@@ -1,0 +1,392 @@
+##########################################
+
+residuals.mirt <- function(object, digits = 3, res.cor=FALSE, ...)
+{
+  if(res.cor) {
+    cormat <- object$cormat
+    F <- object$F
+    Rrep <- F %*% t(F)
+	residual <- cormat - Rrep	
+	RMR <- 0
+	for(i in 1:ncol(cormat))
+	  for(j in 1:ncol(cormat))
+	    if(i < j) RMR <- RMR + (cormat[i,j] - Rrep[i,j])^2
+	RMR <- sqrt(RMR/(ncol(cormat)*(ncol(cormat) -1 )/2))	
+    cat("Residual correlations: \n")
+	print(residual,digits)  
+	cat("\nRMR : ", round(RMR,3),"\n")
+  
+  } else {   
+    r <- object$tabdata[ ,ncol(object$tabdata)]
+    res <- (r - object$Pl * nrow(object$fulldata)) / 
+      sqrt(object$Pl * nrow(object$fulldata))
+    print(res,digits)
+    invisible(res)  	
+  }	  
+}
+
+plot.mirt <- function(x, type = 'curve', npts = 30,
+  rot = list(x = -70, y = 30, z = 10), ...)
+{  
+  if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
+  a <- as.matrix(x$pars[ ,1:(ncol(x$pars) - 1)])
+  d <- x$pars[ ,ncol(x$pars)]
+  g <- x$guess
+  A <- as.matrix(sqrt(apply(a^2,1,sum)))
+  B <- -d/A
+  if(ncol(a) > 2 ) stop("Can't plot high dimentional solutions.\n")
+  theta <- seq(-4,4,length.out=npts)
+  Theta <- thetaComb(theta, ncol(a))
+  P <- matrix(0, ncol=length(g), nrow = nrow(as.matrix(Theta)))
+  for(i in 1:nrow(a)) P[ ,i] <- P.mirt(a[i, ],d[i],as.matrix(Theta),g[i])  
+  Ptot <- rowSums(P)  
+  
+  if(ncol(a) == 2){
+    require(lattice)
+	if(type == 'info'){
+      I <- (P * (1 - P)) %*% A^2 
+	  plt <- cbind(I,Theta)
+	  wireframe(I ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Test Information", 
+	    zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+		screen = rot)
+    } else {  
+	  plt <- cbind(Ptot,Theta)			
+	  wireframe(Ptot ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Test score surface", 
+	    zlab = "Test \nScore", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+		screen = rot)
+	}	
+  } else {
+    if(type == 'curve'){  
+	  plot(Theta, Ptot, type='l', main = 'Test score plot', xlab = 'Theta', ylab='Test Score')
+	} else {
+      I <- (P * (1 - P)) %*% a^2 
+	  plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')
+    } 	
+  }  
+}
+
+fitted.mirt <- function(object, digits = 3, ...)
+{  
+  expected <- round(nrow(object$fulldata) * object$Pl,digits)  
+  tabdata <- cbind(object$tabdata,expected)
+  colnames(tabdata) <- c(colnames(object$fulldata),"freq","exp")	
+  print(tabdata)
+  invisible(expected)
+}
+
+fscores.mirt <- function(object, full.scores = FALSE, 
+  method = "EAP", rotate = 'varimax', ...)
+{    
+  if(ncol(object$F) > 1 && rotate != 'none') rotF <- Rotate(object$F,rotate)$loadings  
+    else rotF <- object$F
+  cs <- sqrt(1 - object$h2)
+  a <- as.matrix(rotF / cs)
+  d <- qnorm(object$facility) / cs  
+  g <- object$guess  
+  nfact <- ncol(a)
+  theta <- as.matrix(seq(-4,4,length.out = 15))
+  Theta <- thetaComb(theta,nfact)
+  fulldata <- object$fulldata  
+  tabdata <- object$tabdata[ ,1:ncol(fulldata)]
+  colnames(tabdata) <- colnames(fulldata) 
+  scores <- matrix(0,ncol=ncol(Theta),nrow=nrow(tabdata))
+  thetas <- rep(0,nfact)
+  W <- AXk(0,1,Theta)  
+  
+  for (i in 1:nrow(scores)) {
+    L <- 0  
+    for (j in 1:nrow(a)){
+      if(tabdata[i,j] == 1) L <- log(P.mirt(a[j, ],d[j],Theta,g[j])) + L
+	  else L <- log(1 - P.mirt(a[j, ],d[j],Theta,g[j])) + L	
+    }	
+	for (k in 1:ncol(Theta))
+	  thetas[k] <- sum(Theta[ ,k] * exp(L) * W / sum(exp(L) * W))
+    scores[i, ] <- thetas
+  }
+  if(method == "MAP"){
+    for (i in 1:nrow(scores)) {       
+      Theta <- scores[i, ]	  
+      thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ])$estimate 
+      scores[i, ] <- thetas
+    }  
+  }
+  
+  colnames(scores) <- paste("F",1:ncol(scores),sep="")  
+  if (full.scores){
+    TFvec <- rep(FALSE,nrow(fulldata))  
+    scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta)) 
+    for (j in 1:nrow(tabdata)){
+      for (i in 1:nrow(fulldata)){
+        TFvec <- rep(FALSE,nrow(fulldata))
+        TFvec[i] <- all(fulldata[i, ] == tabdata[j, ])
+	    scoremat[TFvec, ] <- scores[j, ]
+      }  
+    }        
+    return(cbind(fulldata,scoremat))
+  } else {
+    r <- as.matrix(object$tabdata[ ,ncol(tabdata)+1])
+	colnames(r) <- 'Freq'
+	cat("Rotate: ", rotate,"\n")
+	cat("Method: ", method,"\n")
+    return(cbind(tabdata,r,scores))
+  }   
+}  
+
+coef.mirt <- function(object, digits = 3, ...)
+{
+  a <- as.matrix(object$pars[ ,1:(ncol(object$pars)-1)])
+  d <- object$pars[ ,ncol(object$pars)]
+  A <- sqrt(apply(a^2,1,sum))
+  B <- -d/A
+  if (ncol(a) > 1){  
+    parameters <- cbind(object$pars,object$guess,object$facility,A,B)
+    colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess", 
+      "facility","mvdisc","mvint")
+    cat("Unrotated parameters, multivariate discrimination and intercept: \n")
+    print(round(parameters, digits))  	
+  } else {
+    parameters <- cbind(object$pars,object$guess,object$facility)  
+	colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess","facility")
+    cat("Parameters with multivariate discrimination and intercept: \n")	
+    print(round(parameters, digits))	  
+  }
+  invisible(parameters)
+}
+
+summary.mirt <- function(object, digits = 3, rotate = 'varimax', ...)
+{
+  if (rotate == 'none' || ncol(object$F) == 1) {
+    F <- object$F
+	h2 <- as.matrix(object$h2)
+    fac <- as.matrix(object$facility)	
+    SS <- apply(F^2,2,sum)
+	colnames(h2) <- "h2"
+	colnames(fac) <- "facility"
+	colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
+	cat("\nUnrotated factor loadings: \n")
+	loads <- round(cbind(F,h2,fac),digits)
+    print(loads)	    	 
+	cat("\nSS loadings: ",round(SS,digits), "\n")
+	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+	invisible(list(F,h2))
+  } else {	
+    F <- object$F
+	h2 <- as.matrix(object$h2)
+	fac <- as.matrix(object$facility)
+	colnames(F) <- paste("F_", 1:ncol(F),sep="")
+    colnames(h2) <- "h2"
+    colnames(fac) <- "facility"	
+	cat("Rotation: ", rotate, "\n")
+	rotF <- Rotate(F,rotate)
+	SS <- apply(rotF$loadings^2,2,sum)
+	loads <- round(cbind(rotF$loadings,h2,fac),digits)	
+	cat("\nRotated factor loadings: \n")
+	print(loads)		
+	if(attr(rotF, "oblique")){
+	  cat("\nFactor correlations: \n")
+	  Phi <- rotF$Phi	  
+	  Phi <- round(Phi, digits)
+	  colnames(Phi) <- rownames(Phi) <- colnames(F)
+	  print(Phi)
+      cat("\nRotated Sums of Squares: ")
+      round(colSums(rotF$loadings %*% Phi), digits)      
+	}	
+	cat("\nSS loadings: ",round(SS,digits), "\n")
+	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")	
+	if(any(h2 > 1)) 
+	  warning("Solution has heywood cases. Interpret with caution.") 
+	invisible(list(loadings,h2))  
+  }  
+}
+
+anova.mirt <- function(object, object2, ...) 
+{
+  df <- object$df - object2$df  
+  X2 <- 2*object2$log.lik - 2*object$log.lik 
+  AICdiff <- object$AIC - object2$AIC    
+  cat("\tChi-squared difference \n\nX2 = ", round(X2,3), ", df = ",
+    df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+  cat("AIC difference = ", round(AICdiff,3), "\n")  
+}
+
+print.mirt <- function(x, ...) 
+{  
+  cat("Call: ")
+  print(x$Call)
+  cat("\nFull-information factor analysis with ", ncol(x$F), " factor",
+    if(ncol(x$F)>1) "s", "\n", sep="")
+  if(x$converge == 1)	
+    cat("Converged in ", x$EMiter, " iterations.\n", sep="")
+  else 	
+    cat("Estimation stopped after ", x$EMiter, " iterations.\n", sep="")
+  cat("Log-likelihood = ", x$log.lik, "\n")
+  cat("AIC = ", x$AIC, "\n")
+  cat("Chi-squared = ", round(x$X2,2), ", df = ", 
+    x$df, ", p = ", round(x$p,4), "\n", sep="")
+}
+    
+############################################
+
+mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL, 
+  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, ...)
+{ 
+  Call <- match.call()    
+  itemnames <- colnames(fulldata)
+  fulldata <- as.matrix(fulldata)
+  if (!any(fulldata %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")
+  fulldata[is.na(fulldata)] <- 0  
+  nitems <- ncol(fulldata)
+  colnames(fulldata) <- itemnames
+  if (length(guess) == 1) guess <- rep(guess,nitems)
+  else if (length(guess) > nitems || length(guess) < nitems) 
+    stop("The number of guessing parameters is incorrect.")	
+  pats <- apply(fulldata,1,paste,collapse = "/")
+  freqs <- table(pats)
+  nfreqs <- length(freqs)
+  r <- as.vector(freqs)
+  sampsize <- nrow(fulldata) 
+  tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
+  tabdata <- matrix(as.numeric(tabdata),nfreqs,nitems,TRUE)
+  tabdata <- cbind(tabdata,r)    
+  if (is.null(quadpts)) quadpts <- ceiling(15/nfact)
+  if (nfact > 6) quadpts <- 3  
+  theta <- as.matrix(seq(-4,4,length.out = quadpts))
+  Theta <- thetaComb(theta,nfact)
+  facility <- colMeans(fulldata)
+  temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
+  if(!is.null(par.prior)){
+    if(!is.null(par.prior$slope.items))
+      for(i in 1:length(par.prior$slope.items))
+        temp[par.prior$slope.items[i],1] <- par.prior$slope		
+	if(!is.null(par.prior$int.items))
+      for(i in 1:length(par.prior$int.items))
+        temp[par.prior$int.items[i],2:3] <- par.prior$int		 
+  }  
+  par.prior <- temp    
+  if (any(class(prev.cor) == c('mirt','bmirt'))) Rpoly <- prev.cor$cormat
+    else if(!is.null(prev.cor)) {
+	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
+	  else stop("Correlation matrix is not square.\n")
+	} else Rpoly <- tetrachor(fulldata,guess, nowarn=nowarn)   
+  if (is.null(startvalues)) 
+    suppressMessages(pars <- start.values(fulldata,guess,Rpoly,nfact=nfact,nowarn=nowarn)) 
+    else {
+      if ((ncol(startvalues) != (nfact + 1)) || (nrow(startvalues) != nitems))
+      stop("Startvalues are declared incorrectly.")  
+    pars <- startvalues  
+    } 
+  diag(Rpoly) <- 1
+  item <- 1
+  lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))  
+  prior <- AXk(0,1,Theta)
+  startvalues <- pars
+  converge <- 1  
+  index <- 1:nitems
+  # EM loop
+  for (cycles in 1:ncycles)
+  {       
+    rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)
+    prior <- rlist[[4]]
+    lastpars2 <- lastpars1
+    lastpars1 <- pars      
+    maxim <- .Call("Mstep",                
+                as.double(rlist[[1]]),
+                as.double(rlist[[2]]),
+				as.double(prior),
+			    as.double(pars),
+			    as.double(guess),			    
+			    as.double(as.matrix(Theta)),
+			    as.double(par.prior))				
+	pars <- matrix(maxim, ncol = nfact + 1)	
+	if(any(is.na(pars))) converge <- 0
+	pars[is.na(pars)] <- lastpars1[is.na(pars)]
+	if(any(abs(pars[ ,nfact+1]) > 3.5)){
+	  ints <- index[abs(pars[ ,nfact+1]) > 3.5] 	
+	  par.prior[ints,3] <- 2
+	  if(any(abs(pars[ ,nfact+1]) > 5)){
+	    ints <- index[abs(pars[ ,nfact+1]) > 5] 	
+	    par.prior[ints,3] <- 1
+	  } 
+	}
+	if(nfact > 1){ 
+	  norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
+	  alp <- as.matrix(pars[ ,1:nfact]/norm)
+      FF <- alp %*% t(alp)
+	  V <- eigen(FF)$vector[ ,1:nfact]
+      L <- eigen(FF)$values[1:nfact]      
+      F <- V %*% sqrt(diag(L))
+	  h2 <- rowSums(F^2)
+      if(any(h2 > .9)){
+	    ind <- index[h2 > .9]
+        par.prior[ind,1] <- 1.2
+	    if(any(h2 > .95)){
+		  ind <- index[h2 > .95]
+          par.prior[ind,1] <- 1.5
+		} 
+      }
+	}	    
+    maxdif <- max(abs(lastpars1 - pars))	
+    if (maxdif < EMtol) break    
+    # rate acceleration adjusted every third cycle
+    if (cycles %% 3 == 0 & cycles > 6) 
+	{
+      d1 <- lastpars1 - pars
+      d2 <- lastpars2 - pars      
+      for (i in 1:nitems) {
+        for(j in 1:ncol(pars)){      
+          if((abs(d1[i,j]) > 0.001) & (d1[i,j]*d2[i,j] > 0.0) & 
+            (d1[i,j]/d2[i,j] < 1.0)) rate[i,j] <- (1 - (1 - rate[i,j]) * (d1[i,j]/d2[i,j]))
+		  else rate[i,j] <- 0
+        }        
+      }      
+    }
+    rate[pars > 4] <- 0
+	rate[pars < -4] <- 0    
+	pars <- lastpars1*rate*(-2) + (1 - rate*(-2))*pars    	
+  }
+  
+  if(converge == 0) 
+    warning("Parameter estimation reached unacceptable values. Solution likely has not converged.")  
+  if (any(abs(pars) > 5))
+    warning("Solution contains extreme values. Interpret with caution.")	  	  
+  lastchange <- lastpars1 - pars
+  if (cycles == ncycles){
+    converge <- 0  
+    message("Estimation terminated after ", cycles, " EM loops. Maximum changes:") 
+	message("\n slopes = ", round(max(abs(lastchange[ ,1:nfact])),4), ", intercepts = ", 
+	  round(max(abs(lastchange[ ,ncol(pars)])),4) ,"\n", sep="")
+  }		
+  rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)    
+  Pl <- rlist[[3]]
+  log.lik <- sum(r*log(Pl))
+  logN <- 0
+  logr <- rep(0,length(r))
+  for (i in 1:sampsize) logN <- logN + log(i)
+  for (i in 1:length(r)) 
+    for (j in 1:r[i]) 
+	  logr[i] <- logr[i] + log(j)	
+  log.lik <- log.lik + logN/sum(logr)
+  AIC <- (-2) * log.lik + 2 * length(pars)
+  X2 <- 2 * sum(r * log(r/(sampsize*Pl)))  
+  df <- (length(r) - 1) - (nitems*(nfact + 1) - nfact*(nfact - 1)/2) 
+  p <- 1 - pchisq(X2,df)
+  
+  # pars to FA loadings
+  if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
+    else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
+  alp <- as.matrix(pars[ ,1:nfact]/norm)
+  FF <- alp %*% t(alp)
+  V <- eigen(FF)$vector[ ,1:nfact]
+  L <- eigen(FF)$values[1:nfact]
+  if (nfact == 1) F <- as.matrix(V * sqrt(L))
+    else F <- V %*% sqrt(diag(L))  
+  if (all(F[ ,1] < 0)) F[ ,1] <- (-1)*F[ ,1]  
+  h2 <- rowSums(F^2)    
+  
+  mod <- list(EMiter=cycles, pars=pars, guess=guess, AIC=AIC, X2=X2, df=df, 
+    log.lik=log.lik, p=p, F=F, h2=h2, tabdata=tabdata, Pl=Pl,  
+    Theta=Theta, fulldata=fulldata, empdist=rlist[[4]], cormat=Rpoly, 
+    facility=facility, par.prior=par.prior, converge = converge, Call=Call)    
+  class(mod) <- "mirt"
+  mod    
+}
