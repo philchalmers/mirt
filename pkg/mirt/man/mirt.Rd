@@ -97,7 +97,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
   \item{F}{unrotated factor loadings matrix}
   \item{h2}{a vector of communalities}
   \item{EMiter}{number of EM cycles performed; will be less than \code{ncycles} if the tolerance is reached}
-  \item{par.prior}{matrix of the assumed prior parameters used to constrain the solution. If no priors are specified then the solution will be a matrix of \code{c(1,0,0)}, indicating no influence on the parameters}
+  \item{par.prior}{list of the assumed prior parameters used to constrain the solution. If no priors are specified then the solution will be a matrix of \code{c(1,0,0)}, indicating no influence on the parameters. For instance, if we wish to contrain the slopes of item 1 and 3 to 1.2, and the intercepts of item 4 with a weak normal prior (mean = 0) then \code{par.prior = list(slope = 1.2, slope.items = c(1,3), int = c(0,3), int.items = 4)}}
   \item{Call}{the function call}
 }
 
@@ -134,7 +134,6 @@ fulldata <- expand.table(LSAT7)
 mod1 <- mirt(fulldata, 1)
 mod1
 summary(mod1)
-
 mod2 <- mirt(fulldata, 2, prev.cor = mod1) #use previous tetrachoric matrix to save time
 mod2
 summary(mod2)
@@ -149,15 +148,18 @@ fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 tmat <- tetrachor(fulldata, .1) #this can take some time
 mod1 <- mirt(fulldata, 1, guess = .1, prev.cor = tmat)
-#didn't converge, item 6 appears too difficult to account for guessing (facility = .16)
-#fix guessing par
+coef(mod1)
+#didn't converge, item 6 and 32 appear too difficult (facility = .16)
+#fix guessing pars
 guess <- rep(.1,32)
-guess[6] <- 0
+guess[c(6,32)] <- 0
 mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
 
-mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat) #item 17 too easy, bound the intercept from going to infinity
-mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat, par.prior = list(priors = c(1,0,3), items = 17))
+mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat) 
+mod3 <- mirt(fulldata, 3, guess = guess, prev.cor = tmat) #guessing causing many problems
+mod3 <- mirt(fulldata, 3, prev.cor = tmat) 
 anova(mod1,mod2)
+anova(mod2,mod3)
      }
 }
 
