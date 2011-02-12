@@ -159,7 +159,8 @@ P.mirt <- function(a, d, Theta, g){
   }
   
   # Estep
-  Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, specific) {
+  Estep.bfactor <- function(pars, tabdata, Theta, prior, prior2, guess, logicalfact, specific, sitems) 
+  {
     a <- as.matrix(pars[ ,1:(ncol(pars) - 1)])
     nfact <- ncol(a)
     nitems <- nrow(a)
@@ -171,53 +172,24 @@ P.mirt <- function(a, d, Theta, g){
     
     itemtrace <- r1 <- r0 <- matrix(0,nrow=nitems,ncol=nrow(Theta))
     for (i in 1:nitems) itemtrace[i, ] <- 
-      P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])      
-        
-    retlist <- .Call("Estepbfactor",                     
-                     as.double(itemtrace),					 
-                     as.double(prior),					 
-                     as.integer(X), 
-                     as.integer(nfact),      
-                     as.integer(r),
-					 as.integer(specific))   
-
-    N <- retlist$r1 + retlist$r0    
-    empprior <- colSums(N)/sum(N)    
-    rlist <- list(retlist$r1, N, retlist$expected, empprior)
-    return(rlist)
-  } 
+      P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])
     
- ll.bfactor <- function(p, r1, N, Theta, prior, g, p.p, patload) {
-    npars <- length(p)
-    a <- p[1:(npars - 1)]
-    d <- p[npars]
-	betaprior <- normprior <- 0
-	if(p.p[1] & all(a[patload] != 0)) 
-	  betaprior <- sum(log(2*(1.2 - 1) * a[patload] / (1 + a[patload] %*% a[patload])))
-    if(p.p[2]) normprior <- log(dnorm(d))	
-    Pfix <- P <- P.bfactor(a,d,Theta,g,patload)
-	P[P < .000000001] <- .000000001
-	Pfix[P > .999999999] <- .999999999
-    Q <- 1 - Pfix    
-    l <- (-1)*(sum(r1*(log(P))) + (sum((N - r1)*(log(Q))))) - betaprior - normprior      
-    return(l)
-  }
-
-  # gradient  
-  gr.bfactor <- function(p, r1, N, Theta, prior, g, p.p, patload) { 
-    npars <- length(p)
-    a <- p[1:(npars - 1)]
-    d <- p[npars]    
-    P <- P.bfactor(a,d,Theta,g,patload)
-    Q <- 1 - P    
-    gr <- rep(0,npars-2)    
-    PQ <- P*Q
-    for (i in 1:2){
-      gr[i] <- (-1)*sum((r1 - N*P) * N*(Theta[ ,i] * prior))
-    }      
-    gr[3] <- (-1)*sum((r1 - N*P) *N* prior)
-    grret <- rep(0,npars)
-    patload <- c(patload,TRUE)
-    grret[patload] <- gr
-    return(grret)
-  }
+    retlist <- .Call("Estepbfactor",
+					as.double(itemtrace),
+					as.double(prior), 
+					as.double(prior2), 
+					as.integer(X), 
+					as.integer(nfact),
+					as.integer(r),
+					as.double(sitems))      
+    
+	r1 <- N <- matrix(0, nitems, nrow(Theta))
+    for (i in 1:nitems){
+      r1[i, ] <- retlist$r1[(specific[i] - 1)*nitems + i, ]
+	  N[i, ] <- retlist$r0[(specific[i] - 1)*nitems + i, ] + r1[i, ]
+	}
+    	
+    rlist <- list(r1, N, retlist$expected)
+    return(rlist)
+  }     
+ 

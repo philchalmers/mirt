@@ -222,15 +222,17 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
   diag(Rpoly) <- 1
   item <- 1
   lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))  
-  prior <- AXk(0,1,Theta)  
+  prior <- AXk(0,1,Theta)
+  prior2 <- AXk(0,1,as.matrix(Theta[,2]))  
   startvalues <- pars  
   converge <- 1
   index <- 1:nitems
+  sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
+  for(i in 1:32) sitems[specific[i],i] <- 1 
   #EM  loop  
   for (cycles in 1:ncycles) 
-  {     
-    rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact, specific)
-    #prior <- rlist[[4]]
+  {    
+    rlist <- Estep.bfactor(pars, tabdata, Theta, prior, prior2, guess, logicalfact, specific, sitems)
     lastpars2 <- lastpars1
     lastpars1 <- pars	
 	mpars <- matrix(pars[logicalfact], ncol=3)    
@@ -310,7 +312,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	    \n slopes = ", round(max(abs(lastchange[,1:nfact])),4), ", intercepts = ", 
 		round(max(abs(lastchange[,ncol(pars)])),4) ,"\n")
   }	
-  rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact)
+  rlist <- Estep.bfactor(pars, tabdata, Theta, prior, prior2, guess, logicalfact, specific, sitems)
   Pl <- rlist[[3]]
   log.lik <- sum(r * log(Pl))
   logN <- 0
@@ -335,7 +337,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
   mod <- list(EMiter=cycles, pars=pars, guess=guess, AIC=AIC, X2=X2, df=df, 
     log.lik=log.lik, p=p, F=F, h2=h2, itemnames=itemnames, 
     tabdata=tabdata, sampsize=sampsize, Pl=Pl, Theta=Theta, fulldata=fulldata, 
-    empdist=rlist[[4]],logicalfact=logicalfact, facility=facility, specific=specific,
+    logicalfact=logicalfact, facility=facility, specific=specific,
 	cormat=Rpoly, converge=converge, par.prior=par.prior,Call=Call) 
     
   class(mod) <- "bfactor"
