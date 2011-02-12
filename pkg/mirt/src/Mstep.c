@@ -156,7 +156,7 @@ SEXP Mstep(SEXP Rr1, SEXP RN, SEXP Rprior, SEXP Rpars,
 		  	PQ[i] = P[i] * (1 - P[i]) * Pprior[i];
 		  	DIF[i] = ((r1[i] / N[i]) - P[i]) * Pprior[i];	  	
 		  }		  
-		  //gradient
+		  //gradient		  
 		  for(i = 0 ; i < nfact; i++){
 		  	for(j = 0; j < nquad; j++)
 		      tempTheta[j] = Theta[j][i]; 
