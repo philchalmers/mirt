@@ -8,8 +8,8 @@ Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
 Description: Analysis of multivariate dichotomous data using latent 
 		trait models under the Item Response Theory paradigm. 
 		Includes the multivariate two- and three-parameter logistic 
-		models, confirmatory bifactor analysis, and a parially compensatory 
-        item response model. 
+		models, confirmatory bifactor analysis, and polytomous confirmatory
+		and exploratory item response model (in developement). 
 Depends: psych, polycor, GPArotation
 Suggests: MASS, lattice,mvtnorm
 License: GPL (>= 2)

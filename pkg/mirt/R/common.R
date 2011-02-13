@@ -5,8 +5,8 @@ AXk <- function(mu, sigma, Theta) {
     A[ ,i] <- exp(-0.5*((Theta[ ,i] - mu)/sigma)^2)    
   }
   const<- sum(A[,1]) #temp
-  A <- apply(A,1,prod)  
-  return(A/const)      
+  A <- apply(A/const,1,prod)  
+  return(A)  
 }
 
 # theta combinations
