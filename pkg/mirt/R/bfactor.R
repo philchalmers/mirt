@@ -54,9 +54,9 @@ fscores.bfactor <- function(object, full.scores = FALSE,
     L <- 0  
     for (j in 1:nrow(a)){
       if(tabdata[i,j] == 1) 
-	    L <- log(Pbfactor(a[j, ],d[j],Theta,g[j],logicalfact[j, ])) + L
+	    L <- log(P.bfactor(a[j, ],d[j],Theta,g[j],logicalfact[j, ])) + L
 	  else 
-        L <- log(1 - Pbfactor(a[j, ],d[j],Theta,g[j],logicalfact[j, ])) + L	
+        L <- log(1 - P.bfactor(a[j, ],d[j],Theta,g[j],logicalfact[j, ])) + L	
     }	
 	for (k in 1:ncol(Theta))
 	  thetas[k] <- sum(Theta[ ,k] * exp(L) * W / sum(exp(L) * W))
@@ -222,17 +222,18 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
   diag(Rpoly) <- 1
   item <- 1
   lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))  
-  prior <- AXk(0,1,Theta)
-  prior2 <- AXk(0,1,as.matrix(Theta[,2]))  
+  prior <- AXk(0,1,as.matrix(theta))
+  Prior <- AXk(0,1,Theta)  
   startvalues <- pars  
   converge <- 1
   index <- 1:nitems
   sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
   for(i in 1:32) sitems[specific[i],i] <- 1 
+  
   #EM  loop  
   for (cycles in 1:ncycles) 
   {    
-    rlist <- Estep.bfactor(pars, tabdata, Theta, prior, prior2, guess, logicalfact, specific, sitems)
+    rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems)
     lastpars2 <- lastpars1
     lastpars1 <- pars	
 	mpars <- matrix(pars[logicalfact], ncol=3)    
@@ -241,7 +242,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	maxim <- .Call("Mstep",                
                 as.double(rlist[[1]]),
                 as.double(rlist[[2]]),
-				as.double(prior),
+				as.double(Prior),
 			    as.double(mpars),
 			    as.double(guess),    
 			    as.double(as.matrix(Theta)),
@@ -312,7 +313,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	    \n slopes = ", round(max(abs(lastchange[,1:nfact])),4), ", intercepts = ", 
 		round(max(abs(lastchange[,ncol(pars)])),4) ,"\n")
   }	
-  rlist <- Estep.bfactor(pars, tabdata, Theta, prior, prior2, guess, logicalfact, specific, sitems)
+  rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems)
   Pl <- rlist[[3]]
   log.lik <- sum(r * log(Pl))
   logN <- 0

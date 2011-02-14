@@ -1,9 +1,7 @@
 Roughly in order of importance:
 
-- fix bifactor estimation
-- add partially compensatory mirt (Whitely 1980)
-- add adaptive quadrature for nfact > 5
 - expand bifactor and full information factor analysis to polytomous items (Gibbons 2007, Muraki 1995)
+- add adaptive quadrature for nfact > 5
 - allow for specific parameter constraints
 - add more extensive simulation data functions (different distributions, skew/kurtosis, better selectivity of dims)
 

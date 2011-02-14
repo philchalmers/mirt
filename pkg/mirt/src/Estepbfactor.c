@@ -2,21 +2,19 @@
 #include<Rdefines.h>
 #include<Rmath.h>
 
-SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP Rprior2,
+SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, 
     SEXP RX, SEXP Rnfact, SEXP Rr, SEXP Rsitems) {
 	
 	SEXP list,list_names,Rr1,Rr0,Rexpected;		
-	double *itemtracev,*prior,*prior2,*sitems;
-	int *X,*nfact,*r,nquad,nitems,npat,i,j,k,sfact;	
+	double *itemtracev,*prior,*sitems;
+	int *X,*nfact,*r,nquad,npquad,nitems,npat,i,j,k,sfact;	
 	
 	//Make pointers and protect variables	
 	PROTECT(Ritemtrace = AS_NUMERIC(Ritemtrace));	
-	PROTECT(Rprior = AS_NUMERIC(Rprior));	
-	PROTECT(Rprior2 = AS_NUMERIC(Rprior2));
+	PROTECT(Rprior = AS_NUMERIC(Rprior));		
 	PROTECT(Rsitems = AS_NUMERIC(Rsitems));
 	itemtracev = NUMERIC_POINTER(Ritemtrace);
-	prior = NUMERIC_POINTER(Rprior);	
-	prior2 = NUMERIC_POINTER(Rprior2);	
+	prior = NUMERIC_POINTER(Rprior);		
 	sitems = NUMERIC_POINTER(Rsitems);
 	
 	PROTECT(RX = AS_INTEGER(RX));
@@ -25,27 +23,31 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP Rprior2,
 	X = INTEGER_POINTER(RX);
 	nfact = INTEGER_POINTER(Rnfact);		
 	r = INTEGER_POINTER(Rr);
-	nquad = LENGTH(Rprior);
+	npquad = LENGTH(Rprior);
+	nquad = (int)pow(npquad,2.0);
 	nitems = LENGTH(Ritemtrace) / nquad;
 	npat = LENGTH(Rr);
-	sfact = *nfact - 1;
-	
+	sfact = *nfact - 1;	
 	
 	//declare dependent arrays and initialize	
-	double likelihoods[sfact][nquad],expected[npat],
-		itemtrace[nitems][nquad],r1[nitems*sfact][nquad],
-		r0[nitems*sfact][nquad],Plk[sfact],Ek[sfact],Pls = 1.0,
-		sitemsfull[sfact][nitems],posterior[sfact][nquad];	
+	double likelihoods[sfact][nquad],L[npquad][npquad],expected[npat],
+		itemtrace[nitems][nquad],r1[nitems*sfact][nquad],tempsum[npquad],
+		r0[nitems*sfact][nquad],Plk[sfact][npquad],Elk[sfact][npquad],
+		Pls[npquad],sitemsfull[sfact][nitems],posterior[sfact][nquad];	
 	int data[npat][nitems],fact;	
 	
 	for	(j = 0; j < nitems; j++)
 		for (i = 0; i < npat; i++)
-			data[i][j] = X[i + j*npat];	
+			data[i][j] = X[i + j*npat];
+	k=0;			
+	for	(j = 0; j < nquad; j++){
+		for (i = 0; i < nitems; i++){
+			itemtrace[i][j] = itemtracev[k];
+			k++;
+		}
+	}					
 	for	(j = 0; j < nquad; j++)
-		for (i = 0; i < nitems; i++)
-			itemtrace[i][j] = itemtracev[i + j*nitems];			
-	for	(j = 0; j < nquad; j++)
-		for (i = 0; i < nitems*(sfact); i++)
+		for (i = 0; i < nitems*sfact; i++)
 			r1[i][j] = r0[i][j] = 0;
   k = 0; 	
 	for	(j = 0; j < nitems; j++){
@@ -53,37 +55,62 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP Rprior2,
 		  sitemsfull[i][j] = sitems[k];
 		  k++;
 		}
-	}	  			
-		
+	}	 
+	
+	  
+				
 	// Begin main function body here				
-	for (int pat = 0; pat < npat; pat++){
+	for (int pat = 0; pat < npat; pat++){	
+	//int pat = 0;
     for(fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
 				likelihoods[fact][k] = 1;				
 			for (int item = 0; item < nitems; item++){
 				if (data[pat][item]) {
 					for (k = 0; k < nquad; k++)
-						likelihoods[fact][k] = likelihoods[fact][k]*pow(itemtrace[item][k],sitemsfull[fact][item]);
+						likelihoods[fact][k] = likelihoods[fact][k]*
+						  pow(itemtrace[item][k],sitemsfull[fact][item]);
 				} else {
 					for (k = 0; k < nquad; k++)
-						likelihoods[fact][k] = likelihoods[fact][k]*pow((1 - itemtrace[item][k]),sitemsfull[fact][item]);
+						likelihoods[fact][k] = likelihoods[fact][k]*
+						  pow((1.0 - itemtrace[item][k]),sitemsfull[fact][item]);
 				}			
 			}
-		}		  		  
+		}			
 		for(fact = 0; fact < sfact; fact++){
-		  Plk[fact] = 0.0;
-      for (k = 0; k < nquad; k++) 	
-			  Plk[fact] += likelihoods[fact][k]*prior2[k];
-		}	  
-		Pls = 1.0;	  
+			k=0;
+			for (j = 0; j < npquad; j++){
+				tempsum[j] = 0.0;
+			  for (i = 0; i < npquad; i++){
+			  	L[i][j] = likelihoods[fact][k];
+			  	k++;
+			  }
+			}
+			for (j = 0; j < npquad; j++)				
+			  for (i = 0; i < npquad; i++)
+			  	L[i][j] = L[i][j]*prior[j];
+			for (j = 0; j < npquad; j++)				
+			  for (i = 0; i < npquad; i++)
+			    tempsum[j] += L[j][i];
+			for (i = 0; i < npquad; i++)
+			  Plk[fact][i] = tempsum[i];    			
+		}				
+		expected[pat] = 0.0;
+		for (i = 0; i < npquad; i++){
+		  Pls[i] = 1.0; 		  		
+			for(fact = 0; fact < sfact; fact++)
+			  Pls[i] = Pls[i] * Plk[fact][i];			
+			expected[pat] += Pls[i] * prior[i];  
+		}				
 		for(fact = 0; fact < sfact; fact++)
-			Pls = Pls*Plk[fact];
-    expected[pat] = Pls;			
-	  for(fact = 0; fact < sfact; fact++)
-			Ek[fact] = Pls/Plk[fact];		
-		for(fact = 0; fact < sfact; fact++)		
-			for (i = 0; i < nquad; i++)
-				posterior[fact][i] = r[pat]*likelihoods[fact][i]*Ek[fact] / Pls;	
+		  for (i = 0; i < npquad; i++)
+		  	Elk[fact][i] = Pls[i] / Plk[fact][i];		  	
+		for(fact = 0; fact < sfact; fact++){
+		  for (i = 0; i < nquad; i++){  			  	
+		    posterior[fact][i] = likelihoods[fact][i]*r[i]*Elk[fact][i % npquad] 
+		      / expected[pat];
+		  }
+	  }		    	 	
 		for(fact = 0; fact < sfact; fact++){			
 			for (int item = 0; item < nitems; item++){
 				if (data[pat][item]) {
@@ -96,6 +123,7 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP Rprior2,
 			}
 		}	
 	}	//end main 
+	
 	
 	//set R objects used for return	
 	PROTECT(Rr1 = allocMatrix(REALSXP,nitems*sfact,nquad));	
@@ -125,6 +153,6 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP Rprior2,
 	SET_VECTOR_ELT(list, 2, Rexpected);		
 	setAttrib(list, R_NamesSymbol, list_names); 
 		
-	UNPROTECT(12);	
+	UNPROTECT(11);	
 	return(list);
 }

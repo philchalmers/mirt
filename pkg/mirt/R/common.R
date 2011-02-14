@@ -3,10 +3,9 @@ AXk <- function(mu, sigma, Theta) {
   A <- matrix(0, ncol = ncol(Theta), nrow = nrow(Theta))
   for (i in 1:ncol(Theta)) {  
     A[ ,i] <- exp(-0.5*((Theta[ ,i] - mu)/sigma)^2)    
-  }
-  const<- sum(A[,1]) #temp
-  A <- apply(A/const,1,prod)  
-  return(A)  
+  }  
+  A <- apply(A,1,prod)  
+  return(A/sum(A))  
 }
 
 # theta combinations
@@ -159,7 +158,7 @@ P.mirt <- function(a, d, Theta, g){
   }
   
   # Estep
-  Estep.bfactor <- function(pars, tabdata, Theta, prior, prior2, guess, logicalfact, specific, sitems) 
+  Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems) 
   {
     a <- as.matrix(pars[ ,1:(ncol(pars) - 1)])
     nfact <- ncol(a)
@@ -176,8 +175,7 @@ P.mirt <- function(a, d, Theta, g){
     
     retlist <- .Call("Estepbfactor",
 					as.double(itemtrace),
-					as.double(prior), 
-					as.double(prior2), 
+					as.double(prior), 					
 					as.integer(X), 
 					as.integer(nfact),
 					as.integer(r),

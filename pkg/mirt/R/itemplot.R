@@ -56,7 +56,7 @@ itemplot.bfactor <- function(object, item, type = 'curve', npts = 30,
   theta <- seq(-4,4,length.out=npts)
   Theta <- thetaComb(theta, 2)
   P <- matrix(0, ncol=length(g), nrow = nrow(Theta))
-  for(i in 1:nrow(a)) P[ ,i] <- Pbfactor(a[i,],d[i],Theta,g[i],logicalfact[i, ])
+  for(i in 1:nrow(a)) P[ ,i] <- P.bfactor(a[i,],d[i],Theta,g[i],logicalfact[i, ])
   P <- P[ ,item]     
   require(lattice)
   
@@ -70,7 +70,5 @@ itemplot.bfactor <- function(object, item, type = 'curve', npts = 30,
 	wireframe(P ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Item Probability Surface", 
 	  zlab = "P", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE))
   }	  
-  
-
 }
 

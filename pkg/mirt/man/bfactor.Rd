@@ -55,7 +55,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
 
   Unlike TESTFACT 4 (2003) initial start values are computed by using information from the matrix of tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responses. To begin, a MINRES factor analysis with one factor is extracted, and the transformed loadings and intercepts (see \link{mirt} for more details) are used as starting values for the general factor loadings and item intercepts. Values for the specific factor loadings are taken to be half the magnitude of the extracted general factor loadings. Note that while the sign of the loading may be incorrect for specific factors (and possibly for some of the general factor loadings) the intercepts and general factor loadings will be relatively close to the final solution. These initial values should be an improvement over the TESTFACT 4 initial starting values of 1.414 for all the general factor slopes, 1 for all the specific factor slopes, and 0 for all the intercepts.
 
-  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. Fitted and residual values may be observed via \code{fitted.bfactor} and \code{residual.bfactor}. To examine individuals item plots use \code{\link{itemplot.bfactor}} which will also plot information and surface functions.
+  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. Fitted and residual values may be observed via \code{fitted.bfactor} and \code{residual.bfactor}. To examine individuals item plots use \code{\link{itemplot.bfactor}} which will also plot information and surface functions (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics).
 }
 
 \value{
@@ -100,23 +100,22 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 \examples{
 \dontrun{
 
-#load LSAT section 7 data and compute 1 and 2 factor models
+###load SAT12 and compute bifactor model with 3 specific factors
 data(SAT12)
 fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-
 tmat <- tetrachor(fulldata) #this can take a while
 specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
-
 mod1 <- bfactor(fulldata, specific,prev.cor = tmat)
-#didn't converge, item 11 causing problems since it's too easy
-mod1 <- bfactor(fulldata, specific, guess = 0, prev.cor = tmat, par.prior = list(priors = c(1,0,2), items = 11))
-summary(mod1)
 
-#guessing added, don't add parameter for items with small facility values
-g <- rep(.1,32)
-g[c(6,8,18,32)] <- 0
-mod1 <- bfactor(fulldata, specific, guess = g, prev.cor = tmat, par.prior = list(priors = c(1,0,2), items = 11))
+###Try with guessing parameters added
+guess <- rep(.1,32)
+mod2 <- bfactor(fulldata, specific, guess = guess, prev.cor = tmat)
+coef(mod2) #didn't converge, item 6 item facility too close to guessing parameter
+guess[6]<-0
+mod2 <- bfactor(fulldata, specific, guess = guess, prev.cor = tmat)
+anova(mod1,mod2) #although no change in df X2 decreased
+
     }
 }
 

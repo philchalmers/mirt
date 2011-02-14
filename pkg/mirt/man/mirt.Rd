@@ -75,7 +75,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
     \item{oblique: }{\code{"promax", "oblimin", "quartimin", "oblimax", "simplimax"}}
   }
 
-  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} which will also plot information and surface functions.
+  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions.
 }
 
 \value{
@@ -103,7 +103,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
 
 \section{Convergence}{
 
-Full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for and acceptable solution. Be mindful of the item facility values that are printed with \code{coef.mirt} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for being dropped from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation.
+Full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for and acceptable solution. Be mindful of the item facility values that are printed with \code{coef.mirt} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for being dropped from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation. Also, increasing the number of quadrature points per dimension should help to stabilize the estimation process.
 
 }
 
@@ -155,9 +155,9 @@ guess <- rep(.1,32)
 guess[c(6,32)] <- 0
 mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
 
-mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat) 
+mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat)
 mod3 <- mirt(fulldata, 3, guess = guess, prev.cor = tmat) #guessing causing many problems
-mod3 <- mirt(fulldata, 3, prev.cor = tmat) 
+mod3 <- mirt(fulldata, 3, prev.cor = tmat)
 anova(mod1,mod2)
 anova(mod2,mod3)
      }
