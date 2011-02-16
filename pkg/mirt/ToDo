@@ -1,5 +1,6 @@
 Roughly in order of importance:
 
+- allow SE estimation of parameters with R's nlm optimizer
 - expand bifactor and full information factor analysis to polytomous items (Gibbons 2007, Muraki 1995)
 - add adaptive quadrature for nfact > 5
 - allow for specific parameter constraints

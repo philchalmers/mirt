@@ -2,7 +2,7 @@
 \alias{tetrachor}
 \title{Computes a tetrachoric matrix with Carroll's correction for guessing}
 \description{
-The \code{tetrachor} function computes a matrix of tetrachoric correlations between the variables, and if applicable computes the tetrachoric correlations on chance adjusted tables specified by Carroll (1945). If the matrix in not positive definite then it is smoothed by setting the negative eigenvalues to zero and recomputing the correlation matrix and re-scaling the matrix trace.
+The \code{tetrachor} function computes a matrix of tetrachoric correlations between the variables, and if applicable computes the tetrachoric correlations on chance adjusted tables specified by Carroll (1945). If the matrix in not positive definite then it is smoothed by setting the negative eigenvalues to zero and recomputing the correlation matrix.
 }
 
 \usage{
