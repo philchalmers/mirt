@@ -146,20 +146,19 @@ scores <- fscores(mod2) #save factor score table
 data(SAT12)
 fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-tmat <- tetrachor(fulldata, .1) #this can take some time
+tmat <- tetrachor(fulldata, .1) #this can save some time if reused
 mod1 <- mirt(fulldata, 1, guess = .1, prev.cor = tmat)
 coef(mod1)
 #didn't converge, item 6 and 32 appear too difficult (facility = .16)
 #fix guessing pars
 guess <- rep(.1,32)
 guess[c(6,32)] <- 0
-mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
 
-mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat)
-mod3 <- mirt(fulldata, 3, guess = guess, prev.cor = tmat) #guessing causing many problems
-mod3 <- mirt(fulldata, 3, prev.cor = tmat)
+tmat <- tetrachor(fulldata, guess)
+mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
+mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat, ncycles = 100)
 anova(mod1,mod2)
-anova(mod2,mod3)
+
      }
 }
 

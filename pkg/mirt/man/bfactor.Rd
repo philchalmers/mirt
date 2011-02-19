@@ -104,16 +104,16 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 data(SAT12)
 fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-tmat <- tetrachor(fulldata) #this can take a while
+tmat <- tetrachor(fulldata) #this can save some time if bfactor run more than once
 specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
-mod1 <- bfactor(fulldata, specific,prev.cor = tmat)
+mod1 <- bfactor(fulldata, specific, prev.cor = tmat)
 
 ###Try with guessing parameters added
 guess <- rep(.1,32)
-mod2 <- bfactor(fulldata, specific, guess = guess, prev.cor = tmat)
+mod2 <- bfactor(fulldata, specific, guess = guess)
 coef(mod2) #didn't converge, item 6 item facility too close to guessing parameter
 guess[6]<-0
-mod2 <- bfactor(fulldata, specific, guess = guess, prev.cor = tmat)
+mod2 <- bfactor(fulldata, specific, guess = guess)
 anova(mod1,mod2) #although no change in df X2 decreased
 
     }

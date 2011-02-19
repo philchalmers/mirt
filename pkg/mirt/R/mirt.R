@@ -267,7 +267,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
     else if(!is.null(prev.cor)) {
 	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 	  else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- tetrachor(fulldata,guess, nowarn=nowarn)   
+	} else Rpoly <- tetrachor(fulldata,guess)   
   if (is.null(startvalues)) 
     suppressMessages(pars <- start.values(fulldata,guess,Rpoly,nfact=nfact,nowarn=nowarn)) 
     else {
