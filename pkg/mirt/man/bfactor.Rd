@@ -14,7 +14,7 @@
 
 \usage{
 bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
-  startvalues = NULL,  quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, ...)
+  startvalues = NULL,  quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, debug = FALSE, ...)
 
 \method{print}{bfactor}(x, ...)
 
@@ -46,6 +46,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
   \item{digits}{number of significant digits to be rounded.}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
   \item{res.cor}{logical; print the residual correlation matrix instead of residual values?}
+  \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed.}
 }
 

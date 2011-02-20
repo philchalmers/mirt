@@ -152,7 +152,7 @@ print.bfactor <- function(x, ...)
 ########################################## 
 
 bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
-  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, ...)
+  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, debug = FALSE, ...)
 { 
   Call <- match.call() 
   rotate <- 'oblimin'
@@ -229,11 +229,15 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
   index <- 1:nitems
   sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
   for(i in 1:32) sitems[specific[i],i] <- 1 
-  
+  if(debug) {
+    print(startvalues)
+	print(sitems)
+  }  
   #EM  loop  
   for (cycles in 1:ncycles) 
   {    
     rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems)
+	if(debug) print(sum(r*log(rlist[[3]])))
     lastpars2 <- lastpars1
     lastpars1 <- pars	
 	mpars <- matrix(pars[logicalfact], ncol=3)    

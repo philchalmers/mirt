@@ -16,7 +16,7 @@
 
 \usage{
 mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
-  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, ...)
+  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, debug = FALSE, ...)
 
 \method{print}{mirt}(x, ...)
 
@@ -55,6 +55,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
   \item{rot}{allows rotation of the 3D graphics}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
   \item{res.cor}{logical; print the residual correlation matrix instead of residual values?}
+  \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }
 

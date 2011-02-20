@@ -5,7 +5,6 @@ export(bfactor,mirt,tetrachor,key2binary,expand.table,fscores,itemplot,simdata)
 
 # Imported functions
 importFrom("psych", factor.wls, Promax, fa)
-importFrom("polycor", polychor)
 
 # S3 methods
 S3method(print, mirt)

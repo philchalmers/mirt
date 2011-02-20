@@ -228,7 +228,7 @@ print.mirt <- function(x, ...)
 ############################################
 
 mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL, 
-  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, ...)
+  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, debug = FALSE, ...)
 { 
   Call <- match.call()    
   itemnames <- colnames(fulldata)
@@ -282,11 +282,13 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
   startvalues <- pars
   converge <- 1  
   index <- 1:nitems
+  if(debug) print(startvalues)
   # EM loop
   for (cycles in 1:ncycles)
   {       
     rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)
     prior <- rlist[[4]]
+	if (debug) print(sum(r*log(rlist[[3]])))
     lastpars2 <- lastpars1
     lastpars1 <- pars      
     maxim <- .Call("Mstep",                
@@ -342,7 +344,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
     }
     rate[pars > 4] <- 0
 	rate[pars < -4] <- 0    
-	pars <- lastpars1*rate*(-2) + (1 - rate*(-2))*pars    	
+	pars <- lastpars1*rate*(-2) + (1 - rate*(-2))*pars        	
   }
   
   if(converge == 0) 

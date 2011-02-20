@@ -2,11 +2,11 @@
 \alias{tetrachor}
 \title{Computes a tetrachoric matrix with Carroll's correction for guessing}
 \description{
-The \code{tetrachor} function computes a matrix of tetrachoric correlations between the variables, and if applicable computes the tetrachoric correlations on chance adjusted tables specified by Carroll (1945). If the matrix in not positive definite (and \code{smooth = TRUE}) then it is smoothed by setting the negative eigenvalues to zero and recomputing the correlation matrix. 
+The \code{tetrachor} function computes a matrix of tetrachoric correlations between the variables, and if applicable computes the tetrachoric correlations on chance adjusted tables specified by Carroll (1945). If the matrix in not positive definite (and \code{smooth = TRUE}) then it is smoothed by setting the negative eigenvalues to zero and recomputing the correlation matrix.
 }
 
 \usage{
-tetrachor(fulldata, guess = 0, nowarn = TRUE)
+tetrachor(fulldata, guess = 0, smooth = TRUE)
 }
  \arguments{
    \item{fulldata}{dichotomous data matrix}
