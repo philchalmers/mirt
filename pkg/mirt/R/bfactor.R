@@ -184,8 +184,9 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
   Theta <- expand.grid(theta,theta)
   facility <- colMeans(fulldata)
   selvec <- 2:(nfact)  
+  suppressPrior <- ifelse(is.logical(par.prior), TRUE, FALSE)   
   temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
-  if(!is.null(par.prior)){
+  if(!is.null(par.prior) & !is.logical(par.prior)){
     if(!is.null(par.prior$slope.items))
       for(i in 1:length(par.prior$slope.items))
         temp[par.prior$slope.items[i],1] <- par.prior$slope		
@@ -261,31 +262,33 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	if(any(is.na(pars))) converge <- 0
 	pars[is.na(pars)] <- lastpars1[is.na(pars)]
 	if (max(abs(lastpars1 - pars)) < EMtol) break
-    if(any(abs(pars[ ,nfact+1]) > 3.5)){
-	  ints <- index[abs(pars[ ,nfact+1]) > 3.5] 	
-	  par.prior[ints,3] <- 2
-	  if(any(abs(pars[ ,nfact+1]) > 5)){
-	    ints <- index[abs(pars[ ,nfact+1]) > 5] 	
-	    par.prior[ints,3] <- 1
+	if(!suppressPrior){
+      if(any(abs(pars[ ,nfact+1]) > 3.5)){
+	    ints <- index[abs(pars[ ,nfact+1]) > 3.5] 	
+	    par.prior[ints,3] <- 2
+	    if(any(abs(pars[ ,nfact+1]) > 5)){
+	      ints <- index[abs(pars[ ,nfact+1]) > 5] 	
+	      par.prior[ints,3] <- 1
+	    }
 	  }
-	}
-	norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
-	alp <- as.matrix(pars[ ,1:nfact]/norm)
-    FF <- alp %*% t(alp)
-	V <- eigen(FF)$vector[ ,1:nfact]
-    L <- eigen(FF)$values[1:nfact]
-    F <- as.matrix(V * sqrt(L))
-    F <- V %*% sqrt(diag(L))
-	h2 <- rowSums(F^2)
-    if(any(h2 > .9)){
-	  if(any(h2 > .95)){
-	    ind <- index[h2 > .95]
-        par.prior[ind,1] <- 1.5
-	  } else {  
-	    ind <- index[h2 > .9]
-        par.prior[ind,1] <- 1.2		
-      }
-	}    	
+	  norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
+	  alp <- as.matrix(pars[ ,1:nfact]/norm)
+      FF <- alp %*% t(alp)
+	  V <- eigen(FF)$vector[ ,1:nfact]
+      L <- eigen(FF)$values[1:nfact]
+      F <- as.matrix(V * sqrt(L))
+      F <- V %*% sqrt(diag(L))
+	  h2 <- rowSums(F^2)
+      if(any(h2 > .9)){
+	    if(any(h2 > .95)){
+	      ind <- index[h2 > .95]
+          par.prior[ind,1] <- 1.5
+	    } else {  
+	      ind <- index[h2 > .9]
+          par.prior[ind,1] <- 1.2		
+        }
+	  }
+    }	
 	# apply rate acceleration every third cycle    
     if (cycles %% 3 == 0 & cycles > 6) 
 	{

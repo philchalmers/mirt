@@ -25,7 +25,6 @@ data(LSAT7)
 LSAT7full <- expand.table(LSAT7)
 tmat <- tetrachor(LSAT7full)
 
-mirt(LSAT7full, 2, prev.cor = tmat)
    }
 }
 

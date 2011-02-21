@@ -11,6 +11,6 @@ Description: Analysis of multivariate dichotomous data using latent
 		models, confirmatory bifactor analysis, and polytomous confirmatory
 		and exploratory item response model (in developement). 
 Depends: psych, GPArotation
-Suggests: MASS, lattice,mvtnorm
+Suggests: MASS, lattice, mvtnorm
 License: GPL (>= 2)
 URL: 
