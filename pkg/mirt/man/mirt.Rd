@@ -132,23 +132,26 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
 
-mod1 <- mirt(fulldata, 1)
-mod1
+(mod1 <- mirt(fulldata, 1))
 summary(mod1)
-mod2 <- mirt(fulldata, 2, prev.cor = mod1) #use previous tetrachoric matrix to save time
-mod2
+(mod2 <- mirt(fulldata, 2, prev.cor = mod1) #use previous tetrachoric matrix)
 summary(mod2)
-anova(mod1, mod2) #compare the two models
-
 coef(mod2)
+anova(mod1, mod2) #compare the two models
 scores <- fscores(mod2) #save factor score table
 
 ###########
 data(SAT12)
 fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-tmat <- tetrachor(fulldata, .1) #this can save some time if reused
-mod1 <- mirt(fulldata, 1, guess = .1, prev.cor = tmat)
+  
+#without guessing
+mod1 <- mirt(fulldata,1)
+mod2 <- mirt(fulldata,2,prev.cor = mod1,ncycles=100)
+anova(mod1,mod2)  
+
+#with guessing  
+mod1 <- mirt(fulldata, 1, guess = .1)
 coef(mod1)
 #didn't converge, item 6 and 32 appear too difficult (facility = .16)
 #fix guessing pars
@@ -157,8 +160,9 @@ guess[c(6,32)] <- 0
 
 tmat <- tetrachor(fulldata, guess)
 mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
-mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat, ncycles = 100)
-anova(mod1,mod2)
+mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat, ncycles = 150)
+#negative AIC and n.s. X^2, mod1 likely better (caution: priors imposed on mod2)
+anova(mod1,mod2) 
 
      }
 }

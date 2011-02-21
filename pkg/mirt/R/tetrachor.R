@@ -63,6 +63,6 @@ tetrachor <- function(fulldata, guess = 0, smooth = TRUE)
       tmat <- V %*% diag(L) %*% t(V)    
     }      
   }	
-  tmat  
-}
+  tmat
+}  
 

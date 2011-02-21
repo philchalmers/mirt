@@ -263,11 +263,11 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	pars[is.na(pars)] <- lastpars1[is.na(pars)]
 	if (max(abs(lastpars1 - pars)) < EMtol) break
 	if(!suppressPrior){
-      if(any(abs(pars[ ,nfact+1]) > 3.5)){
-	    ints <- index[abs(pars[ ,nfact+1]) > 3.5] 	
+      if(any(abs(pars[ ,nfact+1]) > 4)){
+	    ints <- index[abs(pars[ ,nfact+1]) > 4] 	
 	    par.prior[ints,3] <- 2
-	    if(any(abs(pars[ ,nfact+1]) > 5)){
-	      ints <- index[abs(pars[ ,nfact+1]) > 5] 	
+	    if(any(abs(pars[ ,nfact+1]) > 5.5)){
+	      ints <- index[abs(pars[ ,nfact+1]) > 5.5] 	
 	      par.prior[ints,3] <- 1
 	    }
 	  }
@@ -279,13 +279,14 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
       F <- as.matrix(V * sqrt(L))
       F <- V %*% sqrt(diag(L))
 	  h2 <- rowSums(F^2)
-      if(any(h2 > .9)){
+      if(any(h2 > .95)){
 	    if(any(h2 > .95)){
 	      ind <- index[h2 > .95]
-          par.prior[ind,1] <- 1.5
-	    } else {  
-	      ind <- index[h2 > .9]
-          par.prior[ind,1] <- 1.2		
+          par.prior[ind,1] <- 1.2
+	    } 
+		if(any(h2 > .98)){  
+	      ind <- index[h2 > .98]
+          par.prior[ind,1] <- 1.5		
         }
 	  }
     }	
@@ -307,12 +308,13 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	pars <- lastpars1*rate*(-2) + (1 - rate*(-2))*pars          
   }
   
+  if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",as.character(index[par.prior[,1] > 1]), 
+    "\n")
+  if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",as.character(index[par.prior[,3] > 0]), 
+    "\n")  
   if(converge == 0) 
-    warning("Estimation reached unacceptable values. Solution likely has not converged.")
-	
-  if (any(abs(pars) > 5))
-    warning("Solution contains extreme values. Interpret with caution.")	  	  
-  
+    warning("Parameter estimation reached unacceptable values. Model probably did not 
+	converged.") 	  	    
   lastchange <- abs(lastpars1 - pars)
   if (cycles == ncycles){ 
     converge <- 0
