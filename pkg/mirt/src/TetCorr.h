@@ -1,7 +1,7 @@
 /*
  *  TetCorr.h
  *
- *  Created by J.S.Fleming translated by Nic Jackson
+ *  Created by J.S.Fleming, translated by Nic Jackson, and modified to be R compatible by Phil Chalmers
  *
  */
 
