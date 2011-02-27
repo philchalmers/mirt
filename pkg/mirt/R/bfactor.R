@@ -151,7 +151,7 @@ print.bfactor <- function(x, ...)
 
 ########################################## 
 
-bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
+bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, debug = FALSE, ...)
 { 
   Call <- match.call() 
@@ -183,10 +183,12 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
   theta <- as.matrix(seq(-4,4,length.out = quadpts))
   Theta <- expand.grid(theta,theta)
   facility <- colMeans(fulldata)
-  selvec <- 2:(nfact)  
-  suppressPrior <- ifelse(is.logical(par.prior), TRUE, FALSE)   
+  selvec <- 2:(nfact)    
+  suppressAutoPrior <- TRUE
+  if(is.logical(par.prior)) 
+    if(par.prior) suppressAutoPrior <- FALSE  
   temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
-  if(!is.null(par.prior) & !is.logical(par.prior)){
+  if(!is.logical(par.prior)){
     if(!is.null(par.prior$slope.items))
       for(i in 1:length(par.prior$slope.items))
         temp[par.prior$slope.items[i],1] <- par.prior$slope		
@@ -262,7 +264,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NU
 	if(any(is.na(pars))) converge <- 0
 	pars[is.na(pars)] <- lastpars1[is.na(pars)]
 	if (max(abs(lastpars1 - pars)) < EMtol) break
-	if(!suppressPrior){
+	if(!suppressAutoPrior){
       if(any(abs(pars[ ,nfact+1]) > 4)){
 	    ints <- index[abs(pars[ ,nfact+1]) > 4] 	
 	    par.prior[ints,3] <- 2

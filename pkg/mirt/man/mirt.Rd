@@ -40,7 +40,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
   \item{nfact}{number of factors to be extracted. Maximum of 10}
   \item{guess}{fixed pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item}
   \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation. The input could be any correlation matrix, but it is advised to use a matrix of tetrachoric correlations (with Carroll's (1945) correction for guessing, if necessary) which can be computed by \code{\link{tetrachor}}. Otherwise, the value may be set to a previously computed \code{mirt} model to obtain the correlation matrix therein}
-  \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}. Priors are automatically imposed for extreme provisional estimates, but can be completely suppressed by declaring \code{par.prior = FALSE}}
+  \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}. Priors may be automatically imposed for extreme provisional estimates if \code{par.prior = TRUE}, otherwise the standard MML approach is used}
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
   \item{startvalues}{user declared start values for parameters}
   \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then they are determined by \code{ceiling{15/nfact}} for \code{nfact} < 6, else they are set to 3}
@@ -98,13 +98,13 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
   \item{F}{unrotated factor loadings matrix}
   \item{h2}{a vector of communalities}
   \item{EMiter}{number of EM cycles performed; will be less than \code{ncycles} if the tolerance is reached}
-  \item{par.prior}{list of the assumed prior parameters used to constrain the solution. If no priors are specified then the solution will be a matrix of \code{c(1,0,0)}, indicating no influence on the parameters. For instance, if we wish to contrain the slopes of item 1 and 3 to 1.2, and the intercepts of item 4 with a weak normal prior (mean = 0) then \code{par.prior = list(slope = 1.2, slope.items = c(1,3), int = c(0,3), int.items = 4)}}
+  \item{par.prior}{list of the assumed prior parameters used to constrain the solution. If no priors are specified then the solution will be a matrix of \code{c(1,0,0)}, indicating no influence on the parameters}
   \item{Call}{the function call}
 }
 
 \section{Convergence}{
 
-Full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for and acceptable solution. Be mindful of the item facility values that are printed with \code{coef.mirt} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for being dropped from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation. Also, increasing the number of quadrature points per dimension should help to stabilize the estimation process.
+Unrestricted full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for an acceptable solution. Be mindful of the item facility values that are printed with \code{coef.mirt} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for removal from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation. Also, increasing the number of quadrature points per dimension may help to stabilize the estimation process.
 
 }
 
@@ -144,13 +144,13 @@ scores <- fscores(mod2) #save factor score table
 data(SAT12)
 fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-  
+
 #without guessing
 mod1 <- mirt(fulldata,1)
 mod2 <- mirt(fulldata,2,prev.cor = mod1,ncycles=100)
-anova(mod1,mod2)  
+anova(mod1,mod2)
 
-#with guessing  
+#with guessing
 mod1 <- mirt(fulldata, 1, guess = .1)
 coef(mod1)
 #didn't converge, item 6 and 32 appear too difficult (facility = .16)
@@ -162,7 +162,7 @@ tmat <- tetrachor(fulldata, guess)
 mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
 mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat, ncycles = 150)
 #negative AIC and n.s. X^2, mod1 likely better (caution: priors imposed on mod2)
-anova(mod1,mod2) 
+anova(mod1,mod2)
 
      }
 }

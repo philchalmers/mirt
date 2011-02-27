@@ -197,7 +197,7 @@ SEXP Mstep(SEXP Rr1, SEXP RN, SEXP Rprior, SEXP Rpars,
 		  	  d2 += a[i] * a[i];	  	  
 		  	c = 2.0*(fullparprior[item][0] - 1) / d2*d2;
 		  	for(i = 0; i < nfact; i++)
-		  	  L[i] -= c * a[i];
+		  	  L[i] -=  (2.0*(fullparprior[item][0] - 1) / d2) * a[i];
 		  	for(i = 0; i < nfact; i++)
 		  	  betaprior[i][i] = d2 - 2*a[i]*a[i];
 		  	for(i = 0; i < nfact; i++)
@@ -205,16 +205,18 @@ SEXP Mstep(SEXP Rr1, SEXP RN, SEXP Rprior, SEXP Rpars,
 		  	    if(i < j) betaprior[i][j] = betaprior[j][i] = -2*a[i]*a[j];
 		  	for(i = 0; i < nfact; i++)
 		  	  for(j = 0; j < nfact; j++)
-		  	    LL[i][j] += betaprior[i][j];
+		  	    LL[i][j] += c * betaprior[i][j];
 	  	}        	 	  		    
 		  if(fullparprior[item][2] > 0.0){
 		  	normprior = dnorm(fullparprior[item][1],fullparprior[item][1], fullparprior[item][2],0) -
-		  	  dnorm(d, fullparprior[item][1], fullparprior[item][2], 0);		  
-			  L[nfact] -=  2*normprior;			    		  			  			  	
-			  for(i = 0; i < npars; i++){
-			    LL[i][nfact] -= 2*normprior;
-			    LL[nfact][i] = LL[i][nfact];
-			  }
+		  	  dnorm(d, fullparprior[item][1], fullparprior[item][2], 0);
+			if(d < 0.0) L[nfact] += 2*normprior; 
+			  else L[nfact] -=  2*normprior;			    		  			  			  	
+			for(i = 0; i < npars; i++){
+			  LL[i][nfact] -= 2*normprior;
+			  LL[nfact][i] = LL[i][nfact];
+			}
+			LL[npars][npars] += 2*normprior;			  
 		  }
 	    //Invert and NR correction
 	    for(i = 0; i < npars; i++) 		  
