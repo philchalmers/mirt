@@ -160,9 +160,7 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 		  sitemsfull[i][j] = sitems[k];
 		  k++;
 		}
-	}	 
-	
-	  
+	}  
 				
 	// Begin main function body here				
 	for (int pat = 0; pat < npat; pat++){	
