@@ -163,20 +163,19 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	}  
 				
 	// Begin main function body here				
-	for (int pat = 0; pat < npat; pat++){	
-	//int pat = 0;
+	for (int pat = 0; pat < npat; pat++){		
     for(fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
 				likelihoods[fact][k] = 1;				
 			for (int item = 0; item < nitems; item++){
-				if (data[pat][item]) {
-					for (k = 0; k < nquad; k++)
-						likelihoods[fact][k] = likelihoods[fact][k]*
-						  pow(itemtrace[item][k],sitemsfull[fact][item]);
+				if (data[pat][item]){	
+					if(sitemsfull[fact][item])
+					  for (k = 0; k < nquad; k++)
+					  	  likelihoods[fact][k] = likelihoods[fact][k]*itemtrace[item][k];					
 				} else {
-					for (k = 0; k < nquad; k++)
-						likelihoods[fact][k] = likelihoods[fact][k]*
-						  pow((1.0 - itemtrace[item][k]),sitemsfull[fact][item]);
+					if(sitemsfull[fact][item])
+					  for (k = 0; k < nquad; k++)
+						likelihoods[fact][k] = likelihoods[fact][k]*(1.0 - itemtrace[item][k]);
 				}			
 			}
 		}			

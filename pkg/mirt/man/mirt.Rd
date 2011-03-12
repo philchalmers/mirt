@@ -147,7 +147,7 @@ fulldata <- key2binary(SAT12,
 
 #without guessing
 mod1 <- mirt(fulldata,1)
-mod2 <- mirt(fulldata,2,prev.cor = mod1,ncycles=100)
+mod2 <- mirt(fulldata,2, prev.cor = mod1, par.prior = list(int=c(0,4), int.items=11), ncycles=100)
 anova(mod1,mod2)
 
 #with guessing
@@ -160,9 +160,9 @@ guess[c(6,32)] <- 0
 
 tmat <- tetrachor(fulldata, guess)
 mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
-mod2 <- mirt(fulldata, 2, guess = guess, prev.cor = tmat, ncycles = 150)
-#negative AIC and n.s. X^2, mod1 likely better (caution: priors imposed on mod2)
+mod2 <- mirt(fulldata, 2, guess = guess, par.prior = list(int = c(0,3), int.items = 17), prev.cor = tmat)
 anova(mod1,mod2)
+summary(mod2, rotate='promax')
 
      }
 }
