@@ -134,7 +134,7 @@ fulldata <- expand.table(LSAT7)
 
 (mod1 <- mirt(fulldata, 1))
 summary(mod1)
-(mod2 <- mirt(fulldata, 2, prev.cor = mod1) #use previous tetrachoric matrix)
+(mod2 <- mirt(fulldata, 2, prev.cor = mod1)) #use previous tetrachoric matrix
 summary(mod2)
 coef(mod2)
 anova(mod1, mod2) #compare the two models
