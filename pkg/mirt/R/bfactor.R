@@ -284,7 +284,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
       if(class(maxim) == "try-error") {
 	    cat("Maximization error for item ", i, "\n")		  
 		converge <- 0
-		break
+		next
 	  }	
 	  mpars[i, ] <- maxim$par	  
 	}			

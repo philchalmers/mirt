@@ -282,7 +282,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   suppressAutoPrior <- TRUE
   if(is.logical(par.prior)) 
     if(par.prior) suppressAutoPrior <- FALSE  
-  temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
+  temp <- matrix(c(1,0,3),ncol = 3, nrow=nitems, byrow=TRUE)
   if(!is.logical(par.prior)){
     if(!is.null(par.prior$slope.items))
       for(i in 1:length(par.prior$slope.items))
@@ -334,7 +334,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	  if(class(maxim) == "try-error") {
 	    cat("Maximization error for item ", i, "\n")		  
 		converge <- 0
-		break
+		next
 	  }		  
 	  pars[i, ] <- maxim$par	  
 	}	
@@ -386,7 +386,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   }  
   if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",as.character(index[par.prior[,1] > 1]), 
     "\n")
-  if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",as.character(index[par.prior[,3] > 0]), 
+  if(any(par.prior[,3] != 3)) cat("Intercept prior for item(s):",as.character(index[par.prior[,3] > 0]), 
     "\n")
   if(converge == 0) 
     warning("Parameter estimation reached unacceptable values. Model probably did not 
