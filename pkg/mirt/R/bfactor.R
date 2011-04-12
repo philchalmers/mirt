@@ -145,7 +145,7 @@ print.bfactor <- function(x, ...)
     cat("Estimation stopped after ", x$EMiter, " iterations.\n", sep="")
   cat("Log-likelihood = ", x$log.lik, "\n")
   cat("AIC = ", x$AIC, "\n")
-  cat("Chi-squared = ", round(x$X2,2), ", df = ", 
+  cat("G^2 = ", round(x$X2,2), ", df = ", 
     x$df, ", p = ", round(x$p,4), "\n")
 }
 
@@ -154,6 +154,31 @@ print.bfactor <- function(x, ...)
 bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, debug = FALSE, ...)
 { 
+  fn <- function(pars, r1, N, guess, Theta, prior, parprior){
+    a <- pars[1:(length(pars)-1)]
+    d <- pars[length(pars)]		
+	result <- .Call("loglik", 	                
+					as.double(a),				
+					as.double(d),
+					as.double(r1),
+					as.double(N),
+					as.double(guess),
+					as.double(as.matrix(Theta)),
+					as.integer(parprior))					
+  }    
+  gr <- function(pars, r1, N, guess, Theta, prior, parprior){
+    a <- pars[1:(length(pars)-1)]
+    d <- pars[length(pars)]			
+	result <- (-1)* .Call("grad", 	                
+					as.double(a),				
+					as.double(d),
+					as.double(r1),
+					as.double(N),
+					as.double(guess),
+					as.double(as.matrix(Theta)),
+					as.double(prior),
+					as.integer(parprior))	    				
+  }  
   Call <- match.call() 
   rotate <- 'oblimin'
   itemnames <- colnames(fulldata) 
@@ -232,10 +257,13 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
   index <- 1:nitems
   sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
   for(i in 1:32) sitems[specific[i],i] <- 1 
+  options(show.error.messages = FALSE)  
   if(debug) {
     print(startvalues)
 	print(sitems)
-  }  
+	options(show.error.messages = TRUE)  
+  } 
+  
   #EM  loop  
   for (cycles in 1:ncycles) 
   {    
@@ -245,23 +273,28 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
     lastpars1 <- pars	
 	mpars <- matrix(pars[logicalfact], ncol=3)    
 	temp <- rowSums(pars[,2:nfact])
-    mpars[ ,2] <- temp		
-	maxim <- .Call("Mstep",                
-                as.double(rlist[[1]]),
-                as.double(rlist[[2]]),
-				as.double(Prior),
-			    as.double(mpars),
-			    as.double(guess),    
-			    as.double(as.matrix(Theta)),
-			    as.double(par.prior))    
-    sload <- maxim[(nitems+1):(2*nitems)]		
+    mpars[ ,2] <- temp	
+	for(i in 1:nitems){      	
+	  if(guess[i] == 0)
+	    maxim <- try(optim(mpars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+		  guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
+	  else	  
+		maxim <- try(optim(mpars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+		  guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
+      if(class(maxim) == "try-error") {
+	    cat("Maximization error for item ", i, "\n")		  
+		converge <- 0
+		break
+	  }	
+	  mpars[i, ] <- maxim$par	  
+	}			
+    sload <- mpars[(nitems+1):(2*nitems)]		
     for(i in 1:nitems){
 	  temp <- selvec[pars[i,2:nfact] > 0]
       pars[i,temp] <- sload[i]
 	}  
-	pars[ ,1] <- maxim[1:nitems]
-	pars[ ,nfact+1] <- maxim[(2*nitems+1):(3*nitems)]	
-	if(any(is.na(pars))) converge <- 0
+	pars[ ,1] <- mpars[,1]
+	pars[ ,nfact+1] <- mpars[ ,3]		
 	pars[is.na(pars)] <- lastpars1[is.na(pars)]
 	if (max(abs(lastpars1 - pars)) < EMtol) break
 	if(!suppressAutoPrior){

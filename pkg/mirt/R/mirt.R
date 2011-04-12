@@ -221,7 +221,7 @@ print.mirt <- function(x, ...)
     cat("Estimation stopped after ", x$EMiter, " iterations.\n", sep="")
   cat("Log-likelihood = ", x$log.lik, "\n")
   cat("AIC = ", x$AIC, "\n")
-  cat("Chi-squared = ", round(x$X2,2), ", df = ", 
+  cat("G^2 = ", round(x$X2,2), ", df = ", 
     x$df, ", p = ", round(x$p,4), "\n", sep="")
 }
     
@@ -230,6 +230,32 @@ print.mirt <- function(x, ...)
 mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE, 
   startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, debug = FALSE, ...)
 { 
+  fn <- function(pars, r1, N, guess, Theta, prior, parprior){
+    a <- pars[1:(length(pars)-1)]
+    d <- pars[length(pars)]		
+	result <- .Call("loglik", 	                
+					as.double(a),				
+					as.double(d),
+					as.double(r1),
+					as.double(N),
+					as.double(guess),
+					as.double(as.matrix(Theta)),
+					as.integer(parprior))					
+  }    
+  gr <- function(pars, r1, N, guess, Theta, prior, parprior){
+    a <- pars[1:(length(pars)-1)]
+    d <- pars[length(pars)]			
+	result <- .Call("grad", 	                
+					as.double(a),				
+					as.double(d),
+					as.double(r1),
+					as.double(N),
+					as.double(guess),
+					as.double(as.matrix(Theta)),
+					as.double(prior),
+					as.integer(parprior))	    				
+  }  
+  
   Call <- match.call()    
   itemnames <- colnames(fulldata)
   fulldata <- as.matrix(fulldata)
@@ -285,7 +311,11 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   startvalues <- pars
   converge <- 1  
   index <- 1:nitems
-  if(debug) print(startvalues)
+  options(show.error.messages = FALSE)  
+  if(debug){
+    print(startvalues)    
+    options(show.error.messages = TRUE)  
+  }
   # EM loop
   for (cycles in 1:ncycles)
   {       
@@ -293,18 +323,21 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
     prior <- rlist[[4]]
 	if (debug) print(sum(r*log(rlist[[3]])))
     lastpars2 <- lastpars1
-    lastpars1 <- pars      
-    maxim <- .Call("Mstep",                
-                as.double(rlist[[1]]),
-                as.double(rlist[[2]]),
-				as.double(prior),
-			    as.double(pars),
-			    as.double(guess),			    
-			    as.double(as.matrix(Theta)),
-			    as.double(par.prior))				
-	pars <- matrix(maxim, ncol = nfact + 1)	
-	if(any(is.na(pars))) converge <- 0
-	pars[is.na(pars)] <- lastpars1[is.na(pars)]
+    lastpars1 <- pars	
+    for(i in 1:nitems){
+      if(guess[i] == 0)	
+	    maxim <- try(optim(pars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+		  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
+	  else 
+	    maxim <- try(optim(pars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+		  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
+	  if(class(maxim) == "try-error") {
+	    cat("Maximization error for item ", i, "\n")		  
+		converge <- 0
+		break
+	  }		  
+	  pars[i, ] <- maxim$par	  
+	}	
 	if(!suppressAutoPrior){
 	  if(any(abs(pars[ ,nfact+1]) > 4)){
 	    ints <- index[abs(pars[ ,nfact+1]) > 4] 	

@@ -1,12 +1,11 @@
 #include<R.h>
 #include<Rdefines.h>
 #include<Rmath.h>
-#include <R_ext/Lapack.h>      
 
 static double arraysum(const double *A1, const int *length)
 {  
-  double Sum = 0.0;  
-  for(int j = 0; j < *length; j++)		  
+	double Sum = 0.0;  
+	for(int j = 0; j < *length; j++)		  
 		Sum += A1[j];
 	return (Sum);
 }
@@ -21,8 +20,8 @@ static void arrayprod2(double *Prod, const double *A1,
 static void arrayprod3(double *Prod, const double *A1, 
    const double *A2, const double *A3, const int *length)
 { 	
-  for(int i = 0; i < *length; i++)
-    Prod[i] = A1[i] * A2[i] * A3[i];
+	for(int i = 0; i < *length; i++)
+		Prod[i] = A1[i] * A2[i] * A3[i];
 }
 
 static void itemtrace(double *P, const double *a, 
@@ -34,10 +33,10 @@ static void itemtrace(double *P, const double *a,
 		z[i] = 0;
 	int k = 0;  
 	for(int i = 0; i < *nfact; i++){
-    for(int j = 0; j < *nquad; j++){		    
-	    Theta[j][i] = PTheta[k];
-	    k++;
-	  }
+		for(int j = 0; j < *nquad; j++){		    
+			Theta[j][i] = PTheta[k];
+			k++;
+		 }
 	}	
 	//compute item trace vector
 	for (int j = 0; j <	*nquad; j++){		
@@ -50,234 +49,139 @@ static void itemtrace(double *P, const double *a,
 		P[i] = *g + (1 - *g) * (exp(z[i])/(1 + exp(z[i])));		
 }	
 
-SEXP Mstep(SEXP Rr1, SEXP RN, SEXP Rprior, SEXP Rpars,  
-	SEXP Rguess, SEXP RTheta, SEXP Rparprior) 
+//Gradient
+SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess, 
+	SEXP RTheta, SEXP Rprior, SEXP Rparprior) 
+{
+	//Protect and create vars
+	SEXP Rreturn;
+	PROTECT(Ra = AS_NUMERIC(Ra));
+	PROTECT(Rd = AS_NUMERIC(Rd));
+	PROTECT(Rr1 = AS_NUMERIC(Rr1));	
+	PROTECT(RN = AS_NUMERIC(RN));		
+	PROTECT(Rguess = AS_NUMERIC(Rguess));
+	PROTECT(RTheta = AS_NUMERIC(RTheta));	
+	PROTECT(Rprior = AS_NUMERIC(Rprior));
+	PROTECT(Rparprior = AS_NUMERIC(Rparprior));	
+			
+	double *Pguess, *Pr1, *PN, *Pa, *Pd, *PTheta, *Preturn, 
+		*Pprior, *Pparprior;
+	const int nfact = LENGTH(Ra);
+	const int nquad = LENGTH(RTheta) / nfact;
+	int i, j, k;
+	Pr1 = NUMERIC_POINTER(Rr1);
+	PN = NUMERIC_POINTER(RN);	
+	Pguess = NUMERIC_POINTER(Rguess);
+	PTheta = NUMERIC_POINTER(RTheta);
+	Pa = NUMERIC_POINTER(Ra);
+	Pd = NUMERIC_POINTER(Rd);
+	Pprior = NUMERIC_POINTER(Rprior);
+	Pparprior = NUMERIC_POINTER(Rparprior);		
+	PROTECT(Rreturn = NEW_NUMERIC(nfact + 1));			
+	Preturn = NUMERIC_POINTER(Rreturn);    
+
+	double P[nquad], PQ[nquad], DIF[nquad], Theta[nquad][nfact],
+		tempTheta[nquad], tempArray[nquad];
+	k = 0;
+	for(i = 0; i < nfact; i++){
+		for(j = 0; j < nquad; j++){		    
+		   Theta[j][i] = PTheta[k];
+		   k++;
+		}
+	}	
+	itemtrace(P, Pa, Pd, PTheta, Pguess, &nfact, &nquad);	  	  		  
+	for(i = 0; i < nquad; i++){      
+		PQ[i] = P[i] * (1.0 - P[i]) * Pprior[i];
+		DIF[i] = ((Pr1[i] / PN[i]) - P[i]) * Pprior[i];	  	
+	}	
+	//load gradient		  
+	for(i = 0; i < nfact; i++){
+		for(j = 0; j < nquad; j++)
+			tempTheta[j] = Theta[j][i]; 
+		arrayprod3(tempArray, PN, DIF, tempTheta, &nquad);
+		Preturn[i] = arraysum(tempArray, &nquad);		
+	}	
+	arrayprod2(tempArray, PN, DIF, &nquad);
+	Preturn[nfact] = arraysum(tempArray, &nquad);
+	
+	//priors
+	if(Pparprior[0] > 1.0){	  
+		double c, d2 = 1.0;
+		for(i = 0; i < nfact; i++)
+			d2 += Pa[i] * Pa[i];	  	  
+		c = 2.0 * (Pparprior[0] - 1) / d2*d2;
+		for(i = 0; i < nfact; i++)
+			Preturn[i] -= (2.0*(Pparprior[0] - 1) / d2) * Pa[i];
+	}
+	if(Pparprior[2] > 0.0){
+		double normprior;
+		normprior = dnorm(Pparprior[1],Pparprior[1], Pparprior[2],0) -
+			dnorm(*Pd, Pparprior[1], Pparprior[2], 0);
+		if(*Pd < 0.0) 
+			Preturn[nfact] += 2*normprior; 
+		else 
+			Preturn[nfact] -=  2*normprior;
+	}
+
+	for(i = 0; i <= nfact; i++)
+		Preturn[i] = (-1) * Preturn[i];
+    
+	UNPROTECT(9);		
+	return(Rreturn);	
+}
+
+//Log-likelihood
+SEXP loglik(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess, 
+	SEXP RTheta, SEXP Rparprior) 
 {
 	//Proctect and create vars
-	SEXP Rreturn;	
+	SEXP Rreturn;
+	PROTECT(Ra = AS_NUMERIC(Ra));
+	PROTECT(Rd = AS_NUMERIC(Rd));
 	PROTECT(Rr1 = AS_NUMERIC(Rr1));	
-	PROTECT(RN = AS_NUMERIC(RN));
-  PROTECT(Rprior = AS_NUMERIC(Rprior));
-	PROTECT(Rpars = AS_NUMERIC(Rpars));	
+	PROTECT(RN = AS_NUMERIC(RN));		
 	PROTECT(Rguess = AS_NUMERIC(Rguess));
-  PROTECT(RTheta = AS_NUMERIC(RTheta));	
+	PROTECT(RTheta = AS_NUMERIC(RTheta));	
 	PROTECT(Rparprior = AS_NUMERIC(Rparprior));	
-		
-	double *guess, *Pr1, *PN, *Ppars, *PTheta, *Preturn, 
-	  *Pprior, *Pparprior;
-	int i, j, k;
-	const int nitems = LENGTH(Rguess);
-	const int nquad = LENGTH(RN) / nitems;
-  const int nfact = (LENGTH(Rpars) / nitems) - 1;
-  const int npars = nfact + 1; 	
-  Pr1 = NUMERIC_POINTER(Rr1);
-	PN = NUMERIC_POINTER(RN);
-	Pprior = NUMERIC_POINTER(Rprior);
-	Ppars = NUMERIC_POINTER(Rpars);
-	guess = NUMERIC_POINTER(Rguess);
+			
+	double *Pguess, *Pr1, *PN, *Pa, *Pd, *PTheta, *Preturn, 
+	  *Pparprior;
+	const int nfact = LENGTH(Ra);
+	const int nquad = LENGTH(RTheta) / nfact;
+	int i;
+	Pr1 = NUMERIC_POINTER(Rr1);
+	PN = NUMERIC_POINTER(RN);	
+	Pguess = NUMERIC_POINTER(Rguess);
 	PTheta = NUMERIC_POINTER(RTheta);
-	Pparprior = NUMERIC_POINTER(Rparprior);
-	PROTECT(Rreturn = NEW_NUMERIC(nitems * npars));			
-	Preturn = NUMERIC_POINTER(Rreturn);			
-	
-//	//define and load arrays
-	double fullr1[nitems][nquad], fullN[nitems][nquad],
-	  fullpars[nitems][npars], fullparprior[nitems][3],
-	  Theta[nquad][nfact];
-	k = 0;  
-	for(j = 0; j < nquad; j++){
-    for(i = 0; i < nitems; i++){	
-	    fullr1[i][j] = Pr1[k];
-	    fullN[i][j] = PN[k];
-	    Theta[j][i] = PTheta[k];
-	    k++;
-	  }
+	Pa = NUMERIC_POINTER(Ra);
+	Pd = NUMERIC_POINTER(Rd);
+	Pparprior = NUMERIC_POINTER(Rparprior);		
+	PROTECT(Rreturn = NEW_NUMERIC(1));			
+	Preturn = NUMERIC_POINTER(Rreturn);    
+
+	double P[nquad], Q[nquad], l = 0.0, sigma = 1.0;
+    itemtrace(P, Pa, Pd, PTheta, Pguess, &nfact, &nquad);
+	for (i = 0; i < nquad; i++)
+		Q[i] = 1 - P[i];
+	for(i = 0; i < nquad; i++) 
+		l += Pr1[i]*log(P[i]) + (PN[i] - Pr1[i])*log(Q[i]);
+    //priors
+	if(Pparprior[0] > 1.0){		
+		double temp = 1.0, alpha[nfact];
+		for (i = 0; i < nfact; i++)
+			temp += Pa[i]*Pa[i];
+		temp = pow(temp,0.5);
+		for (i = 0; i < nfact; i++)
+			alpha[i] = Pa[i] / temp;
+		for (i = 0; i < nfact; i++)
+			sigma -= alpha[i]*alpha[i];		
+		l += pow(sigma,Pparprior[0] - 1.0) / beta(Pparprior[0],1.0);				
 	}
-	k = 0;  
-	for(i = 0; i < nfact; i++){
-    for(j = 0; j < nquad; j++){		    
-	    Theta[j][i] = PTheta[k];
-	    k++;
-	  }
-	}
-	k = 0;
-	for(j = 0; j < npars; j++){
-    for(i = 0; i < nitems; i++){
-      fullpars[i][j] = Ppars[k];
-		  k++;
-    } 	  
-	}
-	k = 0;
-  for(j = 0; j < 3 ; j++){
-    for(i = 0; i < nitems; i++){
-      fullparprior[i][j] = Pparprior[k];	  
-	    k++;
-    }	
-	}  
-		
-	//****************************************************
-	// Main big loop
-	double a[nfact], d, g, P[nquad], PQ[nquad], 
-	  DIF[nquad], L[npars], temp, temparray[nquad],
-	  tempTheta[nquad], r1[nquad], N[nquad], LL[npars][npars],
-	  LLinv[npars][npars], correction[npars], StepLimit[npars], 
-	  LastL[npars], work[npars], corSign[npars], d2, c, 
-	  betaprior[nfact][nfact], normprior; 	
-	int iter = 1, info = 0, ipiv[npars];
-	
-	k = 0;		
-	for(i = 0; i < npars; i++){
-	  for(j = 0; j < nitems; j++){
-	    Preturn[k] = 0;
-	    k++;
-		}
-	}		
-	
-	//BIG LOOP OVER ITEMS 		
-	for(int item = 0; item < nitems; item++)
-	{
-		//Load the values		
-		for(i = 0; i < npars; i++){
-	   StepLimit[i] = 0.5;
-	   LastL[i] = 0;
-	  }	
-	  for(i = 0; i < nquad; i++){
-		  r1[i] = fullr1[item][i];
-		  N[i] = fullN[item][i];
-		}
-		for(i = 0; i < nfact; i++)
-		  a[i] = fullpars[item][i];
-	  d = fullpars[item][nfact];
-		g = guess[item]; 	  
-	  for(int loop = 0; loop < 100; loop++)//MAX LOOP	  			  		    
-	  {	
-		  itemtrace(P, a, &d, PTheta, &g, &nfact, &nquad);	  	  		  
-		  for(i = 0; i < nquad; i++){      
-		  	PQ[i] = P[i] * (1 - P[i]) * Pprior[i];
-		  	DIF[i] = ((r1[i] / N[i]) - P[i]) * Pprior[i];	  	
-		  }		  
-		  //gradient		  
-		  for(i = 0 ; i < nfact; i++){
-		  	for(j = 0; j < nquad; j++)
-		      tempTheta[j] = Theta[j][i]; 
-		    arrayprod3(temparray, N, DIF, tempTheta, &nquad);
-		    L[i] = arraysum(temparray, &nquad);		     
-		  }		  	    
-		  arrayprod2(temparray, N, DIF, &nquad);
-		  L[nfact] = arraysum(temparray, &nquad);		       
-		  //hessian
-		  for(i = 0 ; i < nfact; i++){
-		    for(j = 0; j < nquad; j++)
-		      tempTheta[j] = Theta[j][i] * Theta[j][i];
-		    arrayprod3(temparray, N, PQ, tempTheta, &nquad);
-		    LL[i][i] = (-1.0) * arraysum(temparray, &nquad);
-		  }	  	    
-		  arrayprod2(temparray, N, PQ, &nquad);	  
-		  LL[nfact][nfact] = (-1.0) * arraysum(temparray, &nquad);		  
-		  for(i = 0; i < nfact; i++){
-		  	for(j = 0; j < nfact; j++){		      		  	  		  
-		  	  if( i < j ){
-		  	  	for(k = 0; k < nquad; k++)	  	    
-		          tempTheta[k] = Theta[k][i] * Theta[k][j];
-		  	  	arrayprod3(temparray, N, PQ, tempTheta, &nquad);
-		  	  	LL[i][j] = LL[j][i] = (-1.0) * arraysum(temparray, &nquad);
-		  	  }
-		  	}
-		  }
-		  for(i = 0 ; i < nfact; i++){
-		  	for(j = 0; j < nquad; j++)
-		      tempTheta[j] = Theta[j][i];
-		    arrayprod3(temparray, N, PQ, tempTheta, &nquad);
-		    LL[nfact][i] = LL[i][nfact] = (-1.0) * arraysum(temparray, &nquad);
-		  }		  		  
-		  //priors
-		  if(fullparprior[item][0] > 1.0){	  
-			  d2 = 1;
-		  	for(i = 0; i < nfact; i++)
-		  	  d2 += a[i] * a[i];	  	  
-		  	c = 2.0*(fullparprior[item][0] - 1) / d2*d2;
-		  	for(i = 0; i < nfact; i++)
-		  	  L[i] -=  (2.0*(fullparprior[item][0] - 1) / d2) * a[i];
-		  	for(i = 0; i < nfact; i++)
-		  	  betaprior[i][i] = d2 - 2*a[i]*a[i];
-		  	for(i = 0; i < nfact; i++)
-		  	  for(j = 0; j < nfact; j++)
-		  	    if(i < j) betaprior[i][j] = betaprior[j][i] = -2*a[i]*a[j];
-		  	for(i = 0; i < nfact; i++)
-		  	  for(j = 0; j < nfact; j++)
-		  	    LL[i][j] += c * betaprior[i][j];
-	  	}        	 	  		    
-		  if(fullparprior[item][2] > 0.0){
-		  	normprior = dnorm(fullparprior[item][1],fullparprior[item][1], fullparprior[item][2],0) -
-		  	  dnorm(d, fullparprior[item][1], fullparprior[item][2], 0);
-			if(d < 0.0) L[nfact] += 2*normprior; 
-			  else L[nfact] -=  2*normprior;			    		  			  			  	
-			for(i = 0; i < npars; i++){
-			  LL[i][nfact] -= 2*normprior;
-			  LL[nfact][i] = LL[i][nfact];
-			}
-			LL[npars][npars] += 2*normprior;			  
-		  }
-	    //Invert and NR correction
-	    for(i = 0; i < npars; i++) 		  
-		    for(j = 0; j < npars; j++)	  
-		      LLinv[i][j] = LL[i][j];  		  
-		  F77_CALL(dgetrf)(&npars, &npars, &LLinv[0][0], &npars, ipiv, &info);
-		  if(info > 0){
-		  	for(i = 0; i < npars; i++)
-		  	  LLinv[i][i] += .0001;
-		    F77_CALL(dgetrf)(&npars, &npars, &LLinv[0][0], &npars, ipiv, &info);	
-		  }	
-		  F77_CALL(dgetri)(&npars, &LLinv[0][0], &npars, ipiv, work, &npars, &info); 		  		  		  		  
-		  for(i = 0; i < npars; i++)
-		    correction[i] = 0;
-		  for(i = 0; i < npars; i++)
-		    for(j = 0; j < npars; j++)
-		      correction[i] += LLinv[i][j] * L[j];		      
-		  //stop condition		   		  
-		  for(i = 0; i < npars; i++){
-		  	corSign[i] = 1.0;
-		  	if(correction[i] < 0) corSign[i] = -1.0;
-		  }		  
-		  temp = 0.0; 
-		  for(i = 0; i < npars; i++){		  	
-		    temp += corSign[i]*correction[i];
-		  }       	  
-		  if(temp < .00001) break;		  	
-		  //rate checking	  		  	
-		  for(i = 0; i < npars; i++){
-		    if((corSign[i] * correction[i]) > StepLimit[i])		   	  
-		      correction[i] = corSign[i] * StepLimit[i];
-		  }    		  
-		  for(i = 0; i < nfact; i++) 
-		    a[i] -= correction[i];
-		  d -= correction[nfact];     		
-		  for(i = 0; i < nfact; i++){		    
-		    if(L[i] * LastL[i] < 0.0){
-		    	a[i] += 0.5 * correction[i];
-		    	StepLimit[i] = 0.5 * StepLimit[i];
-		    }
-		  }
-		  if(L[nfact] * LastL[nfact] < 0.0){
-		    d += 0.5 * correction[nfact];
-		    StepLimit[nfact] = 0.5 * StepLimit[nfact];
-		  }		  
-		  for(i = 0; i < npars; i++)
-		    LastL[i] = L[i];
-		  iter++;		   
-		} //END MAX LOOP		
-		for(i = 0; i < nfact; i++)
-		  fullpars[item][i] = a[i];
-	    fullpars[item][nfact] = d;
-			 
-  }//  END BIG LOOP						
-	k = 0;		
-	for(i = 0; i < npars; i++){
-	  for(j = 0; j < nitems; j++){
-	    Preturn[k] = fullpars[j][i];
-	    k++;
-		}
-	}		
+	if(Pparprior[2] > 0.0)		
+		l -= log(dnorm(*Pd,Pparprior[1],Pparprior[2],0));     
+
+    *Preturn = (-1.0)*l;		
 	UNPROTECT(8);		
 	return(Rreturn);	
 }
+
