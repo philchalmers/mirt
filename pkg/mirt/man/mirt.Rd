@@ -146,24 +146,26 @@ fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 #without guessing
-mod1 <- mirt(fulldata,1)
-mod2 <- mirt(fulldata,2, prev.cor = mod1, par.prior = list(int=c(0,4), int.items=11), ncycles=100)
-anova(mod1,mod2)
+tmat <- tetrachor(fulldata)
+scree(tmat) #looks like a 2 factor solution
+mod1 <- mirt(fulldata, 1, prev.cor = tmat)
+mod2 <- mirt(fulldata, 2, prev.cor = tmat)
+mod3 <- mirt(fulldata, 3, prev.cor = tmat)
+anova(mod1, mod2)
+anova(mod2, mod3) #negative AIC, 2 factors probably best
 
 #with guessing
 mod1 <- mirt(fulldata, 1, guess = .1)
 coef(mod1)
-#didn't converge, item 6 and 32 appear too difficult (facility = .16)
-#fix guessing pars
+#didn't converge, item 6, 8, and 32 appear to have problems
+#remove guessing pars from problem items
 guess <- rep(.1,32)
-guess[c(6,32)] <- 0
+guess[c(6,8,32)] <- 0
 
-tmat <- tetrachor(fulldata, guess)
-mod1 <- mirt(fulldata, 1, guess = guess, prev.cor = tmat)
-mod2 <- mirt(fulldata, 2, guess = guess, par.prior = list(int = c(0,3), int.items = 17), prev.cor = tmat)
-anova(mod1,mod2)
-summary(mod2, rotate='promax')
-
+mod1g <- mirt(fulldata, 1, guess = guess)
+mod2g <- mirt(fulldata, 2, guess = guess, prev.cor = mod1g)
+anova(mod1g, mod2g)
+summary(mod2g, rotate='promax')
      }
 }
 

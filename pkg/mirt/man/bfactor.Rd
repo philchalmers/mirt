@@ -108,15 +108,12 @@ fulldata <- key2binary(SAT12,
 tmat <- tetrachor(fulldata) #this can save some time if bfactor run more than once
 specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
 mod1 <- bfactor(fulldata, specific, prev.cor = tmat)
+coef(mod1)
 
 ###Try with guessing parameters added
 guess <- rep(.1,32)
-mod2 <- bfactor(fulldata, specific, guess = guess)
-coef(mod2) #converged, but item 6 item facility seems too close to guessing parameter
-guess[6]<-0
-mod2 <- bfactor(fulldata, specific, guess = guess)
-anova(mod1,mod2) #although no change in df, X2 and AIC decreased. Better with guessing pars
-
+mod2 <- bfactor(fulldata, specific, guess = guess) 
+anova(mod1,mod2) #no Chi-squared test here, but lower AIC value for guessing model
     }
 }
 

@@ -126,8 +126,8 @@ fscores.mirt <- function(object, full.scores = FALSE,
   } else {
     r <- as.matrix(object$tabdata[ ,ncol(tabdata)+1])
 	colnames(r) <- 'Freq'
-	cat("Rotate: ", rotate,"\n")
-	cat("Method: ", method,"\n")
+	if(nfact > 1) cat("Rotate: ", rotate,"\n")
+	cat("Method: ", method,"\n")	
     return(cbind(tabdata,r,scores))
   }   
 }  
@@ -310,6 +310,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   prior <- AXk(0,1,Theta)
   startvalues <- pars
   converge <- 1  
+  problemitems <- c()
   index <- 1:nitems
   options(show.error.messages = FALSE)  
   if(debug){
@@ -332,7 +333,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	    maxim <- try(optim(pars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
 		  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
 	  if(class(maxim) == "try-error") {
-	    cat("Maximization error for item ", i, "\n")		  
+	    problemitems <- c(problemitems, i)
 		converge <- 0
 		next
 	  }		  
@@ -390,7 +391,9 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
     "\n")
   if(converge == 0) 
     warning("Parameter estimation reached unacceptable values. Model probably did not 
-	converged.")  	  	
+	converged.")  
+    if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
+	  paste(unique(problemitems), " "))	
   lastchange <- lastpars1 - pars
   if (cycles == ncycles){
     converge <- 0  

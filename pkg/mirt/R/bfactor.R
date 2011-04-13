@@ -156,7 +156,9 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
 { 
   fn <- function(pars, r1, N, guess, Theta, prior, parprior){
     a <- pars[1:(length(pars)-1)]
-    d <- pars[length(pars)]		
+    d <- pars[length(pars)]
+    r1 <- r1 * prior	
+	N <- N * prior
 	result <- .Call("loglik", 	                
 					as.double(a),				
 					as.double(d),
@@ -165,11 +167,11 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
 					as.double(guess),
 					as.double(as.matrix(Theta)),
 					as.integer(parprior))					
-  }    
+  }  
   gr <- function(pars, r1, N, guess, Theta, prior, parprior){
     a <- pars[1:(length(pars)-1)]
     d <- pars[length(pars)]			
-	result <- (-1)* .Call("grad", 	                
+	result <- .Call("grad", 	                
 					as.double(a),				
 					as.double(d),
 					as.double(r1),
@@ -178,7 +180,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
 					as.double(as.matrix(Theta)),
 					as.double(prior),
 					as.integer(parprior))	    				
-  }  
+  }    
   Call <- match.call() 
   rotate <- 'oblimin'
   itemnames <- colnames(fulldata) 
@@ -254,9 +256,10 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
   Prior <- AXk(0,1,Theta)  
   startvalues <- pars  
   converge <- 1
+  problemitems <- c()
   index <- 1:nitems
   sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
-  for(i in 1:32) sitems[specific[i],i] <- 1 
+  for(i in 1:32) sitems[specific[i],i] <- 1   
   options(show.error.messages = FALSE)  
   if(debug) {
     print(startvalues)
@@ -274,15 +277,15 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
 	mpars <- matrix(pars[logicalfact], ncol=3)    
 	temp <- rowSums(pars[,2:nfact])
     mpars[ ,2] <- temp	
-	for(i in 1:nitems){      	
-	  if(guess[i] == 0)
+	for(i in 1:nitems){ 
+      if(guess[i] == 0)	
 	    maxim <- try(optim(mpars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-		  guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
+	      guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
 	  else	  
-		maxim <- try(optim(mpars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-		  guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
+	    maxim <- try(optim(mpars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+	      guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
       if(class(maxim) == "try-error") {
-	    cat("Maximization error for item ", i, "\n")		  
+	    problemitems <- c(problemitems, i)	  
 		converge <- 0
 		next
 	  }	
@@ -349,7 +352,9 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
     "\n")  
   if(converge == 0) 
     warning("Parameter estimation reached unacceptable values. Model probably did not 
-	converged.") 	  	    
+	converged.")
+    if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
+	  paste(unique(problemitems), " "))	
   lastchange <- abs(lastpars1 - pars)
   if (cycles == ncycles){ 
     converge <- 0
