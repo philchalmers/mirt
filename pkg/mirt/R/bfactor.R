@@ -378,7 +378,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
   p <- 1 - pchisq(X2,df)
   
   #from last EM cycle pars to FA
-  norm <- as.matrix(sqrt(1 + pars[ ,1]^2))
+  norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
   gam <- (-1)*pars[ ,nfact + 1]/norm  
   F <- matrix(0,ncol = nfact, nrow = nitems)
   for (i in 1:nitems) F[i,1:nfact] <- pars[i,1:nfact]/norm[i]  

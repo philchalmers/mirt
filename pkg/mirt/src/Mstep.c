@@ -109,9 +109,9 @@ SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 		double c, d2 = 1.0;
 		for(i = 0; i < nfact; i++)
 			d2 += Pa[i] * Pa[i];	  	  
-		c = 2.0 * (Pparprior[0] - 1) / d2*d2;
+		c = 2.0 * (Pparprior[0] - 1) / d2;
 		for(i = 0; i < nfact; i++)
-			Preturn[i] -= (2.0*(Pparprior[0] - 1) / d2) * Pa[i];
+			Preturn[i] -= c * Pa[i];
 	}
 	if(Pparprior[2] > 0.0){
 		double normprior;
@@ -167,18 +167,18 @@ SEXP loglik(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 		l += Pr1[i]*log(P[i]) + (PN[i] - Pr1[i])*log(Q[i]);
     //priors
 	if(Pparprior[0] > 1.0){		
-		double temp = 1.0, alpha[nfact];
+		double d = 1.0, alpha[nfact];
 		for (i = 0; i < nfact; i++)
-			temp += Pa[i]*Pa[i];
-		temp = pow(temp,0.5);
+			d += Pa[i]*Pa[i];
+		d = pow(d,0.5);
 		for (i = 0; i < nfact; i++)
-			alpha[i] = Pa[i] / temp;
+			alpha[i] = Pa[i] / d;
 		for (i = 0; i < nfact; i++)
 			sigma -= alpha[i]*alpha[i];		
-		l += pow(sigma,Pparprior[0] - 1.0) / beta(Pparprior[0],1.0);				
+		l += log(pow(sigma,Pparprior[0] - 1.0) / beta(Pparprior[0],1.0));				
 	}
 	if(Pparprior[2] > 0.0)		
-		l -= log(dnorm(*Pd,Pparprior[1],Pparprior[2],0));     
+		l += log(dnorm(*Pd,Pparprior[1],Pparprior[2],0));     
 
     *Preturn = (-1.0)*l;		
 	UNPROTECT(8);		

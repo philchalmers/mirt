@@ -113,7 +113,15 @@ coef(mod1)
 ###Try with guessing parameters added
 guess <- rep(.1,32)
 mod2 <- bfactor(fulldata, specific, guess = guess) 
-anova(mod1,mod2) #no Chi-squared test here, but lower AIC value for guessing model
+coef(mod2) #item 32 too difficult to include guessing par
+#fix by imposing a weak intercept prior
+mod3a <- bfactor(fulldata, specific, guess = guess, prev.cor = mod2, par.prior = list(int = c(0,4), int.items = 32))
+coef(mod3a)
+#...or by removing guessing parameter
+guess[32] <- 0
+mod3b <- bfactor(fulldata, specific, guess = guess) 
+coef(mod3b)
+anova(mod1,mod3b) #no Chi-squared test here, but lower AIC value for guessing model
     }
 }
 
