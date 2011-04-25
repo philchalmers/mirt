@@ -16,7 +16,7 @@
 
 \usage{
 mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
-  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, debug = FALSE, ...)
+  startvalues = NULL, quadpts = NULL, ncycles = 150, EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
 
 \method{print}{mirt}(x, ...)
 
@@ -155,16 +155,12 @@ anova(mod1, mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 
 #with guessing
-mod1 <- mirt(fulldata, 1, guess = .1)
-coef(mod1)
-#didn't converge, item 6, 8, and 32 appear to have problems
-#remove guessing pars from problem items
-guess <- rep(.1,32)
-guess[c(6,8,32)] <- 0
-
-mod1g <- mirt(fulldata, 1, guess = guess)
+mod1g <- mirt(fulldata, 1, guess = .1)
+coef(mod1g)
 mod2g <- mirt(fulldata, 2, guess = guess, prev.cor = mod1g)
+coef(mod2g)
 anova(mod1g, mod2g)
+anova(mod2,mod2g) #no Chi-squared test, but lower AIC
 summary(mod2g, rotate='promax')
      }
 }

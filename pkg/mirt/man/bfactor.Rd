@@ -14,7 +14,7 @@
 
 \usage{
 bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
-  startvalues = NULL,  quadpts = NULL, ncycles = 50, EMtol=.005, nowarn = TRUE, debug = FALSE, ...)
+  startvalues = NULL,  quadpts = NULL, ncycles = 150, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
 
 \method{print}{bfactor}(x, ...)
 

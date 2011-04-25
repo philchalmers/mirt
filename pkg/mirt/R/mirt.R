@@ -228,7 +228,7 @@ print.mirt <- function(x, ...)
 ############################################
 
 mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE, 
-  startvalues = NULL, quadpts = NULL, ncycles = 50, EMtol = .005, nowarn = TRUE, debug = FALSE, ...)
+  startvalues = NULL, quadpts = NULL, ncycles = 150, EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
 { 
   fn <- function(pars, r1, N, guess, Theta, prior, parprior){
     a <- pars[1:(length(pars)-1)]
