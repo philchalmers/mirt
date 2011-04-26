@@ -1,4 +1,4 @@
-##########################################
+########################################## 
 
 residuals.bfactor <- function(object, digits = 3, res.cor=FALSE, ...)
 {
@@ -49,7 +49,7 @@ fscores.bfactor <- function(object, full.scores = FALSE,
   scores <- matrix(0,ncol=ncol(Theta),nrow=nrow(tabdata))
   thetas <- rep(0,nfact)
   logicalfact <- object$logicalfact
-  W <- AXk(0,1,Theta)  
+  W <- dmvnorm(theta0,rep(0,nfact),diag(nfact))  
   for (i in 1:nrow(scores)){
     L <- 0  
     for (j in 1:nrow(a)){
@@ -252,8 +252,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
   diag(Rpoly) <- 1
   item <- 1
   lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))  
-  prior <- AXk(0,1,as.matrix(theta))
-  Prior <- AXk(0,1,Theta)  
+  prior <- dnorm(theta) 
+  Prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))  
   startvalues <- pars  
   converge <- 1
   problemitems <- c()

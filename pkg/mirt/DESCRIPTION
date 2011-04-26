@@ -10,7 +10,7 @@ Description: Analysis of multivariate dichotomous data using latent
 		Includes the multivariate two- and three-parameter logistic 
 		models, confirmatory bifactor analysis, and polytomous confirmatory
 		and exploratory item response model (in developement). 
-Depends: psych, GPArotation
+Depends: psych, GPArotation, mvtnorm
 Suggests: MASS, lattice, mvtnorm
 License: GPL (>= 2)
 URL: 
