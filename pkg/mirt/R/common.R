@@ -5,12 +5,7 @@ thetaComb <- function(theta, nfact)
     else if (nfact == 2) Theta <- expand.grid(theta,theta)   
     else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
     else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
-    else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)
-    else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)
-    else if (nfact == 7) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta)
-    else if (nfact == 8) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta)
-    else if (nfact == 9) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta,theta)
-    else if (nfact == 10) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta,theta,theta)    
+    else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
   return(Theta)     
 }
 
@@ -237,15 +232,16 @@ mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
     #preamble	
 	N <- nrow(fulldata)
 	J <- ncol(fulldata)
-	nfact <- ncol(pars) - 1
-	FA <- factor.minres(Rpoly,nfact)
-	theta0 <- factor.scores(fulldata,FA$loadings)
+	nfact <- ncol(pars) - 1	
+	suppressMessages(FA <- factor.minres(Rpoly,nfact))
+	theta0 <- factor.scores(fulldata,FA$loadings)	
     npars <- nfact + 1
 	cand.t.var <- 1
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,pars,guess,fulldata,cand.t.var)
 		if(attr(theta0,"Proportion Accepted") > .5 && nfact < 5) cand.t.var <- cand.t.var + .1 
-		else if(attr(theta0,"Proportion Accepted") > .3) cand.t.var <- cand.t.var + .1 
+		else if(attr(theta0,"Proportion Accepted") > .3) cand.t.var <- cand.t.var + .1
+     	if(attr(theta0,"Proportion Accepted") < .2)	 cand.t.var <- cand.t.var - .1
 	}	
 	m.thetas <- SEM.stores <- list()	
 	phi <- g <- rep(0,J*npars)

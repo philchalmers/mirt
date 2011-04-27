@@ -276,10 +276,13 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
   tabdata <- matrix(as.numeric(tabdata),nfreqs,nitems,TRUE)
   tabdata <- cbind(tabdata,r)    
-  if (is.null(quadpts)) quadpts <- ceiling(15/nfact)
-  if (nfact > 6) quadpts <- 3  
+  if (is.null(quadpts)) quadpts <- ceiling(15/nfact)  
   theta <- as.matrix(seq(-4,4,length.out = quadpts))
-  Theta <- thetaComb(theta,nfact)
+  if(nfact < 6){
+	Theta <- thetaComb(theta,nfact)
+	prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+    prior <- prior/sum(prior)
+  }	
   facility <- colMeans(fulldata)
   suppressAutoPrior <- TRUE
   if(is.logical(par.prior)) 
@@ -299,18 +302,18 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 	  else stop("Correlation matrix is not square.\n")
 	} else Rpoly <- tetrachor(fulldata,guess)   
-  if (is.null(startvalues)) 
-    suppressMessages(pars <- start.values(fulldata,guess,Rpoly,nfact=nfact,nowarn=nowarn)) 
-    else {
-      if ((ncol(startvalues) != (nfact + 1)) || (nrow(startvalues) != nitems))
+  if (is.null(startvalues)){ 
+    suppressMessages(pars <- start.values(fulldata,guess,Rpoly,nfact=nfact,nowarn=nowarn))
+    pars[pars > 3] <- 3
+    pars[pars < -3] <- -3	
+  } else {
+    if ((ncol(startvalues) != (nfact + 1)) || (nrow(startvalues) != nitems))
       stop("Startvalues are declared incorrectly.")  
     pars <- startvalues  
     } 
   diag(Rpoly) <- 1
   item <- 1
-  lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))  
-  prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
-  prior <- prior/sum(prior)
+  lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))    
   startvalues <- pars
   converge <- 1  
   problemitems <- c()
@@ -322,7 +325,11 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 		mk = 3, SEM.cycles = 20, max.cycles = 1000, tol = .001)
 	pars <- MHRMlist$pars
     cycles <- MHRMlist$cycles
-	SE <- MHRMlist$SE    
+	SE <- MHRMlist$SE 
+    prior <- dmvnorm(MHRMlist$Theta,rep(0,nfact),diag(nfact))
+    prior <- prior/sum(prior)  
+    rlist <- Estep.mirt(pars,cbind(fulldata,1),MHRMlist$Theta,prior,guess) 
+    Pl <- unique(rlist[[3]])      	
   } else {  
 	  # EM loop
 	  for (cycles in 1:ncycles)
@@ -407,12 +414,12 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 		message("Estimation terminated after ", cycles, " EM loops. Maximum changes:") 
 		message("\n slopes = ", round(max(abs(lastchange[ ,1:nfact])),4), ", intercepts = ", 
 		  round(max(abs(lastchange[ ,ncol(pars)])),4) ,"\n", sep="")
-	  }	        
-  }
-  prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
-  prior <- prior/sum(prior)  
-  rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)	
-  Pl <- rlist[[3]]
+	  }	    
+      prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+      prior <- prior/sum(prior)  
+      rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)      	  
+	  Pl <- rlist[[3]]
+  }   
   log.lik <- sum(r*log(Pl))
   logN <- 0
   logr <- rep(0,length(r))
@@ -444,7 +451,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
       Theta=Theta, fulldata=fulldata, empdist=rlist[[4]], cormat=Rpoly, 
       facility=facility, par.prior=par.prior, converge = converge, Call=Call)    
   else 
-    mod <- list(EMiter=cycles, pars=pars, guess=guess, X2 = X2, df = df, p = p,
+    mod <- list(EMiter=cycles, pars=pars, SE=SE, guess=guess, X2 = X2, df = df, p = p,
 	  AIC=AIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, MHRM = MHRM, Theta=Theta, 
 	  fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, Call=Call)  
   class(mod) <- "mirt"
