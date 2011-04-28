@@ -176,6 +176,9 @@ P.mirt <- function(a, d, Theta, g){
     return(rlist)
   }     
  
+ library(mirt)
+ load("C:\\Users\\Phil\\Desktop\\temp.RData")
+ 
 mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
 	mk = 3, SEM.cycles = 20, max.cycles = 1000, tol = .001){
 
@@ -190,11 +193,11 @@ mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
 		N <- nrow(fulldata)
 		J <- ncol(fulldata)
 		nfact <- ncol(pars) - 1
-		prior.t.var <- diag(nfact)	
-		if(nfact > 1) 
-			theta1 <- theta0 + rmvnorm(N,rep(0,nfact), diag(rep(sqrt(cand.t.var),nfact))) 
-		else 
-			theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))		
+		prior.t.var <- diag(nfact)
+        if(nfact > 1)		
+		  theta1 <- theta0 + rmvnorm(N,rep(0,nfact), diag(rep(sqrt(cand.t.var),nfact))) 
+        else
+          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))		
 		tmp <- all.P.mirt(theta0,pars,guess,N,J) 
 		tmp <- ifelse(fulldata,tmp,1-tmp)	
 		irt0 <- rowSums(log(tmp)) + dmvnorm(theta0,rep(0,nfact),prior.t.var,log=TRUE)
@@ -232,12 +235,12 @@ mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
     #preamble	
 	N <- nrow(fulldata)
 	J <- ncol(fulldata)
-	nfact <- ncol(pars) - 1	
-	suppressMessages(FA <- factor.minres(Rpoly,nfact))
-	theta0 <- factor.scores(fulldata,FA$loadings)	
+	nfact <- ncol(pars) - 1		
+    theta0 <- matrix(0,N,nfact)	
     npars <- nfact + 1
 	cand.t.var <- 1
-	for(i in 1:20){
+	for(i in 1:20) theta0 <- draw.thetas(theta0,pars,guess,fulldata,cand.t.var) 
+	for(i in 1:30){
 		theta0 <- draw.thetas(theta0,pars,guess,fulldata,cand.t.var)
 		if(attr(theta0,"Proportion Accepted") > .5 && nfact < 5) cand.t.var <- cand.t.var + .1 
 		else if(attr(theta0,"Proportion Accepted") > .3) cand.t.var <- cand.t.var + .1
@@ -278,8 +281,8 @@ mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
 			g.m[[j]] <- g
 			h.m[[j]] <- h
 		}
-		ave.g <- rep(0,ncol(fulldata)*npars)
-		ave.h <- matrix(0,ncol(fulldata)*npars,ncol(fulldata)*npars)		
+		ave.g <- rep(0,J*npars)
+		ave.h <- matrix(0,J*npars,J*npars)		
 		for(i in 1:k){
 		  ave.g <- ave.g + g.m[[i]]
 		  ave.h <- ave.h + h.m[[i]]
@@ -306,7 +309,7 @@ mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
 	}
 	SE <- matrix(sqrt(diag(solve(info))),ncol=npars,byrow=TRUE)
 	tmp <- all.P.mirt(theta0, pars, guess, N, J)
-	tmp <- ifelse(fulldata,tmp,1-tmp)
+	tmp <- ifelse(fulldata,tmp,1-tmp)	
 	Pl <- apply(tmp,1,prod)
 	
 	list(pars = pars, SE = SE, cycles = cycles - SEM.cycles, Theta = theta0, Pl = Pl)    

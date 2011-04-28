@@ -132,21 +132,27 @@ fscores.mirt <- function(object, full.scores = FALSE,
   }   
 }  
 
-coef.mirt <- function(object, digits = 3, ...)
-{
+coef.mirt <- function(object, digits = 3, SE = FALSE, ...)
+{  
   a <- as.matrix(object$pars[ ,1:(ncol(object$pars)-1)])
   d <- object$pars[ ,ncol(object$pars)]
   A <- sqrt(apply(a^2,1,sum))
   B <- -d/A
+  if(SE && object$MHRM){
+    SE <- object$SE
+	colnames(SE) <- c(paste("SE.a_",1:ncol(a),sep=""),"SE.d")
+  }
   if (ncol(a) > 1){  
-    parameters <- cbind(object$pars,object$guess,object$facility,A,B)
+    parameters <- cbind(object$pars,object$guess,object$facility,A,B)    
     colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess", 
       "facility","mvdisc","mvint")
+	if(!is.logical(SE)) parameters <- cbind(parameters, SE)	  
     cat("Unrotated parameters, multivariate discrimination and intercept: \n")
     print(round(parameters, digits))  	
   } else {
-    parameters <- cbind(object$pars,object$guess,object$facility)  
+    parameters <- cbind(object$pars,object$guess,object$facility) 
 	colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess","facility")
+    if(!is.logical(SE)) parameters <- cbind(parameters, SE)	
     cat("Parameters with multivariate discrimination and intercept: \n")	
     print(round(parameters, digits))	  
   }
@@ -322,14 +328,14 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   
   if(MHRM){
 	MHRMlist <- mirt.MHRM(fulldata, nfact, pars, guess, Rpoly,
-		mk = 3, SEM.cycles = 20, max.cycles = 1000, tol = .001)
+		mk = 5, SEM.cycles = 30, max.cycles = 2000, tol = tol/10)
 	pars <- MHRMlist$pars
     cycles <- MHRMlist$cycles
 	SE <- MHRMlist$SE 
-    prior <- dmvnorm(MHRMlist$Theta,rep(0,nfact),diag(nfact))
-    prior <- prior/sum(prior)  
-    rlist <- Estep.mirt(pars,cbind(fulldata,1),MHRMlist$Theta,prior,guess) 
-    Pl <- unique(rlist[[3]])      	
+	prior <- dmvnorm(MHRMlist$Theta,rep(0,nfact),diag(nfact))
+	prior <- prior/sum(prior)
+    rlist <- Estep.mirt(pars,tabdata,MHRMlist$Theta,prior,guess)      	  
+	Pl <- rlist[[3]]	    	
   } else {  
 	  # EM loop
 	  for (cycles in 1:ncycles)
@@ -419,13 +425,14 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
       prior <- prior/sum(prior)  
       rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)      	  
 	  Pl <- rlist[[3]]
-  }   
+  }    
+  
   log.lik <- sum(r*log(Pl))
   logN <- 0
   logr <- rep(0,length(r))
   for (i in 1:sampsize) logN <- logN + log(i)
   for (i in 1:length(r)) 
-    for (j in 1:r[i]) 
+	for (j in 1:r[i]) 
 	  logr[i] <- logr[i] + log(j)    
   df <- (length(r) - 1) - (nitems*(nfact + 1) - nfact*(nfact - 1)/2) 
   X2 <- 2 * sum(r * log(r/(sampsize*Pl)))

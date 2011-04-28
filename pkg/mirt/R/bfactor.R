@@ -259,12 +259,10 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
   problemitems <- c()
   index <- 1:nitems
   sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
-  for(i in 1:32) sitems[specific[i],i] <- 1   
-  options(show.error.messages = FALSE)  
+  for(i in 1:32) sitems[specific[i],i] <- 1      
   if(debug) {
     print(startvalues)
-	print(sitems)
-	options(show.error.messages = TRUE)  
+	print(sitems)	 
   } 
   
   #EM  loop  
