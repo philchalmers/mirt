@@ -328,7 +328,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   
   if(MHRM){
 	MHRMlist <- mirt.MHRM(fulldata, nfact, pars, guess, Rpoly,
-		mk = 5, SEM.cycles = 30, max.cycles = 2000, tol = tol/10)
+		mk = 5, SEM.cycles = 30, max.cycles = 2000, tol = tol)
 	pars <- MHRMlist$pars
     cycles <- MHRMlist$cycles
 	SE <- MHRMlist$SE 

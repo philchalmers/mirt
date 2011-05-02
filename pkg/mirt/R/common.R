@@ -214,21 +214,22 @@ mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
 	dpars <- function(pars,guess,item,Thetas) {
 		nfact <- length(pars) - 1
 		P <- P.mirt(pars[1:nfact], pars[nfact + 1], Thetas, guess)								
-		PQ <- P*(1-P)
-		L1 <- L11 <- L12 <- c()
-		for(i in 1:nfact){
-			L1[i] <- sum((item-P)*Thetas[,i])
-			L11[i] <- (-1)*sum(PQ*Thetas[,i]^2)		
-		}	
-		L2 <- sum(item-P)	
-		L22<- (-1)*sum(PQ)
-		dL <- c(L1,L2)
-		d2L<- diag(c(L11,L22))
-		for(i in 1:nfact)
-			for(j in 1:nfact)
-				if(j > i) d2L[i,j] <- d2L[j,i] <- (-1)*sum(PQ * Thetas[,i] * Thetas[,j])
-		for(i in 1:nfact)
-			d2L[nfact+1,i] <- d2L[i,nfact+1] <- (-1)*sum(PQ * Thetas[,i])	
+		PQ <- P*(1-P)		
+		L1 <- colSums((item-P)*Thetas)						
+		L2 <- sum(item-P)
+        dL <- c(L1,L2) 		
+		d2L <- matrix(0,nfact+1,nfact+1)		
+		L11 <- matrix(0,nfact,nfact)
+		temp <- c()
+        if(nfact > 1){		
+			for(i in 1:N){
+			  temp <- outer(Thetas[i,], Thetas[i,])
+			  L11 <- L11 + temp * PQ[i] 
+			}  
+			d2L[1:nfact,1:nfact] <- -L11
+		} else d2L[1,1] <- (-1)*colSums(PQ * Thetas^2)
+		d2L[nfact+1,nfact+1]<- (-1)*sum(PQ)		
+		d2L[nfact+1,1:nfact] <- d2L[1:nfact,nfact+1] <- (-1)*colSums(PQ * Thetas)	
 		list(grad = dL, hess = d2L)
 	} 
 	
