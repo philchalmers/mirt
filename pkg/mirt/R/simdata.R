@@ -11,9 +11,8 @@ simdata <- function(a, d, N, guess = 0,  sigma = NULL, mu = NULL,
   if(logconst) {
     a <- a/1.702
 	d <- d/1.702
-  }
-  require(MASS)
-  if (dist == 'normal') Theta <- MASS::mvrnorm(N,mu,sigma,empirical=TRUE)     
+  }  
+  if (dist == 'normal') Theta <- rmvnorm(N,mu,sigma)     
   data <- matrix(0,N,nitems)  
   for( i in 1:nitems){ 
     p <- P.mirt(a[i, ], d[i], Theta, guess[i])	

@@ -228,7 +228,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
     else if(!is.null(prev.cor)) {
 	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 	  else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- tetrachor(fulldata,guess)       
+	} else Rpoly <- cormod(fulldata,guess)       
   pars <- matrix(0,nrow=nitems, ncol=nfact + 1)
   if (is.null(startvalues))
   {  

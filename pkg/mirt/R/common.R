@@ -174,147 +174,28 @@ P.mirt <- function(a, d, Theta, g){
     	
     rlist <- list(r1, N, retlist$expected)
     return(rlist)
-  }     
- 
- library(mirt)
- load("C:\\Users\\Phil\\Desktop\\temp.RData")
- 
-mirt.MHRM <- function(fulldata, nfact, pars, guess, Rpoly,
-	mk = 3, SEM.cycles = 20, max.cycles = 1000, tol = .001){
+  }  
 
-	all.P.mirt <- function(Thetas, pars, guess, N, J) {
-		nfact <- ncol(pars) - 1
-		P <- matrix(0,N, J)
-		for(i in 1:J)	
-		   P[ ,i] <- P.mirt(pars[i,1:nfact], pars[i,nfact + 1], Thetas, guess[i])
-		return(P)	
-	}
-	draw.thetas <- function(theta0,pars,guess,fulldata,cand.t.var) {     
-		N <- nrow(fulldata)
-		J <- ncol(fulldata)
-		nfact <- ncol(pars) - 1
-		prior.t.var <- diag(nfact)
-        if(nfact > 1)		
-		  theta1 <- theta0 + rmvnorm(N,rep(0,nfact), diag(rep(sqrt(cand.t.var),nfact))) 
-        else
-          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))		
-		tmp <- all.P.mirt(theta0,pars,guess,N,J) 
-		tmp <- ifelse(fulldata,tmp,1-tmp)	
-		irt0 <- rowSums(log(tmp)) + dmvnorm(theta0,rep(0,nfact),prior.t.var,log=TRUE)
-		tmp <- all.P.mirt(theta1,pars,guess,N,J)
-		tmp <- ifelse(fulldata,tmp,1-tmp)	
-		irt1 <- rowSums(log(tmp)) + dmvnorm(theta1,rep(0,nfact),prior.t.var,log=TRUE)		
-		accept <- irt1 - irt0
-		accept <- ifelse(accept>0,0,accept)
-		accept <- ifelse(runif(N) < exp(accept),TRUE,FALSE) 		
-		theta1[!accept,] <- theta0[!accept,]	
-		attr(theta1, "Proportion Accepted") <- sum(accept)/N 		
-		return(theta1) 
-	}
-	dpars <- function(pars,guess,item,Thetas) {
-		nfact <- length(pars) - 1
-		P <- P.mirt(pars[1:nfact], pars[nfact + 1], Thetas, guess)								
-		PQ <- P*(1-P)		
-		L1 <- colSums((item-P)*Thetas)						
-		L2 <- sum(item-P)
-        dL <- c(L1,L2) 		
-		d2L <- matrix(0,nfact+1,nfact+1)		
-		L11 <- matrix(0,nfact,nfact)
-		temp <- c()
-        if(nfact > 1){		
-			for(i in 1:N){
-			  temp <- outer(Thetas[i,], Thetas[i,])
-			  L11 <- L11 + temp * PQ[i] 
-			}  
-			d2L[1:nfact,1:nfact] <- -L11
-		} else d2L[1,1] <- (-1)*colSums(PQ * Thetas^2)
-		d2L[nfact+1,nfact+1]<- (-1)*sum(PQ)		
-		d2L[nfact+1,1:nfact] <- d2L[1:nfact,nfact+1] <- (-1)*colSums(PQ * Thetas)	
-		list(grad = dL, hess = d2L)
-	} 
-	
-    #preamble	
-	N <- nrow(fulldata)
-	J <- ncol(fulldata)
-	nfact <- ncol(pars) - 1		
-    theta0 <- matrix(0,N,nfact)	
-    npars <- nfact + 1
-	cand.t.var <- 1
-	for(i in 1:20) theta0 <- draw.thetas(theta0,pars,guess,fulldata,cand.t.var) 
-	for(i in 1:30){
-		theta0 <- draw.thetas(theta0,pars,guess,fulldata,cand.t.var)
-		if(attr(theta0,"Proportion Accepted") > .5 && nfact < 5) cand.t.var <- cand.t.var + .1 
-		else if(attr(theta0,"Proportion Accepted") > .3) cand.t.var <- cand.t.var + .1
-     	if(attr(theta0,"Proportion Accepted") < .2)	 cand.t.var <- cand.t.var - .1
-	}	
-	m.thetas <- SEM.stores <- list()	
-	phi <- g <- rep(0,J*npars)
-	Tau <- info <- h <- matrix(0,J*npars,J*npars)
-    m.list <- list()	  
-	conv <- 0
-    k <- 1 	
-	
-	for(cycles in 1:max.cycles)
-	{
-		if(cycles == (SEM.cycles + 1)){
-		    pars <- matrix(0, ncol=npars, nrow = J)
-			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[[i]]
-			pars <- pars/SEM.cycles			
-		}
-		if(cycles > SEM.cycles){
-			gamma <- 1/(cycles - SEM.cycles)        		
-			k <- mk
-		}		
-		
-		#Step 1. Generate m_k datasets of theta 
-		for(i in 1:k)
-			m.thetas[[i]] <- draw.thetas(theta0,pars,guess,fulldata,cand.t.var)
-		theta0 <- m.thetas[[1]]
-		
-		#Step 2. Find average of simulated data gradients and hessian 
-		g.m <- h.m <- list()				
-		for(j in 1:k){
-			for(i in 0:(J - 1)){
-			    temp <- dpars(pars[i+1,], guess[i+1], fulldata[,i+1], m.thetas[[j]])
-				g[1:npars + i*npars] <- temp$grad
-				h[1:npars + i*npars,1:npars + i*npars] <- temp$hess
-			} 
-			g.m[[j]] <- g
-			h.m[[j]] <- h
-		}
-		ave.g <- rep(0,J*npars)
-		ave.h <- matrix(0,J*npars,J*npars)		
-		for(i in 1:k){
-		  ave.g <- ave.g + g.m[[i]]
-		  ave.h <- ave.h + h.m[[i]]
-		}
-		grad <- ave.g/k
-		ave.h <- (-1)*ave.h/k
-		if(cycles <= SEM.cycles){
-			SEM.stores[[cycles]] <- pars <- pars + 
-				matrix(solve(ave.h) %*% grad, ncol=npars, byrow=TRUE)
-			next
+	P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE){	
+		ncat <- length(zetas) + 1
+		nfact <- length(lambda)
+		Pk <- matrix(0,nrow(Thetas),ncat+1)
+		Pk[,1] <- 1	
+		for(i in 1:(ncat-1))			
+			Pk[ ,i+1] <- P.mirt(lambda,zetas[i],Thetas,0)		
+		if(itemexp){
+			P <- matrix(0,nrow(Thetas),ncat)
+			tempsum <- rep(0,nrow(Thetas))
+			for(i in ncat:1){
+				P[,i] <- Pk[,i] - tempsum
+				tempsum <- tempsum + P[,i]	
+			}
+			Pk <- P
 		}	
-		
-		#Step 3. Update R-M step
-		Tau <- Tau + gamma*(ave.h - Tau)		
-		correction <- gamma*(solve(Tau) %*% grad)		
-		if(all(correction < tol)) conv <- conv + 1
-			else conv <- 0		
-		if(conv == 3) break		
-		pars <- pars + matrix(correction, ncol = npars, byrow=TRUE)	
-		
-		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 	
-		phi <- phi + gamma*(grad - phi)
-		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
+		return(Pk)
 	}
-	SE <- matrix(sqrt(diag(solve(info))),ncol=npars,byrow=TRUE)
-	tmp <- all.P.mirt(theta0, pars, guess, N, J)
-	tmp <- ifelse(fulldata,tmp,1-tmp)	
-	Pl <- apply(tmp,1,prod)
-	
-	list(pars = pars, SE = SE, cycles = cycles - SEM.cycles, Theta = theta0, Pl = Pl)    
-}
+  
+
  
  
  

@@ -1,7 +1,7 @@
 useDynLib(mirt, .registration=TRUE)
 
 # Exported functions
-export(bfactor,mirt,tetrachor,key2binary,expand.table,fscores,itemplot,simdata)
+export(bfactor,mirt,key2binary,expand.table,fscores,itemplot,simdata)
 
 # Imported functions
 importFrom("psych", factor.wls, Promax, fa)

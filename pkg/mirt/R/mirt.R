@@ -137,11 +137,7 @@ coef.mirt <- function(object, digits = 3, SE = FALSE, ...)
   a <- as.matrix(object$pars[ ,1:(ncol(object$pars)-1)])
   d <- object$pars[ ,ncol(object$pars)]
   A <- sqrt(apply(a^2,1,sum))
-  B <- -d/A
-  if(SE && object$MHRM){
-    SE <- object$SE
-	colnames(SE) <- c(paste("SE.a_",1:ncol(a),sep=""),"SE.d")
-  }
+  B <- -d/A  
   if (ncol(a) > 1){  
     parameters <- cbind(object$pars,object$guess,object$facility,A,B)    
     colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess", 
@@ -235,7 +231,7 @@ print.mirt <- function(x, ...)
 
 mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE, 
   startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE, 
-  MHRM = FALSE, debug = FALSE, ...)
+  debug = FALSE, ...)
 { 
   fn <- function(pars, r1, N, guess, Theta, prior, parprior){
     a <- pars[1:(length(pars)-1)]
@@ -268,8 +264,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   fulldata <- as.matrix(fulldata)
   if (!any(fulldata %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")
   fulldata[is.na(fulldata)] <- 0  
-  nitems <- ncol(fulldata)
-  if(nfact > 5) MHRM <- TRUE
+  nitems <- ncol(fulldata)  
   colnames(fulldata) <- itemnames
   if (length(guess) == 1) guess <- rep(guess,nitems)
   else if (length(guess) > nitems || length(guess) < nitems) 
@@ -307,7 +302,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
     else if(!is.null(prev.cor)) {
 	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 	  else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- tetrachor(fulldata,guess)   
+	} else Rpoly <- cormod(fulldata,guess)   
   if (is.null(startvalues)){ 
     suppressMessages(pars <- start.values(fulldata,guess,Rpoly,nfact=nfact,nowarn=nowarn))
     pars[pars > 3] <- 3
@@ -324,109 +319,96 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   converge <- 1  
   problemitems <- c()
   index <- 1:nitems  
-  if(debug) print(startvalues)    
+  if(debug) print(startvalues)      
   
-  if(MHRM){
-	MHRMlist <- mirt.MHRM(fulldata, nfact, pars, guess, Rpoly,
-		mk = 5, SEM.cycles = 30, max.cycles = 2000, tol = tol)
-	pars <- MHRMlist$pars
-    cycles <- MHRMlist$cycles
-	SE <- MHRMlist$SE 
-	prior <- dmvnorm(MHRMlist$Theta,rep(0,nfact),diag(nfact))
-	prior <- prior/sum(prior)
-    rlist <- Estep.mirt(pars,tabdata,MHRMlist$Theta,prior,guess)      	  
-	Pl <- rlist[[3]]	    	
-  } else {  
-	  # EM loop
-	  for (cycles in 1:ncycles)
-	  {       
-		rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)
-		prior <- rlist[[4]]
-		if (debug) print(sum(r*log(rlist[[3]])))
-		lastpars2 <- lastpars1
-		lastpars1 <- pars	
-		for(i in 1:nitems){
-		  if(guess[i] == 0)	
-			maxim <- try(optim(pars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-			  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
-		  else 
-			maxim <- try(optim(pars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-			  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
-		  if(class(maxim) == "try-error") {
-			problemitems <- c(problemitems, i)
-			converge <- 0
-			next
-		  }		  
-		  pars[i, ] <- maxim$par	  
-		}	
-		if(!suppressAutoPrior){
-		  if(any(abs(pars[ ,nfact+1]) > 4)){
-			ints <- index[abs(pars[ ,nfact+1]) > 4] 	
-			par.prior[ints,3] <- 2
-			if(any(abs(pars[ ,nfact+1]) > 5.5)){
-			  ints <- index[abs(pars[ ,nfact+1]) > 5.5] 	
-			  par.prior[ints,3] <- 1
-			} 
-		  }
-		  if(nfact > 1){ 
-			norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
-			alp <- as.matrix(pars[ ,1:nfact]/norm)
-			FF <- alp %*% t(alp)
-			V <- eigen(FF)$vector[ ,1:nfact]
-			L <- eigen(FF)$values[1:nfact]      
-			F <- V %*% sqrt(diag(L))
-			h2 <- rowSums(F^2)
-			if(any(h2 > .95)){
-			  ind <- index[h2 > .95]
-			  par.prior[ind,1] <- 1.2
-			  if(any(h2 > .98)){
-				ind <- index[h2 > .98]
-				par.prior[ind,1] <- 1.5
-			  } 
-			}
-		  }
-		}  
-		maxdif <- max(abs(lastpars1 - pars))	
-		if (maxdif < tol) break    
-		# rate acceleration adjusted every third cycle
-		if (cycles %% 3 == 0 & cycles > 6) 
-		{
-		  d1 <- lastpars1 - pars
-		  d2 <- lastpars2 - pars      
-		  for (i in 1:nitems) {
-			for(j in 1:ncol(pars)){      
-			  if((abs(d1[i,j]) > 0.001) & (d1[i,j]*d2[i,j] > 0.0) & 
-				(d1[i,j]/d2[i,j] < 1.0)) rate[i,j] <- (1 - (1 - rate[i,j]) * (d1[i,j]/d2[i,j]))
-			  else rate[i,j] <- 0
-			}        
-		  }      
+  # EM loop
+  for (cycles in 1:ncycles)
+  {       
+	rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)
+	prior <- rlist[[4]]
+	if (debug) print(sum(r*log(rlist[[3]])))
+	lastpars2 <- lastpars1
+	lastpars1 <- pars	
+	for(i in 1:nitems){
+	  if(guess[i] == 0)	
+		maxim <- try(optim(pars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+		  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
+	  else 
+		maxim <- try(optim(pars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
+		  guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
+	  if(class(maxim) == "try-error") {
+		problemitems <- c(problemitems, i)
+		converge <- 0
+		next
+	  }		  
+	  pars[i, ] <- maxim$par	  
+	}	
+	if(!suppressAutoPrior){
+	  if(any(abs(pars[ ,nfact+1]) > 4)){
+		ints <- index[abs(pars[ ,nfact+1]) > 4] 	
+		par.prior[ints,3] <- 2
+		if(any(abs(pars[ ,nfact+1]) > 5.5)){
+		  ints <- index[abs(pars[ ,nfact+1]) > 5.5] 	
+		  par.prior[ints,3] <- 1
+		} 
+	  }
+	  if(nfact > 1){ 
+		norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
+		alp <- as.matrix(pars[ ,1:nfact]/norm)
+		FF <- alp %*% t(alp)
+		V <- eigen(FF)$vector[ ,1:nfact]
+		L <- eigen(FF)$values[1:nfact]      
+		F <- V %*% sqrt(diag(L))
+		h2 <- rowSums(F^2)
+		if(any(h2 > .95)){
+		  ind <- index[h2 > .95]
+		  par.prior[ind,1] <- 1.2
+		  if(any(h2 > .98)){
+			ind <- index[h2 > .98]
+			par.prior[ind,1] <- 1.5
+		  } 
 		}
-		rate[pars > 4] <- 0
-		rate[pars < -4] <- 0    
-		pars <- lastpars1*rate*(-2) + (1 - rate*(-2))*pars        	
-	  }  
-	  if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",as.character(index[par.prior[,1] > 1]), 
-		"\n")
-	  if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",as.character(index[par.prior[,3] > 0]), 
-		"\n")
-	  if(converge == 0) 
-		warning("Parameter estimation reached unacceptable values. Model probably did not 
-		converged.")  
-		if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
-		  paste(unique(problemitems), " "))	
-	  lastchange <- lastpars1 - pars
-	  if (cycles == ncycles){
-		converge <- 0  
-		message("Estimation terminated after ", cycles, " EM loops. Maximum changes:") 
-		message("\n slopes = ", round(max(abs(lastchange[ ,1:nfact])),4), ", intercepts = ", 
-		  round(max(abs(lastchange[ ,ncol(pars)])),4) ,"\n", sep="")
-	  }	    
-      prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
-      prior <- prior/sum(prior)  
-      rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)      	  
-	  Pl <- rlist[[3]]
-  }    
-  
+	  }
+	}  
+	maxdif <- max(abs(lastpars1 - pars))	
+	if (maxdif < tol) break    
+	# rate acceleration adjusted every third cycle
+	if (cycles %% 3 == 0 & cycles > 6) 
+	{
+	  d1 <- lastpars1 - pars
+	  d2 <- lastpars2 - pars      
+	  for (i in 1:nitems) {
+		for(j in 1:ncol(pars)){      
+		  if((abs(d1[i,j]) > 0.001) & (d1[i,j]*d2[i,j] > 0.0) & 
+			(d1[i,j]/d2[i,j] < 1.0)) rate[i,j] <- (1 - (1 - rate[i,j]) * (d1[i,j]/d2[i,j]))
+		  else rate[i,j] <- 0
+		}        
+	  }      
+	}
+	rate[pars > 4] <- 0
+	rate[pars < -4] <- 0    
+	pars <- lastpars1*rate*(-2) + (1 - rate*(-2))*pars        	
+  }  
+  if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",as.character(index[par.prior[,1] > 1]), 
+	"\n")
+  if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",as.character(index[par.prior[,3] > 0]), 
+	"\n")
+  if(converge == 0) 
+	warning("Parameter estimation reached unacceptable values. Model probably did not 
+	converged.")  
+	if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
+	  paste(unique(problemitems), " "))	
+  lastchange <- lastpars1 - pars
+  if (cycles == ncycles){
+	converge <- 0  
+	message("Estimation terminated after ", cycles, " EM loops. Maximum changes:") 
+	message("\n slopes = ", round(max(abs(lastchange[ ,1:nfact])),4), ", intercepts = ", 
+	  round(max(abs(lastchange[ ,ncol(pars)])),4) ,"\n", sep="")
+  }	    
+  prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+  prior <- prior/sum(prior)  
+  rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)      	  
+  Pl <- rlist[[3]]  
   log.lik <- sum(r*log(Pl))
   logN <- 0
   logr <- rep(0,length(r))
@@ -450,17 +432,11 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   if (nfact == 1) F <- as.matrix(V * sqrt(L))
     else F <- V %*% sqrt(diag(L))  
   if (sum(F[ ,1] < 0)) F[ ,1] <- (-1)*F[ ,1]  
-  h2 <- rowSums(F^2)    
+  h2 <- rowSums(F^2)      
   
-  if(!MHRM)
-    mod <- list(EMiter=cycles, pars=pars, guess=guess, AIC=AIC, X2=X2, df=df, 
-      log.lik=log.lik, p=p, F=F, h2=h2, tabdata=tabdata, Pl=Pl, MHRM = MHRM, 
-      Theta=Theta, fulldata=fulldata, empdist=rlist[[4]], cormat=Rpoly, 
-      facility=facility, par.prior=par.prior, converge = converge, Call=Call)    
-  else 
-    mod <- list(EMiter=cycles, pars=pars, SE=SE, guess=guess, X2 = X2, df = df, p = p,
-	  AIC=AIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, MHRM = MHRM, Theta=Theta, 
-	  fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, Call=Call)  
+  mod <- list(EMiter=cycles, pars=pars, SE=SE, guess=guess, X2 = X2, df = df, p = p,
+    AIC=AIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, 
+    fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, Call=Call)  
   class(mod) <- "mirt"
   mod    
 }
