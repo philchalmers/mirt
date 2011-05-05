@@ -434,7 +434,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   if (sum(F[ ,1] < 0)) F[ ,1] <- (-1)*F[ ,1]  
   h2 <- rowSums(F^2)      
   
-  mod <- list(EMiter=cycles, pars=pars, SE=SE, guess=guess, X2 = X2, df = df, p = p,
+  mod <- list(EMiter=cycles, pars=pars, guess=guess, X2 = X2, df = df, p = p,
     AIC=AIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, 
     fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, Call=Call)  
   class(mod) <- "mirt"
