@@ -1,28 +1,12 @@
 ##########################################
 
 residuals.mirt <- function(object, digits = 3, res.cor=FALSE, ...)
-{
-  if(res.cor) {
-    cormat <- object$cormat
-    F <- object$F
-    Rrep <- F %*% t(F)
-	residual <- cormat - Rrep	
-	RMR <- 0
-	for(i in 1:ncol(cormat))
-	  for(j in 1:ncol(cormat))
-	    if(i < j) RMR <- RMR + (cormat[i,j] - Rrep[i,j])^2
-	RMR <- sqrt(RMR/(ncol(cormat)*(ncol(cormat) -1 )/2))	
-    cat("Residual correlations: \n")
-	print(residual,digits)  
-	cat("\nRMR : ", round(RMR,3),"\n")
-  
-  } else {   
-    r <- object$tabdata[ ,ncol(object$tabdata)]
-    res <- (r - object$Pl * nrow(object$fulldata)) / 
-      sqrt(object$Pl * nrow(object$fulldata))
-    print(res,digits)
-    invisible(res)  	
-  }	  
+{    
+  r <- object$tabdata[ ,ncol(object$tabdata)]
+  res <- (r - object$Pl * nrow(object$fulldata)) / 
+    sqrt(object$Pl * nrow(object$fulldata))
+  print(res,digits)
+  invisible(res)  	  	  
 }
 
 plot.mirt <- function(x, type = 'curve', npts = 30,
@@ -157,7 +141,8 @@ coef.mirt <- function(object, digits = 3, SE = FALSE, ...)
 
 summary.mirt <- function(object, digits = 3, rotate = 'varimax', ...)
 {
-  if (rotate == 'none' || ncol(object$F) == 1) {
+  nfact <- ncol(object$F)
+  if (rotate == 'none' || nfact == 1) {
     F <- object$F
 	h2 <- as.matrix(object$h2)
     fac <- as.matrix(object$facility)	
@@ -181,7 +166,7 @@ summary.mirt <- function(object, digits = 3, rotate = 'varimax', ...)
 	cat("Rotation: ", rotate, "\n")
 	rotF <- Rotate(F,rotate)
 	SS <- apply(rotF$loadings^2,2,sum)
-	loads <- round(cbind(rotF$loadings,h2,fac),digits)	
+	loads <- round(cbind(rotF$loadings,h2,fac),digits)		
 	cat("\nRotated factor loadings: \n")
 	print(loads)		
 	if(attr(rotF, "oblique")){
@@ -190,7 +175,7 @@ summary.mirt <- function(object, digits = 3, rotate = 'varimax', ...)
 	  Phi <- round(Phi, digits)
 	  colnames(Phi) <- rownames(Phi) <- colnames(F)
 	  print(Phi)
-      cat("\nRotated Sums of Squares: ")
+      cat("\nRotated Sums of Squares: \n")
       round(colSums(rotF$loadings %*% Phi), digits)      
 	}	
 	cat("\nSS loadings: ",round(SS,digits), "\n")
@@ -272,6 +257,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   pats <- apply(fulldata,1,paste,collapse = "/")
   freqs <- table(pats)
   nfreqs <- length(freqs)
+  K <- rep(2,nitems)
   r <- as.vector(freqs)
   sampsize <- nrow(fulldata) 
   tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
@@ -302,7 +288,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
     else if(!is.null(prev.cor)) {
 	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 	  else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- cormod(fulldata,guess)   
+	} else Rpoly <- cormod(fulldata,K,guess)   
   if (is.null(startvalues)){ 
     suppressMessages(pars <- start.values(fulldata,guess,Rpoly,nfact=nfact,nowarn=nowarn))
     pars[pars > 3] <- 3

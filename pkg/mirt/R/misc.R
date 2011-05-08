@@ -87,6 +87,26 @@ MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact)
   L  
 }  
 
+#trace lines for polymirt
+P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE){	
+	ncat <- length(zetas) + 1
+	nfact <- length(lambda)
+	Pk <- matrix(0,nrow(Thetas),ncat+1)
+	Pk[,1] <- 1	
+	for(i in 1:(ncat-1))			
+		Pk[ ,i+1] <- P.mirt(lambda,zetas[i],Thetas,0)		
+	if(itemexp){
+		P <- matrix(0,nrow(Thetas),ncat)
+		tempsum <- rep(0,nrow(Thetas))
+		for(i in ncat:1){
+			P[,i] <- Pk[,i] - tempsum
+			tempsum <- tempsum + P[,i]	
+		}
+		Pk <- P
+	}	
+	return(Pk)
+}
+
 # Trace lines for mirt models
 P.mirt <- function(a, d, Theta, g){ 
     nfact <- length(a)
@@ -176,24 +196,7 @@ P.mirt <- function(a, d, Theta, g){
     return(rlist)
   }  
 
-	P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE){	
-		ncat <- length(zetas) + 1
-		nfact <- length(lambda)
-		Pk <- matrix(0,nrow(Thetas),ncat+1)
-		Pk[,1] <- 1	
-		for(i in 1:(ncat-1))			
-			Pk[ ,i+1] <- P.mirt(lambda,zetas[i],Thetas,0)		
-		if(itemexp){
-			P <- matrix(0,nrow(Thetas),ncat)
-			tempsum <- rep(0,nrow(Thetas))
-			for(i in ncat:1){
-				P[,i] <- Pk[,i] - tempsum
-				tempsum <- tempsum + P[,i]	
-			}
-			Pk <- P
-		}	
-		return(Pk)
-	}
+	
   
 
  

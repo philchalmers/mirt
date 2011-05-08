@@ -72,3 +72,13 @@ itemplot.bfactor <- function(object, item, type = 'curve', npts = 30,
   }	  
 }
 
+itemplot.polymirt <- function(object, item, type = 'curve', npts = 30,
+  rot = list(x = -70, y = 30, z = 10), ...)
+ {
+ 
+ 
+ 
+ 
+ 
+ }
+

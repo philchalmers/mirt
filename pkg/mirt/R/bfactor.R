@@ -151,8 +151,9 @@ print.bfactor <- function(x, ...)
 
 ########################################## 
 
-bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
-  startvalues = NULL, quadpts = NULL, ncycles = 150, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
+bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, 
+  par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 150, 
+  EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
 { 
   fn <- function(pars, r1, N, guess, Theta, prior, parprior){
     a <- pars[1:(length(pars)-1)]
@@ -198,7 +199,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
   freqs <- table(pats)
   nfreqs <- length(freqs)
   r <- as.vector(freqs)
-  sampsize <- nrow(fulldata) 
+  sampsize <- nrow(fulldata)
+  K <- rep(2,nitems)  
   tabdata <- unlist(strsplit(cbind(names(freqs)), "/"))
   tabdata <- matrix(as.numeric(tabdata), nfreqs, nitems, TRUE)
   tabdata <- cbind(tabdata,r)  
@@ -228,7 +230,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FA
     else if(!is.null(prev.cor)) {
 	if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 	  else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- cormod(fulldata,guess)       
+	} else Rpoly <- cormod(fulldata,K,guess)       
   pars <- matrix(0,nrow=nitems, ncol=nfact + 1)
   if (is.null(startvalues))
   {  

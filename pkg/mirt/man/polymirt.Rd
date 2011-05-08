@@ -1,22 +1,19 @@
-\name{mirt}
+\name{polymirt}
 
-\alias{mirt}
+\alias{polymirt}
 \alias{print.mirt}
 \alias{summary.mirt}
 \alias{coef.mirt}
-\alias{anova.mirt}
-\alias{fitted.mirt}
-\alias{residuals.mirt}
 \alias{plot.mirt}
 
-\title{Full-Information Item Factor Analysis (Multidimensional Item Response Theory)}
+\title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
-  \code{mirt} fits an unconditional maximum likelihood factor analysis model to dichotomous data under the item response theory paradigm. Pseudo-guessing parameters may be included but must be declared as constant, since the estimation of these parameters often leads to unacceptable solutions.
+  \code{polymirt} fits an unconditional maximum likelihood factor analysis model to dichotomous and polychotomous data under the item response theory paradigm using Cai's (2010) algorithm. 
 }
 
 \usage{
-mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
-  startvalues = NULL, quadpts = NULL, ncycles = 150, EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
+polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
+	ncycles = 2000, SEM.cycles = 30, kdraws = 3, tol = .0005, debug = FALSE, ...)
 
 \method{print}{mirt}(x, ...)
 
@@ -24,37 +21,24 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
 
 \method{coef}{mirt}(object, digits = 3, ...)
 
-\method{anova}{mirt}(object, object2, ...)
-
-\method{fitted}{mirt}(object, digits = 3, ...)
-
 \method{plot}{mirt}(x, type = 'curve', npts = 30,
   rot = list(x = -70, y = 30, z = 10), ...)
-
-\method{residuals}{mirt}(object, digits = 3, res.cor=FALSE, ...)
 
 }
 
 \arguments{
-  \item{fulldata}{a \code{matrix} or \code{data.frame} that consists of only 0, 1, and \code{NA} values to be factor analyzed. If scores have been recorded by the response pattern then they can be recoded to dichotomous format using the \code{\link{key2binary}} function}
+  \item{data}{a \code{matrix} or \code{data.frame} that consists of only 0, 1, and \code{NA} values to be factor analyzed. If scores have been recorded by the response pattern then they can be recoded to dichotomous format using the \code{\link{key2binary}} function}
   \item{nfact}{number of factors to be extracted. Maximum of 10}
-  \item{guess}{fixed pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item}
-  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation. The input could be any correlation matrix, but it is advised to use a matrix of tetrachoric correlations (with Carroll's (1945) correction for guessing, if necessary) which can be computed by \code{\link{tetrachor}}. Otherwise, the value may be set to a previously computed \code{mirt} model to obtain the correlation matrix therein}
-  \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}. Priors may be automatically imposed for extreme provisional estimates if \code{par.prior = TRUE}, otherwise the standard MML approach is used}
+  \item{guess}{starting values for pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item. When the value is greater than zero the parameter will be estimated.}
+  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation. The input could be any correlation matrix, but it is advised to use a matrix of tetrachoric correlations (with Carroll's (1945) correction for guessing, if necessary) which can be computed by \code{\link{tetrachor}}. Otherwise, the value may be set to a previously computed \code{mirt} model to obtain the correlation matrix therein}  
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
-  \item{startvalues}{user declared start values for parameters}
-  \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then they are determined by \code{ceiling{15/nfact}} for \code{nfact} < 6, else they are set to 3}
   \item{ncycles}{the number of EM iterations to be performed}
-  \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early}
   \item{x}{an object of class \code{mirt} to be plotted or printed}
   \item{object}{a model estimated from \code{mirt} of class \code{mirt}}
-  \item{object2}{a second model estimated from \code{mirt} of class \code{mirt} with more estimated parameters than \code{object}}
   \item{digits}{number of significant digits to be rounded}
   \item{type}{type of plot to view; can be \code{'curve'} for the total test score as a function of two dimensions, or \code{'info'} to show the test information function for two dimensions}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
-  \item{nowarn}{logical; suppress warnings from dependent packages?}
-  \item{res.cor}{logical; print the residual correlation matrix instead of residual values?}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }
@@ -146,8 +130,8 @@ fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 #without guessing scree(tmat) #looks like a 2 factor solution
-mod1 <- mirt(fulldata, 1) 
-mod2 <- mirt(fulldata, 2) 
+mod1 <- mirt(fulldata, 1)
+mod2 <- mirt(fulldata, 2)
 mod3 <- mirt(fulldata, 3)
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
