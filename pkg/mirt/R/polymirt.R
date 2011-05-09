@@ -1,67 +1,55 @@
-plot.polymirt <- function(x, type = 'curve', npts = 30,
+plot.polymirt <- function(x, npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
 {  
-	if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
-	nfact<-ncol(object$Theta)	
-	K <- x$K
-	K[K == 2] <- 1
-	a <- matrix(object$pars[ ,1:nfact],ncol=nfact)
-	d <- matrix(object$pars[,(nfact+1):ncol(object$pars)],
-		ncol = ncol(object$pars)-nfact)    
-	g <- x$guess
-	A <- as.matrix(sqrt(apply(a^2,1,sum)))
-	B <- -d/A
-	if(ncol(a) > 2) stop("Can't plot high dimentional solutions.\n")
+	type = 'curve'
+	K <- x$K		
+	nfact <- ncol(x$Theta)
+	a <- as.matrix(x$pars[ ,1:nfact])
+    d <- as.matrix(x$pars[ ,(nfact+1):ncol(x$pars)])	
+	guess <- x$guess
+	guess[is.na(guess)] <- 0
+	A <- as.matrix(sqrt(apply(a^2,1,sum)))	
 	theta <- seq(-4,4,length.out=npts)
-	Theta <- thetaComb(theta, ncol(a))
-	P <- matrix(0, ncol=length(g), nrow = nrow(as.matrix(Theta)))
-	for(i in 1:nrow(a)){
-		if(K[i] == 1)
-			P[ ,i] <- P.mirt(a[i, ],d[i,],as.matrix(Theta),g[i])
-		else{
-			z <- d[i,1:K[i]]				
-			P[ ,i:K[i]] <- P.poly(a[i, ],z,as.matrix(Theta),itemexp=TRUE)
-		}		
-	}	  
-
-	if(ncol(a) == 2){
+	Theta <- thetaComb(theta, nfact)
+	info <- rep(0,nrow(Theta))
+	for(j in 1:length(K)){
+		if(K[j] > 2){
+			P <- P.poly(a[j,], d[j,],Theta, itemexp = FALSE)		
+			for(i in 1:K[i]){
+				w1 <- P[,i]*(1-P[,i])*A[j]
+				w2 <- P[,i+1]*(1-P[,i+1])*A[j]
+				I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
+				info <- info + I
+			}
+		} else {
+			P <- P.mirt(a[j,], d[j,],Theta, guess[j])
+			Pstar <- P.mirt(a[j,], d[j,],Theta, 0)
+			info <- info + A[j]^2 * P * (1-P) * Pstar/P
+		}			
+	}		
+	plt <- cbind(info,Theta)
+	if(nfact > 1){
 		require(lattice)
-		if(type == 'info'){
-		I <- (P * (1 - P)) %*% A^2 
-		plt <- cbind(I,Theta)
-		wireframe(I ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Test Information", 
-		zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-		screen = rot)
-		} else {  
-		plt <- cbind(Ptot,Theta)			
-		wireframe(Ptot ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Test score surface", 
-		zlab = "Test \nScore", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-		screen = rot)
-		}	
-	} else {
-	if(type == 'curve'){  
-	plot(Theta, Ptot, type='l', main = 'Test score plot', xlab = 'Theta', ylab='Test Score')
-	} else {
-	I <- (P * (1 - P)) %*% a^2 
-	plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')
-	} 	
-	}  
-}
+		wireframe(info ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Item Information", 
+			zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+			screen = rot)	
+	} else 
+		plot(Theta, info, type='l',main = 'Item Information', xlab = 'Theta', ylab='Information')
+}	  
 
-coef.polymirt <- function(object, digits = 3, SE = FALSE, ...)
+coef.polymirt <- function(object, digits = 3, SE = TRUE, ...)
 {  
-	nfact<-ncol(object$Theta)	
+	nfact <- ncol(object$Theta)	
 	a <- matrix(object$pars[ ,1:nfact],ncol=nfact)
 	d <- matrix(object$pars[,(nfact+1):ncol(object$pars)],
 		ncol = ncol(object$pars)-nfact)    
 	A <- sqrt(apply(a^2,1,sum))
 	B <- -d/A  
-	if (ncol(a) > 1){  
+	if (nfact > 1){  
 		parameters <- cbind(object$pars,object$guess,A,B)
 		SEs <- object$SEpars	
-		colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess",
-			"mvdisc","mvint")	
-		colnames(SEs) <- c(paste("a_",1:ncol(a),sep=""),"d","guess")		
+		colnames(parameters) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess","mvdisc",paste("mvint_",1:(ncol(object$pars)-nfact),sep=""))	
+		colnames(SEs) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")		
 		cat("Unrotated parameters, multivariate discrimination and intercept: \n")
 		print(round(parameters, digits))
 		if(SE){
@@ -71,7 +59,7 @@ coef.polymirt <- function(object, digits = 3, SE = FALSE, ...)
 	} else {
 		parameters <- cbind(object$pars,object$guess)
 		SEs <- object$SEpars	
-		colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:ncol(a),sep=""),"d","guess")			
+		colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")			
 		cat("Parameters with multivariate discrimination and intercept: \n")	
 		print(round(parameters, digits))
 		if(SE){
@@ -139,9 +127,9 @@ print.polymirt <- function(x, ...){
 
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, 
-	ncycles = 2000, SEM.cycles = 30, kdraws = 3, tol = .0005, debug = FALSE, ...){
+	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...){
 	
-	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var) {    
+	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var) { 		
 		N <- nrow(fulldata)
 		J <- length(K)
 		nfact <- ncol(theta0)
@@ -151,7 +139,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
         if(nfact > 1)		
 		  theta1 <- theta0 + rmvnorm(N,rep(0,nfact), diag(rep(sqrt(cand.t.var),nfact))) 
         else
-          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))
+          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))		
 		for(i in 1:J){
 			if(K[i]==2){
 				tmp <- P.mirt(lambdas[i,],zetas[locz],theta0,guess[i])
@@ -171,9 +159,9 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 				P1[,i] <- rowSums(tmp * fulldata[,itemloc[i]:(itemloc[i+1]-1)])							
 				locz <- locz + (K[i]-1)
 			}
-		}					
+		}			
 		irt0 <- rowSums(log(P0)) + dmvnorm(theta0,rep(0,nfact),prior.t.var,log=TRUE)		
-		irt1 <- rowSums(log(P1)) + dmvnorm(theta1,rep(0,nfact),prior.t.var,log=TRUE)		
+		irt1 <- rowSums(log(P1)) + dmvnorm(theta1,rep(0,nfact),prior.t.var,log=TRUE)				
 		accept <- irt1 - irt0
 		accept <- ifelse(accept>0,0,accept)
 		accept <- ifelse(runif(N) < exp(accept),TRUE,FALSE) 		
@@ -262,7 +250,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	
 	############################
 	
-	Call <- match.call()    
+	Call <- match.call()   
 	itemnames <- colnames(data)
 	data <- as.matrix(data)	
 	if(any(is.na(data))) stop("polymirt function can't handle missing data.\n")  
@@ -315,7 +303,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 			zetas[i] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
 			loc <- loc + 1
 		} else {			
-			temp <- colMeans(fulldata[,itemloc[i]:(itemloc[i+1]-2)])
+			temp <- table(data[,i])[1:(K[i]-1)]/N
 			temp <- cumsum(temp)			
 			zetas[loc:(loc+K[i]-2)] <- qnorm(1 - temp)/cs[i]	
 			loc <- loc + K[i] - 1	
@@ -363,7 +351,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	startvalues <- pars	
 	
 	for(cycles in 1:ncycles)
-	{
+	{ 
 		if(cycles == (SEM.cycles + 1)){
 		    pars <- rep(0,npars)
 			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[i,]
@@ -418,7 +406,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		  ave.h <- ave.h + h.m[[i]]
 		}
 		grad <- ave.g/k
-		ave.h <- (-1)*ave.h/k
+		ave.h <- (-1)*ave.h/k 
 		if(cycles <= SEM.cycles){
 		    correction <- solve(ave.h) %*% grad
 			correction[correction > .5] <- .5
@@ -458,10 +446,10 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	SE <- sqrt(SE)	
 	lambdas <- matrix(pars[lamind],ncol=nfact,byrow=TRUE)
 	SElam <- matrix(SE[lamind],ncol=nfact,byrow=TRUE)
-	SEg <- guess <- rep(0,J)
+	SEg <- guess <- rep(NA,J)
 	guess[estGuess] <- pars[gind]
 	SEg[estGuess] <- SE[gind]
-	zetas <- SEzeta <- matrix(0,J,(max(K)-1))
+	zetas <- SEzeta <- matrix(NA,J,(max(K)-1))
 	temp <- pars[zetaind]
 	temp1 <- SE[zetaind]	
 	k <- 1
@@ -489,7 +477,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles - SEM.cycles,
 		Theta=theta0, fulldata=fulldata,K=K, F=F, h2=h2, fulldata=fulldata, 
-		converge = converge,Call=Call)	 
+		itemloc=itemloc, converge = converge,Call=Call)	 
 	class(mod) <- 'polymirt'
 	mod	
 }

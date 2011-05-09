@@ -1,28 +1,12 @@
 ########################################## 
 
-residuals.bfactor <- function(object, digits = 3, res.cor=FALSE, ...)
-{
-  if(res.cor) {
-    cormat <- object$cormat
-    F <- object$F
-    Rrep <- F %*% t(F)
-	residual <- cormat - Rrep	
-	RMR <- 0
-	for(i in 1:ncol(cormat))
-	  for(j in 1:ncol(cormat))
-	    if(i < j) RMR <- RMR + (cormat[i,j] - Rrep[i,j])^2
-	RMR <- sqrt(RMR/(ncol(cormat)*(ncol(cormat) - 1) / 2))	
-    cat("Residual correlations: \n")
-	print(residual,digits)  
-	cat("\nRMR : ", round(RMR,3),"\n")
-  
-  } else {     
-    r <- object$tabdata[ ,ncol(object$tabdata)]
-    res <- (r - object$Pl * nrow(object$fulldata)) / 
-      sqrt(object$Pl * nrow(object$fulldata))
-    print(res,digits)
-    invisible(res)
-  }
+residuals.bfactor <- function(object, digits = 3, ...)
+{       
+  r <- object$tabdata[ ,ncol(object$tabdata)]
+  res <- (r - object$Pl * nrow(object$fulldata)) / 
+    sqrt(object$Pl * nrow(object$fulldata))
+  print(res,digits)
+  invisible(res)  
 }
 
 fitted.bfactor <- function(object, digits = 3, ...)

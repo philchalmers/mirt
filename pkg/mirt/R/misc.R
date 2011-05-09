@@ -1,7 +1,7 @@
 # theta combinations
 thetaComb <- function(theta, nfact)
 {
-  if (nfact == 1) Theta <- theta
+  if (nfact == 1) Theta <- matrix(theta)
     else if (nfact == 2) Theta <- expand.grid(theta,theta)   
     else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
     else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
@@ -28,7 +28,7 @@ start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowar
     FA <- fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn)	
     loads <- unclass(loadings(FA))
     u <- FA$unique
-    u[u < 0 ] <- .25
+    u[u < .001 ] <- .2
     cs <- sqrt(u)
     dstart <- qnorm(colMeans(fulldata))/cs
     astart <- loads/cs
@@ -96,12 +96,9 @@ P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE){
 	for(i in 1:(ncat-1))			
 		Pk[ ,i+1] <- P.mirt(lambda,zetas[i],Thetas,0)		
 	if(itemexp){
-		P <- matrix(0,nrow(Thetas),ncat)
-		tempsum <- rep(0,nrow(Thetas))
-		for(i in ncat:1){
-			P[,i] <- Pk[,i] - tempsum
-			tempsum <- tempsum + P[,i]	
-		}
+		P <- matrix(0,nrow(Thetas),ncat)		
+		for(i in ncat:1)
+			P[,i] <- Pk[,i] - Pk[,i+1]						
 		Pk <- P
 	}	
 	return(Pk)
@@ -196,10 +193,5 @@ P.mirt <- function(a, d, Theta, g){
     return(rlist)
   }  
 
-	
-  
-
- 
- 
  
  

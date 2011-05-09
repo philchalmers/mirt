@@ -15,8 +15,9 @@
 }
 
 \usage{
-mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
-  startvalues = NULL, quadpts = NULL, ncycles = 150, EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
+mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
+  startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE, 
+  debug = FALSE, ...)
 
 \method{print}{mirt}(x, ...)
 
@@ -28,10 +29,10 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = NULL,
 
 \method{fitted}{mirt}(object, digits = 3, ...)
 
-\method{plot}{mirt}(x, type = 'curve', npts = 30,
+\method{plot}{mirt}(x, type = 'info', npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
 
-\method{residuals}{mirt}(object, digits = 3, res.cor=FALSE, ...)
+\method{residuals}{mirt}(object, digits = 3, ...)
 
 }
 
@@ -146,8 +147,8 @@ fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 #without guessing scree(tmat) #looks like a 2 factor solution
-mod1 <- mirt(fulldata, 1) 
-mod2 <- mirt(fulldata, 2) 
+mod1 <- mirt(fulldata, 1)
+mod2 <- mirt(fulldata, 2)
 mod3 <- mirt(fulldata, 3)
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best

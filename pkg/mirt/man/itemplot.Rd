@@ -11,10 +11,12 @@
 \usage{
 itemplot(object, ...)
 
-\method{itemplot}{mirt}(object, item, type = 'curve', 
-  npts = 30, rot = list(x = -70, y = 30, z = 10), ...)
+\method{itemplot}{mirt}(object, item, type = 'info',
+  npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 \method{itemplot}{bfactor}(object, item, type = 'curve',
-  npts = 30, rot = list(x = -70, y = 30, z = 10), ...)
+  npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
+\method{itemplot}{polymirt}(object, item,
+  npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 }
  \arguments{
    \item{object}{a computed model of class \code{bfactor} or \code{mirt}}
@@ -41,7 +43,7 @@ itemplot(mod1, 1, type = 'info')
 itemplot(mod2, 1)
 itemplot(mod2, 1, type = 'info')
 #turn it a little
-itemplot(mod2, 1, type = 'info', rot = list(x = -70, y = -15, z = -10))  
+itemplot(mod2, 1, type = 'info', rot = list(x = -70, y = -15, z = -10))
 
     }
 }

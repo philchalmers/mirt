@@ -6,7 +6,7 @@ Simulates response patterns with multivariate normal distributions.
 }
 
 \usage{
-simdata(a, d, N, guess = 0, sigma = NULL, mu = NULL, logconst = TRUE)
+simdata(a, d, N, guess = 0, sigma = NULL, mu = NULL)
 
 }
  \arguments{
@@ -32,7 +32,7 @@ Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: S
 \examples{
 \dontrun{
 #parameters from Reckase (2009), p. 153
-a <- matrix(c( 
+a <- matrix(c(
  .7471, .0250, .1428,
  .4595, .0097, .0692,
  .8613, .0067, .4040,

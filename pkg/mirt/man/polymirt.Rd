@@ -1,42 +1,41 @@
 \name{polymirt}
 
 \alias{polymirt}
-\alias{print.mirt}
-\alias{summary.mirt}
-\alias{coef.mirt}
-\alias{plot.mirt}
+\alias{print.polymirt}
+\alias{summary.polymirt}
+\alias{coef.polymirt}
+\alias{plot.polymirt}
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
-  \code{polymirt} fits an unconditional maximum likelihood factor analysis model to dichotomous and polychotomous data under the item response theory paradigm using Cai's (2010) algorithm. 
+  \code{polymirt} fits an unconditional maximum likelihood factor analysis model to dichotomous and polychotomous data under the item response theory paradigm using Cai's (2010) Metropolis-Hastings Robbins-Monro algorithm.
 }
 
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, SEM.cycles = 30, kdraws = 3, tol = .0005, debug = FALSE, ...)
+	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...)
 
 \method{print}{mirt}(x, ...)
 
 \method{summary}{mirt}(object, digits = 3, rotate='varimax', ...)
 
-\method{coef}{mirt}(object, digits = 3, ...)
+\method{coef}{mirt}(object, digits = 3, SE = TRUE, ...)
 
-\method{plot}{mirt}(x, type = 'curve', npts = 30,
+\method{plot}{mirt}(x, npts = 30,
   rot = list(x = -70, y = 30, z = 10), ...)
 
 }
 
 \arguments{
-  \item{data}{a \code{matrix} or \code{data.frame} that consists of only 0, 1, and \code{NA} values to be factor analyzed. If scores have been recorded by the response pattern then they can be recoded to dichotomous format using the \code{\link{key2binary}} function}
-  \item{nfact}{number of factors to be extracted. Maximum of 10}
-  \item{guess}{starting values for pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item. When the value is greater than zero the parameter will be estimated.}
-  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation. The input could be any correlation matrix, but it is advised to use a matrix of tetrachoric correlations (with Carroll's (1945) correction for guessing, if necessary) which can be computed by \code{\link{tetrachor}}. Otherwise, the value may be set to a previously computed \code{mirt} model to obtain the correlation matrix therein}  
+  \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data.}
+  \item{nfact}{number of factors to be extracted.}
+  \item{guess}{starting values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item. When the value is greater than zero the parameter will be estimated.}
+  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values the estimation. The input could be any correlation matrix, but it is advised to use a matrix of polychoric correlations.}
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
-  \item{ncycles}{the number of EM iterations to be performed}
-  \item{x}{an object of class \code{mirt} to be plotted or printed}
-  \item{object}{a model estimated from \code{mirt} of class \code{mirt}}
-  \item{digits}{number of significant digits to be rounded}
-  \item{type}{type of plot to view; can be \code{'curve'} for the total test score as a function of two dimensions, or \code{'info'} to show the test information function for two dimensions}
+  \item{ncycles}{the maximum number of iterations to be performed}
+  \item{x}{an object of class \code{polymirt} to be plotted or printed}
+  \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}
+  \item{digits}{the number of significant digits to be rounded}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
   \item{debug}{logical; turn on debugging features?}
@@ -45,64 +44,40 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 
 \details{
 
-  \code{mirt} follows the item factor analysis strategy by marginal maximum likelihood estimation (MML) that is outlined in Bock and Aiken (1981) and Bock, Gibbons and Muraki (1988). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC (accessible via \code{\link{anova.mirt}}). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The target equation is
+  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The target equation for dichotomous data is
 
 \deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_i + (1 - g_i) * 1.702(\bold{a}_i' \bold{a}_i + d_i)/ (1 + 1.702(\bold{a}_i' \bold{a}_i + d_i))}
 
-  where \emph{i} is the item index, \eqn{\bold{a}_i} is the vector of discrimination parameters (i.e. slopes), \eqn{d_i} is the intercept, and \eqn{g_i} is the pseudo-guessing parameter. To avoid estimation difficulties the \eqn{g_i}'s must be specified by the user.
+  where \emph{i} is the item index, \eqn{\bold{a}_i} is the vector of discrimination parameters (i.e. slopes), \eqn{d_i} is the intercept, and \eqn{g_i} is the pseudo-guessing parameter. The \eqn{g_i}'s must be specified by the user, and is often difficult to estimate.
 
-  Estimation of the model begins with computing a matrix of tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responds. A MINRES factor analysis with \code{nfact} is then extracted and item parameters are estimated by \eqn{a_{ij} = f_{ij}/u_i}, where  \eqn{f_{ij}} is the factor loading for the \emph{i}th item on the \emph{j}th factor, and \eqn{u_i} is the square root of the factor uniqueness, \eqn{\sqrt{1 - h_i^2}}. The initially intercept parameters are determined by calculating the inverse normal of the item facility (i.e., item easiness), \eqn{q_i}, to obtain \eqn{d_i = q_i / u_i}. Following these initial estimates the model is iterated using the EM estimation strategy with non-adaptive quadrature points. Implicit equation accelerations (described in Ramsey (1975)) are also added to facilitate parameter convergence speed, and this is adjusted every third cycle.
-
-  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
+  \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
 
   \describe{
     \item{orthogonal: }{\code{"varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon"}}
     \item{oblique: }{\code{"promax", "oblimin", "quartimin", "oblimax", "simplimax"}}
   }
 
-  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions.
+  Using \code{plot} will plot the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions.
 }
 
 \value{
-  \code{mirt} returns an object of class \code{mirt}, with the following elements:
-  \item{pars}{estimated parameters of the model, the rightmost column being the intercept}
-  \item{guess}{a vector of the constant user-supplied pseudo-guessing parameters}
-  \item{facility}{a proportion vector of item endorsement}
-  \item{cormat}{if not initially specified, a tetrachoric matrix with Carroll's correction for guessing (if applicable); else the user supplied correlation matrix }
-  \item{log.lik}{log-likelihood of the model}
-  \item{AIC}{Akaike Information Criteria}
-  \item{X2}{chi-squared statistic}
-  \item{df}{degrees of freedom associated with \code{X2}}
-  \item{p}{probability associated with \code{df} and \code{X2}}
-  \item{tabdata}{a summary table of unique response patterns with the frequency of occurrence in the rightmost column}
-  \item{Pl}{calculated expected probability vector for each unique response pattern}
-  \item{Theta}{combination of quadrature points for each factor; contains \eqn{quadpts^nfact} number of rows}
-  \item{fulldata}{complete data complete with the original item names}
-  \item{empdist}{calculated empirical distribution}
+  \code{polymirt} returns an object of class \code{polymirt}, with the following elements:
+  \item{pars}{estimated parameters of the model, the rightmost columns being the intercepts}
+  \item{guess}{a vector of the estimated pseudo-guessing parameters}
+  \item{SEpars}{a matrix of standard errors for the parameters estimated}
+  \item{Theta}{last iteration of the Metropolis-Hastings imputation of the factor scores}
+  \item{fulldata}{complete data complete with the original item names and values}
   \item{F}{unrotated factor loadings matrix}
   \item{h2}{a vector of communalities}
-  \item{EMiter}{number of EM cycles performed; will be less than \code{ncycles} if the tolerance is reached}
-  \item{par.prior}{list of the assumed prior parameters used to constrain the solution. If no priors are specified then the solution will be a matrix of \code{c(1,0,0)}, indicating no influence on the parameters}
+  \item{cycles}{number of MHRM cycles performed; will be less than \code{ncycles} if the tolerance is reached}
+  \item{itemloc}{a vector indicating where the item location begin}
+  \item{converge}{logical; did the model converge?}
   \item{Call}{the function call}
-}
-
-\section{Convergence}{
-
-Unrestricted full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for an acceptable solution. Be mindful of the item facility values that are printed with \code{coef.mirt} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for removal from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation. Also, increasing the number of quadrature points per dimension may help to stabilize the estimation process.
-
 }
 
 \references{
 
-Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.
-
-Bock, R. D., Gibbons, R., & Muraki, E. (1988). Full-Information Item Factor Analysis. \emph{Applied Psychological Measurement, 12}(3), 261-280.
-
-Carroll, J. B. (1945). The effect of difficulty and chance success on correlations between items and between tests. \emph{Psychometrika, 26}, 347-372.
-
-Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis. \emph{Psychometrika, 40}(3), 337-360.
-
-Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis [Computer software]. Lincolnwood, IL: Scientific Software International.
+Cai, L. (2010). High-Dimensional exploratory item factor analysis by a Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75}, 33-57.
 
 }
 
@@ -116,33 +91,18 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
 
-(mod1 <- mirt(fulldata, 1))
+(mod1 <- polymirt(fulldata, 1))
 summary(mod1)
-(mod2 <- mirt(fulldata, 2, prev.cor = mod1)) #use previous tetrachoric matrix
+(mod2 <- polymirt(fulldata, 2))
 summary(mod2)
-coef(mod2)
-anova(mod1, mod2) #compare the two models
-scores <- fscores(mod2) #save factor score table
+coef(mod2, SE = TRUE)
+plot(mod2)
 
 ###########
-data(SAT12)
-fulldata <- key2binary(SAT12,
-  key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+data(Science)
+mod1 < -polymirt(Science,1)
+mod2 <- polymirt(Science,2)
 
-#without guessing scree(tmat) #looks like a 2 factor solution
-mod1 <- mirt(fulldata, 1)
-mod2 <- mirt(fulldata, 2)
-mod3 <- mirt(fulldata, 3)
-anova(mod1,mod2)
-anova(mod2, mod3) #negative AIC, 2 factors probably best
-
-#with guessing
-mod1g <- mirt(fulldata, 1, guess = .1)
-coef(mod1g)
-mod2g <- mirt(fulldata, 2, guess = .1)
-coef(mod2g)
-anova(mod1g, mod2g)
-summary(mod2g, rotate='promax')
      }
 }
 

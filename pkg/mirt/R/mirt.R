@@ -1,6 +1,6 @@
 ##########################################
 
-residuals.mirt <- function(object, digits = 3, res.cor=FALSE, ...)
+residuals.mirt <- function(object, digits = 3, ...)
 {    
   r <- object$tabdata[ ,ncol(object$tabdata)]
   res <- (r - object$Pl * nrow(object$fulldata)) / 
@@ -9,7 +9,7 @@ residuals.mirt <- function(object, digits = 3, res.cor=FALSE, ...)
   invisible(res)  	  	  
 }
 
-plot.mirt <- function(x, type = 'curve', npts = 30,
+plot.mirt <- function(x, type = 'info', npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
 {  
   if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
@@ -116,7 +116,7 @@ fscores.mirt <- function(object, full.scores = FALSE,
   }   
 }  
 
-coef.mirt <- function(object, digits = 3, SE = FALSE, ...)
+coef.mirt <- function(object, digits = 3, ...)
 {  
   a <- as.matrix(object$pars[ ,1:(ncol(object$pars)-1)])
   d <- object$pars[ ,ncol(object$pars)]
@@ -125,14 +125,12 @@ coef.mirt <- function(object, digits = 3, SE = FALSE, ...)
   if (ncol(a) > 1){  
     parameters <- cbind(object$pars,object$guess,object$facility,A,B)    
     colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess", 
-      "facility","mvdisc","mvint")
-	if(!is.logical(SE)) parameters <- cbind(parameters, SE)	  
+      "facility","mvdisc","mvint")	  
     cat("Unrotated parameters, multivariate discrimination and intercept: \n")
     print(round(parameters, digits))  	
   } else {
     parameters <- cbind(object$pars,object$guess,object$facility) 
-	colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess","facility")
-    if(!is.logical(SE)) parameters <- cbind(parameters, SE)	
+	colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess","facility")    
     cat("Parameters with multivariate discrimination and intercept: \n")	
     print(round(parameters, digits))	  
   }

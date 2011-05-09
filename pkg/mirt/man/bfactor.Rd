@@ -13,7 +13,7 @@
 }
 
 \usage{
-bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
+bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   startvalues = NULL,  quadpts = NULL, ncycles = 150, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
 
 \method{print}{bfactor}(x, ...)
@@ -26,7 +26,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = NULL,
 
 \method{fitted}{bfactor}(object, digits = 3, ...)
 
-\method{residuals}{bfactor}(object, digits = 3, res.cor=FALSE, ...)
+\method{residuals}{bfactor}(object, digits = 3, ...)
 
 }
 
@@ -112,14 +112,14 @@ coef(mod1)
 
 ###Try with guessing parameters added
 guess <- rep(.1,32)
-mod2 <- bfactor(fulldata, specific, guess = guess) 
+mod2 <- bfactor(fulldata, specific, guess = guess)
 coef(mod2) #item 32 too difficult to include guessing par
 #fix by imposing a weak intercept prior
 mod3a <- bfactor(fulldata, specific, guess = guess, prev.cor = mod2, par.prior = list(int = c(0,4), int.items = 32))
 coef(mod3a)
 #...or by removing guessing parameter
 guess[32] <- 0
-mod3b <- bfactor(fulldata, specific, guess = guess) 
+mod3b <- bfactor(fulldata, specific, guess = guess)
 coef(mod3b)
 anova(mod1,mod3b) #no Chi-squared test here, but lower AIC value for guessing model
     }
