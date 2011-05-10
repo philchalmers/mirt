@@ -2,6 +2,7 @@
 \alias{itemplot}
 \alias{itemplot.mirt}
 \alias{itemplot.bfactor}
+\alias{itemplot.polymirt}
 
 \title{Displays item surface and information plots}
 \description{

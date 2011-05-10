@@ -33,7 +33,7 @@ fscores.bfactor <- function(object, full.scores = FALSE,
   scores <- matrix(0,ncol=ncol(Theta),nrow=nrow(tabdata))
   thetas <- rep(0,nfact)
   logicalfact <- object$logicalfact
-  W <- dmvnorm(theta0,rep(0,nfact),diag(nfact))  
+  W <- dmvnorm(Theta,rep(0,nfact),diag(nfact))  
   for (i in 1:nrow(scores)){
     L <- 0  
     for (j in 1:nrow(a)){

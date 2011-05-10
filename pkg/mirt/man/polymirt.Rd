@@ -13,15 +13,15 @@
 
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...)
+	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...)
 
-\method{print}{mirt}(x, ...)
+\method{print}{polymirt}(x, ...)
 
-\method{summary}{mirt}(object, digits = 3, rotate='varimax', ...)
+\method{summary}{polymirt}(object, rotate='varimax', digits = 3, ...)
 
-\method{coef}{mirt}(object, digits = 3, SE = TRUE, ...)
+\method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
 
-\method{plot}{mirt}(x, npts = 30,
+\method{plot}{polymirt}(x, npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
 
 }
@@ -33,6 +33,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values the estimation. The input could be any correlation matrix, but it is advised to use a matrix of polychoric correlations.}
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
   \item{ncycles}{the maximum number of iterations to be performed}
+  \item{SE}{logical; display the standard errors?}
   \item{x}{an object of class \code{polymirt} to be plotted or printed}
   \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}
   \item{digits}{the number of significant digits to be rounded}
@@ -100,8 +101,14 @@ plot(mod2)
 
 ###########
 data(Science)
-mod1 < -polymirt(Science,1)
-mod2 <- polymirt(Science,2)
+(mod1 <- polymirt(Science,1))
+summary(mod1)
+coef(mod1)
+
+(mod2 <- polymirt(Science,2))
+summary(mod2,'promax')
+coef(mod2)
+plot(mod2)
 
      }
 }

@@ -137,7 +137,7 @@ coef.mirt <- function(object, digits = 3, ...)
   invisible(parameters)
 }
 
-summary.mirt <- function(object, digits = 3, rotate = 'varimax', ...)
+summary.mirt <- function(object, rotate = 'varimax', digits = 3, ...)
 {
   nfact <- ncol(object$F)
   if (rotate == 'none' || nfact == 1) {

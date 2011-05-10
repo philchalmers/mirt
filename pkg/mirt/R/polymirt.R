@@ -15,7 +15,7 @@ plot.polymirt <- function(x, npts = 50,
 	for(j in 1:length(K)){
 		if(K[j] > 2){
 			P <- P.poly(a[j,], d[j,],Theta, itemexp = FALSE)		
-			for(i in 1:K[i]){
+			for(i in 1:K[j]){
 				w1 <- P[,i]*(1-P[,i])*A[j]
 				w2 <- P[,i+1]*(1-P[,i+1])*A[j]
 				I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
@@ -37,7 +37,7 @@ plot.polymirt <- function(x, npts = 50,
 		plot(Theta, info, type='l',main = 'Item Information', xlab = 'Theta', ylab='Information')
 }	  
 
-coef.polymirt <- function(object, digits = 3, SE = TRUE, ...)
+coef.polymirt <- function(object, SE = TRUE, digits = 3, ...)
 {  
 	nfact <- ncol(object$Theta)	
 	a <- matrix(object$pars[ ,1:nfact],ncol=nfact)
@@ -70,7 +70,7 @@ coef.polymirt <- function(object, digits = 3, SE = TRUE, ...)
 	invisible(parameters)
 }
 
-summary.polymirt <- function(object, digits = 3, rotate = 'varimax', ...)
+summary.polymirt <- function(object, rotate = 'varimax', digits = 3, ...)
 {
 	nfact <- ncol(object$F)
 	if (rotate == 'none' || nfact == 1) {
@@ -127,7 +127,7 @@ print.polymirt <- function(x, ...){
 
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, 
-	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...){
+	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...){
 	
 	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var) { 		
 		N <- nrow(fulldata)

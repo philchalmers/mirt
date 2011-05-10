@@ -16,7 +16,6 @@ simdata(a, d, N, guess = 0, sigma = NULL, mu = NULL)
    \item{guess}{a vector of guessing parameters}
    \item{sigma}{a covariance matrix of the underlying distribution}
    \item{mu}{a mean vector of the underlying distribution}
-   \item{logconst}{logical; transform the parameters to use log constant 1.702?}
  }
 
 \details{

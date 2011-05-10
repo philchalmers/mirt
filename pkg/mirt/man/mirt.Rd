@@ -16,12 +16,12 @@
 
 \usage{
 mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
-  startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE, 
+  startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE,
   debug = FALSE, ...)
 
 \method{print}{mirt}(x, ...)
 
-\method{summary}{mirt}(object, digits = 3, rotate='varimax', ...)
+\method{summary}{mirt}(object, rotate='varimax', digits = 3, ...)
 
 \method{coef}{mirt}(object, digits = 3, ...)
 
@@ -46,7 +46,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   \item{startvalues}{user declared start values for parameters}
   \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then they are determined by \code{ceiling{15/nfact}} for \code{nfact} < 6, else they are set to 3}
   \item{ncycles}{the number of EM iterations to be performed}
-  \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early}
+  \item{tol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early}
   \item{x}{an object of class \code{mirt} to be plotted or printed}
   \item{object}{a model estimated from \code{mirt} of class \code{mirt}}
   \item{object2}{a second model estimated from \code{mirt} of class \code{mirt} with more estimated parameters than \code{object}}
@@ -55,7 +55,6 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
-  \item{res.cor}{logical; print the residual correlation matrix instead of residual values?}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }

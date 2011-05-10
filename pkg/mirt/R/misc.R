@@ -63,8 +63,8 @@ MAP.mirt <- function(Theta,a,d,guess,patdata)
   Theta <- t(as.matrix(Theta))
   L <- 0
   for (j in 1:length(patdata)){
-    if(patdata[j] == 1) L <- log(Pmirt(a[j, ],d[j],Theta,guess[j])) + L
-	  else L <- log(1 - Pmirt(a[j, ],d[j],Theta,guess[j])) + L	
+    if(patdata[j] == 1) L <- log(P.mirt(a[j, ],d[j],Theta,guess[j])) + L
+	  else L <- log(1 - P.mirt(a[j, ],d[j],Theta,guess[j])) + L	
   }
   mu <- 0
   sigma <- 1
@@ -78,8 +78,8 @@ MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact)
   Theta <- t(as.matrix(Theta))
   L <- 0
   for (j in 1:length(patdata)){
-    if(patdata[j] == 1) L <- log(Pbfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L
-	  else L <- log(1 - Pbfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L	
+    if(patdata[j] == 1) L <- log(P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L
+	  else L <- log(1 - P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L	
   }
   mu <- 0
   sigma <- 1
