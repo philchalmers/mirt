@@ -13,7 +13,7 @@
 
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...)
+	ncycles = 2000, SEM.cycles = 50, kdraws = 1, tol = .0005, debug = FALSE, ...)
 
 \method{print}{polymirt}(x, ...)
 
@@ -45,11 +45,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 
 \details{
 
-  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The target equation for dichotomous data is
-
-\deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_i + (1 - g_i) * 1.702(\bold{a}_i' \bold{a}_i + d_i)/ (1 + 1.702(\bold{a}_i' \bold{a}_i + d_i))}
-
-  where \emph{i} is the item index, \eqn{\bold{a}_i} is the vector of discrimination parameters (i.e. slopes), \eqn{d_i} is the intercept, and \eqn{g_i} is the pseudo-guessing parameter. The \eqn{g_i}'s must be specified by the user, and is often difficult to estimate.
+  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT.
 
   \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
 
@@ -79,6 +75,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 \references{
 
 Cai, L. (2010). High-Dimensional exploratory item factor analysis by a Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75}, 33-57.
+
+Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis [Computer software]. Lincolnwood, IL: Scientific Software International.
 
 }
 

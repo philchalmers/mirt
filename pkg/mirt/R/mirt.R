@@ -415,7 +415,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   L <- eigen(FF)$values[1:nfact]
   if (nfact == 1) F <- as.matrix(V * sqrt(L))
     else F <- V %*% sqrt(diag(L))  
-  if (sum(F[ ,1] < 0)) F[ ,1] <- (-1)*F[ ,1]  
+  if (sum(F[ ,1] < 0)) F <- (-1) * F  
   h2 <- rowSums(F^2)      
   
   mod <- list(EMiter=cycles, pars=pars, guess=guess, X2 = X2, df = df, p = p,

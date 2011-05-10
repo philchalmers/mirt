@@ -127,7 +127,7 @@ print.polymirt <- function(x, ...){
 
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, 
-	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...){
+	ncycles = 2000, SEM.cycles = 50, kdraws = 1, tol = .0005, debug = FALSE, ...){
 	
 	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var) { 		
 		N <- nrow(fulldata)
@@ -410,12 +410,11 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		if(cycles <= SEM.cycles){
 		    correction <- solve(ave.h) %*% grad
 			correction[correction > .5] <- .5
-			correction[correction < -.5] <- -.5
-			if(any(estGuess)){
-				correction[correction[gind] > .05] <- .05
-				correction[correction[gind] < -.05] <- -.05
-			}	
-			SEM.stores[cycles,] <- pars <- pars + correction				
+			correction[correction < -.5] <- -.5			
+			parsold <- pars
+			SEM.stores[cycles,] <- pars <- pars + correction
+			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
+			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
 			next
 		}	
 		
@@ -431,7 +430,10 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		if(all(gamma*correction < tol)) conv <- conv + 1
 			else conv <- 0		
 		if(conv == 3) break		
+		parsold <- pars
 		pars <- pars + gamma*correction
+		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
+		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 	
 		phi <- phi + gamma*(grad - phi)
@@ -472,7 +474,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	L <- eigen(FF)$values[1:nfact]
 	if (nfact == 1) F <- as.matrix(V * sqrt(L))
 		else F <- V %*% sqrt(diag(L))  
-	if (sum(F[ ,1] < 0)) F[ ,1] <- (-1)*F[ ,1]  
+	if (sum(F[ ,1] < 0)) F <- (-1) * F  
 	h2 <- rowSums(F^2) 
 	
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles - SEM.cycles,

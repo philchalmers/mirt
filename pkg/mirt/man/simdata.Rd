@@ -6,17 +6,16 @@ Simulates response patterns with multivariate normal distributions.
 }
 
 \usage{
-simdata(a, d, N, guess = 0, sigma = NULL, mu = NULL)
+simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0)
 
 }
  \arguments{
-   \item{a}{a matrix of slope parameters}
-   \item{d}{a vector of intercepts}
+   \item{a}{a matrix of slope parameters. If slopes are to be constrained to zero then use \code{NA}}
+   \item{d}{a matrix of intercepts. The matrix should have as many columns as the item with the largest number of categories. To declare that the other values should not be included, replace the omitted values with \code{NA}}
    \item{N}{sample size}
-   \item{guess}{a vector of guessing parameters}
+   \item{guess}{a vector of guessing parameters for each item; only applicable for dichotomous items. Must be either a scalar value that will affect all of the dichotomous items, or a vector with as many values as to be simulated items}
    \item{sigma}{a covariance matrix of the underlying distribution}
-   \item{mu}{a mean vector of the underlying distribution}
- }
+   \item{mu}{a mean vector of the underlying distribution} }
 
 \details{
 Returns a data matrix simulated from the parameters.
@@ -30,7 +29,7 @@ Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: S
 
 \examples{
 \dontrun{
-#parameters from Reckase (2009), p. 153
+###Parameters from Reckase (2009), p. 153
 a <- matrix(c(
  .7471, .0250, .1428,
  .4595, .0097, .0692,
@@ -63,16 +62,42 @@ a <- matrix(c(
  .2139, .4612, .0063,
  .1761,1.1200, .0870),30,3,byrow=TRUE)
 
-d <- c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
+d <- matrix(c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
   .6431,.0122,.0912,.8082,-.1867,.4533,-1.8398,.4139,
   -.3004,-.1824,.5125,1.1342,.0230,.6172,-.1955,-.3668,
-  -1.7590,-.2434,.4925,-.3410,.2896,.006,.0329)
+  -1.7590,-.2434,.4925,-.3410,.2896,.006,.0329),ncol=1)
 
 mu <- c(-.4, -.7, .1)
 sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
 
 dataset1 <- simdata(a, d, 2000)
 dataset2 <- simdata(a, d, 2000, mu = mu, sigma = sigma)
+
+###An example of a mixed item, bifactor loadings pattern with correlated specific factors
+a <- matrix(c(
+1.5,0.5,NA,
+0.5,0.5,NA,
+1.0,0.5,NA,
+1.5,NA,0.5,
+0.5,NA,0.5,
+1.0,NA,0.5),ncol=3,byrow=TRUE)
+
+#first three items are dichotomous, next two have 3 categories, and the last has 2
+d <- matrix(c(
+-1.0,NA,NA,
+ 1.5,NA,NA,
+ 0.0,NA,NA,
+3.0,2.0,-0.5,
+2.5,1.0,-1,
+2.0,0.0,NA),ncol=3,byrow=TRUE)
+
+sigma <- diag(3)
+sigma[2,3] <- sigma[3,2] <- .25
+
+
+dataset <- simdata(a,d,1000,sigma)
+
+
 
    }
 }
