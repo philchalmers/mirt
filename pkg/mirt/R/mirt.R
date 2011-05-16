@@ -58,7 +58,7 @@ fitted.mirt <- function(object, digits = 3, ...)
   invisible(expected)
 }
 
-fscores.mirt <- function(object, full.scores = FALSE, 
+f.scores.mirt <- function(object, full.scores = FALSE, 
   method = "EAP", rotate = 'varimax', ...)
 {    
   if(ncol(object$F) > 1 && rotate != 'none') rotF <- Rotate(object$F,rotate)$loadings  

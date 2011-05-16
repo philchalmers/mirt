@@ -1,4 +1,4 @@
-fscores <- function(object, ...)
+f.scores <- function(object, ...)
 {
-  UseMethod("fscores")
+  UseMethod("f.scores")
 }

@@ -1,7 +1,7 @@
 useDynLib(mirt, .registration=TRUE)
 
 # Exported functions
-export(bfactor,mirt,polymirt,key2binary,expand.table,fscores,itemplot,simdata)
+export(bfactor,mirt,polymirt,key2binary,expand.table,f.scores,itemplot,simdata)
 
 # Imported functions
 importFrom("psych", factor.minres, Promax, fa)
@@ -11,7 +11,7 @@ S3method(print, mirt)
 S3method(summary, mirt)
 S3method(anova, mirt)
 S3method(coef, mirt)
-S3method(fscores, mirt)
+S3method(f.scores, mirt)
 S3method(fitted, mirt)
 S3method(itemplot, mirt)
 S3method(plot, mirt)
@@ -20,7 +20,7 @@ S3method(print, bfactor)
 S3method(summary, bfactor)
 S3method(anova, bfactor)
 S3method(coef, bfactor)
-S3method(fscores, bfactor)
+S3method(f.scores, bfactor)
 S3method(fitted, bfactor)
 S3method(itemplot, bfactor)
 S3method(residuals, bfactor)

@@ -127,7 +127,7 @@ print.polymirt <- function(x, ...){
 
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, 
-	ncycles = 2000, SEM.cycles = 50, kdraws = 1, tol = .0005, debug = FALSE, ...){
+	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...){
 	
 	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var) { 		
 		N <- nrow(fulldata)

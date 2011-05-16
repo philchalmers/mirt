@@ -18,7 +18,7 @@ fitted.bfactor <- function(object, digits = 3, ...)
   invisible(expected)
 }
 
-fscores.bfactor <- function(object, full.scores = FALSE, 
+f.scores.bfactor <- function(object, full.scores = FALSE, 
   method = "EAP", ...)
 {  
   g <- object$guess
