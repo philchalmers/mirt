@@ -60,7 +60,7 @@ coef.polymirt <- function(object, SE = TRUE, digits = 3, ...)
 		parameters <- cbind(object$pars,object$guess)
 		SEs <- object$SEpars	
 		colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")			
-		cat("Parameters with multivariate discrimination and intercept: \n")	
+		cat("Parameter slopes and intercepts: \n")	
 		print(round(parameters, digits))
 		if(SE){
 			cat("\nStd. Errors: \n")	
@@ -179,7 +179,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	loc <- 1	
 	for(i in 1:J){
 		if(K[i] == 2){
-			zetas[i] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
+			zetas[loc] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
 			loc <- loc + 1
 		} else {			
 			temp <- table(data[,i])[1:(K[i]-1)]/N
@@ -318,6 +318,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
+	
 	SE <- diag(solve(info))
 	if(any(SE < 0)){
 		warning("Solution is not proper, information matrix is not positive definite.\n")
@@ -356,9 +357,10 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	if (sum(F[ ,1] < 0)) F <- (-1) * F  
 	h2 <- rowSums(F^2) 
 	
+	
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles - SEM.cycles,
 		Theta=theta0, fulldata=fulldata,K=K, F=F, h2=h2, fulldata=fulldata, 
-		itemloc=itemloc, converge = converge,Call=Call)	 
+		itemloc=itemloc, converge = converge, log.lik=log.lik, Call=Call)	 
 	class(mod) <- 'polymirt'
 	mod	
 }

@@ -194,7 +194,7 @@ P.mirt <- function(a, d, Theta, g){
   }    
   
 	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
-		prior.t.var = diag(ncol(theta0))) { 		
+		prior.t.var = diag(ncol(theta0)), log.lik = FALSE) { 		
 		N <- nrow(fulldata)
 		J <- length(K)
 		nfact <- 1:ncol(theta0)		
@@ -232,6 +232,7 @@ P.mirt <- function(a, d, Theta, g){
 		accept <- ifelse(runif(N) < exp(accept),TRUE,FALSE) 		
 		theta1[!accept,] <- theta0[!accept,]	
 		attr(theta1, "Proportion Accepted") <- sum(accept)/N 		
+		if(log.lik) return(sum(log(P0)))
 		return(theta1) 
 	}
 	

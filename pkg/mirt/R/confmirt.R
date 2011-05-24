@@ -1,4 +1,4 @@
-coef.confmirt <- function(object, SE = TRUE, digits = 3, ...)
+coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 {  
 	nfact <- ncol(object$Theta)	
 	a <- matrix(object$pars[ ,1:nfact],ncol=nfact)
@@ -9,13 +9,27 @@ coef.confmirt <- function(object, SE = TRUE, digits = 3, ...)
 	SEs <- cbind(object$SEpars,object$SEg)	
 	colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
 		paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")					
-	cat("Parameters: \n")
-	print(round(parameters, digits))
+	cat("Item Parameters: \n")
+	print(parameters, digits)
 	if(SE){
 		cat("\nStd. Errors: \n")	
-		print(round(SEs, digits))
-	}					
-	invisible(parameters)
+		print(SEs, digits)
+	}	
+	u <- object$gpars$u	
+	sig <- object$gpars$sig	
+	cat("\nGroup Parameters: \n")
+	if(print.gmeans){
+		cat("Means: \n")
+		print(u,digits)
+		cat("\nStd. Errors: \n")	
+		print(object$SEgpars$SEu, digits)	
+	}
+	cat("Covariance: \n")
+	print(sig,digits)
+	if(SE){
+		cat("\nStd. Errors: \n")	
+		print(object$SEgpars$SEsig, digits)	
+	}		
 }
 
 print.confmirt <- function(x, ...){
@@ -33,8 +47,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
-	data <- as.matrix(data)	
-	if(any(is.na(data))) stop("confmirt function can't handle missing data.\n") 
+	data <- as.matrix(data)		
 	colnames(data) <- itemnames	
 	J <- ncol(data)
 	N <- nrow(data)	
@@ -55,7 +68,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		tmp <- paste(itemnames[i], "<->", itemnames[i])
 		sem.mod <- rbind(sem.mod,c(tmp,paste("th",i,sep=""),NA))		
 	}	
-	SEM <- sem(sem.mod,Rpoly,N)
+	suppressWarnings(SEM <- sem:::sem.mod(sem.mod,Rpoly,N)) 		
 	ram <- SEM$ram
 	coefs <- SEM$coef
 	ramloads <- ram[ram[,1]==1,]
@@ -105,13 +118,13 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
 	}	
-	cs <- sqrt(1-rowSums(loads^2))
+	cs <- sqrt(abs(1-rowSums(loads^2)))
 	lambdas <- loads/cs	
 	zetas <- rep(0,ncol(fulldata) - J)	
 	loc <- 1	
 	for(i in 1:J){
 		if(K[i] == 2){
-			zetas[i] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
+			zetas[loc] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
 			loc <- loc + 1
 		} else {			
 			temp <- table(data[,i])[1:(K[i]-1)]/N
@@ -289,8 +302,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	
 	SEtmp <- diag(solve(info))
 	if(any(SEtmp < 0)){
-		warning("Solution is not proper, information matrix is not positive definite.\n")
-		SEtmp <- rep(0,length(SEtmp))
+		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
+		SEtmp[SEtmp < 0] <- NA
 	}
 	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")		
 	SEtmp <- sqrt(SEtmp)
