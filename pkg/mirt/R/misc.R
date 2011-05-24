@@ -191,7 +191,179 @@ P.mirt <- function(a, d, Theta, g){
     	
     rlist <- list(r1, N, retlist$expected)
     return(rlist)
-  }  
+  }    
+  
+	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
+		prior.t.var = diag(ncol(theta0))) { 		
+		N <- nrow(fulldata)
+		J <- length(K)
+		nfact <- 1:ncol(theta0)		
+		locz <- 1		
+		P0 <- P1 <- matrix(0,N,J)		
+        if(length(nfact) > 1)		
+		  theta1 <- theta0 + rmvnorm(N,rep(0,ncol(theta0)), 
+			diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
+        else
+          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))		
+		for(i in 1:J){
+			if(K[i]==2){				
+				tmp <- P.mirt(lambdas[i,],zetas[locz],theta0,guess[i])
+				tmp[tmp < 1e-7] <- 1e-7	
+				P0[,i] <- ifelse(fulldata[,itemloc[i]],tmp,1-tmp)				
+				tmp <- P.mirt(lambdas[i,],zetas[locz],theta1,guess[i])
+				tmp[tmp < 1e-7] <- 1e-7	
+				P1[,i] <- ifelse(fulldata[,itemloc[i]],tmp,1-tmp)						
+				locz <- locz + 1				
+			} else {
+				upz <- locz + (K[i]-2) #here				
+				tmp <- P.poly(lambdas[i,],zetas[locz:upz],theta0,itemexp=TRUE)
+				tmp[tmp < 1e-7] <- 1e-7	
+				P0[,i] <- rowSums(tmp * fulldata[,itemloc[i]:(itemloc[i+1]-1)])				
+				tmp <- P.poly(lambdas[i,],zetas[locz:upz],theta1,itemexp=TRUE)
+				tmp[tmp < 1e-7] <- 1e-7	
+				P1[,i] <- rowSums(tmp * fulldata[,itemloc[i]:(itemloc[i+1]-1)])							
+				locz <- locz + (K[i]-1)
+			}
+		}			
+		irt0 <- rowSums(log(P0)) + dmvnorm(theta0,rep(0,length(nfact)),prior.t.var,log=TRUE)		
+		irt1 <- rowSums(log(P1)) + dmvnorm(theta1,rep(0,length(nfact)),prior.t.var,log=TRUE)
+		accept <- irt1 - irt0
+		accept <- ifelse(accept>0,0,accept)
+		accept <- ifelse(runif(N) < exp(accept),TRUE,FALSE) 		
+		theta1[!accept,] <- theta0[!accept,]	
+		attr(theta1, "Proportion Accepted") <- sum(accept)/N 		
+		return(theta1) 
+	}
+	
+	dgroup <- function(grouplist,theta){
+		tr <- function(x) sum(diag(x))
+		x <- theta
+		u <- grouplist$u	
+		sig <- grouplist$sig
+		N <- nrow(x)
+		nfact <- length(u)
+		selcov <- matrix(FALSE,nfact,nfact)
+		npars <- length(sig) + nfact
+		for(i in 1:nfact)
+			for(j in 1:nfact)
+				if(i <= j) selcov[j,i] <- TRUE
+		g <- rep(0,nfact + nfact*(nfact+1)/2)	
+		invSig <- solve(sig)	
+		Z <- t(x-u) %*% (x-u)
+		g[1:nfact] <- N * invSig %*% (colMeans(x) - u) 		
+		tmp <- .5 * invSig %*% (Z - N * sig) %*% invSig  ####here
+		g[(nfact+1):length(g)] <- tmp[selcov]
+		h <- matrix(0,npars,npars)
+		sel <- 1:npars			
+		for(j in 1:npars){
+			for(i in 1:npars){
+				if(i <= j){
+					derv1 <- derv2 <- rep(0,npars)
+					derv1[i] <- 1
+					derv2[j] <- 1						
+					du1 <- derv1[1:nfact]	
+					du2 <- derv2[1:nfact]	
+					dsig1 <- matrix(derv1[(nfact+1):npars],nfact,nfact)			
+					dsig2 <- matrix(derv2[(nfact+1):npars],nfact,nfact)	
+					dinvSig1 <- -invSig %*% dsig1 %*% invSig		
+					dinvSig2 <- -invSig %*% dsig2 %*% invSig		
+					dZ1 <- t(x-u) %*% matrix(rep(c(du1),N),N,byrow=TRUE)		
+					dZ2 <- t(x-u) %*% matrix(rep(c(du2),N),N,byrow=TRUE)
+					value <- .5 * tr(dsig1 %*% dinvSig2 %*% (Z - N * sig) %*% invSig) + 
+						.5 * tr(dsig1 %*% invSig %*% (Z - N * sig) %*% dinvSig2) + 
+						.5 * tr(dsig1 %*% invSig %*% (dZ2 - N * dsig2) %*% invSig) + 
+						N * du1 %*% dinvSig2 %*% (colMeans(x) - u) - 
+						N * du1 %*% invSig %*% du2			
+					h[i,j] <- h[j,i] <- value							
+				}	
+			}		
+		}
+		sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]	
+		h <- h[sel,sel]
+		list(h=h,g=g)
+	}
+	
+	dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess) {
+		nfact <- length(lambda)
+		P <- P.mirt(lambda, zeta, Thetas, g)						
+		if(estGuess){
+			Pstar <- P.mirt(lambda, zeta, Thetas, 0)
+			Q <- 1 - P		
+			PQ <- P*Q	
+			L1 <- sum((dat-P)/(P-g) * (Pstar/P))
+			L2 <- sum((dat-P) * (Pstar/P))
+			L3 <- colSums((dat-P) * Thetas * (Pstar/P))			
+			dL <- c(L1,L2,L3)
+			d2L <- matrix(0,nfact+2,nfact+2)			
+			d2L[1,1] <- -sum(Q/(1-g) * 1/(P-g) *(Pstar/P))			
+			d2L[2,2] <- -sum(PQ*(Pstar/P))			
+			d2L[1,2] <- d2L[2,1] <- -sum(Q/(1-g)*(Pstar/P))	
+			const <- PQ * (Pstar/P)^2
+			d2L[3:(3+nfact-1),3:(3+nfact-1)] <- (-1)* .Call("dichOuter",Thetas,
+				const,nfact,nrow(Thetas))
+			d2L[1,3:(3+nfact-1)] <- d2L[3:(3+nfact-1),1] <- -colSums(Thetas*(Q/(1-g)*(Pstar/P)))	
+			d2L[2,3:(3+nfact-1)] <- d2L[3:(3+nfact-1),2] <-	-colSums(Thetas*PQ*(Pstar/P))			
+		} else {
+			PQ <- P*(1-P)
+			L1 <- sum(dat-P)
+			L2 <- colSums((dat-P)*Thetas)
+			dL <- c(L1,L2)		
+			d2L <- matrix(0,nfact+1,nfact+1)						
+			L11 <- .Call("dichOuter",Thetas,PQ,nfact,nrow(Thetas))
+			if(nfact > 1) d2L[1:nfact+1,1:nfact+1] <- -L11
+				 else d2L[nfact+1,nfact+1] <- -L11 				
+			d2L[1,1]<- (-1)*sum(PQ)		
+			d2L[1,1:nfact+1] <- d2L[1:nfact+1,1] <- (-1)*colSums(PQ * Thetas)
+		}	
+		list(grad = dL, hess = d2L)
+	}
+	
+	dpars.poly <- function(lambda,zeta,dat,Thetas){  
+		nzeta <- length(zeta)
+		ncat <- nzeta + 1		
+		nfact <- length(lambda)
+		factind <- ncat:(ncat+nfact-1)
+		N <- nrow(Thetas)		
+		P <- P.poly(lambda,zeta,Thetas)	
+		dL <- rep(0,nzeta + nfact)
+		d2L <- matrix(0,nzeta + nfact, nzeta + nfact)	
+		PQfull <- P * (1 - P)			 
+		for(i in 1:ncat){
+			if(i < ncat){
+				Pk_1 <- P[,i]	
+				Pk <- P[,i+1]
+				Pk.1 <- P[,i+2]
+				PQ_1 <- PQfull[,i]			
+				PQ <- PQfull[,i+1]
+				PQ.1 <- PQfull[,i+2]		
+				dif1 <- dat[,i]/(Pk_1 - Pk)
+				dif1sq <- dat[,i]/(Pk_1 - Pk)^2		
+				dif2 <- dat[,i+1]/(Pk - Pk.1)	  
+				dif2sq <- dat[,i+1]/(Pk - Pk.1)^2		
+				
+				dL[i] <- sum(-1 * PQ * (dif1 - dif2)) 
+				d2L[i,i] <- sum(-1 * (PQ^2) * (dif1sq + dif2sq) -
+					(dif1 - dif2) * (Pk * (1 - Pk) * (1 - 2*Pk)))
+				if(i < nzeta) d2L[i,i+1] <- d2L[i+1,i] <- sum(dif2sq * PQ.1 * PQ)        		
+				d2L[factind,i] <- d2L[i,factind] <- 
+					colSums(-(dif2sq * PQ * (PQ - PQ.1) * Thetas) +
+					(dif1sq * PQ * (PQ_1 - PQ) * Thetas) - 
+					((dif1 - dif2) * (Pk * (1 - Pk) * (1 - 2*Pk) * Thetas)))
+			}		
+			Pk_1 <- P[,i]	
+			Pk <- P[,i+1]		
+			PQ_1 <- PQfull[,i]			
+			PQ <- PQfull[,i+1]		
+			dif1 <- dat[,i]/(Pk_1 - Pk)
+			dif1sq <- dat[,i]/(Pk_1 - Pk)^2
+			dL[factind] <- dL[factind] + colSums(dif1 * (PQ_1 - PQ) * Thetas)			
+			d2L[factind,factind] <- d2L[factind,factind] + .Call("polyOuter",Thetas,Pk,Pk_1,PQ_1,PQ,
+				dif1sq,dif1,nfact,nrow(Thetas))					
+		} 
+		return(list(grad=dL, hess=d2L))	
+	}
+  
+  
 
  
  

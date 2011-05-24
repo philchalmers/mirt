@@ -1,10 +1,7 @@
 useDynLib(mirt, .registration=TRUE)
 
 # Exported functions
-export(bfactor,mirt,polymirt,key2binary,expand.table,f.scores,itemplot,simdata)
-
-# Imported functions
-importFrom("psych", factor.minres, Promax, fa)
+export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,f.scores,itemplot,simdata)
 
 # S3 methods
 S3method(print, mirt)
@@ -29,3 +26,5 @@ S3method(plot, polymirt)
 S3method(summary, polymirt)
 S3method(coef, polymirt)
 S3method(itemplot, polymirt)
+S3method(print, confmirt)
+S3method(coef, confmirt)
