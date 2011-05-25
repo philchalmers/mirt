@@ -228,23 +228,23 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- 0.1
+	gamma <- 0.25
 	startvalues <- pars
 	stagecycle <- 1	
 	
 	for(cycles in 1:(ncycles + burnin + SEM.cycles))
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2
+		if(stagecycle == 3)
+			gamma <- sqrt(0.1/(2*(cycles - SEM.cycles - burnin - 1)))
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
 			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[i,]
 			pars <- pars/SEM.cycles	
 			k <- kdraws	
-		}
-		if(stagecycle == 3)
-			gamma <- 1/(cycles - SEM.cycles - burnin)        					
-		
+			gamma <- 1
+		}		
 		lambdas <- matrix(pars[lamind],ncol=nfact,byrow=TRUE)
 		zetas <- pars[zetaind]
 		guess <- rep(0,J)
@@ -296,14 +296,14 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 			correction[correction > .5] <- .5
 			correction[correction < -.5] <- -.5			
 			parsold <- pars
-			pars <- pars + correction
+			pars <- pars + gamma*correction
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	
 		
-		#Step 3. Update R-M step
+		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)		
 		correction <- (solve(Tau) %*% grad)	
 		correction[correction > .5] <- .5
