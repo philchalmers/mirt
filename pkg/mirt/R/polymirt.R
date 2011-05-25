@@ -127,7 +127,8 @@ print.polymirt <- function(x, ...){
 
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, 
-	ncycles = 2000, SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...){
+	ncycles = 2000, burnin = 200, SEM.cycles = 100, kdraws = 1, 
+	tol = .001, debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
@@ -226,19 +227,23 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	Tau <- info <- h <- matrix(0,npars,npars)
 	m.list <- list()	  
 	conv <- 0
-	gamma <- k <- 1	
-	startvalues <- pars	
+	k <- 1	
+	gamma <- 0.1
+	startvalues <- pars
+	stagecycle <- 1	
 	
-	for(cycles in 1:ncycles)
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))
 	{ 
-		if(cycles == (SEM.cycles + 1)){
+		if(cycles == burnin + 1) stagecycle <- 2
+		if(cycles == (burnin + SEM.cycles + 1)){ 
+			stagecycle <- 3		
 		    pars <- rep(0,npars)
 			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[i,]
 			pars <- pars/SEM.cycles	
 			k <- kdraws	
 		}
-		if(cycles > SEM.cycles)
-			gamma <- 1/(cycles - SEM.cycles)        					
+		if(stagecycle == 3)
+			gamma <- 1/(cycles - SEM.cycles - burnin)        					
 		
 		lambdas <- matrix(pars[lamind],ncol=nfact,byrow=TRUE)
 		zetas <- pars[zetaind]
@@ -286,14 +291,15 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		}
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k 
-		if(cycles <= SEM.cycles){
+		if(stagecycle < 3){
 		    correction <- solve(ave.h) %*% grad
 			correction[correction > .5] <- .5
 			correction[correction < -.5] <- -.5			
 			parsold <- pars
-			SEM.stores[cycles,] <- pars <- pars + correction
+			pars <- pars + correction
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
+			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	
 		
@@ -314,14 +320,14 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		
-		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 	
+		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE		
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
 	
 	SE <- diag(solve(info))
 	if(any(SE < 0)){
-		warning("Solution is not proper, information matrix is not positive definite.\n")
+		warning("Information matrix is not positive definite.\n")
 		SE <- rep(0,npars)
 	}
 	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")		

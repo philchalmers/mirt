@@ -1,7 +1,7 @@
-\name{fscores}
-\alias{fscores}
-\alias{fscores.mirt}
-\alias{fscores.bfactor}
+\name{f.scores}
+\alias{f.scores}
+\alias{f.scores.mirt}
+\alias{f.scores.bfactor}
 
 \title{Compute factor scores}
 \description{
@@ -9,11 +9,11 @@ Computes MAP or EAP factor scores for \code{mirt} and \code{bfactor} models. Not
 }
 
 \usage{
-fscores(object, ...)
+f.scores(object, ...)
 
-\method{fscores}{mirt}(object, full.scores = FALSE,
+\method{f.scores}{mirt}(object, full.scores = FALSE,
   method = "EAP", rotate = 'varimax', ...)
-\method{fscores}{bfactor}(object, full.scores = FALSE,
+\method{f.scores}{bfactor}(object, full.scores = FALSE,
   method = "EAP", ...)
 
 }
@@ -32,7 +32,7 @@ fscores(object, ...)
 \examples{
 \dontrun{
 
-scores <- fscores(mod)
+scores <- f.scores(mod)
 scores
 
   }

@@ -13,7 +13,8 @@
 
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, SEM.cycles = 50, kdraws = 1, tol = .0005, debug = FALSE, ...)
+	ncycles = 2000, burnin = 200, SEM.cycles = 100, kdraws = 1, 
+    tol = .001, debug = FALSE, ...)
 
 \method{print}{polymirt}(x, ...)
 
@@ -30,9 +31,11 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data.}
   \item{nfact}{number of factors to be extracted.}
   \item{guess}{starting values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item. When the value is greater than zero the parameter will be estimated.}
-  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values the estimation. The input could be any correlation matrix, but it is advised to use a matrix of polychoric correlations.}
+  \item{prev.cor}{use a previously computed correlation matrix to be used to estimate starting values the estimation. The input could be any correlation matrix, but it is advised to use a matrix of polychoric correlations.}
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
   \item{ncycles}{the maximum number of iterations to be performed}
+  \item{burnin}{number of burn-in cycles to perform before beginning the SEM stage}
+  \item{SEM.cycles}{number of stocastic EM cycles to perform before beginning the MH-RM algorithm}
   \item{SE}{logical; display the standard errors?}
   \item{x}{an object of class \code{polymirt} to be plotted or printed}
   \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}

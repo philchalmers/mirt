@@ -43,7 +43,7 @@ print.confmirt <- function(x, ...){
 } 
 
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000, 
-	SEM.cycles = 150, kdraws = 1, tol = .0005, debug = FALSE, ...){
+	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
@@ -183,19 +183,23 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	parind <- 1:npars	
 	m.list <- list()	  
 	conv <- 0
-	gamma <- k <- 1	
+	k <- 1	
+	gamma <- 0.1
 	startvalues <- pars	
+	stagecycle <- 1
 	
-	for(cycles in 1:ncycles)
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))
 	{ 
-		if(cycles == (SEM.cycles + 1)){
+		if(cycles == burnin + 1) stagecycle <- 2
+		if(cycles == (burnin + SEM.cycles + 1)){ 
+			stagecycle <- 3		
 		    pars <- rep(0,npars)
 			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[i,]
 			pars <- pars/SEM.cycles	
 			k <- kdraws	
 		}
-		if(cycles > SEM.cycles)
-			gamma <- 1/(cycles - SEM.cycles)        					
+		if(stagecycle == 3)
+			gamma <- 1/(cycles - SEM.cycles - burnin)        					
 				
 		lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)
 		zetas <- pars[zetaind]
@@ -263,16 +267,17 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		grad <- grad[parind[sind]]		
 		ave.h <- ave.h[parind[sind],parind[sind]] 
 		
-		if(cycles <= SEM.cycles){
+		if(stagecycle < 3){
 		    correction <- solve(ave.h) %*% grad			
 			correction[correction > .5] <- .5
 			correction[correction < -.5] <- -.5			
 			parsold <- pars
 			correct <- rep(0,npars)
 			correct[sind] <- correction
-			SEM.stores[cycles,] <- pars <- pars + correct
+			pars <- pars + correct
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
+			if(stagecycle ==2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	
 		
@@ -295,7 +300,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		
-		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 	
+		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 			
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
