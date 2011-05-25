@@ -360,7 +360,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles - SEM.cycles,
 		Theta=theta0, fulldata=fulldata,K=K, F=F, h2=h2, fulldata=fulldata, 
-		itemloc=itemloc, converge = converge, log.lik=log.lik, Call=Call)	 
+		itemloc=itemloc, converge = converge, Call=Call)	 
 	class(mod) <- 'polymirt'
 	mod	
 }

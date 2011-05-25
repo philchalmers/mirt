@@ -11,7 +11,7 @@
 
 \usage{
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
-	SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...)
+	SEM.cycles = 150, kdraws = 1, tol = .0005, debug = FALSE, ...)
 
 \method{print}{confmirt}(x, ...)
 
@@ -31,8 +31,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{debug}{logical; turn on debugging features?}
   \item{x}{an object of class \code{confmirt}.}
   \item{object}{an object of class \code{confmirt}.}
-  \item{SE}{an object of class \code{confmirt}.}
-  \item{print.gmeans}{an object of class \code{confmirt}.}
+  \item{SE}{logical; print standard errors?}
+  \item{print.gmeans}{logical; print factor means?}
   \item{digits}{the number of significant digits to be rounded}
   \item{...}{additional arguments to be passed}
 }
@@ -40,7 +40,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 \details{
 
   \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT.
-  
+
 }
 
 \value{
@@ -53,7 +53,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{SEgpars}{a list of standard errors for the group parameters}
   \item{estpars}{a list of logical sets used to identify which parameters were estimated}
   \item{Theta}{last iteration of the Metropolis-Hastings imputation of the factor scores}
-  \item{fulldata}{complete data complete with the original item names and values}  
+  \item{fulldata}{complete data complete with the original item names and values}
   \item{K}{a vector indicating how many unique values each item contains}
   \item{cycles}{number of MHRM cycles performed; will be less than \code{ncycles} if the tolerance is reached}
   \item{itemloc}{a vector indicating where the item location begin}

@@ -43,7 +43,7 @@ print.confmirt <- function(x, ...){
 } 
 
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000, 
-	SEM.cycles = 100, kdraws = 1, tol = .0005, debug = FALSE, ...){
+	SEM.cycles = 150, kdraws = 1, tol = .0005, debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
