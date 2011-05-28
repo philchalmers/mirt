@@ -1,0 +1,192 @@
+#include<R.h>
+#include<Rdefines.h>
+#include<Rmath.h>
+
+static void matrixMult(double *c, double *a, double *b, 
+	int dim)
+{
+	double A[dim][dim], B[dim][dim], C[dim][dim];
+	int i, j, k = 0;
+
+	for (j = 0; j < dim; j++){ 
+		for (i = 0; i < dim; i++){ 		
+			A[i][j] = a[k];
+			k++;
+		}
+	}
+	k = 0;
+	for (j = 0; j < dim; j++){ 
+		for (i = 0; i < dim; i++){ 		
+			B[i][j] = b[k];
+			k++;
+		}
+	}
+	for (i = 0; i < dim; i++){ 
+		for (j = 0; j < dim; j++) {
+			C[i][j] = 0;
+			for (k = 0; k < dim; k++)
+				C[i][j] += A[i][k] * B[k][j];
+		}
+	}
+	k = 0;
+	for (j = 0; j < dim; j++) {
+		for (i = 0; i < dim; i++){ 		
+			c[k] = C[i][j]; 
+			k++;
+		}
+	}   
+}
+
+static void matrixMult4(double *e, double *a, double *b,
+	double *c, double *d, int dim)
+{
+	double tmp1[dim * dim], tmp2[dim * dim];
+	matrixMult(tmp1, a, b, dim);
+	matrixMult(tmp2, tmp1, c, dim);
+	matrixMult(e, tmp2, d, dim);
+}
+
+
+static double tr(double *a, int dim)
+{	
+	double trace = 0.0;
+	int i, j, k = 0;
+
+	for(j = 0; j < dim; j++){
+		for(i = 0; i < dim; i++){
+			if(i == j)
+				trace += a[k];			
+			k++;
+		}
+	}	
+	return trace;
+}
+
+static void matrixSub(double *c, double *a, double *b, int dim)
+{	
+	int i;
+	for(i = 0; i < dim*dim; i++)		
+		c[i] = a[i] - b[i];
+}
+
+static void outer(double *c, double *a, double *b, int dim)
+{
+	int i, j, k = 0;
+	for(i = 0; i < dim; i++){
+		for(j = 0; j < dim; j++){
+			c[k] = a[i] * b[j];
+			k++;
+		}
+	}
+}
+
+static double inner(double *a, double *b, double *c, int dim)
+{
+	int i, j, k = 0;
+	double tmp[dim], B[dim][dim], ret = 0;
+				
+	for(i = 0; i < dim; i++){
+		tmp[i] = 0.0;
+		for(j = 0; j < dim; j++){
+			B[i][j] = b[k];
+			k++;
+		}
+	}		
+	for(i = 0; i < dim; i++){
+		for(j = 0; j < dim; j++){
+			tmp[i] += a[j] * B[j][i];
+			k++;
+		}
+	}
+	for(i = 0; i < dim; i++)
+		ret += tmp[i] * c[i];
+	return ret;
+}
+
+SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
+	SEXP RZdif, SEXP RN, SEXP Rnfact, SEXP Rnpars) 
+{   
+	//SEXP Rreturn;			
+	int i, j, k, N, nfact, npars, nsig;
+	double *sig, *invSig, *cMeans, *Z, *Zdif;
+	
+	PROTECT(Rsig = AS_NUMERIC(Rsig));
+	PROTECT(RinvSig = AS_NUMERIC(RinvSig));
+	PROTECT(RcMeans = AS_NUMERIC(RcMeans));
+	PROTECT(RZ = AS_NUMERIC(RZ));
+	PROTECT(RZdif = AS_NUMERIC(RZdif));
+	PROTECT(RN = AS_INTEGER(RN));
+	PROTECT(Rnfact = AS_INTEGER(Rnfact));
+	PROTECT(Rnpars = AS_INTEGER(Rnpars));
+	sig = NUMERIC_POINTER(Rsig);
+	invSig = NUMERIC_POINTER(RinvSig);
+	cMeans = NUMERIC_POINTER(RcMeans);
+	Z = NUMERIC_POINTER(RZ);
+	Zdif = NUMERIC_POINTER(RZdif);
+	N = NUMERIC_VALUE(RN);
+	nfact = NUMERIC_VALUE(Rnfact);
+	npars = NUMERIC_VALUE(Rnpars);
+	nsig = npars - nfact;
+		 
+	double derv1[npars], derv2[npars], du1[nfact], du2[nfact], dsig1[nsig],
+		dsig2[nsig], dZ[nsig], dinvSig1[nsig], dinvSig2[nsig], h[npars][npars],
+		tmpmat[nsig], dZdif[nsig], Ndsig2[nsig], s1, s2, s3, s4, s5;		
+
+	for(j = 0; j < npars; j++){
+		for(i = 0; i < npars; i++){
+			if(i <= j){
+				for(k = 0; k < npars; k++){
+					derv1[k] = 0.0;
+					derv2[k] = 0.0;
+				}
+				derv1[i] = 1.0;
+				derv2[j] = 1.0;
+				for(k = 0; k < nfact; k++){
+					du1[k] = derv1[k];
+					du2[k] = derv2[k];
+				}
+				for(k = nfact; k < npars; k++){
+					dsig1[k] = derv1[k];
+					dsig2[k] = derv2[k];
+				}
+				matrixMult(tmpmat, invSig, dsig1, nfact); 
+				matrixMult(dinvSig1, tmpmat, invSig, nfact);	
+				matrixMult(tmpmat, invSig, dsig2, nfact); 
+				matrixMult(dinvSig2, tmpmat, invSig, nfact);
+				for(k = 0; k < nsig; k++){
+					dinvSig1[k] = -1.0 * dinvSig1[k];
+					dinvSig2[k] = -1.0 * dinvSig2[k];
+				}
+				outer(dZ, cMeans, du2, nfact);
+				for(k = 0; k < nsig; k++)
+					Ndsig2[k] = N * dsig2[k];
+				matrixSub(dZdif, dZ, Ndsig2, nfact);
+				matrixMult4(tmpmat, dsig1, dinvSig2, Zdif, invSig, nfact);
+				s1 = 0.5 * tr(tmpmat, nfact);
+				matrixMult4(tmpmat, dsig1, invSig, Zdif, dinvSig2, nfact);
+				s2 = 0.5 * tr(tmpmat, nfact);
+				matrixMult4(tmpmat, dsig1, invSig, dZdif, invSig, nfact);
+				s3 = 0.5 * tr(tmpmat, nfact);
+				s4 = inner(du1, dinvSig2, cMeans, nfact);
+				s5 = inner(du1, invSig, du2, nfact);
+				h[i][j] = s1 + s2 + s3 + s4 + s5;
+				h[j][i] = h[i][j]; 
+			}
+		}
+	}
+
+	SEXP Rreturn;
+	double *Preturn;
+	PROTECT(Rreturn = allocMatrix(REALSXP,npars,npars));
+	Preturn = NUMERIC_POINTER(Rreturn);	
+	k=0;
+	for(j = 0; j < npars; j++){
+		for(i = 0; i < npars; i++){
+			Preturn[k] = h[i][j];
+			k++;
+		}
+	}
+	
+	UNPROTECT(9);	
+	return(Rreturn);
+}

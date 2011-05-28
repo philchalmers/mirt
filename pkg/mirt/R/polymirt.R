@@ -213,13 +213,11 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	
     #preamble for MRHM algorithm			
 	theta0 <- matrix(0,N,nfact)	    
-	cand.t.var <- 1
-	for(i in 1:20) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+	cand.t.var <- 1	
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
-		if(attr(theta0,"Proportion Accepted") > .5 && nfact < 5) cand.t.var <- cand.t.var + .1 
-		else if(attr(theta0,"Proportion Accepted") > .3) cand.t.var <- cand.t.var + .1
-     	if(attr(theta0,"Proportion Accepted") < .2)	 cand.t.var <- cand.t.var - .1
+		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .1 
+		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .1     	
 	}	
 	m.thetas <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -228,7 +226,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- 0.25
+	gamma <- 0.1
 	startvalues <- pars
 	stagecycle <- 1	
 	
@@ -236,7 +234,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2
 		if(stagecycle == 3)
-			gamma <- sqrt(0.1/(2*(cycles - SEM.cycles - burnin - 1)))
+			gamma <- sqrt(0.1/(2.5*(cycles - SEM.cycles - burnin - 1)))
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
@@ -249,10 +247,11 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		zetas <- pars[zetaind]
 		guess <- rep(0,J)
 		guess[estGuess] <- pars[gind]
+		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(i in 1:k)
-			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+		for(i in 1:k)			
+			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 
@@ -311,12 +310,12 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		if(any(estGuess)){
 			correction[correction[gind] > .05] <- .05
 			correction[correction[gind] < -.05] <- -.05
-		}	
-		if(all(gamma*correction < tol)) conv <- conv + 1
-			else conv <- 0		
-		if(conv == 3) break		
-		parsold <- pars
+		}				
+		if(conv == 3) break				
 		pars <- pars + gamma*correction
+		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
+			else conv <- 0	
+		parsold <- pars	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		

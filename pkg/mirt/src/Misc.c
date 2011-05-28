@@ -146,3 +146,173 @@ SEXP polyOuter(SEXP RThetas, SEXP RPk, SEXP RPk_1, SEXP RPQ_1,
 	UNPROTECT(10);	
 	return(Rreturn);
 }
+
+
+static void itemtrace(double *P, const double *a, 
+  const double *d, const double *PTheta, const double *g, 
+  const int *nfact, const int *nquad)
+{	
+	double z[*nquad], Theta[*nquad][*nfact];
+	for (int i = 0; i < *nquad; i++)
+		z[i] = 0;
+	int k = 0;  
+	for(int i = 0; i < *nfact; i++){
+		for(int j = 0; j < *nquad; j++){		    
+			Theta[j][i] = PTheta[k];
+			k++;
+		 }
+	}	
+	//compute item trace vector
+	for (int j = 0; j <	*nquad; j++){		
+		for (int i = 0; i <	*nfact; i++)		
+			z[j] += 1.702 * a[i] * Theta[j][i];  		
+		z[j] += *d * 1.702;
+	}
+	
+	for (int i = 0; i < *nquad; i++) 
+		P[i] = *g + (1 - *g) * (exp(z[i])/(1 + exp(z[i])));		
+}
+
+static void Prob(double *P, const int *k, const int *N, const int *nfact,
+	const double *theta, const double *a, const double *d, const double *g)
+{
+	double Ps[*N][*k + 1], Pdif[*N][*k], p1[*N], tmp;
+	int i, j;
+
+	for(i = 0; i < *N; i++){
+		Ps[i][0] = 1;
+		Ps[i][*k] = 0;
+	}
+	for(j = 0; j < (*k - 1); j++){
+		tmp = d[j];
+		itemtrace(p1, a, &tmp, theta, g, nfact, N);
+		for(i = 0; i < *N; i++)
+			Ps[i][j + 1] = p1[i];
+	}
+	for(j = (*k - 1); j >= 0; j--)
+		for(i = 0; i < *N; i++)
+			Pdif[i][j] = Ps[i][j] - Ps[i][j + 1];			
+	int m = 0;
+	for(j = 0; j < *k; j++){
+		for(i = 0; i < *N; i++){
+			if(Pdif[i][j] < .00000001) Pdif[i][j] = .00000001;
+			if(*k == 2) Pdif[i][j] = 1 - Pdif[i][j];
+			P[m] = Pdif[i][j];
+			m++;
+		}
+	}
+}
+
+
+SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
+	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc,
+	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
+
+	SEXP Rreturn;			
+	int i, j, k, m, J, nfact, N, *itemloc,*K, *Pfulldata, Ksums = 0;
+	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0,*Ptheta1, *unif, 
+		*den0, *den1;		
+	
+	PROTECT(Runif = AS_NUMERIC(Runif));
+	PROTECT(Rden0 = AS_NUMERIC(Rden0));
+	PROTECT(Rden1 = AS_NUMERIC(Rden1));
+	PROTECT(Rlambdas = AS_NUMERIC(Rlambdas));
+	PROTECT(Rzetas = AS_NUMERIC(Rzetas));
+	PROTECT(Rguess = AS_NUMERIC(Rguess));
+	PROTECT(Rtheta0 = AS_NUMERIC(Rtheta0));
+	PROTECT(Rtheta1 = AS_NUMERIC(Rtheta1));
+	PROTECT(Rfulldata = AS_INTEGER(Rfulldata));
+	PROTECT(Ritemloc = AS_INTEGER(Ritemloc));
+	PROTECT(RK = AS_INTEGER(RK));	
+	PROTECT(RJ = AS_INTEGER(RJ));	
+	PROTECT(RN = AS_INTEGER(RN));
+	PROTECT(Rnfact = AS_INTEGER(Rnfact));
+	unif = NUMERIC_POINTER(Runif);
+	den0 = NUMERIC_POINTER(Rden0);
+	den1 = NUMERIC_POINTER(Rden1);
+	Plambdas = NUMERIC_POINTER(Rlambdas);
+	zetas = NUMERIC_POINTER(Rzetas);
+	guess = NUMERIC_POINTER(Rguess);
+	Ptheta0 = NUMERIC_POINTER(Rtheta0);
+	Ptheta1 = NUMERIC_POINTER(Rtheta1);
+	Pfulldata = INTEGER_POINTER(Rfulldata);
+	itemloc = INTEGER_POINTER(Ritemloc);	
+	K = INTEGER_POINTER(RK);	
+	J = NUMERIC_VALUE(RJ);
+	N = NUMERIC_VALUE(RN);
+	nfact = NUMERIC_VALUE(Rnfact);
+	int max = 2;
+	for(i = 0; i < J; i++){
+		Ksums += K[i]; 
+		if(max < K[i]) max = K[i];
+	}
+	
+	PROTECT(Rreturn = NEW_NUMERIC(N));
+	Preturn = NUMERIC_POINTER(Rreturn);
+	double a[nfact], d[max], g, lambdas[J][nfact], 
+		irt0[N], irt1[N], accept[N], tmp1, tmp2;
+	int fulldata[N][Ksums], loc = 0;
+	
+	k = 0;
+	for(i = 0; i < nfact; i++){
+		for(j = 0; j < J; j++){
+			lambdas[j][i] = Plambdas[k];
+			k++;
+		}
+	}	
+	k = 0;
+	for(i = 0; i < Ksums; i++){
+		for(j = 0; j < N; j++){
+			fulldata[j][i] = Pfulldata[k];
+			k++;
+		}
+	}
+	for(i = 0; i < N; i++){
+		irt0[i] = 0.0;
+		irt1[i] = 0.0;
+	}
+
+	for(int item = 0; item < J; item++){
+		k = K[item];
+		for(i = 0; i < nfact; i++)
+			a[i] = lambdas[item][i];		
+		for(i = 0; i < (k-1); i++) 
+			d[i] = zetas[i + loc];
+		g = guess[item];
+		double P0[N][k], P1[N][k], Plong_0[N * k], Plong_1[N * k];
+		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);
+		Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);	
+		m = 0;
+		for(j = 0; j < k; j++){
+			for(i = 0; i < N; i++){
+				P0[i][j] = Plong_0[m] * fulldata[i][j + itemloc[item]];
+				P1[i][j] = Plong_1[m] * fulldata[i][j + itemloc[item]];
+				m++;
+			}
+		}
+		for(i = 0; i < N; i++){
+			tmp1 = 0.0;
+			tmp2 = 0.0;
+			for(j = 0; j < k; j++){
+				tmp1 += P0[i][j]; 
+				tmp2 += P1[i][j]; 
+			}
+			irt0[i] += log(tmp1);
+			irt1[i] += log(tmp2);
+		}
+		loc += k - 1;
+	}
+	for(i = 0; i < N; i++){
+		irt0[i] += log(den0[i]);
+		irt1[i] += log(den1[i]);
+		accept[i] = irt1[i] - irt0[i];		
+		if(accept[i] > 0.0) accept[i] = 0.0;
+		if(unif[i] < exp(accept[i])) accept[i] = 1.0;
+			else accept[i] = 0.0;
+		Preturn[i] = accept[i];
+	}
+	
+	UNPROTECT(15);	
+	return(Rreturn);	
+}
+

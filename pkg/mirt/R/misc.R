@@ -205,6 +205,7 @@ P.mirt <- function(a, d, Theta, g){
 			diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
         else
           theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))		
+		#c code from here
 		for(i in 1:J){
 			if(K[i]==2){				
 				tmp <- P.mirt(lambdas[i,],zetas[locz],theta0,guess[i])
@@ -224,19 +225,57 @@ P.mirt <- function(a, d, Theta, g){
 				P1[,i] <- rowSums(tmp * fulldata[,itemloc[i]:(itemloc[i+1]-1)])							
 				locz <- locz + (K[i]-1)
 			}
-		}			
+		} 
 		irt0 <- rowSums(log(P0)) + dmvnorm(theta0,rep(0,length(nfact)),prior.t.var,log=TRUE)		
-		irt1 <- rowSums(log(P1)) + dmvnorm(theta1,rep(0,length(nfact)),prior.t.var,log=TRUE)
+		irt1 <- rowSums(log(P1)) + dmvnorm(theta1,rep(0,length(nfact)),prior.t.var,log=TRUE)		
 		accept <- irt1 - irt0
 		accept <- ifelse(accept>0,0,accept)
 		accept <- ifelse(runif(N) < exp(accept),TRUE,FALSE) 		
 		theta1[!accept,] <- theta0[!accept,]	
+		#to here
 		attr(theta1, "Proportion Accepted") <- sum(accept)/N 		
 		if(log.lik) return(sum(log(P0)))
 		return(theta1) 
 	}
 	
-	dgroup <- function(grouplist,theta){
+	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
+		prior.t.var = diag(ncol(theta0))) { 		
+		N <- nrow(fulldata)
+		J <- length(K)
+		nfact <- 1:ncol(theta0)		
+		locz <- 1		
+		P0 <- P1 <- matrix(0,N,J)		
+		unif <- runif(N)
+        if(length(nfact) > 1)		
+		  theta1 <- theta0 + rmvnorm(N,rep(0,ncol(theta0)), 
+			diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
+        else
+          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))					
+		den0 <- dmvnorm(theta0,rep(0,length(nfact)),prior.t.var)
+		den1 <- dmvnorm(theta1,rep(0,length(nfact)),prior.t.var)		
+		accept <- as.logical(.Call("drawThetas",
+						as.numeric(unif),
+						as.numeric(den0),
+						as.numeric(den1),
+						as.numeric(lambdas),
+						as.numeric(zetas),
+						as.numeric(guess),
+						as.numeric(theta0),
+						as.numeric(theta1),
+						as.integer(fulldata),
+						as.integer(itemloc - 1),
+						as.integer(K),
+						as.integer(J),
+						as.integer(N),
+						as.integer(ncol(lambdas))))
+				
+		theta1[!accept,] <- theta0[!accept,]			
+		attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
+		return(theta1) 
+	}
+	
+	
+	d.group <- function(grouplist,theta){		
 		tr <- function(x) sum(diag(x))
 		x <- theta
 		u <- grouplist$u	
@@ -252,13 +291,31 @@ P.mirt <- function(a, d, Theta, g){
 		invSig <- solve(sig)	
 		Z <- t(x-u) %*% (x-u)
 		g[1:nfact] <- N * invSig %*% (colMeans(x) - u) 		
-		tmp <- .5 * invSig %*% (Z - N * sig) %*% invSig  ####here
+		tmp <- .5 * invSig %*% (Z - N * sig) %*% invSig  
 		g[(nfact+1):length(g)] <- tmp[selcov]
 		h <- matrix(0,npars,npars)
-		sel <- 1:npars			
+		sel <- 1:npars		
+		cMeans <- N*(colMeans(x) - u)
+		Zdif <- (Z - N * sig)
+		load("C:\\Users\\Phil\\Desktop\\Dropbox\\Phils-R-Scripts\\confmirt.RData")
+		setwd("C:/Users/Phil/Desktop/mirt/pkg/mirt/src")
+		dyn.load("dgroup.dll")
+		dyn.unload("dgroup.dll")
+		#here 	
+		h <- .Call("dgroup",
+					as.numeric(sig),
+					as.numeric(invSig),
+					as.numeric(cMeans),					
+					as.numeric(Z),
+					as.numeric(Zdif),
+					as.integer(N),
+					as.integer(nfact),
+					as.integer(npars))
+					
+		
 		for(j in 1:npars){
 			for(i in 1:npars){
-				if(i <= j){
+				if(i <= j){					
 					derv1 <- derv2 <- rep(0,npars)
 					derv1[i] <- 1
 					derv2[j] <- 1						
@@ -267,18 +324,17 @@ P.mirt <- function(a, d, Theta, g){
 					dsig1 <- matrix(derv1[(nfact+1):npars],nfact,nfact)			
 					dsig2 <- matrix(derv2[(nfact+1):npars],nfact,nfact)	
 					dinvSig1 <- -invSig %*% dsig1 %*% invSig		
-					dinvSig2 <- -invSig %*% dsig2 %*% invSig		
-					dZ1 <- t(x-u) %*% matrix(rep(c(du1),N),N,byrow=TRUE)		
-					dZ2 <- t(x-u) %*% matrix(rep(c(du2),N),N,byrow=TRUE)
-					value <- .5 * tr(dsig1 %*% dinvSig2 %*% (Z - N * sig) %*% invSig) + 
+					dinvSig2 <- -invSig %*% dsig2 %*% invSig								
+					dZ <- outer(N * (colMeans(x) - u),  du2)					
+					h[i,j] <- h[j,i]  <- .5 * tr(dsig1 %*% dinvSig2 %*% (Z - N * sig) %*% invSig) + 
 						.5 * tr(dsig1 %*% invSig %*% (Z - N * sig) %*% dinvSig2) + 
-						.5 * tr(dsig1 %*% invSig %*% (dZ2 - N * dsig2) %*% invSig) + 
+						.5 * tr(dsig1 %*% invSig %*% (dZ - N * dsig2) %*% invSig) + 
 						N * du1 %*% dinvSig2 %*% (colMeans(x) - u) - 
-						N * du1 %*% invSig %*% du2			
-					h[i,j] <- h[j,i] <- value							
+						N * du1 %*% invSig %*% du2														
 				}	
 			}		
 		}
+		#to here
 		sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]	
 		h <- h[sel,sel]
 		list(h=h,g=g)

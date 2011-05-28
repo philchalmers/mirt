@@ -166,14 +166,11 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	
 	#preamble for MRHM algorithm			
 	theta0 <- matrix(0,N,nfact)	    
-	cand.t.var <- 1
-	for(i in 1:20) 
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
+	cand.t.var <- 1	
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
-		if(attr(theta0,"Proportion Accepted") > .5 && nfact < 5) cand.t.var <- cand.t.var + .1 
-		else if(attr(theta0,"Proportion Accepted") > .3) cand.t.var <- cand.t.var + .1
-     	if(attr(theta0,"Proportion Accepted") < .2)	 cand.t.var <- cand.t.var - .1
+		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .1 
+		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .1     	
 	}	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -184,7 +181,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- .25
+	gamma <- .1
 	startvalues <- pars	
 	stagecycle <- 1
 	
@@ -219,7 +216,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}		
 		sig <- sig + t(sig) - diag(diag(sig))		
-		grouplist$sig <- sig		
+		grouplist$sig <- sig
+		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
 		
 		#Step 1. Generate m_k datasets of theta 
 		for(i in 1:k)
@@ -251,7 +249,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 					loc <- loc + K[i+1] - 1				
 				}
 			} 
-			tmp <- dgroup(grouplist,m.thetas[[j]])
+			tmp <- d.group(grouplist,m.thetas[[j]])
 			g[is.na(g)] <- tmp$g
 			h[(npars - ngpars + 1):npars,(npars - ngpars + 1):npars] <- tmp$h
 			g.m[[j]] <- g
