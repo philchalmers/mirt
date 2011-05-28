@@ -247,10 +247,10 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		if(max < K[i]) max = K[i];
 	}
 	
-	PROTECT(Rreturn = NEW_NUMERIC(N));
+	PROTECT(Rreturn = NEW_NUMERIC(N + 1));
 	Preturn = NUMERIC_POINTER(Rreturn);
-	double a[nfact], d[max], g, lambdas[J][nfact], 
-		irt0[N], irt1[N], accept[N], tmp1, tmp2;
+	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N], irt1[N], 
+		accept[N], tmp1, tmp2, cdloglik = 0;
 	int fulldata[N][Ksums], loc = 0;
 	
 	k = 0;
@@ -302,7 +302,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		}
 		loc += k - 1;
 	}
-	for(i = 0; i < N; i++){
+	for(i = 0; i < N; i++){		
 		irt0[i] += log(den0[i]);
 		irt1[i] += log(den1[i]);
 		accept[i] = irt1[i] - irt0[i];		
@@ -310,7 +310,12 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		if(unif[i] < exp(accept[i])) accept[i] = 1.0;
 			else accept[i] = 0.0;
 		Preturn[i] = accept[i];
+	}	
+	for(i = 0; i < N; i++){		
+		if(accept[i]) cdloglik += irt1[i];
+		else cdloglik += irt0[i];
 	}
+	Preturn[N] = cdloglik;		
 	
 	UNPROTECT(15);	
 	return(Rreturn);	

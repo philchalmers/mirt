@@ -13,8 +13,8 @@
 
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, burnin = 200, SEM.cycles = 100, kdraws = 1, 
-    tol = .001, debug = FALSE, ...)
+	ncycles = 2000, burnin = 200, SEM.cycles = 100, kdraws = 1,
+    tol = .001, printcycles = TRUE, debug = FALSE, ...)
 
 \method{print}{polymirt}(x, ...)
 
@@ -35,13 +35,14 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
   \item{ncycles}{the maximum number of iterations to be performed}
   \item{burnin}{number of burn-in cycles to perform before beginning the SEM stage}
-  \item{SEM.cycles}{number of stocastic EM cycles to perform before beginning the MH-RM algorithm}
+  \item{SEM.cycles}{number of stochastic EM cycles to perform before beginning the MH-RM algorithm}
   \item{SE}{logical; display the standard errors?}
   \item{x}{an object of class \code{polymirt} to be plotted or printed}
   \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}
   \item{digits}{the number of significant digits to be rounded}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
+  \item{printcycles}{logical; display iteration history during estimation? Works best if the console output buffer is disabled}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }

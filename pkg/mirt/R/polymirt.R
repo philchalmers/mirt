@@ -126,9 +126,9 @@ print.polymirt <- function(x, ...){
 } 
 
 
-polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, 
-	ncycles = 2000, burnin = 200, SEM.cycles = 100, kdraws = 1, 
-	tol = .001, debug = FALSE, ...){
+polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000, 
+	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, printcycles = TRUE,
+	debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
@@ -136,8 +136,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	if(any(is.na(data))) stop("polymirt function can't handle missing data.\n")  
 	J <- ncol(data)
 	N <- nrow(data)	
-	colnames(data) <- itemnames
 	if(length(guess) == 1) guess <- rep(guess,J)
+	colnames(data) <- itemnames
 	if(length(guess) > J || length(guess) < J) 
 		stop("The number of guessing parameters is incorrect.")
 	estGuess <- guess > 0					
@@ -290,12 +290,27 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		}
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k 
+		if(printcycles){
+			if((cycles + 1) %% 10 == 0){
+				if(cycles < burnin)
+					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
+						attr(theta0,"log.lik"), sep="")
+				if(cycles > burnin && cycles < burnin + SEM.cycles)
+					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
+						attr(theta0,"log.lik"), sep="")
+				if(cycles > burnin + SEM.cycles)
+					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
+						", Log-Lik = ", attr(theta0,"log.lik"), sep="")
+			}
+		}			
 		if(stagecycle < 3){
 		    correction <- solve(ave.h) %*% grad
 			correction[correction > .5] <- .5
 			correction[correction < -.5] <- -.5			
 			parsold <- pars
 			pars <- pars + gamma*correction
+			if(printcycles && (cycles + 1) %% 10 == 0) 
+				cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
@@ -313,6 +328,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		}				
 		if(conv == 3) break				
 		pars <- pars + gamma*correction
+		if(printcycles && (cycles + 1) %% 10 == 0) 
+			cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
 			else conv <- 0	
 		parsold <- pars	
@@ -323,13 +340,13 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
-	
+	cat("\n")	
 	SE <- diag(solve(info))
 	if(any(SE < 0)){
 		warning("Information matrix is not positive definite.\n")
 		SE <- rep(0,npars)
 	}
-	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")		
+	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")					
 	SE <- sqrt(SE)	
 	lambdas <- matrix(pars[lamind],ncol=nfact,byrow=TRUE)
 	SElam <- matrix(SE[lamind],ncol=nfact,byrow=TRUE)
@@ -363,7 +380,9 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	h2 <- rowSums(F^2) 
 	
 	
-	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles - SEM.cycles,
+	
+	
+	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles-SEM.cycles-burnin,
 		Theta=theta0, fulldata=fulldata,K=K, F=F, h2=h2, fulldata=fulldata, 
 		itemloc=itemloc, converge = converge, Call=Call)	 
 	class(mod) <- 'polymirt'

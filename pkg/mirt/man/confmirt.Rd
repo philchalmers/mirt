@@ -11,7 +11,8 @@
 
 \usage{
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
-	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...)
+	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, printcycles = TRUE,
+    debug = FALSE, ...)
 
 \method{print}{confmirt}(x, ...)
 
@@ -26,9 +27,10 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{gmeans}{starting values for the group means. Can be entered as a single value to assign a global parameter or may be entered as a numeric vector for each factor. When the value is not equal to zero the parameter will be estimated.}
   \item{ncycles}{the maximum number of iterations to be performed}
   \item{burnin}{number of burn-in cycles to perform before beginning the SEM stage}
-  \item{SEM.cycles}{number of stocastic EM cycles to perform before beginning the MH-RM algorithm}
+  \item{SEM.cycles}{number of stochastic EM cycles to perform before beginning the MH-RM algorithm}
   \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
   \item{tol}{tolerance that must be reached before the model is returned}
+  \item{printcycles}{logical; display iteration history during estimation? Works best if the console output buffer is disabled}
   \item{debug}{logical; turn on debugging features?}
   \item{x}{an object of class \code{confmirt}.}
   \item{object}{an object of class \code{confmirt}.}

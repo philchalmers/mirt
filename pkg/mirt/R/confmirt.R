@@ -43,7 +43,8 @@ print.confmirt <- function(x, ...){
 } 
 
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000, 
-	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, debug = FALSE, ...){
+	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, printcycles = TRUE, 
+	debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
@@ -225,7 +226,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 
-		g.m <- h.m <- group.m <- list()					
+		g.m <- h.m <- group.m <- list()				
 		for(j in 1:k){
 			g <- rep(NA,npars)
 			loc <- 1
@@ -260,12 +261,24 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		for(i in 1:k){
 		  ave.g <- ave.g + g.m[[i]]
 		  ave.h <- ave.h + h.m[[i]]
-		}
+		} 
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k				
 		grad <- grad[parind[sind]]		
 		ave.h <- ave.h[parind[sind],parind[sind]] 
-		
+		if(printcycles){
+			if((cycles + 1) %% 10 == 0){
+				if(cycles < burnin)
+					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
+						attr(theta0,"log.lik"), sep="")
+				if(cycles > burnin && cycles < burnin + SEM.cycles)
+					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
+						attr(theta0,"log.lik"), sep="")
+				if(cycles > burnin + SEM.cycles)
+					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
+						", Log-Lik = ", attr(theta0,"log.lik"), sep="")
+			}
+		}			
 		if(stagecycle < 3){
 		    correction <- solve(ave.h) %*% grad			
 			correction[correction > .5] <- .5
@@ -274,6 +287,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			correct <- rep(0,npars)
 			correct[sind] <- correction
 			pars <- pars + gamma*correct
+			if(printcycles && (cycles + 1) %% 10 == 0) 
+				cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
 			if(stagecycle ==2) SEM.stores[cycles - burnin,] <- pars
@@ -296,6 +311,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		correct <- rep(0,npars)
 		correct[sind] <- correction
 		pars <- pars + gamma*correct
+		if(printcycles && (cycles + 1) %% 10 == 0) 
+			cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		
@@ -303,7 +320,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
-	
+	cat("\n")
 	SEtmp <- diag(solve(info))
 	if(any(SEtmp < 0)){
 		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
@@ -359,7 +376,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
 		estgmeans=estgmeans)
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, gpars=gpars, 
-		SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles,
+		SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - burnin,
 		Theta=theta0, fulldata=fulldata, K=K, itemloc=itemloc, 
 		converge = converge, Call=Call)	 
 	class(mod) <- 'confmirt'
