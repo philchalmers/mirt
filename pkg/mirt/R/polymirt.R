@@ -377,10 +377,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	if (nfact == 1) F <- as.matrix(V * sqrt(L))
 		else F <- V %*% sqrt(diag(L))  
 	if (sum(F[ ,1] < 0)) F <- (-1) * F  
-	h2 <- rowSums(F^2) 
-	
-	
-	
+	h2 <- rowSums(F^2) 	
 	
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles-SEM.cycles-burnin,
 		Theta=theta0, fulldata=fulldata,K=K, F=F, h2=h2, fulldata=fulldata, 

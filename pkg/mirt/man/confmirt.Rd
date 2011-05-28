@@ -80,14 +80,14 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 \dontrun{
 #simulate data
 a <- matrix(c(
-1.5,0.5,NA,
-0.5,0.5,NA,
-1.0,0.5,NA,
-1.0,0.5,NA,
-1.5,NA,0.5,
-0.5,NA,0.5,
-1.0,NA,0.5,
-1.0,NA,0.5),ncol=3,byrow=TRUE)
+1.5,NA,
+0.5,NA,
+1.0,NA,
+1.0,0.5,
+ NA,1.5,
+ NA,0.5,
+ NA,1.0,
+ NA,1.0),ncol=2,byrow=TRUE)
 
 d <- matrix(c(
 -1.0,NA,NA,
@@ -99,17 +99,19 @@ d <- matrix(c(
 2.0,0.0,NA,
 1.0,NA,NA),ncol=3,byrow=TRUE)
 
-sigma <- diag(3)
+sigma <- diag(2)
+sigma[1,2] <- sigma[2,1] <- .4
 dataset <- simdata(a,d,1000,sigma)
 
 #analyses
-#CIFA for 2 factor simple structure
+#CIFA for 2 factor crossed structure
 
 sem.mod <- specify.model()
     F1 -> Item_1,   lam11, NA
     F1 -> Item_2,   lam12, NA
     F1 -> Item_3,   lam13, NA
     F1 -> Item_4,   lam14, NA
+    F2 -> Item_4,   lam24, NA
     F2 -> Item_5,   lam25, NA
     F2 -> Item_6,   lam26, NA
     F2 -> Item_7,   lam27, NA
