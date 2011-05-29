@@ -4,6 +4,7 @@ plot.polymirt <- function(x, npts = 50,
 	type = 'curve'
 	K <- x$K		
 	nfact <- ncol(x$Theta)
+	if(nfact >2) stop("Can't plot high dimensional solutions.")
 	a <- as.matrix(x$pars[ ,1:nfact])
     d <- as.matrix(x$pars[ ,(nfact+1):ncol(x$pars)])	
 	guess <- x$guess
@@ -132,8 +133,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
-	data <- as.matrix(data)	
-	if(any(is.na(data))) stop("polymirt function can't handle missing data.\n")  
+	data <- as.matrix(data)		
 	J <- ncol(data)
 	N <- nrow(data)	
 	if(length(guess) == 1) guess <- rep(guess,J)
@@ -165,11 +165,12 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		for (j in 0:(K[ind]-1))  
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
-	}			
+	}	
+	fulldata[is.na(fulldata)] <- 0	
 	if(!is.null(prev.cor)){
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 			else stop("Correlation matrix is not square.\n")
-	} 	else Rpoly <- cormod(data,K,guess)
+	} 	else Rpoly <- cormod(na.omit(data),K,guess)
 	FA <- factor.minres(Rpoly,nfact,rotate = 'none', warnings= FALSE)	
 	loads <- unclass(loadings(FA))
 	u <- FA$unique
@@ -216,8 +217,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	cand.t.var <- 1	
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
-		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .1 
-		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .1     	
+		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
+		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05     	
 	}	
 	m.thetas <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -304,9 +305,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){
-		    correction <- solve(ave.h) %*% grad
-			correction[correction > .5] <- .5
-			correction[correction < -.5] <- -.5			
+		    correction <- solve(ave.h) %*% grad					
 			parsold <- pars
 			pars <- pars + gamma*correction
 			if(printcycles && (cycles + 1) %% 10 == 0) 

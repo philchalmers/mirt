@@ -1,11 +1,11 @@
 Package: mirt
-Version: 0.1-8
-Date: 2011-05-24
+Version: 0.1-9
+Date: 2011-05-29
 Type: Package
 Title: Multidimensional Item Response Theory
 Author: Phil Chalmers <rphilip.chalmers@gmail.com>
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
-Description: Analysis of multivariate dichotomous data using latent 
+Description: Analysis of dichotomous and polychotomous response data using latent 
 		trait models under the Item Response Theory paradigm. 
 		Includes the multivariate two- and three-parameter logistic 
 		models, confirmatory bifactor analysis, and polytomous confirmatory

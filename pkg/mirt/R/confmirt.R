@@ -62,7 +62,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])
 	guess[K > 2] <- 0	
-	Rpoly <- cormod(data,K,guess)
+	Rpoly <- cormod(na.omit(data),K,guess)
 	sem.mod <- unclass(sem.mod)
 	itemnames <- colnames(data)
 	for(i in 1:J){
@@ -119,6 +119,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
 	}	
+	fulldata[is.na(fulldata)] <- 0
 	cs <- sqrt(abs(1-rowSums(loads^2)))
 	lambdas <- loads/cs	
 	zetas <- rep(0,ncol(fulldata) - J)	
@@ -170,8 +171,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	cand.t.var <- 1	
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
-		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .1 
-		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .1     	
+		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
+		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05     	
 	}	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -218,14 +219,15 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		}		
 		sig <- sig + t(sig) - diag(diag(sig))		
 		grouplist$sig <- sig
+		system.time({
 		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
-		
+		})
 		#Step 1. Generate m_k datasets of theta 
 		for(i in 1:k)
 			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)
 		theta0 <- m.thetas[[1]]
 		
-		#Step 2. Find average of simulated data gradients and hessian 
+		#Step 2. Find average of simulated data gradients and hessian 		
 		g.m <- h.m <- group.m <- list()				
 		for(j in 1:k){
 			g <- rep(NA,npars)
@@ -262,6 +264,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		  ave.g <- ave.g + g.m[[i]]
 		  ave.h <- ave.h + h.m[[i]]
 		} 
+		
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k				
 		grad <- grad[parind[sind]]		
@@ -280,9 +283,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){
-		    correction <- solve(ave.h) %*% grad			
-			correction[correction > .5] <- .5
-			correction[correction < -.5] <- -.5			
+		    correction <- solve(ave.h) %*% grad								
 			parsold <- pars
 			correct <- rep(0,npars)
 			correct[sind] <- correction

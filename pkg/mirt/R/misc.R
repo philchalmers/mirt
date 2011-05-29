@@ -195,6 +195,7 @@ P.mirt <- function(a, d, Theta, g){
 		
 	draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
 		prior.t.var = diag(ncol(theta0))) { 		
+		
 		N <- nrow(fulldata)
 		J <- length(K)
 		nfact <- 1:ncol(theta0)		
@@ -205,9 +206,9 @@ P.mirt <- function(a, d, Theta, g){
 		  theta1 <- theta0 + rmvnorm(N,rep(0,ncol(theta0)), 
 			diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
         else
-          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))					
+          theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))							
 		den0 <- dmvnorm(theta0,rep(0,length(nfact)),prior.t.var)
-		den1 <- dmvnorm(theta1,rep(0,length(nfact)),prior.t.var)		
+		den1 <- dmvnorm(theta1,rep(0,length(nfact)),prior.t.var)						
 		accept <- .Call("drawThetas",
 						as.numeric(unif),
 						as.numeric(den0),
@@ -229,8 +230,7 @@ P.mirt <- function(a, d, Theta, g){
 		attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
 		attr(theta1, "log.lik") <- log.lik		
 		return(theta1) 
-	}
-	
+	}	
 	
 	d.group <- function(grouplist,theta){		
 		tr <- function(x) sum(diag(x))
