@@ -176,7 +176,7 @@ static void Prob(double *P, const int *k, const int *N, const int *nfact,
 	const double *theta, const double *a, const double *d, const double *g)
 {
 	double Ps[*N][*k + 1], Pdif[*N][*k], p1[*N], tmp;
-	int i, j;
+	int i, j, m = 0;
 
 	for(i = 0; i < *N; i++){
 		Ps[i][0] = 1;
@@ -190,8 +190,7 @@ static void Prob(double *P, const int *k, const int *N, const int *nfact,
 	}
 	for(j = (*k - 1); j >= 0; j--)
 		for(i = 0; i < *N; i++)
-			Pdif[i][j] = Ps[i][j] - Ps[i][j + 1];			
-	int m = 0;
+			Pdif[i][j] = Ps[i][j] - Ps[i][j + 1];				
 	for(j = 0; j < *k; j++){
 		for(i = 0; i < *N; i++){
 			if(Pdif[i][j] < .00000001) Pdif[i][j] = .00000001;
@@ -248,7 +247,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	PROTECT(Rreturn = NEW_NUMERIC(N + 1));
 	Preturn = NUMERIC_POINTER(Rreturn);
 	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N], irt1[N], 
-		accept[N], Plong_0[N * k], Plong_1[N * k], cdloglik = 0;
+		accept[N], Plong_1[N * max], Plong_0[N * max], cdloglik = 0;
 	unsigned int loc = 0, location[J];
 	
 	k = 0;
@@ -264,15 +263,15 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		irt0[i] = 0.0;
 		irt1[i] = 0.0;
 	}	
-	for(unsigned int item = 0; item < J; item++){
+	for(unsigned int item = 0; item < J; item++){		
 		k = K[item];
 		for(i = 0; i < nfact; i++)
 			a[i] = lambdas[item][i];		
 		for(i = 0; i < (k-1); i++) 
 			d[i] = zetas[i + loc];
 		g = guess[item];		
-		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);
-		Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);	
+		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);			
+		Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);		
 		m = 0;
 		for(j = 0; j < k; j++){
 			for(i = 0; i < N; i++){				
@@ -298,7 +297,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		if(accept[i]) cdloglik += irt1[i];
 		else cdloglik += irt0[i];
 	}
-	Preturn[N] = cdloglik;		
+	Preturn[N] = cdloglik;
 	
 	UNPROTECT(15);	
 	return(Rreturn);	

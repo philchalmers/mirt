@@ -218,7 +218,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
 		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
-		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05     	
+		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05  
+		if (cand.t.var < 0)	cand.t.var <- 0.1		
 	}	
 	m.thetas <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)

@@ -172,7 +172,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	for(i in 1:20){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
 		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
-		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05     	
+		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05
+		if (cand.t.var < 0)	cand.t.var <- 0.1
 	}	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -218,10 +219,9 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}		
 		sig <- sig + t(sig) - diag(diag(sig))		
-		grouplist$sig <- sig
-		system.time({
+		grouplist$sig <- sig		
 		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
-		})
+		
 		#Step 1. Generate m_k datasets of theta 
 		for(i in 1:k)
 			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)
@@ -263,8 +263,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		for(i in 1:k){
 		  ave.g <- ave.g + g.m[[i]]
 		  ave.h <- ave.h + h.m[[i]]
-		} 
-		
+		} 		
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k				
 		grad <- grad[parind[sind]]		
@@ -292,7 +291,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 				cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
-			if(stagecycle ==2) SEM.stores[cycles - burnin,] <- pars
+			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	
 		
