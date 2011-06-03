@@ -13,7 +13,7 @@
 
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, burnin = 200, SEM.cycles = 100, kdraws = 1,
+	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
     tol = .001, printcycles = TRUE, debug = FALSE, ...)
 
 \method{print}{polymirt}(x, ...)

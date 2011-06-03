@@ -320,11 +320,15 @@ P.mirt <- function(a, d, Theta, g){
 				Pk.1 <- P[,i+2]
 				PQ_1 <- PQfull[,i]			
 				PQ <- PQfull[,i+1]
-				PQ.1 <- PQfull[,i+2]		
-				dif1 <- dat[,i]/(Pk_1 - Pk)
-				dif1sq <- dat[,i]/(Pk_1 - Pk)^2		
-				dif2 <- dat[,i+1]/(Pk - Pk.1)	  
-				dif2sq <- dat[,i+1]/(Pk - Pk.1)^2		
+				PQ.1 <- PQfull[,i+2]	
+				Pk_1.Pk <- Pk_1 - Pk	
+				Pk_Pk.1 <- Pk - Pk.1
+				Pk_1.Pk[Pk_1.Pk < 1e-10] <- 1e-10
+				Pk_Pk.1[Pk_Pk.1 < 1e-10] <- 1e-10
+				dif1 <- dat[,i]/(Pk_1.Pk)
+				dif1sq <- dat[,i]/(Pk_1.Pk)^2		
+				dif2 <- dat[,i+1]/(Pk_Pk.1)	  
+				dif2sq <- dat[,i+1]/(Pk_Pk.1)^2		
 				
 				dL[i] <- sum(-1 * PQ * (dif1 - dif2)) 
 				d2L[i,i] <- sum(-1 * (PQ^2) * (dif1sq + dif2sq) -
@@ -338,9 +342,11 @@ P.mirt <- function(a, d, Theta, g){
 			Pk_1 <- P[,i]	
 			Pk <- P[,i+1]		
 			PQ_1 <- PQfull[,i]			
-			PQ <- PQfull[,i+1]		
-			dif1 <- dat[,i]/(Pk_1 - Pk)
-			dif1sq <- dat[,i]/(Pk_1 - Pk)^2
+			PQ <- PQfull[,i+1]	
+			Pk_1.Pk <- Pk_1 - Pk				
+			Pk_1.Pk[Pk_1.Pk < 1e-10] <- 1e-10			
+			dif1 <- dat[,i]/(Pk_1.Pk)
+			dif1sq <- dat[,i]/(Pk_1.Pk)^2
 			dL[factind] <- dL[factind] + colSums(dif1 * (PQ_1 - PQ) * Thetas)			
 			d2L[factind,factind] <- d2L[factind,factind] + .Call("polyOuter",Thetas,Pk,Pk_1,PQ_1,PQ,
 				dif1sq,dif1,nfact,nrow(Thetas))					

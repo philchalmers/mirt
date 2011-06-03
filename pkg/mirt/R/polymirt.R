@@ -128,7 +128,7 @@ print.polymirt <- function(x, ...){
 
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000, 
-	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, printcycles = TRUE,
+	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
 	debug = FALSE, ...){
 		
 	Call <- match.call()   
@@ -295,22 +295,24 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		if(printcycles){
 			if((cycles + 1) %% 10 == 0){
 				if(cycles < burnin)
-					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-						attr(theta0,"log.lik"), sep="")
+					cat("Stage I: Cycle = ", cycles + 1, ", Log-Lik = ", 
+						round(attr(theta0,"log.lik"),1), sep="")
 				if(cycles > burnin && cycles < burnin + SEM.cycles)
-					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
-						attr(theta0,"log.lik"), sep="")
+					cat("Stage II: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
+						round(attr(theta0,"log.lik"),1), sep="")
 				if(cycles > burnin + SEM.cycles)
-					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
-						", Log-Lik = ", attr(theta0,"log.lik"), sep="")
+					cat("Stage III: Cycle = ", cycles-burnin-SEM.cycles+1, 
+						", Log-Lik = ", round(attr(theta0,"log.lik"),1), sep="")				
 			}
 		}			
 		if(stagecycle < 3){
 		    correction <- solve(ave.h) %*% grad					
 			parsold <- pars
 			pars <- pars + gamma*correction
-			if(printcycles && (cycles + 1) %% 10 == 0) 
+			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
+				flush.console()			
+			}	
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
@@ -328,8 +330,10 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		}				
 		if(conv == 3) break				
 		pars <- pars + gamma*correction
-		if(printcycles && (cycles + 1) %% 10 == 0) 
+		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
+			flush.console()			
+		}	
 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
 			else conv <- 0	
 		parsold <- pars	

@@ -9,7 +9,7 @@ coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, .
 	SEs <- cbind(object$SEpars,object$SEg)	
 	colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
 		paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")					
-	cat("Item Parameters: \n")
+	cat("ITEM PARAMTERS: \n")
 	print(parameters, digits)
 	if(SE){
 		cat("\nStd. Errors: \n")	
@@ -17,7 +17,7 @@ coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, .
 	}	
 	u <- object$gpars$u	
 	sig <- object$gpars$sig	
-	cat("\nGroup Parameters: \n")
+	cat("\nGROUP PARAMETERS: \n")
 	if(print.gmeans){
 		cat("Means: \n")
 		print(u,digits)
@@ -43,7 +43,7 @@ print.confmirt <- function(x, ...){
 } 
 
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000, 
-	burnin = 200, SEM.cycles = 100, kdraws = 1, tol = .001, printcycles = TRUE, 
+	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	debug = FALSE, ...){
 		
 	Call <- match.call()   
@@ -69,7 +69,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		tmp <- paste(itemnames[i], "<->", itemnames[i])
 		sem.mod <- rbind(sem.mod,c(tmp,paste("th",i,sep=""),NA))		
 	}	
-	suppressWarnings(SEM <- sem:::sem.mod(sem.mod,Rpoly,N)) 		
+	suppressWarnings(SEM <- sem:::sem.mod(sem.mod,Rpoly,N, maxiter = 5)) 		
 	ram <- SEM$ram
 	coefs <- SEM$coef
 	ramloads <- ram[ram[,1]==1,]
@@ -126,15 +126,17 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	loc <- 1	
 	for(i in 1:J){
 		if(K[i] == 2){
-			zetas[loc] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
+			div <- ifelse(cs[i] > .25, cs[i], .25)		
+			zetas[loc] <- qnorm(mean(fulldata[,itemloc[i]]))/div
 			loc <- loc + 1
 		} else {			
 			temp <- table(data[,i])[1:(K[i]-1)]/N
-			temp <- cumsum(temp)			
-			zetas[loc:(loc+K[i]-2)] <- qnorm(1 - temp)/cs[i]	
+			temp <- cumsum(temp)
+			div <- ifelse(cs[i] > .25, cs[i], .25)		
+			zetas[loc:(loc+K[i]-2)] <- qnorm(1 - temp)/div	
 			loc <- loc + K[i] - 1	
 		}		
-	}	
+	}		
 	npars <- length(lambdas) + length(zetas) + sum(estGuess) 
 	parind <- 1:npars
 	pars <- rep(NA,npars)
@@ -186,7 +188,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	k <- 1	
 	gamma <- .1
 	startvalues <- pars	
-	stagecycle <- 1
+	stagecycle <- 1		
 	
 	for(cycles in 1:(ncycles + burnin + SEM.cycles))
 	{ 
@@ -220,7 +222,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		}		
 		sig <- sig + t(sig) - diag(diag(sig))		
 		grouplist$sig <- sig		
-		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
+		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)		
 		
 		#Step 1. Generate m_k datasets of theta 
 		for(i in 1:k)
@@ -267,28 +269,30 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k				
 		grad <- grad[parind[sind]]		
-		ave.h <- ave.h[parind[sind],parind[sind]] 
+		ave.h <- ave.h[parind[sind],parind[sind]] 		
 		if(printcycles){
 			if((cycles + 1) %% 10 == 0){
 				if(cycles < burnin)
-					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-						attr(theta0,"log.lik"), sep="")
+					cat("Stage I: Cycle = ", cycles + 1, ", Log-Lik = ", 
+						round(attr(theta0,"log.lik"),1), sep="")
 				if(cycles > burnin && cycles < burnin + SEM.cycles)
-					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
-						attr(theta0,"log.lik"), sep="")
+					cat("Stage II: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
+						round(attr(theta0,"log.lik"),1), sep="")
 				if(cycles > burnin + SEM.cycles)
-					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
-						", Log-Lik = ", attr(theta0,"log.lik"), sep="")
+					cat("Stage III: Cycle = ", cycles-burnin-SEM.cycles+1, 
+						", Log-Lik = ", round(attr(theta0,"log.lik"),1), sep="")					
 			}
 		}			
-		if(stagecycle < 3){
+		if(stagecycle < 3){			
 		    correction <- solve(ave.h) %*% grad								
 			parsold <- pars
 			correct <- rep(0,npars)
 			correct[sind] <- correction
 			pars <- pars + gamma*correct
-			if(printcycles && (cycles + 1) %% 10 == 0) 
+			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
+				flush.console()
+			}				
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
@@ -296,7 +300,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		}	
 		
 		#Step 3. Update R-M step		
-		Tau <- Tau + gamma*(ave.h - Tau)		
+		Tau <- Tau + gamma*(ave.h - Tau)			
 		correction <- (solve(Tau) %*% grad)	
 		correction[correction > .5] <- .5
 		correction[correction < -.5] <- -.5	
@@ -311,8 +315,10 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		correct <- rep(0,npars)
 		correct[sind] <- correction
 		pars <- pars + gamma*correct
-		if(printcycles && (cycles + 1) %% 10 == 0) 
+		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
+			flush.console()		
+		}	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		
