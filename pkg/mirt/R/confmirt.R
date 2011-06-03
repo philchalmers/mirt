@@ -171,11 +171,13 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	#preamble for MRHM algorithm			
 	theta0 <- matrix(0,N,nfact)	    
 	cand.t.var <- 1	
-	for(i in 1:20){
+	for(i in 1:30){
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
 		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
-		else if(attr(theta0,"Proportion Accepted") < .35) cand.t.var <- cand.t.var - .05
-		if (cand.t.var < 0)	cand.t.var <- 0.1
+		else if(attr(theta0,"Proportion Accepted") > .3 && nfact > 4) cand.t.var <- cand.t.var + .05
+		else if(attr(theta0,"Proportion Accepted") < .35 && nfact < 4) cand.t.var <- cand.t.var - .05
+		else if(attr(theta0,"Proportion Accepted") < .2) cand.t.var <- cand.t.var - .05
+		if (cand.t.var < 0)	cand.t.var <- 0.025
 	}	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -194,7 +196,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
-			gamma <- sqrt(0.1/(2*(cycles - SEM.cycles - burnin - 1)))
+			gamma <- .5/(cycles - SEM.cycles - burnin - 1)
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
@@ -221,10 +223,10 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}		
 		sig <- sig + t(sig) - diag(diag(sig))		
-		grouplist$sig <- sig		
-		for(j in 1:5) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)		
+		grouplist$sig <- sig			
 		
 		#Step 1. Generate m_k datasets of theta 
+		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)	
 		for(i in 1:k)
 			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)
 		theta0 <- m.thetas[[1]]
@@ -273,14 +275,14 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		if(printcycles){
 			if((cycles + 1) %% 10 == 0){
 				if(cycles < burnin)
-					cat("Stage I: Cycle = ", cycles + 1, ", Log-Lik = ", 
-						round(attr(theta0,"log.lik"),1), sep="")
+					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
+						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
 				if(cycles > burnin && cycles < burnin + SEM.cycles)
-					cat("Stage II: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
-						round(attr(theta0,"log.lik"),1), sep="")
+					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
+						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
 				if(cycles > burnin + SEM.cycles)
-					cat("Stage III: Cycle = ", cycles-burnin-SEM.cycles+1, 
-						", Log-Lik = ", round(attr(theta0,"log.lik"),1), sep="")					
+					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
+						", Log-Lik = ", sprintf("%.1f",attr(theta0,"log.lik")), sep="")					
 			}
 		}			
 		if(stagecycle < 3){			
@@ -290,7 +292,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 			correct[sind] <- correction
 			pars <- pars + gamma*correct
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
-				cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
+				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()
 			}				
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
@@ -316,7 +318,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		correct[sind] <- correction
 		pars <- pars + gamma*correct
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
-			cat(", Max Change =", round(max(abs(gamma*correction)),5), "\n")
+			cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 			flush.console()		
 		}	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]

@@ -304,54 +304,18 @@ P.mirt <- function(a, d, Theta, g){
 	}
 	
 	dpars.poly <- function(lambda,zeta,dat,Thetas){  
-		nzeta <- length(zeta)
-		ncat <- nzeta + 1		
-		nfact <- length(lambda)
-		factind <- ncat:(ncat+nfact-1)
+		nzeta <- length(zeta)			
+		nfact <- length(lambda)				
 		N <- nrow(Thetas)		
-		P <- P.poly(lambda,zeta,Thetas)	
-		dL <- rep(0,nzeta + nfact)
-		d2L <- matrix(0,nzeta + nfact, nzeta + nfact)	
-		PQfull <- P * (1 - P)			 
-		for(i in 1:ncat){
-			if(i < ncat){
-				Pk_1 <- P[,i]	
-				Pk <- P[,i+1]
-				Pk.1 <- P[,i+2]
-				PQ_1 <- PQfull[,i]			
-				PQ <- PQfull[,i+1]
-				PQ.1 <- PQfull[,i+2]	
-				Pk_1.Pk <- Pk_1 - Pk	
-				Pk_Pk.1 <- Pk - Pk.1
-				Pk_1.Pk[Pk_1.Pk < 1e-10] <- 1e-10
-				Pk_Pk.1[Pk_Pk.1 < 1e-10] <- 1e-10
-				dif1 <- dat[,i]/(Pk_1.Pk)
-				dif1sq <- dat[,i]/(Pk_1.Pk)^2		
-				dif2 <- dat[,i+1]/(Pk_Pk.1)	  
-				dif2sq <- dat[,i+1]/(Pk_Pk.1)^2		
-				
-				dL[i] <- sum(-1 * PQ * (dif1 - dif2)) 
-				d2L[i,i] <- sum(-1 * (PQ^2) * (dif1sq + dif2sq) -
-					(dif1 - dif2) * (Pk * (1 - Pk) * (1 - 2*Pk)))
-				if(i < nzeta) d2L[i,i+1] <- d2L[i+1,i] <- sum(dif2sq * PQ.1 * PQ)        		
-				d2L[factind,i] <- d2L[i,factind] <- 
-					colSums(-(dif2sq * PQ * (PQ - PQ.1) * Thetas) +
-					(dif1sq * PQ * (PQ_1 - PQ) * Thetas) - 
-					((dif1 - dif2) * (Pk * (1 - Pk) * (1 - 2*Pk) * Thetas)))
-			}		
-			Pk_1 <- P[,i]	
-			Pk <- P[,i+1]		
-			PQ_1 <- PQfull[,i]			
-			PQ <- PQfull[,i+1]	
-			Pk_1.Pk <- Pk_1 - Pk				
-			Pk_1.Pk[Pk_1.Pk < 1e-10] <- 1e-10			
-			dif1 <- dat[,i]/(Pk_1.Pk)
-			dif1sq <- dat[,i]/(Pk_1.Pk)^2
-			dL[factind] <- dL[factind] + colSums(dif1 * (PQ_1 - PQ) * Thetas)			
-			d2L[factind,factind] <- d2L[factind,factind] + .Call("polyOuter",Thetas,Pk,Pk_1,PQ_1,PQ,
-				dif1sq,dif1,nfact,nrow(Thetas))					
-		} 
-		return(list(grad=dL, hess=d2L))	
+		P <- P.poly(lambda,zeta,Thetas)			
+		ret <- .Call("dparsPoly",
+				as.numeric(P), 
+				as.numeric(Thetas), 
+				as.integer(dat),
+				as.integer(nzeta),
+				as.integer(nfact),
+				as.integer(N)) 				 
+		return(ret)	
 	}
   
   
