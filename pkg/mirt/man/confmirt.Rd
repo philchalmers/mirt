@@ -101,7 +101,7 @@ d <- matrix(c(
 
 sigma <- diag(2)
 sigma[1,2] <- sigma[2,1] <- .4
-dataset <- simdata(a,d,1000,sigma)
+dataset <- simdata(a,d,2000,sigma)
 
 #analyses
 #CIFA for 2 factor crossed structure

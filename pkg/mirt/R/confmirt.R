@@ -59,7 +59,7 @@ print.confmirt <- function(x, ...){
 		cat("Estimation stopped after ", x$cycles, " iterations.\n", sep="")	
 } 
 
-confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000, 
+confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	debug = FALSE, ...){
 		
@@ -80,15 +80,15 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	for(i in 1:J) K[i] <- length(uniques[[i]])
 	guess[K > 2] <- 0	
 	Rpoly <- cormod(na.omit(data),K,guess)
-	sem.mod <- unclass(sem.mod)
+	sem.model <- unclass(sem.model)
 	itemnames <- colnames(data)
 	for(i in 1:J){
 		tmp <- paste(itemnames[i], "<->", itemnames[i])
-		sem.mod <- rbind(sem.mod,c(tmp,paste("th",i,sep=""),NA))		
+		sem.model <- rbind(sem.model,c(tmp,paste("th",i,sep=""),NA))		
 	}	
-	suppressWarnings(SEM <- sem:::sem.mod(sem.mod,Rpoly,N, maxiter = 5)) 		
-	ram <- SEM$ram
-	coefs <- SEM$coef
+	SEM <- sem.mod(sem.model,Rpoly,N)
+	ram <- SEM$ram	
+	coefs <- rep(.5,nrow(ram))
 	ramloads <- ram[ram[,1]==1,]
 	ramloads[,3] <- ramloads[,3] - J
 	groups <- ram[ram[,2] > J,]	
@@ -313,7 +313,9 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 				flush.console()
 			}				
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
-			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
+			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
+			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
+			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]		
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	
@@ -341,6 +343,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		}	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
+		pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
+		pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 			
 		phi <- phi + gamma*(grad - phi)
