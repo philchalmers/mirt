@@ -32,6 +32,24 @@ coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, .
 	}		
 }
 
+summary.confmirt <- function(object, digits = 3, ...)
+{
+	nfact <- ncol(object$F)		
+	F <- object$F
+	h2 <- as.matrix(object$h2)		
+	colnames(F) <- paste("F_", 1:ncol(F),sep="")
+	colnames(h2) <- "h2"				
+	SS <- apply(F^2,2,sum)			
+	cat("\nFactor loadings metric: \n")
+	print(cbind(F,h2),digits)		
+	cat("\nSS loadings: ",round(SS,digits), "\n")
+	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")		
+	if(any(h2 > 1)) 
+		warning("Solution has heywood cases. Interpret with caution.") 
+	invisible(F)  
+	  
+}
+
 print.confmirt <- function(x, ...){
 	cat("Call: ")
 	print(x$Call)
@@ -76,7 +94,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	ramloads[,3] <- ramloads[,3] - J
 	groups <- ram[ram[,2] > J,]	
 	groups[,2:3] <- groups[,2:3] - J
-	nfact <- sum(groups[,2] == groups[,3])	
+	nfact <- sum(groups[,2] == groups[,3])		
 	if(length(gmeans) == 1)	gmeans <- rep(gmeans,nfact)					
 	if(length(gmeans) > J || length(guess) < J) 
 		stop("The number of gmeans parameters is incorrect.")
@@ -188,7 +206,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- .1
+	gamma <- .2
 	startvalues <- pars	
 	stagecycle <- 1		
 	
@@ -196,7 +214,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
-			gamma <- .5/(cycles - SEM.cycles - burnin - 1)
+			gamma <- sqrt(0.1/(3*(cycles - SEM.cycles - burnin - 1)))
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
@@ -318,7 +336,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 		correct[sind] <- correction
 		pars <- pars + gamma*correct
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
-			cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
+			cat(", gam =",sprintf("%.3f",gamma),", Max Change =", 
+				sprintf("%.4f",max(abs(gamma*correction))), "\n")
 			flush.console()		
 		}	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
@@ -383,9 +402,16 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
 		estgmeans=estgmeans)
+		
+	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2,na.rm = TRUE))
+		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
+	F <- as.matrix(pars[ ,1:nfact]/norm)
+	F[is.na(F)] <- 0	
+	h2 <- rowSums(F^2)	
+		
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, gpars=gpars, 
 		SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - burnin,
-		Theta=theta0, fulldata=fulldata, K=K, itemloc=itemloc, 
+		Theta=theta0, fulldata=fulldata, K=K, itemloc=itemloc, h2=h2, F=F,
 		converge = converge, Call=Call)	 
 	class(mod) <- 'confmirt'
 	mod

@@ -230,7 +230,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- 0.1
+	gamma <- 0.2
 	startvalues <- pars
 	stagecycle <- 1	
 	
@@ -238,7 +238,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2
 		if(stagecycle == 3)
-			gamma <- sqrt(0.05/(2*(cycles - SEM.cycles - burnin - 1)))
+			gamma <- sqrt(0.1/(2*(cycles - SEM.cycles - burnin - 1)))
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
@@ -333,7 +333,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		if(conv == 3) break				
 		pars <- pars + gamma*correction
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
-			cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
+			cat(", gam =",sprintf("%.3f",gamma),", Max Change =", 
+				sprintf("%.4f",max(abs(gamma*correction))), "\n")
 			flush.console()			
 		}	
 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
