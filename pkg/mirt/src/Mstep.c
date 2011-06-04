@@ -5,7 +5,7 @@
 static double arraysum(const double *A1, const int *length)
 {  
 	double Sum = 0.0;  
-	for(int j = 0; j < *length; j++)		  
+	for(unsigned int j = 0; j < *length; j++)		  
 		Sum += A1[j];
 	return (Sum);
 }
@@ -13,14 +13,14 @@ static double arraysum(const double *A1, const int *length)
 static void arrayprod2(double *Prod, const double *A1, 
   const double *A2, const int *length)
 { 	
-  for(int i = 0; i < *length; i++)
+  for(unsigned int i = 0; i < *length; i++)
     Prod[i] = A1[i] * A2[i];
 }
 
 static void arrayprod3(double *Prod, const double *A1, 
    const double *A2, const double *A3, const int *length)
 { 	
-	for(int i = 0; i < *length; i++)
+	for(unsigned int i = 0; i < *length; i++)
 		Prod[i] = A1[i] * A2[i] * A3[i];
 }
 
@@ -29,23 +29,24 @@ static void itemtrace(double *P, const double *a,
   const int *nfact, const int *nquad)
 {	
 	double z[*nquad], Theta[*nquad][*nfact];
-	for (int i = 0; i < *nquad; i++)
+	unsigned int i, j, k;
+	for (i = 0; i < *nquad; i++)
 		z[i] = 0;
-	int k = 0;  
-	for(int i = 0; i < *nfact; i++){
-		for(int j = 0; j < *nquad; j++){		    
+	k = 0;  
+	for(i = 0; i < *nfact; i++){
+		for(j = 0; j < *nquad; j++){		    
 			Theta[j][i] = PTheta[k];
 			k++;
 		 }
 	}	
 	//compute item trace vector
-	for (int j = 0; j <	*nquad; j++){		
-		for (int i = 0; i <	*nfact; i++)		
+	for (j = 0; j <	*nquad; j++){		
+		for (i = 0; i <	*nfact; i++)		
 			z[j] += 1.702 * a[i] * Theta[j][i];  		
 		z[j] += *d * 1.702;
 	}
 	
-	for (int i = 0; i < *nquad; i++) 
+	for (i = 0; i < *nquad; i++) 
 		P[i] = *g + (1 - *g) * (exp(z[i])/(1 + exp(z[i])));		
 }	
 
@@ -68,7 +69,7 @@ SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 		*Pprior, *Pparprior;
 	const int nfact = LENGTH(Ra);
 	const int nquad = LENGTH(RTheta) / nfact;
-	int i, j, k;
+	unsigned int i, j, k;
 	Pr1 = NUMERIC_POINTER(Rr1);
 	PN = NUMERIC_POINTER(RN);	
 	Pguess = NUMERIC_POINTER(Rguess);
@@ -148,7 +149,7 @@ SEXP loglik(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 	  *Pparprior;
 	const int nfact = LENGTH(Ra);
 	const int nquad = LENGTH(RTheta) / nfact;
-	int i;
+	unsigned int i;
 	Pr1 = NUMERIC_POINTER(Rr1);
 	PN = NUMERIC_POINTER(RN);	
 	Pguess = NUMERIC_POINTER(Rguess);

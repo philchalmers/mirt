@@ -7,7 +7,8 @@ SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 	
 	SEXP list,list_names,Rr1,Rr0,Rexpected;		
 	double *itemtracev,*prior,expd;
-	int *X,*nfact,*r,nquad,nitems,npat,i,j,k;	
+	int *X,*nfact,*r,nquad,nitems,npat;
+	unsigned int i,j,k;	
 	
 	//Make pointers and protect variables	
 	PROTECT(Ritemtrace = AS_NUMERIC(Ritemtrace));	
@@ -29,7 +30,7 @@ SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 	double posterior[nquad],expected[npat],
 		itemtrace[nitems][nquad],r1[nitems][nquad],
 		r0[nitems][nquad];	
-	int data[npat][nitems];	
+	unsigned int data[npat][nitems];	
 	
 	for	(j = 0; j < nitems; j++)
 		for (i = 0; i < npat; i++)
@@ -42,7 +43,7 @@ SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 	}
 	
 	// Begin main function body here				
-	for (int pat = 0; pat < npat; pat++){		
+	for (unsigned int pat = 0; pat < npat; pat++){		
 		for (k = 0; k < nquad; k++)
 			posterior[k] = prior[k];
 			
@@ -112,8 +113,9 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	
 	SEXP list,list_names,Rr1,Rr0,Rexpected;		
 	double *itemtracev,*prior,*sitems;
-	int *X,*nfact,*r,nquad,npquad,nitems,npat,i,j,k,sfact;	
-	
+	int *X,*nfact,*r,nquad,npquad,nitems,npat,sfact;	
+	unsigned int i,j,k;
+
 	//Make pointers and protect variables	
 	PROTECT(Ritemtrace = AS_NUMERIC(Ritemtrace));	
 	PROTECT(Rprior = AS_NUMERIC(Rprior));		
@@ -139,7 +141,7 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 		itemtrace[nitems][nquad],r1[nitems*sfact][nquad],tempsum[npquad],
 		r0[nitems*sfact][nquad],Plk[sfact][npquad],Elk[sfact][npquad],
 		Pls[npquad],sitemsfull[sfact][nitems],posterior[sfact][nquad];	
-	int data[npat][nitems],fact;	
+	int unsigned data[npat][nitems],fact;	
 	
 	for	(j = 0; j < nitems; j++)
 		for (i = 0; i < npat; i++)
@@ -154,7 +156,7 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	for	(j = 0; j < nquad; j++)
 		for (i = 0; i < nitems*sfact; i++)
 			r1[i][j] = r0[i][j] = 0;
-  k = 0; 	
+	k = 0; 	
 	for	(j = 0; j < nitems; j++){
 		for (i = 0; i < sfact; i++){
 		  sitemsfull[i][j] = sitems[k];
@@ -163,8 +165,8 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	}  
 				
 	// Begin main function body here				
-	for (int pat = 0; pat < npat; pat++){		
-    for(fact = 0; fact < sfact; fact++){ 	
+	for (unsigned int pat = 0; pat < npat; pat++){		
+		for(fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
 				likelihoods[fact][k] = 1;				
 			for (int item = 0; item < nitems; item++){

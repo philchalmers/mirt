@@ -96,19 +96,15 @@ summary.polymirt <- function(object, rotate = 'varimax', digits = 3, ...)
 		SS <- apply(rotF$loadings^2,2,sum)
 		loads <- round(cbind(rotF$loadings,h2),digits)		
 		cat("\nRotated factor loadings: \n")
-		print(loads)		
+		print(loads,digits)		
 		if(attr(rotF, "oblique")){
 			cat("\nFactor correlations: \n")
 			Phi <- rotF$Phi	  
 			Phi <- round(Phi, digits)
 			colnames(Phi) <- rownames(Phi) <- colnames(F)
-			print(Phi)
-			cat("\nRotated Sums of Squares: \n")
-			round(colSums(rotF$loadings %*% Phi), digits)      
-		} else {	
-			cat("\nSS loadings: ",round(SS,digits), "\n")
-			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")	
-		}
+			print(Phi)			    
+		}		
+		cat("\nSS loadings: ",round(SS,digits), "\n")		
 		if(any(h2 > 1)) 
 			warning("Solution has heywood cases. Interpret with caution.") 
 		invisible(list(loadings,h2))  
@@ -238,7 +234,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2
 		if(stagecycle == 3)
-			gamma <- sqrt(0.1/(2*(cycles - SEM.cycles - burnin - 1)))
+			gamma <- (0.05/(cycles - SEM.cycles - burnin - 1))^(0.5) - .004
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)

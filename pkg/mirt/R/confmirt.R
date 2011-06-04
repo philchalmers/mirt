@@ -46,8 +46,7 @@ summary.confmirt <- function(object, digits = 3, ...)
 	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")		
 	if(any(h2 > 1)) 
 		warning("Solution has heywood cases. Interpret with caution.") 
-	invisible(F)  
-	  
+	invisible(F)  	  
 }
 
 print.confmirt <- function(x, ...){
@@ -214,7 +213,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
-			gamma <- sqrt(0.1/(3*(cycles - SEM.cycles - burnin - 1)))
+			gamma <- (0.05/(cycles - SEM.cycles - burnin - 1))^(0.5) - .004
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)

@@ -142,8 +142,7 @@ SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta,
 		dL[j] = 0.0;
 		for(i = 0; i < (nfact + nzeta); i++)
 			d2L[i][j] = 0.0;
-	}
-		
+	}		
 
 	for(j = 0; j < (nzeta + 1); j++){
 		if(j < nzeta){
@@ -263,7 +262,6 @@ SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg,
 	unsigned int i, j;
 	int *nquad,*nfact;
 	double *a,*d,*g,*Theta,*P;
-
 	
 	//set pointers and protect
 	PROTECT(Rnquad = AS_INTEGER(Rnquad));
@@ -292,8 +290,7 @@ SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg,
 			z[j] += 1.702 * a[i] * Theta[j + i*(*nquad)]; 
 		}
 		z[j] += *d * 1.702;
-	}
-	
+	}	
 	for (i = 0; i < *nquad; i++) 
 		P[i] = *g + (1 - *g) * (exp(z[i])/(1 + exp(z[i])));		
 		
@@ -348,7 +345,8 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
 
 	SEXP Rreturn;	
-	int i, j, k, m, J, nfact, N,*itemloc,*K,*Pfulldata, Ksums = 0, max = 2;
+	unsigned int i, j, m;
+	int k, J, nfact, N,*itemloc,*K,*Pfulldata, Ksums = 0, max = 2;
 	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0,*Ptheta1,*unif, 
 		*den0,*den1;
 		
