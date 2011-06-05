@@ -142,6 +142,12 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		uniques[[i]] <- sort(unique(data[,i]))
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])
+	data99 <- data
+	for(i in 1:J)
+		for(j in 1:K[i])
+			data99[data[,i] == uniques[[i]][j],i] <- j
+	data99 <- data99 - 1		
+	data99[is.na(data99)] <- 99	
 	guess[K > 2] <- 0
 	estGuess[K > 2] <- FALSE	
 	itemloc <- cumsum(c(1,K))
@@ -212,7 +218,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	theta0 <- matrix(0,N,nfact)	    
 	cand.t.var <- 1	
 	for(i in 1:30){
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var)
 		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
 		else if(attr(theta0,"Proportion Accepted") > .3 && nfact > 4) cand.t.var <- cand.t.var + .05
 		else if(attr(theta0,"Proportion Accepted") < .35 && nfact < 4) cand.t.var <- cand.t.var - .05
@@ -249,9 +255,9 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		guess[estGuess] <- pars[gind]		
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var)
 		for(i in 1:k)			
-			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
+			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var)		
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 

@@ -43,7 +43,12 @@ summary.confmirt <- function(object, digits = 3, ...)
 	cat("\nFactor loadings metric: \n")
 	print(cbind(F,h2),digits)		
 	cat("\nSS loadings: ",round(SS,digits), "\n")
-	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")		
+	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+	cat("\nFactor correlations: \n")
+	Phi <- object$gpars$sig	  
+	Phi <- round(Phi, digits)
+	colnames(Phi) <- rownames(Phi) <- colnames(F)
+	print(Phi)		
 	if(any(h2 > 1)) 
 		warning("Solution has heywood cases. Interpret with caution.") 
 	invisible(F)  	  
@@ -78,6 +83,12 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		uniques[[i]] <- sort(unique(data[,i]))
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])
+	data99 <- data
+	for(i in 1:J)
+		for(j in 1:K[i])
+			data99[data[,i] == uniques[[i]][j],i] <- j
+	data99 <- data99 - 1		
+	data99[is.na(data99)] <- 99	
 	guess[K > 2] <- 0	
 	Rpoly <- cormod(na.omit(data),K,guess)
 	sem.model <- unclass(sem.model)
@@ -187,15 +198,15 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	
 	#preamble for MRHM algorithm			
 	theta0 <- matrix(0,N,nfact)	    
-	cand.t.var <- 1	
-	for(i in 1:30){
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
+	cand.t.var <- 1			
+	for(i in 1:30){			
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var,gcov)
 		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
 		else if(attr(theta0,"Proportion Accepted") > .3 && nfact > 4) cand.t.var <- cand.t.var + .05
 		else if(attr(theta0,"Proportion Accepted") < .35 && nfact < 4) cand.t.var <- cand.t.var - .05
 		else if(attr(theta0,"Proportion Accepted") < .2) cand.t.var <- cand.t.var - .05
 		if (cand.t.var < 0)	cand.t.var <- 0.025
-	}	
+	} 	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
 	phi <- rep(0,sum(sind))
@@ -243,9 +254,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		grouplist$sig <- sig			
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)	
+		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var,sig)	
 		for(i in 1:k)
-			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,sig)
+			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var,sig)
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 		
