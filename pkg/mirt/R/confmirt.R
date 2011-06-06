@@ -314,7 +314,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){			
-		    correction <- solve(ave.h) %*% grad								
+		    correction <- SparseM::solve(ave.h) %*% grad								
 			parsold <- pars
 			correct <- rep(0,npars)
 			correct[sind] <- correction
@@ -329,11 +329,11 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]		
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
-		}	
+		}	 
 		
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)			
-		correction <- (solve(Tau) %*% grad)	
+		correction <- SparseM::solve(Tau) %*% grad
 		correction[correction > .5] <- .5
 		correction[correction < -.5] <- -.5	
 		if(any(estGuess)){

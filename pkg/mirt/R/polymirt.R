@@ -310,7 +310,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){
-		    correction <- solve(ave.h) %*% grad					
+		    correction <- SparseM::solve(ave.h) %*% grad					
 			parsold <- pars
 			pars <- pars + gamma*correction
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
@@ -325,7 +325,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)		
-		correction <- (solve(Tau) %*% grad)	
+		correction <- SparseM::solve(Tau) %*% grad
 		correction[correction > .5] <- .5
 		correction[correction < -.5] <- -.5	
 		if(any(estGuess)){

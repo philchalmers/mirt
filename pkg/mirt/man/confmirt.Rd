@@ -18,6 +18,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 
+\method{summary}{confmirt}(object, digits = 3, ...)
+
 }
 
 \arguments{
@@ -74,7 +76,7 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
-\seealso{\code{\link{expand.table}},\code{\link{key2binary}}}
+\seealso{\code{\link{expand.table}},\code{\link{key2binary}},\code{\link{sim.data}}}
 
 \examples{
 \dontrun{

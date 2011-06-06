@@ -1,7 +1,12 @@
 useDynLib(mirt, .registration=TRUE)
 
 # Exported functions
-export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,f.scores,itemplot,simdata)
+export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,f.scores,itemplot,simdata,
+	specify.model)
+
+# Imported functions
+importFrom(sem, specify.model)
+importFrom(SparseM, solve)
 
 # S3 methods
 S3method(print, mirt)

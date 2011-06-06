@@ -318,7 +318,9 @@
 		return(ret)	
 	}
 
-	#functions adopted from John Fox's sem package, ommiting the final call to sem.default
+	#functions adopted from John Fox's sem package, ommiting the S3 call to sem.default
+	specify.model <- function() sem::specify.model()
+	
 	sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=FALSE, ...){
 	parse.path <- function(path) {                                           
 		path.1 <- gsub('-', '', gsub(' ','', path))
@@ -384,9 +386,7 @@
 		cat('\n\n RAM:\n')
 		print(ram)
 		}	
-	return(list(ram = ram))	
-	#sem(ram=ram, S=S, N=N, param.names=pars, var.names=vars, fixed.x=fixed.x,
-	#    debug=debug, ...)
+	return(list(ram = ram))		
 	}
 
 
