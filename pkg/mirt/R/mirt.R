@@ -1,12 +1,20 @@
 ##########################################
 
-residuals.mirt <- function(object, digits = 3, ...)
-{    
-  r <- object$tabdata[ ,ncol(object$tabdata)]
-  res <- (r - object$Pl * nrow(object$fulldata)) / 
-    sqrt(object$Pl * nrow(object$fulldata))
-  print(res,digits)
-  invisible(res)  	  	  
+residuals.mirt <- function(object, type = 'LD', digits = 3, ...)
+{   
+	if(type == 'LD'){ }
+	if(type == 'SX2'){ }	
+	if(type == 'exp'){	
+		r <- object$tabdata[ ,ncol(object$tabdata)]
+		res <- (r - object$Pl * nrow(object$fulldata)) / 
+		sqrt(object$Pl * nrow(object$fulldata))
+		print(res,digits)		  	  	  
+	}
+	
+	
+	
+	
+	return(invisible(res))	
 }
 
 plot.mirt <- function(x, type = 'info', npts = 50,
@@ -96,16 +104,12 @@ f.scores.mirt <- function(object, full.scores = FALSE,
   }
   
   colnames(scores) <- paste("F",1:ncol(scores),sep="")  
-  if (full.scores){
-    TFvec <- rep(FALSE,nrow(fulldata))  
+  if (full.scores){      
     scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta)) 
-    for (j in 1:nrow(tabdata)){
-      for (i in 1:nrow(fulldata)){
-        TFvec <- rep(FALSE,nrow(fulldata))
-        TFvec[i] <- all(fulldata[i, ] == tabdata[j, ])
-	    scoremat[TFvec, ] <- scores[j, ]
-      }  
-    }        
+    for (j in 1:nrow(tabdata)){          
+        TFvec <- colSums(ifelse(t(fulldata) == tabdata[j, ],1,0)) == ncol(fulldata)        
+        scoremat[TFvec, ] <- scores[j, ]
+    }              
     return(cbind(fulldata,scoremat))
   } else {
     r <- as.matrix(object$tabdata[ ,ncol(tabdata)+1])

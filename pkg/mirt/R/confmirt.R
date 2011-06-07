@@ -1,3 +1,11 @@
+residuals.confmirt <- function(object, digits = 3, ...)
+{ 
+	
+	
+	
+    	  	  
+}
+
 coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 {  
 	nfact <- ncol(object$Theta)	

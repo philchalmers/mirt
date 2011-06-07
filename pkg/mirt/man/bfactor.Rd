@@ -55,7 +55,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
 
   Unlike TESTFACT 4 (2003) initial start values are computed by using information from the matrix of tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responses. To begin, a MINRES factor analysis with one factor is extracted, and the transformed loadings and intercepts (see \link{mirt} for more details) are used as starting values for the general factor loadings and item intercepts. Values for the specific factor loadings are taken to be half the magnitude of the extracted general factor loadings. Note that while the sign of the loading may be incorrect for specific factors (and possibly for some of the general factor loadings) the intercepts and general factor loadings will be relatively close to the final solution. These initial values should be an improvement over the TESTFACT 4 initial starting values of 1.414 for all the general factor slopes, 1 for all the specific factor slopes, and 0 for all the intercepts.
 
-  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. Fitted and residual values may be observed via \code{fitted.bfactor} and \code{residual.bfactor}. To examine individuals item plots use \code{\link{itemplot.bfactor}} which will also plot information and surface functions (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics).
+  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.scores = TRUE}) or displayed in a summary table for all the unique response patterns. Fitted and residual values may be observed via \code{fitted.bfactor} and \code{residual.bfactor}. To examine individuals item plots use \code{\link{itemplot.bfactor}} which will also plot information and surface functions (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics).
 }
 
 \value{
@@ -104,9 +104,8 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 data(SAT12)
 fulldata <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-tmat <- tetrachor(fulldata) #this can save some time if bfactor run more than once
 specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
-mod1 <- bfactor(fulldata, specific, prev.cor = tmat)
+mod1 <- bfactor(fulldata, specific)
 coef(mod1)
 
 ###Try with guessing parameters added
@@ -114,7 +113,7 @@ guess <- rep(.1,32)
 mod2 <- bfactor(fulldata, specific, guess = guess)
 coef(mod2) #item 32 too difficult to include guessing par
 #fix by imposing a weak intercept prior
-mod3a <- bfactor(fulldata, specific, guess = guess, prev.cor = mod2, par.prior = list(int = c(0,4), int.items = 32))
+mod3a <- bfactor(fulldata, specific, guess = guess, par.prior = list(int = c(0,4), int.items = 32))
 coef(mod3a)
 #...or by removing guessing parameter
 guess[32] <- 0

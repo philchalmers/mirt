@@ -319,6 +319,7 @@
 	}
 
 	#functions adopted from John Fox's sem package, ommiting the S3 call to sem.default
+	### ADAPTED ON JUNE 5th, 2010, FROM THE 'SEM' PACKAGE VERSION 0.9-21 ###
 	specify.model <- function() sem::specify.model()
 	
 	sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=FALSE, ...){

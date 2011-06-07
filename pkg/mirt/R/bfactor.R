@@ -53,19 +53,14 @@ f.scores.bfactor <- function(object, full.scores = FALSE,
 	    patdata=tabdata[i, ],logicalfact=logicalfact)$estimate 
       scores[i, ] <- thetas
     }  
-  }  
-  scores <- as.matrix(scores[ ,1])
-  colnames(scores) <- "g"
+  }    
+  colnames(scores) <- c("g","s")
   if (full.scores){
-    TFvec <- rep(FALSE,nrow(fulldata))  
-    scoremat <- matrix(0,nrow=nrow(fulldata),ncol=1) 
-    for (j in 1:nrow(tabdata)){
-      for (i in 1:nrow(fulldata)){
-        TFvec <- rep(FALSE,nrow(fulldata))
-        TFvec[i] <- all(fulldata[i, ] == tabdata[j, ])
-	    scoremat[TFvec, ] <- scores[j]
-      }  
-    }    
+    scoremat <- matrix(0,nrow=nrow(fulldata),ncol=2) 
+    for (j in 1:nrow(tabdata)){          
+        TFvec <- colSums(ifelse(t(fulldata) == tabdata[j, ],1,0)) == ncol(fulldata)        
+	    scoremat[TFvec, ] <- scores[j, ]
+    } 
     return(cbind(fulldata,scoremat))
   } else {  
 	cat("Method: ", method,"\n")
@@ -135,9 +130,9 @@ print.bfactor <- function(x, ...)
 
 ########################################## 
 
-bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL, 
+bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL, 
   par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 150, 
-  EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
+  EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
 { 
   fn <- function(pars, r1, N, guess, Theta, prior, parprior){
     a <- pars[1:(length(pars)-1)]
@@ -239,7 +234,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor=NULL,
   item <- 1
   lastpars2 <- lastpars1 <- rate <- matrix(0,nrow=nitems,ncol=ncol(pars))  
   prior <- dnorm(theta) 
-  Prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))  
+  Prior <- dmvnorm(Theta,rep(0,2),diag(2))  
   startvalues <- pars  
   converge <- 1
   problemitems <- c()

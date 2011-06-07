@@ -1,3 +1,26 @@
+residuals.polymirt <- function(object, type = 'LD', digits = 3, ...)
+{ 
+	Theta <- object$Theta
+	fulldata <- object$fulldata	
+	N <- nrow(fulldata)
+	K <- object$K
+	J <- length(K)
+	nfact <- ncol(object$F)
+	lambdas <- matrix(object$pars[,1:nfact], J)
+	zetas <- object$pars[,(nfact+1):ncol(object$pars)]
+	guess <- object$guess
+	guess[is.na(guess)] <- 0	
+	Ksums <- cumsum(K) - 1	
+	if(type == 'LD') {
+		
+	}
+	
+	if(type == 'SX2') {}
+	
+	
+    	  	  
+}
+
 plot.polymirt <- function(x, npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
 {  
