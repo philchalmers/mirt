@@ -40,7 +40,7 @@ static void polyOuter(double *d2Louter, const double *PThetas, const double *Pk,
 
 static void itemtrace(double *P, const double *a, 
   const double *d, const double *PTheta, const double *g, 
-  const int *nfact, const int *nquad)
+  const unsigned int *nfact, const unsigned int *nquad)
 {	
 	double z[*nquad];
 	unsigned int i, j, loc[*nfact];
@@ -60,8 +60,9 @@ static void itemtrace(double *P, const double *a,
 		P[i] = *g + (1 - *g) * (exp(z[i])/(1 + exp(z[i])));		
 }
 
-static void Prob(double *P, const int *k, const int *N, const int *nfact,
-	const double *theta, const double *a, const double *d, const double *g)
+static void Prob(double *P, const unsigned int *k, const unsigned int *N, 
+	const unsigned int *nfact, const double *theta, const double *a, 
+	const double *d, const double *g)
 {
 	double Ps[*N][*k + 1], Pdif[*N][*k], p1[*N], tmp;
 	int i, j, m = 0;
@@ -345,8 +346,8 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
 
 	SEXP Rreturn;	
-	unsigned int i, j;
-	int k, J, nfact, N,*itemloc,*K,*Pdata, Ksums = 0, max = 2;
+	unsigned int i, j, J, N, nfact, k, max = 2;
+	int *itemloc,*K,*Pdata;
 	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0,*Ptheta1,*unif, 
 		*den0,*den1;
 		
@@ -378,16 +379,14 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	J = NUMERIC_VALUE(RJ);
 	N = NUMERIC_VALUE(RN);
 	nfact = NUMERIC_VALUE(Rnfact);	
-	for(i = 0; i < J; i++){
-		Ksums += K[i]; 
-		if(max < K[i]) max = K[i];
-	}
+	for(i = 0; i < J; i++)		
+		if(max < K[i]) max = K[i];	
 	
 	PROTECT(Rreturn = NEW_NUMERIC(N + 1));
 	Preturn = NUMERIC_POINTER(Rreturn);
 	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N], irt1[N], 
 		accept[N], Plong_1[N * max], Plong_0[N * max], cdloglik = 0;
-	unsigned int item, loc = 0, location[J];
+	unsigned int ind, Nitem, item, loc = 0, location[J];
 	
 	k = 0;
 	for(i = 0; i < nfact; i++){
@@ -404,6 +403,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	}	
 	for(item = 0; item < J; item++){		
 		k = K[item];
+		Nitem = N * item;
 		for(i = 0; i < nfact; i++)
 			a[i] = lambdas[item][i];		
 		for(i = 0; i < (k-1); i++) 
@@ -412,17 +412,19 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);			
 		Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);		
 		for(i = 0; i < N; i++){
-			if(Pdata[i + item*N] == 99) 
+			if(Pdata[i + Nitem] == 99) 
 				continue;
 			else
-			{
+			{				
 				if(k == 2){ 
-					irt0[i] += log(Plong_0[i + ((k-1) - Pdata[i + item*N])*N]); 				
-					irt1[i] += log(Plong_1[i + ((k-1) - Pdata[i + item*N])*N]); 
+					ind = i + ((k-1) - Pdata[i + Nitem])*N;
+					irt0[i] += log(Plong_0[ind]); 				
+					irt1[i] += log(Plong_1[ind]); 
 				}
 				else {
-					irt0[i] += log(Plong_0[i + Pdata[i + item*N]*N]); 				
-					irt1[i] += log(Plong_1[i + Pdata[i + item*N]*N]); 
+					ind = i + Pdata[i + Nitem]*N;
+					irt0[i] += log(Plong_0[ind]); 				
+					irt1[i] += log(Plong_1[ind]); 
 				}
 			}									
 		}				
