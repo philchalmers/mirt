@@ -1,12 +1,46 @@
 ########################################## 
 
-residuals.bfactor <- function(object, digits = 3, ...)
+residuals.bfactor <- function(object, type = 'LD', digits = 3, ...)
 {       
-  r <- object$tabdata[ ,ncol(object$tabdata)]
-  res <- (r - object$Pl * nrow(object$fulldata)) / 
-    sqrt(object$Pl * nrow(object$fulldata))
-  print(res,digits)
-  invisible(res)  
+	Theta <- object$Theta
+	fulldata <- object$fulldata	
+	N <- nrow(fulldata)	
+	J <- ncol(fulldata)
+	nfact <- ncol(object$F)
+	lambdas <- matrix(object$pars[,1:nfact], J)
+	zetas <- object$pars[,(nfact+1)]
+	guess <- object$guess
+	guess[is.na(guess)] <- 0
+	logicalfact <- object$logicalfact
+	if(type == 'LD'){
+		res <- matrix(0,J,J)
+		colnames(res) <- rownames(res) <- colnames(fulldata)
+		prior <- dmvnorm(Theta,rep(0,2),diag(2))
+		prior <- prior/sum(prior)
+		for(i in 1:J){			
+			for(j in 1:J){
+				if(i < j){
+					P1 <- P.bfactor(lambdas[i,],zetas[i], Theta, guess[i],logicalfact[i,])
+					P2 <- P.bfactor(lambdas[j,],zetas[j], Theta, guess[j],logicalfact[j,])
+					E22 <- N * sum(P1 * P2 * prior)
+					E12 <- N * sum(P1 * (1-P2) * prior)
+					E21 <- N * sum((1-P1) * P2 * prior)
+					E11 <- N * sum((1-P1) * (1-P2) * prior)
+					tab <- table(fulldata[,i],fulldata[,j])
+					Etab <- matrix(c(E11,E12,E21,E22),2)
+					s <- phi(tab) - phi(Etab)
+					res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+				}
+			}
+		}	
+	}
+	if(type == 'exp'){
+	  r <- object$tabdata[ ,ncol(object$tabdata)]
+	  res <- (r - object$Pl * nrow(object$fulldata)) / 
+		sqrt(object$Pl * nrow(object$fulldata))
+	}	
+	print(res,digits)
+	invisible(res)  
 }
 
 fitted.bfactor <- function(object, digits = 3, ...)

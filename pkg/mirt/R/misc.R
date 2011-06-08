@@ -6,6 +6,9 @@
 		else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
 		else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
 		else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
+		else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)        
+		else if (nfact == 7) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta)        
+		else if (nfact == 8) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta)        
 	  return(Theta)     
 	}
 
@@ -390,5 +393,28 @@
 	return(list(ram = ram))		
 	}
 
-
+gamma.cor <- function(x){ 
+	concordant <- function(x){ 	  
+			mat.lr <- function(r, c){ 
+				lr <- x[(r.x > r) & (c.x > c)] 
+				sum(lr) 
+			} 	  
+		r.x <- row(x) 
+		c.x <- col(x) 	  
+		sum(x * mapply(mat.lr, r = r.x, c = c.x)) 
+	} 	
+	discordant <- function(x){ 	  
+		mat.ll <- function(r, c){ 
+			ll <- x[(r.x > r) & (c.x < c)] 
+			sum(ll) 
+		} 	  
+		r.x <- row(x) 
+		c.x <- col(x) 	  
+		sum(x * mapply(mat.ll, r = r.x, c = c.x)) 
+	} 
+	c <- concordant(x) 
+	d <- discordant(x) 
+	gamma <- (c - d) / (c + d) 
+	gamma 
+} 
 

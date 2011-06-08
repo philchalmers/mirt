@@ -26,7 +26,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
 
 \method{fitted}{bfactor}(object, digits = 3, ...)
 
-\method{residuals}{bfactor}(object, digits = 3, ...)
+\method{residuals}{bfactor}(object, type = 'LD', digits = 3, ...)
 
 }
 
@@ -43,6 +43,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   \item{x}{a model of class \code{bfactor} to be printed}
   \item{object}{a model estimated from \code{bfactor} of class \code{bfactor}.}
   \item{object2}{a model estimated from \code{mirt} of class \code{mirt} with more estimated parameters than \code{object}.}
+  \item{type}{type of residuals to be displayed. Can be either \code{'LD'} for a linear dependency matrix (Chen \& Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern.}
   \item{digits}{number of significant digits to be rounded.}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
   \item{debug}{logical; turn on debugging features?}

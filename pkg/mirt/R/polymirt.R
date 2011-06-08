@@ -1,24 +1,56 @@
-residuals.polymirt <- function(object, type = 'LD', digits = 3, ...)
-{ 
-	Theta <- object$Theta
+residuals.polymirt <- function(object, digits = 3, ...)
+{ 	
 	fulldata <- object$fulldata	
+	data <- object$data
+	data[data==99] <- NA
 	N <- nrow(fulldata)
 	K <- object$K
 	J <- length(K)
 	nfact <- ncol(object$F)
+	theta <- seq(-4,4, length.out = round(20/nfact))
+	Theta <- thetaComb(theta,nfact)
 	lambdas <- matrix(object$pars[,1:nfact], J)
-	zetas <- object$pars[,(nfact+1):ncol(object$pars)]
+	zetas <- as.vector(t(object$pars[,(nfact+1):ncol(object$pars)]))
+	zetas <- na.omit(zetas)
 	guess <- object$guess
 	guess[is.na(guess)] <- 0	
 	Ksums <- cumsum(K) - 1	
-	if(type == 'LD') {
-		
-	}
-	
-	if(type == 'SX2') {}
-	
-	
-    	  	  
+	itemloc <- object$itemloc
+	res <- matrix(0,J,J)
+	colnames(res) <- rownames(res) <- colnames(data)
+	prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+	prior <- prior/sum(prior)
+	loc <- loc2 <- 1	
+	for(i in 1:J){
+		if(i > 1) loc <- loc + K[i-1] - 1	
+		loc2 <- 1
+		for(j in 1:J){			
+			if(i < j){
+				if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+				else { 
+					P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+					P1 <- cbind(1 - P1, P1)
+				}	
+				if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+				else {
+					P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+					P2 <- cbind(1 - P2, P2)
+				}
+				tab <- table(data[,i],data[,j])		
+				Etab <- matrix(0,K[i],K[j])
+				for(k in 1:K[i])
+					for(m in 1:K[j])						
+						Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+				s <- gamma.cor(tab) - gamma.cor(Etab)
+				if(s == 0) s <- 1				
+				res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) /
+					((K[i] - 1) * (K[j] - 1)) * sign(s)
+			}
+		loc2 <- loc2 + K[j] - 1 	
+		}
+	}	
+	cat("LD matrix:\n\n")	
+	print(res,digits)
 }
 
 plot.polymirt <- function(x, npts = 50,
@@ -396,7 +428,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 			k <- k + 1
 		}
 	}	 
-	guess[K > 2] <- NA
+	guess[K == 2 & !estGuess] <- 0
 	pars <- cbind(lambdas,zetas)
 	SEpars <- cbind(SElam,SEzeta,SEg)
 	
@@ -412,7 +444,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	h2 <- rowSums(F^2) 	
 	
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles-SEM.cycles-burnin,
-		Theta=theta0, fulldata=fulldata,K=K, F=F, h2=h2, fulldata=fulldata, 
+		Theta=theta0, fulldata=fulldata, data = data99, K=K, F=F, h2=h2, fulldata=fulldata, 
 		itemloc=itemloc, converge = converge, Call=Call)	 
 	class(mod) <- 'polymirt'
 	mod	

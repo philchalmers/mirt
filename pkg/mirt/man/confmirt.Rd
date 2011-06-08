@@ -20,6 +20,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \method{summary}{confmirt}(object, digits = 3, ...)
 
+\method{residuals}{confmirt}(object, digits = 3, ...)
+
 }
 
 \arguments{
@@ -44,7 +46,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \details{
 
-  \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation.
+  \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997).
 
 }
 

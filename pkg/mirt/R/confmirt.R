@@ -1,9 +1,56 @@
 residuals.confmirt <- function(object, digits = 3, ...)
 { 
-	
-	
-	
-    	  	  
+	fulldata <- object$fulldata	
+	data <- object$data
+	data[data==99] <- NA
+	N <- nrow(fulldata)
+	K <- object$K
+	J <- length(K)
+	nfact <- ncol(object$F)
+	theta <- seq(-4,4, length.out = round(20/nfact))
+	Theta <- thetaComb(theta,nfact)		
+	lambdas <- matrix(object$pars[,1:nfact], J)
+	lambdas[is.na(lambdas)] <- 0
+	zetas <- as.vector(t(object$pars[,(nfact+1):ncol(object$pars)]))
+	zetas <- na.omit(zetas)
+	guess <- object$guess
+	guess[is.na(guess)] <- 0	
+	Ksums <- cumsum(K) - 1	
+	itemloc <- object$itemloc
+	res <- matrix(0,J,J)
+	colnames(res) <- rownames(res) <- colnames(data)
+	prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+	prior <- prior/sum(prior)
+	loc <- loc2 <- 1	
+	for(i in 1:J){
+		if(i > 1) loc <- loc + K[i-1] - 1	
+		loc2 <- 1
+		for(j in 1:J){			
+			if(i < j){
+				if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+				else { 
+					P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+					P1 <- cbind(1 - P1, P1)
+				}	
+				if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+				else {
+					P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+					P2 <- cbind(1 - P2, P2)
+				}
+				tab <- table(data[,i],data[,j])		
+				Etab <- matrix(0,K[i],K[j])
+				for(k in 1:K[i])
+					for(m in 1:K[j])						
+						Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+				s <- gamma.cor(tab) - gamma.cor(Etab)		
+				res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) /
+					((K[i] - 1) * (K[j] - 1)) * sign(s)
+			}
+		loc2 <- loc2 + K[j] - 1 	
+		}
+	}	
+	cat("LD matrix:\n\n")	
+	print(res,digits)    	  	  
 }
 
 coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
@@ -384,6 +431,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	lambdas[!estlam] <- NA	
 	guess <- rep(NA,J)
 	guess[estGuess] <- pars[gind]
+	guess[K == 2 & !estGuess] <- 0
 	zetas <- pars[zetaind]
 	u <- pars[gmeansind]	
 	sig <- matrix(0,nfact,nfact)
@@ -433,8 +481,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		
 	mod <- list(pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, gpars=gpars, 
 		SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - burnin,
-		Theta=theta0, fulldata=fulldata, K=K, itemloc=itemloc, h2=h2, F=F,
-		converge = converge, Call=Call)	 
+		Theta=theta0, fulldata=fulldata, data=data99, K=K, itemloc=itemloc, h2=h2, 
+		F=F, converge = converge, Call=Call)	 
 	class(mod) <- 'confmirt'
 	mod
 }	
