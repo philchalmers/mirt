@@ -6,6 +6,7 @@ residuals.confmirt <- function(object, digits = 3, ...)
 	N <- nrow(fulldata)
 	K <- object$K
 	J <- length(K)
+	sig <- object$gpars$sig	
 	nfact <- ncol(object$F)
 	theta <- seq(-4,4, length.out = round(20/nfact))
 	Theta <- thetaComb(theta,nfact)		
@@ -19,7 +20,7 @@ residuals.confmirt <- function(object, digits = 3, ...)
 	itemloc <- object$itemloc
 	res <- matrix(0,J,J)
 	colnames(res) <- rownames(res) <- colnames(data)
-	prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+	prior <- dmvnorm(Theta,rep(0,nfact),sig)
 	prior <- prior/sum(prior)
 	loc <- loc2 <- 1	
 	for(i in 1:J){
