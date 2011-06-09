@@ -13,6 +13,7 @@ residuals.mirt <- function(object, type = 'LD', digits = 3, ...)
 	guess[is.na(guess)] <- 0		
 	if(type == 'LD'){
 		res <- matrix(0,J,J)
+		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(fulldata)
 		prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
 		prior <- prior/sum(prior)
@@ -29,19 +30,24 @@ residuals.mirt <- function(object, type = 'LD', digits = 3, ...)
 					Etab <- matrix(c(E11,E12,E21,E22),2)
 					s <- phi(tab) - phi(Etab)
 					if(s == 0) s <- 1
-					res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+					res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+					res[i,j] <- sqrt( abs(res[j,i]) / N ) 					
 				}
 			}
 		}
 		cat("LD matrix:\n\n")			
+		print(res,digits)
+		cat("\np-value's and df:\n\n")			
+		print(p,digits) 
 	}		
 	if(type == 'exp'){	
 		r <- object$tabdata[ ,ncol(object$tabdata)]
 		res <- (r - object$Pl * nrow(object$fulldata)) / 
 			sqrt(object$Pl * nrow(object$fulldata))	
-		cat("Expected values:\n\n")			
+		cat("Expected values:\n\n")
+		print(res,digits)		
 	}	
-	print(res,digits)
+	
 	return(invisible(res))	
 }
 

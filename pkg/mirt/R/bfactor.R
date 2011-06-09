@@ -1,6 +1,6 @@
 ########################################## 
 
-residuals.bfactor <- function(object, type = 'LD', digits = 3, ...)
+residuals.bfactor <- function(object, type = 'LD', digits = 3, p = FALSE, ...)
 {       
 	Theta <- object$Theta
 	fulldata <- object$fulldata	
@@ -14,6 +14,7 @@ residuals.bfactor <- function(object, type = 'LD', digits = 3, ...)
 	logicalfact <- object$logicalfact
 	if(type == 'LD'){
 		res <- matrix(0,J,J)
+		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(fulldata)
 		prior <- dmvnorm(Theta,rep(0,2),diag(2))
 		prior <- prior/sum(prior)
@@ -29,17 +30,21 @@ residuals.bfactor <- function(object, type = 'LD', digits = 3, ...)
 					tab <- table(fulldata[,i],fulldata[,j])
 					Etab <- matrix(c(E11,E12,E21,E22),2)
 					s <- phi(tab) - phi(Etab)
-					res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+					if(s == 0) s <- 1
+					res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+					res[i,j] <- sqrt( abs(res[j,i]) / N ) 
 				}
 			}
-		}	
+		}
+		cat("LD matrix:\n\n")			
+		print(res,digits)		
 	}
 	if(type == 'exp'){
 	  r <- object$tabdata[ ,ncol(object$tabdata)]
 	  res <- (r - object$Pl * nrow(object$fulldata)) / 
-		sqrt(object$Pl * nrow(object$fulldata))
-	}	
-	print(res,digits)
+		sqrt(object$Pl * nrow(object$fulldata))	  
+	  print(res,digits)
+	}		
 	invisible(res)  
 }
 

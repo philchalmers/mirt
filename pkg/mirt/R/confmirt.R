@@ -19,6 +19,7 @@ residuals.confmirt <- function(object, digits = 3, ...)
 	Ksums <- cumsum(K) - 1	
 	itemloc <- object$itemloc
 	res <- matrix(0,J,J)
+	diag(res) <- NA
 	colnames(res) <- rownames(res) <- colnames(data)
 	prior <- dmvnorm(Theta,rep(0,nfact),sig)
 	prior <- prior/sum(prior)
@@ -43,13 +44,14 @@ residuals.confmirt <- function(object, digits = 3, ...)
 				for(k in 1:K[i])
 					for(m in 1:K[j])						
 						Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-				s <- gamma.cor(tab) - gamma.cor(Etab)		
-				res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) /
-					((K[i] - 1) * (K[j] - 1)) * sign(s)
+				s <- gamma.cor(tab) - gamma.cor(Etab)
+				if(s == 0) s <- 1				
+				res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+				res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1))) 					
 			}
 		loc2 <- loc2 + K[j] - 1 	
 		}
-	}	
+	}		
 	cat("LD matrix:\n\n")	
 	print(res,digits)    	  	  
 }
@@ -166,9 +168,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		stop("The number of gmeans parameters is incorrect.")
 	estgmeans <- gmeans != 0	
 	gcov <- selgcov <- estgcov <- matrix(FALSE,nfact,nfact)
-	for(i in 1:nfact)
-		for(j in 1:nfact)
-			if(i <= j) selgcov[j,i] <- TRUE
+	selgcov <- lower.tri(selgcov, diag = TRUE)	
 	est <- is.na(groups[,5])
 	for(i in 1:nrow(groups)){ 
 		i1 <- groups[i,2]
