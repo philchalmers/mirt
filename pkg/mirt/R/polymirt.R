@@ -1,182 +1,277 @@
-residuals.polymirt <- function(object, digits = 3, ...)
-{ 	
-	fulldata <- object$fulldata	
-	data <- object$data
-	data[data==99] <- NA
-	N <- nrow(fulldata)
-	K <- object$K
-	J <- length(K)
-	nfact <- ncol(object$F)
-	theta <- seq(-4,4, length.out = round(20/nfact))
-	Theta <- thetaComb(theta,nfact)
-	lambdas <- matrix(object$pars[,1:nfact], J)
-	zetas <- as.vector(t(object$pars[,(nfact+1):ncol(object$pars)]))
-	zetas <- na.omit(zetas)
-	guess <- object$guess
-	guess[is.na(guess)] <- 0	
-	Ksums <- cumsum(K) - 1	
-	itemloc <- object$itemloc
-	res <- matrix(0,J,J)
-	colnames(res) <- rownames(res) <- colnames(data)
-	prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
-	prior <- prior/sum(prior)
-	loc <- loc2 <- 1	
-	for(i in 1:J){
-		if(i > 1) loc <- loc + K[i-1] - 1	
-		loc2 <- 1
-		for(j in 1:J){			
-			if(i < j){
-				if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
-				else { 
-					P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
-					P1 <- cbind(1 - P1, P1)
-				}	
-				if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
-				else {
-					P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
-					P2 <- cbind(1 - P2, P2)
-				}
-				tab <- table(data[,i],data[,j])		
-				Etab <- matrix(0,K[i],K[j])
-				for(k in 1:K[i])
-					for(m in 1:K[j])						
-						Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-				s <- gamma.cor(tab) - gamma.cor(Etab)
-				if(s == 0) s <- 1				
-				res[i,j] <- res[j,i] <- sum(((tab - Etab)^2)/Etab) /
-					((K[i] - 1) * (K[j] - 1)) * sign(s)
-			}
-		loc2 <- loc2 + K[j] - 1 	
-		}
-	}	
-	cat("LD matrix:\n\n")	
-	print(res,digits)
-}
+setMethod(
+	f = "print",
+	signature = signature(x = 'polymirtClass'),
+	definition = function(x, ...){
+		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information factor analysis with ", ncol(x@F), " factor",
+			if(ncol(x@F)>1) "s", "\n", sep="")
+		if(x@converge == 1)	
+			cat("Converged in ", x@cycles, " iterations.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")	
+	} 
+)
 
-plot.polymirt <- function(x, npts = 50,
-  rot = list(x = -70, y = 30, z = 10), ...)
-{  
-	type = 'curve'
-	K <- x$K		
-	nfact <- ncol(x$Theta)
-	if(nfact >2) stop("Can't plot high dimensional solutions.")
-	a <- as.matrix(x$pars[ ,1:nfact])
-    d <- as.matrix(x$pars[ ,(nfact+1):ncol(x$pars)])	
-	guess <- x$guess
-	guess[is.na(guess)] <- 0
-	A <- as.matrix(sqrt(apply(a^2,1,sum)))	
-	theta <- seq(-4,4,length.out=npts)
-	Theta <- thetaComb(theta, nfact)
-	info <- rep(0,nrow(Theta))
-	for(j in 1:length(K)){
-		if(K[j] > 2){
-			P <- P.poly(a[j,], d[j,],Theta, itemexp = FALSE)		
-			for(i in 1:K[j]){
-				w1 <- P[,i]*(1-P[,i])*A[j]
-				w2 <- P[,i+1]*(1-P[,i+1])*A[j]
-				I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
-				info <- info + I
-			}
-		} else {
-			P <- P.mirt(a[j,], d[j,],Theta, guess[j])
-			Pstar <- P.mirt(a[j,], d[j,],Theta, 0)
-			info <- info + A[j]^2 * P * (1-P) * Pstar/P
-		}			
-	}		
-	plt <- cbind(info,Theta)
-	if(nfact > 1){
-		require(lattice)
-		wireframe(info ~ Theta[ ,1] + Theta[ ,2], data = plt, main = "Item Information", 
-			zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-			screen = rot)	
-	} else 
-		plot(Theta, info, type='l',main = 'Item Information', xlab = 'Theta', ylab='Information')
-}	  
+setMethod(
+	f = "show",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object){
+		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information factor analysis with ", ncol(object@F), " factor",
+			if(ncol(object@F)>1) "s", "\n", sep="")
+		if(object@converge == 1)	
+			cat("Converged in ", object@cycles, " iterations.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
+	} 
+)
 
-coef.polymirt <- function(object, SE = TRUE, digits = 3, ...)
-{  
-	nfact <- ncol(object$Theta)	
-	a <- matrix(object$pars[ ,1:nfact],ncol=nfact)
-	d <- matrix(object$pars[,(nfact+1):ncol(object$pars)],
-		ncol = ncol(object$pars)-nfact)    
-	A <- sqrt(apply(a^2,1,sum))
-	B <- -d/A  
-	if (nfact > 1){  
-		parameters <- cbind(object$pars,object$guess,A,B)
-		SEs <- object$SEpars	
-		colnames(parameters) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess","mvdisc",paste("mvint_",1:(ncol(object$pars)-nfact),sep=""))	
-		colnames(SEs) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")		
-		cat("Unrotated parameters, multivariate discrimination and intercept: \n")
-		print(round(parameters, digits))
-		if(SE){
-			cat("\nStd. Errors: \n")	
-			print(round(SEs, digits))
-		}				
-	} else {
-		parameters <- cbind(object$pars,object$guess)
-		SEs <- object$SEpars	
-		colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:nfact,sep=""),paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")			
-		cat("Parameter slopes and intercepts: \n")	
-		print(round(parameters, digits))
-		if(SE){
-			cat("\nStd. Errors: \n")	
-			print(round(SEs, digits))
-		}
+setMethod(
+	f = "summary",
+	signature = 'polymirtClass',
+	definition = function(object, rotate = 'varimax', digits = 3, ...){
+		nfact <- ncol(object@F)
+		if (rotate == 'none' || nfact == 1) {
+			F <- object@F
+			h2 <- as.matrix(object@h2)    	
+			SS <- apply(F^2,2,sum)
+			colnames(h2) <- "h2"	
+			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
+			cat("\nUnrotated factor loadings: \n\n")
+			loads <- round(cbind(F,h2),digits)
+			print(loads)	    	 
+			cat("\nSS loadings: ",round(SS,digits), "\n")
+			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+			invisible(list(F,h2))
+		} else {	
+			F <- object@F
+			h2 <- as.matrix(object@h2)		
+			colnames(F) <- paste("F_", 1:ncol(F),sep="")
+			colnames(h2) <- "h2"		
+			cat("\nRotation: ", rotate, "\n")
+			rotF <- Rotate(F,rotate)
+			SS <- apply(rotF$loadings^2,2,sum)
+			loads <- round(cbind(rotF$loadings,h2),digits)		
+			cat("\nRotated factor loadings: \n\n")
+			print(loads,digits)		
+			if(attr(rotF, "oblique")){
+				cat("\nFactor correlations: \n")
+				Phi <- rotF$Phi	  
+				Phi <- round(Phi, digits)
+				colnames(Phi) <- rownames(Phi) <- colnames(F)
+				print(Phi)			    
+			}		
+			cat("\nSS loadings: ",round(SS,digits), "\n")		
+			if(!attr(rotF, "oblique")) 
+				cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+			if(any(h2 > 1)) 
+				warning("Solution has heywood cases. Interpret with caution.") 
+			invisible(list(loadings,h2))  
+		}  
 	}
-	invisible(parameters)
-}
+)
 
-summary.polymirt <- function(object, rotate = 'varimax', digits = 3, ...)
-{
-	nfact <- ncol(object$F)
-	if (rotate == 'none' || nfact == 1) {
-		F <- object$F
-		h2 <- as.matrix(object$h2)    	
-		SS <- apply(F^2,2,sum)
-		colnames(h2) <- "h2"	
-		colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
-		cat("\nUnrotated factor loadings: \n")
-		loads <- round(cbind(F,h2),digits)
-		print(loads)	    	 
-		cat("\nSS loadings: ",round(SS,digits), "\n")
-		cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
-		invisible(list(F,h2))
-	} else {	
-		F <- object$F
-		h2 <- as.matrix(object$h2)		
-		colnames(F) <- paste("F_", 1:ncol(F),sep="")
-		colnames(h2) <- "h2"		
-		cat("Rotation: ", rotate, "\n")
-		rotF <- Rotate(F,rotate)
-		SS <- apply(rotF$loadings^2,2,sum)
-		loads <- round(cbind(rotF$loadings,h2),digits)		
-		cat("\nRotated factor loadings: \n")
-		print(loads,digits)		
-		if(attr(rotF, "oblique")){
-			cat("\nFactor correlations: \n")
-			Phi <- rotF$Phi	  
-			Phi <- round(Phi, digits)
-			colnames(Phi) <- rownames(Phi) <- colnames(F)
-			print(Phi)			    
+setMethod(
+	f = "coef",
+	signature = 'polymirtClass',
+	definition = function(object, SE = TRUE, digits = 3, ...){  
+		nfact <- ncol(object@Theta)	
+		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
+		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
+			ncol = ncol(object@pars)-nfact)    
+		A <- sqrt(apply(a^2,1,sum))
+		B <- -d/A  
+		if (nfact > 1){  
+			parameters <- cbind(object@pars,object@guess,A,B)
+			SEs <- object@SEpars	
+			colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
+				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess","mvdisc",
+				paste("mvint_",1:(ncol(object@pars)-nfact),sep=""))	
+			colnames(SEs) <- c(paste("a_",1:nfact,sep=""),
+				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")		
+			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
+			print(round(parameters, digits))
+			if(SE){
+				cat("\nStd. Errors: \n\n")	
+				print(round(SEs, digits))
+			}				
+		} else {
+			parameters <- cbind(object@pars,object@guess)
+			SEs <- object@SEpars	
+			colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:nfact,sep=""),
+				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")			
+			cat("\nParameter slopes and intercepts: \n\n")	
+			print(round(parameters, digits))
+			if(SE){
+				cat("\nStd. Errors: \n\n")	
+				print(round(SEs, digits))
+			}
+		}
+		invisible(parameters)
+	}
+)
+
+setMethod(
+	f = "residuals",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object, type = 'LD', digits = 3, ...){   	
+		Theta <- object@Theta
+		fulldata <- object@fulldata	
+		N <- nrow(fulldata)	
+		J <- ncol(fulldata)
+		nfact <- ncol(object@F)
+		lambdas <- matrix(object@pars[,1:nfact], J)
+		zetas <- object@pars[,(nfact+1)]
+		guess <- object@guess
+		guess[is.na(guess)] <- 0		
+		if(type == 'LD'){
+			res <- matrix(0,J,J)
+			diag(res) <- NA
+			colnames(res) <- rownames(res) <- colnames(fulldata)
+			prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+			prior <- prior/sum(prior)
+			for(i in 1:J){			
+				for(j in 1:J){
+					if(i < j){
+						P1 <- P.mirt(lambdas[i,],zetas[i], Theta, guess[i])
+						P2 <- P.mirt(lambdas[j,],zetas[j], Theta, guess[j])
+						E22 <- N * sum(P1 * P2 * prior)
+						E12 <- N * sum(P1 * (1-P2) * prior)
+						E21 <- N * sum((1-P1) * P2 * prior)
+						E11 <- N * sum((1-P1) * (1-P2) * prior)
+						tab <- table(fulldata[,i],fulldata[,j])
+						Etab <- matrix(c(E11,E12,E21,E22),2)
+						s <- phi(tab) - phi(Etab)
+						if(s == 0) s <- 1
+						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+						res[i,j] <- sqrt( abs(res[j,i]) / N ) 					
+					}
+				}
+			}
+			cat("\nLD matrix:\n\n")			
+			print(res,digits)			
 		}		
-		cat("\nSS loadings: ",round(SS,digits), "\n")		
-		if(any(h2 > 1)) 
-			warning("Solution has heywood cases. Interpret with caution.") 
-		invisible(list(loadings,h2))  
-	}  
-}
+		if(type == 'exp'){	
+			r <- object@tabdata[ ,ncol(object@tabdata)]
+			res <- (r - object@Pl * nrow(object@fulldata)) / 
+				sqrt(object@Pl * nrow(object@fulldata))	
+			cat("\nExpected values:\n\n")
+			print(res,digits)		
+		}			
+		return(invisible(res))	
+	}
+)
 
-print.polymirt <- function(x, ...){
-	cat("Call: ")
-	print(x$Call)
-	cat("\nFull-information factor analysis with ", ncol(x$F), " factor",
-		if(ncol(x$F)>1) "s", "\n", sep="")
-	if(x$converge == 1)	
-		cat("Converged in ", x$cycles, " iterations.\n", sep="")
-	else 	
-		cat("Estimation stopped after ", x$cycles, " iterations.\n", sep="")	
-} 
+setMethod(
+	f = "plot",
+	signature = signature(x = 'polymirtClass', y = "missing"),
+	definition = function(x, y, npts = 50, 
+		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
+	{  
+		type = 'curve'
+		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
+		K <- x@K		
+		nfact <- ncol(x@Theta)
+		if(nfact >2) stop("Can't plot high dimensional solutions.")
+		a <- as.matrix(x@pars[ ,1:nfact])
+		d <- as.matrix(x@pars[ ,(nfact+1):ncol(x@pars)])	
+		guess <- x@guess
+		guess[is.na(guess)] <- 0
+		A <- as.matrix(sqrt(apply(a^2,1,sum)))	
+		theta <- seq(-4,4,length.out=npts)
+		Theta <- thetaComb(theta, nfact)
+		info <- rep(0,nrow(Theta))
+		for(j in 1:length(K)){
+			if(K[j] > 2){
+				P <- P.poly(a[j,], d[j,],Theta, itemexp = FALSE)		
+				for(i in 1:K[j]){
+					w1 <- P[,i]*(1-P[,i])*A[j]
+					w2 <- P[,i+1]*(1-P[,i+1])*A[j]
+					I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
+					info <- info + I
+				}
+			} else {
+				P <- P.mirt(a[j,], d[j,],Theta, guess[j])
+				Pstar <- P.mirt(a[j,], d[j,],Theta, 0)
+				info <- info + A[j]^2 * P * (1-P) * Pstar/P
+			}			
+		}		
+		plt <- data.frame(cbind(info,Theta))
+		if(nfact > 1){
+			require(lattice)			
+			colnames(plt) <- c("info", "Theta1", "Theta2")
+			wireframe(info ~ Theta1 + Theta2, data = plt, main = "Item Information", 
+				zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+				screen = rot)	
+		} else 
+			plot(Theta, info, type='l',main = 'Item Information', xlab = 'Theta', ylab='Information')
+	}	  
+)	
 
+setMethod(
+	f = "residuals",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object, digits = 3, ...){ 	
+		fulldata <- object@fulldata	
+		data <- object@data
+		data[data==99] <- NA
+		N <- nrow(fulldata)
+		K <- object@K
+		J <- length(K)
+		nfact <- ncol(object@F)
+		theta <- seq(-4,4, length.out = round(20/nfact))
+		Theta <- thetaComb(theta,nfact)
+		lambdas <- matrix(object@pars[,1:nfact], J)
+		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
+		zetas <- na.omit(zetas)
+		guess <- object@guess
+		guess[is.na(guess)] <- 0	
+		Ksums <- cumsum(K) - 1	
+		itemloc <- object@itemloc
+		res <- matrix(0,J,J)
+		diag(res) <- NA
+		colnames(res) <- rownames(res) <- colnames(data)
+		prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+		prior <- prior/sum(prior)
+		loc <- loc2 <- 1	
+		for(i in 1:J){
+			if(i > 1) loc <- loc + K[i-1] - 1	
+			loc2 <- 1
+			for(j in 1:J){			
+				if(i < j){
+					if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+					else { 
+						P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+						P1 <- cbind(1 - P1, P1)
+					}	
+					if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+					else {
+						P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+						P2 <- cbind(1 - P2, P2)
+					}
+					tab <- table(data[,i],data[,j])		
+					Etab <- matrix(0,K[i],K[j])
+					for(k in 1:K[i])
+						for(m in 1:K[j])						
+							Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+					s <- gamma.cor(tab) - gamma.cor(Etab)
+					if(s == 0) s <- 1				
+					res[j,i] <- sum(((tab - Etab)^2)/Etab) /
+						((K[i] - 1) * (K[j] - 1)) * sign(s)
+					res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
+				}
+			loc2 <- loc2 + K[j] - 1 	
+			}
+		}	
+		cat("LD matrix:\n\n")	
+		print(res,digits)
+	}
+)
+
+########################################
+#Main Function
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
@@ -443,9 +538,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	if (sum(F[ ,1] < 0)) F <- (-1) * F  
 	h2 <- rowSums(F^2) 	
 	
-	mod <- list(pars=pars, guess=guess, SEpars=SEpars, cycles=cycles-SEM.cycles-burnin,
-		Theta=theta0, fulldata=fulldata, data = data99, K=K, F=F, h2=h2, fulldata=fulldata, 
-		itemloc=itemloc, converge = converge, Call=Call)	 
-	class(mod) <- 'polymirt'
-	mod	
+	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
+		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, data = data99,
+		K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)	
+	return(mod)	
 }

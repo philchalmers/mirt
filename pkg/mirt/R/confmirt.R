@@ -1,126 +1,159 @@
-residuals.confmirt <- function(object, digits = 3, ...)
-{ 
-	fulldata <- object$fulldata	
-	data <- object$data
-	data[data==99] <- NA
-	N <- nrow(fulldata)
-	K <- object$K
-	J <- length(K)
-	sig <- object$gpars$sig	
-	nfact <- ncol(object$F)
-	theta <- seq(-4,4, length.out = round(20/nfact))
-	Theta <- thetaComb(theta,nfact)		
-	lambdas <- matrix(object$pars[,1:nfact], J)
-	lambdas[is.na(lambdas)] <- 0
-	zetas <- as.vector(t(object$pars[,(nfact+1):ncol(object$pars)]))
-	zetas <- na.omit(zetas)
-	guess <- object$guess
-	guess[is.na(guess)] <- 0	
-	Ksums <- cumsum(K) - 1	
-	itemloc <- object$itemloc
-	res <- matrix(0,J,J)
-	diag(res) <- NA
-	colnames(res) <- rownames(res) <- colnames(data)
-	prior <- dmvnorm(Theta,rep(0,nfact),sig)
-	prior <- prior/sum(prior)
-	loc <- loc2 <- 1	
-	for(i in 1:J){
-		if(i > 1) loc <- loc + K[i-1] - 1	
-		loc2 <- 1
-		for(j in 1:J){			
-			if(i < j){
-				if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
-				else { 
-					P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
-					P1 <- cbind(1 - P1, P1)
-				}	
-				if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
-				else {
-					P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
-					P2 <- cbind(1 - P2, P2)
-				}
-				tab <- table(data[,i],data[,j])		
-				Etab <- matrix(0,K[i],K[j])
-				for(k in 1:K[i])
-					for(m in 1:K[j])						
-						Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-				s <- gamma.cor(tab) - gamma.cor(Etab)
-				if(s == 0) s <- 1				
-				res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-				res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1))) 					
-			}
-		loc2 <- loc2 + K[j] - 1 	
-		}
-	}		
-	cat("LD matrix:\n\n")	
-	print(res,digits)    	  	  
-}
+setMethod(
+	f = "print",
+	signature = signature(x = 'confmirtClass'),
+	definition = function(x, ...){
+		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
+		if(x@converge == 1)	
+			cat("Converged in ", x@cycles, " iterations.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")	
+	} 
+)
 
-coef.confmirt <- function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
-{  
-	nfact <- ncol(object$Theta)	
-	a <- matrix(object$pars[ ,1:nfact],ncol=nfact)
-	d <- matrix(object$pars[,(nfact+1):ncol(object$pars)],
-		ncol = ncol(object$pars)-nfact)    	
+setMethod(
+	f = "show",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object){
+		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
+		if(object@converge == 1)	
+			cat("Converged in ", object@cycles, " iterations.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
+	} 
+)
 
-	parameters <- cbind(object$pars,object$guess)
-	SEs <- cbind(object$SEpars,object$SEg)	
-	colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
-		paste("d_",1:(ncol(object$pars)-nfact),sep=""),"guess")					
-	cat("ITEM PARAMTERS: \n")
-	print(parameters, digits)
-	if(SE){
-		cat("\nStd. Errors: \n")	
-		print(SEs, digits)
-	}	
-	u <- object$gpars$u	
-	sig <- object$gpars$sig	
-	cat("\nGROUP PARAMETERS: \n")
-	if(print.gmeans){
-		cat("Means: \n")
-		print(u,digits)
-		cat("\nStd. Errors: \n")	
-		print(object$SEgpars$SEu, digits)	
+setMethod(
+	f = "summary",
+	signature = 'confmirtClass',
+	definition = function(object, digits = 3, ...)
+	{
+		nfact <- ncol(object@F)		
+		F <- object@F
+		h2 <- as.matrix(object@h2)		
+		colnames(F) <- paste("F_", 1:ncol(F),sep="")
+		colnames(h2) <- "h2"				
+		SS <- apply(F^2,2,sum)			
+		cat("\nFactor loadings metric: \n")
+		print(cbind(F,h2),digits)		
+		cat("\nSS loadings: ",round(SS,digits), "\n")
+		cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+		cat("\nFactor correlations: \n")
+		Phi <- object@gpars$sig	  
+		Phi <- round(Phi, digits)
+		colnames(Phi) <- rownames(Phi) <- colnames(F)
+		print(Phi)		
+		if(any(h2 > 1)) 
+			warning("Solution has heywood cases. Interpret with caution.") 
+		invisible(F)  	  
 	}
-	cat("Covariance: \n")
-	print(sig,digits)
-	if(SE){
-		cat("\nStd. Errors: \n")	
-		print(object$SEgpars$SEsig, digits)	
-	}		
-}
+)
 
-summary.confmirt <- function(object, digits = 3, ...)
-{
-	nfact <- ncol(object$F)		
-	F <- object$F
-	h2 <- as.matrix(object$h2)		
-	colnames(F) <- paste("F_", 1:ncol(F),sep="")
-	colnames(h2) <- "h2"				
-	SS <- apply(F^2,2,sum)			
-	cat("\nFactor loadings metric: \n")
-	print(cbind(F,h2),digits)		
-	cat("\nSS loadings: ",round(SS,digits), "\n")
-	cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
-	cat("\nFactor correlations: \n")
-	Phi <- object$gpars$sig	  
-	Phi <- round(Phi, digits)
-	colnames(Phi) <- rownames(Phi) <- colnames(F)
-	print(Phi)		
-	if(any(h2 > 1)) 
-		warning("Solution has heywood cases. Interpret with caution.") 
-	invisible(F)  	  
-}
+setMethod(
+	f = "coef",
+	signature = 'confmirtClass',
+	definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
+	{  
+		nfact <- ncol(object@Theta)	
+		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
+		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
+			ncol = ncol(object@pars)-nfact)    	
 
-print.confmirt <- function(x, ...){
-	cat("Call: ")
-	print(x$Call)
-	cat("\nFull-information item factor analysis with ", ncol(x$Theta), " factors \n", sep="")
-	if(x$converge == 1)	
-		cat("Converged in ", x$cycles, " iterations.\n", sep="")
-	else 	
-		cat("Estimation stopped after ", x$cycles, " iterations.\n", sep="")	
-} 
+		parameters <- cbind(object@pars,object@guess)
+		SEs <- cbind(object@SEpars,object@SEg)	
+		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
+			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
+		cat("ITEM PARAMTERS: \n")
+		print(parameters, digits)
+		if(SE){
+			cat("\nStd. Errors: \n")	
+			print(SEs, digits)
+		}	
+		u <- object@gpars$u	
+		sig <- object@gpars$sig	
+		cat("\nGROUP PARAMETERS: \n")
+		if(print.gmeans){
+			cat("Means: \n")
+			print(u,digits)
+			cat("\nStd. Errors: \n")	
+			print(object@SEgpars$SEu, digits)	
+		}
+		cat("Covariance: \n")
+		print(sig,digits)
+		if(SE){
+			cat("\nStd. Errors: \n")	
+			print(object@SEgpars$SEsig, digits)	
+		}		
+	}
+)
+
+setMethod(
+	f = "residuals",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object, digits = 3, ...)
+	{ 
+		fulldata <- object@fulldata	
+		data <- object@data
+		data[data==99] <- NA
+		N <- nrow(fulldata)
+		K <- object@K
+		J <- length(K)
+		sig <- object@gpars$sig	
+		nfact <- ncol(object@F)
+		theta <- seq(-4,4, length.out = round(20/nfact))
+		Theta <- thetaComb(theta,nfact)		
+		lambdas <- matrix(object@pars[,1:nfact], J)
+		lambdas[is.na(lambdas)] <- 0
+		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
+		zetas <- na.omit(zetas)
+		guess <- object@guess
+		guess[is.na(guess)] <- 0	
+		Ksums <- cumsum(K) - 1	
+		itemloc <- object@itemloc
+		res <- matrix(0,J,J)
+		diag(res) <- NA
+		colnames(res) <- rownames(res) <- colnames(data)
+		prior <- dmvnorm(Theta,rep(0,nfact),sig)
+		prior <- prior/sum(prior)
+		loc <- loc2 <- 1	
+		for(i in 1:J){
+			if(i > 1) loc <- loc + K[i-1] - 1	
+			loc2 <- 1
+			for(j in 1:J){			
+				if(i < j){
+					if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+					else { 
+						P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+						P1 <- cbind(1 - P1, P1)
+					}	
+					if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+					else {
+						P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+						P2 <- cbind(1 - P2, P2)
+					}
+					tab <- table(data[,i],data[,j])		
+					Etab <- matrix(0,K[i],K[j])
+					for(k in 1:K[i])
+						for(m in 1:K[j])						
+							Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+					s <- gamma.cor(tab) - gamma.cor(Etab)
+					if(s == 0) s <- 1				
+					res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+					res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1))) 					
+				}
+			loc2 <- loc2 + K[j] - 1 	
+			}
+		}		
+		cat("LD matrix:\n\n")	
+		print(res,digits)    	
+	}
+)
+
+####################
+#Main Function
 
 confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
@@ -479,11 +512,10 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	F <- as.matrix(pars[ ,1:nfact]/norm)
 	F[is.na(F)] <- 0	
 	h2 <- rowSums(F^2)	
-		
-	mod <- list(pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, gpars=gpars, 
-		SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - burnin,
-		Theta=theta0, fulldata=fulldata, data=data99, K=K, itemloc=itemloc, h2=h2, 
-		F=F, converge = converge, Call=Call)	 
-	class(mod) <- 'confmirt'
-	mod
+
+	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
+		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
+		- burnin, Theta=theta0, fulldata=fulldata, data=data99, K=K, itemloc=itemloc,
+		h2=h2,F=F, converge = converge, Call=Call)	 	
+	return(mod)
 }	

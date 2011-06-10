@@ -1,97 +1,96 @@
 # theta combinations
 thetaComb <- function(theta, nfact)
 {
-  if (nfact == 1) Theta <- matrix(theta)
-	else if (nfact == 2) Theta <- expand.grid(theta,theta)   
-	else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
-	else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
-	else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
-	else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)        
-	else if (nfact == 7) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta)        
-	else if (nfact == 8) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta)        
-  return(Theta)     
+	if (nfact == 1) Theta <- matrix(theta)
+		else if (nfact == 2) Theta <- expand.grid(theta,theta)   
+		else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
+		else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
+		else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
+		else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)        
+		else if (nfact == 7) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta)        
+		else if (nfact == 8) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta) 
+	Theta <- as.matrix(Theta)	
+	return(Theta)     
 }
 
 # start values
 start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowarn = TRUE)
 {
-  if (length(guess) == 1) guess <- rep(guess,ncol(fulldata))
-	else if (length(guess) > ncol(fulldata) || length(guess) < ncol(fulldata)) 
-	  stop("The number of guessing parameters is incorrect.")  
-  if(nowarn) options(warn = -1)	  
-  if (bfactor)
-  { 
-	FA <- fa(Rpoly,1, warnings= !nowarn)
-	loads <- unclass(FA$load)
-	cs <- sqrt(abs(FA$u))      
-	dstart <- qnorm(colMeans(fulldata))/cs
-	astart <- loads/cs
-	startvalues <- cbind(astart,astart/2,dstart)
-  } else {    
-	FA <- fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn)	
-	loads <- unclass(loadings(FA))
-	u <- FA$unique
-	u[u < .001 ] <- .2
-	cs <- sqrt(u)
-	dstart <- qnorm(colMeans(fulldata))/cs
-	astart <- loads/cs
-	startvalues <- cbind(astart,dstart)
-  }  
-  if(nowarn) options(warn = 0)
-  startvalues
+	if (length(guess) == 1) guess <- rep(guess,ncol(fulldata))
+		else if (length(guess) > ncol(fulldata) || length(guess) < ncol(fulldata)) 
+			stop("The number of guessing parameters is incorrect.")  	
+	if (bfactor){ 
+		FA <- fa(Rpoly,1, warnings= !nowarn)
+		loads <- unclass(FA$load)
+		cs <- sqrt(abs(FA$u))      
+		dstart <- qnorm(colMeans(fulldata))/cs
+		astart <- loads/cs
+		startvalues <- cbind(astart,astart/2,dstart)
+	} else {    
+		FA <- fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn)	
+		loads <- unclass(loadings(FA))
+		u <- FA$unique
+		u[u < .001 ] <- .2
+		cs <- sqrt(u)
+		dstart <- qnorm(colMeans(fulldata))/cs
+		astart <- loads/cs
+		startvalues <- cbind(astart,dstart)
+	}  	
+	startvalues
 }
 
 # Rotation function
 Rotate <- function(F, rotate)
 {
-  orthogonal <- c("varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon")
-  oblique <- c("promax", "oblimin", "quartimin", "oblimax", "simplimax")
-  if (!any(rotate %in% c(orthogonal,oblique))) stop("Unknown rotation specified.")
-  if(any(rotate %in% orthogonal)){
-	oblique <- FALSE
-	rotF <- GPForth(F, method = rotate)
-  }
-  if(any(rotate %in% oblique)){
-	oblique <- TRUE
-	if(rotate == 'promax') rotF <- Promax(F) 
-	else rotF <- GPFoblq(F, method = rotate)
-  }
-  attr(rotF,"oblique") <- oblique 
-  return(rotF)
+	orthogonal <- c("varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon")
+	oblique <- c("promax", "oblimin", "quartimin", "oblimax", "simplimax")
+	if (!any(rotate %in% c(orthogonal,oblique))) stop("Unknown rotation specified.")
+	if(any(rotate %in% orthogonal)){
+		oblique <- FALSE
+		rotF <- GPForth(F, method = rotate)
+	}
+	if(any(rotate %in% oblique)){
+		oblique <- TRUE
+		if(rotate == 'promax') rotF <- Promax(F) 
+			else rotF <- GPFoblq(F, method = rotate)
+	}
+	attr(rotF,"oblique") <- oblique 
+	return(rotF)
 }  
 
 # MAP scoring for mirt
 MAP.mirt <- function(Theta,a,d,guess,patdata)
 {
-  Theta <- t(as.matrix(Theta))
-  L <- 0
-  for (j in 1:length(patdata)){
-	if(patdata[j] == 1) L <- log(P.mirt(a[j, ],d[j],Theta,guess[j])) + L
-	  else L <- log(1 - P.mirt(a[j, ],d[j],Theta,guess[j])) + L	
-  }
-  mu <- 0
-  sigma <- 1
-  L <- (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2))))
-  L  
+	Theta <- t(as.matrix(Theta))
+	L <- 0
+	for (j in 1:length(patdata)){
+		if(patdata[j] == 1) L <- log(P.mirt(a[j, ],d[j],Theta,guess[j])) + L
+			else L <- log(1 - P.mirt(a[j, ],d[j],Theta,guess[j])) + L	
+	}
+	mu <- 0
+	sigma <- 1
+	L <- (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2))))
+	L  
 }  
 
 # MAP scoring for bfactor
 MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact)
 {
-  Theta <- t(as.matrix(Theta))
-  L <- 0
-  for (j in 1:length(patdata)){
-	if(patdata[j] == 1) L <- log(P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L
-	  else L <- log(1 - P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L	
-  }
-  mu <- 0
-  sigma <- 1
-  L <- (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2))))
-  L  
+	Theta <- t(as.matrix(Theta))
+	L <- 0
+	for (j in 1:length(patdata)){
+		if(patdata[j] == 1) L <- log(P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L
+			else L <- log(1 - P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L	
+	}
+	mu <- 0
+	sigma <- 1
+	L <- (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2))))
+	L  
 }  
 
 #trace lines for polymirt
-P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE){	
+P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE)
+{	
 	ncat <- length(zetas) + 1
 	nfact <- length(lambda)
 	Pk <- matrix(0,nrow(Thetas),ncat+1)
@@ -108,7 +107,8 @@ P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE){
 }
 
 # Trace lines for mirt models
-P.mirt <- function(a, d, Theta, g){ 
+P.mirt <- function(a, d, Theta, g)
+{ 
 	nfact <- length(a)
 	nquad <- nrow(Theta)
 	traces <- .Call("traceLinePts",
@@ -122,7 +122,8 @@ P.mirt <- function(a, d, Theta, g){
   }
 
 # Estep
-Estep.mirt <- function(pars, tabdata, Theta, prior, guess) {
+Estep.mirt <- function(pars, tabdata, Theta, prior, guess) 
+{
 	a <- as.matrix(pars[ ,1:(ncol(pars) - 1)])
 	nfact <- ncol(a)
 	nitems <- nrow(a)
@@ -148,7 +149,8 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess) {
 	return(rlist)
 } 
 
-P.bfactor <- function(a, d, Theta, g, patload){ 
+P.bfactor <- function(a, d, Theta, g, patload)
+{ 
 	a <- a[patload]
 	nfact <- length(a)
 	nquad <- nrow(Theta)
@@ -197,8 +199,8 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 }      
 
 draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
-	prior.t.var = diag(ncol(theta0))) { 		
-	
+	prior.t.var = diag(ncol(theta0))) 
+{ 			
 	N <- nrow(fulldata)
 	J <- length(K)
 	nfact <- 1:ncol(theta0)		
@@ -206,10 +208,10 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	P0 <- P1 <- matrix(0,N,J)		
 	unif <- runif(N)
 	if(length(nfact) > 1)		
-	  theta1 <- theta0 + rmvnorm(N,rep(0,ncol(theta0)), 
-		diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
+		theta1 <- theta0 + rmvnorm(N,rep(0,ncol(theta0)), 
+			diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
 	else
-	  theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))							
+		theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))							
 	den0 <- dmvnorm(theta0,rep(0,length(nfact)),prior.t.var)
 	den1 <- dmvnorm(theta1,rep(0,length(nfact)),prior.t.var)						
 	accept <- .Call("drawThetas",
@@ -312,12 +314,12 @@ dpars.poly <- function(lambda,zeta,dat,Thetas){
 	N <- nrow(Thetas)		
 	P <- P.poly(lambda,zeta,Thetas)			
 	ret <- .Call("dparsPoly",
-			as.numeric(P), 
-			as.numeric(Thetas), 
-			as.integer(dat),
-			as.integer(nzeta),
-			as.integer(nfact),
-			as.integer(N)) 				 
+				as.numeric(P), 
+				as.numeric(Thetas), 
+				as.integer(dat),
+				as.integer(nzeta),
+				as.integer(nfact),
+				as.integer(N)) 				 
 	return(ret)	
 }
 
@@ -348,8 +350,8 @@ sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=F
 		if (path$direction == -1) {
 			to[p] <- path$first
 			from[p] <- path$second
-			}
 		}
+	}
 	ram <- matrix(0, p, 5)
 	all.vars <- unique(c(to, from))
 	latent.vars <- setdiff(all.vars, obs.variables)
@@ -359,9 +361,8 @@ sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=F
 		obs.variables <- setdiff(obs.variables, not.used)
 		S <- S[obs.variables, obs.variables]
 		warning("The following observed variables are in the input covariance or raw-moment matrix ",
-			"but do not appear in the model:\n",
-			paste(not.used, collapse=", "), "\n")
-		}
+			"but do not appear in the model:\n", paste(not.used, collapse=", "), "\n")
+	}
 	vars <- c(obs.variables, latent.vars)
 	pars <- na.omit(unique(par.names))
 	ram[,1] <- heads
@@ -384,12 +385,12 @@ sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=F
 			cat('\n latent variables:\n')
 			print(paste(paste((n+1):m,':', sep=''), latent.vars, sep=''))
 			cat('\n')
-			}
+		}
 		cat('\n parameters:\n') 
 		print(paste(paste(1:t,':', sep=''), pars, sep=''))
 		cat('\n\n RAM:\n')
 		print(ram)
-		}	
+	}	
 	return(list(ram = ram))		
 }
 

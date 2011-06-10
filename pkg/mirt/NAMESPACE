@@ -1,38 +1,16 @@
 useDynLib(mirt, .registration=TRUE)
 
 # Exported functions
-export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,f.scores,itemplot,simdata,
+export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,fscores,itemplot,simdata,
 	specify.model)
 
 # Imported functions
 importFrom(sem, specify.model)
 importFrom(SparseM, solve)
+#importFrom("stats4", logLik)
+importFrom("graphics", plot) 
+importFrom("stats", anova, coef, fitted, residuals)
 
-# S3 methods
-S3method(print, mirt)
-S3method(summary, mirt)
-S3method(anova, mirt)
-S3method(coef, mirt)
-S3method(f.scores, mirt)
-S3method(fitted, mirt)
-S3method(itemplot, mirt)
-S3method(plot, mirt)
-S3method(residuals, mirt)
-S3method(print, bfactor)
-S3method(summary, bfactor)
-S3method(anova, bfactor)
-S3method(coef, bfactor)
-S3method(f.scores, bfactor)
-S3method(fitted, bfactor)
-S3method(itemplot, bfactor)
-S3method(residuals, bfactor)
-S3method(print, polymirt)
-S3method(plot, polymirt)
-S3method(summary, polymirt)
-S3method(coef, polymirt)
-S3method(itemplot, polymirt)
-S3method(residuals, polymirt)
-S3method(print, confmirt)
-S3method(coef, confmirt)
-S3method(summary, confmirt)
-S3method(residuals, confmirt)
+exportClasses("mirtClass", "bfactorClass", "polymirtClass", "confmirtClass")
+exportMethods(anova, fscores, plot, fitted, residuals, coef, summary, itemplot)
+
