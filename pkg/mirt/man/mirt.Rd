@@ -1,6 +1,11 @@
 \name{mirt}
 \alias{mirt}
-\alias{mirt,mirtClass-class}
+\alias{summary,mirt-method}
+\alias{coef,mirt-method}
+\alias{anova,mirt-method}
+\alias{fitted,mirt-method}
+\alias{plot,mirt-method}
+\alias{residuals,mirt-method}
 
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response Theory)}
 \description{
@@ -11,8 +16,6 @@
 mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE,
   debug = FALSE, ...)
-
-\S4method{print}{mirt}(x, ...)
 
 \S4method{summary}{mirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
 
@@ -55,7 +58,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
 \details{
 
-  \code{mirt} follows the item factor analysis strategy by marginal maximum likelihood estimation (MML) that is outlined in Bock and Aiken (1981) and Bock, Gibbons and Muraki (1988). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC (accessible via \code{\link{anova.mirt}}). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The target equation is
+  \code{mirt} follows the item factor analysis strategy by marginal maximum likelihood estimation (MML) that is outlined in Bock and Aiken (1981) and Bock, Gibbons and Muraki (1988). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC (accessible via \code{\link{anova}}). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The target equation is
 
 \deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_i + (1 - g_i) * 1.702(\bold{a}_i' \bold{a}_i + d_i)/ (1 + 1.702(\bold{a}_i' \bold{a}_i + d_i))}
 
@@ -63,14 +66,14 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
   Estimation of the model begins with computing a matrix of tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responds. A MINRES factor analysis with \code{nfact} is then extracted and item parameters are estimated by \eqn{a_{ij} = f_{ij}/u_i}, where  \eqn{f_{ij}} is the factor loading for the \emph{i}th item on the \emph{j}th factor, and \eqn{u_i} is the square root of the factor uniqueness, \eqn{\sqrt{1 - h_i^2}}. The initially intercept parameters are determined by calculating the inverse normal of the item facility (i.e., item easiness), \eqn{q_i}, to obtain \eqn{d_i = q_i / u_i}. Following these initial estimates the model is iterated using the EM estimation strategy with non-adaptive quadrature points. Implicit equation accelerations (described in Ramsey (1975)) are also added to facilitate parameter convergence speed, and this is adjusted every third cycle.
 
-  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
+  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. \code{summary} allows for various rotations available from the \code{GPArotation} package. These are:
 
   \describe{
     \item{orthogonal: }{\code{"varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon"}}
     \item{oblique: }{\code{"promax", "oblimin", "quartimin", "oblimax", "simplimax"}}
   }
 
-  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions.
+  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
 }
 
 \value{
@@ -98,7 +101,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
 \section{Convergence}{
 
-Unrestricted full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for an acceptable solution. Be mindful of the item facility values that are printed with \code{coef.mirt} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for removal from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation. Also, increasing the number of quadrature points per dimension may help to stabilize the estimation process.
+Unrestricted full information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for an acceptable solution. Be mindful of the item facility values that are printed with \code{coef} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for removal from the analysis. It is also important to pay attention to the log-likelihood values printed after the model is estimated, since if these values do not increase then there likely is a problem with the estimation. Also, increasing the number of quadrature points per dimension may help to stabilize the estimation process.
 
 }
 

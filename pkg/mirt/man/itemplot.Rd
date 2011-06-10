@@ -1,8 +1,8 @@
 \name{itemplot}
 \alias{itemplot}
-\alias{itemplot,mirtClass-method}
-\alias{itemplot,bfactorClass-method}
-\alias{itemplot,polymirtClass-method}
+\alias{itemplot,mirt-method}
+\alias{itemplot,bfactor-method}
+\alias{itemplot,polymirt-method}
 
 \title{Displays item surface and information plots}
 \description{
@@ -10,12 +10,14 @@
 }
 
 \usage{
-itemplot(object, ...)
+itemplot(object, item, ...)
 
 \S4method{itemplot}{mirt}(object, item, type = 'info',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
+
 \S4method{itemplot}{bfactor}(object, item, type = 'curve',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
+
 \S4method{itemplot}{polymirt}(object, item,
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 }
@@ -50,6 +52,6 @@ itemplot(mod2, 1, type = 'info', rot = list(x = -70, y = -15, z = -10))
 }
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
-\seealso{\code{\link{plot.mirt}}}
+\seealso{\code{\link{plot}}}
 
 \keyword{plot}

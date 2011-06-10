@@ -1,6 +1,8 @@
 \name{confmirt}
 \alias{confmirt}
-\alias{confmirt,confmirtClass-class}
+\alias{coef,confmirt-method}
+\alias{summary,confmirt-method}
+\alias{residuals,confmirt-method}
 
 \title{Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -11,8 +13,6 @@
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
     debug = FALSE, ...)
-
-\S4method{print}{confmirt}(x, ...)
 
 \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 
@@ -33,8 +33,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
   \item{tol}{tolerance that must be reached before the model is returned}
   \item{printcycles}{logical; display iteration history during estimation?}
-  \item{debug}{logical; turn on debugging features?}
-  \item{x}{an object of class \code{confmirt}.}
+  \item{debug}{logical; turn on debugging features?}  
   \item{object}{an object of class \code{confmirt}.}
   \item{SE}{logical; print standard errors?}
   \item{print.gmeans}{logical; print factor means?}
@@ -44,7 +43,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \details{
 
-  \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997).
+  \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
 
 }
 
@@ -76,7 +75,7 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
-\seealso{\code{\link{expand.table}},\code{\link{key2binary}},\code{\link{sim.data}}}
+\seealso{\code{\link{expand.table}},\code{\link{key2binary}},\code{\link{simdata}}}
 
 \examples{
 \dontrun{
@@ -108,7 +107,7 @@ dataset <- simdata(a,d,2000,sigma)
 #analyses
 #CIFA for 2 factor crossed structure
 
-sem.mod <- specify.model()
+model.1 <- specify.model()
     F1 -> Item_1,   lam11, NA
     F1 -> Item_2,   lam12, NA
     F1 -> Item_3,   lam13, NA
@@ -122,10 +121,13 @@ sem.mod <- specify.model()
     F1 <-> F1,      NA,     1
     F2 <-> F2,      NA,     1
 
-mod1 <- confmirt(dataset,sem.mod)
+mod1 <- confmirt(dataset,model1)
+coef(mod1)
+summary(mod1)
+residuals(mod1)
 	
 #bifactor 	
-sem.mod2 <- specify.model()
+model.2 <- specify.model()
     F1 -> Item_1,   lam11, NA
     F1 -> Item_2,   lam12, NA
     F1 -> Item_3,   lam13, NA
@@ -146,7 +148,10 @@ sem.mod2 <- specify.model()
     F2 <-> F2,      NA,     1
     F3 <-> F3,      NA,     1
 	
-mod2 <- confmirt(dataset,sem.mod2)
+mod2 <- confmirt(dataset,model.2)
+coef(mod2)
+summary(mod2)
+residuals(mod2)
 
      }
 }

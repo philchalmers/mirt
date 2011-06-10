@@ -1,6 +1,9 @@
 \name{polymirt}
 \alias{polymirt}
-\alias{polymirt,polymirtClass-class}
+\alias{summary,polymirt-method}
+\alias{coef,polymirt-method}
+\alias{plot,polymirt-method}
+\alias{residuals,polymirt-method}
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -12,8 +15,6 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
     tol = .001, printcycles = TRUE, debug = FALSE, ...)
 
-\S4method{print}{polymirt}(x, ...)
-
 \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0,
     digits = 3, ...)
 
@@ -22,7 +23,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 \S4method{plot}{polymirt}(x, npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
 
-\S4method{residuals}{bfactor}(object, digits = 3, ...)
+\S4method{residuals}{polymirt}(object, digits = 3, ...)
 
 }
 
@@ -49,7 +50,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 
 \details{
 
-  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997).
+  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
 
   \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
 
@@ -96,21 +97,24 @@ fulldata <- expand.table(LSAT7)
 
 (mod1 <- polymirt(fulldata, 1))
 summary(mod1)
+residuals(mod1)
+
 (mod2 <- polymirt(fulldata, 2))
 summary(mod2)
-coef(mod2, SE = TRUE)
-plot(mod2)
+residuals(mod2)
+coef(mod2)
 
 ###########
 data(Science)
 (mod1 <- polymirt(Science,1))
 summary(mod1)
+residuals(mod2)
 coef(mod1)
 
 (mod2 <- polymirt(Science,2))
-summary(mod2,'promax')
+summary(mod2, 'promax', suppress = .3)
 coef(mod2)
-plot(mod2)
+
 
      }
 }

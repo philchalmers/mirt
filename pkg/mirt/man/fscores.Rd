@@ -1,7 +1,7 @@
 \name{fscores}
 \alias{fscores}
-\alias{fscores,mirtClass-method}
-\alias{fscores,bfactorClass-method}
+\alias{fscores,mirt-method}
+\alias{fscores,bfactor-method}
 
 \title{Compute factor scores}
 \description{
@@ -12,7 +12,8 @@ Computes MAP or EAP factor scores for \code{mirt} and \code{bfactor} models. Not
 fscores(object, ...)
 
 \S4method{fscores}{mirt}(object, full.scores = FALSE,
-  method = "EAP", rotate = 'varimax', ...)
+  method = "EAP", ...)
+
 \S4method{fscores}{bfactor}(object, full.scores = FALSE,
   method = "EAP", ...)
 
@@ -20,8 +21,7 @@ fscores(object, ...)
  \arguments{
    \item{object}{a model of class \code{mirt} or \code{bfactor}}
    \item{full.scores}{if \code{FALSE} (default) then a summary table with factor scores for each unique pattern is displayed. Otherwise the original data matrix is returned with the computed factor scores}
-  \item{method}{type of factor score estimation method. Can be expected a-posteriori (\code{"EAP"}) or Bayes modal (\code{"MAP"})}
-   \item{rotate}{type of rotation to use for before computing factor scores. See \code{\link{mirt}} for a list of possible rotations}
+  \item{method}{type of factor score estimation method. Can be expected a-posteriori (\code{"EAP"}) or Bayes modal (\code{"MAP"})}   
    \item{...}{additional arguments to be passed}
  }
 
@@ -32,8 +32,9 @@ fscores(object, ...)
 \examples{
 \dontrun{
 
-scores <- fscores(mod)
-scores
+tabscores <- fscores(mod)
+fullscores <- fscores(mod, full.scores = TRUE)
+
 
   }
 }

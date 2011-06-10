@@ -1,7 +1,9 @@
 \name{bfactor}
 \alias{bfactor}
-\alias{bfactor,bfactorClass-class}
-
+\alias{summary,bfactor-method}
+\alias{coef,bfactor-method}
+\alias{fitted,bfactor-method}
+\alias{residuals,bfactor-method}
 
 \title{Full-Information Item Bifactor Analysis}
 \description{
@@ -12,13 +14,9 @@
 bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   startvalues = NULL,  quadpts = NULL, ncycles = 150, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
 
-\S4method{print}{bfactor}(x, ...)
-
 \S4method{summary}{bfactor}(object, digits = 3, ...)
 
 \S4method{coef}{bfactor}(object, digits = 3, ...)
-
-\S4method{anova}{bfactor}(object, object2, ...)
 
 \S4method{fitted}{bfactor}(object, digits = 3, ...)
 
@@ -35,10 +33,8 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   \item{startvalues}{user declared start values for parameters. }
   \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then the number of quadrature points is set to 9. }
   \item{ncycles}{the number of EM iterations to be performed.}
-  \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early.}
-  \item{x}{a model of class \code{bfactor} to be printed}
-  \item{object}{a model estimated from \code{bfactor} of class \code{bfactor}.}
-  \item{object2}{a model estimated from \code{mirt} of class \code{mirt} with more estimated parameters than \code{object}.}
+  \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early.}  
+  \item{object}{a model estimated from \code{bfactor} of class \code{bfactor}.}  
   \item{type}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen \& Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern.}
   \item{digits}{number of significant digits to be rounded.}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
@@ -48,11 +44,11 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
 
 \details{
 
-  \code{bfactor} follows the item factor analysis strategy explicated by Gibbons and Hedeker (1992). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC (accessible via \code{\link{anova.bfactor}}); note that this only makes sense when comparing class \code{bfactor} models to class \code{mirt}. The general equation used for item bifactor analysis in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT 4 (2003).
+  \code{bfactor} follows the item factor analysis strategy explicated by Gibbons and Hedeker (1992). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC (accessible via \code{\link{anova}}); note that this only makes sense when comparing class \code{bfactor} models to class \code{mirt}. The general equation used for item bifactor analysis in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT 4 (2003).
 
   Unlike TESTFACT 4 (2003) initial start values are computed by using information from the matrix of tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responses. To begin, a MINRES factor analysis with one factor is extracted, and the transformed loadings and intercepts (see \link{mirt} for more details) are used as starting values for the general factor loadings and item intercepts. Values for the specific factor loadings are taken to be half the magnitude of the extracted general factor loadings. Note that while the sign of the loading may be incorrect for specific factors (and possibly for some of the general factor loadings) the intercepts and general factor loadings will be relatively close to the final solution. These initial values should be an improvement over the TESTFACT 4 initial starting values of 1.414 for all the general factor slopes, 1 for all the specific factor slopes, and 0 for all the intercepts.
 
-  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.scores = TRUE}) or displayed in a summary table for all the unique response patterns. Fitted and residual values may be observed via \code{fitted.bfactor} and \code{residual.bfactor}. To examine individuals item plots use \code{\link{itemplot.bfactor}} which will also plot information and surface functions (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics).
+  Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.scores = TRUE}) or displayed in a summary table for all the unique response patterns. Fitted and residual values may be observed via \code{fitted.bfactor} and \code{residual.bfactor}. To examine individuals item plots use \code{\link{itemplot}} which will also plot information and surface functions (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics). Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
 }
 
 \value{
@@ -109,14 +105,16 @@ coef(mod1)
 guess <- rep(.1,32)
 mod2 <- bfactor(fulldata, specific, guess = guess)
 coef(mod2) #item 32 too difficult to include guessing par
+
 #fix by imposing a weak intercept prior
-mod3a <- bfactor(fulldata, specific, guess = guess, par.prior = list(int = c(0,4), int.items = 32))
+mod3a <- bfactor(fulldata, specific, guess = guess, par.prior =
+    list(int = c(0,4), int.items = 32))
 coef(mod3a)
+
 #...or by removing guessing parameter
 guess[32] <- 0
 mod3b <- bfactor(fulldata, specific, guess = guess)
 coef(mod3b)
-anova(mod1,mod3b) #no Chi-squared test here, but lower AIC value for guessing model
     }
 }
 

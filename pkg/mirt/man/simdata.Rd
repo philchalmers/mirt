@@ -97,8 +97,6 @@ sigma[2,3] <- sigma[3,2] <- .25
 
 dataset <- simdata(a,d,1000,sigma)
 
-
-
    }
 }
 
