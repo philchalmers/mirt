@@ -1,8 +1,6 @@
 \name{confmirt}
-
 \alias{confmirt}
-\alias{print.confmirt}
-\alias{coef.confmirt}
+\alias{confmirt,confmirtClass-class}
 
 \title{Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -14,13 +12,13 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
     debug = FALSE, ...)
 
-\method{print}{confmirt}(x, ...)
+\S4method{print}{confmirt}(x, ...)
 
-\method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
+\S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 
-\method{summary}{confmirt}(object, digits = 3, ...)
+\S4method{summary}{confmirt}(object, digits = 3, ...)
 
-\method{residuals}{confmirt}(object, digits = 3, ...)
+\S4method{residuals}{confmirt}(object, digits = 3, ...)
 
 }
 
@@ -34,7 +32,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{SEM.cycles}{number of stochastic EM cycles to perform before beginning the MH-RM algorithm}
   \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
   \item{tol}{tolerance that must be reached before the model is returned}
-  \item{printcycles}{logical; display iteration history during estimation? Works best if the console output buffer is disabled}
+  \item{printcycles}{logical; display iteration history during estimation?}
   \item{debug}{logical; turn on debugging features?}
   \item{x}{an object of class \code{confmirt}.}
   \item{object}{an object of class \code{confmirt}.}

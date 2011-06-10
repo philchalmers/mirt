@@ -1,11 +1,7 @@
 \name{bfactor}
 \alias{bfactor}
-\alias{print.bfactor}
-\alias{summary.bfactor}
-\alias{coef.bfactor}
-\alias{anova.bfactor}
-\alias{fitted.bfactor}
-\alias{residuals.bfactor}
+\alias{bfactor,bfactorClass-class}
+
 
 \title{Full-Information Item Bifactor Analysis}
 \description{
@@ -16,17 +12,17 @@
 bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   startvalues = NULL,  quadpts = NULL, ncycles = 150, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
 
-\method{print}{bfactor}(x, ...)
+\S4method{print}{bfactor}(x, ...)
 
-\method{summary}{bfactor}(object, digits = 3, ...)
+\S4method{summary}{bfactor}(object, digits = 3, ...)
 
-\method{coef}{bfactor}(object, digits = 3, ...)
+\S4method{coef}{bfactor}(object, digits = 3, ...)
 
-\method{anova}{bfactor}(object, object2, ...)
+\S4method{anova}{bfactor}(object, object2, ...)
 
-\method{fitted}{bfactor}(object, digits = 3, ...)
+\S4method{fitted}{bfactor}(object, digits = 3, ...)
 
-\method{residuals}{bfactor}(object, type = 'LD', digits = 3, ...)
+\S4method{residuals}{bfactor}(object, type = 'LD', digits = 3, ...)
 
 }
 
@@ -34,8 +30,8 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   \item{fulldata}{a \code{matrix} or \code{data.frame} that consists of only 0, 1, and \code{NA} values to be factor analyzed. If scores have been recorded by the response pattern then they can be recoded to dichotomous format using the \code{\link{key2binary}} function. }
   \item{specific}{a numeric vector specifying where the which factor loads on which item. For example if for a 4 item test with two specific factors, the first specific factor loading on the first two items, then the vector may be specified as \code{c(1,1,2,2)}.}
   \item{guess}{fixed pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item.}
-  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation. The input could be any correlation matrix, but it is advised to use a matrix of tetrachoric correlations (with Carroll's (1945) correction for guessing, if necessary) which can be computed by \code{\link{tetrachor}}. Otherwise, the value may be set to a previously computed \code{bfactor} model to obtain the correlation matrix therein.}
-  \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}. Priors may be automatically imposed for extreme provisional estimates if \code{par.prior = TRUE}, otherwise the standard MML approach is used}
+  \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation}
+  \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}}
   \item{startvalues}{user declared start values for parameters. }
   \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then the number of quadrature points is set to 9. }
   \item{ncycles}{the number of EM iterations to be performed.}

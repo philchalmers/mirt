@@ -9,9 +9,11 @@ setMethod(
 		cat("Full-information bifactor analysis with ", 
 		length(unique(x@specific)), " specific factors \n", sep='')
 		if(x@converge == 1)	
-			cat("Converged in ", x@EMiter, " iterations.\n", sep="")
+			cat("Converged in ", x@EMiter, " iterations using ",x@quadpts,
+			" quadrature points. \n", sep="")
 		else 	
-			cat("Estimation stopped after ", x@EMiter, " iterations.\n", sep="")
+			cat("Estimation stopped after ", x@EMiter, " iterations using ",x@quadpts,
+			" quadrature points. \n", sep="")
 		cat("Log-likelihood = ", x@log.lik, "\n")
 		cat("AIC = ", x@AIC, "\n")
 		cat("G^2 = ", round(x@X2,2), ", df = ", 
@@ -28,9 +30,11 @@ setMethod(
 		cat("Full-information bifactor analysis with ", 
 		length(unique(object@specific)), " specific factors \n", sep='')
 		if(object@converge == 1)	
-			cat("Converged in ", object@EMiter, " iterations.\n", sep="")
+			cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
+				" quadrature points.\n", sep="")
 		else 	
-			cat("Estimation stopped after ", object@EMiter, " iterations.\n", sep="")
+			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
+				object@quadpts,	" quadrature points.\n", sep="")
 		cat("Log-likelihood = ", object@log.lik, "\n")
 		cat("AIC = ", object@AIC, "\n")
 		cat("G^2 = ", round(object@X2,2), ", df = ", 
@@ -257,7 +261,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	is.na(specific) <- FALSE
 	for (i in 1:nitems) logicalfact[i,specific[i]] <- TRUE
 	logicalfact <- cbind(rep(TRUE,nitems),logicalfact)     
-	if (is.null(quadpts)) quadpts <- 9
+	if (is.null(quadpts)) quadpts <- 15
 	theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	Theta <- as.matrix(expand.grid(theta,theta))
 	facility <- colMeans(fulldata)
@@ -435,6 +439,6 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 		df=df, log.lik=log.lik, p=p, F=F, h2=h2, itemnames=itemnames, 
 		tabdata=tabdata, sampsize=sampsize, Pl=Pl, Theta=Theta, fulldata=fulldata, 
 		logicalfact=logicalfact, facility=facility, specific=specific,
-		cormat=Rpoly, converge=converge, par.prior=par.prior,Call=Call)  
+		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,Call=Call)  
 	return(mod)  
 }

@@ -1,8 +1,8 @@
 \name{itemplot}
 \alias{itemplot}
-\alias{itemplot.mirt}
-\alias{itemplot.bfactor}
-\alias{itemplot.polymirt}
+\alias{itemplot,mirtClass-method}
+\alias{itemplot,bfactorClass-method}
+\alias{itemplot,polymirtClass-method}
 
 \title{Displays item surface and information plots}
 \description{
@@ -12,11 +12,11 @@
 \usage{
 itemplot(object, ...)
 
-\method{itemplot}{mirt}(object, item, type = 'info',
+\S4method{itemplot}{mirt}(object, item, type = 'info',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
-\method{itemplot}{bfactor}(object, item, type = 'curve',
+\S4method{itemplot}{bfactor}(object, item, type = 'curve',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
-\method{itemplot}{polymirt}(object, item,
+\S4method{itemplot}{polymirt}(object, item,
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 }
  \arguments{

@@ -31,10 +31,11 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'polymirtClass',
-	definition = function(object, rotate = 'varimax', digits = 3, ...){
+	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...){
 		nfact <- ncol(object@F)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
+			F[abs(F) < suppress] <- NA
 			h2 <- as.matrix(object@h2)    	
 			SS <- apply(F^2,2,sum)
 			colnames(h2) <- "h2"	
@@ -53,7 +54,9 @@ setMethod(
 			cat("\nRotation: ", rotate, "\n")
 			rotF <- Rotate(F,rotate)
 			SS <- apply(rotF$loadings^2,2,sum)
-			loads <- round(cbind(rotF$loadings,h2),digits)		
+			L <- rotF$loadings
+			L[abs(L) < suppress] <- NA	
+			loads <- round(cbind(L,h2),digits)		
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
@@ -68,7 +71,7 @@ setMethod(
 				cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
 			if(any(h2 > 1)) 
 				warning("Solution has heywood cases. Interpret with caution.") 
-			invisible(list(loadings,h2))  
+			invisible(list(rotF$loadings,h2))  
 		}  
 	}
 )
@@ -365,16 +368,20 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	}	
 	
     #preamble for MRHM algorithm			
-	theta0 <- matrix(0,N,nfact)	    
+	theta0 <- matrix(0,N,nfact)	
 	cand.t.var <- 1	
-	for(i in 1:30){
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var)
-		if(attr(theta0,"Proportion Accepted") > .5) cand.t.var <- cand.t.var + .05 
-		else if(attr(theta0,"Proportion Accepted") > .3 && nfact > 4) cand.t.var <- cand.t.var + .05
-		else if(attr(theta0,"Proportion Accepted") < .35 && nfact < 4) cand.t.var <- cand.t.var - .05
-		else if(attr(theta0,"Proportion Accepted") < .2) cand.t.var <- cand.t.var - .05
-		if (cand.t.var < 0)	cand.t.var <- 0.025
-	}	
+	tmp <- .05
+	for(i in 1:30){			
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var)		
+		if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
+		else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
+		else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
+		else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - tmp
+		if (cand.t.var < 0){
+			cand.t.var <- tmp		
+			tmp <- tmp / 2
+		}		
+	} 
 	m.thetas <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
 	phi <- rep(0,npars)

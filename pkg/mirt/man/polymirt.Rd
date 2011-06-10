@@ -1,10 +1,6 @@
 \name{polymirt}
-
 \alias{polymirt}
-\alias{print.polymirt}
-\alias{summary.polymirt}
-\alias{coef.polymirt}
-\alias{plot.polymirt}
+\alias{polymirt,polymirtClass-class}
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -16,16 +12,17 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
     tol = .001, printcycles = TRUE, debug = FALSE, ...)
 
-\method{print}{polymirt}(x, ...)
+\S4method{print}{polymirt}(x, ...)
 
-\method{summary}{polymirt}(object, rotate='varimax', digits = 3, ...)
+\S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0,
+    digits = 3, ...)
 
-\method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
+\S4method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
 
-\method{plot}{polymirt}(x, npts = 50,
+\S4method{plot}{polymirt}(x, npts = 50,
   rot = list(x = -70, y = 30, z = 10), ...)
-  
-\method{residuals}{bfactor}(object, digits = 3, ...)
+
+\S4method{residuals}{bfactor}(object, digits = 3, ...)
 
 }
 
@@ -41,10 +38,11 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   \item{SE}{logical; display the standard errors?}
   \item{x}{an object of class \code{polymirt} to be plotted or printed}
   \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}
+  \item{suppress}{a numeric value indicating which (possibly rotated) factor loadings should be suppressed. Typical values are around .3 in most statistical software}
   \item{digits}{the number of significant digits to be rounded}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
-  \item{printcycles}{logical; display iteration history during estimation? Works best if the console output buffer is disabled}
+  \item{printcycles}{logical; display iteration history during estimation?}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }

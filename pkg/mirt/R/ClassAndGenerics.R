@@ -7,7 +7,7 @@ setClass(
 		X2 = 'numeric', df = 'numeric', p = 'numeric', AIC = 'numeric', log.lik = 'numeric',
 		F = 'matrix', h2 = 'numeric', tabdata = 'matrix', Theta = 'matrix', Pl = 'numeric',
 		fulldata = 'matrix', cormat = 'matrix', facility = 'numeric', converge = 'numeric', 
-		Call = 'call'),	
+		quadpts = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -18,7 +18,8 @@ setClass(
 		F = 'matrix', h2 = 'numeric', itemnames = 'character', tabdata = 'matrix', 
 		sampsize = 'numeric', Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
 		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric',
-		cormat = 'matrix', converge = 'numeric', par.prior = 'matrix', Call = 'call'),	
+		cormat = 'matrix', converge = 'numeric', par.prior = 'matrix', quadpts = 'numeric', 
+		Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 

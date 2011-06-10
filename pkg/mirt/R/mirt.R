@@ -8,11 +8,13 @@ setMethod(
 		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(x@F), " factor",
-		if(ncol(x@F)>1) "s", "\n", sep="")
-		if(x@converge == 1)	
-			cat("Converged in ", x@EMiter, " iterations.\n", sep="")
+			if(ncol(x@F)>1) "s", "\n", sep="")
+			if(x@converge == 1)	
+				cat("Converged in ", x@EMiter, " iterations using ", x@quadpts,
+				" quadrature points.\n", sep="")
 		else 	
-			cat("Estimation stopped after ", x@EMiter, " iterations.\n", sep="")
+			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
+				x@quadpts, " quadrature points.\n", sep="")
 		cat("Log-likelihood = ", x@log.lik, "\n")
 		cat("AIC = ", x@AIC, "\n")
 		cat("G^2 = ", round(x@X2,2), ", df = ", 
@@ -27,11 +29,13 @@ setMethod(
 		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(object@F), " factor",
-		if(ncol(object@F)>1) "s", "\n", sep="")
-		if(object@converge == 1)	
-			cat("Converged in ", object@EMiter, " iterations.\n", sep="")
+			if(ncol(object@F)>1) "s", "\n", sep="")
+			if(object@converge == 1)	
+				cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
+				" quadrature points.\n", sep="")
 		else 	
-			cat("Estimation stopped after ", object@EMiter, " iterations.\n", sep="")
+			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
+				object@quadpts,	" quadrature points.\n", sep="")
 		cat("Log-likelihood = ", object@log.lik, "\n")
 		cat("AIC = ", object@AIC, "\n")
 		cat("G^2 = ", round(object@X2,2), ", df = ", 
@@ -42,10 +46,11 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'mirtClass',
-	definition = function(object, rotate = 'varimax', digits = 3, ...){
+	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...){
 		nfact <- ncol(object@F)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
+			F[abs(F) < suppress] <- NA
 			h2 <- as.matrix(object@h2)
 			fac <- as.matrix(object@facility)	
 			SS <- apply(F^2,2,sum)
@@ -63,12 +68,13 @@ setMethod(
 			h2 <- as.matrix(object@h2)
 			fac <- as.matrix(object@facility)
 			colnames(F) <- paste("F_", 1:ncol(F),sep="")
-			colnames(h2) <- "h2"
-			colnames(fac) <- "facility"	
+			colnames(h2) <- "h2"				
 			cat("\nRotation: ", rotate, "\n")
 			rotF <- Rotate(F,rotate)
 			SS <- apply(rotF$loadings^2,2,sum)
-			loads <- round(cbind(rotF$loadings,h2,fac),digits)		
+			L <- rotF$loadings
+			L[abs(L) < suppress] <- NA	
+			loads <- round(cbind(L,h2),digits)			
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
@@ -81,7 +87,7 @@ setMethod(
 			cat("\nRoateted SS loadings: ",round(SS,digits), "\n")		
 			if(any(h2 > 1)) 
 				warning("Solution has heywood cases. Interpret with caution.") 
-			invisible(list(loadings,h2))  
+			invisible(list(rotF$loadings,h2))  
 		}  
 	}
 )
@@ -238,7 +244,7 @@ setMethod(
 	signature = 'mirtClass',
 	definition = function(object, full.scores = FALSE, method = "EAP", rotate = 'varimax')
 	{    
-		if(ncol(object@F) > 1 && rotate != 'none') rotF <- Rotate(object@F,rotate)@loadings  
+		if(ncol(object@F) > 1 && rotate != 'none') rotF <- Rotate(object@F,rotate)$loadings  
 			else rotF <- object@F
 		cs <- sqrt(1 - object@h2)
 		a <- as.matrix(rotF / cs)
@@ -292,8 +298,8 @@ setMethod(
 #Main function
 
 mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE, 
-  startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE, 
-  debug = FALSE, ...)
+	startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE, 
+	debug = FALSE, ...)
 { 
 	fn <- function(pars, r1, N, guess, Theta, prior, parprior){
 		a <- pars[1:(length(pars)-1)]
@@ -340,7 +346,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
 	tabdata <- matrix(as.numeric(tabdata),nfreqs,nitems,TRUE)
 	tabdata <- cbind(tabdata,r)    
-	if (is.null(quadpts)) quadpts <- ceiling(15/nfact)  
+	if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))  
 	theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	if(nfact < 6){
 		Theta <- thetaComb(theta,nfact)
@@ -501,7 +507,8 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p,
 		AIC=AIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
-		fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, Call=Call)	  
+		fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, quadpts=quadpts,
+		Call=Call)	  
 	return(mod)    
 }
 
