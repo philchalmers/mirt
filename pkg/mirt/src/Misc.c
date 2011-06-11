@@ -43,7 +43,7 @@ static void itemtrace(double *P, const double *a,
   const unsigned int *nfact, const unsigned int *nquad)
 {	
 	double z[*nquad];
-	unsigned int i, j, loc[*nfact];
+	int i, j, loc[*nfact];
 
 	for (int i = 0; i < *nquad; i++)
 		z[i] = 0;		
@@ -65,7 +65,8 @@ static void Prob(double *P, const unsigned int *k, const unsigned int *N,
 	const double *d, const double *g)
 {
 	double Ps[*N][*k + 1], Pdif[*N][*k], p1[*N], tmp;
-	int i, j, m = 0;
+	unsigned int i, m = 0;
+	int j;
 
 	for(i = 0; i < *N; i++){
 		Ps[i][0] = 1;
@@ -342,12 +343,12 @@ SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP Rnfact, SEXP RN){
 }
 
 SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
-	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rdata, SEXP Ritemloc,
+	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc,
 	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
 
-	SEXP Rreturn;	
-	unsigned int i, j, J, N, nfact, k, max = 2;
-	int *itemloc,*K,*Pdata;
+	SEXP Rreturn;
+	unsigned int i, j, k, m, nfact, J, N, Ksums = 0, max = 2;
+	int *itemloc,*K,*Pfulldata;
 	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0,*Ptheta1,*unif, 
 		*den0,*den1;
 		
@@ -359,7 +360,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	PROTECT(Rguess = AS_NUMERIC(Rguess));
 	PROTECT(Rtheta0 = AS_NUMERIC(Rtheta0));
 	PROTECT(Rtheta1 = AS_NUMERIC(Rtheta1));
-	PROTECT(Rdata = AS_INTEGER(Rdata));
+	PROTECT(Rfulldata = AS_INTEGER(Rfulldata));
 	PROTECT(Ritemloc = AS_INTEGER(Ritemloc));
 	PROTECT(RK = AS_INTEGER(RK));	
 	PROTECT(RJ = AS_INTEGER(RJ));	
@@ -373,20 +374,22 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	guess = NUMERIC_POINTER(Rguess);
 	Ptheta0 = NUMERIC_POINTER(Rtheta0);
 	Ptheta1 = NUMERIC_POINTER(Rtheta1);
-	Pdata = INTEGER_POINTER(Rdata);
+	Pfulldata = INTEGER_POINTER(Rfulldata);
 	itemloc = INTEGER_POINTER(Ritemloc);	
 	K = INTEGER_POINTER(RK);	
 	J = NUMERIC_VALUE(RJ);
 	N = NUMERIC_VALUE(RN);
 	nfact = NUMERIC_VALUE(Rnfact);	
-	for(i = 0; i < J; i++)		
-		if(max < K[i]) max = K[i];	
+	for(i = 0; i < J; i++){
+		Ksums += K[i]; 
+		if(max < K[i]) max = K[i];
+	}
 	
 	PROTECT(Rreturn = NEW_NUMERIC(N + 1));
 	Preturn = NUMERIC_POINTER(Rreturn);
 	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N], irt1[N], 
 		accept[N], Plong_1[N * max], Plong_0[N * max], cdloglik = 0;
-	unsigned int ind, Nitem, item, loc = 0, location[J];
+	unsigned int loc = 0, location[J];
 	
 	k = 0;
 	for(i = 0; i < nfact; i++){
@@ -401,9 +404,8 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		irt0[i] = 0.0;
 		irt1[i] = 0.0;
 	}	
-	for(item = 0; item < J; item++){		
+	for(unsigned int item = 0; item < J; item++){		
 		k = K[item];
-		Nitem = N * item;
 		for(i = 0; i < nfact; i++)
 			a[i] = lambdas[item][i];		
 		for(i = 0; i < (k-1); i++) 
@@ -411,23 +413,16 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		g = guess[item];		
 		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);			
 		Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);		
-		for(i = 0; i < N; i++){
-			if(Pdata[i + Nitem] == 99) 
-				continue;
-			else
-			{				
-				if(k == 2){ 
-					ind = i + ((k-1) - Pdata[i + Nitem])*N;
-					irt0[i] += log(Plong_0[ind]); 				
-					irt1[i] += log(Plong_1[ind]); 
-				}
-				else {
-					ind = i + Pdata[i + Nitem]*N;
-					irt0[i] += log(Plong_0[ind]); 				
-					irt1[i] += log(Plong_1[ind]); 
-				}
-			}									
-		}				
+		m = 0;
+		for(j = 0; j < k; j++){
+			for(i = 0; i < N; i++){				
+				if(Pfulldata[m + location[item]]){
+					irt0[i] += log(Plong_0[m]);
+					irt1[i] += log(Plong_1[m]);
+				}				
+				m++;
+			}
+		}		
 		loc += k - 1;
 	}	
 	for(i = 0; i < N; i++){		
@@ -438,9 +433,11 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		if(unif[i] < exp(accept[i])) accept[i] = 1.0;
 			else accept[i] = 0.0;
 		Preturn[i] = accept[i];
+	}	
+	for(i = 0; i < N; i++){		
 		if(accept[i]) cdloglik += irt1[i];
 		else cdloglik += irt0[i];
-	}		
+	}
 	Preturn[N] = cdloglik;
 	
 	UNPROTECT(15);	

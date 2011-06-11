@@ -33,7 +33,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
   \item{tol}{tolerance that must be reached before the model is returned}
   \item{printcycles}{logical; display iteration history during estimation?}
-  \item{debug}{logical; turn on debugging features?}  
+  \item{debug}{logical; turn on debugging features?}
   \item{object}{an object of class \code{confmirt}.}
   \item{SE}{logical; print standard errors?}
   \item{print.gmeans}{logical; print factor means?}
@@ -121,7 +121,7 @@ model.1 <- specify.model()
     F1 <-> F1,      NA,     1
     F2 <-> F2,      NA,     1
 
-mod1 <- confmirt(dataset,model1)
+mod1 <- confmirt(dataset,model.1)
 coef(mod1)
 summary(mod1)
 residuals(mod1)

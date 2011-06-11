@@ -245,10 +245,9 @@ d.group <- function(grouplist,theta){
 	N <- nrow(x)
 	nfact <- length(u)
 	selcov <- matrix(FALSE,nfact,nfact)
-	npars <- length(sig) + nfact
-	for(i in 1:nfact)
-		for(j in 1:nfact)
-			if(i <= j) selcov[j,i] <- TRUE
+	selcov <- lower.tri(selcov) 
+	diag(selcov) <- TRUE
+	npars <- length(sig) + nfact	
 	g <- rep(0,nfact + nfact*(nfact+1)/2)	
 	invSig <- solve(sig)	
 	Z <- t(x-u) %*% (x-u)

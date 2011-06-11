@@ -174,12 +174,12 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		uniques[[i]] <- sort(unique(data[,i]))
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])
-	data99 <- data
-	for(i in 1:J)
-		for(j in 1:K[i])
-			data99[data[,i] == uniques[[i]][j],i] <- j
-	data99 <- data99 - 1		
-	data99[is.na(data99)] <- 99	
+	# data99 <- data
+	# for(i in 1:J)
+		# for(j in 1:K[i])
+			# data99[data[,i] == uniques[[i]][j],i] <- j
+	# data99 <- data99 - 1		
+	# data99[is.na(data99)] <- 99	
 	guess[K > 2] <- 0	
 	Rpoly <- cormod(na.omit(data),K,guess)
 	sem.model <- unclass(sem.model)
@@ -207,7 +207,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		i1 <- groups[i,2]
 		i2 <- groups[i,3]
 		if(groups[i,4] != 0)
-			gcov[i1,i2] <- gcov[i2,i1] <- coefs[groups[i,4]] 
+			gcov[i1,i2] <- gcov[i2,i1] <- .1
 		else 
 			gcov[i1,i2] <- gcov[i2,i1] <- groups[i,5] 	
 		if(est[i]) estgcov[i2,i1] <- TRUE					
@@ -220,7 +220,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	}		
 	itemloc <- cumsum(c(1,K))
 	index <- 1:J	
-	fulldata <- matrix(0,N,sum(K))
+	fulldata <- fulldata2 <- matrix(0,N,sum(K))
 	Names <- NULL
 	for(i in 1:J)
         Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
@@ -229,14 +229,16 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		ind <- index[i]
 		if(setequal(uniques[[i]], c(0,1))){
 			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[,ind],abs(1-data[,ind]))
+			fulldata2[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(abs(1-data[,ind]),data[,ind])
 			next
 		}
 		dummy <- matrix(0,N,K[ind])
 		for (j in 0:(K[ind]-1))  
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
-		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
+		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy
+		fulldata2[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy	
 	}	
-	fulldata[is.na(fulldata)] <- 0
+	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0
 	cs <- sqrt(abs(1-rowSums(loads^2)))
 	lambdas <- loads/cs	
 	zetas <- rep(0,ncol(fulldata) - J)	
@@ -290,7 +292,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	cand.t.var <- 1			
 	tmp <- .05
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var,gcov)		
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)		
 		if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
 		else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
 		else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
@@ -313,7 +315,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	startvalues <- pars	
 	stagecycle <- 1		
 	
-	for(cycles in 1:(ncycles + burnin + SEM.cycles))
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))	
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
@@ -347,9 +349,10 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		grouplist$sig <- sig			
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var,sig)	
-		for(i in 1:k)
-			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,data99,K,itemloc,cand.t.var,sig)
+		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,
+			fulldata,K,itemloc,cand.t.var,sig)	
+		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,
+			K,itemloc,cand.t.var,sig)
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 		
@@ -358,7 +361,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			g <- rep(NA,npars)
 			loc <- 1
 			for(i in 0:(J - 1)){
-				if(K[i+1]==2){
+				if(estGuess[i+1]){
 					temp <- dpars.dich(lambdas[i+1,],zetas[loc],guess[i+1],
 						fulldata[,itemloc[i+1]],m.thetas[[j]], estGuess[i+1])
 					ind <- parind[is.na(g)][1]
@@ -369,7 +372,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 				} else {
 					loc2 <- loc + K[i+1] - 2
 					temp <- dpars.poly(lambdas[i+1,],zetas[loc:loc2],
-						fulldata[,itemloc[i+1]:(itemloc[i+2]-1)],m.thetas[[j]])
+						fulldata2[,itemloc[i+1]:(itemloc[i+2]-1)],m.thetas[[j]])
 					ind <- parind[is.na(g)][1]	
 					ind2 <- ind+nfact+K[i+1]-2
 					g[ind:ind2] <- temp$grad
@@ -407,15 +410,19 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){			
-		    correction <- SparseM::solve(ave.h) %*% grad								
+			correction <- SparseM::solve(ave.h) %*% grad		    
 			parsold <- pars
 			correct <- rep(0,npars)
-			correct[sind] <- correction
+			correct[sind] <- correction			
+			correct[correct < -2] <- -1.5
+			correct[correct > 2] <- 1.5
 			pars <- pars + gamma*correct
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()
 			}				
+			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
+			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]
 			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
@@ -454,7 +461,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
-	cat("\n")
+	cat("\n\n")
 	SEtmp <- diag(solve(info))
 	if(any(SEtmp < 0)){
 		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
@@ -519,7 +526,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
-		- burnin, Theta=theta0, fulldata=fulldata, data=data99, K=K, itemloc=itemloc,
-		h2=h2,F=F, converge = converge, Call=Call)	 	
+		- burnin, Theta=theta0, fulldata=fulldata, K=K, itemloc=itemloc, h2=h2,F=F,
+		converge = converge, Call=Call)	 	
 	return(mod)
 }	
