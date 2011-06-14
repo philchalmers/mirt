@@ -237,7 +237,8 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	return(theta1) 
 }	
 
-d.group <- function(grouplist,theta){		
+d.group <- function(grouplist,theta)
+{		
 	tr <- function(x) sum(diag(x))
 	x <- theta
 	u <- grouplist$u	
@@ -272,7 +273,8 @@ d.group <- function(grouplist,theta){
 	list(h=h,g=g) 
 }
 
-dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess) {
+dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
+{
 	nfact <- length(lambda)
 	P <- P.mirt(lambda, zeta, Thetas, g)						
 	if(estGuess){
@@ -307,7 +309,8 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess) {
 	list(grad = dL, hess = d2L)
 }
 
-dpars.poly <- function(lambda,zeta,dat,Thetas){  
+dpars.poly <- function(lambda,zeta,dat,Thetas)
+{  
 	nzeta <- length(zeta)			
 	nfact <- length(lambda)				
 	N <- nrow(Thetas)		
@@ -326,7 +329,8 @@ dpars.poly <- function(lambda,zeta,dat,Thetas){
 ### ADAPTED ON JUNE 5th, 2010, FROM THE 'SEM' PACKAGE VERSION 0.9-21 ###
 specify.model <- function() sem::specify.model()
 
-sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=FALSE, ...){
+sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=FALSE, ...)
+{
 	parse.path <- function(path) {                                           
 	path.1 <- gsub('-', '', gsub(' ','', path))
 	direction <- if (regexpr('<>', path.1) > 0) 2 
@@ -393,7 +397,8 @@ sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=F
 	return(list(ram = ram))		
 }
 
-gamma.cor <- function(x){ 
+gamma.cor <- function(x)
+{ 
 	concordant <- function(x){ 	  
 			mat.lr <- function(r, c){ 
 				lr <- x[(r.x > r) & (c.x > c)] 

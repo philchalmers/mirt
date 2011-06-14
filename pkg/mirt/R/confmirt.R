@@ -39,8 +39,7 @@ setMethod(
 		SS <- apply(F^2,2,sum)			
 		cat("\nFactor loadings metric: \n")
 		print(cbind(F,h2),digits)		
-		cat("\nSS loadings: ",round(SS,digits), "\n")
-		cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+		cat("\nSS loadings: ",round(SS,digits), "\n")		
 		cat("\nFactor correlations: \n")
 		Phi <- object@gpars$sig	  
 		Phi <- round(Phi, digits)
@@ -210,8 +209,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			gcov[i1,i2] <- gcov[i2,i1] <- .1
 		else 
 			gcov[i1,i2] <- gcov[i2,i1] <- groups[i,5] 	
-		if(est[i]) estgcov[i2,i1] <- TRUE					
+		if(est[i]) estgcov[i1,i2] <- estgcov[i2,i1] <- TRUE					
 	}	
+	estgcov <- (estgcov + selgcov) == 2
 	loads <- estlam <- matrix(FALSE,J,nfact)
 	for(i in 1:nrow(ramloads)){
 		item <- ramloads[i,2]
@@ -315,7 +315,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	startvalues <- pars	
 	stagecycle <- 1		
 	
-	for(cycles in 1:(ncycles + burnin + SEM.cycles))	
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))		
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
@@ -526,7 +526,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
-		- burnin, Theta=theta0, fulldata=fulldata, K=K, itemloc=itemloc, h2=h2,F=F,
-		converge = converge, Call=Call)	 	
+		- burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
+		h2=h2,F=F,converge = converge, Call=Call)	 	
 	return(mod)
 }	
