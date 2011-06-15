@@ -108,7 +108,7 @@ coef(mod2)
 data(Science)
 (mod1 <- polymirt(Science,1))
 summary(mod1)
-residuals(mod2)
+residuals(mod1)
 coef(mod1)
 
 (mod2 <- polymirt(Science,2))

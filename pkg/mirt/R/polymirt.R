@@ -294,13 +294,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	for(i in 1:J)
 		uniques[[i]] <- sort(unique(data[,i]))
 	K <- rep(0,J)
-	for(i in 1:J) K[i] <- length(uniques[[i]])
-	# data99 <- data
-	# for(i in 1:J)
-		# for(j in 1:K[i])
-			# data99[data[,i] == uniques[[i]][j],i] <- j
-	# data99 <- data99 - 1		
-	# data99[is.na(data99)] <- 99	
+	for(i in 1:J) K[i] <- length(uniques[[i]])	
 	guess[K > 2] <- 0
 	estGuess[K > 2] <- FALSE	
 	itemloc <- cumsum(c(1,K))
@@ -495,7 +489,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		pars <- pars + gamma*correction
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam =",sprintf("%.3f",gamma),", Max Change =", 
-				sprintf("%.4f",max(abs(gamma*correction))), "\n")
+				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep='')
 			flush.console()			
 		}	
 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
@@ -549,6 +543,6 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	
 	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
-		K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)			
+		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)			
 	return(mod)	
 }
