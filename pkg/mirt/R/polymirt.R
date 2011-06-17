@@ -319,7 +319,7 @@ setMethod(
 		pars <- object@pars
 		lambdas <- pars[,1:nfact]
 		zetas <- pars[,(nfact+1):ncol(pars)]
-		zetas <- zetas[!is.na(zetas)]		
+		zetas <- t(zetas)[!is.na(t(zetas))]		
 		mu <- rep(0,nfact)
 		sigma <- diag(nfact)		
 		LL <- matrix(0,N,draws)

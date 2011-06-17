@@ -5,6 +5,12 @@ setMethod(
 		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
+		if(length(x@logLik) > 0){
+			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')
+			AIC <- (-2) * x@logLik + 2 * (length(x@pars[!is.na(x@pars)]) 
+				+ sum(x@guess[!is.na(x@guess)] != 0))
+			cat("AIC = ", AIC, "\n")
+		}
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
 		else 	
@@ -19,6 +25,12 @@ setMethod(
 		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
+		if(length(object@logLik) > 0){
+			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
+			AIC <- (-2) * object@logLik + 2 * (length(object@pars[!is.na(object@pars)]) + 
+				sum(object@guess[!is.na(object@guess)] != 0))
+			cat("AIC = ", AIC, "\n")
+		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")
 		else 	
@@ -154,9 +166,41 @@ setMethod(
 setMethod(
 	f = "logLik",
 	signature = signature(object = 'confmirtClass'),
-	definition = function(object){
-			
-	} 
+	definition = function(object, draws = 2000){	
+		nfact <- ncol(object@Theta)
+		N <- nrow(object@Theta)
+		J <- length(object@K)
+		pars <- object@pars
+		lambdas <- pars[,1:nfact]
+		lambdas[is.na(lambdas)] <- 0
+		zetas <- pars[,(nfact+1):ncol(pars)]
+		zetas <- t(zetas)[!is.na(t(zetas))]		
+		mu <- object@gpars$u
+		sigma <- object@gpars$sig		
+		LL <- matrix(0,N,draws)
+		theta <- matrix(0,N,nfact*draws)
+		guess <- object@guess
+		guess[is.na(guess)] <- 0
+		for(i in 1:draws){
+			theta <- rmvnorm(N,mu,sigma)				
+			LL[,i] <- .Call('logLik', 					
+						as.numeric(lambdas),
+						as.numeric(zetas),
+						as.numeric(guess),
+						as.numeric(theta),
+						as.integer(object@fulldata),
+						as.integer(object@itemloc-1),
+						as.integer(object@K),
+						as.integer(J),
+						as.integer(N),
+						as.integer(nfact))		
+		}
+		logLik <- sum(log(rowMeans(LL)))
+		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
+		object@logLik <- logLik
+		object@SElogLik <- SElogLik		
+		return(object)
+	} 	
 )
 
 ####################
@@ -195,7 +239,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	ramloads <- ram[ram[,1]==1,]
 	ramloads[,3] <- ramloads[,3] - J
 	constvalues <- unique(ramloads[,4])[table(ramloads[,4]) > 1]
-	groups <- matrix(ram[ram[,2] > J,],ncol=5,byrow=TRUE)	
+	groups <- matrix(ram[ram[,2] > J,],ncol=5)	
 	groups[,2:3] <- groups[,2:3] - J	
 	nfact <- sum(groups[,2] == groups[,3])		
 	if(length(gmeans) == 1)	gmeans <- rep(gmeans,nfact)					

@@ -7,7 +7,6 @@
 \alias{residuals,polymirtClass-method}
 \alias{show,polymirtClass-method}
 \alias{summary,polymirtClass-method}
-\alias{logLik,polymirtClass-method}
 
 \title{Class "polymirtClass"}
 \description{
@@ -28,6 +27,8 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{K}:}{Object of class \code{"numeric"}, number of item categories  }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
+    \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
+    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item locations in fulldata }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{Call}:}{Object of class \code{"call"}, call }
@@ -40,7 +41,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{print}{\code{signature(x = "polymirtClass")} }
     \item{residuals}{\code{signature(object = "polymirtClass")} }
     \item{show}{\code{signature(object = "polymirtClass")} }
-    \item{summary}{\code{signature(object = "polymirtClass")}
+    \item{summary}{\code{signature(object = "polymirtClass")}}
     \item{logLik}{\code{signature(object = "polymirtClass")} }
 	 }
 }

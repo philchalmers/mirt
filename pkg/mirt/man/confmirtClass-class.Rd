@@ -29,6 +29,8 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{data}:}{Object of class \code{"matrix"}, data with 99 as missing }
     \item{\code{K}:}{Object of class \code{"numeric"},  number of item categories}
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item location in fulldata }
+    \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
+    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
@@ -42,6 +44,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{residuals}{\code{signature(object = "confmirtClass")}}
     \item{show}{\code{signature(object = "confmirtClass")} }
     \item{summary}{\code{signature(object = "confmirtClass")} }
+    \item{logLik}{\code{signature(object = "confmirtClass")} }
 	 }
 }
 

@@ -4,7 +4,6 @@
 \alias{coef,polymirt-method}
 \alias{plot,polymirt-method}
 \alias{residuals,polymirt-method}
-\alias{logLik,polymirt-method}
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -25,8 +24,6 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   rot = list(x = -70, y = 30, z = 10), ...)
 
 \S4method{residuals}{polymirt}(object, digits = 3, ...)
-
-\S4method{logLik}{polymirt}(object, draws = 2000)
 
 }
 
@@ -53,7 +50,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 
 \details{
 
-  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
+  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood see \code{\link{logLik}}.
 
   \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
 
