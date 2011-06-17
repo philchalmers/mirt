@@ -41,7 +41,7 @@ setMethod(
 		print(cbind(F,h2),digits)		
 		cat("\nSS loadings: ",round(SS,digits), "\n")		
 		cat("\nFactor correlations: \n")
-		Phi <- object@gpars$sig	  
+		Phi <- cov2cor(object@gpars$sig)	  
 		Phi <- round(Phi, digits)
 		colnames(Phi) <- rownames(Phi) <- colnames(F)
 		print(Phi)		
@@ -186,8 +186,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	coefs <- rep(.5,nrow(ram))
 	ramloads <- ram[ram[,1]==1,]
 	ramloads[,3] <- ramloads[,3] - J
-	groups <- ram[ram[,2] > J,]	
-	groups[,2:3] <- groups[,2:3] - J
+	constvalues <- unique(ramloads[,4])[table(ramloads[,4]) > 1]
+	groups <- matrix(ram[ram[,2] > J,],ncol=5,byrow=TRUE)	
+	groups[,2:3] <- groups[,2:3] - J	
 	nfact <- sum(groups[,2] == groups[,3])		
 	if(length(gmeans) == 1)	gmeans <- rep(gmeans,nfact)					
 	if(length(gmeans) > J || length(guess) < J) 
@@ -206,16 +207,21 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		if(est[i]) estgcov[i1,i2] <- estgcov[i2,i1] <- TRUE					
 	}	
 	estgcov <- (estgcov + selgcov) == 2
-	loads <- tmplambdas <- estlam <- matrix(FALSE,J,nfact)
+	loads <- tmplambdas <- matrix(0,J,nfact)
+	estlam <- matrix(FALSE,J,nfact)
+	constlam <- matrix(0,J,nfact)
 	for(i in 1:nrow(ramloads)){
 		item <- ramloads[i,2]
 		if(!is.na(ramloads[i,5])){
 			tmplambdas[item,ramloads[i,3]] <- ramloads[i,5]
 		} else {	
-			estlam[item,ramloads[i,3]] <- TRUE
+			estlam[item,ramloads[i,3]] <- TRUE			
 			loads[item,ramloads[i,3]] <- coefs[ramloads[i,4]]
+			if(any(ramloads[i,4] == constvalues)) 
+				constlam[item,ramloads[i,3]] <- constvalues[ramloads[i,4] == constvalues]
 		}
-	}		
+	}
+	constlam <- as.vector(t(constlam))
 	itemloc <- cumsum(c(1,K))
 	index <- 1:J	
 	fulldata <- fulldata2 <- matrix(0,N,sum(K))
@@ -237,8 +243,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		fulldata2[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy	
 	}	
 	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0
-	cs <- sqrt(abs(1-rowSums(loads^2)))
-	lambdas <- loads/cs	+ tmplambdas
+	cs <- sqrt(abs(1-rowSums(loads^2)))	
+	lambdas <- loads + tmplambdas
 	zetas <- rep(0,ncol(fulldata) - J)	
 	loc <- 1	
 	for(i in 1:J){
@@ -256,11 +262,11 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	}		
 	npars <- length(lambdas) + length(zetas) + sum(estGuess) 
 	parind <- 1:npars
-	pars <- rep(NA,npars)
+	pars <- constrained <- rep(NA,npars)
 	Ksum <- cumsum(K + nfact - 1 + estGuess) - (nfact-1)
 	sind <- lamind	<- gind <- c()	 
 	for(i in 1:J){
-		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]
+		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]		
 		lamind <- c(lamind,Ksum[i]:(Ksum[i] + nfact - 1))
 		sind <- c(sind, rep(TRUE,K[i]-1), estlam[i,])
 		if(estGuess[i]){
@@ -275,7 +281,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	gmeansind <- (length(pars) + 1):(length(pars) + nfact)
 	gcovind <- (gmeansind[length(gmeansind)] + 1):(gmeansind[length(gmeansind)] 
 		+ nfact*(nfact+1)/2)	
-	pars <- c(pars, gmeans, gcov[selgcov]) 
+	pars <- c(pars, gmeans, gcov[selgcov])	
 	npars <- length(pars)
 	ngpars <- nfact + nfact*(nfact + 1)/2
 	converge <- 1    	
@@ -290,15 +296,17 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	cand.t.var <- 1			
 	tmp <- .05
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)		
-		if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
-		else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
-		else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
-		else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - tmp
-		if (cand.t.var < 0){
-			cand.t.var <- tmp		
-			tmp <- tmp / 2
-		}		
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
+		if(i > 5){		
+			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
+			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
+			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
+			else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - tmp
+			if (cand.t.var < 0){
+				cand.t.var <- tmp		
+				tmp <- tmp / 2
+			}		
+		}
 	} 	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -309,7 +317,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- .2
+	gamma <- .25
 	startvalues <- pars	
 	stagecycle <- 1		
 	
@@ -408,10 +416,16 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){			
-			correction <- SparseM::solve(ave.h) %*% grad		    
+			correction <- SparseM::solve(ave.h) %*% grad					
 			parsold <- pars
 			correct <- rep(0,npars)
-			correct[sind] <- correction			
+			correct[sind] <- correction	
+			for(i in 1:length(constvalues)){
+				tmp <- correct[lamind]
+				tmp[constlam == constvalues[i]] <- 
+					mean(tmp[constlam == constvalues[i]])
+				correct[lamind] <- tmp
+			}			
 			correct[correct < -2] <- -1.5
 			correct[correct > 2] <- 1.5
 			pars <- pars + gamma*correct
@@ -431,19 +445,25 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)			
-		correction <- SparseM::solve(Tau) %*% grad
+		correction <- SparseM::solve(Tau) %*% grad		
 		correction[correction > .5] <- .5
 		correction[correction < -.5] <- -.5	
 		if(any(estGuess)){
 			correction[correction[gind] > .05] <- .05
 			correction[correction[gind] < -.05] <- -.05
-		}	
-		if(all(gamma*correction < tol)) conv <- conv + 1
-			else conv <- 0		
-		if(conv == 3) break		
+		}					
 		parsold <- pars
 		correct <- rep(0,npars)
 		correct[sind] <- correction
+		for(i in 1:length(constvalues)){
+			tmp <- correct[lamind]
+			tmp[constlam == constvalues[i]] <- 
+				mean(tmp[constlam == constvalues[i]])
+			correct[lamind] <- tmp
+		}
+		if(all(gamma*correct < tol)) conv <- conv + 1
+			else conv <- 0		
+		if(conv == 3) break	
 		pars <- pars + gamma*correct
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam =",sprintf("%.3f",gamma),", Max Change =", 
@@ -496,8 +516,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}
 	}		
-	sig <- sig + t(sig) - diag(diag(sig))		
-	SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
+	sig <- sig + t(sig) - diag(diag(sig))
+	if(nfact > 1) SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
+		else SEsig <- NA
 	tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
 	loc <- 1
 	for(i in 1:J){

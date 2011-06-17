@@ -368,15 +368,17 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	cand.t.var <- 1	
 	tmp <- .05
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
-		if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
-		else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
-		else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
-		else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - tmp
-		if (cand.t.var < 0){
-			cand.t.var <- tmp		
-			tmp <- tmp / 2
-		}		
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+		if(i > 5){		
+			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
+			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
+			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
+			else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - tmp
+			if (cand.t.var < 0){
+				cand.t.var <- tmp		
+				tmp <- tmp / 2
+			}		
+		}	
 	} 
 	m.thetas <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
@@ -385,7 +387,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
-	gamma <- 0.2
+	gamma <- 0.25
 	startvalues <- pars
 	stagecycle <- 1	
 	
