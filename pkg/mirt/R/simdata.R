@@ -1,7 +1,11 @@
-simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0){
+simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = FALSE){
 	dist = 'normal'
 	nfact <- ncol(a)
 	nitems <- nrow(a)	
+	if(factor.loads){
+		cs <- sqrt(1 - rowSums(a^2, na.rm = TRUE))
+		a <- a / cs
+	}
 	K <- rep(0,nitems)
 	for(i in 1:nitems) K[i] <- sum(!is.na(d[i,]))	
 	if(length(guess) == 1) guess <- rep(guess,nitems)

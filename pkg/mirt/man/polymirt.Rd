@@ -4,6 +4,7 @@
 \alias{coef,polymirt-method}
 \alias{plot,polymirt-method}
 \alias{residuals,polymirt-method}
+\alias{logLik,polymirt-method}
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -24,6 +25,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   rot = list(x = -70, y = 30, z = 10), ...)
 
 \S4method{residuals}{polymirt}(object, digits = 3, ...)
+
+\S4method{logLik}{polymirt}(object, draws = 2000)
 
 }
 

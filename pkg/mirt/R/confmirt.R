@@ -151,6 +151,14 @@ setMethod(
 	}
 )
 
+setMethod(
+	f = "logLik",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object){
+			
+	} 
+)
+
 ####################
 #Main Function
 

@@ -12,5 +12,5 @@ importFrom("graphics", plot)
 importFrom("stats", anova, coef, fitted, residuals)
 
 exportClasses("mirtClass", "bfactorClass", "polymirtClass", "confmirtClass")
-exportMethods(anova, fscores, plot, fitted, residuals, coef, summary, itemplot)
+exportMethods(anova, fscores, plot, fitted, residuals, coef, summary, itemplot, logLik)
 

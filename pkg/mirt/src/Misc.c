@@ -443,3 +443,82 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	UNPROTECT(15);	
 	return(Rreturn);	
 }
+
+SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
+	SEXP Rfulldata, SEXP Ritemloc, SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
+
+	SEXP Rreturn;
+	unsigned int i, j, k, m, nfact, J, N, Ksums = 0, max = 2;
+	int *itemloc,*K,*Pfulldata;
+	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0;
+		
+	PROTECT(Rlambdas = AS_NUMERIC(Rlambdas));
+	PROTECT(Rzetas = AS_NUMERIC(Rzetas));
+	PROTECT(Rguess = AS_NUMERIC(Rguess));
+	PROTECT(Rtheta0 = AS_NUMERIC(Rtheta0));	
+	PROTECT(Rfulldata = AS_INTEGER(Rfulldata));
+	PROTECT(Ritemloc = AS_INTEGER(Ritemloc));
+	PROTECT(RK = AS_INTEGER(RK));	
+	PROTECT(RJ = AS_INTEGER(RJ));	
+	PROTECT(RN = AS_INTEGER(RN));
+	PROTECT(Rnfact = AS_INTEGER(Rnfact));		
+	Plambdas = NUMERIC_POINTER(Rlambdas);
+	zetas = NUMERIC_POINTER(Rzetas);
+	guess = NUMERIC_POINTER(Rguess);
+	Ptheta0 = NUMERIC_POINTER(Rtheta0);	
+	Pfulldata = INTEGER_POINTER(Rfulldata);
+	itemloc = INTEGER_POINTER(Ritemloc);	
+	K = INTEGER_POINTER(RK);	
+	J = NUMERIC_VALUE(RJ);
+	N = NUMERIC_VALUE(RN);
+	nfact = NUMERIC_VALUE(Rnfact);	
+	for(i = 0; i < J; i++){
+		Ksums += K[i]; 
+		if(max < K[i]) max = K[i];
+	}
+	
+	PROTECT(Rreturn = NEW_NUMERIC(N));
+	Preturn = NUMERIC_POINTER(Rreturn);
+	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N],
+		Plong_0[N * max], cdloglik;
+	unsigned int loc = 0, location[J];
+	
+	k = 0;
+	for(i = 0; i < nfact; i++){
+		for(j = 0; j < J; j++){
+			lambdas[j][i] = Plambdas[k];
+			k++;
+		}
+	}		
+	for(i = 0; i < J; i++)		
+		location[i] = itemloc[i] * N;	
+	for(i = 0; i < N; i++)
+		irt0[i] = 1.0;		
+		
+	for(unsigned int item = 0; item < J; item++){		
+		k = K[item];
+		for(i = 0; i < nfact; i++)
+			a[i] = lambdas[item][i];		
+		for(i = 0; i < (k-1); i++) 
+			d[i] = zetas[i + loc];
+		g = guess[item];		
+		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);							
+		m = 0;
+		for(j = 0; j < k; j++){
+			for(i = 0; i < N; i++){				
+				if(Pfulldata[m + location[item]])
+					irt0[i] *= Plong_0[m];													
+				m++;
+			}
+		}		
+		loc += k - 1;
+	}	
+	for(i = 0; i < N; i++){				 
+		cdloglik = irt0[i];
+		if(cdloglik < .000000000001) cdloglik = .000000000001;
+		Preturn[i] = cdloglik;
+	}
+	
+	UNPROTECT(11);	
+	return(Rreturn);	
+}

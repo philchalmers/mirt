@@ -7,6 +7,7 @@
 \alias{residuals,polymirtClass-method}
 \alias{show,polymirtClass-method}
 \alias{summary,polymirtClass-method}
+\alias{logLik,polymirtClass-method}
 
 \title{Class "polymirtClass"}
 \description{
@@ -39,7 +40,8 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{print}{\code{signature(x = "polymirtClass")} }
     \item{residuals}{\code{signature(object = "polymirtClass")} }
     \item{show}{\code{signature(object = "polymirtClass")} }
-    \item{summary}{\code{signature(object = "polymirtClass")} }
+    \item{summary}{\code{signature(object = "polymirtClass")}
+    \item{logLik}{\code{signature(object = "polymirtClass")} }
 	 }
 }
 

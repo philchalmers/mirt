@@ -6,6 +6,11 @@ setMethod(
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(x@F), " factor",
 			if(ncol(x@F)>1) "s", "\n", sep="")
+		if(length(x@logLik) > 0){
+			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')
+			AIC <- (-2) * x@logLik + 2 * (length(x@pars[!is.na(x@pars)]) + sum(x@guess[!is.na(x@guess)] != 0))
+			cat("AIC = ", AIC, "\n")
+		}	
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
 		else 	
@@ -21,6 +26,12 @@ setMethod(
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(object@F), " factor",
 			if(ncol(object@F)>1) "s", "\n", sep="")
+		if(length(object@logLik) > 0){
+			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
+			AIC <- (-2) * object@logLik + 2 * (length(object@pars[!is.na(object@pars)]) + 
+				sum(object@guess[!is.na(object@guess)] != 0))
+			cat("AIC = ", AIC, "\n")
+		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")
 		else 	
@@ -123,38 +134,63 @@ setMethod(
 		Theta <- object@Theta
 		fulldata <- object@fulldata	
 		N <- nrow(fulldata)	
-		J <- ncol(fulldata)
+		K <- object@K
+		J <- length(K)
 		nfact <- ncol(object@F)
 		lambdas <- matrix(object@pars[,1:nfact], J)
 		zetas <- object@pars[,(nfact+1)]
 		guess <- object@guess
 		guess[is.na(guess)] <- 0		
-		if(type == 'LD'){
+		if(type == 'LD'){			
+			data <- object@data
+			data[data==99] <- NA						
+			nfact <- ncol(object@F)
+			theta <- seq(-4,4, length.out = round(20/nfact))
+			Theta <- thetaComb(theta,nfact)		
+			lambdas <- matrix(object@pars[,1:nfact], J)
+			lambdas[is.na(lambdas)] <- 0
+			zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
+			zetas <- na.omit(zetas)
+			guess <- object@guess
+			guess[is.na(guess)] <- 0	
+			Ksums <- cumsum(K) - 1	
+			itemloc <- object@itemloc
 			res <- matrix(0,J,J)
 			diag(res) <- NA
-			colnames(res) <- rownames(res) <- colnames(fulldata)
-			prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+			colnames(res) <- rownames(res) <- colnames(data)
+			prior <- dmvnorm(Theta,rep(0,nfact))
 			prior <- prior/sum(prior)
-			for(i in 1:J){			
-				for(j in 1:J){
+			loc <- loc2 <- 1	
+			for(i in 1:J){
+				if(i > 1) loc <- loc + K[i-1] - 1	
+				loc2 <- 1
+				for(j in 1:J){			
 					if(i < j){
-						P1 <- P.mirt(lambdas[i,],zetas[i], Theta, guess[i])
-						P2 <- P.mirt(lambdas[j,],zetas[j], Theta, guess[j])
-						E22 <- N * sum(P1 * P2 * prior)
-						E12 <- N * sum(P1 * (1-P2) * prior)
-						E21 <- N * sum((1-P1) * P2 * prior)
-						E11 <- N * sum((1-P1) * (1-P2) * prior)
-						tab <- table(fulldata[,i],fulldata[,j])
-						Etab <- matrix(c(E11,E12,E21,E22),2)
-						s <- phi(tab) - phi(Etab)
-						if(s == 0) s <- 1
+						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+						else { 
+							P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+							P1 <- cbind(1 - P1, P1)
+						}	
+						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+						else {
+							P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+							P2 <- cbind(1 - P2, P2)
+						}
+						tab <- table(data[,i],data[,j])		
+						Etab <- matrix(0,K[i],K[j])
+						for(k in 1:K[i])
+							for(m in 1:K[j])						
+								Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+						s <- gamma.cor(tab) - gamma.cor(Etab)
+						if(s == 0) s <- 1				
 						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-						res[i,j] <- sqrt( abs(res[j,i]) / N ) 					
+						res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1))) 					
 					}
+				loc2 <- loc2 + K[j] - 1 	
 				}
-			}
-			cat("\nLD matrix:\n\n")			
-			print(res,digits)			
+			}		
+			cat("LD matrix:\n\n")	
+			print(res,digits)    			
 		}		
 		if(type == 'exp'){	
 			r <- object@tabdata[ ,ncol(object@tabdata)]
@@ -271,6 +307,45 @@ setMethod(
 		cat("LD matrix:\n\n")	
 		print(res,digits)
 	}
+)
+
+setMethod(
+	f = "logLik",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object, draws = 2000){	
+		nfact <- ncol(object@Theta)
+		N <- nrow(object@Theta)
+		J <- length(object@K)
+		pars <- object@pars
+		lambdas <- pars[,1:nfact]
+		zetas <- pars[,(nfact+1):ncol(pars)]
+		zetas <- zetas[!is.na(zetas)]		
+		mu <- rep(0,nfact)
+		sigma <- diag(nfact)		
+		LL <- matrix(0,N,draws)
+		theta <- matrix(0,N,nfact*draws)
+		guess <- object@guess
+		guess[is.na(guess)] <- 0
+		for(i in 1:draws){
+			theta <- rmvnorm(N,mu,sigma)				
+			LL[,i] <- .Call('logLik', 					
+						as.numeric(lambdas),
+						as.numeric(zetas),
+						as.numeric(guess),
+						as.numeric(theta),
+						as.integer(object@fulldata),
+						as.integer(object@itemloc-1),
+						as.integer(object@K),
+						as.integer(J),
+						as.integer(N),
+						as.integer(nfact))		
+		}
+		logLik <- sum(log(rowMeans(LL)))
+		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
+		object@logLik <- logLik
+		object@SElogLik <- SElogLik		
+		return(object)
+	} 	
 )
 
 ########################################
@@ -542,7 +617,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		else F <- V %*% sqrt(diag(L))  
 	if (sum(F[ ,1] < 0)) F <- (-1) * F  
 	h2 <- rowSums(F^2) 	
-	
+		
 	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
 		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)			

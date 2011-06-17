@@ -6,7 +6,7 @@ Simulates response patterns with multivariate normal distributions.
 }
 
 \usage{
-simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0)
+simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = FALSE)
 
 }
  \arguments{
@@ -15,7 +15,8 @@ simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0)
    \item{N}{sample size}
    \item{guess}{a vector of guessing parameters for each item; only applicable for dichotomous items. Must be either a scalar value that will affect all of the dichotomous items, or a vector with as many values as to be simulated items}
    \item{sigma}{a covariance matrix of the underlying distribution}
-   \item{mu}{a mean vector of the underlying distribution} }
+   \item{mu}{a mean vector of the underlying distribution}
+   \item{factor.loads}{logical; are the slope parameters in \code{a} in a factor loadings metric?} }
 
 \details{
 Returns a data matrix simulated from the parameters.
@@ -74,13 +75,14 @@ dataset1 <- simdata(a, d, 2000)
 dataset2 <- simdata(a, d, 2000, mu = mu, sigma = sigma)
 
 ###An example of a mixed item, bifactor loadings pattern with correlated specific factors
+#factor loadings metric
 a <- matrix(c(
-1.5,0.5,NA,
-0.5,0.5,NA,
-1.0,0.5,NA,
-1.5,NA,0.5,
-0.5,NA,0.5,
-1.0,NA,0.5),ncol=3,byrow=TRUE)
+.8,.4,NA,
+.4,.4,NA,
+.7,.4,NA,
+.8,NA,.4,
+.4,NA,.4,
+.7,NA,.4),ncol=3,byrow=TRUE)
 
 #first three items are dichotomous, next two have 3 categories, and the last has 2
 d <- matrix(c(
@@ -94,8 +96,7 @@ d <- matrix(c(
 sigma <- diag(3)
 sigma[2,3] <- sigma[3,2] <- .25
 
-
-dataset <- simdata(a,d,1000,sigma)
+dataset <- simdata(a,d,1000,sigma=sigma,factor.loads=TRUE)
 
    }
 }

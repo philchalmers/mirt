@@ -28,16 +28,17 @@ setClass(
 	representation = representation(pars = 'matrix', guess = 'numeric', SEpars = 'matrix', 
 		cycles = 'numeric', Theta = 'matrix', fulldata = 'matrix', data = 'matrix', 
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric',
-		converge = 'numeric', Call = 'call'),	
+		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
 setClass(
 	Class = 'confmirtClass',
 	representation = representation(pars = 'matrix', guess = 'numeric', SEpars = 'matrix', 
-	SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
-	Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
-	h2 = 'numeric',F = 'matrix', converge = 'numeric', Call = 'call'),	
+		SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
+		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
+		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
+		Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -50,5 +51,9 @@ setGeneric("fscores",
 
 setGeneric("itemplot", 
 	def = function(object, item, ...) standardGeneric("itemplot")
+)
+
+setGeneric("logLik", 
+	def = function(object, ...) standardGeneric("logLik")
 )
 
