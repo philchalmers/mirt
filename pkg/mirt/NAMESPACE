@@ -9,7 +9,7 @@ importFrom(sem, specify.model)
 importFrom(SparseM, solve)
 #importFrom("stats4", logLik)
 importFrom("graphics", plot) 
-importFrom("stats", anova, coef, fitted, residuals)
+importFrom("stats", anova, coef, fitted, residuals, logLik)
 
 exportClasses("mirtClass", "bfactorClass", "polymirtClass", "confmirtClass")
 exportMethods(anova, fscores, plot, fitted, residuals, coef, summary, itemplot, logLik)

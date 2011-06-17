@@ -7,9 +7,8 @@ setMethod(
 		cat("Full-information factor analysis with ", ncol(x@F), " factor",
 			if(ncol(x@F)>1) "s", "\n", sep="")
 		if(length(x@logLik) > 0){
-			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')
-			AIC <- (-2) * x@logLik + 2 * (length(x@pars[!is.na(x@pars)]) + sum(x@guess[!is.na(x@guess)] != 0))
-			cat("AIC = ", AIC, "\n")
+			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
+			cat("AIC = ", x@AIC, "\n")
 		}	
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
@@ -27,10 +26,8 @@ setMethod(
 		cat("Full-information factor analysis with ", ncol(object@F), " factor",
 			if(ncol(object@F)>1) "s", "\n", sep="")
 		if(length(object@logLik) > 0){
-			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
-			AIC <- (-2) * object@logLik + 2 * (length(object@pars[!is.na(object@pars)]) + 
-				sum(object@guess[!is.na(object@guess)] != 0))
-			cat("AIC = ", AIC, "\n")
+			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
+			cat("AIC = ", object@AIC, "\n")
 		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")
@@ -342,10 +339,32 @@ setMethod(
 		}
 		logLik <- sum(log(rowMeans(LL)))
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
+		AIC <- (-2) * logLik + 2 * (length(pars[!is.na(pars)]) + 
+			sum(object@guess[!is.na(object@guess)] != 0))
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
+		object@AIC <- AIC
 		return(object)
 	} 	
+)
+
+setMethod(
+	f = "anova",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object, object2, ...){
+		dots <- list(...)		
+		nfact1 <- ncol(object@Theta)
+		nfact2 <- ncol(object2@Theta)
+		nitems <- length(object@K)
+		df1 <- (nitems*(nfact1 + 1) - nfact1*(nfact1 - 1)/2) 
+		df2 <- (nitems*(nfact2 + 1) - nfact2*(nfact2 - 1)/2) 
+		df <- df1 - df2 
+		X2 <- 2*object@logLik - 2*object2@logLik 
+		AICdiff <- object@AIC - object2@AIC    
+		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
+		df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+		cat("AIC difference = ", round(AICdiff,3), "\n")  
+	}		
 )
 
 ########################################
