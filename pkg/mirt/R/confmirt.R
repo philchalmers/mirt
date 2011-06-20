@@ -234,7 +234,7 @@ setMethod(
 
 confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-	debug = FALSE, ...){
+	calcLL = TRUE, draws = 2000, debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
@@ -624,6 +624,11 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
 		- burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
-		h2=h2,F=F,converge = converge, Call=Call)	 	
+		h2=h2,F=F,converge = converge, Call=Call)
+	if(calcLL){
+		cat("Calculating log-likelihood...\n")
+		flush.console()
+		mod <- logLik(mod,draws)		
+	}	
 	return(mod)
 }	

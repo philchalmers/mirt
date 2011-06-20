@@ -324,7 +324,7 @@ setMethod(
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		K <- object@K
-		df <- prod(K) - nfact*J - J - sum(guess != 0) - 1
+		df <- prod(K) - nfact*J - sum(K - 1) - sum(guess != 0) - 1
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -341,8 +341,7 @@ setMethod(
 		}
 		logLik <- sum(log(rowMeans(LL)))
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
-		AIC <- (-2) * logLik + 2 * (length(pars[!is.na(pars)]) + 
-			sum(object@guess[!is.na(object@guess)] != 0))
+		AIC <- (-2) * logLik + 2 * (prod(K) - df)
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
@@ -380,7 +379,7 @@ setMethod(
 
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
-	debug = FALSE, ...){
+	calcLL = TRUE, draws = 2000, debug = FALSE, ...){
 		
 	Call <- match.call()   
 	itemnames <- colnames(data)
@@ -647,6 +646,11 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		
 	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
-		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)			
+		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)
+	if(calcLL){
+		cat("Calculating log-likelihood...\n")
+		flush.console()
+		mod <- logLik(mod,draws)		
+	}	
 	return(mod)	
 }

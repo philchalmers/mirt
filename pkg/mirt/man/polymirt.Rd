@@ -14,7 +14,8 @@
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
-    tol = .001, printcycles = TRUE, debug = FALSE, ...)
+    tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000, 
+    debug = FALSE, ...)
 
 \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0,
     digits = 3, ...)
@@ -48,6 +49,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
   \item{printcycles}{logical; display iteration history during estimation?}
+  \item{calcLL}{logical; calculate the log-likelihood?}
+  \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }
@@ -101,12 +104,10 @@ fulldata <- expand.table(LSAT7)
 
 (mod1 <- polymirt(fulldata, 1))
 summary(mod1)
-mod1 <- logLik(mod1)
 residuals(mod1)
 
 (mod2 <- polymirt(fulldata, 2))
 summary(mod2)
-mod2 <- logLik(mod2)
 coef(mod2)
 anova(mod1,mod2)
 
@@ -117,9 +118,11 @@ summary(mod1)
 residuals(mod1)
 coef(mod1)
 
-(mod2 <- polymirt(Science,2))
+(mod2 <- polymirt(Science,2, calcLL = FALSE)) #don't calculate log-likelihood
+mod2 <- logLik(mod2,5000) #calc log-likelihood here with more draws
 summary(mod2, 'promax', suppress = .3)
 coef(mod2)
+anova(mod1,mod2)
 
 
      }

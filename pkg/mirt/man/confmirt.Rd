@@ -13,7 +13,7 @@
 \usage{
 confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
-    debug = FALSE, ...)
+    calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 
 \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 
@@ -36,6 +36,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
   \item{tol}{tolerance that must be reached before the model is returned}
   \item{printcycles}{logical; display iteration history during estimation?}
+  \item{calcLL}{logical; calculate the log-likelihood?}
+  \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
   \item{debug}{logical; turn on debugging features?}
   \item{object}{an object of class \code{confmirt}.}
   \item{object2}{an object of class \code{confmirt}.}
@@ -129,7 +131,6 @@ mod1 <- confmirt(dataset,model.1)
 coef(mod1)
 summary(mod1)
 residuals(mod1)
-mod1 <- logLik(mod1)
 	
 #bifactor 	
 model.2 <- specify.model()
@@ -157,7 +158,6 @@ mod2 <- confmirt(dataset,model.2)
 coef(mod2)
 summary(mod2)
 residuals(mod2)
-mod2 <- logLik(mod2)
 anova(mod1,mod2)
 
      }
