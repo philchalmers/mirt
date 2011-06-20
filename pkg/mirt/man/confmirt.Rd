@@ -3,6 +3,7 @@
 \alias{coef,confmirt-method}
 \alias{summary,confmirt-method}
 \alias{residuals,confmirt-method}
+\alias{anova,confmirt-method}
 
 \title{Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -20,6 +21,8 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \S4method{residuals}{confmirt}(object, digits = 3, ...)
 
+\S4method{anova}{confmirt}(object, object2, ...)
+
 }
 
 \arguments{
@@ -35,6 +38,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{printcycles}{logical; display iteration history during estimation?}
   \item{debug}{logical; turn on debugging features?}
   \item{object}{an object of class \code{confmirt}.}
+  \item{object2}{an object of class \code{confmirt}.}
   \item{SE}{logical; print standard errors?}
   \item{print.gmeans}{logical; print factor means?}
   \item{digits}{the number of significant digits to be rounded}
@@ -125,6 +129,7 @@ mod1 <- confmirt(dataset,model.1)
 coef(mod1)
 summary(mod1)
 residuals(mod1)
+mod1 <- logLik(mod1)
 	
 #bifactor 	
 model.2 <- specify.model()
@@ -152,6 +157,8 @@ mod2 <- confmirt(dataset,model.2)
 coef(mod2)
 summary(mod2)
 residuals(mod2)
+mod2 <- logLik(mod2)
+anova(mod1,mod2)
 
      }
 }

@@ -4,6 +4,7 @@
 \alias{coef,polymirt-method}
 \alias{plot,polymirt-method}
 \alias{residuals,polymirt-method}
+\alias{anova,polymirt-method}
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
@@ -25,6 +26,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 
 \S4method{residuals}{polymirt}(object, digits = 3, ...)
 
+\S4method{anova}{polymirt}(object, object2, ...)
+
 }
 
 \arguments{
@@ -39,6 +42,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   \item{SE}{logical; display the standard errors?}
   \item{x}{an object of class \code{polymirt} to be plotted or printed}
   \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}
+  \item{object2}{a model estimated from \code{polymirt} of class \code{polymirt}}
   \item{suppress}{a numeric value indicating which (possibly rotated) factor loadings should be suppressed. Typical values are around .3 in most statistical software}
   \item{digits}{the number of significant digits to be rounded}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
@@ -97,12 +101,14 @@ fulldata <- expand.table(LSAT7)
 
 (mod1 <- polymirt(fulldata, 1))
 summary(mod1)
+mod1 <- logLik(mod1)
 residuals(mod1)
 
 (mod2 <- polymirt(fulldata, 2))
 summary(mod2)
-residuals(mod2)
+mod2 <- logLik(mod2)
 coef(mod2)
+anova(mod1,mod2)
 
 ###########
 data(Science)

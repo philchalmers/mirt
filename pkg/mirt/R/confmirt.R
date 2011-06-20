@@ -6,10 +6,8 @@ setMethod(
 			"\n\n", sep = "")
 		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
 		if(length(x@logLik) > 0){
-			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')
-			AIC <- (-2) * x@logLik + 2 * (length(x@pars[!is.na(x@pars)]) 
-				+ sum(x@guess[!is.na(x@guess)] != 0))
-			cat("AIC = ", AIC, "\n")
+			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
+			cat("df =", x@df, "\nAIC = ", x@AIC, "\n")
 		}
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
@@ -26,10 +24,8 @@ setMethod(
 			"\n\n", sep = "")
 		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
 		if(length(object@logLik) > 0){
-			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
-			AIC <- (-2) * object@logLik + 2 * (length(object@pars[!is.na(object@pars)]) + 
-				sum(object@guess[!is.na(object@guess)] != 0))
-			cat("AIC = ", AIC, "\n")
+			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
+			cat("df =", object@df, "\nAIC = ", object@AIC, "\n")
 		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")
@@ -153,7 +149,7 @@ setMethod(
 					s <- gamma.cor(tab) - gamma.cor(Etab)
 					if(s == 0) s <- 1				
 					res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-					res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1))) 					
+					res[i,j] <- sqrt( abs(res[j,i]) / (N * min(c(K[i],K[j]) - 1))) 					
 				}
 			loc2 <- loc2 + K[j] - 1 	
 			}
@@ -181,6 +177,9 @@ setMethod(
 		theta <- matrix(0,N,nfact*draws)
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
+		K <- object@K
+		e <- lapply(object@estpars,sum)
+		df <- prod(K) - e$estlam - e$estGuess - e$estgcov - e$estgmeans - length(zetas) - 1
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -197,10 +196,37 @@ setMethod(
 		}
 		logLik <- sum(log(rowMeans(LL)))
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
+		AIC <- (-2) * logLik + 2 * (prod(K) - df) 
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
+		object@AIC <- AIC
+		object@df <- as.integer(df)
 		return(object)
 	} 	
+)
+
+setMethod(
+	f = "anova",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object, object2, ...){
+		dots <- list(...)				
+		nitems <- length(object@K)
+		if(length(object@df) == 0 || length(object2@df) == 0) 
+			stop('Use \'logLik\' to obtain likelihood values') 	
+		df <- object@df - object2@df 
+		if(df < 0){
+			df <- abs(df)
+			tmp <- object
+			object <- object2
+			object2 <- tmp
+		}
+		X2 <- 2*object2@logLik - 2*object@logLik 
+		AICdiff <- object@AIC - object2@AIC  
+		se <- round(object@SElogLik + object2@SElogLik,3)		
+		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
+			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
+	}		
 )
 
 ####################
@@ -518,7 +544,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		if(conv == 3) break	
 		pars <- pars + gamma*correct
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
-			cat(", gam =",sprintf("%.3f",gamma),", Max Change =", 
+			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
 			flush.console()		
 		}	

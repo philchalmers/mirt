@@ -7,6 +7,7 @@
 \alias{residuals,polymirtClass-method}
 \alias{show,polymirtClass-method}
 \alias{summary,polymirtClass-method}
+\alias{anova,polymirtClass-method}
 
 \title{Class "polymirtClass"}
 \description{
@@ -29,6 +30,8 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
+    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
+    \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item locations in fulldata }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{Call}:}{Object of class \code{"call"}, call }
@@ -43,6 +46,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{show}{\code{signature(object = "polymirtClass")} }
     \item{summary}{\code{signature(object = "polymirtClass")}}
     \item{logLik}{\code{signature(object = "polymirtClass")} }
+    \item{anova}{\code{signature(object = "polymirtClass")} }
 	 }
 }
 

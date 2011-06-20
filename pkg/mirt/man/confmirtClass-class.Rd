@@ -6,6 +6,7 @@
 \alias{residuals,confmirtClass-method}
 \alias{show,confmirtClass-method}
 \alias{summary,confmirtClass-method}
+\alias{anova,confmirtClass-method}
 
 \title{Class "confmirtClass"}
 \description{
@@ -31,6 +32,8 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item location in fulldata }
     \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
+    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
+    \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
@@ -45,6 +48,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{show}{\code{signature(object = "confmirtClass")} }
     \item{summary}{\code{signature(object = "confmirtClass")} }
     \item{logLik}{\code{signature(object = "confmirtClass")} }
+    \item{anova}{\code{signature(object = "confmirtClass")} }
 	 }
 }
 

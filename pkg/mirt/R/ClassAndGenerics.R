@@ -28,7 +28,8 @@ setClass(
 	representation = representation(pars = 'matrix', guess = 'numeric', SEpars = 'matrix', 
 		cycles = 'numeric', Theta = 'matrix', fulldata = 'matrix', data = 'matrix', 
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric', AIC = 'numeric',
-		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', Call = 'call'),	
+		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', df = 'integer', 
+		Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -38,7 +39,7 @@ setClass(
 		SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
-		AIC = 'numeric', Call = 'call'),	
+		df = 'integer', AIC = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 

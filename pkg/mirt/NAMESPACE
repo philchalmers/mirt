@@ -7,7 +7,6 @@ export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,fscores,itemplot,s
 # Imported functions
 importFrom(sem, specify.model)
 importFrom(SparseM, solve)
-#importFrom("stats4", logLik)
 importFrom("graphics", plot) 
 importFrom("stats", anova, coef, fitted, residuals, logLik)
 

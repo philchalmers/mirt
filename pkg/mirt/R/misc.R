@@ -119,7 +119,7 @@ P.mirt <- function(a, d, Theta, g)
 					as.integer(nquad), 
 					as.integer(nfact))
 	return(traces)
-  }
+}
 
 # Estep
 Estep.mirt <- function(pars, tabdata, Theta, prior, guess) 

@@ -243,7 +243,7 @@ setMethod(
 #Main function
 
 mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE, 
-	startvalues = NULL, quadpts = NULL, ncycles = 150, tol = .001, nowarn = TRUE, 
+	startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
 	debug = FALSE, ...)
 { 
 	fn <- function(pars, r1, N, guess, Theta, prior, parprior){

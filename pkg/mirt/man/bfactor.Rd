@@ -12,7 +12,7 @@
 
 \usage{
 bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
-  startvalues = NULL,  quadpts = NULL, ncycles = 150, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
+  startvalues = NULL,  quadpts = NULL, ncycles = 300, EMtol=.001, nowarn = TRUE, debug = FALSE, ...)
 
 \S4method{summary}{bfactor}(object, digits = 3, ...)
 
@@ -31,10 +31,10 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   \item{prev.cor}{uses a previously computed correlation matrix to be used to estimate starting values for the EM estimation}
   \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}}
   \item{startvalues}{user declared start values for parameters. }
-  \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then the number of quadrature points is set to 9. }
+  \item{quadpts}{number of quadrature points per dimension. If \code{NULL} then the number of quadrature points is set to 15. }
   \item{ncycles}{the number of EM iterations to be performed.}
-  \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early.}  
-  \item{object}{a model estimated from \code{bfactor} of class \code{bfactor}.}  
+  \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early.}
+  \item{object}{a model estimated from \code{bfactor} of class \code{bfactor}.}
   \item{type}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen \& Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern.}
   \item{digits}{number of significant digits to be rounded.}
   \item{nowarn}{logical; suppress warnings from dependent packages?}

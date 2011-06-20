@@ -8,7 +8,7 @@ setMethod(
 			if(ncol(x@F)>1) "s", "\n", sep="")
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
-			cat("AIC = ", x@AIC, "\n")
+			cat("df =", x@df, "\nAIC =", x@AIC, "\n")
 		}	
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
@@ -27,7 +27,7 @@ setMethod(
 			if(ncol(object@F)>1) "s", "\n", sep="")
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
-			cat("AIC = ", object@AIC, "\n")
+			cat("df =", object@df, "\nAIC =", object@AIC, "\n")
 		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")
@@ -181,7 +181,7 @@ setMethod(
 						s <- gamma.cor(tab) - gamma.cor(Etab)
 						if(s == 0) s <- 1				
 						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-						res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1))) 					
+						res[i,j] <- sqrt( abs(res[j,i]) / (N * min(c(K[i],K[j]) - 1))) 					
 					}
 				loc2 <- loc2 + K[j] - 1 	
 				}
@@ -323,6 +323,8 @@ setMethod(
 		theta <- matrix(0,N,nfact*draws)
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
+		K <- object@K
+		df <- prod(K) - nfact*J - J - sum(guess != 0) - 1
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -344,6 +346,7 @@ setMethod(
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
+		object@df <- as.integer(df)
 		return(object)
 	} 	
 )
@@ -352,18 +355,23 @@ setMethod(
 	f = "anova",
 	signature = signature(object = 'polymirtClass'),
 	definition = function(object, object2, ...){
-		dots <- list(...)		
-		nfact1 <- ncol(object@Theta)
-		nfact2 <- ncol(object2@Theta)
+		dots <- list(...)				
 		nitems <- length(object@K)
-		df1 <- (nitems*(nfact1 + 1) - nfact1*(nfact1 - 1)/2) 
-		df2 <- (nitems*(nfact2 + 1) - nfact2*(nfact2 - 1)/2) 
-		df <- df1 - df2 
-		X2 <- 2*object@logLik - 2*object2@logLik 
-		AICdiff <- object@AIC - object2@AIC    
-		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
-		df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
-		cat("AIC difference = ", round(AICdiff,3), "\n")  
+		if(length(object@df) == 0 || length(object2@df) == 0) 
+			stop('Use \'logLik\' to obtain likelihood values')  
+		df <- object@df - object2@df 
+		if(df < 0){
+			df <- abs(df)
+			tmp <- object
+			object <- object2
+			object2 <- tmp
+		}
+		X2 <- 2*object2@logLik - 2*object@logLik 
+		AICdiff <- object@AIC - object2@AIC
+		se <- round(object@SElogLik + object2@SElogLik,3)	
+		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
+			" (SE = ", se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')  
 	}		
 )
 
@@ -584,7 +592,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		if(conv == 3) break				
 		pars <- pars + gamma*correction
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
-			cat(", gam =",sprintf("%.3f",gamma),", Max Change =", 
+			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep='')
 			flush.console()			
 		}	
