@@ -178,8 +178,7 @@ setMethod(
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		K <- object@K
-		e <- lapply(object@estpars,sum)
-		df <- prod(K) - e$estlam - e$estGuess - e$estgcov - e$estgmeans - length(zetas) - 1
+		df <- object@df	
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -199,8 +198,7 @@ setMethod(
 		AIC <- (-2) * logLik + 2 * (prod(K) - df) 
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
-		object@AIC <- AIC
-		object@df <- as.integer(df)
+		object@AIC <- AIC		
 		return(object)
 	} 	
 )
@@ -265,6 +263,10 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	ramloads <- ram[ram[,1]==1,]
 	ramloads[,3] <- ramloads[,3] - J
 	constvalues <- unique(ramloads[,4])[table(ramloads[,4]) > 1]
+	nconstvalues <- 0
+	if(length(constvalues) > 0)
+		for(i in 1:length(constvalues))
+			nconstvalues <- nconstvalues + sum(ramloads[,4] == constvalues[i]) - 1
 	groups <- matrix(ram[ram[,2] > J,],ncol=5)	
 	groups[,2:3] <- groups[,2:3] - J	
 	nfact <- sum(groups[,2] == groups[,3])		
@@ -558,15 +560,21 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
 	cat("\n\n")
-	SEtmp <- diag(solve(info))
+	SEtmp <- diag(solve(info))		
 	if(any(SEtmp < 0)){
 		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
 		SEtmp[SEtmp < 0] <- NA
 	}
 	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")		
-	SEtmp <- sqrt(SEtmp)
+	SEtmp <- sqrt(SEtmp)	
 	SE <- rep(NA,npars) 
 	SE[parind[sind]] <- SEtmp
+	for(i in 1:length(constvalues)){
+		tmp <- SE[lamind]
+		tmp[constlam == constvalues[i]] <- 
+			mean(tmp[constlam == constvalues[i]])
+		SE[lamind] <- tmp
+	}
 	estpars <- pars[sind]
 	lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)	
 	lambdas[!estlam] <- NA	
@@ -614,6 +622,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
 		estgmeans=estgmeans)
+	df <- as.integer(prod(K) - sum(estlam) - sum(estGuess) - sum(estgcov) - 
+		sum(estgmeans) - sum(!is.na(zetas)) - nconstvalues - 1)		
 		
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2,na.rm = TRUE))
 		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
@@ -624,7 +634,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
 		- burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
-		h2=h2,F=F,converge = converge, Call=Call)
+		h2=h2,F=F,converge = converge, df = df, Call=Call)
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()
