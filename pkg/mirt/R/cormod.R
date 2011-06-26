@@ -16,7 +16,8 @@ cormod <- function(fulldata, K, guess, smooth = TRUE)
 					tabp[1,2] <- (w2*tab[1,2] - g2*tab[1,1])/(w1*w2)
 					tabp[2,1] <- (w1*tab[2,1] - g1*tab[1,1])/(w1*w2)
 					tabp[2,2] <- 1 - tabp[1,1] - tabp[1,2] - tabp[2,1]
-					tabp <- round(tabp*length(fulldata[ ,i]))		  
+					tabp <- round(tabp*length(fulldata[ ,i]))
+					if(any(tabp < 0)) next	
 					cormat[i,j] <- cormat[j,i] <- 
 						abs(phi(tabp,6))^(1/1.15)*sign(phi(tabp,6))          		  
 				} 

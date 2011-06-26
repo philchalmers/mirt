@@ -3,8 +3,7 @@ setMethod(
 	signature = 'mirtClass',
 	definition = function(object, full.scores = FALSE, method = "EAP", ...)
 	{    
-		if(ncol(object@F) > 1 && rotate != 'none') rotF <- Rotate(object@F,rotate)$loadings  
-			else rotF <- object@F
+		rotF <- object@F
 		cs <- sqrt(1 - object@h2)
 		a <- as.matrix(rotF / cs)
 		d <- qnorm(object@facility) / cs  
@@ -45,8 +44,7 @@ setMethod(
 			return(cbind(fulldata,scoremat))
 		} else {
 			r <- as.matrix(object@tabdata[ ,ncol(tabdata)+1])
-			colnames(r) <- 'Freq'
-			if(nfact > 1) cat("\nRotate: ", rotate,"\n")
+			colnames(r) <- 'Freq'			
 			cat("\nMethod: ", method,"\n\n")	
 			return(cbind(tabdata,r,scores))
 		}   

@@ -324,7 +324,7 @@ setMethod(
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		K <- object@K
-		df <- prod(K) - nfact*J - sum(K - 1) - sum(guess != 0) - 1
+		df <- prod(K) - nfact*J - sum(K - 1) - 1
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -568,6 +568,10 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		if(stagecycle < 3){
 		    correction <- SparseM::solve(ave.h) %*% grad					
 			parsold <- pars
+			correction[correction > .5] <- .5
+			correction[correction < -0.5] <- -0.5	
+			if(any(estGuess)) 
+				correction[gind] <- 0											 
 			pars <- pars + gamma*correction
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
@@ -583,12 +587,9 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		Tau <- Tau + gamma*(ave.h - Tau)		
 		correction <- SparseM::solve(Tau) %*% grad
 		correction[correction > .5] <- .5
-		correction[correction < -.5] <- -.5	
-		if(any(estGuess)){
-			correction[correction[gind] > .05] <- .05
-			correction[correction[gind] < -.05] <- -.05
-		}				
-		if(conv == 3) break				
+		correction[correction < -0.5] <- -0.5	
+		if(any(estGuess))
+			correction[gind] <- 0					
 		pars <- pars + gamma*correction
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
@@ -597,6 +598,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		}	
 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
 			else conv <- 0	
+		if(conv == 3) break		
 		parsold <- pars	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]

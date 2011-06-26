@@ -242,14 +242,14 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	N <- nrow(data)	
 	if(length(guess) == 1) guess <- rep(guess,J)
 	if(length(guess) > J || length(guess) < J) 
-		stop("The number of guessing parameters is incorrect.")
-	estGuess <- guess > 0				
+		stop("The number of guessing parameters is incorrect.")					
 	uniques <- list()
 	for(i in 1:J)
 		uniques[[i]] <- sort(unique(data[,i]))
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])	
-	guess[K > 2] <- 0	
+	guess[K > 2] <- 0
+	estGuess <- guess > 0	
 	Rpoly <- cormod(na.omit(data),K,guess)
 	sem.model <- unclass(sem.model)
 	itemnames <- colnames(data)
@@ -496,27 +496,27 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){			
-			correction <- SparseM::solve(ave.h) %*% grad					
+			correction <- SparseM::solve(ave.h) %*% grad
+			correction[correction > 1] <- 1
+			correction[correction < -1] <- -1								
 			parsold <- pars
 			correct <- rep(0,npars)
 			correct[sind] <- correction	
+			if(any(estGuess))
+				correct[gind] <- 0
 			for(i in 1:length(constvalues)){
 				tmp <- correct[lamind]
 				tmp[constlam == constvalues[i]] <- 
 					mean(tmp[constlam == constvalues[i]])
 				correct[lamind] <- tmp
-			}			
-			correct[correct < -2] <- -1.5
-			correct[correct > 2] <- 1.5
+			}						
 			pars <- pars + gamma*correct
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()
 			}				
 			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
-			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]
-			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
-			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
+			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]			
 			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
 			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]		
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
@@ -525,16 +525,12 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)			
-		correction <- SparseM::solve(Tau) %*% grad		
-		correction[correction > .5] <- .5
-		correction[correction < -.5] <- -.5	
-		if(any(estGuess)){
-			correction[correction[gind] > .05] <- .05
-			correction[correction[gind] < -.05] <- -.05
-		}					
+		correction <- SparseM::solve(Tau) %*% grad												
 		parsold <- pars
 		correct <- rep(0,npars)
 		correct[sind] <- correction
+		if(any(estGuess))
+			correct[gind] <- 0
 		for(i in 1:length(constvalues)){
 			tmp <- correct[lamind]
 			tmp[constlam == constvalues[i]] <- 
@@ -564,8 +560,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	if(any(SEtmp < 0)){
 		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
 		SEtmp[SEtmp < 0] <- NA
-	}
-	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")		
+	}	
 	SEtmp <- sqrt(SEtmp)	
 	SE <- rep(NA,npars) 
 	SE[parind[sind]] <- SEtmp
@@ -622,7 +617,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
 		estgmeans=estgmeans)
-	df <- as.integer(prod(K) - sum(estlam) - sum(estGuess) - sum(estgcov) - 
+	df <- as.integer(prod(K) - sum(estlam) - sum(estgcov) - 
 		sum(estgmeans) - sum(!is.na(zetas)) - nconstvalues - 1)		
 		
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2,na.rm = TRUE))
