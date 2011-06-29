@@ -39,7 +39,7 @@ setClass(
 		SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
-		df = 'integer', AIC = 'numeric', Call = 'call'),	
+		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 

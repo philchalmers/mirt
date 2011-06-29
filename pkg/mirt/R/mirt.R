@@ -15,10 +15,10 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
 				x@quadpts, " quadrature points.\n", sep="")
-		cat("Log-likelihood = ", x@log.lik, "\n")
-		cat("AIC = ", x@AIC, "\n")
+		cat("Log-likelihood =", x@log.lik, "\n")
+		cat("AIC =", x@AIC, "\n")
 		cat("G^2 = ", round(x@X2,2), ", df = ", 
-		x@df, ", p = ", round(x@p,4), "\n", sep="")
+			x@df, ", p = ", round(x@p,4), "\n", sep="")
 	}
 )
 
@@ -36,10 +36,10 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
 				object@quadpts,	" quadrature points.\n", sep="")
-		cat("Log-likelihood = ", object@log.lik, "\n")
-		cat("AIC = ", object@AIC, "\n")
+		cat("Log-likelihood =", object@log.lik, "\n")
+		cat("AIC =", object@AIC, "\n")
 		cat("G^2 = ", round(object@X2,2), ", df = ", 
-		object@df, ", p = ", round(object@p,4), "\n", sep="")
+			object@df, ", p = ", round(object@p,4), "\n", sep="")
 	}
 )
 
@@ -430,9 +430,9 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	logr <- rep(0,length(r))
 	for (i in 1:sampsize) logN <- logN + log(i)
 	for (i in 1:length(r)) 
-	for (j in 1:r[i]) 
-	  logr[i] <- logr[i] + log(j)    
-	df <- (length(r) - 1) - (nitems*(nfact + 1) - nfact*(nfact - 1)/2) 
+		for (j in 1:r[i]) 
+			logr[i] <- logr[i] + log(j)    
+	df <- (length(r) - 1) - nitems*(nfact + 1) + nfact*(nfact - 1)/2 
 	X2 <- 2 * sum(r * log(r/(sampsize*Pl)))
 	log.lik <- log.lik + logN/sum(logr)	
 	p <- 1 - pchisq(X2,df)  

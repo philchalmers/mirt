@@ -177,8 +177,8 @@ setMethod(
 		theta <- matrix(0,N,nfact*draws)
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
-		K <- object@K
-		df <- object@df	
+		K <- object@K	
+		fulldata <- object@fulldata	
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -186,19 +186,35 @@ setMethod(
 						as.numeric(zetas),
 						as.numeric(guess),
 						as.numeric(theta),
-						as.integer(object@fulldata),
+						as.integer(fulldata),
 						as.integer(object@itemloc-1),
 						as.integer(object@K),
 						as.integer(J),
 						as.integer(N),
 						as.integer(nfact))		
 		}
-		logLik <- sum(log(rowMeans(LL)))
+		logLik <- sum(log(rowMeans(LL)))				
+		fulldata[is.na(fulldata)] <- 99  		 				
+		pats <- apply(fulldata,1,paste,collapse = "/")
+		freqs <- table(pats)			
+		r <- as.vector(freqs)
+		logN <- 0
+		logr <- rep(0,length(r))
+		for (i in 1:N) logN <- logN + log(i)
+		for (i in 1:length(r)) 
+			for (j in 1:r[i]) 
+				logr[i] <- logr[i] + log(j)    		
+		logLik <- logLik + logN/sum(logr)		
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
-		AIC <- (-2) * logLik + 2 * (prod(K) - df) 
+		x <- object@estpars	
+		df <- as.integer(length(r) - sum(x$estlam) - sum(x$estgcov) - 
+			sum(x$estgmeans) - length(zetas) + object@nconstvalues + 
+			nfact*(nfact - 1)/2 - 1)			
+		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
-		object@AIC <- AIC		
+		object@AIC <- AIC
+		object@df <- df
 		return(object)
 	} 	
 )
@@ -211,7 +227,7 @@ setMethod(
 		nitems <- length(object@K)
 		if(length(object@df) == 0 || length(object2@df) == 0) 
 			stop('Use \'logLik\' to obtain likelihood values') 	
-		df <- object@df - object2@df 
+		df <- object2@df - object@df
 		if(df < 0){
 			df <- abs(df)
 			tmp <- object
@@ -616,9 +632,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	gpars <- list(u = u, sig = sig)	
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
-		estgmeans=estgmeans)
-	df <- as.integer(prod(K) - sum(estlam) - sum(estgcov) - 
-		sum(estgmeans) - sum(!is.na(zetas)) - nconstvalues - 1)		
+		estgmeans=estgmeans)		
 		
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2,na.rm = TRUE))
 		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
@@ -629,7 +643,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
 		- burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
-		h2=h2,F=F,converge = converge, df = df, Call=Call)
+		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), Call=Call)
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()
@@ -637,3 +651,4 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	}	
 	return(mod)
 }	
+

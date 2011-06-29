@@ -37,6 +37,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
+    \item{\code{nconstvalues}:}{Object of class \code{"integer"}, fixed parameters count }
     \item{\code{Call}:}{Object of class \code{"call"},  call }
   }
 }
