@@ -14,7 +14,7 @@
 \usage{
 polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
-    tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000, 
+    tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000,
     debug = FALSE, ...)
 
 \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0,
@@ -57,9 +57,9 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
 
 \details{
 
-  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood see \code{\link{logLik}}.
+  \code{polymirt} follows the item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood more accurately see \code{\link{logLik}}.
 
-  \code{summary.mirt} allows for various rotations available from the \code{GPArotation} package. These are:
+  \code{summary} allows for various rotations available from the \code{GPArotation} package. These are:
 
   \describe{
     \item{orthogonal: }{\code{"varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon"}}
@@ -67,6 +67,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   }
 
   Using \code{plot} will plot the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions.
+  
+  \code{coef} displays the item parameters with their associated standard errors, while use of \code{summary} transforms the slopes into a factor loadings metric. Also, factor loading values below a specified constant can be also be suppressed in \code{summary} to allow better visual clarity. Models may be compared by using the \code{anova} function, where a Chi-squared difference test and AIC difference values are displayed.
 }
 
 \value{

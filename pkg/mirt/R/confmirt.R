@@ -73,7 +73,7 @@ setMethod(
 		SEs <- cbind(object@SEpars,object@SEg)	
 		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
 			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
-		cat("ITEM PARAMTERS: \n")
+		cat("\nITEM PARAMTERS: \n")
 		print(parameters, digits)
 		if(SE){
 			cat("\nStd. Errors: \n")	
@@ -227,7 +227,7 @@ setMethod(
 		nitems <- length(object@K)
 		if(length(object@df) == 0 || length(object2@df) == 0) 
 			stop('Use \'logLik\' to obtain likelihood values') 	
-		df <- object2@df - object@df
+		df <- object@df - object2@df
 		if(df < 0){
 			df <- abs(df)
 			tmp <- object
@@ -588,7 +588,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	}
 	estpars <- pars[sind]
 	lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)	
-	lambdas[!estlam] <- NA	
+	lambdas[!estlam & !lambdas != 0] <- NA	
 	guess <- rep(NA,J)
 	guess[estGuess] <- pars[gind]
 	guess[K == 2 & !estGuess] <- 0

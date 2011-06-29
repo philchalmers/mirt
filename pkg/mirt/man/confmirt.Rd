@@ -36,7 +36,7 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
   \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
   \item{tol}{tolerance that must be reached before the model is returned}
   \item{printcycles}{logical; display iteration history during estimation?}
-  \item{calcLL}{logical; calculate the log-likelihood?}
+  \item{calcLL}{logical; calculate the log-likelihood via Monte Carlo integration?}
   \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
   \item{debug}{logical; turn on debugging features?}
   \item{object}{an object of class \code{confmirt}.}
@@ -49,7 +49,11 @@ confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \details{
 
-  \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood see \code{\link{logLik}}.
+  \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation. Residuals are computed using the LD statistic (Chen & Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood more accurately see \code{\link{logLik}}.
+
+  Specification of the confirmatory item factor analysis model follows many of the rules in the SEM framework for confirmatory factor analysis. The variances of the latent factors should be fixed to a constant for identification (commonly fixed to 1), and this is the recommended practice since the code is optimized for this method. Parameters may be fixed to specific values by placing a constant in the 4th column of the \code{specify.model} function call with the parameter named \code{NA} in the 3rd column. Item slopes may also be constrained to be equal by labeling them with the same parameter name in the 3rd column. Guessing parameters may be specified for dichotomous items, but are treated as constants, and if a guessing parameter is declared for a polychotomous item it is ignored.
+
+  \code{coef} displays the item parameters with their associated standard errors, while use of \code{summary} transforms the slopes into a factor loadings metric. Also, nested models may be compared by using the \code{anova} function, where a Chi-squared difference test and AIC difference values are displayed.
 
 }
 
@@ -131,9 +135,28 @@ mod1 <- confmirt(dataset,model.1)
 coef(mod1)
 summary(mod1)
 residuals(mod1)
-	
-#bifactor 	
+
+#fix first slope at 1.5, and set slopes 7 & 8 to be equal
 model.2 <- specify.model()
+    F1 -> Item_1,      NA, 1.5
+    F1 -> Item_2,   lam12, NA
+    F1 -> Item_3,   lam13, NA
+    F1 -> Item_4,   lam14, NA
+    F2 -> Item_4,   lam24, NA
+    F2 -> Item_5,   lam25, NA
+    F2 -> Item_6,   lam26, NA
+    F2 -> Item_7,   lam27, NA
+    F2 -> Item_8,   lam27, NA
+    F1 <-> F2,      phi12, NA
+    F1 <-> F1,      NA,     1
+    F2 <-> F2,      NA,     1
+
+mod2 <- confmirt(dataset,model.2)
+anova(mod1,mod2)
+
+#####
+#bifactor 	
+model.3 <- specify.model()
     F1 -> Item_1,   lam11, NA
     F1 -> Item_2,   lam12, NA
     F1 -> Item_3,   lam13, NA
@@ -154,11 +177,11 @@ model.2 <- specify.model()
     F2 <-> F2,      NA,     1
     F3 <-> F3,      NA,     1
 	
-mod2 <- confmirt(dataset,model.2)
-coef(mod2)
-summary(mod2)
-residuals(mod2)
-anova(mod1,mod2)
+mod3 <- confmirt(dataset,model.3)
+coef(mod3)
+summary(mod3)
+residuals(mod3)
+anova(mod1,mod3)
 
      }
 }
