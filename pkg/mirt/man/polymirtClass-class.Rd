@@ -34,6 +34,8 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item locations in fulldata }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
+    \item{\code{G2}:}{Object of class \code{"numeric"}, G2 model fit statistic }
+    \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

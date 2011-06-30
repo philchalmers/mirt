@@ -152,7 +152,7 @@ model.2 <- specify.model()
     F2 <-> F2,      NA,     1
 
 mod2 <- confmirt(dataset,model.2)
-anova(mod1,mod2)
+anova(mod2,mod1)
 
 #####
 #bifactor 	

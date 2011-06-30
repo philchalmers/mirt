@@ -12,7 +12,9 @@ setMethod(
 			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")		
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
-			cat("df =", x@df, "\nAIC =", x@AIC, "\n")
+			cat("AIC =", x@AIC, "\n")
+			cat("G^2 = ", round(x@G2,2), ", df = ", 
+				x@df, ", p = ", round(x@p,4), "\n", sep="")
 		}				
 	} 
 )
@@ -31,7 +33,9 @@ setMethod(
 			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
-			cat("df =", object@df, "\nAIC =", object@AIC, "\n")
+			cat("AIC =", object@AIC, "\n")
+			cat("G^2 = ", round(object@G2,2), ", df = ", 
+				object@df, ", p = ", round(object@p,4), "\n", sep="")
 		}			
 	} 
 )
@@ -233,7 +237,7 @@ setMethod(
 setMethod(
 	f = "logLik",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, draws = 2000){	
+	definition = function(object, draws = 3000, G2 = TRUE){	
 		nfact <- ncol(object@Theta)
 		N <- nrow(object@Theta)
 		J <- length(object@K)
@@ -264,12 +268,16 @@ setMethod(
 						as.integer(N),
 						as.integer(nfact))		
 		}
-		logLik <- sum(log(rowMeans(LL)))				
-		fulldata[is.na(fulldata)] <- 99  		 				
+		rwmeans <- rowMeans(LL)
+		logLik <- sum(log(rwmeans))				
 		pats <- apply(fulldata,1,paste,collapse = "/")
 		freqs <- table(pats)
 		nfreqs <- length(freqs)		
 		r <- as.vector(freqs)
+		ncolfull <- ncol(fulldata)
+		tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
+		tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
+		tabdata <- cbind(tabdata,r)		
 		logN <- 0
 		logr <- rep(0,length(r))
 		for (i in 1:N) logN <- logN + log(i)
@@ -280,6 +288,16 @@ setMethod(
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
 		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
+		if(G2){
+			for (j in 1:nrow(tabdata)){          
+				TFvec <- colSums(ifelse(t(fulldata) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
+				rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
+			}
+			G2 <- 2 * sum(log(1/(N*rwmeans)))
+			p <- 1 - pchisq(G2,df) 
+			object@G2 <- G2	
+			object@p <- p
+		}		
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
