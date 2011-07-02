@@ -307,7 +307,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			nconstvalues <- nconstvalues + sum(ramloads[,4] == constvalues[i]) - 1
 	groups <- matrix(ram[ram[,2] > J,],ncol=5)	
 	groups[,2:3] <- groups[,2:3] - J	
-	nfact <- sum(groups[,2] == groups[,3])		
+	nfact <- sum(groups[,2] == groups[,3])
+	if(2*nfact >= J) stop('Model is not identified.')	
 	if(length(gmeans) == 1)	gmeans <- rep(gmeans,nfact)					
 	if(length(gmeans) > J || length(guess) < J) 
 		stop("The number of gmeans parameters is incorrect.")

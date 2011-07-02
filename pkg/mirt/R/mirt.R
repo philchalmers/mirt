@@ -293,11 +293,11 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	tabdata <- cbind(tabdata,r)    
 	if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))  
 	theta <- as.matrix(seq(-4,4,length.out = quadpts))
-	if(nfact < 6){
+	if(quadpts^nfact < 10000){
 		Theta <- thetaComb(theta,nfact)
 		prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
 		prior <- prior/sum(prior)
-	}	
+	} else stop('Greater than 10000 quadrature points, reduce number.')
 	facility <- colMeans(fulldata)
 	suppressAutoPrior <- TRUE
 	if(is.logical(par.prior)) 

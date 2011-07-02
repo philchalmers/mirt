@@ -194,9 +194,10 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	stop("Specific factor loadings have been declared incorrectly")  
 	nfact <- length(unique(specific)) + 1  
 	nitems <- ncol(fulldata)
+	if(2*nfact >= nitems) stop('Model is not identified.')
 	if (length(guess) == 1) guess <- rep(guess,nitems)
 		else if (length(guess) > nitems || length(guess) < nitems) 
-	stop("The number of guessing parameters is incorrect.")
+			stop("The number of guessing parameters is incorrect.")
 	pats <- apply(fulldata, 1, paste, collapse = "/") 
 	freqs <- table(pats)
 	nfreqs <- length(freqs)
@@ -217,8 +218,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	selvec <- 2:(nfact)    
 	suppressAutoPrior <- TRUE
 	if(is.logical(par.prior)) 
-	if(par.prior) suppressAutoPrior <- FALSE  
-	temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
+		if(par.prior) suppressAutoPrior <- FALSE  
+			temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
 	if(!is.logical(par.prior)){
 		if(!is.null(par.prior$slope.items))
 		for(i in 1:length(par.prior$slope.items))
@@ -262,7 +263,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	problemitems <- c()
 	index <- 1:nitems
 	sitems <- matrix(0,ncol=nitems,nrow=(nfact-1))
-	for(i in 1:32) sitems[specific[i],i] <- 1      
+	for(i in 1:nitems) sitems[specific[i],i] <- 1      
 	if(debug){
 		print(startvalues)
 		print(sitems)	 
