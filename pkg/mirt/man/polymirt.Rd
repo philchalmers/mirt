@@ -38,6 +38,8 @@ polymirt(data, nfact, guess = 0, prev.cor = NULL,
   \item{ncycles}{the maximum number of iterations to be performed}
   \item{burnin}{number of burn-in cycles to perform before beginning the SEM stage}
   \item{SEM.cycles}{number of stochastic EM cycles to perform before beginning the MH-RM algorithm}
+  \item{kdraws}{number of Metropolis-Hastings imputations of the factor scores at each iteration. Default is 1.}
+  \item{tol}{tolerance that must be reached before the model is returned}    
   \item{SE}{logical; display the standard errors?}
   \item{x}{an object of class \code{polymirt} to be plotted or printed}
   \item{object}{a model estimated from \code{polymirt} of class \code{polymirt}}

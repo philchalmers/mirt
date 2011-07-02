@@ -11,7 +11,7 @@
 }
 
 \usage{
-confmirt(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
+confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
     calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 
@@ -27,7 +27,7 @@ confmirt(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data.}
-  \item{sem.mod}{an object resembling the \code{sem} declaration of a confirmatory factor analysis, but with omitted residual variances.}
+  \item{sem.model}{an object resembling the \code{sem} declaration of a confirmatory factor analysis, but with omitted residual variances.}
   \item{guess}{starting values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item. When the value is greater than zero the parameter will be estimated.}
   \item{gmeans}{starting values for the group means. Can be entered as a single value to assign a global parameter or may be entered as a numeric vector for each factor. When the value is not equal to zero the parameter will be estimated.}
   \item{ncycles}{the maximum number of iterations to be performed}
