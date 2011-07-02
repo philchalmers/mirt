@@ -25,8 +25,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
 \S4method{fitted}{mirt}(object, digits = 3, ...)
 
-\S4method{plot}{mirt}(x, type = 'info', npts = 50,
-  rot = list(x = -70, y = 30, z = 10), ...)
+\S4method{plot}{mirt}(x, type = 'info', npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 
 \S4method{residuals}{mirt}(object, digits = 3, ...)
 

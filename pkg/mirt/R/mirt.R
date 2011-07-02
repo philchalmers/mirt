@@ -168,16 +168,16 @@ setMethod(
 				}
 			}
 			cat("\nLD matrix:\n\n")			
-			print(res,digits)			
+			res <- round(res,digits)					
 		}		
 		if(type == 'exp'){	
 			r <- object@tabdata[ ,ncol(object@tabdata)]
 			res <- (r - object@Pl * nrow(object@fulldata)) / 
 				sqrt(object@Pl * nrow(object@fulldata))	
-			cat("\nExpected values:\n\n")
-			print(res,digits)		
+			cat("\nStandardized residuals:\n\n")
+			res <- round(res,digits)				
 		}			
-		return(invisible(res))	
+		return(res)	
 	}
 )
 
@@ -235,7 +235,7 @@ setMethod(
 		tabdata <- cbind(object@tabdata,expected)
 		colnames(tabdata) <- c(colnames(object@fulldata),"freq","exp")	
 		print(tabdata)
-		invisible(expected)
+		invisible(tabdata)
 	}
 )
     

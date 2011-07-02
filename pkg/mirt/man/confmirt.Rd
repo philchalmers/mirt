@@ -11,7 +11,7 @@
 }
 
 \usage{
-confmirt <- function(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
+confmirt(data, sem.mod, guess = 0, gmeans = 0, ncycles = 2000,
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
     calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 

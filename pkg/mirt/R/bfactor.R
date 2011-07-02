@@ -55,7 +55,7 @@ setMethod(
 		colnames(fac) <- "facility"
 		loads <- round(cbind(F,h2,fac),digits)
 		rownames(loads) <- object@itemnames  
-		cat("Factor loadings: \n")
+		cat("\nFactor loadings: \n\n")
 		print(loads)
 		cat("\nSS loadings: ",round(SS,digits), "\n")
 		cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
@@ -76,7 +76,7 @@ setMethod(
 		parameters <- round(cbind(object@pars,object@guess,fac,A,B),digits)
 		colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d", "guess", 
 			"facility","mvdisc", "mvint")  
-		cat("Parameters with multivariate discrimination and intercept: \n")
+		cat("\nParameters with multivariate discrimination and intercept: \n\n")
 		print(parameters)	    
 		invisible(parameters)
 	}
@@ -121,16 +121,17 @@ setMethod(
 					}
 				}
 			}
-			cat("LD matrix:\n\n")			
-			print(res,digits)		
+			cat("\nLD matrix:\n\n")			
+			res <- round(res,digits)		
 		}
 		if(type == 'exp'){
-		  r <- object@tabdata[ ,ncol(object@tabdata)]
-		  res <- (r - object@Pl * nrow(object@fulldata)) / 
-			sqrt(object@Pl * nrow(object@fulldata))	  
-		  print(res,digits)
+			r <- object@tabdata[ ,ncol(object@tabdata)]
+			res <- (r - object@Pl * nrow(object@fulldata)) / 
+				sqrt(object@Pl * nrow(object@fulldata))	
+			cat("\nStandardized residuals:\n\n")	
+			res <- round(res,digits)	
 		}		
-		invisible(res)  
+		res  
 	}
 )
 
@@ -138,11 +139,11 @@ setMethod(
 	f = "fitted",
 	signature = signature(object = 'bfactorClass'),
 	definition = function(object, digits = 3, ...){  
-	  expected <- round(object@sampsize * object@Pl/sum(object@Pl),digits)  
-	  tabdata <- cbind(object@tabdata,expected)
-	  colnames(tabdata) <- c(object@itemnames, "freq", "exp")	
-	  print(tabdata)
-	  invisible(expected)
+		expected <- round(object@sampsize * object@Pl/sum(object@Pl),digits)  
+		tabdata <- cbind(object@tabdata,expected)
+		colnames(tabdata) <- c(object@itemnames, "freq", "exp")	
+		print(tabdata)
+		invisible(tabdata)
 	}
 )
 

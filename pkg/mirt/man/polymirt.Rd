@@ -12,18 +12,16 @@
 }
 
 \usage{
-polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
+polymirt(data, nfact, guess = 0, prev.cor = NULL,
 	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
     tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000,
     debug = FALSE, ...)
 
-\S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0,
-    digits = 3, ...)
+\S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
 
 \S4method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
 
-\S4method{plot}{polymirt}(x, npts = 50,
-  rot = list(x = -70, y = 30, z = 10), ...)
+\S4method{plot}{polymirt}(x, npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 
 \S4method{residuals}{polymirt}(object, digits = 3, ...)
 
@@ -67,7 +65,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL,
   }
 
   Using \code{plot} will plot the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions.
-  
+
   \code{coef} displays the item parameters with their associated standard errors, while use of \code{summary} transforms the slopes into a factor loadings metric. Also, factor loading values below a specified constant can be also be suppressed in \code{summary} to allow better visual clarity. Models may be compared by using the \code{anova} function, where a Chi-squared difference test and AIC difference values are displayed.
 }
 
@@ -114,6 +112,7 @@ coef(mod2)
 anova(mod1,mod2)
 
 ###########
+#data from the 'ltm' package in numeric format
 data(Science)
 (mod1 <- polymirt(Science,1))
 summary(mod1)

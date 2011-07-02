@@ -158,8 +158,9 @@ setMethod(
 			loc2 <- loc2 + K[j] - 1 	
 			}
 		}		
-		cat("LD matrix:\n\n")	
-		print(res,digits)    	
+		cat("\nLD matrix:\n\n")	
+		res <- round(res,digits)    	
+		res
 	}
 )
 

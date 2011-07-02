@@ -230,7 +230,8 @@ setMethod(
 			}
 		}	
 		cat("LD matrix:\n\n")	
-		print(res,digits)
+		res <- round(res,digits)
+		res
 	}
 )
 
