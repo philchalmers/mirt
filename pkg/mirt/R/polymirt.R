@@ -72,7 +72,7 @@ setMethod(
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
-				cat("\nFactor correlations: \n")
+				cat("\nFactor correlations: \n\n")
 				Phi <- rotF$Phi	  
 				Phi <- round(Phi, digits)
 				colnames(Phi) <- rownames(Phi) <- colnames(F)

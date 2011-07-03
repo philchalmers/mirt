@@ -48,12 +48,10 @@ setMethod(
 	definition = function(object, digits = 3, ...){
 		F <- round(object@F,digits)
 		h2 <- round(object@h2,digits)
-		SS <- colSums(F^2)
-		fac <- as.matrix(object@facility)
-		colnames(F) <- c('g',paste("F_", 1:(ncol(F)-1),sep=""))
-		names(h2) <- "h2"
-		colnames(fac) <- "facility"
-		loads <- round(cbind(F,h2,fac),digits)
+		SS <- colSums(F^2)		
+		colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
+		names(h2) <- "h2"		
+		loads <- round(cbind(F,h2),digits)
 		rownames(loads) <- object@itemnames  
 		cat("\nFactor loadings: \n\n")
 		print(loads)
@@ -122,16 +120,18 @@ setMethod(
 				}
 			}
 			cat("\nLD matrix:\n\n")			
-			res <- round(res,digits)		
+			res <- round(res,digits)	
+			return(res)	
 		}
 		if(type == 'exp'){
 			r <- object@tabdata[ ,ncol(object@tabdata)]
-			res <- (r - object@Pl * nrow(object@fulldata)) / 
-				sqrt(object@Pl * nrow(object@fulldata))	
-			cat("\nStandardized residuals:\n\n")	
-			res <- round(res,digits)	
-		}		
-		res  
+			res <- round((r - object@Pl * nrow(object@fulldata)) / 
+				sqrt(object@Pl * nrow(object@fulldata)),digits)
+			expected <- round(object@sampsize * object@Pl/sum(object@Pl),digits)  
+			tabdata <- cbind(object@tabdata,expected,res)
+			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")								
+			return(tabdata)
+		}				
 	}
 )
 

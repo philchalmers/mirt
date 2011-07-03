@@ -51,22 +51,19 @@ setMethod(
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
 			F[abs(F) < suppress] <- NA
-			h2 <- as.matrix(object@h2)
-			fac <- as.matrix(object@facility)	
+			h2 <- as.matrix(object@h2)				
 			SS <- apply(F^2,2,sum)
-			colnames(h2) <- "h2"
-			colnames(fac) <- "facility"
+			colnames(h2) <- "h2"			
 			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
 			cat("\nUnrotated factor loadings: \n\n")
-			loads <- round(cbind(F,h2,fac),digits)
+			loads <- round(cbind(F,h2),digits)
 			print(loads)	    	 
 			cat("\nSS loadings: ",round(SS,digits), "\n")
 			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
 			invisible(list(F,h2))
 		} else {	
 			F <- object@F
-			h2 <- as.matrix(object@h2)
-			fac <- as.matrix(object@facility)
+			h2 <- as.matrix(object@h2)			
 			colnames(F) <- paste("F_", 1:ncol(F),sep="")
 			colnames(h2) <- "h2"				
 			cat("\nRotation: ", rotate, "\n")
@@ -78,7 +75,7 @@ setMethod(
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
-				cat("\nFactor correlations: \n")
+				cat("\nFactor correlations: \n\n")
 				Phi <- rotF$Phi	  
 				Phi <- round(Phi, digits)
 				colnames(Phi) <- rownames(Phi) <- colnames(F)
@@ -168,16 +165,18 @@ setMethod(
 				}
 			}
 			cat("\nLD matrix:\n\n")			
-			res <- round(res,digits)					
+			res <- round(res,digits)
+			return(res)		
 		}		
 		if(type == 'exp'){	
 			r <- object@tabdata[ ,ncol(object@tabdata)]
-			res <- (r - object@Pl * nrow(object@fulldata)) / 
-				sqrt(object@Pl * nrow(object@fulldata))	
-			cat("\nStandardized residuals:\n\n")
-			res <- round(res,digits)				
-		}			
-		return(res)	
+			res <- round((r - object@Pl * nrow(object@fulldata)) / 
+				sqrt(object@Pl * nrow(object@fulldata)),digits)
+			expected <- round(N * object@Pl/sum(object@Pl),digits)  
+			tabdata <- cbind(object@tabdata,expected,res)
+			colnames(tabdata) <- c(colnames(fulldata), "freq", "exp", "std_res")								
+			return(tabdata)				
+		}					
 	}
 )
 
