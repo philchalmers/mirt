@@ -8,8 +8,12 @@ setMethod(
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")
-			cat("G^2 = ", round(x@G2,2), ", df = ", 
-				x@df, ", p = ", round(x@p,4), "\n", sep="")
+			if(x@G2 > 0)
+				cat("G^2 = ", round(x@G2,2), ", df = ", 
+					x@df, ", p = ", round(x@p,4), "\n", sep="")
+			else 
+				cat("G^2 = ", NA, ", df = ", 
+					x@df, ", p = ", NA, "\n", sep="")		
 		}
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
@@ -27,9 +31,13 @@ setMethod(
 		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
-			cat("AIC =", object@AIC, "\n")	
-			cat("G^2 = ", round(object@G2,2), ", df = ", 
-				object@df, ", p = ", round(object@p,4), "\n", sep="")
+			cat("AIC =", object@AIC, "\n")
+			if(object@G2 > 0)	
+				cat("G^2 = ", round(object@G2,2), ", df = ", 
+					object@df, ", p = ", round(object@p,4), "\n", sep="")
+			else 
+				cat("G^2 = ", NA, ", df = ", 
+					object@df, ", p = ", NA, "\n", sep="")
 		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")
@@ -224,13 +232,13 @@ setMethod(
 			sum(x$estgmeans) - length(zetas) + object@nconstvalues + 
 			nfact*(nfact - 1)/2 - 1)			
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-		if(G2){
+		if(G2){			
 			for (j in 1:nrow(tabdata)){          
 				TFvec <- colSums(ifelse(t(fulldata) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
 				rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
 			}
 			G2 <- 2 * sum(log(1/(N*rwmeans)))
-			p <- 1 - pchisq(G2,df) 
+			p <- 1 - pchisq(G2,df) 						
 			object@G2 <- G2	
 			object@p <- p
 		}	
@@ -296,7 +304,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		tmp <- paste(itemnames[i], "<->", itemnames[i])
 		sem.model <- rbind(sem.model,c(tmp,paste("th",i,sep=""),NA))		
 	}	
-	SEM <- sem.mod(sem.model,Rpoly,N)
+	SEM <- sem.mod(sem.model,Rpoly,N)	
 	ram <- SEM$ram	
 	coefs <- rep(.5,nrow(ram))
 	ramloads <- ram[ram[,1]==1,]
@@ -441,7 +449,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	startvalues <- pars	
 	stagecycle <- 1		
 	
-	for(cycles in 1:(ncycles + burnin + SEM.cycles))		
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))			
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
@@ -521,7 +529,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k				
 		grad <- grad[parind[sind]]		
-		ave.h <- ave.h[parind[sind],parind[sind]] 		
+		ave.h <- ave.h[parind[sind],parind[sind]] 
+		if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
 		if(printcycles){
 			if((cycles + 1) %% 10 == 0){
 				if(cycles < burnin)
@@ -554,11 +563,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()
-			}				
-			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
-			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]			
-			pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
-			pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]		
+			}			
+			pars[gcovind][pars[gcovind] > .95] <- parsold[gcovind][pars[gcovind] > .95]
+			pars[gcovind][pars[gcovind] < -.95] <- parsold[gcovind][pars[gcovind] < -.95]						
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	 
@@ -585,11 +592,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
 			flush.console()		
-		}	
-		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
-		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
-		pars[pars[gcovind] > 1] <- parsold[pars[gcovind] > 1]
-		pars[pars[gcovind] < -1] <- parsold[pars[gcovind] < -1]
+		}			
+		pars[gcovind][pars[gcovind] > .95] <- parsold[gcovind][pars[gcovind] > .95]
+		pars[gcovind][pars[gcovind] < -.95] <- parsold[gcovind][pars[gcovind] < -.95]
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 			
 		phi <- phi + gamma*(grad - phi)

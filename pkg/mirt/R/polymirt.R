@@ -13,9 +13,13 @@ setMethod(
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")
-			cat("G^2 = ", round(x@G2,2), ", df = ", 
-				x@df, ", p = ", round(x@p,4), "\n", sep="")
-		}				
+			if(x@G2 > 0)
+				cat("G^2 = ", round(x@G2,2), ", df = ", 
+					x@df, ", p = ", round(x@p,4), "\n", sep="")
+			else 
+				cat("G^2 = ", NA, ", df = ", 
+					x@df, ", p = ", NA, "\n", sep="")	
+		}					
 	} 
 )
 
@@ -34,8 +38,12 @@ setMethod(
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
 			cat("AIC =", object@AIC, "\n")
-			cat("G^2 = ", round(object@G2,2), ", df = ", 
-				object@df, ", p = ", round(object@p,4), "\n", sep="")
+			if(object@G2 > 0 )
+				cat("G^2 = ", round(object@G2,2), ", df = ", 
+					object@df, ", p = ", round(object@p,4), "\n", sep="")
+			else 
+				cat("G^2 = ", NA, ", df = ", 
+					object@df, ", p = ", NA, "\n", sep="")
 		}			
 	} 
 )
@@ -270,8 +278,12 @@ setMethod(
 						as.integer(nfact))		
 		}
 		rwmeans <- rowMeans(LL)
-		logLik <- sum(log(rwmeans))				
-		pats <- apply(fulldata,1,paste,collapse = "/")
+		logLik <- sum(log(rwmeans))
+		data <- object@data	
+		rownames(data) <- 1:N
+		data <- na.omit(data)
+		fullrows <- as.numeric(rownames(data))
+		pats <- apply(fulldata[fullrows,],1,paste,collapse = "/")
 		freqs <- table(pats)
 		nfreqs <- length(freqs)		
 		r <- as.vector(freqs)
@@ -289,7 +301,7 @@ setMethod(
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
 		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-		if(G2){
+		if(G2){				
 			for (j in 1:nrow(tabdata)){          
 				TFvec <- colSums(ifelse(t(fulldata) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
 				rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
@@ -609,7 +621,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()
-		mod <- logLik(mod,draws)		
+		mod <- logLik(mod,draws,...)		
 	}	
 	return(mod)	
 }
