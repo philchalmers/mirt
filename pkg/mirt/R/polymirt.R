@@ -13,7 +13,7 @@ setMethod(
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")
-			if(x@G2 > 0)
+			if(x@p < 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), "\n", sep="")
 			else 
@@ -38,7 +38,7 @@ setMethod(
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
 			cat("AIC =", object@AIC, "\n")
-			if(object@G2 > 0 )
+			if(object@p < 1)
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), "\n", sep="")
 			else 
@@ -256,8 +256,7 @@ setMethod(
 		zetas <- t(zetas)[!is.na(t(zetas))]		
 		mu <- rep(0,nfact)
 		sigma <- diag(nfact)		
-		LL <- matrix(0,N,draws)
-		theta <- matrix(0,N,nfact*draws)
+		LL <- matrix(0,N,draws)		
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		K <- object@K
@@ -278,12 +277,8 @@ setMethod(
 						as.integer(nfact))		
 		}
 		rwmeans <- rowMeans(LL)
-		logLik <- sum(log(rwmeans))
-		data <- object@data	
-		rownames(data) <- 1:N
-		data <- na.omit(data)
-		fullrows <- as.numeric(rownames(data))
-		pats <- apply(fulldata[fullrows,],1,paste,collapse = "/")
+		logLik <- sum(log(rwmeans))		
+		pats <- apply(fulldata,1,paste,collapse = "/")
 		freqs <- table(pats)
 		nfreqs <- length(freqs)		
 		r <- as.vector(freqs)
@@ -302,14 +297,28 @@ setMethod(
 		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		if(G2){				
-			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
-				rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
-			}
-			G2 <- 2 * sum(log(1/(N*rwmeans)))
-			p <- 1 - pchisq(G2,df) 
-			object@G2 <- G2	
-			object@p <- p
+			data <- object@data
+			if(any(is.na(data))){
+				object@G2 <- 0	
+				object@p <- 1					
+			} else {
+				pats <- apply(data,1,paste,collapse = "/")			
+				freqs <- table(pats)
+				nfreqs <- length(freqs)		
+				r <- as.vector(freqs)
+				ncolfull <- ncol(data)
+				tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
+				tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
+				tabdata <- cbind(tabdata,r)		
+				for (j in 1:nrow(tabdata)){          
+					TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
+					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
+				}
+				G2 <- 2 * sum(log(1/(N*rwmeans)))
+				p <- 1 - pchisq(G2,df) 
+				object@G2 <- G2	
+				object@p <- p
+			}	
 		}		
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
