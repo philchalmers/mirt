@@ -2,7 +2,7 @@
 \alias{expand.table}
 \title{Expand summary table of patterns and frequencies}
 \description{
-The \code{expand.table} function expands a summary table of unique response patterns to a full sized dataset. The response frequencies must be on the rightmost column of the object.
+The \code{expand.table} function expands a summary table of unique response patterns to a full sized data-set. The response frequencies must be on the rightmost column of the input data.
 }
 
 \usage{

@@ -19,9 +19,9 @@ fscores(object, ...)
 
 }
  \arguments{
-   \item{object}{a model of class \code{mirt} or \code{bfactor}}
+   \item{object}{a model of class \code{mirtClass} or \code{bfactorClass}}
    \item{full.scores}{if \code{FALSE} (default) then a summary table with factor scores for each unique pattern is displayed. Otherwise the original data matrix is returned with the computed factor scores}
-  \item{method}{type of factor score estimation method. Can be expected a-posteriori (\code{"EAP"}) or Bayes modal (\code{"MAP"})}   
+  \item{method}{type of factor score estimation method. Can be expected a-posteriori (\code{"EAP"}) or Bayes modal (\code{"MAP"})}
    \item{...}{additional arguments to be passed}
  }
 

@@ -22,7 +22,7 @@ itemplot(object, item, ...)
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 }
  \arguments{
-   \item{object}{a computed model of class \code{bfactor} or \code{mirt}}
+   \item{object}{a computed model of class \code{bfactorClass} or \code{mirtClass}}
    \item{item}{a single numerical value indicating which item to plot}
    \item{type}{type of graphic to plot, may be either \code{'curve'} for the response surface curve or \code{'info'} for the item information}
    \item{npts}{number of points to use per dimension. A higher value will make the graphs look smoother}

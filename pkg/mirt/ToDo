@@ -1,9 +1,8 @@
 Roughly in order of importance:
 
-- allow SE estimation of parameters with R's nlm optimizer
+- fix various bugs in confmirt
+- prior paramter distributions for polymirt and confmirt
 - expand bifactor and full information factor analysis to polytomous items (Gibbons 2007, Muraki 1995)
-- add adaptive quadrature for nfact > 5
-- allow for specific parameter constraints
-- add more extensive simulation data functions (different distributions, skew/kurtosis, better selectivity of dims)
+- MAP and EAP factor scores for polymirt and confmirt
+- add more extensive simulation data functions (different distributions, skew/kurtosis)
 
-	

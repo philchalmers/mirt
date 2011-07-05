@@ -292,8 +292,8 @@ setMethod(
 
 confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-	calcLL = TRUE, draws = 2000, debug = FALSE, ...){
-		
+	calcLL = TRUE, draws = 2000, debug = FALSE, ...)
+{		
 	Call <- match.call()   
 	itemnames <- colnames(data)
 	data <- as.matrix(data)		
@@ -409,12 +409,12 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	for(i in 1:J){
 		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]		
 		lamind <- c(lamind,Ksum[i]:(Ksum[i] + nfact - 1))
-		sind <- c(sind, rep(TRUE,K[i]-1), estlam[i,])
 		if(estGuess[i]){
 			pars[Ksum[i] - 2] <- guess[i]
 			gind <- c(gind,Ksum[i] - 2)
-			sind <- c(sind,TRUE)
-		}	
+			sind <- c(sind,FALSE)
+		}
+		sind <- c(sind, rep(TRUE,K[i]-1), estlam[i,])			
 	}
 	sind <- c(sind, estgmeans, estgcov[selgcov])
 	zetaind <- parind[is.na(pars)]		

@@ -2,7 +2,7 @@
 \alias{simdata}
 \title{Simulate response patterns from an underlying multivariate normal distribution}
 \description{
-Simulates response patterns with multivariate normal distributions.
+Simulates response patterns from multivariate normally distributed factor scores.
 }
 
 \usage{
@@ -11,12 +11,12 @@ simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = FALSE)
 }
  \arguments{
    \item{a}{a matrix of slope parameters. If slopes are to be constrained to zero then use \code{NA}}
-   \item{d}{a matrix of intercepts. The matrix should have as many columns as the item with the largest number of categories. To declare that the other values should not be included, replace the omitted values with \code{NA}}
+   \item{d}{a matrix of intercepts. The matrix should have as many columns as the item with the largest number of categories, and fill the empty locations with \code{NA}}
    \item{N}{sample size}
    \item{guess}{a vector of guessing parameters for each item; only applicable for dichotomous items. Must be either a scalar value that will affect all of the dichotomous items, or a vector with as many values as to be simulated items}
    \item{sigma}{a covariance matrix of the underlying distribution}
    \item{mu}{a mean vector of the underlying distribution}
-   \item{factor.loads}{logical; are the slope parameters in \code{a} in a factor loadings metric?} }
+   \item{factor.loads}{logical; are the slope parameters in \code{a} in the factor loadings metric?} }
 
 \details{
 Returns a data matrix simulated from the parameters.
@@ -75,7 +75,7 @@ dataset1 <- simdata(a, d, 2000)
 dataset2 <- simdata(a, d, 2000, mu = mu, sigma = sigma)
 
 ###An example of a mixed item, bifactor loadings pattern with correlated specific factors
-#factor loadings metric
+# can use factor loadings metric
 a <- matrix(c(
 .8,.4,NA,
 .4,.4,NA,
@@ -84,7 +84,7 @@ a <- matrix(c(
 .4,NA,.4,
 .7,NA,.4),ncol=3,byrow=TRUE)
 
-#first three items are dichotomous, next two have 3 categories, and the last has 2
+#first three items are dichotomous, next two have 4 categories, and the last has 3
 d <- matrix(c(
 -1.0,NA,NA,
  1.5,NA,NA,

@@ -11,7 +11,7 @@ data(Science)
 }
 
  \arguments{
-   \item{Science}{4 item data set borrowed from \code{ltm} package, first example of the \code{grm} function. See more complete documentation therein. }
+   \item{Science}{4 item data set borrowed from \code{\link[ltm]{ltm}} package, first example of the \code{\link[ltm]{grm}} function. See more complete documentation therein. }
  }
 
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}

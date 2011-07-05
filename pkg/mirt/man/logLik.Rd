@@ -5,7 +5,7 @@
 
 \title{Monte Carlo Log-Likelihood Calculation}
 \description{
-Calculate new objects that contain the Monte Carlo estimated observed log-likelihood values for \code{polymirt} and \code{confmirt} objects
+Calculates a new object that contain the Monte Carlo estimated observed log-likelihood values for \code{polymirt} and \code{confmirt} objects
 }
 
 \usage{
@@ -17,14 +17,14 @@ logLik(object, ...)
 
 }
  \arguments{
-   \item{object}{a model of class \code{mirt} or \code{bfactor}}
+   \item{object}{a model of class \code{mirtClass} or \code{bfactorClass}}
    \item{draws}{the number of Monte Carlo draws}
    \item{G2}{logical; estimate the G2 model fit statistic?}
    \item{...}{parameters that are passed}
  }
 
 \value{
- returns an object of \code{polymirt} or \code{confmirt} with the log-likelihood and standard error.
+ returns an object of class \code{polymirtClass} or \code{confmirtClass} with the log-likelihood, standard error, and (possibly) the G^2 model fit statistic.
 }
 
 \examples{

@@ -11,7 +11,7 @@ data(LSAT7)
 }
 
  \arguments{
-   \item{LSAT7}{data from Bock & Lieberman (1970); contains 5 dichotomously scored items obtained from the Law School Admissions Test. }
+   \item{LSAT7}{data from Bock & Lieberman (1970); contains 5 dichotomously scored items obtained from the Law School Admissions Test, section 7. }
  }
 
 \references{
