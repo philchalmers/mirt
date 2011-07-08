@@ -199,7 +199,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 }      
 
 draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
-	prior.t.var = diag(ncol(theta0))) 
+	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0))) 
 { 			
 	N <- nrow(fulldata)
 	J <- length(K)
@@ -208,12 +208,12 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	P0 <- P1 <- matrix(0,N,J)		
 	unif <- runif(N)
 	if(length(nfact) > 1)		
-		theta1 <- theta0 + rmvnorm(N,rep(0,ncol(theta0)), 
-			diag(rep(sqrt(cand.t.var),ncol(theta0)))) 
+		theta1 <- theta0 + rmvnorm(N,prior.mu, 
+			diag(rep(cand.t.var,ncol(theta0)))) 
 	else
-		theta1 <- theta0 + rnorm(N,0,sqrt(cand.t.var))							
-	den0 <- dmvnorm(theta0,rep(0,length(nfact)),prior.t.var)
-	den1 <- dmvnorm(theta1,rep(0,length(nfact)),prior.t.var)						
+		theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
+	den0 <- dmvnorm(theta0,prior.mu,prior.t.var)
+	den1 <- dmvnorm(theta1,prior.mu,prior.t.var)						
 	accept <- .Call("drawThetas",
 					as.numeric(unif),
 					as.numeric(den0),
@@ -231,7 +231,8 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 					as.integer(ncol(lambdas)))
 	log.lik <- accept[N+1]			
 	accept <- as.logical(accept[-(N+1)])				
-	theta1[!accept,] <- theta0[!accept,]			
+	theta1[!accept,] <- theta0[!accept,]
+	theta1 <- scale(theta1) %*% diag(sqrt(diag(prior.t.var))) + prior.mu
 	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
 	attr(theta1, "log.lik") <- log.lik		
 	return(theta1) 

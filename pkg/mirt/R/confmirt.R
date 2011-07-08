@@ -291,7 +291,7 @@ setMethod(
 #Main Function
 
 confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000, 
-	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
+	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 {		
 	Call <- match.call()   
@@ -435,14 +435,14 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	#preamble for MRHM algorithm			
 	theta0 <- matrix(0,N,nfact)	    
 	cand.t.var <- 1			
-	tmp <- .05
+	tmp <- .1
 	for(i in 1:30){			
 		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
 		if(i > 5){		
-			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + tmp 
+			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
 			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
 			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
-			else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - tmp
+			else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - 2*tmp
 			if (cand.t.var < 0){
 				cand.t.var <- tmp		
 				tmp <- tmp / 2
@@ -491,8 +491,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 					loc <- loc + 1
 				}
 			}
-		}		
-		sig <- sig + t(sig) - diag(diag(sig))		
+		}
+		if(nfact > 1)		
+			sig <- sig + t(sig) - diag(diag(sig))		
 		grouplist$sig <- sig			
 		
 		#Step 1. Generate m_k datasets of theta 
@@ -654,10 +655,11 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 				loc <- loc + 1
 			}
 		}
-	}		
-	sig <- sig + t(sig) - diag(diag(sig))
-	if(nfact > 1) SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
-		else SEsig <- NA
+	}
+	if(nfact > 1) {	
+		sig <- sig + t(sig) - diag(diag(sig))
+		SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
+	} else SEsig <- NA
 	tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
 	loc <- 1
 	for(i in 1:J){

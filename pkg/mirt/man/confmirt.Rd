@@ -12,7 +12,7 @@
 
 \usage{
 confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
-	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
+	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
     calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 
 \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
