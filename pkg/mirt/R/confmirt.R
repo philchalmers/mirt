@@ -422,7 +422,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	gmeansind <- (length(pars) + 1):(length(pars) + nfact)
 	gcovind <- (gmeansind[length(gmeansind)] + 1):(gmeansind[length(gmeansind)] 
 		+ nfact*(nfact+1)/2)	
-	pars <- c(pars, gmeans, gcov[selgcov])	
+	pars <- c(pars, gmeans, gcov[selgcov])
+	gpars <- c(gmeans, gcov[selgcov])	
 	npars <- length(pars)
 	ngpars <- nfact + nfact*(nfact + 1)/2
 	converge <- 1    	
@@ -437,7 +438,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	cand.t.var <- 1			
 	tmp <- .1
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov)
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov,gmeans)
 		if(i > 5){		
 			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
 			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
@@ -480,7 +481,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		zetas <- pars[zetaind]
 		guess <- rep(0,J)
 		guess[estGuess] <- pars[gind]		
-		grouplist$u <- pars[gmeansind]
+		mu <- grouplist$u <- pars[gmeansind]
 		sig <- matrix(0,nfact,nfact)	
 		tmp <- pars[gcovind]
 		loc <- 1
@@ -498,9 +499,9 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		
 		#Step 1. Generate m_k datasets of theta 
 		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,
-			fulldata,K,itemloc,cand.t.var,sig)	
+			fulldata,K,itemloc,cand.t.var,sig,mu)	
 		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,
-			K,itemloc,cand.t.var,sig)
+			K,itemloc,cand.t.var,sig,mu)
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 		
@@ -597,16 +598,16 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			tmp[constlam == constvalues[i]] <- 
 				mean(tmp[constlam == constvalues[i]])
 			correct[lamind] <- tmp
-		}
-		if(all(gamma*correct < tol)) conv <- conv + 1
-			else conv <- 0		
-		if(conv == 3) break	
-		pars <- pars + gamma*correct
+		}		
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
 			flush.console()		
-		}			
+		}	
+		if(all(gamma*correct < tol)) conv <- conv + 1
+			else conv <- 0		
+		if(conv == 3) break	
+		pars <- pars + gamma*correct	
 		pars[gcovind][pars[gcovind] > .95] <- parsold[gcovind][pars[gcovind] > .95]
 		pars[gcovind][pars[gcovind] < -.95] <- parsold[gcovind][pars[gcovind] < -.95]
 		

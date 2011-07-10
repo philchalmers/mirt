@@ -231,8 +231,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 					as.integer(ncol(lambdas)))
 	log.lik <- accept[N+1]			
 	accept <- as.logical(accept[-(N+1)])				
-	theta1[!accept,] <- theta0[!accept,]
-	theta1 <- scale(theta1) %*% diag(sqrt(diag(prior.t.var))) + prior.mu
+	theta1[!accept,] <- theta0[!accept,]	
 	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
 	attr(theta1, "log.lik") <- log.lik		
 	return(theta1) 

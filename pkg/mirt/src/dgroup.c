@@ -106,6 +106,30 @@ static double inner(double *a, const double *b, const double *c,
 	return ret;
 }
 
+static void symMat(double *dsig, const unsigned int *nfact)
+{
+	unsigned int i, j, k = 0;
+	double tmp[*nfact][*nfact];
+	
+	for(i = 0; i < *nfact; i++){
+		for(j = 0; j < *nfact; j++){
+			tmp[i][j] = dsig[k];
+			k++;
+		}
+	}
+	for(i = 0; i < *nfact; i++)
+		for(j = 0; j < *nfact; j++)
+			if(i < j)
+				tmp[j][i] = tmp[i][j];
+	k = 0;
+	for(i = 0; i < *nfact; i++){
+		for(j = 0; j < *nfact; j++){
+			dsig[k] = tmp[i][j];
+			k++;
+		}
+	}	
+}
+
 SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
 	SEXP RZdif, SEXP RN, SEXP Rnfact, SEXP Rnpars) 
 {   
@@ -151,7 +175,9 @@ SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ,
 				for(k = nfact; k < npars; k++){
 					dsig1[k-nfact] = derv1[k];
 					dsig2[k-nfact] = derv2[k];
-				}																
+				}
+				symMat(dsig1, &nfact);
+				symMat(dsig2, &nfact);
 				matrixMult(tmpmat, invSig, dsig2, &nfact); 
 				matrixMult(dinvSig2, tmpmat, invSig, &nfact);				
 				for(k = 0; k < nsig; k++)				

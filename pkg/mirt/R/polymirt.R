@@ -567,8 +567,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		correction[correction > .5] <- .5
 		correction[correction < -0.5] <- -0.5	
 		if(any(estGuess))
-			correction[gind] <- 0					
-		pars <- pars + gamma*correction
+			correction[gind] <- 0							
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep='')
@@ -577,7 +576,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
 			else conv <- 0	
 		if(conv == 3) break		
-		parsold <- pars	
+		parsold <- pars
+		pars <- pars + gamma*correction	
 		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
 		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
 		
