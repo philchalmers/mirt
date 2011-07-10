@@ -246,7 +246,7 @@ setMethod(
 setMethod(
 	f = "logLik",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, draws = 3000, G2 = TRUE){	
+	definition = function(object, draws = 2000, G2 = TRUE){	
 		nfact <- ncol(object@Theta)
 		N <- nrow(object@Theta)
 		J <- length(object@K)
@@ -276,8 +276,9 @@ setMethod(
 						as.integer(N),
 						as.integer(nfact))		
 		}
-		rwmeans <- rowMeans(LL)
-		logLik <- sum(log(rwmeans))		
+		LL[LL < 1e-11] <- 1e-11
+		rwmeans <- rowMeans(log(LL))
+		logLik <- sum(rwmeans)		
 		pats <- apply(fulldata,1,paste,collapse = "/")
 		freqs <- table(pats)
 		nfreqs <- length(freqs)		
@@ -291,8 +292,9 @@ setMethod(
 		for (i in 1:N) logN <- logN + log(i)
 		for (i in 1:length(r)) 
 			for (j in 1:r[i]) 
-				logr[i] <- logr[i] + log(j)    		
-		logLik <- logLik + logN/sum(logr)		
+				logr[i] <- logr[i] + log(j) 
+		if(sum(logr) != 0)								
+			logLik <- logLik + logN/sum(logr)		
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
 		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
@@ -309,12 +311,13 @@ setMethod(
 				ncolfull <- ncol(data)
 				tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
 				tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-				tabdata <- cbind(tabdata,r)		
+				tabdata <- cbind(tabdata,r)	
+				erwmeans <- exp(rwmeans)		
 				for (j in 1:nrow(tabdata)){          
 					TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
-					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
+					erwmeans[TFvec] <- erwmeans[TFvec]/r[j]
 				}
-				G2 <- 2 * sum(log(1/(N*rwmeans)))
+				G2 <- 2 * sum(log(1/(N*erwmeans)))
 				p <- 1 - pchisq(G2,df) 
 				object@G2 <- G2	
 				object@p <- p

@@ -11,9 +11,9 @@ Calculates a new object that contain the Monte Carlo estimated observed log-like
 \usage{
 logLik(object, ...)
 
-\S4method{logLik}{polymirt}(object, draws = 3000, G2 = TRUE)
+\S4method{logLik}{polymirt}(object, draws = 2000, G2 = TRUE)
 
-\S4method{logLik}{confmirt}(object, draws = 3000, G2 = TRUE)
+\S4method{logLik}{confmirt}(object, draws = 2000, G2 = TRUE)
 
 }
  \arguments{
