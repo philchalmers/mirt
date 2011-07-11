@@ -204,10 +204,9 @@ setMethod(
 						as.integer(J),
 						as.integer(N),
 						as.integer(nfact))		
-		}
-		LL[LL < 1e-11] <- 1e-11
-		rwmeans <- rowMeans(log(LL))
-		logLik <- sum(rwmeans)				
+		}		
+		rwmeans <- rowMeans(LL)
+		logLik <- sum(log(rwmeans))				
 		pats <- apply(fulldata,1,paste,collapse = "/")
 		freqs <- table(pats)
 		nfreqs <- length(freqs)		
@@ -247,13 +246,12 @@ setMethod(
 				ncolfull <- ncol(data)
 				tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
 				tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-				tabdata <- cbind(tabdata,r)
-				erwmeans <- exp(rwmeans)	
+				tabdata <- cbind(tabdata,r)					
 				for (j in 1:nrow(tabdata)){          
 					TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
-					erwmeans[TFvec] <- erwmeans[TFvec]/r[j]
+					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
 				}
-				G2 <- 2 * sum(log(1/(N*erwmeans)))
+				G2 <- 2 * sum(log(1/(N*rwmeans)))
 				p <- 1 - pchisq(G2,df) 
 				object@G2 <- G2	
 				object@p <- p
