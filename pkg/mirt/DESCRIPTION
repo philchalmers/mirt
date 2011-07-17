@@ -1,6 +1,6 @@
 Package: mirt
-Version: 0.1-14
-Date: 2011-07-04
+Version: 0.1-15
+Date: 2011-07-13
 Type: Package
 Title: Multidimensional Item Response Theory
 Author: Phil Chalmers <rphilip.chalmers@gmail.com>

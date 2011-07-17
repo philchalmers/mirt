@@ -130,7 +130,7 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'mirtClass'),
-	definition = function(object, type = 'LD', digits = 3, ...){   	
+	definition = function(object, restype = 'LD', digits = 3, ...){   	
 		Theta <- object@Theta
 		fulldata <- object@fulldata	
 		N <- nrow(fulldata)	
@@ -140,7 +140,7 @@ setMethod(
 		zetas <- object@pars[,(nfact+1)]
 		guess <- object@guess
 		guess[is.na(guess)] <- 0		
-		if(type == 'LD'){
+		if(restype == 'LD'){
 			res <- matrix(0,J,J)
 			diag(res) <- NA
 			colnames(res) <- rownames(res) <- colnames(fulldata)
@@ -168,7 +168,7 @@ setMethod(
 			res <- round(res,digits)
 			return(res)		
 		}		
-		if(type == 'exp'){	
+		if(restype == 'exp'){	
 			r <- object@tabdata[ ,ncol(object@tabdata)]
 			res <- round((r - object@Pl * nrow(object@fulldata)) / 
 				sqrt(object@Pl * nrow(object@fulldata)),digits)

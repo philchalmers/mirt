@@ -185,7 +185,7 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, digits = 3, ...){ 	
+	definition = function(object, restype = 'LD', digits = 3, ...){ 	
 		fulldata <- object@fulldata	
 		data <- object@data
 		data[data==99] <- NA
@@ -207,39 +207,48 @@ setMethod(
 		colnames(res) <- rownames(res) <- colnames(data)
 		prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
 		prior <- prior/sum(prior)
-		loc <- loc2 <- 1	
-		for(i in 1:J){
-			if(i > 1) loc <- loc + K[i-1] - 1	
-			loc2 <- 1
-			for(j in 1:J){			
-				if(i < j){
-					if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
-					else { 
-						P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
-						P1 <- cbind(1 - P1, P1)
-					}	
-					if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
-					else {
-						P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
-						P2 <- cbind(1 - P2, P2)
+		loc <- loc2 <- 1
+		if(restype == 'LD'){	
+			for(i in 1:J){
+				if(i > 1) loc <- loc + K[i-1] - 1	
+				loc2 <- 1
+				for(j in 1:J){			
+					if(i < j){
+						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+						else { 
+							P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+							P1 <- cbind(1 - P1, P1)
+						}	
+						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+						else {
+							P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+							P2 <- cbind(1 - P2, P2)
+						}
+						tab <- table(data[,i],data[,j])		
+						Etab <- matrix(0,K[i],K[j])
+						for(k in 1:K[i])
+							for(m in 1:K[j])						
+								Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+						s <- gamma.cor(tab) - gamma.cor(Etab)
+						if(s == 0) s <- 1				
+						res[j,i] <- sum(((tab - Etab)^2)/Etab) /
+							((K[i] - 1) * (K[j] - 1)) * sign(s)
+						res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
 					}
-					tab <- table(data[,i],data[,j])		
-					Etab <- matrix(0,K[i],K[j])
-					for(k in 1:K[i])
-						for(m in 1:K[j])						
-							Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-					s <- gamma.cor(tab) - gamma.cor(Etab)
-					if(s == 0) s <- 1				
-					res[j,i] <- sum(((tab - Etab)^2)/Etab) /
-						((K[i] - 1) * (K[j] - 1)) * sign(s)
-					res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
+				loc2 <- loc2 + K[j] - 1 	
 				}
-			loc2 <- loc2 + K[j] - 1 	
-			}
-		}	
-		cat("LD matrix:\n\n")	
-		res <- round(res,digits)
-		res
+			}	
+			cat("LD matrix:\n\n")	
+			res <- round(res,digits)
+			print(res)
+		} 
+		if(restype == 'exp'){
+			tabdata <- object@tabdata
+			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
+			tabdata <- round(cbind(tabdata,res),digits)
+			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
+			tabdata
+		}
 	}
 )
 
@@ -310,15 +319,19 @@ setMethod(
 				ncolfull <- ncol(data)
 				tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
 				tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-				tabdata <- cbind(tabdata,r)							
+				tabdata <- cbind(tabdata,r)	
+				expected <- rep(0,nrow(tabdata))	
 				for (j in 1:nrow(tabdata)){          
 					TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
-					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
+					expected[j] <- mean(rwmeans[TFvec])
+					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]					
 				}
+				tabdata <- cbind(tabdata,expected*N)
 				G2 <- 2 * sum(log(1/(N*rwmeans)))
 				p <- 1 - pchisq(G2,df) 
 				object@G2 <- G2	
 				object@p <- p
+				object@tabdata <- tabdata
 			}	
 		}		
 		object@logLik <- logLik

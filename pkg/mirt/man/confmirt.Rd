@@ -19,7 +19,7 @@ confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 
 \S4method{summary}{confmirt}(object, digits = 3, ...)
 
-\S4method{residuals}{confmirt}(object, digits = 3, ...)
+\S4method{residuals}{confmirt}(object, restype = 'LD', digits = 3, ...)
 
 \S4method{anova}{confmirt}(object, object2, ...)
 
@@ -38,6 +38,7 @@ confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
   \item{printcycles}{logical; display iteration history during estimation?}
   \item{calcLL}{logical; calculate the log-likelihood via Monte Carlo integration?}
   \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
+  \item{restype}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
   \item{debug}{logical; turn on debugging features?}
   \item{object}{an object of class \code{confmirt}.}
   \item{object2}{an object of class \code{confmirt}.}

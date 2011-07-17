@@ -1,8 +1,8 @@
 Roughly in order of importance:
 
-- fix various bugs in confmirt
+- standard errors for factor scores
 - prior paramter distributions for polymirt and confmirt
-- expand bifactor and full information factor analysis to polytomous items (Gibbons 2007, Muraki 1995)
+- expand bifactor and mirt to polytomous items (Gibbons 2007, Muraki 1995)
 - MAP and EAP factor scores for polymirt and confmirt
 - add more extensive simulation data functions (different distributions, skew/kurtosis)
-
+- multiple group estimation for DIF

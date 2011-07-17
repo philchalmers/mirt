@@ -23,7 +23,7 @@ polymirt(data, nfact, guess = 0, prev.cor = NULL,
 
 \S4method{plot}{polymirt}(x, npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 
-\S4method{residuals}{polymirt}(object, digits = 3, ...)
+\S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, ...)
 
 \S4method{anova}{polymirt}(object, object2, ...)
 
@@ -50,6 +50,7 @@ polymirt(data, nfact, guess = 0, prev.cor = NULL,
   \item{rot}{allows rotation of the 3D graphics}
   \item{printcycles}{logical; display iteration history during estimation?}
   \item{calcLL}{logical; calculate the log-likelihood?}
+  \item{restype}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
   \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}

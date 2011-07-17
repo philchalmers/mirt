@@ -27,7 +27,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
 \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 
-\S4method{residuals}{mirt}(object, digits = 3, ...)
+\S4method{residuals}{mirt}(object, restype = 'LD', digits = 3, ...)
 
 }
 
@@ -50,6 +50,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   \item{type}{type of plot to view; can be \code{'curve'} for the total test score as a function of two dimensions, or \code{'info'} to show the test information function for two dimensions}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
   \item{rot}{allows rotation of the 3D graphics}
+  \item{restype}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}

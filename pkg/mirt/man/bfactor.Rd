@@ -20,7 +20,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
 
 \S4method{fitted}{bfactor}(object, digits = 3, ...)
 
-\S4method{residuals}{bfactor}(object, type = 'LD', digits = 3, ...)
+\S4method{residuals}{bfactor}(object, restype = 'LD', digits = 3, ...)
 
 }
 
@@ -35,7 +35,7 @@ bfactor(fulldata, specific, guess = 0, prev.cor=NULL, par.prior = FALSE,
   \item{ncycles}{the number of EM iterations to be performed}
   \item{EMtol}{if the largest change in the EM cycle is less than this value then the EM iteration are stopped early}
   \item{object}{a model estimated from \code{bfactor} of class \code{bfactor}}
-  \item{type}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
+  \item{restype}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
   \item{digits}{number of significant digits to be rounded}
   \item{nowarn}{logical; suppress warnings from dependent packages?}
   \item{debug}{logical; turn on debugging features?}

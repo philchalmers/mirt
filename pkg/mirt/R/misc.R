@@ -203,11 +203,10 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 { 			
 	N <- nrow(fulldata)
 	J <- length(K)
-	nfact <- 1:ncol(theta0)		
-	locz <- 1		
+	nfact <- ncol(theta0)				
 	P0 <- P1 <- matrix(0,N,J)		
 	unif <- runif(N)
-	if(length(nfact) > 1)		
+	if(nfact > 1)		
 		theta1 <- theta0 + rmvnorm(N,prior.mu, 
 			diag(rep(cand.t.var,ncol(theta0)))) 
 	else
