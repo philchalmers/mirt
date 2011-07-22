@@ -52,7 +52,7 @@ confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 
   \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation (i.e., full-information). Residuals are computed using the LD statistic (Chen & Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood more accurately see \code{\link{logLik}}.
 
-  Specification of the confirmatory item factor analysis model follows many of the rules in the SEM framework for confirmatory factor analysis. The variances of the latent factors should be fixed to a constant for identification (commonly fixed to 1), and this is the recommended practice since the code is optimized for this method. Parameters may be fixed to specific values by placing a constant in the 4th column of the \code{specify.model} function call with the parameter named \code{NA} in the 3rd column. Item slopes may also be constrained to be equal by labeling them with the same parameter name in the 3rd column. Guessing parameters may be specified for dichotomous items, but are treated as constants, and if a guessing parameter is declared for a polychotomous item it is ignored.
+  Specification of the confirmatory item factor analysis model follows many of the rules in the SEM framework for confirmatory factor analysis. The variances of the latent factors are automatically fixed to 1 to ensure proper identification. Additional parameters may be fixed to constant values by placing the value in the 4th column of the \code{specify.model} function call with the parameter named \code{NA} in the 3rd column. Item slopes may also be constrained to be equal by labeling them with the same parameter name in the 3rd column. Guessing parameters may be specified for dichotomous items, but are treated as constants, and if a guessing parameter is declared for a polychotomous item it is ignored.
 
   \code{coef} displays the item parameters with their associated standard errors, while use of \code{summary} transforms the slopes into a factor loadings metric. Also, nested models may be compared by using the \code{anova} function, where a Chi-squared difference test and AIC difference values are displayed.
 
@@ -110,9 +110,7 @@ model.1 <- specify.model()
     F2 -> Item_6,   lam26, NA
     F2 -> Item_7,   lam27, NA
     F2 -> Item_8,   lam28, NA
-    F1 <-> F2,      phi12, NA
-    F1 <-> F1,      NA,     1
-    F2 <-> F2,      NA,     1
+    F1 <-> F2,      phi12, NA    
 
 mod1 <- confmirt(dataset,model.1)
 coef(mod1)
@@ -130,9 +128,7 @@ model.2 <- specify.model()
     F2 -> Item_6,   lam26, NA
     F2 -> Item_7,   lam27, NA
     F2 -> Item_8,   lam27, NA
-    F1 <-> F2,      phi12, NA
-    F1 <-> F1,      NA,     1
-    F2 <-> F2,      NA,     1
+    F1 <-> F2,      phi12, NA   
 
 mod2 <- confmirt(dataset,model.2)
 anova(mod2,mod1)
@@ -155,10 +151,7 @@ model.3 <- specify.model()
     F3 -> Item_5,   lam35, NA
     F3 -> Item_6,   lam36, NA                	
     F3 -> Item_7,   lam37, NA
-    F3 -> Item_8,   lam38, NA
-    F1 <-> F1,      NA,     1
-    F2 <-> F2,      NA,     1
-    F3 <-> F3,      NA,     1
+    F3 -> Item_8,   lam38, NA   
 	
 mod3 <- confmirt(dataset,model.3)
 coef(mod3)

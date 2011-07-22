@@ -7,7 +7,7 @@ setMethod(
 		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
-			cat("AIC =", x@AIC, "\n")
+			cat("AIC =", x@AIC, "\n")			
 			if(x@p < 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), "\n", sep="")
@@ -31,7 +31,7 @@ setMethod(
 		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
-			cat("AIC =", object@AIC, "\n")
+			cat("AIC =", object@AIC, "\n")			
 			if(object@p < 1)	
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), "\n", sep="")
@@ -326,8 +326,20 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	guess[K > 2] <- 0
 	estGuess <- guess > 0	
 	Rpoly <- cormod(na.omit(data),K,guess)
-	sem.model <- unclass(sem.model)
-	itemnames <- colnames(data)
+	sem.model <- unclass(sem.model)	
+	factors <- c()
+	for(i in 1:nrow(sem.model)){				
+		tmp <- sub('<->','->',sem.model[i,1])
+		tmp <- sub('<-','->',tmp)		
+		tmp <- strsplit(tmp,'->')[[1]]
+		tmp <- sub(' ', '', tmp)
+		factors <- c(factors,tmp)	
+	}
+	factors <- setdiff(factors,itemnames)
+	for(i in 1:length(factors)){
+		tmp <- paste(factors[i], "<->", factors[i])
+		sem.model <- rbind(sem.model,c(tmp,NA,1))
+	}	
 	for(i in 1:J){
 		tmp <- paste(itemnames[i], "<->", itemnames[i])
 		sem.model <- rbind(sem.model,c(tmp,paste("th",i,sep=""),NA))		

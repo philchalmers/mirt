@@ -16,9 +16,10 @@ setMethod(
 			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
 				x@quadpts, " quadrature points.\n", sep="")
 		cat("Log-likelihood =", x@log.lik, "\n")
-		cat("AIC =", x@AIC, "\n")
+		cat("AIC =", x@AIC, "\n")		
 		cat("G^2 = ", round(x@X2,2), ", df = ", 
 			x@df, ", p = ", round(x@p,4), "\n", sep="")
+		
 	}
 )
 
@@ -37,9 +38,10 @@ setMethod(
 			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
 				object@quadpts,	" quadrature points.\n", sep="")
 		cat("Log-likelihood =", object@log.lik, "\n")
-		cat("AIC =", object@AIC, "\n")
+		cat("AIC =", object@AIC, "\n")		
 		cat("G^2 = ", round(object@X2,2), ", df = ", 
 			object@df, ", p = ", round(object@p,4), "\n", sep="")
+			
 	}
 )
 

@@ -12,7 +12,7 @@ setMethod(
 			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")		
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
-			cat("AIC =", x@AIC, "\n")
+			cat("AIC =", x@AIC, "\n")			
 			if(x@p < 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), "\n", sep="")
@@ -37,7 +37,8 @@ setMethod(
 			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
-			cat("AIC =", object@AIC, "\n")
+			cat("AIC =", object@AIC, "\n")			
+				"\n", sep="")
 			if(object@p < 1)
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), "\n", sep="")
