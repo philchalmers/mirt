@@ -20,7 +20,8 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{EMiter}:}{Object of class \code{"numeric"}, number of EM iterations  }
     \item{\code{pars}:}{Object of class \code{"matrix"}, parameters }
     \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters }
-    \item{\code{AIC}:}{Object of class \code{"numeric"}, AIC }
+    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
+    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian Information Criteria }
     \item{\code{X2}:}{Object of class \code{"numeric"}, chi-squared }
     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
     \item{\code{log.lik}:}{Object of class \code{"numeric"}, log-likelihood }
@@ -29,7 +30,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{itemnames}:}{Object of class \code{"character"},  item names}
     \item{\code{tabdata}:}{Object of class \code{"matrix"},  tabulated data}
-    \item{\code{sampsize}:}{Object of class \code{"numeric"},  sample size}
+    \item{\code{N}:}{Object of class \code{"numeric"},  sample size}
     \item{\code{Pl}:}{Object of class \code{"numeric"},  p for tabdata}
     \item{\code{Theta}:}{Object of class \code{"matrix"}, theta grid }
     \item{\code{fulldata}:}{Object of class \code{"matrix"},  binary data}

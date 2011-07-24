@@ -1,4 +1,4 @@
-########################################## 
+##########################################  N
 
 setMethod(
 	f = "print",
@@ -16,6 +16,7 @@ setMethod(
 			" quadrature points. \n", sep="")
 		cat("Log-likelihood = ", x@log.lik, "\n")
 		cat("AIC = ", x@AIC, "\n")		
+		cat("BIC = ", x@BIC, "\n")
 		cat("G^2 = ", round(x@X2,2), ", df = ", 
 		x@df, ", p = ", round(x@p,4), "\n")
 	}
@@ -37,6 +38,7 @@ setMethod(
 				object@quadpts,	" quadrature points.\n", sep="")
 		cat("Log-likelihood = ", object@log.lik, "\n")
 		cat("AIC = ", object@AIC, "\n")		
+		cat("BIC = ", object@BIC, "\n")
 		cat("G^2 = ", round(object@X2,2), ", df = ", 
 		object@df, ", p = ", round(object@p,4), "\n")
 	}
@@ -127,7 +129,7 @@ setMethod(
 			r <- object@tabdata[ ,ncol(object@tabdata)]
 			res <- round((r - object@Pl * nrow(object@fulldata)) / 
 				sqrt(object@Pl * nrow(object@fulldata)),digits)
-			expected <- round(object@sampsize * object@Pl/sum(object@Pl),digits)  
+			expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
 			tabdata <- cbind(object@tabdata,expected,res)
 			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")								
 			return(tabdata)
@@ -139,7 +141,7 @@ setMethod(
 	f = "fitted",
 	signature = signature(object = 'bfactorClass'),
 	definition = function(object, digits = 3, ...){  
-		expected <- round(object@sampsize * object@Pl/sum(object@Pl),digits)  
+		expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
 		tabdata <- cbind(object@tabdata,expected)
 		colnames(tabdata) <- c(object@itemnames, "freq", "exp")	
 		print(tabdata)
@@ -203,7 +205,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	freqs <- table(pats)
 	nfreqs <- length(freqs)
 	r <- as.vector(freqs)
-	sampsize <- nrow(fulldata)
+	N <- nrow(fulldata)
 	K <- rep(2,nitems)  
 	tabdata <- unlist(strsplit(cbind(names(freqs)), "/"))
 	tabdata <- matrix(as.numeric(tabdata), nfreqs, nitems, TRUE)
@@ -369,13 +371,14 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	log.lik <- sum(r * log(Pl))
 	logN <- 0
 	logr <- rep(0,length(r))
-	for (i in 1:sampsize) logN <- logN + log(i)
+	for (i in 1:N) logN <- logN + log(i)
 	for (i in 1:length(r)) 
-	for (j in 1:r[i]) 
-	logr[i] <- logr[i] + log(j)	
+		for (j in 1:r[i]) 
+			logr[i] <- logr[i] + log(j)	
 	log.lik <- log.lik + logN/sum(logr)
-	AIC <- (-2) * log.lik + 3 * length(specific)
-	X2 <- 2 * sum(r * log(r / (sampsize*Pl)))  
+	AIC <- (-2) * log.lik + 6 * length(specific)
+	BIC <- (-2) * log.lik + 3 * length(specific)*log(N)
+	X2 <- 2 * sum(r * log(r / (N*Pl)))  
 	df <- length(r) - 1 - 2*nitems - length(specific)
 	p <- 1 - pchisq(X2,df)
 
@@ -387,9 +390,9 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	h2 <- rowSums(F^2)  
 
 	mod <- new('bfactorClass',EMiter=cycles, pars=pars, guess=guess, AIC=AIC, X2=X2, 
-		df=df, log.lik=log.lik, p=p, F=F, h2=h2, itemnames=itemnames, 
-		tabdata=tabdata, sampsize=sampsize, Pl=Pl, Theta=Theta, fulldata=fulldata, 
+		df=df, log.lik=log.lik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
+		tabdata=tabdata, N=N, Pl=Pl, Theta=Theta, fulldata=fulldata, 
 		logicalfact=logicalfact, facility=facility, specific=specific,
 		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,Call=Call)  
 	return(mod)  
-}
+} 

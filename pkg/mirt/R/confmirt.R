@@ -8,6 +8,7 @@ setMethod(
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")			
+			cat("BIC =", x@BIC, "\n")
 			if(x@p < 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), "\n", sep="")
@@ -32,6 +33,7 @@ setMethod(
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
 			cat("AIC =", object@AIC, "\n")			
+			cat("BIC =", object@BIC, "\n")
 			if(object@p < 1)	
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), "\n", sep="")
@@ -242,6 +244,7 @@ setMethod(
 			sum(x$estgmeans) - length(zetas) + object@nconstvalues + 
 			nfact*(nfact - 1)/2 - 1)			
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
+		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
 		if(G2){			
 			data <- object@data
 			if(any(is.na(data))){
@@ -273,6 +276,7 @@ setMethod(
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
+		object@BIC <- BIC
 		object@df <- df
 		return(object)
 	} 	
@@ -295,10 +299,12 @@ setMethod(
 		}
 		X2 <- 2*object2@logLik - 2*object@logLik 
 		AICdiff <- object@AIC - object2@AIC  
+		BICdiff <- object@BIC - object2@BIC  
 		se <- round(object@SElogLik + object2@SElogLik,3)		
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
 			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
+		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='')
 	}		
 )
 

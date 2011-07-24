@@ -21,7 +21,7 @@ polymirt(data, nfact, guess = 0, prev.cor = NULL,
 
 \S4method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
 
-\S4method{plot}{polymirt}(x, npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
+\S4method{plot}{polymirt}(x, npts = 50, type = 'info', rot = list(x = -70, y = 30, z = 10), ...)
 
 \S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, ...)
 
@@ -52,6 +52,7 @@ polymirt(data, nfact, guess = 0, prev.cor = NULL,
   \item{calcLL}{logical; calculate the log-likelihood?}
   \item{restype}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
   \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
+  \item{type}{either \code{'info'} or \code{'infocontour'} to plot test information plots}
   \item{debug}{logical; turn on debugging features?}
   \item{...}{additional arguments to be passed}
 }

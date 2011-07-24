@@ -13,6 +13,7 @@ setMethod(
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")			
+			cat("BIC =", x@BIC, "\n")
 			if(x@p < 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), "\n", sep="")
@@ -36,8 +37,9 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
 		if(length(object@logLik) > 0){
-			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
+			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
 			cat("AIC =", object@AIC, "\n")							
+			cat("BIC =", object@BIC, "\n")
 			if(object@p < 1)
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), "\n", sep="")
@@ -139,10 +141,10 @@ setMethod(
 setMethod(
 	f = "plot",
 	signature = signature(x = 'polymirtClass', y = "missing"),
-	definition = function(x, y, npts = 50, 
+	definition = function(x, y, type = 'info', npts = 50, 
 		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
-	{  
-		type = 'curve'
+	{  		
+		if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
 		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
 		K <- x@K		
 		nfact <- ncol(x@Theta)
@@ -171,14 +173,21 @@ setMethod(
 			}			
 		}		
 		plt <- data.frame(cbind(info,Theta))
-		if(nfact > 1){
-			require(lattice)			
-			colnames(plt) <- c("info", "Theta1", "Theta2")
-			wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
-				zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-				screen = rot)	
-		} else 
-			plot(Theta, info, type='l',main = 'Test Information', xlab = 'Theta', ylab='Information')
+		if(nfact == 2){						
+			colnames(plt) <- c("info", "Theta1", "Theta2")			
+			if(type == 'infocontour')												
+				contour(theta, theta, matrix(info,length(theta),length(theta)), 
+					main = paste("Test Information Contour"), xlab = "Theta 1", ylab = "Theta 2")
+			if(type == 'info')
+				return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
+					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+					screen = rot))
+		} else {
+			if(type == 'info')
+				plot(Theta, info, type='l',main = 'Test Information', xlab = 'Theta', ylab='Information')
+			if(type == 'infocontour') 
+				cat('No \'contour\' plots for 1-dimensional models\n')
+		}		
 	}	  
 )	
 
@@ -306,6 +315,7 @@ setMethod(
 		SElogLik <- sqrt(var(log(rwmeans)) / draws)
 		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
+		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
 		if(G2){				
 			data <- object@data
 			if(any(is.na(data))){
@@ -337,10 +347,12 @@ setMethod(
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
+		object@BIC <- BIC
 		object@df <- as.integer(df)
 		return(object)
 	} 	
 )
+
 
 setMethod(
 	f = "anova",
@@ -359,10 +371,12 @@ setMethod(
 		}
 		X2 <- 2*object2@logLik - 2*object@logLik 
 		AICdiff <- object@AIC - object2@AIC
+		BICdiff <- object@BIC - object2@BIC
 		se <- round(object@SElogLik + object2@SElogLik,3)	
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
 			" (SE = ", se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')  
+		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='') 
 	}		
 )
 

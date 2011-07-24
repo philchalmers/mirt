@@ -15,16 +15,16 @@ itemplot(object, item, ...)
 \S4method{itemplot}{mirt}(object, item, type = 'info',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 
-\S4method{itemplot}{bfactor}(object, item, type = 'curve',
+\S4method{itemplot}{bfactor}(object, item, type = 'info',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 
-\S4method{itemplot}{polymirt}(object, item,
+\S4method{itemplot}{polymirt}(object, item, type = 'info',
   npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 }
  \arguments{
    \item{object}{a computed model of class \code{bfactorClass} or \code{mirtClass}}
    \item{item}{a single numerical value indicating which item to plot}
-   \item{type}{type of graphic to plot, may be either \code{'curve'} for the response surface curve or \code{'info'} for the item information}
+   \item{type}{type of graphic to plot, may be either \code{'curve'} for the response surface curve, \code{'info'} for the item information, \code{'contour'} for item probability contours, or \code{'infocontour'} for information contour plot. Note that \code{polymirtClass} objects can only display information plots}
    \item{npts}{number of points to use per dimension. A higher value will make the graphs look smoother}
    \item{rot}{allows rotation of the 3D graphics}
    \item{...}{additional arguments to be passed}

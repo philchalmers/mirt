@@ -10,11 +10,10 @@ Description: Analysis of dichotomous and polychotomous response data using laten
 		Includes the multivariate two- and three-parameter logistic 
 		models, confirmatory bifactor analysis, and polytomous confirmatory
 		and exploratory item response models. 
-Depends: R (>= 2.10), methods, psych, GPArotation, mvtnorm
+Depends: R (>= 2.10), methods, lattice, psych, GPArotation, mvtnorm
 Imports: SparseM, sem
 LazyLoad: yes
 LazyData: yes
-Suggests: lattice
 Repository: R-Forge
 License: GPL (>= 2)
 URL: 

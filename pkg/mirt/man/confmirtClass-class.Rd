@@ -33,6 +33,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
+    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian Information Criteria }
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }

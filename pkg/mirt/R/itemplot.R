@@ -4,7 +4,7 @@ setMethod(
 	definition = function(object, item, type = 'info', npts = 50,
 		rot = list(x = -70, y = 30, z = 10), ...)
 	{  
-		if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
+		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		nfact <- ncol(object@Theta)
 		a <- as.matrix(object@pars[ ,1:nfact])
 		d <- object@pars[ ,ncol(object@pars)]
@@ -17,31 +17,44 @@ setMethod(
 		Theta <- thetaComb(theta, nfact) 
 		P <- P.mirt(a[item, ],d[item],as.matrix(Theta),g[item])  
 		Pstar <- P.mirt(a[item, ],d[item],as.matrix(Theta),0)  		  
-		if(nfact == 2){
-			require(lattice)
-			if(type == 'info'){
-				I <- (P * (1 - P)) * Pstar/P * A[item,]^2 
+		if(nfact == 2){			
+			I <- (P * (1 - P)) * Pstar/P * A[item,]^2
+			if(type == 'info'){				 
 				plt <- data.frame(cbind(I,Theta))
 				colnames(plt) <- c('I','Theta1','Theta2')
-				wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item", item,"Information"), 
+				return(wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item", item,"Information"), 
 					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-					screen = rot)
-			} else {  
+					screen = rot))
+			} 
+			if(type == 'curve'){	
 				plt <- data.frame(cbind(P,Theta))
 				colnames(plt) <- c('P','Theta1','Theta2')
-				wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item", item,"Characteristic Surface"), 
-					zlab = "P", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-					screen = rot)
+				return(wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item", item,
+					"Characteristic Surface"), zlab = "P", xlab = "Theta 1", ylab = "Theta 2", 
+					scales = list(arrows = FALSE), screen = rot))
 			}		
+			if(type == 'contour'){
+				plt <- data.frame(cbind(P,Theta))
+				colnames(plt) <- c('P','Theta1','Theta2')
+				contour(theta, theta, matrix(P,length(theta),length(theta)), 
+					main = paste("Item", item,"Probability Contour"), xlab = "Theta 1", ylab = "Theta 2")			
+			}
+			if(type == 'infocontour'){
+				plt <- data.frame(cbind(I,Theta))
+				colnames(plt) <- c('I','Theta1','Theta2')
+				contour(theta, theta, matrix(I,length(theta),length(theta)), 
+					main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")		
+			}
 		} else {
 			if(type == 'curve')  
 				plot(Theta, P, type='l',main = paste("Item", item, "Characteristic Curve"), 
 					xlab = 'Theta', ylab='Probability')
-			else {
+			if(type == 'info'){ 
 				I <- (P * (1 - P)) * Pstar/P * a[item,]^2 
 				plot(Theta, I, type='l',main = paste('Item', item, 'Information'), xlab = 'Theta', 
 					ylab='Information')
-			} 	
+			}
+			if(type == 'contour' || type == 'infocontour') cat('No \'contour\' plots for 1-dimensional models\n')
 		}  
 	}
 )
@@ -52,7 +65,7 @@ setMethod(
 	definition = function(object, item, type = 'info', npts = 50, 
 		rot = list(x = -70, y = 30, z = 10), ...)
 	{
-		if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
+		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		a <- as.matrix(object@pars[ ,1:(ncol(object@pars) - 1)])
 		d <- object@pars[ ,ncol(object@pars)]
 		g <- object@guess
@@ -63,29 +76,41 @@ setMethod(
 		Theta <- thetaComb(theta, 2)		
 		P <- P.bfactor(a[item,],d[item],Theta,g[item],logicalfact[item, ])
 		Pstar <- P.bfactor(a[item,],d[item],Theta,0,logicalfact[item, ])		    
-		require(lattice)
-		if(type == 'info'){
-			I <- (P * (1 - P)) * Pstar/P * A^2 
+		I <- (P * (1 - P)) * Pstar/P * A^2		
+		if(type == 'info'){			 
 			plt <- data.frame(cbind(I,Theta))
 			colnames(plt) <- c('I','Theta1','Theta2')		
-			wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
-				zlab = "I", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE))
-		} else { 	    
+			return(wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
+				zlab = "I", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE)))
+		}		
+		if(type == 'curve'){
 			plt <- data.frame(cbind(P,Theta))	
 			colnames(plt) <- c('P','Theta1','Theta2')		
-			wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item",item, "Probability Surface"), 
-				zlab = "P", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE))
+			return(wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item",item, "Probability Surface"), 
+				zlab = "P", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE)))
 		}	  
+		if(type == 'contour'){
+			plt <- data.frame(cbind(P,Theta))
+			colnames(plt) <- c('P','Theta1','Theta2')
+			contour(theta, theta, matrix(P,length(theta),length(theta)), 
+				main = paste("Item", item,"Probability Contour"), xlab = "General", ylab = "Specific")			
+		}
+		if(type == 'infocontour'){
+			plt <- data.frame(cbind(I,Theta))
+			colnames(plt) <- c('I','Theta1','Theta2')
+			contour(theta, theta, matrix(I,length(theta),length(theta)), 
+				main = paste("Item", item,"Information Contour"), xlab = "General", ylab = "Specific")		
+		}
 	}
 )
 
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'polymirtClass', item = 'numeric'),
-	definition = function(object, item, npts = 50,
+	definition = function(object, item, type = 'info', npts = 50,
 		rot = list(x = -70, y = 30, z = 10), ...)
-	{
-		type = 'info'	
+	{		
+		if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
 		if(object@K[item] > 2){
 			K <- object@K		
 			nfact <- ncol(object@Theta)
@@ -107,16 +132,21 @@ setMethod(
 			if(nfact == 1)	
 				plot(Theta, info, type='l',main = paste('Item', item,'Information'), 
 					xlab = 'Theta', ylab='Information')
-			else {	
-				require(lattice)
+			else {					
 				colnames(plt) <- c('info','Theta1','Theta2')
-				wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
-					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-					screen = rot)	
+				if(type == 'info')
+					return(wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
+						zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+						screen = rot))				
+				if(type == 'infocontour'){										
+					contour(theta, theta, matrix(info,length(theta),length(theta)), 
+						main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")					
+				}
 			}	
-		} else 
+		} else {
 			class(object) <- 'mirtClass'
 			itemplot(object,item,type,npts,rot)		 
-	 }
+		}	
+	}
 )
 

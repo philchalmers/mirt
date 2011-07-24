@@ -17,6 +17,7 @@ setMethod(
 				x@quadpts, " quadrature points.\n", sep="")
 		cat("Log-likelihood =", x@log.lik, "\n")
 		cat("AIC =", x@AIC, "\n")		
+		cat("BIC =", x@BIC, "\n")
 		cat("G^2 = ", round(x@X2,2), ", df = ", 
 			x@df, ", p = ", round(x@p,4), "\n", sep="")
 		
@@ -39,6 +40,7 @@ setMethod(
 				object@quadpts,	" quadrature points.\n", sep="")
 		cat("Log-likelihood =", object@log.lik, "\n")
 		cat("AIC =", object@AIC, "\n")		
+		cat("BIC =", object@BIC, "\n")
 		cat("G^2 = ", round(object@X2,2), ", df = ", 
 			object@df, ", p = ", round(object@p,4), "\n", sep="")
 			
@@ -123,9 +125,11 @@ setMethod(
 		df <- object@df - object2@df  
 		X2 <- 2*object2@log.lik - 2*object@log.lik 
 		AICdiff <- object@AIC - object2@AIC    
+		BICdiff <- object@BIC - object2@BIC
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
 		df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3), "\n")  
+		cat("BIC difference = ", round(BICdiff,3), "\n")
 	}
 )
 
@@ -188,7 +192,7 @@ setMethod(
 	definition = function(x, y, type = 'info', npts = 50, 
 		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
 	{  
-		if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
+		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
 		a <- as.matrix(x@pars[ ,1:(ncol(x@pars) - 1)])
 		d <- x@pars[ ,ncol(x@pars)]
@@ -201,30 +205,44 @@ setMethod(
 		P <- matrix(0, ncol=length(g), nrow = nrow(as.matrix(Theta)))
 		for(i in 1:nrow(a)) P[ ,i] <- P.mirt(a[i, ],d[i],as.matrix(Theta),g[i])  
 		Ptot <- rowSums(P) 
-		if(ncol(a) == 2){
-			require(lattice)
-			if(type == 'info'){
-				I <- (P * (1 - P)) %*% A^2 
-				plt <- data.frame(cbind(I,Theta))
-				colnames(plt) <- c("I", "Theta1", "Theta2")
-				wireframe(I ~ Theta1 + Theta2, data = plt, main = "Test Information", 
-					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", 
-					scales = list(arrows = FALSE), screen = rot)
-			} else {  
+		if(ncol(a) == 2) {			
+			I <- (P * (1 - P)) %*% A^2	
+			if(type == 'curve'){
 				plt <- data.frame(cbind(Ptot,Theta))
 				colnames(plt) <- c("Ptot", "Theta1", "Theta2")
-				wireframe(Ptot ~ Theta1 + Theta2, data = plt, main = "Test score surface", 
+				return(wireframe(Ptot ~ Theta1 + Theta2, data = plt, main = "Test Score Surface", 
 					zlab = "Test \nScore", xlab = "Theta 1", ylab = "Theta 2", 
-					scales = list(arrows = FALSE), screen = rot)
+					scales = list(arrows = FALSE), screen = rot))
 			}	
+			if(type == 'contour'){
+				plt <- data.frame(cbind(Ptot,Theta))
+				colnames(plt) <- c('Ptot','Theta1','Theta2')
+				contour(theta, theta, matrix(Ptot,length(theta),length(theta)), 
+					main = "Test Scores Contour", xlab = "Theta 1", ylab = "Theta 2")			
+			}			
+			if(type == 'infocontour'){
+				plt <- data.frame(cbind(I,Theta))
+				colnames(plt) <- c('I','Theta1','Theta2')
+				contour(theta, theta, matrix(I,length(theta),length(theta)), 
+					main = "Test Information Contour", xlab = "Theta 1", ylab = "Theta 2")		
+			}				
+			if(type == 'info'){				 
+				plt <- data.frame(cbind(I,Theta))
+				colnames(plt) <- c("I", "Theta1", "Theta2")
+				return(wireframe(I ~ Theta1 + Theta2, data = plt, main = "Test Information", 
+					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", 
+					scales = list(arrows = FALSE), screen = rot))
+			}
 		} else {
 			if(type == 'curve')  
 				plot(Theta, Ptot, type='l', main = 'Test score plot', xlab = 'Theta', ylab='Test Score')
-			 else {
+			if(type == 'info'){
 				I <- (P * (1 - P)) %*% a^2 
-				plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')
-			} 	
-		}  
+				plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')			
+			}	
+			if(type == 'contour' || type == 'infocontour') 
+				cat('No \'contour\' plots for 1-dimensional models\n')					
+		} 			
 	}		
 )	
 
@@ -288,7 +306,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	nfreqs <- length(freqs)
 	K <- rep(2,nitems)
 	r <- as.vector(freqs)
-	sampsize <- nrow(fulldata) 
+	N <- nrow(fulldata) 
 	tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
 	tabdata <- matrix(as.numeric(tabdata),nfreqs,nitems,TRUE)
 	tabdata <- cbind(tabdata,r)    
@@ -429,15 +447,16 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	log.lik <- sum(r*log(Pl))
 	logN <- 0
 	logr <- rep(0,length(r))
-	for (i in 1:sampsize) logN <- logN + log(i)
+	for (i in 1:N) logN <- logN + log(i)
 	for (i in 1:length(r)) 
 		for (j in 1:r[i]) 
 			logr[i] <- logr[i] + log(j)    
 	df <- (length(r) - 1) - nitems*(nfact + 1) + nfact*(nfact - 1)/2 
-	X2 <- 2 * sum(r * log(r/(sampsize*Pl)))
+	X2 <- 2 * sum(r * log(r/(N*Pl)))
 	log.lik <- log.lik + logN/sum(logr)	
 	p <- 1 - pchisq(X2,df)  
 	AIC <- (-2) * log.lik + 2 * length(pars)
+	BIC <- (-2) * log.lik + length(pars)*log(N)
 
 	# pars to FA loadings
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
@@ -452,7 +471,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	h2 <- rowSums(F^2) 
 
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p,
-		AIC=AIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
+		AIC=AIC, BIC=BIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
 		fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, quadpts=quadpts,
 		Call=Call)	  
 	return(mod)    
