@@ -37,8 +37,7 @@ setMethod(
 			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')			
-			cat("AIC =", object@AIC, "\n")			
-				"\n", sep="")
+			cat("AIC =", object@AIC, "\n")							
 			if(object@p < 1)
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), "\n", sep="")
@@ -175,11 +174,11 @@ setMethod(
 		if(nfact > 1){
 			require(lattice)			
 			colnames(plt) <- c("info", "Theta1", "Theta2")
-			wireframe(info ~ Theta1 + Theta2, data = plt, main = "Item Information", 
+			wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
 				zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
 				screen = rot)	
 		} else 
-			plot(Theta, info, type='l',main = 'Item Information', xlab = 'Theta', ylab='Information')
+			plot(Theta, info, type='l',main = 'Test Information', xlab = 'Theta', ylab='Information')
 	}	  
 )	
 

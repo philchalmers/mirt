@@ -23,23 +23,23 @@ setMethod(
 				I <- (P * (1 - P)) * Pstar/P * A[item,]^2 
 				plt <- data.frame(cbind(I,Theta))
 				colnames(plt) <- c('I','Theta1','Theta2')
-				wireframe(I ~ Theta1 + Theta2, data = plt, main = "Item Information", 
+				wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item", item,"Information"), 
 					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
 					screen = rot)
 			} else {  
 				plt <- data.frame(cbind(P,Theta))
 				colnames(plt) <- c('P','Theta1','Theta2')
-				wireframe(P ~ Theta + Theta, data = plt, main = "Item Characteristic Surface", 
+				wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item", item,"Characteristic Surface"), 
 					zlab = "P", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
 					screen = rot)
 			}		
 		} else {
 			if(type == 'curve')  
-				plot(Theta, P, type='l',main = 'Item Characteristic Curve', 
+				plot(Theta, P, type='l',main = paste("Item", item, "Characteristic Curve"), 
 					xlab = 'Theta', ylab='Probability')
 			else {
 				I <- (P * (1 - P)) * Pstar/P * a[item,]^2 
-				plot(Theta, I, type='l',main = 'Item Information', xlab = 'Theta', 
+				plot(Theta, I, type='l',main = paste('Item', item, 'Information'), xlab = 'Theta', 
 					ylab='Information')
 			} 	
 		}  
@@ -49,7 +49,7 @@ setMethod(
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'bfactorClass', item = 'numeric'),
-	definition = function(object, item, type = 'curve', npts = 50, 
+	definition = function(object, item, type = 'info', npts = 50, 
 		rot = list(x = -70, y = 30, z = 10), ...)
 	{
 		if (!type %in% c('curve','info')) stop(type, " is not a valid plot type.")
@@ -60,25 +60,20 @@ setMethod(
 		A <- as.matrix(sqrt(apply(a^2,1,sum)))[item]
 		B <- -d/A  
 		theta <- seq(-4,4,length.out=npts)
-		Theta <- thetaComb(theta, 2)
-		Pstar <- P <- matrix(0, ncol=length(g), nrow = nrow(Theta))
-		for(i in 1:nrow(a)){
-			P[ ,i] <- P.bfactor(a[i,],d[i],Theta,g[i],logicalfact[i, ])
-			Pstar[ ,i] <- P.mirt(a[i, ],d[i],as.matrix(Theta),0)
-		}	
-		P <- P[ ,item]     
-		Pstar <- Pstar[ ,item]     
+		Theta <- thetaComb(theta, 2)		
+		P <- P.bfactor(a[item,],d[item],Theta,g[item],logicalfact[item, ])
+		Pstar <- P.bfactor(a[item,],d[item],Theta,0,logicalfact[item, ])		    
 		require(lattice)
 		if(type == 'info'){
-			I <- (P * (1 - P)) * Pstar/P * A[item]^2 
+			I <- (P * (1 - P)) * Pstar/P * A^2 
 			plt <- data.frame(cbind(I,Theta))
 			colnames(plt) <- c('I','Theta1','Theta2')		
-			wireframe(I ~ Theta1 + Theta2, data = plt, main = "Item Information", 
+			wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
 				zlab = "I", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE))
 		} else { 	    
 			plt <- data.frame(cbind(P,Theta))	
 			colnames(plt) <- c('P','Theta1','Theta2')		
-			wireframe(P ~ Theta1 + Theta2, data = plt, main = "Item Probability Surface", 
+			wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item",item, "Probability Surface"), 
 				zlab = "P", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE))
 		}	  
 	}
@@ -110,16 +105,18 @@ setMethod(
 			}	
 			plt <- data.frame(cbind(info,Theta))		
 			if(nfact == 1)	
-				plot(Theta, info, type='l',main = 'Item Information', xlab = 'Theta', ylab='Information')
+				plot(Theta, info, type='l',main = paste('Item', item,'Information'), 
+					xlab = 'Theta', ylab='Information')
 			else {	
 				require(lattice)
 				colnames(plt) <- c('info','Theta1','Theta2')
-				wireframe(info ~ Theta1 + Theta2, data = plt, main = "Item Information", 
+				wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
 					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
 					screen = rot)	
 			}	
 		} else 
-			itemplot.mirt(object,item,type,npts,rot)		 
+			class(object) <- 'mirtClass'
+			itemplot(object,item,type,npts,rot)		 
 	 }
 )
 
