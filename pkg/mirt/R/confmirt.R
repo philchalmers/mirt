@@ -54,21 +54,17 @@ setMethod(
 	definition = function(object, digits = 3, ...)
 	{
 		nfact <- ncol(object@F)		
-		F <- object@F
-		h2 <- as.matrix(object@h2)		
-		colnames(F) <- paste("F_", 1:ncol(F),sep="")
-		colnames(h2) <- "h2"				
+		F <- object@F		
+		colnames(F) <- paste("F_", 1:ncol(F),sep="")						
 		SS <- apply(F^2,2,sum)			
 		cat("\nFactor loadings metric: \n")
-		print(cbind(F,h2),digits)		
+		print(cbind(F),digits)		
 		cat("\nSS loadings: ",round(SS,digits), "\n")		
 		cat("\nFactor correlations: \n")
 		Phi <- cov2cor(object@gpars$sig)	  
 		Phi <- round(Phi, digits)
 		colnames(Phi) <- rownames(Phi) <- colnames(F)
-		print(Phi)		
-		if(any(h2 > 1)) 
-			warning("Solution has heywood cases. Interpret with caution.") 
+		print(Phi)				
 		invisible(F)  	  
 	}
 )
@@ -311,12 +307,13 @@ setMethod(
 ####################
 #Main Function
 
-confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000, 
+confmirt <- function(data, model, guess = 0, gmeans = 0, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 {		
 	Call <- match.call()   
 	itemnames <- colnames(data)
+	keywords <- c('SLOPE','INT','COV','MEAN','START')
 	data <- as.matrix(data)		
 	colnames(data) <- itemnames	
 	J <- ncol(data)
@@ -330,73 +327,11 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])	
 	guess[K > 2] <- 0
-	estGuess <- guess > 0	
-	Rpoly <- cormod(na.omit(data),K,guess)
-	sem.model <- unclass(sem.model)	
-	factors <- c()
-	for(i in 1:nrow(sem.model)){				
-		tmp <- sub('<->','->',sem.model[i,1])
-		tmp <- sub('<-','->',tmp)		
-		tmp <- strsplit(tmp,'->')[[1]]
-		tmp <- sub(' ', '', tmp)
-		factors <- c(factors,tmp)	
-	}
-	factors <- setdiff(factors,itemnames)
-	for(i in 1:length(factors)){
-		tmp <- paste(factors[i], "<->", factors[i])
-		sem.model <- rbind(sem.model,c(tmp,NA,1))
-	}	
-	for(i in 1:J){
-		tmp <- paste(itemnames[i], "<->", itemnames[i])
-		sem.model <- rbind(sem.model,c(tmp,paste("th",i,sep=""),NA))		
-	}	
-	SEM <- sem.mod(sem.model,Rpoly,N)	
-	ram <- SEM$ram	
-	coefs <- rep(.5,nrow(ram))
-	ramloads <- ram[ram[,1]==1,]
-	ramloads[,3] <- ramloads[,3] - J
-	constvalues <- unique(ramloads[,4])[table(ramloads[,4]) > 1]
-	nconstvalues <- 0
-	if(length(constvalues) > 0)
-		for(i in 1:length(constvalues))
-			nconstvalues <- nconstvalues + sum(ramloads[,4] == constvalues[i]) - 1
-	groups <- matrix(ram[ram[,2] > J,],ncol=5)	
-	groups[,2:3] <- groups[,2:3] - J	
-	nfact <- sum(groups[,2] == groups[,3])
-	if(2*nfact >= J) stop('Model is not identified.')	
-	if(length(gmeans) == 1)	gmeans <- rep(gmeans,nfact)					
-	if(length(gmeans) > J || length(guess) < J) 
-		stop("The number of gmeans parameters is incorrect.")
-	estgmeans <- gmeans != 0	
-	gcov <- selgcov <- estgcov <- matrix(FALSE,nfact,nfact)
-	selgcov <- lower.tri(selgcov, diag = TRUE)	
-	est <- is.na(groups[,5])
-	for(i in 1:nrow(groups)){ 
-		i1 <- groups[i,2]
-		i2 <- groups[i,3]
-		if(groups[i,4] != 0)
-			gcov[i1,i2] <- gcov[i2,i1] <- .1
-		else 
-			gcov[i1,i2] <- gcov[i2,i1] <- groups[i,5] 	
-		if(est[i]) estgcov[i1,i2] <- estgcov[i2,i1] <- TRUE					
-	}	
-	estgcov <- (estgcov + selgcov) == 2
-	loads <- tmplambdas <- matrix(0,J,nfact)
-	estlam <- matrix(FALSE,J,nfact)
-	constlam <- matrix(0,J,nfact)
-	for(i in 1:nrow(ramloads)){
-		item <- ramloads[i,2]
-		if(!is.na(ramloads[i,5])){
-			tmplambdas[item,ramloads[i,3]] <- ramloads[i,5]
-		} else {	
-			estlam[item,ramloads[i,3]] <- TRUE			
-			loads[item,ramloads[i,3]] <- coefs[ramloads[i,4]]
-			if(any(ramloads[i,4] == constvalues)) 
-				constlam[item,ramloads[i,3]] <- constvalues[ramloads[i,4] == constvalues]
-		}
-	}
-	constlam <- as.vector(t(constlam))
-	itemloc <- cumsum(c(1,K))
+	estGuess <- guess > 0
+	itemloc <- cumsum(c(1,K))	
+	model <- matrix(model$x,ncol=2)
+	factorNames <- setdiff(model[,1],keywords) 
+	nfact <- length(factorNames)	
 	index <- 1:J	
 	fulldata <- fulldata2 <- matrix(0,N,sum(K))
 	Names <- NULL
@@ -417,8 +352,31 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		fulldata2[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy	
 	}	
 	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0
-	cs <- sqrt(abs(1-rowSums(loads^2)))	
-	lambdas <- loads + tmplambdas
+		
+	#slopes specification
+	estlam <- matrix(FALSE, ncol = nfact, nrow = J)	
+	for(i in 1:nfact){
+		tmp <- model[model[,1] == factorNames[i],2]
+		if(any(regexpr(",",tmp)))
+			tmp <- strsplit(tmp,",")[[1]]
+		popout <- c()	
+		for(j in 1:length(tmp)){
+			if(regexpr("-",tmp[j]) > 1){
+				popout <- c(popout,j)
+				tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1]])
+				tmp2 <- as.character(tmp2[1]:tmp2[2])
+				tmp <- c(tmp,tmp2)
+			}
+		}
+		if(length(popout != 0))	
+			estlam[as.numeric(tmp[-popout]),i] <- TRUE
+		else 
+			estlam[as.numeric(tmp),i] <- TRUE
+	}
+	lambdas <- ifelse(estlam, .5, 0)		
+		
+	#INT
+	cs <- sqrt(abs(1-rowSums(lambdas^2)))	
 	zetas <- rep(0,ncol(fulldata) - J)	
 	loc <- 1	
 	for(i in 1:J){
@@ -434,39 +392,108 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			loc <- loc + K[i] - 1	
 		}		
 	}		
-	npars <- length(lambdas) + length(zetas) + sum(estGuess) 
-	parind <- 1:npars
-	pars <- constrained <- rep(NA,npars)
-	Ksum <- cumsum(K + nfact - 1 + estGuess) - (nfact-1)
-	sind <- lamind	<- gind <- c()	 
-	for(i in 1:J){
-		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]		
-		lamind <- c(lamind,Ksum[i]:(Ksum[i] + nfact - 1))
-		if(estGuess[i]){
-			pars[Ksum[i] - 2] <- guess[i]
-			gind <- c(gind,Ksum[i] - 2)
-			sind <- c(sind,FALSE)
-		}
-		sind <- c(sind, rep(TRUE,K[i]-1), estlam[i,])			
-	}
-	sind <- c(sind, estgmeans, estgcov[selgcov])
-	zetaind <- parind[is.na(pars)]		
-	pars[is.na(pars)] <- zetas
-	gmeansind <- (length(pars) + 1):(length(pars) + nfact)
-	gcovind <- (gmeansind[length(gmeansind)] + 1):(gmeansind[length(gmeansind)] 
-		+ nfact*(nfact+1)/2)	
-	pars <- c(pars, gmeans, gcov[selgcov])
-	gpars <- c(gmeans, gcov[selgcov])	
-	npars <- length(pars)
-	ngpars <- nfact + nfact*(nfact + 1)/2
-	converge <- 1    	
-	if(debug){
-		print(lambdas)
-		print(zetas)
-		print(guess)
-	}	
+	estzetas <- list()
+	estzetas2 <- c()
+	ind1 <- 1
+	for(i in 1:J){ 
+		estzetas[[i]] <- rep(TRUE,length((ind1):(K[i] + ind1 - 2)))		
+		estzetas2 <- c(estzetas2,estzetas[[i]])
+		ind1 <- ind1 + K[i] - 1
+	}		
+		
+	#MEANS
+	if(length(gmeans) == 1) gmeans <- rep(gmeans,nfact)
+	estgmeans <- rep(FALSE,nfact)	
 	
-	#preamble for MRHM algorithm			
+	#COV
+	estgcov <- matrix(FALSE,nfact,nfact)
+	find <- 1:nfact
+	if(any(model[,1] == 'COV')) {
+		tmp <- model[model[,1] == 'COV',2]		
+		tmp <- strsplit(tmp,",")[[1]]
+		tmp <- gsub(" ","",tmp)
+		for(i in 1:length(tmp)){
+			tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1]]
+			ind1 <- find[tmp2[1] == factorNames]
+			ind2 <- find[tmp2[2] == factorNames]
+			estgcov[ind1,ind2] <- estgcov[ind2,ind1] <- TRUE
+		}
+	}
+	gcov <- ifelse(estgcov,.1,0)
+	diag(gcov) <- 1
+	tmp <- matrix(FALSE,nfact,nfact)
+	tmp[lower.tri(tmp,diag=TRUE)] <- estgcov[lower.tri(tmp,diag=TRUE)]
+	selgcov <- lower.tri(tmp,diag = TRUE)
+	estgcov <- tmp
+	
+	#Housework
+	loc1 <- 1
+	lamind <- zetaind <- guessind <- sind <- c()	
+	for(i in 1:J){	
+		zetaind <- c(zetaind,loc1:(loc1 + K[i] - 2))
+		lamind <- c(lamind,max(zetaind + 1):(max(zetaind)+nfact))		
+		guessind <- c(guessind,max(lamind + 1):max(lamind + 1 ))
+		sind <- c(sind, estzetas[[i]], estlam[i,], estGuess[i])
+		loc1 <- loc1 + nfact + K[i]	
+	}	
+	sind <- c(sind, estgmeans, estgcov[lower.tri(estgcov,diag=TRUE)])
+	npars <- length(sind)
+	pars <- rep(0,npars)
+	groupind <- (npars - length(c(gmeans,gcov[lower.tri(gcov,diag=TRUE)]))+1):npars
+	meanind <- groupind[1:nfact]
+	covind <- groupind[-(1:nfact)]	
+	pars[lamind] <- t(lambdas)
+	pars[zetaind] <- zetas
+	pars[guessind] <- guess
+	pars[groupind] <- c(gmeans,gcov[lower.tri(gcov,diag=TRUE)])
+	parcount <- list(lam = estlam, zeta = estzetas2, guess = estGuess, cov = estgcov, mean = estgmeans)
+	parind <- 1:npars
+	loc1 <- 1
+	parcount$lam <- matrix(lamind,J,byrow=TRUE)
+	parcount$zeta <- zetaind
+	parcount$guess <- guessind
+	parcount$cov <- covind
+	parcount$mean <- meanind
+	constvalues <- matrix(0,ncol = 2, npars)	
+	
+	#ADDITIONAL SPECS
+	if(any(model[,1] == 'MEAN')){ }
+	if(any(model[,1] == 'INT')){ }		
+	equalconst <- list()
+	equalind <- 1
+	if(any(model[,1] == 'SLOPE')){
+		tmp <- model[model[,1] == "SLOPE",2]
+		if(any(regexpr(",",tmp)))
+			tmp <- strsplit(tmp,",")[[1]]
+		tmp <- gsub('\\s+','', tmp, perl = TRUE)	
+		for(i in 1:length(tmp)){
+			tmp2 <- strsplit(tmp[i],'eq')[[1]]
+			suppressWarnings(attempt <- as.numeric(tmp2))
+			if(any(!is.na(attempt))){
+				value <- attempt[!is.na(attempt)]
+				tmp3 <- tmp2[is.na(attempt)]
+				tmp3 <- strsplit(tmp3,"@")								
+				for(j in 1:length(tmp3)){					
+					loc1 <- tmp3[[j]][1] == factorNames
+					loc2 <- as.numeric(tmp3[[j]][2])
+					constvalues[parcount$lam[loc2,loc1], ] <- c(1,value)
+				}					
+			} else {
+				tmp3 <- strsplit(tmp2,"@")				
+				equalconst[[equalind]] <- rep(0,length(tmp3)) 
+				for(j in 1:length(tmp3)){					
+					loc1 <- tmp3[[j]][1] == factorNames
+					loc2 <- as.numeric(tmp3[[j]][2])
+					equalconst[[equalind]][j] <- parcount$lam[loc2,loc1] 					
+				}
+				if(any(equalconst[[equalind]] == 0)) stop("Improper constrainst specification.")
+				equalind <- equalind + 1					
+			}
+		}
+	}	
+		
+	#preamble for MRHM algorithm
+	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
 	theta0 <- matrix(0,N,nfact)	    
 	cand.t.var <- 1			
 	tmp <- .1
@@ -485,18 +512,27 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	} 	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
-	phi <- rep(0,sum(sind))
+	phi <- rep(0,sum(sind))	
 	h <- matrix(0,npars,npars)		
-	Tau <- info <- matrix(0,sum(sind),sum(sind))
-	parind <- 1:npars	
+	Tau <- info <- matrix(0,sum(sind),sum(sind))		
 	m.list <- list()	  
 	conv <- 0
 	k <- 1	
 	gamma <- .25
 	startvalues <- pars	
-	stagecycle <- 1		
+	stagecycle <- 1	
+	converge <- 1
+	nconstvalues <- sum(constvalues[,1] == 1)		
+	if(length(equalconst) > 0)	
+		for(i in 1:length(equalconst))
+			nconstvalues <- nconstvalues + length(equalconst[[i]]) - 1
+	if(debug){
+		print(lambdas)
+		print(zetas)
+		print(guess)
+	}	
 	
-	for(cycles in 1:(ncycles + burnin + SEM.cycles))			
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))				
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
@@ -511,71 +547,73 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		}	
 				
 		lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)
-		zetas <- pars[zetaind]
-		guess <- rep(0,J)
-		guess[estGuess] <- pars[gind]		
-		mu <- grouplist$u <- pars[gmeansind]
-		sig <- matrix(0,nfact,nfact)	
-		tmp <- pars[gcovind]
-		loc <- 1
-		for(i in 1:nfact){
-			for(j in 1:nfact){
-				if(i <= j) {
-					sig[i,j] <- tmp[loc]
-					loc <- loc + 1
-				}
-			}
-		}
-		if(nfact > 1)		
-			sig <- sig + t(sig) - diag(diag(sig))		
+		zetas <- list()
+		ind1 <- 1
+		for(i in 1:J){ 
+			zetas[[i]] <- pars[zetaind][(ind1):(K[i] + ind1 - 2)]		
+			ind1 <- ind1 + K[i] - 1
+		}	
+		guess <- pars[guessind]		
+		mu <- grouplist$u <- pars[meanind]
+		sig <- matrix(0,nfact,nfact)
+		sig[lower.tri(sig,diag=TRUE)] <- pars[covind]
+		if(nfact > 1)
+			sig <- sig + t(sig) - diag(diag(sig))				
 		grouplist$sig <- sig			
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,
+		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,pars[zetaind],guess,
 			fulldata,K,itemloc,cand.t.var,sig,mu)	
-		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,
+		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0,lambdas,pars[zetaind],guess,fulldata,
 			K,itemloc,cand.t.var,sig,mu)
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 		
-		g.m <- h.m <- group.m <- list()				
-		for(j in 1:k){
-			g <- rep(NA,npars)
-			loc <- 1
-			for(i in 0:(J - 1)){
-				if(estGuess[i+1]){
-					temp <- dpars.dich(lambdas[i+1,],zetas[loc],guess[i+1],
-						fulldata[,itemloc[i+1]],m.thetas[[j]], estGuess[i+1])
+		g.m <- h.m <- group.m <- list()
+		g <- rep(0,npars)
+		h <- matrix(0,npars,npars)	
+		for (j in 1:k) {
+            g <- rep(NA, npars)
+            loc <- 1
+            for (i in 0:(J - 1)) {
+                if (estGuess[i + 1]) {
+					temp <- dpars.dich(lambdas[i + 1, ], zetas[loc], 
+						guess[i + 1], fulldata[, itemloc[i + 1]], 
+						m.thetas[[j]], estGuess[i + 1])
 					ind <- parind[is.na(g)][1]
-					ind2 <- ind+nfact+ estGuess[i+1]		
+					ind2 <- ind + nfact + estGuess[i + 1]
 					g[ind:ind2] <- temp$grad
-					h[ind:ind2,ind:ind2] <- temp$hess
+					h[ind:ind2, ind:ind2] <- temp$hess
 					loc <- loc + 1
-				} else {
-					loc2 <- loc + K[i+1] - 2
-					temp <- dpars.poly(lambdas[i+1,],zetas[loc:loc2],
-						fulldata2[,itemloc[i+1]:(itemloc[i+2]-1)],m.thetas[[j]])
-					ind <- parind[is.na(g)][1]	
-					ind2 <- ind+nfact+K[i+1]-2
+				} else {					
+					temp <- dpars.poly(lambdas[i + 1, ], zetas[[i+1]], 
+						fulldata2[, itemloc[i + 1]:(itemloc[i + 2] - 1)], m.thetas[[j]])
+					ind <- parind[is.na(g)][1]
+					if(i > 0){
+						g[is.na(g)][1] <- 0
+						ind <- ind + 1
+					}						
+					ind2 <- ind + nfact + K[i + 1] - 2
 					g[ind:ind2] <- temp$grad
-					h[ind:ind2,ind:ind2] <- temp$hess
-					loc <- loc + K[i+1] - 1				
-				}
-			} 
+					h[ind:ind2, ind:ind2] <- temp$hess
+					loc <- loc + K[i + 1] - 1
+                }
+            }
+			g[is.na(g)] <- 0
 			tmp <- d.group(grouplist,m.thetas[[j]])
-			g[is.na(g)] <- tmp$g
-			h[(npars - ngpars + 1):npars,(npars - ngpars + 1):npars] <- tmp$h
+			g[groupind] <- tmp$g
+			h[groupind,groupind] <- tmp$h
 			g.m[[j]] <- g
 			h.m[[j]] <- h			
 		}				
 		ave.g <- rep(0,length(g))
 		ave.h <- matrix(0,length(g),length(g))		
 		for(i in 1:k){
-		  ave.g <- ave.g + g.m[[i]]
-		  ave.h <- ave.h + h.m[[i]]
+			ave.g <- ave.g + g.m[[i]]
+			ave.h <- ave.h + h.m[[i]]
 		} 		
 		grad <- ave.g/k
-		ave.h <- (-1)*ave.h/k				
+		ave.h <- (-1)*ave.h/k					
 		grad <- grad[parind[sind]]		
 		ave.h <- ave.h[parind[sind],parind[sind]] 
 		if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
@@ -593,45 +631,37 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){			
-			correction <- SparseM::solve(ave.h) %*% grad
+			correction <- SparseM::solve(ave.h) %*% grad						
 			correction[correction > 1] <- 1
-			correction[correction < -1] <- -1								
+			correction[correction < -1] <- -1			
 			parsold <- pars
 			correct <- rep(0,npars)
-			correct[sind] <- correction	
-			if(any(estGuess))
-				correct[gind] <- 0
-			for(i in 1:length(constvalues)){
-				tmp <- correct[lamind]
-				tmp[constlam == constvalues[i]] <- 
-					mean(tmp[constlam == constvalues[i]])
-				correct[lamind] <- tmp
-			}						
+			correct[sind] <- correction
+			correct[constvalues[,1] == 1] <- 0
+			if(length(equalconst) > 0)	
+				for(i in 1:length(equalconst))
+					correct[equalconst[[i]]] <- mean(correct[equalconst[[i]]])			
 			pars <- pars + gamma*correct
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()
 			}			
-			pars[gcovind][pars[gcovind] > .95] <- parsold[gcovind][pars[gcovind] > .95]
-			pars[gcovind][pars[gcovind] < -.95] <- parsold[gcovind][pars[gcovind] < -.95]						
+			pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
+			pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]						
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	 
 		
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)			
-		correction <- SparseM::solve(Tau) %*% grad												
+		correction <- SparseM::solve(Tau) %*% grad																
 		parsold <- pars
 		correct <- rep(0,npars)
 		correct[sind] <- correction
-		if(any(estGuess))
-			correct[gind] <- 0
-		for(i in 1:length(constvalues)){
-			tmp <- correct[lamind]
-			tmp[constlam == constvalues[i]] <- 
-				mean(tmp[constlam == constvalues[i]])
-			correct[lamind] <- tmp
-		}		
+		correct[constvalues[,1] == 1] <- 0
+		if(length(equalconst) > 0)		
+			for(i in 1:length(equalconst))
+				correct[equalconst[[i]]] <- mean(correct[equalconst[[i]]])	
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
@@ -641,8 +671,8 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 			else conv <- 0		
 		if(conv == 3) break	
 		pars <- pars + gamma*correct	
-		pars[gcovind][pars[gcovind] > .95] <- parsold[gcovind][pars[gcovind] > .95]
-		pars[gcovind][pars[gcovind] < -.95] <- parsold[gcovind][pars[gcovind] < -.95]
+		pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
+		pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 			
 		phi <- phi + gamma*(grad - phi)
@@ -657,29 +687,27 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 	SEtmp <- sqrt(SEtmp)	
 	SE <- rep(NA,npars) 
 	SE[parind[sind]] <- SEtmp
-	for(i in 1:length(constvalues)){
-		tmp <- SE[lamind]
-		tmp[constlam == constvalues[i]] <- 
-			mean(tmp[constlam == constvalues[i]])
-		SE[lamind] <- tmp
-	}
+	SE[constvalues[,1]==1] <- NA
+	if(length(equalconst) > 0)
+		for(i in 1:length(equalconst))
+			SE[equalconst[[i]]] <- mean(SE[equalconst[[i]]])
 	estpars <- pars[sind]
 	lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)	
 	lambdas[!estlam & !lambdas != 0] <- NA	
 	guess <- rep(NA,J)
-	guess[estGuess] <- pars[gind]
+	guess[estGuess] <- pars[guessind]
 	guess[K == 2 & !estGuess] <- 0
 	zetas <- pars[zetaind]
-	u <- pars[gmeansind]	
+	u <- pars[meanind]	
 	sig <- matrix(0,nfact,nfact)
 	SElam <- matrix(SE[lamind],J,nfact,byrow=TRUE)
 	SEzetas <- SE[zetaind]	
 	SEg <- rep(NA,J)	
-	SEg[estGuess] <- SE[gind]	
-	SEu <- SE[gmeansind]	
+	SEg[estGuess] <- SE[guessind]	
+	SEu <- SE[meanind]	
 	SEsig <- matrix(0,nfact,nfact)	
-	tmp <- pars[gcovind]
-	tmp2 <- SE[gcovind]
+	tmp <- pars[covind]
+	tmp2 <- SE[covind]
 	loc <- 1
 	for(i in 1:nfact){
 		for(j in 1:nfact){
@@ -716,7 +744,7 @@ confmirt <- function(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
 	F <- as.matrix(pars[ ,1:nfact]/norm)
 	F[is.na(F)] <- 0	
-	h2 <- rowSums(F^2)	
+	h2 <- rowSums(F^2)
 
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 

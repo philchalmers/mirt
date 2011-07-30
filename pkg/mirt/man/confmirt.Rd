@@ -11,9 +11,8 @@
 }
 
 \usage{
-confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
-	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
-    calcLL = TRUE, draws = 2000, debug = FALSE, ...)
+confmirt(data, model, guess = 0, gmeans = 0, ncycles = 2000,
+	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 
 \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 
@@ -27,7 +26,7 @@ confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data}
-  \item{sem.model}{an object resembling the \code{sem} declaration of a confirmatory factor analysis, but with omitted residual variances}
+  \item{model}{an object returned from \code{confmirt.model()} declarating how the factor model is to be estimated. See \code{\link{confmirt.model}} for more details}
   \item{guess}{fixed values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item}
   \item{gmeans}{starting values for the group means. Can be entered as a single value to assign a global parameter or may be entered as a numeric vector for each factor. When the value is not equal to zero the parameter will be estimated}
   \item{ncycles}{the maximum number of MH-RM iterations to be performed}
@@ -52,7 +51,7 @@ confmirt(data, sem.model, guess = 0, gmeans = 0, ncycles = 2000,
 
   \code{confmirt} follows the confirmatory item factor analysis strategy by a stochastic version of maximum likelihood estimation described by Cai (2010). The general equation used for multidimensional item response theory in this function is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at random' so that each response vector is included in the estimation (i.e., full-information). Residuals are computed using the LD statistic (Chen & Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal. For computing the log-likelihood more accurately see \code{\link{logLik}}.
 
-  Specification of the confirmatory item factor analysis model follows many of the rules in the SEM framework for confirmatory factor analysis. The variances of the latent factors are automatically fixed to 1 to ensure proper identification. Additional parameters may be fixed to constant values by placing the value in the 4th column of the \code{specify.model} function call with the parameter named \code{NA} in the 3rd column. Item slopes may also be constrained to be equal by labeling them with the same parameter name in the 3rd column. Guessing parameters may be specified for dichotomous items, but are treated as constants, and if a guessing parameter is declared for a polychotomous item it is ignored.
+  Specification of the confirmatory item factor analysis model follows many of the rules in the SEM framework for confirmatory factor analysis. The variances of the latent factors are automatically fixed to 1 to ensure proper identification. All parameters may be fixed to constant values or set equal to other parameters using the appropriate declarations. Guessing parameters may be specified for dichotomous items, but are treated as constants, and if a guessing parameter is declared for a polychotomous item it is ignored.
 
   \code{coef} displays the item parameters with their associated standard errors, while use of \code{summary} transforms the slopes into a factor loadings metric. Also, nested models may be compared by using the \code{anova} function, where a Chi-squared difference test and AIC difference values are displayed.
 
@@ -100,58 +99,32 @@ dataset <- simdata(a,d,2000,sigma)
 #analyses
 #CIFA for 2 factor crossed structure
 
-model.1 <- specify.model()
-    F1 -> Item_1,   lam11, NA
-    F1 -> Item_2,   lam12, NA
-    F1 -> Item_3,   lam13, NA
-    F1 -> Item_4,   lam14, NA
-    F2 -> Item_4,   lam24, NA
-    F2 -> Item_5,   lam25, NA
-    F2 -> Item_6,   lam26, NA
-    F2 -> Item_7,   lam27, NA
-    F2 -> Item_8,   lam28, NA
-    F1 <-> F2,      phi12, NA    
-
+model.1 <- confmirt.model()
+  F1 = 1-4
+  F2 = 4-8
+  COV = F1*F2
+  
 mod1 <- confmirt(dataset,model.1)
 coef(mod1)
 summary(mod1)
 residuals(mod1)
 
 #fix first slope at 1.5, and set slopes 7 & 8 to be equal
-model.2 <- specify.model()
-    F1 -> Item_1,      NA, 1.5
-    F1 -> Item_2,   lam12, NA
-    F1 -> Item_3,   lam13, NA
-    F1 -> Item_4,   lam14, NA
-    F2 -> Item_4,   lam24, NA
-    F2 -> Item_5,   lam25, NA
-    F2 -> Item_6,   lam26, NA
-    F2 -> Item_7,   lam27, NA
-    F2 -> Item_8,   lam27, NA
-    F1 <-> F2,      phi12, NA   
-
+model.2 <- confmirt.model()
+  F1 = 1-4
+  F2 = 4-8
+  COV = F1*F2
+  SLOPE = F1@1 eq 1.5, F2@7 eq F2@8
+  
 mod2 <- confmirt(dataset,model.2)
 anova(mod2,mod1)
 
 #####
 #bifactor 	
-model.3 <- specify.model()
-    F1 -> Item_1,   lam11, NA
-    F1 -> Item_2,   lam12, NA
-    F1 -> Item_3,   lam13, NA
-    F1 -> Item_4,   lam14, NA
-    F1 -> Item_5,   lam15, NA
-    F1 -> Item_6,   lam16, NA
-    F1 -> Item_7,   lam17, NA
-    F1 -> Item_8,   lam18, NA
-    F2 -> Item_1,   lam21, NA
-    F2 -> Item_2,   lam22, NA
-    F2 -> Item_3,   lam23, NA
-    F2 -> Item_4,   lam24, NA
-    F3 -> Item_5,   lam35, NA
-    F3 -> Item_6,   lam36, NA                	
-    F3 -> Item_7,   lam37, NA
-    F3 -> Item_8,   lam38, NA   
+model.3 <- confmirt.model()
+  G = 1-8
+  F1 = 1-4
+  F2 = 5-8
 	
 mod3 <- confmirt(dataset,model.3)
 coef(mod3)

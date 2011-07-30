@@ -96,12 +96,12 @@ anova(mod1,mod2)
 ###########
 #data from the 'ltm' package in numeric format
 data(Science)
-(mod1 <- polymirt(Science,1))
+(mod1 <- polymirt(Science, 1))
 summary(mod1)
 residuals(mod1)
 coef(mod1)
 
-(mod2 <- polymirt(Science,2, calcLL = FALSE)) #don't calculate log-likelihood
+(mod2 <- polymirt(Science, 2, calcLL = FALSE)) #don't calculate log-likelihood
 mod2 <- logLik(mod2,5000) #calc log-likelihood here with more draws
 summary(mod2, 'promax', suppress = .3)
 coef(mod2)

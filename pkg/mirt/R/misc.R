@@ -324,76 +324,19 @@ dpars.poly <- function(lambda,zeta,dat,Thetas)
 	return(ret)	
 }
 
-#functions adopted from John Fox's sem package, ommiting the S3 call to sem.default
-### ADAPTED ON JUNE 5th, 2010, FROM THE 'SEM' PACKAGE VERSION 0.9-21 ###
-specify.model <- function() sem::specify.model()
+#special characters: @ for location, == for equalities (and const), P(#,#) for priors, * for covariance
+#must specify by 'type = list'
+#special types -> slope, int, cov, start
 
-sem.mod <- function (ram, S, N, obs.variables=rownames(S), fixed.x=NULL, debug=FALSE, ...)
+confmirt.model <- function(file = "")
 {
-	parse.path <- function(path) {                                           
-	path.1 <- gsub('-', '', gsub(' ','', path))
-	direction <- if (regexpr('<>', path.1) > 0) 2 
-		else if (regexpr('<', path.1) > 0) -1
-		else if (regexpr('>', path.1) > 0) 1
-		else stop(paste('ill-formed path:', path))
-	path.1 <- strsplit(path.1, '[<>]')[[1]]
-	list(first=path.1[1], second=path.1[length(path.1)], direction=direction)
-	}
-	if ((!is.matrix(ram)) | ncol(ram) != 3) stop ('ram argument must be a 3-column matrix')
-	startvalues <- as.numeric(ram[,3])
-	par.names <- ram[,2]
-	n.paths <- length(par.names)
-	heads <- from <- to <- rep(0, n.paths)
-	for (p in 1:n.paths){
-		path <- parse.path(ram[p,1])
-		heads[p] <- abs(path$direction)
-		to[p] <- path$second
-		from[p] <- path$first
-		if (path$direction == -1) {
-			to[p] <- path$first
-			from[p] <- path$second
-		}
-	}
-	ram <- matrix(0, p, 5)
-	all.vars <- unique(c(to, from))
-	latent.vars <- setdiff(all.vars, obs.variables)
-	not.used <- setdiff(obs.variables, all.vars)
-	if (length(not.used) > 0){
-		rownames(S) <- colnames(S) <- obs.variables
-		obs.variables <- setdiff(obs.variables, not.used)
-		S <- S[obs.variables, obs.variables]
-		warning("The following observed variables are in the input covariance or raw-moment matrix ",
-			"but do not appear in the model:\n", paste(not.used, collapse=", "), "\n")
-	}
-	vars <- c(obs.variables, latent.vars)
-	pars <- na.omit(unique(par.names))
-	ram[,1] <- heads
-	ram[,2] <- apply(outer(vars, to, '=='), 2, which)
-	ram[,3] <- apply(outer(vars, from, '=='), 2, which)   
-	par.nos <- apply(outer(pars, par.names, '=='), 2, which)
-	if (length(par.nos) > 0)
-		ram[,4] <- unlist(lapply(par.nos, function(x) if (length(x) == 0) 0 else x))
-	ram[,5]<- startvalues
-	colnames(ram) <- c('heads', 'to', 'from', 'parameter', 'start')
-	if (!is.null(fixed.x)) fixed.x <- apply(outer(vars, fixed.x, '=='), 2, which)
-	n <- length(obs.variables)
-	m <- length(all.vars)
-	t <- length(pars)
-	if (debug) {
-		cat('\n observed variables:\n') 
-		print(paste(paste(1:n,':', sep=''), obs.variables, sep=''))
-		cat('\n')
-		if (m > n){ 
-			cat('\n latent variables:\n')
-			print(paste(paste((n+1):m,':', sep=''), latent.vars, sep=''))
-			cat('\n')
-		}
-		cat('\n parameters:\n') 
-		print(paste(paste(1:t,':', sep=''), pars, sep=''))
-		cat('\n\n RAM:\n')
-		print(ram)
-	}	
-	return(list(ram = ram))		
+	mod <- scan(file = file, what = list(type = "", pars = ""), 
+		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE)
+	mod <- cbind(mod$type, mod$pars)
+	colnames(mod) <- c("Type","Parameters")	
+	mod <- list(x = mod)
+	class(mod) <- 'confmirt.model'
+	mod
 }
 
 gamma.cor <- function(x)

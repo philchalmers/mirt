@@ -2,7 +2,7 @@ useDynLib(mirt, .registration=TRUE)
 
 # Exported functions
 export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,fscores,itemplot,simdata,
-	specify.model)
+	confmirt.model)
 
 # Imported functions
 importFrom(sem, specify.model)
