@@ -11,8 +11,9 @@
 }
 
 \usage{
-confmirt(data, model, guess = 0, gmeans = 0, ncycles = 2000,
-	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000, debug = FALSE, ...)
+confmirt(data, model, guess = 0, prior = NULL, ncycles = 2000, burnin = 150, 
+SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
+draws = 2000, returnindex = FALSE, debug = FALSE, ...)
 
 \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 
@@ -28,7 +29,7 @@ confmirt(data, model, guess = 0, gmeans = 0, ncycles = 2000,
   \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data}
   \item{model}{an object returned from \code{confmirt.model()} declarating how the factor model is to be estimated. See \code{\link{confmirt.model}} for more details}
   \item{guess}{fixed values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item}
-  \item{gmeans}{starting values for the group means. Can be entered as a single value to assign a global parameter or may be entered as a numeric vector for each factor. When the value is not equal to zero the parameter will be estimated}
+  \item{prior}{a matrix indicating which type of prior distribution should be imposed for the numerically identified parameters (use \code{returnindex = TRUE} to determine these values). The first column indicates the parameter number, the second the type of prior to be imposed (1 = normal, 2 = beta), and columns three and four indicate the respective numerical values to be input to the distrubutions. For example, imposing a normal prior on paramter 17 with a mean of .2 and standard deviation of .1 would be \code{prior = matrix(c(17,1,.2,.1), ncol=4)}.}
   \item{ncycles}{the maximum number of MH-RM iterations to be performed}
   \item{burnin}{number of burn-in cycles to perform before beginning the SEM stage}
   \item{SEM.cycles}{number of stochastic EM cycles to perform before beginning the MH-RM algorithm}
@@ -38,6 +39,7 @@ confmirt(data, model, guess = 0, gmeans = 0, ncycles = 2000,
   \item{calcLL}{logical; calculate the log-likelihood via Monte Carlo integration?}
   \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
   \item{restype}{type of residuals to be displayed. Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the expected values for the frequencies of every response pattern}
+  \item{returnindex}{logical; return the list containing the item paramter locations? To be used when specifying prior parameter distrubutions}
   \item{debug}{logical; turn on debugging features?}
   \item{object}{an object of class \code{confmirt}.}
   \item{object2}{an object of class \code{confmirt}.}

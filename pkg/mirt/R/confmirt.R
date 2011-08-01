@@ -307,13 +307,13 @@ setMethod(
 ####################
 #Main Function
 
-confmirt <- function(data, model, guess = 0, gmeans = 0, ncycles = 2000, 
+confmirt <- function(data, model, guess = 0, prior = NULL, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-	calcLL = TRUE, draws = 2000, debug = FALSE, ...)
+	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, ...)
 {		
 	Call <- match.call()   
 	itemnames <- colnames(data)
-	keywords <- c('SLOPE','INT','COV','MEAN','START')
+	keywords <- c('SLOPE','INT','COV','MEAN')
 	data <- as.matrix(data)		
 	colnames(data) <- itemnames	
 	J <- ncol(data)
@@ -402,25 +402,44 @@ confmirt <- function(data, model, guess = 0, gmeans = 0, ncycles = 2000,
 	}		
 		
 	#MEANS
-	if(length(gmeans) == 1) gmeans <- rep(gmeans,nfact)
+	find <- 1:nfact
+	gmeans <- rep(0,nfact)
 	estgmeans <- rep(FALSE,nfact)	
+	if(any(model[,1] == 'MEAN')){
+		tmp <- model[model[,1] == 'MEAN',2]		
+		tmp <- strsplit(tmp,",")[[1]]
+		tmp <- gsub(" ","",tmp)
+		for(i in 1:length(tmp)){
+			tmp2 <- strsplit(tmp[i],"eq",fixed=TRUE)[[1]]
+			ind1 <- find[tmp2[1] == factorNames]			
+			gmeans[ind1] <- as.numeric(tmp2[2])
+		}
+	}
 	
 	#COV
-	estgcov <- matrix(FALSE,nfact,nfact)
-	find <- 1:nfact
-	if(any(model[,1] == 'COV')) {
+	estgcov <- constgcov <- matrix(FALSE,nfact,nfact)	
+	if(any(model[,1] == 'COV')){
 		tmp <- model[model[,1] == 'COV',2]		
 		tmp <- strsplit(tmp,",")[[1]]
 		tmp <- gsub(" ","",tmp)
 		for(i in 1:length(tmp)){
-			tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1]]
-			ind1 <- find[tmp2[1] == factorNames]
-			ind2 <- find[tmp2[2] == factorNames]
-			estgcov[ind1,ind2] <- estgcov[ind2,ind1] <- TRUE
+			if(regexpr("eq",tmp[j]) > 1){
+				tmp2 <- strsplit(tmp[i],"eq",fixed=TRUE)[[1]]
+				value <- as.numeric(tmp2[2])
+				tmp2 <- strsplit(tmp2[1],"*",fixed=TRUE)[[1]]
+				ind1 <- find[tmp2[1] == factorNames]
+				ind2 <- find[tmp2[2] == factorNames]
+				constgcov[ind1,ind2] <- constgcov[ind2,ind1] <- value
+			} else {
+				tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1]]
+				ind1 <- find[tmp2[1] == factorNames]
+				ind2 <- find[tmp2[2] == factorNames]
+				estgcov[ind1,ind2] <- estgcov[ind2,ind1] <- TRUE
+			}	
 		}
 	}
-	gcov <- ifelse(estgcov,.1,0)
-	diag(gcov) <- 1
+	gcov <- ifelse(estgcov,.1,0) + constgcov
+	diag(gcov) <- 1	
 	tmp <- matrix(FALSE,nfact,nfact)
 	tmp[lower.tri(tmp,diag=TRUE)] <- estgcov[lower.tri(tmp,diag=TRUE)]
 	selgcov <- lower.tri(tmp,diag = TRUE)
@@ -457,8 +476,7 @@ confmirt <- function(data, model, guess = 0, gmeans = 0, ncycles = 2000,
 	constvalues <- matrix(0,ncol = 2, npars)	
 	
 	#ADDITIONAL SPECS
-	if(any(model[,1] == 'MEAN')){ }
-	if(any(model[,1] == 'INT')){ }		
+	constvalues[parcount$cov[constgcov[selgcov] != 0], ] <- c(1,constgcov[constgcov[selgcov] != 0])
 	equalconst <- list()
 	equalind <- 1
 	if(any(model[,1] == 'SLOPE')){
@@ -491,8 +509,46 @@ confmirt <- function(data, model, guess = 0, gmeans = 0, ncycles = 2000,
 			}
 		}
 	}	
+	zetaind2 <- estzetas
+	k <- 1
+	for(i in 1:J){
+		for(j in 1:length(zetaind2[[i]])){
+			zetaind2[[i]][j] <- zetaind[k]
+			k <- k + 1
+		}
+	}
+	if(any(model[,1] == 'INT')){
+		tmp <- model[model[,1] == 'INT',2]
+		if(any(regexpr(",",tmp)))
+			tmp <- strsplit(tmp,",")[[1]]
+		tmp <- gsub('\\s+','', tmp, perl = TRUE)	
+		for(i in 1:length(tmp)){
+			tmp2 <- strsplit(tmp[i],'eq')[[1]]
+			suppressWarnings(attempt <- as.numeric(tmp2))
+			if(any(!is.na(attempt))){
+				value <- attempt[!is.na(attempt)]
+				tmp3 <- tmp2[is.na(attempt)]
+				tmp3 <- strsplit(tmp3,"@")								
+				for(j in 1:length(tmp3)){					
+					loc1 <- as.numeric(tmp3[[j]][1])
+					loc2 <- as.numeric(tmp3[[j]][2])
+					constvalues[zetaind2[[loc1]][loc2], ] <- c(1,value)
+				}					
+			} else {
+				tmp3 <- strsplit(tmp2,"@")				
+				equalconst[[equalind]] <- rep(0,length(tmp3)) 
+				for(j in 1:length(tmp3)){	
+					loc1 <- as.numeric(tmp3[[j]][1])
+					loc2 <- as.numeric(tmp3[[j]][2])
+					equalconst[[equalind]][j] <- zetaind2[[loc1]][loc2]					
+				}
+				if(any(equalconst[[equalind]] == 0)) stop("Improper constraint specification.")
+				equalind <- equalind + 1					
+			}
+		}
+	}		
 		
-	#preamble for MRHM algorithm
+	#Preamble for MRHM algorithm
 	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
 	theta0 <- matrix(0,N,nfact)	    
 	cand.t.var <- 1			
@@ -530,7 +586,11 @@ confmirt <- function(data, model, guess = 0, gmeans = 0, ncycles = 2000,
 		print(lambdas)
 		print(zetas)
 		print(guess)
+		print(gmeans)
+		print(gcov)		
 	}	
+	
+	if(returnindex) return(parcount)
 	
 	for(cycles in 1:(ncycles + burnin + SEM.cycles))				
 	{ 

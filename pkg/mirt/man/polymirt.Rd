@@ -12,10 +12,9 @@
 }
 
 \usage{
-polymirt(data, nfact, guess = 0, prev.cor = NULL,
-	ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1,
-    tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000,
-    debug = FALSE, ...)
+polymirt(data, nfact, guess = 0, prev.cor = NULL,ncycles = 2000, burnin = 100, 
+SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
+draws = 2000, debug = FALSE, ...)
 
 \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
 

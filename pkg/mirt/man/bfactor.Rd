@@ -11,7 +11,9 @@
 }
 
 \usage{
-bfactor(fulldata, specific, guess = 0, prev.cor = NULL, par.prior = FALSE, startvalues = NULL,  quadpts = NULL, ncycles = 300, EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
+bfactor(fulldata, specific, guess = 0, prev.cor = NULL, par.prior = FALSE, 
+startvalues = NULL,  quadpts = NULL, ncycles = 300, EMtol = .001, nowarn = TRUE, 
+debug = FALSE, ...)
 
 \S4method{summary}{bfactor}(object, digits = 3, ...)
 
