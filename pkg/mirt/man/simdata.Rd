@@ -2,11 +2,11 @@
 \alias{simdata}
 \title{Simulate response patterns from an underlying multivariate normal distribution}
 \description{
-Simulates response patterns for compensetory MIRT models from multivariate normally distributed factor (\eqn{\theta}) scores.
+Simulates response patterns for compensetory MIRT models from multivariate normally distributed factor (\eqn{\theta}) scores, or from a user input matrix of \eqn{\theta}'s.
 }
 
 \usage{
-simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = FALSE)
+simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0, compensatory = FALSE, factor.loads = FALSE, Theta = NULL)
 
 }
  \arguments{
@@ -16,7 +16,10 @@ simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = FALSE)
    \item{guess}{a vector of guessing parameters for each item; only applicable for dichotomous items. Must be either a scalar value that will affect all of the dichotomous items, or a vector with as many values as to be simulated items}
    \item{sigma}{a covariance matrix of the underlying distribution. Default is the identity matrix}
    \item{mu}{a mean vector of the underlying distribution. Defualt is a vector of zeros}
-   \item{factor.loads}{logical; are the slope parameters in \code{a} in the factor loadings metric?} }
+   \item{compensatory}{a logical vector used to sepcify which items are to be treated as parially compensatory items (see Reckase, 2009), and single values are repeated for each item. Note that when simulating compensatory data the slope parameters must equal the number of intercept parameters}
+   \item{factor.loads}{logical; are the slope parameters in \code{a} in the factor loadings metric?}
+   \item{Theta}{a user specified matrix of the underlying ability parameters, where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}}
+   }
 
 \details{
 Returns a data matrix simulated from the parameters.
@@ -98,6 +101,26 @@ sigma[2,3] <- sigma[3,2] <- .25
 
 dataset <- simdata(a,d,1000,sigma=sigma,factor.loads=TRUE)
 
+####Compensatory item example
+a <- matrix(c(
+  1,NA,
+1.5,NA,
+ NA, 1,
+ NA,1.6,
+1.5,.5,
+ .7, 1), ncol=2,byrow=TRUE)
+
+#notice that the compensatory items have the same number of intercepts as 
+#factors influencing the item
+d <- matrix(c(
+-1.0,NA,
+ 1.5,NA,
+ 0.0,NA,
+ 3.0,NA,
+2.5,1.0,
+2.0, -1),ncol=2,byrow=TRUE)
+
+compdata <- simdata(a,d,3000, compensatory = c(F,F,F,F,T,T))
    }
 }
 

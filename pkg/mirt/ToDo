@@ -1,8 +1,6 @@
 Roughly in order of importance:
 
-- MAP and EAP factor scores for polymirt and confmirt
-- prior paramter distributions for polymirt and confmirt
+- factor scores for polymirt and confmirt with standard errors
 - nominal and rating intercept estimation for polymirt and confmirt
-- expand bifactor and mirt to handle polytomous items (Gibbons 2007, Muraki 1995)
 - add more extensive simulation data functions (different distributions, skew/kurtosis)
 - multiple group estimation for DIF

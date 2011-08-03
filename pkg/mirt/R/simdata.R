@@ -1,4 +1,5 @@
-simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = FALSE){
+simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, 
+	compensatory = FALSE, factor.loads = FALSE, Theta = NULL){
 	dist = 'normal'
 	nfact <- ncol(a)
 	nitems <- nrow(a)	
@@ -7,23 +8,32 @@ simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, factor.loads = 
 		a <- a / cs
 	}
 	K <- rep(0,nitems)
-	for(i in 1:nitems) K[i] <- sum(!is.na(d[i,]))	
-	if(length(guess) == 1) guess <- rep(guess,nitems)
+	for(i in 1:nitems) K[i] <- sum(!is.na(d[i,]))		
+	if(length(compensatory) == 1) compensatory <- rep(compensatory,nitems)
+	if(length(compensatory) != nitems) stop("Logical compensatory vector is incorrect")  
+	if(length(guess) == 1) guess <- rep(guess,nitems)	
 	if(length(guess) != nitems) stop("Guessing parameter is incorrect")  
 	guess[K > 1] <- 0
 	if(is.null(sigma)) sigma <- diag(nfact)
-	if(is.null(mu)) mu <- rep(0,nfact)  
-	if (dist == 'normal') Theta <- rmvnorm(N,mu,sigma)     
-	data <- matrix(0,N,nitems)  	
+	if(is.null(mu)) mu <- rep(0,nfact)
+	if (!is.null(Theta))
+		if(ncol(Theta) != nfact || nrow(Theta) != N) 
+			stop("The input Theta matrix does not have the correct dimensions")
+	if (dist == 'normal' && is.null(Theta)) Theta <- rmvnorm(N,mu,sigma)     
+	data <- matrix(0,N,nitems)
+	K[compensatory]	<- 1	
 	for(i in 1:nitems){
 		if(K[i] == 1){	
 			slp <- a[i,!is.na(a[i,])]
 			tht <- Theta[,!is.na(a[i,])]
-			if(length(slp) == 1) tht <- matrix(tht)
-			P <- P.mirt(slp, d[i], tht, guess[i])	
+			if(compensatory[i]){										
+				P <- P.comp(slp, na.omit(d[i,]), tht, guess[i])				
+			} else {
+				if(length(slp) == 1) tht <- matrix(tht)			
+				P <- P.mirt(slp, na.omit(d[i,1]), tht, guess[i])
+			}	
 			for (j in 1:N) data[j,i] <- sample(c(0,1), 1, prob = c((1 - P[j]), P[j]))		
-		} 
-		else {			
+		} else {			
 			int <- d[i,!is.na(d[i,])]
 			slp <- a[i,!is.na(a[i,])]
 			tht <- Theta[,!is.na(a[i,])]

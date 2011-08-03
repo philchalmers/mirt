@@ -121,6 +121,15 @@ P.mirt <- function(a, d, Theta, g)
 	return(traces)
 }
 
+P.comp <- function(a,d,thetas,c = 0){
+	nfact <- length(a)
+	P <- rep(1,nrow(thetas))
+	for(i in 1:nfact)
+		P <- P * P.mirt(a[i],d[i],matrix(thetas[,i]),0)
+	P <- c + (1-c) * P
+	P	
+} 
+
 # Estep
 Estep.mirt <- function(pars, tabdata, Theta, prior, guess) 
 {

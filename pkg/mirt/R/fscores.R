@@ -17,6 +17,7 @@ setMethod(
 		SEscores <- scores <- matrix(0,ncol=ncol(Theta),nrow=nrow(tabdata))
 		SE <- thetas <- rep(0,nfact)
 		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+		W <- W/sum(W)
 		for (i in 1:nrow(scores)){
 			L <- 0  
 			for (j in 1:nrow(a)){
@@ -75,7 +76,8 @@ setMethod(
 		SEscores <- scores <- rep(0,nrow(tabdata))
 		SE <- thetas <- 0
 		logicalfact <- object@logicalfact
-		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact))  
+		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
+		W <- W/sum(W)	
 		for (i in 1:nrow(tabdata)){
 			L <- 0  
 			for (j in 1:nrow(a)){
