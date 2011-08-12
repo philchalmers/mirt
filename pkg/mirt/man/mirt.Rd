@@ -14,8 +14,8 @@
 
 \usage{
 mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
-startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
-debug = FALSE, ...)
+  startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
+  debug = FALSE, ...)
 
 \S4method{summary}{mirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
 

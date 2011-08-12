@@ -91,6 +91,29 @@ static void Prob(double *P, const unsigned int *k, const unsigned int *N,
 	}
 }
 
+static void ProbComp(double *P, const unsigned int *k, const unsigned int *N, 
+	const unsigned int *nfact, const double *theta, const double *a, 
+	const double *d, const double *g)
+{
+	double Theta[*N], tmp[*N], zerog = 0.0, tmpa, tmpd;
+	unsigned int i, j, onenfact = 1;	
+	for(j = 0; j < *N; j++)
+		tmp[j] = 1.0;
+	for(i = 0; i < *nfact; i++){
+		for(j = 0; j < *N; j++)
+			Theta[j] = theta[j + i*(*N)];
+		tmpa = a[i];
+		tmpd = d[i];
+		itemtrace(P, &tmpa, &tmpd, Theta, &zerog, &onenfact, N);
+		for(j = 0; j < *N; j++)
+			tmp[j] *= P[j];
+	}
+	for(j = 0; j < *N; j++){
+		P[j + *N] = 1.0 - (*g + (1 - *g)*tmp[j]);
+		P[j] = 1.0 - P[j + *N];
+	}
+}
+
 SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta, 
 	SEXP Rnfact, SEXP RN){
 		
@@ -344,11 +367,11 @@ SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP Rnfact, SEXP RN){
 
 SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
 	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc,
-	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
+	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact, SEXP RestComp){
 
 	SEXP Rreturn;
 	unsigned int i, j, k, m, nfact, J, N, Ksums = 0, max = 2;
-	int *itemloc,*K,*Pfulldata;
+	int *itemloc,*K,*Pfulldata,*estComp;
 	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0,*Ptheta1,*unif, 
 		*den0,*den1;
 		
@@ -366,6 +389,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	PROTECT(RJ = AS_INTEGER(RJ));	
 	PROTECT(RN = AS_INTEGER(RN));
 	PROTECT(Rnfact = AS_INTEGER(Rnfact));
+	PROTECT(RestComp = AS_INTEGER(RestComp));
 	unif = NUMERIC_POINTER(Runif);
 	den0 = NUMERIC_POINTER(Rden0);
 	den1 = NUMERIC_POINTER(Rden1);
@@ -377,6 +401,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	Pfulldata = INTEGER_POINTER(Rfulldata);
 	itemloc = INTEGER_POINTER(Ritemloc);	
 	K = INTEGER_POINTER(RK);	
+	estComp = INTEGER_POINTER(RestComp);
 	J = NUMERIC_VALUE(RJ);
 	N = NUMERIC_VALUE(RN);
 	nfact = NUMERIC_VALUE(Rnfact);	
@@ -389,7 +414,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	Preturn = NUMERIC_POINTER(Rreturn);
 	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N], irt1[N], 
 		accept[N], Plong_1[N * max], Plong_0[N * max], cdloglik = 0;
-	unsigned int loc = 0, location[J];
+	unsigned int loc = 0, location[J], tmpcount = 0;
 	
 	k = 0;
 	for(i = 0; i < nfact; i++){
@@ -404,26 +429,54 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		irt0[i] = 0.0;
 		irt1[i] = 0.0;
 	}	
-	for(unsigned int item = 0; item < J; item++){		
+	for(unsigned int item = 0; item < J; item++){
 		k = K[item];
 		for(i = 0; i < nfact; i++)
-			a[i] = lambdas[item][i];		
-		for(i = 0; i < (k-1); i++) 
-			d[i] = zetas[i + loc];
-		g = guess[item];		
-		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);			
-		Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);		
-		m = 0;
-		for(j = 0; j < k; j++){
-			for(i = 0; i < N; i++){				
-				if(Pfulldata[m + location[item]]){
-					irt0[i] += log(Plong_0[m]);
-					irt1[i] += log(Plong_1[m]);
-				}				
-				m++;
+			a[i] = lambdas[item][i];
+		g = guess[item];
+		if(estComp[item]){
+			/*if(estComp[item]){
+				loc += nfact;
+				continue;
+			}*/
+			double dnew[nfact];
+			tmpcount = 0;
+			for(i = 0; i < nfact; i++){
+				if(a[i] != 0.0){
+					dnew[i] = zetas[i + loc];
+					tmpcount += 1;
+				} else dnew[i] = 200;
 			}
-		}		
-		loc += k - 1;
+			ProbComp(Plong_0, &k, &N, &nfact, Ptheta0, a, dnew, &g);			
+			ProbComp(Plong_1, &k, &N, &nfact, Ptheta1, a, dnew, &g);			
+			m = 0;
+			for(j = 0; j < k; j++){
+				for(i = 0; i < N; i++){				
+					if(Pfulldata[m + location[item]]){
+						irt0[i] += log(Plong_0[m]);
+						irt1[i] += log(Plong_1[m]);
+					}													
+					m++;
+				}
+			}	
+			loc += tmpcount; 
+		} else {					
+			for(i = 0; i < (k-1); i++) 
+				d[i] = zetas[i + loc];			
+			Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);			
+			Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);			
+			m = 0;
+			for(j = 0; j < k; j++){
+				for(i = 0; i < N; i++){				
+					if(Pfulldata[m + location[item]]){
+						irt0[i] += log(Plong_0[m]);
+						irt1[i] += log(Plong_1[m]);
+					}				
+					m++;
+				}
+			}		
+			loc += k - 1;
+		}
 	}	
 	for(i = 0; i < N; i++){		
 		irt0[i] += log(den0[i]);
@@ -440,16 +493,17 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	}
 	Preturn[N] = cdloglik;
 	
-	UNPROTECT(15);	
+	UNPROTECT(16);	
 	return(Rreturn);	
 }
 
 SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
-	SEXP Rfulldata, SEXP Ritemloc, SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact){
+	SEXP Rfulldata, SEXP Ritemloc, SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact,
+	SEXP RestComp){
 
 	SEXP Rreturn;
 	unsigned int i, j, k, m, nfact, J, N, Ksums = 0, max = 2;
-	int *itemloc,*K,*Pfulldata;
+	int *itemloc,*K,*Pfulldata,*estComp;
 	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0;
 		
 	PROTECT(Rlambdas = AS_NUMERIC(Rlambdas));
@@ -461,14 +515,16 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	PROTECT(RK = AS_INTEGER(RK));	
 	PROTECT(RJ = AS_INTEGER(RJ));	
 	PROTECT(RN = AS_INTEGER(RN));
-	PROTECT(Rnfact = AS_INTEGER(Rnfact));		
+	PROTECT(Rnfact = AS_INTEGER(Rnfact));
+	PROTECT(RestComp = AS_INTEGER(RestComp));
 	Plambdas = NUMERIC_POINTER(Rlambdas);
 	zetas = NUMERIC_POINTER(Rzetas);
 	guess = NUMERIC_POINTER(Rguess);
 	Ptheta0 = NUMERIC_POINTER(Rtheta0);	
 	Pfulldata = INTEGER_POINTER(Rfulldata);
 	itemloc = INTEGER_POINTER(Ritemloc);	
-	K = INTEGER_POINTER(RK);	
+	K = INTEGER_POINTER(RK);
+	estComp = INTEGER_POINTER(RestComp);
 	J = NUMERIC_VALUE(RJ);
 	N = NUMERIC_VALUE(RN);
 	nfact = NUMERIC_VALUE(Rnfact);	
@@ -481,7 +537,7 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	Preturn = NUMERIC_POINTER(Rreturn);
 	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N],
 		Plong_0[N * max], cdloglik;
-	unsigned int loc = 0, location[J];
+	unsigned int loc = 0, location[J], tmpcount = 0;
 	
 	k = 0;
 	for(i = 0; i < nfact; i++){
@@ -496,22 +552,43 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 		irt0[i] = 1.0;		
 		
 	for(unsigned int item = 0; item < J; item++){		
-		k = K[item];
-		for(i = 0; i < nfact; i++)
-			a[i] = lambdas[item][i];		
-		for(i = 0; i < (k-1); i++) 
-			d[i] = zetas[i + loc];
-		g = guess[item];		
-		Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);							
-		m = 0;
-		for(j = 0; j < k; j++){
-			for(i = 0; i < N; i++){				
-				if(Pfulldata[m + location[item]])
-					irt0[i] *= Plong_0[m];													
-				m++;
+		if(estComp[item]){
+			double dnew[nfact];
+			tmpcount = 0;
+			for(i = 0; i < nfact; i++){
+				if(a[i] != 0.0){
+					dnew[i] = zetas[i + loc];
+					tmpcount += 1;
+				} else dnew[i] = 200;
 			}
-		}		
-		loc += k - 1;
+			ProbComp(Plong_0, &k, &N, &nfact, Ptheta0, a, dnew, &g);
+			m = 0;
+			for(j = 0; j < k; j++){
+				for(i = 0; i < N; i++){				
+					if(Pfulldata[m + location[item]])
+						irt0[i] *= Plong_0[m];													
+					m++;
+				}
+			}	
+			loc += tmpcount; 
+		} else {
+			k = K[item];
+			for(i = 0; i < nfact; i++)
+				a[i] = lambdas[item][i];		
+			for(i = 0; i < (k-1); i++) 
+				d[i] = zetas[i + loc];
+			g = guess[item];		
+			Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);		
+			m = 0;
+			for(j = 0; j < k; j++){
+				for(i = 0; i < N; i++){				
+					if(Pfulldata[m + location[item]])
+						irt0[i] *= Plong_0[m];													
+					m++;
+				}
+			}		
+			loc += k - 1;
+		}
 	}	
 	for(i = 0; i < N; i++){				 
 		cdloglik = irt0[i];
@@ -519,6 +596,6 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 		Preturn[i] = cdloglik;
 	}
 	
-	UNPROTECT(11);	
+	UNPROTECT(12);	
 	return(Rreturn);	
 }

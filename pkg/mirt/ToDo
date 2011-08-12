@@ -1,6 +1,7 @@
 Roughly in order of importance:
 
 - factor scores for polymirt and confmirt with standard errors
+- multicore estimation of Monte carlo logliklihood
 - nominal and rating intercept estimation for polymirt and confmirt
 - add more extensive simulation data functions (different distributions, skew/kurtosis)
 - multiple group estimation for DIF

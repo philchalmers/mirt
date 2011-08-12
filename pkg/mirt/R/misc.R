@@ -207,8 +207,11 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 	return(rlist)
 }      
 
+#library(mirt)
+#load("C:\\Users\\Phil\\Desktop\\conf.RData")
+
 draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
-	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0))) 
+	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K))) 
 { 			
 	N <- nrow(fulldata)
 	J <- length(K)
@@ -236,7 +239,8 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 					as.integer(K),
 					as.integer(J),
 					as.integer(N),
-					as.integer(ncol(lambdas)))
+					as.integer(ncol(lambdas)),
+					as.integer(estComp))
 	log.lik <- accept[N+1]			
 	accept <- as.logical(accept[-(N+1)])				
 	theta1[!accept,] <- theta0[!accept,]	
@@ -317,6 +321,72 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 	list(grad = dL, hess = d2L)
 }
 
+dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
+{	
+	nfact <- length(lambda)							
+	if(estg){
+		
+	} else {			
+		P <- P.comp(lambda,zeta,Thetas)	
+		Q <- 1 - P	
+		da <- dd <- rep(0,nfact)	
+		for(i in 1:nfact){
+			Pk <- P.mirt(lambda[i],zeta[i],matrix(Thetas[,i]),0)
+			Qk <- 1 - Pk
+			const <- (1 - dat)*P/Q
+			dd[i] <- sum(Qk*(dat - const))
+			da[i] <- sum(Thetas[,i]*Qk*(dat - const))
+		}
+		hess <- matrix(0,nfact*2,nfact*2)
+		dNames <- paste("d",1:nfact,sep='_')
+		aNames <- paste("a",1:nfact,sep='_')
+		Names <- c(paste("d",1:nfact,sep='_'),paste("a",1:nfact,sep='_'))
+		f <- 1
+		r <- dat
+		for(i in 1:(nfact*2)){		
+			for(j in 1:(nfact*2)){
+				if(i <= j){
+					d1 <- strsplit(Names[c(i,j)],"_")[[1]]
+					d2 <- strsplit(Names[c(i,j)],"_")[[2]]
+					k <- as.numeric(d1[2])
+					m <- as.numeric(d2[2])
+					Pk <- P.mirt(lambda[k],zeta[k],matrix(Thetas[,k]),0)
+					Qk <- 1 - Pk	
+					Pm <- P.mirt(lambda[m],zeta[m],matrix(Thetas[,m]),0)
+					Qm <- 1 - Pm									
+					if(i == j && d1[1] == 'd'){
+						hess[k,k] <- sum(-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2)
+						next
+					}
+					if(i == j && d1[1] == 'a'){
+						hess[k+nfact,k+nfact] <- sum(Thetas[,k]^2 *
+							(-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2))
+						next		
+					}				
+					if(d1[1] == 'a' && d2[1] == 'a'){
+						hess[i,j] <- hess[j,i] <- -sum(Thetas[,k]*Thetas[,m]*Qk*Qm*(f-r)*P/Q^2) 
+						next
+					}
+					if(d1[1] == 'd' && d2[1] == 'd'){
+						hess[i,j] <- hess[j,i] <- -sum(Qk*Qm*(f-r)*P/Q^2)
+						next
+					}	
+					if(d1[1] == 'd' && d2[1] == 'a' && d1[2] == d2[2]){
+						hess[i,j] <- hess[j,i] <- sum(Thetas[,k]*Qk*(-Pk*(r - (f-r)*P/Q) - 
+							Qk*(f-r)*P/Q^2))
+						next	
+					}
+					if(d1[1] == 'd' && d2[1] == 'a' && d1[2] != d2[2]){
+						hess[i,j] <- hess[j,i] <- -sum(Qk*Qm*Thetas[,m]*(f-r)*P/Q^2)
+						next
+					}						
+				}
+			}
+		}		
+	}	
+	list(grad = c(dd,da), hess = hess)
+}
+
 dpars.poly <- function(lambda,zeta,dat,Thetas)
 {  
 	nzeta <- length(zeta)			
@@ -335,7 +405,7 @@ dpars.poly <- function(lambda,zeta,dat,Thetas)
 
 #special characters: @ for location, == for equalities (and const), P(#,#) for priors, * for covariance
 #must specify by 'type = list'
-#special types -> slope, int, cov, start
+#special types -> slope, int, cov, start, comp
 
 confmirt.model <- function(file = "")
 {

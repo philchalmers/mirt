@@ -40,7 +40,7 @@ setClass(
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
 		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
-		tabdata = 'matrix', BIC = 'numeric', Call = 'call'),	
+		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 

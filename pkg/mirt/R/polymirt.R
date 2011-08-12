@@ -1,7 +1,8 @@
 setMethod(
 	f = "print",
 	signature = signature(x = 'polymirtClass'),
-	definition = function(x, ...){
+	definition = function(x, ...)
+	{
 		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(x@F), " factor",
@@ -27,7 +28,8 @@ setMethod(
 setMethod(
 	f = "show",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object){
+	definition = function(object)
+	{
 		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(object@F), " factor",
@@ -53,7 +55,8 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'polymirtClass',
-	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...){
+	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...)
+	{
 		nfact <- ncol(object@F)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
@@ -101,7 +104,8 @@ setMethod(
 setMethod(
 	f = "coef",
 	signature = 'polymirtClass',
-	definition = function(object, SE = TRUE, digits = 3, ...){  
+	definition = function(object, SE = TRUE, digits = 3, ...)
+	{  
 		nfact <- ncol(object@Theta)	
 		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
 		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
@@ -194,7 +198,8 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, ...){ 	
+	definition = function(object, restype = 'LD', digits = 3, ...)
+	{ 	
 		fulldata <- object@fulldata	
 		data <- object@data
 		data[data==99] <- NA
@@ -249,14 +254,16 @@ setMethod(
 			}	
 			cat("LD matrix:\n\n")	
 			res <- round(res,digits)
-			print(res)
+			return(res)
 		} 
 		if(restype == 'exp'){
+			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because logLik() 
+				has not been run or the data contains missing responses.')
 			tabdata <- object@tabdata
 			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
 			tabdata <- round(cbind(tabdata,res),digits)
 			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
-			tabdata
+			return(tabdata)
 		}
 	}
 )
@@ -264,7 +271,8 @@ setMethod(
 setMethod(
 	f = "logLik",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, draws = 2000, G2 = TRUE){	
+	definition = function(object, draws = 2000, G2 = TRUE)
+	{	
 		nfact <- ncol(object@Theta)
 		N <- nrow(object@Theta)
 		J <- length(object@K)
@@ -280,6 +288,7 @@ setMethod(
 		K <- object@K
 		df <- -nfact*J - sum(K - 1) - 1
 		fulldata <- object@fulldata
+		estComp <- rep(FALSE,J)
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', 					
@@ -292,7 +301,8 @@ setMethod(
 						as.integer(object@K),
 						as.integer(J),
 						as.integer(N),
-						as.integer(nfact))		
+						as.integer(nfact),
+						as.integer(estComp))		
 		}		
 		rwmeans <- rowMeans(LL)
 		logLik <- sum(log(rwmeans))		
@@ -357,7 +367,8 @@ setMethod(
 setMethod(
 	f = "anova",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, object2, ...){
+	definition = function(object, object2, ...)
+	{
 		dots <- list(...)				
 		nitems <- length(object@K)
 		if(length(object@df) == 0 || length(object2@df) == 0) 
@@ -378,7 +389,7 @@ setMethod(
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')  
 		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='') 
 	}		
-)
+) 
 
 ########################################
 #Main Function
@@ -470,7 +481,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		print(zetas)
 	}	
 	
-    #preamble for MRHM algorithm			
+    #preamble for MRHM algorithm		
 	theta0 <- matrix(0,N,nfact)	
 	cand.t.var <- 1	
 	tmp <- .1

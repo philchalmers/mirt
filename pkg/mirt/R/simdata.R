@@ -1,5 +1,6 @@
 simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, 
-	compensatory = FALSE, factor.loads = FALSE, Theta = NULL){
+	partcomp = FALSE, factor.loads = FALSE, Theta = NULL)
+{
 	dist = 'normal'
 	nfact <- ncol(a)
 	nitems <- nrow(a)	
@@ -9,8 +10,8 @@ simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0,
 	}
 	K <- rep(0,nitems)
 	for(i in 1:nitems) K[i] <- sum(!is.na(d[i,]))		
-	if(length(compensatory) == 1) compensatory <- rep(compensatory,nitems)
-	if(length(compensatory) != nitems) stop("Logical compensatory vector is incorrect")  
+	if(length(partcomp) == 1) partcomp <- rep(partcomp,nitems)
+	if(length(partcomp) != nitems) stop("Logical partcomp vector is incorrect")  
 	if(length(guess) == 1) guess <- rep(guess,nitems)	
 	if(length(guess) != nitems) stop("Guessing parameter is incorrect")  
 	guess[K > 1] <- 0
@@ -21,12 +22,12 @@ simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0,
 			stop("The input Theta matrix does not have the correct dimensions")
 	if (dist == 'normal' && is.null(Theta)) Theta <- rmvnorm(N,mu,sigma)     
 	data <- matrix(0,N,nitems)
-	K[compensatory]	<- 1	
+	K[partcomp]	<- 1	
 	for(i in 1:nitems){
 		if(K[i] == 1){	
 			slp <- a[i,!is.na(a[i,])]
 			tht <- Theta[,!is.na(a[i,])]
-			if(compensatory[i]){										
+			if(partcomp[i]){										
 				P <- P.comp(slp, na.omit(d[i,]), tht, guess[i])				
 			} else {
 				if(length(slp) == 1) tht <- matrix(tht)			
