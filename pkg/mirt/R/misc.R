@@ -289,7 +289,7 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 {
 	nfact <- length(lambda)
 	P <- P.mirt(lambda, zeta, Thetas, g)						
-	if(estGuess){
+	if(estGuess){ ############fix this
 		Pstar <- P.mirt(lambda, zeta, Thetas, 0)
 		Q <- 1 - P		
 		PQ <- P*Q	
@@ -403,7 +403,7 @@ dpars.poly <- function(lambda,zeta,dat,Thetas)
 	return(ret)	
 }
 
-#special characters: @ for location, == for equalities (and const), P(#,#) for priors, * for covariance
+#special characters: @ for location, == for equalities (and const), * for covariance
 #must specify by 'type = list'
 #special types -> slope, int, cov, start, comp
 

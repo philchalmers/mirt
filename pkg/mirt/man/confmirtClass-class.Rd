@@ -35,6 +35,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian Information Criteria }
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
+    \item{\code{estComp}:}{Object of class \code{"logical"}, vector indicating which items were estimated with the partially compensetory model }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }

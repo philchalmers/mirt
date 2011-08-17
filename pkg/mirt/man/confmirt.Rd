@@ -11,7 +11,7 @@
 }
 
 \usage{
-confmirt(data, model, guess = 0, ncycles = 2000, burnin = 150, SEM.cycles = 50, 
+confmirt(data, model, guess = 0, estGuess = NULL, ncycles = 2000, burnin = 150, SEM.cycles = 50, 
   kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, draws = 2000, 
   returnindex = FALSE, debug = FALSE, ...)
 
@@ -29,6 +29,7 @@ confmirt(data, model, guess = 0, ncycles = 2000, burnin = 150, SEM.cycles = 50,
   \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data}
   \item{model}{an object returned from \code{confmirt.model()} declarating how the factor model is to be estimated. See \code{\link{confmirt.model}} for more details}
   \item{guess}{fixed values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item} 
+  \item{estGuess}{a logical vector indicating which lower-asymptote parameters to be estimated (default is null, and therefore is contigent on the values in \code{guess}). By default, if any value in \code{guess} is greater than 0 then its respective estGuess value is set to \code{TRUE}. Additionally, beta priors are automatically imposed for estimated parameters that correspond to the input guessing value.}
   \item{ncycles}{the maximum number of MH-RM iterations to be performed}
   \item{burnin}{number of burn-in cycles to perform before beginning the SEM stage}
   \item{SEM.cycles}{number of stochastic EM cycles to perform before beginning the MH-RM algorithm}

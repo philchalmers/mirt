@@ -109,8 +109,8 @@ static void ProbComp(double *P, const unsigned int *k, const unsigned int *N,
 			tmp[j] *= P[j];
 	}
 	for(j = 0; j < *N; j++){
-		P[j + *N] = 1.0 - (*g + (1 - *g)*tmp[j]);
-		P[j] = 1.0 - P[j + *N];
+		P[j] = *g + (1 - *g)*tmp[j];
+		P[j + *N] = 1.0 - P[j];
 	}
 }
 
@@ -434,11 +434,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		for(i = 0; i < nfact; i++)
 			a[i] = lambdas[item][i];
 		g = guess[item];
-		if(estComp[item]){
-			/*if(estComp[item]){
-				loc += nfact;
-				continue;
-			}*/
+		if(estComp[item]){			
 			double dnew[nfact];
 			tmpcount = 0;
 			for(i = 0; i < nfact; i++){
@@ -536,7 +532,7 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	PROTECT(Rreturn = NEW_NUMERIC(N));
 	Preturn = NUMERIC_POINTER(Rreturn);
 	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N],
-		Plong_0[N * max], cdloglik;
+		Plong_0[N * max];
 	unsigned int loc = 0, location[J], tmpcount = 0;
 	
 	k = 0;
@@ -549,7 +545,7 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	for(i = 0; i < J; i++)		
 		location[i] = itemloc[i] * N;	
 	for(i = 0; i < N; i++)
-		irt0[i] = 1.0;		
+		irt0[i] = 0.0;		
 		
 	for(unsigned int item = 0; item < J; item++){		
 		if(estComp[item]){
@@ -566,7 +562,7 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 			for(j = 0; j < k; j++){
 				for(i = 0; i < N; i++){				
 					if(Pfulldata[m + location[item]])
-						irt0[i] *= Plong_0[m];													
+						irt0[i] += log(Plong_0[m]);													
 					m++;
 				}
 			}	
@@ -583,19 +579,16 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 			for(j = 0; j < k; j++){
 				for(i = 0; i < N; i++){				
 					if(Pfulldata[m + location[item]])
-						irt0[i] *= Plong_0[m];													
+						irt0[i] += log(Plong_0[m]);													
 					m++;
 				}
 			}		
 			loc += k - 1;
 		}
 	}	
-	for(i = 0; i < N; i++){				 
-		cdloglik = irt0[i];
-		if(cdloglik < .000000000001) cdloglik = .000000000001;
-		Preturn[i] = cdloglik;
-	}
-	
+	for(i = 0; i < N; i++)				 		
+		Preturn[i] = exp(irt0[i]);
+		
 	UNPROTECT(12);	
 	return(Rreturn);	
 }

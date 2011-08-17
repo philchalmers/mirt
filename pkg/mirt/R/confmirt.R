@@ -106,7 +106,8 @@ setMethod(
 		if(SE){
 			cat("\nStd. Errors: \n")	
 			print(object@SEgpars$SEsig, digits)	
-		}		
+		}
+		invisible(list(pars = parameters,mu = u,sigma = sig))	
 	}
 )
 
@@ -316,13 +317,13 @@ setMethod(
 ####################
 #Main Function
 
-confmirt <- function(data, model, guess = 0, ncycles = 2000, 
+confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, ...)
 {		
 	Call <- match.call()   
 	itemnames <- colnames(data)
-	keywords <- c('SLOPE','INT','COV','MEAN','COMP')
+	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
 	data <- as.matrix(data)		
 	colnames(data) <- itemnames	
 	J <- ncol(data)
@@ -336,7 +337,8 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])	
 	guess[K > 2] <- 0
-	estGuess <- guess > 0
+	if(is.null(estGuess))
+		estGuess <- guess > 0
 	itemloc <- cumsum(c(1,K))	
 	model <- matrix(model$x,ncol=2)
 	factorNames <- setdiff(model[,1],keywords) 
@@ -384,10 +386,10 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 	}
 	lambdas <- ifelse(estlam, .5, 0)	
 
-	#COMP
+	#PARTCOMP
 	estComp <- rep(FALSE,J)
-	if(any(model[,1] == 'COMP')){
-		tmp <- model[model[,1] == 'COMP',2]		
+	if(any(model[,1] == 'PARTCOMP')){
+		tmp <- model[model[,1] == 'PARTCOMP',2]		
 		tmp <- strsplit(tmp,",")[[1]]
 		tmp <- gsub(" ","",tmp)		
 		for(j in 1:length(tmp)){
@@ -525,11 +527,21 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 	parcount <- list(lam = estlam, zeta = estzetas2, guess = estGuess, cov = estgcov, mean = estgmeans)
 	parind <- 1:npars
 	loc1 <- 1
-	parcount$lam <- matrix(lamind,J,byrow=TRUE)
-	parcount$zeta <- zetaind
+	parcount$lam <- matrix(lamind,J,byrow=TRUE)	
+	zetaind2 <- estzetas
+	k <- 1
+	for(i in 1:J){
+		for(j in 1:length(zetaind2[[i]])){
+			zetaind2[[i]][j] <- zetaind[k]			
+			k <- k + 1
+		}
+	}
+	names(zetaind2) <- itemnames
+	parcount$zeta <- zetaind2
 	parcount$guess <- guessind
-	parcount$cov <- covind
 	parcount$mean <- meanind
+	parcount$cov <- matrix(0,nfact,nfact)
+	parcount$cov[selgcov] <- covind		
 	constvalues <- matrix(0,ncol = 2, npars)	
 	
 	#ADDITIONAL SPECS
@@ -609,8 +621,37 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 				equalind <- equalind + 1					
 			}
 		}
+	}
+
+	#PRIOR, 1 == norm, 2== beta
+	parpriors <- list()
+	parpriorscount <- 1
+	if(sum(estGuess) > 0){
+		for(i in 1:J){
+			if(estGuess[i]){
+				a <- guess[i] * 20
+				b <- (1 - guess[i]) * 20
+				parpriors[[parpriorscount]] <- c(2,guessind[i],a,b)						
+				parpriorscount <- parpriorscount + 1			
+			}
+		}
 	}		
-	if(returnindex) return(parcount)	
+	if(any(model[,1] == 'PRIOR')){
+		tmp <- model[model[,1] == 'PRIOR',2]
+		if(any(regexpr(",",tmp)))
+			tmp <- strsplit(tmp,",")[[1]]
+		tmp <- gsub('\\s+','', tmp, perl = TRUE)	
+		for(i in seq(1,length(tmp),by=2)){
+			tmp2 <- strsplit(tmp[i],"\\(")[[1]]
+			tmp3 <- as.numeric(strsplit(tmp[i+1],"\\)@")[[1]])			
+			if(tmp2[1] == 'N')				
+				parpriors[[parpriorscount]] <- c(1,tmp3[2],as.numeric(tmp2[2]),tmp3[1])
+			if(tmp2[1] == 'B')				
+				parpriors[[parpriorscount]] <- c(2,tmp3[2],as.numeric(tmp2[2]),tmp3[1])
+			parpriorscount <- parpriorscount + 1	
+		}
+	}		
+	if(returnindex) return(parcount)
 		
 	#Preamble for MRHM algorithm
 	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
@@ -642,7 +683,8 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 	startvalues <- pars	
 	stagecycle <- 1	
 	converge <- 1
-	nconstvalues <- sum(constvalues[,1] == 1)		
+	nconstvalues <- sum(constvalues[,1] == 1)
+	noninvcount <- 0	
 	if(length(equalconstr) > 0)	
 		for(i in 1:length(equalconstr))
 			nconstvalues <- nconstvalues + length(equalconstr[[i]]) - 1
@@ -754,7 +796,22 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 			ave.h <- ave.h + h.m[[i]]
 		} 		
 		grad <- ave.g/k
-		ave.h <- (-1)*ave.h/k					
+		ave.h <- (-1)*ave.h/k
+		if(length(parpriors) > 0){
+			for(i in 1:length(parpriors)){
+				tmp <- parpriors[[i]]
+				if(tmp[1] == 1){
+					grad[tmp[2]] <- grad[tmp[2]] - (pars[tmp[2]] - tmp[3])/ tmp[4]^2
+					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] +  1/tmp[4]^2
+				}				
+				else if(tmp[1] == 2){
+					if(pars[tmp[2]] < .1) next
+					grad[tmp[2]] <- grad[tmp[2]] + (tmp[3]-1)*pars[tmp[2]]^(tmp[3]-2) + (tmp[4]-1)*(1-pars[tmp[2]])^(tmp[4]-2)
+					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + (tmp[3]-2)*(tmp[3]-1)*pars[tmp[2]]^(tmp[3]-3)
+						+ (tmp[4]-2)*(tmp[4]-1)*(1-pars[tmp[2]])^(tmp[4]-3)
+				}				
+			}
+		}		
 		grad <- grad[parind[sind]]		
 		ave.h <- ave.h[parind[sind],parind[sind]] 
 		if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
@@ -772,7 +829,8 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 			}
 		}			
 		if(stagecycle < 3){			
-			correction <- SparseM::solve(ave.h) %*% grad						
+			try(correction <- SparseM::solve(ave.h) %*% grad)
+			if(class(correction) == 'try-errorr') next
 			correction[correction > 1] <- 1
 			correction[correction < -1] <- -1			
 			parsold <- pars
@@ -788,14 +846,20 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 				flush.console()
 			}			
 			pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
-			pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]						
+			pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
+			pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	 
 		
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)			
-		correction <- SparseM::solve(Tau) %*% grad																
+		try(correction <- SparseM::solve(Tau) %*% grad)
+		if(class(correction) == 'try-error'){
+			noninvcount <- noninvcount + 1
+			if(noninvcount == 3) stop('Estimation terminated due to matrix inversion problems') 
+			next	
+		}	
 		parsold <- pars
 		correct <- rep(0,npars)
 		correct[sind] <- correction
@@ -814,6 +878,7 @@ confmirt <- function(data, model, guess = 0, ncycles = 2000,
 		pars <- pars + gamma*correct	
 		pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
 		pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
+		pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 			
 		phi <- phi + gamma*(grad - phi)

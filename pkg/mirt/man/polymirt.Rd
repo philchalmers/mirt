@@ -12,7 +12,7 @@
 }
 
 \usage{
-polymirt(data, nfact, guess = 0, prev.cor = NULL,ncycles = 2000, burnin = 100, 
+polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL,ncycles = 2000, burnin = 100, 
   SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
   draws = 2000, debug = FALSE, ...)
 
@@ -32,6 +32,7 @@ polymirt(data, nfact, guess = 0, prev.cor = NULL,ncycles = 2000, burnin = 100,
   \item{data}{a \code{matrix} or \code{data.frame} that consists of numerically ordered data}
   \item{nfact}{number of factors to be extracted}
   \item{guess}{fixed values for the pseudo-guessing parameter. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item}
+  \item{estGuess}{a logical vector indicating which lower-asymptote parameters to be estimated (default is null, and therefore is contigent on the values in \code{guess}). By default, if any value in \code{guess} is greater than 0 then its respective estGuess value is set to \code{TRUE}. Additionally, beta priors are automatically imposed for estimated parameters that correspond to the input guessing value.}
   \item{prev.cor}{use a previously computed correlation matrix to be used to estimate starting values the estimation. The input could be any correlation matrix, but it is advised to use a matrix of polychoric correlations.}
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See \code{\link{mirt}} for a list of possible rotations}
   \item{ncycles}{the maximum number of iterations to be performed}

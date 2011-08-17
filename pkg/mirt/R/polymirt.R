@@ -394,7 +394,7 @@ setMethod(
 ########################################
 #Main Function
 
-polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000, 
+polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
 	calcLL = TRUE, draws = 2000, debug = FALSE, ...)
 {		
@@ -407,7 +407,8 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	colnames(data) <- itemnames
 	if(length(guess) > J || length(guess) < J) 
 		stop("The number of guessing parameters is incorrect.")
-	estGuess <- guess > 0					
+	if(is.null(estGuess))
+		estGuess <- guess > 0					
 	uniques <- list()
 	for(i in 1:J)
 		uniques[[i]] <- sort(unique(data[,i]))
@@ -475,7 +476,17 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 	zetaind <- parind[is.na(pars)]			
 	pars[is.na(pars)] <- zetas
 	diag(Rpoly) <- 1	
-	converge <- 1    	
+	converge <- 1
+	guessPrior <- list()
+	guessPriorCount <- 1
+	if(sum(estGuess) > 0){
+		for(i in 1:J){
+			if(estGuess[i]){
+				guessPrior[[guessPriorCount]] <- c(gind[i],guess[i]*20,(1-guess[i])*20)
+				guessPriorCount <- guessPriorCount + 1			
+			}
+		}	
+	}
 	if(debug){
 		print(lambdas)
 		print(zetas)
@@ -569,6 +580,16 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		}
 		grad <- ave.g/k
 		ave.h <- (-1)*ave.h/k 
+		if(length(guessPrior) > 0){
+			for(i in 1:length(guessPrior)){
+				tmp <- guessPrior[[i]]
+				tmp2 <- tmp[1]
+				if(pars[tmp2] < .1) next 
+				grad[tmp2] <- grad[tmp2] + (tmp[2]-1)*pars[tmp2]^(tmp[2]-2) + (tmp[3]-1)*(1 - pars[tmp2])^(tmp[3]-2)
+				ave.h[tmp2,tmp2] <- ave.h[tmp2,tmp2] + (tmp[2]-2)*(tmp[2]-1)*pars[tmp2]^(tmp[2]-3) 
+					+ (tmp[3]-2)*(tmp[3]-1)*(1 - pars[tmp2])^(tmp[3]-3)
+			}		
+		}
 		if(printcycles){
 			if((cycles + 1) %% 10 == 0){
 				if(cycles < burnin)
@@ -586,16 +607,13 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		    correction <- SparseM::solve(ave.h) %*% grad					
 			parsold <- pars
 			correction[correction > .5] <- .5
-			correction[correction < -0.5] <- -0.5	
-			if(any(estGuess)) 
-				correction[gind] <- 0											 
+			correction[correction < -0.5] <- -0.5				
 			pars <- pars + gamma*correction
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()			
 			}	
-			pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
-			pars[pars[gind] > .4] <- parsold[pars[gind] > .4]	
+			pars[gind][pars[gind] < 0] <- parsold[gind][pars[gind] < 0]			
 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
 			next
 		}	
@@ -604,9 +622,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		Tau <- Tau + gamma*(ave.h - Tau)		
 		correction <- SparseM::solve(Tau) %*% grad
 		correction[correction > .5] <- .5
-		correction[correction < -0.5] <- -0.5	
-		if(any(estGuess))
-			correction[gind] <- 0							
+		correction[correction < -0.5] <- -0.5										
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep='')
@@ -617,8 +633,7 @@ polymirt <- function(data, nfact, guess = 0, prev.cor = NULL, ncycles = 2000,
 		if(conv == 3) break		
 		parsold <- pars
 		pars <- pars + gamma*correction	
-		pars[pars[gind] < 0] <- parsold[pars[gind] < 0]
-		pars[pars[gind] > .4] <- parsold[pars[gind] > .4]
+		pars[gind][pars[gind] < 0] <- parsold[gind][pars[gind] < 0]	
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE		
 		phi <- phi + gamma*(grad - phi)
