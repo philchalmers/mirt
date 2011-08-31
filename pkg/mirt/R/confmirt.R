@@ -247,7 +247,7 @@ setMethod(
 		x <- object@estpars	
 		df <- as.integer(length(r) - sum(x$estlam) - sum(x$estgcov) - 
 			sum(x$estgmeans) - length(zetas) + object@nconstvalues + 
-			nfact*(nfact - 1)/2 - 1)			
+			nfact*(nfact - 1)/2 - sum(x$estGuess) - 1)			
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
 		if(G2){			
@@ -738,12 +738,16 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		g <- rep(0,npars)
 		h <- matrix(0,npars,npars)	
 		for (j in 1:k) {
-            g <- rep(NA, npars)
-            loc <- 1
-            for (i in 0:(J - 1)) {
+            g <- rep(NA, npars)            
+            for (i in 0:(J - 1)) {			
 				if(estComp[i+1]){
 					if (estGuess[i + 1]) {
-						
+						temp <- dpars.comp(lambdas[i + 1,][estlam[i+1,]], zetas[[i+1]], 
+							guess[i+1], fulldata[, itemloc[i + 1]], m.thetas[[j]], TRUE)
+						ind <- parind[is.na(g)][1]
+						ind2 <- ind + length(temp$grad) - 1
+						g[ind:ind2] <- temp$grad
+						h[ind:ind2, ind:ind2] <- temp$hess						
 					} else {
 						temp <- dpars.comp(lambdas[i + 1,][estlam[i+1,]], zetas[[i+1]], 
 							guess[i+1], fulldata[, itemloc[i + 1]], m.thetas[[j]])
@@ -754,20 +758,18 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 						}
 						ind2 <- ind + length(zetas[[i+1]])*2 - 1
 						g[ind:ind2] <- temp$grad
-						h[ind:ind2, ind:ind2] <- temp$hess
-						loc <- loc + length(zetas[[i+1]])*2 - 1
+						h[ind:ind2, ind:ind2] <- temp$hess						
 					}				
 					next
 				}
                 if (estGuess[i + 1]) {
-					temp <- dpars.dich(lambdas[i + 1, ], zetas[loc], 
+					temp <- dpars.dich(lambdas[i + 1, ], zetas[[i+1]], 
 						guess[i + 1], fulldata[, itemloc[i + 1]], 
 						m.thetas[[j]], estGuess[i + 1])
 					ind <- parind[is.na(g)][1]
-					ind2 <- ind + nfact + estGuess[i + 1]
+					ind2 <- ind + nfact + 1
 					g[ind:ind2] <- temp$grad
-					h[ind:ind2, ind:ind2] <- temp$hess
-					loc <- loc + 1
+					h[ind:ind2, ind:ind2] <- temp$hess					
 				} else {					
 					temp <- dpars.poly(lambdas[i + 1, ], zetas[[i+1]], 
 						fulldata2[, itemloc[i + 1]:(itemloc[i + 2] - 1)], m.thetas[[j]])
@@ -778,8 +780,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 					}						
 					ind2 <- ind + nfact + K[i + 1] - 2
 					g[ind:ind2] <- temp$grad
-					h[ind:ind2, ind:ind2] <- temp$hess
-					loc <- loc + K[i + 1] - 1
+					h[ind:ind2, ind:ind2] <- temp$hess					
                 }
             }
 			g[is.na(g)] <- 0
@@ -804,11 +805,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 					grad[tmp[2]] <- grad[tmp[2]] - (pars[tmp[2]] - tmp[3])/ tmp[4]^2
 					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] +  1/tmp[4]^2
 				}				
-				else if(tmp[1] == 2){
-					if(pars[tmp[2]] < .1) next
-					grad[tmp[2]] <- grad[tmp[2]] + (tmp[3]-1)*pars[tmp[2]]^(tmp[3]-2) + (tmp[4]-1)*(1-pars[tmp[2]])^(tmp[4]-2)
-					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + (tmp[3]-2)*(tmp[3]-1)*pars[tmp[2]]^(tmp[3]-3)
-						+ (tmp[4]-2)*(tmp[4]-1)*(1-pars[tmp[2]])^(tmp[4]-3)
+				else if(tmp[1] == 2){		
+					tmp2 <- betaprior(tmp[3],tmp[4],pars[tmp[2]])					
+					grad[tmp[2]] <- grad[tmp[2]] + tmp2$g
+					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + tmp2$h
 				}				
 			}
 		}		
@@ -830,6 +830,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		}			
 		if(stagecycle < 3){			
 			try(correction <- SparseM::solve(ave.h) %*% grad)
+			if(any(is.na(correction))){
+				cat("\n Estimation terminated early. Last iteration parameter values are returned: \n")
+				return(list(lambdas=lambdas,zetas=zetas,guess=guess, gmeans=gmeans,gcov=gcov))
+			}	
 			if(class(correction) == 'try-errorr') next
 			correction[correction > 1] <- 1
 			correction[correction < -1] <- -1			
@@ -840,6 +844,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			if(length(equalconstr) > 0)	
 				for(i in 1:length(equalconstr))
 					correct[equalconstr[[i]]] <- mean(correct[equalconstr[[i]]])			
+			correct[correct[guessind] > .05] <- .05		
+			correct[correct[guessind] < -.05] <- -.05
 			pars <- pars + gamma*correct
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
@@ -855,6 +861,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)			
 		try(correction <- SparseM::solve(Tau) %*% grad)
+		if(any(is.na(correction))){
+			cat("\n Estimation terminated early. Last iteration parameter values are returned \n")
+			return(list(lambdas=lambdas,zetas=zetas,guess=guess,gmeans=gmeans,gcov=gcov))
+		}	
 		if(class(correction) == 'try-error'){
 			noninvcount <- noninvcount + 1
 			if(noninvcount == 3) stop('Estimation terminated due to matrix inversion problems') 
@@ -874,7 +884,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		}	
 		if(all(gamma*correct < tol)) conv <- conv + 1
 			else conv <- 0		
-		if(conv == 3) break	
+		if(conv == 3) break
+		correct[correct[guessind] > .025] <- .025		
+		correct[correct[guessind] < -.025] <- -.025	
 		pars <- pars + gamma*correct	
 		pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
 		pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]

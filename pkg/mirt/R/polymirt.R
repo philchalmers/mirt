@@ -323,7 +323,7 @@ setMethod(
 		if(sum(logr) != 0)								
 			logLik <- logLik + logN/sum(logr)		
 		SElogLik <- sqrt(var(log(rwmeans)) / draws)
-		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2
+		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2 - object@estGuess
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
 		if(G2){				
@@ -460,17 +460,18 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 			loc <- loc + K[i] - 1	
 		}		
 	}	
-	npars <- length(c(lambdas,zetas)) + sum(estGuess) #start here
+	npars <- length(c(lambdas,zetas)) + sum(estGuess) 
 	parind <- 1:npars
 	pars <- rep(NA,npars)
-	Ksum <- cumsum(K + nfact - 1 + estGuess) - (nfact-1)
+	Ksum <- cumsum(K-1 + nfact + estGuess)
+	Ksum <- Ksum - min(Ksum) + K[1]
 	lamind	<- gind <- c()	 
 	for(i in 1:J){
 		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]
 		lamind <- c(lamind,Ksum[i]:(Ksum[i] + nfact - 1))
 		if(estGuess[i]){
-			pars[Ksum[i] - 2] <- guess[i]
-			gind <- c(gind,Ksum[i] - 2)
+			pars[Ksum[i] + nfact] <- guess[i]
+			gind <- c(gind,Ksum[i] + nfact)
 		}	
 	}	
 	zetaind <- parind[is.na(pars)]			
@@ -582,12 +583,10 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		ave.h <- (-1)*ave.h/k 
 		if(length(guessPrior) > 0){
 			for(i in 1:length(guessPrior)){
-				tmp <- guessPrior[[i]]
-				tmp2 <- tmp[1]
-				if(pars[tmp2] < .1) next 
-				grad[tmp2] <- grad[tmp2] + (tmp[2]-1)*pars[tmp2]^(tmp[2]-2) + (tmp[3]-1)*(1 - pars[tmp2])^(tmp[3]-2)
-				ave.h[tmp2,tmp2] <- ave.h[tmp2,tmp2] + (tmp[2]-2)*(tmp[2]-1)*pars[tmp2]^(tmp[2]-3) 
-					+ (tmp[3]-2)*(tmp[3]-1)*(1 - pars[tmp2])^(tmp[3]-3)
+				tmp <- guessPrior[[i]]				
+				tmp2 <- betaprior(tmp[2],tmp[3],pars[tmp[1]])				
+				grad[tmp[1]] <- grad[tmp[1]] + tmp2$g
+				ave.h[tmp[1],tmp[1]] <- ave.h[tmp[1],tmp[1]] + tmp2$h
 			}		
 		}
 		if(printcycles){
@@ -604,7 +603,11 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 			}
 		}			
 		if(stagecycle < 3){
-		    correction <- SparseM::solve(ave.h) %*% grad					
+		    correction <- SparseM::solve(ave.h) %*% grad
+			if(any(is.na(correction))){
+				cat("\n Estimation terminated early. Last iteration parameter values are returned: \n")
+				return(list(lambdas=lambdas,zetas=zetas,guess=guess))
+			}				
 			parsold <- pars
 			correction[correction > .5] <- .5
 			correction[correction < -0.5] <- -0.5				
@@ -621,6 +624,10 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)		
 		correction <- SparseM::solve(Tau) %*% grad
+		if(any(is.na(correction))){
+			cat("\n Estimation terminated early. Last iteration parameter values are returned: \n")
+			return(list(lambdas=lambdas,zetas=zetas,guess=guess))
+		}
 		correction[correction > .5] <- .5
 		correction[correction < -0.5] <- -0.5										
 		if(printcycles && (cycles + 1) %% 10 == 0){ 
@@ -680,7 +687,8 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		
 	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
-		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge, Call=Call)
+		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
+		estGuess=estGuess, Call=Call)
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()
