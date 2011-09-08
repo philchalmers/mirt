@@ -55,7 +55,7 @@ setMethod(
 	signature = 'confmirtClass',
 	definition = function(object, digits = 3, ...)
 	{
-		if(any(object@estComp)) stop('No factor metric for non-compensatory models')
+		if(any(object@estComp)) stop('No factor metric for noncompensatory models')
 		nfact <- ncol(object@F)		
 		F <- object@F		
 		colnames(F) <- paste("F_", 1:ncol(F),sep="")						

@@ -285,8 +285,7 @@ setMethod(
 		LL <- matrix(0,N,draws)		
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
-		K <- object@K
-		df <- -nfact*J - sum(K - 1) - 1
+		K <- object@K		
 		fulldata <- object@fulldata
 		estComp <- rep(FALSE,J)
 		for(i in 1:draws){
@@ -323,7 +322,7 @@ setMethod(
 		if(sum(logr) != 0)								
 			logLik <- logLik + logN/sum(logr)		
 		SElogLik <- sqrt(var(log(rwmeans)) / draws)
-		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2 - object@estGuess
+		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2 - sum(object@estGuess)
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
 		if(G2){				
