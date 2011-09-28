@@ -359,8 +359,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	# EM loop
 	for (cycles in 1:ncycles)
 	{       
-		rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)
-		prior <- rlist[[4]]
+		rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)		
 		if (debug) print(sum(r*log(rlist[[3]])))
 		lastpars2 <- lastpars1
 		lastpars1 <- pars	
