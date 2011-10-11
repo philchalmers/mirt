@@ -82,6 +82,13 @@ Unrestricted full-information factor analysis is known to have problems with con
 
 }
 
+\section{Additional Estimation Functions}{
+
+For data that do not contain strickly dichotomous responses users should attempt the stochastic equivelent \code{\link{polymirt}} function, which can analyze mixed data formats as well as estimate lower asymptote paramters. For a specialized bifactor model see \code{\link{bfactor}}, or for a more general confirmatory item response modeling see the \code{\link{confmirt}} function.
+
+}
+
+
 \references{
 
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.
@@ -98,7 +105,7 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
-\seealso{\code{\link{expand.table}},\code{\link{key2binary}}}
+\seealso{\code{\link{expand.table}},\code{\link{key2binary}},\code{\link{polymirt}},\code{\link{confmirt}}}
 
 \examples{
 \dontrun{

@@ -395,7 +395,7 @@ setMethod(
 
 polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
-	calcLL = TRUE, draws = 2000, debug = FALSE, ...)
+	calcLL = TRUE, draws = 2000, debug = FALSE, technical = list(), ...)
 {		
 	Call <- match.call()   
 	itemnames <- colnames(data)

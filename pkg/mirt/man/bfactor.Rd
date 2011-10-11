@@ -64,7 +64,7 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
-\seealso{\code{\link{expand.table}},\code{\link{key2binary}}}
+\seealso{\code{\link{expand.table}},\code{\link{key2binary}},\code{\link{confmirt}}}
 
 \examples{
 \dontrun{

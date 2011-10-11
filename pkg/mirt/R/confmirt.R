@@ -319,7 +319,7 @@ setMethod(
 
 confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, ...)
+	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
 {		
 	Call <- match.call()   
 	itemnames <- colnames(data)
