@@ -24,7 +24,7 @@ logLik(object, ...)
  }
 
 \value{
- returns an object of class \code{polymirtClass} or \code{confmirtClass} with the log-likelihood, standard error, and (possibly) the G^2 model fit statistic.
+ Returns an object of class \code{polymirtClass} or \code{confmirtClass} with the log-likelihood, standard error, and (possibly) the G^2 model fit statistic.
 }
 
 \examples{

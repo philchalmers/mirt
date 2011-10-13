@@ -14,12 +14,13 @@ key2binary(fulldata, key)
  }
 
 \value{
-  returns a numeric matrix with all the response patterns in dichotomous format.
+  Returns a numeric matrix with all the response patterns in dichotomous format.
 }
 
 \examples{
 \dontrun{
 data(SAT12)
+head(SAT12)
 key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 
 dicho.SAT12 <- key2binary(SAT12,key)

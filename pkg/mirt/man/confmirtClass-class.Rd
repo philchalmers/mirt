@@ -17,29 +17,29 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
 }
 \section{Slots}{
   \describe{
-    \item{\code{pars}:}{Object of class \code{"matrix"}, parameters }
-    \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters }
+    \item{\code{pars}:}{Object of class \code{"matrix"}, estimated parameters }
+    \item{\code{guess}:}{Object of class \code{"numeric"}, estimated guessing parameters }
     \item{\code{SEpars}:}{Object of class \code{"matrix"},  standard errors for pars}
     \item{\code{SEg}:}{Object of class \code{"numeric"}, standard errors for guess }
     \item{\code{gpars}:}{Object of class \code{"list"}, group parameters }
     \item{\code{SEgpars}:}{Object of class \code{"list"}, standard errors for gpars }
-    \item{\code{estpars}:}{Object of class \code{"list"}, indicators for gpars }
-    \item{\code{cycles}:}{Object of class \code{"numeric"},  number of MHRM cycles}
+    \item{\code{estpars}:}{Object of class \code{"list"}, logical indicators for gpars }
+    \item{\code{cycles}:}{Object of class \code{"numeric"},  number of MH-RM cycles}
     \item{\code{Theta}:}{Object of class \code{"matrix"}, final MH draw }
-    \item{\code{fulldata}:}{Object of class \code{"matrix"},  binary data}
-    \item{\code{data}:}{Object of class \code{"matrix"}, data with 99 as missing }
-    \item{\code{K}:}{Object of class \code{"numeric"},  number of item categories}
+    \item{\code{fulldata}:}{Object of class \code{"matrix"},  dichotomous expression of data-set}
+    \item{\code{data}:}{Object of class \code{"matrix"}, fulldata with 99 as missing }
+    \item{\code{K}:}{Object of class \code{"numeric"},  number of item categories for each item}
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item location in fulldata }
-    \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
-    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
+    \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
+    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo std error for log-likelihood }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
-    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian Information Criteria }
+    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{estComp}:}{Object of class \code{"logical"}, vector indicating which items were estimated with the partially compensetory model }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
-    \item{\code{nconstvalues}:}{Object of class \code{"integer"}, fixed parameters count }
+    \item{\code{nconstvalues}:}{Object of class \code{"integer"}, count of fixed parameters  }
     \item{\code{G2}:}{Object of class \code{"numeric"}, G2 model fit statistic }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data with expected values }

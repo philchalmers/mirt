@@ -5,15 +5,16 @@
 \alias{fscores,mirtClass-method}
 \title{ Methods for Function fscores }
 \description{
- Methods for function \code{fscores} 
+ Save tabulated or full data factor scores for \code{mirt} or \code{bfactor} using EAP or MAP scoring.
 }
 \section{Methods}{
-\describe{Save tabulated or full data factor scores for \code{mirt} or \code{bfactor} using EAP or MAP scoring.
+  \describe{
+    \item{fscores}{\code{signature(object = "bfactorClass")}}
+    \item{fscores}{\code{signature(object = "mirtClass")}}
+  }
+}
 
-\item{\code{signature(object = "bfactorClass")}}{}
-
-\item{\code{signature(object = "mirtClass")}}{}
-}}
+\author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
 \keyword{methods}
 

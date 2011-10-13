@@ -9,7 +9,7 @@
 
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response Theory)}
 \description{
-  \code{mirt} fits an unconditional maximum likelihood factor analysis model to dichotomous data under the item response theory paradigm. Pseudo-guessing parameters may be included but must be declared as constant, since the estimation of these parameters often leads to unacceptable solutions. Missing values are automatically assumed to represent the lowest response category.
+  \code{mirt} fits an unconditional maximum likelihood factor analysis model to dichotomous data under the item response theory paradigm. Pseudo-guessing parameters may be included but must be declared as constant, since the estimation of these parameters often leads to unacceptable solutions. Missing values are automatically assumed to be 0.
 }
 
 \usage{
@@ -34,7 +34,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 \arguments{
   \item{fulldata}{a \code{matrix} or \code{data.frame} that consists of only 0, 1, and \code{NA} values to be factor analyzed. If scores have been recorded by the response pattern then they can be recoded to dichotomous format using the \code{\link{key2binary}} function}
   \item{nfact}{number of factors to be extracted}
-  \item{guess}{fixed pseudo-guessing parameters. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector for each item}
+  \item{guess}{fixed pseudo-guessing parameters. Can be entered as a single value to assign a global guessing parameter or may be entered as a numeric vector correspding to each item}
   \item{prev.cor}{use a previously computed correlation matrix to be used to estimate starting values for the EM estimation? Default in \code{NULL}}
   \item{par.prior}{a list declaring which items should have assumed priors distributions, and what these prior weights are. Elements are \code{slope} and \code{int} to specify the coefficients beta prior for the slopes and normal prior for the intercepts, and \code{slope.items} and \code{int.items} to specify which items to constrain. The value in  \code{slope} is the \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1 constrains the slopes), and the two values in \code{int} are the normal distribution intercept and variance. Larger values of the variance have less impact on the solution. For example, if items 2 and 3 were Heywood cases with no extreme item facilities, and item 4 had a very large item facility (say, greater than .95) then a possible constraint might be \code{par.prior = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}}
   \item{rotate}{type of rotation to perform after the initial orthogonal parameters have been extracted. See below for list of possible rotations}
@@ -45,7 +45,7 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   \item{x}{an object of class \code{mirt} to be plotted or printed}
   \item{object}{a model estimated from \code{mirt} of class \code{mirt}}
   \item{object2}{a second model estimated from \code{mirt} of class \code{mirt} with more estimated parameters than \code{object}}
-  \item{suppress}{a numeric value indicating which (possibly rotated) factor loadings should be suppressed. Typical values are around .3 in most statistical software}
+  \item{suppress}{a numeric value indicating which (possibly rotated) factor loadings should be suppressed. Typical values are around .3 in most statistical software. Default is 0 for no suppression }
   \item{digits}{number of significant digits to be rounded}
   \item{type}{type of plot to view; can be \code{'curve'} for the total test score as a function of two dimensions, or \code{'info'} to show the test information function for two dimensions}
   \item{npts}{number of quadrature points to be used for plotting features. Larger values make plots look smoother}
@@ -58,13 +58,13 @@ mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 
 \details{
 
-  \code{mirt} follows the item factor analysis strategy by marginal maximum likelihood estimation (MML) outlined in Bock and Aiken (1981) and Bock, Gibbons and Muraki (1988). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC (comparison via \code{\link{anova}}). The general equation used for multidimensional item response theory in this package is in the logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The target equation is
+  \code{mirt} follows the item factor analysis strategy by marginal maximum likelihood estimation (MML) outlined in Bock and Aiken (1981) and Bock, Gibbons and Muraki (1988). Nested models may be compared via the approximate chi-squared difference test or by a reduction in AIC/BIC values (comparison via \code{\link{anova}}). The general equation used for dichotomous multidimensional item response theory item is a logistic form with a scaling correction of 1.702. This correction is applied to allow comparison to mainstream programs such as TESTFACT (2003). The general IRT equation is
 
-\deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_j + (1 - g_j) * exp(1.702(\bold{a}_j' \theta + d_j))/ (1 + exp(1.702(\bold{a}_j' \theta + d_j)))}
+\deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_j + (1 - g_j) / (1 + exp(-1.702(\bold{a}_j' \theta + d_j)))}
 
-where \emph{j} is the item index, \eqn{\bold{a}_j} is the vector of discrimination parameters (i.e. slopes), \deqn{\theta} is the vector of factor scores, \eqn{d_j} is the intercept, and \eqn{g_j} is the pseudo-guessing parameter. To avoid estimation difficulties the \eqn{g_j}'s must be specified by the user.
+where \emph{j} is the item index, \eqn{\bold{a}_j} is the vector of discrimination parameters (i.e., slopes), \deqn{\theta} is the vector of factor scores, \eqn{d_j} is the intercept, and \eqn{g_j} is the pseudo-guessing parameter. To avoid estimation difficulties the \eqn{g_j}'s must be specified by the user.
 
-  Estimation begins by computing a matrix of quasi-tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responds. A MINRES factor analysis with \code{nfact} is then extracted and item parameters are estimated by \eqn{a_{ij} = f_{ij}/u_j}, where  \eqn{f_{ij}} is the factor loading for the \emph{j}th item on the \emph{i}th factor, and \eqn{u_j} is the square root of the factor uniqueness, \eqn{\sqrt{1 - h_j^2}}. The initially intercept parameters are determined by calculating the inverse normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain \eqn{d_j = q_j / u_j}. Following these initial estimates the model is iterated using the EM estimation strategy with fixed quadrature points. Implicit equation accelerations (described in Ramsey (1975)) are also added to facilitate parameter convergence speed, and this is adjusted every third cycle.
+  Estimation begins by computing a matrix of quasi-tetrachoric correlations, potentially with Carroll's (1945) adjustment for chance responds. A MINRES factor analysis with \code{nfact} is then extracted and item parameters are estimated by \eqn{a_{ij} = f_{ij}/u_j}, where  \eqn{f_{ij}} is the factor loading for the \emph{j}th item on the \emph{i}th factor, and \eqn{u_j} is the square root of the factor uniqueness, \eqn{\sqrt{1 - h_j^2}}. The initial intercept parameters are determined by calculating the inverse normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain \eqn{d_j = q_j / u_j}. Following these initial estimates the model is iterated using the EM estimation strategy with fixed quadrature points. Implicit equation accelerations described by Ramsey (1975) are also added to facilitate parameter convergence speed, and these are adjusted every third cycle.
 
   Factor scores are estimated assuming a normal prior distribution and can be appended to the input data matrix (\code{full.data = TRUE}) or displayed in a summary table for all the unique response patterns. \code{summary} allows for various rotations available from the \code{GPArotation} package. These are:
 
@@ -73,18 +73,18 @@ where \emph{j} is the item index, \eqn{\bold{a}_j} is the vector of discriminati
     \item{oblique: }{\code{"promax", "oblimin", "quartimin", "oblimax", "simplimax"}}
   }
 
-  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individuals item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is much more suitable for IRT graphics) which will also plot information and surface functions. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
+  Using \code{plot} will plot the either the test surface function or the test information function for 1 and 2 dimensional solutions. To examine individual item plots use \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package may be more suitable for IRT graphics) which will also plot information and surface functions. Residuals are computed using the LD statistic (Chen \& Thissen, 1997) in the lower diagonal of the matrix returned by \code{residuals}, and Cramer's V above the diagonal.
 }
 
 \section{Convergence}{
 
-Unrestricted full-information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for an acceptable solution. Be mindful of the item facility values that are printed with \code{coef} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for removal from the analysis. Also, increasing the number of quadrature points per dimension may help to stabilize the estimation process.
+Unrestricted full-information factor analysis is known to have problems with convergence, and some items may need to be constrained or removed entirely to allow for an acceptable solution. Be mindful of the item facility values that are printed with \code{coef} since these will be helpful in determining whether a guessing parameter should be removed (item facility value is too close to the guessing parameter) or if an item should be constrained or removed entirely (values too close to 0 or 1). As a general rule, items with facilities greater than .95, or items that are only .05 greater than the guessing parameter, should be considered for removal from the analysis or treated with prior distributions. Also, increasing the number of quadrature points per dimension may help to stabilize the estimation process.
 
 }
 
 \section{Additional Estimation Functions}{
 
-For data that do not contain strickly dichotomous responses users should attempt the stochastic equivelent \code{\link{polymirt}} function, which can analyze mixed data formats as well as estimate lower asymptote paramters. For a specialized bifactor model see \code{\link{bfactor}}, or for a more general confirmatory item response modeling see the \code{\link{confmirt}} function.
+For data that do not contain strickly dichotomous responses users should use the stochastic equivelent \code{\link{polymirt}} function, which can analyze mixed dichotomous and polytomous data formats as well as estimate the lower asymptote paramters. For a specialized bifactor model see \code{\link{bfactor}}, and for  more general confirmatory item response modeling see the \code{\link{confmirt}} function.
 
 }
 

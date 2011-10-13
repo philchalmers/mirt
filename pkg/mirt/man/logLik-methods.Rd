@@ -5,15 +5,15 @@
 \alias{logLik,confmirtClass-method}
 \title{ Methods for Function logLik }
 \description{
- Methods for function \code{logLik}
+ Calculate new objects that contain the Monte Carlo estimated observed log-likelihood values for \code{polymirt} and \code{confmirt} objects.
 }
 \section{Methods}{
-\describe{Calculate new objects that contain the Monte Carlo estimated observed log-likelihood values for \code{polymirt} and \code{confmirt} objects.
-
-\item{\code{signature(object = "polymirtClass")}}{}
-
-\item{\code{signature(object = "confmirtClass")}}{}
+\describe{
+\item{logLik}{\code{signature(object = "polymirtClass")}}
+\item{logLik}{\code{signature(object = "confmirtClass")}}
 }}
+
+\author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
 \keyword{methods}
 

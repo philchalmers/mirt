@@ -8,12 +8,12 @@
 
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \description{
-  \code{polymirt} fits an unconditional full-information maximum-likelihood factor analysis model to dichotomous and polychotomous data under the item response theory paradigm using Cai's (2010) Metropolis-Hastings Robbins-Monro algorithm.
+  \code{polymirt} fits an unconditional (exploratory) full-information maximum-likelihood factor analysis model to dichotomous and polychotomous data under the item response theory paradigm using Cai's (2010) Metropolis-Hastings Robbins-Monro algorithm.
 }
 
 \usage{
-polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, burnin = 100, 
-  SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
+polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, 
+  burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
   draws = 2000, debug = FALSE, technical = list(), ...)
 
 \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
@@ -77,7 +77,7 @@ Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R
 
 \author{Phil Chalmers \email{rphilip.chalmers@gmail.com}}
 
-\seealso{\code{\link{expand.table}},\code{\link{key2binary}}}
+\seealso{\code{\link{expand.table}}, \code{\link{key2binary}}}
 
 \examples{
 \dontrun{

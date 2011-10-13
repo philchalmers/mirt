@@ -13,7 +13,7 @@ expand.table(tabdata)
  }
 
 \value{
-  returns a numeric matrix with all the response patterns.
+  Returns a numeric matrix with all the response patterns.
 }
 
 \examples{

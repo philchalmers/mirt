@@ -2,7 +2,7 @@
 \alias{simdata}
 \title{Simulate response patterns from an underlying multivariate normal distribution}
 \description{
-Simulates response patterns for compensetory MIRT models from multivariate normally distributed factor (\eqn{\theta}) scores, or from a user input matrix of \eqn{\theta}'s.
+Simulates response patterns for compensetory and noncompensatory MIRT models from multivariate normally distributed factor (\eqn{\theta}) scores, or from a user input matrix of \eqn{\theta}'s.
 }
 
 \usage{
@@ -12,12 +12,12 @@ simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0, partcomp = FALSE,
 }
  \arguments{
    \item{a}{a matrix of slope parameters. If slopes are to be constrained to zero then use \code{NA}. \code{a} may also be a similar matrix specifying factor loadings if \code{factor.loads = TRUE}}
-   \item{d}{a matrix of intercepts. The matrix should have as many columns as the item with the largest number of categories, and fill the empty locations with \code{NA}}
+   \item{d}{a matrix of intercepts. The matrix should have as many columns as the item with the largest number of categories, and filled empty locations with \code{NA}}
    \item{N}{sample size}
    \item{guess}{a vector of guessing parameters for each item; only applicable for dichotomous items. Must be either a scalar value that will affect all of the dichotomous items, or a vector with as many values as to be simulated items}
    \item{sigma}{a covariance matrix of the underlying distribution. Default is the identity matrix}
    \item{mu}{a mean vector of the underlying distribution. Defualt is a vector of zeros}
-   \item{partcomp}{a logical vector used to sepcify which items are to be treated as parially compensatory items (see Reckase, 2009), and single values are repeated for each item. Note that when simulating compensatory data the slope parameters must equal the number of intercept parameters}
+   \item{partcomp}{a logical vector used to sepcify which items are to be treated as parially compensatory items (see Reckase, 2009), and single values are repeated for each item. Note that when simulating noncompensatory data the slope parameters must equal the number of intercept parameters}
    \item{factor.loads}{logical; are the slope parameters in \code{a} in the factor loadings metric?}
    \item{Theta}{a user specified matrix of the underlying ability parameters, where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}}
    }

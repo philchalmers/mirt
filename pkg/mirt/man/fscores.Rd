@@ -20,13 +20,13 @@ fscores(object, ...)
 }
  \arguments{
    \item{object}{a model of class \code{mirtClass} or \code{bfactorClass}}
-   \item{full.scores}{if \code{FALSE} (default) then a summary table with factor scores for each unique pattern is displayed. Otherwise the original data matrix is returned with the computed factor scores}
+   \item{full.scores}{if \code{FALSE} (default) then a summary table with factor scores for each unique pattern is displayed. Otherwise the original data matrix is returned with the computed factor scores appended to the rightmost column}
   \item{method}{type of factor score estimation method. Can be expected a-posteriori (\code{"EAP"}) or Bayes modal (\code{"MAP"})}
    \item{...}{additional arguments to be passed}
  }
 
 \value{
- returns either a summary table with the response patterns and expected factor scores, or a complete data matrix with factor scores appended to the last column.
+ Returns either a summary table with the response patterns and expected factor scores, or a complete data matrix with factor scores appended to the last column.
 }
 
 \examples{

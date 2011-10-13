@@ -20,19 +20,19 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
 \section{Slots}{
   \describe{
     \item{\code{EMiter}:}{Object of class \code{"numeric"}, number of iterations  }
-    \item{\code{pars}:}{Object of class \code{"matrix"}, parameters  }
+    \item{\code{pars}:}{Object of class \code{"matrix"}, estimated parameters  }
     \item{\code{guess}:}{Object of class \code{"numeric", guessing parameters}  }
     \item{\code{X2}:}{Object of class \code{"numeric"}, Chi-squared  }
     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom for X2 }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for X2  }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
-    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian Information Criteria }
-    \item{\code{log.lik}:}{Object of class \code{"numeric"}, log-likelihood }
+    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
+    \item{\code{log.lik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
-    \item{\code{Pl}:}{Object of class \code{"numeric"}, p's for tabulated response}
+    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
     \item{\code{fulldata}:}{Object of class \code{"matrix"}, complete data }
     \item{\code{cormat}:}{Object of class \code{"matrix"}, quasi-correlation matrix }
     \item{\code{facility}:}{Object of class \code{"numeric"}, item easiness }
