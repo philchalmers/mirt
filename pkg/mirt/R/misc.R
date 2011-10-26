@@ -207,9 +207,6 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 	return(rlist)
 }      
 
-#library(mirt)
-#load("C:\\Users\\Phil\\Desktop\\conf.RData")
-
 draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
 	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K))) 
 { 			
@@ -224,7 +221,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	else
 		theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
 	den0 <- dmvnorm(theta0,prior.mu,prior.t.var)
-	den1 <- dmvnorm(theta1,prior.mu,prior.t.var)						
+	den1 <- dmvnorm(theta1,prior.mu,prior.t.var)		
 	accept <- .Call("drawThetas",
 					as.numeric(unif),
 					as.numeric(den0),
@@ -572,3 +569,48 @@ betaprior <- function(a,b,g,W=20){
 		+ ((g^(a-1)*(a-1)*(1-g)^(b-1)/g-g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g))*(b-1)/(g^(a-1)*(1-g)^(b-1)*(1-g))))
 	return(list(g=grad, h=hess))	
 }
+
+cormod <- function(fulldata, K, guess, smooth = TRUE) 
+{  
+	fulldata <- as.matrix(fulldata) 
+	nitems <- ncol(fulldata)         
+	cormat <- cor(fulldata)      
+	if (any(guess > 0)){
+		for (i in 1:nitems){
+			for (j in 1:nitems){
+				if (i < j & K[i] == 2 & K[j] == 2 & guess[i]!= 0 ){         
+					g1 <- guess[i]
+					g2 <- guess[j]
+					tabp <- tab <- table(fulldata[ ,i],fulldata[ ,j])/length(fulldata[ ,i])
+					w1 <- (1 - g1)
+					w2 <- (1 - g2)
+					tabp[1,1] <- tab[1,1]/(w1*w2)
+					tabp[1,2] <- (w2*tab[1,2] - g2*tab[1,1])/(w1*w2)
+					tabp[2,1] <- (w1*tab[2,1] - g1*tab[1,1])/(w1*w2)
+					tabp[2,2] <- 1 - tabp[1,1] - tabp[1,2] - tabp[2,1]
+					tabp <- round(tabp*length(fulldata[ ,i]))
+					if(any(tabp < 0)) next	
+					cormat[i,j] <- cormat[j,i] <- 
+						abs(phi(tabp,6))^(1/1.15)*sign(phi(tabp,6))          		  
+				} 
+				if(i < j & K[i] == 2 & K[j] > 2 & guess[i]!= 0) 
+					cormat[i,j] <- cormat[j,i] <- abs(cormat[i,j])^(1/1.15) * sign(cormat[i,j])
+			}	
+		}      
+	} 
+	cormat <- abs(cormat)^(1/1.15) * sign(cormat)  
+	if(smooth){  
+		eig <- eigen(cormat)
+		negvalues <- eig$values < 0 
+		if (any(negvalues)) {
+			negeig <- sum(abs(eig$value[eig$value < 0])) 
+			eig$value[eig$value < 0] <- 0
+			L <- nitems/sum(eig$value)*eig$value[!negvalues]
+			V <- eig$vector[ ,!negvalues] 
+			cormat <- V %*% diag(L) %*% t(V)    
+		}      
+	}	
+	cormat
+}  
+
+
