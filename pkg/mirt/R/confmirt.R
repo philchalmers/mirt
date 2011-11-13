@@ -673,6 +673,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	}	
 	m.thetas <- grouplist <- list()		
 	SEM.stores <- matrix(0,SEM.cycles,npars)
+	SEM.stores2 <- list()
 	phi <- rep(0,sum(sind))	
 	h <- matrix(0,npars,npars)		
 	Tau <- info <- matrix(0,sum(sind),sum(sind))		
@@ -684,7 +685,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	stagecycle <- 1	
 	converge <- 1
 	nconstvalues <- sum(constvalues[,1] == 1)
-	noninvcount <- 0	
+	noninvcount <- 0		
 	if(length(equalconstr) > 0)	
 		for(i in 1:length(equalconstr))
 			nconstvalues <- nconstvalues + length(equalconstr[[i]]) - 1
@@ -697,7 +698,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	}		
 	
 	####Big MHRM loop
-	for(cycles in 1:(ncycles + burnin + SEM.cycles))				
+	for(cycles in 1:(ncycles + burnin + SEM.cycles))								
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
@@ -705,10 +706,14 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
-			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[i,]
-			pars <- pars/SEM.cycles				
+			for(i in 1:SEM.cycles){
+				pars <- pars + SEM.stores[i,]
+				Tau <- Tau + SEM.stores2[[i]]
+			}	
+			pars <- pars/SEM.cycles	
+			Tau <- Tau/SEM.cycles	
 			k <- kdraws	
-			gamma <- 1
+			gamma <- .25
 		}	
 				
 		lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)
@@ -828,18 +833,18 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 						", Log-Lik = ", sprintf("%.1f",attr(theta0,"log.lik")), sep="")					
 			}
 		}			
-		if(stagecycle < 3){			
-			try(correction <- SparseM::solve(ave.h) %*% grad)
-			if(any(is.na(correction))){
-				cat("\n Estimation terminated early. Last iteration parameter values are returned: \n")
-				return(list(lambdas=lambdas,zetas=zetas,guess=guess, gmeans=gmeans,gcov=gcov))
-			}	
-			if(class(correction) == 'try-errorr') next
+		if(stagecycle < 3){	
+			ave.h <- as(ave.h,'sparseMatrix')
+			try(correction <- solve(ave.h) %*% grad)
+			if(length(correction) == 1){
+				try(correction <- solve(ave.h + 2 * diag(ncol(ave.h))) %*% grad)
+				noninvcount <- noninvcount + 1
+			}			
 			correction[correction > 1] <- 1
 			correction[correction < -1] <- -1			
 			parsold <- pars
 			correct <- rep(0,npars)
-			correct[sind] <- correction
+			correct[sind] <- as.vector(correction)
 			correct[constvalues[,1] == 1] <- 0
 			if(length(equalconstr) > 0)	
 				for(i in 1:length(equalconstr))
@@ -854,25 +859,26 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
 			pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
 			pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
-			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
+			if(stagecycle == 2){
+				SEM.stores[cycles - burnin,] <- pars
+				SEM.stores2[[cycles - burnin]] <- ave.h
+			}	
 			next
 		}	 
 		
 		#Step 3. Update R-M step		
-		Tau <- Tau + gamma*(ave.h - Tau)			
-		try(correction <- SparseM::solve(Tau) %*% grad)
-		if(any(is.na(correction))){
-			cat("\n Estimation terminated early. Last iteration parameter values are returned \n")
-			return(list(lambdas=lambdas,zetas=zetas,guess=guess,gmeans=gmeans,gcov=gcov))
-		}	
-		if(class(correction) == 'try-error'){
+		Tau <- Tau + gamma*(ave.h - Tau)
+		Tau <- as(Tau,'sparseMatrix')	
+		try(correction <- solve(Tau) %*% grad)
+		if(length(correction) == 1){
+			try(correction <- solve(Tau + 2 * diag(ncol(Tau))) %*% grad)
 			noninvcount <- noninvcount + 1
-			if(noninvcount == 3) stop('Estimation terminated due to matrix inversion problems') 
-			next	
-		}	
+			if(noninvcount > 10) 
+				stop('Matrix inversion correction occured more than 10 times. Solution is unstable')
+		}		
 		parsold <- pars
 		correct <- rep(0,npars)
-		correct[sind] <- correction
+		correct[sind] <- as.vector(correction)
 		correct[constvalues[,1] == 1] <- 0
 		if(length(equalconstr) > 0)		
 			for(i in 1:length(equalconstr))
@@ -892,7 +898,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
 		pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
 		
-		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE 			
+		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
+		if(gamma == .25) gamma <- 1	
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	} ###END BIG LOOP
