@@ -322,6 +322,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
 {		
 	Call <- match.call()   
+	set.seed(12345)
+	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
 	itemnames <- colnames(data)
 	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
 	data <- as.matrix(data)		
@@ -835,11 +837,14 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		}			
 		if(stagecycle < 3){	
 			ave.h <- as(ave.h,'sparseMatrix')
-			try(correction <- solve(ave.h) %*% grad)
-			if(length(correction) == 1){
-				try(correction <- solve(ave.h + 2 * diag(ncol(ave.h))) %*% grad)
+			inv.ave.h <- try(solve(ave.h))			
+			if(class(inv.ave.h) == 'try-error'){
+				inv.ave.h <- try(qr.solve(ave.h + 2*diag(ncol(ave.h))))
 				noninvcount <- noninvcount + 1
-			}			
+				if(noninvcount == 3) 
+					stop('\nEstimation halted during burn in stages, solution is unstable')
+			}
+			correction <-  inv.ave.h %*% grad	
 			correction[correction > 1] <- 1
 			correction[correction < -1] <- -1			
 			parsold <- pars
@@ -869,13 +874,14 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		#Step 3. Update R-M step		
 		Tau <- Tau + gamma*(ave.h - Tau)
 		Tau <- as(Tau,'sparseMatrix')	
-		try(correction <- solve(Tau) %*% grad)
-		if(length(correction) == 1){
-			try(correction <- solve(Tau + 2 * diag(ncol(Tau))) %*% grad)
+		inv.Tau <- solve(Tau)
+		if(class(inv.Tau) == 'try-error'){
+			inv.Tau <- try(qr.solve(Tau + 2 * diag(ncol(Tau))))
 			noninvcount <- noninvcount + 1
-			if(noninvcount > 10) 
-				stop('Matrix inversion correction occured more than 10 times. Solution is unstable')
+			if(noninvcount == 3) 
+				stop('\nEstimation halted during stage 3, solution is unstable')
 		}		
+		correction <-  inv.Tau %*% grad
 		parsold <- pars
 		correct <- rep(0,npars)
 		correct[sind] <- as.vector(correction)
