@@ -1,3 +1,25 @@
+#' Methods for Function fscores
+#' 
+#' Save tabulated or full data factor scores for \code{mirt} or \code{bfactor}
+#' using EAP or MAP scoring.
+#' 
+#' 
+#' @name fscores-methods
+#' @aliases fscores-methods fscores,bfactorClass-method
+#' fscores,mirtClass-method fscores,polymirtClass-method
+#' fscores,confmirtClass-method
+#' @docType methods
+#' @section Methods: \describe{ \item{fscores}{\code{signature(object =
+#' "bfactorClass")}} \item{fscores}{\code{signature(object = "mirtClass")}}
+#' \item{fscores}{\code{signature(object = "polymirtClass")}}
+#' \item{fscores}{\code{signature(object = "confmirtClass")}} }
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @exportMethod fscores
+#' @keywords methods
+setGeneric("fscores", 
+	def = function(object, ...) standardGeneric("fscores")
+)
+
 #' Compute factor scores
 #' 
 #' Computes MAP or EAP factor scores for \code{mirt} and \code{bfactor} models,
@@ -6,7 +28,7 @@
 #' 
 #' 
 #' @aliases fscores fscores,mirt-method fscores,bfactor-method
-#' fscores,polymirt-method fscores,confmirt-method
+#' fscores,polymirt-method fscores,confmirt-method fscores
 #' @param object a model of class \code{mirtClass} or \code{bfactorClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
 #' factor scores for each unique pattern is displayed. Otherwise the original

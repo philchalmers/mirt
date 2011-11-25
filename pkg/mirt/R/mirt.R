@@ -1,262 +1,29 @@
-#Methods 
-
-setMethod(
-	f = "print",
-	signature = signature(x = 'mirtClass'),
-	definition = function(x, ...){  
-		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
-			"\n\n", sep = "")
-		cat("Full-information factor analysis with ", ncol(x@F), " factor",
-			if(ncol(x@F)>1) "s", "\n", sep="")
-			if(x@converge == 1)	
-				cat("Converged in ", x@EMiter, " iterations using ", x@quadpts,
-				" quadrature points.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
-				x@quadpts, " quadrature points.\n", sep="")
-		cat("Log-likelihood =", x@log.lik, "\n")
-		cat("AIC =", x@AIC, "\n")		
-		cat("BIC =", x@BIC, "\n")
-		cat("G^2 = ", round(x@X2,2), ", df = ", 
-			x@df, ", p = ", round(x@p,4), "\n", sep="")
-		
-	}
-)
-
-setMethod(
-	f = "show",
-	signature = signature(object = 'mirtClass'),
-	definition = function(object){  
-		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
-			"\n\n", sep = "")
-		cat("Full-information factor analysis with ", ncol(object@F), " factor",
-			if(ncol(object@F)>1) "s", "\n", sep="")
-			if(object@converge == 1)	
-				cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
-				" quadrature points.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
-				object@quadpts,	" quadrature points.\n", sep="")
-		cat("Log-likelihood =", object@log.lik, "\n")
-		cat("AIC =", object@AIC, "\n")		
-		cat("BIC =", object@BIC, "\n")
-		cat("G^2 = ", round(object@X2,2), ", df = ", 
-			object@df, ", p = ", round(object@p,4), "\n", sep="")
-			
-	}
-)
-
-setMethod(
-	f = "summary",
-	signature = 'mirtClass',
-	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...){
-		nfact <- ncol(object@F)
-		if (rotate == 'none' || nfact == 1) {
-			F <- object@F
-			F[abs(F) < suppress] <- NA
-			h2 <- as.matrix(object@h2)				
-			SS <- apply(F^2,2,sum)
-			colnames(h2) <- "h2"			
-			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
-			cat("\nUnrotated factor loadings: \n\n")
-			loads <- round(cbind(F,h2),digits)
-			print(loads)	    	 
-			cat("\nSS loadings: ",round(SS,digits), "\n")
-			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
-			invisible(list(F,h2))
-		} else {	
-			F <- object@F
-			h2 <- as.matrix(object@h2)			
-			colnames(F) <- paste("F_", 1:ncol(F),sep="")
-			colnames(h2) <- "h2"				
-			cat("\nRotation: ", rotate, "\n")
-			rotF <- Rotate(F,rotate)
-			SS <- apply(rotF$loadings^2,2,sum)
-			L <- rotF$loadings
-			L[abs(L) < suppress] <- NA	
-			loads <- round(cbind(L,h2),digits)			
-			cat("\nRotated factor loadings: \n\n")
-			print(loads,digits)		
-			if(attr(rotF, "oblique")){
-				cat("\nFactor correlations: \n\n")
-				Phi <- rotF$Phi	  
-				Phi <- round(Phi, digits)
-				colnames(Phi) <- rownames(Phi) <- colnames(F)
-				print(Phi)            
-			}	
-			cat("\nRoateted SS loadings: ",round(SS,digits), "\n")		
-			if(any(h2 > 1)) 
-				warning("Solution has heywood cases. Interpret with caution.") 
-			invisible(list(rotF$loadings,h2))  
-		}  
-	}
-)
-
-setMethod(
-	f = "coef",
-	signature = 'mirtClass',
-	definition = function(object, digits = 3, ...){  
-		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])
-		d <- object@pars[ ,ncol(object@pars)]
-		A <- sqrt(apply(a^2,1,sum))
-		B <- -d/A  
-		if (ncol(a) > 1){  
-			parameters <- cbind(object@pars,object@guess,object@facility,A,B)    
-			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess", 
-			"facility","mvdisc","mvint")	  
-			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
-			print(round(parameters, digits))  	
-		} else {
-			parameters <- cbind(object@pars,object@guess,object@facility) 
-			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess","facility")    
-			cat("\nParameter slopes and intercepts: \n\n")	
-			print(round(parameters, digits))	  
-		}
-		invisible(parameters)
-	}
-)
-
-setMethod(
-	f = "anova",
-	signature = signature(object = 'mirtClass'),
-	definition = function(object, object2, ...){
-		dots <- list(...)		
-		df <- object@df - object2@df  
-		X2 <- 2*object2@log.lik - 2*object@log.lik 
-		AICdiff <- object@AIC - object2@AIC    
-		BICdiff <- object@BIC - object2@BIC
-		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
-		df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
-		cat("AIC difference = ", round(AICdiff,3), "\n")  
-		cat("BIC difference = ", round(BICdiff,3), "\n")
-	}
-)
-
-setMethod(
-	f = "residuals",
-	signature = signature(object = 'mirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, ...){   	
-		Theta <- object@Theta
-		fulldata <- object@fulldata	
-		N <- nrow(fulldata)	
-		J <- ncol(fulldata)
-		nfact <- ncol(object@F)
-		lambdas <- matrix(object@pars[,1:nfact], J)
-		zetas <- object@pars[,(nfact+1)]
-		guess <- object@guess
-		guess[is.na(guess)] <- 0		
-		if(restype == 'LD'){
-			res <- matrix(0,J,J)
-			diag(res) <- NA
-			colnames(res) <- rownames(res) <- colnames(fulldata)
-			prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
-			prior <- prior/sum(prior)
-			for(i in 1:J){			
-				for(j in 1:J){
-					if(i < j){
-						P1 <- P.mirt(lambdas[i,],zetas[i], Theta, guess[i])
-						P2 <- P.mirt(lambdas[j,],zetas[j], Theta, guess[j])
-						E22 <- N * sum(P1 * P2 * prior)
-						E12 <- N * sum(P1 * (1-P2) * prior)
-						E21 <- N * sum((1-P1) * P2 * prior)
-						E11 <- N * sum((1-P1) * (1-P2) * prior)
-						tab <- table(fulldata[,i],fulldata[,j])
-						Etab <- matrix(c(E11,E12,E21,E22),2)
-						s <- phi(tab) - phi(Etab)
-						if(s == 0) s <- 1
-						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-						res[i,j] <- sqrt( abs(res[j,i]) / N ) 					
-					}
-				}
-			}
-			cat("\nLD matrix:\n\n")			
-			res <- round(res,digits)
-			return(res)		
-		}		
-		if(restype == 'exp'){	
-			r <- object@tabdata[ ,ncol(object@tabdata)]
-			res <- round((r - object@Pl * nrow(object@fulldata)) / 
-				sqrt(object@Pl * nrow(object@fulldata)),digits)
-			expected <- round(N * object@Pl/sum(object@Pl),digits)  
-			tabdata <- cbind(object@tabdata,expected,res)
-			colnames(tabdata) <- c(colnames(fulldata), "freq", "exp", "std_res")								
-			return(tabdata)				
-		}					
-	}
-)
-
-setMethod(
-	f = "plot",
-	signature = signature(x = 'mirtClass', y = "missing"),
-	definition = function(x, y, type = 'info', npts = 50, 
-		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
-	{  
-		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
-		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
-		a <- as.matrix(x@pars[ ,1:(ncol(x@pars) - 1)])
-		d <- x@pars[ ,ncol(x@pars)]
-		g <- x@guess
-		A <- as.matrix(sqrt(apply(a^2,1,sum)))
-		B <- -d/A
-		if(ncol(a) > 2 ) stop("Can't plot high dimentional solutions.\n")
-		theta <- seq(-4,4,length.out=npts)
-		Theta <- thetaComb(theta, ncol(a))
-		P <- matrix(0, ncol=length(g), nrow = nrow(as.matrix(Theta)))
-		for(i in 1:nrow(a)) P[ ,i] <- P.mirt(a[i, ],d[i],as.matrix(Theta),g[i])  
-		Ptot <- rowSums(P) 
-		if(ncol(a) == 2) {			
-			I <- (P * (1 - P)) %*% A^2	
-			if(type == 'curve'){
-				plt <- data.frame(cbind(Ptot,Theta))
-				colnames(plt) <- c("Ptot", "Theta1", "Theta2")
-				return(wireframe(Ptot ~ Theta1 + Theta2, data = plt, main = "Test Score Surface", 
-					zlab = "Test \nScore", xlab = "Theta 1", ylab = "Theta 2", 
-					scales = list(arrows = FALSE), screen = rot))
-			}	
-			if(type == 'contour'){
-				plt <- data.frame(cbind(Ptot,Theta))
-				colnames(plt) <- c('Ptot','Theta1','Theta2')
-				contour(theta, theta, matrix(Ptot,length(theta),length(theta)), 
-					main = "Test Scores Contour", xlab = "Theta 1", ylab = "Theta 2")			
-			}			
-			if(type == 'infocontour'){
-				plt <- data.frame(cbind(I,Theta))
-				colnames(plt) <- c('I','Theta1','Theta2')
-				contour(theta, theta, matrix(I,length(theta),length(theta)), 
-					main = "Test Information Contour", xlab = "Theta 1", ylab = "Theta 2")		
-			}				
-			if(type == 'info'){				 
-				plt <- data.frame(cbind(I,Theta))
-				colnames(plt) <- c("I", "Theta1", "Theta2")
-				return(wireframe(I ~ Theta1 + Theta2, data = plt, main = "Test Information", 
-					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", 
-					scales = list(arrows = FALSE), screen = rot))
-			}
-		} else {
-			if(type == 'curve')  
-				plot(Theta, Ptot, type='l', main = 'Test score plot', xlab = 'Theta', ylab='Test Score')
-			if(type == 'info'){
-				I <- (P * (1 - P)) %*% a^2 
-				plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')			
-			}	
-			if(type == 'contour' || type == 'infocontour') 
-				cat('No \'contour\' plots for 1-dimensional models\n')					
-		} 			
-	}		
+# Class "mirtClass"
+# 
+# Defines the object returned from \code{\link{mirt}}.
+# 
+# 
+# @name mirtClass-class
+# @aliases mirtClass-class anova,mirtClass-method coef,mirtClass-method
+# fitted,mirtClass-method plot,mirtClass,missing-method print,mirtClass-method
+# residuals,mirtClass-method show,mirtClass-method summary,mirtClass-method
+# @docType class
+# @section Objects from the Class: Objects can be created by calls of the form
+# \code{new("mirtClass", ...).}.
+# @method Emiter number of EM iterations
+# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @exportClass mirtClass
+# @keywords classes
+setClass(
+	Class = 'mirtClass',
+	representation = representation(EMiter = 'numeric', pars = 'matrix', guess = 'numeric', 
+		X2 = 'numeric', df = 'numeric', p = 'numeric', AIC = 'numeric', log.lik = 'numeric',
+		F = 'matrix', h2 = 'numeric', tabdata = 'matrix', Theta = 'matrix', Pl = 'numeric',
+		fulldata = 'matrix', cormat = 'matrix', facility = 'numeric', converge = 'numeric', 
+		quadpts = 'numeric', BIC = 'numeric', Call = 'call'),	
+	validity = function(object) return(TRUE)
 )	
 
-setMethod(
-	f = "fitted",
-	signature = signature(object = 'mirtClass'),
-	definition = function(object, digits = 3, ...){  
-		expected <- round(nrow(object@fulldata) * object@Pl,digits)  
-		tabdata <- cbind(object@tabdata,expected)
-		colnames(tabdata) <- c(colnames(object@fulldata),"freq","exp")	
-		print(tabdata)
-		invisible(tabdata)
-	}
-)
-    
 #' Full-Information Item Factor Analysis (Multidimensional Item Response
 #' Theory)
 #' 
@@ -678,5 +445,266 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 		Call=Call)	  
 	return(mod)    
 }
+
+#Methods 
+
+setMethod(
+	f = "print",
+	signature = signature(x = 'mirtClass'),
+	definition = function(x, ...){  
+		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information factor analysis with ", ncol(x@F), " factor",
+			if(ncol(x@F)>1) "s", "\n", sep="")
+			if(x@converge == 1)	
+				cat("Converged in ", x@EMiter, " iterations using ", x@quadpts,
+				" quadrature points.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
+				x@quadpts, " quadrature points.\n", sep="")
+		cat("Log-likelihood =", x@log.lik, "\n")
+		cat("AIC =", x@AIC, "\n")		
+		cat("BIC =", x@BIC, "\n")
+		cat("G^2 = ", round(x@X2,2), ", df = ", 
+			x@df, ", p = ", round(x@p,4), "\n", sep="")
+		
+	}
+)
+
+setMethod(
+	f = "show",
+	signature = signature(object = 'mirtClass'),
+	definition = function(object){  
+		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information factor analysis with ", ncol(object@F), " factor",
+			if(ncol(object@F)>1) "s", "\n", sep="")
+			if(object@converge == 1)	
+				cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
+				" quadrature points.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
+				object@quadpts,	" quadrature points.\n", sep="")
+		cat("Log-likelihood =", object@log.lik, "\n")
+		cat("AIC =", object@AIC, "\n")		
+		cat("BIC =", object@BIC, "\n")
+		cat("G^2 = ", round(object@X2,2), ", df = ", 
+			object@df, ", p = ", round(object@p,4), "\n", sep="")
+			
+	}
+)
+
+setMethod(
+	f = "summary",
+	signature = 'mirtClass',
+	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...){
+		nfact <- ncol(object@F)
+		if (rotate == 'none' || nfact == 1) {
+			F <- object@F
+			F[abs(F) < suppress] <- NA
+			h2 <- as.matrix(object@h2)				
+			SS <- apply(F^2,2,sum)
+			colnames(h2) <- "h2"			
+			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
+			cat("\nUnrotated factor loadings: \n\n")
+			loads <- round(cbind(F,h2),digits)
+			print(loads)	    	 
+			cat("\nSS loadings: ",round(SS,digits), "\n")
+			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+			invisible(list(F,h2))
+		} else {	
+			F <- object@F
+			h2 <- as.matrix(object@h2)			
+			colnames(F) <- paste("F_", 1:ncol(F),sep="")
+			colnames(h2) <- "h2"				
+			cat("\nRotation: ", rotate, "\n")
+			rotF <- Rotate(F,rotate)
+			SS <- apply(rotF$loadings^2,2,sum)
+			L <- rotF$loadings
+			L[abs(L) < suppress] <- NA	
+			loads <- round(cbind(L,h2),digits)			
+			cat("\nRotated factor loadings: \n\n")
+			print(loads,digits)		
+			if(attr(rotF, "oblique")){
+				cat("\nFactor correlations: \n\n")
+				Phi <- rotF$Phi	  
+				Phi <- round(Phi, digits)
+				colnames(Phi) <- rownames(Phi) <- colnames(F)
+				print(Phi)            
+			}	
+			cat("\nRoateted SS loadings: ",round(SS,digits), "\n")		
+			if(any(h2 > 1)) 
+				warning("Solution has heywood cases. Interpret with caution.") 
+			invisible(list(rotF$loadings,h2))  
+		}  
+	}
+)
+
+setMethod(
+	f = "coef",
+	signature = 'mirtClass',
+	definition = function(object, digits = 3, ...){  
+		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])
+		d <- object@pars[ ,ncol(object@pars)]
+		A <- sqrt(apply(a^2,1,sum))
+		B <- -d/A  
+		if (ncol(a) > 1){  
+			parameters <- cbind(object@pars,object@guess,object@facility,A,B)    
+			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess", 
+			"facility","mvdisc","mvint")	  
+			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
+			print(round(parameters, digits))  	
+		} else {
+			parameters <- cbind(object@pars,object@guess,object@facility) 
+			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d","guess","facility")    
+			cat("\nParameter slopes and intercepts: \n\n")	
+			print(round(parameters, digits))	  
+		}
+		invisible(parameters)
+	}
+)
+
+setMethod(
+	f = "anova",
+	signature = signature(object = 'mirtClass'),
+	definition = function(object, object2, ...){
+		dots <- list(...)		
+		df <- object@df - object2@df  
+		X2 <- 2*object2@log.lik - 2*object@log.lik 
+		AICdiff <- object@AIC - object2@AIC    
+		BICdiff <- object@BIC - object2@BIC
+		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
+		df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+		cat("AIC difference = ", round(AICdiff,3), "\n")  
+		cat("BIC difference = ", round(BICdiff,3), "\n")
+	}
+)
+
+setMethod(
+	f = "residuals",
+	signature = signature(object = 'mirtClass'),
+	definition = function(object, restype = 'LD', digits = 3, ...){   	
+		Theta <- object@Theta
+		fulldata <- object@fulldata	
+		N <- nrow(fulldata)	
+		J <- ncol(fulldata)
+		nfact <- ncol(object@F)
+		lambdas <- matrix(object@pars[,1:nfact], J)
+		zetas <- object@pars[,(nfact+1)]
+		guess <- object@guess
+		guess[is.na(guess)] <- 0		
+		if(restype == 'LD'){
+			res <- matrix(0,J,J)
+			diag(res) <- NA
+			colnames(res) <- rownames(res) <- colnames(fulldata)
+			prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+			prior <- prior/sum(prior)
+			for(i in 1:J){			
+				for(j in 1:J){
+					if(i < j){
+						P1 <- P.mirt(lambdas[i,],zetas[i], Theta, guess[i])
+						P2 <- P.mirt(lambdas[j,],zetas[j], Theta, guess[j])
+						E22 <- N * sum(P1 * P2 * prior)
+						E12 <- N * sum(P1 * (1-P2) * prior)
+						E21 <- N * sum((1-P1) * P2 * prior)
+						E11 <- N * sum((1-P1) * (1-P2) * prior)
+						tab <- table(fulldata[,i],fulldata[,j])
+						Etab <- matrix(c(E11,E12,E21,E22),2)
+						s <- phi(tab) - phi(Etab)
+						if(s == 0) s <- 1
+						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+						res[i,j] <- sqrt( abs(res[j,i]) / N ) 					
+					}
+				}
+			}
+			cat("\nLD matrix:\n\n")			
+			res <- round(res,digits)
+			return(res)		
+		}		
+		if(restype == 'exp'){	
+			r <- object@tabdata[ ,ncol(object@tabdata)]
+			res <- round((r - object@Pl * nrow(object@fulldata)) / 
+				sqrt(object@Pl * nrow(object@fulldata)),digits)
+			expected <- round(N * object@Pl/sum(object@Pl),digits)  
+			tabdata <- cbind(object@tabdata,expected,res)
+			colnames(tabdata) <- c(colnames(fulldata), "freq", "exp", "std_res")								
+			return(tabdata)				
+		}					
+	}
+)
+
+setMethod(
+	f = "plot",
+	signature = signature(x = 'mirtClass', y = "missing"),
+	definition = function(x, y, type = 'info', npts = 50, 
+		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
+	{  
+		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
+		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
+		a <- as.matrix(x@pars[ ,1:(ncol(x@pars) - 1)])
+		d <- x@pars[ ,ncol(x@pars)]
+		g <- x@guess
+		A <- as.matrix(sqrt(apply(a^2,1,sum)))
+		B <- -d/A
+		if(ncol(a) > 2 ) stop("Can't plot high dimentional solutions.\n")
+		theta <- seq(-4,4,length.out=npts)
+		Theta <- thetaComb(theta, ncol(a))
+		P <- matrix(0, ncol=length(g), nrow = nrow(as.matrix(Theta)))
+		for(i in 1:nrow(a)) P[ ,i] <- P.mirt(a[i, ],d[i],as.matrix(Theta),g[i])  
+		Ptot <- rowSums(P) 
+		if(ncol(a) == 2) {			
+			I <- (P * (1 - P)) %*% A^2	
+			if(type == 'curve'){
+				plt <- data.frame(cbind(Ptot,Theta))
+				colnames(plt) <- c("Ptot", "Theta1", "Theta2")
+				return(wireframe(Ptot ~ Theta1 + Theta2, data = plt, main = "Test Score Surface", 
+					zlab = "Test \nScore", xlab = "Theta 1", ylab = "Theta 2", 
+					scales = list(arrows = FALSE), screen = rot))
+			}	
+			if(type == 'contour'){
+				plt <- data.frame(cbind(Ptot,Theta))
+				colnames(plt) <- c('Ptot','Theta1','Theta2')
+				contour(theta, theta, matrix(Ptot,length(theta),length(theta)), 
+					main = "Test Scores Contour", xlab = "Theta 1", ylab = "Theta 2")			
+			}			
+			if(type == 'infocontour'){
+				plt <- data.frame(cbind(I,Theta))
+				colnames(plt) <- c('I','Theta1','Theta2')
+				contour(theta, theta, matrix(I,length(theta),length(theta)), 
+					main = "Test Information Contour", xlab = "Theta 1", ylab = "Theta 2")		
+			}				
+			if(type == 'info'){				 
+				plt <- data.frame(cbind(I,Theta))
+				colnames(plt) <- c("I", "Theta1", "Theta2")
+				return(wireframe(I ~ Theta1 + Theta2, data = plt, main = "Test Information", 
+					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", 
+					scales = list(arrows = FALSE), screen = rot))
+			}
+		} else {
+			if(type == 'curve')  
+				plot(Theta, Ptot, type='l', main = 'Test score plot', xlab = 'Theta', ylab='Test Score')
+			if(type == 'info'){
+				I <- (P * (1 - P)) %*% a^2 
+				plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')			
+			}	
+			if(type == 'contour' || type == 'infocontour') 
+				cat('No \'contour\' plots for 1-dimensional models\n')					
+		} 			
+	}		
+)	
+
+setMethod(
+	f = "fitted",
+	signature = signature(object = 'mirtClass'),
+	definition = function(object, digits = 3, ...){  
+		expected <- round(nrow(object@fulldata) * object@Pl,digits)  
+		tabdata <- cbind(object@tabdata,expected)
+		colnames(tabdata) <- c(colnames(object@fulldata),"freq","exp")	
+		print(tabdata)
+		invisible(tabdata)
+	}
+)
+    
+
 
 

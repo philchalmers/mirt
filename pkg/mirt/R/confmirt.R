@@ -1,218 +1,29 @@
-setMethod(
-	f = "print",
-	signature = signature(x = 'confmirtClass'),
-	definition = function(x, ...)
-	{
-		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
-			"\n\n", sep = "")
-		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
-		if(length(x@logLik) > 0){
-			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
-			cat("AIC =", x@AIC, "\n")			
-			cat("BIC =", x@BIC, "\n")
-			if(x@p < 1)
-				cat("G^2 = ", round(x@G2,2), ", df = ", 
-					x@df, ", p = ", round(x@p,4), "\n", sep="")
-			else 
-				cat("G^2 = ", NA, ", df = ", 
-					x@df, ", p = ", NA, "\n", sep="")		
-		}
-		if(x@converge == 1)	
-			cat("Converged in ", x@cycles, " iterations.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")	
-	} 
-)
-
-setMethod(
-	f = "show",
-	signature = signature(object = 'confmirtClass'),
-	definition = function(object)
-	{
-		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
-			"\n\n", sep = "")
-		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
-		if(length(object@logLik) > 0){
-			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
-			cat("AIC =", object@AIC, "\n")			
-			cat("BIC =", object@BIC, "\n")
-			if(object@p < 1)	
-				cat("G^2 = ", round(object@G2,2), ", df = ", 
-					object@df, ", p = ", round(object@p,4), "\n", sep="")
-			else 
-				cat("G^2 = ", NA, ", df = ", 
-					object@df, ", p = ", NA, "\n", sep="")
-		}
-		if(object@converge == 1)	
-			cat("Converged in ", object@cycles, " iterations.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
-	} 
-)
-
-setMethod(
-	f = "summary",
-	signature = 'confmirtClass',
-	definition = function(object, digits = 3, ...)
-	{
-		if(any(object@estComp)) stop('No factor metric for noncompensatory models')
-		nfact <- ncol(object@F)		
-		F <- object@F		
-		colnames(F) <- paste("F_", 1:ncol(F),sep="")						
-		SS <- apply(F^2,2,sum)			
-		cat("\nFactor loadings metric: \n")
-		print(cbind(F),digits)		
-		cat("\nSS loadings: ",round(SS,digits), "\n")		
-		cat("\nFactor correlations: \n")
-		Phi <- cov2cor(object@gpars$sig)	  
-		Phi <- round(Phi, digits)
-		colnames(Phi) <- rownames(Phi) <- colnames(F)
-		print(Phi)				
-		invisible(F)  	  
-	}
-)
-
-setMethod(
-	f = "coef",
-	signature = 'confmirtClass',
-	definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
-	{  
-		nfact <- ncol(object@Theta)	
-		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
-		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
-			ncol = ncol(object@pars)-nfact)    	
-
-		parameters <- cbind(object@pars,object@guess)
-		SEs <- cbind(object@SEpars,object@SEg)	
-		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
-			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
-		cat("\nITEM PARAMTERS: \n")
-		print(parameters, digits)
-		if(SE){
-			cat("\nStd. Errors: \n")	
-			print(SEs, digits)
-		}	
-		u <- object@gpars$u	
-		sig <- object@gpars$sig	
-		cat("\nGROUP PARAMETERS: \n")
-		if(print.gmeans){
-			cat("Means: \n")
-			print(u,digits)
-			cat("\nStd. Errors: \n")	
-			print(object@SEgpars$SEu, digits)	
-		}
-		cat("Covariance: \n")
-		print(sig,digits)
-		if(SE){
-			cat("\nStd. Errors: \n")	
-			print(object@SEgpars$SEsig, digits)	
-		}
-		invisible(list(pars = parameters,mu = u,sigma = sig))	
-	}
-)
-
-setMethod(
-	f = "residuals",
-	signature = signature(object = 'confmirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, ...)
-	{ 
-		fulldata <- object@fulldata	
-		data <- object@data
-		data[data==99] <- NA		
-		N <- nrow(data)
-		K <- object@K
-		J <- length(K)
-		sig <- object@gpars$sig	
-		nfact <- ncol(object@F)
-		theta <- seq(-4,4, length.out = round(20/nfact))
-		Theta <- thetaComb(theta,nfact)		
-		lambdas <- matrix(object@pars[,1:nfact], J)
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
-		zetas <- na.omit(zetas)
-		zetalist <- list()
-		loc <- 1
-		for(i in 1:J){
-			zetalist[[i]] <- zetas[loc:(loc+K[i]-2)]
-			loc <- loc + K[i] - 1		
-		}
-		guess <- object@guess
-		guess[is.na(guess)] <- 0	
-		Ksums <- cumsum(K) - 1	
-		itemloc <- object@itemloc
-		res <- matrix(0,J,J)
-		diag(res) <- NA
-		colnames(res) <- rownames(res) <- colnames(data)
-		prior <- dmvnorm(Theta,rep(0,nfact),sig)
-		prior <- prior/sum(prior)		
-		if(restype == 'LD'){	
-			for(i in 1:J){				
-				for(j in 1:J){			
-					if(i < j){
-						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetalist[[i]],Theta,itemexp=TRUE)
-						else { 
-							P1 <- P.mirt(lambdas[i,],zetalist[[i]], Theta, guess[i])
-							P1 <- cbind(1 - P1, P1)
-						}	
-						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetalist[[j]],Theta,itemexp=TRUE)
-						else {
-							P2 <- P.mirt(lambdas[j,],zetalist[[j]], Theta, guess[j])	
-							P2 <- cbind(1 - P2, P2)
-						}
-						tab <- table(data[,i],data[,j])		
-						Etab <- matrix(0,K[i],K[j])
-						for(k in 1:K[i])
-							for(m in 1:K[j])						
-								Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-						s <- gamma.cor(tab) - gamma.cor(Etab)
-						if(s == 0) s <- 1				
-						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-						res[i,j] <- sqrt(abs(res[j,i]) / (N * min(c(K[i],K[j]) - 1))) 					
-					}					
-				}
-			}		
-			cat("LD matrix:\n\n")	
-			res <- round(res,digits)    	
-			return(res)
-		}
-		if(restype == 'exp'){
-			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because logLik() 
-				has not been run or the data contains missing responses.')
-			tabdata <- object@tabdata
-			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
-			tabdata <- round(cbind(tabdata,res),digits)
-			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
-			return(tabdata)
-		}
-	}
-)
-
-setMethod(
-	f = "anova",
-	signature = signature(object = 'confmirtClass'),
-	definition = function(object, object2, ...)
-	{
-		dots <- list(...)				
-		nitems <- length(object@K)
-		if(length(object@df) == 0 || length(object2@df) == 0) 
-			stop('Use \'logLik\' to obtain likelihood values') 	
-		df <- object@df - object2@df
-		if(df < 0){
-			df <- abs(df)
-			tmp <- object
-			object <- object2
-			object2 <- tmp
-		}
-		X2 <- 2*object2@logLik - 2*object@logLik 
-		AICdiff <- object@AIC - object2@AIC  
-		BICdiff <- object@BIC - object2@BIC  
-		se <- round(object@SElogLik + object2@SElogLik,3)
-		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
-			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
-		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
-		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='')
-	}		
-)
+# Class "confmirtClass"
+# 
+# Defines the object returned from \code{\link{confmirt}}.
+# 
+# 
+# @name confmirtClass-class
+# @aliases confmirtClass-class coef,confmirtClass-method
+# print,confmirtClass-method residuals,confmirtClass-method
+# show,confmirtClass-method summary,confmirtClass-method
+# anova,confmirtClass-method
+# @docType class
+# @section Objects from the Class: Objects can be created by calls of the form
+# \code{new("confmirtClass", ...)}.
+# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @exportClass confmirtClass
+# @keywords classes
+setClass(
+	Class = 'confmirtClass',
+	representation = representation(pars = 'matrix', guess = 'numeric', SEpars = 'matrix', 
+		SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
+		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
+		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
+		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
+		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', Call = 'call'),	
+	validity = function(object) return(TRUE)
+)	
 
 #' Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats
 #' 
@@ -1069,5 +880,224 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		mod <- logLik(mod,draws)		
 	}	
 	return(mod)
-}	
+}
+
+# Methods
+setMethod(
+	f = "print",
+	signature = signature(x = 'confmirtClass'),
+	definition = function(x, ...)
+	{
+		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
+		if(length(x@logLik) > 0){
+			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
+			cat("AIC =", x@AIC, "\n")			
+			cat("BIC =", x@BIC, "\n")
+			if(x@p < 1)
+				cat("G^2 = ", round(x@G2,2), ", df = ", 
+					x@df, ", p = ", round(x@p,4), "\n", sep="")
+			else 
+				cat("G^2 = ", NA, ", df = ", 
+					x@df, ", p = ", NA, "\n", sep="")		
+		}
+		if(x@converge == 1)	
+			cat("Converged in ", x@cycles, " iterations.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")	
+	} 
+)
+
+setMethod(
+	f = "show",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object)
+	{
+		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")
+		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
+		if(length(object@logLik) > 0){
+			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
+			cat("AIC =", object@AIC, "\n")			
+			cat("BIC =", object@BIC, "\n")
+			if(object@p < 1)	
+				cat("G^2 = ", round(object@G2,2), ", df = ", 
+					object@df, ", p = ", round(object@p,4), "\n", sep="")
+			else 
+				cat("G^2 = ", NA, ", df = ", 
+					object@df, ", p = ", NA, "\n", sep="")
+		}
+		if(object@converge == 1)	
+			cat("Converged in ", object@cycles, " iterations.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
+	} 
+)
+
+setMethod(
+	f = "summary",
+	signature = 'confmirtClass',
+	definition = function(object, digits = 3, ...)
+	{
+		if(any(object@estComp)) stop('No factor metric for noncompensatory models')
+		nfact <- ncol(object@F)		
+		F <- object@F		
+		colnames(F) <- paste("F_", 1:ncol(F),sep="")						
+		SS <- apply(F^2,2,sum)			
+		cat("\nFactor loadings metric: \n")
+		print(cbind(F),digits)		
+		cat("\nSS loadings: ",round(SS,digits), "\n")		
+		cat("\nFactor correlations: \n")
+		Phi <- cov2cor(object@gpars$sig)	  
+		Phi <- round(Phi, digits)
+		colnames(Phi) <- rownames(Phi) <- colnames(F)
+		print(Phi)				
+		invisible(F)  	  
+	}
+)
+
+setMethod(
+	f = "coef",
+	signature = 'confmirtClass',
+	definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
+	{  
+		nfact <- ncol(object@Theta)	
+		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
+		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
+			ncol = ncol(object@pars)-nfact)    	
+
+		parameters <- cbind(object@pars,object@guess)
+		SEs <- cbind(object@SEpars,object@SEg)	
+		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
+			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
+		cat("\nITEM PARAMTERS: \n")
+		print(parameters, digits)
+		if(SE){
+			cat("\nStd. Errors: \n")	
+			print(SEs, digits)
+		}	
+		u <- object@gpars$u	
+		sig <- object@gpars$sig	
+		cat("\nGROUP PARAMETERS: \n")
+		if(print.gmeans){
+			cat("Means: \n")
+			print(u,digits)
+			cat("\nStd. Errors: \n")	
+			print(object@SEgpars$SEu, digits)	
+		}
+		cat("Covariance: \n")
+		print(sig,digits)
+		if(SE){
+			cat("\nStd. Errors: \n")	
+			print(object@SEgpars$SEsig, digits)	
+		}
+		invisible(list(pars = parameters,mu = u,sigma = sig))	
+	}
+)
+
+setMethod(
+	f = "residuals",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object, restype = 'LD', digits = 3, ...)
+	{ 
+		fulldata <- object@fulldata	
+		data <- object@data
+		data[data==99] <- NA		
+		N <- nrow(data)
+		K <- object@K
+		J <- length(K)
+		sig <- object@gpars$sig	
+		nfact <- ncol(object@F)
+		theta <- seq(-4,4, length.out = round(20/nfact))
+		Theta <- thetaComb(theta,nfact)		
+		lambdas <- matrix(object@pars[,1:nfact], J)
+		lambdas[is.na(lambdas)] <- 0
+		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
+		zetas <- na.omit(zetas)
+		zetalist <- list()
+		loc <- 1
+		for(i in 1:J){
+			zetalist[[i]] <- zetas[loc:(loc+K[i]-2)]
+			loc <- loc + K[i] - 1		
+		}
+		guess <- object@guess
+		guess[is.na(guess)] <- 0	
+		Ksums <- cumsum(K) - 1	
+		itemloc <- object@itemloc
+		res <- matrix(0,J,J)
+		diag(res) <- NA
+		colnames(res) <- rownames(res) <- colnames(data)
+		prior <- dmvnorm(Theta,rep(0,nfact),sig)
+		prior <- prior/sum(prior)		
+		if(restype == 'LD'){	
+			for(i in 1:J){				
+				for(j in 1:J){			
+					if(i < j){
+						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetalist[[i]],Theta,itemexp=TRUE)
+						else { 
+							P1 <- P.mirt(lambdas[i,],zetalist[[i]], Theta, guess[i])
+							P1 <- cbind(1 - P1, P1)
+						}	
+						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetalist[[j]],Theta,itemexp=TRUE)
+						else {
+							P2 <- P.mirt(lambdas[j,],zetalist[[j]], Theta, guess[j])	
+							P2 <- cbind(1 - P2, P2)
+						}
+						tab <- table(data[,i],data[,j])		
+						Etab <- matrix(0,K[i],K[j])
+						for(k in 1:K[i])
+							for(m in 1:K[j])						
+								Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+						s <- gamma.cor(tab) - gamma.cor(Etab)
+						if(s == 0) s <- 1				
+						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+						res[i,j] <- sqrt(abs(res[j,i]) / (N * min(c(K[i],K[j]) - 1))) 					
+					}					
+				}
+			}		
+			cat("LD matrix:\n\n")	
+			res <- round(res,digits)    	
+			return(res)
+		}
+		if(restype == 'exp'){
+			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because logLik() 
+				has not been run or the data contains missing responses.')
+			tabdata <- object@tabdata
+			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
+			tabdata <- round(cbind(tabdata,res),digits)
+			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
+			return(tabdata)
+		}
+	}
+)
+
+setMethod(
+	f = "anova",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object, object2, ...)
+	{
+		dots <- list(...)				
+		nitems <- length(object@K)
+		if(length(object@df) == 0 || length(object2@df) == 0) 
+			stop('Use \'logLik\' to obtain likelihood values') 	
+		df <- object@df - object2@df
+		if(df < 0){
+			df <- abs(df)
+			tmp <- object
+			object <- object2
+			object2 <- tmp
+		}
+		X2 <- 2*object2@logLik - 2*object@logLik 
+		AICdiff <- object@AIC - object2@AIC  
+		BICdiff <- object@BIC - object2@BIC  
+		se <- round(object@SElogLik + object2@SElogLik,3)
+		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
+			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
+		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='')
+	}		
+)
+
+	
 

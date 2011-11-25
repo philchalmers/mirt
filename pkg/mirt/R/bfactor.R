@@ -1,151 +1,30 @@
-setMethod(
-	f = "print",
-	signature = signature(x = 'bfactorClass'),
-	definition = function(x, ...){  
-		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
-			"\n\n", sep = "")		
-		cat("Full-information bifactor analysis with ", 
-			length(unique(x@specific)), " specific factors \n", sep='')
-		if(x@converge == 1)	
-			cat("Converged in ", x@EMiter, " iterations using ",x@quadpts,
-			" quadrature points. \n", sep="")
-		else 	
-			cat("Estimation stopped after ", x@EMiter, " iterations using ",x@quadpts,
-			" quadrature points. \n", sep="")
-		cat("Log-likelihood = ", x@log.lik, "\n")
-		cat("AIC = ", x@AIC, "\n")		
-		cat("BIC = ", x@BIC, "\n")
-		cat("G^2 = ", round(x@X2,2), ", df = ", 
-		x@df, ", p = ", round(x@p,4), "\n")
-	}
-)
-
-setMethod(
-	f = "show",
-	signature = signature(object = 'bfactorClass'),
-	definition = function(object){  
-		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
-			"\n\n", sep = "")		
-		cat("Full-information bifactor analysis with ", 
-			length(unique(object@specific)), " specific factors \n", sep='')
-		if(object@converge == 1)	
-			cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
-				" quadrature points.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
-				object@quadpts,	" quadrature points.\n", sep="")
-		cat("Log-likelihood = ", object@log.lik, "\n")
-		cat("AIC = ", object@AIC, "\n")		
-		cat("BIC = ", object@BIC, "\n")
-		cat("G^2 = ", round(object@X2,2), ", df = ", 
-		object@df, ", p = ", round(object@p,4), "\n")
-	}
-)
-
-setMethod(
-	f = "summary",
-	signature = signature(object = 'bfactorClass'),
-	definition = function(object, digits = 3, ...){
-		F <- round(object@F,digits)
-		h2 <- round(object@h2,digits)
-		SS <- colSums(F^2)		
-		colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
-		names(h2) <- "h2"		
-		loads <- round(cbind(F,h2),digits)
-		rownames(loads) <- object@itemnames  
-		cat("\nFactor loadings: \n\n")
-		print(loads)
-		cat("\nSS loadings: ",round(SS,digits), "\n")
-		cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
-		if(any(h2 > 1)) 
-			warning("Solution has heywood cases. Interpret with caution.")
-	}
-)
-
-setMethod(
-	f = "coef",
-	signature = signature(object = 'bfactorClass'),
-	definition = function(object, digits = 3, ...){
-		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])
-		d <- object@pars[ ,ncol(object@pars)]
-		A <- sqrt(apply(a^2,1,sum))
-		B <- -d/A 
-		fac <- object@facility  
-		parameters <- round(cbind(object@pars,object@guess,fac,A,B),digits)
-		colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d", "guess", 
-			"facility","mvdisc", "mvint")  
-		cat("\nParameters with multivariate discrimination and intercept: \n\n")
-		print(parameters)	    
-		invisible(parameters)
-	}
-)
-
-setMethod(
-	f = "residuals",
-	signature = signature(object = 'bfactorClass'),
-	definition = function(object, restype = 'LD', digits = 3, p = FALSE, ...)
-	{       
-		Theta <- object@Theta
-		fulldata <- object@fulldata	
-		N <- nrow(fulldata)	
-		J <- ncol(fulldata)
-		nfact <- ncol(object@F)
-		lambdas <- matrix(object@pars[,1:nfact], J)
-		zetas <- object@pars[,(nfact+1)]
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
-		logicalfact <- object@logicalfact
-		if(restype == 'LD'){
-			res <- matrix(0,J,J)
-			diag(res) <- NA
-			colnames(res) <- rownames(res) <- colnames(fulldata)
-			prior <- dmvnorm(Theta,rep(0,2),diag(2))
-			prior <- prior/sum(prior)
-			for(i in 1:J){			
-				for(j in 1:J){
-					if(i < j){
-						P1 <- P.bfactor(lambdas[i,],zetas[i], Theta, guess[i],logicalfact[i,])
-						P2 <- P.bfactor(lambdas[j,],zetas[j], Theta, guess[j],logicalfact[j,])
-						E22 <- N * sum(P1 * P2 * prior)
-						E12 <- N * sum(P1 * (1-P2) * prior)
-						E21 <- N * sum((1-P1) * P2 * prior)
-						E11 <- N * sum((1-P1) * (1-P2) * prior)
-						tab <- table(fulldata[,i],fulldata[,j])
-						Etab <- matrix(c(E11,E12,E21,E22),2)
-						s <- phi(tab) - phi(Etab)
-						if(s == 0) s <- 1
-						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-						res[i,j] <- sqrt( abs(res[j,i]) / N ) 
-					}
-				}
-			}
-			cat("\nLD matrix:\n\n")			
-			res <- round(res,digits)	
-			return(res)	
-		}
-		if(restype == 'exp'){
-			r <- object@tabdata[ ,ncol(object@tabdata)]
-			res <- round((r - object@Pl * nrow(object@fulldata)) / 
-				sqrt(object@Pl * nrow(object@fulldata)),digits)
-			expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
-			tabdata <- cbind(object@tabdata,expected,res)
-			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")								
-			return(tabdata)
-		}				
-	}
-)
-
-setMethod(
-	f = "fitted",
-	signature = signature(object = 'bfactorClass'),
-	definition = function(object, digits = 3, ...){  
-		expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
-		tabdata <- cbind(object@tabdata,expected)
-		colnames(tabdata) <- c(object@itemnames, "freq", "exp")	
-		print(tabdata)
-		invisible(tabdata)
-	}
-)
+# Class "bfactorClass"
+# 
+# Defines the object returned from \code{\link{bfactor}}.
+# 
+# 
+# @name bfactorClass-class
+# @aliases bfactorClass-class coef,bfactorClass-method
+# fitted,bfactorClass-method print,bfactorClass-method
+# residuals,bfactorClass-method show,bfactorClass-method
+# summary,bfactorClass-method
+# @docType class
+# @section Objects from the Class: Objects can be created by calls of the form
+# \code{new("bfactorClass", ...)}.
+# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @exportClass bfactorClass
+# @keywords classes
+setClass(
+	Class = 'bfactorClass',
+	representation = representation(EMiter = 'numeric', pars = 'matrix', guess = 'numeric', 
+		AIC = 'numeric', X2 = 'numeric', df = 'numeric', log.lik = 'numeric', p = 'numeric', 
+		F = 'matrix', h2 = 'numeric', itemnames = 'character', tabdata = 'matrix', 
+		N = 'numeric', Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
+		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', BIC = 'numeric',
+		cormat = 'matrix', converge = 'numeric', par.prior = 'matrix', quadpts = 'numeric', 
+		Call = 'call'),	
+	validity = function(object) return(TRUE)
+)	
 
 #' Full-Information Item Bifactor Analysis
 #' 
@@ -536,4 +415,157 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,Call=Call)  
 	return(mod)  
 } 
+
+# Methods
+
+setMethod(
+	f = "print",
+	signature = signature(x = 'bfactorClass'),
+	definition = function(x, ...){  
+		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")		
+		cat("Full-information bifactor analysis with ", 
+			length(unique(x@specific)), " specific factors \n", sep='')
+		if(x@converge == 1)	
+			cat("Converged in ", x@EMiter, " iterations using ",x@quadpts,
+			" quadrature points. \n", sep="")
+		else 	
+			cat("Estimation stopped after ", x@EMiter, " iterations using ",x@quadpts,
+			" quadrature points. \n", sep="")
+		cat("Log-likelihood = ", x@log.lik, "\n")
+		cat("AIC = ", x@AIC, "\n")		
+		cat("BIC = ", x@BIC, "\n")
+		cat("G^2 = ", round(x@X2,2), ", df = ", 
+		x@df, ", p = ", round(x@p,4), "\n")
+	}
+)
+
+setMethod(
+	f = "show",
+	signature = signature(object = 'bfactorClass'),
+	definition = function(object){  
+		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
+			"\n\n", sep = "")		
+		cat("Full-information bifactor analysis with ", 
+			length(unique(object@specific)), " specific factors \n", sep='')
+		if(object@converge == 1)	
+			cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
+				" quadrature points.\n", sep="")
+		else 	
+			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
+				object@quadpts,	" quadrature points.\n", sep="")
+		cat("Log-likelihood = ", object@log.lik, "\n")
+		cat("AIC = ", object@AIC, "\n")		
+		cat("BIC = ", object@BIC, "\n")
+		cat("G^2 = ", round(object@X2,2), ", df = ", 
+		object@df, ", p = ", round(object@p,4), "\n")
+	}
+)
+
+setMethod(
+	f = "summary",
+	signature = signature(object = 'bfactorClass'),
+	definition = function(object, digits = 3, ...){
+		F <- round(object@F,digits)
+		h2 <- round(object@h2,digits)
+		SS <- colSums(F^2)		
+		colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
+		names(h2) <- "h2"		
+		loads <- round(cbind(F,h2),digits)
+		rownames(loads) <- object@itemnames  
+		cat("\nFactor loadings: \n\n")
+		print(loads)
+		cat("\nSS loadings: ",round(SS,digits), "\n")
+		cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+		if(any(h2 > 1)) 
+			warning("Solution has heywood cases. Interpret with caution.")
+	}
+)
+
+setMethod(
+	f = "coef",
+	signature = signature(object = 'bfactorClass'),
+	definition = function(object, digits = 3, ...){
+		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])
+		d <- object@pars[ ,ncol(object@pars)]
+		A <- sqrt(apply(a^2,1,sum))
+		B <- -d/A 
+		fac <- object@facility  
+		parameters <- round(cbind(object@pars,object@guess,fac,A,B),digits)
+		colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d", "guess", 
+			"facility","mvdisc", "mvint")  
+		cat("\nParameters with multivariate discrimination and intercept: \n\n")
+		print(parameters)	    
+		invisible(parameters)
+	}
+)
+
+setMethod(
+	f = "residuals",
+	signature = signature(object = 'bfactorClass'),
+	definition = function(object, restype = 'LD', digits = 3, p = FALSE, ...)
+	{       
+		Theta <- object@Theta
+		fulldata <- object@fulldata	
+		N <- nrow(fulldata)	
+		J <- ncol(fulldata)
+		nfact <- ncol(object@F)
+		lambdas <- matrix(object@pars[,1:nfact], J)
+		zetas <- object@pars[,(nfact+1)]
+		guess <- object@guess
+		guess[is.na(guess)] <- 0
+		logicalfact <- object@logicalfact
+		if(restype == 'LD'){
+			res <- matrix(0,J,J)
+			diag(res) <- NA
+			colnames(res) <- rownames(res) <- colnames(fulldata)
+			prior <- dmvnorm(Theta,rep(0,2),diag(2))
+			prior <- prior/sum(prior)
+			for(i in 1:J){			
+				for(j in 1:J){
+					if(i < j){
+						P1 <- P.bfactor(lambdas[i,],zetas[i], Theta, guess[i],logicalfact[i,])
+						P2 <- P.bfactor(lambdas[j,],zetas[j], Theta, guess[j],logicalfact[j,])
+						E22 <- N * sum(P1 * P2 * prior)
+						E12 <- N * sum(P1 * (1-P2) * prior)
+						E21 <- N * sum((1-P1) * P2 * prior)
+						E11 <- N * sum((1-P1) * (1-P2) * prior)
+						tab <- table(fulldata[,i],fulldata[,j])
+						Etab <- matrix(c(E11,E12,E21,E22),2)
+						s <- phi(tab) - phi(Etab)
+						if(s == 0) s <- 1
+						res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+						res[i,j] <- sqrt( abs(res[j,i]) / N ) 
+					}
+				}
+			}
+			cat("\nLD matrix:\n\n")			
+			res <- round(res,digits)	
+			return(res)	
+		}
+		if(restype == 'exp'){
+			r <- object@tabdata[ ,ncol(object@tabdata)]
+			res <- round((r - object@Pl * nrow(object@fulldata)) / 
+				sqrt(object@Pl * nrow(object@fulldata)),digits)
+			expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
+			tabdata <- cbind(object@tabdata,expected,res)
+			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")								
+			return(tabdata)
+		}				
+	}
+)
+
+setMethod(
+	f = "fitted",
+	signature = signature(object = 'bfactorClass'),
+	definition = function(object, digits = 3, ...){  
+		expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
+		tabdata <- cbind(object@tabdata,expected)
+		colnames(tabdata) <- c(object@itemnames, "freq", "exp")	
+		print(tabdata)
+		invisible(tabdata)
+	}
+)
+
+
 

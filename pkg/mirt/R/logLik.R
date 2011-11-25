@@ -4,7 +4,7 @@
 #' log-likelihood values for \code{polymirt} and \code{confmirt} objects
 #' 
 #' 
-#' @aliases logLik logLik,polymirt-method logLik,confmirt-method
+#' @aliases logLik logLik,polymirt-method logLik,confmirt-method logLik
 #' @param object a model of class \code{mirtClass} or \code{bfactorClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?

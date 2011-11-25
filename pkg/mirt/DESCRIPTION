@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.1-19
+Version: 0.1-20
 Date: 2011-08-09
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -27,7 +27,6 @@ URL:
 Collate:
     'bfactor.R'
     'mirt.R'
-    'ClassAndGenerics.R'
     'expand.table.R'
     'fscores.R'
     'itemplot.R'
@@ -38,4 +37,4 @@ Collate:
     'confmirt.model.R'
     'confmirt.R'
     'mirt-package.R'
-    'log.lik.R'
+    'logLik.R'
