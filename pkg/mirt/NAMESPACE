@@ -1,13 +1,28 @@
-useDynLib(mirt, .registration=TRUE)
-
-# Exported functions
-export(bfactor,mirt,polymirt,confmirt,key2binary,expand.table,fscores,itemplot,simdata,
-	confmirt.model)
-
-# Imported functions
-importFrom("graphics", plot) 
-importFrom("stats", anova, coef, fitted, residuals, logLik)
-
-exportClasses("mirtClass", "bfactorClass", "polymirtClass", "confmirtClass")
-exportMethods(anova, fscores, plot, fitted, residuals, coef, summary, itemplot, logLik)
-
+export(bfactor)
+export(confmirt)
+export(confmirt.model)
+export(expand.table)
+export(fscores)
+export(itemplot)
+export(key2binary)
+export(mirt)
+export(polymirt)
+export(simdata)
+exportClasses(bfactorClass)
+exportClasses(confmirtClass)
+exportClasses(mirtClass)
+exportClasses(polymirtClass)
+exportMethods(anova)
+exportMethods(coef)
+exportMethods(fitted)
+exportMethods(fscores)
+exportMethods(itemplot)
+exportMethods(logLik)
+exportMethods(residuals)
+importFrom(graphics,plot)
+importFrom(stats,anova)
+importFrom(stats,coef)
+importFrom(stats,fitted)
+importFrom(stats,logLik)
+importFrom(stats,residuals)
+useDynLib(mirt)

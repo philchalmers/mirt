@@ -269,101 +269,6 @@ setMethod(
 )
 
 setMethod(
-	f = "logLik",
-	signature = signature(object = 'polymirtClass'),
-	definition = function(object, draws = 2000, G2 = TRUE)
-	{	
-		nfact <- ncol(object@Theta)
-		N <- nrow(object@Theta)
-		J <- length(object@K)
-		pars <- object@pars
-		lambdas <- pars[,1:nfact]
-		zetas <- pars[,(nfact+1):ncol(pars)]
-		zetas <- t(zetas)[!is.na(t(zetas))]		
-		mu <- rep(0,nfact)
-		sigma <- diag(nfact)		
-		LL <- matrix(0,N,draws)		
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
-		K <- object@K		
-		fulldata <- object@fulldata
-		estComp <- rep(FALSE,J)
-		for(i in 1:draws){
-			theta <- rmvnorm(N,mu,sigma)				
-			LL[,i] <- .Call('logLik', 					
-						as.numeric(lambdas),
-						as.numeric(zetas),
-						as.numeric(guess),
-						as.numeric(theta),
-						as.integer(fulldata),
-						as.integer(object@itemloc-1),
-						as.integer(object@K),
-						as.integer(J),
-						as.integer(N),
-						as.integer(nfact),
-						as.integer(estComp))		
-		}		
-		rwmeans <- rowMeans(LL)
-		logLik <- sum(log(rwmeans))		
-		pats <- apply(fulldata,1,paste,collapse = "/")
-		freqs <- table(pats)
-		nfreqs <- length(freqs)		
-		r <- as.vector(freqs)
-		ncolfull <- ncol(fulldata)
-		tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
-		tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-		tabdata <- cbind(tabdata,r)		
-		logN <- 0
-		logr <- rep(0,length(r))
-		for (i in 1:N) logN <- logN + log(i)
-		for (i in 1:length(r)) 
-			for (j in 1:r[i]) 
-				logr[i] <- logr[i] + log(j) 
-		if(sum(logr) != 0)								
-			logLik <- logLik + logN/sum(logr)		
-		SElogLik <- sqrt(var(log(rwmeans)) / draws)
-		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2 - sum(object@estGuess)
-		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
-		if(G2){				
-			data <- object@data
-			if(any(is.na(data))){
-				object@G2 <- 0	
-				object@p <- 1					
-			} else {
-				pats <- apply(data,1,paste,collapse = "/")			
-				freqs <- table(pats)
-				nfreqs <- length(freqs)		
-				r <- as.vector(freqs)
-				ncolfull <- ncol(data)
-				tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
-				tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-				tabdata <- cbind(tabdata,r)	
-				expected <- rep(0,nrow(tabdata))	
-				for (j in 1:nrow(tabdata)){          
-					TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
-					expected[j] <- mean(rwmeans[TFvec])
-					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]					
-				}
-				tabdata <- cbind(tabdata,expected*N)
-				G2 <- 2 * sum(log(1/(N*rwmeans)))
-				p <- 1 - pchisq(G2,df) 
-				object@G2 <- G2	
-				object@p <- p
-				object@tabdata <- tabdata
-			}	
-		}		
-		object@logLik <- logLik
-		object@SElogLik <- SElogLik		
-		object@AIC <- AIC
-		object@BIC <- BIC
-		object@df <- as.integer(df)
-		return(object)
-	} 	
-)
-
-
-setMethod(
 	f = "anova",
 	signature = signature(object = 'polymirtClass'),
 	definition = function(object, object2, ...)
@@ -390,9 +295,155 @@ setMethod(
 	}		
 ) 
 
-########################################
-#Main Function
 
+#' Full-Information Item Factor Analysis for Mixed Data Formats
+#' 
+#' \code{polymirt} fits an unconditional (exploratory) full-information
+#' maximum-likelihood factor analysis model to dichotomous and polychotomous
+#' data under the item response theory paradigm using Cai's (2010)
+#' Metropolis-Hastings Robbins-Monro algorithm.
+#' 
+
+#' 
+#' \code{polymirt} follows the item factor analysis strategy by a stochastic
+#' version of maximum likelihood estimation described by Cai (2010). The
+#' general equation used for multidimensional item response theory in this
+#' package is in the logistic form with a scaling correction of 1.702. This
+#' correction is applied to allow comparison to mainstream programs such as
+#' TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at
+#' random' so that each response vector is included in the estimation (i.e.,
+#' full-information). Residuals are computed using the LD statistic (Chen &
+#' Thissen, 1997) in the lower diagonal of the matrix returned by
+#' \code{residuals}, and Cramer's V above the diagonal. For computing the
+#' log-likelihood more accurately see \code{\link{logLik}}.
+#' 
+#' Use of \code{plot} will display the test information function for 1 and 2
+#' dimensional solutions. To examine individuals item plots use
+#' \code{\link{itemplot}} (although the \code{\link[plink]{plink}} package is
+#' much more suitable for IRT graphics) which will also plot information and
+#' surface functions.
+#' 
+#' \code{coef} displays the item parameters with their associated standard
+#' errors, while use of \code{summary} transforms the slopes into a factor
+#' loadings metric. Also, factor loading values below a specified constant can
+#' be also be suppressed in \code{summary} to allow better visual clarity.
+#' Models may be compared by using the \code{anova} function, where a
+#' Chi-squared difference test and AIC difference values are displayed.
+#' 
+#' @aliases polymirt summary,polymirt-method coef,polymirt-method
+#' plot,polymirt-method residuals,polymirt-method anova,polymirt-method
+#' @param data a \code{matrix} or \code{data.frame} that consists of
+#' numerically ordered data
+#' @param nfact number of factors to be extracted
+#' @param guess fixed values for the pseudo-guessing parameter. Can be entered
+#' as a single value to assign a global guessing parameter or may be entered as
+#' a numeric vector for each item
+#' @param estGuess a logical vector indicating which lower-asymptote parameters
+#' to be estimated (default is null, and therefore is contigent on the values
+#' in \code{guess}). By default, if any value in \code{guess} is greater than 0
+#' then its respective \code{estGuess} value is set to \code{TRUE}.
+#' Additionally, beta priors are automatically imposed for estimated parameters
+#' that correspond to the input guessing value.
+#' @param prev.cor use a previously computed correlation matrix to be used to
+#' estimate starting values the estimation. The input could be any correlation
+#' matrix, but it is advised to use a matrix of polychoric correlations.
+#' @param rotate type of rotation to perform after the initial orthogonal
+#' parameters have been extracted. See \code{\link{mirt}} for a list of
+#' possible rotations
+#' @param ncycles the maximum number of iterations to be performed
+#' @param burnin number of burn-in cycles to perform before beginning the SEM
+#' stage
+#' @param SEM.cycles number of stochastic EM cycles to perform before beginning
+#' the MH-RM algorithm
+#' @param kdraws number of Metropolis-Hastings imputations of the factor scores
+#' at each iteration. Default is 1
+#' @param tol tolerance that will terminate the model estimation; must occur in
+#' 3 consecutive iterations
+#' @param SE logical; display the standard errors?
+#' @param x an object of class \code{polymirt} to be plotted or printed
+#' @param object a model estimated from \code{polymirt} of class
+#' \code{polymirt}
+#' @param object2 a model estimated from \code{polymirt} of class
+#' \code{polymirt}
+#' @param suppress a numeric value indicating which (possibly rotated) factor
+#' loadings should be suppressed. Typical values are around .3 in most
+#' statistical software
+#' @param digits the number of significant digits to be rounded
+#' @param npts number of quadrature points to be used for plotting features.
+#' Larger values make plots look smoother
+#' @param rot allows rotation of the 3D graphics
+#' @param printcycles logical; display iteration history during estimation?
+#' @param calcLL logical; calculate the log-likelihood?
+#' @param restype type of residuals to be displayed. Can be either \code{'LD'}
+#' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
+#' expected values for the frequencies of every response pattern
+#' @param draws the number of Monte Carlo draws to estimate the log-likelihood
+#' @param type either \code{'info'} or \code{'infocontour'} to plot test
+#' information plots
+#' @param debug logical; turn on debugging features?
+#' @param technical list specifying subtle parameters that can be adjusted
+#' @param ... additional arguments to be passed
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @seealso \code{\link{expand.table}}, \code{\link{key2binary}}
+#' @references
+#' 
+#' Cai, L. (2010). High-Dimensional exploratory item factor analysis by a
+#' Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75},
+#' 33-57.
+#' 
+#' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
+#' Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics,
+#' and Full-information Item Factor Analysis [Computer software]. Lincolnwood,
+#' IL: Scientific Software International.
+#' @keywords models
+#' @usage 
+#' polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, 
+#'   burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
+#'   draws = 2000, debug = FALSE, technical = list(), ...)
+#' 
+#' \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
+#' 
+#' \S4method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
+#' 
+#' \S4method{plot}{polymirt}(x, npts = 50, type = 'info', rot = list(x = -70, y = 30, z = 10), ...)
+#' 
+#' \S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, ...)
+#' 
+#' \S4method{anova}{polymirt}(object, object2, ...)
+#' @export polymirt
+#' @examples
+#' 
+#' \dontrun{
+#' #load LSAT section 7 data and compute 1 and 2 factor models
+#' data(LSAT7)
+#' fulldata <- expand.table(LSAT7)
+#' 
+#' (mod1 <- polymirt(fulldata, 1))
+#' summary(mod1)
+#' residuals(mod1)
+#' 
+#' (mod2 <- polymirt(fulldata, 2))
+#' summary(mod2)
+#' coef(mod2)
+#' anova(mod1,mod2)
+#' 
+#' ###########
+#' #data from the 'ltm' package in numeric format
+#' data(Science)
+#' (mod1 <- polymirt(Science, 1))
+#' summary(mod1)
+#' residuals(mod1)
+#' coef(mod1)
+#' 
+#' (mod2 <- polymirt(Science, 2, calcLL = FALSE)) #don't calculate log-likelihood
+#' mod2 <- logLik(mod2,5000) #calc log-likelihood here with more draws
+#' summary(mod2, 'promax', suppress = .3)
+#' coef(mod2)
+#' anova(mod1,mod2)
+#' 
+#' 
+#'      }
+#' 
 polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, 
 	burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE,
 	calcLL = TRUE, draws = 2000, debug = FALSE, technical = list(), ...)

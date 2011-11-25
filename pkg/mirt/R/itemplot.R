@@ -1,3 +1,21 @@
+#' Methods for Function itemplot
+#' 
+#' Plot individual items for fitted \code{mirt}, \code{bfactor}, or
+#' \code{polymirt} models.
+#' 
+#' 
+#' @name itemplot-methods
+#' @aliases itemplot-methods itemplot,bfactorClass,numeric-method
+#' itemplot,mirtClass,numeric-method itemplot,polymirtClass,numeric-method
+#' @docType methods
+#' @section Methods: \describe{ \item{itemplot}{\code{signature(object =
+#' "bfactorClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
+#' "mirtClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
+#' "polymirtClass", item = "numeric")}} }
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @exportMethod itemplot
+#' @export itemplot
+#' @keywords methods
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'mirtClass', item = 'numeric'),

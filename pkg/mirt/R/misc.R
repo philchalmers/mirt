@@ -516,20 +516,7 @@ dpars.poly <- function(lambda,zeta,dat,Thetas)
 	return(ret)	
 }
 
-#special characters: @ for location, == for equalities (and const), * for covariance
-#must specify by 'type = list'
-#special types -> slope, int, cov, start, comp
 
-confmirt.model <- function(file = "")
-{
-	mod <- scan(file = file, what = list(type = "", pars = ""), 
-		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE)
-	mod <- cbind(mod$type, mod$pars)
-	colnames(mod) <- c("Type","Parameters")	
-	mod <- list(x = mod)
-	class(mod) <- 'confmirt.model'
-	mod
-}
 
 gamma.cor <- function(x)
 { 

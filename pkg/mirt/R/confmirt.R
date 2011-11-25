@@ -188,106 +188,6 @@ setMethod(
 )
 
 setMethod(
-	f = "logLik",
-	signature = signature(object = 'confmirtClass'),
-	definition = function(object, draws = 2000, G2 = TRUE)
-	{	
-		nfact <- ncol(object@Theta)
-		N <- nrow(object@Theta)
-		J <- length(object@K)
-		pars <- object@pars
-		lambdas <- pars[,1:nfact]
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- pars[,(nfact+1):ncol(pars)]
-		zetas <- t(zetas)[!is.na(t(zetas))]		
-		mu <- object@gpars$u
-		sigma <- object@gpars$sig		
-		LL <- matrix(0,N,draws)		
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
-		K <- object@K	
-		fulldata <- object@fulldata	
-		for(i in 1:draws){
-			theta <- rmvnorm(N,mu,sigma)				
-			LL[,i] <- .Call('logLik', 					
-						as.numeric(lambdas),
-						as.numeric(zetas),
-						as.numeric(guess),
-						as.numeric(theta),
-						as.integer(fulldata),
-						as.integer(object@itemloc-1),
-						as.integer(object@K),
-						as.integer(J),
-						as.integer(N),
-						as.integer(nfact),
-						as.integer(object@estComp))		
-		}		
-		rwmeans <- rowMeans(LL)
-		logLik <- sum(log(rwmeans))				
-		pats <- apply(fulldata,1,paste,collapse = "/")
-		freqs <- table(pats)
-		nfreqs <- length(freqs)		
-		r <- as.vector(freqs)
-		ncolfull <- ncol(fulldata)
-		tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
-		tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-		tabdata <- cbind(tabdata,r)		 		 				
-		pats <- apply(fulldata,1,paste,collapse = "/")
-		freqs <- table(pats)			
-		r <- as.vector(freqs)
-		logN <- 0
-		logr <- rep(0,length(r))
-		for (i in 1:N) logN <- logN + log(i)
-		for (i in 1:length(r)) 
-			for (j in 1:r[i]) 
-				logr[i] <- logr[i] + log(j)    		
-		if(sum(logr) != 0)		
-			logLik <- logLik + logN/sum(logr)			
-		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
-		x <- object@estpars	
-		df <- as.integer(length(r) - sum(x$estlam) - sum(x$estgcov) - 
-			sum(x$estgmeans) - length(zetas) + object@nconstvalues + 
-			nfact*(nfact - 1)/2 - sum(x$estGuess) - 1)			
-		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
-		if(G2){			
-			data <- object@data
-			if(any(is.na(data))){
-				object@G2 <- 0	
-				object@p <- 1					
-			} else {			
-				pats <- apply(data,1,paste,collapse = "/")			
-				freqs <- table(pats)
-				nfreqs <- length(freqs)		
-				r <- as.vector(freqs)
-				ncolfull <- ncol(data)
-				tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
-				tabdata <- matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE)
-				tabdata <- cbind(tabdata,r)	
-				expected <- rep(0,nrow(tabdata))	
-				for (j in 1:nrow(tabdata)){          
-					TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull        
-					expected[j] <- mean(rwmeans[TFvec])
-					rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
-				}
-				tabdata <- cbind(tabdata,expected*N)
-				G2 <- 2 * sum(log(1/(N*rwmeans)))
-				p <- 1 - pchisq(G2,df) 
-				object@G2 <- G2	
-				object@p <- p
-				object@tabdata <- tabdata
-			}	
-		}	
-		object@logLik <- logLik
-		object@SElogLik <- SElogLik		
-		object@AIC <- AIC
-		object@BIC <- BIC
-		object@df <- df		
-		return(object)
-	} 	
-)
-
-setMethod(
 	f = "anova",
 	signature = signature(object = 'confmirtClass'),
 	definition = function(object, object2, ...)
@@ -306,7 +206,7 @@ setMethod(
 		X2 <- 2*object2@logLik - 2*object@logLik 
 		AICdiff <- object@AIC - object2@AIC  
 		BICdiff <- object@BIC - object2@BIC  
-		se <- round(object@SElogLik + object2@SElogLik,3)		
+		se <- round(object@SElogLik + object2@SElogLik,3)
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
 			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
@@ -314,9 +214,177 @@ setMethod(
 	}		
 )
 
-####################
-#Main Function
-
+#' Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats
+#' 
+#' \code{confmirt} fits a conditional (i.e., confirmatory) full-information
+#' maximum-likelihood factor analysis model to dichotomous and polychotomous
+#' data under the item response theory paradigm using Cai's (2010)
+#' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower asymptote
+#' parameters are estimated with a beta prior and are included automatically.
+#' 
+#' 
+#' \code{confmirt} follows a confirmatory item factor analysis strategy that
+#' uses a stochastic version of maximum likelihood estimation described by Cai
+#' (2010). The general equation used for multidimensional item response theory
+#' in this function is in the logistic form with a scaling correction of 1.702.
+#' This correction is applied to allow comparison to mainstream programs such
+#' as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at
+#' random' so that each response vector is included in the estimation (i.e.,
+#' full-information). Residuals are computed using the LD statistic (Chen &
+#' Thissen, 1997) in the lower diagonal of the matrix returned by
+#' \code{residuals}, and Cramer's V above the diagonal. For computing the
+#' log-likelihood more accurately see \code{\link{logLik}}.
+#' 
+#' Specification of the confirmatory item factor analysis model follows many of
+#' the rules in the SEM framework for confirmatory factor analysis. The
+#' variances of the latent factors are automatically fixed to 1 to help
+#' facilitate model identification. All parameters may be fixed to constant
+#' values or set equal to other parameters using the appropriate declarations.
+#' Guessing parameters may be specified for dichotomous items and are estimated
+#' with beta priors automatically, and if a guessing parameter is declared for
+#' a polychotomous item it is ignored.
+#' 
+#' \code{coef} displays the item parameters with their associated standard
+#' errors, while use of \code{summary} transforms the slopes into a factor
+#' loadings metric. Also, nested models may be compared by using the
+#' \code{anova} function, where a Chi-squared difference test and AIC/BIC
+#' difference values are displayed.
+#' 
+#' @aliases confmirt coef,confmirt-method summary,confmirt-method
+#' residuals,confmirt-method anova,confmirt-method
+#' @param data a \code{matrix} or \code{data.frame} that consists of
+#' numerically ordered data
+#' @param model an object returned from \code{confmirt.model()} declarating how
+#' the factor model is to be estimated. See \code{\link{confmirt.model}} for
+#' more details
+#' @param guess fixed values for the pseudo-guessing parameter. Can be entered
+#' as a single value to assign a global guessing parameter or may be entered as
+#' a numeric vector for each item
+#' @param estGuess a logical vector indicating which lower-asymptote parameters
+#' to be estimated (default is null, and therefore is contigent on the values
+#' in \code{guess}). By default, if any value in \code{guess} is greater than 0
+#' then its respective \code{estGuess} value is set to \code{TRUE}.
+#' Additionally, beta priors are automatically imposed for estimated parameters
+#' which correspond to the input guessing values.
+#' @param ncycles the maximum number of MH-RM iterations to be performed
+#' @param burnin number of burn-in cycles to perform before beginning the SEM
+#' stage
+#' @param SEM.cycles number of stochastic EM cycles to perform before beginning
+#' the MH-RM algorithm
+#' @param kdraws number of Metropolis-Hastings imputations of the factor scores
+#' at each iteration. Default is 1.
+#' @param tol tolerance that can be reached to terminate the model estimation;
+#' must be achieved on 3 consecutive iterations
+#' @param printcycles logical; display iteration history during estimation?
+#' @param calcLL logical; calculate the log-likelihood via Monte Carlo
+#' integration?
+#' @param draws the number of Monte Carlo draws to estimate the log-likelihood
+#' @param restype type of residuals to be displayed. Can be either \code{'LD'}
+#' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
+#' expected values for the frequencies of every response pattern
+#' @param returnindex logical; return the list containing the item paramter
+#' locations? To be used when specifying prior parameter distrubutions
+#' @param debug logical; turn on debugging features?
+#' @param object an object of class \code{confmirt}.
+#' @param object2 an object of class \code{confmirt}.
+#' @param SE logical; print standard errors?
+#' @param print.gmeans logical; print latent factor means?
+#' @param digits the number of significant digits to be rounded
+#' @param technical list specifying subtle parameters that can be adjusted
+#' @param ... additional arguments to be passed
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @seealso
+#' \code{\link{expand.table}},\code{\link{key2binary}},\code{\link{simdata}}
+#' @references
+#' 
+#' Cai, L. (2010). Metropolis-Hastings Robbins-Monro algorithm for confirmatory
+#' item factor analysis. \emph{Journal of Educational and Behavioral
+#' Statistics, 35}, 307-335.
+#' 
+#' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
+#' Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics,
+#' and Full-information Item Factor Analysis [Computer software]. Lincolnwood,
+#' IL: Scientific Software International.
+#' @keywords models
+#' @usage 
+#' confmirt(data, model, guess = 0, estGuess = NULL, ncycles = 2000, burnin = 150, 
+#'   SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
+#'   draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
+#' 
+#' \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
+#' 
+#' \S4method{summary}{confmirt}(object, digits = 3, ...)
+#' 
+#' \S4method{residuals}{confmirt}(object, restype = 'LD', digits = 3, ...)
+#' 
+#' \S4method{anova}{confmirt}(object, object2, ...)
+#' @export confmirt
+#' @examples
+#'  
+#' \dontrun{
+#' #simulate data
+#' a <- matrix(c(
+#' 1.5,NA,
+#' 0.5,NA,
+#' 1.0,NA,
+#' 1.0,0.5,
+#'  NA,1.5,
+#'  NA,0.5,
+#'  NA,1.0,
+#'  NA,1.0),ncol=2,byrow=TRUE)
+#' 
+#' d <- matrix(c(
+#' -1.0,NA,NA,
+#' -1.5,NA,NA,
+#'  1.5,NA,NA,
+#'  0.0,NA,NA,
+#' 3.0,2.0,-0.5,
+#' 2.5,1.0,-1,
+#' 2.0,0.0,NA,
+#' 1.0,NA,NA),ncol=3,byrow=TRUE)
+#' 
+#' sigma <- diag(2)
+#' sigma[1,2] <- sigma[2,1] <- .4
+#' dataset <- simdata(a,d,2000,sigma)
+#' 
+#' #analyses
+#' #CIFA for 2 factor crossed structure
+#' 
+#' model.1 <- confmirt.model()
+#'   F1 = 1-4
+#'   F2 = 4-8
+#'   COV = F1*F2
+#'   
+#' mod1 <- confmirt(dataset,model.1)
+#' coef(mod1)
+#' summary(mod1)
+#' residuals(mod1)
+#' 
+#' #fix first slope at 1.5, and set slopes 7 & 8 to be equal
+#' model.2 <- confmirt.model()
+#'   F1 = 1-4
+#'   F2 = 4-8
+#'   COV = F1*F2
+#'   SLOPE = F1@@1 eq 1.5, F2@@7 eq F2@@8
+#'   
+#' mod2 <- confmirt(dataset,model.2)
+#' anova(mod2,mod1)
+#' 
+#' #####
+#' #bifactor 	
+#' model.3 <- confmirt.model()
+#'   G = 1-8
+#'   F1 = 1-4
+#'   F2 = 5-8
+#' 	
+#' mod3 <- confmirt(dataset,model.3)
+#' coef(mod3)
+#' summary(mod3)
+#' residuals(mod3)
+#' anova(mod1,mod3)
+#' 
+#' }
+#' 
 confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
