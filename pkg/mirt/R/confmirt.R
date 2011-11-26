@@ -203,6 +203,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	Call <- match.call()   
 	set.seed(12345)
 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
+	ifelse(!is.null(technical$guess.prior.n), guess.prior.n <- technical$guess.prior.n,
+		guess.prior.n <- 20)
 	itemnames <- colnames(data)
 	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
 	data <- as.matrix(data)		
@@ -510,8 +512,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	if(sum(estGuess) > 0){
 		for(i in 1:J){
 			if(estGuess[i]){
-				a <- guess[i] * 20
-				b <- (1 - guess[i]) * 20
+				a <- guess[i] * guess.prior.n
+				b <- (1 - guess[i]) * guess.prior.n
 				parpriors[[parpriorscount]] <- c(2,guessind[i],a,b)						
 				parpriorscount <- parpriorscount + 1			
 			}

@@ -179,6 +179,8 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	Call <- match.call()
 	set.seed(12345)
 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
+	ifelse(!is.null(technical$guess.prior.n), guess.prior.n <- technical$guess.prior.n,
+		guess.prior.n <- 20)
 	itemnames <- colnames(data)
 	data <- as.matrix(data)		
 	J <- ncol(data)
@@ -263,7 +265,8 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	if(sum(estGuess) > 0){
 		for(i in 1:J){
 			if(estGuess[i]){
-				guessPrior[[guessPriorCount]] <- c(gind[i],guess[i]*20,(1-guess[i])*20)
+				guessPrior[[guessPriorCount]] <- c(gind[i],guess[i]*guess.prior.n,
+					(1-guess[i])*guess.prior.n)
 				guessPriorCount <- guessPriorCount + 1			
 			}
 		}	
