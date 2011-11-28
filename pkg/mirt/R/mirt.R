@@ -636,7 +636,7 @@ setMethod(
 
 setMethod(
 	f = "plot",
-	signature = signature(x = 'mirtClass', y = "missing"),
+	signature = signature(x = 'mirtClass', y = 'missing'),
 	definition = function(x, y, type = 'info', npts = 50, 
 		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
 	{  

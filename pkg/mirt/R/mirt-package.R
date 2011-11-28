@@ -19,6 +19,7 @@
 #' @exportMethod fitted
 #' @exportMethod residuals
 #' @exportMethod logLik
+#' @exportMethod plot
 #' @keywords package
 NULL
 

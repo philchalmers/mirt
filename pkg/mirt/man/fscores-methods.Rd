@@ -55,8 +55,6 @@
   \code{bfactor} models, or stocastic approximations for
   \code{polymirt} and \code{confmirt}. Note that only the
   general factor scores are computed for bifactor models.
-
-  Compute factor scores
 }
 \section{Methods}{
   \describe{ \item{fscores}{\code{signature(object =

@@ -1,6 +1,8 @@
 Roughly in order of importance:
 
 - multicore estimation of Monte carlo logliklihood
+- fitted functions for confmirt and polymirt
 - nominal and rating intercept estimation for polymirt and confmirt
+- nonlinear factors in confmirt (e.g., F1^2, F1*F2)
 - add more extensive simulation data functions (different distributions, skew/kurtosis)
 

@@ -74,7 +74,7 @@ setGeneric("itemplot",
 # @name itemplot
 # @docType methods
 # @rdname itemplot-methods  
-# @export itemplot
+#' @export itemplot
 # @keywords methods
 setMethod(
 	f = "itemplot",

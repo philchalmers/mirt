@@ -24,8 +24,6 @@ setGeneric("fscores",
 	def = function(object, ...) standardGeneric("fscores")
 )
 
-#' Compute factor scores
-#' 
 #' @name fscores
 #' @param object a model of class \code{mirtClass} or \code{bfactorClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
