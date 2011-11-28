@@ -114,7 +114,8 @@ setClass(
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}},\code{\link{key2binary}},\code{\link{confmirt}}
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt}},
+#' \code{\link{fscores}}
 #' @references
 #' 
 #' Gibbons, R. D., & Hedeker, D. R. (1992). Full-information Item Bi-Factor

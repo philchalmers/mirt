@@ -1,11 +1,14 @@
 #' Methods for Function fscores
 #' 
-#' Save tabulated or full data factor scores for \code{mirt} or \code{bfactor}
-#' using EAP or MAP scoring.
+#' Computes MAP or EAP factor scores for \code{mirt} and \code{bfactor} models,
+#' or stocastic approximations for \code{polymirt} and \code{confmirt}. Note
+#' that only the general factor scores are computed for bifactor models.
 #' 
 #' 
-#' @name fscores-methods
-#' @aliases fscores-methods fscores,bfactorClass-method
+#' @usage 
+#' fscores(object, ...)
+#' 
+#' @aliases fscores-method fscores,bfactorClass-method
 #' fscores,mirtClass-method fscores,polymirtClass-method
 #' fscores,confmirtClass-method
 #' @docType methods
@@ -14,6 +17,7 @@
 #' \item{fscores}{\code{signature(object = "polymirtClass")}}
 #' \item{fscores}{\code{signature(object = "confmirtClass")}} }
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @rdname fscores-methods   
 #' @exportMethod fscores
 #' @keywords methods
 setGeneric("fscores", 
@@ -22,13 +26,7 @@ setGeneric("fscores",
 
 #' Compute factor scores
 #' 
-#' Computes MAP or EAP factor scores for \code{mirt} and \code{bfactor} models,
-#' or stocastic approximations for \code{polymirt} and \code{confmirt}. Note
-#' that only the general factor scores are computed for bifactor models.
-#' 
-#' 
-#' @aliases fscores fscores,mirt-method fscores,bfactor-method
-#' fscores,polymirt-method fscores,confmirt-method fscores
+#' @name fscores
 #' @param object a model of class \code{mirtClass} or \code{bfactorClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
 #' factor scores for each unique pattern is displayed. Otherwise the original
@@ -43,9 +41,8 @@ setGeneric("fscores",
 #' @return Returns either a summary table with the response patterns and
 #' expected factor scores, or a complete data matrix with factor scores
 #' appended to the last column.
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
-#' @exportMethod fscores
+#' @rdname fscores-methods   
 #' @export fscores
 #' @examples
 #' 
@@ -118,7 +115,7 @@ setMethod(
 	}  
 )
 
-
+#' @rdname fscores-methods
 setMethod(
 	f = "fscores",
 	signature = 'bfactorClass',
@@ -182,138 +179,6 @@ setMethod(
 				return(cbind(tabdata,r,scores))	
 		}   
 	}  
-)
-
-setMethod(
-	f = "fscores",
-	signature = 'polymirtClass',
-	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5, ...)
-	{ 	
-		cand.t.var <- 1
-		theta0 <- object@Theta
-		K <- object@K
-		nfact <- ncol(theta0)
-		lambdas <- matrix(object@pars[,1:nfact],ncol=nfact)
-		zetas <- na.omit(as.numeric(t(object@pars[,(nfact+1):ncol(object@pars)])))
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
-		data <- cbind(object@data,object@fulldata)
-		Names <- c(colnames(object@data[,1:length(K)]),paste("F",1:nfact,sep=''),paste("SE_F",1:nfact,sep=''))
-		tabdata <- unique(data)[,-c(1:length(K))]			
-		itemloc <- object@itemloc
-		Theta <- list()
-		for(i in 1:nfact)
-			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
-		theta0 <- matrix(0,nrow(tabdata),nfact)
-		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
-			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
-			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
-		}
-		ind <- 1
-		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
-			if(i %% thin == 0){
-				for(j in 1:nfact)
-					Theta[[j]][,ind] <- theta0[,j]									
-				ind <- ind + 1
-			}			
-		}
-
-		expscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		sdscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		for(i in 1:nfact){
-			expscores[,i] <- rowMeans(Theta[[i]])
-			sdscores[,i] <- apply(Theta[[i]],1,sd)
-		}
-				
-		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
-		colnames(ret) <- Names
-		
-		if(!full.scores){ 
-			ret <- ret[order(expscores[,1]),]
-			rownames(ret) <- NULL
-			return(ret)
-		} else {
-			fulldata <- object@data
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=nfact)
-			colnames(scoremat) <- paste("F",1:nfact,sep='')
-			tmp <- unique(data)[,1:length(K)]
-			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- expscores[j, ]
-			}              
-			return(cbind(object@data,scoremat))
-		}	
-	}	
-)
-
-setMethod(
-	f = "fscores",
-	signature = 'confmirtClass',
-	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5, ...)
-	{ 	
-		cand.t.var <- 1
-		estComp <- object@estComp
-		sig <- object@gpars$sig
-		mu <- object@gpars$u
-		theta0 <- object@Theta
-		K <- object@K
-		nfact <- ncol(theta0)
-		lambdas <- matrix(object@pars[,1:nfact],ncol=nfact)
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- na.omit(as.numeric(t(object@pars[,(nfact+1):ncol(object@pars)])))
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
-		data <- cbind(object@data,object@fulldata)		
-		Names <- c(colnames(object@data[,1:length(K)]),paste("F",1:nfact,sep=''),paste("SE_F",1:nfact,sep=''))
-		tabdata <- unique(data)[,-c(1:length(K))]			
-		itemloc <- object@itemloc
-		Theta <- list()
-		for(i in 1:nfact)
-			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
-		theta0 <- matrix(0,nrow(tabdata),nfact)
-		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var,sig,mu,estComp)
-			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
-			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
-		}
-		ind <- 1
-		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var,sig,mu,estComp)
-			if(i %% thin == 0){
-				for(j in 1:nfact)
-					Theta[[j]][,ind] <- theta0[,j]									
-				ind <- ind + 1
-			}			
-		}
-
-		expscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		sdscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		for(i in 1:nfact){
-			expscores[,i] <- rowMeans(Theta[[i]])
-			sdscores[,i] <- apply(Theta[[i]],1,sd)
-		}
-				
-		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
-		colnames(ret) <- Names
-		
-		if(!full.scores){ 
-			ret <- ret[order(expscores[,1]),]
-			rownames(ret) <- NULL
-			return(ret)
-		} else {
-			fulldata <- object@data
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=nfact)
-			colnames(scoremat) <- paste("F",1:nfact,sep='')
-			tmp <- unique(data)[,1:length(K)]
-			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- expscores[j, ]
-			}              
-			return(cbind(object@data,scoremat))
-		}	
-	}	
 )
 
 

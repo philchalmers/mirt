@@ -112,7 +112,8 @@ setClass(
 #' @param technical list specifying subtle parameters that can be adjusted
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{expand.table}}, \code{\link{key2binary}}
+#' @seealso \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{polymirt}},
+#' \code{\link{itemplot}}
 #' @references
 #' 
 #' Cai, L. (2010). High-Dimensional exploratory item factor analysis by a
@@ -138,6 +139,7 @@ setClass(
 #' \S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, ...)
 #' 
 #' \S4method{anova}{polymirt}(object, object2, ...)
+#'
 #' @export polymirt
 #' @examples
 #' 
@@ -787,5 +789,114 @@ setMethod(
 	}		
 ) 
 
+# @rdname itemplot-methods  
+setMethod(
+	f = "itemplot",
+	signature = signature(object = 'polymirtClass', item = 'numeric'),
+	definition = function(object, item, type = 'info', npts = 50,
+		rot = list(), ...)
+	{		
+		if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
+		if(object@K[item] > 2){
+			K <- object@K		
+			nfact <- ncol(object@Theta)
+			a <- as.matrix(object@pars[ ,1:nfact])
+			d <- as.matrix(object@pars[ ,(nfact+1):ncol(object@pars)])			
+			A <- as.matrix(sqrt(apply(a^2,1,sum)))[item,]
+			nzeta <- K[item] - 1
+			theta <- seq(-4,4,length.out=npts)
+			Theta <- thetaComb(theta, nfact)		
+			P <- P.poly(a[item,], d[item,], Theta, itemexp = FALSE)
+			info <- rep(0,nrow(P))
+			for(i in 1:K[item]){
+				w1 <- P[,i]*(1-P[,i])*A
+				w2 <- P[,i+1]*(1-P[,i+1])*A
+				I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
+				info <- info + I
+			}	
+			plt <- data.frame(cbind(info,Theta))		
+			if(nfact == 1)	
+				plot(Theta, info, type='l',main = paste('Item', item,'Information'), 
+					xlab = 'Theta', ylab='Information')
+			else {					
+				colnames(plt) <- c('info','Theta1','Theta2')
+				if(type == 'info')
+					return(wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
+						zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
+						screen = rot))				
+				if(type == 'infocontour'){										
+					contour(theta, theta, matrix(info,length(theta),length(theta)), 
+						main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")					
+				}
+			}	
+		} else {
+			class(object) <- 'mirtClass'
+			itemplot(object,item,type,npts,rot)		 
+		}	
+	}
+)
 
+#' @rdname fscores-methods  
+setMethod(
+	f = "fscores",
+	signature = 'polymirtClass',
+	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5, ...)
+	{ 	
+		cand.t.var <- 1
+		theta0 <- object@Theta
+		K <- object@K
+		nfact <- ncol(theta0)
+		lambdas <- matrix(object@pars[,1:nfact],ncol=nfact)
+		zetas <- na.omit(as.numeric(t(object@pars[,(nfact+1):ncol(object@pars)])))
+		guess <- object@guess
+		guess[is.na(guess)] <- 0
+		data <- cbind(object@data,object@fulldata)
+		Names <- c(colnames(object@data[,1:length(K)]),paste("F",1:nfact,sep=''),paste("SE_F",1:nfact,sep=''))
+		tabdata <- unique(data)[,-c(1:length(K))]			
+		itemloc <- object@itemloc
+		Theta <- list()
+		for(i in 1:nfact)
+			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
+		theta0 <- matrix(0,nrow(tabdata),nfact)
+		for(i in 1:30){			
+			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
+			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
+			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
+		}
+		ind <- 1
+		for(i in 1:ndraws){			
+			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
+			if(i %% thin == 0){
+				for(j in 1:nfact)
+					Theta[[j]][,ind] <- theta0[,j]									
+				ind <- ind + 1
+			}			
+		}
 
+		expscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
+		sdscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
+		for(i in 1:nfact){
+			expscores[,i] <- rowMeans(Theta[[i]])
+			sdscores[,i] <- apply(Theta[[i]],1,sd)
+		}
+				
+		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
+		colnames(ret) <- Names
+		
+		if(!full.scores){ 
+			ret <- ret[order(expscores[,1]),]
+			rownames(ret) <- NULL
+			return(ret)
+		} else {
+			fulldata <- object@data
+			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=nfact)
+			colnames(scoremat) <- paste("F",1:nfact,sep='')
+			tmp <- unique(data)[,1:length(K)]
+			for (j in 1:nrow(tabdata)){          
+				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata)        
+				scoremat[TFvec, ] <- expscores[j, ]
+			}              
+			return(cbind(object@data,scoremat))
+		}	
+	}	
+)

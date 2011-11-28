@@ -3,17 +3,31 @@
 #' Calculates a new object that contain the Monte Carlo estimated observed
 #' log-likelihood values for \code{polymirt} and \code{confmirt} objects
 #' 
-#' 
-#' @aliases logLik logLik,polymirt-method logLik,confmirt-method logLik
+#' @name logLik
+#' @usage 
+#' logLik(object, ...)
+#'
+#' \S4method{logLik}{polymirtClass}(object,
+#'    draws = 2000, G2 = TRUE)
+#'
+#' \S4method{logLik}{confmirtClass}(object,
+#'    draws = 2000, G2 = TRUE)
+#' @aliases logLik-method logLik,polymirtClass-method 
+#' logLik,confmirtClass-method
 #' @param object a model of class \code{mirtClass} or \code{bfactorClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
 #' @param ... parameters that are passed
+#' @section Methods: \describe{ \item{logLik}{\code{signature(object =
+#' "polymirtClass")}} \item{logLik}{\code{signature(object = "confmirtClass")}} }
 #' @return Returns an object of class \code{polymirtClass} or
 #' \code{confmirtClass} with the log-likelihood, standard error, and (possibly)
 #' the G^2 model fit statistic.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @docType methods
+#' @rdname logLik-methods  
+#' @seealso
+#' \code{\link{polymirt}}, \code{\link{confmirt}}
 #' @keywords logLik
 #' @examples
 #' 
@@ -123,6 +137,7 @@ setMethod(
 	} 	
 )
 
+# @rdname logLik-methods  
 setMethod(
 	f = "logLik",
 	signature = signature(object = 'polymirtClass'),

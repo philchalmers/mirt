@@ -151,7 +151,8 @@ setClass(
 #' points per dimension may help to stabilize the estimation process.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}},\code{\link{key2binary}},\code{\link{polymirt}},\code{\link{confmirt}}
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{polymirt}},
+#' \code{\link{confmirt}}, \code{\link{polymirt}}, \code{\link{itemplot}}
 #' @references
 #' 
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of
@@ -188,7 +189,7 @@ setClass(
 #' 
 #' \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 #' 
-#' \S4method{residuals}{mirt}(object, restype = 'LD', digits = 3, ...)
+#' \S4method{residuals}{mirt}(object, restype = 'LD', digits=3, ...)
 #' @export mirt
 #' @examples
 #' 

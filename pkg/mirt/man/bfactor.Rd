@@ -194,7 +194,8 @@ coef(mod3b)
   International.
 }
 \seealso{
-  \code{\link{expand.table}},\code{\link{key2binary}},\code{\link{confmirt}}
+  \code{\link{expand.table}}, \code{\link{key2binary}},
+  \code{\link{confmirt}}, \code{\link{fscores}}
 }
 \keyword{models}
 

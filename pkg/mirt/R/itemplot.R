@@ -3,9 +3,20 @@
 #' \code{itemplot} displays 3D surface plots if the number of factors is 2, or
 #' standard 2D plots if the number of factors is equal to one.
 #' 
+#'
+#' @usage 
+#' itemplot(object, item, ...)
 #' 
-#' @aliases itemplot itemplot,mirt-method itemplot,bfactor-method
-#' itemplot,polymirt-method
+#' \S4method{itemplot}{mirtClass,numeric}(object,
+#'   item, type = "info", npts = 50, rot = list(), ...)
+#'
+#' \S4method{itemplot}{bfactorClass,numeric}(object,
+#'   item, type = "info", npts = 50, rot = list(), ...)
+#'
+#' \S4method{itemplot}{polymirtClass,numeric}(object,
+#'   item, type = "info", npts = 50, rot = list(), ...)
+#' @aliases itemplot-method itemplot,mirtClass,numeric-method 
+#' itemplot,polymirtClass,numeric-method itemplot,bfactorClass,numeric-method
 #' @param object a computed model of class \code{bfactorClass},
 #' \code{mirtClass}, or \code{polymirtClass}
 #' @param item a single numerical value indicating which item to plot
@@ -16,10 +27,16 @@
 #' display information plots
 #' @param npts number of points to use per dimension. A higher value will make
 #' the graphs look smoother
-#' @param rot allows rotation of the 3D graphics
+#' @param rot allows rotation of the 3D graphics. Default is \code{list(x=-70,y=30,z=10)}
 #' @param ... additional arguments to be passed
+#' @section Methods: \describe{ \item{itemplot}{\code{signature(object =
+#' "bfactorClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
+#' "mirtClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
+#' "polymirtClass", item = "numeric")}} }
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{plot}}
+#' @seealso \code{\link{plot}}, \code{\link{mirt}}, \code{\link{bfactor}},
+#' \code{\link{polymirt}}
+#' @rdname itemplot-methods  
 #' @keywords plot
 #' @docType methods
 #' @exportMethod itemplot
@@ -48,29 +65,22 @@ setGeneric("itemplot",
 	def = function(object, item, ...) standardGeneric("itemplot")
 )
 
-#' Methods for Function itemplot
-#' 
-#' Plot individual items for fitted \code{mirt}, \code{bfactor}, or
-#' \code{polymirt} models.
-#' 
-#' 
-#' @name itemplot-methods
-#' @aliases itemplot-methods itemplot,bfactorClass,numeric-method
-#' itemplot,mirtClass,numeric-method itemplot,polymirtClass,numeric-method
-#' @docType methods
-#' @section Methods: \describe{ \item{itemplot}{\code{signature(object =
-#' "bfactorClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
-#' "mirtClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
-#' "polymirtClass", item = "numeric")}} }
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @exportMethod itemplot
-#' @export itemplot
-#' @keywords methods
+# Methods for Function itemplot
+# 
+# Plot individual items for fitted \code{mirt}, \code{bfactor}, or
+# \code{polymirt} models.
+# 
+# 
+# @name itemplot
+# @docType methods
+# @rdname itemplot-methods  
+# @export itemplot
+# @keywords methods
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'mirtClass', item = 'numeric'),
 	definition = function(object, item, type = 'info', npts = 50,
-		rot = list(x = -70, y = 30, z = 10), ...)
+		rot = list(), ...)
 	{  
 		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		nfact <- ncol(object@Theta)
@@ -127,11 +137,12 @@ setMethod(
 	}
 )
 
+# @rdname itemplot-methods  
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'bfactorClass', item = 'numeric'),
 	definition = function(object, item, type = 'info', npts = 50, 
-		rot = list(x = -70, y = 30, z = 10), ...)
+		rot = list(), ...)
 	{
 		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		a <- as.matrix(object@pars[ ,1:(ncol(object@pars) - 1)])
@@ -172,49 +183,7 @@ setMethod(
 	}
 )
 
-setMethod(
-	f = "itemplot",
-	signature = signature(object = 'polymirtClass', item = 'numeric'),
-	definition = function(object, item, type = 'info', npts = 50,
-		rot = list(x = -70, y = 30, z = 10), ...)
-	{		
-		if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
-		if(object@K[item] > 2){
-			K <- object@K		
-			nfact <- ncol(object@Theta)
-			a <- as.matrix(object@pars[ ,1:nfact])
-			d <- as.matrix(object@pars[ ,(nfact+1):ncol(object@pars)])			
-			A <- as.matrix(sqrt(apply(a^2,1,sum)))[item,]
-			nzeta <- K[item] - 1
-			theta <- seq(-4,4,length.out=npts)
-			Theta <- thetaComb(theta, nfact)		
-			P <- P.poly(a[item,], d[item,], Theta, itemexp = FALSE)
-			info <- rep(0,nrow(P))
-			for(i in 1:K[item]){
-				w1 <- P[,i]*(1-P[,i])*A
-				w2 <- P[,i+1]*(1-P[,i+1])*A
-				I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
-				info <- info + I
-			}	
-			plt <- data.frame(cbind(info,Theta))		
-			if(nfact == 1)	
-				plot(Theta, info, type='l',main = paste('Item', item,'Information'), 
-					xlab = 'Theta', ylab='Information')
-			else {					
-				colnames(plt) <- c('info','Theta1','Theta2')
-				if(type == 'info')
-					return(wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
-						zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-						screen = rot))				
-				if(type == 'infocontour'){										
-					contour(theta, theta, matrix(info,length(theta),length(theta)), 
-						main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")					
-				}
-			}	
-		} else {
-			class(object) <- 'mirtClass'
-			itemplot(object,item,type,npts,rot)		 
-		}	
-	}
-)
+
+
+
 

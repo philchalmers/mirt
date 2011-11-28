@@ -223,7 +223,8 @@ anova(mod1,mod3)
   International.
 }
 \seealso{
-  \code{\link{expand.table}},\code{\link{key2binary}},\code{\link{simdata}}
+  \code{\link{expand.table}}, \code{\link{key2binary}},
+  \code{\link{simdata}}, \code{\link{fscores}}
 }
 \keyword{models}
 

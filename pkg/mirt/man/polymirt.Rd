@@ -207,7 +207,8 @@ anova(mod1,mod2)
   International.
 }
 \seealso{
-  \code{\link{expand.table}}, \code{\link{key2binary}}
+  \code{\link{expand.table}}, \code{\link{key2binary}},
+  \code{\link{polymirt}}, \code{\link{itemplot}}
 }
 \keyword{models}
 
