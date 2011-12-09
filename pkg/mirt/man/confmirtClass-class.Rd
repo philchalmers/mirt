@@ -7,6 +7,7 @@
 \alias{show,confmirtClass-method}
 \alias{summary,confmirtClass-method}
 \alias{anova,confmirtClass-method}
+\alias{fitted,confmirtClass-method}
 
 \title{Class "confmirtClass"}
 \description{
@@ -48,13 +49,14 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
 }
 \section{Methods}{
   \describe{
-    \item{coef}{\code{signature(object = "confmirtClass")} }
+    \item{coef}{\code{signature(object = "confmirtClass")}}
     \item{print}{\code{signature(x = "confmirtClass")} }
     \item{residuals}{\code{signature(object = "confmirtClass")}}
     \item{show}{\code{signature(object = "confmirtClass")} }
     \item{summary}{\code{signature(object = "confmirtClass")} }
     \item{logLik}{\code{signature(object = "confmirtClass")} }
     \item{anova}{\code{signature(object = "confmirtClass")} }
+	\item{fitted}{\code{signature(object = "confmirtClass")} }
 	 }
 }
 

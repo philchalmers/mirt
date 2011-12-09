@@ -5,15 +5,6 @@
 \alias{logLik,confmirtClass-method}
 \alias{logLik,polymirtClass-method}
 \title{Monte Carlo Log-Likelihood Calculation}
-\usage{
-  logLik(object, ...)
-
-  \S4method{logLik}{polymirtClass}(object, draws = 2000, G2
-    = TRUE)
-
-  \S4method{logLik}{confmirtClass}(object, draws = 2000, G2
-    = TRUE)
-}
 \arguments{
   \item{object}{a model of class \code{mirtClass} or
   \code{bfactorClass}}

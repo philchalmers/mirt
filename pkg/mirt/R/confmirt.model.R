@@ -82,3 +82,4 @@ confmirt.model <- function(file = "")
 	class(mod) <- 'confmirt.model'
 	mod
 }
+

@@ -62,7 +62,7 @@ setClass(
 #' difference values are displayed.
 #' 
 #' @aliases confmirt coef,confmirt-method summary,confmirt-method
-#' residuals,confmirt-method anova,confmirt-method
+#' residuals,confmirt-method anova,confmirt-method fitted,confmirt-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data
 #' @param model an object returned from \code{confmirt.model()} declarating how
@@ -77,13 +77,14 @@ setClass(
 #' then its respective \code{estGuess} value is set to \code{TRUE}.
 #' Additionally, beta priors are automatically imposed for estimated parameters
 #' which correspond to the input guessing values.
-#' @param ncycles the maximum number of MH-RM iterations to be performed
+#' @param ncycles the maximum number of MH-RM iterations to be performed. Default is 
+#' 2000
 #' @param burnin number of burn-in cycles to perform before beginning the SEM
-#' stage
-#' @param SEM.cycles number of stochastic EM cycles to perform before beginning
-#' the MH-RM algorithm
+#' stage. Default is 150
+#' @param SEM.cycles number of stochastic EM cycles to perform and average over
+#' before beginning the MH-RM algorithm. Default is 50
 #' @param kdraws number of Metropolis-Hastings imputations of the factor scores
-#' at each iteration. Default is 1.
+#' at each iteration. Default is 1
 #' @param tol tolerance that can be reached to terminate the model estimation;
 #' must be achieved on 3 consecutive iterations
 #' @param printcycles logical; display iteration history during estimation?
@@ -96,8 +97,8 @@ setClass(
 #' @param returnindex logical; return the list containing the item paramter
 #' locations? To be used when specifying prior parameter distrubutions
 #' @param debug logical; turn on debugging features?
-#' @param object an object of class \code{confmirt}.
-#' @param object2 an object of class \code{confmirt}.
+#' @param object an object of class \code{confmirt}
+#' @param object2 an object of class \code{confmirt}
 #' @param SE logical; print standard errors?
 #' @param print.gmeans logical; print latent factor means?
 #' @param digits the number of significant digits to be rounded
@@ -106,7 +107,7 @@ setClass(
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
-#' \code{\link{fscores}}
+#' \code{\link{fscores}}, \code{\link{confmirt.model}}
 #' @references
 #' 
 #' Cai, L. (2010). Metropolis-Hastings Robbins-Monro algorithm for confirmatory
@@ -130,6 +131,9 @@ setClass(
 #' \S4method{residuals}{confmirt}(object, restype = 'LD', digits = 3, ...)
 #' 
 #' \S4method{anova}{confmirt}(object, object2, ...)
+#'
+#' \S4method{fitted}{confmirt}(object, digits = 3, ...)
+#'
 #' @export confmirt
 #' @examples
 #'  
@@ -792,6 +796,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	} ###END BIG LOOP
 	
+	if(!is.null(technical$return.verbose)) {}
 	cat("\n\n")
 	SEtmp <- diag(solve(info))		
 	if(any(SEtmp < 0)){
@@ -1171,4 +1176,13 @@ setMethod(
 	}	
 )
 
-
+setMethod(
+	f = "fitted",
+	signature = signature(object = 'confmirtClass'),
+	definition = function(object, digits = 3, ...){  
+		tabdata <- object@tabdata
+		colnames(tabdata) <- c(colnames(object@data),"freq","exp")	
+		print(tabdata, digits)
+		invisible(tabdata)
+	}
+)

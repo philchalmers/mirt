@@ -30,3 +30,4 @@ key2binary <- function (fulldata, key){
   X <- t(t(X) == key) + 0   
   return(X)
 }
+

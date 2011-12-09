@@ -60,6 +60,7 @@ setClass(
 #' 
 #' @aliases polymirt summary,polymirt-method coef,polymirt-method
 #' plot,polymirt-method residuals,polymirt-method anova,polymirt-method
+#' fitted,polymirt-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data
 #' @param nfact number of factors to be extracted
@@ -139,6 +140,8 @@ setClass(
 #' \S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, ...)
 #' 
 #' \S4method{anova}{polymirt}(object, object2, ...)
+#'
+#' \S4method{fitted}{polymirt}(object, digits = 3, ...)
 #'
 #' @export polymirt
 #' @examples
@@ -900,3 +903,15 @@ setMethod(
 		}	
 	}	
 )
+
+setMethod(
+	f = "fitted",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object, digits = 3, ...){  		  
+		tabdata <- object@tabdata
+		colnames(tabdata) <- c(colnames(object@data),"freq","exp")	
+		print(tabdata, digits)
+		invisible(tabdata)
+	}
+)
+

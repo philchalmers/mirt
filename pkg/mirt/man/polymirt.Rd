@@ -1,6 +1,7 @@
 \name{polymirt}
 \alias{anova,polymirt-method}
 \alias{coef,polymirt-method}
+\alias{fitted,polymirt-method}
 \alias{plot,polymirt-method}
 \alias{polymirt}
 \alias{residuals,polymirt-method}
@@ -26,6 +27,8 @@
     digits = 3, ...)
 
   \S4method{anova}{polymirt}(object, object2, ...)
+
+  \S4method{fitted}{polymirt}(object, digits = 3, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that

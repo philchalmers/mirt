@@ -7,21 +7,6 @@
 \alias{fscores,mirtClass-method}
 \alias{fscores,polymirtClass-method}
 \title{Methods for Function fscores}
-\usage{
-  fscores(object, ...)
-
-  \S4method{fscores}{mirtClass}(object,
-    full.scores = FALSE, method = "EAP", ...)
-
-  \S4method{fscores}{bfactorClass}(object,
-    full.scores = FALSE, method = "EAP", ...)
-
-  \S4method{fscores}{polymirtClass}(object,
-    full.scores = FALSE, ndraws = 3000, thin = 5, ...)
-
-  \S4method{fscores}{confmirtClass}(object,
-    full.scores = FALSE, ndraws = 3000, thin = 5, ...)
-}
 \arguments{
   \item{object}{a model of class \code{mirtClass} or
   \code{bfactorClass}}

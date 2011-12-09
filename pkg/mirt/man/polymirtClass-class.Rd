@@ -8,6 +8,7 @@
 \alias{show,polymirtClass-method}
 \alias{summary,polymirtClass-method}
 \alias{anova,polymirtClass-method}
+\alias{fitted,polymirtClass-method}
 
 \title{Class "polymirtClass"}
 \description{
@@ -52,6 +53,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{summary}{\code{signature(object = "polymirtClass")}}
     \item{logLik}{\code{signature(object = "polymirtClass")} }
     \item{anova}{\code{signature(object = "polymirtClass")} }
+	\item{fitted}{\code{signature(object = "polymirtClass")} }
 	 }
 }
 

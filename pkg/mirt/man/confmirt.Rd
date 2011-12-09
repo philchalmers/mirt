@@ -2,6 +2,7 @@
 \alias{anova,confmirt-method}
 \alias{coef,confmirt-method}
 \alias{confmirt}
+\alias{fitted,confmirt-method}
 \alias{residuals,confmirt-method}
 \alias{summary,confmirt-method}
 \title{Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats}
@@ -21,6 +22,8 @@
     digits = 3, ...)
 
   \S4method{anova}{confmirt}(object, object2, ...)
+
+  \S4method{fitted}{confmirt}(object, digits = 3, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -46,16 +49,17 @@
   correspond to the input guessing values.}
 
   \item{ncycles}{the maximum number of MH-RM iterations to
-  be performed}
+  be performed. Default is 2000}
 
   \item{burnin}{number of burn-in cycles to perform before
-  beginning the SEM stage}
+  beginning the SEM stage. Default is 150}
 
   \item{SEM.cycles}{number of stochastic EM cycles to
-  perform before beginning the MH-RM algorithm}
+  perform and average over before beginning the MH-RM
+  algorithm. Default is 50}
 
   \item{kdraws}{number of Metropolis-Hastings imputations
-  of the factor scores at each iteration. Default is 1.}
+  of the factor scores at each iteration. Default is 1}
 
   \item{tol}{tolerance that can be reached to terminate the
   model estimation; must be achieved on 3 consecutive
@@ -81,9 +85,9 @@
 
   \item{debug}{logical; turn on debugging features?}
 
-  \item{object}{an object of class \code{confmirt}.}
+  \item{object}{an object of class \code{confmirt}}
 
-  \item{object2}{an object of class \code{confmirt}.}
+  \item{object2}{an object of class \code{confmirt}}
 
   \item{SE}{logical; print standard errors?}
 
@@ -224,7 +228,8 @@ anova(mod1,mod3)
 }
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
-  \code{\link{simdata}}, \code{\link{fscores}}
+  \code{\link{simdata}}, \code{\link{fscores}},
+  \code{\link{confmirt.model}}
 }
 \keyword{models}
 

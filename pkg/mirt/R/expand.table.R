@@ -33,3 +33,4 @@ expand.table <- function(tabdata) {
   colnames(fulldata) <- itemnames  
   fulldata 
 }
+

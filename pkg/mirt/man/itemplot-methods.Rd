@@ -6,18 +6,6 @@
 \alias{itemplot,mirtClass,numeric-method}
 \alias{itemplot,polymirtClass,numeric-method}
 \title{Displays item surface and information plots}
-\usage{
-  itemplot(object, item, ...)
-
-  \S4method{itemplot}{mirtClass,numeric}(object, item, type
-    = "info", npts = 50, rot = list(), ...)
-
-  \S4method{itemplot}{bfactorClass,numeric}(object, item,
-    type = "info", npts = 50, rot = list(), ...)
-
-  \S4method{itemplot}{polymirtClass,numeric}(object, item,
-    type = "info", npts = 50, rot = list(), ...)
-}
 \arguments{
   \item{object}{a computed model of class
   \code{bfactorClass}, \code{mirtClass}, or
