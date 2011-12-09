@@ -27,7 +27,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{log.lik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for chi-squared value}
     \item{\code{F}:}{Object of class \code{"matrix"},  factor loadings}
-    \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
+    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{itemnames}:}{Object of class \code{"character"},  item names}
     \item{\code{tabdata}:}{Object of class \code{"matrix"},  tabulated data}
     \item{\code{N}:}{Object of class \code{"numeric"},  sample size}

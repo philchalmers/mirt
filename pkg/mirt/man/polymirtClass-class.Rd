@@ -28,7 +28,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{data}:}{Object of class \code{"matrix"}, complete data with 99 as missing }
     \item{\code{K}:}{Object of class \code{"numeric"}, number of item categories  }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
-    \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
+    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }

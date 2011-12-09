@@ -1,4 +1,4 @@
-#' Full information maximum likelihood estimation of mutlidimensional IRT models
+#' Full information maximum likelihood estimation of multidimensional IRT models
 #' 
 #' Analysis of dichotomous and polychotomous response data using
 #' latent trait models under the Item Response Theory paradigm. Includes the

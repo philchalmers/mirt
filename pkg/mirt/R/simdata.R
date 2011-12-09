@@ -20,10 +20,10 @@
 #' items
 #' @param sigma a covariance matrix of the underlying distribution. Default is
 #' the identity matrix
-#' @param mu a mean vector of the underlying distribution. Defualt is a vector
+#' @param mu a mean vector of the underlying distribution. Default is a vector
 #' of zeros
-#' @param partcomp a logical vector used to sepcify which items are to be
-#' treated as parially compensatory items (see Reckase, 2009), and single
+#' @param partcomp a logical vector used to specify which items are to be
+#' treated as partially compensatory items (see Reckase, 2009), and single
 #' values are repeated for each item. Note that when simulating noncompensatory
 #' data the slope parameters must equal the number of intercept parameters
 #' @param factor.loads logical; are the slope parameters in \code{a} in the

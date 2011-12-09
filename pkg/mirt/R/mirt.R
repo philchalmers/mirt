@@ -94,7 +94,7 @@ setClass(
 #' @param nfact number of factors to be extracted
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
-#' vector correspding to each item
+#' vector corresponding to each item
 #' @param prev.cor use a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation? Default in \code{NULL}
 #' @param par.prior a list declaring which items should have assumed priors

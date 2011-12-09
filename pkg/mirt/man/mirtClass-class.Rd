@@ -29,7 +29,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{log.lik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
-    \item{\code{h2}:}{Object of class \code{"numeric"}, communalities }
+    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}

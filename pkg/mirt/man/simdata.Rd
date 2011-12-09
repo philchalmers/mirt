@@ -28,10 +28,10 @@ distribution}
   distribution. Default is the identity matrix}
 
   \item{mu}{a mean vector of the underlying distribution.
-  Defualt is a vector of zeros}
+  Default is a vector of zeros}
 
-  \item{partcomp}{a logical vector used to sepcify which
-  items are to be treated as parially compensatory items
+  \item{partcomp}{a logical vector used to specify which
+  items are to be treated as partially compensatory items
   (see Reckase, 2009), and single values are repeated for
   each item. Note that when simulating noncompensatory data
   the slope parameters must equal the number of intercept

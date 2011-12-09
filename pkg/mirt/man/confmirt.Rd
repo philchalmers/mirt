@@ -41,7 +41,7 @@
 
   \item{estGuess}{a logical vector indicating which
   lower-asymptote parameters to be estimated (default is
-  null, and therefore is contigent on the values in
+  null, and therefore is contingent on the values in
   \code{guess}). By default, if any value in \code{guess}
   is greater than 0 then its respective \code{estGuess}
   value is set to \code{TRUE}. Additionally, beta priors
@@ -81,7 +81,7 @@
 
   \item{returnindex}{logical; return the list containing
   the item paramter locations? To be used when specifying
-  prior parameter distrubutions}
+  prior parameter distributions}
 
   \item{debug}{logical; turn on debugging features?}
 

@@ -4,7 +4,7 @@
 \title{Full information maximum likelihood estimation of IRT models.}
 \description{
   Full information maximum likelihood estimation of
-  mutlidimensional IRT models
+  multidimensional IRT models
 }
 \details{
   Analysis of dichotomous and polychotomous response data

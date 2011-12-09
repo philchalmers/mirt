@@ -37,7 +37,7 @@
 }
 \description{
   Computes MAP or EAP factor scores for \code{mirt} and
-  \code{bfactor} models, or stocastic approximations for
+  \code{bfactor} models, or stochastic approximations for
   \code{polymirt} and \code{confmirt}. Note that only the
   general factor scores are computed for bifactor models.
 }

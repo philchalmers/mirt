@@ -72,7 +72,7 @@ setClass(
 #' as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
 #' @param estGuess a logical vector indicating which lower-asymptote parameters
-#' to be estimated (default is null, and therefore is contigent on the values
+#' to be estimated (default is null, and therefore is contingent on the values
 #' in \code{guess}). By default, if any value in \code{guess} is greater than 0
 #' then its respective \code{estGuess} value is set to \code{TRUE}.
 #' Additionally, beta priors are automatically imposed for estimated parameters
@@ -95,7 +95,7 @@ setClass(
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
 #' @param returnindex logical; return the list containing the item paramter
-#' locations? To be used when specifying prior parameter distrubutions
+#' locations? To be used when specifying prior parameter distributions
 #' @param debug logical; turn on debugging features?
 #' @param object an object of class \code{confmirt}
 #' @param object2 an object of class \code{confmirt}
