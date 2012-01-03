@@ -10,8 +10,13 @@
 #' @name mirt-package
 #' @docType package
 #' @title Full information maximum likelihood estimation of IRT models.
-#' @author \email{rphilip.chalmers@@gmail.com}
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt 
+#' @import psych
+#' @import MASS
+#' @import GPArotation
+#' @import mvtnorm
+#' @import Matrix
 #' @importFrom graphics plot
 #' @importFrom stats anova coef fitted residuals logLik
 #' @exportMethod anova 

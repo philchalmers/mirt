@@ -16,7 +16,7 @@
   modeling in conjunction with other IRT models. ...
 }
 \author{
-  \email{rphilip.chalmers@gmail.com}
+  Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{package}
 

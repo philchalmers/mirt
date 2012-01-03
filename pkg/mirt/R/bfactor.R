@@ -16,13 +16,14 @@
 # @keywords classes
 setClass(
 	Class = 'bfactorClass',
-	representation = representation(EMiter = 'numeric', pars = 'matrix', guess = 'numeric', 
-		AIC = 'numeric', X2 = 'numeric', df = 'numeric', log.lik = 'numeric', p = 'numeric', 
-		F = 'matrix', h2 = 'numeric', itemnames = 'character', tabdata = 'matrix', 
-		N = 'numeric', Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
-		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', BIC = 'numeric',
-		cormat = 'matrix', converge = 'numeric', par.prior = 'matrix', quadpts = 'numeric', 
-		Call = 'call'),	
+	representation = representation(EMiter = 'numeric', pars = 'matrix', 
+		guess = 'numeric', AIC = 'numeric', X2 = 'numeric', df = 'numeric', 
+		log.lik = 'numeric', p = 'numeric', F = 'matrix', h2 = 'numeric', 
+		itemnames = 'character', tabdata = 'matrix', N = 'numeric', 
+		Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
+		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', 
+		BIC = 'numeric', cormat = 'matrix', converge = 'numeric', 
+		par.prior = 'matrix', quadpts = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -259,7 +260,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 		} else Rpoly <- cormod(fulldata,K,guess)       
 	pars <- matrix(0,nrow=nitems, ncol=nfact + 1)
 	if (is.null(startvalues)){  
-		suppressMessages(startvalues <- start.values(fulldata,guess,Rpoly,bfactor=TRUE))
+		suppressMessages(startvalues <- start.values(fulldata,guess,Rpoly,
+			bfactor=TRUE))
 		pars[logicalfact] <- startvalues    
 		sload <- startvalues[(nitems+1):(2*nitems)]
 		for(i in 1:nitems){
@@ -304,11 +306,13 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 		mpars[ ,2] <- temp	
 		for(i in 1:nitems){ 
 			if(guess[i] == 0)	
-				maxim <- try(optim(mpars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-					guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
+				maxim <- try(optim(mpars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],
+					N=rlist[[2]][i, ],guess=guess[i],Theta=Theta,prior=Prior,
+					parprior=par.prior[i, ],method="BFGS"))
 			else	  
-				maxim <- try(optim(mpars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-					guess=guess[i],Theta=Theta,prior=Prior,parprior=par.prior[i, ],method="BFGS"))
+				maxim <- try(optim(mpars[i, ],fn=fn,r1=rlist[[1]][i, ],
+				N=rlist[[2]][i, ],guess=guess[i],Theta=Theta,prior=Prior,
+				parprior=par.prior[i, ],method="BFGS"))
 			if(class(maxim) == "try-error") {
 				problemitems <- c(problemitems, i)	  
 				converge <- 0

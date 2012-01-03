@@ -16,6 +16,7 @@ Depends:
     methods,
     lattice,
     psych,
+    MASS,
     GPArotation,
     mvtnorm,
     Matrix
