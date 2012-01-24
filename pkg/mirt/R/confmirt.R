@@ -876,6 +876,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	F <- as.matrix(pars[ ,1:nfact]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
+	names(h2) <- itemnames
 
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
 		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
@@ -949,8 +950,10 @@ setMethod(
 	definition = function(object, digits = 3, ...)
 	{
 		if(any(object@estComp)) stop('No factor metric for noncompensatory models')
-		nfact <- ncol(object@F)		
-		F <- object@F		
+		nfact <- ncol(object@F)
+		itemnames <- names(object@h2)	
+		F <- object@F
+		rownames(F) <- itemnames
 		colnames(F) <- paste("F_", 1:ncol(F),sep="")						
 		SS <- apply(F^2,2,sum)			
 		cat("\nFactor loadings metric: \n")
@@ -971,12 +974,15 @@ setMethod(
 	definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 	{  
 		nfact <- ncol(object@Theta)	
+		itemnames <- names(object@h2)
 		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
 		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
 			ncol = ncol(object@pars)-nfact)    	
 
 		parameters <- cbind(object@pars,object@guess)
-		SEs <- cbind(object@SEpars,object@SEg)	
+		SEs <- cbind(object@SEpars,object@SEg)
+		rownames(parameters) <- itemnames
+		rownames(SEs) <- itemnames
 		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
 			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
 		cat("\nITEM PARAMTERS: \n")
@@ -1090,8 +1096,7 @@ setMethod(
 		if(length(object@df) == 0 || length(object2@df) == 0) 
 			stop('Use \'logLik\' to obtain likelihood values') 	
 		df <- object@df - object2@df
-		if(df < 0){
-			df <- abs(df)
+		if(df < 0){			
 			tmp <- object
 			object <- object2
 			object2 <- tmp
@@ -1101,7 +1106,8 @@ setMethod(
 		BICdiff <- object@BIC - object2@BIC  
 		se <- round(object@SElogLik + object2@SElogLik,3)
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
-			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+			" (SE = ",se,"), df = ", df, ", p = ", round(1 - pchisq(X2,abs(df)),4), 
+			"\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
 		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='')
 	}		

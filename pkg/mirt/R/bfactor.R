@@ -215,7 +215,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	fulldata[is.na(fulldata)] <- 0
 	if (!any(fulldata %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")
 	if (length(specific) != ncol(fulldata)) 
-	stop("Specific factor loadings have been declared incorrectly")  
+		stop("Specific factor loadings have been declared incorrectly")  
 	nfact <- length(unique(specific)) + 1  
 	nitems <- ncol(fulldata)
 	if(2*nfact >= nitems) stop('Model is not identified.')
@@ -497,7 +497,7 @@ setMethod(
 		B <- -d/A 
 		fac <- object@facility  
 		parameters <- round(cbind(object@pars,object@guess,fac,A,B),digits)
-		colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),"d", "guess", 
+		colnames(parameters) <- c('G',paste("F_", 1:(ncol(object@F)-1),sep=""),"d", "guess", 
 			"facility","mvdisc", "mvint")  
 		cat("\nParameters with multivariate discrimination and intercept: \n\n")
 		print(parameters)	    

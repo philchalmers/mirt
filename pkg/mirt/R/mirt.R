@@ -509,6 +509,7 @@ setMethod(
 			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
 			cat("\nUnrotated factor loadings: \n\n")
 			loads <- round(cbind(F,h2),digits)
+			rownames(loads) <- rownames(object@pars)
 			print(loads)	    	 
 			cat("\nSS loadings: ",round(SS,digits), "\n")
 			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
@@ -523,7 +524,8 @@ setMethod(
 			SS <- apply(rotF$loadings^2,2,sum)
 			L <- rotF$loadings
 			L[abs(L) < suppress] <- NA	
-			loads <- round(cbind(L,h2),digits)			
+			loads <- round(cbind(L,h2),digits)
+			rownames(loads) <- rownames(object@pars)			
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
@@ -571,11 +573,16 @@ setMethod(
 	definition = function(object, object2, ...){
 		dots <- list(...)		
 		df <- object@df - object2@df  
-		X2 <- 2*object2@log.lik - 2*object@log.lik 
+		if(df < 0){
+			temp <- object
+			object <- object2
+			object2 <- temp
+		}
+		X2 <- 2*object2@log.lik - 2*object@log.lik 		
 		AICdiff <- object@AIC - object2@AIC    
 		BICdiff <- object@BIC - object2@BIC
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
-		df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+			df, ", p = ", round(1 - pchisq(X2,abs(df)),4), "\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3), "\n")  
 		cat("BIC difference = ", round(BICdiff,3), "\n")
 	}
@@ -584,7 +591,7 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'mirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, ...){   	
+	definition = function(object, restype = 'LD', digits = 3, printres = .05, ...){   	
 		Theta <- object@Theta
 		fulldata <- object@fulldata	
 		N <- nrow(fulldata)	

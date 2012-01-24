@@ -20,14 +20,14 @@ start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowar
 		else if (length(guess) > ncol(fulldata) || length(guess) < ncol(fulldata)) 
 			stop("The number of guessing parameters is incorrect.")  	
 	if (bfactor){ 
-		FA <- fa(Rpoly,1, warnings= !nowarn)
+		suppressWarnings(FA <- fa(Rpoly,1, warnings= !nowarn))
 		loads <- unclass(FA$load)
 		cs <- sqrt(abs(FA$u))      
 		dstart <- qnorm(colMeans(fulldata))/cs
 		astart <- loads/cs
 		startvalues <- cbind(astart,astart/2,dstart)
 	} else {    
-		FA <- fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn)	
+		suppressWarnings(FA <- fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn))	
 		loads <- unclass(loadings(FA))
 		u <- FA$unique
 		u[u < .001 ] <- .2

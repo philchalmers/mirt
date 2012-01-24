@@ -480,6 +480,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		else F <- V %*% sqrt(diag(L))  
 	if (sum(F[ ,1] < 0)) F <- (-1) * F  
 	h2 <- rowSums(F^2) 	
+	names(h2) <- itemnames
 		
 	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
@@ -555,6 +556,7 @@ setMethod(
 	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...)
 	{
 		nfact <- ncol(object@F)
+		itemnames <- names(object@h2)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
 			F[abs(F) < suppress] <- NA
@@ -564,6 +566,7 @@ setMethod(
 			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
 			cat("\nUnrotated factor loadings: \n\n")
 			loads <- round(cbind(F,h2),digits)
+			rownames(loads) <- itemnames
 			print(loads)	    	 
 			cat("\nSS loadings: ",round(SS,digits), "\n")
 			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
@@ -578,7 +581,8 @@ setMethod(
 			SS <- apply(rotF$loadings^2,2,sum)
 			L <- rotF$loadings
 			L[abs(L) < suppress] <- NA	
-			loads <- round(cbind(L,h2),digits)		
+			loads <- round(cbind(L,h2),digits)
+			rownames(loads) <- itemnames			
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
@@ -604,14 +608,17 @@ setMethod(
 	definition = function(object, SE = TRUE, digits = 3, ...)
 	{  
 		nfact <- ncol(object@Theta)	
+		itemnames <- names(object@h2)
 		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
 		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
 			ncol = ncol(object@pars)-nfact)    
 		A <- sqrt(apply(a^2,1,sum))
 		B <- -d/A  
 		if (nfact > 1){  
-			parameters <- cbind(object@pars,object@guess,A,B)
+			parameters <- cbind(object@pars,object@guess,A,B)			
 			SEs <- object@SEpars	
+			rownames(parameters) <- itemnames
+			rownames(SEs) <- itemnames
 			colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
 				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess","mvdisc",
 				paste("mvint_",1:(ncol(object@pars)-nfact),sep=""))	
@@ -625,7 +632,9 @@ setMethod(
 			}				
 		} else {
 			parameters <- cbind(object@pars,object@guess)
-			SEs <- object@SEpars	
+			SEs <- object@SEpars
+			rownames(parameters) <- itemnames
+			rownames(SEs) <- itemnames			
 			colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:nfact,sep=""),
 				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")			
 			cat("\nParameter slopes and intercepts: \n\n")	
@@ -775,8 +784,7 @@ setMethod(
 		if(length(object@df) == 0 || length(object2@df) == 0) 
 			stop('Use \'logLik\' to obtain likelihood values')  
 		df <- object@df - object2@df 
-		if(df < 0){
-			df <- abs(df)
+		if(df < 0){			
 			tmp <- object
 			object <- object2
 			object2 <- tmp
@@ -786,7 +794,8 @@ setMethod(
 		BICdiff <- object@BIC - object2@BIC
 		se <- round(object@SElogLik + object2@SElogLik,3)	
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
-			" (SE = ", se,"), df = ", df, ", p = ", round(1 - pchisq(X2,df),4), "\n", sep="")
+			" (SE = ", se,"), df = ", df, ", p = ", round(1 - pchisq(X2,abs(df)),4),
+			"\n", sep="")
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')  
 		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='') 
 	}		

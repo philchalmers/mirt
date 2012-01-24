@@ -1,5 +1,7 @@
 Roughly in order of importance:
 
+- missing data fix for mirt and bfactor
+
 - multicore estimation of Monte carlo logliklihood
 - nominal and rating intercept estimation for polymirt and confmirt
 - nonlinear factors in confmirt (e.g., F1^2, F1*F2)
