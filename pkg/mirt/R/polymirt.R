@@ -704,7 +704,7 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, ...)
+	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 	{ 	
 		fulldata <- object@fulldata	
 		data <- object@data
@@ -769,6 +769,10 @@ setMethod(
 			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
 			tabdata <- round(cbind(tabdata,res),digits)
 			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
+			if(!is.null(printvalue)){
+				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
+				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
+			}	
 			return(tabdata)
 		}
 	}

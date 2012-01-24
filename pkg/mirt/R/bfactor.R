@@ -508,7 +508,7 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'bfactorClass'),
-	definition = function(object, restype = 'LD', digits = 3, p = FALSE, ...)
+	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 	{       
 		Theta <- object@Theta
 		fulldata <- object@fulldata	
@@ -554,7 +554,11 @@ setMethod(
 				sqrt(object@Pl * nrow(object@fulldata)),digits)
 			expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
 			tabdata <- cbind(object@tabdata,expected,res)
-			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")								
+			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")
+			if(!is.null(printvalue)){
+				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
+				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
+			}			
 			return(tabdata)
 		}				
 	}

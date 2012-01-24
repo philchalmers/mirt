@@ -985,26 +985,31 @@ setMethod(
 		rownames(SEs) <- itemnames
 		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
 			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
-		cat("\nITEM PARAMTERS: \n")
+		cat("\nITEM PARAMETERS: \n")
 		print(parameters, digits)
 		if(SE){
 			cat("\nStd. Errors: \n")	
 			print(SEs, digits)
 		}	
 		u <- object@gpars$u	
-		sig <- object@gpars$sig	
+		sig <- object@gpars$sig
+		names(u) <- colnames(sig) <- rownames(sig) <- paste("a_",1:nfact,sep="")	
 		cat("\nGROUP PARAMETERS: \n")
 		if(print.gmeans){
 			cat("Means: \n")
 			print(u,digits)
-			cat("\nStd. Errors: \n")	
-			print(object@SEgpars$SEu, digits)	
+			cat("\nStd. Errors: \n")
+			SEu <- object@SEgpars$SEu
+			names(SEu) <- names(u) 	
+			print(SEu, digits)	
 		}
 		cat("Covariance: \n")
 		print(sig,digits)
 		if(SE){
-			cat("\nStd. Errors: \n")	
-			print(object@SEgpars$SEsig, digits)	
+			cat("\nStd. Errors: \n")
+			SEsig <- object@SEgpars$SEsig
+			colnames(SEsig) <- rownames(SEsig) <- paste("a_",1:nfact,sep="")	
+			print(SEsig, digits)	
 		}
 		invisible(list(pars = parameters,mu = u,sigma = sig))	
 	}
@@ -1013,7 +1018,7 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'confmirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, ...)
+	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 	{ 
 		fulldata <- object@fulldata	
 		data <- object@data
@@ -1081,6 +1086,10 @@ setMethod(
 			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
 			tabdata <- round(cbind(tabdata,res),digits)
 			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
+			if(!is.null(printvalue)){
+				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
+				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
+			}
 			return(tabdata)
 		}
 	}
