@@ -500,7 +500,7 @@ setMethod(
 		B <- -d/A 
 		fac <- object@facility  
 		parameters <- round(cbind(object@pars,object@guess,fac,A,B),digits)
-		colnames(parameters) <- c('G',paste("F_", 1:(ncol(object@F)-1),sep=""),"d", "guess", 
+		colnames(parameters) <- c('a_G',paste("a_", 1:(ncol(object@F)-1),sep=""),"d", "guess", 
 			"facility","mvdisc", "mvint")  
 		cat("\nParameters with multivariate discrimination and intercept: \n\n")
 		print(parameters)	    
