@@ -33,7 +33,7 @@ setClass(
 #' dichotomous data under the item response theory paradigm. Pseudo-guessing
 #' parameters may be included but must be declared as constant, since the
 #' estimation of these parameters often leads to unacceptable solutions.
-#' Missing values are automatically assumed to be 0.
+#' 
 #' 
 #' 
 #' \code{bfactor} follows the item factor analysis strategy explicated by
@@ -82,6 +82,9 @@ setClass(
 #' item. For example, if for a 4 item test with two specific factors, the first
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
+#' @param printvalue a numeric value to be specified when using the \code{res='exp'}
+#' option. Only prints patterns that have standardized residuals greater than 
+#' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param guess fixed pseudo-guessing parameter. Can be entered as a single
 #' value to assign a global value or may be entered as a numeric vector for
 #' each item of length \code{ncol(fulldata)}.
@@ -142,7 +145,7 @@ setClass(
 #' 
 #' \S4method{fitted}{bfactor}(object, digits = 3, ...)
 #' 
-#' \S4method{residuals}{bfactor}(object, restype = 'LD', digits = 3, ...)
+#' \S4method{residuals}{bfactor}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 #'
 #'
 #' @export bfactor

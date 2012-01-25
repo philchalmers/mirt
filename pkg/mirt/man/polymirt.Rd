@@ -24,7 +24,7 @@
     rot = list(x = -70, y = 30, z = 10), ...)
 
   \S4method{residuals}{polymirt}(object, restype = 'LD',
-    digits = 3, ...)
+    digits = 3, printvalue = NULL, ...)
 
   \S4method{anova}{polymirt}(object, object2, ...)
 
@@ -76,6 +76,12 @@
   estimation; must occur in 3 consecutive iterations}
 
   \item{SE}{logical; display the standard errors?}
+
+  \item{printvalue}{a numeric value to be specified when
+  using the \code{res='exp'} option. Only prints patterns
+  that have standardized residuals greater than
+  \code{abs(printvalue)}. The default (NULL) prints all
+  response patterns}
 
   \item{x}{an object of class \code{polymirt} to be plotted
   or printed}

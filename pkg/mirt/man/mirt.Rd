@@ -27,7 +27,7 @@ Theory)}
     list(x = -70, y = 30, z = 10), ...)
 
   \S4method{residuals}{mirt}(object, restype = 'LD',
-    digits=3, ...)
+    digits=3, printvalue = NULL, ...)
 }
 \arguments{
   \item{fulldata}{a \code{matrix} or \code{data.frame} that
@@ -78,6 +78,12 @@ Theory)}
 
   \item{tol}{if the largest change in the EM cycle is less
   than this value then the EM iteration are stopped early}
+
+  \item{printvalue}{a numeric value to be specified when
+  using the \code{res='exp'} option. Only prints patterns
+  that have standardized residuals greater than
+  \code{abs(printvalue)}. The default (NULL) prints all
+  response patterns}
 
   \item{x}{an object of class \code{mirt} to be plotted or
   printed}

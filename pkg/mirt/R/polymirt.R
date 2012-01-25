@@ -89,6 +89,9 @@ setClass(
 #' @param tol tolerance that will terminate the model estimation; must occur in
 #' 3 consecutive iterations
 #' @param SE logical; display the standard errors?
+#' @param printvalue a numeric value to be specified when using the \code{res='exp'}
+#' option. Only prints patterns that have standardized residuals greater than 
+#' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param x an object of class \code{polymirt} to be plotted or printed
 #' @param object a model estimated from \code{polymirt} of class
 #' \code{polymirt}
@@ -137,7 +140,7 @@ setClass(
 #' 
 #' \S4method{plot}{polymirt}(x, npts = 50, type = 'info', rot = list(x = -70, y = 30, z = 10), ...)
 #' 
-#' \S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, ...)
+#' \S4method{residuals}{polymirt}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 #' 
 #' \S4method{anova}{polymirt}(object, object2, ...)
 #'

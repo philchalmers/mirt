@@ -31,7 +31,7 @@ setClass(
 #' to dichotomous data under the item response theory paradigm. Pseudo-guessing
 #' parameters may be included but must be declared as constant, since the
 #' estimation of these parameters often leads to unacceptable solutions.
-#' Missing values are automatically assumed to be 0.
+#' 
 #' 
 #' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
@@ -116,6 +116,9 @@ setClass(
 #' @param ncycles the number of EM iterations to be performed
 #' @param tol if the largest change in the EM cycle is less than this value
 #' then the EM iteration are stopped early
+#' @param printvalue a numeric value to be specified when using the \code{res='exp'}
+#' option. Only prints patterns that have standardized residuals greater than 
+#' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param x an object of class \code{mirt} to be plotted or printed
 #' @param object a model estimated from \code{mirt} of class \code{mirt}
 #' @param object2 a second model estimated from \code{mirt} of class
@@ -189,7 +192,7 @@ setClass(
 #' 
 #' \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 #' 
-#' \S4method{residuals}{mirt}(object, restype = 'LD', digits=3, ...)
+#' \S4method{residuals}{mirt}(object, restype = 'LD', digits=3, printvalue = NULL, ...)
 #' @export mirt
 #' @examples
 #' 
@@ -535,7 +538,7 @@ setMethod(
 				colnames(Phi) <- rownames(Phi) <- colnames(F)
 				print(Phi)            
 			}	
-			cat("\nRoateted SS loadings: ",round(SS,digits), "\n")		
+			cat("\nRotated SS loadings: ",round(SS,digits), "\n")		
 			if(any(h2 > 1)) 
 				warning("Solution has heywood cases. Interpret with caution.") 
 			invisible(list(rotF$loadings,h2))  

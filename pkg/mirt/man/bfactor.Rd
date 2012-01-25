@@ -18,7 +18,7 @@
   \S4method{fitted}{bfactor}(object, digits = 3, ...)
 
   \S4method{residuals}{bfactor}(object, restype = 'LD',
-    digits = 3, ...)
+    digits = 3, printvalue = NULL, ...)
 }
 \arguments{
   \item{fulldata}{a complete \code{matrix} or
@@ -34,6 +34,12 @@
   loads on the first two items and the second specific
   factor on the last two, then the vector is
   \code{c(1,1,2,2)}.}
+
+  \item{printvalue}{a numeric value to be specified when
+  using the \code{res='exp'} option. Only prints patterns
+  that have standardized residuals greater than
+  \code{abs(printvalue)}. The default (NULL) prints all
+  response patterns}
 
   \item{guess}{fixed pseudo-guessing parameter. Can be
   entered as a single value to assign a global value or may

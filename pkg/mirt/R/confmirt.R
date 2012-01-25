@@ -79,6 +79,9 @@ setClass(
 #' which correspond to the input guessing values.
 #' @param ncycles the maximum number of MH-RM iterations to be performed. Default is 
 #' 2000
+#' @param printvalue a numeric value to be specified when using the \code{res='exp'}
+#' option. Only prints patterns that have standardized residuals greater than 
+#' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param burnin number of burn-in cycles to perform before beginning the SEM
 #' stage. Default is 150
 #' @param SEM.cycles number of stochastic EM cycles to perform and average over
@@ -128,7 +131,7 @@ setClass(
 #' 
 #' \S4method{summary}{confmirt}(object, digits = 3, ...)
 #' 
-#' \S4method{residuals}{confmirt}(object, restype = 'LD', digits = 3, ...)
+#' \S4method{residuals}{confmirt}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 #' 
 #' \S4method{anova}{confmirt}(object, object2, ...)
 #'
