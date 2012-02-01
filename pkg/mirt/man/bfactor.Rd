@@ -104,10 +104,11 @@
   response theory paradigm. Pseudo-guessing parameters may
   be included but must be declared as constant, since the
   estimation of these parameters often leads to
-  unacceptable solutions. Missing values are automatically
-  assumed to be 0.
+  unacceptable solutions.
 }
 \details{
+
+
   \code{bfactor} follows the item factor analysis strategy
   explicated by Gibbons and Hedeker (1992). Nested models
   may be compared via an approximate chi-squared difference

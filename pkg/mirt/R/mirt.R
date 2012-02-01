@@ -17,7 +17,7 @@
 setClass(
 	Class = 'mirtClass',
 	representation = representation(EMiter = 'numeric', pars = 'matrix', guess = 'numeric', 
-		X2 = 'numeric', df = 'numeric', p = 'numeric', AIC = 'numeric', log.lik = 'numeric',
+		X2 = 'numeric', df = 'numeric', p = 'numeric', AIC = 'numeric', logLik = 'numeric',
 		F = 'matrix', h2 = 'numeric', tabdata = 'matrix', Theta = 'matrix', Pl = 'numeric',
 		fulldata = 'matrix', cormat = 'matrix', facility = 'numeric', converge = 'numeric', 
 		quadpts = 'numeric', BIC = 'numeric', Call = 'call'),	
@@ -267,14 +267,15 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
   
 	Call <- match.call()    
 	itemnames <- colnames(fulldata)
-	fulldata <- as.matrix(fulldata)
-	if (!any(fulldata %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")
-	fulldata[is.na(fulldata)] <- 0  
+	fulldata <- as.matrix(fulldata)	
+	fulldata.original <- fulldata 
+	fulldata[is.na(fulldata)] <- 9	
+	if (!any(fulldata.original %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")	
 	nitems <- ncol(fulldata)  
 	colnames(fulldata) <- itemnames
 	if (length(guess) == 1) guess <- rep(guess,nitems)
 		else if (length(guess) > nitems || length(guess) < nitems) 
-	stop("The number of guessing parameters is incorrect.")	
+			stop("The number of guessing parameters is incorrect.")	
 	pats <- apply(fulldata,1,paste,collapse = "/")
 	freqs <- table(pats)
 	nfreqs <- length(freqs)
@@ -291,7 +292,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 		prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
 		prior <- prior/sum(prior)
 	} else stop('Greater than 10000 quadrature points, reduce number.')
-	facility <- colMeans(fulldata)
+	facility <- colMeans(na.omit(fulldata.original))
 	suppressAutoPrior <- TRUE
 	if(is.logical(par.prior)) 
 	if(par.prior) suppressAutoPrior <- FALSE  
@@ -307,12 +308,12 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	par.prior <- temp    
 	if (any(class(prev.cor) == c('mirt','bmirt'))) Rpoly <- prev.cor$cormat
 		else if(!is.null(prev.cor)) {
-		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
-			else stop("Correlation matrix is not square.\n")
+			if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
+				else stop("Correlation matrix is not square.\n")
 	} else 
-		Rpoly <- cormod(fulldata,K,guess)   
+		Rpoly <- cormod(na.omit(fulldata.original),K,guess)   
 	if (is.null(startvalues)){ 
-		suppressMessages(pars <- start.values(fulldata,guess,Rpoly,
+		suppressMessages(pars <- start.values(na.omit(fulldata.original),guess,Rpoly,
 			nfact=nfact,nowarn=nowarn))
 		pars[pars > 3] <- 3
 		pars[pars < -3] <- -3	
@@ -417,7 +418,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	prior <- prior/sum(prior)  
 	rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)      	  
 	Pl <- rlist[[3]]  
-	log.lik <- sum(r*log(Pl))
+	logLik <- sum(r*log(Pl))
 	logN <- 0
 	logr <- rep(0,length(r))
 	for (i in 1:N) logN <- logN + log(i)
@@ -425,11 +426,12 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 		for (j in 1:r[i]) 
 			logr[i] <- logr[i] + log(j)    
 	df <- (length(r) - 1) - nitems*(nfact + 1) + nfact*(nfact - 1)/2 
-	X2 <- 2 * sum(r * log(r/(N*Pl)))
-	log.lik <- log.lik + logN/sum(logr)	
+	X2 <- 2 * sum(r * log(r/(N*Pl)))	
+	logLik <- logLik + logN/sum(logr)	
 	p <- 1 - pchisq(X2,df)  
-	AIC <- (-2) * log.lik + 2 * length(pars)
-	BIC <- (-2) * log.lik + length(pars)*log(N)
+	AIC <- (-2) * logLik + 2 * length(pars)
+	BIC <- (-2) * logLik + length(pars)*log(N)
+	if(any(is.na(fulldata.original))) p <- 2	
 
 	# pars to FA loadings
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
@@ -444,9 +446,9 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	h2 <- rowSums(F^2) 
 
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p,
-		AIC=AIC, BIC=BIC, log.lik=log.lik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
-		fulldata=fulldata, cormat=Rpoly, facility=facility, converge=converge, quadpts=quadpts,
-		Call=Call)	  
+		AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
+		fulldata=fulldata.original, cormat=Rpoly, facility=facility, converge=converge, 
+		quadpts=quadpts, Call=Call)	  
 	return(mod)    
 }
 
@@ -466,12 +468,15 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
 				x@quadpts, " quadrature points.\n", sep="")
-		cat("Log-likelihood =", x@log.lik, "\n")
+		cat("Log-likelihood =", x@logLik, "\n")
 		cat("AIC =", x@AIC, "\n")		
 		cat("BIC =", x@BIC, "\n")
-		cat("G^2 = ", round(x@X2,2), ", df = ", 
-			x@df, ", p = ", round(x@p,4), "\n", sep="")
-		
+		if(x@p < 1)
+			cat("G^2 = ", round(x@X2,2), ", df = ", 
+				x@df, ", p = ", round(x@p,4), "\n", sep="")
+		else 
+			cat("G^2 = ", NA, ", df = ", 
+				x@df, ", p = ", NA, "\n", sep="")		
 	}
 )
 
@@ -489,12 +494,15 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
 				object@quadpts,	" quadrature points.\n", sep="")
-		cat("Log-likelihood =", object@log.lik, "\n")
+		cat("Log-likelihood =", object@logLik, "\n")
 		cat("AIC =", object@AIC, "\n")		
 		cat("BIC =", object@BIC, "\n")
-		cat("G^2 = ", round(object@X2,2), ", df = ", 
-			object@df, ", p = ", round(object@p,4), "\n", sep="")
-			
+		if(object@p < 1)
+			cat("G^2 = ", round(object@X2,2), ", df = ", 
+				object@df, ", p = ", round(object@p,4), "\n", sep="")
+		else 
+			cat("G^2 = ", NA, ", df = ", 
+				object@df, ", p = ", NA, "\n", sep="")			
 	}
 )
 
@@ -581,7 +589,7 @@ setMethod(
 			object <- object2
 			object2 <- temp
 		}
-		X2 <- 2*object2@log.lik - 2*object@log.lik 		
+		X2 <- 2*object2@logLik - 2*object@logLik 		
 		AICdiff <- object@AIC - object2@AIC    
 		BICdiff <- object@BIC - object2@BIC
 		cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
@@ -637,7 +645,11 @@ setMethod(
 			res <- round((r - object@Pl * nrow(object@fulldata)) / 
 				sqrt(object@Pl * nrow(object@fulldata)),digits)
 			expected <- round(N * object@Pl/sum(object@Pl),digits)  
-			tabdata <- cbind(object@tabdata,expected,res)
+			tabdata <- object@tabdata
+			freq <- tabdata[ ,ncol(tabdata)]
+			tabdata[tabdata[ ,1:ncol(object@fulldata)] == 9] <- NA
+			tabdata[ ,ncol(tabdata)] <- freq
+			tabdata <- cbind(tabdata,expected,res)
 			colnames(tabdata) <- c(colnames(fulldata), "freq", "exp", "std_res")
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
@@ -713,7 +725,11 @@ setMethod(
 	signature = signature(object = 'mirtClass'),
 	definition = function(object, digits = 3, ...){  
 		expected <- round(nrow(object@fulldata) * object@Pl,digits)  
-		tabdata <- cbind(object@tabdata,expected)
+		tabdata <- object@tabdata
+		freq <- tabdata[ ,ncol(tabdata)]
+		tabdata[tabdata[ ,1:ncol(object@fulldata)] == 9] <- NA
+		tabdata[ ,ncol(tabdata)] <- freq
+		tabdata <- cbind(tabdata,expected)
 		colnames(tabdata) <- c(colnames(object@fulldata),"freq","exp")	
 		print(tabdata)
 		invisible(tabdata)

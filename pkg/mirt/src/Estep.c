@@ -48,6 +48,8 @@ SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 			posterior[k] = prior[k];
 			
 		for (int item = 0; item < nitems; item++){
+			if (data[pat][item] == 9) 
+				continue;
 			if (data[pat][item]) {
 				for (k = 0; k < nquad; k++)
 					posterior[k] = posterior[k]*itemtrace[item][k];
@@ -60,12 +62,14 @@ SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 		expd = 0;
 		for (i = 0; i < nquad; i++)
 			expd += posterior[i];		
-		expected[pat]	= expd;		
+		expected[pat] = expd;		
 		
 		for (i = 0; i < nquad; i++)
 			posterior[i] = r[pat]*posterior[i]/expd;	
 			
 		for (int item = 0; item < nitems; item++){
+			if (data[pat][item] == 9) 
+				continue;
 			if (data[pat][item]) {
 				for (k = 0; k < nquad; k++)
 					r1[item][k] += posterior[k];
@@ -170,6 +174,8 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 			for (k = 0; k < nquad; k++)
 				likelihoods[fact][k] = 1;				
 			for (int item = 0; item < nitems; item++){
+				if (data[pat][item] == 9) 
+					continue;
 				if (data[pat][item]){	
 					if(sitemsfull[fact][item])
 					  for (k = 0; k < nquad; k++)
@@ -201,7 +207,7 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 		}				
 		expected[pat] = 0.0;
 		for (i = 0; i < npquad; i++){
-		  Pls[i] = 1.0; 		  		
+		    Pls[i] = 1.0; 		  		
 			for(fact = 0; fact < sfact; fact++)
 			  Pls[i] = Pls[i] * Plk[fact][i];			
 			expected[pat] += Pls[i] * prior[i];  
@@ -217,6 +223,8 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	  }		    	 	
 		for(fact = 0; fact < sfact; fact++){			
 			for (int item = 0; item < nitems; item++){
+				if (data[pat][item] == 9) 
+					continue;
 				if (data[pat][item]) {
 					for (k = 0; k < nquad; k++)
 						r1[item + nitems*fact][k] += posterior[fact][k];

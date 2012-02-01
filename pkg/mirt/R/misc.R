@@ -143,7 +143,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess)
 
 	itemtrace <- r1 <- r0 <- matrix(0,nrow=nitems,ncol=nrow(Theta))
 	for (i in 1:nitems) itemtrace[i, ] <- 
-	  P.mirt(a[i, ],d[i],Theta,guess[i])    
+		P.mirt(a[i, ],d[i],Theta,guess[i])    
 	  
 	retlist <- .Call("Estep",                     	
 					 as.double(itemtrace),
@@ -515,8 +515,6 @@ dpars.poly <- function(lambda,zeta,dat,Thetas)
 				as.integer(N)) 				 
 	return(ret)	
 }
-
-
 
 gamma.cor <- function(x)
 { 

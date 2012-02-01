@@ -27,7 +27,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for X2  }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-    \item{\code{log.lik}:}{Object of class \code{"numeric"}, observed log-likelihood }
+    \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }

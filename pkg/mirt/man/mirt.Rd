@@ -131,10 +131,11 @@ Theory)}
   response theory paradigm. Pseudo-guessing parameters may
   be included but must be declared as constant, since the
   estimation of these parameters often leads to
-  unacceptable solutions. Missing values are automatically
-  assumed to be 0.
+  unacceptable solutions.
 }
 \details{
+
+
   \code{mirt} follows the item factor analysis strategy by
   marginal maximum likelihood estimation (MML) outlined in
   Bock and Aiken (1981) and Bock, Gibbons and Muraki

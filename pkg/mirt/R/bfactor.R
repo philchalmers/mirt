@@ -18,7 +18,7 @@ setClass(
 	Class = 'bfactorClass',
 	representation = representation(EMiter = 'numeric', pars = 'matrix', 
 		guess = 'numeric', AIC = 'numeric', X2 = 'numeric', df = 'numeric', 
-		log.lik = 'numeric', p = 'numeric', F = 'matrix', h2 = 'numeric', 
+		logLik = 'numeric', p = 'numeric', F = 'matrix', h2 = 'numeric', 
 		itemnames = 'character', tabdata = 'matrix', N = 'numeric', 
 		Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
 		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', 
@@ -211,12 +211,12 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	} 
 	
 	#Main
-	Call <- match.call() 
-	rotate <- 'oblimin'
+	Call <- match.call() 	
 	itemnames <- colnames(fulldata) 
 	fulldata <- as.matrix(fulldata)
-	fulldata[is.na(fulldata)] <- 0
-	if (!any(fulldata %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")
+	fulldata.original <- fulldata 
+	fulldata[is.na(fulldata)] <- 9	
+	if (!any(fulldata.original %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")
 	if (length(specific) != ncol(fulldata)) 
 		stop("Specific factor loadings have been declared incorrectly")  
 	nfact <- length(unique(specific)) + 1  
@@ -241,7 +241,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	if (is.null(quadpts)) quadpts <- 15
 	theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	Theta <- as.matrix(expand.grid(theta,theta))
-	facility <- colMeans(fulldata)
+	facility <- colMeans(na.omit(fulldata.original))
 	selvec <- 2:(nfact)    
 	suppressAutoPrior <- TRUE
 	if(is.logical(par.prior)) 
@@ -260,11 +260,11 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 		else if(!is.null(prev.cor)) {
 			if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 				else stop("Correlation matrix is not square.\n")
-		} else Rpoly <- cormod(fulldata,K,guess)       
+		} else Rpoly <- cormod(na.omit(fulldata.original),K,guess)       
 	pars <- matrix(0,nrow=nitems, ncol=nfact + 1)
 	if (is.null(startvalues)){  
-		suppressMessages(startvalues <- start.values(fulldata,guess,Rpoly,
-			bfactor=TRUE))
+		suppressMessages(startvalues <- start.values(na.omit(fulldata.original),guess,
+			Rpoly,bfactor=TRUE))
 		pars[logicalfact] <- startvalues    
 		sload <- startvalues[(nitems+1):(2*nitems)]
 		for(i in 1:nitems){
@@ -395,19 +395,20 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	}	
 	rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems)
 	Pl <- rlist[[3]]
-	log.lik <- sum(r * log(Pl))
+	logLik <- sum(r * log(Pl))
 	logN <- 0
 	logr <- rep(0,length(r))
 	for (i in 1:N) logN <- logN + log(i)
 	for (i in 1:length(r)) 
 		for (j in 1:r[i]) 
 			logr[i] <- logr[i] + log(j)	
-	log.lik <- log.lik + logN/sum(logr)
-	AIC <- (-2) * log.lik + 6 * length(specific)
-	BIC <- (-2) * log.lik + 3 * length(specific)*log(N)
+	logLik <- logLik + logN/sum(logr)
+	AIC <- (-2) * logLik + 6 * length(specific)
+	BIC <- (-2) * logLik + 3 * length(specific)*log(N)
 	X2 <- 2 * sum(r * log(r / (N*Pl)))  
-	df <- length(r) - 1 - 2*nitems - length(specific)
+	df <- length(r) + nfact*(nfact - 1)/2 - 2*nitems - length(specific) - 1
 	p <- 1 - pchisq(X2,df)
+	if(any(is.na(fulldata.original))) p <- 2
 
 	#from last EM cycle pars to FA
 	norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
@@ -417,8 +418,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	h2 <- rowSums(F^2)  
 
 	mod <- new('bfactorClass',EMiter=cycles, pars=pars, guess=guess, AIC=AIC, X2=X2, 
-		df=df, log.lik=log.lik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
-		tabdata=tabdata, N=N, Pl=Pl, Theta=Theta, fulldata=fulldata, 
+		df=df, logLik=logLik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
+		tabdata=tabdata, N=N, Pl=Pl, Theta=Theta, fulldata=fulldata.original, 
 		logicalfact=logicalfact, facility=facility, specific=specific,
 		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,Call=Call)  
 	return(mod)  
@@ -440,11 +441,15 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", x@EMiter, " iterations using ",x@quadpts,
 			" quadrature points. \n", sep="")
-		cat("Log-likelihood = ", x@log.lik, "\n")
+		cat("Log-likelihood = ", x@logLik, "\n")
 		cat("AIC = ", x@AIC, "\n")		
 		cat("BIC = ", x@BIC, "\n")
-		cat("G^2 = ", round(x@X2,2), ", df = ", 
-		x@df, ", p = ", round(x@p,4), "\n")
+		if(x@p < 1)
+			cat("G^2 = ", round(x@X2,2), ", df = ", 
+				x@df, ", p = ", round(x@p,4), "\n", sep="")
+		else 
+			cat("G^2 = ", NA, ", df = ", 
+				x@df, ", p = ", NA, "\n", sep="")		
 	}
 )
 
@@ -462,11 +467,15 @@ setMethod(
 		else 	
 			cat("Estimation stopped after ", object@EMiter, " iterations using ", 
 				object@quadpts,	" quadrature points.\n", sep="")
-		cat("Log-likelihood = ", object@log.lik, "\n")
+		cat("Log-likelihood = ", object@logLik, "\n")
 		cat("AIC = ", object@AIC, "\n")		
 		cat("BIC = ", object@BIC, "\n")
-		cat("G^2 = ", round(object@X2,2), ", df = ", 
-		object@df, ", p = ", round(object@p,4), "\n")
+		if(object@p < 1)
+			cat("G^2 = ", round(object@X2,2), ", df = ", 
+				object@df, ", p = ", round(object@p,4), "\n", sep="")
+		else 
+			cat("G^2 = ", NA, ", df = ", 
+				object@df, ", p = ", NA, "\n", sep="")			
 	}
 )
 
@@ -555,8 +564,12 @@ setMethod(
 			r <- object@tabdata[ ,ncol(object@tabdata)]
 			res <- round((r - object@Pl * nrow(object@fulldata)) / 
 				sqrt(object@Pl * nrow(object@fulldata)),digits)
-			expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
-			tabdata <- cbind(object@tabdata,expected,res)
+			expected <- round(object@N * object@Pl,digits)  
+			tabdata <- object@tabdata
+			freq <- tabdata[ ,ncol(tabdata)]
+			tabdata[tabdata[ ,1:ncol(object@fulldata)] == 9] <- NA
+			tabdata[ ,ncol(tabdata)] <- freq
+			tabdata <- cbind(tabdata,expected,res)
 			colnames(tabdata) <- c(object@itemnames, "freq", "exp", "std_res")
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
@@ -572,7 +585,11 @@ setMethod(
 	signature = signature(object = 'bfactorClass'),
 	definition = function(object, digits = 3, ...){  
 		expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
-		tabdata <- cbind(object@tabdata,expected)
+		tabdata <- object@tabdata
+		freq <- tabdata[ ,ncol(tabdata)]
+		tabdata[tabdata[ ,1:ncol(object@fulldata)] == 9] <- NA
+		tabdata[ ,ncol(tabdata)] <- freq
+		tabdata <- cbind(tabdata,expected)
 		colnames(tabdata) <- c(object@itemnames, "freq", "exp")	
 		print(tabdata)
 		invisible(tabdata)
