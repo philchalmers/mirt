@@ -72,7 +72,7 @@
 
   \item{quadpts}{number of quadrature points per dimension.
   If \code{NULL} then the number of quadrature points is
-  set to 15}
+  set to 9}
 
   \item{ncycles}{the number of EM iterations to be
   performed}

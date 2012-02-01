@@ -104,7 +104,7 @@ setClass(
 #' = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}
 #' @param startvalues user declared start values for parameters
 #' @param quadpts number of quadrature points per dimension. If \code{NULL}
-#' then the number of quadrature points is set to 15
+#' then the number of quadrature points is set to 9
 #' @param ncycles the number of EM iterations to be performed
 #' @param EMtol if the largest change in the EM cycle is less than this value
 #' then the EM iteration are stopped early
@@ -238,7 +238,7 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	is.na(specific) <- FALSE
 	for (i in 1:nitems) logicalfact[i,specific[i]] <- TRUE
 	logicalfact <- cbind(rep(TRUE,nitems),logicalfact)     
-	if (is.null(quadpts)) quadpts <- 15
+	if (is.null(quadpts)) quadpts <- 9
 	theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	Theta <- as.matrix(expand.grid(theta,theta))
 	facility <- colMeans(na.omit(fulldata.original))
@@ -314,8 +314,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 					parprior=par.prior[i, ],method="BFGS"))
 			else	  
 				maxim <- try(optim(mpars[i, ],fn=fn,r1=rlist[[1]][i, ],
-				N=rlist[[2]][i, ],guess=guess[i],Theta=Theta,prior=Prior,
-				parprior=par.prior[i, ],method="BFGS"))
+					N=rlist[[2]][i, ],guess=guess[i],Theta=Theta,prior=Prior,
+					parprior=par.prior[i, ],method="BFGS"))
 			if(class(maxim) == "try-error") {
 				problemitems <- c(problemitems, i)	  
 				converge <- 0
