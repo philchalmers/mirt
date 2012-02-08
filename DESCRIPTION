@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.1-20
+Version: 0.1.20
 Date: 2012-01-25
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -22,7 +22,7 @@ Depends:
     Matrix
 LazyLoad: yes
 LazyData: yes
-Repository: R-Forge
+Repository: github
 License: GPL (>= 2)
 URL: 
 Collate:
