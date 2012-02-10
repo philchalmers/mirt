@@ -24,7 +24,7 @@ LazyLoad: yes
 LazyData: yes
 Repository: github
 License: GPL (>= 2)
-URL: 
+URL: https://github.com/philchalmers/mirt
 Collate:
     'bfactor.R'
     'expand.table.R'
