@@ -74,7 +74,7 @@ confmirt.model <- function(file = "")
   #special characters: @ for location, == for equalities (and const), * for covariance
   #must specify by 'type = list'
   #special types -> slope, int, cov, start, comp
-  mod <- scan(file = file, what = list(type = "", pars = ""), 
+    mod <- scan(file = file, what = list(type = "", pars = ""), 
 		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE)
 	mod <- cbind(mod$type, mod$pars)
 	colnames(mod) <- c("Type","Parameters")	

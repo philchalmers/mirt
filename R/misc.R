@@ -338,7 +338,7 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 		L11 <- .Call("dichOuter",Thetas,PQ,nfact,nrow(Thetas))
 		if(nfact > 1) d2L[1:nfact+1,1:nfact+1] <- -L11
 			 else d2L[nfact+1,nfact+1] <- -L11 				
-		d2L[1,1]<- (-1)*sum(PQ)		
+		d2L[1,1] <- (-1)*sum(PQ)		
 		d2L[1,1:nfact+1] <- d2L[1:nfact+1,1] <- (-1)*colSums(PQ * Thetas)
 	}	
 	list(grad = dL, hess = d2L)

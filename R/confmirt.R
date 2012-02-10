@@ -105,7 +105,18 @@ setClass(
 #' @param SE logical; print standard errors?
 #' @param print.gmeans logical; print latent factor means?
 #' @param digits the number of significant digits to be rounded
-#' @param technical list specifying subtle parameters that can be adjusted
+#' @param technical list specifying subtle parameters that can be adjusted. These 
+#' values are 
+#' \describe{
+#'   \item{set.seed}{seed number used during estimation. Default is 12345}
+#' 	 \item{guess.prior.n}{a scalar or vector for the weighting of the beta priors for 
+#'		guessing parameters (default is 50, typical ranges are from 2 to 500). If a 
+#'      scalar is specified this is used globally, otherwise a numeric vector of size
+#' 	    \code{ncol(data)} can be used to correspond to particualr items (NA values use 
+#'      the default)} 
+#'   \item{gain}{a vector of three values specifying the numerator, exponent, and subtracted
+#'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}   	
+#' }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
@@ -209,16 +220,28 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
 {		
 	Call <- match.call()   
-	set.seed(12345)
-	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-	ifelse(!is.null(technical$guess.prior.n), guess.prior.n <- technical$guess.prior.n,
-		guess.prior.n <- 20)
+	set.seed(12345)	
 	itemnames <- colnames(data)
 	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
 	data <- as.matrix(data)		
 	colnames(data) <- itemnames	
 	J <- ncol(data)
-	N <- nrow(data)	
+	N <- nrow(data)
+	##technical
+	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
+	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n), technical$guess.prior.n,
+		rep(50,J))
+	if(length(guess.prior.n) == 1) guess.prior.n <- rep(guess.prior.n,J)	
+	if(length(guess.prior.n) != J) 
+		stop('technical$guess.prior.n does not have the same number of values as items')
+	guess.prior.n[is.na(guess.prior.n)] <- 50
+	gain <- c(0.05,0.5,0.004)
+	if(!is.null(technical$gain)) {
+		if(length(technical$gain) == 3 && is.numeric(technical$gain))
+			gain <- technical$gain
+	}
+	##
+	
 	if(length(guess) == 1) guess <- rep(guess,J)
 	if(length(guess) > J || length(guess) < J) 
 		stop("The number of guessing parameters is incorrect.")					
@@ -243,8 +266,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	for(i in 1:J){
 		ind <- index[i]
 		if(setequal(uniques[[i]], c(0,1))){
-			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[,ind],abs(1-data[,ind]))
-			fulldata2[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(abs(1-data[,ind]),data[,ind])
+			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[ ,ind],abs(1-data[ ,ind]))
+			fulldata2[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(abs(1-data[ ,ind]),data[ ,ind])
 			next
 		}
 		dummy <- matrix(0,N,K[ind])
@@ -258,7 +281,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	#slopes specification
 	estlam <- matrix(FALSE, ncol = nfact, nrow = J)	
 	for(i in 1:nfact){
-		tmp <- model[model[,1] == factorNames[i],2]
+		tmp <- model[model[ ,1] == factorNames[i],2]
 		if(any(regexpr(",",tmp)))
 			tmp <- strsplit(tmp,",")[[1]]
 		popout <- c()	
@@ -520,7 +543,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	if(sum(estGuess) > 0){
 		for(i in 1:J){
 			if(estGuess[i]){
-				a <- guess[i] * guess.prior.n
+				a <- guess[i] * guess.prior.n[i]
 				b <- (1 - guess[i]) * guess.prior.n
 				parpriors[[parpriorscount]] <- c(2,guessind[i],a,b)						
 				parpriorscount <- parpriorscount + 1			
@@ -593,7 +616,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	{ 
 		if(cycles == burnin + 1) stagecycle <- 2			
 		if(stagecycle == 3)
-			gamma <- (0.05/(cycles - SEM.cycles - burnin - 1))^(0.5) - .004
+			gamma <- (gain[1]/(cycles - SEM.cycles - burnin - 1))^(gain[2]) - gain[3]
 		if(cycles == (burnin + SEM.cycles + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
@@ -797,9 +820,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		if(gamma == .25) gamma <- 1	
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
-	} ###END BIG LOOP
+	} ###END BIG LOOP	
 	
-	if(!is.null(technical$return.verbose)) {}
 	cat("\n\n")
 	SEtmp <- diag(solve(info))		
 	if(any(SEtmp < 0)){
@@ -817,7 +839,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)	
 	lambdas[!estlam & !lambdas != 0] <- NA	
 	guess <- rep(NA,J)
-	guess[estGuess] <- pars[guessind]
+	guess <- pars[guessind]
+	guess[!estGuess] <- NA
 	guess[K == 2 & !estGuess] <- 0
 	zetas <- pars[zetaind]
 	u <- pars[meanind]	
@@ -825,7 +848,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	SElam <- matrix(SE[lamind],J,nfact,byrow=TRUE)
 	SEzetas <- SE[zetaind]	
 	SEg <- rep(NA,J)	
-	SEg[estGuess] <- SE[guessind]	
+	SEg <- SE[guessind]	
+	SEg[!estGuess] <- NA
 	SEu <- SE[meanind]	
 	SEsig <- matrix(0,nfact,nfact)	
 	tmp <- pars[covind]

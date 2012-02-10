@@ -103,7 +103,18 @@
   rounded}
 
   \item{technical}{list specifying subtle parameters that
-  can be adjusted}
+  can be adjusted. These values are \describe{
+  \item{set.seed}{seed number used during estimation.
+  Default is 12345} \item{guess.prior.n}{a scalar or vector
+  for the weighting of the beta priors for guessing
+  parameters (default is 50, typical ranges are from 2 to
+  500). If a scalar is specified this is used globally,
+  otherwise a numeric vector of size \code{ncol(data)} can
+  be used to correspond to particualr items (NA values use
+  the default)} \item{gain}{a vector of three values
+  specifying the numerator, exponent, and subtracted values
+  for the RM gain value. Default is
+  \code{c(0.05,0.5,0.004)}} }}
 
   \item{...}{additional arguments to be passed}
 }
