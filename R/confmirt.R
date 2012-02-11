@@ -1078,26 +1078,27 @@ setMethod(
 			print(SEs, digits)
 		}	
 		u <- object@gpars$u	
+		SEu <- object@SEgpars$SEu
 		sig <- object@gpars$sig
+		SEsig <- as.matrix(object@SEgpars$SEsig)
 		names(u) <- colnames(sig) <- rownames(sig) <- paste("a_",1:nfact,sep="")	
 		cat("\nGROUP PARAMETERS: \n")
 		if(print.gmeans){
 			cat("Means: \n")
 			print(u,digits)
-			cat("\nStd. Errors: \n")
-			SEu <- object@SEgpars$SEu
+			cat("\nStd. Errors: \n")			
 			names(SEu) <- names(u) 	
 			print(SEu, digits)	
 		}
 		cat("Covariance: \n")
 		print(sig,digits)
 		if(SE){
-			cat("\nStd. Errors: \n")
-			SEsig <- object@SEgpars$SEsig
+			cat("\nStd. Errors: \n")			
 			colnames(SEsig) <- rownames(SEsig) <- paste("a_",1:nfact,sep="")	
 			print(SEsig, digits)	
 		}
-		invisible(list(pars = parameters,mu = u,sigma = sig))	
+		invisible(list(pars = parameters,mu = u,sigma = sig, sigmaSE = SEsig,
+			muSE = SEu))	
 	}
 )
 
