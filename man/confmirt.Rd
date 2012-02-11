@@ -250,9 +250,9 @@ mod.cube <- confmirt(dataset, model.cube)
 mod.combo <- confmirt(dataset, model.combo)
 
 anova(mod.linear,mod.quad)
-anova(mod.quad,mod.quad)
-anova(mod.linear,mod.quad)
-anova(mod.linear,mod.quad)
+anova(mod.linear,mod.cube)
+anova(mod.linear,mod.combo)
+anova(mod.cube,mod.combo)
 }
 }
 \author{
