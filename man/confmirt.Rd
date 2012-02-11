@@ -225,6 +225,34 @@ summary(mod3)
 residuals(mod3)
 anova(mod1,mod3)
 
+#####
+#polynomial and combinations
+model.linear <- confmirt.model()
+  F = 1-8
+
+model.quad <- confmirt.model()
+      F = 1-8
+  (F*F) = 1-8
+
+model.cube <- confmirt.model()
+        F = 1-8
+    (F*F) = 1-8
+  (F*F*F) = 1-8
+
+model.combo <- confmirt.model()
+       F1 = 1-4
+       F2 = 5-8
+  (F1*F2) = 1-8
+
+mod.linear <- confmirt(dataset, model.linear)
+mod.quad <- confmirt(dataset, model.quad )
+mod.cube <- confmirt(dataset, model.cube)
+mod.combo <- confmirt(dataset, model.combo)
+
+anova(mod.linear,mod.quad)
+anova(mod.quad,mod.quad)
+anova(mod.linear,mod.quad)
+anova(mod.linear,mod.quad)
 }
 }
 \author{

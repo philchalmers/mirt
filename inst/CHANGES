@@ -1,0 +1,10 @@
+mirt 0.1.21
+----------------------------------------------------------------
+
+* 'technical' added for confmirt function, allowing for various tweeks and 
+  varying beta prior weights
+
+* product relations added for confmirt.model. Specified by enclosing in brackets
+  and using an asterik 
+
+* documentation fixes with roxygenize  

@@ -44,6 +44,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{G2}:}{Object of class \code{"numeric"}, G2 model fit statistic }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data with expected values }
+    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
     \item{\code{Call}:}{Object of class \code{"call"},  call }
   }
 }

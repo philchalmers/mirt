@@ -43,12 +43,14 @@ setMethod(
 	definition = function(object, draws = 2000, G2 = TRUE)
 	{	
 		nfact <- ncol(object@Theta)
+		nfactNames <- ifelse(length(object@prodlist) > 0, 
+			length(object@prodlist) + nfact, nfact)		
 		N <- nrow(object@Theta)
 		J <- length(object@K)
 		pars <- object@pars
-		lambdas <- pars[,1:nfact]
+		lambdas <- pars[ ,1:nfactNames]
 		lambdas[is.na(lambdas)] <- 0
-		zetas <- pars[,(nfact+1):ncol(pars)]
+		zetas <- pars[,(nfactNames+1):ncol(pars)]
 		zetas <- t(zetas)[!is.na(t(zetas))]		
 		mu <- object@gpars$u
 		sigma <- object@gpars$sig		
@@ -58,7 +60,9 @@ setMethod(
 		K <- object@K	
 		fulldata <- object@fulldata	
 		for(i in 1:draws){
-			theta <- rmvnorm(N,mu,sigma)				
+			theta <- rmvnorm(N,mu,sigma)	
+			if(nfact < nfactNames) 
+				theta <- prodterms(theta, object@prodlist)	
 			LL[,i] <- .Call('logLik', 					
 						as.numeric(lambdas),
 						as.numeric(zetas),
@@ -69,7 +73,7 @@ setMethod(
 						as.integer(object@K),
 						as.integer(J),
 						as.integer(N),
-						as.integer(nfact),
+						as.integer(nfactNames),
 						as.integer(object@estComp))		
 		}		
 		rwmeans <- rowMeans(LL) 

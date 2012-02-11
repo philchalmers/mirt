@@ -20,11 +20,13 @@
   Factors are first named and then specify which numerical
   items they affect (i.e., where the slope is not equal to
   0), separated either by commas or by - to indicate a
-  range of items. There are six optional keyword for
-  specifying the relationships between factors, item
-  parameters, and prior distributions. Note that all
-  independent terms must be separated with a comma. These
-  are:
+  range of items. Products between factors may be specified
+  by enclosing the left hand term within brackets.
+
+  There are six optional keyword for specifying the
+  relationships between factors, item parameters, and prior
+  distributions. Note that all independent terms must be
+  separated with a comma. These are:
 
   \describe{ \item{COV}{Specify the relationship between
   the latent factors. Estimating a correlation between
@@ -77,6 +79,7 @@
 model <- confmirt.model()
   F1 = 1,2,3,4-10
   F2 = 10-20
+  (F1*F1) = 1,2,3,4-10
   COV = F1*F2
   PARTCOMP = 10
   SLOPE = F1@1 eq F1@2

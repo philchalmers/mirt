@@ -247,7 +247,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	accept <- as.logical(accept[-(N+1)])				
 	theta1[!accept,] <- theta0[!accept,]	
 	if(!is.null(prodlist)) 
-		theta1 <- theta1[ ,1:(ncol(lambdas) - length(prodlist))]
+		theta1 <- as.matrix(theta1[ ,1:(ncol(lambdas) - length(prodlist))])
 	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
 	attr(theta1, "log.lik") <- log.lik	
 	return(theta1) 

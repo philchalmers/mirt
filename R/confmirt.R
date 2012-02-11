@@ -21,7 +21,7 @@ setClass(
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
 		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
-		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', Call = 'call'),	
+		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -212,12 +212,41 @@ setClass(
 #' summary(mod3)
 #' residuals(mod3)
 #' anova(mod1,mod3)
-#' 
+#'
+#' #####
+#' #polynomial and combinations
+#' model.linear <- confmirt.model()
+#'   F = 1-8
+#'
+#' model.quad <- confmirt.model()
+#'       F = 1-8
+#'   (F*F) = 1-8
+#'
+#' model.cube <- confmirt.model()
+#'         F = 1-8
+#'     (F*F) = 1-8
+#'   (F*F*F) = 1-8
+#'
+#' model.combo <- confmirt.model()
+#'        F1 = 1-4
+#'        F2 = 5-8
+#'   (F1*F2) = 1-8
+#'
+#' mod.linear <- confmirt(dataset, model.linear)
+#' mod.quad <- confmirt(dataset, model.quad )
+#' mod.cube <- confmirt(dataset, model.cube)
+#' mod.combo <- confmirt(dataset, model.combo)
+#'
+#' anova(mod.linear,mod.quad)
+#' anova(mod.quad,mod.quad)
+#' anova(mod.linear,mod.quad)
+#' anova(mod.linear,mod.quad)
 #' }
 #' 
 confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
+	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
+	...)
 {		
 	Call <- match.call()   
 	set.seed(12345)	
@@ -257,7 +286,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	model <- matrix(model$x,ncol=2)
 	factorNames <- setdiff(model[,1],keywords)
 	nfactNames <- length(factorNames)
-	nfact <- sum(grepl('\\(',factorNames))
+	nfact <- sum(!grepl('\\(',factorNames))
 	hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
 	prodlist <- NULL
 	if(hasProdTerms){		
@@ -720,7 +749,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
                 }
             }
 			g[is.na(g)] <- 0
-			tmp <- d.group(grouplist,thetatemp)
+			tmp <- d.group(grouplist,as.matrix(thetatemp[ ,1:nfact]))
 			g[groupind] <- tmp$g
 			h[groupind,groupind] <- tmp$h
 			g.m[[j]] <- g
@@ -920,13 +949,13 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	F <- as.matrix(pars[ ,1:nfactNames]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
-	names(h2) <- itemnames
+	names(h2) <- itemnames	
 
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
-		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles 
-		- burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
+		gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - 
+		burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
 		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), 
-		estComp=estComp, Call=Call)
+		estComp=estComp, prodlist=as.list(prodlist), Call=Call)
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()
@@ -994,6 +1023,7 @@ setMethod(
 	definition = function(object, digits = 3, ...)
 	{
 		if(any(object@estComp)) stop('No factor metric for noncompensatory models')
+		if(length(object@prodlist) > 0) stop('No factor metric for models with product terms')
 		nfact <- ncol(object@F)
 		itemnames <- names(object@h2)	
 		F <- object@F
@@ -1017,18 +1047,30 @@ setMethod(
 	signature = 'confmirtClass',
 	definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 	{  
-		nfact <- ncol(object@Theta)	
+		nfact <- ncol(object@Theta)
+		nfactNames <- ifelse(length(object@prodlist) > 0, 
+			length(object@prodlist) + nfact, nfact)		
 		itemnames <- names(object@h2)
-		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
-		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
-			ncol = ncol(object@pars)-nfact)    	
+		a <- matrix(object@pars[ ,1:nfactNames],ncol=nfactNames)
+		d <- matrix(object@pars[,(nfactNames+1):ncol(object@pars)],
+			ncol = ncol(object@pars)-nfactNames)    	
 
 		parameters <- cbind(object@pars,object@guess)
 		SEs <- cbind(object@SEpars,object@SEg)
 		rownames(parameters) <- itemnames
 		rownames(SEs) <- itemnames
-		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
-			paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")					
+		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfactNames,sep=""),
+			paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
+		if(nfact < nfactNames){
+			tmpnames <- colnames(parameters)
+			prodlist <- object@prodlist
+			for(i in 1:length(prodlist)){
+				tmp <- deparse(prodlist[[i]])
+				tmp <- gsub(" ","",tmp)
+				tmpnames[nfact + i] <- gsub("c","a",tmp)
+			}
+			colnames(SEs) <- colnames(parameters) <- tmpnames
+		}
 		cat("\nITEM PARAMETERS: \n")
 		print(parameters, digits)
 		if(SE){
@@ -1071,12 +1113,14 @@ setMethod(
 		K <- object@K
 		J <- length(K)
 		sig <- object@gpars$sig	
-		nfact <- ncol(object@F)
+		nfact <- ncol(sig)
+		nfactNames <- ncol(object@F)
 		theta <- seq(-4,4, length.out = round(20/nfact))
 		Theta <- thetaComb(theta,nfact)		
-		lambdas <- matrix(object@pars[,1:nfact], J)
+		if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
+		lambdas <- matrix(object@pars[,1:nfactNames], J)
 		lambdas[is.na(lambdas)] <- 0
-		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
+		zetas <- as.vector(t(object@pars[,(nfactNames+1):ncol(object@pars)]))
 		zetas <- na.omit(zetas)
 		zetalist <- list()
 		loc <- 1
@@ -1091,7 +1135,7 @@ setMethod(
 		res <- matrix(0,J,J)
 		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(data)
-		prior <- dmvnorm(Theta,rep(0,nfact),sig)
+		prior <- dmvnorm(Theta[,1:nfact],rep(0,nfact),sig)
 		prior <- prior/sum(prior)		
 		if(restype == 'LD'){	
 			for(i in 1:J){				
@@ -1179,27 +1223,33 @@ setMethod(
 		theta0 <- object@Theta
 		K <- object@K
 		nfact <- ncol(theta0)
-		lambdas <- matrix(object@pars[,1:nfact],ncol=nfact)
+		nfactNames <- ncol(object@F)
+		lambdas <- matrix(object@pars[,1:nfactNames],ncol=nfactNames)
 		lambdas[is.na(lambdas)] <- 0
-		zetas <- na.omit(as.numeric(t(object@pars[,(nfact+1):ncol(object@pars)])))
+		zetas <- na.omit(as.numeric(t(object@pars[,(nfactNames+1):ncol(object@pars)])))
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		data <- cbind(object@data,object@fulldata)		
-		Names <- c(colnames(object@data[,1:length(K)]),paste("F",1:nfact,sep=''),paste("SE_F",1:nfact,sep=''))
+		Names <- c(colnames(object@data[,1:length(K)]),paste("F",1:nfact,sep=''),
+			paste("SE_F",1:nfact,sep=''))
 		tabdata <- unique(data)[,-c(1:length(K))]			
 		itemloc <- object@itemloc
 		Theta <- list()
+		prodlist <- object@prodlist
+		if(length(prodlist) == 0) prodlist <- NULL	
 		for(i in 1:nfact)
 			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
-		theta0 <- matrix(0,nrow(tabdata),nfact)
+		theta0 <- matrix(0,nrow(tabdata),nfact)		
 		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var,sig,mu,estComp)
+			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,
+				cand.t.var,sig,mu,estComp,prodlist)
 			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
 			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
 		}
 		ind <- 1
 		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var,sig,mu,estComp)
+			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,
+				cand.t.var,sig,mu,estComp,prodlist)
 			if(i %% thin == 0){
 				for(j in 1:nfact)
 					Theta[[j]][,ind] <- theta0[,j]									
