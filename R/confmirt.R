@@ -255,8 +255,23 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		estGuess <- guess > 0
 	itemloc <- cumsum(c(1,K))	
 	model <- matrix(model$x,ncol=2)
-	factorNames <- setdiff(model[,1],keywords) 
-	nfact <- length(factorNames)	
+	factorNames <- setdiff(model[,1],keywords)
+	nfactNames <- length(factorNames)
+	nfact <- sum(grepl('\\(',factorNames))
+	hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
+	prodlist <- NULL
+	if(hasProdTerms){		
+		tmp <- factorNames[grepl('\\(',factorNames)]
+		tmp2 <- factorNames[!grepl('\\(',factorNames)] 
+		tmp <- gsub("\\(","",tmp)	
+		tmp <- gsub("\\)","",tmp)
+		prodlist <- strsplit(tmp,"\\*")
+		for(j in 1:length(prodlist)){
+			for(i in 1:nfact)
+				prodlist[[j]][prodlist[[j]] == tmp2[[i]]] <- i		
+			prodlist[[j]] <- as.numeric(prodlist[[j]])	
+		}		
+	}
 	index <- 1:J	
 	fulldata <- fulldata2 <- matrix(0,N,sum(K))
 	Names <- NULL
@@ -279,8 +294,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0
 		
 	#slopes specification
-	estlam <- matrix(FALSE, ncol = nfact, nrow = J)	
-	for(i in 1:nfact){
+	estlam <- matrix(FALSE, ncol = nfactNames, nrow = J)	
+	for(i in 1:nfactNames){
 		tmp <- model[model[ ,1] == factorNames[i],2]
 		if(any(regexpr(",",tmp)))
 			tmp <- strsplit(tmp,",")[[1]]
@@ -423,10 +438,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		if(estComp[i])
 			zetaind <- c(zetaind, loc1:(loc1+(length(estzetas[[i]])-1)))		
 		else zetaind <- c(zetaind,loc1:(loc1 + K[i] - 2))
-		lamind <- c(lamind,max(zetaind + 1):(max(zetaind)+nfact))		
+		lamind <- c(lamind,max(zetaind + 1):(max(zetaind) + nfactNames))		
 		guessind <- c(guessind,max(lamind + 1):max(lamind + 1 ))
 		sind <- c(sind, estzetas[[i]], estlam[i,], estGuess[i])
-		loc1 <- loc1 + nfact + sum(estzetas[[i]]) + 1	
+		loc1 <- loc1 + nfactNames + sum(estzetas[[i]]) + 1	
 	}	
 	sind <- c(sind, estgmeans, estgcov[lower.tri(estgcov,diag=TRUE)])
 	npars <- length(sind)
@@ -468,8 +483,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			equalind <- equalind + 1
 		}	
 	}
-	if(any(model[,1] == 'SLOPE')){
-		tmp <- model[model[,1] == "SLOPE",2]
+	if(any(model[ ,1] == 'SLOPE')){
+		tmp <- model[model[ ,1] == "SLOPE",2]
 		if(any(regexpr(",",tmp)))
 			tmp <- strsplit(tmp,",")[[1]]
 		tmp <- gsub('\\s+','', tmp, perl = TRUE)	
@@ -573,7 +588,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	cand.t.var <- 1			
 	tmp <- .1
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov,gmeans,estComp)
+		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov,gmeans,estComp,prodlist)
 		if(i > 5){		
 			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
 			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
@@ -630,7 +645,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			gamma <- .25
 		}	
 				
-		lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)
+		lambdas <- matrix(pars[lamind],J,nfactNames,byrow=TRUE)
 		zetas <- list()
 		ind1 <- 1
 		for(i in 1:J){ 
@@ -647,9 +662,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		
 		#Step 1. Generate m_k datasets of theta 
 		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,pars[zetaind],guess,
-			fulldata,K,itemloc,cand.t.var,sig,mu,estComp)	
+			fulldata,K,itemloc,cand.t.var,sig,mu,estComp,prodlist)	
 		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0,lambdas,pars[zetaind],guess,fulldata,
-			K,itemloc,cand.t.var,sig,mu,estComp)
+			K,itemloc,cand.t.var,sig,mu,estComp,prodlist)
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 		
@@ -658,18 +673,20 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		h <- matrix(0,npars,npars)	
 		for (j in 1:k) {
             g <- rep(NA, npars)            
+			thetatemp <- m.thetas[[j]]
+			if(!is.null(prodlist)) thetatemp <- prodterms(thetatemp,prodlist)	
             for (i in 0:(J - 1)) {			
 				if(estComp[i+1]){
 					if (estGuess[i + 1]) {
 						temp <- dpars.comp(lambdas[i + 1,][estlam[i+1,]], zetas[[i+1]], 
-							guess[i+1], fulldata[, itemloc[i + 1]], m.thetas[[j]], TRUE)
+							guess[i+1], fulldata[, itemloc[i + 1]], thetatemp, TRUE)
 						ind <- parind[is.na(g)][1]
 						ind2 <- ind + length(temp$grad) - 1
 						g[ind:ind2] <- temp$grad
 						h[ind:ind2, ind:ind2] <- temp$hess						
 					} else {
 						temp <- dpars.comp(lambdas[i + 1,][estlam[i+1,]], zetas[[i+1]], 
-							guess[i+1], fulldata[, itemloc[i + 1]], m.thetas[[j]])
+							guess[i+1], fulldata[, itemloc[i + 1]], thetatemp)
 						ind <- parind[is.na(g)][1]	
 						if(i > 0){
 							g[is.na(g)][1] <- 0
@@ -684,26 +701,26 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
                 if (estGuess[i + 1]) {
 					temp <- dpars.dich(lambdas[i + 1, ], zetas[[i+1]], 
 						guess[i + 1], fulldata[, itemloc[i + 1]], 
-						m.thetas[[j]], estGuess[i + 1])
+						thetatemp, estGuess[i + 1])
 					ind <- parind[is.na(g)][1]
-					ind2 <- ind + nfact + 1
+					ind2 <- ind + nfactNames + 1
 					g[ind:ind2] <- temp$grad
 					h[ind:ind2, ind:ind2] <- temp$hess					
 				} else {					
 					temp <- dpars.poly(lambdas[i + 1, ], zetas[[i+1]], 
-						fulldata2[, itemloc[i + 1]:(itemloc[i + 2] - 1)], m.thetas[[j]])
+						fulldata2[, itemloc[i + 1]:(itemloc[i + 2] - 1)], thetatemp)
 					ind <- parind[is.na(g)][1]
 					if(i > 0){
 						g[is.na(g)][1] <- 0
 						ind <- ind + 1
 					}						
-					ind2 <- ind + nfact + K[i + 1] - 2
+					ind2 <- ind + nfactNames + K[i + 1] - 2
 					g[ind:ind2] <- temp$grad
 					h[ind:ind2, ind:ind2] <- temp$hess					
                 }
             }
 			g[is.na(g)] <- 0
-			tmp <- d.group(grouplist,m.thetas[[j]])
+			tmp <- d.group(grouplist,thetatemp)
 			g[groupind] <- tmp$g
 			h[groupind,groupind] <- tmp$h
 			g.m[[j]] <- g
@@ -836,7 +853,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		for(i in 1:length(equalconstr))
 			SE[equalconstr[[i]]] <- mean(SE[equalconstr[[i]]])
 	estpars <- pars[sind]
-	lambdas <- matrix(pars[lamind],J,nfact,byrow=TRUE)	
+	lambdas <- matrix(pars[lamind],J,nfactNames,byrow=TRUE)	
 	lambdas[!estlam & !lambdas != 0] <- NA	
 	guess <- rep(NA,J)
 	guess <- pars[guessind]
@@ -845,7 +862,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	zetas <- pars[zetaind]
 	u <- pars[meanind]	
 	sig <- matrix(0,nfact,nfact)
-	SElam <- matrix(SE[lamind],J,nfact,byrow=TRUE)
+	SElam <- matrix(SE[lamind],J,nfactNames,byrow=TRUE)
 	SEzetas <- SE[zetaind]	
 	SEg <- rep(NA,J)	
 	SEg <- SE[guessind]	
@@ -869,8 +886,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
 	} else SEsig <- NA
 	if(any(estComp)){
-		if((max(K)-1) > nfact) tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
-		else tmp1 <- tmp2 <- matrix(NA,J,nfact)
+		if((max(K)-1) > nfactNames) tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
+		else tmp1 <- tmp2 <- matrix(NA,J,nfactNames)
 	} else tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
 	
 	loc <- 1
@@ -882,7 +899,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 				loc <- loc + 1
 			}
 		} else {
-			for(j in 1:nfact){
+			for(j in 1:nfactNames){
 				tmp1[i,j] <- zetas[loc]
 				tmp2[i,j] <- SEzetas[loc]
 				loc <- loc + 1
@@ -898,9 +915,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
 		estgmeans=estgmeans)		
 		
-	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2,na.rm = TRUE))
+	if (nfactNames > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfactNames]^2,na.rm = TRUE))
 		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
-	F <- as.matrix(pars[ ,1:nfact]/norm)
+	F <- as.matrix(pars[ ,1:nfactNames]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
 	names(h2) <- itemnames

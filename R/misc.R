@@ -208,7 +208,8 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 }      
 
 draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
-	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K))) 
+	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K)),
+	prodlist = NULL) 
 { 			
 	N <- nrow(fulldata)
 	J <- length(K)
@@ -222,6 +223,10 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 		theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
 	den0 <- dmvnorm(theta0,prior.mu,prior.t.var)
 	den1 <- dmvnorm(theta1,prior.mu,prior.t.var)		
+	if(!is.null(prodlist)){
+		theta0 <- prodterms(theta0,prodlist)
+		theta1 <- prodterms(theta1,prodlist)	
+	}
 	accept <- .Call("drawThetas",
 					as.numeric(unif),
 					as.numeric(den0),
@@ -241,8 +246,10 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	log.lik <- accept[N+1]			
 	accept <- as.logical(accept[-(N+1)])				
 	theta1[!accept,] <- theta0[!accept,]	
+	if(!is.null(prodlist)) 
+		theta1 <- theta1[ ,1:(ncol(lambdas) - length(prodlist))]
 	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
-	attr(theta1, "log.lik") <- log.lik		
+	attr(theta1, "log.lik") <- log.lik	
 	return(theta1) 
 }	
 
@@ -598,4 +605,14 @@ cormod <- function(fulldata, K, guess, smooth = TRUE)
 	cormat
 }  
 
-
+prodterms <- function(theta0, prodlist)
+{
+	products <- matrix(1, ncol = length(prodlist), nrow = nrow(theta0))
+	for(i in 1:length(prodlist)){
+		tmp <- prodlist[[i]]
+		for(j in 1:length(tmp)) 
+			products[ ,i] <- products[ ,i] * theta0[ ,tmp[j]]	
+	}	
+	ret <- cbind(theta0,products)
+	ret
+}
