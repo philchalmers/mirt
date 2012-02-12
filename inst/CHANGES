@@ -1,10 +1,15 @@
 mirt 0.1.21
 ----------------------------------------------------------------
 
+* parameter standard errors added for mirt() and bfactor() models
+
+* bfactor() values that are ommited are recoded to NA in summary and coef 
+  for better viewing
+
 * 'technical' added for confmirt function, allowing for various tweeks and 
   varying beta prior weights
 
-* product relations added for confmirt.model. Specified by enclosing in brackets
+* product relations added for confmirt.model(). Specified by enclosing in brackets
   and using an asterik 
 
 * documentation fixes with roxygenize  

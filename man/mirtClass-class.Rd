@@ -38,6 +38,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{facility}:}{Object of class \code{"numeric"}, item easiness }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
+    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }    
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

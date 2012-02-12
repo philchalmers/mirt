@@ -20,7 +20,7 @@ setClass(
 		X2 = 'numeric', df = 'numeric', p = 'numeric', AIC = 'numeric', logLik = 'numeric',
 		F = 'matrix', h2 = 'numeric', tabdata = 'matrix', Theta = 'matrix', Pl = 'numeric',
 		fulldata = 'matrix', cormat = 'matrix', facility = 'numeric', converge = 'numeric', 
-		quadpts = 'numeric', BIC = 'numeric', Call = 'call'),	
+		quadpts = 'numeric', BIC = 'numeric', vcov = 'matrix', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -92,6 +92,7 @@ setClass(
 #' recorded by the response pattern then they can be recoded to dichotomous
 #' format using the \code{\link{key2binary}} function
 #' @param nfact number of factors to be extracted
+#' @param SE logical, estimate the standard errors?
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
@@ -178,7 +179,7 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
+#' mirt(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE,
 #'   startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
 #'   debug = FALSE, ...)
 #' 
@@ -235,7 +236,7 @@ setClass(
 #' summary(mod2g, rotate='promax')
 #'      }
 #' 
-mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE, 
+mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
 	startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
 	debug = FALSE, ...)
 { 
@@ -419,6 +420,20 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)      	  
 	Pl <- rlist[[3]]  
 	logLik <- sum(r*log(Pl))
+	vcovpar <- matrix(999)
+	if(SE){
+		LLfun <- function(pars,tabdata,Theta,prior,guess){
+			nfact <- ncol(Theta)
+			pars2 <- matrix(pars, ncol=nfact+1)
+			rlist <- Estep.mirt(pars2,tabdata,Theta,prior,guess)      	  
+			Pl <- rlist[[3]]  
+			logLik <- sum(r*log(Pl))
+			-1*logLik		
+		}
+		fmin <- nlm(LLfun, as.numeric(pars), tabdata=tabdata,Theta=Theta,prior=prior,
+			guess=guess, hessian=TRUE, gradtol=1)
+		vcovpar <- solve(fmin$hessian)		
+	}	
 	logN <- 0
 	logr <- rep(0,length(r))
 	for (i in 1:N) logN <- logN + log(i)
@@ -448,7 +463,7 @@ mirt <- function(fulldata, nfact, guess = 0, prev.cor = NULL, par.prior = FALSE,
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p,
 		AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
 		fulldata=fulldata.original, cormat=Rpoly, facility=facility, converge=converge, 
-		quadpts=quadpts, Call=Call)	  
+		quadpts=quadpts, vcov=vcovpar, Call=Call)	  
 	return(mod)    
 }
 
@@ -557,7 +572,7 @@ setMethod(
 setMethod(
 	f = "coef",
 	signature = 'mirtClass',
-	definition = function(object, digits = 3, ...){  
+	definition = function(object, SE = TRUE, digits = 3, ...){  
 		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])
 		d <- object@pars[ ,ncol(object@pars)]
 		A <- sqrt(apply(a^2,1,sum))
@@ -574,7 +589,16 @@ setMethod(
 			cat("\nParameter slopes and intercepts: \n\n")	
 			print(round(parameters, digits))	  
 		}
-		invisible(parameters)
+		ret <- list(parameters)
+		if(ncol(object@vcov) != 1){
+			cat("\nStd. Errors: \n\n")	
+			SEs <- matrix(sqrt(diag(object@vcov)), ncol = ncol(a) + 1)
+			colnames(SEs) <- colnames(parameters)[1:(ncol(a) + 1)]
+			rownames(SEs) <- rownames(parameters)
+			print(SEs, digits)
+			ret <- list(parameters,SEs)
+		}
+		invisible(ret)
 	}
 )
 

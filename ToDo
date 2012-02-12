@@ -1,12 +1,8 @@
 Things to do:
 
-- fix up confmirt code, it's getting out of hand
-- multicore estimation of Monte carlo logliklihood
 - nominal and rating intercept estimation for polymirt and confmirt
 - multilevel structure function using lme4
 - add limited-information model fit statistics
-- providing standard errors for EM solutions
-- bfactor() and mirt() to accommodate polytomous data
 - multiple-group estimation
 
 

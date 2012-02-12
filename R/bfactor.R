@@ -23,7 +23,7 @@ setClass(
 		Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
 		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', 
 		BIC = 'numeric', cormat = 'matrix', converge = 'numeric', 
-		par.prior = 'matrix', quadpts = 'numeric', Call = 'call'),	
+		par.prior = 'matrix', quadpts = 'numeric', vcov = 'matrix', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -88,6 +88,7 @@ setClass(
 #' @param guess fixed pseudo-guessing parameter. Can be entered as a single
 #' value to assign a global value or may be entered as a numeric vector for
 #' each item of length \code{ncol(fulldata)}.
+#' @param SE logical; estimate parameter standard errors?
 #' @param prev.cor uses a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation
 #' @param par.prior a list declaring which items should have assumed priors
@@ -135,7 +136,7 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage
-#' bfactor(fulldata, specific, guess = 0, prev.cor = NULL, par.prior = FALSE, 
+#' bfactor(fulldata, specific, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
 #'   startvalues = NULL,  quadpts = NULL, ncycles = 300, EMtol = .001, nowarn = TRUE, 
 #'   debug = FALSE, ...)
 #' 
@@ -177,7 +178,7 @@ setClass(
 #' coef(mod3b)
 #'     }
 #' 
-bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL, 
+bfactor <- function(fulldata, specific, guess = 0, SE = FALSE, prev.cor = NULL, 
   par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300, 
   EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
 { 
@@ -396,6 +397,23 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 	rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems)
 	Pl <- rlist[[3]]
 	logLik <- sum(r * log(Pl))
+	vcovpar <- matrix(999)
+	if(SE){
+		LLfun <- function(inppars,tabdata,Theta,prior,guess,logicalfact,specific,sitems){
+			pars2 <- cbind(logicalfact,rep(TRUE,nrow(logicalfact)))
+			pars2[pars2] <- inppars
+			nfact <- ncol(logicalfact)			
+			rlist <- Estep.bfactor(pars2,tabdata,Theta,prior,guess,logicalfact,specific,sitems)      	  
+			Pl <- rlist[[3]]  
+			logLik <- sum(r*log(Pl))
+			-1*logLik		
+		}
+		inppars <- pars[logicalfact]
+		fmin <- nlm(LLfun, inppars, tabdata=tabdata,Theta=Theta,prior=prior,
+			guess=guess,logicalfact=logicalfact,specific=specific,sitems=sitems,
+			hessian=TRUE, gradtol=1)
+		vcovpar <- solve(fmin$hessian)	
+	}
 	logN <- 0
 	logr <- rep(0,length(r))
 	for (i in 1:N) logN <- logN + log(i)
@@ -421,7 +439,8 @@ bfactor <- function(fulldata, specific, guess = 0, prev.cor = NULL,
 		df=df, logLik=logLik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
 		tabdata=tabdata, N=N, Pl=Pl, Theta=Theta, fulldata=fulldata.original, 
 		logicalfact=logicalfact, facility=facility, specific=specific,
-		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,Call=Call)  
+		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,
+		vcov=vcovpar, Call=Call)  
 	return(mod)  
 } 
 
@@ -484,8 +503,9 @@ setMethod(
 	signature = signature(object = 'bfactorClass'),
 	definition = function(object, digits = 3, ...){
 		F <- round(object@F,digits)
-		h2 <- round(object@h2,digits)
-		SS <- colSums(F^2)		
+		SS <- colSums(F^2)	
+		F[!object@logicalfact] <- NA
+		h2 <- round(object@h2,digits)			
 		colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
 		names(h2) <- "h2"		
 		loads <- round(cbind(F,h2),digits)
@@ -503,17 +523,31 @@ setMethod(
 	f = "coef",
 	signature = signature(object = 'bfactorClass'),
 	definition = function(object, digits = 3, ...){
-		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])
+		a <- as.matrix(object@pars[ ,1:(ncol(object@pars)-1)])		
 		d <- object@pars[ ,ncol(object@pars)]
 		A <- sqrt(apply(a^2,1,sum))
 		B <- -d/A 
 		fac <- object@facility  
-		parameters <- round(cbind(object@pars,object@guess,fac,A,B),digits)
+		pars <- object@pars
+		pars[!object@logicalfact] <- NA
+		parameters <- round(cbind(pars,object@guess,fac,A,B),digits)
 		colnames(parameters) <- c('a_G',paste("a_", 1:(ncol(object@F)-1),sep=""),"d", "guess", 
 			"facility","mvdisc", "mvint")  
-		cat("\nParameters with multivariate discrimination and intercept: \n\n")
-		print(parameters)	    
-		invisible(parameters)
+		cat("\nParameters with multivariate discrimination and intercept: \n\n")		
+		print(parameters)
+		ret <- list(parameters)
+		if(ncol(object@vcov) != 1){
+			cat("\nStd. Errors: \n\n")	
+			tmp <- sqrt(diag(object@vcov))
+			tmp2 <- SEs <- cbind(object@logicalfact, rep(TRUE,nrow(object@logicalfact)))
+			SEs[SEs] <- tmp
+			SEs[!tmp2] <- NA
+			colnames(SEs) <- colnames(parameters)[1:(ncol(object@logicalfact)+1)]
+			rownames(SEs) <- rownames(parameters)
+			print(SEs, digits)
+			ret <- list(parameters, SEs)
+		}	
+		invisible(ret)
 	}
 )
 

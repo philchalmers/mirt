@@ -41,6 +41,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{par.prior}:}{Object of class \code{"matrix"},  prior parameter distribution specifications}
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number for quadrature points }
+    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }
     \item{\code{Call}:}{Object of class \code{"call"},  call }
   }
 }

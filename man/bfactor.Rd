@@ -6,10 +6,10 @@
 \alias{summary,bfactor-method}
 \title{Full-Information Item Bifactor Analysis}
 \usage{
-  bfactor(fulldata, specific, guess = 0, prev.cor = NULL,
-    par.prior = FALSE, startvalues = NULL, quadpts = NULL,
-    ncycles = 300, EMtol = .001, nowarn = TRUE, debug =
-    FALSE, ...)
+  bfactor(fulldata, specific, guess = 0, SE = FALSE,
+    prev.cor = NULL, par.prior = FALSE, startvalues = NULL,
+    quadpts = NULL, ncycles = 300, EMtol = .001, nowarn =
+    TRUE, debug = FALSE, ...)
 
   \S4method{summary}{bfactor}(object, digits = 3, ...)
 
@@ -45,6 +45,8 @@
   entered as a single value to assign a global value or may
   be entered as a numeric vector for each item of length
   \code{ncol(fulldata)}.}
+
+  \item{SE}{logical; estimate parameter standard errors?}
 
   \item{prev.cor}{uses a previously computed correlation
   matrix to be used to estimate starting values for the EM

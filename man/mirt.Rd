@@ -9,9 +9,9 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(fulldata, nfact, guess = 0, prev.cor = NULL,
-    par.prior = FALSE, startvalues = NULL, quadpts = NULL,
-    ncycles = 300, tol = .001, nowarn = TRUE, debug =
+  mirt(fulldata, nfact, guess = 0, SE = FALSE, prev.cor =
+    NULL, par.prior = FALSE, startvalues = NULL, quadpts =
+    NULL, ncycles = 300, tol = .001, nowarn = TRUE, debug =
     FALSE, ...)
 
   \S4method{summary}{mirt}(object, rotate='varimax',
@@ -37,6 +37,8 @@ Theory)}
   using the \code{\link{key2binary}} function}
 
   \item{nfact}{number of factors to be extracted}
+
+  \item{SE}{logical, estimate the standard errors?}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing
