@@ -1,7 +1,7 @@
-mirt 0.1.21
+mirt 0.2.0
 ----------------------------------------------------------------
 
-* parameter standard errors added for mirt() and bfactor() models
+* parameter standard errors added for mirt() (1 factor only) and bfactor() models
 
 * bfactor() values that are ommited are recoded to NA in summary and coef 
   for better viewing
