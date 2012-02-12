@@ -421,7 +421,7 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	Pl <- rlist[[3]]  
 	logLik <- sum(r*log(Pl))
 	vcovpar <- matrix(999)
-	if(SE){
+	if(SE && nfact == 1){
 		LLfun <- function(pars,tabdata,Theta,prior,guess){
 			nfact <- ncol(Theta)
 			pars2 <- matrix(pars, ncol=nfact+1)
@@ -431,7 +431,7 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 			-1*logLik		
 		}
 		fmin <- nlm(LLfun, as.numeric(pars), tabdata=tabdata,Theta=Theta,prior=prior,
-			guess=guess, hessian=TRUE, gradtol=1)
+			guess=guess, hessian=TRUE, gradtol=.001)
 		vcovpar <- solve(fmin$hessian)		
 	}	
 	logN <- 0
