@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.2.0
+Version: 0.2.1
 Date: 2012-01-25
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -40,6 +40,3 @@ Collate:
     'polymirt.R'
     'simdata.R'
     'confmirt.model.R'
-    'LSAT7.R'
-    'SAT12.R'
-    'Science.R'
