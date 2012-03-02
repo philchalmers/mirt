@@ -580,7 +580,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			}
 		}
 	}
-
+	if(!all(sort(colSums(estlam) - nfact) >= 0:(nfact-1)) && length(equalconstr) == 0)
+		warning('Slope parameters may not be uniquely identified.')
+	
 	#PRIOR, 1 == norm, 2== beta
 	parpriors <- list()
 	parpriorscount <- 1
