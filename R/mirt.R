@@ -457,7 +457,8 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	L <- eigen(FF)$values[1:nfact]
 	if (nfact == 1) F <- as.matrix(V * sqrt(L))
 		else F <- V %*% sqrt(diag(L))  
-	if (sum(F[ ,1] < 0)) F <- (-1) * F  
+	if (sum(F[ ,1] < 0)) F <- (-1) * F 
+	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
 	h2 <- rowSums(F^2) 
 
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p,
@@ -532,7 +533,7 @@ setMethod(
 			h2 <- as.matrix(object@h2)				
 			SS <- apply(F^2,2,sum)
 			colnames(h2) <- "h2"			
-			colnames(F) <- names(SS) <- paste("F_", 1:ncol(F),sep="")
+			names(SS) <- colnames(F)
 			cat("\nUnrotated factor loadings: \n\n")
 			loads <- round(cbind(F,h2),digits)
 			rownames(loads) <- rownames(object@pars)
@@ -542,8 +543,7 @@ setMethod(
 			invisible(list(F,h2))
 		} else {	
 			F <- object@F
-			h2 <- as.matrix(object@h2)			
-			colnames(F) <- paste("F_", 1:ncol(F),sep="")
+			h2 <- as.matrix(object@h2)						
 			colnames(h2) <- "h2"				
 			cat("\nRotation: ", rotate, "\n")
 			rotF <- Rotate(F,rotate)

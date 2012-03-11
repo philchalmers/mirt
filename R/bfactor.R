@@ -432,7 +432,9 @@ bfactor <- function(fulldata, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
 	gam <- (-1)*pars[ ,nfact + 1]/norm  
 	F <- matrix(0,ncol = nfact, nrow = nitems)
-	for (i in 1:nitems) F[i,1:nfact] <- pars[i,1:nfact]/norm[i]  
+	for (i in 1:nitems) 
+		F[i,1:nfact] <- pars[i,1:nfact]/norm[i]  
+	colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
 	h2 <- rowSums(F^2)  
 
 	mod <- new('bfactorClass',EMiter=cycles, pars=pars, guess=guess, AIC=AIC, X2=X2, 
@@ -505,8 +507,7 @@ setMethod(
 		F <- round(object@F,digits)
 		SS <- colSums(F^2)	
 		F[!object@logicalfact] <- NA
-		h2 <- round(object@h2,digits)			
-		colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
+		h2 <- round(object@h2,digits)					
 		names(h2) <- "h2"		
 		loads <- round(cbind(F,h2),digits)
 		rownames(loads) <- object@itemnames  

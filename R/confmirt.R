@@ -953,6 +953,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	F <- as.matrix(pars[ ,1:nfactNames]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
+	colnames(F) <- factorNames
 	names(h2) <- itemnames	
 
 	mod <- new('confmirtClass', pars=pars, guess=guess, SEpars=SEpars, SEg = SEg, 
@@ -1031,8 +1032,7 @@ setMethod(
 		nfact <- ncol(object@F)
 		itemnames <- names(object@h2)	
 		F <- object@F
-		rownames(F) <- itemnames
-		colnames(F) <- paste("F_", 1:ncol(F),sep="")						
+		rownames(F) <- itemnames								
 		SS <- apply(F^2,2,sum)			
 		cat("\nFactor loadings metric: \n")
 		print(cbind(F),digits)		
@@ -1053,27 +1053,22 @@ setMethod(
 	{  
 		nfact <- ncol(object@Theta)
 		nfactNames <- ifelse(length(object@prodlist) > 0, 
-			length(object@prodlist) + nfact, nfact)		
+			length(object@prodlist) + nfact, nfact)
+		factorNames <- colnames(object@F)
 		itemnames <- names(object@h2)
-		a <- matrix(object@pars[ ,1:nfactNames],ncol=nfactNames)
-		d <- matrix(object@pars[,(nfactNames+1):ncol(object@pars)],
+		a <- matrix(object@pars[ ,1:nfactNames], ncol=nfactNames)
+		d <- matrix(object@pars[ ,(nfactNames+1):ncol(object@pars)],
 			ncol = ncol(object@pars)-nfactNames)    	
 
 		parameters <- cbind(object@pars,object@guess)
 		SEs <- cbind(object@SEpars,object@SEg)
 		rownames(parameters) <- itemnames
 		rownames(SEs) <- itemnames
-		colnames(SEs) <- colnames(parameters) <- c(paste("a_",1:nfactNames,sep=""),
-			paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
+		colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],
+			sep=""),paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
+		factorNames2 <- factorNames	
 		if(nfact < nfactNames){
-			tmpnames <- colnames(parameters)
-			prodlist <- object@prodlist
-			for(i in 1:length(prodlist)){
-				tmp <- deparse(prodlist[[i]])
-				tmp <- gsub(" ","",tmp)
-				tmpnames[nfact + i] <- gsub("c","a",tmp)
-			}
-			colnames(SEs) <- colnames(parameters) <- tmpnames
+			
 		}
 		cat("\nITEM PARAMETERS: \n")
 		print(parameters, digits)
@@ -1085,7 +1080,7 @@ setMethod(
 		SEu <- object@SEgpars$SEu
 		sig <- object@gpars$sig
 		SEsig <- as.matrix(object@SEgpars$SEsig)
-		names(u) <- colnames(sig) <- rownames(sig) <- paste("a_",1:nfact,sep="")	
+		names(u) <- colnames(sig) <- rownames(sig) <- factorNames	
 		cat("\nGROUP PARAMETERS: \n")
 		if(print.gmeans){
 			cat("Means: \n")
@@ -1098,7 +1093,7 @@ setMethod(
 		print(sig,digits)
 		if(SE){
 			cat("\nStd. Errors: \n")			
-			colnames(SEsig) <- rownames(SEsig) <- paste("a_",1:nfact,sep="")	
+			colnames(SEsig) <- rownames(SEsig) <- factorNames	
 			print(SEsig, digits)	
 		}
 		invisible(list(pars = parameters,mu = u,sigma = sig, sigmaSE = SEsig,
@@ -1213,81 +1208,6 @@ setMethod(
 		cat("AIC difference = ", round(AICdiff,3)," (SE = ", se,")\n", sep='')
 		cat("BIC difference = ", round(BICdiff,3)," (SE = ", se,")\n", sep='')
 	}		
-)
-
-#' @rdname fscores-methods  	
-setMethod(
-	f = "fscores",
-	signature = 'confmirtClass',
-	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5, ...)
-	{ 	
-		cand.t.var <- 1
-		estComp <- object@estComp
-		sig <- object@gpars$sig
-		mu <- object@gpars$u
-		theta0 <- object@Theta
-		K <- object@K
-		nfact <- ncol(theta0)
-		nfactNames <- ncol(object@F)
-		lambdas <- matrix(object@pars[,1:nfactNames],ncol=nfactNames)
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- na.omit(as.numeric(t(object@pars[,(nfactNames+1):ncol(object@pars)])))
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
-		data <- cbind(object@data,object@fulldata)		
-		Names <- c(colnames(object@data[,1:length(K)]),paste("F",1:nfact,sep=''),
-			paste("SE_F",1:nfact,sep=''))
-		tabdata <- unique(data)[,-c(1:length(K))]			
-		itemloc <- object@itemloc
-		Theta <- list()
-		prodlist <- object@prodlist
-		if(length(prodlist) == 0) prodlist <- NULL	
-		for(i in 1:nfact)
-			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
-		theta0 <- matrix(0,nrow(tabdata),nfact)		
-		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,
-				cand.t.var,sig,mu,estComp,prodlist)
-			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
-			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
-		}
-		ind <- 1
-		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,
-				cand.t.var,sig,mu,estComp,prodlist)
-			if(i %% thin == 0){
-				for(j in 1:nfact)
-					Theta[[j]][,ind] <- theta0[,j]									
-				ind <- ind + 1
-			}			
-		}
-
-		expscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		sdscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		for(i in 1:nfact){
-			expscores[,i] <- rowMeans(Theta[[i]])
-			sdscores[,i] <- apply(Theta[[i]],1,sd)
-		}
-				
-		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
-		colnames(ret) <- Names
-		
-		if(!full.scores){ 
-			ret <- ret[order(expscores[,1]),]
-			rownames(ret) <- NULL
-			return(ret)
-		} else {
-			fulldata <- object@data
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=nfact)
-			colnames(scoremat) <- paste("F",1:nfact,sep='')
-			tmp <- unique(data)[,1:length(K)]
-			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- expscores[j, ]
-			}              
-			return(cbind(object@data,scoremat))
-		}	
-	}	
 )
 
 setMethod(
