@@ -580,9 +580,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			}
 		}
 	}
-	if(!all(sort(abs(colSums(estlam[ ,1:nfact]) - J)) >= 0:(nfact-1)) && length(equalconstr) == 0)
+	if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)) && length(equalconstr) == 0)
 		stop('Slope parameters are not uniquely identified.')
-	if(!all(sort(abs(colSums(estlam[ ,1:nfact]) - J)) >= 0:(nfact-1)))
+	if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)))
 		warning('Slope parameters may not be uniquely identified.')	
 	
 	#PRIOR, 1 == norm, 2== beta
@@ -1064,8 +1064,8 @@ setMethod(
 		SEs <- cbind(object@SEpars,object@SEg)
 		rownames(parameters) <- itemnames
 		rownames(SEs) <- itemnames
-		colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],
-			sep=""),paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
+		colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],sep=""),
+            paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
 		factorNames2 <- factorNames	
 		if(nfact < nfactNames)
 		  factorNames2 <- factorNames[!grepl("\\(",factorNames)]			
