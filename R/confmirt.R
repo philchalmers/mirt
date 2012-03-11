@@ -580,9 +580,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 			}
 		}
 	}
-	if(!all(sort(abs(colSums(estlam) - J)) >= 0:(nfact-1)) && length(equalconstr) == 0)
+	if(!all(sort(abs(colSums(estlam[ ,1:nfact]) - J)) >= 0:(nfact-1)) && length(equalconstr) == 0)
 		stop('Slope parameters are not uniquely identified.')
-	if(!all(sort(abs(colSums(estlam) - J)) >= 0:(nfact-1)))
+	if(!all(sort(abs(colSums(estlam[ ,1:nfact]) - J)) >= 0:(nfact-1)))
 		warning('Slope parameters may not be uniquely identified.')	
 	
 	#PRIOR, 1 == norm, 2== beta
@@ -1059,7 +1059,6 @@ setMethod(
 		a <- matrix(object@pars[ ,1:nfactNames], ncol=nfactNames)
 		d <- matrix(object@pars[ ,(nfactNames+1):ncol(object@pars)],
 			ncol = ncol(object@pars)-nfactNames)    	
-
 		parameters <- cbind(object@pars,object@guess)
 		SEs <- cbind(object@SEpars,object@SEg)
 		rownames(parameters) <- itemnames
@@ -1067,9 +1066,8 @@ setMethod(
 		colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],
 			sep=""),paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
 		factorNames2 <- factorNames	
-		if(nfact < nfactNames){
-			
-		}
+		if(nfact < nfactNames)
+		  factorNames2 <- factorNames[!grepl("\\(",factorNames)]			
 		cat("\nITEM PARAMETERS: \n")
 		print(parameters, digits)
 		if(SE){
@@ -1080,7 +1078,7 @@ setMethod(
 		SEu <- object@SEgpars$SEu
 		sig <- object@gpars$sig
 		SEsig <- as.matrix(object@SEgpars$SEsig)
-		names(u) <- colnames(sig) <- rownames(sig) <- factorNames	
+		names(u) <- colnames(sig) <- rownames(sig) <- factorNames2	
 		cat("\nGROUP PARAMETERS: \n")
 		if(print.gmeans){
 			cat("Means: \n")
@@ -1093,7 +1091,7 @@ setMethod(
 		print(sig,digits)
 		if(SE){
 			cat("\nStd. Errors: \n")			
-			colnames(SEsig) <- rownames(SEsig) <- factorNames	
+			colnames(SEsig) <- rownames(SEsig) <- factorNames2	
 			print(SEsig, digits)	
 		}
 		invisible(list(pars = parameters,mu = u,sigma = sig, sigmaSE = SEsig,
