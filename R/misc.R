@@ -321,11 +321,12 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 		hess[1,1] <- sum((1-c)*Pstar*Qstar*(const1 - 
 			Pstar*Qstar*(1-c)*const2))		
 		hess[hsize,hsize] <- -sum(Qstar^2 *(r/P^2 + (f-r)/Q^2))
-		hess[hsize,1] <- hess[1,hsize] <- sum(-Pstar*Qstar*((r/P - (f-r)/Q) + Qstar*(1-c)*const2))  				
+		hess[hsize,1] <- hess[1,hsize] <- sum(-Pstar*Qstar*((r/P - (f-r)/Q) + Qstar*(1-c)*const2)) 
 		for(i in 1:nfact){
 			hess[1,1+i] <- hess[1+i,1] <- sum((1-c)*thetas[,i]*Pstar*Qstar*(const1 - 
 				Pstar*Qstar*(1-c)*const2))			
-			hess[hsize,1+i] <- hess[1+i,hsize] <- sum(-thetas[,i]*Pstar*Qstar*((r/P - (f-r)/Q) + Qstar*(1-c)*const2))		
+			hess[hsize,1+i] <- hess[1+i,hsize] <- sum(-thetas[,i]*Pstar*Qstar*((r/P - (f-r)/Q) + 
+                Qstar*(1-c)*const2))		
 			for(j in 1:nfact){
 				if(i == j)
 					hess[1+i,1+i] <- sum(thetas[,i]^2 *Pstar*Qstar*(1-c)*(const1 - 
@@ -409,7 +410,8 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 							next
 						}
 						if(i == j && d1[1] == 'a'){
-							hess[i,i] <- sum((1-c)*thetas[,k]^2*Pstar*Qk*(const1*((1-c)*Qk - Pk) - Pstar*Qk*(1-c)*const2))
+							hess[i,i] <- sum((1-c)*thetas[,k]^2*Pstar*Qk*(const1*((1-c)*Qk - Pk) - Pstar*Qk*
+                                (1-c)*const2))
 							next		
 						}
 						if(i == j && d1[1] == 'c'){
@@ -417,7 +419,8 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 							next		
 						}	
 						if(d1[1] == 'a' && d2[1] == 'a'){
-							hess[i,j] <- hess[j,i] <- sum((1-c)*thetas[,k]*thetas[,m]*Qk*Pstar*Qm*(const1 - Pstar*(1-c)*const2))
+							hess[i,j] <- hess[j,i] <- sum((1-c)*thetas[,k]*thetas[,m]*Qk*Pstar*Qm*(const1 - 
+                                Pstar*(1-c)*const2))
 							next
 						}
 						if(d1[1] == 'd' && d2[1] == 'd'){
@@ -433,11 +436,13 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 							next
 						}
 						if(d1[1] == 'd' && d2[1] == 'a' && d1[2] == d2[2]){
-							hess[i,j] <- hess[j,i] <- sum((1-c)*thetas[,k]*Pstar*Qk*(const1*((1-c)*Qk - Pk) - Pstar*Qk*(1-c)*const2))
+							hess[i,j] <- hess[j,i] <- sum((1-c)*thetas[,k]*Pstar*Qk*(const1*((1-c)*Qk - Pk) - 
+                                Pstar*Qk*(1-c)*const2))
 							next	
 						}
 						if(d1[1] == 'd' && d2[1] == 'a' && d1[2] != d2[2]){
-							hess[i,j] <- hess[j,i] <- sum((1-c)*Qk*thetas[,m]*Pstar*Qm*(const1 - Pstar*(1-c)*const2))
+							hess[i,j] <- hess[j,i] <- sum((1-c)*Qk*thetas[,m]*Pstar*Qm*(const1 - 
+                                Pstar*(1-c)*const2))
 							next
 						}						
 					}

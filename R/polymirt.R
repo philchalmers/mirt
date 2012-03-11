@@ -766,8 +766,8 @@ setMethod(
 			return(res)
 		} 
 		if(restype == 'exp'){
-			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because logLik() 
-				has not been run or the data contains missing responses.')
+			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because 
+                logLik() has not been run or the data contains missing responses.')
 			tabdata <- object@tabdata
 			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
 			tabdata <- round(cbind(tabdata,res),digits)
@@ -840,12 +840,12 @@ setMethod(
 			else {					
 				colnames(plt) <- c('info','Theta1','Theta2')
 				if(type == 'info')
-					return(wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
+					return(wireframe(info ~ Theta1 + Theta2, data=plt, main = paste("Item",item,"Information"),
 						zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
 						screen = rot))				
 				if(type == 'infocontour'){										
 					contour(theta, theta, matrix(info,length(theta),length(theta)), 
-						main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")					
+						main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")
 				}
 			}	
 		} else {

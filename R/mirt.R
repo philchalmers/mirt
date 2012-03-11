@@ -690,7 +690,8 @@ setMethod(
 	definition = function(x, y, type = 'info', npts = 50, 
 		rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
 	{  
-		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
+		if (!type %in% c('curve','info','contour','infocontour')) 
+            stop(type, " is not a valid plot type.")
 		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
 		a <- as.matrix(x@pars[ ,1:(ncol(x@pars) - 1)])
 		d <- x@pars[ ,ncol(x@pars)]
@@ -736,7 +737,7 @@ setMethod(
 				plot(Theta, Ptot, type='l', main = 'Test score plot', xlab = 'Theta', ylab='Test Score')
 			if(type == 'info'){
 				I <- (P * (1 - P)) %*% a^2 
-				plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')			
+				plot(Theta, I, type='l', main = 'Test Information', xlab = 'Theta', ylab='Information')	
 			}	
 			if(type == 'contour' || type == 'infocontour') 
 				cat('No \'contour\' plots for 1-dimensional models\n')					
