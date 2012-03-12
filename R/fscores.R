@@ -1,9 +1,10 @@
 #' Methods for Function fscores
 #' 
-#' Computes MAP or EAP factor scores for \code{mirt} and \code{bfactor} models,
-#' or stochastic approximations for \code{polymirt} and \code{confmirt}. Note
-#' that only the general factor scores are computed for bifactor models.
-#' 
+#' Computes MAP, EAP, or ML factor scores for \code{mirt} and \code{bfactor} models,
+#' or a stochastic approximation with a multivariate normal prior for \code{polymirt} and 
+#' \code{confmirt}. Note that only the general factor scores are computed for bifactor 
+#' models.
+#'
 #' 
 #' @usage 
 #' fscores(object, ...)
@@ -31,7 +32,8 @@ setGeneric("fscores",
 #' data matrix is returned with the computed factor scores appended to the
 #' rightmost column
 #' @param method type of factor score estimation method. Can be expected
-#' a-posteriori (\code{"EAP"}) or Bayes modal (\code{"MAP"})
+#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
+#' (\code{"ML"})
 #' @param ndraws number of MH samplers to draw for each response pattern
 #' @param thin controls how much the chain should be thinned by, default
 #' collects every 5th draw. Note that \code{ndraws/thin} must be a whole number
@@ -48,6 +50,7 @@ setGeneric("fscores",
 #' 
 #' tabscores <- fscores(mod)
 #' fullscores <- fscores(mod, full.scores = TRUE)
+#' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 #' 
 #' 
 #'   }
@@ -70,7 +73,7 @@ setMethod(
 		colnames(tabdata) <- colnames(fulldata) 
 		SEscores <- scores <- matrix(0,ncol=ncol(Theta),nrow=nrow(tabdata))
 		SE <- thetas <- rep(0,nfact)
-		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact))    
 		W <- W/sum(W)
 		for (i in 1:nrow(scores)){
 			L <- 0  
@@ -84,13 +87,23 @@ setMethod(
 				SE[k] <- sqrt(sum((Theta[,k] - thetas[k])^2 * exp(L) * W / sum(exp(L) * W)))
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
-		}
+		}		
 		if(method == "MAP"){
 			for (i in 1:nrow(scores)){       
 				Theta <- scores[i, ]	  
 				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ])$estimate 
 				scores[i, ] <- thetas
 			}  
+		}
+		if(method == "ML"){
+      scores[rowSums(tabdata) == 0, ] <- -Inf 
+      scores[rowSums(tabdata) == ncol(fulldata), ] <- Inf
+		  for (i in 1:nrow(scores)){
+        if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
+		    Theta <- scores[i, ]	  
+		    thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],ML=TRUE)$estimate 
+		    scores[i, ] <- thetas
+		  }  
 		}
 		colnames(scores) <- colnames(object@F)
 		if (full.scores){      
@@ -153,6 +166,17 @@ setMethod(
 					patdata=tabdata[i, ],logicalfact=logicalfact)$estimate 
 				scores[i] <- thetas
 			}  
+		}
+		if(method == "ML"){
+		  scores[rowSums(tabdata) == 0] <- -Inf 
+      scores[rowSums(tabdata) == ncol(fulldata)] <- Inf
+		  for (i in 1:length(scores)) { 
+		    if(any(scores[i] == -Inf | scores[i] == Inf)) next
+		    Theta <- scores[i]	  
+		    thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
+		                  patdata=tabdata[i, ],logicalfact=logicalfact,ML=TRUE)$estimate 
+		    scores[i] <- thetas
+		  }
 		}
 		if(method == 'EAP'){	
 			scores <- cbind(scores,SEscores)			

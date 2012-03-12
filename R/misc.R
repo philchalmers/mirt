@@ -59,7 +59,7 @@ Rotate <- function(F, rotate)
 }  
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta,a,d,guess,patdata)
+MAP.mirt <- function(Theta,a,d,guess,patdata,ML=FALSE)
 {
 	Theta <- t(as.matrix(Theta))
 	L <- 0
@@ -69,12 +69,12 @@ MAP.mirt <- function(Theta,a,d,guess,patdata)
 	}
 	mu <- 0
 	sigma <- 1
-	L <- (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2))))
+  L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
 	L  
 }  
 
 # MAP scoring for bfactor
-MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact)
+MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact,ML=FALSE)
 {
 	Theta <- t(as.matrix(Theta))
 	L <- 0
@@ -84,7 +84,7 @@ MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact)
 	}
 	mu <- 0
 	sigma <- 1
-	L <- (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2))))
+	L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
 	L  
 }  
 

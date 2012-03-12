@@ -1,9 +1,9 @@
 \docType{methods}
 \name{fscores}
 \alias{fscores}
-\alias{fscores-method}
 \alias{fscores,bfactorClass-method}
 \alias{fscores,confmirtClass-method}
+\alias{fscores-method}
 \alias{fscores,mirtClass-method}
 \alias{fscores,polymirtClass-method}
 \title{Methods for Function fscores}
@@ -18,8 +18,8 @@
   rightmost column}
 
   \item{method}{type of factor score estimation method. Can
-  be expected a-posteriori (\code{"EAP"}) or Bayes modal
-  (\code{"MAP"})}
+  be expected a-posteriori (\code{"EAP"}), Bayes modal
+  (\code{"MAP"}), or maximum likelihood (\code{"ML"})}
 
   \item{ndraws}{number of MH samplers to draw for each
   response pattern}
@@ -36,10 +36,11 @@
   with factor scores appended to the last column.
 }
 \description{
-  Computes MAP or EAP factor scores for \code{mirt} and
-  \code{bfactor} models, or stochastic approximations for
-  \code{polymirt} and \code{confmirt}. Note that only the
-  general factor scores are computed for bifactor models.
+  Computes MAP, EAP, or ML factor scores for \code{mirt}
+  and \code{bfactor} models, or a stochastic approximation
+  with a multivariate normal prior for \code{polymirt} and
+  \code{confmirt}. Note that only the general factor scores
+  are computed for bifactor models.
 }
 \section{Methods}{
   \describe{ \item{fscores}{\code{signature(object =
@@ -53,6 +54,7 @@
 
 tabscores <- fscores(mod)
 fullscores <- fscores(mod, full.scores = TRUE)
+fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 
 
   }
