@@ -1136,7 +1136,7 @@ setMethod(
 		res <- matrix(0,J,J)
 		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(data)
-		prior <- dmvnorm(Theta[,1:nfact],rep(0,nfact),sig)
+		prior <- dmvnorm(Theta[,1:nfact,drop=FALSE],rep(0,nfact),sig)
 		prior <- prior/sum(prior)		
 		if(restype == 'LD'){	
 			for(i in 1:J){				
