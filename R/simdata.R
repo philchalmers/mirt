@@ -126,6 +126,22 @@
 #' 2.0, -1),ncol=2,byrow=TRUE)
 #' 
 #' compdata <- simdata(a,d,3000, partcomp = c(F,F,F,F,T,T))
+#'
+#' ####Unidimensional nonlinear factor pattern
+#' theta <- rnorm(2000)
+#' Theta <- cbind(theta,theta^2)
+#'
+#' a <- matrix(c(
+#' .8,.4,
+#' .4,.4,
+#' .7,.4,
+#' .8,NA,
+#' .4,NA,
+#' .7,NA),ncol=2,byrow=TRUE)
+#' d <- matrix(rnorm(6))
+#' 
+#' nonlindata <- simdata(a,d,2000,Theta=Theta)
+#'
 #'    }
 #' 
 simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, 

@@ -8,8 +8,9 @@
 \alias{fscores,polymirtClass-method}
 \title{Methods for Function fscores}
 \arguments{
-  \item{object}{a model of class \code{mirtClass} or
-  \code{bfactorClass}}
+  \item{object}{a model of class \code{mirtClass},
+  \code{bfactorClass}, \code{polymirtClass}, or
+  \code{confmirtClass}}
 
   \item{full.scores}{if \code{FALSE} (default) then a
   summary table with factor scores for each unique pattern
@@ -21,12 +22,12 @@
   be expected a-posteriori (\code{"EAP"}), Bayes modal
   (\code{"MAP"}), or maximum likelihood (\code{"ML"})}
 
-  \item{ndraws}{number of MH samplers to draw for each
+  \item{ndraws}{number of MH samples to draw for each
   response pattern}
 
   \item{thin}{controls how much the chain should be thinned
-  by, default collects every 5th draw. Note that
-  \code{ndraws/thin} must be a whole number}
+  by, default collects every 5th draw (\code{thin = 5}).
+  Note that \code{ndraws/thin} must be a whole number}
 
   \item{...}{additional arguments to be passed}
 }

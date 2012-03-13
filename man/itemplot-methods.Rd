@@ -23,7 +23,8 @@
   plots}
 
   \item{npts}{number of points to use per dimension. A
-  higher value will make the graphs look smoother}
+  higher value will make the graphs look smoother. Default
+  is 50}
 
   \item{rot}{allows rotation of the 3D graphics. Default is
   \code{list(x=-70,y=30,z=10)}}
@@ -32,7 +33,7 @@
 }
 \description{
   \code{itemplot} displays 3D surface plots if the number
-  of factors is 2, or standard 2D plots if the number of
+  of factors is two, or standard 2D plots if the number of
   factors is equal to one.
 }
 \section{Methods}{

@@ -13,7 +13,7 @@
   three-parameter logistic models, confirmatory bifactor
   analysis, polytomous confirmatory and exploratory item
   response models, and partially-compensatory item response
-  modeling in conjunction with other IRT models. ...
+  modeling in conjunction with other IRT models.
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}

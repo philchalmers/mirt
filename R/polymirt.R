@@ -30,7 +30,8 @@ setClass(
 #' \code{polymirt} fits an unconditional (exploratory) full-information
 #' maximum-likelihood factor analysis model to dichotomous and polychotomous
 #' data under the item response theory paradigm using Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm.
+#' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower asymptote
+#' parameters are estimated with a beta prior included automatically.
 #'
 #' 
 #' \code{polymirt} follows the item factor analysis strategy by a stochastic
@@ -64,8 +65,8 @@ setClass(
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data
 #' @param nfact number of factors to be extracted
-#' @param guess fixed values for the pseudo-guessing parameter. Can be entered
-#' as a single value to assign a global guessing parameter or may be entered as
+#' @param guess starting (or fixed) values for the pseudo-guessing parameter. Can be 
+#' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
 #' @param estGuess a logical vector indicating which lower-asymptote parameters
 #' to be estimated (default is null, and therefore is contingent on the values
@@ -92,11 +93,11 @@ setClass(
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
-#' @param x an object of class \code{polymirt} to be plotted or printed
-#' @param object a model estimated from \code{polymirt} of class
+#' @param x an object of class \code{polymirtClass} to be plotted or printed
+#' @param object a model estimated from \code{polymirtClass} of class
 #' \code{polymirt}
 #' @param object2 a model estimated from \code{polymirt} of class
-#' \code{polymirt}
+#' \code{polymirtClass}
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software

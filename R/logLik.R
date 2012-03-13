@@ -14,7 +14,7 @@
 #'    draws = 2000, G2 = TRUE)
 #' @aliases logLik-method logLik,polymirtClass-method 
 #' logLik,confmirtClass-method
-#' @param object a model of class \code{mirtClass} or \code{bfactorClass}
+#' @param object a model of class \code{polymirtClass} or \code{confmirtClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
 #' @param ... parameters that are passed

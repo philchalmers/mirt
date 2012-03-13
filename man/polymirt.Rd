@@ -36,10 +36,10 @@
 
   \item{nfact}{number of factors to be extracted}
 
-  \item{guess}{fixed values for the pseudo-guessing
-  parameter. Can be entered as a single value to assign a
-  global guessing parameter or may be entered as a numeric
-  vector for each item}
+  \item{guess}{starting (or fixed) values for the
+  pseudo-guessing parameter. Can be entered as a single
+  value to assign a global guessing parameter or may be
+  entered as a numeric vector for each item}
 
   \item{estGuess}{a logical vector indicating which
   lower-asymptote parameters to be estimated (default is
@@ -83,14 +83,14 @@
   \code{abs(printvalue)}. The default (NULL) prints all
   response patterns}
 
-  \item{x}{an object of class \code{polymirt} to be plotted
-  or printed}
+  \item{x}{an object of class \code{polymirtClass} to be
+  plotted or printed}
 
-  \item{object}{a model estimated from \code{polymirt} of
-  class \code{polymirt}}
+  \item{object}{a model estimated from \code{polymirtClass}
+  of class \code{polymirt}}
 
   \item{object2}{a model estimated from \code{polymirt} of
-  class \code{polymirt}}
+  class \code{polymirtClass}}
 
   \item{suppress}{a numeric value indicating which
   (possibly rotated) factor loadings should be suppressed.
@@ -134,7 +134,9 @@
   full-information maximum-likelihood factor analysis model
   to dichotomous and polychotomous data under the item
   response theory paradigm using Cai's (2010)
-  Metropolis-Hastings Robbins-Monro algorithm.
+  Metropolis-Hastings Robbins-Monro algorithm. If
+  requested, lower asymptote parameters are estimated with
+  a beta prior included automatically.
 }
 \details{
   \code{polymirt} follows the item factor analysis strategy

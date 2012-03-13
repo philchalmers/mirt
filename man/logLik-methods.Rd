@@ -6,8 +6,8 @@
 \alias{logLik,polymirtClass-method}
 \title{Monte Carlo Log-Likelihood Calculation}
 \arguments{
-  \item{object}{a model of class \code{mirtClass} or
-  \code{bfactorClass}}
+  \item{object}{a model of class \code{polymirtClass} or
+  \code{confmirtClass}}
 
   \item{draws}{the number of Monte Carlo draws}
 

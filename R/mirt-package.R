@@ -6,7 +6,8 @@
 #' bifactor analysis, polytomous confirmatory and exploratory item response
 #' models, and partially-compensatory item response modeling in conjunction
 #' with other IRT models.
-#' ...
+#'
+#' 
 #' @name mirt-package
 #' @docType package
 #' @title Full information maximum likelihood estimation of IRT models.

@@ -46,7 +46,7 @@ setClass(
 #' comparison to mainstream programs such as TESTFACT 4 (2003).
 #' 
 #' Unlike TESTFACT 4 (2003) initial start values are computed by using
-#' information from the matrix of quasi-tetrachoric correlations, potentially
+#' information from a quasi-tetrachoric correlation matrix, potentially
 #' with Carroll's (1945) adjustment for chance responses. To begin, a MINRES
 #' factor analysis with one factor is extracted, and the transformed loadings
 #' and intercepts (see \link{mirt} for more details) are used as starting
@@ -56,7 +56,7 @@ setClass(
 #' incorrect for specific factors (and possibly for some of the general factor
 #' loadings) the intercepts and general factor loadings will be relatively
 #' close to the final solution. These initial values should be an improvement
-#' over the TESTFACT 4 initial starting values of 1.414 for all the general
+#' over the TESTFACT initial starting values of 1.414 for all the general
 #' factor slopes, 1 for all the specific factor slopes, and 0 for all the
 #' intercepts.
 #' 
@@ -108,8 +108,8 @@ setClass(
 #' then the number of quadrature points is set to 9
 #' @param ncycles the number of EM iterations to be performed
 #' @param EMtol if the largest change in the EM cycle is less than this value
-#' then the EM iteration are stopped early
-#' @param object a model estimated from \code{bfactor} of class \code{bfactor}
+#' then the EM iterations are stopped
+#' @param object a model estimated from \code{bfactor} of class \code{bfactorClass}
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern

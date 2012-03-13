@@ -29,8 +29,7 @@ setClass(
 #' 
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous data under the item response theory paradigm. Pseudo-guessing
-#' parameters may be included but must be declared as constant, since the
-#' estimation of these parameters often leads to unacceptable solutions.
+#' parameters may be included but must be declared as constant.
 #' 
 #' 
 #' 
@@ -121,9 +120,9 @@ setClass(
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param x an object of class \code{mirt} to be plotted or printed
-#' @param object a model estimated from \code{mirt} of class \code{mirt}
+#' @param object a model estimated from \code{mirt} of class \code{mirtClass}
 #' @param object2 a second model estimated from \code{mirt} of class
-#' \code{mirt} with more estimated parameters than \code{object}
+#' \code{mirtClass} with more estimated parameters than \code{object}
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
@@ -146,7 +145,7 @@ setClass(
 #' convergence, and some items may need to be constrained or removed entirely
 #' to allow for an acceptable solution. Be mindful of the item facility values
 #' that are printed with \code{coef} since these will be helpful in determining
-#' whether a guessing parameter should be removed (item facility value is too
+#' whether a guessing parameter is causing problems (item facility value is too
 #' close to the guessing parameter) or if an item should be constrained or
 #' removed entirely (values too close to 0 or 1). As a general rule, items with
 #' facilities greater than .95, or items that are only .05 greater than the
@@ -156,7 +155,7 @@ setClass(
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{polymirt}},
-#' \code{\link{confmirt}}, \code{\link{polymirt}}, \code{\link{itemplot}}
+#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{itemplot}}
 #' @references
 #' 
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of

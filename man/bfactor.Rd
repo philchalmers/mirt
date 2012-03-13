@@ -80,11 +80,10 @@
   performed}
 
   \item{EMtol}{if the largest change in the EM cycle is
-  less than this value then the EM iteration are stopped
-  early}
+  less than this value then the EM iterations are stopped}
 
   \item{object}{a model estimated from \code{bfactor} of
-  class \code{bfactor}}
+  class \code{bfactorClass}}
 
   \item{restype}{type of residuals to be displayed. Can be
   either \code{'LD'} for a local dependence matrix (Chen &
@@ -124,23 +123,23 @@
   as TESTFACT 4 (2003).
 
   Unlike TESTFACT 4 (2003) initial start values are
-  computed by using information from the matrix of
-  quasi-tetrachoric correlations, potentially with
-  Carroll's (1945) adjustment for chance responses. To
-  begin, a MINRES factor analysis with one factor is
-  extracted, and the transformed loadings and intercepts
-  (see \link{mirt} for more details) are used as starting
-  values for the general factor loadings and item
-  intercepts. Values for the specific factor loadings are
-  taken to be half the magnitude of the extracted general
-  factor loadings. Note that while the sign of the loading
-  may be incorrect for specific factors (and possibly for
-  some of the general factor loadings) the intercepts and
-  general factor loadings will be relatively close to the
-  final solution. These initial values should be an
-  improvement over the TESTFACT 4 initial starting values
-  of 1.414 for all the general factor slopes, 1 for all the
-  specific factor slopes, and 0 for all the intercepts.
+  computed by using information from a quasi-tetrachoric
+  correlation matrix, potentially with Carroll's (1945)
+  adjustment for chance responses. To begin, a MINRES
+  factor analysis with one factor is extracted, and the
+  transformed loadings and intercepts (see \link{mirt} for
+  more details) are used as starting values for the general
+  factor loadings and item intercepts. Values for the
+  specific factor loadings are taken to be half the
+  magnitude of the extracted general factor loadings. Note
+  that while the sign of the loading may be incorrect for
+  specific factors (and possibly for some of the general
+  factor loadings) the intercepts and general factor
+  loadings will be relatively close to the final solution.
+  These initial values should be an improvement over the
+  TESTFACT initial starting values of 1.414 for all the
+  general factor slopes, 1 for all the specific factor
+  slopes, and 0 for all the intercepts.
 
   Factor scores are estimated assuming a normal prior
   distribution and can be appended to the input data matrix

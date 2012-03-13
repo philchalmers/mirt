@@ -34,10 +34,10 @@
   is to be estimated. See \code{\link{confmirt.model}} for
   more details}
 
-  \item{guess}{fixed values for the pseudo-guessing
-  parameter. Can be entered as a single value to assign a
-  global guessing parameter or may be entered as a numeric
-  vector for each item}
+  \item{guess}{initial (or fixed) values for the
+  pseudo-guessing parameter. Can be entered as a single
+  value to assign a global guessing parameter or may be
+  entered as a numeric vector for each item}
 
   \item{estGuess}{a logical vector indicating which
   lower-asymptote parameters to be estimated (default is
@@ -91,9 +91,9 @@
 
   \item{debug}{logical; turn on debugging features?}
 
-  \item{object}{an object of class \code{confmirt}}
+  \item{object}{an object of class \code{confmirtClass}}
 
-  \item{object2}{an object of class \code{confmirt}}
+  \item{object2}{an object of class \code{confmirtClass}}
 
   \item{SE}{logical; print standard errors?}
 
@@ -125,7 +125,7 @@
   response theory paradigm using Cai's (2010)
   Metropolis-Hastings Robbins-Monro algorithm. If
   requested, lower asymptote parameters are estimated with
-  a beta prior and are included automatically.
+  a beta prior included automatically.
 }
 \details{
   \code{confmirt} follows a confirmatory item factor

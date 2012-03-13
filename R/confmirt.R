@@ -31,7 +31,7 @@ setClass(
 #' maximum-likelihood factor analysis model to dichotomous and polychotomous
 #' data under the item response theory paradigm using Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower asymptote
-#' parameters are estimated with a beta prior and are included automatically.
+#' parameters are estimated with a beta prior included automatically.
 #' 
 #' 
 #' \code{confmirt} follows a confirmatory item factor analysis strategy that
@@ -68,8 +68,8 @@ setClass(
 #' @param model an object returned from \code{confmirt.model()} declarating how
 #' the factor model is to be estimated. See \code{\link{confmirt.model}} for
 #' more details
-#' @param guess fixed values for the pseudo-guessing parameter. Can be entered
-#' as a single value to assign a global guessing parameter or may be entered as
+#' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
+#' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
 #' @param estGuess a logical vector indicating which lower-asymptote parameters
 #' to be estimated (default is null, and therefore is contingent on the values
@@ -100,8 +100,8 @@ setClass(
 #' @param returnindex logical; return the list containing the item paramter
 #' locations? To be used when specifying prior parameter distributions
 #' @param debug logical; turn on debugging features?
-#' @param object an object of class \code{confmirt}
-#' @param object2 an object of class \code{confmirt}
+#' @param object an object of class \code{confmirtClass}
+#' @param object2 an object of class \code{confmirtClass}
 #' @param SE logical; print standard errors?
 #' @param print.gmeans logical; print latent factor means?
 #' @param digits the number of significant digits to be rounded
