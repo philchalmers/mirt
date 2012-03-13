@@ -27,6 +27,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for X2  }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
+    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
@@ -38,7 +39,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{facility}:}{Object of class \code{"numeric"}, item easiness }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }    
+    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }        
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

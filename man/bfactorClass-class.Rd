@@ -24,6 +24,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{X2}:}{Object of class \code{"numeric"}, chi-squared value }
     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
+    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for chi-squared value}
     \item{\code{F}:}{Object of class \code{"matrix"},  factor loadings}

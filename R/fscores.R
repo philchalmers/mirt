@@ -97,13 +97,12 @@ setMethod(
 			}  
 		}
 		if(method == "ML"){
-      scores[rowSums(tabdata) == 0, ] <- -Inf 
-      scores[rowSums(tabdata) == ncol(fulldata), ] <- Inf
-		  for (i in 1:nrow(scores)){
-        if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
-		    Theta <- scores[i, ]	  
-		    thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],ML=TRUE)$estimate 
-		    scores[i, ] <- thetas
+            scores[rowSums(tabdata) == 0 | rowSums(tabdata) == ncol(fulldata), ] <- NA
+		for (i in 1:nrow(scores)){
+            if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
+		        Theta <- scores[i, ]	  
+		        thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],ML=TRUE)$estimate 
+		        scores[i, ] <- thetas
 		  }  
 		}
 		colnames(scores) <- colnames(object@F)
@@ -169,15 +168,14 @@ setMethod(
 			}  
 		}
 		if(method == "ML"){
-		  scores[rowSums(tabdata) == 0] <- -Inf 
-      scores[rowSums(tabdata) == ncol(fulldata)] <- Inf
-		  for (i in 1:length(scores)) { 
-		    if(any(scores[i] == -Inf | scores[i] == Inf)) next
-		    Theta <- scores[i]	  
-		    thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
-		                  patdata=tabdata[i, ],logicalfact=logicalfact,ML=TRUE)$estimate 
-		    scores[i] <- thetas
-		  }
+		    scores[rowSums(tabdata) == 0 | rowSums(tabdata) == ncol(fulldata)] <- NA
+		    for (i in 1:length(scores)) { 
+		        if(any(scores[i] == -Inf | scores[i] == Inf)) next
+		        Theta <- scores[i]	  
+		        thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
+		                      patdata=tabdata[i, ],logicalfact=logicalfact,ML=TRUE)$estimate 
+		        scores[i] <- thetas
+		    }
 		}
 		if(method == 'EAP'){	
 			scores <- cbind(scores,SEscores)			
@@ -224,19 +222,20 @@ setMethod(
 		Names <- c(colnames(object@data[,1:length(K)]),colnames(object@F),
 			paste("SE_F",1:nfact,sep=''))
 		tabdata <- unique(data)[ ,-c(1:length(K))]			
-		itemloc <- object@itemloc
+		itemloc <- object@itemloc            
 		Theta <- list()
 		for(i in 1:nfact)
 			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
-		theta0 <- matrix(0,nrow(tabdata),nfact)
+		theta0 <- matrix(0,nrow(tabdata),nfact)        
 		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
+			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)            
 			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
 			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
 		}
 		ind <- 1
 		for(i in 1:ndraws){			
 			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
+			theta0[CONSTRAIN, ] <- 0
 			if(i %% thin == 0){
 				for(j in 1:nfact)
 					Theta[[j]][,ind] <- theta0[,j]									
@@ -250,6 +249,8 @@ setMethod(
 			expscores[,i] <- rowMeans(Theta[[i]])
 			sdscores[,i] <- apply(Theta[[i]],1,sd)
 		}
+        expscores[CONSTRAIN] <- NA
+		sdscores[CONSTRAIN] <- NA
 				
 		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
 		colnames(ret) <- Names

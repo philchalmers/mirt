@@ -21,7 +21,8 @@ setClass(
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
 		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
-		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', Call = 'call'),	
+		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', 
+        RMSEA = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -985,10 +986,10 @@ setMethod(
 			cat("BIC =", x@BIC, "\n")
 			if(x@p < 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
-					x@df, ", p = ", round(x@p,4), "\n", sep="")
+					x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 
-					x@df, ", p = ", NA, "\n", sep="")		
+					x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
 		}
 		if(x@converge == 1)	
 			cat("Converged in ", x@cycles, " iterations.\n", sep="")
@@ -1011,10 +1012,11 @@ setMethod(
 			cat("BIC =", object@BIC, "\n")
 			if(object@p < 1)	
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
-					object@df, ", p = ", round(object@p,4), "\n", sep="")
+					object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3), 
+                    "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 
-					object@df, ", p = ", NA, "\n", sep="")
+					object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")
 		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")

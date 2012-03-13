@@ -109,6 +109,7 @@ setMethod(
 			if(any(is.na(data))){
 				object@G2 <- 0	
 				object@p <- 1					
+				object@RMSEA <- 1
 			} else {			
 				pats <- apply(data,1,paste,collapse = "/")			
 				freqs <- table(pats)
@@ -130,6 +131,8 @@ setMethod(
 				object@G2 <- G2	
 				object@p <- p
 				object@tabdata <- tabdata
+				object@RMSEA <- ifelse((G2 - df) > 0, 
+				    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
 			}	
 		}	
 		object@logLik <- logLik
@@ -203,7 +206,8 @@ setMethod(
 			data <- object@data
 			if(any(is.na(data))){
 				object@G2 <- 0	
-				object@p <- 1					
+				object@p <- 1
+                object@RMSEA <- 1
 			} else {
 				pats <- apply(data,1,paste,collapse = "/")			
 				freqs <- table(pats)
@@ -225,6 +229,8 @@ setMethod(
 				object@G2 <- G2	
 				object@p <- p
 				object@tabdata <- tabdata
+				object@RMSEA <- ifelse((G2 - df) > 0, 
+				    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
 			}	
 		}		
 		object@logLik <- logLik

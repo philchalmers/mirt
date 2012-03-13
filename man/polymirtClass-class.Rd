@@ -33,6 +33,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian Information Criteria }
+    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item locations in fulldata }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }

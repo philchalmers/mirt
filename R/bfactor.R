@@ -22,7 +22,7 @@ setClass(
 		itemnames = 'character', tabdata = 'matrix', N = 'numeric', 
 		Pl = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
 		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', 
-		BIC = 'numeric', cormat = 'matrix', converge = 'numeric', 
+		BIC = 'numeric', cormat = 'matrix', converge = 'numeric', RMSEA = 'numeric',
 		par.prior = 'matrix', quadpts = 'numeric', vcov = 'matrix', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
@@ -31,8 +31,7 @@ setClass(
 #' 
 #' \code{bfactor} fits a confirmatory maximum likelihood bifactor model to
 #' dichotomous data under the item response theory paradigm. Pseudo-guessing
-#' parameters may be included but must be declared as constant, since the
-#' estimation of these parameters often leads to unacceptable solutions.
+#' parameters may be included but must be declared as constant.
 #' 
 #' 
 #' 
@@ -427,6 +426,8 @@ bfactor <- function(fulldata, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	df <- length(r) + nfact*(nfact - 1)/2 - 2*nitems - length(specific) - 1
 	p <- 1 - pchisq(X2,df)
 	if(any(is.na(fulldata.original))) p <- 2
+	RMSEA <- ifelse((X2 - df) > 0, 
+	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 
 	#from last EM cycle pars to FA
 	norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
@@ -442,7 +443,7 @@ bfactor <- function(fulldata, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 		tabdata=tabdata, N=N, Pl=Pl, Theta=Theta, fulldata=fulldata.original, 
 		logicalfact=logicalfact, facility=facility, specific=specific,
 		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,
-		vcov=vcovpar, Call=Call)  
+		vcov=vcovpar, RMSEA=RMSEA, Call=Call)  
 	return(mod)  
 } 
 
@@ -467,10 +468,10 @@ setMethod(
 		cat("BIC = ", x@BIC, "\n")
 		if(x@p < 1)
 			cat("G^2 = ", round(x@X2,2), ", df = ", 
-				x@df, ", p = ", round(x@p,4), "\n", sep="")
+				x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
-				x@df, ", p = ", NA, "\n", sep="")		
+				x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
 	}
 )
 
@@ -493,10 +494,11 @@ setMethod(
 		cat("BIC = ", object@BIC, "\n")
 		if(object@p < 1)
 			cat("G^2 = ", round(object@X2,2), ", df = ", 
-				object@df, ", p = ", round(object@p,4), "\n", sep="")
+				object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3),
+                "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
-				object@df, ", p = ", NA, "\n", sep="")			
+				object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")			
 	}
 )
 

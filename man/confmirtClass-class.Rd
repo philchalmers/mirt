@@ -35,6 +35,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
+    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{estComp}:}{Object of class \code{"logical"}, vector indicating which items were estimated with the partially compensatory model }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }

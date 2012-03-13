@@ -20,7 +20,7 @@ setClass(
 		X2 = 'numeric', df = 'numeric', p = 'numeric', AIC = 'numeric', logLik = 'numeric',
 		F = 'matrix', h2 = 'numeric', tabdata = 'matrix', Theta = 'matrix', Pl = 'numeric',
 		fulldata = 'matrix', cormat = 'matrix', facility = 'numeric', converge = 'numeric', 
-		quadpts = 'numeric', BIC = 'numeric', vcov = 'matrix', Call = 'call'),	
+		quadpts = 'numeric', BIC = 'numeric', vcov = 'matrix', RMSEA = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -219,7 +219,6 @@ setClass(
 #' fulldata <- key2binary(SAT12,
 #'   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' 
-#' #without guessing scree(tmat) #looks like a 2 factor solution
 #' mod1 <- mirt(fulldata, 1)
 #' mod2 <- mirt(fulldata, 2)
 #' mod3 <- mirt(fulldata, 3)
@@ -445,6 +444,8 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	p <- 1 - pchisq(X2,df)  
 	AIC <- (-2) * logLik + 2 * length(pars)
 	BIC <- (-2) * logLik + length(pars)*log(N)
+	RMSEA <- ifelse((X2 - df) > 0, 
+	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 	if(any(is.na(fulldata.original))) p <- 2	
 
 	# pars to FA loadings
@@ -460,10 +461,10 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
 	h2 <- rowSums(F^2) 
 
-	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p,
+	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, X2=X2, df=df, p=p, 
 		AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata, Theta=Theta, Pl=Pl, 
 		fulldata=fulldata.original, cormat=Rpoly, facility=facility, converge=converge, 
-		quadpts=quadpts, vcov=vcovpar, Call=Call)	  
+		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, Call=Call)	  
 	return(mod)    
 }
 
@@ -486,12 +487,12 @@ setMethod(
 		cat("Log-likelihood =", x@logLik, "\n")
 		cat("AIC =", x@AIC, "\n")		
 		cat("BIC =", x@BIC, "\n")
-		if(x@p < 1)
+		if(x@p < 1)            
 			cat("G^2 = ", round(x@X2,2), ", df = ", 
-				x@df, ", p = ", round(x@p,4), "\n", sep="")
+				x@df, ", p = ", round(x@p,4),", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
-				x@df, ", p = ", NA, "\n", sep="")		
+				x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )		
 	}
 )
 
@@ -514,10 +515,11 @@ setMethod(
 		cat("BIC =", object@BIC, "\n")
 		if(object@p < 1)
 			cat("G^2 = ", round(object@X2,2), ", df = ", 
-				object@df, ", p = ", round(object@p,4), "\n", sep="")
+				object@df, ", p = ", round(object@p,4),", RMSEA = ", round(object@RMSEA,3),
+                "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
-				object@df, ", p = ", NA, "\n", sep="")			
+				object@df, ", p = ", NA, "RMSEA = ", NA, "\n", sep="")			
 	}
 )
 

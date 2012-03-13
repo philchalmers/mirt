@@ -5,7 +5,7 @@
 #' multivariate two- and three-parameter logistic models, confirmatory
 #' bifactor analysis, polytomous confirmatory and exploratory item response
 #' models, and partially-compensatory item response modeling in conjunction
-#' with other IRT models.
+#' with non-linear (product) factor relationships.
 #'
 #' 
 #' @name mirt-package

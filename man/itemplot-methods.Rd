@@ -1,8 +1,8 @@
 \docType{methods}
 \name{itemplot}
 \alias{itemplot}
-\alias{itemplot,bfactorClass,numeric-method}
 \alias{itemplot-method}
+\alias{itemplot,bfactorClass,numeric-method}
 \alias{itemplot,mirtClass,numeric-method}
 \alias{itemplot,polymirtClass,numeric-method}
 \title{Displays item surface and information plots}

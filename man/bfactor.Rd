@@ -103,9 +103,7 @@
   \code{bfactor} fits a confirmatory maximum likelihood
   bifactor model to dichotomous data under the item
   response theory paradigm. Pseudo-guessing parameters may
-  be included but must be declared as constant, since the
-  estimation of these parameters often leads to
-  unacceptable solutions.
+  be included but must be declared as constant.
 }
 \details{
 
