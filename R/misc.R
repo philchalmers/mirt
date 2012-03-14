@@ -621,3 +621,327 @@ prodterms <- function(theta0, prodlist)
 	ret <- cbind(theta0,products)
 	ret
 }
+
+model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N,
+  estGuess, guess, itemnames)
+{
+  hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
+  prodlist <- NULL
+  if(hasProdTerms){		
+    tmp <- factorNames[grepl('\\(',factorNames)]
+    tmp2 <- factorNames[!grepl('\\(',factorNames)] 
+    tmp <- gsub("\\(","",tmp)	
+    tmp <- gsub("\\)","",tmp)
+    prodlist <- strsplit(tmp,"\\*")
+    for(j in 1:length(prodlist)){
+      for(i in 1:nfact)
+        prodlist[[j]][prodlist[[j]] == tmp2[[i]]] <- i		
+      prodlist[[j]] <- as.numeric(prodlist[[j]])	
+    }		
+  } 
+  
+  #slopes specification
+  estlam <- matrix(FALSE, ncol = nfactNames, nrow = J)	
+  for(i in 1:nfactNames){
+    tmp <- model[model[ ,1] == factorNames[i],2]
+    if(any(regexpr(",",tmp)))
+      tmp <- strsplit(tmp,",")[[1]]
+    popout <- c()	
+    for(j in 1:length(tmp)){
+      if(regexpr("-",tmp[j]) > 1){
+        popout <- c(popout,j)
+        tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1]])
+        tmp2 <- as.character(tmp2[1]:tmp2[2])
+        tmp <- c(tmp,tmp2)
+      }
+    }
+    if(length(popout != 0))	
+      estlam[as.numeric(tmp[-popout]),i] <- TRUE
+    else 
+      estlam[as.numeric(tmp),i] <- TRUE
+  }
+  lambdas <- ifelse(estlam, .5, 0)	
+  
+  #PARTCOMP
+  estComp <- rep(FALSE,J)
+  if(any(model[,1] == 'PARTCOMP')){
+    tmp <- model[model[,1] == 'PARTCOMP',2]		
+    tmp <- strsplit(tmp,",")[[1]]
+    tmp <- gsub(" ","",tmp)		
+    for(j in 1:length(tmp)){
+      if(regexpr("-",tmp[j]) > 1){				
+        tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1]])				
+        estComp[tmp2[1]:tmp2[2]] <- TRUE
+      }
+    }
+    if(any(is.numeric(suppressWarnings(as.numeric(tmp)))))
+      for(i in 1:length(tmp))
+        estComp[suppressWarnings(as.numeric(tmp))] <- TRUE				
+  }
+  if(nfact == 1) estComp <- rep(FALSE,J)	
+  
+  #INT
+  cs <- sqrt(abs(1-rowSums(lambdas^2)))	
+  zetas <- rep(NA,200)	
+  loc <- 1	
+  for(i in 1:J){
+    if(estComp[i]){ 
+      div <- ifelse(cs[i] > .25, cs[i], .25)
+      tmp <- rep(qnorm(mean(fulldata[,itemloc[i]]))/div, sum(estlam[i,]))
+      zetas[loc:(loc+length(tmp)-1)] <- tmp
+      loc <- loc + length(tmp)
+      next
+    }
+    if(K[i] == 2){
+      div <- ifelse(cs[i] > .25, cs[i], .25)		
+      zetas[loc] <- qnorm(mean(fulldata[,itemloc[i]]))/div
+      loc <- loc + 1
+    } else {			
+      temp <- table(data[,i])[1:(K[i]-1)]/N
+      temp <- cumsum(temp)
+      div <- ifelse(cs[i] > .25, cs[i], .25)		
+      zetas[loc:(loc+K[i]-2)] <- qnorm(1 - temp)/div	
+      loc <- loc + K[i] - 1	
+    }		
+  }
+  zetas <- zetas[!is.na(zetas)]
+  estzetas <- list()
+  estzetas2 <- c()
+  ind1 <- 1
+  for(i in 1:J){
+    if(estComp[i]){
+      estzetas[[i]] <- rep(TRUE,sum(estlam[i,]))		
+      estzetas2 <- c(estzetas2,estzetas[[i]])
+      ind1 <- ind1 + sum(estlam[i,]) - 1
+    } else {
+      estzetas[[i]] <- rep(TRUE,length((ind1):(K[i] + ind1 - 2)))		
+      estzetas2 <- c(estzetas2,estzetas[[i]])
+      ind1 <- ind1 + K[i] - 1
+    }	
+  }		
+  
+  #MEANS
+  find <- 1:nfact
+  gmeans <- rep(0,nfact)
+  estgmeans <- rep(FALSE,nfact)	
+  if(any(model[,1] == 'MEAN')){
+    tmp <- model[model[,1] == 'MEAN',2]		
+    tmp <- strsplit(tmp,",")[[1]]
+    tmp <- gsub(" ","",tmp)
+    for(i in 1:length(tmp)){
+      tmp2 <- strsplit(tmp[i],"eq",fixed=TRUE)[[1]]
+      ind1 <- find[tmp2[1] == factorNames]			
+      gmeans[ind1] <- as.numeric(tmp2[2])
+    }
+  }
+  
+  #COV
+  estgcov <- constgcov <- matrix(FALSE,nfact,nfact)
+  equalcov <- list()
+  equalcovind <- 1
+  if(any(model[,1] == 'COV')){
+    tmp <- model[model[,1] == 'COV',2]		
+    tmp <- strsplit(tmp,",")[[1]]
+    tmp <- gsub(" ","",tmp)
+    for(i in 1:length(tmp)){
+      if(regexpr("eq",tmp[i]) > 1){
+        tmp2 <- strsplit(tmp[i],"eq",fixed=TRUE)[[1]]
+        suppressWarnings(value <- as.numeric(tmp2[length(tmp2)]))
+        if(!is.na(value)){
+          tmp2 <- strsplit(tmp2[1],"*",fixed=TRUE)[[1]]
+          ind1 <- find[tmp2[1] == factorNames]
+          ind2 <- find[tmp2[2] == factorNames]
+          constgcov[ind1,ind2] <- constgcov[ind2,ind1] <- value
+        } else {
+          tmp2 <- strsplit(tmp2,"*",fixed=TRUE)
+          equalcov[[equalcovind]] <- matrix(FALSE,nfact,nfact)
+          for(j in 1:length(tmp2)){
+            ind1 <- find[tmp2[[j]][1] == factorNames]
+            ind2 <- find[tmp2[[j]][2] == factorNames]
+            estgcov[ind1,ind2] <- estgcov[ind2,ind1] <- TRUE						
+            equalcov[[equalcovind]][ind1,ind2] <- equalcov[[equalcovind]][ind2,ind1] <- TRUE
+          }
+          equalcovind <- equalcovind + 1
+        }
+      } else {
+        tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1]]				
+        ind1 <- find[tmp2[1] == factorNames]
+        ind2 <- find[tmp2[2] == factorNames]
+        estgcov[ind1,ind2] <- estgcov[ind2,ind1] <- TRUE
+      }	
+    }
+  }
+  gcov <- ifelse(estgcov,.1,0) + constgcov
+  diag(gcov) <- 1	
+  tmp <- matrix(FALSE,nfact,nfact)
+  tmp[lower.tri(tmp,diag=TRUE)] <- estgcov[lower.tri(tmp,diag=TRUE)]
+  selgcov <- lower.tri(tmp,diag = TRUE)
+  estgcov <- tmp
+  
+  #Housework
+  loc1 <- 1
+  lamind <- zetaind <- guessind <- sind <- c()	
+  for(i in 1:J){
+    if(estComp[i])
+      zetaind <- c(zetaind, loc1:(loc1+(length(estzetas[[i]])-1)))		
+    else zetaind <- c(zetaind,loc1:(loc1 + K[i] - 2))
+    lamind <- c(lamind,max(zetaind + 1):(max(zetaind) + nfactNames))		
+    guessind <- c(guessind,max(lamind + 1):max(lamind + 1 ))
+    sind <- c(sind, estzetas[[i]], estlam[i,], estGuess[i])
+    loc1 <- loc1 + nfactNames + sum(estzetas[[i]]) + 1	
+  }	
+  sind <- c(sind, estgmeans, estgcov[lower.tri(estgcov,diag=TRUE)])
+  npars <- length(sind)
+  pars <- rep(0,npars)
+  groupind <- (npars - length(c(gmeans,gcov[lower.tri(gcov,diag=TRUE)]))+1):npars
+  meanind <- groupind[1:nfact]
+  covind <- groupind[-(1:nfact)]	
+  pars[lamind] <- t(lambdas)
+  pars[zetaind] <- zetas
+  pars[guessind] <- guess
+  pars[groupind] <- c(gmeans,gcov[lower.tri(gcov,diag=TRUE)])
+  parcount <- list(lam = estlam, zeta = estzetas2, guess = estGuess, cov = estgcov, mean = estgmeans)
+  parind <- 1:npars
+  loc1 <- 1
+  parcount$lam <- matrix(lamind,J,byrow=TRUE)	
+  zetaind2 <- estzetas
+  k <- 1
+  for(i in 1:J){
+    for(j in 1:length(zetaind2[[i]])){
+      zetaind2[[i]][j] <- zetaind[k]			
+      k <- k + 1
+    }
+  }
+  names(zetaind2) <- itemnames
+  parcount$zeta <- zetaind2
+  parcount$guess <- guessind
+  parcount$mean <- meanind
+  parcount$cov <- matrix(0,nfact,nfact)
+  parcount$cov[selgcov] <- covind		
+  constvalues <- matrix(0,ncol = 2, npars)	
+  
+  #ADDITIONAL SPECS
+  constvalues[parcount$cov[constgcov[selgcov] != 0], ] <- c(1,constgcov[constgcov[selgcov] != 0])
+  equalconstr <- list()
+  equalind <- 1
+  if(length(equalcov) > 0){
+    for(i in 1:length(equalcov)){
+      equalconstr[[equalind]] <- parcount$cov[equalcov[[i]][lower.tri(estgcov,diag=TRUE)]]
+      equalind <- equalind + 1
+    }	
+  }
+  if(any(model[ ,1] == 'SLOPE')){
+    tmp <- model[model[ ,1] == "SLOPE",2]
+    if(any(regexpr(",",tmp)))
+      tmp <- strsplit(tmp,",")[[1]]
+    tmp <- gsub('\\s+','', tmp, perl = TRUE)	
+    for(i in 1:length(tmp)){
+      tmp2 <- strsplit(tmp[i],'eq')[[1]]
+      suppressWarnings(attempt <- as.numeric(tmp2))
+      if(any(!is.na(attempt))){
+        value <- attempt[!is.na(attempt)]
+        tmp3 <- tmp2[is.na(attempt)]
+        tmp3 <- strsplit(tmp3,"@")								
+        for(j in 1:length(tmp3)){					
+          loc1 <- tmp3[[j]][1] == factorNames
+          loc2 <- as.numeric(tmp3[[j]][2])
+          constvalues[parcount$lam[loc2,loc1], ] <- c(1,value)
+        }					
+      } else {
+        tmp3 <- strsplit(tmp2,"@")				
+        equalconstr[[equalind]] <- rep(0,length(tmp3)) 
+        for(j in 1:length(tmp3)){					
+          loc1 <- tmp3[[j]][1] == factorNames
+          loc2 <- as.numeric(tmp3[[j]][2])
+          equalconstr[[equalind]][j] <- parcount$lam[loc2,loc1] 					
+        }
+        if(any(equalconstr[[equalind]] == 0)) stop("Improper constrainst specification.")
+        equalind <- equalind + 1					
+      }
+    }
+  }	
+  zetaind2 <- estzetas
+  k <- 1
+  for(i in 1:J){
+    for(j in 1:length(zetaind2[[i]])){
+      zetaind2[[i]][j] <- zetaind[k]
+      k <- k + 1
+    }
+  }
+  if(any(model[,1] == 'INT')){
+    tmp <- model[model[,1] == 'INT',2]
+    if(any(regexpr(",",tmp)))
+      tmp <- strsplit(tmp,",")[[1]]
+    tmp <- gsub('\\s+','', tmp, perl = TRUE)	
+    for(i in 1:length(tmp)){
+      tmp2 <- strsplit(tmp[i],'eq')[[1]]
+      suppressWarnings(attempt <- as.numeric(tmp2))
+      if(any(!is.na(attempt))){
+        value <- attempt[!is.na(attempt)]
+        tmp3 <- tmp2[is.na(attempt)]
+        tmp3 <- strsplit(tmp3,"@")								
+        for(j in 1:length(tmp3)){					
+          loc1 <- as.numeric(tmp3[[j]][1])
+          loc2 <- as.numeric(tmp3[[j]][2])
+          constvalues[zetaind2[[loc1]][loc2], ] <- c(1,value)
+        }					
+      } else {
+        tmp3 <- strsplit(tmp2,"@")				
+        equalconstr[[equalind]] <- rep(0,length(tmp3)) 
+        for(j in 1:length(tmp3)){	
+          loc1 <- as.numeric(tmp3[[j]][1])
+          loc2 <- as.numeric(tmp3[[j]][2])
+          equalconstr[[equalind]][j] <- zetaind2[[loc1]][loc2]					
+        }
+        if(any(equalconstr[[equalind]] == 0)) stop("Improper constraint specification.")
+        equalind <- equalind + 1					
+      }
+    }
+  }
+  if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)) && 
+    length(equalconstr) == 0) stop('Slope parameters are not uniquely identified.')
+  if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)))
+    warning('Slope parameters may not be uniquely identified.')	
+  
+  #PRIOR, 1 == norm, 2== beta
+  parpriors <- list()
+  parpriorscount <- 1
+  if(sum(estGuess) > 0){
+    for(i in 1:J){
+      if(estGuess[i]){
+        a <- guess[i] * guess.prior.n[i]
+        b <- (1 - guess[i]) * guess.prior.n
+        parpriors[[parpriorscount]] <- c(2,guessind[i],a,b)						
+        parpriorscount <- parpriorscount + 1			
+      }
+    }
+  }		
+  if(any(model[,1] == 'PRIOR')){
+    tmp <- model[model[,1] == 'PRIOR',2]
+    if(any(regexpr(",",tmp)))
+      tmp <- strsplit(tmp,",")[[1]]
+    tmp <- gsub('\\s+','', tmp, perl = TRUE)	
+    for(i in seq(1,length(tmp),by=2)){
+      tmp2 <- strsplit(tmp[i],"\\(")[[1]]
+      tmp3 <- as.numeric(strsplit(tmp[i+1],"\\)@")[[1]])			
+      if(tmp2[1] == 'N')				
+        parpriors[[parpriorscount]] <- c(1,tmp3[2],as.numeric(tmp2[2]),tmp3[1])
+      if(tmp2[1] == 'B')
+        parpriors[[parpriorscount]] <- c(2,tmp3[2],as.numeric(tmp2[2]),tmp3[1])
+      parpriorscount <- parpriorscount + 1	
+    }
+  }
+  
+    
+  val <- list(pars=pars, lambdas=lambdas, zetas=zetas, gmeans=gmeans, gcov=gcov, 
+    constvalues=constvalues)
+  est <- list(estlam=estlam, estComp=estComp, estzetas=estzetas, estzetas2=estzetas2, 
+    estgcov=estgcov, estgmeans=estgmeans)
+  ind <- list(equalind=equalind, equalconstr=equalconstr, parpriorscount=parpriorscount, 
+    prodlist=prodlist, parpriors=parpriors, sind=sind, lamind=lamind, zetaind=zetaind, 
+    guessind=guessind, groupind=groupind, meanind=meanind, covind=covind, parind=parind)
+  ret <- list(val=val, est=est, ind=ind, parcount=parcount, npars=npars)
+  ret
+}
+
+
