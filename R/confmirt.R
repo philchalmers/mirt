@@ -310,42 +310,42 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0
   
 	mod <- model.elements(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N, 
-    estGuess, guess, itemnames)
-  parcount <- mod$parcount
-  npars <- mod$npars
+		estGuess, guess, itemnames)
+	parcount <- mod$parcount
+	npars <- mod$npars
 	if(returnindex) return(parcount)
 	if(debug) print(mod)
   
-  #pars
-  pars <- mod$val$pars
+	#pars
+	pars <- mod$val$pars
 	lambdas <- mod$val$lambdas
-  zetas <- mod$val$zetas
-  gmeans <- mod$val$gmeans
-  gcov <- mod$val$gcov
-  constvalues <- mod$val$constvalues
-  
-  #est
-  estlam <- mod$est$estlam
+	zetas <- mod$val$zetas
+	gmeans <- mod$val$gmeans
+	gcov <- mod$val$gcov
+	constvalues <- mod$val$constvalues
+	
+	#est
+	estlam <- mod$est$estlam
 	estComp <- mod$est$estComp
 	estzetas <- mod$est$estzetas
 	estzetas2 <- mod$est$estzetas2
 	estgcov <- mod$est$estgcov
 	estgmeans <- mod$est$estgmeans
   
-  #ind
-  parind <- mod$ind$parind
+	#ind
+	parind <- mod$ind$parind
 	equalind <- mod$ind$equalind
 	equalconstr <- mod$ind$equalconstr
 	parpriorscount <- mod$ind$parpriorscount
 	prodlist <- mod$ind$prodlist
-	parpriors<- mod$ind$parpriors
-  sind <- mod$ind$sind
-  lamind <- mod$ind$lamind
+	parpriors <- mod$ind$parpriors
+	sind <- mod$ind$sind
+	lamind <- mod$ind$lamind
 	zetaind <- mod$ind$zetaind
-  guessind<- mod$ind$guessind
+	guessind <- mod$ind$guessind
 	groupind <- mod$ind$groupind
-  meanind <- mod$ind$meanind
-  covind <- mod$ind$covind
+	meanind <- mod$ind$meanind
+	covind <- mod$ind$covind
   		
 	#Preamble for MRHM algorithm
 	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
@@ -413,23 +413,23 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		}		
 		guess <- pars[guessind]		
 		mu <- grouplist$u <- pars[meanind]
-		sig <- matrix(0,nfact,nfact)
-		sig[lower.tri(sig,diag=TRUE)] <- pars[covind]
+		sig <- matrix(0, nfact, nfact)
+		sig[lower.tri(sig, diag=TRUE)] <- pars[covind]
 		if(nfact > 1)
 			sig <- sig + t(sig) - diag(diag(sig))				
 		grouplist$sig <- sig			
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,pars[zetaind],guess,
-			fulldata,K,itemloc,cand.t.var,sig,mu,estComp,prodlist)	
-		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0,lambdas,pars[zetaind],guess,fulldata,
-			K,itemloc,cand.t.var,sig,mu,estComp,prodlist)
+		for(j in 1:4) theta0 <- draw.thetas(theta0, lambdas, pars[zetaind], guess,
+			fulldata, K, itemloc, cand.t.var, sig, mu, estComp, prodlist)	
+		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0, lambdas, pars[zetaind], guess,
+			fulldata, K, itemloc, cand.t.var, sig, mu, estComp, prodlist)
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 		
 		g.m <- h.m <- group.m <- list()
-		g <- rep(0,npars)
-		h <- matrix(0,npars,npars)	
+		g <- rep(0, npars)
+		h <- matrix(0, npars, npars)	
 		for (j in 1:k) {
             g <- rep(NA, npars)            
 			thetatemp <- m.thetas[[j]]
@@ -607,7 +607,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	SEtmp <- sqrt(SEtmp)	
 	SE <- rep(NA,npars) 
 	SE[parind[sind]] <- SEtmp
-	SE[constvalues[,1]==1] <- NA
+	SE[constvalues[ ,1]==1] <- NA
 	if(length(equalconstr) > 0)
 		for(i in 1:length(equalconstr))
 			SE[equalconstr[[i]]] <- mean(SE[equalconstr[[i]]])
