@@ -1,8 +1,6 @@
-#include<R.h>
-#include<Rdefines.h>
-#include<Rmath.h>
+#include <Rcpp.h>
 
-SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,  
+RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,  
 	SEXP Rnfact, SEXP Rr) {
 	
 	SEXP list,list_names,Rr1,Rr0,Rexpected;		
@@ -112,7 +110,8 @@ SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 
 
 //Estep for bfactor
-SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, 
+/*
+RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, 
     SEXP RX, SEXP Rnfact, SEXP Rr, SEXP Rsitems) {
 	
 	SEXP list,list_names,Rr1,Rr0,Rexpected;		
@@ -268,3 +267,5 @@ SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	UNPROTECT(11);	
 	return(list);
 }
+*/
+

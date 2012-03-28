@@ -1,6 +1,4 @@
-#include<R.h>
-#include<Rdefines.h>
-#include<Rmath.h>
+#include <Rcpp.h>
 
 static double arraysum(const double *A1, const int *length)
 {  
@@ -51,7 +49,7 @@ static void itemtrace(double *P, const double *a,
 }	
 
 //Gradient
-SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess, 
+RcppExport SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess, 
 	SEXP RTheta, SEXP Rprior, SEXP Rparprior) 
 {
 	//Protect and create vars

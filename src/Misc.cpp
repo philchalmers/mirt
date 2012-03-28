@@ -1,6 +1,4 @@
-#include<R.h>
-#include<Rdefines.h>
-#include<Rmath.h>
+#include <Rcpp.h>
 
 static void polyOuter(double *d2Louter, const double *PThetas, const double *Pk,
 	const double *Pk_1, const double *PQ_1,	const double *PQ, 
@@ -114,7 +112,7 @@ static void ProbComp(double *P, const unsigned int *k, const unsigned int *N,
 	}
 }
 
-SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta, 
+RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta, 
 	SEXP Rnfact, SEXP RN){
 		
 	unsigned int i, j, k, nzeta, nfact, N; 
@@ -280,7 +278,7 @@ SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta,
 	return(list);
 }
 
-SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, 
+RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, 
 	SEXP RTheta, SEXP Rnquad, SEXP Rnfact) {
 	
 	SEXP Rreturn;			
@@ -324,7 +322,7 @@ SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg,
 }
 
 
-SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP Rnfact, SEXP RN){
+RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP Rnfact, SEXP RN){
 	
 	SEXP Rreturn;			
 	unsigned int i, j, n, nfact, N;
@@ -365,7 +363,7 @@ SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP Rnfact, SEXP RN){
 	return(Rreturn);
 }
 
-SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
+RcppExport SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
 	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc,
 	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact, SEXP RestComp){
 
@@ -493,7 +491,7 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 	return(Rreturn);	
 }
 
-SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
+RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	SEXP Rfulldata, SEXP Ritemloc, SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact,
 	SEXP RestComp){
 

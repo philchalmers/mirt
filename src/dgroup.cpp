@@ -1,6 +1,4 @@
-#include<R.h>
-#include<Rdefines.h>
-#include<Rmath.h>
+#include <Rcpp.h>
 
 static void matrixMult(double *c, const double *a, const double *b, 
 	const unsigned int *dim)
@@ -130,13 +128,14 @@ static void symMat(double *dsig, const unsigned int *nfact)
 	}	
 }
 
-SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
+RcppExport SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
 	SEXP RZdif, SEXP RN, SEXP Rnfact, SEXP Rnpars) 
 {   
 	//SEXP Rreturn;			
-	unsigned int i, j, k, N, nfact, npars, nsig;	
-	double *sig, *invSig, *cMeans, *Z, *Zdif;
+	unsigned int i, j, k; //N, nfact, npars, nsig;	
+	//double *sig, *invSig, *cMeans, *Z, *Zdif;
 	
+	/*
 	PROTECT(Rsig = AS_NUMERIC(Rsig));
 	PROTECT(RinvSig = AS_NUMERIC(RinvSig));
 	PROTECT(RcMeans = AS_NUMERIC(RcMeans));
@@ -144,15 +143,15 @@ SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ,
 	PROTECT(RZdif = AS_NUMERIC(RZdif));
 	PROTECT(RN = AS_INTEGER(RN));
 	PROTECT(Rnfact = AS_INTEGER(Rnfact));
-	PROTECT(Rnpars = AS_INTEGER(Rnpars));
-	sig = NUMERIC_POINTER(Rsig);
-	invSig = NUMERIC_POINTER(RinvSig);
-	cMeans = NUMERIC_POINTER(RcMeans);
-	Z = NUMERIC_POINTER(RZ);
-	Zdif = NUMERIC_POINTER(RZdif);
-	N = INTEGER_VALUE(RN);
-	nfact = INTEGER_VALUE(Rnfact);
-	npars = INTEGER_VALUE(Rnpars);
+	PROTECT(Rnpars = AS_INTEGER(Rnpars)); */
+
+	Rcpp::NumericVector sig(Rsig);
+	Rcpp::NumericVector cMeans(RcMeans);
+	Rcpp::NumericVector Z(RZ);
+	Rcpp::NumericVector Zdif(RZdif);	
+	Rcpp::IntegerVector N(RN);
+	Rcpp::IntegerVector nfact(Rnfact);
+	Rcpp::IntegerVector npars(Rnpars);		
 	nsig = npars - nfact;
 		 
 	double derv1[npars], derv2[npars], du1[nfact], du2[nfact], dsig1[nsig],
@@ -200,18 +199,11 @@ SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ,
 		}
 	}
 
-	SEXP Rreturn;
-	double *Preturn;
-	PROTECT(Rreturn = allocMatrix(REALSXP,npars,npars));
-	Preturn = NUMERIC_POINTER(Rreturn);	
-	k=0;
+	Rcpp::NumericMatrix Rreturn(npars,npars);		
 	for(j = 0; j < npars; j++){
 		for(i = 0; i < npars; i++){
-			Preturn[k] = h[i][j];
-			k++;
+			Rreturn(i,j) = h[i][j];			
 		}
-	}
-	
-	UNPROTECT(9);	
+	}	
 	return(Rreturn);
 }
