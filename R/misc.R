@@ -623,7 +623,7 @@ prodterms <- function(theta0, prodlist)
 }
 
 model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N,
-  estGuess, guess, itemnames)
+  estGuess, guess, guess.prior.n, itemnames)
 {
   hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
   prodlist <- NULL
