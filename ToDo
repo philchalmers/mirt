@@ -1,8 +1,9 @@
 Things to do:
 
-- nominal and rating intercept estimation for polymirt and confmirt
-- multilevel structure function using lme4
-- add limited-information model fit statistics
-- multiple-group estimation
+- Restructure underlying SEXP calls to use RcppArmadillo. This will take time....
+- Nominal and rating intercept estimation for polymirt and confmirt
+- Multilevel structure function using lme4 (via multimirt function)
+- Add limited-information model fit statistics
+- Multiple-group estimation for confmirt
 
 

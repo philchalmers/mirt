@@ -310,7 +310,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0
   
 	mod <- model.elements(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N, 
-		estGuess, guess, itemnames)
+		estGuess, guess, guess.prior.n, itemnames)
 	parcount <- mod$parcount
 	npars <- mod$npars
 	if(returnindex) return(parcount)

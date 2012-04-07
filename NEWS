@@ -1,3 +1,15 @@
+mirt 0.2.1
+----------------------------------------------------------------
+
+* ML estimation of factor scores for mirt and bfactor
+
+* RMSEA statistic added for all fitted models
+
+* Nonlinear polynomial estimation specification for confmirt models, now
+  with more consistent returned lables
+
+
+
 mirt 0.2.0
 ----------------------------------------------------------------
 
