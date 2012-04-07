@@ -1,3 +1,6 @@
+#include<R.h>
+#include<Rdefines.h>
+#include<Rmath.h>
 
 static double arraysum(const double *A1, const int *length)
 {  

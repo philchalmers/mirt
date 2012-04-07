@@ -1,3 +1,6 @@
+#include<R.h>
+#include<Rdefines.h>
+#include<Rmath.h>
 
 static void polyOuter(double *d2Louter, const double *PThetas, const double *Pk,
 	const double *Pk_1, const double *PQ_1,	const double *PQ, 
@@ -589,4 +592,3 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	UNPROTECT(12);	
 	return(Rreturn);	
 }
-
