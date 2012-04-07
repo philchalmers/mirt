@@ -128,7 +128,7 @@ static void symMat(double *dsig, const unsigned int *nfact)
 	}	
 }
 
-RcppExport SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
+SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
 	SEXP RZdif, SEXP RN, SEXP Rnfact, SEXP Rnpars) 
 {   
 	//SEXP Rreturn;			
@@ -207,3 +207,4 @@ RcppExport SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ,
 	}	
 	return(Rreturn);
 }
+

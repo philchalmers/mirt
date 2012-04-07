@@ -294,8 +294,8 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	facility <- colMeans(na.omit(fulldata.original))
 	suppressAutoPrior <- TRUE
 	if(is.logical(par.prior)) 
-	if(par.prior) suppressAutoPrior <- FALSE  
-	temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
+	    if(par.prior) suppressAutoPrior <- FALSE  
+	        temp <- matrix(c(1,0,0),ncol = 3, nrow=nitems, byrow=TRUE)
 	if(!is.logical(par.prior)){
 		if(!is.null(par.prior$slope.items))
 			for(i in 1:length(par.prior$slope.items))

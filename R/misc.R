@@ -125,7 +125,7 @@ P.comp <- function(a,d,thetas,c = 0){
 	nfact <- length(a)
 	P <- rep(1,nrow(thetas))
 	for(i in 1:nfact)
-		P <- P * P.mirt(a[i],d[i],matrix(thetas[,i]),0)
+		P <- P * P.mirt(a[i], d[i], matrix(thetas[ ,i]),0)
 	P <- c + (1-c) * P
 	P	
 } 
@@ -141,19 +141,12 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess)
 	r <- tabdata[ ,ncol(tabdata)]
 	X <- tabdata[ ,1:(ncol(tabdata) - 1)]     
 
-	itemtrace <- r1 <- r0 <- matrix(0,nrow=nitems,ncol=nrow(Theta))
+	itemtrace <- r1 <- r0 <- matrix(0, nrow=nitems, ncol=nrow(Theta))
 	for (i in 1:nitems) itemtrace[i, ] <- 
-		P.mirt(a[i, ],d[i],Theta,guess[i])    
-	  
-	retlist <- .Call("Estep",                     	
-					 as.double(itemtrace),
-					 as.double(prior),
-					 as.integer(X), 
-					 as.integer(nfact),      
-					 as.integer(r))   
-
+		P.mirt(a[i, ],d[i], Theta, guess[i])    
+    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)
 	N <- retlist$r1 + retlist$r0    
-	empprior <- colSums(N)/sum(N)    
+	empprior <- colSums(N) / sum(N)    
 	rlist <- list(retlist$r1, N, retlist$expected, empprior)
 	return(rlist)
 } 
@@ -189,13 +182,15 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 	for (i in 1:nitems) itemtrace[i, ] <- 
 	  P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])
 
-	retlist <- .Call("Estepbfactor",
-					as.double(itemtrace),
-					as.double(prior), 					
-					as.integer(X), 
-					as.integer(nfact),
-					as.integer(r),
-					as.double(sitems))      
+# 	retlist <- .Call("Estepbfactor",
+# 					as.double(itemtrace),
+# 					as.double(prior), 					
+# 					as.integer(X), 
+# 					as.integer(nfact),
+# 					as.integer(r),
+# 					as.double(sitems))      
+	
+    retlist <- .Call("Estepbfactor", itemtrace, prior, X, nfact, r, sitems)
 
 	r1 <- N <- matrix(0, nitems, nrow(Theta))
 	for (i in 1:nitems){
