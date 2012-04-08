@@ -18,8 +18,8 @@ Depends:
     methods
 Imports:
     stats4,
-    lattice,
     psych,
+    lattice,
     MASS,
     GPArotation,
     mvtnorm,

@@ -208,6 +208,7 @@ SEXP dgroup(SEXP RinvSig, SEXP RcMeans,	SEXP RZdif, SEXP RN, SEXP Rnfact,
 		}
 	}
 	
-	UNPROTECT(9);	
+	UNPROTECT(7);	
 	return(Rreturn);
 }
+

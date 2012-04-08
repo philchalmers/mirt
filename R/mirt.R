@@ -210,6 +210,7 @@ setClass(
 #' summary(mod2)
 #' coef(mod2)
 #' residuals(mod2)
+#' plot(mod2)
 #' 
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table

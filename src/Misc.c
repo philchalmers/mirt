@@ -592,3 +592,4 @@ SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
 	UNPROTECT(12);	
 	return(Rreturn);	
 }
+
