@@ -14,14 +14,16 @@ Description: Analysis of dichotomous and polychotomous response data using
     with other IRT models.
 Depends:
     R (>= 2.13),
+    stats4,
     methods
 Imports:
+    stats4,
     lattice,
     psych,
     MASS,
     GPArotation,
     mvtnorm,
-	Rcpp,
+    Rcpp,
     Matrix
 LazyLoad: yes
 LazyData: yes

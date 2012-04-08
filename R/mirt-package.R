@@ -13,8 +13,8 @@
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt 
-#' @importMethodsFrom Matrix
-#' @importFrom stats anova fitted residuals 
+# @importMethodsFrom Matrix summary
+#' @importFrom stats anova fitted residuals
 #' @import psych lattice MASS GPArotation mvtnorm Matrix
 #' @exportMethod anova 
 #' @exportMethod coef
