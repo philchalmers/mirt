@@ -182,13 +182,6 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 	for (i in 1:nitems) itemtrace[i, ] <- 
 	  P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])
 
-# 	retlist <- .Call("Estepbfactor",
-# 					as.double(itemtrace),
-# 					as.double(prior), 					
-# 					as.integer(X), 
-# 					as.integer(nfact),
-# 					as.integer(r),
-# 					as.double(sitems))      
 	
     retlist <- .Call("Estepbfactor", itemtrace, prior, X, nfact, r, sitems)
 
@@ -270,11 +263,9 @@ d.group <- function(grouplist,theta)
 	sel <- 1:npars		
 	cMeans <- N*(colMeans(x) - u)
 	Zdif <- (Z - N * sig)		
-	h <- .Call("dgroup",
-				as.numeric(sig),
+	h <- .Call("dgroup",				
 				as.numeric(invSig),
-				as.numeric(cMeans),					
-				as.numeric(Z),
+				as.numeric(cMeans),				
 				as.numeric(Zdif),
 				as.integer(N),
 				as.integer(nfact),

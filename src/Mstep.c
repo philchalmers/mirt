@@ -81,7 +81,7 @@ SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 	PROTECT(Rreturn = NEW_NUMERIC(nfact + 1));			
 	Preturn = NUMERIC_POINTER(Rreturn);    
 
-	double P[nquad], PQ[nquad], DIF[nquad], Theta[nquad][nfact],
+	double P[nquad], DIF[nquad], Theta[nquad][nfact],
 		tempTheta[nquad], tempArray[nquad];
 	k = 0;
 	for(i = 0; i < nfact; i++){
@@ -91,10 +91,9 @@ SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 		}
 	}	
 	itemtrace(P, Pa, Pd, PTheta, Pguess, &nfact, &nquad);	  	  		  
-	for(i = 0; i < nquad; i++){      
-		PQ[i] = P[i] * (1.0 - P[i]) * Pprior[i];
+	for(i = 0; i < nquad; i++)      
 		DIF[i] = ((Pr1[i] / PN[i]) - P[i]) * Pprior[i];	  	
-	}	
+		
 	//load gradient		  
 	for(i = 0; i < nfact; i++){
 		for(j = 0; j < nquad; j++)

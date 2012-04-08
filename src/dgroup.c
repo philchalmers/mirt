@@ -130,25 +130,21 @@ static void symMat(double *dsig, const unsigned int *nfact)
 	}	
 }
 
-SEXP dgroup(SEXP Rsig, SEXP RinvSig, SEXP RcMeans, SEXP RZ, 
-	SEXP RZdif, SEXP RN, SEXP Rnfact, SEXP Rnpars) 
+SEXP dgroup(SEXP RinvSig, SEXP RcMeans,	SEXP RZdif, SEXP RN, SEXP Rnfact, 
+        SEXP Rnpars) 
 {   
 	//SEXP Rreturn;			
 	unsigned int i, j, k, N, nfact, npars, nsig;	
-	double *sig, *invSig, *cMeans, *Z, *Zdif;
+	double *invSig, *cMeans, *Zdif;
 	
-	PROTECT(Rsig = AS_NUMERIC(Rsig));
 	PROTECT(RinvSig = AS_NUMERIC(RinvSig));
 	PROTECT(RcMeans = AS_NUMERIC(RcMeans));
-	PROTECT(RZ = AS_NUMERIC(RZ));
 	PROTECT(RZdif = AS_NUMERIC(RZdif));
 	PROTECT(RN = AS_INTEGER(RN));
 	PROTECT(Rnfact = AS_INTEGER(Rnfact));
 	PROTECT(Rnpars = AS_INTEGER(Rnpars));
-	sig = NUMERIC_POINTER(Rsig);
 	invSig = NUMERIC_POINTER(RinvSig);
 	cMeans = NUMERIC_POINTER(RcMeans);
-	Z = NUMERIC_POINTER(RZ);
 	Zdif = NUMERIC_POINTER(RZdif);
 	N = INTEGER_VALUE(RN);
 	nfact = INTEGER_VALUE(Rnfact);
