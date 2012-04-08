@@ -622,7 +622,7 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
 {
   hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
   prodlist <- NULL
-  if(hasProdTerms){		
+  if(hasProdTerms){
     tmp <- factorNames[grepl('\\(',factorNames)]
     tmp2 <- factorNames[!grepl('\\(',factorNames)] 
     tmp <- gsub("\\(","",tmp)	
