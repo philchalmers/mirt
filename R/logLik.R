@@ -76,6 +76,7 @@ setMethod(
 						as.integer(nfactNames),
 						as.integer(object@estComp))		
 		}		
+        LL[is.nan(LL)] <- 0 ###check this
 		rwmeans <- rowMeans(LL) 
 		logLik <- sum(log(rwmeans))				
 		pats <- apply(fulldata,1,paste,collapse = "/")
