@@ -69,7 +69,7 @@ MAP.mirt <- function(Theta,a,d,guess,patdata,ML=FALSE)
 	}
 	mu <- 0
 	sigma <- 1
-  L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
+    L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
 	L  
 }  
 
@@ -139,8 +139,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess)
 	nquad <- nrow(Theta)
 	d <- pars[ ,ncol(pars)]    
 	r <- tabdata[ ,ncol(tabdata)]
-	X <- tabdata[ ,1:(ncol(tabdata) - 1)]     
-
+	X <- tabdata[ ,1:(ncol(tabdata) - 1)]
 	itemtrace <- r1 <- r0 <- matrix(0, nrow=nitems, ncol=nrow(Theta))
 	for (i in 1:nitems) itemtrace[i, ] <- 
 		P.mirt(a[i, ],d[i], Theta, guess[i])    
@@ -177,20 +176,15 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, speci
 	r <- tabdata[ ,ncol(tabdata)]
 	X <- tabdata[ ,1:(ncol(tabdata) - 1)]
 	as <- rowSums(pars[,2:nfact])
-
 	itemtrace <- r1 <- r0 <- matrix(0,nrow=nitems,ncol=nrow(Theta))
 	for (i in 1:nitems) itemtrace[i, ] <- 
-	  P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])
-
-	
+	    P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])
     retlist <- .Call("Estepbfactor", itemtrace, prior, X, nfact, r, sitems)
-
 	r1 <- N <- matrix(0, nitems, nrow(Theta))
 	for (i in 1:nitems){
-	  r1[i, ] <- retlist$r1[(specific[i] - 1)*nitems + i, ]
-	  N[i, ] <- retlist$r0[(specific[i] - 1)*nitems + i, ] + r1[i, ]
-	}
-		
+	    r1[i, ] <- retlist$r1[(specific[i] - 1)*nitems + i, ]
+	    N[i, ] <- retlist$r0[(specific[i] - 1)*nitems + i, ] + r1[i, ]
+	}		
 	rlist <- list(r1, N, retlist$expected)
 	return(rlist)
 }      
@@ -295,8 +289,7 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 		for(i in 1:nfact){
 			da[i] <- sum(Thetas[,i]*Pstar*Qstar*(1-g)*(r/P - (f-r)/Q))
 		}
-		dL <- c(dd,da,dc)
-				
+		dL <- c(dd,da,dc)				
 		hess <- matrix(0,nfact + 2,nfact + 2)	
 		aNames <- paste("a",1:nfact,sep='_')
 		Names <- c('d',paste("a",1:nfact,sep='_'),'c')
