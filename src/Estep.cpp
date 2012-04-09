@@ -1,13 +1,5 @@
 #include <Rcpp.h>
 
-#ifndef BEGIN_RCPP
-#define BEGIN_RCPP
-#endif
-
-#ifndef END_RCPP
-#define END_RCPP
-#endif
-
 //Estep for mirt
 RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,  
 	SEXP Rnfact, SEXP Rr) 
