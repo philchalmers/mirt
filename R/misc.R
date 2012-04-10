@@ -96,11 +96,11 @@ P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE)
 	Pk <- matrix(0,nrow(Thetas),ncat+1)
 	Pk[,1] <- 1	
 	for(i in 1:(ncat-1))			
-		Pk[ ,i+1] <- P.mirt(lambda,zetas[i],Thetas,0)		
+		Pk[ ,i+1] <- P.mirt(lambda, zetas[i], Thetas, 0)		
 	if(itemexp){
 		P <- matrix(0,nrow(Thetas),ncat)		
 		for(i in ncat:1)
-			P[,i] <- Pk[,i] - Pk[,i+1]						
+			P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]						
 		Pk <- P
 	}	
 	return(Pk)
@@ -108,16 +108,8 @@ P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE)
 
 # Trace lines for mirt models
 P.mirt <- function(a, d, Theta, g)
-{ 
-	nfact <- length(a)
-	nquad <- nrow(Theta)
-	traces <- .Call("traceLinePts",
-					as.double(a), 
-					as.double(d),
-					as.double(g),  
-					as.double(as.matrix(Theta)), 
-					as.integer(nquad), 
-					as.integer(nfact))
+{ 		
+	traces <- .Call("traceLinePts", a, d, g, Theta)
 	return(traces)
 }
 
@@ -125,7 +117,7 @@ P.comp <- function(a,d,thetas,c = 0){
 	nfact <- length(a)
 	P <- rep(1,nrow(thetas))
 	for(i in 1:nfact)
-		P <- P * P.mirt(a[i], d[i], matrix(thetas[ ,i]),0)
+		P <- P * P.mirt(a[i], d[i], thetas[ ,i, drop=FALSE],0)
 	P <- c + (1-c) * P
 	P	
 } 
@@ -133,7 +125,7 @@ P.comp <- function(a,d,thetas,c = 0){
 # Estep
 Estep.mirt <- function(pars, tabdata, Theta, prior, guess) 
 {
-	a <- as.matrix(pars[ ,1:(ncol(pars) - 1)])
+	a <- pars[ ,1:(ncol(pars) - 1), drop=FALSE]
 	nfact <- ncol(a)
 	nitems <- nrow(a)
 	nquad <- nrow(Theta)
@@ -152,23 +144,15 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess)
 
 P.bfactor <- function(a, d, Theta, g, patload)
 { 
-	a <- a[patload]
-	nfact <- length(a)
-	nquad <- nrow(Theta)
-	traces <- .Call("traceLinePts",                    
-					as.double(a), 
-					as.double(d),
-					as.double(g),  
-					as.double(as.matrix(Theta)), 
-					as.integer(nquad), 
-					as.integer(nfact))
+	a <- a[patload]	
+	traces <- .Call("traceLinePts", a, d, g, Theta)
 	return(traces)
 }
 
 # Estep
 Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems) 
 {
-	a <- as.matrix(pars[ ,1:(ncol(pars) - 1)])
+	a <- pars[ ,1:(ncol(pars) - 1), drop=FALSE]
 	nfact <- ncol(a)
 	nitems <- nrow(a)
 	nquad <- nrow(Theta)	
@@ -229,7 +213,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	accept <- as.logical(accept[-(N+1)])				
 	theta1[!accept,] <- theta0[!accept,]	
 	if(!is.null(prodlist)) 
-		theta1 <- as.matrix(theta1[ ,1:(ncol(lambdas) - length(prodlist))])
+		theta1 <- theta1[ ,1:(ncol(lambdas) - length(prodlist)), drop=FALSE]
 	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
 	attr(theta1, "log.lik") <- log.lik	
 	return(theta1) 
@@ -350,7 +334,7 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 			dd <- da <- rep(0,nfact)		
 			dc <- sum(Qstar*const1)
 			for(i in 1:nfact){
-				Pk <- P.mirt(a[i],d[i],matrix(thetas[,i]),0)
+				Pk <- P.mirt(a[i],d[i],thetas[ , i, drop=FALSE],0)
 				Qk <- 1 - Pk
 				dd[i] <- sum((1-c)*Pstar*Qk*const1)
 				da[i] <- sum((1-c)*Pstar*Qk*thetas[,i]*const1)
@@ -380,9 +364,9 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 						d2 <- strsplit(Names[c(i,j)],"_")[[2]]
 						k <- as.numeric(d1[2])
 						m <- as.numeric(d2[2])
-						Pk <- P.mirt(a[k],d[k],matrix(thetas[,k]),0)
+						Pk <- P.mirt(a[k],d[k],thetas[ , k, drop=FALSE],0)
 						Qk <- 1 - Pk	
-						Pm <- P.mirt(a[m],d[m],matrix(thetas[,m]),0)
+						Pm <- P.mirt(a[m],d[m],thetas[ , m, drop=FALSE],0)
 						Qm <- 1 - Pm									
 						if(i == j && d1[1] == 'd'){
 							hess[i,i] <- sum((1-c)*Pstar*Qk*(const1*((1-c)*Qk - Pk) - Pstar*Qk*(1-c)*const2))
@@ -435,7 +419,7 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 		Q <- 1 - P	
 		da <- dd <- rep(0,nfact)	
 		for(i in 1:nfact){
-			Pk <- P.mirt(lambda[i],zeta[i],matrix(Thetas[,i]),0)
+			Pk <- P.mirt(lambda[i],zeta[i],Thetas[ , i, drop=FALSE],0)
 			Qk <- 1 - Pk
 			const <- (1 - dat)*P/Q
 			dd[i] <- sum(Qk*(dat - const))
@@ -454,9 +438,9 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 					d2 <- strsplit(Names[c(i,j)],"_")[[2]]
 					k <- as.numeric(d1[2])
 					m <- as.numeric(d2[2])
-					Pk <- P.mirt(lambda[k],zeta[k],matrix(Thetas[,k]),0)
+					Pk <- P.mirt(lambda[k],zeta[k],Thetas[ , k, drop=FALSE],0)
 					Qk <- 1 - Pk	
-					Pm <- P.mirt(lambda[m],zeta[m],matrix(Thetas[,m]),0)
+					Pm <- P.mirt(lambda[m],zeta[m],Thetas[ , m, drop=FALSE],0)
 					Qm <- 1 - Pm									
 					if(i == j && d1[1] == 'd'){
 						hess[k,k] <- sum(-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2)
