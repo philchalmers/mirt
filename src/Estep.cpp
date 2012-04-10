@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+using namespace Rcpp;
 
 //Estep for mirt
 RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,  
@@ -14,19 +15,19 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
         Rr = integer vector.  Counts of same response vector
     */
     
-    Rcpp::NumericVector prior(Rprior);
-    Rcpp::IntegerVector nfact(Rnfact);
-    Rcpp::IntegerVector r(Rr);
-    Rcpp::IntegerMatrix data(RX);
-    Rcpp::NumericMatrix itemtrace(Ritemtrace);
+    NumericVector prior(Rprior);
+    IntegerVector nfact(Rnfact);
+    IntegerVector r(Rr);
+    IntegerMatrix data(RX);
+    NumericMatrix itemtrace(Ritemtrace);
     int nquad = prior.length();
     int nitems = data.ncol();
     int npat = r.length();      
     double expd=0.0, posterior[nquad];
     int i=0, k=0, item=0;	
-    Rcpp::NumericMatrix r1(nitems, nquad);    
-    Rcpp::NumericMatrix r0(nitems, nquad);
-    Rcpp::NumericVector expected(npat);
+    NumericMatrix r1(nitems, nquad);    
+    NumericMatrix r0(nitems, nquad);
+    NumericVector expected(npat);
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; pat++){		
@@ -66,7 +67,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 	} //end main 		
  
     //return R list of length 3 with list("r1","r0","expected") 
-    Rcpp::List ret;
+    List ret;
     ret["r1"] = r1;
     ret["r0"] = r0;
     ret["expected"] = expected;
@@ -91,12 +92,12 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
         Rsitems = integer matrix. Specific factor indicator
     */
 
-    Rcpp::NumericVector prior(Rprior);
-    Rcpp::IntegerVector tmpnfact(Rnfact);
-    Rcpp::IntegerVector r(Rr);
-    Rcpp::IntegerMatrix data(RX);
-    Rcpp::NumericMatrix itemtrace(Ritemtrace);
-    Rcpp::IntegerMatrix sitems(Rsitems);
+    NumericVector prior(Rprior);
+    IntegerVector tmpnfact(Rnfact);
+    IntegerVector r(Rr);
+    IntegerMatrix data(RX);
+    NumericMatrix itemtrace(Ritemtrace);
+    IntegerMatrix sitems(Rsitems);
     int nfact = tmpnfact[0];
     int sfact = nfact - 1;
     int nitems = data.ncol();
@@ -104,9 +105,9 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
     int nquad = npquad * npquad;  
     int npat = r.length();      
     int i=0, j=0, k=0, item=0, fact=0;	
-    Rcpp::NumericMatrix r1(nitems*sfact,nquad);    
-    Rcpp::NumericMatrix r0(nitems*sfact,nquad);
-    Rcpp::NumericVector expected(npat);
+    NumericMatrix r1(nitems*sfact,nquad);    
+    NumericMatrix r0(nitems*sfact,nquad);
+    NumericVector expected(npat);
         
 	//declare dependent arrays 
 	double likelihoods[sfact][nquad], L[npquad][npquad], tempsum[npquad],
@@ -178,7 +179,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior,
 	}	//end main 
 	
     //return R list of length 3 with list("r1","r0","expected") 
-    Rcpp::List ret;
+    List ret;
     ret["r1"] = r1;
     ret["r0"] = r0;
     ret["expected"] = expected;
