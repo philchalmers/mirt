@@ -197,6 +197,7 @@ model.1 <- confmirt.model()
   F2 = 4-8
   COV = F1*F2
 
+
 mod1 <- confmirt(dataset,model.1)
 coef(mod1)
 summary(mod1)
@@ -209,6 +210,7 @@ model.2 <- confmirt.model()
   COV = F1*F2
   SLOPE = F1@1 eq 1.5, F2@7 eq F2@8
 
+
 mod2 <- confmirt(dataset,model.2)
 anova(mod2,mod1)
 
@@ -218,6 +220,7 @@ model.3 <- confmirt.model()
   G = 1-8
   F1 = 1-4
   F2 = 5-8
+
 
 mod3 <- confmirt(dataset,model.3)
 coef(mod3)
@@ -230,19 +233,23 @@ anova(mod1,mod3)
 model.linear <- confmirt.model()
   F = 1-8
 
+
 model.quad <- confmirt.model()
       F = 1-8
   (F*F) = 1-8
+
 
 model.cube <- confmirt.model()
         F = 1-8
     (F*F) = 1-8
   (F*F*F) = 1-8
 
+
 model.combo <- confmirt.model()
        F1 = 1-4
        F2 = 5-8
   (F1*F2) = 1-8
+
 
 mod.linear <- confmirt(dataset, model.linear)
 mod.quad <- confmirt(dataset, model.quad )

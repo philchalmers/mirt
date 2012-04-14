@@ -1,4 +1,55 @@
-#include"Misc.h"
+static void Prob(double *P, const unsigned int *k, const unsigned int *N, 
+	const unsigned int *nfact, const double *theta, const double *a, 
+	const double *d, const double *g)
+{
+	double Ps[*N][*k + 1], Pdif[*N][*k], p1[*N], tmp;
+	unsigned int i, m = 0;
+	int j;
+
+	for(i = 0; i < *N; i++){
+		Ps[i][0] = 1;
+		Ps[i][*k] = 0;
+	}
+	for(j = 0; j < (*k - 1); j++){
+		tmp = d[j];
+		itemtrace(p1, a, &tmp, theta, g, nfact, N);
+		for(i = 0; i < *N; i++)
+			Ps[i][j + 1] = p1[i];
+	}
+	for(j = (*k - 1); j >= 0; j--)
+		for(i = 0; i < *N; i++)
+			Pdif[i][j] = Ps[i][j] - Ps[i][j + 1];				
+	for(j = 0; j < *k; j++){
+		for(i = 0; i < *N; i++){
+			if(Pdif[i][j] < .00000001) Pdif[i][j] = .00000001;
+			if(*k == 2) Pdif[i][j] = 1 - Pdif[i][j];
+			P[m] = Pdif[i][j];
+			m++;
+		}
+	}
+}
+
+static void ProbComp(double *P, const unsigned int *k, const unsigned int *N, 
+	const unsigned int *nfact, const double *theta, const double *a, 
+	const double *d, const double *g)
+{
+	double Theta[*N], tmp[*N], zerog = 0.0, tmpa, tmpd;
+	unsigned int i, j, onenfact = 1;	
+	for(j = 0; j < *N; j++)
+		tmp[j] = 1.0;
+	for(i = 0; i < *nfact; i++){
+		for(j = 0; j < *N; j++)
+			Theta[j] = theta[j + i*(*N)];
+		tmpa = a[i];
+		tmpd = d[i];
+		itemtrace(P, &tmpa, &tmpd, Theta, &zerog, &onenfact, N);
+		for(j = 0; j < *N; j++)
+			tmp[j] *= P[j];
+	}
+	for(j = 0; j < *N; j++){
+		P[j] = *g + (1 - *g)*tmp[j];
+		P[j + *N] = 1.0 - P[j];
+	}
 
 SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
 	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc,

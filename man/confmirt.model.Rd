@@ -21,7 +21,10 @@
   items they affect (i.e., where the slope is not equal to
   0), separated either by commas or by - to indicate a
   range of items. Products between factors may be specified
-  by enclosing the left hand term within brackets.
+  by enclosing the left hand term within brackets. To
+  finish the declaration of a model simply enter a blank
+  line with only a carriage return (i.e., the 'enter' or
+  'return' key).
 
   There are six optional keyword for specifying the
   relationships between factors, item parameters, and prior

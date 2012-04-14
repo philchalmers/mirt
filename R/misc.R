@@ -306,7 +306,7 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 		L2 <- colSums((dat-P)*Thetas)
 		dL <- c(L1,L2)		
 		d2L <- matrix(0,nfact+1,nfact+1)						
-		L11 <- .Call("dichOuter",Thetas,PQ,nfact,nrow(Thetas))
+		L11 <- .Call("dichOuter",Thetas,PQ,nrow(Thetas))
 		if(nfact > 1) d2L[1:nfact+1,1:nfact+1] <- -L11
 			 else d2L[nfact+1,nfact+1] <- -L11 				
 		d2L[1,1] <- (-1)*sum(PQ)		

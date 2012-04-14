@@ -25,6 +25,7 @@ Imports:
     mvtnorm,
     Rcpp,
     Matrix
+ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
 LinkingTo: Rcpp

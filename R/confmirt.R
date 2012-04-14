@@ -185,7 +185,8 @@ setClass(
 #'   F1 = 1-4
 #'   F2 = 4-8
 #'   COV = F1*F2
-#'   
+#' 
+#' 
 #' mod1 <- confmirt(dataset,model.1)
 #' coef(mod1)
 #' summary(mod1)
@@ -198,6 +199,7 @@ setClass(
 #'   COV = F1*F2
 #'   SLOPE = F1@@1 eq 1.5, F2@@7 eq F2@@8
 #'   
+#' 
 #' mod2 <- confmirt(dataset,model.2)
 #' anova(mod2,mod1)
 #' 
@@ -207,7 +209,8 @@ setClass(
 #'   G = 1-8
 #'   F1 = 1-4
 #'   F2 = 5-8
-#' 	
+#' 
+#' 
 #' mod3 <- confmirt(dataset,model.3)
 #' coef(mod3)
 #' summary(mod3)
@@ -219,20 +222,24 @@ setClass(
 #' model.linear <- confmirt.model()
 #'   F = 1-8
 #'
+#' 
 #' model.quad <- confmirt.model()
 #'       F = 1-8
 #'   (F*F) = 1-8
 #'
+#' 
 #' model.cube <- confmirt.model()
 #'         F = 1-8
 #'     (F*F) = 1-8
 #'   (F*F*F) = 1-8
 #'
+#' 
 #' model.combo <- confmirt.model()
 #'        F1 = 1-4
 #'        F2 = 5-8
 #'   (F1*F2) = 1-8
 #'
+#' 
 #' mod.linear <- confmirt(dataset, model.linear)
 #' mod.quad <- confmirt(dataset, model.quad )
 #' mod.cube <- confmirt(dataset, model.cube)
@@ -323,7 +330,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	gmeans <- mod$val$gmeans
 	gcov <- mod$val$gcov
 	constvalues <- mod$val$constvalues
-	
+
 	#est
 	estlam <- mod$est$estlam
 	estComp <- mod$est$estComp
@@ -346,7 +353,13 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	groupind <- mod$ind$groupind
 	meanind <- mod$ind$meanind
 	covind <- mod$ind$covind
-  		
+    
+    if(any(rowSums(estlam) == 0)){
+        tmp <- 1:J
+        tmp <- tmp[rowSums(estlam) == 0]
+    	stop('Item(s) ', paste(tmp,''), 'have no factor loadings specified.')
+    }
+
 	#Preamble for MRHM algorithm
 	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
 	theta0 <- matrix(0,N,nfact)	    
