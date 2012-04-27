@@ -20,6 +20,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
 \section{Slots}{
   \describe{
     \item{\code{pars}:}{Object of class \code{"matrix"}, parameters  }
+    \item{\code{parlist}:}{Object of class \code{"list"}, list of parameters  }
     \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters  }
     \item{\code{SEpars}:}{Object of class \code{"matrix"}, standard errors for pars }
     \item{\code{cycles}:}{Object of class \code{"numeric"}, number of MHRM cycles }

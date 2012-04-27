@@ -16,8 +16,8 @@
 # @keywords classes
 setClass(
 	Class = 'polymirtClass',
-	representation = representation(pars = 'matrix', guess = 'numeric', SEpars = 'matrix', 
-		cycles = 'numeric', Theta = 'matrix', fulldata = 'matrix', data = 'matrix', 
+	representation = representation(pars = 'matrix', parlist = 'list', guess = 'numeric', 
+		SEpars = 'matrix', cycles = 'numeric', Theta = 'matrix', fulldata = 'matrix', data = 'matrix', 
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric', AIC = 'numeric',
 		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', df = 'integer', 
 		G2 = 'numeric', p = 'numeric', tabdata = 'matrix', BIC = 'numeric', estGuess = 'logical', 
@@ -188,8 +188,8 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	Call <- match.call()
 	set.seed(12345)
 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-	ifelse(!is.null(technical$guess.prior.n), guess.prior.n <- technical$guess.prior.n,
-		guess.prior.n <- 20)
+	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n),  
+                            technical$guess.prior.n, 20)
 	itemnames <- colnames(data)
 	data <- as.matrix(data)		
 	J <- ncol(data)
@@ -209,7 +209,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	estGuess[K > 2] <- FALSE	
 	itemloc <- cumsum(c(1,K))
 	index <- 1:J	
-	fulldata <- fulldata2 <- matrix(0,N,sum(K))
+	fulldata <- matrix(0,N,sum(K))
 	Names <- NULL
 	for(i in 1:J)
         Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
@@ -218,16 +218,14 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		ind <- index[i]
 		if(setequal(uniques[[i]], c(0,1))){
 			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[,ind],abs(1-data[,ind]))
-			fulldata2[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(abs(1-data[,ind]),data[,ind])
 			next
 		}
 		dummy <- matrix(0,N,K[ind])
 		for (j in 0:(K[ind]-1))  
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
-		fulldata2[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy
 	}	
-	fulldata[is.na(fulldata)] <- fulldata2[is.na(fulldata2)] <- 0	
+	fulldata[is.na(fulldata)] <- 0	
 	if(!is.null(prev.cor)){
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 			else stop("Correlation matrix is not square.\n")
@@ -237,26 +235,28 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	u <- FA$unique
 	u[u < .001 ] <- .2
 	cs <- sqrt(u)
-	lambdas <- loads/cs
-	zetas <- rep(0,ncol(fulldata) - J)
-	loc <- 1	
-	for(i in 1:J){
-		if(K[i] == 2){
-			zetas[loc] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]
-			loc <- loc + 1
-		} else {			
-			temp <- table(data[,i])[1:(K[i]-1)]/N
-			temp <- cumsum(temp)			
-			zetas[loc:(loc+K[i]-2)] <- qnorm(1 - temp)/cs[i]	
-			loc <- loc + K[i] - 1	
-		}		
-	}	
-	npars <- length(c(lambdas,zetas)) + sum(estGuess) 
+	lambdas <- loads/cs	
+    zetas <- zetaindlist <- list()
+	zetalong <- c()
+    for(i in 1:J){
+        if(K[i] == 2){
+            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]            
+			zetalong <- c(zetalong, zetas[[i]])
+        } else {
+            temp <- table(data[,i])[1:(K[i]-1)]/N
+            temp <- cumsum(temp)			
+            zetas[[i]] <- qnorm(1 - temp)/cs[i]        
+			zetalong <- c(zetalong, zetas[[i]])
+        }       
+    }
+    nzetas <- 0
+    for(i in 1:J) nzetas <- nzetas + length(zetas[[i]])
+	npars <- length(lambdas) + nzetas + sum(estGuess) 
 	parind <- 1:npars
 	pars <- rep(NA,npars)
 	Ksum <- cumsum(K-1 + nfact + estGuess)
 	Ksum <- Ksum - min(Ksum) + K[1]
-	lamind	<- gind <- c()	 
+	lamind	<- gind <- c()
 	for(i in 1:J){
 		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]
 		lamind <- c(lamind,Ksum[i]:(Ksum[i] + nfact - 1))
@@ -265,8 +265,13 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 			gind <- c(gind,Ksum[i] + nfact)
 		}	
 	}	
-	zetaind <- parind[is.na(pars)]			
-	pars[is.na(pars)] <- zetas
+	zetaind <- parind[is.na(pars)]					
+	tmp <- 1
+	for(i in 1:J){
+		zetaindlist[[i]] <- zetaind[tmp:(tmp + length(zetas[[i]]) - 1)]
+		tmp <- tmp + length(zetas[[i]])
+	}
+	pars[is.na(pars)] <- zetalong
 	diag(Rpoly) <- 1	
 	converge <- 1
 	guessPrior <- list()
@@ -279,10 +284,10 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 				guessPriorCount <- guessPriorCount + 1			
 			}
 		}	
-	}
+	}	
+	indlist <- list(lamind=lamind,zetaind=zetaindlist,gind=gind)
 	if(debug){
-		print(lambdas)
-		print(zetas)
+		print(indlist)
 	}	
 	
     #preamble for MRHM algorithm		
@@ -311,7 +316,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	k <- 1	
 	gamma <- 0.25
 	startvalues <- pars
-	stagecycle <- 1	
+	stagecycle <- 1		
 	
 	for(cycles in 1:(ncycles + burnin + SEM.cycles))
 	{ 
@@ -326,10 +331,11 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 			k <- kdraws	
 			gamma <- 1
 		}		
-		lambdas <- matrix(pars[lamind],ncol=nfact,byrow=TRUE)
-		zetas <- pars[zetaind]
-		guess <- rep(0,J)
-		guess[estGuess] <- pars[gind]		
+		
+		normpars <- sortPars(pars, indlist, nfact, estGuess)
+		lambdas <- normpars$lambdas
+		zetas <- normpars$zetas		 
+		guess <- normpars$guess		
 		
 		#Step 1. Generate m_k datasets of theta 
 		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
@@ -340,26 +346,22 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		#Step 2. Find average of simulated data gradients and hessian 
 		g.m <- h.m <- list()					
 		for(j in 1:k){
-			g <- rep(NA,npars)
-			loc <- 1
-			for(i in 0:(J - 1)){
-				if(estGuess[i+1]){
-					temp <- dpars.dich(lambdas[i+1,],zetas[loc],guess[i+1],
-						fulldata[,itemloc[i+1]],m.thetas[[j]], estGuess[i+1])
+			g <- rep(NA,npars)			
+			for(i in 1:J){
+				if(K[i] == 2){
+					temp <- dpars.dich(lambdas[i, ], zetas[[i]],guess[i],
+						fulldata[ ,itemloc[i]],m.thetas[[j]],estGuess[i])
 					ind <- parind[is.na(g)][1]
-					ind2 <- ind+nfact+ estGuess[i+1]		
+					ind2 <- ind + length(temp$g) - 1		
 					g[ind:ind2] <- temp$grad
-					h[ind:ind2,ind:ind2] <- temp$hess
-					loc <- loc + 1
-				} else {
-					loc2 <- loc + K[i+1] - 2
-					temp <- dpars.poly(lambdas[i+1,],zetas[loc:loc2],
-						fulldata2[,itemloc[i+1]:(itemloc[i+2]-1)],m.thetas[[j]])
+					h[ind:ind2,ind:ind2] <- temp$hess					
+				} else {						
+					temp <- dpars.poly(lambdas[i, ],zetas[[i]],
+						fulldata[ ,itemloc[i]:(itemloc[i+1]-1)],m.thetas[[j]])
 					ind <- parind[is.na(g)][1]	
-					ind2 <- ind+nfact+K[i+1]-2
+					ind2 <- ind + length(temp$g) - 1		
 					g[ind:ind2] <- temp$grad
-					h[ind:ind2,ind:ind2] <- temp$hess
-					loc <- loc + K[i+1] - 1				
+					h[ind:ind2,ind:ind2] <- temp$hess					
 				}
 			} 
 			g.m[[j]] <- g
@@ -446,6 +448,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	}
+		
 	cat("\n\n")	
 	SE <- diag(solve(info))
 	if(any(SE < 0)){
@@ -453,26 +456,27 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		SE <- rep(0,npars)
 	}
 	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")					
-	SE <- sqrt(SE)	
-	lambdas <- matrix(pars[lamind],ncol=nfact,byrow=TRUE)
-	SElam <- matrix(SE[lamind],ncol=nfact,byrow=TRUE)
-	SEg <- guess <- rep(NA,J)
-	guess[estGuess] <- pars[gind]
-	SEg[estGuess] <- SE[gind]
-	zetas <- SEzeta <- matrix(NA,J,(max(K)-1))
-	temp <- pars[zetaind]
-	temp1 <- SE[zetaind]	
-	k <- 1
+	SE <- sqrt(SE)
+	SEpars <- sortPars(SE, indlist, nfact, estGuess)
+	normpars <- sortPars(pars, indlist, nfact, estGuess)
+	lambdas <- normpars$lambdas
+	zetas <- normpars$zetas		 
+	guess <- normpars$guess		
+	SElam <- SEpars$lambdas
+	SEzetas <- SEpars$zetas		 
+	SEg <- SEpars$guess		
+		
+	zetatable <- SEzetatable <- matrix(NA,J,(max(K)-1))		
 	for(i in 1:J){
 		for(j in 1:(K[i]-1)){
-			zetas[i,j] <- temp[k] 
-			SEzeta[i,j] <- temp1[k]
-			k <- k + 1
+			zetatable[i,j] <- zetas[[i]][j]
+			SEzetatable[i,j] <- SEzetas[[i]][j]
+			
 		}
 	}	 
 	guess[K == 2 & !estGuess] <- 0
-	pars <- cbind(lambdas,zetas)
-	SEpars <- cbind(SElam,SEzeta,SEg)
+	pars <- cbind(lambdas,zetatable)
+	SEpars <- cbind(SElam,SEzetatable,SEg)
 	
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
 		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
@@ -487,7 +491,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	h2 <- rowSums(F^2) 	
 	names(h2) <- itemnames
 		
-	mod <- new('polymirtClass',pars=pars, guess=guess, SEpars=SEpars, 
+	mod <- new('polymirtClass',pars=pars, parlist=normpars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
 		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
 		estGuess=estGuess, Call=Call)

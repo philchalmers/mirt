@@ -48,33 +48,22 @@ setMethod(
 		N <- nrow(object@Theta)
 		J <- length(object@K)
 		pars <- object@pars
-		lambdas <- pars[ ,1:nfactNames]
+		lambdas <- matrix(pars[ ,1:nfactNames], ncol=nfact)
 		lambdas[is.na(lambdas)] <- 0
-		zetas <- pars[,(nfactNames+1):ncol(pars)]
-		zetas <- t(zetas)[!is.na(t(zetas))]		
+		zetas <- object@parlist$zetas			
 		mu <- object@gpars$u
 		sigma <- object@gpars$sig		
 		LL <- matrix(0,N,draws)		
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		K <- object@K	
-		fulldata <- object@fulldata	
+		fulldata <- object@fulldata			
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)	
 			if(nfact < nfactNames) 
 				theta <- prodterms(theta, object@prodlist)	
-			LL[,i] <- .Call('logLik', 					
-						as.numeric(lambdas),
-						as.numeric(zetas),
-						as.numeric(guess),
-						as.numeric(theta),
-						as.integer(fulldata),
-						as.integer(object@itemloc-1),
-						as.integer(object@K),
-						as.integer(J),
-						as.integer(N),
-						as.integer(nfactNames),
-						as.integer(object@estComp))		
+			LL[,i] <- .Call('logLik', lambdas, zetas, guess, theta,	fulldata,
+						object@itemloc-1, object@K,	as.integer(object@estComp))		
 		}		
         LL[is.nan(LL)] <- 0 ###check this
 		rwmeans <- rowMeans(LL) 
@@ -101,7 +90,7 @@ setMethod(
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
 		x <- object@estpars	
 		df <- as.integer(length(r) - sum(x$estlam) - sum(x$estgcov) - 
-			sum(x$estgmeans) - length(zetas) + object@nconstvalues + 
+			sum(x$estgmeans) - sum(object@K - 1) + object@nconstvalues + 
 			nfact*(nfact - 1)/2 - sum(x$estGuess) - 1)			
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
@@ -155,9 +144,8 @@ setMethod(
 		N <- nrow(object@Theta)
 		J <- length(object@K)
 		pars <- object@pars
-		lambdas <- pars[,1:nfact]
-		zetas <- pars[,(nfact+1):ncol(pars)]
-		zetas <- t(zetas)[!is.na(t(zetas))]		
+		lambdas <- matrix(pars[,1:nfact], ncol=nfact)
+		zetas <- object@parlist$zetas	
 		mu <- rep(0,nfact)
 		sigma <- diag(nfact)		
 		LL <- matrix(0,N,draws)		
@@ -168,18 +156,8 @@ setMethod(
 		estComp <- rep(FALSE,J)
 		for(i in 1:draws){
 			theta <- rmvnorm(N,mu,sigma)				
-			LL[,i] <- .Call('logLik', 					
-						as.numeric(lambdas),
-						as.numeric(zetas),
-						as.numeric(guess),
-						as.numeric(theta),
-						as.integer(fulldata),
-						as.integer(object@itemloc-1),
-						as.integer(object@K),
-						as.integer(J),
-						as.integer(N),
-						as.integer(nfact),
-						as.integer(estComp))		
+			LL[,i] <- .Call('logLik', lambdas, zetas, guess, theta,	fulldata,
+						object@itemloc-1, object@K,	as.integer(estComp))		
 		}		
 		rwmeans <- rowMeans(LL)
 		logLik <- sum(log(rwmeans))		

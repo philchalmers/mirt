@@ -2,8 +2,9 @@
 using namespace Rcpp;
 
 // NOTE REMOVE Rnfact in R
-RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN){
-	
+RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
+{	
+    BEGIN_RCPP
 	int i, j, n, nfact;
     NumericMatrix Thetas(RThetas);    
     NumericVector PQ(RPQ);
@@ -17,6 +18,7 @@ RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN){
 				ret(i,j) += Thetas(n,i) * Thetas(n,j) * PQ[n];
 		
 	return(ret);
+	END_RCPP
 }
 
 

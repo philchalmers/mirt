@@ -239,30 +239,41 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
 	debug = FALSE, ...)
 { 
-	fn <- function(pars, r1, N, guess, Theta, prior, parprior){
-		a <- pars[1:(length(pars)-1)]
-		d <- pars[length(pars)]		
-		result <- .Call("loglik", 	                
-						as.double(a),				
-						as.double(d),
-						as.double(r1),
-						as.double(N),
-						as.double(guess),
-						as.double(as.matrix(Theta)),
-						as.integer(parprior))					
+	fn <- function(par, r1, N, guess, Theta, prior, parprior){
+		a <- par[1:(length(par)-1)]
+		d <- par[length(par)]		
+		result <- .Call("loglik", a, d, r1, N, guess, Theta)
+		if(parprior[1] > 1){
+			sigma <- 1
+			d <- sqrt(a %*% a)
+			anew <- a/d
+			sigma <- sigma - sum(anew)
+			l <- log(sigma^(parprior[1] - 1.0) / beta(parprior[1],1.0))
+			result <- result - l
+		}
+		if(parprior[3] > 0){
+			l <- log(dnorm(d,parprior[2],parprior[3]))
+			result <- result - l
+		}
+		result
 	}    
-	gr <- function(pars, r1, N, guess, Theta, prior, parprior){
-		a <- pars[1:(length(pars)-1)]
-		d <- pars[length(pars)]			
-		result <- .Call("grad", 	                
-						as.double(a),				
-						as.double(d),
-						as.double(r1),
-						as.double(N),
-						as.double(guess),
-						as.double(as.matrix(Theta)),
-						as.double(prior),
-						as.integer(parprior))	    				
+	gr <- function(par, r1, N, guess, Theta, prior, parprior){		
+		a <- par[1:(length(par)-1)]
+		d <- par[length(par)]			
+		result <- .Call("grad", a, d, r1, N, guess, Theta, prior)
+		if(parprior[1] > 1){
+			d2 <- a %*% a
+			c <- 2 * (parprior[1] - 1) / d2			
+			result[1:length(a)] <- result[1:length(a)] - c * a
+		}
+		if(parprior[3] > 0){
+			normprior <- dnorm(parprior[2], parprior[2], parprior[3]) - 
+				dnorm(d, parprior[2], parprior[3])
+			result[length(result)] <- ifelse(d < 0, 
+				result[length(result)] - 2*normprior, 
+				result[length(result)] + 2*normprior)  	
+		}
+		result
 	}  
   
 	Call <- match.call()    
@@ -270,10 +281,10 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 	fulldata <- as.matrix(fulldata)	
 	fulldata.original <- fulldata 
 	fulldata[is.na(fulldata)] <- 9	
-	if (!any(fulldata.original %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")	
+	if(!any(fulldata.original %in% c(0,1,NA))) stop("Data must contain only 0, 1, or NA.")	
 	nitems <- ncol(fulldata)  
 	colnames(fulldata) <- itemnames
-	if (length(guess) == 1) guess <- rep(guess,nitems)
+	if(length(guess) == 1) guess <- rep(guess,nitems)
 		else if (length(guess) > nitems || length(guess) < nitems) 
 			stop("The number of guessing parameters is incorrect.")	
 	pats <- apply(fulldata,1,paste,collapse = "/")
@@ -306,13 +317,13 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 				temp[par.prior$int.items[i],2:3] <- par.prior$int		 
 	}  
 	par.prior <- temp    
-	if (any(class(prev.cor) == c('mirt','bmirt'))) Rpoly <- prev.cor$cormat
+	if(any(class(prev.cor) == c('mirt','bmirt'))) Rpoly <- prev.cor$cormat
 		else if(!is.null(prev.cor)) {
 			if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 				else stop("Correlation matrix is not square.\n")
 	} else 
 		Rpoly <- cormod(na.omit(fulldata.original),K,guess)   
-	if (is.null(startvalues)){ 
+	if(is.null(startvalues)){ 
 		suppressMessages(pars <- start.values(na.omit(fulldata.original),guess,Rpoly,
 			nfact=nfact,nowarn=nowarn))
 		pars[pars > 3] <- 3
@@ -337,14 +348,14 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 		rlist <- Estep.mirt(pars,tabdata,Theta,prior,guess)		
 		if (debug) print(sum(r*log(rlist[[3]])))
 		lastpars2 <- lastpars1
-		lastpars1 <- pars	
+		lastpars1 <- pars		
 		for(i in 1:nitems){
 			if(guess[i] == 0)	
 				maxim <- try(optim(pars[i, ],fn=fn,gr=gr,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-				guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
+					guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
 			else 
 				maxim <- try(optim(pars[i, ],fn=fn,r1=rlist[[1]][i, ],N=rlist[[2]][i, ],
-				guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
+					guess=guess[i],Theta=Theta,prior=prior,parprior=par.prior[i, ],method="BFGS"))
 			if(class(maxim) == "try-error"){
 				problemitems <- c(problemitems, i)
 				converge <- 0
@@ -470,7 +481,6 @@ mirt <- function(fulldata, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.pr
 }
 
 #Methods 
-
 setMethod(
 	f = "print",
 	signature = signature(x = 'mirtClass'),

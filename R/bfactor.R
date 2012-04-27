@@ -178,37 +178,48 @@ setClass(
 #'     }
 #' 
 bfactor <- function(fulldata, specific, guess = 0, SE = FALSE, prev.cor = NULL, 
-  par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300, 
-  EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
+	par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300, 
+	EMtol = .001, nowarn = TRUE, debug = FALSE, ...)
 { 
-	#local functions
-	fn <- function(pars, r1, N, guess, Theta, prior, parprior){
-		a <- pars[1:(length(pars)-1)]
-		d <- pars[length(pars)]
+	#local functions	
+	fn <- function(par, r1, N, guess, Theta, prior, parprior){
+		a <- par[1:(length(par)-1)]
+		d <- par[length(par)]
 		r1 <- r1 * prior	
-		N <- N * prior
-		result <- .Call("loglik", 	                
-						as.double(a),				
-						as.double(d),
-						as.double(r1),
-						as.double(N),
-						as.double(guess),
-						as.double(as.matrix(Theta)),
-						as.integer(parprior))					
+		N <- N * prior		
+		result <- .Call("loglik", a, d, r1, N, guess, Theta)
+		if(parprior[1] > 1){
+			sigma <- 1
+			d <- sqrt(a %*% a)
+			anew <- a/d
+			sigma <- sigma - sum(anew)
+			l <- log(sigma^(parprior[1] - 1.0) / beta(parprior[1],1.0))
+			result <- result - l
+		}
+		if(parprior[3] > 0){
+			l <- log(dnorm(d, parprior[2], parprior[3]))
+			result <- result - l
+		}
+		result
 	}  
-	gr <- function(pars, r1, N, guess, Theta, prior, parprior){
-		a <- pars[1:(length(pars)-1)]
-		d <- pars[length(pars)]			
-		result <- .Call("grad", 	                
-						as.double(a),				
-						as.double(d),
-						as.double(r1),
-						as.double(N),
-						as.double(guess),
-						as.double(as.matrix(Theta)),
-						as.double(prior),
-						as.integer(parprior))	    				
-	} 
+	gr <- function(par, r1, N, guess, Theta, prior, parprior){		
+		a <- par[1:(length(par)-1)]
+		d <- par[length(par)]			
+		result <- .Call("grad", a, d, r1, N, guess, Theta, prior)
+		if(parprior[1] > 1){
+			d2 <- a %*% a
+			c <- 2 * (parprior[1] - 1) / d2			
+			result[1:length(a)] <- result[1:length(a)] - c * a
+		}
+		if(parprior[3] > 0){
+			normprior <- dnorm(parprior[2], parprior[2], parprior[3]) - 
+				dnorm(d, parprior[2], parprior[3])
+			result[length(result)] <- ifelse(d < 0, 
+				result[length(result)] - 2*normprior, 
+				result[length(result)] + 2*normprior)  	
+		}
+		result
+	}  
 	
 	#Main
 	Call <- match.call() 	

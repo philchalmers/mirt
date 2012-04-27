@@ -19,6 +19,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
 \section{Slots}{
   \describe{
     \item{\code{pars}:}{Object of class \code{"matrix"}, estimated parameters }
+    \item{\code{parlist}:}{Object of class \code{"list"}, list of parameters  }
     \item{\code{guess}:}{Object of class \code{"numeric"}, estimated guessing parameters }
     \item{\code{SEpars}:}{Object of class \code{"matrix"},  standard errors for pars}
     \item{\code{SEg}:}{Object of class \code{"numeric"}, standard errors for guess }

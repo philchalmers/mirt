@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.2.2
+Version: 0.2.3
 Date: 2012-01-25
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -13,22 +13,23 @@ Description: Analysis of dichotomous and polychotomous response data using
     and partially-compensatory item response modeling in conjunction
     with other IRT models.
 Depends:
-    R (>= 2.13),
+    R (>= 2.14),
     stats4,
+    MASS,
     methods
 Imports:
     stats4,
     psych,
     lattice,
-    MASS,
     GPArotation,
     mvtnorm,
     Rcpp,
+    RcppArmadillo,
     Matrix
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 Repository: github
 License: GPL (>= 2)
 URL: https://github.com/philchalmers/mirt

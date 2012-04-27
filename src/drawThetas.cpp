@@ -1,163 +1,70 @@
-static void Prob(double *P, const unsigned int *k, const unsigned int *N, 
-	const unsigned int *nfact, const double *theta, const double *a, 
-	const double *d, const double *g)
+#include<Rcpp.h>
+#include"Misc.h"
+using namespace Rcpp;
+
+RcppExport SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
+	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc, SEXP RestComp)
 {
-	double Ps[*N][*k + 1], Pdif[*N][*k], p1[*N], tmp;
-	unsigned int i, m = 0;
-	int j;
+    BEGIN_RCPP
 
-	for(i = 0; i < *N; i++){
-		Ps[i][0] = 1;
-		Ps[i][*k] = 0;
-	}
-	for(j = 0; j < (*k - 1); j++){
-		tmp = d[j];
-		itemtrace(p1, a, &tmp, theta, g, nfact, N);
-		for(i = 0; i < *N; i++)
-			Ps[i][j + 1] = p1[i];
-	}
-	for(j = (*k - 1); j >= 0; j--)
-		for(i = 0; i < *N; i++)
-			Pdif[i][j] = Ps[i][j] - Ps[i][j + 1];				
-	for(j = 0; j < *k; j++){
-		for(i = 0; i < *N; i++){
-			if(Pdif[i][j] < .00000001) Pdif[i][j] = .00000001;
-			if(*k == 2) Pdif[i][j] = 1 - Pdif[i][j];
-			P[m] = Pdif[i][j];
-			m++;
-		}
-	}
-}
+	NumericVector unif(Runif);
+	NumericVector den0(Rden0);
+	NumericVector den1(Rden1);
+	NumericMatrix lambdas(Rlambdas);
+	List zetaslist(Rzetas);
+	NumericVector guess(Rguess);
+	NumericMatrix theta0(Rtheta0);
+	NumericMatrix theta1(Rtheta1);
+	IntegerMatrix fulldata(Rfulldata);
+	IntegerVector itemloc(Ritemloc);
+	IntegerVector estComp(RestComp);
 
-static void ProbComp(double *P, const unsigned int *k, const unsigned int *N, 
-	const unsigned int *nfact, const double *theta, const double *a, 
-	const double *d, const double *g)
-{
-	double Theta[*N], tmp[*N], zerog = 0.0, tmpa, tmpd;
-	unsigned int i, j, onenfact = 1;	
-	for(j = 0; j < *N; j++)
-		tmp[j] = 1.0;
-	for(i = 0; i < *nfact; i++){
-		for(j = 0; j < *N; j++)
-			Theta[j] = theta[j + i*(*N)];
-		tmpa = a[i];
-		tmpd = d[i];
-		itemtrace(P, &tmpa, &tmpd, Theta, &zerog, &onenfact, N);
-		for(j = 0; j < *N; j++)
-			tmp[j] *= P[j];
-	}
-	for(j = 0; j < *N; j++){
-		P[j] = *g + (1 - *g)*tmp[j];
-		P[j + *N] = 1.0 - P[j];
-	}
+	int i, j, J, N, nfact, nzetas, istart;
+	J = lambdas.nrow(); 
+	N = fulldata.nrow();
+	nfact = lambdas.ncol();
+	NumericVector accept(N), cdloglik(1);
+	cdloglik.fill(0.0);
+	double a[nfact], g, irt0[N], irt1[N];
+	NumericVector zetas;
+	NumericMatrix P_0, P_1;
 
-SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas, 
-	SEXP Rguess, SEXP Rtheta0, SEXP Rtheta1, SEXP Rfulldata, SEXP Ritemloc,
-	SEXP RK, SEXP RJ, SEXP RN, SEXP Rnfact, SEXP RestComp){
-
-	SEXP Rreturn;
-	unsigned int i, j, k, m, nfact, J, N, Ksums = 0, max = 2;
-	int *itemloc,*K,*Pfulldata,*estComp;
-	double *Preturn,*Plambdas,*zetas,*guess,*Ptheta0,*Ptheta1,*unif, 
-		*den0,*den1;
-		
-	PROTECT(Runif = AS_NUMERIC(Runif));
-	PROTECT(Rden0 = AS_NUMERIC(Rden0));
-	PROTECT(Rden1 = AS_NUMERIC(Rden1));
-	PROTECT(Rlambdas = AS_NUMERIC(Rlambdas));
-	PROTECT(Rzetas = AS_NUMERIC(Rzetas));
-	PROTECT(Rguess = AS_NUMERIC(Rguess));
-	PROTECT(Rtheta0 = AS_NUMERIC(Rtheta0));
-	PROTECT(Rtheta1 = AS_NUMERIC(Rtheta1));
-	PROTECT(Rfulldata = AS_INTEGER(Rfulldata));
-	PROTECT(Ritemloc = AS_INTEGER(Ritemloc));
-	PROTECT(RK = AS_INTEGER(RK));	
-	PROTECT(RJ = AS_INTEGER(RJ));	
-	PROTECT(RN = AS_INTEGER(RN));
-	PROTECT(Rnfact = AS_INTEGER(Rnfact));
-	PROTECT(RestComp = AS_INTEGER(RestComp));
-	unif = NUMERIC_POINTER(Runif);
-	den0 = NUMERIC_POINTER(Rden0);
-	den1 = NUMERIC_POINTER(Rden1);
-	Plambdas = NUMERIC_POINTER(Rlambdas);
-	zetas = NUMERIC_POINTER(Rzetas);
-	guess = NUMERIC_POINTER(Rguess);
-	Ptheta0 = NUMERIC_POINTER(Rtheta0);
-	Ptheta1 = NUMERIC_POINTER(Rtheta1);
-	Pfulldata = INTEGER_POINTER(Rfulldata);
-	itemloc = INTEGER_POINTER(Ritemloc);	
-	K = INTEGER_POINTER(RK);	
-	estComp = INTEGER_POINTER(RestComp);
-	J = NUMERIC_VALUE(RJ);
-	N = NUMERIC_VALUE(RN);
-	nfact = NUMERIC_VALUE(Rnfact);	
-	for(i = 0; i < J; i++){
-		Ksums += K[i]; 
-		if(max < K[i]) max = K[i];
-	}
-	
-	PROTECT(Rreturn = NEW_NUMERIC(N + 1));
-	Preturn = NUMERIC_POINTER(Rreturn);
-	double a[nfact], d[max], g, lambdas[J][nfact], irt0[N], irt1[N], 
-		accept[N], Plong_1[N * max], Plong_0[N * max], cdloglik = 0;
-	unsigned int loc = 0, location[J], tmpcount = 0;
-	
-	k = 0;
-	for(i = 0; i < nfact; i++){
-		for(j = 0; j < J; j++){
-			lambdas[j][i] = Plambdas[k];
-			k++;
-		}
-	}		
-	for(i = 0; i < J; i++)		
-		location[i] = itemloc[i] * N;	
 	for(i = 0; i < N; i++){
 		irt0[i] = 0.0;
 		irt1[i] = 0.0;
-	}	
-	for(unsigned int item = 0; item < J; item++){
-		k = K[item];
+	}
+	//loop over items to gather log-likelihoods
+	for(int item = 0; item < J; item++){
+	    zetas = zetaslist[item];
+		nzetas = zetas.length();
+		istart = itemloc[item];
 		for(i = 0; i < nfact; i++)
-			a[i] = lambdas[item][i];
+			a[i] = lambdas(item,i);
 		g = guess[item];
+
+		//part comp items
 		if(estComp[item]){			
-			double dnew[nfact];
-			tmpcount = 0;
-			for(i = 0; i < nfact; i++){
-				if(a[i] != 0.0){
-					dnew[i] = zetas[i + loc];
-					tmpcount += 1;
-				} else dnew[i] = 200;
-			}
-			ProbComp(Plong_0, &k, &N, &nfact, Ptheta0, a, dnew, &g);			
-			ProbComp(Plong_1, &k, &N, &nfact, Ptheta1, a, dnew, &g);			
-			m = 0;
-			for(j = 0; j < k; j++){
+			P_0 = ProbComp(theta0, a, zetas, &g);			
+			P_1 = ProbComp(theta1, a, zetas, &g);			
+			for(j = 0; j < 2; j++){
 				for(i = 0; i < N; i++){				
-					if(Pfulldata[m + location[item]]){
-						irt0[i] += log(Plong_0[m]);
-						irt1[i] += log(Plong_1[m]);
+					if(fulldata(i,j + istart)){
+						irt0[i] += log(P_0(i,j));
+						irt1[i] += log(P_1(i,j));
 					}													
-					m++;
 				}
 			}	
-			loc += tmpcount; 
-		} else {					
-			for(i = 0; i < (k-1); i++) 
-				d[i] = zetas[i + loc];			
-			Prob(Plong_0, &k, &N, &nfact, Ptheta0, a, d, &g);			
-			Prob(Plong_1, &k, &N, &nfact, Ptheta1, a, d, &g);			
-			m = 0;
-			for(j = 0; j < k; j++){
+		} else { //comp items
+			P_0 = Prob(theta0, a, zetas, &g);			
+			P_1 = Prob(theta1, a, zetas, &g);			
+			for(j = 0; j <= nzetas; j++){
 				for(i = 0; i < N; i++){				
-					if(Pfulldata[m + location[item]]){
-						irt0[i] += log(Plong_0[m]);
-						irt1[i] += log(Plong_1[m]);
+					if(fulldata(i,j + istart)){
+						irt0[i] += log(P_0(i,j));
+						irt1[i] += log(P_1(i,j));
 					}				
-					m++;
 				}
 			}		
-			loc += k - 1;
 		}
 	}	
 	for(i = 0; i < N; i++){		
@@ -167,16 +74,17 @@ SEXP drawThetas(SEXP Runif, SEXP Rden0, SEXP Rden1, SEXP Rlambdas, SEXP Rzetas,
 		if(accept[i] > 0.0) accept[i] = 0.0;
 		if(unif[i] < exp(accept[i])) accept[i] = 1.0;
 			else accept[i] = 0.0;
-		Preturn[i] = accept[i];
 	}	
 	for(i = 0; i < N; i++){		
-		if(accept[i]) cdloglik += irt1[i];
-		else cdloglik += irt0[i];
+		if(accept[i]) cdloglik[0] += irt1[i];
+		    else cdloglik[0] += irt0[i];
 	}
-	Preturn[N] = cdloglik;
-	
-	UNPROTECT(16);	
-	return(Rreturn);	
+	List ret;
+	ret["accept"] = accept;
+	ret["cdloglik"] = cdloglik;
+	return(ret);
+
+	END_RCPP
 }
 
 
