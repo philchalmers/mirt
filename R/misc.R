@@ -15,19 +15,16 @@ thetaComb <- function(theta, nfact)
 
 # start values
 start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowarn = TRUE)
-{
-	if (length(guess) == 1) guess <- rep(guess,ncol(fulldata))
-		else if (length(guess) > ncol(fulldata) || length(guess) < ncol(fulldata)) 
-			stop("The number of guessing parameters is incorrect.")  	
+{	  	
 	if (bfactor){ 
-		suppressWarnings(FA <- fa(Rpoly,1, warnings= !nowarn))
+		suppressWarnings(FA <- psych::fa(Rpoly, 1, warnings = !nowarn))
 		loads <- unclass(FA$load)
 		cs <- sqrt(abs(FA$u))      
 		dstart <- qnorm(colMeans(fulldata))/cs
 		astart <- loads/cs
 		startvalues <- cbind(astart,astart/2,dstart)
 	} else {    
-		suppressWarnings(FA <- fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn))	
+		suppressWarnings(FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn))	
 		loads <- unclass(loadings(FA))
 		u <- FA$unique
 		u[u < .001 ] <- .2
@@ -47,12 +44,12 @@ Rotate <- function(F, rotate)
 	if (!any(rotate %in% c(orthogonal,oblique))) stop("Unknown rotation specified.")
 	if(any(rotate %in% orthogonal)){
 		oblique <- FALSE
-		rotF <- GPForth(F, method = rotate)
+		rotF <- GPArotation::GPForth(F, method = rotate)
 	}
 	if(any(rotate %in% oblique)){
 		oblique <- TRUE
 		if(rotate == 'promax') rotF <- Promax(F) 
-			else rotF <- GPFoblq(F, method = rotate)
+			else rotF <- GPArotation::GPFoblq(F, method = rotate)
 	}
 	attr(rotF,"oblique") <- oblique 
 	return(rotF)
@@ -123,54 +120,76 @@ P.comp <- function(a,d,thetas,c = 0){
 } 
 
 # Estep
-Estep.mirt <- function(pars, tabdata, Theta, prior, guess) 
+Estep.mirt <- function(pars, tabdata, Theta, prior, guess, itemloc) 
 {
-	a <- pars[ ,1:(ncol(pars) - 1), drop=FALSE]
-	nfact <- ncol(a)
-	nitems <- nrow(a)
+	a <- pars$lambdas
+	J <- nrow(a)
+	nfact <- ncol(a)	
 	nquad <- nrow(Theta)
-	d <- pars[ ,ncol(pars)]    
+	d <- pars$zetas    
 	r <- tabdata[ ,ncol(tabdata)]
-	X <- tabdata[ ,1:(ncol(tabdata) - 1)]
-	itemtrace <- r1 <- r0 <- matrix(0, nrow=nitems, ncol=nrow(Theta))
-	for (i in 1:nitems) itemtrace[i, ] <- 
-		P.mirt(a[i, ],d[i], Theta, guess[i])    
-    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)
-	N <- retlist$r1 + retlist$r0    
-	empprior <- colSums(N) / sum(N)    
-	rlist <- list(retlist$r1, N, retlist$expected, empprior)
-	return(rlist)
+	X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
+	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))
+	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
+	for (i in 1:J){
+		if(length(d[[i]]) == 1){
+			itemtrace[ ,itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+			itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+		} else {
+			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+				P.poly(a[i, ], d[[i]], Theta, TRUE)	
+		}
+	}		
+    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)	    		
+	return(retlist)
 } 
 
 P.bfactor <- function(a, d, Theta, g, patload)
 { 
 	a <- a[patload]	
-	traces <- .Call("traceLinePts", a, d, g, Theta)
-	return(traces)
+	if(length(d) > 1){
+		ncat <- length(d) + 1
+		nfact <- length(a)
+		Pk <- matrix(0,nrow(Theta),ncat+1)
+		Pk[,1] <- 1	
+		for(i in 1:(ncat-1))			
+			Pk[ ,i+1] <- P.mirt(a, d[i], Theta, 0)				
+		P <- matrix(0,nrow(Theta),ncat)		
+		for(i in ncat:1)
+			P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]		
+	} else P <- .Call("traceLinePts", a, d, g, Theta)		
+	return(P)
 }
 
 # Estep
-Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, logicalfact, specific, sitems) 
-{
-	a <- pars[ ,1:(ncol(pars) - 1), drop=FALSE]
+Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, specific, sitems, itemloc) 
+{	
+	a <- pars$lambdas
+	logicalfact <- attr(pars, 'lamsel')
 	nfact <- ncol(a)
-	nitems <- nrow(a)
+	J <- nrow(a)
 	nquad <- nrow(Theta)	
-	d <- pars[ ,ncol(pars)]    
+	d <- pars$zetas    
 	r <- tabdata[ ,ncol(tabdata)]
-	X <- tabdata[ ,1:(ncol(tabdata) - 1)]
-	as <- rowSums(pars[,2:nfact])
-	itemtrace <- r1 <- r0 <- matrix(0,nrow=nitems,ncol=nrow(Theta))
-	for (i in 1:nitems) itemtrace[i, ] <- 
-	    P.bfactor(a[i, ],d[i],Theta,guess[i],logicalfact[i,])
-    retlist <- .Call("Estepbfactor", itemtrace, prior, X, nfact, r, sitems)
-	r1 <- N <- matrix(0, nitems, nrow(Theta))
-	for (i in 1:nitems){
-	    r1[i, ] <- retlist$r1[(specific[i] - 1)*nitems + i, ]
-	    N[i, ] <- retlist$r0[(specific[i] - 1)*nitems + i, ] + r1[i, ]
+	X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
+	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))
+	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
+	for (i in 1:J){
+		if(length(d[[i]]) == 1){
+			itemtrace[ ,itemloc[i]] <- P.bfactor(a[i, ], d[[i]], Theta, guess[i], logicalfact[i, ]) 
+			itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+		} else {
+			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+				P.bfactor(a[i, ], d[[i]], Theta, 0, logicalfact[i, ])	
+		}
 	}		
-	rlist <- list(r1, N, retlist$expected)
-	return(rlist)
+	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)
+	r1 <- matrix(0, nrow(Theta), ncol(X))	
+	for (i in 1:J)
+	    r1[ ,itemloc[i]:(itemloc[i+1]-1)] <- 		
+			retlist$r1[ ,itemloc[i]:(itemloc[i+1]-1) + (specific[i] - 1)*ncol(X) ]	    
+		
+	return(list(r1=r1, expected=retlist$expected))	
 }      
 
 draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
@@ -183,12 +202,12 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	P0 <- P1 <- matrix(0,N,J)		
 	unif <- runif(N)
 	if(nfact > 1)		
-		theta1 <- theta0 + rmvnorm(N,prior.mu, 
+		theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, 
 			diag(rep(cand.t.var,ncol(theta0)))) 
 	else
 		theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
-	den0 <- dmvnorm(theta0,prior.mu,prior.t.var)
-	den1 <- dmvnorm(theta1,prior.mu,prior.t.var)		
+	den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var)
+	den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var)		
 	if(!is.null(prodlist)){
 		theta0 <- prodterms(theta0,prodlist)
 		theta1 <- prodterms(theta1,prodlist)	
@@ -289,14 +308,14 @@ dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
 	} else {
 		PQ <- P*(1-P)
 		L1 <- sum(dat-P)
-		L2 <- colSums((dat-P)*Thetas)
+		L2 <- colSums((dat-P) * Thetas)
 		dL <- c(L1,L2)		
-		d2L <- matrix(0,nfact+1,nfact+1)						
-		L11 <- .Call("dichOuter",Thetas,PQ,nrow(Thetas))
-		if(nfact > 1) d2L[1:nfact+1,1:nfact+1] <- -L11
-			 else d2L[nfact+1,nfact+1] <- -L11 				
-		d2L[1,1] <- (-1)*sum(PQ)		
-		d2L[1,1:nfact+1] <- d2L[1:nfact+1,1] <- (-1)*colSums(PQ * Thetas)
+		d2L <- matrix(0,nfact+1, nfact+1)						
+		L11 <- .Call("dichOuter", Thetas, PQ, nrow(Thetas))
+		if(nfact > 1) d2L[1:nfact+1, 1:nfact+1] <- -L11
+			 else d2L[nfact+1, nfact+1] <- -L11 				
+		d2L[1, 1] <- (-1)*sum(PQ)		
+		d2L[1, 1:nfact+1] <- d2L[1:nfact+1, 1] <- (-1)*colSums(PQ * Thetas)
 	}	
 	list(grad = dL, hess = d2L)
 }
@@ -927,3 +946,35 @@ sortParsConfmirt <- function(pars, indlist, nfact, estGuess, nfactNames){
 	
 	return(list(lambdas=lambdas, zetas=zetas, guess=guess, mu=mu, sig=sig))
 }
+
+rateChange <- function(pars, lastpars1, lastpars2){
+	p <- unlist(pars)	
+	lp1 <- unlist(lastpars1)
+	lp2 <- unlist(lastpars2)
+	rate <- rep(0, length(p))
+	d1 <- lp1 - p
+	d2 <- lp2 - p
+	rate <- ifelse(abs(d1) > 0.001 & (d1*d2 > 0.0) & (d1/d2 < 1.0),
+		(1 - (1 - rate) * (d1/d2)),
+		0)	    		
+	rate[p > 4] <- 0
+	rate[p < -4] <- 0    
+	p <- lp1*rate*(-2) + (1 - rate*(-2))*p
+	parsret <- rebuildPars(p, pars)	
+	parsret
+}
+
+rebuildPars <- function(p, pars){
+	names(p) <- NULL
+	pars2 <- pars
+	pars2$lambdas <- matrix(p[1:length(pars$lambdas)], ncol=ncol(pars$lambdas), 
+		nrow=nrow(pars$lambdas)) 
+	ind1 <- length(pars$lambdas) + 1
+	for(i in 1:length(pars$zetas) ){
+		ind2 <- ind1 + length(pars$zetas[[i]]) - 1
+		pars2$zetas[[i]] <- p[ind1:ind2]
+		ind1 <- ind1 + length(pars$zetas[[i]])
+	}			
+	return(pars2)
+}
+

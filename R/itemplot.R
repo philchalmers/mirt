@@ -82,6 +82,7 @@ setMethod(
 	definition = function(object, item, type = 'info', npts = 50,
 		rot = list(), ...)
 	{  
+		if(object@K[item] != 2) stop('Polytomous items not supported yet...') 
 		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		nfact <- ncol(object@Theta)
 		a <- as.matrix(object@pars[ ,1:nfact])
@@ -144,6 +145,7 @@ setMethod(
 	definition = function(object, item, type = 'info', npts = 50, 
 		rot = list(), ...)
 	{
+		if(object@K[item] != 2) stop('Polytomous items not supported yet...') 
 		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
 		a <- as.matrix(object@pars[ ,1:(ncol(object@pars) - 1)])
 		d <- object@pars[ ,ncol(object@pars)]

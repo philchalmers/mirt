@@ -50,35 +50,38 @@ RcppExport SEXP grad(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess,
 }
 
 //Log-likelihood
-RcppExport SEXP loglik(SEXP Ra, SEXP Rd, SEXP Rr1, SEXP RN, SEXP Rguess, SEXP RTheta) 
+/*
+RcppExport SEXP loglik(SEXP Ra, SEXP Rd, SEXP Rrs, SEXP Rgues, SEXP RTheta){
 {
 	//Proctect and create vars
 	BEGIN_RCPP
-	int i, nfact, nquad;
-    Rcpp::NumericVector Pa(Ra);
-    Rcpp::NumericVector Pd(Rd);
-    Rcpp::NumericVector r1(Rr1);
-    Rcpp::NumericVector N(RN);
-    Rcpp::NumericVector guess(Rguess);
-    Rcpp::NumericMatrix Theta(RTheta);
-    nfact = Pa.length();
+	int i, j, nitems, nquad, nfact, nzeta;
+	NumericVector Pa(Ra);
+	NumericVector d(Rd);
+	NumericVector Pgues(Rgues);
+	NumericMatrix rs(Rrs);
+	NumericMatrix Theta(RTheta);
+	nitems = rs.ncol();
 	nquad = Theta.nrow();
-	Rcpp::NumericVector ret(1);
+	nfact = Theta.ncol();
+	nzeta = d.length();
 
-	double a[nfact], d, g, P[nquad], Q[nquad], l = 0.0;
+	double g = Pgues[0], l,	a[nfact], dtmp, P[nquad], 
+	       itemtrace[nquad][nzeta + 1];
 	for(i = 0; i < nfact; i++)
-	    a[i] = Pa[i];
-	d = Pd[0];
-	g = guess[0];
+	    a[i] = Pa(i);
+    for(j = 0; j < nzeta; j++){
+        dtmp = d(j);
+        itemtrace(P, a, &dtmp, Theta, &g);
+        for(i = 0; i < nquad; i++){
+            itemtrace[i][j] = P[i];
 
-    itemtrace(P, a, &d, Theta, &g);
-	for (i = 0; i < nquad; i++)
-		Q[i] = 1 - P[i];
-	for(i = 0; i < nquad; i++) 
-		l += r1(i) * log(P[i]) + (N(i) - r1(i)) * log(Q[i]);
-    
+
+
+    NumericVector ret(1);    
     ret(0) = (-1.0) * l;		
 	return(ret);	
 	END_RCPP
 }
+*/
 

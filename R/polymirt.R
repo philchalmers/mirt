@@ -191,7 +191,9 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n),  
                             technical$guess.prior.n, 20)
 	itemnames <- colnames(data)
-	data <- as.matrix(data)		
+	data <- as.matrix(data)	
+	if(!any(data %in% c(0:20,NA))) 
+		stop("Data must contain only numeric values (including NA).")	
 	J <- ncol(data)
 	N <- nrow(data)	
 	if(length(guess) == 1) guess <- rep(guess,J)
@@ -230,7 +232,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 			else stop("Correlation matrix is not square.\n")
 	} 	else Rpoly <- cormod(na.omit(data),K,guess)
-	FA <- fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres")	
+	FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres")	
 	loads <- unclass(loadings(FA))
 	u <- FA$unique
 	u[u < .001 ] <- .2
@@ -667,7 +669,7 @@ setMethod(
 		rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
 		K <- x@K		
 		nfact <- ncol(x@Theta)
-		if(nfact >2) stop("Can't plot high dimensional solutions.")
+		if(nfact > 2) stop("Can't plot high dimensional solutions.")
 		a <- as.matrix(x@pars[ ,1:nfact])
 		d <- as.matrix(x@pars[ ,(nfact+1):ncol(x@pars)])	
 		guess <- x@guess
@@ -728,13 +730,12 @@ setMethod(
 		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
 		zetas <- na.omit(zetas)
 		guess <- object@guess
-		guess[is.na(guess)] <- 0	
-		Ksums <- cumsum(K) - 1	
+		guess[is.na(guess)] <- 0			
 		itemloc <- object@itemloc
 		res <- matrix(0,J,J)
 		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(data)
-		prior <- dmvnorm(Theta,rep(0,nfact),diag(nfact))
+		prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
 		prior <- prior/sum(prior)
 		loc <- loc2 <- 1
 		if(restype == 'LD'){	

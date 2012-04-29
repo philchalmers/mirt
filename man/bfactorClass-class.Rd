@@ -18,8 +18,10 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
 \section{Slots}{
   \describe{
     \item{\code{EMiter}:}{Object of class \code{"numeric"}, number of EM iterations  }
-    \item{\code{pars}:}{Object of class \code{"matrix"}, estimated parameters }
+    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameters }
+    \item{\code{parsSE}:}{Object of class \code{"list"}, estimated parameter standard errors  }    
     \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters }
+    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }    
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{X2}:}{Object of class \code{"numeric"}, chi-squared value }
@@ -31,6 +33,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{itemnames}:}{Object of class \code{"character"},  item names}
     \item{\code{tabdata}:}{Object of class \code{"matrix"},  tabulated data}
+	\item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }		
     \item{\code{N}:}{Object of class \code{"numeric"},  sample size}
     \item{\code{Pl}:}{Object of class \code{"numeric"},  likelihood-values for tabdata}
     \item{\code{Theta}:}{Object of class \code{"matrix"}, theta grid }

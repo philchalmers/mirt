@@ -20,8 +20,10 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
 \section{Slots}{
   \describe{
     \item{\code{EMiter}:}{Object of class \code{"numeric"}, number of iterations  }
-    \item{\code{pars}:}{Object of class \code{"matrix"}, estimated parameters  }
+    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameters  }
+    \item{\code{parsSE}:}{Object of class \code{"list"}, estimated parameter standard errors  }
     \item{\code{guess}:}{Object of class \code{"numeric", guessing parameters}  }
+    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }    
     \item{\code{X2}:}{Object of class \code{"numeric"}, Chi-squared  }
     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom for X2 }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for X2  }
@@ -32,6 +34,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
+    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }	
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
     \item{\code{fulldata}:}{Object of class \code{"matrix"}, complete data }

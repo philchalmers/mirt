@@ -52,7 +52,7 @@ void itemtrace(double *P, const double *a, const double *d,
 		P[i] = *g + (1 - *g) * (exp(z[i])/(1 + exp(z[i])));		
 }
 
-Rcpp::NumericMatrix Prob(NumericMatrix Theta, const double *a,
+NumericMatrix Prob(NumericMatrix Theta, const double *a,
         NumericVector zetas, const double *g)
 {
 	int i, j;
@@ -84,7 +84,7 @@ Rcpp::NumericMatrix Prob(NumericMatrix Theta, const double *a,
 	return P;
 }
 
-Rcpp::NumericMatrix ProbComp(NumericMatrix Theta, const double *a, 
+NumericMatrix ProbComp(NumericMatrix Theta, const double *a, 
         NumericVector zetas, const double *g)
 {
 	int i, j;

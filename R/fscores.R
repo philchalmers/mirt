@@ -61,35 +61,40 @@ setMethod(
 	signature = 'mirtClass',
 	definition = function(object, full.scores = FALSE, method = "EAP", ...)
 	{    
-		rotF <- object@F
-		cs <- sqrt(1 - object@h2)
-		a <- as.matrix(rotF / cs)
-		d <- qnorm(object@facility) / cs  
-		g <- object@guess  
+		K <- object@K		
+		a <- object@pars$lambdas		
+		d <- object@pars$zetas		
+		g <- object@guess		
+		g[is.na(guess)] <- 0
+		itemloc <- object@itemloc
+		J <- nrow(a)
 		nfact <- ncol(a)
 		theta <- as.matrix(seq(-4,4,length.out = 15))
 		Theta <- thetaComb(theta,nfact)
-		fulldata <- object@fulldata  
-		tabdata <- object@tabdata[ ,1:ncol(fulldata)]
-		colnames(tabdata) <- colnames(fulldata) 
-		SEscores <- scores <- matrix(0,ncol=ncol(Theta),nrow=nrow(tabdata))
-		SE <- thetas <- rep(0,nfact)
-		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact))    
+		fulldata <- object@data 
+		tabdata <- object@tabdatalong
+		tabdata <- tabdata[,-ncol(tabdata)]
+		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			
+		W <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
 		W <- W/sum(W)
-		for (i in 1:nrow(scores)){
-			L <- 0  
-			for (j in 1:nrow(a)){
-				if(tabdata[i,j] == 1) L <- log(P.mirt(a[j, ],d[j],Theta,g[j])) + L
-				else L <- log(1 - P.mirt(a[j, ],d[j],Theta,g[j])) + L	
-			}	
-			for (k in 1:ncol(Theta))
-				thetas[k] <- sum(Theta[ ,k] * exp(L) * W / sum(exp(L) * W))
-			for (k in 1:ncol(Theta))	
-				SE[k] <- sqrt(sum((Theta[,k] - thetas[k])^2 * exp(L) * W / sum(exp(L) * W)))
+		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
+		for (i in 1:J){
+			if(length(d[[i]]) == 1){
+				itemtrace[ ,itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+				itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+			} else {
+				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+					P.poly(a[i, ], d[[i]], Theta, TRUE)	
+			}
+		}			
+		for (i in 1:nrow(tabdata)){							
+			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
+			thetas <- sum(Theta * exp(L) * W / sum(exp(L) * W))
+			SE <- sqrt(sum((Theta - thetas)^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
 		}		
-		if(method == "MAP"){
+		if(method == "MAP"){ #FIXME
 			for (i in 1:nrow(scores)){       
 				Theta <- scores[i, ]	  
 				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ])$estimate 
@@ -98,31 +103,27 @@ setMethod(
 		}
 		if(method == "ML"){
             scores[rowSums(tabdata) == 0 | rowSums(tabdata) == ncol(fulldata), ] <- NA
-		for (i in 1:nrow(scores)){
-            if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
-		        Theta <- scores[i, ]	  
-		        thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],ML=TRUE)$estimate 
-		        scores[i, ] <- thetas
-		  }  
+			for (i in 1:nrow(scores)){
+				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
+				Theta <- scores[i, ]	  
+				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],ML=TRUE)$estimate 
+				scores[i, ] <- thetas
+			}  
 		}
 		colnames(scores) <- colnames(object@F)
 		if (full.scores){      
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta)) 
+			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta))
+			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
 			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tabdata[j, ],1,0)) == ncol(fulldata)        
+				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)        
 				scoremat[TFvec, ] <- scores[j, ]
 			} 
 			colnames(scoremat) <- colnames(object@F)	
 			return(cbind(fulldata,scoremat))
-		} else {
-			r <- matrix(object@tabdata[ ,ncol(tabdata)+1])
-			colnames(r) <- 'Freq'			
-			colnames(SEscores) <- paste("SE_",colnames(scores),sep='')
+		} else {						
 			cat("\nMethod: ", method,"\n\n")
-			if(method == "EAP")	
-				return(cbind(tabdata,r,scores,SEscores))
-			else
-				return(cbind(tabdata,r,scores))	
+			return(cbind(object@tabdata,scores))
+				
 		}   
 	}  
 )
@@ -131,35 +132,44 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'bfactorClass',
-	definition = function(object, full.scores = FALSE, method = "EAP", ...){  
-		g <- object@guess
-		d <- object@pars[ ,ncol(object@pars)]
-		a <- as.matrix(object@pars[ ,1:(ncol(object@pars) - 1)])
+	definition = function(object, full.scores = FALSE, method = "EAP", ...)
+	{  
+		K <- object@K		
+		a <- object@pars$lambdas		
+		d <- object@pars$zetas		
+		g <- object@guess		
+		g[is.na(guess)] <- 0
+		itemloc <- object@itemloc
+		J <- nrow(a)
 		nfact <- 2
 		theta <- as.matrix(seq(-4,4,length.out = 15))
 		Theta <- thetaComb(theta,nfact)
-		fulldata <- object@fulldata  
-		tabdata <- object@tabdata[ ,1:ncol(fulldata)]
-		colnames(tabdata) <- colnames(fulldata) <- object@itemnames
+		fulldata <- object@data 
+		tabdata <- object@tabdatalong
+		tabdata <- tabdata[,-ncol(tabdata)]
 		SEscores <- scores <- rep(0,nrow(tabdata))
 		SE <- thetas <- 0
 		logicalfact <- object@logicalfact
-		W <- dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
-		W <- W/sum(W)	
-		for (i in 1:nrow(tabdata)){
-			L <- 0  
-			for (j in 1:nrow(a)){
-				if(tabdata[i,j] == 1) 
-					L <- log(P.bfactor(a[j, ],d[j],Theta,g[j],logicalfact[j, ])) + L
-				else 
-					L <- log(1 - P.bfactor(a[j, ],d[j],Theta,g[j],logicalfact[j, ])) + L	
-			}	
+		W <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
+		W <- W/sum(W)
+		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
+		for (i in 1:J){
+			if(length(d[[i]]) == 1){
+				itemtrace[ ,itemloc[i]] <- P.bfactor(a[i, ], d[[i]], Theta, guess[i], logicalfact[i, ]) 
+				itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+			} else {
+				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+					P.bfactor(a[i, ], d[[i]], Theta, 0, logicalfact[i, ])	
+			}
+		}		
+		for (i in 1:nrow(tabdata)){							
+			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])				
 			thetas <- sum(Theta[ ,1] * exp(L) * W / sum(exp(L) * W))
 			SE <- sqrt(sum((Theta[ ,1] - thetas)^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i] <- thetas
 			SEscores[i] <- SE
 		}
-		if(method == "MAP"){
+		if(method == "MAP"){ ###FIXME
 			for (i in 1:length(scores)) {       
 				Theta <- scores[i]	  
 				thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
@@ -185,21 +195,17 @@ setMethod(
 			colnames(scores) <- 'g'
 		}	
 		if(full.scores){
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=1) 
+			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta))
+			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
 			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tabdata[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- scores[j,1]
+				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)        
+				scoremat[TFvec, ] <- scores[j, ]
 			} 
-			colnames(scoremat) <- colnames(object@F)
+			colnames(scoremat) <- colnames(object@F)	
 			return(cbind(fulldata,scoremat))
-		} else {  	
-			r <- matrix(object@tabdata[,ncol(tabdata)+1])
-			colnames(r) <- 'Freq'
-			cat("\nMethod: ", method,"\n\n")
-			if(method == "EAP")	
-				return(cbind(tabdata,r,scores))
-			else
-				return(cbind(tabdata,r,scores))	
+		} else {  				
+			cat("\nMethod: ", method,"\n\n")			
+			return(cbind(object@tabdata,scores))			
 		}   
 	}  
 )
