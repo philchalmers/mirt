@@ -30,19 +30,20 @@ setClass(
 #' Full-Information Item Bifactor Analysis
 #' 
 #' \code{bfactor} fits a confirmatory maximum likelihood bifactor model to
-#' dichotomous data under the item response theory paradigm. Pseudo-guessing
-#' parameters may be included but must be declared as constant.
+#' dichotomous and polychotomous data under the item response theory paradigm. 
+#' Pseudo-guessing parameters may be included but must be declared as constant.
 #' 
 #' 
 #' 
 #' \code{bfactor} follows the item factor analysis strategy explicated by
-#' Gibbons and Hedeker (1992). Nested models may be compared via an approximate
+#' Gibbons and Hedeker (1992) and Gibbons et al. (2007). 
+#' Nested models may be compared via an approximate
 #' chi-squared difference test or by a reduction in AIC or BIC (accessible via
 #' \code{\link{anova}}); note that this only makes sense when comparing class
-#' \code{bfactorClass} models to class \code{mirtClass}. The general equation
-#' used for item bifactor analysis in this package is in the logistic form with
-#' a scaling correction of 1.702. This correction is applied to allow
-#' comparison to mainstream programs such as TESTFACT 4 (2003).
+#' \code{bfactorClass} models to class \code{mirtClass} or \code{polymirtClass}. 
+#' The general equation used for item bifactor analysis in this package is in the logistic 
+#' form with a scaling correction of 1.702. This correction is applied to allow
+#' comparison to mainstream programs such as TESTFACT 4 (2003) and POLYFACT.
 #' 
 #' Unlike TESTFACT 4 (2003) initial start values are computed by using
 #' information from a quasi-tetrachoric correlation matrix, potentially
@@ -64,8 +65,7 @@ setClass(
 #' in a summary table for all the unique response patterns. Fitted and residual
 #' values can be observed by using the \code{fitted} and \code{residuals}
 #' functions. To examine individuals item plots use \code{\link{itemplot}}
-#' which will also plot information and surface functions (although the
-#' \code{\link[plink]{plink}} package may be more suitable for IRT graphics).
+#' which will also plot information and surface functions.
 #' Residuals are computed using the LD statistic (Chen & Thissen, 1997) in the
 #' lower diagonal of the matrix returned by \code{residuals}, and Cramer's V
 #' above the diagonal.
@@ -103,8 +103,7 @@ setClass(
 #' (say, greater than .95) then a possible constraint might be \code{par.prior
 #' = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}
 #' @param startvalues user declared start values for parameters
-#' @param quadpts number of quadrature points per dimension. If \code{NULL}
-#' then the number of quadrature points is set to 9
+#' @param quadpts number of quadrature points per dimension. 
 #' @param ncycles the number of EM iterations to be performed
 #' @param tol if the largest change in the EM cycle is less than this value
 #' then the EM iterations are stopped
@@ -124,6 +123,11 @@ setClass(
 #' 
 #' Gibbons, R. D., & Hedeker, D. R. (1992). Full-information Item Bi-Factor
 #' Analysis. \emph{Psychometrika, 57}, 423-436.
+#'
+#' Gibbons, R. D., Darrell, R. B., Hedeker, D., Weiss, D. J., Segawa, E., Bhaumik, D. K., 
+#' Kupfer, D. J., Frank, E., Grochocinski, V. J., & Stover, A. (2007).
+#' Full-Information item bifactor analysis of graded response data. 
+#' \emph{Applied Psychological Measurement, 31}, 4-19
 #' 
 #' Carroll, J. B. (1945). The effect of difficulty and chance success on
 #' correlations between items and between tests. \emph{Psychometrika, 26},
@@ -136,7 +140,7 @@ setClass(
 #' @keywords models
 #' @usage
 #' bfactor(data, specific, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
-#'   startvalues = NULL,  quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
+#'   startvalues = NULL,  quadpts = 15, ncycles = 300, tol = .001, nowarn = TRUE, 
 #'   debug = FALSE, ...)
 #' 
 #' \S4method{summary}{bfactor}(object, digits = 3, ...)
@@ -175,6 +179,47 @@ setClass(
 #' guess[32] <- 0
 #' mod3b <- bfactor(data, specific, guess = guess)
 #' coef(mod3b)
+#'
+#' #########
+#' #simulate data
+#' a <- matrix(c(
+#' 1,0.5,NA,
+#' 1,0.5,NA,
+#' 1,0.5,NA,
+#' 1,0.5,NA,
+#' 1,0.5,NA,
+#' 1,0.5,NA,
+#' 1,0.5,NA,
+#' 1,NA,0.5,
+#' 1,NA,0.5,
+#' 1,NA,0.5,
+#' 1,NA,0.5,
+#' 1,NA,0.5,
+#' 1,NA,0.5,
+#' 1,NA,0.5),ncol=3,byrow=TRUE)
+#' 
+#' d <- matrix(c(
+#' -1.0,NA,NA,
+#' -1.5,NA,NA,
+#'  1.5,NA,NA,
+#'  0.0,NA,NA,
+#' 2.5,1.0,-1,
+#' 3.0,2.0,-0.5,
+#' 3.0,2.0,-0.5,
+#' 3.0,2.0,-0.5,
+#' 2.5,1.0,-1,
+#' 2.0,0.0,NA,
+#' -1.0,NA,NA,
+#' -1.5,NA,NA,
+#'  1.5,NA,NA,
+#'  0.0,NA,NA,
+#' 1.0,NA,NA),ncol=3,byrow=TRUE)
+#' 
+#' sigma <- diag(3)
+#' dataset <- simdata(a,d,2000,sigma)
+#'
+#' specific <- c(rep(1,7),rep(2,7))
+#' simmod <- bfactor(dataset, specific)
 #'     }
 #' 
 bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL, 
@@ -327,13 +372,14 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 			ind <- ind + 1
 		}		
 	}		
-	if(debug) print(startvalues)			 
-		
+	if(debug) print(startvalues)			 		
+	
 	#EM  loop  
 	for (cycles in 1:ncycles) 
 	{    
 		rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, 
-			specific, sitems, itemloc)		
+			specific, sitems, itemloc)
+		if(debug) print(sum(r * log(rlist$expected)))			
 		lastpars2 <- lastpars1
 		lastpars1 <- pars			
 		for(i in 1:J){ 
@@ -594,7 +640,7 @@ setMethod(
 			tabdata[tabdata[ ,1:ncol(object@data)] == 99] <- NA
 			tabdata[ ,ncol(tabdata)] <- freq
 			tabdata <- cbind(tabdata,expected,res)
-			colnames(tabdata) <- c(colnames(object@tabdata),"freq","exp")	
+			colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
 				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]

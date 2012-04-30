@@ -28,19 +28,21 @@ setClass(
 #' Theory)
 #' 
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
-#' to dichotomous data under the item response theory paradigm. Pseudo-guessing
-#' parameters may be included but must be declared as constant.
+#' to dichotomous and polychotomous data under the item response theory paradigm. 
+#' Pseudo-guessing parameters may be included but must be declared as constant.
 #' 
 #' 
 #' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
-#' likelihood estimation (MML) outlined in Bock and Aiken (1981) and Bock,
-#' Gibbons and Muraki (1988). Nested models may be compared via the approximate
+#' likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
+#' Gibbons and Muraki (1988), and Muraki and Carlson (1995). 
+#' Nested models may be compared via the approximate
 #' chi-squared difference test or by a reduction in AIC/BIC values (comparison
-#' via \code{\link{anova}}). The general equation used for dichotomous
-#' multidimensional item response theory item is a logistic form with a scaling
+#' via \code{\link{anova}}). The general equation used for 
+#' multidimensional item response theory is a logistic form with a scaling
 #' correction of 1.702. This correction is applied to allow comparison to
-#' mainstream programs such as TESTFACT (2003). The general IRT equation is
+#' mainstream programs such as TESTFACT (2003) and POLYFACT. The general IRT equation 
+#' for dichotomous items is 
 #' 
 #' \deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_j + (1 - g_j) / (1 +
 #' exp(-1.702(\bold{a}_j' \theta + d_j)))}
@@ -49,7 +51,8 @@ setClass(
 #' discrimination parameters (i.e., slopes), \deqn{\theta} is the vector of
 #' factor scores, \eqn{d_j} is the intercept, and \eqn{g_j} is the
 #' pseudo-guessing parameter. To avoid estimation difficulties the \eqn{g_j}'s
-#' must be specified by the user.
+#' must be specified by the user. The polychotomous functions has a similar form
+#' but is not expressed here.
 #' 
 #' Estimation begins by computing a matrix of quasi-tetrachoric correlations,
 #' potentially with Carroll's (1945) adjustment for chance responds. A MINRES
@@ -59,7 +62,8 @@ setClass(
 #' the square root of the factor uniqueness, \eqn{\sqrt{1 - h_j^2}}. The
 #' initial intercept parameters are determined by calculating the inverse
 #' normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain
-#' \eqn{d_j = q_j / u_j}. Following these initial estimates the model is
+#' \eqn{d_j = q_j / u_j}. A similar implementation is also used for obtaining 
+#' initial values for polychotomous items. Following these initial estimates the model is
 #' iterated using the EM estimation strategy with fixed quadrature points.
 #' Implicit equation accelerations described by Ramsey (1975) are also added to
 #' facilitate parameter convergence speed, and these are adjusted every third
@@ -77,9 +81,7 @@ setClass(
 #' 
 #' Using \code{plot} will plot the either the test surface function or the test
 #' information function for 1 and 2 dimensional solutions. To examine
-#' individual item plots use \code{\link{itemplot}} (although the
-#' \code{\link[plink]{plink}} package may be more suitable for IRT graphics)
-#' which will also plot information and surface functions. Residuals are
+#' individual item plots use \code{\link{itemplot}}. Residuals are
 #' computed using the LD statistic (Chen \& Thissen, 1997) in the lower
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
 #' the diagonal.
@@ -168,6 +170,9 @@ setClass(
 #' Carroll, J. B. (1945). The effect of difficulty and chance success on
 #' correlations between items and between tests. \emph{Psychometrika, 26},
 #' 347-372.
+#'
+#' Muraki, E. & Carlson, E. B. (1995). Full-information factor analysis for polytomous 
+#' item responses. \emph{Applied Psychological Measurement, 19}, 73-90.
 #' 
 #' Ramsay, J. O. (1975). Solving implicit equations in psychometric data
 #' analysis. \emph{Psychometrika, 40}(3), 337-360.
@@ -215,6 +220,18 @@ setClass(
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table
 #' 
+#' ###########
+#' pmod1 <- mirt(Science, 1)
+#' plot(pmod1)
+#' summary(pmod1)
+#'
+#' pmod2 <- mirt(Science, 2)
+#' coef(pmod2)
+#' residuals(pmod2)
+#' plot(pmod2)
+#' itemplot(pmod2)
+#' anova(pmod1, pmod2)
+#'
 #' ###########
 #' data(SAT12)
 #' data <- key2binary(SAT12,
@@ -316,9 +333,9 @@ mirt <- function(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior 
 	pats <- apply(data, 1, paste, collapse = "/") 
 	freqs <- table(pats)		
 	tabdata2 <- unlist(strsplit(cbind(names(freqs)), "/"))
-	tabdata2 <- matrix(as.numeric(tabdata2), nfreqs, J, TRUE)	
+	tabdata2 <- suppressWarnings(matrix(as.numeric(tabdata2), nfreqs, J, TRUE))	
 	tabdata2 <- cbind(tabdata2,r) 
-	colnames(tabdata2) <- c(itemnames,'Freq')
+	colnames(tabdata2) <- c(itemnames,'Freq')	
 	
 	if(is.logical(par.prior)) 
 	    if(par.prior) suppressAutoPrior <- FALSE  
@@ -472,10 +489,10 @@ setMethod(
 		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information factor analysis with ", ncol(x@F), " factor",
-			if(ncol(x@F)>1) "s", "\n", sep="")
-			if(x@converge == 1)	
-				cat("Converged in ", x@EMiter, " iterations using ", x@quadpts,
-				" quadrature points.\n", sep="")
+		if(ncol(x@F)>1) "s", "\n", sep="")
+		if(x@converge == 1)	
+			cat("Converged in ", x@EMiter, " iterations using ", x@quadpts,
+			" quadrature points.\n", sep="")
 		else 	
 			cat("Estimation stopped after ", x@EMiter, " iterations using ", 
 				x@quadpts, " quadrature points.\n", sep="")
@@ -514,7 +531,7 @@ setMethod(
                 "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
-				object@df, ", p = ", NA, "RMSEA = ", NA, "\n", sep="")			
+				x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )			
 	}
 )
 
@@ -687,7 +704,7 @@ setMethod(
 			tabdata[tabdata[ ,1:ncol(object@data)] == 99] <- NA
 			tabdata[ ,ncol(tabdata)] <- freq
 			tabdata <- cbind(tabdata,expected,res)
-			colnames(tabdata) <- c(colnames(object@tabdata),"freq","exp")	
+			colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
 				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
@@ -735,15 +752,18 @@ setMethod(
 		if(nfact == 2){						
 			colnames(plt) <- c("info", "Theta1", "Theta2")			
 			if(type == 'infocontour')												
-				contour(theta, theta, matrix(info,length(theta),length(theta)), 
-					main = paste("Test Information Contour"), xlab = "Theta 1", ylab = "Theta 2")
+				return(contourplot(info ~ Theta1 * Theta2, data = plt, 
+					main = paste("Test Information Contour"), xlab = expression(theta[1]), 
+					ylab = expression(theta[2])))
 			if(type == 'info')
-				return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
-					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-					screen = rot))
+				return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
+					zlab = expression(I(theta)), xlab = expression(theta[1]), ylab = expression(theta[2]), 
+					scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
 		} else {
+			colnames(plt) <- c("info", "Theta")
 			if(type == 'info')
-				plot(Theta, info, type='l',main = 'Test Information', xlab = 'Theta', ylab='Information')
+				return(xyplot(info~Theta, plt, type='l',main = 'Test Information', 
+					xlab = expression(theta), ylab=expression(I(theta))))				
 			if(type == 'infocontour') 
 				cat('No \'contour\' plots for 1-dimensional models\n')
 		}		

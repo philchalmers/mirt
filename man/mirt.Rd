@@ -9,9 +9,9 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(fulldata, nfact, guess = 0, SE = FALSE, prev.cor =
-    NULL, par.prior = FALSE, startvalues = NULL, quadpts =
-    NULL, ncycles = 300, tol = .001, nowarn = TRUE, debug =
+  mirt(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL,
+    par.prior = FALSE, startvalues = NULL, quadpts = NULL,
+    ncycles = 300, tol = .001, nowarn = TRUE, debug =
     FALSE, ...)
 
   \S4method{summary}{mirt}(object, rotate='varimax',
@@ -30,7 +30,7 @@ Theory)}
     digits=3, printvalue = NULL, ...)
 }
 \arguments{
-  \item{fulldata}{a \code{matrix} or \code{data.frame} that
+  \item{data}{a \code{matrix} or \code{data.frame} that
   consists of only 0, 1, and \code{NA} values to be factor
   analyzed. If scores have been recorded by the response
   pattern then they can be recoded to dichotomous format
@@ -129,24 +129,26 @@ Theory)}
 }
 \description{
   \code{mirt} fits an unconditional maximum likelihood
-  factor analysis model to dichotomous data under the item
-  response theory paradigm. Pseudo-guessing parameters may
-  be included but must be declared as constant.
+  factor analysis model to dichotomous and polychotomous
+  data under the item response theory paradigm.
+  Pseudo-guessing parameters may be included but must be
+  declared as constant.
 }
 \details{
 
 
   \code{mirt} follows the item factor analysis strategy by
   marginal maximum likelihood estimation (MML) outlined in
-  Bock and Aiken (1981) and Bock, Gibbons and Muraki
-  (1988). Nested models may be compared via the approximate
-  chi-squared difference test or by a reduction in AIC/BIC
-  values (comparison via \code{\link{anova}}). The general
-  equation used for dichotomous multidimensional item
-  response theory item is a logistic form with a scaling
-  correction of 1.702. This correction is applied to allow
-  comparison to mainstream programs such as TESTFACT
-  (2003). The general IRT equation is
+  Bock and Aiken (1981), Bock, Gibbons and Muraki (1988),
+  and Muraki and Carlson (1995). Nested models may be
+  compared via the approximate chi-squared difference test
+  or by a reduction in AIC/BIC values (comparison via
+  \code{\link{anova}}). The general equation used for
+  multidimensional item response theory is a logistic form
+  with a scaling correction of 1.702. This correction is
+  applied to allow comparison to mainstream programs such
+  as TESTFACT (2003) and POLYFACT. The general IRT equation
+  for dichotomous items is
 
   \deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_j + (1 -
   g_j) / (1 + exp(-1.702(\bold{a}_j' \theta + d_j)))}
@@ -156,7 +158,9 @@ Theory)}
   \deqn{\theta} is the vector of factor scores, \eqn{d_j}
   is the intercept, and \eqn{g_j} is the pseudo-guessing
   parameter. To avoid estimation difficulties the
-  \eqn{g_j}'s must be specified by the user.
+  \eqn{g_j}'s must be specified by the user. The
+  polychotomous functions has a similar form but is not
+  expressed here.
 
   Estimation begins by computing a matrix of
   quasi-tetrachoric correlations, potentially with
@@ -169,12 +173,14 @@ Theory)}
   \eqn{\sqrt{1 - h_j^2}}. The initial intercept parameters
   are determined by calculating the inverse normal of the
   item facility (i.e., item easiness), \eqn{q_j}, to obtain
-  \eqn{d_j = q_j / u_j}. Following these initial estimates
-  the model is iterated using the EM estimation strategy
-  with fixed quadrature points. Implicit equation
-  accelerations described by Ramsey (1975) are also added
-  to facilitate parameter convergence speed, and these are
-  adjusted every third cycle.
+  \eqn{d_j = q_j / u_j}. A similar implementation is also
+  used for obtaining initial values for polychotomous
+  items. Following these initial estimates the model is
+  iterated using the EM estimation strategy with fixed
+  quadrature points. Implicit equation accelerations
+  described by Ramsey (1975) are also added to facilitate
+  parameter convergence speed, and these are adjusted every
+  third cycle.
 
   Factor scores are estimated assuming a normal prior
   distribution and can be appended to the input data matrix
@@ -191,13 +197,10 @@ Theory)}
   Using \code{plot} will plot the either the test surface
   function or the test information function for 1 and 2
   dimensional solutions. To examine individual item plots
-  use \code{\link{itemplot}} (although the
-  \code{\link[plink]{plink}} package may be more suitable
-  for IRT graphics) which will also plot information and
-  surface functions. Residuals are computed using the LD
-  statistic (Chen \& Thissen, 1997) in the lower diagonal
-  of the matrix returned by \code{residuals}, and Cramer's
-  V above the diagonal.
+  use \code{\link{itemplot}}. Residuals are computed using
+  the LD statistic (Chen \& Thissen, 1997) in the lower
+  diagonal of the matrix returned by \code{residuals}, and
+  Cramer's V above the diagonal.
 }
 \section{Convergence}{
   Unrestricted full-information factor analysis is known to
@@ -220,14 +223,14 @@ Theory)}
 \dontrun{
 #load LSAT section 7 data and compute 1 and 2 factor models
 data(LSAT7)
-fulldata <- expand.table(LSAT7)
+data <- expand.table(LSAT7)
 
-(mod1 <- mirt(fulldata, 1))
+(mod1 <- mirt(data, 1))
 summary(mod1)
 residuals(mod1)
 plot(mod1) #test information function
 
-(mod2 <- mirt(fulldata, 2))
+(mod2 <- mirt(data, 2))
 summary(mod2)
 coef(mod2)
 residuals(mod2)
@@ -237,20 +240,32 @@ anova(mod1, mod2) #compare the two models
 scores <- fscores(mod2) #save factor score table
 
 ###########
+pmod1 <- mirt(Science, 1)
+plot(pmod1)
+summary(pmod1)
+
+pmod2 <- mirt(Science, 2)
+coef(pmod2)
+residuals(pmod2)
+plot(pmod2)
+itemplot(pmod2)
+anova(pmod1, pmod2)
+
+###########
 data(SAT12)
-fulldata <- key2binary(SAT12,
+data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
-mod1 <- mirt(fulldata, 1)
-mod2 <- mirt(fulldata, 2)
-mod3 <- mirt(fulldata, 3)
+mod1 <- mirt(data, 1)
+mod2 <- mirt(data, 2)
+mod3 <- mirt(data, 3)
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 
 #with guessing
-mod1g <- mirt(fulldata, 1, guess = .1)
+mod1g <- mirt(data, 1, guess = .1)
 coef(mod1g)
-mod2g <- mirt(fulldata, 2, guess = .1)
+mod2g <- mirt(data, 2, guess = .1)
 coef(mod2g)
 anova(mod1g, mod2g)
 summary(mod2g, rotate='promax')
@@ -271,6 +286,10 @@ summary(mod2g, rotate='promax')
   Carroll, J. B. (1945). The effect of difficulty and
   chance success on correlations between items and between
   tests. \emph{Psychometrika, 26}, 347-372.
+
+  Muraki, E. & Carlson, E. B. (1995). Full-information
+  factor analysis for polytomous item responses.
+  \emph{Applied Psychological Measurement, 19}, 73-90.
 
   Ramsay, J. O. (1975). Solving implicit equations in
   psychometric data analysis. \emph{Psychometrika, 40}(3),

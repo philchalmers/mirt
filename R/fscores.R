@@ -65,7 +65,7 @@ setMethod(
 		a <- object@pars$lambdas		
 		d <- object@pars$zetas		
 		g <- object@guess		
-		g[is.na(guess)] <- 0
+		g[is.na(g)] <- 0
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- ncol(a)
@@ -80,17 +80,17 @@ setMethod(
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
 		for (i in 1:J){
 			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+				itemtrace[ ,itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, g[i]) 
 				itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
 			} else {
 				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 					P.poly(a[i, ], d[[i]], Theta, TRUE)	
 			}
 		}			
-		for (i in 1:nrow(tabdata)){							
+		for (i in 1:nrow(tabdata)){				
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
-			thetas <- sum(Theta * exp(L) * W / sum(exp(L) * W))
-			SE <- sqrt(sum((Theta - thetas)^2 * exp(L) * W / sum(exp(L) * W)))	
+			thetas <- colSums(Theta * exp(L) * W / sum(exp(L) * W))
+			SE <- sqrt(colSums((Theta - thetas)^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
 		}		

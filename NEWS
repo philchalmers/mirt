@@ -1,3 +1,24 @@
+----------------------------------------------------------------
+mirt 0.2.3
+---------------------------------------------------------------
+
+* mirt() and bfactor() can now accommodate polychotomous items using 
+  an ordinal IRT scheme
+
+* itemplot() now makes use of the handy plink package plots, giving a 
+  good deal of flexibility. 
+
+* Generic plot()'s now use lattice plots extensively
+
+
+
+----------------------------------------------------------------
+mirt 0.2.2
+----------------------------------------------------------------
+
+* Ported src code into Rcpp for future tweaking. 
+
+----------------------------------------------------------------
 mirt 0.2.1
 ----------------------------------------------------------------
 
@@ -8,8 +29,7 @@ mirt 0.2.1
 * Nonlinear polynomial estimation specification for confmirt models, now
   with more consistent returned lables
 
-
-
+----------------------------------------------------------------
 mirt 0.2.0
 ----------------------------------------------------------------
 

@@ -1,38 +1,31 @@
 #' Displays item surface and information plots
 #' 
-#' \code{itemplot} displays 3D surface plots if the number of factors is two, or
-#' standard 2D plots if the number of factors is equal to one.
+#' \code{itemplot} displays various item based IRT plots.
 #' 
 #'
 #' @usage 
-#' itemplot(object, item, ...)
+#' itemplot(object, ...)
 #' 
-#' \S4method{itemplot}{mirtClass,numeric}(object,
-#'   item, type = "info", npts = 50, rot = list(), ...)
+#' \S4method{itemplot}{mirtClass}(object,
+#'   items = NULL, ...)
 #'
-#' \S4method{itemplot}{bfactorClass,numeric}(object,
-#'   item, type = "info", npts = 50, rot = list(), ...)
+#' \S4method{itemplot}{bfactorClass}(object,
+#'   items = NULL, ...) 
 #'
-#' \S4method{itemplot}{polymirtClass,numeric}(object,
-#'   item, type = "info", npts = 50, rot = list(), ...)
-#' @aliases itemplot-method itemplot,mirtClass,numeric-method 
-#' itemplot,polymirtClass,numeric-method itemplot,bfactorClass,numeric-method
+#' \S4method{itemplot}{polymirtClass}(object,
+#'   items = NULL, ...)
+#'
+#' @aliases itemplot-method itemplot,mirtClass-method 
+#' itemplot,polymirtClass-method itemplot,bfactorClass-method
 #' @param object a computed model of class \code{bfactorClass},
 #' \code{mirtClass}, or \code{polymirtClass}
-#' @param item a single numerical value indicating which item to plot
-#' @param type type of graphic to plot, may be either \code{'curve'} for the
-#' response surface curve, \code{'info'} for the item information,
-#' \code{'contour'} for item probability contours, or \code{'infocontour'} for
-#' information contour plot. Note that \code{polymirtClass} objects can only
-#' display information plots
-#' @param npts number of points to use per dimension. A higher value will make
-#' the graphs look smoother. Default is 50
-#' @param rot allows rotation of the 3D graphics. Default is \code{list(x=-70,y=30,z=10)}
-#' @param ... additional arguments to be passed
+#' @param items an integer vector which item(s) to plot. Default is to plot all items
+#' @param ... additional arguments to be passed on to \code{\link[plink]{plink}} generic
+#' \code{plot()}. See the \code{\link[plink]{plink}} package for further details.  
 #' @section Methods: \describe{ \item{itemplot}{\code{signature(object =
-#' "bfactorClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
-#' "mirtClass", item = "numeric")}} \item{itemplot}{\code{signature(object =
-#' "polymirtClass", item = "numeric")}} }
+#' "bfactorClass")}} \item{itemplot}{\code{signature(object =
+#' "mirtClass")}} \item{itemplot}{\code{signature(object =
+#' "polymirtClass")}} }
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{plot}}, \code{\link{mirt}}, \code{\link{bfactor}},
 #' \code{\link{polymirt}}
@@ -49,20 +42,16 @@
 #' mod1 <- mirt(fulldata,1)
 #' mod2 <- mirt(fulldata,2)
 #' 
-#' #first item unidimensional
-#' itemplot(mod1, 1)
-#' itemplot(mod1, 1, type = 'info')
-#' 
-#' #first item multidimensional
-#' itemplot(mod2, 1)
-#' itemplot(mod2, 1, type = 'info')
-#' #turn it a little
-#' itemplot(mod2, 1, type = 'info', rot = list(x = -70, y = -15, z = -10))
+#' itemplot(mod1)
+#' itemplot(mod1, combine = 5, auto.key=list(space="right"))
+#'
+#' itemplot(mod2, drape = TRUE)
+#' itemplot(mod2, type = "vectorplot1")
 #' 
 #'     }
 #' 
 setGeneric("itemplot", 
-	def = function(object, item, ...) standardGeneric("itemplot")
+	def = function(object, ...) standardGeneric("itemplot")
 )
 
 # Methods for Function itemplot
@@ -78,114 +67,81 @@ setGeneric("itemplot",
 # @keywords methods
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'mirtClass', item = 'numeric'),
-	definition = function(object, item, type = 'info', npts = 50,
-		rot = list(), ...)
-	{  
-		if(object@K[item] != 2) stop('Polytomous items not supported yet...') 
-		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
-		nfact <- ncol(object@Theta)
-		a <- as.matrix(object@pars[ ,1:nfact])
-		d <- object@pars[ ,ncol(object@pars)]
-		g <- object@guess
-		g[is.na(g)] <- 0
-		A <- as.matrix(sqrt(apply(a^2,1,sum)))
-		B <- -d/A
-		if(nfact > 2 ) stop("Can't plot high dimentional solutions.\n")
-		theta <- seq(-4,4,length.out=npts)
-		Theta <- thetaComb(theta, nfact) 
-		P <- P.mirt(a[item, ],d[item],as.matrix(Theta),g[item])  
-		Pstar <- P.mirt(a[item, ],d[item],as.matrix(Theta),0)  		  
-		if(nfact == 2){			
-			I <- (P * (1 - P)) * Pstar/P * A[item,]^2
-			if(type == 'info'){				 
-				plt <- data.frame(cbind(I,Theta))
-				colnames(plt) <- c('I','Theta1','Theta2')
-				return(wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item", item,"Information"),
-					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-					screen = rot))
-			} 
-			if(type == 'curve'){	
-				plt <- data.frame(cbind(P,Theta))
-				colnames(plt) <- c('P','Theta1','Theta2')
-				return(wireframe(P ~ Theta1 + Theta2, data = plt, main = paste("Item", item,
-					"Characteristic Surface"), zlab = "P", xlab = "Theta 1", ylab = "Theta 2", 
-					scales = list(arrows = FALSE), screen = rot))
-			}		
-			if(type == 'contour'){
-				plt <- data.frame(cbind(P,Theta))
-				colnames(plt) <- c('P','Theta1','Theta2')
-				contour(theta, theta, matrix(P,length(theta),length(theta)), 
-					main = paste("Item", item,"Probability Contour"), xlab = "Theta 1", ylab = "Theta 2")
-			}
-			if(type == 'infocontour'){
-				plt <- data.frame(cbind(I,Theta))
-				colnames(plt) <- c('I','Theta1','Theta2')
-				contour(theta, theta, matrix(I,length(theta),length(theta)), 
-					main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")
-			}
-		} else {
-			if(type == 'curve')  
-				plot(Theta, P, type='l',main = paste("Item", item, "Characteristic Curve"), 
-					xlab = 'Theta', ylab='Probability')
-			if(type == 'info'){ 
-				I <- (P * (1 - P)) * Pstar/P * a[item,]^2 
-				plot(Theta, I, type='l',main = paste('Item', item, 'Information'), xlab = 'Theta', 
-					ylab='Information')
-			}
-			if(type=='contour' || type=='infocontour') cat('No \'contour\' plots for 1-dimensional models\n')
-		}  
+	signature = signature(object = 'mirtClass'),
+	definition = function(object, items = NULL, ...)
+	{  			
+		if(is.null(items)) items <- 1:length(object@K)
+		x <- itemplot.main(object, items)
+		ret <- plot(x, ...)
+		invisible(ret)		
 	}
 )
 
 # @rdname itemplot-methods  
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'bfactorClass', item = 'numeric'),
-	definition = function(object, item, type = 'info', npts = 50, 
-		rot = list(), ...)
+	signature = signature(object = 'bfactorClass'),
+	definition = function(object, items = NULL, ...)
 	{
-		if(object@K[item] != 2) stop('Polytomous items not supported yet...') 
-		if (!type %in% c('curve','info','contour','infocontour')) stop(type, " is not a valid plot type.")
-		a <- as.matrix(object@pars[ ,1:(ncol(object@pars) - 1)])
-		d <- object@pars[ ,ncol(object@pars)]
-		g <- object@guess
-		logicalfact <- object@logicalfact
-		A <- as.matrix(sqrt(apply(a^2,1,sum)))[item]
-		B <- -d/A  
-		theta <- seq(-4,4,length.out=npts)
-		Theta <- thetaComb(theta, 2)		
-		P <- P.bfactor(a[item,],d[item],Theta,g[item],logicalfact[item, ])
-		Pstar <- P.bfactor(a[item,],d[item],Theta,0,logicalfact[item, ])		    
-		I <- (P * (1 - P)) * Pstar/P * A^2		
-		if(type == 'info'){			 
-			plt <- data.frame(cbind(I,Theta))
-			colnames(plt) <- c('I','Theta1','Theta2')		
-			return(wireframe(I ~ Theta1 + Theta2, data = plt, main = paste("Item",item,"Information"), 
-				zlab = "I", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE)))
-		}		
-		if(type == 'curve'){
-			plt <- data.frame(cbind(P,Theta))	
-			colnames(plt) <- c('P','Theta1','Theta2')		
-			return(wireframe(P ~ Theta1 + Theta2, data=plt, main = paste("Item",item, "Probability Surface"), 
-				zlab = "P", xlab = "General", ylab = "Specific", scales = list(arrows = FALSE)))
-		}	  
-		if(type == 'contour'){
-			plt <- data.frame(cbind(P,Theta))
-			colnames(plt) <- c('P','Theta1','Theta2')
-			contour(theta, theta, matrix(P,length(theta),length(theta)), 
-				main = paste("Item", item,"Probability Contour"), xlab = "General", ylab = "Specific")	
-		}
-		if(type == 'infocontour'){
-			plt <- data.frame(cbind(I,Theta))
-			colnames(plt) <- c('I','Theta1','Theta2')
-			contour(theta, theta, matrix(I,length(theta),length(theta)), 
-				main = paste("Item", item,"Information Contour"), xlab = "General", ylab = "Specific")
-		}
+		if(is.null(items)) items <- 1:length(object@K)
+		x <- itemplot.main(object, items)
+		ret <- plot(x, ...)
+		invisible(ret)
 	}
 )
 
+# @rdname itemplot-methods  
+setMethod(
+	f = "itemplot",
+	signature = signature(object = 'polymirtClass'),
+	definition = function(object, items = NULL, ...)
+	{
+		if(is.null(items)) items <- 1:length(object@K)
+		x <- itemplot.main(object, items)
+		ret <- plot(x, ...)
+		invisible(ret)
+	}
+)
 
-
+itemplot.main <- function(object, items)
+{
+	K <- object@K
+	nitems <- length(items)
+	guess <- object@guess
+	if(class(object) == 'polymirtClass'){
+		lambdas <- object@parlist$lambdas[items, , drop=FALSE]
+		zetas <- object@parlist$zetas
+	} else {	
+		lambdas <- object@pars$lambdas[items, , drop=FALSE]
+		zetas <- object@pars$zetas
+	}
+	if(class(object) == 'bfactorClass')
+		lambdas <- cbind(lambdas[ ,1], rowSums(lambdas[,2:ncol(lambdas)])) 		
+	nfact <- ncol(lambdas)
+	pars <- matrix(NA, length(items), nfact + max(K))
+	pars[ ,1:nfact] <- lambdas
+	for(i in items){
+		len <- K[i] - 1
+		pars[i, (nfact+1):(nfact+len)] <- zetas[[i]]
+		if(len == 1) pars[i, nfact + 2] <- guess[i]	
+	}	
+	if(all(is.na(pars[,ncol(pars)]))) pars <- pars[, -ncol(pars)]	
+	index <- 1:nitems
+	drm <- index[K == 2]
+	grm <- index[K != 2]	
+	if(nitems == 1){
+		if(K[items] == 2) x <- drm(pars, dimensions = nfact) 
+		else x <- plink::grm(pars, dimensions = nfact)
+		return(x)
+	}
+	if(length(grm) > 0 && length(drm) > 0)
+		pm <- plink::as.poly.mod(nitems, c('drm','grm'), list(drm, grm))
+	else if(length(drm) > 0)
+		pm <- plink::as.poly.mod(nitems, 'drm')
+	else
+		pm <- plink::as.poly.mod(nitems, 'grm')
+	x <- plink::mixed(pars, K, pm, dimensions=nfact)
+	x
+}
 
 

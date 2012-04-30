@@ -22,6 +22,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{parsSE}:}{Object of class \code{"list"}, estimated parameter standard errors  }    
     \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters }
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }    
+    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }     
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{X2}:}{Object of class \code{"numeric"}, chi-squared value }
@@ -37,7 +38,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{N}:}{Object of class \code{"numeric"},  sample size}
     \item{\code{Pl}:}{Object of class \code{"numeric"},  likelihood-values for tabdata}
     \item{\code{Theta}:}{Object of class \code{"matrix"}, theta grid }
-    \item{\code{fulldata}:}{Object of class \code{"matrix"},  complete binary data}
+    \item{\code{data}:}{Object of class \code{"matrix"},  complete binary data}
     \item{\code{logicalfact}:}{Object of class \code{"matrix"}, logical factor indicators }
     \item{\code{facility}:}{Object of class \code{"numeric"},  item easiness}
     \item{\code{specific}:}{Object of class \code{"numeric"}, specific item indicators }

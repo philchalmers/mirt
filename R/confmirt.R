@@ -933,6 +933,8 @@ setMethod(
 	signature = signature(object = 'confmirtClass'),
 	definition = function(object, digits = 3, ...){  
 		tabdata <- object@tabdata
+		if(length(tabdata)) stop('Expected response vectors cannot be computed because 
+                logLik() has not been run or the data contains missing responses.')
 		colnames(tabdata) <- c(colnames(object@data),"freq","exp")	
 		print(tabdata, digits)
 		invisible(tabdata)

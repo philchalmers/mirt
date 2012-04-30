@@ -697,15 +697,18 @@ setMethod(
 		if(nfact == 2){						
 			colnames(plt) <- c("info", "Theta1", "Theta2")			
 			if(type == 'infocontour')												
-				contour(theta, theta, matrix(info,length(theta),length(theta)), 
-					main = paste("Test Information Contour"), xlab = "Theta 1", ylab = "Theta 2")
+				return(contourplot(info ~ Theta1 * Theta2, data = plt, 
+					main = paste("Test Information Contour"), xlab = expression(theta[1]), 
+					ylab = expression(theta[2])))
 			if(type == 'info')
 				return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
-					zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-					screen = rot))
+					zlab = expression(I(theta)), xlab = expression(theta[1]), ylab = expression(theta[2]), 
+					scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
 		} else {
+			colnames(plt) <- c("info", "Theta")
 			if(type == 'info')
-				plot(Theta, info, type='l',main = 'Test Information', xlab = 'Theta', ylab='Information')
+				return(xyplot(info~Theta, plt, type='l',main = 'Test Information', xlab = expression(theta), 
+					ylab = expression(I(theta))))
 			if(type == 'infocontour') 
 				cat('No \'contour\' plots for 1-dimensional models\n')
 		}		
@@ -815,58 +818,13 @@ setMethod(
 	}		
 ) 
 
-# @rdname itemplot-methods  
-setMethod(
-	f = "itemplot",
-	signature = signature(object = 'polymirtClass', item = 'numeric'),
-	definition = function(object, item, type = 'info', npts = 50,
-		rot = list(), ...)
-	{		
-		if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
-		if(object@K[item] > 2){
-			K <- object@K		
-			nfact <- ncol(object@Theta)
-			a <- as.matrix(object@pars[ ,1:nfact])
-			d <- as.matrix(object@pars[ ,(nfact+1):ncol(object@pars)])			
-			A <- as.matrix(sqrt(apply(a^2,1,sum)))[item,]
-			nzeta <- K[item] - 1
-			theta <- seq(-4,4,length.out=npts)
-			Theta <- thetaComb(theta, nfact)		
-			P <- P.poly(a[item,], d[item,], Theta, itemexp = FALSE)
-			info <- rep(0,nrow(P))
-			for(i in 1:K[item]){
-				w1 <- P[,i]*(1-P[,i])*A
-				w2 <- P[,i+1]*(1-P[,i+1])*A
-				I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
-				info <- info + I
-			}	
-			plt <- data.frame(cbind(info,Theta))		
-			if(nfact == 1)	
-				plot(Theta, info, type='l',main = paste('Item', item,'Information'), 
-					xlab = 'Theta', ylab='Information')
-			else {					
-				colnames(plt) <- c('info','Theta1','Theta2')
-				if(type == 'info')
-					return(wireframe(info ~ Theta1 + Theta2, data=plt, main = paste("Item",item,"Information"),
-						zlab = "I", xlab = "Theta 1", ylab = "Theta 2", scales = list(arrows = FALSE),
-						screen = rot))				
-				if(type == 'infocontour'){										
-					contour(theta, theta, matrix(info,length(theta),length(theta)), 
-						main = paste("Item", item,"Information Contour"), xlab = "Theta 1", ylab = "Theta 2")
-				}
-			}	
-		} else {
-			class(object) <- 'mirtClass'
-			itemplot(object,item,type,npts,rot)		 
-		}	
-	}
-)
-
 setMethod(
 	f = "fitted",
 	signature = signature(object = 'polymirtClass'),
 	definition = function(object, digits = 3, ...){  		  
 		tabdata <- object@tabdata
+		if(length(tabdata)) stop('Expected response vectors cannot be computed because 
+                logLik() has not been run or the data contains missing responses.')
 		colnames(tabdata) <- c(colnames(object@data),"freq","exp")	
 		print(tabdata, digits)
 		invisible(tabdata)

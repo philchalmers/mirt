@@ -175,12 +175,13 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, specific, sitems, 
 	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))
 	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
 	for (i in 1:J){
+		atmp <- a[i, logicalfact[i, ]]
 		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i]] <- P.bfactor(a[i, ], d[[i]], Theta, guess[i], logicalfact[i, ]) 
+			itemtrace[ ,itemloc[i]] <- P.mirt(atmp, d[[i]], Theta, guess[i]) 
 			itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
 		} else {
 			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-				P.bfactor(a[i, ], d[[i]], Theta, 0, logicalfact[i, ])	
+				P.poly(atmp, d[[i]], Theta, TRUE) 
 		}
 	}		
 	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)

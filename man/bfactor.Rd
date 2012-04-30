@@ -6,10 +6,10 @@
 \alias{summary,bfactor-method}
 \title{Full-Information Item Bifactor Analysis}
 \usage{
-  bfactor(fulldata, specific, guess = 0, SE = FALSE,
-    prev.cor = NULL, par.prior = FALSE, startvalues = NULL,
-    quadpts = NULL, ncycles = 300, EMtol = .001, nowarn =
-    TRUE, debug = FALSE, ...)
+  bfactor(data, specific, guess = 0, SE = FALSE, prev.cor =
+    NULL, par.prior = FALSE, startvalues = NULL, quadpts =
+    15, ncycles = 300, tol = .001, nowarn = TRUE, debug =
+    FALSE, ...)
 
   \S4method{summary}{bfactor}(object, digits = 3, ...)
 
@@ -21,11 +21,11 @@
     digits = 3, printvalue = NULL, ...)
 }
 \arguments{
-  \item{fulldata}{a complete \code{matrix} or
-  \code{data.frame} of item responses that consists of only
-  0, 1, and \code{NA} values to be factor analyzed. If
-  scores have been recorded by the response pattern then
-  they can be recoded to dichotomous format using the
+  \item{data}{a complete \code{matrix} or \code{data.frame}
+  of item responses that consists of only 0, 1, and
+  \code{NA} values to be factor analyzed. If scores have
+  been recorded by the response pattern then they can be
+  recoded to dichotomous format using the
   \code{\link{key2binary}} function.}
 
   \item{specific}{a numeric vector specifying which factor
@@ -44,7 +44,7 @@
   \item{guess}{fixed pseudo-guessing parameter. Can be
   entered as a single value to assign a global value or may
   be entered as a numeric vector for each item of length
-  \code{ncol(fulldata)}.}
+  \code{ncol(data)}.}
 
   \item{SE}{logical; estimate parameter standard errors?}
 
@@ -72,15 +72,14 @@
   \item{startvalues}{user declared start values for
   parameters}
 
-  \item{quadpts}{number of quadrature points per dimension.
-  If \code{NULL} then the number of quadrature points is
-  set to 9}
+  \item{quadpts}{number of quadrature points per
+  dimension.}
 
   \item{ncycles}{the number of EM iterations to be
   performed}
 
-  \item{EMtol}{if the largest change in the EM cycle is
-  less than this value then the EM iterations are stopped}
+  \item{tol}{if the largest change in the EM cycle is less
+  than this value then the EM iterations are stopped}
 
   \item{object}{a model estimated from \code{bfactor} of
   class \code{bfactorClass}}
@@ -101,24 +100,26 @@
 }
 \description{
   \code{bfactor} fits a confirmatory maximum likelihood
-  bifactor model to dichotomous data under the item
-  response theory paradigm. Pseudo-guessing parameters may
-  be included but must be declared as constant.
+  bifactor model to dichotomous and polychotomous data
+  under the item response theory paradigm. Pseudo-guessing
+  parameters may be included but must be declared as
+  constant.
 }
 \details{
 
 
   \code{bfactor} follows the item factor analysis strategy
-  explicated by Gibbons and Hedeker (1992). Nested models
-  may be compared via an approximate chi-squared difference
-  test or by a reduction in AIC or BIC (accessible via
-  \code{\link{anova}}); note that this only makes sense
-  when comparing class \code{bfactorClass} models to class
-  \code{mirtClass}. The general equation used for item
+  explicated by Gibbons and Hedeker (1992) and Gibbons et
+  al. (2007). Nested models may be compared via an
+  approximate chi-squared difference test or by a reduction
+  in AIC or BIC (accessible via \code{\link{anova}}); note
+  that this only makes sense when comparing class
+  \code{bfactorClass} models to class \code{mirtClass} or
+  \code{polymirtClass}. The general equation used for item
   bifactor analysis in this package is in the logistic form
   with a scaling correction of 1.702. This correction is
   applied to allow comparison to mainstream programs such
-  as TESTFACT 4 (2003).
+  as TESTFACT 4 (2003) and POLYFACT.
 
   Unlike TESTFACT 4 (2003) initial start values are
   computed by using information from a quasi-tetrachoric
@@ -146,38 +147,78 @@
   residual values can be observed by using the
   \code{fitted} and \code{residuals} functions. To examine
   individuals item plots use \code{\link{itemplot}} which
-  will also plot information and surface functions
-  (although the \code{\link[plink]{plink}} package may be
-  more suitable for IRT graphics). Residuals are computed
-  using the LD statistic (Chen & Thissen, 1997) in the
-  lower diagonal of the matrix returned by
-  \code{residuals}, and Cramer's V above the diagonal.
+  will also plot information and surface functions.
+  Residuals are computed using the LD statistic (Chen &
+  Thissen, 1997) in the lower diagonal of the matrix
+  returned by \code{residuals}, and Cramer's V above the
+  diagonal.
 }
 \examples{
 \dontrun{
 
 ###load SAT12 and compute bifactor model with 3 specific factors
 data(SAT12)
-fulldata <- key2binary(SAT12,
+data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
-mod1 <- bfactor(fulldata, specific)
+mod1 <- bfactor(data, specific)
 coef(mod1)
 
 ###Try with guessing parameters added
 guess <- rep(.1,32)
-mod2 <- bfactor(fulldata, specific, guess = guess)
+mod2 <- bfactor(data, specific, guess = guess)
 coef(mod2) #item 32 too difficult to include guessing par
 
 #fix by imposing a weak intercept prior
-mod3a <- bfactor(fulldata, specific, guess = guess, par.prior =
+mod3a <- bfactor(data, specific, guess = guess, par.prior =
     list(int = c(0,4), int.items = 32))
 coef(mod3a)
 
 #...or by removing guessing parameter
 guess[32] <- 0
-mod3b <- bfactor(fulldata, specific, guess = guess)
+mod3b <- bfactor(data, specific, guess = guess)
 coef(mod3b)
+
+#########
+#simulate data
+a <- matrix(c(
+1,0.5,NA,
+1,0.5,NA,
+1,0.5,NA,
+1,0.5,NA,
+1,0.5,NA,
+1,0.5,NA,
+1,0.5,NA,
+1,NA,0.5,
+1,NA,0.5,
+1,NA,0.5,
+1,NA,0.5,
+1,NA,0.5,
+1,NA,0.5,
+1,NA,0.5),ncol=3,byrow=TRUE)
+
+d <- matrix(c(
+-1.0,NA,NA,
+-1.5,NA,NA,
+ 1.5,NA,NA,
+ 0.0,NA,NA,
+2.5,1.0,-1,
+3.0,2.0,-0.5,
+3.0,2.0,-0.5,
+3.0,2.0,-0.5,
+2.5,1.0,-1,
+2.0,0.0,NA,
+-1.0,NA,NA,
+-1.5,NA,NA,
+ 1.5,NA,NA,
+ 0.0,NA,NA,
+1.0,NA,NA),ncol=3,byrow=TRUE)
+
+sigma <- diag(3)
+dataset <- simdata(a,d,2000,sigma)
+
+specific <- c(rep(1,7),rep(2,7))
+simmod <- bfactor(dataset, specific)
     }
 }
 \author{
@@ -187,6 +228,13 @@ coef(mod3b)
   Gibbons, R. D., & Hedeker, D. R. (1992). Full-information
   Item Bi-Factor Analysis. \emph{Psychometrika, 57},
   423-436.
+
+  Gibbons, R. D., Darrell, R. B., Hedeker, D., Weiss, D.
+  J., Segawa, E., Bhaumik, D. K., Kupfer, D. J., Frank, E.,
+  Grochocinski, V. J., & Stover, A. (2007).
+  Full-Information item bifactor analysis of graded
+  response data. \emph{Applied Psychological Measurement,
+  31}, 4-19
 
   Carroll, J. B. (1945). The effect of difficulty and
   chance success on correlations between items and between

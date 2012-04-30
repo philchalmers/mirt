@@ -15,16 +15,17 @@ Description: Analysis of dichotomous and polychotomous response data using
 Depends:
     R (>= 2.14),
     stats4,
+    lattice,
     MASS,
     methods
 Imports:
     stats4,
     psych,
-    lattice,
     GPArotation,
     mvtnorm,
     Rcpp,
     RcppArmadillo,
+    plink,
     Matrix
 ByteCompile: yes
 LazyLoad: yes

@@ -231,7 +231,7 @@ anova(mod1,mod3)
 #####
 #polynomial and combinations
 model.linear <- confmirt.model()
-  F = 1-8
+ 	 F = 1-8
 
 
 model.quad <- confmirt.model()
