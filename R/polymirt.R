@@ -16,7 +16,7 @@
 # @keywords classes
 setClass(
 	Class = 'polymirtClass',
-	representation = representation(pars = 'matrix', parlist = 'list', guess = 'numeric', 
+	representation = representation(pars = 'list', guess = 'numeric', 
 		SEpars = 'matrix', cycles = 'numeric', Theta = 'matrix', fulldata = 'matrix', data = 'matrix', 
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric', AIC = 'numeric',
 		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', df = 'integer', 
@@ -493,7 +493,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	h2 <- rowSums(F^2) 	
 	names(h2) <- itemnames
 		
-	mod <- new('polymirtClass',pars=pars, parlist=normpars, guess=guess, SEpars=SEpars, 
+	mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, 
 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
 		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
 		estGuess=estGuess, Call=Call)
@@ -618,44 +618,39 @@ setMethod(
 	signature = 'polymirtClass',
 	definition = function(object, SE = TRUE, digits = 3, ...)
 	{  
-		nfact <- ncol(object@Theta)	
-		itemnames <- names(object@h2)
-		a <- matrix(object@pars[ ,1:nfact],ncol=nfact)
-		d <- matrix(object@pars[,(nfact+1):ncol(object@pars)],
-			ncol = ncol(object@pars)-nfact)    
+		K <- object@K
+		a <- object@pars$lambdas		
+		d <- matrix(NA, nrow(a), max(K-1))
+		zetas <- object@pars$zetas
+		for(i in 1:length(K)){
+			d[i, 1:(K[i] - 1)] <- zetas[[i]]
+		}
 		A <- sqrt(apply(a^2,1,sum))
 		B <- -d/A  
-		if (nfact > 1){  
-			parameters <- cbind(object@pars,object@guess,A,B)			
-			SEs <- object@SEpars	
-			rownames(parameters) <- itemnames
-			rownames(SEs) <- itemnames
-			colnames(parameters) <- c(paste("a_",1:nfact,sep=""),
-				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess","mvdisc",
-				paste("mvint_",1:(ncol(object@pars)-nfact),sep=""))	
-			colnames(SEs) <- c(paste("a_",1:nfact,sep=""),
-				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")		
+		if (ncol(a) > 1){  
+			parameters <- cbind(a,d,object@guess,A,B)    
+			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 
+				"mvdisc",paste("mvint_",1:max(K-1),sep=""))	  
 			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
-			print(round(parameters, digits))
-			if(SE){
-				cat("\nStd. Errors: \n\n")	
-				print(round(SEs, digits))
-			}				
+			print(round(parameters, digits))  	
 		} else {
-			parameters <- cbind(object@pars,object@guess)
-			SEs <- object@SEpars
-			rownames(parameters) <- itemnames
-			rownames(SEs) <- itemnames			
-			colnames(parameters) <- colnames(SEs) <- c(paste("a_",1:nfact,sep=""),
-				paste("d_",1:(ncol(object@pars)-nfact),sep=""),"guess")			
+			parameters <- cbind(a,d,object@guess)
+			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess")   
 			cat("\nParameter slopes and intercepts: \n\n")	
-			print(round(parameters, digits))
+			print(round(parameters, digits))	  
+		}
+		ret <- list(parameters)
+		if(length(object@parsSE) > 1){
 			if(SE){
 				cat("\nStd. Errors: \n\n")	
-				print(round(SEs, digits))
+				SEs <- matrix(sqrt(diag(object@vcov)), ncol = ncol(a) + 1)
+				colnames(SEs) <- colnames(parameters)[1:(ncol(a) + 1)]
+				rownames(SEs) <- rownames(parameters)
+				print(SEs, digits)
+				ret <- list(parameters,SEs)
 			}
 		}
-		invisible(parameters)
+		invisible(ret)
 	}
 )
 
@@ -670,8 +665,8 @@ setMethod(
 		K <- x@K		
 		nfact <- ncol(x@Theta)
 		if(nfact > 2) stop("Can't plot high dimensional solutions.")
-		a <- as.matrix(x@pars[ ,1:nfact])
-		d <- as.matrix(x@pars[ ,(nfact+1):ncol(x@pars)])	
+		a <- x@pars$lambdas
+		d <- x@pars$zetas	
 		guess <- x@guess
 		guess[is.na(guess)] <- 0
 		A <- as.matrix(sqrt(apply(a^2,1,sum)))	
@@ -680,7 +675,7 @@ setMethod(
 		info <- rep(0,nrow(Theta))
 		for(j in 1:length(K)){
 			if(K[j] > 2){
-				P <- P.poly(a[j,], d[j,],Theta, itemexp = FALSE)		
+				P <- P.poly(a[j,], d[[j]],Theta, itemexp = FALSE)		
 				for(i in 1:K[j]){
 					w1 <- P[,i]*(1-P[,i])*A[j]
 					w2 <- P[,i+1]*(1-P[,i+1])*A[j]
@@ -688,8 +683,8 @@ setMethod(
 					info <- info + I
 				}
 			} else {
-				P <- P.mirt(a[j,], d[j,],Theta, guess[j])
-				Pstar <- P.mirt(a[j,], d[j,],Theta, 0)
+				P <- P.mirt(a[j,], d[[j]],Theta, guess[j])
+				Pstar <- P.mirt(a[j,], d[[j]],Theta, 0)
 				info <- info + A[j]^2 * P * (1-P) * Pstar/P
 			}			
 		}		
@@ -720,41 +715,34 @@ setMethod(
 	signature = signature(object = 'polymirtClass'),
 	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 	{ 	
-		fulldata <- object@fulldata	
-		data <- object@data
-		data[data==99] <- NA
-		N <- nrow(fulldata)
 		K <- object@K
-		J <- length(K)
+		Theta <- object@Theta
+		data <- object@data	
+		N <- nrow(data)	
+		J <- ncol(data)
 		nfact <- ncol(object@F)
-		theta <- seq(-4,4, length.out = round(20/nfact))
-		Theta <- thetaComb(theta,nfact)
-		lambdas <- matrix(object@pars[,1:nfact], J)
-		zetas <- as.vector(t(object@pars[,(nfact+1):ncol(object@pars)]))
-		zetas <- na.omit(zetas)
+		lambdas <- object@pars$lambdas
+		zetas <- object@pars$zetas
 		guess <- object@guess
-		guess[is.na(guess)] <- 0			
+		guess[is.na(guess)] <- 0
 		itemloc <- object@itemloc
 		res <- matrix(0,J,J)
 		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(data)
 		prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-		prior <- prior/sum(prior)
-		loc <- loc2 <- 1
+		prior <- prior/sum(prior)	
 		if(restype == 'LD'){	
-			for(i in 1:J){
-				if(i > 1) loc <- loc + K[i-1] - 1	
-				loc2 <- 1
+			for(i in 1:J){								
 				for(j in 1:J){			
 					if(i < j){
-						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[loc:(loc+K[i]-2)],Theta,itemexp=TRUE)
+						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[[i]],Theta,itemexp=TRUE)
 						else { 
-							P1 <- P.mirt(lambdas[i,],zetas[loc], Theta, guess[i])
+							P1 <- P.mirt(lambdas[i,],zetas[[i]], Theta, guess[i])
 							P1 <- cbind(1 - P1, P1)
 						}	
-						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[loc2:(loc2+K[j]-2)],Theta,itemexp=TRUE)
+						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[[j]],Theta,itemexp=TRUE)
 						else {
-							P2 <- P.mirt(lambdas[j,],zetas[loc2], Theta, guess[j])	
+							P2 <- P.mirt(lambdas[j,],zetas[[j]], Theta, guess[j])	
 							P2 <- cbind(1 - P2, P2)
 						}
 						tab <- table(data[,i],data[,j])		
@@ -768,26 +756,29 @@ setMethod(
 							((K[i] - 1) * (K[j] - 1)) * sign(s)
 						res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
 					}
-				loc2 <- loc2 + K[j] - 1 	
 				}
 			}	
 			cat("LD matrix:\n\n")	
 			res <- round(res,digits)
 			return(res)
 		} 
-		if(restype == 'exp'){
-			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because 
-                logLik() has not been run or the data contains missing responses.')
+		if(restype == 'exp'){	
+			r <- object@tabdata[ ,ncol(object@tabdata)]
+			res <- round((r - object@Pl * nrow(object@data)) / 
+				sqrt(object@Pl * nrow(object@data)),digits)
+			expected <- round(N * object@Pl/sum(object@Pl),digits)  
 			tabdata <- object@tabdata
-			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
-			tabdata <- round(cbind(tabdata,res),digits)
-			colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
+			freq <- tabdata[ ,ncol(tabdata)]			
+			tabdata[tabdata[ ,1:ncol(object@data)] == 99] <- NA
+			tabdata[ ,ncol(tabdata)] <- freq
+			tabdata <- cbind(tabdata,expected,res)
+			colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
 				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
-			}	
-			return(tabdata)
-		}
+			}			
+			return(tabdata)				
+		}					
 	}
 )
 

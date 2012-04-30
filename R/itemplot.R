@@ -6,20 +6,16 @@
 #' @usage 
 #' itemplot(object, ...)
 #' 
-#' \S4method{itemplot}{mirtClass}(object,
-#'   items = NULL, ...)
+#' \S4method{itemplot}{mirtClass}(object, ...)
 #'
-#' \S4method{itemplot}{bfactorClass}(object,
-#'   items = NULL, ...) 
+#' \S4method{itemplot}{bfactorClass}(object, ...) 
 #'
-#' \S4method{itemplot}{polymirtClass}(object,
-#'   items = NULL, ...)
+#' \S4method{itemplot}{polymirtClass}(object, ...)
 #'
 #' @aliases itemplot-method itemplot,mirtClass-method 
 #' itemplot,polymirtClass-method itemplot,bfactorClass-method
 #' @param object a computed model of class \code{bfactorClass},
 #' \code{mirtClass}, or \code{polymirtClass}
-#' @param items an integer vector which item(s) to plot. Default is to plot all items
 #' @param ... additional arguments to be passed on to \code{\link[plink]{plink}} generic
 #' \code{plot()}. See the \code{\link[plink]{plink}} package for further details.  
 #' @section Methods: \describe{ \item{itemplot}{\code{signature(object =
@@ -68,10 +64,9 @@ setGeneric("itemplot",
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'mirtClass'),
-	definition = function(object, items = NULL, ...)
+	definition = function(object, ...)
 	{  			
-		if(is.null(items)) items <- 1:length(object@K)
-		x <- itemplot.main(object, items)
+		x <- read.mirt(object)
 		ret <- plot(x, ...)
 		invisible(ret)		
 	}
@@ -81,10 +76,9 @@ setMethod(
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'bfactorClass'),
-	definition = function(object, items = NULL, ...)
+	definition = function(object, ...)
 	{
-		if(is.null(items)) items <- 1:length(object@K)
-		x <- itemplot.main(object, items)
+		x <- read.mirt(object)
 		ret <- plot(x, ...)
 		invisible(ret)
 	}
@@ -94,54 +88,14 @@ setMethod(
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'polymirtClass'),
-	definition = function(object, items = NULL, ...)
+	definition = function(object, ...)
 	{
-		if(is.null(items)) items <- 1:length(object@K)
-		x <- itemplot.main(object, items)
+		x <- read.mirt(object)
 		ret <- plot(x, ...)
 		invisible(ret)
 	}
 )
 
-itemplot.main <- function(object, items)
-{
-	K <- object@K
-	nitems <- length(items)
-	guess <- object@guess
-	if(class(object) == 'polymirtClass'){
-		lambdas <- object@parlist$lambdas[items, , drop=FALSE]
-		zetas <- object@parlist$zetas
-	} else {	
-		lambdas <- object@pars$lambdas[items, , drop=FALSE]
-		zetas <- object@pars$zetas
-	}
-	if(class(object) == 'bfactorClass')
-		lambdas <- cbind(lambdas[ ,1], rowSums(lambdas[,2:ncol(lambdas)])) 		
-	nfact <- ncol(lambdas)
-	pars <- matrix(NA, length(items), nfact + max(K))
-	pars[ ,1:nfact] <- lambdas
-	for(i in items){
-		len <- K[i] - 1
-		pars[i, (nfact+1):(nfact+len)] <- zetas[[i]]
-		if(len == 1) pars[i, nfact + 2] <- guess[i]	
-	}	
-	if(all(is.na(pars[,ncol(pars)]))) pars <- pars[, -ncol(pars)]	
-	index <- 1:nitems
-	drm <- index[K == 2]
-	grm <- index[K != 2]	
-	if(nitems == 1){
-		if(K[items] == 2) x <- drm(pars, dimensions = nfact) 
-		else x <- plink::grm(pars, dimensions = nfact)
-		return(x)
-	}
-	if(length(grm) > 0 && length(drm) > 0)
-		pm <- plink::as.poly.mod(nitems, c('drm','grm'), list(drm, grm))
-	else if(length(drm) > 0)
-		pm <- plink::as.poly.mod(nitems, 'drm')
-	else
-		pm <- plink::as.poly.mod(nitems, 'grm')
-	x <- plink::mixed(pars, K, pm, dimensions=nfact)
-	x
-}
+
 
 

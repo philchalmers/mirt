@@ -56,14 +56,20 @@ Rotate <- function(F, rotate)
 }  
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta,a,d,guess,patdata,ML=FALSE)
-{
-	Theta <- t(as.matrix(Theta))
-	L <- 0
-	for (j in 1:length(patdata)){
-		if(patdata[j] == 1) L <- log(P.mirt(a[j, ],d[j],Theta,guess[j])) + L
-			else L <- log(1 - P.mirt(a[j, ],d[j],Theta,guess[j])) + L	
-	}
+MAP.mirt <- function(Theta,a,d,guess,patdata,itemloc,ML=FALSE)
+{	
+	itemtrace <- rep(0, ncol=length(patdata))
+	Theta <- matrix(Theta, 1)
+	for (i in 1:length(guess)){
+		if(length(d[[i]]) == 1){
+			itemtrace[itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+			itemtrace[itemloc[i] + 1] <- 1.0 - itemtrace[itemloc[i]]
+		} else {
+			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+				P.poly(a[i, ], d[[i]], Theta, TRUE)	
+		}
+	}		
+	L <- sum(log(itemtrace)[ ,as.logical(patdata)])
 	mu <- 0
 	sigma <- 1
     L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
@@ -71,17 +77,23 @@ MAP.mirt <- function(Theta,a,d,guess,patdata,ML=FALSE)
 }  
 
 # MAP scoring for bfactor
-MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact,ML=FALSE)
+MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact,itemloc,ML=FALSE)
 {
-	Theta <- t(as.matrix(Theta))
-	L <- 0
-	for (j in 1:length(patdata)){
-		if(patdata[j] == 1) L <- log(P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L
-			else L <- log(1 - P.bfactor(a[j, ],d[j],Theta,guess[j],logicalfact[j, ])) + L	
-	}
+	itemtrace <- rep(0, ncol=length(patdata))
+	Theta <- matrix(Theta, 1)
+	for (i in 1:length(guess)){
+		if(length(d[[i]]) == 1){
+			itemtrace[itemloc[i]] <- P.mirt(a[i, logicalfact[i, ]], d[[i]], Theta, guess[i]) 
+			itemtrace[itemloc[i] + 1] <- 1.0 - itemtrace[itemloc[i]]
+		} else {
+			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+				P.poly(a[i, logicalfact[i, ]], d[[i]], Theta, TRUE)	
+		}
+	}		
+	L <- sum(log(itemtrace)[ ,as.logical(patdata)])
 	mu <- 0
 	sigma <- 1
-	L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
+    L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
 	L  
 }  
 

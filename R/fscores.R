@@ -94,10 +94,10 @@ setMethod(
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
 		}		
-		if(method == "MAP"){ #FIXME
+		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				Theta <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ])$estimate 
+				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],itemloc)$estimate 
 				scores[i, ] <- thetas
 			}  
 		}
@@ -106,7 +106,7 @@ setMethod(
 			for (i in 1:nrow(scores)){
 				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
 				Theta <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],ML=TRUE)$estimate 
+				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],itemloc,ML=TRUE)$estimate 
 				scores[i, ] <- thetas
 			}  
 		}
@@ -169,11 +169,11 @@ setMethod(
 			scores[i] <- thetas
 			SEscores[i] <- SE
 		}
-		if(method == "MAP"){ ###FIXME
+		if(method == "MAP"){ 
 			for (i in 1:length(scores)) {       
 				Theta <- scores[i]	  
 				thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
-					patdata=tabdata[i, ],logicalfact=logicalfact)$estimate 
+					patdata=tabdata[i, ],logicalfact=logicalfact,itemloc)$estimate 
 				scores[i] <- thetas
 			}  
 		}
@@ -183,7 +183,7 @@ setMethod(
 		        if(any(scores[i] == -Inf | scores[i] == Inf)) next
 		        Theta <- scores[i]	  
 		        thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
-		                      patdata=tabdata[i, ],logicalfact=logicalfact,ML=TRUE)$estimate 
+		                      patdata=tabdata[i, ],logicalfact=logicalfact,itemloc,ML=TRUE)$estimate 
 		        scores[i] <- thetas
 		    }
 		}
@@ -220,8 +220,8 @@ setMethod(
 		theta0 <- object@Theta
 		K <- object@K
 		nfact <- ncol(theta0)
-		lambdas <- matrix(object@pars[,1:nfact],ncol=nfact)
-		zetas <- na.omit(as.numeric(t(object@pars[,(nfact+1):ncol(object@pars)])))
+		lambdas <- object@pars$lambdas
+		zetas <- object@pars$zetas
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		data <- cbind(object@data,object@fulldata)

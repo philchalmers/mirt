@@ -14,7 +14,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt 
 #' @importFrom stats anova fitted residuals
-#' @import psych lattice MASS GPArotation mvtnorm Matrix
+#' @import psych lattice MASS GPArotation mvtnorm Matrix plink
 #' @exportMethod anova 
 #' @exportMethod coef
 #' @exportMethod fitted

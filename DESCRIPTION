@@ -48,3 +48,4 @@ Collate:
     'polymirt.R'
     'simdata.R'
     'confmirt.model.R'
+    'read.mirt.R'

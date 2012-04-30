@@ -11,9 +11,6 @@
   \code{bfactorClass}, \code{mirtClass}, or
   \code{polymirtClass}}
 
-  \item{items}{an integer vector which item(s) to plot.
-  Default is to plot all items}
-
   \item{...}{additional arguments to be passed on to
   \code{\link[plink]{plink}} generic \code{plot()}. See the
   \code{\link[plink]{plink}} package for further details.}
