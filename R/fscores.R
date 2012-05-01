@@ -301,8 +301,8 @@ setMethod(
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		data <- cbind(object@data,object@fulldata)		
-		Names <- c(colnames(object@data[,1:length(K)]),factorNames,
-			paste("SE_",factorNames,sep=''))
+		Names <- c(colnames(object@data[,1:length(K)]),paste('F_',1:nfact,sep=''),
+			paste("SE_",1:nfact,sep=''))
 		tabdata <- unique(data)[,-c(1:length(K))]			
 		itemloc <- object@itemloc
 		Theta <- list()

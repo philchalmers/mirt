@@ -646,7 +646,7 @@ setMethod(
 			if(SE){
 				cat("\nStd. Errors: \n\n")	
 				SEs <- object@SEpars
-				colnames(SEs) <- colnames(parameters)[1:(ncol(a) + max(K-1,3) + 1)]		
+				colnames(SEs) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess") 	
 				rownames(SEs) <- rownames(parameters)
 				print(SEs, digits)
 				ret <- list(parameters,SEs)
@@ -717,17 +717,17 @@ setMethod(
 	signature = signature(object = 'polymirtClass'),
 	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 	{ 	
-		K <- object@K
-		Theta <- object@Theta
+		K <- object@K		
 		data <- object@data	
 		N <- nrow(data)	
 		J <- ncol(data)
 		nfact <- ncol(object@F)
 		lambdas <- object@pars$lambdas
 		zetas <- object@pars$zetas
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
+		guess <- object@guess		
 		itemloc <- object@itemloc
+		theta <- seq(-4,4, length.out = round(20/nfact))
+		Theta <- thetaComb(theta,nfact)
 		res <- matrix(0,J,J)
 		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(data)
@@ -756,7 +756,7 @@ setMethod(
 						if(s == 0) s <- 1				
 						res[j,i] <- sum(((tab - Etab)^2)/Etab) /
 							((K[i] - 1) * (K[j] - 1)) * sign(s)
-						res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
+						res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
 					}
 				}
 			}	

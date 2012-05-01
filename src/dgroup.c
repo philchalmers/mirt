@@ -2,7 +2,7 @@
 #include<Rdefines.h>
 #include<Rmath.h>
 
-void matrixMult(double *c, const double *a, const double *b, 
+static void matrixMult(double *c, const double *a, const double *b, 
 	const int *dim)
 {
 	double A[*dim][*dim], B[*dim][*dim], C[*dim][*dim];
@@ -37,7 +37,7 @@ void matrixMult(double *c, const double *a, const double *b,
 	}   
 }
 
-void matrixMult4(double *e, const double *a, const double *b,
+static void matrixMult4(double *e, const double *a, const double *b,
 	const double *c, const double *d, const int *dim)
 {
 	double tmp1[*dim * (*dim)], tmp2[*dim * (*dim)];
@@ -47,7 +47,7 @@ void matrixMult4(double *e, const double *a, const double *b,
 }
 
 
-double tr(double *a, const int *dim)
+static double tr(double *a, const int *dim)
 {	
 	double trace = 0.0;
 	int i, j, k = 0;
@@ -62,7 +62,7 @@ double tr(double *a, const int *dim)
 	return trace;
 }
 
-void matrixSub(double *c, const double *a,const  double *b, 
+static void matrixSub(double *c, const double *a,const  double *b, 
 	const int *dim)
 {	
 	int i;
@@ -70,7 +70,7 @@ void matrixSub(double *c, const double *a,const  double *b,
 		c[i] = a[i] - b[i];
 }
 
-void outer(double *c, const double *a, const double *b, 
+static void outer(double *c, const double *a, const double *b, 
 	const int *dim)
 {
 	int i, j, k = 0;
@@ -82,7 +82,7 @@ void outer(double *c, const double *a, const double *b,
 	}
 }
 
-double inner(double *a, const double *b, const double *c, 
+static double inner(double *a, const double *b, const double *c, 
 	const int *dim)
 {
 	int i, j, k = 0;
@@ -106,7 +106,7 @@ double inner(double *a, const double *b, const double *c,
 	return ret;
 }
 
-void symMat(double *dsig, const int *nfact)
+static void symMat(double *dsig, const int *nfact)
 {
 	int i, j, k = 0;
 	double tmp[*nfact][*nfact];

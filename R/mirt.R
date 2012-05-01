@@ -611,7 +611,7 @@ setMethod(
 			if(SE){
 				cat("\nStd. Errors: \n\n")	
 				SEs <- matrix(sqrt(diag(object@vcov)), ncol = ncol(a) + 1)
-				colnames(SEs) <- colnames(parameters)[1:(ncol(a) + 1)]
+				colnames(SEs) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess") 
 				rownames(SEs) <- rownames(parameters)
 				print(SEs, digits)
 				ret <- list(parameters,SEs)
@@ -645,7 +645,8 @@ setMethod(
 setMethod(
 	f = "residuals",
 	signature = signature(object = 'mirtClass'),
-	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...){   	
+	definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
+	{   	
 		K <- object@K
 		Theta <- object@Theta
 		data <- object@data	
@@ -654,8 +655,7 @@ setMethod(
 		nfact <- ncol(object@F)
 		lambdas <- object@pars$lambdas
 		zetas <- object@pars$zetas
-		guess <- object@guess
-		guess[is.na(guess)] <- 0
+		guess <- object@guess		
 		itemloc <- object@itemloc
 		res <- matrix(0,J,J)
 		diag(res) <- NA

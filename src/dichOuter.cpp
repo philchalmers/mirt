@@ -12,10 +12,10 @@ RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
     nfact = Thetas.ncol();
 	NumericMatrix ret(nfact,nfact);			
 
-	for(n = 0; n < N[0]; n++)
+	for(n = 0; n < N(0); n++)
 		for(i = 0; i < nfact; i++)
 			for(j = 0; j < nfact; j++)
-				ret(i,j) += Thetas(n,i) * Thetas(n,j) * PQ[n];
+				ret(i,j) += Thetas(n,i) * Thetas(n,j) * PQ(n);
 		
 	return(ret);
 	END_RCPP

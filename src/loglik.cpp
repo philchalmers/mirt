@@ -18,29 +18,30 @@ RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
     J = K.length();
     N = theta0.nrow();
 	
-	double a[nfact], g, irt0[N];
+	NumericVector a(nfact), irt0(N);
+	double g;
 	for(i = 0; i < N; i++)
-		irt0[i] = 0.0;		
+		irt0(i) = 0.0;		
 		
 	for(int item = 0; item < J; item++){		
 	    d = zetas[item];
-        NumericMatrix P(N, K[item]);
+        NumericMatrix P(N, K(item));
         for(i = 0; i < nfact; i++)
-			a[i] = lambdas(item,i);
-		g = guess[item];		
-		if(estComp[item])
+			a(i) = lambdas(item,i);
+		g = guess(item);		
+		if(estComp(item))
 			P = ProbComp(theta0, a, d, &g); 
         else 
             P = Prob(theta0, a, d, &g);
-		for(j = 0; j < K[item]; j++)
+		for(j = 0; j < K(item); j++)
 			for(i = 0; i < N; i++)				
-			    if(fulldata(i,j + itemloc[item]))
-					irt0[i] += log(P(i,j));													
+			    if(fulldata(i,j + itemloc(item)))
+					irt0(i) += log(P(i,j));													
 	}	
 
     NumericVector ret(N);
 	for(i = 0; i < N; i++)				 		
-		ret[i] = exp(irt0[i]);		
+		ret(i) = exp(irt0[i]);		
 	return(ret);	
 	END_RCPP
 }

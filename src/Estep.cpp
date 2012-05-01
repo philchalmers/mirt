@@ -23,33 +23,33 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     int nquad = prior.length();
     int nitems = data.ncol();
     int npat = r.length();      
-    double expd = 0.0, posterior[nquad];
+    double expd = 0.0;
     int i = 0, k = 0, item = 0;	
     NumericMatrix r1(nquad, nitems);    
-    NumericVector expected(npat);
+    NumericVector expected(npat), posterior(nquad);
     List ret;
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; pat++){		
   	    for (k = 0; k < nquad; k++)
-		    posterior[k] = prior(k);
+		    posterior(k) = prior(k);
 			
 		for (item = 0; item < nitems; item++){
             if (data(pat,item))
                 for (k = 0; k < nquad; k++)
-			        posterior[k] = posterior[k] * itemtrace(k,item);
+			        posterior(k) = posterior(k) * itemtrace(k,item);
 		}    
 	    expd = 0.0;
 	    for (i = 0; i < nquad; i++)
-	        expd += posterior[i];	
-	    expected[pat] = expd;		
+	        expd += posterior(i);	
+	    expected(pat) = expd;		
 		
 	    for (i = 0; i < nquad; i++)
-	        posterior[i] = r[pat] * posterior[i] / expd;	
+	        posterior(i) = r(pat) * posterior(i) / expd;	
         for (item = 0; item < nitems; item++){              
             if (data(pat,item))
 	            for (k = 0; k < nquad; k++)
-	                r1(k,item) += posterior[k];
+	                r1(k,item) += posterior(k);
 		    			
 	    }
 	} //end main 		
@@ -86,63 +86,62 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     int npquad = prior.length();
     int nquad = npquad * npquad;  
     int npat = r.length();      
-    int i=0, j=0, k=0, item=0, fact=0;	
-    NumericMatrix r1(nquad, nitems*sfact);    
-    NumericVector expected(npat);
+    int i=0, j=0, k=0, item=0, fact=0;	          
         
 	//declare dependent arrays 
-	double likelihoods[nquad][sfact], L[npquad][npquad], tempsum[npquad],
-		Plk[npquad][sfact], Elk[npquad][sfact], Pls[npquad], posterior[nquad][sfact];	
+	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
+	NumericMatrix likelihoods(nquad,sfact), L(npquad,npquad), r1(nquad,nitems*sfact),
+		Plk(npquad,sfact), Elk(npquad,sfact), posterior(nquad,sfact);	
 				
 	// Begin main function body here				
 	for (int pat = 0; pat < npat; pat++){		
 		for (fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
-				likelihoods[k][fact] = 1;				
+				likelihoods(k,fact) = 1;				
 			for (item = 0; item < nitems; item++){
 				if (data(pat,item))	
 					if(sitems(item,fact))
 					    for (k = 0; k < nquad; k++)
-					  	    likelihoods[k][fact] = likelihoods[k][fact] * itemtrace(k,item);					
+					  	    likelihoods(k,fact) = likelihoods(k,fact) * itemtrace(k,item);					
 			}
 		}			
 		for (fact = 0; fact < sfact; fact++){
 			k = 0;
 			for (j = 0; j < npquad; j++){
-				tempsum[j] = 0.0;
+				tempsum(j) = 0.0;
 			    for (i = 0; i < npquad; i++){
-			  	    L[i][j] = likelihoods[k][fact];
+			  	    L(i,j) = likelihoods(k,fact);
 			  	    k++;
 			    }
 			}
 			for (j = 0; j < npquad; j++)				
 			    for (i = 0; i < npquad; i++)
-			  	    L[i][j] = L[i][j] * prior[j];
+			  	    L(i,j) = L(i,j) * prior(j);
 			for (j = 0; j < npquad; j++)				
 		        for (i = 0; i < npquad; i++)
-			        tempsum[j] += L[j][i];
+			        tempsum(j) += L(j,i);
 			for (i = 0; i < npquad; i++)
-			    Plk[i][fact] = tempsum[i];    			
+			    Plk(i,fact) = tempsum(i);    			
 		}				
 		expected(pat) = 0.0;
 		for (i = 0; i < npquad; i++){
-		    Pls[i] = 1.0; 		  		
+		    Pls(i) = 1.0; 		  		
 			for(fact = 0; fact < sfact; fact++)
-			    Pls[i] = Pls[i] * Plk[i][fact];			
-			expected(pat) += Pls[i] * prior[i];  
+			    Pls(i) = Pls(i) * Plk(i,fact);			
+			expected(pat) += Pls(i) * prior(i);  
 		}				
 		for (fact = 0; fact < sfact; fact++)
 		    for (i = 0; i < npquad; i++)
-		  	    Elk[i][fact] = Pls[i] / Plk[i][fact];		  	
+		  	    Elk(i,fact) = Pls(i) / Plk(i,fact);		  	
 		for (fact = 0; fact < sfact; fact++)
 		    for (i = 0; i < nquad; i++)  			  	
-		        posterior[i][fact] = likelihoods[i][fact] * r[i] * Elk[i % npquad][fact] / expected(pat);
+		        posterior(i,fact) = likelihoods(i,fact) * r(i) * Elk(i % npquad,fact) / expected(pat);
 		// ordered specific factor packets, each the size of itemtrace
 		for (fact = 0; fact < sfact; fact++){			
 			for (item = 0; item < nitems; item++)
 				if (data(pat,item))
 					for (k = 0; k < nquad; k++)
-						r1(k,item + nitems*fact) += posterior[k][fact];
+						r1(k,item + nitems*fact) += posterior(k,fact);
 			
 		}	
 	}	//end main 

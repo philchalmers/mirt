@@ -4,18 +4,17 @@ using namespace Rcpp;
 #ifndef _MISC_H
 #define _MISC_H
 
-void polyOuter(double *, NumericMatrix, const double *,
-	const double *, const double *,	const double *, 
-	const double *, const double *);
+NumericMatrix polyOuter(NumericMatrix, NumericVector,
+	NumericVector, NumericVector, NumericVector, 
+	NumericVector, NumericVector);
 
-
-void itemtrace(double *, const double *, const double *, 
+NumericVector itemTrace(NumericVector, const double *, 
         NumericMatrix, const double *);
 
-NumericMatrix Prob(NumericMatrix, const double *,
+NumericMatrix Prob(NumericMatrix, NumericVector,
         NumericVector, const double *);
 
-NumericMatrix ProbComp(NumericMatrix, const double *, 
+NumericMatrix ProbComp(NumericMatrix, NumericVector, 
         NumericVector, const double *);
 
 #endif 

@@ -24,13 +24,12 @@ Imports:
     GPArotation,
     mvtnorm,
     Rcpp,
-    RcppArmadillo,
     plink,
     Matrix
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo: Rcpp 
 Repository: github
 License: GPL (>= 2)
 URL: https://github.com/philchalmers/mirt

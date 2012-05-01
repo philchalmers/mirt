@@ -2,6 +2,10 @@
 mirt 0.2.3
 ---------------------------------------------------------------
 
+* bugfixes for fscores, itemplot, and generic functions
+
+* read.mirt() added for creating a suitable plink object
+
 * mirt() and bfactor() can now accommodate polychotomous items using 
   an ordinal IRT scheme
 
