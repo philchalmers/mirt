@@ -568,7 +568,7 @@ setMethod(
 	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...)
 	{
 		nfact <- ncol(object@F)
-		itemnames <- names(object@h2)
+		itemnames <- colnames(object@data)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
 			F[abs(F) < suppress] <- NA
@@ -631,11 +631,13 @@ setMethod(
 			parameters <- cbind(a,d,object@guess,A,B)    
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 
 				"mvdisc",paste("mvint_",1:max(K-1),sep=""))	  
+			rownames(parameters) <- colnames(object@data)
 			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
 			print(round(parameters, digits))  	
 		} else {
 			parameters <- cbind(a,d,object@guess)
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess")   
+			rownames(parameters) <- colnames(object@data)
 			cat("\nParameter slopes and intercepts: \n\n")	
 			print(round(parameters, digits))	  
 		}
@@ -644,7 +646,7 @@ setMethod(
 			if(SE){
 				cat("\nStd. Errors: \n\n")	
 				SEs <- object@SEpars
-				colnames(SEs) <- colnames(parameters)
+				colnames(SEs) <- colnames(parameters)[1:(ncol(a) + max(K-1,3) + 1)]		
 				rownames(SEs) <- rownames(parameters)
 				print(SEs, digits)
 				ret <- list(parameters,SEs)

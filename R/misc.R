@@ -2,13 +2,14 @@
 thetaComb <- function(theta, nfact)
 {
 	if (nfact == 1) Theta <- matrix(theta)
-		else if (nfact == 2) Theta <- expand.grid(theta,theta)   
-		else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
-		else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
-		else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
-		else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)        
-		else if (nfact == 7) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta)        
-		else if (nfact == 8) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta) 
+	else if (nfact == 2) Theta <- expand.grid(theta,theta)   
+	else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
+	else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
+	else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
+	else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)        
+	else if (nfact == 7) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta)        
+	else if (nfact == 8) Theta <- expand.grid(theta,theta,theta,theta,theta,theta,theta,theta) 
+	if(nfact > 8) stop('Are you crazy?!?!? That\'s way too many factors for this quandrature method.')
 	Theta <- as.matrix(Theta)	
 	return(Theta)     
 }
@@ -561,7 +562,7 @@ cormod <- function(fulldata, K, guess, smooth = TRUE)
 					tabp <- round(tabp*length(fulldata[ ,i]))
 					if(any(tabp < 0)) next	
 					cormat[i,j] <- cormat[j,i] <- 
-						abs(phi(tabp,6))^(1/1.15)*sign(phi(tabp,6))          		  
+						abs(psych::phi(tabp,6))^(1/1.15)*sign(psych::phi(tabp,6))          		  
 				} 
 				if(i < j & K[i] == 2 & K[j] > 2 & guess[i]!= 0) 
 					cormat[i,j] <- cormat[j,i] <- abs(cormat[i,j])^(1/1.15) * sign(cormat[i,j])

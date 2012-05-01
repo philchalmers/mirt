@@ -168,17 +168,7 @@ setClass(
 #' ###Try with guessing parameters added
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)
-#' coef(mod2) #item 32 too difficult to include guessing par
-#' 
-#' #fix by imposing a weak intercept prior
-#' mod3a <- bfactor(data, specific, guess = guess, par.prior =
-#'     list(int = c(0,4), int.items = 32))
-#' coef(mod3a)
-#' 
-#' #...or by removing guessing parameter
-#' guess[32] <- 0
-#' mod3b <- bfactor(data, specific, guess = guess)
-#' coef(mod3b)
+#' coef(mod2) 
 #'
 #' #########
 #' #simulate data
@@ -220,6 +210,8 @@ setClass(
 #'
 #' specific <- c(rep(1,7),rep(2,7))
 #' simmod <- bfactor(dataset, specific)
+#' coef(simmod)
+#'
 #'     }
 #' 
 bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL, 
@@ -322,8 +314,9 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	if(!is.null(prev.cor)){
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 			else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- cormod(na.omit(data.original),K,guess)
-	FA <- psych::fa(Rpoly,1,rotate = 'none', warnings= FALSE, fm="minres")	
+	} else Rpoly <- cormod(na.omit(data.original),K,guess)	
+	if(det(Rpoly) < 1e-15) Rpoly <- cor(na.omit(data.original))
+	FA <- suppressWarnings(psych::fa(Rpoly,1,rotate = 'none', warnings= FALSE, fm="minres"))	
 	loads <- unclass(loadings(FA))
 	u <- FA$unique
 	u[u < .1 ] <- .25	
@@ -401,7 +394,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 		if (cycles %% 3 == 0 & cycles > 6)		 
 			pars <- rateChange(pars, lastpars1, lastpars2)       
 	}
-
+	
 	if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",
 		as.character(index[par.prior[,1] > 1]), "\n")
 	if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",
@@ -490,7 +483,7 @@ setMethod(
 		cat("Log-likelihood = ", x@logLik, "\n")
 		cat("AIC = ", x@AIC, "\n")		
 		cat("BIC = ", x@BIC, "\n")
-		if(x@p < 1)
+		if(x@p <= 1)
 			cat("G^2 = ", round(x@X2,2), ", df = ", 
 				x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
@@ -516,7 +509,7 @@ setMethod(
 		cat("Log-likelihood = ", object@logLik, "\n")
 		cat("AIC = ", object@AIC, "\n")		
 		cat("BIC = ", object@BIC, "\n")
-		if(object@p < 1)
+		if(object@p <= 1)
 			cat("G^2 = ", round(object@X2,2), ", df = ", 
 				object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3),
                 "\n", sep="")
@@ -536,7 +529,7 @@ setMethod(
 		h2 <- round(object@h2,digits)					
 		names(h2) <- "h2"		
 		loads <- round(cbind(F,h2),digits)
-		rownames(loads) <- object@itemnames  
+		rownames(loads) <- colnames(object@data)	 
 		cat("\nFactor loadings: \n\n")
 		print(loads)
 		cat("\nSS loadings: ",round(SS,digits), "\n")
@@ -563,6 +556,7 @@ setMethod(
 		parameters <- round(cbind(a,d,object@guess,A,B),digits)
 		colnames(parameters) <- c('a_G',paste("a_", 1:(ncol(object@F)-1),sep=""),
 			paste("d_", 1:(max(K)-1),sep=""), "guess", "mvdisc", paste("mvint_", 1:(max(K)-1),sep=""))  
+		rownames(parameters) <- colnames(object@data)	
 		cat("\nParameters with multivariate discrimination and intercept: \n\n")		
 		print(parameters)
 		ret <- list(parameters)
@@ -577,6 +571,7 @@ setMethod(
 			SEs <- cbind(a,d)
 			colnames(SEs) <- c('a_G',paste("a_", 1:(ncol(object@F)-1),sep=""),
 				paste("d_", 1:(max(K)-1),sep=""))
+			rownames(SEs) <- colnames(object@data)		
 			print(SEs, digits)
 			ret <- list(parameters, SEs)
 		}	

@@ -52,7 +52,7 @@ setClass(
 #' factor scores, \eqn{d_j} is the intercept, and \eqn{g_j} is the
 #' pseudo-guessing parameter. To avoid estimation difficulties the \eqn{g_j}'s
 #' must be specified by the user. The polychotomous functions has a similar form
-#' but is not expressed here.
+#' that can be found in Muraki and Carlson (1995).
 #' 
 #' Estimation begins by computing a matrix of quasi-tetrachoric correlations,
 #' potentially with Carroll's (1945) adjustment for chance responds. A MINRES
@@ -145,12 +145,8 @@ setClass(
 #' 
 #' Unrestricted full-information factor analysis is known to have problems with
 #' convergence, and some items may need to be constrained or removed entirely
-#' to allow for an acceptable solution. Be mindful of the item facility values
-#' that are printed with \code{coef} since these will be helpful in determining
-#' whether a guessing parameter is causing problems (item facility value is too
-#' close to the guessing parameter) or if an item should be constrained or
-#' removed entirely (values too close to 0 or 1). As a general rule, items with
-#' facilities greater than .95, or items that are only .05 greater than the
+#' to allow for an acceptable solution. As a general rule dichotmous items with
+#' means greater than .95, or items that are only .05 greater than the
 #' guessing parameter, should be considered for removal from the analysis or
 #' treated with prior distributions. Also, increasing the number of quadrature
 #' points per dimension may help to stabilize the estimation process.
@@ -353,7 +349,8 @@ mirt <- function(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior 
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 			else stop("Correlation matrix is not square.\n")
 	} else Rpoly <- cormod(na.omit(data),K,guess)
-	FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres")	
+	if(det(Rpoly) < 1e-15) Rpoly <- cor(na.omit(data.original))
+	FA <- suppressWarnings(psych::fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres"))	
 	loads <- unclass(loadings(FA))
 	u <- FA$unique
 	u[u < .1 ] <- .25	
@@ -499,7 +496,7 @@ setMethod(
 		cat("Log-likelihood =", x@logLik, "\n")
 		cat("AIC =", x@AIC, "\n")		
 		cat("BIC =", x@BIC, "\n")
-		if(x@p < 1)            
+		if(x@p <= 1)            
 			cat("G^2 = ", round(x@X2,2), ", df = ", 
 				x@df, ", p = ", round(x@p,4),", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
@@ -525,7 +522,7 @@ setMethod(
 		cat("Log-likelihood =", object@logLik, "\n")
 		cat("AIC =", object@AIC, "\n")		
 		cat("BIC =", object@BIC, "\n")
-		if(object@p < 1)
+		if(object@p <= 1)
 			cat("G^2 = ", round(object@X2,2), ", df = ", 
 				object@df, ", p = ", round(object@p,4),", RMSEA = ", round(object@RMSEA,3),
                 "\n", sep="")
@@ -549,7 +546,7 @@ setMethod(
 			names(SS) <- colnames(F)
 			cat("\nUnrotated factor loadings: \n\n")
 			loads <- round(cbind(F,h2),digits)
-			rownames(loads) <- rownames(object@pars$lambdas)
+			rownames(loads) <- colnames(object@data)
 			print(loads)	    	 
 			cat("\nSS loadings: ",round(SS,digits), "\n")
 			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
@@ -564,7 +561,7 @@ setMethod(
 			L <- rotF$loadings
 			L[abs(L) < suppress] <- NA	
 			loads <- round(cbind(L,h2),digits)
-			rownames(loads) <- rownames(object@pars)			
+			rownames(loads) <- colnames(object@data)			
 			cat("\nRotated factor loadings: \n\n")
 			print(loads,digits)		
 			if(attr(rotF, "oblique")){
@@ -598,12 +595,14 @@ setMethod(
 		if (ncol(a) > 1){  
 			parameters <- cbind(a,d,object@guess,A,B)    
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 
-				"mvdisc",paste("mvint_",1:max(K-1),sep=""))	  
+				"mvdisc",paste("mvint_",1:max(K-1),sep=""))	
+			rownames(parameters) <- colnames(object@data)		
 			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
 			print(round(parameters, digits))  	
 		} else {
 			parameters <- cbind(a,d,object@guess)
-			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess")   
+			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess") 
+			rownames(parameters) <- colnames(object@data)	
 			cat("\nParameter slopes and intercepts: \n\n")	
 			print(round(parameters, digits))	  
 		}

@@ -159,8 +159,8 @@ Theory)}
   is the intercept, and \eqn{g_j} is the pseudo-guessing
   parameter. To avoid estimation difficulties the
   \eqn{g_j}'s must be specified by the user. The
-  polychotomous functions has a similar form but is not
-  expressed here.
+  polychotomous functions has a similar form that can be
+  found in Muraki and Carlson (1995).
 
   Estimation begins by computing a matrix of
   quasi-tetrachoric correlations, potentially with
@@ -206,18 +206,13 @@ Theory)}
   Unrestricted full-information factor analysis is known to
   have problems with convergence, and some items may need
   to be constrained or removed entirely to allow for an
-  acceptable solution. Be mindful of the item facility
-  values that are printed with \code{coef} since these will
-  be helpful in determining whether a guessing parameter is
-  causing problems (item facility value is too close to the
-  guessing parameter) or if an item should be constrained
-  or removed entirely (values too close to 0 or 1). As a
-  general rule, items with facilities greater than .95, or
-  items that are only .05 greater than the guessing
-  parameter, should be considered for removal from the
-  analysis or treated with prior distributions. Also,
-  increasing the number of quadrature points per dimension
-  may help to stabilize the estimation process.
+  acceptable solution. As a general rule dichotmous items
+  with means greater than .95, or items that are only .05
+  greater than the guessing parameter, should be considered
+  for removal from the analysis or treated with prior
+  distributions. Also, increasing the number of quadrature
+  points per dimension may help to stabilize the estimation
+  process.
 }
 \examples{
 \dontrun{

@@ -167,17 +167,7 @@ coef(mod1)
 ###Try with guessing parameters added
 guess <- rep(.1,32)
 mod2 <- bfactor(data, specific, guess = guess)
-coef(mod2) #item 32 too difficult to include guessing par
-
-#fix by imposing a weak intercept prior
-mod3a <- bfactor(data, specific, guess = guess, par.prior =
-    list(int = c(0,4), int.items = 32))
-coef(mod3a)
-
-#...or by removing guessing parameter
-guess[32] <- 0
-mod3b <- bfactor(data, specific, guess = guess)
-coef(mod3b)
+coef(mod2)
 
 #########
 #simulate data
@@ -219,6 +209,8 @@ dataset <- simdata(a,d,2000,sigma)
 
 specific <- c(rep(1,7),rep(2,7))
 simmod <- bfactor(dataset, specific)
+coef(simmod)
+
     }
 }
 \author{
