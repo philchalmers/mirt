@@ -16,11 +16,8 @@
 #' @importFrom stats anova fitted residuals
 #' @import psych lattice MASS GPArotation mvtnorm Matrix plink
 #' @exportMethod anova 
-#' @exportMethod coef
 #' @exportMethod fitted
 #' @exportMethod residuals
-#' @exportMethod logLik
-#' @exportMethod plot
 #' @exportMethod summary
 #' @keywords package
 NULL
