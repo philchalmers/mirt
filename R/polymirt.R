@@ -640,11 +640,11 @@ setMethod(
 			print(round(parameters, digits))	  
 		}
 		ret <- list(parameters)
-		if(length(object@parsSE) > 1){
+		if(length(object@SEpars) > 1){
 			if(SE){
 				cat("\nStd. Errors: \n\n")	
-				SEs <- matrix(sqrt(diag(object@vcov)), ncol = ncol(a) + 1)
-				colnames(SEs) <- colnames(parameters)[1:(ncol(a) + 1)]
+				SEs <- object@SEpars
+				colnames(SEs) <- colnames(parameters)
 				rownames(SEs) <- rownames(parameters)
 				print(SEs, digits)
 				ret <- list(parameters,SEs)
@@ -763,16 +763,15 @@ setMethod(
 			return(res)
 		} 
 		if(restype == 'exp'){	
-			r <- object@tabdata[ ,ncol(object@tabdata)]
-			res <- round((r - object@Pl * nrow(object@data)) / 
-				sqrt(object@Pl * nrow(object@data)),digits)
-			expected <- round(N * object@Pl/sum(object@Pl),digits)  
+			r <- object@tabdata[ ,ncol(object@tabdata)-1]
+			rexp <- object@tabdata[ ,ncol(object@tabdata)]
+			res <- round((r - rexp) / sqrt(rexp),digits)
 			tabdata <- object@tabdata
 			freq <- tabdata[ ,ncol(tabdata)]			
 			tabdata[tabdata[ ,1:ncol(object@data)] == 99] <- NA
 			tabdata[ ,ncol(tabdata)] <- freq
-			tabdata <- cbind(tabdata,expected,res)
-			colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
+			tabdata <- cbind(tabdata,res)
+			colnames(tabdata) <- c(colnames(object@tabdata),"res")	
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
 				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]

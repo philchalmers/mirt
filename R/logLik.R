@@ -47,7 +47,7 @@ setMethod(
 			length(object@prodlist) + nfact, nfact)		
 		N <- nrow(object@Theta)
 		J <- length(object@K)
-		pars <- object@pars
+		pars <- object@pars		
 		lambdas <- matrix(pars[ ,1:nfactNames], ncol=nfact)
 		lambdas[is.na(lambdas)] <- 0
 		zetas <- object@parlist$zetas			
@@ -142,10 +142,9 @@ setMethod(
 	{	
 		nfact <- ncol(object@Theta)
 		N <- nrow(object@Theta)
-		J <- length(object@K)
-		pars <- object@pars
-		lambdas <- matrix(pars[,1:nfact], ncol=nfact)
-		zetas <- object@parlist$zetas	
+		J <- length(object@K)		
+		lambdas <- object@pars$lambdas	
+		zetas <- object@pars$zetas	
 		mu <- rep(0,nfact)
 		sigma <- diag(nfact)		
 		LL <- matrix(0,N,draws)		
@@ -155,7 +154,7 @@ setMethod(
 		fulldata <- object@fulldata
 		estComp <- rep(FALSE,J)
 		for(i in 1:draws){
-			theta <- rmvnorm(N,mu,sigma)				
+			theta <- mvtnorm::rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', lambdas, zetas, guess, theta,	fulldata,
 						object@itemloc-1, object@K,	as.integer(estComp))		
 		}		

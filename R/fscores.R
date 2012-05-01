@@ -64,8 +64,7 @@ setMethod(
 		K <- object@K		
 		a <- object@pars$lambdas		
 		d <- object@pars$zetas		
-		g <- object@guess		
-		g[is.na(g)] <- 0
+		g <- object@guess				
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- ncol(a)
@@ -102,7 +101,10 @@ setMethod(
 			}  
 		}
 		if(method == "ML"){
-            scores[rowSums(tabdata) == 0 | rowSums(tabdata) == ncol(fulldata), ] <- NA
+			tmp <- tabdata[,itemloc[-length(itemloc)]]			 
+			tmp2 <- tabdata[,itemloc[-1] - 1]			 
+            scores[rowSums(tmp) == J, ] <- Inf
+			scores[rowSums(tmp2) == J,] <- -Inf
 			for (i in 1:nrow(scores)){
 				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
 				Theta <- scores[i, ]	  
@@ -137,8 +139,7 @@ setMethod(
 		K <- object@K		
 		a <- object@pars$lambdas		
 		d <- object@pars$zetas		
-		g <- object@guess		
-		g[is.na(guess)] <- 0
+		g <- object@guess				
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- 2
@@ -155,7 +156,7 @@ setMethod(
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
 		for (i in 1:J){
 			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i]] <- P.bfactor(a[i, ], d[[i]], Theta, guess[i], logicalfact[i, ]) 
+				itemtrace[ ,itemloc[i]] <- P.bfactor(a[i, ], d[[i]], Theta, g[i], logicalfact[i, ]) 
 				itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
 			} else {
 				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
@@ -177,8 +178,11 @@ setMethod(
 				scores[i] <- thetas
 			}  
 		}
-		if(method == "ML"){
-		    scores[rowSums(tabdata) == 0 | rowSums(tabdata) == ncol(fulldata)] <- NA
+		if(method == "ML"){			
+		    tmp <- tabdata[,itemloc[-length(itemloc)]]			 
+			tmp2 <- tabdata[,itemloc[-1] - 1]
+			scores[rowSums(tmp) == J, ] <- Inf
+			scores[rowSums(tmp2) == J,] <- -Inf
 		    for (i in 1:length(scores)) { 
 		        if(any(scores[i] == -Inf | scores[i] == Inf)) next
 		        Theta <- scores[i]	  
@@ -240,8 +244,7 @@ setMethod(
 		}
 		ind <- 1
 		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)
-			theta0[CONSTRAIN, ] <- 0
+			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)			
 			if(i %% thin == 0){
 				for(j in 1:nfact)
 					Theta[[j]][,ind] <- theta0[,j]									
@@ -254,9 +257,7 @@ setMethod(
 		for(i in 1:nfact){
 			expscores[,i] <- rowMeans(Theta[[i]])
 			sdscores[,i] <- apply(Theta[[i]],1,sd)
-		}
-        expscores[CONSTRAIN] <- NA
-		sdscores[CONSTRAIN] <- NA
+		}        
 				
 		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
 		colnames(ret) <- Names
