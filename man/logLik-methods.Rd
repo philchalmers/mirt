@@ -1,8 +1,8 @@
 \docType{methods}
 \name{logLik}
 \alias{logLik}
-\alias{logLik,confmirtClass-method}
 \alias{logLik-method}
+\alias{logLik,confmirtClass-method}
 \alias{logLik,polymirtClass-method}
 \title{Monte Carlo Log-Likelihood Calculation}
 \arguments{

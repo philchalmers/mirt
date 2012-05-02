@@ -1,9 +1,9 @@
 \docType{methods}
 \name{fscores}
 \alias{fscores}
+\alias{fscores-method}
 \alias{fscores,bfactorClass-method}
 \alias{fscores,confmirtClass-method}
-\alias{fscores-method}
 \alias{fscores,mirtClass-method}
 \alias{fscores,polymirtClass-method}
 \title{Methods for Function fscores}

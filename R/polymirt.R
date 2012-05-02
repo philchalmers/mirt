@@ -524,7 +524,7 @@ setMethod(
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")			
 			cat("BIC =", x@BIC, "\n")
-			if(x@p < 1)
+			if(x@p <= 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 			else 
@@ -551,7 +551,7 @@ setMethod(
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
 			cat("AIC =", object@AIC, "\n")							
 			cat("BIC =", object@BIC, "\n")
-			if(object@p < 1)
+			if(object@p <= 1)
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3), 
                     "\n", sep="")
@@ -773,7 +773,7 @@ setMethod(
 			tabdata[tabdata[ ,1:ncol(object@data)] == 99] <- NA
 			tabdata[ ,ncol(tabdata)] <- freq
 			tabdata <- cbind(tabdata,res)
-			colnames(tabdata) <- c(colnames(object@tabdata),"res")	
+			colnames(tabdata) <- c(colnames(data),'freq', 'exp', 'std_res')	
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
 				tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
@@ -814,11 +814,10 @@ setMethod(
 	f = "fitted",
 	signature = signature(object = 'polymirtClass'),
 	definition = function(object, digits = 3, ...){  		  
-		tabdata <- object@tabdata
-		if(length(tabdata)) stop('Expected response vectors cannot be computed because 
-                logLik() has not been run or the data contains missing responses.')
-		colnames(tabdata) <- c(colnames(object@data),"freq","exp")	
-		print(tabdata, digits)
+		tabdata <- object@tabdata		
+		colnames(tabdata) <- c(colnames(object@data),"freq","exp")
+		r <- round(tabdata[,ncol(tabdata)], digits)	
+		print(cbind(tabdata[,-ncol(tabdata)],r))
 		invisible(tabdata)
 	}
 )

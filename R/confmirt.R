@@ -220,7 +220,7 @@ setClass(
 #' #####
 #' #polynomial and combinations
 #' model.linear <- confmirt.model()
-#'  	 F = 1-8
+#' 		F = 1-8
 #'
 #' 
 #' model.quad <- confmirt.model()
@@ -241,7 +241,7 @@ setClass(
 #'
 #' 
 #' mod.linear <- confmirt(dataset, model.linear)
-#' mod.quad <- confmirt(dataset, model.quad )
+#' mod.quad <- confmirt(dataset, model.quad)
 #' mod.cube <- confmirt(dataset, model.cube)
 #' mod.combo <- confmirt(dataset, model.combo)
 #'
@@ -701,7 +701,7 @@ setMethod(
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")			
 			cat("BIC =", x@BIC, "\n")
-			if(x@p < 1)
+			if(x@p <= 1)
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 			else 
@@ -727,7 +727,7 @@ setMethod(
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
 			cat("AIC =", object@AIC, "\n")			
 			cat("BIC =", object@BIC, "\n")
-			if(object@p < 1)	
+			if(object@p <= 1)	
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3), 
                     "\n", sep="")
@@ -853,7 +853,7 @@ setMethod(
 		res <- matrix(0,J,J)
 		diag(res) <- NA
 		colnames(res) <- rownames(res) <- colnames(data)
-		prior <- dmvnorm(Theta[,1:nfact,drop=FALSE],rep(0,nfact),sig)
+		prior <- mvtnorm::dmvnorm(Theta[,1:nfact,drop=FALSE],rep(0,nfact),sig)
 		prior <- prior/sum(prior)		
 		if(restype == 'LD'){	
 			for(i in 1:J){				
@@ -932,11 +932,10 @@ setMethod(
 	f = "fitted",
 	signature = signature(object = 'confmirtClass'),
 	definition = function(object, digits = 3, ...){  
-		tabdata <- object@tabdata
-		if(length(tabdata)) stop('Expected response vectors cannot be computed because 
-                logLik() has not been run or the data contains missing responses.')
-		colnames(tabdata) <- c(colnames(object@data),"freq","exp")	
-		print(tabdata, digits)
+		tabdata <- object@tabdata		
+		colnames(tabdata) <- c(colnames(object@data),"freq","exp")
+		r <- round(tabdata[,ncol(tabdata)], digits)	
+		print(cbind(tabdata[,-ncol(tabdata)],r))
 		invisible(tabdata)
 	}
 )

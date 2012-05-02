@@ -231,7 +231,7 @@ anova(mod1,mod3)
 #####
 #polynomial and combinations
 model.linear <- confmirt.model()
- 	 F = 1-8
+		F = 1-8
 
 
 model.quad <- confmirt.model()
@@ -252,7 +252,7 @@ model.combo <- confmirt.model()
 
 
 mod.linear <- confmirt(dataset, model.linear)
-mod.quad <- confmirt(dataset, model.quad )
+mod.quad <- confmirt(dataset, model.quad)
 mod.cube <- confmirt(dataset, model.cube)
 mod.combo <- confmirt(dataset, model.combo)
 
