@@ -46,13 +46,11 @@ setMethod(
 		nfactNames <- ifelse(length(object@prodlist) > 0, 
 			length(object@prodlist) + nfact, nfact)		
 		N <- nrow(object@Theta)
-		J <- length(object@K)
-		pars <- object@pars		
-		lambdas <- matrix(pars[ ,1:nfactNames], ncol=nfactNames)
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- object@parlist$zetas			
-		mu <- object@gpars$u
-		sigma <- object@gpars$sig		
+		J <- length(object@K)			
+		lambdas <- object@pars$lambdas		
+		zetas <- object@pars$zetas			
+		mu <- object@pars$mu
+		sigma <- object@pars$sig		
 		LL <- matrix(0,N,draws)		
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
@@ -97,9 +95,10 @@ setMethod(
 			logLik <- logLik + logN/sum(logr)			
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
 		x <- object@estpars	
+		nestComp <- sum(ifelse(x$estComp, nfact - 1, 0))
 		df <- as.integer(length(r) - sum(x$estlam) - sum(x$estgcov) - 
 			sum(x$estgmeans) - sum(object@K - 1) + object@nconstvalues + 
-			nfact*(nfact - 1)/2 - sum(x$estGuess) - 1)			
+			nfact*(nfact - 1)/2 - sum(x$estGuess) - nestComp - 1)			
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)				
 		if(G2){						

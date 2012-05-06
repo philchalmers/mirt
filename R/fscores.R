@@ -288,16 +288,15 @@ setMethod(
 	{ 	
 		cand.t.var <- 1
 		estComp <- object@estComp
-		sig <- object@gpars$sig
-		mu <- object@gpars$u
+		sig <- object@pars$sig
+		mu <- object@pars$mu
 		theta0 <- object@Theta
 		K <- object@K
 		nfact <- ncol(theta0)
 		nfactNames <- ncol(object@F)
 		factorNames <- colnames(object@F)
-		lambdas <- matrix(object@pars[,1:nfactNames],ncol=nfactNames)
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- na.omit(as.numeric(t(object@pars[,(nfactNames+1):ncol(object@pars)])))
+		lambdas <- object@pars$lambdas		
+		zetas <- object@pars$zetas
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
 		data <- cbind(object@data,object@fulldata)		

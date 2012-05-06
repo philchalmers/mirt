@@ -16,7 +16,7 @@
 # @keywords classes
 setClass(
 	Class = 'confmirtClass',
-	representation = representation(pars = 'matrix', parlist = 'list', guess = 'numeric', SEpars = 'matrix', 
+	representation = representation(pars = 'list', parsprint = 'matrix', guess = 'numeric', SEpars = 'matrix', 
 		SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
@@ -590,7 +590,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		phi <- phi + gamma*(grad - phi)
 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
 	} ###END BIG LOOP	
-	
+	    
 	normpars <- sortParsConfmirt(pars, indlist, nfact, estGuess, nfactNames)
 	cat("\n\n")
 	SEtmp <- diag(solve(info))		
@@ -661,22 +661,22 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	}	 
 	zetas <- tmp1
 	SEzetas <- tmp2	
-	pars <- cbind(lambdas,zetas)
+	parsprint <- cbind(lambdas,zetas)
 	SEpars <- cbind(SElam,SEzetas)
 	gpars <- list(u = u, sig = sig)	
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
 	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
-		estgmeans=estgmeans)		
+		estgmeans=estgmeans,estComp=estComp)		
 		
-	if (nfactNames > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfactNames]^2,na.rm = TRUE))
-		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
-	F <- as.matrix(pars[ ,1:nfactNames]/norm)
+	if (nfactNames > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
+		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
+	F <- as.matrix(lambdas[ ,1:nfactNames]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
 	colnames(F) <- factorNames
 	names(h2) <- itemnames	
 
-	mod <- new('confmirtClass', pars=pars, parlist=normpars, guess=guess, SEpars=SEpars, 
+	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, SEpars=SEpars, 
 		SEg=SEg, gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - 
 		burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
 		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), 
@@ -777,15 +777,15 @@ setMethod(
 			length(object@prodlist) + nfact, nfact)
 		factorNames <- colnames(object@F)
 		itemnames <- names(object@h2)
-		a <- matrix(object@pars[ ,1:nfactNames], ncol=nfactNames)
-		d <- matrix(object@pars[ ,(nfactNames+1):ncol(object@pars)],
-			ncol = ncol(object@pars)-nfactNames)    	
-		parameters <- cbind(object@pars,object@guess)
+		a <- matrix(object@parsprint[ ,1:nfactNames], ncol=nfactNames)
+		d <- matrix(object@parsprint[ ,(nfactNames+1):ncol(object@parsprint)],
+			ncol = ncol(object@parsprint)-nfactNames)    	
+		parameters <- cbind(object@parsprint,object@guess)
 		SEs <- cbind(object@SEpars,object@SEg)
 		rownames(parameters) <- itemnames
 		rownames(SEs) <- itemnames
 		colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],sep=""),
-            paste("d_",1:(ncol(object@pars)-nfactNames),sep=""),"guess")
+            paste("d_",1:(ncol(object@parsprint)-nfactNames),sep=""),"guess")
 		factorNames2 <- factorNames	
 		if(nfact < nfactNames)
 		  factorNames2 <- factorNames[!grepl("\\(",factorNames)]			
@@ -815,7 +815,7 @@ setMethod(
 			colnames(SEsig) <- rownames(SEsig) <- factorNames2	
 			print(SEsig, digits)	
 		}
-		invisible(list(pars = parameters,mu = u,sigma = sig, sigmaSE = SEsig,
+		invisible(list(parsprint = parameters,mu = u,sigma = sig, sigmaSE = SEsig,
 			muSE = SEu))	
 	}
 )
@@ -837,16 +837,8 @@ setMethod(
 		theta <- seq(-4,4, length.out = round(20/nfact))
 		Theta <- thetaComb(theta,nfact)		
 		if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
-		lambdas <- matrix(object@pars[,1:nfactNames], J)
-		lambdas[is.na(lambdas)] <- 0
-		zetas <- as.vector(t(object@pars[,(nfactNames+1):ncol(object@pars)]))
-		zetas <- na.omit(zetas)
-		zetalist <- list()
-		loc <- 1
-		for(i in 1:J){
-			zetalist[[i]] <- zetas[loc:(loc+K[i]-2)]
-			loc <- loc + K[i] - 1		
-		}
+		lambdas <- object@pars$lambdas
+		zetas <- object@pars$zetas
 		guess <- object@guess
 		guess[is.na(guess)] <- 0	
 		Ksums <- cumsum(K) - 1	
@@ -860,14 +852,14 @@ setMethod(
 			for(i in 1:J){				
 				for(j in 1:J){			
 					if(i < j){
-						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetalist[[i]],Theta,itemexp=TRUE)
+						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[[i]],Theta,itemexp=TRUE)
 						else { 
-							P1 <- P.mirt(lambdas[i,],zetalist[[i]], Theta, guess[i])
+							P1 <- P.mirt(lambdas[i,],zetas[[i]], Theta, guess[i])
 							P1 <- cbind(1 - P1, P1)
 						}	
-						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetalist[[j]],Theta,itemexp=TRUE)
+						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[[j]],Theta,itemexp=TRUE)
 						else {
-							P2 <- P.mirt(lambdas[j,],zetalist[[j]], Theta, guess[j])	
+							P2 <- P.mirt(lambdas[j,],zetas[[j]], Theta, guess[j])	
 							P2 <- cbind(1 - P2, P2)
 						}
 						tab <- table(data[,i],data[,j])		
