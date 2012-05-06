@@ -220,7 +220,7 @@ setClass(
 #' #####
 #' #polynomial and combinations
 #' model.linear <- confmirt.model()
-#' 		F = 1-8
+#'       F = 1-8
 #'
 #' 
 #' model.quad <- confmirt.model()
@@ -424,7 +424,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0, lambdas, zetas, guess,
 			fulldata, K, itemloc, cand.t.var, sig, mu, estComp, prodlist)
 		theta0 <- m.thetas[[1]]
-		
+				
 		#Step 2. Find average of simulated data gradients and hessian 		
 		g.m <- h.m <- group.m <- list()
 		g <- rep(0, npars)
@@ -448,7 +448,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 						ind <- parind[is.na(g)][1]							
 						ind2 <- ind + length(zetas[[i]])*2 - 1
 						g[ind:ind2] <- temp$grad
-						h[ind:ind2, ind:ind2] <- temp$hess						
+						h[ind:ind2, ind:ind2] <- temp$hess
+						g[ind2 + 1] <- 0	
 					}				
 					next
 				}

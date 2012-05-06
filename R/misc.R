@@ -212,8 +212,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 { 			
 	N <- nrow(fulldata)
 	J <- length(K)
-	nfact <- ncol(theta0)				
-	P0 <- P1 <- matrix(0,N,J)		
+	nfact <- ncol(theta0)					
 	unif <- runif(N)
 	if(nfact > 1)		
 		theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, 
@@ -225,9 +224,9 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 	if(!is.null(prodlist)){
 		theta0 <- prodterms(theta0,prodlist)
 		theta1 <- prodterms(theta1,prodlist)	
-	}
+	}	
 	ThetaDraws <- .Call("drawThetas", unif, den0, den1, lambdas, zetas, guess,
-					theta0, theta1,	fulldata,	itemloc-1, as.numeric(estComp))
+					theta0, theta1,	fulldata, (itemloc-1), as.numeric(estComp))
 	log.lik <- ThetaDraws$cdloglik
 	accept <- as.logical(ThetaDraws$accept)				
 	theta1[!accept,] <- theta0[!accept,]	
@@ -340,8 +339,7 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 	pars <- c(zeta,lambda,g)
 	if(estg){
 		grad <- function(pars, r, thetas){
-			f <- 1
-			nfact <- ncol(thetas)
+			f <- 1			
 			d <- pars[1:nfact]	
 			a <- pars[(nfact+1):(length(pars)-1)]
 			c <- pars[length(pars)]
@@ -361,8 +359,7 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 			return(c(dd,da,dc))
 		}		
 		hess <- function(pars, r, thetas){
-			f <- 1
-			nfact <- ncol(thetas)
+			f <- 1			
 			d <- pars[1:nfact]	
 			a <- pars[(nfact+1):(length(pars)-1)]
 			c <- pars[length(pars)]

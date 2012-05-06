@@ -48,7 +48,7 @@ setMethod(
 		N <- nrow(object@Theta)
 		J <- length(object@K)
 		pars <- object@pars		
-		lambdas <- matrix(pars[ ,1:nfactNames], ncol=nfact)
+		lambdas <- matrix(pars[ ,1:nfactNames], ncol=nfactNames)
 		lambdas[is.na(lambdas)] <- 0
 		zetas <- object@parlist$zetas			
 		mu <- object@gpars$u

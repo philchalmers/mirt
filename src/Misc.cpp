@@ -86,7 +86,7 @@ NumericMatrix ProbComp(NumericMatrix Theta, NumericVector a,
 	int i, j;
     int nfact = Theta.ncol();
     int N = Theta.nrow();
-	NumericMatrix Pret(N,2);    
+	NumericMatrix Pret(N,2), theta(N,1);    
 	NumericVector P(N), p1(N), tmpa(1);
 	double zerog = 0.0, tmpd;
 	P.fill(1.0);
@@ -94,7 +94,8 @@ NumericMatrix ProbComp(NumericMatrix Theta, NumericVector a,
 	for(j = 0; j < nfact; j++){
 		tmpa(0) = a(j);
 		tmpd = zetas(j);
-		p1 = itemTrace(tmpa, &tmpd, Theta, &zerog);
+		theta(_,0) = Theta(_,j);
+		p1 = itemTrace(tmpa, &tmpd, theta, &zerog);
 		for(i = 0; i < N; i++)
 			P(i) *= p1(i);
 	}

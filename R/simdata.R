@@ -106,7 +106,7 @@
 #' 
 #' dataset <- simdata(a,d,1000,sigma=sigma,factor.loads=TRUE)
 #' 
-#' ####Compensatory item example
+#' ####Noncompensatory item example
 #' a <- matrix(c(
 #'   1,NA,
 #' 1.5,NA,
@@ -115,7 +115,7 @@
 #' 1.5,.5,
 #'  .7, 1), ncol=2,byrow=TRUE)
 #' 
-#' #notice that the compensatory items have the same number of intercepts as 
+#' #notice that the partially compensatory items have the same number of intercepts as 
 #' #factors influencing the item
 #' d <- matrix(c(
 #' -1.0,NA,
