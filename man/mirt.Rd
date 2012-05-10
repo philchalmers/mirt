@@ -282,6 +282,10 @@ summary(mod2g, rotate='promax')
   chance success on correlations between items and between
   tests. \emph{Psychometrika, 26}, 347-372.
 
+  Chalmers, R., P. (2012). mirt: A Multidimensional Item
+  Response Theory Package for the R Environment.
+  \emph{Journal of Statistical Software, 48}(6), 1-29.
+
   Muraki, E. & Carlson, E. B. (1995). Full-information
   factor analysis for polytomous item responses.
   \emph{Applied Psychological Measurement, 19}, 73-90.

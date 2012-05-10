@@ -129,6 +129,10 @@ setClass(
 #' item factor analysis. \emph{Journal of Educational and Behavioral
 #' Statistics, 35}, 307-335.
 #' 
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6),
+#' 1-29.
+#'
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
 #' Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics,
 #' and Full-information Item Factor Analysis [Computer software]. Lincolnwood,

@@ -210,6 +210,10 @@ anova(mod1,mod2)
   analysis by a Metropolis-Hastings Robbins-Monro
   algorithm. \emph{Psychometrika, 75}, 33-57.
 
+  Chalmers, R., P. (2012). mirt: A Multidimensional Item
+  Response Theory Package for the R Environment.
+  \emph{Journal of Statistical Software, 48}(6), 1-29.
+
   Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S.
   G., Muraki, E., & Bock, R. D. (2003). TESTFACT 4 for
   Windows: Test Scoring, Item Statistics, and

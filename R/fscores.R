@@ -124,7 +124,8 @@ setMethod(
 			return(cbind(fulldata,scoremat))
 		} else {						
 			cat("\nMethod: ", method,"\n\n")
-			return(cbind(object@tabdata,scores))
+			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
+			return(cbind(object@tabdata,scores,SEscores))
 				
 		}   
 	}  

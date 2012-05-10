@@ -121,6 +121,10 @@ setClass(
 #' \code{\link{fscores}}
 #' @references
 #' 
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6),
+#' 1-29.
+#'
 #' Gibbons, R. D., & Hedeker, D. R. (1992). Full-information Item Bi-Factor
 #' Analysis. \emph{Psychometrika, 57}, 423-436.
 #'

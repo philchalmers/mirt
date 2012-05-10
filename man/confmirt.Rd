@@ -231,7 +231,7 @@ anova(mod1,mod3)
 #####
 #polynomial and combinations
 model.linear <- confmirt.model()
-		F = 1-8
+      F = 1-8
 
 
 model.quad <- confmirt.model()
@@ -270,6 +270,10 @@ anova(mod.cube,mod.combo)
   algorithm for confirmatory item factor analysis.
   \emph{Journal of Educational and Behavioral Statistics,
   35}, 307-335.
+
+  Chalmers, R., P. (2012). mirt: A Multidimensional Item
+  Response Theory Package for the R Environment.
+  \emph{Journal of Statistical Software, 48}(6), 1-29.
 
   Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S.
   G., Muraki, E., & Bock, R. D. (2003). TESTFACT 4 for

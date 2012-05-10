@@ -124,6 +124,10 @@ setClass(
 #' Cai, L. (2010). High-Dimensional exploratory item factor analysis by a
 #' Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75},
 #' 33-57.
+#'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6),
+#' 1-29.
 #' 
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
 #' Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics,
@@ -466,7 +470,8 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, n
 	guess <- normpars$guess		
 	SElam <- SEpars$lambdas
 	SEzetas <- SEpars$zetas		 
-	SEg <- SEpars$guess		
+	SEg <- SEpars$guess
+	SEg[!estGuess] <- NA	
 		
 	zetatable <- SEzetatable <- matrix(NA,J,(max(K)-1))		
 	for(i in 1:J){
