@@ -34,6 +34,9 @@ mirt 0.2.2
 
 * Ported src code into Rcpp for future tweaking. 
 
+* Added better fitted() function when missing data exist (noticed by 
+  Erin Horn)
+
 ----------------------------------------------------------------
 mirt 0.2.1
 ----------------------------------------------------------------
@@ -43,7 +46,10 @@ mirt 0.2.1
 * RMSEA statistic added for all fitted models
 
 * Nonlinear polynomial estimation specification for confmirt models, now
-  with more consistent returned lables
+  with more consistent returned labels
+
+* Provide better identification criteria for confmirt() (suggested by 
+  Hendrik Lohse)
 
 ----------------------------------------------------------------
 mirt 0.2.0
@@ -54,10 +60,22 @@ mirt 0.2.0
 * bfactor() values that are ommited are recoded to NA in summary and coef 
   for better viewing
 
-* 'technical' added for confmirt function, allowing for various tweeks and 
+* 'technical' added for confmirt function, allowing for various tweaks and 
   varying beta prior weights
 
 * product relations added for confmirt.model(). Specified by enclosing in brackets
-  and using an asterik 
+  and using an asterisk 
 
 * documentation fixes with roxygenize  
+
+----------------------------------------------------------------
+mirt 0.1.20
+----------------------------------------------------------------
+
+* allow lower bound beta priors to vary over items (suggested by James Lee)
+
+----------------------------------------------------------------
+mirt 0.1.6
+----------------------------------------------------------------
+
+* bias fix for mirt() function (noticed by Pedro Barbetta)
