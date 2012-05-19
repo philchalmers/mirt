@@ -206,7 +206,7 @@ Theory)}
   Unrestricted full-information factor analysis is known to
   have problems with convergence, and some items may need
   to be constrained or removed entirely to allow for an
-  acceptable solution. As a general rule dichotmous items
+  acceptable solution. As a general rule dichotomous items
   with means greater than .95, or items that are only .05
   greater than the guessing parameter, should be considered
   for removal from the analysis or treated with prior
