@@ -95,7 +95,7 @@ setMethod(
 			logLik <- logLik + logN/sum(logr)			
 		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)
 		x <- object@estpars	
-		nestComp <- sum(ifelse(object$estComp, nfact - 1, 0))
+		nestComp <- sum(ifelse(object@estComp, nfact - 1, 0))
 		df <- as.integer(length(r) - sum(x$estlam) - sum(x$estgcov) - 
 			sum(x$estgmeans) - sum(object@K - 1) + object@nconstvalues + 
 			nfact*(nfact - 1)/2 - sum(x$estGuess) - nestComp - 1)			
