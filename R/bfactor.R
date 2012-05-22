@@ -424,7 +424,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	if(SE){		
 		LLfun <- function(p, pars, tabdata, Theta, prior, guess, specific, sitems, itemloc){
 			pars2 <- rebuildPars(p, pars)		
-			rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, 
+			rlist <- Estep.bfactor(pars2, tabdata, Theta, prior, guess, 
 				specific, sitems, itemloc)    	  
 			Pl <- rlist$expected
 			logLik <- sum(r*log(Pl))
