@@ -1,9 +1,9 @@
 Things to do:
 
-- Restructure underlying SEXP calls to use RcppArmadillo. This will take time....
+- Add generics for general extraction of AIC, BIC, G2, logLikelihood, etc.
 - Nominal and rating intercept estimation for polymirt and confmirt
-- Multilevel structure function using lme4 (via multimirt function)
-- Add limited-information model fit statistics
 - Multiple-group estimation for confmirt
+- Multilevel structure function using lme4 or nlme (via multimirt function)
+- Add limited-information model fit statistics
 
 
