@@ -250,6 +250,14 @@ setClass(
 #' coef(mod2g)
 #' anova(mod1g, mod2g)
 #' summary(mod2g, rotate='promax')
+#'
+#' ###########
+#' #data from the 'ltm' package in numeric format
+#' data(Science)
+#' (mod1 <- mirt(Science, 1))
+#' summary(mod1)
+#' residuals(mod1)
+#' coef(mod1)
 #'      }
 #' 
 mirt <- function(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 

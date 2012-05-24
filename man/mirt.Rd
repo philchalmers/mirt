@@ -264,6 +264,14 @@ mod2g <- mirt(data, 2, guess = .1)
 coef(mod2g)
 anova(mod1g, mod2g)
 summary(mod2g, rotate='promax')
+
+###########
+#data from the 'ltm' package in numeric format
+data(Science)
+(mod1 <- mirt(Science, 1))
+summary(mod1)
+residuals(mod1)
+coef(mod1)
      }
 }
 \author{
