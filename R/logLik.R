@@ -183,9 +183,7 @@ setMethod(
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)		
 		if(G2){							
 			if(any(is.na(data))){
-				object@G2 <- 0	
-				object@p <- 2
-                object@RMSEA <- 1
+				object@G2 <- object@p <- object@RMSEA <- NaN					
 			} else {				
 				G2 <- 2 * sum(log(1/(N*rwmeans)))
 				p <- 1 - pchisq(G2,df) 

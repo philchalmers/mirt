@@ -529,7 +529,7 @@ setMethod(
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")			
 			cat("BIC =", x@BIC, "\n")
-			if(x@p <= 1)
+			if(!is.nan(x@p))
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
 					x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 			else 
@@ -556,7 +556,7 @@ setMethod(
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
 			cat("AIC =", object@AIC, "\n")							
 			cat("BIC =", object@BIC, "\n")
-			if(object@p <= 1)
+			if(!is.nan(object@p))
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
 					object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3), 
                     "\n", sep="")

@@ -447,7 +447,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	X2 <- 2 * sum(r * log(r / (N*Pl)))  
 	df <- length(r) - 1 + nfact*(nfact - 1)/2 - npars 
 	p <- 1 - pchisq(X2,df)
-	if(any(is.na(data.original))) p <- 2
+	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 
@@ -487,7 +487,7 @@ setMethod(
 		cat("Log-likelihood = ", x@logLik, "\n")
 		cat("AIC = ", x@AIC, "\n")		
 		cat("BIC = ", x@BIC, "\n")
-		if(x@p <= 1)
+		if(!is.nan(x@p))
 			cat("G^2 = ", round(x@X2,2), ", df = ", 
 				x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
@@ -513,7 +513,7 @@ setMethod(
 		cat("Log-likelihood = ", object@logLik, "\n")
 		cat("AIC = ", object@AIC, "\n")		
 		cat("BIC = ", object@BIC, "\n")
-		if(object@p <= 1)
+		if(!is.nan(object@p))
 			cat("G^2 = ", round(object@X2,2), ", df = ", 
 				object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3),
                 "\n", sep="")

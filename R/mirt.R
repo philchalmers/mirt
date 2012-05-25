@@ -467,7 +467,7 @@ mirt <- function(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior 
 	BIC <- (-2) * logLik + npars*log(N)
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
-	if(any(is.na(data.original))) p <- 2
+	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN		
 	guess[K > 2] <- NA	
 
 	# pars to FA loadings
@@ -508,7 +508,7 @@ setMethod(
 		cat("Log-likelihood =", x@logLik, "\n")
 		cat("AIC =", x@AIC, "\n")		
 		cat("BIC =", x@BIC, "\n")
-		if(x@p <= 1)            
+		if(!is.nan(x@p))            
 			cat("G^2 = ", round(x@X2,2), ", df = ", 
 				x@df, ", p = ", round(x@p,4),", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
@@ -534,13 +534,13 @@ setMethod(
 		cat("Log-likelihood =", object@logLik, "\n")
 		cat("AIC =", object@AIC, "\n")		
 		cat("BIC =", object@BIC, "\n")
-		if(object@p <= 1)
+		if(!is.nan(object@p))
 			cat("G^2 = ", round(object@X2,2), ", df = ", 
 				object@df, ", p = ", round(object@p,4),", RMSEA = ", round(object@RMSEA,3),
                 "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
-				x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )			
+				object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )			
 	}
 )
 
