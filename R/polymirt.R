@@ -137,11 +137,13 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, ncycles = 2000, 
-#'   burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
-#'   draws = 2000, debug = FALSE, technical = list(), ...)
+#' polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, rotate = 'varimax', 
+#'    ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, 
+#'    printcycles = TRUE,	calcLL = TRUE, draws = 2000, debug = FALSE, technical = list(), ...)
+#'  
 #' 
-#' \S4method{summary}{polymirt}(object, rotate='varimax', suppress = 0, digits = 3, ...)
+#' 
+#' \S4method{summary}{polymirt}(object, rotate='', suppress = 0, digits = 3, ...)
 #' 
 #' \S4method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
 #' 

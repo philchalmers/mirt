@@ -9,13 +9,13 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL,
-    par.prior = FALSE, startvalues = NULL, quadpts = NULL,
-    ncycles = 300, tol = .001, nowarn = TRUE, debug =
-    FALSE, ...)
+  mirt(data, nfact, guess = 0, SE = FALSE, rotate =
+    'varimax', prev.cor = NULL, par.prior = FALSE,
+    startvalues = NULL, quadpts = NULL, ncycles = 300, tol
+    = .001, nowarn = TRUE, debug = FALSE, ...)
 
-  \S4method{summary}{mirt}(object, rotate='varimax',
-    suppress = 0, digits = 3, ...)
+  \S4method{summary}{mirt}(object, rotate='', suppress = 0,
+    digits = 3, ...)
 
   \S4method{coef}{mirt}(object, digits = 3, ...)
 
