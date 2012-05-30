@@ -34,11 +34,12 @@ setGeneric("fscores",
 #' rightmost column
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
-#' (\code{"ML"})
-#' @param ndraws number of MH samples to draw for each response pattern
+#' (\code{"ML"}). Only applicable to \code{mirtClass} and \code{bfactorClass} objects 
+#' @param ndraws number of MH samples to draw for each response pattern for \code{polymirtClass}
+#' or \code{confmirtClass} objects
 #' @param thin controls how much the chain should be thinned by, default
-#' collects every 5th draw (\code{thin = 5}). Note that \code{ndraws/thin} must be a whole number
-#' @param ... additional arguments to be passed
+#' collects every 5th draw (\code{thin = 5}). Note that \code{ndraws/thin} must be a whole number.
+#' for \code{polymirtClass} or \code{confmirtClass} objects only
 #' @return Returns either a summary table with the response patterns and
 #' expected factor scores, or a complete data matrix with factor scores
 #' appended to the last column.
@@ -48,18 +49,21 @@ setGeneric("fscores",
 #' @examples
 #' 
 #' \dontrun{
-#' 
+#'
+#' mod <- mirt(Science, 1)
 #' tabscores <- fscores(mod)
 #' fullscores <- fscores(mod, full.scores = TRUE)
 #' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 #' 
+#' mod2 <- polymirt(Science, 1)
+#' tabscores2 <- fscores(mod2, ndraws = 5000)
 #' 
 #'   }
 #' 
 setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
-	definition = function(object, full.scores = FALSE, method = "EAP", ...)
+	definition = function(object, full.scores = FALSE, method = "EAP")
 	{    
 		K <- object@K		
 		a <- object@pars$lambdas		
@@ -79,8 +83,8 @@ setMethod(
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
 		for (i in 1:J){
 			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, g[i]) 
-				itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+				itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, g[i]) 
+				itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 			} else {
 				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 					P.poly(a[i, ], d[[i]], Theta, TRUE)	
@@ -95,8 +99,8 @@ setMethod(
 		}		
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
-				Theta <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],itemloc)$estimate 
+				tmp <- scores[i, ]	  
+				thetas <- nlm(MAP.mirt,tmp,a=a,d=d,guess=g,patdata=tabdata[i, ],itemloc)$estimate 
 				scores[i, ] <- thetas
 			}  
 		}
@@ -135,7 +139,7 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'bfactorClass',
-	definition = function(object, full.scores = FALSE, method = "EAP", ...)
+	definition = function(object, full.scores = FALSE, method = "EAP")
 	{  
 		K <- object@K		
 		a <- object@pars$lambdas		
@@ -157,8 +161,8 @@ setMethod(
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
 		for (i in 1:J){
 			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i]] <- P.bfactor(a[i, ], d[[i]], Theta, g[i], logicalfact[i, ]) 
-				itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+				itemtrace[ ,itemloc[i] + 1] <- P.bfactor(a[i, ], d[[i]], Theta, g[i], logicalfact[i, ]) 
+				itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 			} else {
 				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 					P.bfactor(a[i, ], d[[i]], Theta, 0, logicalfact[i, ])	
@@ -199,14 +203,14 @@ setMethod(
 			scores <- matrix(scores)
 			colnames(scores) <- 'g'
 		}	
-		if(full.scores){
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta))
+		if(full.scores){		
+			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=1)
 			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
 			for (j in 1:nrow(tabdata)){          
 				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- scores[j, ]
+				scoremat[TFvec, 1] <- scores[j, 1]
 			} 
-			colnames(scoremat) <- colnames(object@F)	
+			colnames(scoremat) <- 'G'	
 			return(cbind(fulldata,scoremat))
 		} else {  				
 			cat("\nMethod: ", method,"\n\n")			
@@ -219,7 +223,7 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'polymirtClass',
-	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5, ...)
+	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5)
 	{ 	
 		cand.t.var <- 1
 		theta0 <- object@Theta
@@ -285,7 +289,7 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'confmirtClass',
-	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5, ...)
+	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5)
 	{ 	
 		cand.t.var <- 1
 		estComp <- object@estComp
@@ -355,3 +359,4 @@ setMethod(
 		}	
 	}	
 )
+

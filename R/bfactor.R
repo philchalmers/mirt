@@ -229,7 +229,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 		rs <- rs * Prior
 		if(ncol(rs) == 2){
 			itemtrace <- P.mirt(a, d, Theta, gues) 
-			itemtrace <- cbind(itemtrace, 1.0 - itemtrace)
+			itemtrace <- cbind(1.0 - itemtrace, itemtrace)
 		} else {
 			itemtrace <- P.poly(a, d, Theta, TRUE)	
 		}
@@ -250,7 +250,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	}   
 	
 	#Main
-	Call <- match.call()	
+	Call <- match.call()		
 	itemnames <- colnames(data)
 	data <- as.matrix(data)
 	data.original <- data		
@@ -277,11 +277,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
         Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
 	colnames(fulldata) <- Names			
 	for(i in 1:J){
-		ind <- index[i]
-		if(setequal(uniques[[i]], c(0,1))){
-			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[,ind],abs(1-data[,ind]))
-			next
-		}
+		ind <- index[i]		
 		dummy <- matrix(0,N,K[ind])
 		for (j in 0:(K[ind]-1))  
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
@@ -289,20 +285,36 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	}	
 	fulldata[is.na(fulldata)] <- 0
 	pats <- apply(fulldata, 1, paste, collapse = "/") 
-	freqs <- table(pats)
+	freqs <- rev(table(pats))
 	nfreqs <- length(freqs)
 	r <- as.vector(freqs)	
 	tabdata <- unlist(strsplit(cbind(names(freqs)), "/"))
 	tabdata <- matrix(as.numeric(tabdata), nfreqs, sum(K), TRUE)	
+	tabdata2 <- matrix(NA, nfreqs, J)
+	tmp <- c()
+	for(i in 1:J){ 
+		if(K[i] == 2) tmp <- c(tmp,0,1)
+		else tmp <- c(tmp, 1:K[i])
+	}
+	for(i in 1:nfreqs){
+		if(sum(tabdata[i, ]) < J){
+			tmp2 <- rep(NA,J)
+			ind <- tmp[as.logical(tabdata[i, ])]
+			logicalind <- as.logical(tabdata[i, ])
+			k <- 1
+			for(j in 1:J){
+				if(sum(logicalind[itemloc[j]:(itemloc[j+1]-1)]) != 0){
+					tmp2[j] <- ind[k]
+					k <- k + 1
+				}
+			}
+			tabdata2[i, ] <- tmp2
+		} else tabdata2[i, ] <- tmp[as.logical(tabdata[i, ])]
+	}
 	tabdata <- cbind(tabdata,r) 
+	tabdata2 <- cbind(tabdata2,r)
 	colnames(tabdata) <- c(Names,'Freq')	
-	#for return
-	pats <- apply(data, 1, paste, collapse = "/") 
-	freqs <- table(pats)		
-	tabdata2 <- unlist(strsplit(cbind(names(freqs)), "/"))
-	tabdata2 <- matrix(as.numeric(tabdata2), nfreqs, J, TRUE)	
-	tabdata2 <- cbind(tabdata2,r) 
-	colnames(tabdata2) <- c(itemnames,'Freq')
+	colnames(tabdata2) <- c(itemnames, 'Freq')	
 	if(is.logical(par.prior)) 
 	    if(par.prior) suppressAutoPrior <- FALSE  
 	        temp <- matrix(c(1,0,0),ncol = 3, nrow=J, byrow=TRUE)
@@ -315,10 +327,11 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 				temp[par.prior$int.items[i],2:3] <- par.prior$int		 
 	}  
 	par.prior <- temp 
+	Rpoly <- cormod(na.omit(data.original),K,guess)
 	if(!is.null(prev.cor)){
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
 			else stop("Correlation matrix is not square.\n")
-	} else Rpoly <- cormod(na.omit(data.original),K,guess)	
+	}	
 	if(det(Rpoly) < 1e-15) Rpoly <- cor(na.omit(data.original))
 	FA <- suppressWarnings(psych::fa(Rpoly,1,rotate = 'none', warnings= FALSE, fm="minres"))	
 	loads <- unclass(loadings(FA))
@@ -336,19 +349,14 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	}	
 	lambdas <- cbind(lambdas, slambdas)	
     zetas <- list()	
-    for(i in 1:J){
-        if(K[i] == 2){
-            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]            			
-        } else {
-            temp <- table(data[,i])[1:(K[i]-1)]/N
-            temp <- cumsum(temp)			
-            zetas[[i]] <- qnorm(1 - temp)/cs[i]        			
-        }       
+    for(i in 1:J){        
+        temp <- table(data[,i])[1:(K[i]-1)]/N
+        temp <- cumsum(temp)			
+        zetas[[i]] <- qnorm(1 - temp)/cs[i]        			               
     }    		
 	pars <- list(lambdas=lambdas, zetas=zetas)
 	attr(pars, 'lamsel') <- logicalfact
-	npars <- length(unlist(pars))	
-
+	npars <- sum(K-1) + sum(logicalfact)
 	lastpars2 <- lastpars1 <- pars 	
 	theta <- as.matrix(seq(-4, 4, length.out = quadpts))
 	Theta <- thetaComb(theta, 2)
@@ -435,7 +443,8 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 		vcovpar <- solve(fmin$hessian)
 		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
 	}
-	logN <- 0
+	logN <- 0	
+	npatmissing <- sum(is.na(rowSums(tabdata2)))
 	logr <- rep(0,length(r))
 	for (i in 1:N) logN <- logN + log(i)
 	for (i in 1:length(r)) 
@@ -445,11 +454,11 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	AIC <- (-2) * logLik + 2 * npars
 	BIC <- (-2) * logLik + npars*log(N)
 	X2 <- 2 * sum(r * log(r / (N*Pl)))  
-	df <- length(r) - 1 + nfact*(nfact - 1)/2 - npars 
-	p <- 1 - pchisq(X2,df)
-	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN
+	df <- length(r) - 1 + nfact*(nfact - 1)/2 - npars - npatmissing	
+	p <- 1 - pchisq(X2,df)	
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
+	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN
 
 	#from last EM cycle pars to FA
 	norm <- sqrt(1 + rowSums(pars$lambdas[ ,1:nfact]^2))	 
@@ -635,10 +644,9 @@ setMethod(
 				sqrt(object@Pl * nrow(object@data)),digits)
 			expected <- round(N * object@Pl/sum(object@Pl),digits)  
 			tabdata <- object@tabdata
-			freq <- tabdata[ ,ncol(tabdata)]			
-			tabdata[tabdata[ ,1:ncol(object@data)] == 99] <- NA
-			tabdata[ ,ncol(tabdata)] <- freq
-			tabdata <- cbind(tabdata,expected,res)
+			ISNA <- is.na(rowSums(tabdata))
+			expected[ISNA] <- res[ISNA] <- NA
+			tabdata <- data.frame(tabdata,expected,res)
 			colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
 			if(!is.null(printvalue)){
 				if(!is.numeric(printvalue)) stop('printvalue is not a number.')
@@ -653,13 +661,10 @@ setMethod(
 	f = "fitted",
 	signature = signature(object = 'bfactorClass'),
 	definition = function(object, digits = 3, ...){  
-		expected <- round(object@N * object@Pl/sum(object@Pl),digits)  
+		Exp <- round(object@N * object@Pl/sum(object@Pl),digits)  
 		tabdata <- object@tabdata
-		freq <- tabdata[ ,ncol(tabdata)]
-		tabdata[tabdata[ ,1:ncol(object@data)] == 9] <- NA
-		tabdata[ ,ncol(tabdata)] <- freq
-		tabdata <- cbind(tabdata,expected)
-		colnames(tabdata) <- c(colnames(object@tabdata)[1:(ncol(tabdata)-2)],"freq","exp")		
+		Exp[is.na(rowSums(tabdata))] <- NA				
+		tabdata <- cbind(tabdata,Exp)		
 		tabdata
 	}
 )

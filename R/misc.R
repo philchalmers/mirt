@@ -147,8 +147,8 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess, itemloc)
 	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
 	for (i in 1:J){
 		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
-			itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+			itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+			itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 		} else {
 			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 				P.poly(a[i, ], d[[i]], Theta, TRUE)	
@@ -191,14 +191,14 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, specific, sitems, 
 	for (i in 1:J){
 		atmp <- a[i, logicalfact[i, ]]
 		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i]] <- P.mirt(atmp, d[[i]], Theta, guess[i]) 
-			itemtrace[ ,itemloc[i] + 1] <- 1.0 - itemtrace[ ,itemloc[i]]
+			itemtrace[ ,itemloc[i] + 1] <- P.mirt(atmp, d[[i]], Theta, guess[i]) 
+			itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 		} else {
 			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 				P.poly(atmp, d[[i]], Theta, TRUE) 
 		}
 	}		
-	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)
+	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)	
 	r1 <- matrix(0, nrow(Theta), ncol(X))	
 	for (i in 1:J)
 	    r1[ ,itemloc[i]:(itemloc[i+1]-1)] <- 		

@@ -168,17 +168,19 @@ setMethod(
 			rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
 		}
 		expected[is.nan(expected)] <- NA
-		tabdata <- cbind(tabdata,expected*N)				
+		tabdata <- cbind(tabdata,expected*N)
+		npatmissing <- sum(is.na(rowSums(tabdata)))
 		logN <- 0
 		logr <- rep(0,length(r))
 		for (i in 1:N) logN <- logN + log(i)
-		for (i in 1:length(r)) 
+		for (i in 1:length(logr)) 
 			for (j in 1:r[i]) 
 				logr[i] <- logr[i] + log(j) 
 		if(sum(logr) != 0)								
 			logLik <- logLik + logN/sum(logr)		
-		SElogLik <- sqrt(var(log(rwmeans)) / draws)
-		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2 - sum(object@estGuess)
+		SElogLik <- sqrt(var(log(rwmeans)) / draws)		
+		df <- (length(r) - 1) - nfact*J - sum(K - 1) + nfact*(nfact - 1)/2 - sum(object@estGuess) -
+			npatmissing						
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)		
 		if(G2){							

@@ -2,9 +2,17 @@
 mirt 0.2.5
 ---------------------------------------------------------------
 
+* Fixed fscores() bug when using polychotomous items for mirt() and 
+  bfactor()
+
 * pass rotate='rotation' from mirt and polymirt to override default 
   default 'varimax' rotation at estimation time (suggested by 
   Niels Waller)
+
+* RMSEA, G^2, and p set to NaN instead of internal placeholder when 
+  there are missing data
+
+* df adjusted when in missing data present 
 
 * oblique rotations return invisible factor correlation matrix
 

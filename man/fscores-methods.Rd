@@ -20,16 +20,19 @@
 
   \item{method}{type of factor score estimation method. Can
   be expected a-posteriori (\code{"EAP"}), Bayes modal
-  (\code{"MAP"}), or maximum likelihood (\code{"ML"})}
+  (\code{"MAP"}), or maximum likelihood (\code{"ML"}). Only
+  applicable to \code{mirtClass} and \code{bfactorClass}
+  objects}
 
   \item{ndraws}{number of MH samples to draw for each
-  response pattern}
+  response pattern for \code{polymirtClass} or
+  \code{confmirtClass} objects}
 
   \item{thin}{controls how much the chain should be thinned
   by, default collects every 5th draw (\code{thin = 5}).
-  Note that \code{ndraws/thin} must be a whole number}
-
-  \item{...}{additional arguments to be passed}
+  Note that \code{ndraws/thin} must be a whole number. for
+  \code{polymirtClass} or \code{confmirtClass} objects
+  only}
 }
 \value{
   Returns either a summary table with the response patterns
@@ -53,10 +56,13 @@
 \examples{
 \dontrun{
 
+mod <- mirt(Science, 1)
 tabscores <- fscores(mod)
 fullscores <- fscores(mod, full.scores = TRUE)
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 
+mod2 <- polymirt(Science, 1)
+tabscores2 <- fscores(mod2, ndraws = 5000)
 
   }
 }
