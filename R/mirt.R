@@ -20,7 +20,7 @@ setClass(
 		K='numeric', parsSE='list', X2='numeric', df='numeric', p='numeric', AIC='numeric', logLik='numeric',
 		F='matrix', h2='numeric', tabdata='matrix', tabdatalong='matrix', Theta='matrix', Pl='numeric',
 		data='matrix', cormat='matrix', facility='numeric', converge='numeric', itemloc = 'numeric',
-		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', Call='call'),	
+		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', rotate='character', Call='call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -112,7 +112,10 @@ setClass(
 #' (say, greater than .95) then a possible constraint might be \code{par.prior
 #' = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}
 #' @param rotate type of rotation to perform after the initial orthogonal
-#' parameters have been extracted. See below for list of possible rotations
+#' parameters have been extracted by using \code{summary}; default is \code{'varimax'}. 
+#' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
+#' input then the default from the object is ignored and the new rotation from the list 
+#' is used instead
 #' @param startvalues user declared start values for parameters
 #' @param quadpts number of quadrature points per dimension
 #' @param ncycles the number of EM iterations to be performed
@@ -221,6 +224,7 @@ setClass(
 #' scores <- fscores(mod2) #save factor score table
 #' 
 #' ###########
+#' #data from the 'ltm' package in numeric format
 #' pmod1 <- mirt(Science, 1)
 #' plot(pmod1)
 #' summary(pmod1)
@@ -250,24 +254,16 @@ setClass(
 #' coef(mod2g)
 #' anova(mod1g, mod2g)
 #' summary(mod2g, rotate='promax')
-#'
-#' ###########
-#' #data from the 'ltm' package in numeric format
-#' data(Science)
-#' (mod1 <- mirt(Science, 1))
-#' summary(mod1)
-#' residuals(mod1)
-#' coef(mod1)
-#'      }
+#' }
 #' 
-mirt <- function(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
-	startvalues = NULL, quadpts = NULL, ncycles = 300, tol = .001, nowarn = TRUE, 
-	debug = FALSE, ...)
+mirt <- function(data, nfact, guess = 0, SE = FALSE, rotate = 'varimax', prev.cor = NULL, 
+    par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300, 
+    tol = .001, nowarn = TRUE, debug = FALSE, ...)
 { 
 	fn <- function(par, rs, gues, Theta, prior, parprior){
 		nzeta <- ncol(rs) - 1
 		a <- par[1:(length(par)-nzeta)]
-		d <- par[(length(a)+1):length(par)]				
+		d <- par[(length(a)+1):length(par)]
 		if(ncol(rs) == 2){
 			itemtrace <- P.mirt(a, d, Theta, gues) 
 			itemtrace <- cbind(itemtrace, 1.0 - itemtrace)
@@ -486,7 +482,7 @@ mirt <- function(data, nfact, guess = 0, SE = FALSE, prev.cor = NULL, par.prior 
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, parsSE=parsSE, X2=X2, df=df, 
 		p=p, itemloc=itemloc, AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata2, 
 		Theta=Theta, Pl=Pl, data=data.original, cormat=Rpoly, facility=facility, converge=converge, 
-		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, K=K, tabdatalong=tabdata, Call=Call)	  
+		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, K=K, tabdatalong=tabdata, rotate=rotate, Call=Call)	  
 	return(mod)    
 }
 
@@ -547,7 +543,7 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'mirtClass',
-	definition = function(object, rotate = 'varimax', suppress = 0, digits = 3, ...){
+	definition = function(object, rotate = '', suppress = 0, digits = 3, ...){
 		nfact <- ncol(object@F)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
@@ -565,8 +561,9 @@ setMethod(
 			invisible(list(F,h2))
 		} else {	
 			F <- object@F
-			h2 <- as.matrix(object@h2)						
-			colnames(h2) <- "h2"				
+			h2 <- as.matrix(object@h2)
+			colnames(h2) <- "h2"
+            if(rotate == '') rotate <- object@rotate
 			cat("\nRotation: ", rotate, "\n")
 			rotF <- Rotate(F,rotate)
 			SS <- apply(rotF$loadings^2,2,sum)
@@ -575,7 +572,8 @@ setMethod(
 			loads <- round(cbind(L,h2),digits)
 			rownames(loads) <- colnames(object@data)			
 			cat("\nRotated factor loadings: \n\n")
-			print(loads,digits)		
+			print(loads,digits)
+            Phi <- diag(ncol(F))
 			if(attr(rotF, "oblique")){
 				cat("\nFactor correlations: \n\n")
 				Phi <- rotF$Phi	  
@@ -586,7 +584,7 @@ setMethod(
 			cat("\nRotated SS loadings: ",round(SS,digits), "\n")		
 			if(any(h2 > 1)) 
 				warning("Solution has heywood cases. Interpret with caution.") 
-			invisible(list(rotF$loadings,h2))  
+			invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))  
 		}  
 	}
 )

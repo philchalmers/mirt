@@ -27,7 +27,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{fulldata}:}{Object of class \code{"matrix"}, complete binary data }
     \item{\code{data}:}{Object of class \code{"matrix"}, complete data with 99 as missing }
     \item{\code{K}:}{Object of class \code{"numeric"}, number of item categories  }
-    \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
+    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{logLik}:}{Object of class \code{"numeric"}, log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, std error for log-likelihood }
@@ -37,6 +37,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{itemloc}:}{Object of class \code{"numeric"}, item locations in fulldata }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
+    \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
     \item{\code{G2}:}{Object of class \code{"numeric"}, G2 model fit statistic }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data with expected values }

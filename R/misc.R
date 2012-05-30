@@ -49,7 +49,7 @@ Rotate <- function(F, rotate)
 	}
 	if(any(rotate %in% oblique)){
 		oblique <- TRUE
-		if(rotate == 'promax') rotF <- Promax(F) 
+		if(rotate == 'promax') rotF <- psych::Promax(F) 
 			else rotF <- GPArotation::GPFoblq(F, method = rotate)
 	}
 	attr(rotF,"oblique") <- oblique 

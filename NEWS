@@ -1,4 +1,14 @@
 ----------------------------------------------------------------
+mirt 0.2.5
+---------------------------------------------------------------
+
+* pass rotate='rotation' from mirt and polymirt to override default 
+  default 'varimax' rotation at estimation time (suggested by 
+  Niels Waller)
+
+* oblique rotations return invisible factor correlation matrix
+
+----------------------------------------------------------------
 mirt 0.2.4
 ---------------------------------------------------------------
 
@@ -8,7 +18,7 @@ mirt 0.2.4
 * confmirtClass reorganized to work with S4 methods, now work
   more consistently with methods. 
 
-* fixed G^2 and loglikelihood in logLik() when product terms included
+* fixed G^2 and log-likelihood in logLik() when product terms included
 
 * bugfix in drawThetas when noncompensatory items used
 

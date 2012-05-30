@@ -32,7 +32,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
-    \item{\code{F}:}{Object of class \code{"matrix"}, factor loadings }
+    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }	
@@ -41,6 +41,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
     \item{\code{cormat}:}{Object of class \code{"matrix"}, quasi-correlation matrix }
     \item{\code{facility}:}{Object of class \code{"numeric"}, item easiness }
+    \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
     \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }        

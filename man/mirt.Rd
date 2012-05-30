@@ -67,8 +67,12 @@ Theory)}
   slope = 1.2, int.items = 4, slope.items = c(2,3))}}
 
   \item{rotate}{type of rotation to perform after the
-  initial orthogonal parameters have been extracted. See
-  below for list of possible rotations}
+  initial orthogonal parameters have been extracted by
+  using \code{summary}; default is \code{'varimax'}. See
+  below for list of possible rotations. If \code{rotate !=
+  ''} in the \code{summary} input then the default from the
+  object is ignored and the new rotation from the list is
+  used instead}
 
   \item{startvalues}{user declared start values for
   parameters}
@@ -235,6 +239,7 @@ anova(mod1, mod2) #compare the two models
 scores <- fscores(mod2) #save factor score table
 
 ###########
+#data from the 'ltm' package in numeric format
 pmod1 <- mirt(Science, 1)
 plot(pmod1)
 summary(pmod1)
@@ -264,15 +269,7 @@ mod2g <- mirt(data, 2, guess = .1)
 coef(mod2g)
 anova(mod1g, mod2g)
 summary(mod2g, rotate='promax')
-
-###########
-#data from the 'ltm' package in numeric format
-data(Science)
-(mod1 <- mirt(Science, 1))
-summary(mod1)
-residuals(mod1)
-coef(mod1)
-     }
+}
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
