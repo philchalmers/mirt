@@ -197,7 +197,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, specific, sitems, 
 			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 				P.poly(atmp, d[[i]], Theta, TRUE) 
 		}
-	}		
+	}			
 	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)	
 	r1 <- matrix(0, nrow(Theta), ncol(X))	
 	for (i in 1:J)

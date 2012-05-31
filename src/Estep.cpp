@@ -135,7 +135,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 		  	    Elk(i,fact) = Pls(i) / Plk(i,fact);		  	
 		for (fact = 0; fact < sfact; fact++)
 		    for (i = 0; i < nquad; i++)  			  	
-		        posterior(i,fact) = likelihoods(i,fact) * r(i) * Elk(i % npquad,fact) / expected(pat);
+		        posterior(i,fact) = likelihoods(i,fact) * r(pat) * Elk(i % npquad,fact) / expected(pat);
 		// ordered specific factor packets, each the size of itemtrace
 		for (fact = 0; fact < sfact; fact++){			
 			for (item = 0; item < nitems; item++)

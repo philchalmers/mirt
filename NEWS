@@ -2,6 +2,9 @@
 mirt 0.2.5
 ---------------------------------------------------------------
 
+* Fixed translation bug in the C++ code from bfactor() causing illegal 
+  vector length throw
+
 * Fixed fscores() bug when using polychotomous items for mirt() and 
   bfactor()
 
@@ -12,7 +15,7 @@ mirt 0.2.5
 * RMSEA, G^2, and p set to NaN instead of internal placeholder when 
   there are missing data
 
-* df adjusted when in missing data present 
+* df adjusted when missing data present  
 
 * oblique rotations return invisible factor correlation matrix
 

@@ -326,7 +326,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 			for(i in 1:length(par.prior$int.items))
 				temp[par.prior$int.items[i],2:3] <- par.prior$int		 
 	}  
-	par.prior <- temp 
+	par.prior <- temp 	
 	Rpoly <- cormod(na.omit(data.original),K,guess)
 	if(!is.null(prev.cor)){
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
@@ -360,8 +360,10 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	lastpars2 <- lastpars1 <- pars 	
 	theta <- as.matrix(seq(-4, 4, length.out = quadpts))
 	Theta <- thetaComb(theta, 2)
-	prior <- dnorm(theta) 
-	Prior <- mvtnorm::dmvnorm(Theta,rep(0,2),diag(2))  
+	prior <- dnorm(theta)
+	prior <- prior/sum(prior)	
+	Prior <- mvtnorm::dmvnorm(Theta,rep(0,2),diag(2))
+	Prior <- Prior/sum(Prior)
 	startvalues <- pars  
 	converge <- 1
 	problemitems <- c()
@@ -425,7 +427,7 @@ bfactor <- function(data, specific, guess = 0, SE = FALSE, prev.cor = NULL,
 	}	
 	rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, 
 			specific, sitems, itemloc)
-	Pl <- rlist$expected
+	Pl <- rlist$expected	
 	logLik <- sum(r * log(Pl))
 	vcovpar <- matrix(999)
 	parsSE <- list()
