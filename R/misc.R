@@ -996,9 +996,10 @@ rebuildPars <- function(p, pars)
 }
 
 rotateLambdas <- function(so){
-    F <- so$rotF %*% chol(so$fcor)    
+    F <- so$rotF %*% t(chol(so$fcor))
     h2 <- so$h2
     h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))
     a <- F / h
     a    
 }
+
