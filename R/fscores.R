@@ -32,6 +32,8 @@ setGeneric("fscores",
 #' factor scores for each unique pattern is displayed. Otherwise the original
 #' data matrix is returned with the computed factor scores appended to the
 #' rightmost column
+#' @param rotate rotation declaration to be used when estimating the factor scores. If \code{""} then the 
+#' \code{object@@rotate} default value is used
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
 #' (\code{"ML"}). Only applicable to \code{mirtClass} and \code{bfactorClass} objects 
@@ -63,10 +65,11 @@ setGeneric("fscores",
 setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
-	definition = function(object, full.scores = FALSE, method = "EAP")
+	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP")
 	{    
-		K <- object@K		
-		a <- object@pars$lambdas		
+		K <- object@K				
+        so <- summary(object, rotate = rotate, print = FALSE)
+        a <- rotateLambdas(so)
 		d <- object@pars$zetas		
 		g <- object@guess				
 		itemloc <- object@itemloc
@@ -223,13 +226,14 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'polymirtClass',
-	definition = function(object, full.scores = FALSE, ndraws = 3000, thin = 5)
+	definition = function(object, rotate = '', full.scores = FALSE, ndraws = 3000, thin = 5)
 	{ 	
 		cand.t.var <- 1
 		theta0 <- object@Theta
 		K <- object@K
-		nfact <- ncol(theta0)
-		lambdas <- object@pars$lambdas
+		nfact <- ncol(theta0)		
+		so <- summary(object, rotate = rotate, print = FALSE)
+		lambdas <- rotateLambdas(so)
 		zetas <- object@pars$zetas
 		guess <- object@guess
 		guess[is.na(guess)] <- 0

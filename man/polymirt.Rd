@@ -87,6 +87,8 @@
   \code{abs(printvalue)}. The default (NULL) prints all
   response patterns}
 
+  \item{print}{logical; print output to console?}
+
   \item{x}{an object of class \code{polymirtClass} to be
   plotted or printed}
 

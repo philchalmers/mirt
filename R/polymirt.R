@@ -95,6 +95,7 @@ setClass(
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
+#' @param print logical; print output to console?
 #' @param x an object of class \code{polymirtClass} to be plotted or printed
 #' @param object a model estimated from \code{polymirtClass} of class
 #' \code{polymirt}
@@ -574,7 +575,7 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'polymirtClass',
-	definition = function(object, rotate = '', suppress = 0, digits = 3, ...)
+	definition = function(object, rotate = '', suppress = 0, digits = 3, print = TRUE, ...)
 	{
 		nfact <- ncol(object@F)
 		itemnames <- colnames(object@data)
@@ -585,38 +586,44 @@ setMethod(
 			SS <- apply(F^2,2,sum)
 			colnames(h2) <- "h2"	
 			names(SS) <- colnames(F) 
-			cat("\nUnrotated factor loadings: \n\n")
 			loads <- round(cbind(F,h2),digits)
 			rownames(loads) <- itemnames
-			print(loads)	    	 
-			cat("\nSS loadings: ",round(SS,digits), "\n")
-			cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+			if(print){
+			    cat("\nUnrotated factor loadings: \n\n")
+			    print(loads)	    	 
+			    cat("\nSS loadings: ",round(SS,digits), "\n")
+			    cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+            }
 			invisible(list(F,h2))
 		} else {	
 			F <- object@F
 			h2 <- as.matrix(object@h2)		
 			colnames(h2) <- "h2"
 			if(rotate == '') rotate <- object@rotate
-			cat("\nRotation: ", rotate, "\n")
 			rotF <- Rotate(F,rotate)
 			SS <- apply(rotF$loadings^2,2,sum)
 			L <- rotF$loadings
 			L[abs(L) < suppress] <- NA	
 			loads <- round(cbind(L,h2),digits)
 			rownames(loads) <- itemnames			
-			cat("\nRotated factor loadings: \n\n")
-			print(loads,digits)	
 			Phi <- diag(nfact)
 			if(attr(rotF, "oblique")){
-				cat("\nFactor correlations: \n\n")
 				Phi <- rotF$Phi	  
 				Phi <- round(Phi, digits)
 				colnames(Phi) <- rownames(Phi) <- colnames(F)
-				print(Phi)			    
+				if(print){
+				    cat("\nFactor correlations: \n\n")
+				    print(Phi)
+                }
 			}		
-			cat("\nSS loadings: ",round(SS,digits), "\n")		
-			if(!attr(rotF, "oblique")) 
-				cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+			if(print){
+			    cat("\nRotation: ", rotate, "\n")
+			    cat("\nRotated factor loadings: \n\n")
+			    print(loads,digits)	
+			    cat("\nSS loadings: ",round(SS,digits), "\n")		
+			    if(!attr(rotF, "oblique")) 
+				    cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+            }
 			if(any(h2 > 1)) 
 				warning("Solution has heywood cases. Interpret with caution.") 
 			invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))  

@@ -1,9 +1,9 @@
 \docType{methods}
 \name{fscores}
 \alias{fscores}
-\alias{fscores-method}
 \alias{fscores,bfactorClass-method}
 \alias{fscores,confmirtClass-method}
+\alias{fscores-method}
 \alias{fscores,mirtClass-method}
 \alias{fscores,polymirtClass-method}
 \title{Methods for Function fscores}
@@ -17,6 +17,10 @@
   is displayed. Otherwise the original data matrix is
   returned with the computed factor scores appended to the
   rightmost column}
+
+  \item{rotate}{rotation declaration to be used when
+  estimating the factor scores. If \code{""} then the
+  \code{object@rotate} default value is used}
 
   \item{method}{type of factor score estimation method. Can
   be expected a-posteriori (\code{"EAP"}), Bayes modal

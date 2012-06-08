@@ -40,8 +40,8 @@ start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowar
 # Rotation function
 Rotate <- function(F, rotate)
 {
-	orthogonal <- c("varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon")
-	oblique <- c("promax", "oblimin", "quartimin", "oblimax", "simplimax")
+	orthogonal <- c("varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon", "bifactorT")
+	oblique <- c("promax", "oblimin", "quartimin", "oblimax", "simplimax", "bifactorQ")
 	if (!any(rotate %in% c(orthogonal,oblique))) stop("Unknown rotation specified.")
 	if(any(rotate %in% orthogonal)){
 		oblique <- FALSE
@@ -995,3 +995,10 @@ rebuildPars <- function(p, pars)
 	return(pars2)
 }
 
+rotateLambdas <- function(so){
+    F <- so$rotF %*% chol(so$fcor)    
+    h2 <- so$h2
+    h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))
+    a <- F / h
+    a    
+}
