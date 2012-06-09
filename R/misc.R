@@ -608,6 +608,7 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
     tmp2 <- factorNames[!grepl('\\(',factorNames)] 
     tmp <- gsub("\\(","",tmp)	
     tmp <- gsub("\\)","",tmp)
+    tmp <- gsub(" ","",tmp)
     prodlist <- strsplit(tmp,"\\*")
     for(j in 1:length(prodlist)){
       for(i in 1:nfact)
