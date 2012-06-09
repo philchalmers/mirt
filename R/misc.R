@@ -45,13 +45,16 @@ Rotate <- function(F, rotate)
 	if (!any(rotate %in% c(orthogonal,oblique))) stop("Unknown rotation specified.")
 	if(any(rotate %in% orthogonal)){
 		oblique <- FALSE
-		rotF <- GPArotation::GPForth(F, method = rotate)
+		if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F)
+		    else rotF <- GPArotation::GPForth(F, method = rotate)
 	}
-	if(any(rotate %in% oblique)){
+	if(any(rotate %in% oblique && rotate != 'bifactorQ')){
 		oblique <- TRUE
 		if(rotate == 'promax') rotF <- psych::Promax(F) 
-			else rotF <- GPArotation::GPFoblq(F, method = rotate)
-	}
+		if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F)
+	    if(all(rotate != 'promax', 'bifactorQ')) 
+            rotF <- GPArotation::GPFoblq(F, method = rotate)
+	}	
 	attr(rotF,"oblique") <- oblique 
 	return(rotF)
 }  
