@@ -48,11 +48,11 @@ Rotate <- function(F, rotate)
 		if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F)
 		    else rotF <- GPArotation::GPForth(F, method = rotate)
 	}
-	if(any(rotate %in% oblique && rotate != 'bifactorQ')){
+	if(any(rotate %in% oblique)){
 		oblique <- TRUE
 		if(rotate == 'promax') rotF <- psych::Promax(F) 
 		if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F)
-	    if(all(rotate != 'promax', 'bifactorQ')) 
+	    if(all(rotate != c('promax', 'bifactorQ'))) 
             rotF <- GPArotation::GPFoblq(F, method = rotate)
 	}	
 	attr(rotF,"oblique") <- oblique 
