@@ -15,9 +15,10 @@ Theory)}
     = .001, nowarn = TRUE, debug = FALSE, ...)
 
   \S4method{summary}{mirt}(object, rotate='', suppress = 0,
-    digits = 3, ...)
+    digits = 3, print = FALSE, ...)
 
-  \S4method{coef}{mirt}(object, digits = 3, ...)
+  \S4method{coef}{mirt}(object, rotate = '', digits = 3,
+    ...)
 
   \S4method{anova}{mirt}(object, object2, ...)
 

@@ -144,9 +144,9 @@ setClass(
 #'  
 #' 
 #' 
-#' \S4method{summary}{polymirt}(object, rotate='', suppress = 0, digits = 3, ...)
+#' \S4method{summary}{polymirt}(object, rotate='', suppress = 0, digits = 3, print = FALSE, ...)
 #' 
-#' \S4method{coef}{polymirt}(object, SE = TRUE, digits = 3, ...)
+#' \S4method{coef}{polymirt}(object, rotate = '', SE = TRUE, digits = 3, ...)
 #' 
 #' \S4method{plot}{polymirt}(x, npts = 50, type = 'info', rot = list(x = -70, y = 30, z = 10), ...)
 #' 
@@ -634,7 +634,7 @@ setMethod(
 setMethod(
 	f = "coef",
 	signature = 'polymirtClass',
-	definition = function(object, SE = TRUE, digits = 3, ...)
+	definition = function(object, rotate = '', SE = TRUE, digits = 3, ...)
 	{  
 		K <- object@K
 		a <- object@pars$lambdas		
@@ -646,11 +646,14 @@ setMethod(
 		A <- sqrt(apply(a^2,1,sum))
 		B <- -d/A  
 		if (ncol(a) > 1){  
+		    rotname <- ifelse(rotate == '', object@rotate, rotate)
+		    so <- summary(object, rotate = rotate, print = FALSE)             
+		    a <- rotateLambdas(so)
 			parameters <- cbind(a,d,object@guess,A,B)    
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 
 				"mvdisc",paste("mvint_",1:max(K-1),sep=""))	  
 			rownames(parameters) <- colnames(object@data)
-			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
+		    cat("\nParameters with", rotname, "rotation, multivariate discrimination and intercept: \n\n")
 			print(round(parameters, digits))  	
 		} else {
 			parameters <- cbind(a,d,object@guess)

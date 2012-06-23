@@ -15,10 +15,10 @@
     = FALSE, technical = list(), ...)
 
   \S4method{summary}{polymirt}(object, rotate='', suppress
-    = 0, digits = 3, ...)
+    = 0, digits = 3, print = FALSE, ...)
 
-  \S4method{coef}{polymirt}(object, SE = TRUE, digits = 3,
-    ...)
+  \S4method{coef}{polymirt}(object, rotate = '', SE = TRUE,
+    digits = 3, ...)
 
   \S4method{plot}{polymirt}(x, npts = 50, type = 'info',
     rot = list(x = -70, y = 30, z = 10), ...)

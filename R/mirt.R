@@ -191,9 +191,9 @@ setClass(
 #'     par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300,  
 #'     tol = .001, nowarn = TRUE, debug = FALSE, ...)
 #' 
-#' \S4method{summary}{mirt}(object, rotate='', suppress = 0, digits = 3, ...)
+#' \S4method{summary}{mirt}(object, rotate='', suppress = 0, digits = 3, print = FALSE, ...)
 #' 
-#' \S4method{coef}{mirt}(object, digits = 3, ...)
+#' \S4method{coef}{mirt}(object, rotate = '', digits = 3, ...)
 #' 
 #' \S4method{anova}{mirt}(object, object2, ...)
 #' 
@@ -607,7 +607,7 @@ setMethod(
 setMethod(
 	f = "coef",
 	signature = 'mirtClass',
-	definition = function(object, SE = TRUE, digits = 3, ...){  
+	definition = function(object, rotate = '', SE = TRUE, digits = 3, ...){  
 		K <- object@K
 		a <- object@pars$lambdas		
 		d <- matrix(NA, nrow(a), max(K-1))
@@ -617,12 +617,15 @@ setMethod(
 		}
 		A <- sqrt(apply(a^2,1,sum))
 		B <- -d/A  
-		if (ncol(a) > 1){  
+		if (ncol(a) > 1){ 
+		    rotname <- ifelse(rotate == '', object@rotate, rotate)
+            so <- summary(object, rotate = rotate, print = FALSE)             
+            a <- rotateLambdas(so)
 			parameters <- cbind(a,d,object@guess,A,B)    
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 
 				"mvdisc",paste("mvint_",1:max(K-1),sep=""))	
 			rownames(parameters) <- colnames(object@data)		
-			cat("\nUnrotated parameters, multivariate discrimination and intercept: \n\n")
+			cat("\nParameters with", rotname, "rotation, multivariate discrimination and intercept: \n\n")
 			print(round(parameters, digits))  	
 		} else {
 			parameters <- cbind(a,d,object@guess)

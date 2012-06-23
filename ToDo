@@ -1,6 +1,6 @@
 Things to do:
 
-- Add generics for general extraction of AIC, BIC, G2, logLikelihood, etc.
+- Parallel processing option for logLik()
 - Nominal and rating intercept estimation for polymirt and confmirt
 - Multiple-group estimation for confmirt
 - Multilevel structure function using lme4 or nlme (via multimirt function)
