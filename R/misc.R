@@ -60,13 +60,13 @@ Rotate <- function(F, rotate)
 }  
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta,a,d,guess,patdata,itemloc,ML=FALSE)
+MAP.mirt <- function(Theta, a, d, guess, upper, patdata, itemloc, ML=FALSE)
 {	
 	itemtrace <- rep(0, ncol=length(patdata))
 	Theta <- matrix(Theta, 1)
 	for (i in 1:length(guess)){
 		if(length(d[[i]]) == 1){
-			itemtrace[itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+			itemtrace[itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i], upper[i]) 
 			itemtrace[itemloc[i] + 1] <- 1.0 - itemtrace[itemloc[i]]
 		} else {
 			itemtrace[itemloc[i]:(itemloc[i+1] - 1)] <- 
@@ -81,13 +81,13 @@ MAP.mirt <- function(Theta,a,d,guess,patdata,itemloc,ML=FALSE)
 }  
 
 # MAP scoring for bfactor
-MAP.bfactor <- function(Theta,a,d,guess,patdata,logicalfact,itemloc,ML=FALSE)
+MAP.bfactor <- function(Theta, a, d, guess, upper, patdata, logicalfact, itemloc, ML=FALSE)
 {	
 	itemtrace <- rep(0, ncol=length(patdata))
 	Theta <- matrix(Theta, 1)
 	for (i in 1:length(guess)){
 		if(length(d[[i]]) == 1){
-			itemtrace[itemloc[i]] <- P.mirt(a[i, logicalfact[i, ]], d[[i]], Theta, guess[i]) 
+			itemtrace[itemloc[i]] <- P.mirt(a[i, logicalfact[i, ]], d[[i]], Theta, guess[i], upper[i]) 
 			itemtrace[itemloc[i] + 1] <- 1.0 - itemtrace[itemloc[i]]
 		} else {
 			itemtrace[itemloc[i]:(itemloc[i+1] - 1)] <- 
@@ -120,24 +120,24 @@ P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE)
 }
 
 # Trace lines for mirt models
-P.mirt <- function(a, d, Theta, g)
+P.mirt <- function(a, d, Theta, g, u = 1)
 { 		
-	traces <- .Call("traceLinePts", a, d, g, Theta)
+	traces <- .Call("traceLinePts", a, d, g, u, Theta)
 	return(traces)
 }
 
-P.comp <- function(a,d,thetas,c = 0)
+P.comp <- function(a, d, thetas, c = 0, u = 1)
 {
 	nfact <- length(a)
 	P <- rep(1,nrow(thetas))
 	for(i in 1:nfact)
 		P <- P * P.mirt(a[i], d[i], thetas[ ,i, drop=FALSE],0)
-	P <- c + (1-c) * P
+	P <- c + (u - c) * P
 	P	
 } 
 
 # Estep
-Estep.mirt <- function(pars, tabdata, Theta, prior, guess, itemloc) 
+Estep.mirt <- function(pars, tabdata, Theta, prior, guess, upper, itemloc) 
 {
 	a <- pars$lambdas
 	J <- nrow(a)
@@ -150,7 +150,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess, itemloc)
 	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
 	for (i in 1:J){
 		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, guess[i]) 
+			itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, guess[i], upper[i]) 
 			itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 		} else {
 			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
@@ -161,7 +161,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess, itemloc)
 	return(retlist)
 } 
 
-P.bfactor <- function(a, d, Theta, g, patload)
+P.bfactor <- function(a, d, Theta, g, u, patload)
 { 
 	a <- a[patload]	
 	if(length(d) > 1){
@@ -174,12 +174,12 @@ P.bfactor <- function(a, d, Theta, g, patload)
 		P <- matrix(0,nrow(Theta),ncat)		
 		for(i in ncat:1)
 			P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]		
-	} else P <- .Call("traceLinePts", a, d, g, Theta)		
+	} else P <- .Call("traceLinePts", a, d, g, u, Theta)		
 	return(P)
 }
 
 # Estep
-Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, specific, sitems, itemloc) 
+Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, upper, specific, sitems, itemloc) 
 {	
 	a <- pars$lambdas
 	logicalfact <- attr(pars, 'lamsel')
@@ -194,7 +194,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, specific, sitems, 
 	for (i in 1:J){
 		atmp <- a[i, logicalfact[i, ]]
 		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i] + 1] <- P.mirt(atmp, d[[i]], Theta, guess[i]) 
+			itemtrace[ ,itemloc[i] + 1] <- P.mirt(atmp, d[[i]], Theta, guess[i], upper[i]) 
 			itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 		} else {
 			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
@@ -275,10 +275,10 @@ d.group <- function(grouplist,theta)
 	list(h=h,g=g) 
 }
 
-dpars.dich <- function(lambda,zeta,g,dat,Thetas,estGuess)
+dpars.dich <- function(lambda, zeta, g, u, dat, Thetas, estGuess)
 {
 	nfact <- length(lambda)
-	P <- P.mirt(lambda, zeta, Thetas, g)						
+	P <- P.mirt(lambda, zeta, Thetas, g, u)						
 	if(estGuess){ 
 		r <- dat
 		f <- 1		

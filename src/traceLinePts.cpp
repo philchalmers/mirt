@@ -1,7 +1,7 @@
 #include<Rcpp.h>
 using namespace Rcpp;
 
-RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP RTheta) 
+RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta) 
 {
     BEGIN_RCPP
 
@@ -15,6 +15,7 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP RTheta)
 	NumericVector a(Ra);
 	NumericVector d(Rd);
 	NumericVector g(Rg);
+	NumericVector u(Ru);
 	NumericMatrix Theta(RTheta);
     int nquad = Theta.nrow();
 	int nfact = Theta.ncol();
@@ -32,7 +33,7 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP RTheta)
 		z(j) += d(0) * 1.702;
 	}	
 	for (i = 0; i < nquad; i++) 
-		P(i) = g(0) + (1 - g(0)) * (exp(z(i))/(1 + exp(z(i))));		
+		P(i) = g(0) + (u(0) - g(0)) * (exp(z(i))/(1 + exp(z(i))));		
 		
 	return(P);
 
