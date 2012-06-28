@@ -1,6 +1,6 @@
 #include"Misc.h"
 
-RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
+RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rupper, SEXP Rtheta0,
 	SEXP Rfulldata, SEXP Ritemloc, SEXP RK,	SEXP RestComp)
 { 
     BEGIN_RCPP
@@ -8,6 +8,7 @@ RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
     NumericMatrix lambdas(Rlambdas);
     List zetas(Rzetas);
     NumericVector guess(Rguess);
+    NumericVector upper(Rupper);
     NumericMatrix theta0(Rtheta0);
     IntegerMatrix fulldata(Rfulldata);
     IntegerVector itemloc(Ritemloc); //itemloc - 1 from R
@@ -19,7 +20,7 @@ RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
     N = theta0.nrow();
 	
 	NumericVector a(nfact), irt0(N);
-	double g;
+	double g, u;
 	for(i = 0; i < N; i++)
 		irt0(i) = 0.0;		
 		
@@ -29,10 +30,11 @@ RcppExport SEXP logLik(SEXP Rlambdas, SEXP Rzetas, SEXP Rguess, SEXP Rtheta0,
         for(i = 0; i < nfact; i++)
 			a(i) = lambdas(item,i);
 		g = guess(item);		
+		u = upper(item);		
 		if(estComp(item))
-			P = ProbComp(theta0, a, d, &g); 
+			P = ProbComp(theta0, a, d, &g, &u); 
         else 
-            P = Prob(theta0, a, d, &g);
+            P = Prob(theta0, a, d, &g, &u);
 		for(j = 0; j < K(item); j++)
 			for(i = 0; i < N; i++)				
 			    if(fulldata(i,j + itemloc(item)))

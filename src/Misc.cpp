@@ -27,7 +27,7 @@ NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 }
 
 NumericVector itemTrace(NumericVector a, const double *d, 
-        NumericMatrix Theta, const double *g)
+        NumericMatrix Theta, const double *g, const double *u)
 {	
 	int i, j;
     int nquad = Theta.nrow();
@@ -42,13 +42,13 @@ NumericVector itemTrace(NumericVector a, const double *d,
 		z(i) += *d * 1.702;
 	}	
 	for (i = 0; i < nquad; i++) 
-		P(i) = *g + (1 - *g) * (exp(z(i))/(1 + exp(z(i))));
+		P(i) = *g + (*u - *g) * (exp(z(i))/(1 + exp(z(i))));
 	
 	return P;		
 }
 
 NumericMatrix Prob(NumericMatrix Theta, NumericVector a,
-        NumericVector zetas, const double *g)
+        NumericVector zetas, const double *g, const double *u)
 {
 	int i, j;
     int N = Theta.nrow();
@@ -63,7 +63,7 @@ NumericMatrix Prob(NumericMatrix Theta, NumericVector a,
 	}
 	for(j = 0; j < (k - 1); j++){
 		tmp = zetas(j);
-		p1 = itemTrace(a, &tmp, Theta, g);
+		p1 = itemTrace(a, &tmp, Theta, g, u);
 		for(i = 0; i < N; i++)
 			Ps(i,j+1) = p1(i);
 	}
@@ -81,26 +81,26 @@ NumericMatrix Prob(NumericMatrix Theta, NumericVector a,
 }
 
 NumericMatrix ProbComp(NumericMatrix Theta, NumericVector a, 
-        NumericVector zetas, const double *g)
+        NumericVector zetas, const double *g, const double *u)
 {
 	int i, j;
     int nfact = Theta.ncol();
     int N = Theta.nrow();
 	NumericMatrix Pret(N,2), theta(N,1);    
 	NumericVector P(N), p1(N), tmpa(1);
-	double zerog = 0.0, tmpd;
+	double zerog = 0.0, tmpd, oneu = 1.0;
 	P.fill(1.0);
 
 	for(j = 0; j < nfact; j++){
 		tmpa(0) = a(j);
 		tmpd = zetas(j);
 		theta(_,0) = Theta(_,j);
-		p1 = itemTrace(tmpa, &tmpd, theta, &zerog);
+		p1 = itemTrace(tmpa, &tmpd, theta, &zerog, &oneu);
 		for(i = 0; i < N; i++)
 			P(i) *= p1(i);
 	}
 	for(i = 0; i < N; i++){
-		Pret(i,0) = *g + (1.0 - *g) * P(i);
+		Pret(i,0) = *g + (*u - *g) * P(i);
 		Pret(i,1) = 1.0 - Pret(i,0);
 	}
 	return Pret;

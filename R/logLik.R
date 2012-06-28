@@ -41,7 +41,7 @@ setMethod(
 	f = "logLik",
 	signature = signature(object = 'confmirtClass'),
 	definition = function(object, draws = 2000, G2 = TRUE)
-	{	
+	{	        
 		nfact <- ncol(object@Theta)
 		nfactNames <- ifelse(length(object@prodlist) > 0, 
 			length(object@prodlist) + nfact, nfact)		
@@ -54,13 +54,15 @@ setMethod(
 		LL <- matrix(0,N,draws)		
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
+        upper <- object@upper
+        upper[is.na(upper)] <- 1
 		K <- object@K	
 		fulldata <- object@fulldata			
 		for(i in 1:draws){
 			theta <- mvtnorm::rmvnorm(N,mu,sigma)	
 			if(nfact < nfactNames) 
 				theta <- prodterms(theta, object@prodlist)	
-			LL[,i] <- .Call('logLik', lambdas, zetas, guess, theta,	fulldata,
+			LL[,i] <- .Call('logLik', lambdas, zetas, guess, upper, theta,	fulldata,
 						object@itemloc-1, object@K,	as.integer(object@estComp))		
 		}		
         LL[is.nan(LL)] <- 0 ###check this
@@ -141,12 +143,13 @@ setMethod(
 		LL <- matrix(0,N,draws)		
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
+        upper <- rep(1,length(guess))
 		K <- object@K		
 		fulldata <- object@fulldata
 		estComp <- rep(FALSE,J)
 		for(i in 1:draws){
 			theta <- mvtnorm::rmvnorm(N,mu,sigma)				
-			LL[,i] <- .Call('logLik', lambdas, zetas, guess, theta,	fulldata,
+			LL[,i] <- .Call('logLik', lambdas, zetas, guess, upper, theta, fulldata,
 						object@itemloc-1, object@K,	as.integer(estComp))		
 		}		
 		rwmeans <- rowMeans(LL)

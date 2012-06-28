@@ -9,13 +9,13 @@ NumericMatrix polyOuter(NumericMatrix, NumericVector,
 	NumericVector, NumericVector);
 
 NumericVector itemTrace(NumericVector, const double *, 
-        NumericMatrix, const double *);
+        NumericMatrix, const double *, const double *);
 
 NumericMatrix Prob(NumericMatrix, NumericVector,
-        NumericVector, const double *);
+        NumericVector, const double *, const double *);
 
 NumericMatrix ProbComp(NumericMatrix, NumericVector, 
-        NumericVector, const double *);
+        NumericVector, const double *, const double *);
 
 #endif 
 

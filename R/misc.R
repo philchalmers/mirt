@@ -210,7 +210,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, upper, specific, s
 	return(list(r1=r1, expected=retlist$expected))	
 }      
 
-draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,
+draw.thetas <- function(theta0,lambdas,zetas,guess,upper = rep(1,length(K)),fulldata,K,itemloc,cand.t.var,
 	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K)),
 	prodlist = NULL) 
 { 			
@@ -229,7 +229,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var
 		theta0 <- prodterms(theta0,prodlist)
 		theta1 <- prodterms(theta1,prodlist)	
 	}	
-	ThetaDraws <- .Call("drawThetas", unif, den0, den1, lambdas, zetas, guess,
+	ThetaDraws <- .Call("drawThetas", unif, den0, den1, lambdas, zetas, guess, upper,
 					theta0, theta1,	fulldata, (itemloc-1), as.numeric(estComp))
 	log.lik <- ThetaDraws$cdloglik
 	accept <- as.logical(ThetaDraws$accept)				
@@ -599,8 +599,8 @@ prodterms <- function(theta0, prodlist)
 }
 
 model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N,
-  estGuess, guess, guess.prior.n, itemnames)
-{
+  estGuess, guess, upper, estUpper, guess.prior.n, itemnames)
+{    
   hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
   prodlist <- NULL
   if(hasProdTerms){
@@ -757,15 +757,16 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
   
   #Housework
   loc1 <- 1
-  lamind <- zetaind <- guessind <- sind <- c()	
+  lamind <- zetaind <- guessind <- upperind <- sind <- c()	
   for(i in 1:J){
     if(estComp[i])
       zetaind <- c(zetaind, loc1:(loc1+(length(estzetas[[i]])-1)))		
     else zetaind <- c(zetaind,loc1:(loc1 + K[i] - 2))
     lamind <- c(lamind,max(zetaind + 1):(max(zetaind) + nfactNames))		
     guessind <- c(guessind,max(lamind + 1):max(lamind + 1 ))
-    sind <- c(sind, estzetas[[i]], estlam[i,], estGuess[i])
-    loc1 <- loc1 + nfactNames + sum(estzetas[[i]]) + 1	
+    upperind <- c(upperind,max(lamind + 2):max(lamind + 2 ))
+    sind <- c(sind, estzetas[[i]], estlam[i,], estGuess[i], estUpper[i])
+    loc1 <- loc1 + nfactNames + sum(estzetas[[i]]) + 2	
   }	
   sind <- c(sind, estgmeans, estgcov[lower.tri(estgcov,diag=TRUE)])
   npars <- length(sind)
@@ -776,16 +777,18 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
   pars[lamind] <- t(lambdas)
   pars[zetaind] <- zetas
   pars[guessind] <- guess
+  pars[upperind] <- upper
   pars[groupind] <- c(gmeans,gcov[lower.tri(gcov,diag=TRUE)])
   parnames <- rep('',npars)
   parnames[lamind] <- paste('lam',1:length(lamind),sep='')  
   parnames[zetaind] <- paste('zeta',1:length(zetaind),sep='')
   parnames[guessind] <- paste('guess',1:length(guessind),sep='')  
+  parnames[upperind] <- paste('upper',1:length(upperind),sep='')
   parnames[groupind] <- c(paste('gmeans',1:length(gmeans),sep=''), 
 	paste('gcov',1:length(gcov[lower.tri(gcov,diag=TRUE)]),sep=''))
   names(pars) <- names(sind) <- parnames
   
-  parcount <- list(lam = estlam, zeta = estzetas2, guess = estGuess, cov = estgcov, mean = estgmeans)
+  parcount <- list(lam=estlam, zeta=estzetas2, guess=estGuess, upper=estUpper, cov=estgcov, mean=estgmeans)
   parind <- 1:npars
   loc1 <- 1
   parcount$lam <- matrix(lamind,J,byrow=TRUE)	
@@ -807,6 +810,7 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
   names(zetas) <- names(zetaind2) <- itemnames   
   parcount$zeta <- zetaind2
   parcount$guess <- guessind
+  parcount$upper <- upperind
   parcount$mean <- meanind
   parcount$cov <- matrix(0,nfact,nfact)
   parcount$cov[selgcov] <- covind		
@@ -925,13 +929,13 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
   }
       
   val <- list(pars=pars, lambdas=lambdas, zetas=zetas, gmeans=gmeans, gcov=gcov, 
-    constvalues=constvalues)
+    guess=guess, upper=upper, constvalues=constvalues)
   est <- list(estlam=estlam, estComp=estComp, estzetas=estzetas, estzetas2=estzetas2, 
-    estgcov=estgcov, estgmeans=estgmeans)
+    estgcov=estgcov, estgmeans=estgmeans, estGuess=estGuess, estUpper=estUpper)
   ind <- list(equalind=equalind, equalconstr=equalconstr, parpriorscount=parpriorscount, 
     prodlist=prodlist, parpriors=parpriors, sind=sind, lamind=lamind, zetaind=zetaind, 
-    zetaindlist=zetaind2, guessind=guessind, groupind=groupind, meanind=meanind, covind=covind, 
-	parind=parind)
+    zetaindlist=zetaind2, guessind=guessind, upperind=upperind, groupind=groupind, 
+    meanind=meanind, covind=covind, parind=parind)
   ret <- list(val=val, est=est, ind=ind, parcount=parcount, npars=npars)
   ret
 }
@@ -943,8 +947,8 @@ sortPars <- function(pars, indlist, nfact, estGuess)
 	zetas <- list()
 	for(i in 1:J)
 		zetas[[i]] <- pars[indlist$zetaind[[i]]]
-	guess <- rep(0,J)
-	guess[estGuess] <- pars[indlist$gind]	
+	guess <- upper <- rep(0,J)
+	guess[estGuess] <- pars[indlist$gind]		
 	
 	return(list(lambdas=lambdas, zetas=zetas, guess=guess))
 }
@@ -956,14 +960,15 @@ sortParsConfmirt <- function(pars, indlist, nfact, estGuess, nfactNames)
 	zetas <- list()
 	for(i in 1:J)
 		zetas[[i]] <- pars[indlist$zetaindlist[[i]]]
-	guess <- pars[indlist$guessind]		
+	guess <- pars[indlist$guessind]
+    upper <- pars[indlist$upperind]
 	mu <- pars[indlist$meanind]
 	sig <- matrix(0, nfact, nfact)
 	sig[lower.tri(sig, diag=TRUE)] <- pars[indlist$covind]
 	if(nfact > 1)
 		sig <- sig + t(sig) - diag(diag(sig))							
 	
-	return(list(lambdas=lambdas, zetas=zetas, guess=guess, mu=mu, sig=sig))
+	return(list(lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, mu=mu, sig=sig))
 }
 
 rateChange <- function(pars, lastpars1, lastpars2)

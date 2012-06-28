@@ -17,11 +17,11 @@
 setClass(
 	Class = 'confmirtClass',
 	representation = representation(pars = 'list', parsprint = 'matrix', guess = 'numeric', SEpars = 'matrix', 
-		SEg = 'numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
+		SEup='numeric',SEg='numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
 		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
 		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
-		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', 
+		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', upper = 'numeric', 
         RMSEA = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
@@ -255,12 +255,12 @@ setClass(
 #' anova(mod.cube,mod.combo)
 #' }
 #' 
-confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000, 
+confmirt <- function(data, model, guess = 0, upper = 1, estUpper = NULL, estGuess = NULL, ncycles = 2000, 
 	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
 	...)
 {		
-	Call <- match.call()   
+	Call <- match.call()       
 	set.seed(12345)	
 	itemnames <- colnames(data)
 	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
@@ -268,6 +268,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	colnames(data) <- itemnames	
 	J <- ncol(data)
 	N <- nrow(data)
+    
 	##technical
 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
 	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n), technical$guess.prior.n,
@@ -286,14 +287,20 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	if(length(guess) == 1) guess <- rep(guess,J)
 	if(length(guess) > J || length(guess) < J) 
 		stop("The number of guessing parameters is incorrect.")					
+	if(length(upper) == 1) upper <- rep(upper,J)
+	if(length(upper) > J || length(upper) < J) 
+	    stop("The number of upper bound parameters is incorrect.")
 	uniques <- list()
 	for(i in 1:J)
 		uniques[[i]] <- sort(unique(data[,i]))
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])	
 	guess[K > 2] <- 0
+	upper[K > 2] <- 1
 	if(is.null(estGuess))
 		estGuess <- guess > 0
+	if(is.null(estUpper))
+	    estUpper <- upper < 1
 	itemloc <- cumsum(c(1,K))	
 	model <- matrix(model$x,ncol=2)
 	factorNames <- setdiff(model[,1],keywords)
@@ -318,8 +325,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	}	
 	fulldata[is.na(fulldata)] <- 0
   
-	mod <- model.elements(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N, 
-		estGuess, guess, guess.prior.n, itemnames)
+	mod <- model.elements(model=model, factorNames=factorNames, nfactNames=nfactNames, nfact=nfact, 
+                          J=J, K=K, fulldata=fulldata, itemloc=itemloc, data=data, N=N, estGuess=estGuess,
+                          guess=guess, upper=upper, estUpper=estUpper, guess.prior.n=guess.prior.n, 
+                          itemnames=itemnames)
 	parcount <- mod$parcount
 	npars <- mod$npars
 	if(returnindex) return(parcount)
@@ -348,6 +357,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	lamind <- mod$ind$lamind
 	zetaind <- mod$ind$zetaindlist
 	guessind <- mod$ind$guessind
+	upperind <- mod$ind$upperind
 	groupind <- mod$ind$groupind
 	meanind <- mod$ind$meanind
 	covind <- mod$ind$covind    
@@ -364,8 +374,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	cand.t.var <- 1			
 	tmp <- .1
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var,gcov,gmeans,
-            estComp,prodlist)
+		theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
+                              fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
+		                      prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
 		if(i > 5){		
 			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
 			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp
@@ -419,16 +430,21 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		lambdas <- normpars$lambdas
 		zetas <- normpars$zetas
 		guess <- normpars$guess	
+        upper <- normpars$upper
 		grouplist$u <- mu <- normpars$mu					
 		grouplist$sig <- sig <- normpars$sig			
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0, lambdas, zetas, guess,
-			fulldata, K, itemloc, cand.t.var, sig, mu, estComp, prodlist)	
-		for(i in 1:k) m.thetas[[i]] <- draw.thetas(theta0, lambdas, zetas, guess,
-			fulldata, K, itemloc, cand.t.var, sig, mu, estComp, prodlist)
+		for(j in 1:4) 
+            theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
+                            fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
+                            prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
+		for(i in 1:k) m.thetas[[i]] <- 
+                    draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
+                    fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
+                    prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
 		theta0 <- m.thetas[[1]]
-				
+		        
 		#Step 2. Find average of simulated data gradients and hessian 		
 		g.m <- h.m <- group.m <- list()
 		g <- rep(0, npars)
@@ -458,11 +474,12 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 					next
 				}
                 if(K[i] == 2){
-					temp <- dpars.dich(lambdas[i, ], zetas[[i]],guess[i],
-						fulldata[ ,itemloc[i]],thetatemp,estGuess[i])
+					temp <- dpars.dich(lambda=lambdas[i, ], zeta=zetas[[i]], g=guess[i], u=upper[i],
+						dat=fulldata[ ,itemloc[i]], Thetas=thetatemp, estGuess=estGuess[i])
 					ind <- parind[is.na(g)][1]					
 					ind2 <- ind + length(temp$g) - 1		
 					if(!estGuess[i]) g[ind2 + 1] <- 0
+					if(!estUpper[i]) g[ind2 + 2] <- 0
 					g[ind:ind2] <- temp$grad
 					h[ind:ind2,ind:ind2] <- temp$hess						
 				} else {						
@@ -472,7 +489,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 					ind2 <- ind + length(temp$g) - 1		
 					g[ind:ind2] <- temp$grad
 					h[ind:ind2,ind:ind2] <- temp$hess
-					g[ind2 + 1] <- 0	
+					g[ind2 + 1] <- g[ind2 + 2] <- 0	#zeros for guess + upper
 				}
             }
 			g[is.na(g)] <- 0
@@ -541,6 +558,8 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 					correct[equalconstr[[i]]] <- mean(correct[equalconstr[[i]]])			
 			correct[correct[guessind] > .05] <- .05		
 			correct[correct[guessind] < -.05] <- -.05
+			correct[correct[upperind] > .05] <- .05    	
+			correct[correct[upperind] < -.05] <- -.05
 			pars <- pars + gamma*correct
 			if(printcycles && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
@@ -584,10 +603,13 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 		if(conv == 3) break
 		correct[correct[guessind] > .025] <- .025		
 		correct[correct[guessind] < -.025] <- -.025	
+		correct[correct[upperind] > .025] <- .025    	
+		correct[correct[upperind] < -.025] <- -.025
 		pars <- pars + gamma*correct	
 		pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
 		pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
 		pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
+		pars[upperind][pars[upperind] > 1] <- parsold[upperind][pars[upperind] > 1]
 		
 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
 		if(gamma == .25) gamma <- 1	
@@ -616,6 +638,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	guess <- pars[guessind]
 	guess[!estGuess] <- NA
 	guess[K == 2 & !estGuess] <- 0
+	upper <- rep(NA,J)
+	upper <- pars[upperind]
+	upper[!estUpper] <- NA
+	upper[K == 2 & !estUpper] <- 1
 	zetas <- pars[indlist$zetaind]
 	u <- pars[meanind]	
 	sig <- matrix(0,nfact,nfact)
@@ -623,7 +649,9 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	SEzetas <- SE[indlist$zetaind]	
 	SEg <- rep(NA,J)	
 	SEg <- SE[guessind]	
+	SEup <- SE[upperind]
 	SEg[!estGuess] <- NA
+	SEup[!estUpper] <- NA
 	SEu <- SE[meanind]	
 	SEsig <- matrix(0,nfact,nfact)	
 	tmp <- pars[covind]
@@ -669,7 +697,7 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	SEpars <- cbind(SElam,SEzetas)
 	gpars <- list(u = u, sig = sig)	
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
-	estpars <- list(estlam=estlam,estGuess=estGuess,estgcov=estgcov,
+	estpars <- list(estlam=estlam,estGuess=estGuess,estUpper=estUpper, estgcov=estgcov,
 		estgmeans=estgmeans,estComp=estComp)		
 		
 	if (nfactNames > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
@@ -680,10 +708,10 @@ confmirt <- function(data, model, guess = 0, estGuess = NULL, ncycles = 2000,
 	colnames(F) <- factorNames
 	names(h2) <- itemnames	
 
-	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, SEpars=SEpars, 
-		SEg=SEg, gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - 
+	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
+		SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - 
 		burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
-		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), 
+		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), SEpars=SEpars,
 		estComp=estComp, prodlist=as.list(prodlist), Call=Call)
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
@@ -784,12 +812,12 @@ setMethod(
 		a <- matrix(object@parsprint[ ,1:nfactNames], ncol=nfactNames)
 		d <- matrix(object@parsprint[ ,(nfactNames+1):ncol(object@parsprint)],
 			ncol = ncol(object@parsprint)-nfactNames)    	
-		parameters <- cbind(object@parsprint,object@guess)
-		SEs <- cbind(object@SEpars,object@SEg)
+		parameters <- cbind(object@parsprint,object@guess,object@upper)
+		SEs <- cbind(object@SEpars,object@SEg,object@SEup)
 		rownames(parameters) <- itemnames
 		rownames(SEs) <- itemnames
 		colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],sep=""),
-            paste("d_",1:(ncol(object@parsprint)-nfactNames),sep=""),"guess")
+            paste("d_",1:(ncol(object@parsprint)-nfactNames),sep=""),"guess",'upper')
 		factorNames2 <- factorNames	
 		if(nfact < nfactNames)
 		  factorNames2 <- factorNames[!grepl("\\(",factorNames)]			
@@ -845,6 +873,8 @@ setMethod(
 		zetas <- object@pars$zetas
 		guess <- object@guess
 		guess[is.na(guess)] <- 0	
+		upper <- object@upper
+		upper[is.na(upper)] <- 1
 		Ksums <- cumsum(K) - 1	
 		itemloc <- object@itemloc
 		res <- matrix(0,J,J)
@@ -858,12 +888,12 @@ setMethod(
 					if(i < j){
 						if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[[i]],Theta,itemexp=TRUE)
 						else { 
-							P1 <- P.mirt(lambdas[i,],zetas[[i]], Theta, guess[i])
+							P1 <- P.mirt(lambdas[i,],zetas[[i]], Theta, guess[i], upper[i])
 							P1 <- cbind(1 - P1, P1)
 						}	
 						if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[[j]],Theta,itemexp=TRUE)
 						else {
-							P2 <- P.mirt(lambdas[j,],zetas[[j]], Theta, guess[j])	
+							P2 <- P.mirt(lambdas[j,],zetas[[j]], Theta, guess[j], upper[j])	
 							P2 <- cbind(1 - P2, P2)
 						}
 						tab <- table(data[,i],data[,j])		

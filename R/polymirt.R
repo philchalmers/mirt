@@ -306,7 +306,8 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, r
 	cand.t.var <- 1	
 	tmp <- .1
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+		theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess,
+		                      fulldata=fulldata,K=K,itemloc=itemloc,cand.t.var=cand.t.var)
 		if(i > 5){		
 			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
 			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
@@ -349,9 +350,11 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, r
 		guess <- normpars$guess		
 		
 		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) theta0 <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)
+		for(j in 1:4) theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess,
+                                            fulldata=fulldata,K=K,itemloc=itemloc,cand.t.var=cand.t.var)
 		for(i in 1:k)			
-			m.thetas[[i]] <- draw.thetas(theta0,lambdas,zetas,guess,fulldata,K,itemloc,cand.t.var)		
+			m.thetas[[i]] <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess,
+			                             fulldata=fulldata,K=K,itemloc=itemloc,cand.t.var=cand.t.var)		
 		theta0 <- m.thetas[[1]]
 		
 		#Step 2. Find average of simulated data gradients and hessian 
@@ -360,7 +363,7 @@ polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, r
 			g <- rep(NA,npars)			
 			for(i in 1:J){
 				if(K[i] == 2){
-					temp <- dpars.dich(lambdas[i, ], zetas[[i]],guess[i],
+					temp <- dpars.dich(lambdas[i, ], zetas[[i]],guess[i], 1,
 						fulldata[ ,itemloc[i]],m.thetas[[j]],estGuess[i])
 					ind <- parind[is.na(g)][1]
 					ind2 <- ind + length(temp$g) - 1		
