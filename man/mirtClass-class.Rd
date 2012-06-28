@@ -23,6 +23,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameters  }
     \item{\code{parsSE}:}{Object of class \code{"list"}, estimated parameter standard errors  }
     \item{\code{guess}:}{Object of class \code{"numeric", guessing parameters}  }
+    \item{\code{upper}:}{Object of class \code{"numeric", upper bound parameters}  }
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }        
     \item{\code{X2}:}{Object of class \code{"numeric"}, Chi-squared  }

@@ -21,8 +21,10 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameters }
     \item{\code{parsprint}:}{Object of class \code{"matrix"}, parameters used for printing }
     \item{\code{guess}:}{Object of class \code{"numeric"}, estimated guessing parameters }
+    \item{\code{upper}:}{Object of class \code{"numeric"}, estimated upper bound parameters }
     \item{\code{SEpars}:}{Object of class \code{"matrix"},  standard errors for pars}
     \item{\code{SEg}:}{Object of class \code{"numeric"}, standard errors for guess }
+    \item{\code{SEup}:}{Object of class \code{"numeric"}, standard errors for upper }
     \item{\code{gpars}:}{Object of class \code{"list"}, group parameters }
     \item{\code{SEgpars}:}{Object of class \code{"list"}, standard errors for gpars }
     \item{\code{estpars}:}{Object of class \code{"list"}, logical indicators for gpars }

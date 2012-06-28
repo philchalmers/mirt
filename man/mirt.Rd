@@ -9,10 +9,11 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(data, nfact, guess = 0, SE = FALSE, rotate =
-    'varimax', prev.cor = NULL, par.prior = FALSE,
+  mirt(data, nfact, guess = 0, upper = 1, SE = FALSE,
+    rotate = 'varimax', prev.cor = NULL, par.prior = FALSE,
     startvalues = NULL, quadpts = NULL, ncycles = 300, tol
-    = .001, nowarn = TRUE, debug = FALSE, ...)
+    = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE,
+    ...)
 
   \S4method{summary}{mirt}(object, rotate='', suppress = 0,
     digits = 3, print = FALSE, ...)
@@ -44,6 +45,11 @@ Theory)}
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing
   parameter or may be entered as a numeric vector
+  corresponding to each item}
+
+  \item{upper}{fixed upper bound parameters for 4-PL model.
+  Can be entered as a single value to assign a global
+  guessing parameter or may be entered as a numeric vector
   corresponding to each item}
 
   \item{prev.cor}{use a previously computed correlation
@@ -129,6 +135,9 @@ Theory)}
 
   \item{nowarn}{logical; suppress warnings from dependent
   packages?}
+
+  \item{verbose}{logical; print observed log-likelihood
+  value at each iteration?}
 
   \item{debug}{logical; turn on debugging features?}
 

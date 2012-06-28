@@ -191,9 +191,9 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, nfact, guess = 0, SE = FALSE, rotate = 'varimax', prev.cor = NULL,
+#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', prev.cor = NULL,
 #'     par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300,  
-#'     tol = .001, nowarn = TRUE, debug = FALSE, ...)
+#'     tol = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE, ...)
 #' 
 #' \S4method{summary}{mirt}(object, rotate='', suppress = 0, digits = 3, print = FALSE, ...)
 #' 

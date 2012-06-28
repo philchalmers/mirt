@@ -72,12 +72,16 @@ setClass(
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
 #' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
+#' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
+#' entered as a single value to assign a global upper bound parameter or may be entered as a numeric
+#' vector corresponding to each item
 #' @param estGuess a logical vector indicating which lower-asymptote parameters
 #' to be estimated (default is null, and therefore is contingent on the values
 #' in \code{guess}). By default, if any value in \code{guess} is greater than 0
 #' then its respective \code{estGuess} value is set to \code{TRUE}.
 #' Additionally, beta priors are automatically imposed for estimated parameters
 #' which correspond to the input guessing values.
+#' @param estUpper same function as \code{estGuess}, but for upper bound parameters
 #' @param ncycles the maximum number of MH-RM iterations to be performed. Default is 
 #' 2000
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
@@ -139,9 +143,9 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' confmirt(data, model, guess = 0, estGuess = NULL, ncycles = 2000, burnin = 150, 
-#'   SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL = TRUE, 
-#'   draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
+#' confmirt(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
+#'   ncycles = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
+#'   calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
 #' 
 #' \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 #' 
@@ -255,8 +259,8 @@ setClass(
 #' anova(mod.cube,mod.combo)
 #' }
 #' 
-confmirt <- function(data, model, guess = 0, upper = 1, estUpper = NULL, estGuess = NULL, ncycles = 2000, 
-	burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
+confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
+    ncycles = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
 	...)
 {		
@@ -438,11 +442,11 @@ confmirt <- function(data, model, guess = 0, upper = 1, estUpper = NULL, estGues
 		for(j in 1:4) 
             theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
                             fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
-                            prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
+                            prior.t.var=sig, prior.mu=mu, estComp=estComp, prodlist=prodlist)
 		for(i in 1:k) m.thetas[[i]] <- 
                     draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
                     fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
-                    prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
+                    prior.t.var=sig, prior.mu=mu, estComp=estComp, prodlist=prodlist)
 		theta0 <- m.thetas[[1]]
 		        
 		#Step 2. Find average of simulated data gradients and hessian 		
@@ -568,6 +572,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estUpper = NULL, estGues
 			pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
 			pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
 			pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
+			pars[upperind][pars[upperind] > 1] <- parsold[upperind][pars[upperind] > 1]
 			if(stagecycle == 2){
 				SEM.stores[cycles - burnin,] <- pars
 				SEM.stores2[[cycles - burnin]] <- ave.h

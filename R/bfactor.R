@@ -147,9 +147,9 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage
-#' bfactor(data, specific, guess = 0, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
+#' bfactor(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
 #'   startvalues = NULL,  quadpts = 15, ncycles = 300, tol = .001, nowarn = TRUE, 
-#'   debug = FALSE, ...)
+#'   verbose = FALSE, debug = FALSE, ...)
 #' 
 #' \S4method{summary}{bfactor}(object, digits = 3, ...)
 #' 

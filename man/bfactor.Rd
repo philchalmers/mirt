@@ -6,10 +6,10 @@
 \alias{summary,bfactor-method}
 \title{Full-Information Item Bifactor Analysis}
 \usage{
-  bfactor(data, specific, guess = 0, SE = FALSE, prev.cor =
-    NULL, par.prior = FALSE, startvalues = NULL, quadpts =
-    15, ncycles = 300, tol = .001, nowarn = TRUE, debug =
-    FALSE, ...)
+  bfactor(data, specific, guess = 0, upper = 1, SE = FALSE,
+    prev.cor = NULL, par.prior = FALSE, startvalues = NULL,
+    quadpts = 15, ncycles = 300, tol = .001, nowarn = TRUE,
+    verbose = FALSE, debug = FALSE, ...)
 
   \S4method{summary}{bfactor}(object, digits = 3, ...)
 
@@ -45,6 +45,11 @@
   entered as a single value to assign a global value or may
   be entered as a numeric vector for each item of length
   \code{ncol(data)}.}
+
+  \item{upper}{fixed upper bound parameters for 4-PL model.
+  Can be entered as a single value to assign a global
+  guessing parameter or may be entered as a numeric vector
+  corresponding to each item}
 
   \item{SE}{logical; estimate parameter standard errors?}
 
@@ -93,6 +98,9 @@
 
   \item{nowarn}{logical; suppress warnings from dependent
   packages?}
+
+  \item{verbose}{logical; print observed log-likelihood
+  value at each iteration?}
 
   \item{debug}{logical; turn on debugging features?}
 

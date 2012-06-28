@@ -7,11 +7,11 @@
 \alias{summary,confmirt-method}
 \title{Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats}
 \usage{
-  confmirt(data, model, guess = 0, estGuess = NULL, ncycles
-    = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol
-    = .001, printcycles = TRUE, calcLL = TRUE, draws =
-    2000, returnindex = FALSE, debug = FALSE, technical =
-    list(), ...)
+  confmirt(data, model, guess = 0, upper = 1, estGuess =
+    NULL, estUpper = NULL, ncycles = 2000, burnin = 150,
+    SEM.cycles = 50, kdraws = 1, tol = .001, printcycles =
+    TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE,
+    debug = FALSE, technical = list(), ...)
 
   \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans
     = FALSE, digits = 3, ...)
@@ -39,6 +39,11 @@
   value to assign a global guessing parameter or may be
   entered as a numeric vector for each item}
 
+  \item{upper}{initial (or fixed) upper bound parameters
+  for 4-PL model. Can be entered as a single value to
+  assign a global upper bound parameter or may be entered
+  as a numeric vector corresponding to each item}
+
   \item{estGuess}{a logical vector indicating which
   lower-asymptote parameters to be estimated (default is
   null, and therefore is contingent on the values in
@@ -47,6 +52,9 @@
   value is set to \code{TRUE}. Additionally, beta priors
   are automatically imposed for estimated parameters which
   correspond to the input guessing values.}
+
+  \item{estUpper}{same function as \code{estGuess}, but for
+  upper bound parameters}
 
   \item{ncycles}{the maximum number of MH-RM iterations to
   be performed. Default is 2000}
