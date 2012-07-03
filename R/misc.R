@@ -597,7 +597,7 @@ prodterms <- function(theta0, prodlist)
 }
 
 model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N,
-  estGuess, guess, upper, estUpper, guess.prior.n, itemnames)
+  estGuess, guess, upper, estUpper, guess.prior.n, itemnames, exploratory)
 {    
   hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
   prodlist <- NULL
@@ -893,8 +893,8 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
     }
   }
   if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)) && 
-    length(equalconstr) == 0) stop('Slope parameters are not uniquely identified.')
-  if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)))
+    length(equalconstr) == 0 && !exploratory) stop('Slope parameters are not uniquely identified.')
+  if(!all(sort(abs(colSums(estlam[ ,1:nfact,drop=FALSE]) - J)) >= 0:(nfact-1)) && !exploratory)
     warning('Slope parameters may not be uniquely identified.')	
   
   #PRIOR, 1 == norm, 2== beta

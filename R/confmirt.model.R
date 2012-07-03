@@ -54,6 +54,7 @@
 #' locate the desired parameter.} }
 #' 
 #' @param file a string specifying an external file that declares the input.
+#' @param ... additional arguments for \code{scan()}
 #' @return Returns a model specification object to be used in
 #' \code{\link{confmirt}}.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -75,13 +76,13 @@
 #'     
 #'     }
 #' 
-confmirt.model <- function(file = "")
+confmirt.model <- function(file = "", ...)
 {
   #special characters: @ for location, == for equalities (and const), * for covariance
   #must specify by 'type = list'
   #special types -> slope, int, cov, start, comp
     mod <- scan(file = file, what = list(type = "", pars = ""), 
-		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE)
+		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, ...)
 	mod <- cbind(mod$type, mod$pars)
 	colnames(mod) <- c("Type","Parameters")	
 	mod <- list(x = mod)

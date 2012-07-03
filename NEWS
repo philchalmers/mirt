@@ -2,6 +2,8 @@
 mirt 0.2.6
 ---------------------------------------------------------------
 
+* polymirt() uses confmirt() estimation engine
+
 * 4PL support for mirt() and bfactor(), treating the upper bound as fixed
 
 * coef() now has a rotate option for returning rotated IRT parameters

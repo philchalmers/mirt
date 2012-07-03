@@ -1,6 +1,5 @@
 Things to do:
 
-- Merge polymirt() into confmirt() and leave polymirt() depreciated 
 - Parallel processing option for logLik()
 - Nominal and rating intercept estimation for polymirt and confmirt
 - Multiple-group estimation for confmirt

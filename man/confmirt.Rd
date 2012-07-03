@@ -11,7 +11,8 @@
     NULL, estUpper = NULL, ncycles = 2000, burnin = 150,
     SEM.cycles = 50, kdraws = 1, tol = .001, printcycles =
     TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE,
-    debug = FALSE, technical = list(), ...)
+    debug = FALSE, technical = list(), rotate = 'varimax',
+    ...)
 
   \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans
     = FALSE, digits = 3, ...)
@@ -31,8 +32,9 @@
 
   \item{model}{an object returned from
   \code{confmirt.model()} declarating how the factor model
-  is to be estimated. See \code{\link{confmirt.model}} for
-  more details}
+  is to be estimated, or a single numeric value indicating
+  the number of exploratory factors to estimate. See
+  \code{\link{confmirt.model}} for more details}
 
   \item{guess}{initial (or fixed) values for the
   pseudo-guessing parameter. Can be entered as a single
@@ -109,6 +111,10 @@
 
   \item{digits}{the number of significant digits to be
   rounded}
+
+  \item{rotate}{if \code{model} is numeric (indicating an
+  exploratory item FA) then this rotation is used. Default
+  is \code{'varimax'}}
 
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are \describe{

@@ -67,7 +67,8 @@ setClass(
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data
 #' @param model an object returned from \code{confmirt.model()} declarating how
-#' the factor model is to be estimated. See \code{\link{confmirt.model}} for
+#' the factor model is to be estimated, or a single numeric value indicating the number 
+#' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
 #' more details
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
 #' entered as a single value to assign a global guessing parameter or may be entered as
@@ -110,6 +111,8 @@ setClass(
 #' @param SE logical; print standard errors?
 #' @param print.gmeans logical; print latent factor means?
 #' @param digits the number of significant digits to be rounded
+#' @param rotate if \code{model} is numeric (indicating an exploratory item FA) then this 
+#' rotation is used. Default is \code{'varimax'}
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
 #' \describe{
@@ -145,7 +148,8 @@ setClass(
 #' @usage 
 #' confmirt(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
 #'   ncycles = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-#'   calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), ...)
+#'   calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
+#'   rotate = 'varimax', ...)
 #' 
 #' \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 #' 
@@ -262,7 +266,7 @@ setClass(
 confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
     ncycles = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
 	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
-	...)
+	rotate = 'varimax', ...)
 {		
 	Call <- match.call()       
 	set.seed(12345)	
@@ -272,6 +276,14 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	colnames(data) <- itemnames	
 	J <- ncol(data)
 	N <- nrow(data)
+	exploratory <- FALSE
+    if(is(model, 'numeric')){
+        tmp <- tempfile('tempfile')
+        cat(paste('F',1:model,' = 1-', J, "\n", sep=''), file=tmp)
+        model <- confmirt.model(tmp, quiet = TRUE)
+        exploratory <- TRUE
+        unlink(tmp)
+    }
     
 	##technical
 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
@@ -332,25 +344,25 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	mod <- model.elements(model=model, factorNames=factorNames, nfactNames=nfactNames, nfact=nfact, 
                           J=J, K=K, fulldata=fulldata, itemloc=itemloc, data=data, N=N, estGuess=estGuess,
                           guess=guess, upper=upper, estUpper=estUpper, guess.prior.n=guess.prior.n, 
-                          itemnames=itemnames)
+                          itemnames=itemnames, exploratory=exploratory)
 	parcount <- mod$parcount
 	npars <- mod$npars
 	if(returnindex) return(parcount)
-	if(debug) print(mod)
-  
+	if(debug) print(mod)  
+    
 	#pars
 	pars <- mod$val$pars
 	lambdas <- mod$val$lambdas
 	zetas <- mod$val$zetas
 	gmeans <- mod$val$gmeans
 	gcov <- mod$val$gcov
-	constvalues <- mod$val$constvalues
+	constvalues <- mod$val$constvalues      
 
 	#est
 	estlam <- mod$est$estlam
 	estComp <- mod$est$estComp		
 	estgcov <- mod$est$estgcov
-	estgmeans <- mod$est$estgmeans
+	estgmeans <- mod$est$estgmeans	
   
 	#ind
 	parind <- mod$ind$parind	
@@ -371,6 +383,17 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 		stop('Item(s) ', paste(tmp,''), 'have no factor loadings specified.')
 	}
 	indlist <- mod$ind 
+    
+	if(exploratory){
+	    Rpoly <- cormod(na.omit(data),K,guess)
+	    FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres")    
+	    loads <- unclass(loadings(FA))
+	    u <- FA$unique
+	    u[u < .001 ] <- .2
+	    cs <- sqrt(u)
+	    lambdas <- mod$val$lambdas <- loads/cs        
+        pars[lamind] <- t(lambdas)
+	}
 	
 	#Preamble for MRHM algorithm
 	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
@@ -712,12 +735,20 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	h2 <- rowSums(F^2)
 	colnames(F) <- factorNames
 	names(h2) <- itemnames	
-
-	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
-		SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,cycles=cycles - SEM.cycles - 
-		burnin, Theta=theta0, fulldata=fulldata, data=data, K=K, itemloc=itemloc, 
-		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), SEpars=SEpars,
-		estComp=estComp, prodlist=as.list(prodlist), Call=Call)
+    
+    if(exploratory){
+        mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, SEg=SEg,
+                   upper=upper, SEup=SEup,
+                   cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
+                   data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
+                   estGuess=estGuess, rotate=rotate, Call=Call)
+    } else {
+    	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
+    		SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,K=K, itemloc=itemloc,
+            cycles=cycles - SEM.cycles - burnin, Theta=theta0, fulldata=fulldata, data=data,  
+    		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), SEpars=SEpars,
+    		estComp=estComp, prodlist=as.list(prodlist), Call=Call)
+    }
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()

@@ -21,7 +21,10 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
   \describe{    
     \item{\code{pars}:}{Object of class \code{"list"}, list of parameters  }
     \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters  }
+    \item{\code{upper}:}{Object of class \code{"numeric"}, upper bound parameters  }
     \item{\code{SEpars}:}{Object of class \code{"matrix"}, standard errors for pars }
+    \item{\code{SEg}:}{Object of class \code{"numeric"}, standard errors for guess }
+    \item{\code{SEup}:}{Object of class \code{"numeric"}, standard errors for upper }
     \item{\code{cycles}:}{Object of class \code{"numeric"}, number of MHRM cycles }
     \item{\code{Theta}:}{Object of class \code{"matrix"}, final MH draw }
     \item{\code{fulldata}:}{Object of class \code{"matrix"}, complete binary data }

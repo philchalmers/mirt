@@ -2,11 +2,13 @@
 \alias{confmirt.model}
 \title{Specify confirmatory loadings}
 \usage{
-  confmirt.model(file = "")
+  confmirt.model(file = "", ...)
 }
 \arguments{
   \item{file}{a string specifying an external file that
   declares the input.}
+
+  \item{...}{additional arguments for \code{scan()}}
 }
 \value{
   Returns a model specification object to be used in

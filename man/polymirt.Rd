@@ -133,7 +133,8 @@
   \item{technical}{list specifying subtle parameters that
   can be adjusted}
 
-  \item{...}{additional arguments to be passed}
+  \item{...}{additional arguments to be passed to the
+  \code{\link{confmirt}} estimation engine}
 }
 \description{
   \code{polymirt} fits an unconditional (exploratory)
