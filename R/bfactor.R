@@ -387,15 +387,17 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 			ind <- ind + 1
 		}		
 	}		
-	if(debug) print(startvalues)			 		
-    browser()
+	if(debug) print(startvalues)			 		    
 	
 	#EM  loop  
 	for (cycles in 1:ncycles) 
 	{    
 		rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, upper,
 			specific, sitems, itemloc)
-		if(verbose) print(sum(r * log(rlist$expected)))			
+		if(verbose){
+            print(sum(r * log(rlist$expected)))			
+            flush.console()
+		}
 		lastpars2 <- lastpars1
 		lastpars1 <- pars			
 		for(i in 1:J){ 

@@ -410,7 +410,10 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	for (cycles in 1:ncycles)
 	{       
 		rlist <- Estep.mirt(pars, tabdata, Theta, prior, guess, upper, itemloc)
-        if(verbose) print(Pl <- sum(r*log(rlist$expected)))                            
+        if(verbose){
+            print(Pl <- sum(r*log(rlist$expected)))                            
+            flush.console()
+        }
 		lastpars2 <- lastpars1
 		lastpars1 <- pars				
 		for(i in 1:J){
@@ -822,7 +825,4 @@ setMethod(
 		invisible(tabdata)
 	}
 )
-    
-
-
 
