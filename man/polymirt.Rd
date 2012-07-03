@@ -8,11 +8,12 @@
 \alias{summary,polymirt-method}
 \title{Full-Information Item Factor Analysis for Mixed Data Formats}
 \usage{
-  polymirt(data, nfact, guess = 0, estGuess = NULL,
-    prev.cor = NULL, rotate = 'varimax', ncycles = 2000,
-    burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001,
-    printcycles = TRUE, calcLL = TRUE, draws = 2000, debug
-    = FALSE, technical = list(), ...)
+  polymirt(data, nfact, guess = 0, upper = 1, estGuess =
+    NULL, estUpper = NULL, prev.cor = NULL, rotate =
+    'varimax', ncycles = 2000, burnin = 100, SEM.cycles =
+    50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL
+    = TRUE, draws = 2000, debug = FALSE, technical =
+    list(), ...)
 
   \S4method{summary}{polymirt}(object, rotate='', suppress
     = 0, digits = 3, print = FALSE, ...)
@@ -41,6 +42,11 @@
   value to assign a global guessing parameter or may be
   entered as a numeric vector for each item}
 
+  \item{upper}{initial (or fixed) upper bound parameters
+  for 4-PL model. Can be entered as a single value to
+  assign a global upper bound parameter or may be entered
+  as a numeric vector corresponding to each item}
+
   \item{estGuess}{a logical vector indicating which
   lower-asymptote parameters to be estimated (default is
   null, and therefore is contingent on the values in
@@ -49,6 +55,9 @@
   value is set to \code{TRUE}. Additionally, beta priors
   are automatically imposed for estimated parameters that
   correspond to the input guessing value.}
+
+  \item{estUpper}{same function as \code{estGuess}, but for
+  upper bound parameters}
 
   \item{prev.cor}{use a previously computed correlation
   matrix to be used to estimate starting values the

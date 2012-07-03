@@ -69,12 +69,16 @@ setClass(
 #' @param guess starting (or fixed) values for the pseudo-guessing parameter. Can be 
 #' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
+#' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
+#' entered as a single value to assign a global upper bound parameter or may be entered as a numeric
+#' vector corresponding to each item
 #' @param estGuess a logical vector indicating which lower-asymptote parameters
 #' to be estimated (default is null, and therefore is contingent on the values
 #' in \code{guess}). By default, if any value in \code{guess} is greater than 0
 #' then its respective \code{estGuess} value is set to \code{TRUE}.
 #' Additionally, beta priors are automatically imposed for estimated parameters
 #' that correspond to the input guessing value.
+#' @param estUpper same function as \code{estGuess}, but for upper bound parameters
 #' @param prev.cor use a previously computed correlation matrix to be used to
 #' estimate starting values the estimation. The input could be any correlation
 #' matrix, but it is advised to use a matrix of polychoric correlations.
@@ -139,9 +143,10 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' polymirt(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, rotate = 'varimax', 
-#'    ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, 
-#'    printcycles = TRUE,	calcLL = TRUE, draws = 2000, debug = FALSE, technical = list(), ...)
+#' polymirt(data, nfact, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL,
+#' prev.cor = NULL, rotate = 'varimax', ncycles = 2000, burnin = 100, SEM.cycles = 50, 
+#' kdraws = 1, tol = .001, printcycles = TRUE,    calcLL = TRUE, draws = 2000, debug = FALSE, 
+#' technical = list(), ...)
 #'  
 #' 
 #' 
@@ -191,337 +196,16 @@ setClass(
 #' 
 #'      }
 #' 
-polymirt <- function(data, nfact, guess = 0, estGuess = NULL, prev.cor = NULL, rotate = 'varimax', 
-    ncycles = 2000, burnin = 100, SEM.cycles = 50, kdraws = 1, tol = .001, 
-    printcycles = TRUE,	calcLL = TRUE, draws = 2000, debug = FALSE, technical = list(), ...)
+polymirt <- function(data, nfact, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL,
+    prev.cor = NULL, rotate = 'varimax', ncycles = 2000, burnin = 100, SEM.cycles = 50, 
+    kdraws = 1, tol = .001, printcycles = TRUE,	calcLL = TRUE, draws = 2000, debug = FALSE, 
+    technical = list(), ...)
 {     
     mod <- confmirt(data, nfact, guess=guess, rotate=rotate, ncycles=ncycles, burnin=burnin,
                     SEM.cycles=SEM.cycles, kdraws=kdraws, tol=tol, printcycles=printcycles,
                     calcLL=calcLL, draws=draws, debug=debug, technical=technical, ...)    
     mod@Call <- match.call()
     mod
-# 	Call <- match.call()
-# 	set.seed(12345)
-# 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-# 	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n),  
-#                             technical$guess.prior.n, 20)
-# 	itemnames <- colnames(data)
-# 	data <- as.matrix(data)	
-# 	if(!any(data %in% c(0:20,NA))) 
-# 		stop("Data must contain only numeric values (including NA).")	
-# 	J <- ncol(data)
-# 	N <- nrow(data)	
-# 	if(length(guess) == 1) guess <- rep(guess,J)
-# 	colnames(data) <- itemnames
-# 	if(length(guess) > J || length(guess) < J) 
-# 		stop("The number of guessing parameters is incorrect.")
-# 	if(is.null(estGuess))
-# 		estGuess <- guess > 0					
-# 	uniques <- list()
-# 	for(i in 1:J)
-# 		uniques[[i]] <- sort(unique(data[,i]))
-# 	K <- rep(0,J)
-# 	for(i in 1:J) K[i] <- length(uniques[[i]])	
-# 	guess[K > 2] <- 0
-# 	estGuess[K > 2] <- FALSE	
-# 	itemloc <- cumsum(c(1,K))
-# 	index <- 1:J	
-# 	fulldata <- matrix(0,N,sum(K))
-# 	Names <- NULL
-# 	for(i in 1:J)
-#         Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
-# 	colnames(fulldata) <- Names			
-# 	for(i in 1:J){
-# 		ind <- index[i]
-# 		if(setequal(uniques[[i]], c(0,1))){
-# 			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[,ind],abs(1-data[,ind]))
-# 			next
-# 		}
-# 		dummy <- matrix(0,N,K[ind])
-# 		for (j in 0:(K[ind]-1))  
-# 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
-# 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
-# 	}	
-# 	fulldata[is.na(fulldata)] <- 0	
-# 	if(!is.null(prev.cor)){
-# 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
-# 			else stop("Correlation matrix is not square.\n")
-# 	} 	else Rpoly <- cormod(na.omit(data),K,guess)
-# 	FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres")	
-# 	loads <- unclass(loadings(FA))
-# 	u <- FA$unique
-# 	u[u < .001 ] <- .2
-# 	cs <- sqrt(u)
-# 	lambdas <- loads/cs	
-#     zetas <- zetaindlist <- list()
-# 	zetalong <- c()
-#     for(i in 1:J){
-#         if(K[i] == 2){
-#             zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i]]))/cs[i]            
-# 			zetalong <- c(zetalong, zetas[[i]])
-#         } else {
-#             temp <- table(data[,i])[1:(K[i]-1)]/N
-#             temp <- cumsum(temp)			
-#             zetas[[i]] <- qnorm(1 - temp)/cs[i]        
-# 			zetalong <- c(zetalong, zetas[[i]])
-#         }       
-#     }
-#     nzetas <- 0
-#     for(i in 1:J) nzetas <- nzetas + length(zetas[[i]])
-# 	npars <- length(lambdas) + nzetas + sum(estGuess) 
-# 	parind <- 1:npars
-# 	pars <- rep(NA,npars)
-# 	Ksum <- cumsum(K-1 + nfact + estGuess)
-# 	Ksum <- Ksum - min(Ksum) + K[1]
-# 	lamind	<- gind <- c()
-# 	for(i in 1:J){
-# 		pars[Ksum[i]:(Ksum[i] + nfact - 1)] <- lambdas[i,]
-# 		lamind <- c(lamind,Ksum[i]:(Ksum[i] + nfact - 1))
-# 		if(estGuess[i]){
-# 			pars[Ksum[i] + nfact] <- guess[i]
-# 			gind <- c(gind,Ksum[i] + nfact)
-# 		}	
-# 	}	
-# 	zetaind <- parind[is.na(pars)]					
-# 	tmp <- 1
-# 	for(i in 1:J){
-# 		zetaindlist[[i]] <- zetaind[tmp:(tmp + length(zetas[[i]]) - 1)]
-# 		tmp <- tmp + length(zetas[[i]])
-# 	}
-# 	pars[is.na(pars)] <- zetalong
-# 	diag(Rpoly) <- 1	
-# 	converge <- 1
-# 	guessPrior <- list()
-# 	guessPriorCount <- 1
-# 	if(sum(estGuess) > 0){
-# 		for(i in 1:J){
-# 			if(estGuess[i]){
-# 				guessPrior[[guessPriorCount]] <- c(gind[i],guess[i]*guess.prior.n,
-# 					(1-guess[i])*guess.prior.n)
-# 				guessPriorCount <- guessPriorCount + 1			
-# 			}
-# 		}	
-# 	}	
-# 	indlist <- list(lamind=lamind,zetaind=zetaindlist,gind=gind)
-# 	if(debug){
-# 		print(indlist)
-# 	}	
-# 	
-#     #preamble for MRHM algorithm		
-# 	theta0 <- matrix(0,N,nfact)	
-# 	cand.t.var <- 1	
-# 	tmp <- .1
-# 	for(i in 1:30){			
-# 		theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess,
-# 		                      fulldata=fulldata,K=K,itemloc=itemloc,cand.t.var=cand.t.var)
-# 		if(i > 5){		
-# 			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
-# 			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp	
-# 			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
-# 			else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - 2*tmp
-# 			if (cand.t.var < 0){
-# 				cand.t.var <- tmp		
-# 				tmp <- tmp / 2
-# 			}		
-# 		}	
-# 	} 
-# 	m.thetas <- list()		
-# 	SEM.stores <- matrix(0,SEM.cycles,npars)
-# 	phi <- rep(0,npars)
-# 	Tau <- info <- h <- matrix(0,npars,npars)
-# 	m.list <- list()	  
-# 	conv <- noninvcount <- 0
-# 	k <- 1	
-# 	gamma <- 0.25
-# 	startvalues <- pars
-# 	stagecycle <- 1		
-# 	
-# 	for(cycles in 1:(ncycles + burnin + SEM.cycles))
-# 	{ 
-# 		if(cycles == burnin + 1) stagecycle <- 2
-# 		if(stagecycle == 3)
-# 			gamma <- (0.05/(cycles - SEM.cycles - burnin - 1))^(0.5) - .004
-# 		if(cycles == (burnin + SEM.cycles + 1)){ 
-# 			stagecycle <- 3		
-# 		    pars <- rep(0,npars)
-# 			for(i in 1:SEM.cycles) pars <- pars + SEM.stores[i,]
-# 			pars <- pars/SEM.cycles	
-# 			k <- kdraws	
-# 			gamma <- 1
-# 		}		
-# 		
-# 		normpars <- sortPars(pars, indlist, nfact, estGuess)
-# 		lambdas <- normpars$lambdas
-# 		zetas <- normpars$zetas		 
-# 		guess <- normpars$guess		
-# 		
-# 		#Step 1. Generate m_k datasets of theta 
-# 		for(j in 1:4) theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess,
-#                                             fulldata=fulldata,K=K,itemloc=itemloc,cand.t.var=cand.t.var)
-# 		for(i in 1:k)			
-# 			m.thetas[[i]] <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess,
-# 			                             fulldata=fulldata,K=K,itemloc=itemloc,cand.t.var=cand.t.var)		
-# 		theta0 <- m.thetas[[1]]
-# 		
-# 		#Step 2. Find average of simulated data gradients and hessian 
-# 		g.m <- h.m <- list()					
-# 		for(j in 1:k){
-# 			g <- rep(NA,npars)			
-# 			for(i in 1:J){
-# 				if(K[i] == 2){
-# 					temp <- dpars.dich(lambdas[i, ], zetas[[i]],guess[i], 1,
-# 						fulldata[ ,itemloc[i]],m.thetas[[j]],estGuess[i])
-# 					ind <- parind[is.na(g)][1]
-# 					ind2 <- ind + length(temp$g) - 1		
-# 					g[ind:ind2] <- temp$grad
-# 					h[ind:ind2,ind:ind2] <- temp$hess					
-# 				} else {						
-# 					temp <- dpars.poly(lambdas[i, ],zetas[[i]],
-# 						fulldata[ ,itemloc[i]:(itemloc[i+1]-1)],m.thetas[[j]])
-# 					ind <- parind[is.na(g)][1]	
-# 					ind2 <- ind + length(temp$g) - 1		
-# 					g[ind:ind2] <- temp$grad
-# 					h[ind:ind2,ind:ind2] <- temp$hess					
-# 				}
-# 			} 
-# 			g.m[[j]] <- g
-# 			h.m[[j]] <- h
-# 		}
-# 		ave.g <- rep(0,length(g))
-# 		ave.h <- matrix(0,length(g),length(g))		
-# 		for(i in 1:k){
-# 		  ave.g <- ave.g + g.m[[i]]
-# 		  ave.h <- ave.h + h.m[[i]]
-# 		}
-# 		grad <- ave.g/k
-# 		ave.h <- (-1)*ave.h/k 
-# 		if(length(guessPrior) > 0){
-# 			for(i in 1:length(guessPrior)){
-# 				tmp <- guessPrior[[i]]				
-# 				tmp2 <- betaprior(tmp[2],tmp[3],pars[tmp[1]])				
-# 				grad[tmp[1]] <- grad[tmp[1]] + tmp2$g
-# 				ave.h[tmp[1],tmp[1]] <- ave.h[tmp[1],tmp[1]] + tmp2$h
-# 			}		
-# 		}
-# 		if(printcycles){
-# 			if((cycles + 1) %% 10 == 0){
-# 				if(cycles < burnin)
-# 					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-# 						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
-# 				if(cycles > burnin && cycles < burnin + SEM.cycles)
-# 					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
-# 						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
-# 				if(cycles > burnin + SEM.cycles)
-# 					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
-# 						", Log-Lik = ", sprintf("%.1f",attr(theta0,"log.lik")), sep="")				
-# 			}
-# 		}			
-# 		if(stagecycle < 3){
-# 			ave.h <- as(ave.h,'sparseMatrix')
-# 			inv.ave.h <- try(solve(ave.h))		    
-# 			if(class(inv.ave.h) == 'try-error'){
-# 				inv.ave.h <- try(solve(ave.h + 2*diag(ncol(ave.h))))
-# 				noninvcount <- noninvcount + 1
-# 				if(noninvcount == 3) 
-# 					stop('\nEstimation halted during burn in stages, solution is unstable')
-# 			}
-# 			correction <- inv.ave.h %*% grad
-# 			parsold <- pars
-# 			correction[correction > .5] <- .5
-# 			correction[correction < -0.5] <- -0.5				
-# 			pars <- pars + gamma*as.vector(correction)
-# 			if(printcycles && (cycles + 1) %% 10 == 0){ 
-# 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
-# 				flush.console()			
-# 			}	
-# 			pars[gind][pars[gind] < 0] <- parsold[gind][pars[gind] < 0]			
-# 			if(stagecycle == 2) SEM.stores[cycles - burnin,] <- pars
-# 			next
-# 		}	
-# 		
-# 		#Step 3. Update R-M step		
-# 		Tau <- Tau + gamma*(ave.h - Tau)
-# 		Tau <- as(Tau,'sparseMatrix')	
-# 		inv.Tau <- try(solve(Tau))		
-# 		if(class(inv.Tau) == 'try-error'){
-# 			inv.Tau <- try(solve(Tau + 2 * diag(ncol(Tau))))
-# 			noninvcount <- noninvcount + 1
-# 			if(noninvcount == 3) 
-# 				stop('\nEstimation halted during burn stage 3, solution is unstable')
-# 		}
-# 		correction <- inv.Tau %*% grad	
-# 		correction[correction > .5] <- .5
-# 		correction[correction < -0.5] <- -0.5										
-# 		if(printcycles && (cycles + 1) %% 10 == 0){ 
-# 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-# 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep='')
-# 			flush.console()			
-# 		}	
-# 		if(all(abs(parsold - pars) < tol)) conv <- conv + 1
-# 			else conv <- 0	
-# 		if(conv == 3) break		
-# 		parsold <- pars
-# 		pars <- pars + gamma*as.vector(correction)
-# 		pars[gind][pars[gind] < 0] <- parsold[gind][pars[gind] < 0]	
-# 		
-# 		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE		
-# 		phi <- phi + gamma*(grad - phi)
-# 		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
-# 	}
-# 		
-# 	cat("\n\n")	
-# 	SE <- diag(solve(info))
-# 	if(any(SE < 0)){
-# 		warning("Information matrix is not positive definite.\n")
-# 		SE <- rep(0,npars)
-# 	}
-# 	if(any(guess < 0)) warning("Negative lower asymptote parameter(s). \n")					
-# 	SE <- sqrt(SE)
-# 	SEpars <- sortPars(SE, indlist, nfact, estGuess)
-# 	normpars <- sortPars(pars, indlist, nfact, estGuess)
-# 	lambdas <- normpars$lambdas
-# 	zetas <- normpars$zetas		 
-# 	guess <- normpars$guess		
-# 	SElam <- SEpars$lambdas
-# 	SEzetas <- SEpars$zetas		 
-# 	SEg <- SEpars$guess
-# 	SEg[!estGuess] <- NA	
-# 		
-# 	zetatable <- SEzetatable <- matrix(NA,J,(max(K)-1))		
-# 	for(i in 1:J){
-# 		for(j in 1:(K[i]-1)){
-# 			zetatable[i,j] <- zetas[[i]][j]
-# 			SEzetatable[i,j] <- SEzetas[[i]][j]
-# 			
-# 		}
-# 	}	 
-# 	guess[K == 2 & !estGuess] <- 0
-# 	pars <- cbind(lambdas,zetatable)
-# 	SEpars <- cbind(SElam,SEzetatable,SEg)
-# 	
-# 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars[ ,1:nfact]^2))
-# 		else norm <- as.matrix(sqrt(1 + pars[ ,1]^2))  
-# 	alp <- as.matrix(pars[ ,1:nfact]/norm)
-# 	FF <- alp %*% t(alp)
-# 	V <- eigen(FF)$vector[ ,1:nfact]
-# 	L <- eigen(FF)$values[1:nfact]
-# 	if (nfact == 1) F <- as.matrix(V * sqrt(L))
-# 		else F <- V %*% sqrt(diag(L))  
-# 	if (sum(F[ ,1] < 0)) F <- (-1) * F 
-# 	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
-# 	h2 <- rowSums(F^2) 	
-# 	names(h2) <- itemnames
-# 		
-# 	mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, 
-# 		cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
-# 		data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
-# 		estGuess=estGuess, rotate=rotate, Call=Call)
-# 	if(calcLL){
-# 		cat("Calculating log-likelihood...\n")
-# 		flush.console()
-# 		mod <- logLik(mod,draws,...)		
-# 	}	
-# 	return(mod)	
 }
 
 # Methods
