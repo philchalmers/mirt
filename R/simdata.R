@@ -18,6 +18,7 @@
 #' for dichotomous items. Must be either a scalar value that will affect all of
 #' the dichotomous items, or a vector with as many values as to be simulated
 #' items
+#' @param upper same as \code{guess}, but for upper bound parameters
 #' @param sigma a covariance matrix of the underlying distribution. Default is
 #' the identity matrix
 #' @param mu a mean vector of the underlying distribution. Default is a vector
@@ -145,7 +146,7 @@
 #'    }
 #' 
 simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0, 
-	partcomp = FALSE, factor.loads = FALSE, Theta = NULL)
+	upper = 1, partcomp = FALSE, factor.loads = FALSE, Theta = NULL)
 {
 	dist = 'normal'
 	nfact <- ncol(a)
@@ -159,8 +160,11 @@ simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0,
 	if(length(partcomp) == 1) partcomp <- rep(partcomp,nitems)
 	if(length(partcomp) != nitems) stop("Logical partcomp vector is incorrect")  
 	if(length(guess) == 1) guess <- rep(guess,nitems)	
-	if(length(guess) != nitems) stop("Guessing parameter is incorrect")  
+	if(length(guess) != nitems) stop("Guessing parameter is incorrect")
+	if(length(upper) == 1) upper <- rep(upper,nitems)    
+	if(length(upper) != nitems) stop("Upper bound parameter is incorrect")
 	guess[K > 1] <- 0
+    upper[K > 1] <- 1
 	if(is.null(sigma)) sigma <- diag(nfact)
 	if(is.null(mu)) mu <- rep(0,nfact)
 	if (!is.null(Theta))
@@ -174,10 +178,10 @@ simdata <- function(a, d, N, sigma = NULL, mu = NULL, guess = 0,
 			slp <- a[i,!is.na(a[i,])]
 			tht <- Theta[,!is.na(a[i,])]
 			if(partcomp[i]){										
-				P <- P.comp(slp, na.omit(d[i,]), tht, guess[i])				
+				P <- P.comp(slp, na.omit(d[i,]), tht, guess[i], upper[i])				
 			} else {
 				if(length(slp) == 1) tht <- matrix(tht)			
-				P <- P.mirt(slp, na.omit(d[i,1]), tht, guess[i])
+				P <- P.mirt(slp, na.omit(d[i,1]), tht, guess[i], upper[i])
 			}	
 			for (j in 1:N) data[j,i] <- sample(c(0,1), 1, prob = c((1 - P[j]), P[j]))		
 		} else {			

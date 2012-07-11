@@ -4,7 +4,8 @@
 distribution}
 \usage{
   simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0,
-    partcomp = FALSE, factor.loads = FALSE, Theta = NULL)
+    upper = 1, partcomp = FALSE, factor.loads = FALSE,
+    Theta = NULL)
 }
 \arguments{
   \item{a}{a matrix of slope parameters. If slopes are to
@@ -23,6 +24,9 @@ distribution}
   either a scalar value that will affect all of the
   dichotomous items, or a vector with as many values as to
   be simulated items}
+
+  \item{upper}{same as \code{guess}, but for upper bound
+  parameters}
 
   \item{sigma}{a covariance matrix of the underlying
   distribution. Default is the identity matrix}

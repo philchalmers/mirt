@@ -44,14 +44,15 @@ setClass(
 #' mainstream programs such as TESTFACT (2003) and POLYFACT. The general IRT equation 
 #' for dichotomous items is 
 #' 
-#' \deqn{P(X | \theta; \bold{a}_i; d_i; g_i) = g_j + (1 - g_j) / (1 +
+#' \deqn{P(X | \theta; \bold{a}_j; d_j; g_j, u_j) = g_j + (u_j - g_j) / (1 +
 #' exp(-1.702(\bold{a}_j' \theta + d_j)))}
 #' 
 #' where \emph{j} is the item index, \eqn{\bold{a}_j} is the vector of
 #' discrimination parameters (i.e., slopes), \deqn{\theta} is the vector of
-#' factor scores, \eqn{d_j} is the intercept, and \eqn{g_j} is the
-#' pseudo-guessing parameter. To avoid estimation difficulties the \eqn{g_j}'s
-#' must be specified by the user. The polychotomous functions has a similar form
+#' factor scores, \eqn{d_j} is the intercept, \eqn{g_j} is the
+#' pseudo-guessing parameter, and \eqn{u_j} is the upper bound parameter. 
+#' To avoid estimation difficulties the \eqn{g_j}'s and \eqn{u_j}'s
+#' must be pre-specified by the user. The polychotomous functions has a similar form
 #' that can be found in Muraki and Carlson (1995).
 #' 
 #' Estimation begins by computing a matrix of quasi-tetrachoric correlations,
