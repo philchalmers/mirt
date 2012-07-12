@@ -46,7 +46,7 @@ Objects can be created by calls of the form \code{new("polymirtClass", ...)}.
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data with expected values }
     \item{\code{estGuess}:}{Object of class \code{"logical"}, vector indicating which guessing parameters were estimated }
-    \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}
+    \item{\code{null.mod}:}{Object of class \code{"S4"}, null model}
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

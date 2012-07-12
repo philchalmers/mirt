@@ -23,7 +23,7 @@ setClass(
 		Pl = 'numeric', Theta = 'matrix', data = 'matrix', itemloc = 'numeric',
 		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', tabdatalong='matrix',
 		BIC = 'numeric', cormat = 'matrix', converge = 'numeric', RMSEA = 'numeric',
-		par.prior = 'matrix', quadpts = 'numeric', vcov = 'matrix', null.mod = 'mirtClass', 
+		par.prior = 'matrix', quadpts = 'numeric', vcov = 'matrix', null.mod = 'S4', 
         TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	

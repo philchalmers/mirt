@@ -22,7 +22,7 @@ setClass(
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
 		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
 		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', upper = 'numeric', 
-        RMSEA = 'numeric', null.mod = 'mirtClass', TLI = 'numeric', Call = 'call'),	
+        RMSEA = 'numeric', null.mod = 'S4', TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -735,7 +735,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	h2 <- rowSums(F^2)
 	colnames(F) <- factorNames
 	names(h2) <- itemnames    
-	null.mod <- mirt(data, 0)        
+	null.mod <- mirt(data, 0)
     
     if(exploratory){
         mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, SEg=SEg,

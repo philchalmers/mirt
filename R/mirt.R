@@ -21,7 +21,7 @@ setClass(
 		F='matrix', h2='numeric', tabdata='matrix', tabdatalong='matrix', Theta='matrix', Pl='numeric',
 		data='matrix', cormat='matrix', facility='numeric', converge='numeric', itemloc = 'numeric',
 		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', rotate='character', 
-        null.mod = 'mirtClass', TLI = 'numeric', Call='call'),	
+        null.mod = 'S4', TLI = 'numeric', Call='call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -518,7 +518,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN		
 	guess[K > 2] <- upper[K > 2] <- NA	
 	null.mod <- new('mirtClass')
-	if(!null.model) null.mod <- mirt(data, 0)
+	if(!null.model) null.mod <- unclass(mirt(data, 0))
     TLI <- 0
 	if(!null.model)
         TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)

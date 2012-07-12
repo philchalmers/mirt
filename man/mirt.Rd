@@ -15,8 +15,8 @@ Theory)}
     = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE,
     ...)
 
-  \S4method{summary}{mirt}(object, rotate='', suppress = 0,
-    digits = 3, print = FALSE, ...)
+  \S4method{summary}{mirt}(object, rotate = '', suppress =
+    0, digits = 3, print = FALSE, ...)
 
   \S4method{coef}{mirt}(object, rotate = '', digits = 3,
     ...)
@@ -28,8 +28,8 @@ Theory)}
   \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot =
     list(x = -70, y = 30, z = 10), ...)
 
-  \S4method{residuals}{mirt}(object, restype = 'LD',
-    digits=3, printvalue = NULL, ...)
+  \S4method{residuals}{mirt}(object, restype = 'LD', digits
+    = 3, printvalue = NULL, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that

@@ -49,7 +49,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{par.prior}:}{Object of class \code{"matrix"},  prior parameter distribution specifications}
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number for quadrature points }
     \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }
-    \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}
+    \item{\code{null.mod}:}{Object of class \code{"S4"}, null model}
     \item{\code{Call}:}{Object of class \code{"call"},  call }
   }
 }

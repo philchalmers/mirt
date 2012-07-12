@@ -50,7 +50,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data with expected values }
     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-    \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}
+    \item{\code{null.mod}:}{Object of class \code{"S4"}, null model}
     \item{\code{Call}:}{Object of class \code{"call"},  call }
   }
 }
