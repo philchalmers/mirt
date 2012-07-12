@@ -22,7 +22,7 @@ setClass(
 		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
 		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
 		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', upper = 'numeric', 
-        RMSEA = 'numeric', Call = 'call'),	
+        RMSEA = 'numeric', null.mod = 'mirtClass', TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -734,25 +734,26 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
 	colnames(F) <- factorNames
-	names(h2) <- itemnames	
+	names(h2) <- itemnames    
+	null.mod <- mirt(data, 0)        
     
     if(exploratory){
         mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, SEg=SEg,
                    upper=upper, SEup=SEup,
                    cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
                    data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
-                   estGuess=estGuess, rotate=rotate, Call=Call)
+                   estGuess=estGuess, rotate=rotate, null.mod=null.mod, Call=Call)
     } else {
     	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
     		SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,K=K, itemloc=itemloc,
             cycles=cycles - SEM.cycles - burnin, Theta=theta0, fulldata=fulldata, data=data,  
     		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), SEpars=SEpars,
-    		estComp=estComp, prodlist=as.list(prodlist), Call=Call)
+    		estComp=estComp, prodlist=as.list(prodlist), null.mod=null.mod, Call=Call)
     }
 	if(calcLL){
 		cat("Calculating log-likelihood...\n")
 		flush.console()
-		mod <- logLik(mod,draws)		
+		mod <- logLik(mod,draws)		        
 	}	
 	return(mod)
 }
@@ -772,7 +773,8 @@ setMethod(
 			cat("BIC =", x@BIC, "\n")
 			if(!is.nan(x@p))
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
-					x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
+					x@df, ", p = ", round(x@p,4), "\nTLI = ", round(x@TLI,3),
+                    ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 
 					x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
@@ -798,11 +800,13 @@ setMethod(
 			cat("BIC =", object@BIC, "\n")
 			if(!is.nan(object@p))	
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
-					object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3), 
+					object@df, ", p = ", round(object@p,4), "\nTLI = ", round(x@TLI,3),
+                    ", RMSEA = ", round(object@RMSEA,3), 
                     "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 
-					object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")
+					object@df, ", p = ", NA, "\nTLI = ", round(object@TLI,3),
+                    ", RMSEA = ", NA, "\n", sep="")
 		}
 		if(object@converge == 1)	
 			cat("Converged in ", object@cycles, " iterations.\n", sep="")

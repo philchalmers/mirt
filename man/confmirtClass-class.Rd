@@ -39,6 +39,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
+    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index}
     \item{\code{df}:}{Object of class \code{"integer"}, degrees of freedom }
     \item{\code{estComp}:}{Object of class \code{"logical"}, vector indicating which items were estimated with the partially compensatory model }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
@@ -49,6 +50,7 @@ Objects can be created by calls of the form \code{new("confmirtClass", ...)}.
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2 }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data with expected values }
     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
+    \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}
     \item{\code{Call}:}{Object of class \code{"call"},  call }
   }
 }

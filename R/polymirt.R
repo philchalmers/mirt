@@ -22,7 +22,7 @@ setClass(
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric', AIC = 'numeric',
 		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', df = 'integer', 
 		G2 = 'numeric', p = 'numeric', tabdata = 'matrix', BIC = 'numeric', estGuess = 'logical', 
-		RMSEA = 'numeric', rotate='character', Call = 'call'),	
+		RMSEA = 'numeric', rotate='character', null.mod='mirtClass', TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -229,7 +229,8 @@ setMethod(
 			cat("BIC =", x@BIC, "\n")
 			if(!is.nan(x@p))
 				cat("G^2 = ", round(x@G2,2), ", df = ", 
-					x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
+					x@df, ", p = ", round(x@p,4), "\nTLI = ", round(x@TLI,3),
+                    ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 
 					x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")	
@@ -256,7 +257,8 @@ setMethod(
 			cat("BIC =", object@BIC, "\n")
 			if(!is.nan(object@p))
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
-					object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3), 
+					object@df, ", p = ", round(object@p,4), "\nTLI = ", round(object@TLI,3),
+                    ", RMSEA = ", round(object@RMSEA,3), 
                     "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 

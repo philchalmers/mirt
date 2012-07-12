@@ -32,6 +32,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
     \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
+    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
@@ -45,7 +46,8 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }        
+    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters } 
+    \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}    
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

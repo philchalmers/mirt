@@ -20,7 +20,8 @@ setClass(
 		K='numeric', parsSE='list', X2='numeric', df='numeric', p='numeric', AIC='numeric', logLik='numeric',
 		F='matrix', h2='numeric', tabdata='matrix', tabdatalong='matrix', Theta='matrix', Pl='numeric',
 		data='matrix', cormat='matrix', facility='numeric', converge='numeric', itemloc = 'numeric',
-		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', rotate='character', Call='call'),	
+		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', rotate='character', 
+        null.mod = 'mirtClass', TLI = 'numeric', Call='call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -196,7 +197,7 @@ setClass(
 #'     par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300,  
 #'     tol = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE, ...)
 #' 
-#' \S4method{summary}{mirt}(object, rotate='', suppress = 0, digits = 3, print = FALSE, ...)
+#' \S4method{summary}{mirt}(object, rotate = '', suppress = 0, digits = 3, print = FALSE, ...)
 #' 
 #' \S4method{coef}{mirt}(object, rotate = '', digits = 3, ...)
 #' 
@@ -206,7 +207,7 @@ setClass(
 #' 
 #' \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
 #' 
-#' \S4method{residuals}{mirt}(object, restype = 'LD', digits=3, printvalue = NULL, ...)
+#' \S4method{residuals}{mirt}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 #' @export mirt
 #' @examples
 #' 
@@ -266,10 +267,15 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
     prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
     ncycles = 300, tol = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE, ...)
 { 
-	fn <- function(par, rs, gues, up, Theta, prior, parprior){
-		nzeta <- ncol(rs) - 1
-		a <- par[1:(length(par)-nzeta)]
-		d <- par[(length(a)+1):length(par)]
+	fn <- function(par, rs, gues, up, Theta, prior, parprior, null.model){        
+        if(null.model){
+            a <- 0
+            d <- par
+        } else {
+    		nzeta <- ncol(rs) - 1
+    		a <- par[1:(length(par)-nzeta)]
+    		d <- par[(length(a)+1):length(par)]
+        }
 		if(ncol(rs) == 2){
 			itemtrace <- P.mirt(a, d, Theta, gues, up) 
 			itemtrace <- cbind(1.0 - itemtrace, itemtrace)
@@ -292,7 +298,9 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		result
 	}    	
   
-	Call <- match.call()    
+	Call <- match.call()        
+    null.model <- ifelse(nfact == 0, TRUE, FALSE)
+	nfact <- ifelse(nfact == 0, 1, nfact) #for null model
 	itemnames <- colnames(data)	
 	data <- as.matrix(data)	
 	data.original <- data
@@ -404,9 +412,13 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	startvalues <- pars
 	converge <- 1  
 	problemitems <- c()
-	index <- 1:J  
-	if(debug) print(startvalues)    
-	
+	index <- 1:J 
+    if(null.model) {
+        pars$lambdas <- matrix(0,nrow(lambdas))
+        method = 'Brent'
+    }
+	if(debug) print(startvalues)     
+    
 	# EM loop 
 	for (cycles in 1:ncycles)
 	{       
@@ -419,9 +431,25 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		lastpars1 <- pars				
 		for(i in 1:J){
 			par <- c(pars$lambdas[i, ], pars$zetas[[i]])
-			itemsel <- c(itemloc[i]:(itemloc[i+1] - 1))					
+			itemsel <- c(itemloc[i]:(itemloc[i+1] - 1))
+            if(null.model){
+                par <- par[2:length(par)]
+                if(length(par) == 1){
+                    maxim <- optimize(fn, interval=c(-10, 10), rs=rlist$r1[, itemsel],gues = 0, 
+                                      up = 1, Theta=Theta, prior=prior, parprior=par.prior[i, ],
+                                      null.model=null.model)
+                    pars$zetas[[i]] <- maxim$minimum
+                } else {
+                    maxim <- optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
+                          Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
+                          control=list(maxit=25))
+                    pars$zetas[[i]] <- maxim$par                    
+                }                    
+                next
+            }			
 			maxim <- try(optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
-                Theta=Theta, prior=prior, parprior=par.prior[i, ], control=list(maxit=25)))
+                        Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
+                        control=list(maxit=25)))
 			if(class(maxim) == "try-error"){
 				problemitems <- c(problemitems, i)
 				converge <- 0
@@ -435,7 +463,8 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		# rate acceleration adjusted every third cycle
 		if (cycles %% 3 == 0 & cycles > 6)		 
 			pars <- rateChange(pars, lastpars1, lastpars2)			     	
-	}  
+	}###END EM
+    
 	if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",
 		as.character(index[par.prior[,1] > 1]), "\n")
 	if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",
@@ -478,6 +507,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		for (j in 1:r[i]) 
 			logr[i] <- logr[i] + log(j)    	
 	df <- (length(r) - 1) - npars + nfact*(nfact - 1)/2  - npatmissing
+    if(null.model) df <- (length(r) - 1) - npars - npatmissing + J
 	X2 <- 2 * sum(r * log(r/(N*Pl)))	
 	logLik <- logLik + logN/sum(logr)	
 	p <- 1 - pchisq(X2,df)  
@@ -487,6 +517,11 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN		
 	guess[K > 2] <- upper[K > 2] <- NA	
+	null.mod <- new('mirtClass')
+	if(!null.model) null.mod <- mirt(data, 0)
+    TLI <- 0
+	if(!null.model)
+        TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
 
 	# pars to FA loadings
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars$lambdas[ ,1:nfact]^2))
@@ -499,12 +534,13 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		else F <- V %*% sqrt(diag(L))  
 	if (sum(F[ ,1] < 0)) F <- (-1) * F 
 	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
-	h2 <- rowSums(F^2) 
+	h2 <- rowSums(F^2)         
 
 	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, upper=upper, parsSE=parsSE, X2=X2, df=df, 
 		p=p, itemloc=itemloc, AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata2, 
 		Theta=Theta, Pl=Pl, data=data.original, cormat=Rpoly, facility=facility, converge=converge, 
-		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, K=K, tabdatalong=tabdata, rotate=rotate, Call=Call)	  
+		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, K=K, tabdatalong=tabdata, rotate=rotate, 
+        null.mod=null.mod, TLI=TLI, Call=Call)	  
 	return(mod)    
 }
 
@@ -526,10 +562,10 @@ setMethod(
 		cat("Log-likelihood =", x@logLik, "\n")
 		cat("AIC =", x@AIC, "\n")		
 		cat("BIC =", x@BIC, "\n")
-		if(!is.nan(x@p))            
-			cat("G^2 = ", round(x@X2,2), ", df = ", 
-				x@df, ", p = ", round(x@p,4),", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
-		else 
+		if(!is.nan(x@p))            		    
+			cat("G^2 = ", round(x@X2,2), ", df = ", x@df, ", p = ", round(x@p,4),
+                "\nTLI = ", round(x@TLI,3), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
+		else             
 			cat("G^2 = ", NA, ", df = ", 
 				x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )		
 	}
@@ -553,9 +589,8 @@ setMethod(
 		cat("AIC =", object@AIC, "\n")		
 		cat("BIC =", object@BIC, "\n")
 		if(!is.nan(object@p))
-			cat("G^2 = ", round(object@X2,2), ", df = ", 
-				object@df, ", p = ", round(object@p,4),", RMSEA = ", round(object@RMSEA,3),
-                "\n", sep="")
+			cat("G^2 = ", round(object@X2,2), ", df = ", object@df, ", p = ", round(object@p,4),
+			    "\nTLI = ", round(object@TLI,3), ", RMSEA = ", round(object@RMSEA,3), "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
 				object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )			

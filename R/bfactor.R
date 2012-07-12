@@ -23,7 +23,8 @@ setClass(
 		Pl = 'numeric', Theta = 'matrix', data = 'matrix', itemloc = 'numeric',
 		logicalfact = 'matrix', facility = 'numeric', specific = 'numeric', tabdatalong='matrix',
 		BIC = 'numeric', cormat = 'matrix', converge = 'numeric', RMSEA = 'numeric',
-		par.prior = 'matrix', quadpts = 'numeric', vcov = 'matrix', Call = 'call'),	
+		par.prior = 'matrix', quadpts = 'numeric', vcov = 'matrix', null.mod = 'mirtClass', 
+        TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -457,6 +458,8 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 		vcovpar <- solve(fmin$hessian)
 		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
 	}
+    guess[K > 2] <- NA
+	upper[K > 2] <- NA
 	logN <- 0	
 	npatmissing <- sum(is.na(rowSums(tabdata2)))
 	logr <- rep(0,length(r))
@@ -473,6 +476,8 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN
+	null.mod <- mirt(data, 0)
+	TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
 
 	#from last EM cycle pars to FA
 	norm <- sqrt(1 + rowSums(pars$lambdas[ ,1:nfact]^2))	 
@@ -480,14 +485,14 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	for (i in 1:J) 
 		F[i,1:nfact] <- pars$lambdas[i,1:nfact]/norm[i]  
 	colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
-	h2 <- rowSums(F^2)  
+	h2 <- rowSums(F^2)  	
 
 	mod <- new('bfactorClass',EMiter=cycles, pars=pars, guess=guess, upper=upper, AIC=AIC, X2=X2, 
 		parsSE=parsSE, df=df, logLik=logLik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
 		tabdata=tabdata2, N=N, Pl=Pl, Theta=Theta, data=data.original, tabdatalong=tabdata, 
 		logicalfact=logicalfact, facility=facility, specific=specific, itemloc=itemloc,
 		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,
-		vcov=vcovpar, RMSEA=RMSEA, K=K, Call=Call)  
+		vcov=vcovpar, RMSEA=RMSEA, K=K, null.mod=null.mod, TLI=TLI, Call=Call)  
 	return(mod)  
 } 
 
@@ -511,8 +516,8 @@ setMethod(
 		cat("AIC = ", x@AIC, "\n")		
 		cat("BIC = ", x@BIC, "\n")
 		if(!is.nan(x@p))
-			cat("G^2 = ", round(x@X2,2), ", df = ", 
-				x@df, ", p = ", round(x@p,4), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
+			cat("G^2 = ", round(x@X2,2), ", df = ", x@df, ", p = ", round(x@p,4), 
+                "\nTLI = ", round(x@TLI,3), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
 				x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
@@ -537,9 +542,8 @@ setMethod(
 		cat("AIC = ", object@AIC, "\n")		
 		cat("BIC = ", object@BIC, "\n")
 		if(!is.nan(object@p))
-			cat("G^2 = ", round(object@X2,2), ", df = ", 
-				object@df, ", p = ", round(object@p,4), ", RMSEA = ", round(object@RMSEA,3),
-                "\n", sep="")
+			cat("G^2 = ", round(object@X2,2), ", df = ", object@df, ", p = ", round(object@p,4), 
+                "\nTLI = ", round(object@TLI,3), ", RMSEA = ", round(object@RMSEA,3), "\n", sep="")
 		else 
 			cat("G^2 = ", NA, ", df = ", 
 				object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")			
