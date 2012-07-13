@@ -735,7 +735,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	h2 <- rowSums(F^2)
 	colnames(F) <- factorNames
 	names(h2) <- itemnames    
-	null.mod <- mirt(data, 0)
+	null.mod <- unclass(mirt(data, 0))
     
     if(exploratory){
         mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, SEg=SEg,

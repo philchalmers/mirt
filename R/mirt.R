@@ -517,7 +517,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN		
 	guess[K > 2] <- upper[K > 2] <- NA	
-	null.mod <- new('mirtClass')
+	null.mod <- unclass(new('mirtClass'))
 	if(!null.model) null.mod <- unclass(mirt(data, 0))
     TLI <- 0
 	if(!null.model)
