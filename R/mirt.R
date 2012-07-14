@@ -17,11 +17,11 @@
 setClass(
 	Class = 'mirtClass',
 	representation = representation(EMiter='numeric', pars='list', guess='numeric', upper='numeric',
-		K='numeric', parsSE='list', X2='numeric', df='numeric', p='numeric', AIC='numeric', logLik='numeric',
+		K='numeric', parsSE='list', X2='numeric', df='numeric', p='numeric', AIC='numeric', 
 		F='matrix', h2='numeric', tabdata='matrix', tabdatalong='matrix', Theta='matrix', Pl='numeric',
 		data='matrix', cormat='matrix', facility='numeric', converge='numeric', itemloc = 'numeric',
 		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', rotate='character', 
-        null.mod = 'S4', TLI = 'numeric', Call='call'),	
+        null.mod = 'S4', TLI = 'numeric', logLik='numeric', Call='call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -78,8 +78,8 @@ setClass(
 #' are:
 #' 
 #' \describe{ \item{orthogonal: }{\code{"varimax", "quartimax", "tandemI",
-#' "tandemII", "entropy", "mccammon"}} \item{oblique: }{\code{"promax",
-#' "oblimin", "quartimin", "oblimax", "simplimax"}} }
+#' "tandemII", "entropy", "mccammon", "bifactorT"}} \item{oblique: }{\code{"promax",
+#' "oblimin", "quartimin", "oblimax", "simplimax", "bifactorQ"}} }
 #' 
 #' Using \code{plot} will plot the either the test surface function or the test
 #' information function for 1 and 2 dimensional solutions. To examine
@@ -123,9 +123,6 @@ setClass(
 #' is used instead
 #' @param startvalues user declared start values for parameters
 #' @param quadpts number of quadrature points per dimension
-#' @param ncycles the number of EM iterations to be performed
-#' @param tol if the largest change in the EM cycle is less than this value
-#' then the EM iteration are stopped early
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
@@ -147,9 +144,17 @@ setClass(
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
-#' @param nowarn logical; suppress warnings from dependent packages?
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param debug logical; turn on debugging features?
+#' @param technical a list containing lower level technical parameters for estimation. May be:
+#' \describe{ 
+#' \item{MAXQUAD}{maximum number of quadratures; default 10000}
+#' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
+#' \item{TOL}{EM convergence threshold; default .001}
+#' \item{NCYCLES}{maximum number of EM cycles; default 300}
+#' \item{NOWARN}{a logical indicating whether dependent packages warnings shoudl be printed; d
+#' default \code{TRUE}}
+#' }
 #' @param ... additional arguments to be passed
 #' @section Convergence:
 #' 
@@ -193,9 +198,9 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', prev.cor = NULL,
-#'     par.prior = FALSE, startvalues = NULL, quadpts = NULL, ncycles = 300,  
-#'     tol = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE, ...)
+#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', 
+#' prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
+#' verbose = FALSE, debug = FALSE, technical = list(), ...)
 #' 
 #' \S4method{summary}{mirt}(object, rotate = '', suppress = 0, digits = 3, print = FALSE, ...)
 #' 
@@ -265,7 +270,7 @@ setClass(
 #' 
 mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', 
     prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
-    ncycles = 300, tol = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE, ...)
+    verbose = FALSE, debug = FALSE, technical = list(), ...)
 { 
 	fn <- function(par, rs, gues, up, Theta, prior, parprior, null.model){        
         if(null.model){
@@ -298,7 +303,14 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		result
 	}    	
   
-	Call <- match.call()        
+	Call <- match.call()            
+    ##technical
+    MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
+    MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
+	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
+	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
+    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)
+    ##        
     null.model <- ifelse(nfact == 0, TRUE, FALSE)
 	nfact <- ifelse(nfact == 0, 1, nfact) #for null model
 	itemnames <- colnames(data)	
@@ -403,11 +415,11 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	npars <- length(unlist(pars))
 	if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))  
 	theta <- as.matrix(seq(-4,4,length.out = quadpts))
-	if(quadpts^nfact <= 10000){
+	if(quadpts^nfact <= MAXQUAD){
 		Theta <- thetaComb(theta,nfact)
 		prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
 		prior <- prior/sum(prior)
-	} else stop('Greater than 10000 quadrature points, reduce number.')	  
+	} else stop('Greater than ', MAXQUAD, ' quadrature points.')	  
 	lastpars2 <- lastpars1 <- pars	    
 	startvalues <- pars
 	converge <- 1  
@@ -420,7 +432,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	if(debug) print(startvalues)     
     
 	# EM loop 
-	for (cycles in 1:ncycles)
+	for (cycles in 1:NCYCLES)
 	{       
 		rlist <- Estep.mirt(pars, tabdata, Theta, prior, guess, upper, itemloc)
         if(verbose){
@@ -442,14 +454,14 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
                 } else {
                     maxim <- optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
                           Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
-                          control=list(maxit=25))
+                          control=list(maxit=MSTEPMAXIT))
                     pars$zetas[[i]] <- maxim$par                    
                 }                    
                 next
             }			
 			maxim <- try(optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
                         Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
-                        control=list(maxit=25)))
+                        control=list(maxit=MSTEPMAXIT)))
 			if(class(maxim) == "try-error"){
 				problemitems <- c(problemitems, i)
 				converge <- 0
@@ -459,7 +471,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 			pars$zetas[[i]] <- maxim$par[(nfact+1):length(par)]	  
 		}				
 		maxdif <- max(abs(unlist(lastpars1) - unlist(pars)))	
-		if (maxdif < tol && cycles > 5) break    
+		if (maxdif < TOL && cycles > 5) break    
 		# rate acceleration adjusted every third cycle
 		if (cycles %% 3 == 0 & cycles > 6)		 
 			pars <- rateChange(pars, lastpars1, lastpars2)			     	
@@ -475,7 +487,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
 		paste(unique(problemitems), " "))	
 	lastchange <- unlist(lastpars1) - unlist(pars)
-	if (cycles == ncycles){
+	if (cycles == NCYCLES){
 		converge <- 0  
 		message("Estimation terminated after ", cycles, " EM loops. Maximum changes:") 
 		message("\n slopes = ", round(max(abs(lastchange[ ,1:nfact])),4), ", intercepts = ", 
@@ -495,7 +507,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 			-1*logLik		
 		}
 		fmin <- nlm(LLfun, unlist(pars), pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
-			guess=guess, upper=upper, itemloc=itemloc, hessian=TRUE, gradtol=.1)
+			guess=guess, upper=upper, itemloc=itemloc, hessian=TRUE, gradTOL=.1)
 		vcovpar <- solve(fmin$hessian)
 		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
 	}	
@@ -514,14 +526,14 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	AIC <- (-2) * logLik + 2 * npars
 	BIC <- (-2) * logLik + npars*log(N)
 	RMSEA <- ifelse((X2 - df) > 0, 
-	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
-	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN		
+	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)	
 	guess[K > 2] <- upper[K > 2] <- NA	
 	null.mod <- unclass(new('mirtClass'))
 	if(!null.model) null.mod <- unclass(mirt(data, 0))
-    TLI <- 0
+    TLI <- NaN    
 	if(!null.model)
         TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
+	if(any(is.na(data.original))) p <- RMSEA <- X2 <- TLI <- NaN
 
 	# pars to FA loadings
 	if (nfact > 1) norm <- sqrt(1 + rowSums(pars$lambdas[ ,1:nfact]^2))
@@ -536,8 +548,8 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
 	h2 <- rowSums(F^2)         
 
-	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, upper=upper, parsSE=parsSE, X2=X2, df=df, 
-		p=p, itemloc=itemloc, AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata2, 
+	mod <- new('mirtClass', EMiter=cycles, pars=pars, guess=guess, upper=upper, parsSE=parsSE, X2=X2, 
+        df=df, p=p, itemloc=itemloc, AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata2, 
 		Theta=Theta, Pl=Pl, data=data.original, cormat=Rpoly, facility=facility, converge=converge, 
 		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, K=K, tabdatalong=tabdata, rotate=rotate, 
         null.mod=null.mod, TLI=TLI, Call=Call)	  
@@ -670,10 +682,11 @@ setMethod(
             so <- summary(object, rotate = rotate, print = FALSE)             
             a <- rotateLambdas(so)
 			parameters <- cbind(a,d,object@guess,object@upper,A,B)    
-			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 
-				"upper","mvdisc",paste("mvint_",1:max(K-1),sep=""))	
+			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),
+                                      "guess", "upper","mvdisc",paste("mvint_",1:max(K-1),sep=""))	
 			rownames(parameters) <- colnames(object@data)		
-			cat("\nParameters with", rotname, "rotation, multivariate discrimination and intercept: \n\n")
+			cat("\nParameters with", rotname, "rotation, multivariate discrimination and 
+                intercept: \n\n")
 			print(round(parameters, digits))  	
 		} else {
 			parameters <- cbind(a,d,object@guess, object@upper)
@@ -836,7 +849,7 @@ setMethod(
 					ylab = expression(theta[2])))
 			if(type == 'info')
 				return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
-					zlab = expression(I(theta)), xlab = expression(theta[1]), ylab = expression(theta[2]), 
+					zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
 					scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
 		} else {
 			colnames(plt) <- c("info", "Theta")

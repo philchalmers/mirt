@@ -16,13 +16,14 @@
 # @keywords classes
 setClass(
 	Class = 'confmirtClass',
-	representation = representation(pars = 'list', parsprint = 'matrix', guess = 'numeric', SEpars = 'matrix', 
-		SEup='numeric',SEg='numeric', gpars = 'list', SEgpars = 'list', estpars = 'list',cycles = 'numeric', 
-		Theta = 'matrix', fulldata = 'matrix', data = 'matrix', K = 'numeric', itemloc = 'numeric',
-		h2 = 'numeric',F = 'matrix', converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric',
-		df = 'integer', AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
-		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', upper = 'numeric', 
-        RMSEA = 'numeric', null.mod = 'S4', TLI = 'numeric', Call = 'call'),	
+	representation = representation(pars = 'list', parsprint = 'matrix', guess = 'numeric', 
+        SEpars = 'matrix', SEup='numeric',SEg='numeric', gpars = 'list', SEgpars = 'list', 
+        estpars = 'list',cycles = 'numeric', Theta = 'matrix', fulldata = 'matrix', 
+        data = 'matrix', K = 'numeric', itemloc = 'numeric', h2 = 'numeric',F = 'matrix', 
+        converge = 'numeric', logLik = 'numeric',SElogLik = 'numeric', df = 'integer', 
+        AIC = 'numeric', nconstvalues = 'integer', G2 = 'numeric', p = 'numeric',
+		tabdata = 'matrix', BIC = 'numeric', estComp = 'logical', prodlist = 'list', 
+        upper = 'numeric', RMSEA = 'numeric', null.mod = 'S4', TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -74,8 +75,8 @@ setClass(
 #' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
-#' entered as a single value to assign a global upper bound parameter or may be entered as a numeric
-#' vector corresponding to each item
+#' entered as a single value to assign a global upper bound parameter or may be entered as a 
+#' numeric vector corresponding to each item
 #' @param estGuess a logical vector indicating which lower-asymptote parameters
 #' to be estimated (default is null, and therefore is contingent on the values
 #' in \code{guess}). By default, if any value in \code{guess} is greater than 0
@@ -83,20 +84,10 @@ setClass(
 #' Additionally, beta priors are automatically imposed for estimated parameters
 #' which correspond to the input guessing values.
 #' @param estUpper same function as \code{estGuess}, but for upper bound parameters
-#' @param ncycles the maximum number of MH-RM iterations to be performed. Default is 
-#' 2000
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
-#' @param burnin number of burn-in cycles to perform before beginning the SEM
-#' stage. Default is 150
-#' @param SEM.cycles number of stochastic EM cycles to perform and average over
-#' before beginning the MH-RM algorithm. Default is 50
-#' @param kdraws number of Metropolis-Hastings imputations of the factor scores
-#' at each iteration. Default is 1
-#' @param tol tolerance that can be reached to terminate the model estimation;
-#' must be achieved on 3 consecutive iterations
-#' @param printcycles logical; display iteration history during estimation?
+#' @param verbose logical; display iteration history during estimation?
 #' @param calcLL logical; calculate the log-likelihood via Monte Carlo
 #' integration?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
@@ -116,6 +107,12 @@ setClass(
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
 #' \describe{
+#' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
+#' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
+#' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
+#' \item{KDRAWS}{number of paralell MH sets to be drawn; default 1}
+#' \item{TOL}{minimum threshold tolerance for convergence of MH-RM, must occur on three consecutive
+#' occations; default .001} 
 #'   \item{set.seed}{seed number used during estimation. Default is 12345}
 #' 	 \item{guess.prior.n}{a scalar or vector for the weighting of the beta priors for 
 #'		guessing parameters (default is 50, typical ranges are from 2 to 500). If a 
@@ -147,9 +144,8 @@ setClass(
 #' @keywords models
 #' @usage 
 #' confmirt(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
-#'   ncycles = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-#'   calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
-#'   rotate = 'varimax', ...)
+#' verbose = TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, 
+#' rotate = 'varimax', technical = list(),  ...)
 #' 
 #' \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 #' 
@@ -264,11 +260,13 @@ setClass(
 #' }
 #' 
 confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
-    ncycles = 2000, burnin = 150, SEM.cycles = 50, kdraws = 1, tol = .001, printcycles = TRUE, 
-	calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, technical = list(), 
-	rotate = 'varimax', ...)
+    verbose = TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, 
+    rotate = 'varimax', technical = list(),  ...)
 {		
 	Call <- match.call()       
+    ##########
+    if(any(upper < 1)) stop('Upper bound estimation is not currently available.')
+    ##########
 	set.seed(12345)	
 	itemnames <- colnames(data)
 	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
@@ -286,6 +284,11 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
     }
     
 	##technical
+	NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
+    BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
+    SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
+    KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
+    TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)        
 	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
 	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n), technical$guess.prior.n,
 		rep(50,J))
@@ -342,9 +345,9 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	fulldata[is.na(fulldata)] <- 0
   
 	mod <- model.elements(model=model, factorNames=factorNames, nfactNames=nfactNames, nfact=nfact, 
-                          J=J, K=K, fulldata=fulldata, itemloc=itemloc, data=data, N=N, estGuess=estGuess,
-                          guess=guess, upper=upper, estUpper=estUpper, guess.prior.n=guess.prior.n, 
-                          itemnames=itemnames, exploratory=exploratory)
+                          J=J, K=K, fulldata=fulldata, itemloc=itemloc, data=data, N=N, 
+                          estGuess=estGuess, guess=guess, upper=upper, estUpper=estUpper, 
+                          guess.prior.n=guess.prior.n, itemnames=itemnames, exploratory=exploratory)
 	parcount <- mod$parcount
 	npars <- mod$npars
 	if(returnindex) return(parcount)
@@ -401,14 +404,17 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	cand.t.var <- 1			
 	tmp <- .1
 	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
+		theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
                               fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
 		                      prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
 		if(i > 5){		
 			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
-			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) cand.t.var <- cand.t.var + tmp
-			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) cand.t.var <- cand.t.var - tmp
-			else if(attr(theta0,"Proportion Accepted") < .1) cand.t.var <- cand.t.var - 2*tmp
+			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) 
+                cand.t.var <- cand.t.var + tmp
+			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) 
+                cand.t.var <- cand.t.var - tmp
+			else if(attr(theta0,"Proportion Accepted") < .1) 
+                cand.t.var <- cand.t.var - 2*tmp
 			if (cand.t.var < 0){
 				cand.t.var <- tmp		
 				tmp <- tmp / 2
@@ -416,7 +422,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 		}
 	}	
 	m.thetas <- grouplist <- list()		
-	SEM.stores <- matrix(0,SEM.cycles,npars)
+	SEM.stores <- matrix(0,SEMCYCLES,npars)
 	SEM.stores2 <- list()
 	phi <- rep(0,sum(sind))	
 	h <- matrix(0,npars,npars)		
@@ -435,21 +441,21 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 			nconstvalues <- nconstvalues + length(equalconstr[[i]]) - 1			
 			
 	####Big MHRM loop 
-	for(cycles in 1:(ncycles + burnin + SEM.cycles))								
+	for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))								
 	{ 
-		if(cycles == burnin + 1) stagecycle <- 2			
+		if(cycles == BURNIN + 1) stagecycle <- 2			
 		if(stagecycle == 3)
-			gamma <- (gain[1]/(cycles - SEM.cycles - burnin - 1))^(gain[2]) - gain[3]
-		if(cycles == (burnin + SEM.cycles + 1)){ 
+			gamma <- (gain[1]/(cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
+		if(cycles == (BURNIN + SEMCYCLES + 1)){ 
 			stagecycle <- 3		
 		    pars <- rep(0,npars)
-			for(i in 1:SEM.cycles){
+			for(i in 1:SEMCYCLES){
 				pars <- pars + SEM.stores[i,]
 				Tau <- Tau + SEM.stores2[[i]]
 			}	
-			pars <- pars/SEM.cycles	
-			Tau <- Tau/SEM.cycles	
-			k <- kdraws	
+			pars <- pars/SEMCYCLES	
+			Tau <- Tau/SEMCYCLES	
+			k <- KDRAWS	
 			gamma <- .25
 		}	
 				
@@ -463,13 +469,15 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 		
 		#Step 1. Generate m_k datasets of theta 
 		for(j in 1:4) 
-            theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
-                            fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
-                            prior.t.var=sig, prior.mu=mu, estComp=estComp, prodlist=prodlist)
+            theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
+                            upper=upper, fulldata=fulldata, K=K, itemloc=itemloc, 
+                            cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, estComp=estComp, 
+                            prodlist=prodlist)
 		for(i in 1:k) m.thetas[[i]] <- 
-                    draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, 
-                    fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
-                    prior.t.var=sig, prior.mu=mu, estComp=estComp, prodlist=prodlist)
+            draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
+                                upper=upper, fulldata=fulldata, K=K, itemloc=itemloc, 
+                                cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, 
+                                estComp=estComp, prodlist=prodlist)
 		theta0 <- m.thetas[[1]]
 		        
 		#Step 2. Find average of simulated data gradients and hessian 		
@@ -551,16 +559,16 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 		grad <- grad[parind[sind]]		
 		ave.h <- ave.h[parind[sind],parind[sind]] 
 		if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
-		if(printcycles){
+		if(verbose){
 			if((cycles + 1) %% 10 == 0){
-				if(cycles < burnin)
+				if(cycles < BURNIN)
 					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
 						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
-				if(cycles > burnin && cycles < burnin + SEM.cycles)
-					cat("Stage 2: Cycle = ", cycles-burnin+1, ", Log-Lik = ",
+				if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
+					cat("Stage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
 						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
-				if(cycles > burnin + SEM.cycles)
-					cat("Stage 3: Cycle = ", cycles-burnin-SEM.cycles+1, 
+				if(cycles > BURNIN + SEMCYCLES)
+					cat("Stage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
 						", Log-Lik = ", sprintf("%.1f",attr(theta0,"log.lik")), sep="")					
 			}
 		}			
@@ -588,7 +596,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 			correct[correct[upperind] > .05] <- .05    	
 			correct[correct[upperind] < -.05] <- -.05
 			pars <- pars + gamma*correct
-			if(printcycles && (cycles + 1) %% 10 == 0){ 
+			if(verbose && (cycles + 1) %% 10 == 0){ 
 				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
 				flush.console()
 			}			
@@ -597,8 +605,8 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 			pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
 			pars[upperind][pars[upperind] > 1] <- parsold[upperind][pars[upperind] > 1]
 			if(stagecycle == 2){
-				SEM.stores[cycles - burnin,] <- pars
-				SEM.stores2[[cycles - burnin]] <- ave.h
+				SEM.stores[cycles - BURNIN,] <- pars
+				SEM.stores2[[cycles - BURNIN]] <- ave.h
 			}	
 			next
 		}	 
@@ -621,12 +629,12 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 		if(length(equalconstr) > 0)		
 			for(i in 1:length(equalconstr))
 				correct[equalconstr[[i]]] <- mean(correct[equalconstr[[i]]])	
-		if(printcycles && (cycles + 1) %% 10 == 0){ 
+		if(verbose && (cycles + 1) %% 10 == 0){ 
 			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
 				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
 			flush.console()		
 		}	
-		if(all(gamma*correct < tol)) conv <- conv + 1
+		if(all(gamma*correct < TOL)) conv <- conv + 1
 			else conv <- 0		
 		if(conv == 3) break
 		correct[correct[guessind] > .025] <- .025		
@@ -739,19 +747,20 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
     
     if(exploratory){
         mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, SEg=SEg,
-                   upper=upper, SEup=SEup,
-                   cycles=cycles-SEM.cycles-burnin, Theta=theta0, fulldata=fulldata, 
-                   data=data, K=K, F=F, h2=h2, itemloc=itemloc, converge = converge,
-                   estGuess=estGuess, rotate=rotate, null.mod=null.mod, Call=Call)
+                   upper=upper, SEup=SEup, cycles=cycles-SEMCYCLES-BURNIN, Theta=theta0, 
+                   fulldata=fulldata, data=data, K=K, F=F, h2=h2, itemloc=itemloc, 
+                   converge=converge, estGuess=estGuess, rotate=rotate, null.mod=null.mod, 
+                   Call=Call)
     } else {
     	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
-    		SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,K=K, itemloc=itemloc,
-            cycles=cycles - SEM.cycles - burnin, Theta=theta0, fulldata=fulldata, data=data,  
-    		h2=h2,F=F,converge = converge, nconstvalues = as.integer(nconstvalues), SEpars=SEpars,
-    		estComp=estComp, prodlist=as.list(prodlist), null.mod=null.mod, Call=Call)
+                   SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,K=K, 
+                   itemloc=itemloc, cycles=cycles - SEMCYCLES - BURNIN, Theta=theta0, 
+                   fulldata=fulldata, data=data, h2=h2,F=F,converge=converge, 
+                   nconstvalues=as.integer(nconstvalues), SEpars=SEpars, estComp=estComp, 
+                   prodlist=as.list(prodlist), null.mod=null.mod, Call=Call)
     }
 	if(calcLL){
-		cat("Calculating log-likelihood...\n")
+		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()
 		mod <- logLik(mod,draws)		        
 	}	
@@ -767,6 +776,11 @@ setMethod(
 		cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
 		cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
+		if(x@converge == 1)    
+		    cat("Converged in ", x@cycles, " iterations.\n", sep="")
+        else 	
+		    cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")
+		
 		if(length(x@logLik) > 0){
 			cat("Log-likelihood = ", x@logLik,", SE = ",round(x@SElogLik,3), "\n",sep='')			
 			cat("AIC =", x@AIC, "\n")			
@@ -778,11 +792,7 @@ setMethod(
 			else 
 				cat("G^2 = ", NA, ", df = ", 
 					x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
-		}
-		if(x@converge == 1)	
-			cat("Converged in ", x@cycles, " iterations.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", x@cycles, " iterations.\n", sep="")	
+		}		
 	} 
 )
 
@@ -793,25 +803,26 @@ setMethod(
 	{
 		cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
 			"\n\n", sep = "")
-		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", sep="")
+		cat("Full-information item factor analysis with ", ncol(object@Theta), " factors \n", 
+		    sep="")
+		if(object@converge == 1)    
+		    cat("Converged in ", object@cycles, " iterations.\n", sep="")
+		else 	
+		    cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")
 		if(length(object@logLik) > 0){
 			cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
 			cat("AIC =", object@AIC, "\n")			
 			cat("BIC =", object@BIC, "\n")
 			if(!is.nan(object@p))	
 				cat("G^2 = ", round(object@G2,2), ", df = ", 
-					object@df, ", p = ", round(object@p,4), "\nTLI = ", round(x@TLI,3),
+					object@df, ", p = ", round(object@p,4), "\nTLI = ", round(object@TLI,3),
                     ", RMSEA = ", round(object@RMSEA,3), 
                     "\n", sep="")
 			else 
 				cat("G^2 = ", NA, ", df = ", 
 					object@df, ", p = ", NA, "\nTLI = ", round(object@TLI,3),
                     ", RMSEA = ", NA, "\n", sep="")
-		}
-		if(object@converge == 1)	
-			cat("Converged in ", object@cycles, " iterations.\n", sep="")
-		else 	
-			cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
+		}		
 	} 
 )
 
@@ -948,13 +959,13 @@ setMethod(
 					}					
 				}
 			}		
-			cat("LD matrix:\n\n")	
+			if(is.null(printvalue)) cat("LD matrix:\n\n")	
 			res <- round(res,digits)    	
 			return(res)
 		}
 		if(restype == 'exp'){
-			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed because 
-                logLik() has not been run or the data contains missing responses.')
+			if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed 
+                because logLik() has not been run or the data contains missing responses.')
 			tabdata <- object@tabdata
 			res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
 			tabdata <- round(cbind(tabdata,res),digits)

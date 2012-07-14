@@ -105,9 +105,7 @@ setMethod(
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)				
 		if(G2){						
 			if(any(is.na(data))){
-				object@G2 <- 0	
-				object@p <- 2					
-				object@RMSEA <- 1
+			    object@G2 <- object@p <- object@RMSEA <- object@TLI <- NaN
 			} else {				
 				G2 <- 2 * sum(log(1/(N*rwmeans)))
 				p <- 1 - pchisq(G2,df) 
@@ -115,10 +113,11 @@ setMethod(
 				object@p <- p				
 				object@RMSEA <- ifelse((G2 - df) > 0, 
 				    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
-			}	
+				null.mod <- object@null.mod
+				object@TLI <- (null.mod@X2 / null.mod@df - G2/df) / (null.mod@X2 / null.mod@df - 1)
+			}	            
 		}			
-        null.mod <- object@null.mod
-        object@TLI <- (null.mod@X2 / null.mod@df - G2/df) / (null.mod@X2 / null.mod@df - 1)
+        
 		object@tabdata <- tabdata
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
@@ -190,7 +189,7 @@ setMethod(
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)		
 		if(G2){							
 			if(any(is.na(data))){
-				object@G2 <- object@p <- object@RMSEA <- NaN					
+				object@G2 <- object@p <- object@RMSEA <- object@TLI <- NaN					
 			} else {				
 				G2 <- 2 * sum(log(1/(N*rwmeans)))
 				p <- 1 - pchisq(G2,df) 

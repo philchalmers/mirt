@@ -8,8 +8,8 @@
 \usage{
   bfactor(data, specific, guess = 0, upper = 1, SE = FALSE,
     prev.cor = NULL, par.prior = FALSE, startvalues = NULL,
-    quadpts = 15, ncycles = 300, tol = .001, nowarn = TRUE,
-    verbose = FALSE, debug = FALSE, ...)
+    quadpts = 15, verbose = FALSE, debug = FALSE, technical
+    = list(), ...)
 
   \S4method{summary}{bfactor}(object, digits = 3, ...)
 
@@ -80,12 +80,6 @@
   \item{quadpts}{number of quadrature points per
   dimension.}
 
-  \item{ncycles}{the number of EM iterations to be
-  performed}
-
-  \item{tol}{if the largest change in the EM cycle is less
-  than this value then the EM iterations are stopped}
-
   \item{object}{a model estimated from \code{bfactor} of
   class \code{bfactorClass}}
 
@@ -96,13 +90,20 @@
 
   \item{digits}{number of significant digits to be rounded}
 
-  \item{nowarn}{logical; suppress warnings from dependent
-  packages?}
-
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
 
   \item{debug}{logical; turn on debugging features?}
+
+  \item{technical}{a list containing lower level technical
+  parameters for estimation \describe{
+  \item{MAXQUAD}{maximum number of quadratures; default
+  10000} \item{MSTEPMAXIT}{number of M-step iterations;
+  default 25} \item{TOL}{EM convergence threshold; default
+  .001} \item{NCYCLES}{maximum number of EM cycles; default
+  300} \item{NOWARN}{a logical indicating whether dependent
+  packages warnings shoudl be printed; d default
+  \code{TRUE}} }}
 
   \item{...}{additional arguments to be passed}
 }

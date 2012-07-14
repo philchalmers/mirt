@@ -11,9 +11,8 @@ Theory)}
 \usage{
   mirt(data, nfact, guess = 0, upper = 1, SE = FALSE,
     rotate = 'varimax', prev.cor = NULL, par.prior = FALSE,
-    startvalues = NULL, quadpts = NULL, ncycles = 300, tol
-    = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE,
-    ...)
+    startvalues = NULL, quadpts = NULL, verbose = FALSE,
+    debug = FALSE, technical = list(), ...)
 
   \S4method{summary}{mirt}(object, rotate = '', suppress =
     0, digits = 3, print = FALSE, ...)
@@ -86,12 +85,6 @@ Theory)}
 
   \item{quadpts}{number of quadrature points per dimension}
 
-  \item{ncycles}{the number of EM iterations to be
-  performed}
-
-  \item{tol}{if the largest change in the EM cycle is less
-  than this value then the EM iteration are stopped early}
-
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns
   that have standardized residuals greater than
@@ -133,13 +126,20 @@ Theory)}
   Thissen, 1997) or \code{'exp'} for the expected values
   for the frequencies of every response pattern}
 
-  \item{nowarn}{logical; suppress warnings from dependent
-  packages?}
-
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
 
   \item{debug}{logical; turn on debugging features?}
+
+  \item{technical}{a list containing lower level technical
+  parameters for estimation. May be: \describe{
+  \item{MAXQUAD}{maximum number of quadratures; default
+  10000} \item{MSTEPMAXIT}{number of M-step iterations;
+  default 25} \item{TOL}{EM convergence threshold; default
+  .001} \item{NCYCLES}{maximum number of EM cycles; default
+  300} \item{NOWARN}{a logical indicating whether dependent
+  packages warnings shoudl be printed; d default
+  \code{TRUE}} }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -209,8 +209,9 @@ Theory)}
 
   \describe{ \item{orthogonal: }{\code{"varimax",
   "quartimax", "tandemI", "tandemII", "entropy",
-  "mccammon"}} \item{oblique: }{\code{"promax", "oblimin",
-  "quartimin", "oblimax", "simplimax"}} }
+  "mccammon", "bifactorT"}} \item{oblique:
+  }{\code{"promax", "oblimin", "quartimin", "oblimax",
+  "simplimax", "bifactorQ"}} }
 
   Using \code{plot} will plot the either the test surface
   function or the test information function for 1 and 2

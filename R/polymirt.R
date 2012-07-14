@@ -22,7 +22,7 @@ setClass(
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric', AIC = 'numeric',
 		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', df = 'integer', 
 		G2 = 'numeric', p = 'numeric', tabdata = 'matrix', BIC = 'numeric', estGuess = 'logical', 
-		RMSEA = 'numeric', rotate='character', null.mod='mirtClass', TLI = 'numeric', Call = 'call'),	
+		RMSEA = 'numeric', rotate='character', null.mod='S4', TLI = 'numeric', Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -87,15 +87,6 @@ setClass(
 #' See \code{\link{mirt}} for list of possible rotations. If \code{rotate != ''} in the 
 #' \code{summary} input then the default from the object is ignored and the new rotation 
 #' from the list is used instead
-#' @param ncycles the maximum number of iterations to be performed
-#' @param burnin number of burn-in cycles to perform before beginning the SEM
-#' stage
-#' @param SEM.cycles number of stochastic EM cycles to perform before beginning
-#' the MH-RM algorithm
-#' @param kdraws number of Metropolis-Hastings imputations of the factor scores
-#' at each iteration. Default is 1
-#' @param tol tolerance that will terminate the model estimation; must occur in
-#' 3 consecutive iterations
 #' @param SE logical; display the standard errors?
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
@@ -113,7 +104,7 @@ setClass(
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
 #' @param rot allows rotation of the 3D graphics
-#' @param printcycles logical; display iteration history during estimation?
+#' @param verbose logical; display iteration history during estimation?
 #' @param calcLL logical; calculate the log-likelihood?
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
@@ -122,7 +113,15 @@ setClass(
 #' @param type either \code{'info'} or \code{'infocontour'} to plot test
 #' information plots
 #' @param debug logical; turn on debugging features?
-#' @param technical list specifying subtle parameters that can be adjusted
+#' @param technical list specifying subtle parameters that can be adjusted. Can be
+#' \describe{
+#' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
+#' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
+#' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
+#' \item{KDRAWS}{number of paralell MH sets to be drawn; default 1}
+#' \item{TOL}{minimum threshold tolerance for convergence of MH-RM, must occur on three consecutive
+#' occations; default .001}
+#' }
 #' @param ... additional arguments to be passed to the \code{\link{confmirt}} estimation engine
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{polymirt}},
@@ -144,8 +143,7 @@ setClass(
 #' @keywords models
 #' @usage 
 #' polymirt(data, nfact, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL,
-#' prev.cor = NULL, rotate = 'varimax', ncycles = 2000, burnin = 100, SEM.cycles = 50, 
-#' kdraws = 1, tol = .001, printcycles = TRUE,    calcLL = TRUE, draws = 2000, debug = FALSE, 
+#' prev.cor = NULL, rotate = 'varimax', verbose = TRUE, calcLL = TRUE, draws = 2000, debug = FALSE, 
 #' technical = list(), ...)
 #'  
 #' 
@@ -197,12 +195,10 @@ setClass(
 #'      }
 #' 
 polymirt <- function(data, nfact, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL,
-    prev.cor = NULL, rotate = 'varimax', ncycles = 2000, burnin = 100, SEM.cycles = 50, 
-    kdraws = 1, tol = .001, printcycles = TRUE,	calcLL = TRUE, draws = 2000, debug = FALSE, 
+    prev.cor = NULL, rotate = 'varimax', verbose = TRUE, calcLL = TRUE, draws = 2000, debug = FALSE, 
     technical = list(), ...)
 {     
-    mod <- confmirt(data, nfact, guess=guess, rotate=rotate, ncycles=ncycles, burnin=burnin,
-                    SEM.cycles=SEM.cycles, kdraws=kdraws, tol=tol, printcycles=printcycles,
+    mod <- confmirt(data, nfact, guess=guess, rotate=rotate, verbose=verbose,
                     calcLL=calcLL, draws=draws, debug=debug, technical=technical, ...)    
     mod@Call <- match.call()
     mod

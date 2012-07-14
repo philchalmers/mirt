@@ -108,17 +108,22 @@ setClass(
 #' = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}
 #' @param startvalues user declared start values for parameters
 #' @param quadpts number of quadrature points per dimension. 
-#' @param ncycles the number of EM iterations to be performed
-#' @param tol if the largest change in the EM cycle is less than this value
-#' then the EM iterations are stopped
 #' @param object a model estimated from \code{bfactor} of class \code{bfactorClass}
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
 #' @param digits number of significant digits to be rounded
-#' @param nowarn logical; suppress warnings from dependent packages?
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param debug logical; turn on debugging features?
+#' @param technical a list containing lower level technical parameters for estimation
+#' \describe{ 
+#' \item{MAXQUAD}{maximum number of quadratures; default 10000}
+#' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
+#' \item{TOL}{EM convergence threshold; default .001}
+#' \item{NCYCLES}{maximum number of EM cycles; default 300}
+#' \item{NOWARN}{a logical indicating whether dependent packages warnings shoudl be printed; d
+#' default \code{TRUE}}
+#' }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
@@ -148,9 +153,9 @@ setClass(
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage
-#' bfactor(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor = NULL, par.prior = FALSE, 
-#'   startvalues = NULL,  quadpts = 15, ncycles = 300, tol = .001, nowarn = TRUE, 
-#'   verbose = FALSE, debug = FALSE, ...)
+#' bfactor(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor = NULL, 
+#' par.prior = FALSE, startvalues = NULL, quadpts = 15, verbose = FALSE, debug = FALSE, 
+#' technical = list(), ...)
 #' 
 #' \S4method{summary}{bfactor}(object, digits = 3, ...)
 #' 
@@ -224,8 +229,8 @@ setClass(
 #'     }
 #' 
 bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor = NULL, 
-	par.prior = FALSE, startvalues = NULL, quadpts = 15, ncycles = 300, 
-	tol = .001, nowarn = TRUE, verbose = FALSE, debug = FALSE, ...)
+	par.prior = FALSE, startvalues = NULL, quadpts = 15, verbose = FALSE, debug = FALSE, 
+    technical = list(), ...)
 { 
 	#local functions	
 	fn <- function(par, rs, gues, up, Theta, Prior, parprior, nzeta){		
@@ -253,9 +258,15 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 		}
 		result
 	}   
-	
-	#Main
+		
 	Call <- match.call()		
+	##technical
+	MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
+	MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
+	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
+	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)	
+	NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)
+	##
 	itemnames <- colnames(data)
 	data <- as.matrix(data)
 	data.original <- data		
@@ -391,7 +402,7 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	if(debug) print(startvalues)			 		    
 	
 	#EM  loop  
-	for (cycles in 1:ncycles) 
+	for (cycles in 1:NCYCLES) 
 	{    
 		rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, upper,
 			specific, sitems, itemloc)
@@ -405,7 +416,8 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 			par <- c(pars$lambdas[i, logicalfact[i, ]], pars$zetas[[i]])
 			itemsel <- c(itemloc[i]:(itemloc[i+1] - 1))							
 			maxim <- try(optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up = upper[i], 
-                Theta=Theta, Prior=Prior, parprior=par.prior[i, ], nzeta=K[i]-1, control=list(maxit=25)))			
+                Theta=Theta, Prior=Prior, parprior=par.prior[i, ], nzeta=K[i]-1, 
+                control=list(maxit=MSTEPMAXIT)))			
 			if(class(maxim) == "try-error") {
 				problemitems <- c(problemitems, i)	  
 				converge <- 0
@@ -415,7 +427,7 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 			pars$zetas[[i]] <- maxim$par[3:length(par)]	  
 		}
 		maxdif <- max(abs(unlist(lastpars1) - unlist(pars)))	
-		if (maxdif < tol && cycles > 5) break 	
+		if (maxdif < TOL && cycles > 5) break 	
 		# apply rate acceleration every third cycle    
 		if (cycles %% 3 == 0 & cycles > 6)		 
 			pars <- rateChange(pars, lastpars1, lastpars2)       
@@ -430,7 +442,7 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
 		paste(unique(problemitems), " "))	
 	lastchange <- unlist(lastpars1) - unlist(pars)
-	if (cycles == ncycles){ 
+	if (cycles == NCYCLES){ 
 		converge <- 0
 		message("Estimation terminated after ", cycles, " EM loops. Maximum changes: 
 			\n slopes = ", round(max(abs(lastchange[,1:nfact])),4), ", intercepts = ", 
@@ -454,7 +466,7 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 		}
 		fmin <- nlm(LLfun, unlist(pars), pars=pars,tabdata=tabdata,Theta=Theta,prior=prior,
 			guess=guess, upper=upper, specific=specific, sitems=sitems, itemloc=itemloc, 
-            hessian=TRUE, gradtol=.1)		
+            hessian=TRUE, gradTOL=.1)		
 		vcovpar <- solve(fmin$hessian)
 		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
 	}
@@ -475,9 +487,9 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	p <- 1 - pchisq(X2,df)	
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
-	if(any(is.na(data.original))) p <- RMSEA <- X2 <- NaN
+	if(any(is.na(data.original))) p <- RMSEA <- X2 <- TLI <- NaN
 	null.mod <- unclass(mirt(data, 0))
-	TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
+	if(!is.nan(X2)) TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
 
 	#from last EM cycle pars to FA
 	norm <- sqrt(1 + rowSums(pars$lambdas[ ,1:nfact]^2))	 

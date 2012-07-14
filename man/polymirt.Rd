@@ -10,10 +10,8 @@
 \usage{
   polymirt(data, nfact, guess = 0, upper = 1, estGuess =
     NULL, estUpper = NULL, prev.cor = NULL, rotate =
-    'varimax', ncycles = 2000, burnin = 100, SEM.cycles =
-    50, kdraws = 1, tol = .001, printcycles = TRUE, calcLL
-    = TRUE, draws = 2000, debug = FALSE, technical =
-    list(), ...)
+    'varimax', verbose = TRUE, calcLL = TRUE, draws = 2000,
+    debug = FALSE, technical = list(), ...)
 
   \S4method{summary}{polymirt}(object, rotate='', suppress
     = 0, digits = 3, print = FALSE, ...)
@@ -73,21 +71,6 @@
   default from the object is ignored and the new rotation
   from the list is used instead}
 
-  \item{ncycles}{the maximum number of iterations to be
-  performed}
-
-  \item{burnin}{number of burn-in cycles to perform before
-  beginning the SEM stage}
-
-  \item{SEM.cycles}{number of stochastic EM cycles to
-  perform before beginning the MH-RM algorithm}
-
-  \item{kdraws}{number of Metropolis-Hastings imputations
-  of the factor scores at each iteration. Default is 1}
-
-  \item{tol}{tolerance that will terminate the model
-  estimation; must occur in 3 consecutive iterations}
-
   \item{SE}{logical; display the standard errors?}
 
   \item{printvalue}{a numeric value to be specified when
@@ -121,8 +104,8 @@
 
   \item{rot}{allows rotation of the 3D graphics}
 
-  \item{printcycles}{logical; display iteration history
-  during estimation?}
+  \item{verbose}{logical; display iteration history during
+  estimation?}
 
   \item{calcLL}{logical; calculate the log-likelihood?}
 
@@ -140,7 +123,14 @@
   \item{debug}{logical; turn on debugging features?}
 
   \item{technical}{list specifying subtle parameters that
-  can be adjusted}
+  can be adjusted. Can be \describe{ \item{NCYCLES}{max
+  number of MH-RM cycles; default 2000}
+  \item{BURNIN}{number of burn in cycles (stage 1); default
+  150} \item{SEMCYCLES}{number of SEM cycles (stage 2);
+  default 50} \item{KDRAWS}{number of paralell MH sets to
+  be drawn; default 1} \item{TOL}{minimum threshold
+  tolerance for convergence of MH-RM, must occur on three
+  consecutive occations; default .001} }}
 
   \item{...}{additional arguments to be passed to the
   \code{\link{confmirt}} estimation engine}
