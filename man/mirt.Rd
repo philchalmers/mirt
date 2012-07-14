@@ -80,6 +80,9 @@ Theory)}
   object is ignored and the new rotation from the list is
   used instead}
 
+  \item{Target}{a dummy variable matrix indicing a target
+  rotation pattern}
+
   \item{startvalues}{user declared start values for
   parameters}
 

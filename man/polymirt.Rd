@@ -120,6 +120,9 @@
   \item{type}{either \code{'info'} or \code{'infocontour'}
   to plot test information plots}
 
+  \item{Target}{a dummy variable matrix indicing a target
+  rotation pattern}
+
   \item{debug}{logical; turn on debugging features?}
 
   \item{technical}{list specifying subtle parameters that

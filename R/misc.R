@@ -36,25 +36,37 @@ start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowar
 }
 
 # Rotation function
-Rotate <- function(F, rotate)
-{
-	orthogonal <- c("varimax", "quartimax", "tandemI", "tandemII", "entropy", "mccammon", "bifactorT")
-	oblique <- c("promax", "oblimin", "quartimin", "oblimax", "simplimax", "bifactorQ")
-	if (!any(rotate %in% c(orthogonal,oblique))) stop("Unknown rotation specified.")
-	if(any(rotate %in% orthogonal)){
-		oblique <- FALSE
-		if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F)
-		    else rotF <- GPArotation::GPForth(F, method = rotate)
+Rotate <- function(F, rotate, Target = NULL, ...)
+{	
+	if(rotate == 'promax'){
+        rotF <- psych::Promax(F)
+        rotF$orthogonal <- FALSE
 	}
-	if(any(rotate %in% oblique)){
-		oblique <- TRUE
-		if(rotate == 'promax') rotF <- psych::Promax(F) 
-		if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F)
-	    if(all(rotate != c('promax', 'bifactorQ'))) 
-            rotF <- GPArotation::GPFoblq(F, method = rotate)
-	}	
-	attr(rotF,"oblique") <- oblique 
-	return(rotF)
+    if(rotate == 'oblimin') rotF <- GPArotation::oblimin(F, ...)     
+	if(rotate == 'quartimin') rotF <- GPArotation::quartimin(F, ...)
+	if(rotate == 'targetT') rotF <- GPArotation::targetT(F, Target = Target, ...)
+	if(rotate == 'targetQ') rotF <- GPArotation::targetQ(F, Target = Target, ...)
+	if(rotate == 'pstT') rotF <- GPArotation::pstT(F, Target = Target, ...)
+	if(rotate == 'pstQ') rotF <- GPArotation::pstQ(F, Target = Target, ...)
+	if(rotate == 'oblimax') rotF <- GPArotation::oblimax(F, ...)
+	if(rotate == 'entropy') rotF <- GPArotation::entropy(F, ...)
+	if(rotate == 'quartimax') rotF <- GPArotation::quartimax(F, ...)
+	if(rotate == 'varimax') rotF <- GPArotation::Varimax(F, ...)
+	if(rotate == 'simplimax') rotF <- GPArotation::simplimax(F, ...)
+	if(rotate == 'bentlerT') rotF <- GPArotation::bentlerT(F, ...)
+	if(rotate == 'bentlerQ') rotF <- GPArotation::bentlerQ(F, ...)
+	if(rotate == 'tandemI') rotF <- GPArotation::tandemI(F, ...)
+	if(rotate == 'tandemII') rotF <- GPArotation::tandemII(F, ...)
+	if(rotate == 'geominT') rotF <- GPArotation::geominT(F, ...)
+	if(rotate == 'geominQ') rotF <- GPArotation::geominQ(F, ...)
+	if(rotate == 'cfT') rotF <- GPArotation::cfT(F, ...)
+	if(rotate == 'cfQ') rotF <- GPArotation::cfQ(F, ...)
+	if(rotate == 'infomaxT') rotF <- GPArotation::infomaxT(F, ...)
+	if(rotate == 'infomaxQ') rotF <- GPArotation::infomaxQ(F, ...)
+	if(rotate == 'mccammon') rotF <- GPArotation::mccammon(F, ...)
+	if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F, ...)
+	if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F, ...)    		
+	return(unclass(rotF))
 }  
 
 # MAP scoring for mirt

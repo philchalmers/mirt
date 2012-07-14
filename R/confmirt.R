@@ -261,7 +261,7 @@ setClass(
 #' 
 confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
     verbose = TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, 
-    rotate = 'varimax', technical = list(),  ...)
+    rotate = 'varimax', Target = NULL, technical = list(),  ...)
 {		
 	Call <- match.call()       
     ##########
@@ -302,7 +302,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 			gain <- technical$gain
 	}
 	##
-	
+	Target <- ifelse(is.null(Target), NaN, Target)
 	if(length(guess) == 1) guess <- rep(guess,J)
 	if(length(guess) > J || length(guess) < J) 
 		stop("The number of guessing parameters is incorrect.")					
@@ -750,7 +750,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
                    upper=upper, SEup=SEup, cycles=cycles-SEMCYCLES-BURNIN, Theta=theta0, 
                    fulldata=fulldata, data=data, K=K, F=F, h2=h2, itemloc=itemloc, 
                    converge=converge, estGuess=estGuess, rotate=rotate, null.mod=null.mod, 
-                   Call=Call)
+                   Target=Target, Call=Call)
     } else {
     	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
                    SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,K=K, 

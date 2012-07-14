@@ -22,7 +22,8 @@ setClass(
 		K = 'numeric', F = 'matrix', h2 = 'numeric', itemloc = 'numeric', AIC = 'numeric',
 		converge = 'numeric', logLik = 'numeric', SElogLik = 'numeric', df = 'integer', 
 		G2 = 'numeric', p = 'numeric', tabdata = 'matrix', BIC = 'numeric', estGuess = 'logical', 
-		RMSEA = 'numeric', rotate='character', null.mod='S4', TLI = 'numeric', Call = 'call'),	
+		RMSEA = 'numeric', rotate='character', null.mod='S4', TLI = 'numeric', Target='numeric',
+        Call = 'call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -112,6 +113,7 @@ setClass(
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param type either \code{'info'} or \code{'infocontour'} to plot test
 #' information plots
+#' @param Target a dummy variable matrix indicing a target rotation pattern
 #' @param debug logical; turn on debugging features?
 #' @param technical list specifying subtle parameters that can be adjusted. Can be
 #' \describe{
@@ -195,10 +197,10 @@ setClass(
 #'      }
 #' 
 polymirt <- function(data, nfact, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL,
-    prev.cor = NULL, rotate = 'varimax', verbose = TRUE, calcLL = TRUE, draws = 2000, debug = FALSE, 
-    technical = list(), ...)
+    prev.cor = NULL, rotate = 'varimax', Target = NULL, verbose = TRUE, calcLL = TRUE, 
+    draws = 2000, debug = FALSE, technical = list(), ...)
 {     
-    mod <- confmirt(data, nfact, guess=guess, rotate=rotate, verbose=verbose,
+    mod <- confmirt(data, nfact, guess=guess, rotate=rotate, verbose=verbose, Target=Target,
                     calcLL=calcLL, draws=draws, debug=debug, technical=technical, ...)    
     mod@Call <- match.call()
     mod
@@ -266,7 +268,8 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'polymirtClass',
-	definition = function(object, rotate = '', suppress = 0, digits = 3, print = TRUE, ...)
+	definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
+                          print = TRUE, ...)
 	{
 		nfact <- ncol(object@F)
 		itemnames <- colnames(object@data)
@@ -290,15 +293,18 @@ setMethod(
 			F <- object@F
 			h2 <- as.matrix(object@h2)		
 			colnames(h2) <- "h2"
-			if(rotate == '') rotate <- object@rotate
-			rotF <- Rotate(F,rotate)
+			if(rotate == ''){
+			    rotate <- object@rotate
+			    Target <- object@Target
+			}
+			rotF <- Rotate(F, rotate, Target = Target, ...)			
 			SS <- apply(rotF$loadings^2,2,sum)
 			L <- rotF$loadings
 			L[abs(L) < suppress] <- NA	
 			loads <- round(cbind(L,h2),digits)
 			rownames(loads) <- itemnames			
 			Phi <- diag(nfact)
-			if(attr(rotF, "oblique")){
+			if(!rotF$orthogonal){
 				Phi <- rotF$Phi	  
 				Phi <- round(Phi, digits)
 				colnames(Phi) <- rownames(Phi) <- colnames(F)
@@ -312,7 +318,7 @@ setMethod(
 			    cat("\nRotated factor loadings: \n\n")
 			    print(loads,digits)	
 			    cat("\nSS loadings: ",round(SS,digits), "\n")		
-			    if(!attr(rotF, "oblique")) 
+			    if(!rotF$orthogonal) 
 				    cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
             }
 			if(any(h2 > 1)) 
@@ -325,7 +331,7 @@ setMethod(
 setMethod(
 	f = "coef",
 	signature = 'polymirtClass',
-	definition = function(object, rotate = '', SE = TRUE, digits = 3, ...)
+	definition = function(object, rotate = '', Target = NULL, SE = TRUE, digits = 3, ...)
 	{  
         browser()
 		K <- object@K
@@ -339,7 +345,7 @@ setMethod(
 		B <- -d/A  
 		if (ncol(a) > 1){  
 		    rotname <- ifelse(rotate == '', object@rotate, rotate)
-		    so <- summary(object, rotate = rotate, print = FALSE)             
+		    so <- summary(object, rotate = rotate, Target = Target, print = FALSE, ...)             
 		    a <- rotateLambdas(so)
 			parameters <- cbind(a,d,object@guess,A,B)    
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),"guess", 

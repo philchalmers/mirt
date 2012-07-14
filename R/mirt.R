@@ -21,7 +21,7 @@ setClass(
 		F='matrix', h2='numeric', tabdata='matrix', tabdatalong='matrix', Theta='matrix', Pl='numeric',
 		data='matrix', cormat='matrix', facility='numeric', converge='numeric', itemloc = 'numeric',
 		quadpts='numeric', BIC='numeric', vcov='matrix', RMSEA='numeric', rotate='character', 
-        null.mod = 'S4', TLI = 'numeric', logLik='numeric', Call='call'),	
+        null.mod = 'S4', TLI = 'numeric', Target='numeric', logLik='numeric', Call='call'),	
 	validity = function(object) return(TRUE)
 )	
 
@@ -121,6 +121,7 @@ setClass(
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
 #' input then the default from the object is ignored and the new rotation from the list 
 #' is used instead
+#' @param Target a dummy variable matrix indicing a target rotation pattern
 #' @param startvalues user declared start values for parameters
 #' @param quadpts number of quadrature points per dimension
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
@@ -269,7 +270,7 @@ setClass(
 #' }
 #' 
 mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', 
-    prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
+    Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
     verbose = FALSE, debug = FALSE, technical = list(), ...)
 { 
 	fn <- function(par, rs, gues, up, Theta, prior, parprior, null.model){        
@@ -310,7 +311,8 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
     NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)
-    ##        
+    ##       
+    Target <- ifelse(is.null(Target), NaN, Target)
     null.model <- ifelse(nfact == 0, TRUE, FALSE)
 	nfact <- ifelse(nfact == 0, 1, nfact) #for null model
 	itemnames <- colnames(data)	
@@ -552,7 +554,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
         df=df, p=p, itemloc=itemloc, AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata2, 
 		Theta=Theta, Pl=Pl, data=data.original, cormat=Rpoly, facility=facility, converge=converge, 
 		quadpts=quadpts, vcov=vcovpar, RMSEA=RMSEA, K=K, tabdatalong=tabdata, rotate=rotate, 
-        null.mod=null.mod, TLI=TLI, Call=Call)	  
+        null.mod=null.mod, TLI=TLI, Target=Target, Call=Call)	  
 	return(mod)    
 }
 
@@ -612,7 +614,8 @@ setMethod(
 setMethod(
 	f = "summary",
 	signature = 'mirtClass',
-	definition = function(object, rotate = '', suppress = 0, digits = 3, print = TRUE, ...){
+	definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
+        print = TRUE, ...){
 		nfact <- ncol(object@F)
 		if (rotate == 'none' || nfact == 1) {
 			F <- object@F
@@ -634,15 +637,18 @@ setMethod(
 			F <- object@F
 			h2 <- as.matrix(object@h2)
 			colnames(h2) <- "h2"
-            if(rotate == '') rotate <- object@rotate
-			rotF <- Rotate(F,rotate)
+            if(rotate == ''){
+                rotate <- object@rotate
+                Target <- object@Target
+            }
+			rotF <- Rotate(F, rotate, Target = Target, ...)            
 			SS <- apply(rotF$loadings^2,2,sum)
 			L <- rotF$loadings
 			L[abs(L) < suppress] <- NA	
 			loads <- round(cbind(L,h2),digits)
 			rownames(loads) <- colnames(object@data)			
-            Phi <- diag(ncol(F))
-			if(attr(rotF, "oblique")){
+            Phi <- diag(ncol(F))			
+			if(!rotF$orthogonal){
 				Phi <- rotF$Phi	  
 				Phi <- round(Phi, digits)
 				colnames(Phi) <- rownames(Phi) <- colnames(F)
@@ -650,13 +656,13 @@ setMethod(
 					cat("\nFactor correlations: \n\n")
 				    print(Phi)            
                 }
-			}	
+			}			
 			if(print){
 			    cat("\nRotation: ", rotate, "\n")
 			    cat("\nRotated factor loadings: \n\n")
 			    print(loads,digits)
 			    cat("\nRotated SS loadings: ",round(SS,digits), "\n")		
-            }
+			}
 			if(any(h2 > 1)) 
 				warning("Solution has heywood cases. Interpret with caution.") 
 			invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))  
@@ -667,7 +673,7 @@ setMethod(
 setMethod(
 	f = "coef",
 	signature = 'mirtClass',
-	definition = function(object, rotate = '', SE = TRUE, digits = 3, ...){  
+	definition = function(object, rotate = '', Target = NULL, SE = TRUE, digits = 3, ...){  
 		K <- object@K
 		a <- object@pars$lambdas		
 		d <- matrix(NA, nrow(a), max(K-1))
@@ -679,7 +685,7 @@ setMethod(
 		B <- -d/A  
 		if (ncol(a) > 1){ 
 		    rotname <- ifelse(rotate == '', object@rotate, rotate)
-            so <- summary(object, rotate = rotate, print = FALSE)             
+            so <- summary(object, rotate = rotate, Target = Target, print = FALSE, ...)             
             a <- rotateLambdas(so)
 			parameters <- cbind(a,d,object@guess,object@upper,A,B)    
 			colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),
