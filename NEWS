@@ -2,6 +2,8 @@
 mirt 0.2.6
 ---------------------------------------------------------------
 
+* null model computed, allowing for model statistics such as TLI
+
 * documentation changes
 
 * many back end technical details about estimation moved to technical lists
