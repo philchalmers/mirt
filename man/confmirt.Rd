@@ -10,7 +10,8 @@
   confmirt(data, model, guess = 0, upper = 1, estGuess =
     NULL, estUpper = NULL, verbose = TRUE, calcLL = TRUE,
     draws = 2000, returnindex = FALSE, debug = FALSE,
-    rotate = 'varimax', technical = list(), ...)
+    rotate = 'varimax', Target = NULL, technical = list(),
+    ...)
 
   \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans
     = FALSE, digits = 3, ...)
@@ -96,6 +97,9 @@
   \item{rotate}{if \code{model} is numeric (indicating an
   exploratory item FA) then this rotation is used. Default
   is \code{'varimax'}}
+
+  \item{Target}{a dummy variable matrix indicing a target
+  rotation pattern}
 
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are \describe{

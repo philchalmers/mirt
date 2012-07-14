@@ -2,6 +2,12 @@
 mirt 0.2.6
 ---------------------------------------------------------------
 
+* documentation changes
+
+* many back end technical details about estimation moved to technical lists
+
+* support for all GPArotation methods and options, including Target rotations
+
 * polymirt() uses confmirt() estimation engine
 
 * 4PL support for mirt() and bfactor(), treating the upper bound as fixed

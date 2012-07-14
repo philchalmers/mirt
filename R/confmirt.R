@@ -104,6 +104,7 @@ setClass(
 #' @param digits the number of significant digits to be rounded
 #' @param rotate if \code{model} is numeric (indicating an exploratory item FA) then this 
 #' rotation is used. Default is \code{'varimax'}
+#' @param Target a dummy variable matrix indicing a target rotation pattern
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
 #' \describe{
@@ -145,7 +146,7 @@ setClass(
 #' @usage 
 #' confmirt(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
 #' verbose = TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, 
-#' rotate = 'varimax', technical = list(),  ...)
+#' rotate = 'varimax', Target = NULL, technical = list(),  ...)
 #' 
 #' \S4method{coef}{confmirt}(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
 #' 

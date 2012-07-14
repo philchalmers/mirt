@@ -73,13 +73,9 @@ setClass(
 #' 
 #' Factor scores are estimated assuming a normal prior distribution and can be
 #' appended to the input data matrix (\code{full.data = TRUE}) or displayed in
-#' a summary table for all the unique response patterns. \code{summary} allows
-#' for various rotations available from the \code{GPArotation} package. These
-#' are:
-#' 
-#' \describe{ \item{orthogonal: }{\code{"varimax", "quartimax", "tandemI",
-#' "tandemII", "entropy", "mccammon", "bifactorT"}} \item{oblique: }{\code{"promax",
-#' "oblimin", "quartimin", "oblimax", "simplimax", "bifactorQ"}} }
+#' a summary table for all the unique response patterns. \code{summary} and \code{coef} allow
+#' for all the rotations available from the \code{GPArotation} package as well as a \code{'promax'}
+#' rotation. 
 #' 
 #' Using \code{plot} will plot the either the test surface function or the test
 #' information function for 1 and 2 dimensional solutions. To examine
@@ -200,7 +196,7 @@ setClass(
 #' @keywords models
 #' @usage 
 #' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', 
-#' prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
+#' Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
 #' verbose = FALSE, debug = FALSE, technical = list(), ...)
 #' 
 #' \S4method{summary}{mirt}(object, rotate = '', suppress = 0, digits = 3, print = FALSE, ...)

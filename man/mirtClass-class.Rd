@@ -48,6 +48,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
     \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters } 
     \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}    
+    \item{\code{Target}:}{Object of class \code{"numeric"}, dummy rotation matrix}
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

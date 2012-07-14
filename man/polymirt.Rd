@@ -10,8 +10,9 @@
 \usage{
   polymirt(data, nfact, guess = 0, upper = 1, estGuess =
     NULL, estUpper = NULL, prev.cor = NULL, rotate =
-    'varimax', verbose = TRUE, calcLL = TRUE, draws = 2000,
-    debug = FALSE, technical = list(), ...)
+    'varimax', Target = NULL, verbose = TRUE, calcLL =
+    TRUE, draws = 2000, debug = FALSE, technical = list(),
+    ...)
 
   \S4method{summary}{polymirt}(object, rotate='', suppress
     = 0, digits = 3, print = FALSE, ...)

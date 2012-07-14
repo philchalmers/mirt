@@ -145,8 +145,8 @@ setClass(
 #' @keywords models
 #' @usage 
 #' polymirt(data, nfact, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL,
-#' prev.cor = NULL, rotate = 'varimax', verbose = TRUE, calcLL = TRUE, draws = 2000, debug = FALSE, 
-#' technical = list(), ...)
+#' prev.cor = NULL, rotate = 'varimax', Target = NULL, verbose = TRUE, calcLL = TRUE, 
+#' draws = 2000, debug = FALSE, technical = list(), ...)
 #'  
 #' 
 #' 
