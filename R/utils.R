@@ -136,6 +136,7 @@ P.mirt <- function(a, d, Theta, g, u = 1)
 	return(traces)
 }
 
+# Trace lines for partially compensetory models
 P.comp <- function(a, d, thetas, c = 0, u = 1)
 {
 	nfact <- length(a)
@@ -146,7 +147,7 @@ P.comp <- function(a, d, thetas, c = 0, u = 1)
 	P	
 } 
 
-# Estep
+# Estep for mirt
 Estep.mirt <- function(pars, tabdata, Theta, prior, guess, upper, itemloc) 
 {
 	a <- pars$lambdas
@@ -171,6 +172,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, guess, upper, itemloc)
 	return(retlist)
 } 
 
+# Trace lines for bfactor
 P.bfactor <- function(a, d, Theta, g, u, patload)
 { 
 	a <- a[patload]	
@@ -188,7 +190,7 @@ P.bfactor <- function(a, d, Theta, g, u, patload)
 	return(P)
 }
 
-# Estep
+# Estep for bfactor
 Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, upper, specific, sitems, itemloc) 
 {	
 	a <- pars$lambdas
@@ -220,6 +222,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, upper, specific, s
 	return(list(r1=r1, expected=retlist$expected))	
 }      
 
+# MH sampler for theta values
 draw.thetas <- function(theta0,lambdas,zetas,guess,upper = rep(1,length(K)),fulldata,K,itemloc,cand.t.var,
 	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K)),
 	prodlist = NULL) 
@@ -251,6 +254,7 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,upper = rep(1,length(K)),full
 	return(theta1) 
 }	
 
+# Analytical derivatives for covariances parameters
 d.group <- function(grouplist,theta)
 {		
 	tr <- function(x) sum(diag(x))
@@ -285,6 +289,7 @@ d.group <- function(grouplist,theta)
 	list(h=h,g=g) 
 }
 
+# Analytical derivatives for dichotomous items
 dpars.dich <- function(lambda, zeta, g, u, dat, Thetas, estGuess)
 {
 	nfact <- length(lambda)
@@ -347,6 +352,7 @@ dpars.dich <- function(lambda, zeta, g, u, dat, Thetas, estGuess)
 	list(grad = dL, hess = d2L)
 }
 
+# Analytical derivatives for partially compensatory items
 dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 {	
 	nfact <- length(lambda)	
@@ -505,6 +511,7 @@ dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
 	return(list(grad = c(dd,da), hess = hess))
 }
 
+# Analytical derivatives for polychotomous items (ordinal)
 dpars.poly <- function(lambda,zeta,dat,Thetas)
 {  
 	nzeta <- length(zeta)				
@@ -513,6 +520,7 @@ dpars.poly <- function(lambda,zeta,dat,Thetas)
 	return(ret)	
 }
 
+# Gamma correlation, mainly for obtaining a sign
 gamma.cor <- function(x)
 { 
 	concordant <- function(x){ 	  
@@ -539,6 +547,7 @@ gamma.cor <- function(x)
 	gamma 
 } 
 
+# Beta prior for grad and hess
 betaprior <- function(a,b,g,W=20)
 {
 	a <- a + (1-g)*W
@@ -553,6 +562,7 @@ betaprior <- function(a,b,g,W=20)
 	return(list(g=grad, h=hess))	
 }
 
+# Approximation to polychoric matrix for initial values
 cormod <- function(fulldata, K, guess, smooth = TRUE) 
 {  
 	fulldata <- as.matrix(fulldata) 
@@ -596,6 +606,7 @@ cormod <- function(fulldata, K, guess, smooth = TRUE)
 	cormat
 }  
 
+# Product terms in confmirt
 prodterms <- function(theta0, prodlist)
 {
 	products <- matrix(1, ncol = length(prodlist), nrow = nrow(theta0))
@@ -608,6 +619,7 @@ prodterms <- function(theta0, prodlist)
 	ret
 }
 
+# Extract model matricies and values for user specified confmirt.model()
 model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata, itemloc, data, N,
   estGuess, guess, upper, estUpper, guess.prior.n, itemnames, exploratory)
 {    
@@ -950,6 +962,7 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
   ret
 }
 
+# Take long parameter form and return list of pars for polymirt (obsolete)
 sortPars <- function(pars, indlist, nfact, estGuess)
 {
 	lambdas <- matrix(pars[indlist$lamind],ncol=nfact,byrow=TRUE)	
@@ -963,6 +976,7 @@ sortPars <- function(pars, indlist, nfact, estGuess)
 	return(list(lambdas=lambdas, zetas=zetas, guess=guess))
 }
 
+# Take long parameter form and return list of pars for confmirt
 sortParsConfmirt <- function(pars, indlist, nfact, estGuess, nfactNames)
 {
 	J <- length(estGuess)
@@ -981,6 +995,7 @@ sortParsConfmirt <- function(pars, indlist, nfact, estGuess, nfactNames)
 	return(list(lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, mu=mu, sig=sig))
 }
 
+# Ramsey rate acceleration adjustment for EM
 rateChange <- function(pars, lastpars1, lastpars2)
 {
 	p <- unlist(pars)	
@@ -999,6 +1014,7 @@ rateChange <- function(pars, lastpars1, lastpars2)
 	parsret
 }
 
+# Rebuild parameters given a list
 rebuildPars <- function(p, pars)
 {
 	names(p) <- NULL
@@ -1014,6 +1030,7 @@ rebuildPars <- function(p, pars)
 	return(pars2)
 }
 
+# Rotate lambda coefficients
 rotateLambdas <- function(so){
     F <- so$rotF %*% t(chol(so$fcor))
     h2 <- so$h2
