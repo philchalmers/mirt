@@ -1,3 +1,31 @@
+#' Methods for Function fscores
+#' 
+#' Computes MAP, EAP, or ML factor scores for \code{mirt} and \code{bfactor} models,
+#' or a stochastic approximation with a multivariate normal prior for \code{polymirt} and 
+#' \code{confmirt}. Note that only the general factor scores are computed for bifactor 
+#' models.
+#'
+#' 
+#' @usage 
+#' fscores(object, ...)
+#' 
+#' @aliases fscores-method fscores,bfactorClass-method
+#' fscores,mirtClass-method fscores,polymirtClass-method
+#' fscores,confmirtClass-method
+#' @docType methods
+#' @section Methods: \describe{ \item{fscores}{\code{signature(object =
+#' "bfactorClass")}} \item{fscores}{\code{signature(object = "mirtClass")}}
+#' \item{fscores}{\code{signature(object = "polymirtClass")}}
+#' \item{fscores}{\code{signature(object = "confmirtClass")}} }
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @rdname fscores-methods   
+#' @exportMethod fscores
+#' @keywords methods
+setGeneric("fscores", 
+           def = function(object, ...) standardGeneric("fscores")
+)
+
+#------------------------------------------------------------------------------
 # Methods for Function fscores
 #
 #' @name fscores

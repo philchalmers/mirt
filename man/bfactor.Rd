@@ -102,8 +102,8 @@
   default 25} \item{TOL}{EM convergence threshold; default
   .001} \item{NCYCLES}{maximum number of EM cycles; default
   300} \item{NOWARN}{a logical indicating whether dependent
-  packages warnings shoudl be printed; d default
-  \code{TRUE}} }}
+  packages warnings should be printed; default \code{TRUE}}
+  }}
 
   \item{...}{additional arguments to be passed}
 }

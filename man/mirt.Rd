@@ -142,8 +142,8 @@ Theory)}
   default 25} \item{TOL}{EM convergence threshold; default
   .001} \item{NCYCLES}{maximum number of EM cycles; default
   300} \item{NOWARN}{a logical indicating whether dependent
-  packages warnings shoudl be printed; d default
-  \code{TRUE}} }}
+  packages warnings should be printed; default \code{TRUE}}
+  }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -151,8 +151,8 @@ Theory)}
   \code{mirt} fits an unconditional maximum likelihood
   factor analysis model to dichotomous and polychotomous
   data under the item response theory paradigm.
-  Pseudo-guessing parameters may be included but must be
-  declared as constant.
+  Pseudo-guessing and upper bound parameters may be
+  included but must be declared as constant.
 }
 \details{
 
@@ -209,8 +209,8 @@ Theory)}
   (\code{full.data = TRUE}) or displayed in a summary table
   for all the unique response patterns. \code{summary} and
   \code{coef} allow for all the rotations available from
-  the \code{GPArotation} package as well as a
-  \code{'promax'} rotation.
+  the \code{GPArotation} package (e.g., \code{rotate =
+  'oblimin'}) as well as a \code{'promax'} rotation.
 
   Using \code{plot} will plot the either the test surface
   function or the test information function for 1 and 2
@@ -228,9 +228,10 @@ Theory)}
   with means greater than .95, or items that are only .05
   greater than the guessing parameter, should be considered
   for removal from the analysis or treated with prior
-  distributions. Also, increasing the number of quadrature
-  points per dimension may help to stabilize the estimation
-  process.
+  distributions. The same type of reasoning is applicable
+  when including upper bound parameters as well. Also,
+  increasing the number of quadrature points per dimension
+  may help to stabilize the estimation process.
 }
 \examples{
 \dontrun{

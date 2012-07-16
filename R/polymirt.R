@@ -3,8 +3,8 @@
 #' \code{polymirt} fits an unconditional (exploratory) full-information
 #' maximum-likelihood factor analysis model to dichotomous and polychotomous
 #' data under the item response theory paradigm using Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower asymptote
-#' parameters are estimated with a beta prior included automatically.
+#' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower and upper asymptote
+#' parameters are estimated with a beta priors included automatically.
 #'
 #' 
 #' \code{polymirt} follows the item factor analysis strategy by a stochastic
