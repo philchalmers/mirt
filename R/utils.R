@@ -38,10 +38,11 @@ start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowar
 # Rotation function
 Rotate <- function(F, rotate, Target = NULL, ...)
 {	
+    if(ncol(F) == 1) rotF <- list()
 	if(rotate == 'promax'){
         rotF <- psych::Promax(F)
         rotF$orthogonal <- FALSE
-	}
+	}    
     if(rotate == 'oblimin') rotF <- GPArotation::oblimin(F, ...)     
 	if(rotate == 'quartimin') rotF <- GPArotation::quartimin(F, ...)
 	if(rotate == 'targetT') rotF <- GPArotation::targetT(F, Target = Target, ...)
@@ -66,6 +67,7 @@ Rotate <- function(F, rotate, Target = NULL, ...)
 	if(rotate == 'mccammon') rotF <- GPArotation::mccammon(F, ...)
 	if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F, ...)
 	if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F, ...)    		
+	
 	return(unclass(rotF))
 }  
 
@@ -1032,6 +1034,7 @@ rebuildPars <- function(p, pars)
 
 # Rotate lambda coefficients
 rotateLambdas <- function(so){
+    F <- 
     F <- so$rotF %*% t(chol(so$fcor))
     h2 <- so$h2
     h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))

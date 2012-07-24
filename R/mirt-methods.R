@@ -55,7 +55,7 @@ setMethod(
     f = "summary",
     signature = 'mirtClass',
     definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
-                          print = TRUE, ...){
+                          print = TRUE, ...){        
         nfact <- ncol(object@F)
         if (rotate == 'none' || nfact == 1) {
             F <- object@F
@@ -72,7 +72,7 @@ setMethod(
                 cat("\nSS loadings: ",round(SS,digits), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
             }
-            invisible(list(F,h2))
+            invisible(list(rotF=F,h2=h2,fcor=matrix(1)))
         } else {	
             F <- object@F
             h2 <- as.matrix(object@h2)

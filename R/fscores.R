@@ -69,12 +69,13 @@ setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP")
-	{    
+	{           
 		K <- object@K				
         so <- summary(object, rotate = rotate, print = FALSE)
         a <- rotateLambdas(so)
 		d <- object@pars$zetas		
 		g <- object@guess				
+		u <- object@upper
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- ncol(a)
@@ -89,13 +90,13 @@ setMethod(
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
 		for (i in 1:J){
 			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, g[i]) 
+				itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, g[i], u[i]) 
 				itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 			} else {
 				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
 					P.poly(a[i, ], d[[i]], Theta, TRUE)	
 			}
-		}			
+		}	        
 		for (i in 1:nrow(tabdata)){				
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
 			thetas <- colSums(Theta * exp(L) * W / sum(exp(L) * W))
@@ -106,7 +107,8 @@ setMethod(
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,tmp,a=a,d=d,guess=g,patdata=tabdata[i, ],itemloc)$estimate 
+				thetas <- nlm(MAP.mirt,tmp,a=a,d=d,guess=g,upper=u,patdata=tabdata[i, ],
+                              itemloc=itemloc)$estimate 
 				scores[i, ] <- thetas
 			}  
 		}
@@ -118,7 +120,8 @@ setMethod(
 			for (i in 1:nrow(scores)){
 				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
 				Theta <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,patdata=tabdata[i, ],itemloc,ML=TRUE)$estimate 
+				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,upper=u,patdata=tabdata[i, ],
+                              itemloc=itemloc, ML=TRUE)$estimate 
 				scores[i, ] <- thetas
 			}  
 		}
@@ -152,6 +155,7 @@ setMethod(
 		a <- object@pars$lambdas		
 		d <- object@pars$zetas		
 		g <- object@guess				
+		u <- object@upper
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- 2
@@ -168,13 +172,14 @@ setMethod(
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
 		for (i in 1:J){
 			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i] + 1] <- P.bfactor(a[i, ], d[[i]], Theta, g[i], logicalfact[i, ]) 
+				itemtrace[ ,itemloc[i] + 1] <- P.bfactor(a[i, ], d[[i]], Theta, g[i], u[i], 
+                                                         logicalfact[i, ]) 
 				itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
 			} else {
 				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-					P.bfactor(a[i, ], d[[i]], Theta, 0, logicalfact[i, ])	
+					P.bfactor(a[i, ], d[[i]], Theta, 0, 1, logicalfact[i, ])	
 			}
-		}		
+		}		        
 		for (i in 1:nrow(tabdata)){							
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])				
 			thetas <- sum(Theta[ ,1] * exp(L) * W / sum(exp(L) * W))
@@ -185,8 +190,8 @@ setMethod(
 		if(method == "MAP"){ 
 			for (i in 1:length(scores)) {       
 				Theta <- scores[i]	  
-				thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
-					patdata=tabdata[i, ],logicalfact=logicalfact,itemloc)$estimate 
+				thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,upper=u,
+					patdata=tabdata[i, ],logicalfact=logicalfact,itemloc=itemloc)$estimate 
 				scores[i] <- thetas
 			}  
 		}
@@ -198,8 +203,9 @@ setMethod(
 		    for (i in 1:length(scores)) { 
 		        if(any(scores[i] == -Inf | scores[i] == Inf)) next
 		        Theta <- scores[i]	  
-		        thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,
-		                      patdata=tabdata[i, ],logicalfact=logicalfact,itemloc,ML=TRUE)$estimate 
+		        thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,upper=u,
+		                      patdata=tabdata[i, ],logicalfact=logicalfact,itemloc=itemloc,
+                              ML=TRUE)$estimate 
 		        scores[i] <- thetas
 		    }
 		}
@@ -232,7 +238,7 @@ setMethod(
 	f = "fscores",
 	signature = 'polymirtClass',
 	definition = function(object, rotate = '', full.scores = FALSE, ndraws = 3000, thin = 5)
-	{ 	
+	{ 	        
 		cand.t.var <- 1
 		theta0 <- object@Theta
 		K <- object@K
@@ -240,25 +246,31 @@ setMethod(
 		so <- summary(object, rotate = rotate, print = FALSE)
 		lambdas <- rotateLambdas(so)
 		zetas <- object@pars$zetas
-		guess <- object@guess
+		guess <- object@guess	   
 		guess[is.na(guess)] <- 0
+	    upper <- object@upper       
+	    upper[is.na(upper)] <- 1
 		data <- cbind(object@data,object@fulldata)
 		Names <- c(colnames(object@data[,1:length(K)]),colnames(object@F),
 			paste("SE_F",1:nfact,sep=''))
 		tabdata <- unique(data)[ ,-c(1:length(K))]			
-		itemloc <- object@itemloc            
+		itemloc <- object@itemloc            		
 		Theta <- list()
 		for(i in 1:nfact)
 			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
 		theta0 <- matrix(0,nrow(tabdata),nfact)        
 		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)            
+			theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
+			                      upper=upper, fulldata=tabdata, K=K, itemloc=itemloc, 
+			                      cand.t.var=cand.t.var)
 			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
 			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
 		}
 		ind <- 1
 		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,cand.t.var)			
+		    theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
+		                upper=upper, fulldata=tabdata, K=K, itemloc=itemloc, 
+		                cand.t.var=cand.t.var)			
 			if(i %% thin == 0){
 				for(j in 1:nfact)
 					Theta[[j]][,ind] <- theta0[,j]									
@@ -314,10 +326,13 @@ setMethod(
 		zetas <- object@pars$zetas
 		guess <- object@guess
 		guess[is.na(guess)] <- 0
+		upper <- object@upper       
+		upper[is.na(upper)] <- 1
 		data <- cbind(object@data,object@fulldata)		
 		Names <- c(colnames(object@data[,1:length(K)]),paste('F_',1:nfact,sep=''),
 			paste("SE_",1:nfact,sep=''))
 		tabdata <- unique(data)[,-c(1:length(K))]			
+		fulldata <- object@fulldata
 		itemloc <- object@itemloc
 		Theta <- list()
 		prodlist <- object@prodlist
@@ -325,16 +340,20 @@ setMethod(
 		for(i in 1:nfact)
 			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
 		theta0 <- matrix(0,nrow(tabdata),nfact)		
-		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,
-				cand.t.var,sig,mu,estComp,prodlist)
+		for(i in 1:30){
+		    theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
+		                upper=upper, fulldata=tabdata, K=K, itemloc=itemloc, 
+		                cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, estComp=estComp, 
+		                prodlist=prodlist)			
 			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
 			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
 		}
 		ind <- 1
 		for(i in 1:ndraws){			
-			theta0 <- draw.thetas(theta0,lambdas,zetas,guess,tabdata,K,itemloc,
-				cand.t.var,sig,mu,estComp,prodlist)
+		    theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
+		                upper=upper, fulldata=tabdata, K=K, itemloc=itemloc, 
+		                cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, estComp=estComp, 
+		                prodlist=prodlist)
 			if(i %% thin == 0){
 				for(j in 1:nfact)
 					Theta[[j]][,ind] <- theta0[,j]									
