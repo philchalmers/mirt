@@ -69,7 +69,7 @@ setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP")
-	{           
+	{        
 		K <- object@K				
         so <- summary(object, rotate = rotate, print = FALSE)
         a <- rotateLambdas(so)
@@ -79,7 +79,7 @@ setMethod(
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- ncol(a)
-		theta <- as.matrix(seq(-4,4,length.out = 15))
+		theta <- as.matrix(seq(-4,4,length.out = 30))
 		Theta <- thetaComb(theta,nfact)
 		fulldata <- object@data 
 		tabdata <- object@tabdatalong
@@ -100,7 +100,7 @@ setMethod(
 		for (i in 1:nrow(tabdata)){				
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
 			thetas <- colSums(Theta * exp(L) * W / sum(exp(L) * W))
-			SE <- sqrt(colSums((Theta - thetas)^2 * exp(L) * W / sum(exp(L) * W)))	
+			SE <- sqrt(colSums(t((t(Theta) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
 		}		
