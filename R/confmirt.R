@@ -626,7 +626,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	} ###END BIG LOOP	
 	    
 	normpars <- sortParsConfmirt(pars, indlist, nfact, estGuess, nfactNames)
-	cat("\n\n")
+	if(verbose) cat("\n\n")
 	SEtmp <- diag(solve(info))		
 	if(any(SEtmp < 0)){
 		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")

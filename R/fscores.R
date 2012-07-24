@@ -45,6 +45,7 @@ setGeneric("fscores",
 #' @param thin controls how much the chain should be thinned by, default
 #' collects every 5th draw (\code{thin = 5}). Note that \code{ndraws/thin} must be a whole number.
 #' for \code{polymirtClass} or \code{confmirtClass} objects only
+#' @param verbose logical; print verbose output messages?
 #' @return Returns either a summary table with the response patterns and
 #' expected factor scores, or a complete data matrix with factor scores
 #' appended to the last column.
@@ -68,7 +69,7 @@ setGeneric("fscores",
 setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
-	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP")
+	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", verbose = TRUE)
 	{        
 		K <- object@K				
         so <- summary(object, rotate = rotate, print = FALSE)
@@ -79,7 +80,7 @@ setMethod(
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- ncol(a)
-		theta <- as.matrix(seq(-4,4,length.out = 30))
+		theta <- as.matrix(seq(-4,4,length.out = 15))
 		Theta <- thetaComb(theta,nfact)
 		fulldata <- object@data 
 		tabdata <- object@tabdatalong
@@ -136,7 +137,7 @@ setMethod(
 			colnames(scoremat) <- colnames(object@F)	
 			return(cbind(fulldata,scoremat))
 		} else {						
-			cat("\nMethod: ", method,"\n\n")
+			if(verbose) cat("\nMethod: ", method,"\n\n")
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
 			return(cbind(object@tabdata,scores,SEscores))
 				
@@ -149,7 +150,7 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'bfactorClass',
-	definition = function(object, full.scores = FALSE, method = "EAP")
+	definition = function(object, full.scores = FALSE, method = "EAP", verbose = TRUE)
 	{  
 		K <- object@K		
 		a <- object@pars$lambdas		
@@ -226,7 +227,7 @@ setMethod(
 			colnames(scoremat) <- 'G'	
 			return(cbind(fulldata,scoremat))
 		} else {  				
-			cat("\nMethod: ", method,"\n\n")			
+		    if(verbose) cat("\nMethod: ", method,"\n\n")			
 			return(cbind(object@tabdata,scores))			
 		}   
 	}  
