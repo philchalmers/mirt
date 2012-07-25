@@ -37,6 +37,8 @@
   Note that \code{ndraws/thin} must be a whole number. for
   \code{polymirtClass} or \code{confmirtClass} objects
   only}
+
+  \item{verbose}{logical; print verbose output messages?}
 }
 \value{
   Returns either a summary table with the response patterns
