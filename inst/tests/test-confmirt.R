@@ -33,11 +33,12 @@ test_that('all mods', {
     model.2 <- confmirt.model('confmods/model2', quiet = TRUE)
     model.quad <- confmirt.model('confmods/modelquad', quiet = TRUE)
     model.combo <- confmirt.model('confmods/modelcombo', quiet = TRUE)
+    model.part <- confmirt.model('confmods/noncomp3PL', quiet = TRUE)
     
     mod1 <- confmirt(dataset,model.1, verbose = FALSE)    
     expect_is(mod1, 'confmirtClass')
 
-    mod2 <- confmirt(dataset,model.2, verbose = FALSE)
+    mod2 <- confmirt(dataset,model.2, verbose = FALSE, guess = c(.05,0,0,0,0,0,0,0))
     expect_is(mod2, 'confmirtClass')
 
     mod.quad <- confmirt(dataset, model.quad, verbose = FALSE)
@@ -45,6 +46,9 @@ test_that('all mods', {
     
     mod.combo <- confmirt(dataset, model.combo, verbose = FALSE)
     expect_is(mod.combo, 'confmirtClass')
+    
+    mod.part <- confmirt(dataset, model.part, verbose = FALSE)
+    expect_is(mod.part, 'confmirtClass')
     
     fs1 <- fscores(mod1)
     expect_is(fs1, 'matrix')
@@ -54,5 +58,7 @@ test_that('all mods', {
     expect_is(fs3, 'matrix')
     fs4 <- fscores(mod.combo)
     expect_is(fs4, 'matrix')
+    fs5 <- fscores(mod.part)
+    expect_is(fs5, 'matrix')
 })
  

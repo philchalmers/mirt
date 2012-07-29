@@ -314,8 +314,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy			
 	}	
-	fulldata[is.na(fulldata)] <- 0
-  
+	fulldata[is.na(fulldata)] <- 0	
 	mod <- model.elements(model=model, factorNames=factorNames, nfactNames=nfactNames, nfact=nfact, 
                           J=J, K=K, fulldata=fulldata, itemloc=itemloc, data=data, N=N, 
                           estGuess=estGuess, guess=guess, upper=upper, estUpper=estUpper, 
@@ -323,347 +322,65 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	parcount <- mod$parcount
 	npars <- mod$npars
 	if(returnindex) return(parcount)
-	if(debug) print(mod)  
-    
-	#pars
-	pars <- mod$val$pars
-	lambdas <- mod$val$lambdas
-	zetas <- mod$val$zetas
-	gmeans <- mod$val$gmeans
-	gcov <- mod$val$gcov
-	constvalues <- mod$val$constvalues      
-
-	#est
-	estlam <- mod$est$estlam
-	estComp <- mod$est$estComp		
-	estgcov <- mod$est$estgcov
-	estgmeans <- mod$est$estgmeans	
-  
-	#ind
-	parind <- mod$ind$parind	
-	equalconstr <- mod$ind$equalconstr	
-	prodlist <- mod$ind$prodlist
-	parpriors <- mod$ind$parpriors
-	sind <- mod$ind$sind
-	lamind <- mod$ind$lamind
-	zetaind <- mod$ind$zetaindlist
-	guessind <- mod$ind$guessind
-	upperind <- mod$ind$upperind
-	groupind <- mod$ind$groupind
-	meanind <- mod$ind$meanind
-	covind <- mod$ind$covind    
-	if(any(rowSums(estlam) == 0)){
+	if(debug) print(mod)      
+    if(any(rowSums(mod$est$estlam) == 0)){
 		tmp <- 1:J
-		tmp <- tmp[rowSums(estlam) == 0]
+		tmp <- tmp[rowSums(mod$est$estlam) == 0]
 		stop('Item(s) ', paste(tmp,''), 'have no factor loadings specified.')
-	}
-	indlist <- mod$ind 
-    
+	}	    
 	if(exploratory){
+        lamind <- mod$ind$lamind
 	    Rpoly <- cormod(na.omit(data),K,guess)
-	    FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= FALSE, fm="minres")    
+	    FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
 	    loads <- unclass(loadings(FA))
 	    u <- FA$unique
 	    u[u < .001 ] <- .2
 	    cs <- sqrt(u)
 	    lambdas <- mod$val$lambdas <- loads/cs        
-        pars[lamind] <- t(lambdas)
-	}
-	
-	#Preamble for MRHM algorithm
-	pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
-	theta0 <- matrix(0,N,nfact)	    
-	cand.t.var <- 1			
-	tmp <- .1
-	for(i in 1:30){			
-		theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
-                              fulldata=fulldata, K=K, itemloc=itemloc, cand.t.var=cand.t.var, 
-		                      prior.t.var=gcov, prior.mu=gmeans, estComp=estComp, prodlist=prodlist)
-		if(i > 5){		
-			if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
-			else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) 
-                cand.t.var <- cand.t.var + tmp
-			else if(attr(theta0,"Proportion Accepted") < .2 && nfact < 4) 
-                cand.t.var <- cand.t.var - tmp
-			else if(attr(theta0,"Proportion Accepted") < .1) 
-                cand.t.var <- cand.t.var - 2*tmp
-			if (cand.t.var < 0){
-				cand.t.var <- tmp		
-				tmp <- tmp / 2
-			}		
-		}
-	}	
-	m.thetas <- grouplist <- list()		
-	SEM.stores <- matrix(0,SEMCYCLES,npars)
-	SEM.stores2 <- list()
-	phi <- rep(0,sum(sind))	
-	h <- matrix(0,npars,npars)		
-	Tau <- info <- matrix(0,sum(sind),sum(sind))		
-	m.list <- list()	  
-	conv <- 0
-	k <- 1	
-	gamma <- .25
-	startvalues <- pars	
-	stagecycle <- 1	
-	converge <- 1
-	nconstvalues <- sum(constvalues[,1] == 1)
-	noninvcount <- 0		
-	if(length(equalconstr) > 0)	
-		for(i in 1:length(equalconstr))
-			nconstvalues <- nconstvalues + length(equalconstr[[i]]) - 1			
-			
-	####Big MHRM loop 
-	for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))								
-	{ 
-		if(cycles == BURNIN + 1) stagecycle <- 2			
-		if(stagecycle == 3)
-			gamma <- (gain[1]/(cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
-		if(cycles == (BURNIN + SEMCYCLES + 1)){ 
-			stagecycle <- 3		
-		    pars <- rep(0,npars)
-			for(i in 1:SEMCYCLES){
-				pars <- pars + SEM.stores[i,]
-				Tau <- Tau + SEM.stores2[[i]]
-			}	
-			pars <- pars/SEMCYCLES	
-			Tau <- Tau/SEMCYCLES	
-			k <- KDRAWS	
-			gamma <- .25
-		}	
-				
-		normpars <- sortParsConfmirt(pars, indlist, nfact, estGuess, nfactNames)		
-		lambdas <- normpars$lambdas
-		zetas <- normpars$zetas
-		guess <- normpars$guess	
-        upper <- normpars$upper
-		grouplist$u <- mu <- normpars$mu					
-		grouplist$sig <- sig <- normpars$sig			
-		
-		#Step 1. Generate m_k datasets of theta 
-		for(j in 1:4) 
-            theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
-                            upper=upper, fulldata=fulldata, K=K, itemloc=itemloc, 
-                            cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, estComp=estComp, 
-                            prodlist=prodlist)
-		for(i in 1:k) m.thetas[[i]] <- 
-            draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
-                                upper=upper, fulldata=fulldata, K=K, itemloc=itemloc, 
-                                cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, 
-                                estComp=estComp, prodlist=prodlist)
-		theta0 <- m.thetas[[1]]
-		        
-		#Step 2. Find average of simulated data gradients and hessian 		
-		g.m <- h.m <- group.m <- list()
-		g <- rep(0, npars)
-		h <- matrix(0, npars, npars)	
-		for (j in 1:k) {
-            g <- rep(NA, npars)            
-			thetatemp <- m.thetas[[j]]
-			if(!is.null(prodlist)) thetatemp <- prodterms(thetatemp,prodlist)	
-            for (i in 1:J){			
-				if(estComp[i]){
-					if (estGuess[i]) {
-						temp <- dpars.comp(lambdas[i,][estlam[i,]], zetas[[i]], 
-							guess[i], fulldata[, itemloc[i]], thetatemp, estGuess[i])
-						ind <- parind[is.na(g)][1]
-						ind2 <- ind + length(temp$grad) - 1
-						g[ind:ind2] <- temp$grad
-						h[ind:ind2, ind:ind2] <- temp$hess						
-					} else {
-						temp <- dpars.comp(lambdas[i,][estlam[i,]], zetas[[i]], 
-							guess[i], fulldata[, itemloc[i]], thetatemp)
-						ind <- parind[is.na(g)][1]							
-						ind2 <- ind + length(zetas[[i]])*2 - 1
-						g[ind:ind2] <- temp$grad
-						h[ind:ind2, ind:ind2] <- temp$hess
-						g[ind2 + 1] <- 0	
-					}				
-					next
-				}
-                if(K[i] == 2){
-					temp <- dpars.dich(lambda=lambdas[i, ], zeta=zetas[[i]], g=guess[i], u=upper[i],
-						dat=fulldata[ ,itemloc[i]], Thetas=thetatemp, estGuess=estGuess[i])
-					ind <- parind[is.na(g)][1]					
-					ind2 <- ind + length(temp$g) - 1		
-					if(!estGuess[i]) g[ind2 + 1] <- 0
-					if(!estUpper[i]) g[ind2 + 2] <- 0
-					g[ind:ind2] <- temp$grad
-					h[ind:ind2,ind:ind2] <- temp$hess						
-				} else {						
-					temp <- dpars.poly(lambdas[i, ],zetas[[i]],
-						fulldata[ ,itemloc[i]:(itemloc[i+1]-1)],thetatemp)
-					ind <- parind[is.na(g)][1]	
-					ind2 <- ind + length(temp$g) - 1		
-					g[ind:ind2] <- temp$grad
-					h[ind:ind2,ind:ind2] <- temp$hess
-					g[ind2 + 1] <- g[ind2 + 2] <- 0	#zeros for guess + upper
-				}
-            }
-			g[is.na(g)] <- 0
-			tmp <- d.group(grouplist,as.matrix(thetatemp[ ,1:nfact]))
-			g[groupind] <- tmp$g
-			h[groupind,groupind] <- tmp$h
-			g.m[[j]] <- g
-			h.m[[j]] <- h			
-		}		
-		ave.g <- rep(0,length(g))
-		ave.h <- matrix(0,length(g),length(g))		
-		for(i in 1:k){
-			ave.g <- ave.g + g.m[[i]]
-			ave.h <- ave.h + h.m[[i]]
-		} 		
-		grad <- ave.g/k
-		ave.h <- (-1)*ave.h/k
-		if(length(parpriors) > 0){
-			for(i in 1:length(parpriors)){
-				tmp <- parpriors[[i]]
-				if(tmp[1] == 1){
-					grad[tmp[2]] <- grad[tmp[2]] - (pars[tmp[2]] - tmp[3])/ tmp[4]^2
-					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] +  1/tmp[4]^2
-				}				
-				else if(tmp[1] == 2){		
-					tmp2 <- betaprior(tmp[3],tmp[4],pars[tmp[2]])					
-					grad[tmp[2]] <- grad[tmp[2]] + tmp2$g
-					ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + tmp2$h
-				}				
-			}
-		}		
-		grad <- grad[parind[sind]]		
-		ave.h <- ave.h[parind[sind],parind[sind]] 
-		if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
-		if(verbose){
-			if((cycles + 1) %% 10 == 0){
-				if(cycles < BURNIN)
-					cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
-				if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-					cat("Stage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
-						sprintf("%.1f",attr(theta0,"log.lik")), sep="")
-				if(cycles > BURNIN + SEMCYCLES)
-					cat("Stage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
-						", Log-Lik = ", sprintf("%.1f",attr(theta0,"log.lik")), sep="")					
-			}
-		}			
-		if(stagecycle < 3){	
-			ave.h <- as(ave.h,'sparseMatrix')
-			inv.ave.h <- try(solve(ave.h))			
-			if(class(inv.ave.h) == 'try-error'){
-				inv.ave.h <- try(qr.solve(ave.h + 2*diag(ncol(ave.h))))
-				noninvcount <- noninvcount + 1
-				if(noninvcount == 3) 
-					stop('\nEstimation halted during burn in stages, solution is unstable')
-			}
-			correction <-  inv.ave.h %*% grad	
-			correction[correction > 1] <- 1
-			correction[correction < -1] <- -1			
-			parsold <- pars
-			correct <- rep(0,npars)
-			correct[sind] <- as.vector(correction)
-			correct[constvalues[,1] == 1] <- 0
-			if(length(equalconstr) > 0)	
-				for(i in 1:length(equalconstr))
-					correct[equalconstr[[i]]] <- mean(correct[equalconstr[[i]]])			
-			correct[correct[guessind] > .05] <- .05		
-			correct[correct[guessind] < -.05] <- -.05
-			correct[correct[upperind] > .05] <- .05    	
-			correct[correct[upperind] < -.05] <- -.05
-			pars <- pars + gamma*correct
-			if(verbose && (cycles + 1) %% 10 == 0){ 
-				cat(", Max Change =", sprintf("%.4f",max(abs(gamma*correction))), "\n")
-				flush.console()
-			}			
-			pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
-			pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
-			pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
-			pars[upperind][pars[upperind] > 1] <- parsold[upperind][pars[upperind] > 1]
-			if(stagecycle == 2){
-				SEM.stores[cycles - BURNIN,] <- pars
-				SEM.stores2[[cycles - BURNIN]] <- ave.h
-			}	
-			next
-		}	 
-		
-		#Step 3. Update R-M step		
-		Tau <- Tau + gamma*(ave.h - Tau)
-		Tau <- as(Tau,'sparseMatrix')	
-		inv.Tau <- solve(Tau)
-		if(class(inv.Tau) == 'try-error'){
-			inv.Tau <- try(qr.solve(Tau + 2 * diag(ncol(Tau))))
-			noninvcount <- noninvcount + 1
-			if(noninvcount == 3) 
-				stop('\nEstimation halted during stage 3, solution is unstable')
-		}		
-		correction <-  inv.Tau %*% grad
-		parsold <- pars
-		correct <- rep(0,npars)
-		correct[sind] <- as.vector(correction)
-		correct[constvalues[,1] == 1] <- 0
-		if(length(equalconstr) > 0)		
-			for(i in 1:length(equalconstr))
-				correct[equalconstr[[i]]] <- mean(correct[equalconstr[[i]]])	
-		if(verbose && (cycles + 1) %% 10 == 0){ 
-			cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-				sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
-			flush.console()		
-		}	
-		if(all(gamma*correct < TOL)) conv <- conv + 1
-			else conv <- 0		
-		if(conv == 3) break
-		correct[correct[guessind] > .025] <- .025		
-		correct[correct[guessind] < -.025] <- -.025	
-		correct[correct[upperind] > .025] <- .025    	
-		correct[correct[upperind] < -.025] <- -.025
-		pars <- pars + gamma*correct	
-		pars[covind][pars[covind] > .95] <- parsold[covind][pars[covind] > .95]
-		pars[covind][pars[covind] < -.95] <- parsold[covind][pars[covind] < -.95]
-		pars[guessind][pars[guessind] < 0] <- parsold[guessind][pars[guessind] < 0]
-		pars[upperind][pars[upperind] > 1] <- parsold[upperind][pars[upperind] > 1]
-		
-		#Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
-		if(gamma == .25) gamma <- 1	
-		phi <- phi + gamma*(grad - phi)
-		info <- info + gamma*(Tau - phi %*% t(phi) - info)		
-	} ###END BIG LOOP	
-	    
-	normpars <- sortParsConfmirt(pars, indlist, nfact, estGuess, nfactNames)
+        mod$val$pars[lamind] <- t(lambdas)
+	}        
+	ESTIMATE <- MHRM(mod=mod, NCYCLES=NCYCLES, BURNIN=BURNIN, KDRAWS=KDRAWS, SEMCYCLES=SEMCYCLES,  
+                     TOL=TOL, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, nfact=nfact,
+                     N=N, gain=gain, K=K, J=J, verbose=verbose)	    	
 	if(verbose) cat("\n\n")
-	SEtmp <- diag(solve(info))		
+	SEtmp <- diag(solve(ESTIMATE$info))		
 	if(any(SEtmp < 0)){
 		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
 		SEtmp[SEtmp < 0] <- NA
-	}	
-	SEtmp <- sqrt(SEtmp)	
+	}	    
+    pars <- ESTIMATE$pars
+	SEtmp <- sqrt(SEtmp)	    
 	SE <- rep(NA,npars) 
-	SE[parind[sind]] <- SEtmp
-	SE[constvalues[ ,1]==1] <- NA
-	if(length(equalconstr) > 0)
-		for(i in 1:length(equalconstr))
-			SE[equalconstr[[i]]] <- mean(SE[equalconstr[[i]]])
-	estpars <- pars[sind]
-	lambdas <- matrix(pars[lamind],J,nfactNames,byrow=TRUE)	
-	lambdas[!estlam & !lambdas != 0] <- NA	
+	SE[mod$ind$parind[mod$ind$sind]] <- SEtmp
+	SE[mod$val$constvalues[ ,1]==1] <- NA
+	if(length(mod$ind$equalconstr) > 0)
+		for(i in 1:length(mod$ind$equalconstr))
+			SE[mod$ind$equalconstr[[i]]] <- mean(SE[mod$ind$equalconstr[[i]]])
+	estpars <- pars[mod$ind$sind]
+	lambdas <- ESTIMATE$normpars$lambdas
+	lambdas[!mod$est$estlam & !lambdas != 0] <- NA	
 	guess <- rep(NA,J)
-	guess <- pars[guessind]
-	guess[!estGuess] <- NA
-	guess[K == 2 & !estGuess] <- 0
+	guess <- pars[mod$ind$guessind]
+	guess[!mod$est$estGuess] <- NA
+	guess[K == 2 & !mod$est$estGuess] <- 0
 	upper <- rep(NA,J)
-	upper <- pars[upperind]
-	upper[!estUpper] <- NA
-	upper[K == 2 & !estUpper] <- 1
-	zetas <- pars[indlist$zetaind]
-	u <- pars[meanind]	
+	upper <- pars[mod$ind$upperind]
+	upper[!mod$est$estUpper] <- NA
+	upper[K == 2 & !mod$est$estUpper] <- 1
+	zetas <- pars[mod$ind$zetaind]
+	u <- pars[mod$ind$meanind]	
 	sig <- matrix(0,nfact,nfact)
-	SElam <- matrix(SE[lamind],J,nfactNames,byrow=TRUE)
-	SEzetas <- SE[indlist$zetaind]	
+	SElam <- matrix(SE[mod$ind$lamind],J,nfactNames,byrow=TRUE)
+	SEzetas <- SE[mod$ind$zetaind]	
 	SEg <- rep(NA,J)	
-	SEg <- SE[guessind]	
-	SEup <- SE[upperind]
-	SEg[!estGuess] <- NA
-	SEup[!estUpper] <- NA
-	SEu <- SE[meanind]	
+	SEg <- SE[mod$ind$guessind]	
+	SEup <- SE[mod$ind$upperind]
+	SEg[!mod$est$estGuess] <- NA
+	SEup[!mod$est$estUpper] <- NA
+	SEu <- SE[mod$ind$meanind]	
 	SEsig <- matrix(0,nfact,nfact)	
-	tmp <- pars[covind]
-	tmp2 <- SE[covind]
+	tmp <- pars[mod$ind$covind]
+	tmp2 <- SE[mod$ind$covind]
 	loc <- 1
 	for(i in 1:nfact){
 		for(j in 1:nfact){
@@ -678,14 +395,16 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 		sig <- sig + t(sig) - diag(diag(sig))
 		SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
 	} else SEsig <- NA
-	if(any(estComp)){
+	if(any(mod$est$estComp)){
 		if((max(K)-1) > nfactNames) tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
 		else tmp1 <- tmp2 <- matrix(NA,J,nfactNames)
-	} else tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
+	} else tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))	
 	
+	#reload zetas to matrix
+	zetas <- pars[mod$ind$zetaind]    
 	loc <- 1
 	for(i in 1:J){
-		if(!estComp[i]){
+		if(!mod$est$estComp[i]){
 			for(j in 1:(K[i]-1)){
 				tmp1[i,j] <- zetas[loc] 
 				tmp2[i,j] <- SEzetas[loc]
@@ -701,15 +420,15 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	}	 
 	zetas <- tmp1
 	SEzetas <- tmp2	
-	parsprint <- cbind(lambdas,zetas)
-	SEpars <- cbind(SElam,SEzetas)
-	gpars <- list(u = u, sig = sig)	
+	parsprint <- cbind(ESTIMATE$normpars$lambdas, zetas)
+	SEpars <- cbind(SElam, SEzetas)
+	gpars <- list(u = ESTIMATE$normpars$mu, sig = ESTIMATE$normpars$sig)	
 	SEgpars <- list(SEu = SEu, SEsig = SEsig)
-	estpars <- list(estlam=estlam,estGuess=estGuess,estUpper=estUpper, estgcov=estgcov,
-		estgmeans=estgmeans,estComp=estComp)		
+	estpars <- mod$est
 		
-	if (nfactNames > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
-		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
+	if (nfactNames > 1){
+        norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
+	} else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
 	F <- as.matrix(lambdas[ ,1:nfactNames]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
@@ -718,23 +437,23 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	null.mod <- unclass(mirt(data, 0))
     
     if(exploratory){
-        mod <- new('polymirtClass',pars=normpars, guess=guess, SEpars=SEpars, SEg=SEg,
-                   upper=upper, SEup=SEup, cycles=cycles-SEMCYCLES-BURNIN, Theta=theta0, 
+        ret <- new('polymirtClass',pars=ESTIMATE$normpars, guess=guess, SEpars=SEpars, SEg=SEg,
+                   upper=upper, SEup=SEup, cycles=ESTIMATE$cycles, Theta=ESTIMATE$theta0, 
                    fulldata=fulldata, data=data, K=K, F=F, h2=h2, itemloc=itemloc, 
-                   converge=converge, estGuess=estGuess, rotate=rotate, null.mod=null.mod, 
+                   converge=ESTIMATE$converge, estGuess=estGuess, rotate=rotate, null.mod=null.mod, 
                    Target=Target, Call=Call)
     } else {
-    	mod <- new('confmirtClass', pars=normpars, parsprint=parsprint, guess=guess, upper=upper, 
-                   SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars,K=K, 
-                   itemloc=itemloc, cycles=cycles - SEMCYCLES - BURNIN, Theta=theta0, 
-                   fulldata=fulldata, data=data, h2=h2,F=F,converge=converge, 
-                   nconstvalues=as.integer(nconstvalues), SEpars=SEpars, estComp=estComp, 
-                   prodlist=as.list(prodlist), null.mod=null.mod, Call=Call)
+    	ret <- new('confmirtClass', pars=ESTIMATE$normpars, parsprint=parsprint, guess=guess, upper=upper, 
+                   SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars, K=K, 
+                   itemloc=itemloc, cycles=ESTIMATE$cycles, Theta=ESTIMATE$theta0, 
+                   fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge, 
+                   nconstvalues=as.integer(mod$nconstvalues), SEpars=SEpars, estComp=mod$est$estComp, 
+                   prodlist=as.list(mod$ind$prodlist), null.mod=null.mod, Call=Call)
     }
 	if(calcLL){
 		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()
-		mod <- logLik(mod,draws)		        
+		ret <- logLik(ret, draws)		        
 	}	
-	return(mod)
+	return(ret)
 }

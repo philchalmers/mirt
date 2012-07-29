@@ -227,7 +227,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, upper, specific, s
 # MH sampler for theta values
 draw.thetas <- function(theta0,lambdas,zetas,guess,upper = rep(1,length(K)),fulldata,K,itemloc,cand.t.var,
 	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K)),
-	prodlist = NULL) 
+	prodlist = NULL, itemtype = NULL) 
 { 			
 	N <- nrow(fulldata)
 	J <- length(K)
@@ -356,7 +356,7 @@ dpars.dich <- function(lambda, zeta, g, u, dat, Thetas, estGuess)
 
 # Analytical derivatives for partially compensatory items
 dpars.comp <- function(lambda,zeta,g,dat,Thetas,estg = FALSE)
-{	
+{	    
 	nfact <- length(lambda)	
 	pars <- c(zeta,lambda,g)
 	if(estg){
@@ -950,7 +950,19 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
         parpriors[[parpriorscount]] <- c(2,tmp3[2],as.numeric(tmp2[2]),tmp3[1])
       parpriorscount <- parpriorscount + 1	
     }
-  }
+  }  
+  
+  nconstvalues <- sum(constvalues[,1] == 1)
+  if(length(equalconstr) > 0)    
+      for(i in 1:length(equalconstr))
+          nconstvalues <- nconstvalues + length(equalconstr[[i]]) - 1
+  itemtype <- rep('2PL', J)
+  itemtype[estGuess & estUpper] <- '4PL'
+  itemtype[estGuess &! estUpper] <- '3PL'
+  itemtype[estUpper &! estGuess] <- '3PLu'
+  itemtype[estComp &! estGuess] <- 'N2PL'
+  itemtype[estComp & estGuess] <- 'N3PL'
+  itemtype[K > 2] <- 'ordinal' 
       
   val <- list(pars=pars, lambdas=lambdas, zetas=zetas, gmeans=gmeans, gcov=gcov, 
     guess=guess, upper=upper, constvalues=constvalues)
@@ -960,7 +972,8 @@ model.elements <- function(model, factorNames, nfactNames, nfact, J, K, fulldata
     prodlist=prodlist, parpriors=parpriors, sind=sind, lamind=lamind, zetaind=zetaind, 
     zetaindlist=zetaind2, guessind=guessind, upperind=upperind, groupind=groupind, 
     meanind=meanind, covind=covind, parind=parind)
-  ret <- list(val=val, est=est, ind=ind, parcount=parcount, npars=npars)
+  ret <- list(val=val, est=est, ind=ind, parcount=parcount, npars=npars, nconstvalues=nconstvalues,
+              itemtype=itemtype)
   ret
 }
 
@@ -979,9 +992,9 @@ sortPars <- function(pars, indlist, nfact, estGuess)
 }
 
 # Take long parameter form and return list of pars for confmirt
-sortParsConfmirt <- function(pars, indlist, nfact, estGuess, nfactNames)
+sortParsConfmirt <- function(pars, indlist, nfact, nfactNames)
 {
-	J <- length(estGuess)
+	J <- length(indlist$guessind)
 	lambdas <- matrix(pars[indlist$lamind],J,nfactNames,byrow=TRUE)
 	zetas <- list()
 	for(i in 1:J)
