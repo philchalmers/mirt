@@ -38,7 +38,7 @@ test_that('all mods', {
     mod1 <- confmirt(dataset,model.1, verbose = FALSE)    
     expect_is(mod1, 'confmirtClass')
 
-    mod2 <- confmirt(dataset,model.2, verbose = FALSE, guess = c(.05,0,0,0,0,0,0,0))
+    mod2 <- confmirt(dataset,model.2, verbose = FALSE)
     expect_is(mod2, 'confmirtClass')
 
     mod.quad <- confmirt(dataset, model.quad, verbose = FALSE)
