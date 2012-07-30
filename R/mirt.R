@@ -401,7 +401,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
         pars$lambdas <- matrix(0,nrow(lambdas))
         method = 'Brent'
     }
-	if(debug) print(startvalues)     
+	if(debug) print(startvalues)         
     
 	# EM loop 
 	for (cycles in 1:NCYCLES)
@@ -447,7 +447,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		# rate acceleration adjusted every third cycle
 		if (cycles %% 3 == 0 & cycles > 6)		 
 			pars <- rateChange(pars, lastpars1, lastpars2)			     	
-	}###END EM
+	}###END EM    
     
 	if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",
 		as.character(index[par.prior[,1] > 1]), "\n")
@@ -501,7 +501,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)	
 	guess[K > 2] <- upper[K > 2] <- NA	
 	null.mod <- unclass(new('mirtClass'))
-	if(!null.model) null.mod <- unclass(mirt(data, 0))
+	if(!null.model && !any(is.na(data.original))) null.mod <- unclass(mirt(data, 0))
     TLI <- NaN    
 	if(!null.model)
         TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)

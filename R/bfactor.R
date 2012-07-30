@@ -458,7 +458,8 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 	if(any(is.na(data.original))) p <- RMSEA <- X2 <- TLI <- NaN
-	null.mod <- unclass(mirt(data, 0))
+	null.mod <- unclass(new('mirtClass'))
+	if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0))
 	if(!is.nan(X2)) TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
 
 	#from last EM cycle pars to FA

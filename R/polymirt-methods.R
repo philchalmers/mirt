@@ -123,8 +123,7 @@ setMethod(
     f = "coef",
     signature = 'polymirtClass',
     definition = function(object, rotate = '', Target = NULL, SE = TRUE, digits = 3, ...)
-    {  
-        browser()
+    {          
         K <- object@K
         a <- object@pars$lambdas		
         d <- matrix(NA, nrow(a), max(K-1))

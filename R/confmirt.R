@@ -433,8 +433,9 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
 	colnames(F) <- factorNames
-	names(h2) <- itemnames    
-	null.mod <- unclass(mirt(data, 0))
+	names(h2) <- itemnames  
+	null.mod <- unclass(new('mirtClass'))
+    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0))
     
     if(exploratory){
         ret <- new('polymirtClass',pars=ESTIMATE$normpars, guess=guess, SEpars=SEpars, SEg=SEg,

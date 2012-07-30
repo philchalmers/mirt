@@ -153,7 +153,8 @@ setMethod(
 			theta <- mvtnorm::rmvnorm(N,mu,sigma)				
 			LL[,i] <- .Call('logLik', lambdas, zetas, guess, upper, theta, fulldata,
 						object@itemloc-1, object@K,	as.integer(estComp))		
-		}		
+		}	
+		LL[is.nan(LL)] <- 0 ###check this
 		rwmeans <- rowMeans(LL)
 		logLik <- sum(log(rwmeans))		
 		data <- object@data
