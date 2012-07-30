@@ -19,5 +19,3 @@ NumericMatrix ProbComp(NumericMatrix, NumericVector,
 
 #endif 
 
-
-
