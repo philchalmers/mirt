@@ -369,7 +369,7 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 			ind <- ind + 1
 		}		
 	}		
-	if(debug) print(startvalues)			 		    
+	if(debug) browser()			 		    
 	
 	#EM  loop  
 	for (cycles in 1:NCYCLES) 

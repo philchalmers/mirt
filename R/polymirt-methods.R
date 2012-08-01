@@ -2,7 +2,7 @@
 setMethod(
     f = "print",
     signature = signature(x = 'polymirtClass'),
-    definition = function(x, ...)
+    definition = function(x)
     {
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")
@@ -30,29 +30,8 @@ setMethod(
 setMethod(
     f = "show",
     signature = signature(object = 'polymirtClass'),
-    definition = function(object)
-    {
-        cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
-            "\n\n", sep = "")
-        cat("Full-information factor analysis with ", ncol(object@F), " factor",
-            if(ncol(object@F)>1) "s", "\n", sep="")
-        if(object@converge == 1)	
-            cat("Converged in ", object@cycles, " iterations.\n", sep="")
-        else 	
-            cat("Estimation stopped after ", object@cycles, " iterations.\n", sep="")	
-        if(length(object@logLik) > 0){
-            cat("Log-likelihood = ", object@logLik,", SE = ",round(object@SElogLik,3), "\n",sep='')
-            cat("AIC =", object@AIC, "\n")							
-            cat("BIC =", object@BIC, "\n")
-            if(!is.nan(object@p))
-                cat("G^2 = ", round(object@G2,2), ", df = ", 
-                    object@df, ", p = ", round(object@p,4), "\nTLI = ", round(object@TLI,3),
-                    ", RMSEA = ", round(object@RMSEA,3), 
-                    "\n", sep="")
-            else 
-                cat("G^2 = ", NA, ", df = ", 
-                    object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")
-        }			
+    definition = function(object) {
+        print(object)			
     } 
 )
 

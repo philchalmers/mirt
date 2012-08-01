@@ -322,7 +322,7 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	parcount <- mod$parcount
 	npars <- mod$npars
 	if(returnindex) return(parcount)
-	if(debug) print(mod)      
+	if(debug) browser()      
     if(any(rowSums(mod$est$estlam) == 0)){
 		tmp <- 1:J
 		tmp <- tmp[rowSums(mod$est$estlam) == 0]

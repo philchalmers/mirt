@@ -9,11 +9,11 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(data, nfact, guess = 0, upper = 1, SE = FALSE,
-    rotate = 'varimax', Target = NULL, prev.cor = NULL,
-    par.prior = FALSE, startvalues = NULL, quadpts = NULL,
-    verbose = FALSE, debug = FALSE, technical = list(),
-    ...)
+  mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch
+    = FALSE, rotate = 'varimax', Target = NULL, prev.cor =
+    NULL, par.prior = FALSE, startvalues = NULL, quadpts =
+    NULL, verbose = FALSE, debug = FALSE, technical =
+    list(), ...)
 
   \S4method{summary}{mirt}(object, rotate = '', suppress =
     0, digits = 3, print = FALSE, ...)
@@ -25,8 +25,9 @@ Theory)}
 
   \S4method{fitted}{mirt}(object, digits = 3, ...)
 
-  \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot =
-    list(x = -70, y = 30, z = 10), ...)
+  \S4method{plot}{mirt}(x, type = 'info', npts = 50,
+    theta_angle = 45, rot = list(x = -70, y = 30, z = 10),
+    ...)
 
   \S4method{residuals}{mirt}(object, restype = 'LD', digits
     = 3, printvalue = NULL, ...)
@@ -39,6 +40,9 @@ Theory)}
   using the \code{\link{key2binary}} function}
 
   \item{nfact}{number of factors to be extracted}
+
+  \item{rasch}{logical; estimate one dimenstional model
+  with equal slope parameters?}
 
   \item{SE}{logical, estimate the standard errors?}
 

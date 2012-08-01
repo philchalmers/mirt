@@ -64,6 +64,7 @@
 #' recorded by the response pattern then they can be recoded to dichotomous
 #' format using the \code{\link{key2binary}} function
 #' @param nfact number of factors to be extracted
+#' @param rasch logical; estimate one dimenstional model with equal slope parameters?
 #' @param SE logical, estimate the standard errors?
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
@@ -171,7 +172,7 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', 
+#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, rotate = 'varimax', 
 #' Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
 #' verbose = FALSE, debug = FALSE, technical = list(), ...)
 #' 
@@ -183,7 +184,8 @@
 #' 
 #' \S4method{fitted}{mirt}(object, digits = 3, ...)
 #' 
-#' \S4method{plot}{mirt}(x, type = 'info', npts = 50, rot = list(x = -70, y = 30, z = 10), ...)
+#' \S4method{plot}{mirt}(x, type = 'info', npts = 50, theta_angle = 45, 
+#' rot = list(x = -70, y = 30, z = 10), ...)
 #' 
 #' \S4method{residuals}{mirt}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
 #' @export mirt
@@ -241,7 +243,7 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varimax', 
+mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, rotate = 'varimax', 
     Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
     verbose = FALSE, debug = FALSE, technical = list(), ...)
 { 
@@ -274,7 +276,22 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 			result <- result - l
 		}
 		result
-	}    	
+	}       
+	fn.rasch <- function(longpars, r, Theta, itemloc, K, prior, tabdata, guess, up){         
+        J <- length(K)
+        lambdas <- matrix(rep(longpars[1], J))
+        zetas <- list()
+        loc1 <- 2
+        for(i in 1:J){
+            loc2 <- loc1 + K[i] - 2
+            zetas[[i]] <- longpars[loc1:loc2]
+            loc1 <- loc2 + 1            
+        }    
+        pars <- list(lambdas=lambdas, zetas=zetas)
+	    rlist <- Estep.mirt(pars, tabdata, Theta, prior, guess, up, itemloc)        
+        result <- (-1)*sum(r*log(rlist$expected))
+        result
+	}
   
 	Call <- match.call()            
     ##technical
@@ -374,11 +391,12 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	} 
 	if(det(Rpoly) < 1e-15) Rpoly <- cor(na.omit(data.original))
 	FA <- suppressWarnings(psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres"))	
-	loads <- unclass(loadings(FA))
+	loads <- unclass(loadings(FA))    
 	u <- FA$unique
 	u[u < .1 ] <- .25	
 	cs <- sqrt(u)
-	lambdas <- loads/cs		
+	lambdas <- loads/cs    
+	if(rasch) lambdas[,1] <- mean(lambdas)
     zetas <- list()	
     for(i in 1:J){        
         temp <- table(data[,i])[1:(K[i]-1)]/N
@@ -403,53 +421,70 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
         pars$lambdas <- matrix(0,nrow(lambdas))
         method = 'Brent'
     }
-	if(debug) print(startvalues)         
+	if(debug) browser()    
     
-	# EM loop 
-	for (cycles in 1:NCYCLES)
-	{       
-		rlist <- Estep.mirt(pars, tabdata, Theta, prior, guess, upper, itemloc)
-        if(verbose){
-            print(Pl <- sum(r*log(rlist$expected)))                            
-            flush.console()
-        }
-		lastpars2 <- lastpars1
-		lastpars1 <- pars				
-		for(i in 1:J){
-			par <- c(pars$lambdas[i, ], pars$zetas[[i]])
-			itemsel <- c(itemloc[i]:(itemloc[i+1] - 1))
-            if(null.model){
-                par <- par[2:length(par)]
-                if(length(par) == 1){
-                    maxim <- optimize(fn, interval=c(-10, 10), rs=rlist$r1[, itemsel],gues = 0, 
-                                      up = 1, Theta=Theta, prior=prior, parprior=par.prior[i, ],
-                                      null.model=null.model)
-                    pars$zetas[[i]] <- maxim$minimum
-                } else {
-                    maxim <- optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
-                          Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
-                          control=list(maxit=MSTEPMAXIT))
-                    pars$zetas[[i]] <- maxim$par                    
-                }                    
-                next
-            }			
-			maxim <- try(optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
-                        Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
-                        control=list(maxit=MSTEPMAXIT)))
-			if(class(maxim) == "try-error"){
-				problemitems <- c(problemitems, i)
-				converge <- 0
-				next
-			}		  
-			pars$lambdas[i, ] <- maxim$par[1:nfact]
-			pars$zetas[[i]] <- maxim$par[(nfact+1):length(par)]	  
-		}				
-		maxdif <- max(abs(unlist(lastpars1) - unlist(pars)))	
-		if (maxdif < TOL && cycles > 5) break    
-		# rate acceleration adjusted every third cycle
-		if (cycles %% 3 == 0 & cycles > 6)		 
-			pars <- rateChange(pars, lastpars1, lastpars2)			     	
-	}###END EM    
+	if(rasch){
+	    longpars <- pars$lambdas[1,1]
+	    for(i in 1:J) longpars <- c(longpars, pars$zetas[[i]])            
+	    maxim <- optim(longpars, fn=fn.rasch,  up=upper, r=r, Theta=Theta, itemloc=itemloc, K=K, 
+                       prior=prior, tabdata=tabdata, guess=guess, control=list(reltol=.001), 
+                       hessian = TRUE)	    
+        cycles <- as.numeric(maxim$counts[1])
+	    pars$lambdas[ ,1] <- maxim$par[1]
+	    loc1 <- 2
+	    for(i in 1:J) {
+	        loc2 <- (loc1 + length(pars$zetas[[i]]) - 1)
+	        pars$zetas[[i]] <- maxim$par[loc1:loc2]
+	        loc1 <- loc2 + 1                
+	    }	    
+	} else {       	 
+    	for (cycles in 1:NCYCLES)
+    	{       
+    		rlist <- Estep.mirt(pars, tabdata, Theta, prior, guess, upper, itemloc)
+            if(verbose){
+                print(Pl <- sum(r*log(rlist$expected)))                            
+                flush.console()
+            }
+    		lastpars2 <- lastpars1
+    		lastpars1 <- pars    
+            
+        	for(i in 1:J){
+            	par <- c(pars$lambdas[i, ], pars$zetas[[i]])
+        	    itemsel <- c(itemloc[i]:(itemloc[i+1] - 1))
+                if(null.model){
+                    par <- par[2:length(par)]
+                    if(length(par) == 1){
+                        maxim <- optimize(fn, interval=c(-10, 10), rs=rlist$r1[, itemsel],gues = 0, 
+                                          up = 1, Theta=Theta, prior=prior, parprior=par.prior[i, ],
+                                          null.model=null.model)
+                        pars$zetas[[i]] <- maxim$minimum
+                    } else {
+                        maxim <- optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
+                              Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
+                              control=list(maxit=MSTEPMAXIT))
+                        pars$zetas[[i]] <- maxim$par                    
+                    }                    
+                    next
+                }			
+        		maxim <- try(optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up=upper[i], 
+                            Theta=Theta, prior=prior, parprior=par.prior[i, ], null.model=null.model,
+                            control=list(maxit=MSTEPMAXIT)))
+        		if(class(maxim) == "try-error"){
+        			problemitems <- c(problemitems, i)
+        			converge <- 0
+        			next
+        		}		  
+        		pars$lambdas[i, ] <- maxim$par[1:nfact]
+        		pars$zetas[[i]] <- maxim$par[(nfact+1):length(par)]	  
+        	}	
+            
+    		maxdif <- max(abs(unlist(lastpars1) - unlist(pars)))	
+    		if (maxdif < TOL && cycles > 5) break    
+    		# rate acceleration adjusted every third cycle
+    		if (cycles %% 3 == 0 & cycles > 6)		 
+    			pars <- rateChange(pars, lastpars1, lastpars2)			     	
+    	}###END EM 
+	}
     
 	if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",
 		as.character(index[par.prior[,1] > 1]), "\n")
@@ -473,7 +508,9 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 	vcovpar <- matrix(999)
 	parsSE <- list()
 	if(SE && nfact == 1){
-		LLfun <- function(p, pars, tabdata, Theta, prior, guess, upper, itemloc){
+		LLfun <- function(p, pars, tabdata, Theta, prior, guess, upper, itemloc, rasch){
+            if(rasch)
+                p[2:length(guess)] <- p[1]
 			pars2 <- rebuildPars(p, pars)		
 			rlist <- Estep.mirt(pars2, tabdata, Theta, prior, guess, upper, itemloc)     	  
 			Pl <- rlist$expected
@@ -481,9 +518,17 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 			-1*logLik		
 		}
 		fmin <- nlm(LLfun, unlist(pars), pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
-			guess=guess, upper=upper, itemloc=itemloc, hessian=TRUE, gradTOL=.1)
-		vcovpar <- solve(fmin$hessian)
-		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
+			guess=guess, upper=upper, itemloc=itemloc, rasch=rasch, hessian=TRUE, gradtol=.1)
+		hess <- fmin$hessian
+        if(rasch){
+            hess <- hess[-(2:J),-(2:J)]
+            tmp <- sqrt(diag(solve(hess)))
+            SEs <- c(rep(tmp[1], J), tmp[-1])            
+		} else { 
+            vcovpar <- solve(hess)
+            SEs <- sqrt(diag(solve(hess)))               
+		}
+		parsSE <- rebuildPars(SEs, pars)	
 	}	
 	logN <- 0
 	npatmissing <- sum(is.na(rowSums(tabdata2)))
@@ -493,6 +538,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rotate = 'varima
 		for (j in 1:r[i]) 
 			logr[i] <- logr[i] + log(j)    	
 	df <- (length(r) - 1) - npars + nfact*(nfact - 1)/2  - npatmissing
+	if(rasch) df <- df + (J - 1)
     if(null.model) df <- (length(r) - 1) - npars - npatmissing + J
 	X2 <- 2 * sum(r * log(r/(N*Pl)))	
 	logLik <- logLik + logN/sum(logr)	

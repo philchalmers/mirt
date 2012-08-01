@@ -2,7 +2,7 @@
 setMethod(
     f = "print",
     signature = signature(x = 'bfactorClass'),
-    definition = function(x, ...){  
+    definition = function(x){  
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")		
         cat("Full-information bifactor analysis with ", 
@@ -29,25 +29,7 @@ setMethod(
     f = "show",
     signature = signature(object = 'bfactorClass'),
     definition = function(object){  
-        cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
-            "\n\n", sep = "")		
-        cat("Full-information bifactor analysis with ", 
-            length(unique(object@specific)), " specific factors \n", sep='')
-        if(object@converge == 1)	
-            cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
-                " quadrature points.\n", sep="")
-        else 	
-            cat("Estimation stopped after ", object@EMiter, " iterations using ", 
-                object@quadpts,	" quadrature points.\n", sep="")
-        cat("Log-likelihood = ", object@logLik, "\n")
-        cat("AIC = ", object@AIC, "\n")		
-        cat("BIC = ", object@BIC, "\n")
-        if(!is.nan(object@p))
-            cat("G^2 = ", round(object@X2,2), ", df = ", object@df, ", p = ", round(object@p,4), 
-                "\nTLI = ", round(object@TLI,3), ", RMSEA = ", round(object@RMSEA,3), "\n", sep="")
-        else 
-            cat("G^2 = ", NA, ", df = ", 
-                object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")			
+        print(object)			
     }
 )
 

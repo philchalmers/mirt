@@ -2,7 +2,7 @@
 setMethod(
     f = "print",
     signature = signature(x = 'mirtClass'),
-    definition = function(x, ...){  
+    definition = function(x){  
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")
         cat("Full-information factor analysis with ", ncol(x@F), " factor",
@@ -29,25 +29,7 @@ setMethod(
     f = "show",
     signature = signature(object = 'mirtClass'),
     definition = function(object){  
-        cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
-            "\n\n", sep = "")
-        cat("Full-information factor analysis with ", ncol(object@F), " factor",
-            if(ncol(object@F)>1) "s", "\n", sep="")
-        if(object@converge == 1)	
-            cat("Converged in ", object@EMiter, " iterations using ", object@quadpts,
-                " quadrature points.\n", sep="")
-        else 	
-            cat("Estimation stopped after ", object@EMiter, " iterations using ", 
-                object@quadpts,	" quadrature points.\n", sep="")
-        cat("Log-likelihood =", object@logLik, "\n")
-        cat("AIC =", object@AIC, "\n")		
-        cat("BIC =", object@BIC, "\n")
-        if(!is.nan(object@p))
-            cat("G^2 = ", round(object@X2,2), ", df = ", object@df, ", p = ", round(object@p,4),
-                "\nTLI = ", round(object@TLI,3), ", RMSEA = ", round(object@RMSEA,3), "\n", sep="")
-        else 
-            cat("G^2 = ", NA, ", df = ", 
-                object@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )			
+        print(object)
     }
 )
 
@@ -143,10 +125,15 @@ setMethod(
             print(round(parameters, digits))	  
         }
         ret <- list(parameters)
-        if(length(object@parsSE) > 1){
+        if(length(object@parsSE) > 1){            
             if(SE){
-                cat("\nStd. Errors: \n\n")	
-                SEs <- matrix(sqrt(diag(object@vcov)), ncol = ncol(a) + 1)
+                cat("\nStd. Errors: \n\n")
+                SEs <- parameters                
+                SEs[,ncol(SEs):(ncol(SEs)-1)] <- NA
+                SEs[,1:ncol(a)] <- object@parsSE$lambdas
+                for(i in 1:nrow(a)) 
+                    SEs[i,(ncol(a)+1):(ncol(a) + length(object@parsSE$zetas[[i]]))] <- 
+                        object@parsSE$zetas[[i]] 
                 colnames(SEs) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),
                                    "guess", "upper") 
                 rownames(SEs) <- rownames(parameters)

@@ -20,8 +20,9 @@
   \S4method{coef}{polymirt}(object, rotate = '', SE = TRUE,
     digits = 3, ...)
 
-  \S4method{plot}{polymirt}(x, npts = 50, type = 'info',
-    rot = list(x = -70, y = 30, z = 10), ...)
+  \S4method{plot}{polymirt}(x, npts = 50, theta_angle = 45,
+    type = 'info', rot = list(x = -70, y = 30, z = 10),
+    ...)
 
   \S4method{residuals}{polymirt}(object, restype = 'LD',
     digits = 3, printvalue = NULL, ...)
