@@ -188,7 +188,7 @@ setMethod(
         if(nfact == 2){
             theta_angle <- c(theta_angle, 90 - theta_angle)
             cosalpha <- cos(d2r(theta_angle))
-            A <- as.matrix(rowSums((a * cosalpha)^2))            
+            A <- as.matrix(sqrt(rowSums((a * cosalpha)^2)))
         }
         theta <- seq(-4,4,length.out=npts)
         Theta <- thetaComb(theta, nfact)
