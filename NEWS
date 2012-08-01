@@ -1,3 +1,20 @@
+
+----------------------------------------------------------------
+mirt 0.2.6-1
+---------------------------------------------------------------
+
+* dropped the ball and had lots of bug fixes this round. Future
+  commits will avoid this problem by utilizing the testthat package
+  to test code extensively before release
+
+* internal change in confmirt function to move MHRM engine outside the 
+  function for better maintenance
+
+* theta_angle added to mirt and polymirt plots for changing the viewing angle 
+  w.r..t theta_1 
+
+* null model no longer calculated when missing data present
+
 ----------------------------------------------------------------
 mirt 0.2.6
 ---------------------------------------------------------------
