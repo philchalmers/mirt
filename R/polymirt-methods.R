@@ -170,7 +170,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'polymirtClass', y = "missing"),
-    definition = function(x, y, type = 'info', npts = 50, 
+    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
     {  		
         if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
@@ -184,7 +184,12 @@ setMethod(
         guess[is.na(guess)] <- 0
         upper <- x@upper
         upper[is.na(upper)] <- 1
-        A <- as.matrix(sqrt(apply(a^2,1,sum)))	
+        A <- as.matrix(sqrt(apply(a^2,1,sum)))
+        if(nfact == 2){
+            theta_angle <- c(theta_angle, 90 - theta_angle)
+            cosalpha <- cos(d2r(theta_angle))
+            A <- as.matrix(rowSums((a * cosalpha)^2))            
+        }
         theta <- seq(-4,4,length.out=npts)
         Theta <- thetaComb(theta, nfact)
         info <- rep(0,nrow(Theta))

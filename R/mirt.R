@@ -108,6 +108,8 @@
 #' @param type type of plot to view; can be \code{'curve'} for the total test
 #' score as a function of two dimensions, or \code{'info'} to show the test
 #' information function for two dimensions
+#' @param theta_angle a numeric value ranging from 0 to 90 used in \code{plot}. Give the 
+#' information curve at this \eqn{theta_1} value
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
 #' @param rot allows rotation of the 3D graphics

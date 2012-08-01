@@ -99,6 +99,10 @@
   \item{digits}{the number of significant digits to be
   rounded}
 
+  \item{theta_angle}{a numeric value ranging from 0 to 90
+  used in \code{plot}. Give the information curve at this
+  \eqn{theta_1} value}
+
   \item{npts}{number of quadrature points to be used for
   plotting features. Larger values make plots look
   smoother}

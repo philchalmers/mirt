@@ -1055,3 +1055,5 @@ rotateLambdas <- function(so){
     a    
 }
 
+d2r <-function(d) pi*d/180
+    

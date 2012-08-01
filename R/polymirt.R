@@ -73,6 +73,8 @@
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software
 #' @param digits the number of significant digits to be rounded
+#' @param theta_angle a numeric value ranging from 0 to 90 used in \code{plot}. Give the 
+#' information curve at this \eqn{theta_1} value
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
 #' @param rot allows rotation of the 3D graphics
