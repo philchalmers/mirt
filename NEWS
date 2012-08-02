@@ -15,7 +15,7 @@ mirt 0.2.6-1
 
 * null model no longer calculated when missing data present
 
-* Rasch models estimated in mirt() with associated standard errors
+* fixed item slope models estimated in mirt() with associated standard errors
 
 ----------------------------------------------------------------
 mirt 0.2.6

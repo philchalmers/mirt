@@ -64,7 +64,8 @@
 #' recorded by the response pattern then they can be recoded to dichotomous
 #' format using the \code{\link{key2binary}} function
 #' @param nfact number of factors to be extracted
-#' @param rasch logical; estimate one dimenstional model with equal slope parameters?
+#' @param equal_slopes logical; for a one dimenstional model estimate all slope parameters to equal?
+#' If all the items are dichotomous is the equivalent to the 1PL model
 #' @param SE logical, estimate the standard errors?
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
@@ -172,7 +173,7 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, rotate = 'varimax', 
+#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, equal_slopes = FALSE, rotate = 'varimax', 
 #' Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
 #' verbose = FALSE, debug = FALSE, technical = list(), ...)
 #' 
@@ -243,7 +244,7 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, rotate = 'varimax', 
+mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, equal_slopes = FALSE, rotate = 'varimax', 
     Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = NULL, quadpts = NULL, 
     verbose = FALSE, debug = FALSE, technical = list(), ...)
 { 
@@ -277,7 +278,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, r
 		}
 		result
 	}       
-	fn.rasch <- function(longpars, r, Theta, itemloc, K, prior, tabdata, guess, up){         
+	fn.equal_slopes <- function(longpars, r, Theta, itemloc, K, prior, tabdata, guess, up){         
         J <- length(K)
         lambdas <- matrix(rep(longpars[1], J))
         zetas <- list()
@@ -396,7 +397,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, r
 	u[u < .1 ] <- .25	
 	cs <- sqrt(u)
 	lambdas <- loads/cs    
-	if(rasch) lambdas[,1] <- mean(lambdas)
+	if(equal_slopes) lambdas[,1] <- mean(lambdas)
     zetas <- list()	
     for(i in 1:J){        
         temp <- table(data[,i])[1:(K[i]-1)]/N
@@ -423,10 +424,10 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, r
     }
 	if(debug) browser()    
     
-	if(rasch){
+	if(equal_slopes){
 	    longpars <- pars$lambdas[1,1]
 	    for(i in 1:J) longpars <- c(longpars, pars$zetas[[i]])            
-	    maxim <- optim(longpars, fn=fn.rasch,  up=upper, r=r, Theta=Theta, itemloc=itemloc, K=K, 
+	    maxim <- optim(longpars, fn=fn.equal_slopes,  up=upper, r=r, Theta=Theta, itemloc=itemloc, K=K, 
                        prior=prior, tabdata=tabdata, guess=guess, control=list(reltol=.001), 
                        hessian = TRUE)	    
         cycles <- as.numeric(maxim$counts[1])
@@ -508,8 +509,8 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, r
 	vcovpar <- matrix(999)
 	parsSE <- list()
 	if(SE && nfact == 1){
-		LLfun <- function(p, pars, tabdata, Theta, prior, guess, upper, itemloc, rasch){
-            if(rasch)
+		LLfun <- function(p, pars, tabdata, Theta, prior, guess, upper, itemloc, equal_slopes){
+            if(equal_slopes)
                 p[2:length(guess)] <- p[1]
 			pars2 <- rebuildPars(p, pars)		
 			rlist <- Estep.mirt(pars2, tabdata, Theta, prior, guess, upper, itemloc)     	  
@@ -518,9 +519,9 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, r
 			-1*logLik		
 		}
 		fmin <- nlm(LLfun, unlist(pars), pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
-			guess=guess, upper=upper, itemloc=itemloc, rasch=rasch, hessian=TRUE, gradtol=.1)
+			guess=guess, upper=upper, itemloc=itemloc, equal_slopes=equal_slopes, hessian=TRUE, gradtol=.1)
 		hess <- fmin$hessian
-        if(rasch){
+        if(equal_slopes){
             hess <- hess[-(2:J),-(2:J)]
             tmp <- sqrt(diag(solve(hess)))
             SEs <- c(rep(tmp[1], J), tmp[-1])            
@@ -538,7 +539,7 @@ mirt <- function(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch = FALSE, r
 		for (j in 1:r[i]) 
 			logr[i] <- logr[i] + log(j)    	
 	df <- (length(r) - 1) - npars + nfact*(nfact - 1)/2  - npatmissing
-	if(rasch) df <- df + (J - 1)
+	if(equal_slopes) df <- df + (J - 1)
     if(null.model) df <- (length(r) - 1) - npars - npatmissing + J
 	X2 <- 2 * sum(r * log(r/(N*Pl)))	
 	logLik <- logLik + logN/sum(logr)	

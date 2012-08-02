@@ -9,11 +9,11 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, rasch
-    = FALSE, rotate = 'varimax', Target = NULL, prev.cor =
-    NULL, par.prior = FALSE, startvalues = NULL, quadpts =
-    NULL, verbose = FALSE, debug = FALSE, technical =
-    list(), ...)
+  mirt(data, nfact, guess = 0, upper = 1, SE = FALSE,
+    equal_slopes = FALSE, rotate = 'varimax', Target =
+    NULL, prev.cor = NULL, par.prior = FALSE, startvalues =
+    NULL, quadpts = NULL, verbose = FALSE, debug = FALSE,
+    technical = list(), ...)
 
   \S4method{summary}{mirt}(object, rotate = '', suppress =
     0, digits = 3, print = FALSE, ...)
@@ -41,8 +41,9 @@ Theory)}
 
   \item{nfact}{number of factors to be extracted}
 
-  \item{rasch}{logical; estimate one dimenstional model
-  with equal slope parameters?}
+  \item{equal_slopes}{logical; for a one dimenstional model
+  estimate all slope parameters to equal? If all the items
+  are dichotomous is the equivalent to the 1PL model}
 
   \item{SE}{logical, estimate the standard errors?}
 
