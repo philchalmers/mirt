@@ -153,6 +153,9 @@ setMethod(
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
     {  		
         if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
+        if (any(theta_angle > 90 | theta_angle < 0)) 
+            stop('Improper angle specifed. Must be between 0 and 90.')
+        if(length(theta_angle) > 1) type = 'infoangle'        
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         K <- x@K		
         nfact <- ncol(x@Theta)
@@ -163,30 +166,21 @@ setMethod(
         guess[is.na(guess)] <- 0
         upper <- x@upper
         upper[is.na(upper)] <- 1
-        A <- as.matrix(sqrt(apply(a^2,1,sum)))
         if(nfact == 2){
-            theta_angle <- c(theta_angle, 90 - theta_angle)
-            cosalpha <- cos(d2r(theta_angle))
-            A <- as.matrix(sqrt(rowSums((a * cosalpha)^2)))
-        }
-        theta <- seq(-4,4,length.out=npts)
-        Theta <- thetaComb(theta, nfact)
-        info <- rep(0,nrow(Theta))
-        for(j in 1:length(K)){
-            if(K[j] > 2){
-                P <- P.poly(a[j,], d[[j]],Theta, itemexp = FALSE)		
-                for(i in 1:K[j]){
-                    w1 <- P[,i]*(1-P[,i])*A[j]
-                    w2 <- P[,i+1]*(1-P[,i+1])*A[j]
-                    I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
-                    info <- info + I
-                }
-            } else {
-                P <- P.mirt(a[j,], d[[j]],Theta, guess[j], upper[j])
-                Pstar <- P.mirt(a[j,], d[[j]],Theta, 0)
-                info <- info + A[j]^2 * P * (1-P) * Pstar/P
-            }			
-        }		
+            theta_angle2 <- c(90 - theta_angle)
+            angles <- rbind(theta_angle, theta_angle2)
+            cosalpha <- cos(d2r(angles))
+            A <- list()
+            if(length(theta_angle) == 1)
+                A[[1]] <- as.matrix(sqrt(rowSums((a * matrix(cosalpha[ ,1], nrow(a), 2, TRUE))^2)))
+            else                 
+                for(i in 1:ncol(cosalpha))
+                    A[[i]] <- as.matrix(sqrt(rowSums((a * matrix(cosalpha[ ,i], nrow(a), 2, TRUE))^2)))                                
+        }   
+        theta <- if(length(theta_angle) == 1) seq(-4,4,length.out=npts) 
+        else seq(-4,4,length.out=9)
+        Theta <- thetaComb(theta, nfact)        
+        info <- test_info(a=a, d=d, Theta=Theta, Alist=A, guess=guess, upper=upper, K=K)        
         plt <- data.frame(cbind(info,Theta))
         if(nfact == 2){						
             colnames(plt) <- c("info", "Theta1", "Theta2")			
@@ -198,6 +192,10 @@ setMethod(
                 return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
                                  zlab = expression(I(theta)), xlab = expression(theta[1]), ylab = expression(theta[2]), 
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
+            if(type == 'infoangle')
+                symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue', 
+                        xlab = expression(theta[1]), ylab = expression(theta[2]), 
+                        main = 'Information across different angles')            
         } else {
             colnames(plt) <- c("info", "Theta")
             if(type == 'info')

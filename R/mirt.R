@@ -110,8 +110,9 @@
 #' @param type type of plot to view; can be \code{'curve'} for the total test
 #' score as a function of two dimensions, or \code{'info'} to show the test
 #' information function for two dimensions
-#' @param theta_angle a numeric value ranging from 0 to 90 used in \code{plot}. Give the 
-#' information curve at this \eqn{theta_1} value
+#' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is 
+#' used then a bubble plot is created with the summed information accross the angles specified 
+#' (e.g., \code{theta_angle = seq(0, 90, by=10)})
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
 #' @param rot allows rotation of the 3D graphics

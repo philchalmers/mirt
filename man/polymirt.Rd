@@ -100,9 +100,11 @@
   \item{digits}{the number of significant digits to be
   rounded}
 
-  \item{theta_angle}{a numeric value ranging from 0 to 90
-  used in \code{plot}. Give the information curve at this
-  \eqn{theta_1} value}
+  \item{theta_angle}{numeric values ranging from 0 to 90
+  used in \code{plot}. If a vector is used then a bubble
+  plot is created with the summed information accross the
+  angles specified (e.g., \code{theta_angle = seq(0, 90,
+  by=10)})}
 
   \item{npts}{number of quadrature points to be used for
   plotting features. Larger values make plots look
