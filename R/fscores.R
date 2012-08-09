@@ -70,7 +70,7 @@ setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", verbose = TRUE)
-	{        
+	{           
 		K <- object@K				
         so <- summary(object, rotate = rotate, print = FALSE)
         a <- rotateLambdas(so)
@@ -131,8 +131,9 @@ setMethod(
 			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta))
 			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
 			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- scores[j, ]
+				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)
+                tmp <- matrix(rep(scores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
+                scoremat[TFvec, ] <- tmp
 			} 
 			colnames(scoremat) <- colnames(object@F)	
 			return(cbind(fulldata,scoremat))
@@ -221,9 +222,10 @@ setMethod(
 			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=1)
 			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
 			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, 1] <- scores[j, 1]
-			} 
+			    TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)
+			    tmp <- matrix(rep(scores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
+			    scoremat[TFvec, ] <- tmp
+			}
 			colnames(scoremat) <- 'G'	
 			return(cbind(fulldata,scoremat))
 		} else {  				
@@ -242,10 +244,10 @@ setMethod(
 	{ 	        
 		cand.t.var <- 1
 		theta0 <- object@Theta
-		K <- object@K
-		nfact <- ncol(theta0)		
+		K <- object@K				
 		so <- summary(object, rotate = rotate, print = FALSE)
-		lambdas <- rotateLambdas(so)
+		lambdas <- rotateLambdas(so)        
+        nfact <- ncol(lambdas)
 		zetas <- object@pars$zetas
 		guess <- object@guess	   
 		guess[is.na(guess)] <- 0
@@ -285,7 +287,7 @@ setMethod(
 			expscores[,i] <- rowMeans(Theta[[i]])
 			sdscores[,i] <- apply(Theta[[i]],1,sd)
 		}        
-				
+			
 		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
 		colnames(ret) <- Names
 		
@@ -299,8 +301,9 @@ setMethod(
 			colnames(scoremat) <- paste("F",1:nfact,sep='')
 			tmp <- unique(data)[,1:length(K)]
 			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- expscores[j, ]
+				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata) 
+                tmp2 <- matrix(rep(expscores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
+				scoremat[TFvec, ] <- tmp2
 			}              
 			return(cbind(object@data,scoremat))
 		}	
@@ -382,8 +385,9 @@ setMethod(
 			colnames(scoremat) <- factorNames
 			tmp <- unique(data)[,1:length(K)]
 			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata)        
-				scoremat[TFvec, ] <- expscores[j, ]
+			    TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata) 
+			    tmp2 <- matrix(rep(expscores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
+			    scoremat[TFvec, ] <- tmp2
 			}              
 			return(cbind(object@data,scoremat))
 		}	
