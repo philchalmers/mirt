@@ -166,6 +166,7 @@ setMethod(
         guess[is.na(guess)] <- 0
         upper <- x@upper
         upper[is.na(upper)] <- 1
+        A <- list(a)
         if(nfact == 2){
             theta_angle2 <- c(90 - theta_angle)
             angles <- rbind(theta_angle, theta_angle2)

@@ -242,7 +242,7 @@ setMethod(
     signature = signature(x = 'mirtClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
-    {  
+    {          
         if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
@@ -256,12 +256,12 @@ setMethod(
         guess <- x@guess
         upper <- x@upper
         guess[is.na(guess)] <- 0
-        upper[is.na(upper)] <- 1        
+        upper[is.na(upper)] <- 1
+        A <- list(a)
         if(nfact == 2){
             theta_angle2 <- c(90 - theta_angle)
             angles <- rbind(theta_angle, theta_angle2)
-            cosalpha <- cos(d2r(angles))
-            A <- list()
+            cosalpha <- cos(d2r(angles))            
             if(length(theta_angle) == 1)
                 A[[1]] <- as.matrix(sqrt(rowSums((a * matrix(cosalpha[ ,1], nrow(a), 2, TRUE))^2)))
             else                 
