@@ -66,8 +66,7 @@ Rotate <- function(F, rotate, Target = NULL, ...)
 	if(rotate == 'infomaxQ') rotF <- GPArotation::infomaxQ(F, ...)
 	if(rotate == 'mccammon') rotF <- GPArotation::mccammon(F, ...)
 	if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F, ...)
-	if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F, ...)    		
-	
+	if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F, ...)
 	return(unclass(rotF))
 }  
 
@@ -113,114 +112,36 @@ MAP.bfactor <- function(Theta, a, d, guess, upper, patdata, logicalfact, itemloc
 	L  
 }  
 
-#trace lines for polymirt
-P.poly <- function(lambda, zetas, Thetas, itemexp = FALSE)
-{	
-	ncat <- length(zetas) + 1
-	nfact <- length(lambda)
-	Pk <- matrix(0,nrow(Thetas),ncat+1)
-	Pk[,1] <- 1	
-	for(i in 1:(ncat-1))			
-		Pk[ ,i+1] <- P.mirt(lambda, zetas[i], Thetas, 0)		
-	if(itemexp){
-		P <- matrix(0,nrow(Thetas),ncat)		
-		for(i in ncat:1)
-			P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]						
-		Pk <- P
-	}	
-	return(Pk)
-}
-
-# Trace lines for mirt models
-P.mirt <- function(a, d, Theta, g, u = 1)
-{ 		
-	traces <- .Call("traceLinePts", a, d, g, u, Theta)
-	return(traces)
-}
-
-# Trace lines for partially compensetory models
-P.comp <- function(a, d, thetas, c = 0, u = 1)
-{
-	nfact <- length(a)
-	P <- rep(1,nrow(thetas))
-	for(i in 1:nfact)
-		P <- P * P.mirt(a[i], d[i], thetas[ ,i, drop=FALSE],0)
-	P <- c + (u - c) * P
-	P	
-} 
-
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, Theta, prior, guess, upper, itemloc) 
-{
-	a <- pars$lambdas
-	J <- nrow(a)
-	nfact <- ncol(a)	
-	nquad <- nrow(Theta)
-	d <- pars$zetas    
+Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc) 
+{       
+	nfact <- ncol(Theta)
+	nquad <- nrow(Theta)	
 	r <- tabdata[ ,ncol(tabdata)]
 	X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
-	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))
-	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
-	for (i in 1:J){
-		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, guess[i], upper[i]) 
-			itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
-		} else {
-			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-				P.poly(a[i, ], d[[i]], Theta, TRUE)	
-		}
-	}		
-    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)	    		
+	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
+	for (i in 1:length(pars))
+	    itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)    
 	return(retlist)
 } 
 
-# Trace lines for bfactor
-P.bfactor <- function(a, d, Theta, g, u, patload)
-{ 
-	a <- a[patload]	
-	if(length(d) > 1){
-		ncat <- length(d) + 1
-		nfact <- length(a)
-		Pk <- matrix(0,nrow(Theta),ncat+1)
-		Pk[,1] <- 1	
-		for(i in 1:(ncat-1))			
-			Pk[ ,i+1] <- P.mirt(a, d[i], Theta, 0)				
-		P <- matrix(0,nrow(Theta),ncat)		
-		for(i in ncat:1)
-			P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]		
-	} else P <- .Call("traceLinePts", a, d, g, u, Theta)		
-	return(P)
-}
-
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, guess, upper, specific, sitems, itemloc) 
-{	
-	a <- pars$lambdas
-	logicalfact <- attr(pars, 'lamsel')
-	nfact <- ncol(a)
-	J <- nrow(a)
-	nquad <- nrow(Theta)	
-	d <- pars$zetas    
+Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc) 
+{	    
+	nfact <- pars[[1]]@nfact
+	J <- length(pars)
+	nquad <- nrow(Theta)		
 	r <- tabdata[ ,ncol(tabdata)]
 	X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
-	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))
-	r1 <- r0 <- matrix(0, ncol=length(guess), nrow=nrow(Theta))
-	for (i in 1:J){
-		atmp <- a[i, logicalfact[i, ]]
-		if(length(d[[i]]) == 1){
-			itemtrace[ ,itemloc[i] + 1] <- P.mirt(atmp, d[[i]], Theta, guess[i], upper[i]) 
-			itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
-		} else {
-			itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-				P.poly(atmp, d[[i]], Theta, TRUE) 
-		}
-	}			
+	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
+	for (i in 1:J)
+	    itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)			
 	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)	
 	r1 <- matrix(0, nrow(Theta), ncol(X))	
 	for (i in 1:J)
 	    r1[ ,itemloc[i]:(itemloc[i+1]-1)] <- 		
-			retlist$r1[ ,itemloc[i]:(itemloc[i+1]-1) + (specific[i] - 1)*ncol(X) ]	    
-		
+			retlist$r1[ ,itemloc[i]:(itemloc[i+1]-1) + (specific[i] - 1)*ncol(X) ]		
 	return(list(r1=r1, expected=retlist$expected))	
 }      
 
@@ -1011,9 +932,9 @@ sortParsConfmirt <- function(pars, indlist, nfact, nfactNames)
 }
 
 # Ramsey rate acceleration adjustment for EM
-rateChange <- function(pars, lastpars1, lastpars2)
-{
-	p <- unlist(pars)	
+rateChange <- function(pars, listpars, lastpars1, lastpars2)
+{   
+	p <- unlist(listpars)	
 	lp1 <- unlist(lastpars1)
 	lp2 <- unlist(lastpars2)
 	rate <- rep(0, length(p))
@@ -1025,8 +946,12 @@ rateChange <- function(pars, lastpars1, lastpars2)
 	rate[p > 4] <- 0
 	rate[p < -4] <- 0    
 	p <- lp1*rate*(-2) + (1 - rate*(-2))*p
-	parsret <- rebuildPars(p, pars)	
-	parsret
+    ind <- 1
+    for(i in 1:length(pars)){
+        pars[[i]]@par <- p[ind:(ind + length(pars[[i]]@par) - 1)]
+        ind <- ind + length(pars[[i]]@par)
+    }	
+	pars
 }
 
 # Rebuild parameters given a list
@@ -1084,4 +1009,128 @@ test_info <- function(a, d, Theta, Alist, guess, upper, K){
     }
     info <- tmp/length(infolist)
     info
+}
+
+Mstep.mirt <- function(par, obj, Theta, prior, constr = list()){ 
+    if(length(constr) < 1){
+        obj@par[obj@est] <- par    
+        ret <- LogLik(x=obj, Theta=Theta)            	
+    } else {        
+        obj <- reloadConstr(par=par, constr=constr, obj=obj)        
+        ret <- 0
+        for(i in 1:length(obj))            
+            ret <- ret + LogLik(x=obj[[i]], Theta=Theta)               
+    }
+    return(ret)
+}
+
+Lambdas <- function(pars){
+    lambdas <- list()
+    for(i in 1:length(pars))    
+        lambdas[[i]] <- ExtractLambdas(pars[[i]])    
+    lambdas <- do.call(rbind,lambdas)
+    lambdas
+}
+
+LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
+                     constrain, bfactor = NULL){
+    pars <- list()   
+    estLambdas <- matrix(TRUE, J, nfact)
+    BFACTOR <- FALSE
+    if(!is.null(bfactor)){
+        estLambdas <- bfactor
+        BFACTOR <- TRUE
+    }    
+    parnumber <- 1
+    constr <- c()
+    if(length(constrain) > 0 && is.list(constrain)) 
+        for(i in 1:length(constrain))
+            constr <- c(constr, constrain[[i]])
+    constr <- unique(constr)
+    for(i in 1:J){
+        tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location 
+        if(itemtype[i] == 'NullModel' && K[i] == 2) 
+            pars[[i]] <- new('dich', par=c(0,zetas[[i]],0,1), nfact=1, bfactor=BFACTOR,
+                             dat=fulldata[ ,tmp], est=c(FALSE,TRUE,FALSE,FALSE), constr=FALSE)
+        
+        if(itemtype[i] == 'NullModel' && K[i] > 2) 
+            pars[[i]] <- new('grad', par=c(0,zetas[[i]]), nfact=1, ncat=K[i], bfactor=BFACTOR,
+                             dat=fulldata[ ,tmp], est=c(FALSE,rep(TRUE,K[i]-1)), constr=FALSE)
+        
+        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){ 
+            pars[[i]] <- new('dich', par=c(lambdas[i,], zetas[[i]], guess[i], upper[i]),
+                             nfact=nfact, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                    
+            estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
+            if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
+            if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE            
+            pars[[i]]@est <- estpars
+            tmp2 <- parnumber:(parnumber + length(estpars) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE
+            names(tmp2) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(estpars)
+        }
+        
+        if(itemtype[i] == 'grad'){
+            pars[[i]] <- new('grad', par=c(lambdas[i,], zetas[[i]]), nfact=nfact, ncat=K[i],
+                             dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
+            estpars <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
+            pars[[i]]@est <- estpars
+            tmp2 <- parnumber:(parnumber + length(estpars) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE
+            names(tmp2) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(estpars)
+        }
+        
+        if(itemtype[i] == 'gpcm'){            
+            pars[[i]] <- new('gpcm', par=c(lambdas[i,], zetas[[i]]), nfact=nfact, ncat=K[i],
+                             dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
+            estpars <- c(estLambdas[i, ], rep(TRUE, K[i]))
+            #identifiction constraints
+            estpars[nfact+1] <- FALSE
+            pars[[i]]@par[nfact+1] <- 0
+            pars[[i]]@est <- estpars
+            tmp2 <- parnumber:(parnumber + length(estpars) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE
+            names(tmp2) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(estpars)
+        }        
+        
+        if(itemtype[i] == 'nom'){
+            pars[[i]] <- new('nom', par=c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i])), 
+                             nfact=nfact, ncat=K[i], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
+            estpars <- c(estLambdas[i, ], rep(TRUE, length(pars[[i]]@par) - nfact))
+            #identifiction constraints
+            estpars[c(nfact+1, nfact+ K[i], nfact + K[i] + 1)] <- FALSE
+            pars[[i]]@par[c(nfact + 1, nfact + K[i] + 1)] <- 0
+            pars[[i]]@par[nfact + K[i]] <- K[i] - 1
+            pars[[i]]@est <- estpars
+            tmp2 <- parnumber:(parnumber + length(estpars) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE
+            names(tmp2) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
+                             paste('d', 0:(K[i]-1), sep=''))
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(estpars)
+        }         
+    }    
+    attr(pars, 'uniqueconstr') <- constr 
+    return(pars)
+}
+
+reloadConstr <- function(par, constr, obj){
+    par2 <- rep(NA, length(constr[[1]]))         
+    notconstr <- rep(TRUE, length(par2))
+    for(i in 1:length(constr)){
+        par2[constr[[i]]] <- par[i]           
+        notconstr[constr[[i]]] <- FALSE
+    }
+    par2[notconstr] <- par[(length(constr)+1):length(par)]
+    ind <- 1    
+    for(i in 1:length(obj)){
+        obj[[i]]@par[obj[[i]]@est] <- par2[ind:(ind + sum(obj[[i]]@est) - 1)]
+        ind <- ind + sum(obj[[i]]@est)                   
+    }
+    return(obj)
 }

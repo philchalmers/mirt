@@ -56,3 +56,6 @@ Collate:
     'polymirt-methods.R'
     'utils.R'
     'MHRM.R'
+    '01-itemtypes.R'
+    '02-item_methods.R'
+    '03-mirt_generics.R'

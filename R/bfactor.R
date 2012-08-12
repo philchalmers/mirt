@@ -186,8 +186,7 @@
 #' -1.0,NA,NA,
 #' -1.5,NA,NA,
 #'  1.5,NA,NA,
-#'  0.0,NA,NA,
-#' 1.0,NA,NA),ncol=3,byrow=TRUE)
+#'  0.0,NA,NA),ncol=3,byrow=TRUE)
 #' 
 #' sigma <- diag(3)
 #' dataset <- simdata(a,d,2000,sigma)
@@ -198,44 +197,21 @@
 #'
 #'     }
 #' 
-bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor = NULL, 
-	par.prior = FALSE, startvalues = NULL, quadpts = 15, verbose = FALSE, debug = FALSE, 
-    technical = list(), ...)
-{ 
-	#local functions	
-	fn <- function(par, rs, gues, up, Theta, Prior, parprior, nzeta){		
-		a <- par[1:(length(par)-nzeta)]
-		d <- par[(length(a)+1):length(par)]	
-		rs <- rs * Prior
-		if(ncol(rs) == 2){
-			itemtrace <- P.mirt(a, d, Theta, gues, up) 
-			itemtrace <- cbind(1.0 - itemtrace, itemtrace)
-		} else {
-			itemtrace <- P.poly(a, d, Theta, TRUE)	
-		}
-		result <- (-1) * sum(rs * log(itemtrace))		
-		if(parprior[1] > 1){
-			sigma <- 1
-			d <- sqrt(a %*% a)
-			anew <- a/d
-			sigma <- sigma - sum(anew)
-			l <- log(sigma^(parprior[1] - 1.0) / beta(parprior[1],1.0))
-			result <- result - l
-		}
-		if(parprior[3] > 0 && nzeta == 1){
-			l <- log(dnorm(d,parprior[2],parprior[3]))
-			result <- result - l
-		}
-		result
-	}   
-		
-	Call <- match.call()		
+bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
+                    startvalues = list(), constrain = list(), freepars = list(), prev.cor = NULL, 
+                    par.prior = FALSE,  quadpts = 20, verbose = FALSE, debug = FALSE, 
+                    technical = list(), ...)
+{ 		
+	Call <- match.call()		    
 	##technical
 	MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
 	MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
 	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)	
 	NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)
+	LOWER <- c(-Inf, -20)
+	UPPER <- c(Inf, 20)    
+	METHOD <- c('Nelder-Mead', 'Brent')	
 	##
 	itemnames <- colnames(data)
 	data <- as.matrix(data)
@@ -338,27 +314,83 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 		logicalfact[i, ] <- c(TRUE,temp)
 	}	
 	lambdas <- cbind(lambdas, slambdas)	
+	nfact <- ncol(lambdas)
     zetas <- list()	
     for(i in 1:J){        
         temp <- table(data[,i])[1:(K[i]-1)]/N
         temp <- cumsum(temp)			
         zetas[[i]] <- qnorm(1 - temp)/cs[i]        			               
-    }    		
-	pars <- list(lambdas=lambdas, zetas=zetas)
-	attr(pars, 'lamsel') <- logicalfact
-	npars <- sum(K-1) + sum(logicalfact)
-	lastpars2 <- lastpars1 <- pars 	
+    }	
+	if(is.null(itemtype)) {
+	    itemtype <- rep('', J)
+	    for(i in 1:J){
+	        if(K[i] > 2) itemtype[i] <- 'grad'
+	        if(K[i] == 2) itemtype[i] <- '2PL'                            
+	    }        
+	} 
+	if(length(itemtype) == 1) itemtype <- rep(itemtype, J)      
+	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
+	pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
+	                 upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, 
+                     bfactor=logicalfact) 
+	#Contraints, startvalues, and estimation
+	if(!is.list(constrain)){
+	    if(constrain == 'index'){
+	        returnedlist <- list()                        
+	        for(i in 1:J)
+	            returnedlist[[i]] <- pars[[i]]@parnum 
+	        names(returnedlist) <- itemnames
+	        return(returnedlist)
+	    }
+	}    
+	if(!is.list(startvalues)){
+	    if(startvalues == 'index'){
+	        returnedlist <- list()                        
+	        for(i in 1:J){
+	            par <- pars[[i]]@par
+	            names(par) <- names(pars[[i]]@parnum)
+	            returnedlist[[i]] <- par
+	        }
+	        names(returnedlist) <- itemnames
+	        return(returnedlist)
+	    }
+	}
+	if(!is.list(freepars)){
+	    if(freepars == 'index'){
+	        returnedlist <- list()                        
+	        for(i in 1:J){
+	            est <- pars[[i]]@est
+	            names(est) <- names(pars[[i]]@parnum)
+	            returnedlist[[i]] <- est
+	        }
+	        names(returnedlist) <- itemnames
+	        return(returnedlist)
+	    }
+	}
+	if(length(startvalues) > 0) {
+	    for(i in 1:J)
+	        pars[[i]]@par <- startvalues[[i]]        
+	}
+	if(length(freepars) > 0) {
+	    for(i in 1:J)
+	        pars[[i]]@est <- freepars[[i]]        
+	}
+    ########
+	startvalues <- pars
+	npars <- 0    
+	for(i in 1:length(pars)) npars <- npars + sum(pars[[i]]@est)	
+	listpars <- list()
+	for(i in 1:J)
+	    listpars[[i]] <- pars[[i]]@par
+	lastpars2 <- lastpars1 <- listpars	
 	theta <- as.matrix(seq(-4, 4, length.out = quadpts))
 	Theta <- thetaComb(theta, 2)
 	prior <- dnorm(theta)
 	prior <- prior/sum(prior)	
 	Prior <- mvtnorm::dmvnorm(Theta,rep(0,2),diag(2))
-	Prior <- Prior/sum(Prior)
-	startvalues <- pars  
+	Prior <- Prior/sum(Prior)	  
 	converge <- 1
-	problemitems <- c()
-	index <- 1:J
-	nfact <- ncol(lambdas)
+	index <- 1:J	
 	temp <- matrix(0,nrow=J,ncol=(nfact-1))
 	sitems <- matrix(0, nrow=sum(K), ncol=(nfact-1))
 	for(i in 1:J) temp[i,specific[i]] <- 1
@@ -369,77 +401,76 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 			ind <- ind + 1
 		}		
 	}		
-	if(debug) browser()			 		    
-	
+	if(debug) browser()	
 	#EM  loop  
 	for (cycles in 1:NCYCLES) 
 	{    
-		rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, upper,
-			specific, sitems, itemloc)
+		rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
+			specific=specific, sitems=sitems, itemloc=itemloc)
 		if(verbose){
-            print(sum(r * log(rlist$expected)))			
+            print(sum(r * log(rlist$expected)))
             flush.console()
 		}
+		for(i in 1:J){
+		    tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
+		    pars[[i]]@rs <- rlist$r1[, tmp]           
+		}            
 		lastpars2 <- lastpars1
-		lastpars1 <- pars			
+		lastpars1 <- listpars			
 		for(i in 1:J){ 
-			par <- c(pars$lambdas[i, logicalfact[i, ]], pars$zetas[[i]])
-			itemsel <- c(itemloc[i]:(itemloc[i+1] - 1))							
-			maxim <- try(optim(par, fn=fn, rs=rlist$r1[, itemsel], gues=guess[i], up = upper[i], 
-                Theta=Theta, Prior=Prior, parprior=par.prior[i, ], nzeta=K[i]-1, 
-                control=list(maxit=MSTEPMAXIT)))			
-			if(class(maxim) == "try-error") {
-				problemitems <- c(problemitems, i)	  
+		    if(pars[[i]]@constr) next               
+		    estpar <- pars[[i]]@par[pars[[i]]@est]
+		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=pars[[i]], 
+		                       Theta=Theta, prior=prior, 
+		                       method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
+		                       lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
+		                       upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
+		                       control=list(maxit=MSTEPMAXIT)))
+			if(class(maxim) == "try-error") {				
 				converge <- 0
 				next
 			}	
-			pars$lambdas[i, logicalfact[i, ]] <- maxim$par[1:2]
-			pars$zetas[[i]] <- maxim$par[3:length(par)]	  
+		    pars[[i]]@par[pars[[i]]@est] <- maxim$par
 		}
-		maxdif <- max(abs(unlist(lastpars1) - unlist(pars)))	
+		for(i in 1:J) listpars[[i]] <- pars[[i]]@par
+		maxdif <- max(do.call(c,listpars) - do.call(c,lastpars1))
 		if (maxdif < TOL && cycles > 5) break 	
 		# apply rate acceleration every third cycle    
-		if (cycles %% 3 == 0 & cycles > 6)		 
-			pars <- rateChange(pars, lastpars1, lastpars2)       
-	} #End EM	
-	if(any(par.prior[,1] != 1)) cat("Slope prior for item(s):",
-		as.character(index[par.prior[,1] > 1]), "\n")
-	if(any(par.prior[,3] != 0)) cat("Intercept prior for item(s):",
-		as.character(index[par.prior[,3] > 0]), "\n")  
+		if (cycles %% 3 == 0 & cycles > 6)         
+		    pars <- rateChange(pars=pars, listpars=listpars, lastpars1=lastpars1, 
+                               lastpars2=lastpars2)   
+	} #End EM		
 	if(converge == 0) 
 		warning("Parameter estimation reached unacceptable values. 
-		Model probably did not converge.")
-	if(length(problemitems) > 0) warning("Problem with the M-step for item(s): ", 
-		paste(unique(problemitems), " "))	
-	lastchange <- unlist(lastpars1) - unlist(pars)
+		Model probably did not converge.")	
+	lastchange <- do.call(c,listpars) - do.call(c,lastpars1)
 	if (cycles == NCYCLES){ 
 		converge <- 0
 		message("Estimation terminated after ", cycles, " EM loops. Maximum changes: 
 			\n slopes = ", round(max(abs(lastchange[,1:nfact])),4), ", intercepts = ", 
 			round(max(abs(lastchange[,ncol(pars)])),4) ,"\n")
 	}	
-	rlist <- Estep.bfactor(pars, tabdata, Theta, prior, guess, upper, 
-			specific, sitems, itemloc)
+	rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
+	                       specific=specific, sitems=sitems, itemloc=itemloc)
 	Pl <- rlist$expected	
-	logLik <- sum(r * log(Pl))
-	vcovpar <- matrix(999)
-	parsSE <- list()
-	if(SE){		
-		LLfun <- function(p, pars, tabdata, Theta, prior, guess, upper, 
-                          specific, sitems, itemloc){
-			pars2 <- rebuildPars(p, pars)		
-			rlist <- Estep.bfactor(pars2, tabdata, Theta, prior, guess, upper,  
-				specific, sitems, itemloc)    	  
-			Pl <- rlist$expected
-			logLik <- sum(r*log(Pl))
-			-1*logLik		
-		}
-		fmin <- nlm(LLfun, unlist(pars), pars=pars,tabdata=tabdata,Theta=Theta,prior=prior,
-			guess=guess, upper=upper, specific=specific, sitems=sitems, itemloc=itemloc, 
-            hessian=TRUE, gradTOL=.1)		
-		vcovpar <- solve(fmin$hessian)
-		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
-	}
+	logLik <- sum(r * log(Pl))	
+# 	parsSE <- list()
+# 	if(SE){		
+# 		LLfun <- function(p, pars, tabdata, Theta, prior, guess, upper, 
+#                           specific, sitems, itemloc){
+# 			pars2 <- rebuildPars(p, pars)		
+# 			rlist <- Estep.bfactor(pars2, tabdata, Theta, prior, guess, upper,  
+# 				specific, sitems, itemloc)    	  
+# 			Pl <- rlist$expected
+# 			logLik <- sum(r*log(Pl))
+# 			-1*logLik		
+# 		}
+# 		fmin <- nlm(LLfun, unlist(pars), pars=pars,tabdata=tabdata,Theta=Theta,prior=prior,
+# 			guess=guess, upper=upper, specific=specific, sitems=sitems, itemloc=itemloc, 
+#             hessian=TRUE, gradTOL=.1)		
+# 		vcovpar <- solve(fmin$hessian)
+# 		parsSE <- rebuildPars(sqrt(diag(vcovpar)), pars)	
+# 	}
     guess[K > 2] <- NA
 	upper[K > 2] <- NA
 	logN <- 0	
@@ -459,22 +490,21 @@ bfactor <- function(data, specific, guess = 0, upper = 1, SE = FALSE, prev.cor =
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)
 	if(any(is.na(data.original))) p <- RMSEA <- X2 <- TLI <- NaN
 	null.mod <- unclass(new('mirtClass'))
-	if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0))
+	if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))
 	if(!is.nan(X2)) TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
-
 	#from last EM cycle pars to FA
-	norm <- sqrt(1 + rowSums(pars$lambdas[ ,1:nfact]^2))	 
-	F <- matrix(0,ncol = nfact, nrow = J)
+    lambdas <- Lambdas(pars)
+	norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))	 
+	F <- matrix(0, ncol=nfact, nrow=J)
 	for (i in 1:J) 
-		F[i,1:nfact] <- pars$lambdas[i,1:nfact]/norm[i]  
+		F[i,1:nfact] <- lambdas[i,1:nfact]/norm[i]  
 	colnames(F) <- c('G',paste("F_", 1:(ncol(F)-1),sep=""))
-	h2 <- rowSums(F^2)  	
-
-	mod <- new('bfactorClass',EMiter=cycles, pars=pars, guess=guess, upper=upper, AIC=AIC, X2=X2, 
-		parsSE=parsSE, df=df, logLik=logLik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
+	h2 <- rowSums(F^2)  
+	mod <- new('bfactorClass',EMiter=cycles, pars=pars, AIC=AIC, X2=X2, 
+		df=df, logLik=logLik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
 		tabdata=tabdata2, N=N, Pl=Pl, Theta=Theta, data=data.original, tabdatalong=tabdata, 
 		logicalfact=logicalfact, facility=facility, specific=specific, itemloc=itemloc,
 		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,
-		vcov=vcovpar, RMSEA=RMSEA, K=K, null.mod=null.mod, TLI=TLI, Call=Call)  
+		RMSEA=RMSEA, K=K, null.mod=null.mod, TLI=TLI, Call=Call)  
 	return(mod)  
 } 

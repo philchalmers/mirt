@@ -12,7 +12,7 @@ Theory)}
   mirt(data, nfact, guess = 0, upper = 1, SE = FALSE,
     equal_slopes = FALSE, rotate = 'varimax', Target =
     NULL, prev.cor = NULL, par.prior = FALSE, startvalues =
-    NULL, quadpts = NULL, verbose = FALSE, debug = FALSE,
+    list(), quadpts = NULL, verbose = FALSE, debug = FALSE,
     technical = list(), ...)
 
   \S4method{summary}{mirt}(object, rotate = '', suppress =
@@ -41,9 +41,17 @@ Theory)}
 
   \item{nfact}{number of factors to be extracted}
 
-  \item{equal_slopes}{logical; for a one dimenstional model
-  estimate all slope parameters to equal? If all the items
-  are dichotomous is the equivalent to the 1PL model}
+  \item{itemtype}{type of items to be modeled, decalred as
+  a vector for each item or a single value which will be
+  repeated globally. The NULL default assumes that the
+  items are ordinal or 2PL, however they may be changed to
+  the following: '1PL', '2PL', '3PL', '3PLu', '4PL',
+  'grad', 'gpc', 'nom', for the 1 and 2 parameter logistic,
+  3 parameter logistic (lower asymptote and upper), 4
+  parameter logistic, graded response model, generalized
+  partial credit model, and nominal model, respectively.
+  Note that specifying a '1PL' model should be of length 1
+  (since there is only 1 slope parameter estimated)}
 
   \item{SE}{logical, estimate the standard errors?}
 
@@ -89,8 +97,10 @@ Theory)}
   \item{Target}{a dummy variable matrix indicing a target
   rotation pattern}
 
-  \item{startvalues}{user declared start values for
-  parameters}
+  \item{startvalues}{a list of user declared start values
+  for parameters. To see how to define the parameters
+  correctly use \code{startvalues = 'index'} initially to
+  see what the defaults would noramlly be}
 
   \item{quadpts}{number of quadrature points per dimension}
 
