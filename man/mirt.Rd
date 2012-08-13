@@ -176,8 +176,6 @@ Theory)}
   included but must be declared as constant.
 }
 \details{
-
-
   \code{mirt} follows the item factor analysis strategy by
   marginal maximum likelihood estimation (MML) outlined in
   Bock and Aiken (1981), Bock, Gibbons and Muraki (1988),

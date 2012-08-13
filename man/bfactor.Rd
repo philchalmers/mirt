@@ -210,8 +210,7 @@ d <- matrix(c(
 -1.0,NA,NA,
 -1.5,NA,NA,
  1.5,NA,NA,
- 0.0,NA,NA,
-1.0,NA,NA),ncol=3,byrow=TRUE)
+ 0.0,NA,NA),ncol=3,byrow=TRUE)
 
 sigma <- diag(3)
 dataset <- simdata(a,d,2000,sigma)

@@ -5,8 +5,6 @@
 #' to dichotomous and polychotomous data under the item response theory paradigm. 
 #' Pseudo-guessing and upper bound parameters may be included but must be declared as constant.
 #' 
-#' 
-#' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
 #' likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
 #' Gibbons and Muraki (1988), and Muraki and Carlson (1995). 
@@ -251,8 +249,8 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = list(),
-                 constrain = list(), freepars = list(), rotate = 'varimax', Target = NULL, 
+mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
+                 constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
                  prev.cor = NULL, par.prior = FALSE, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
 {     
@@ -378,9 +376,10 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     if(length(itemtype) == 1) itemtype <- rep(itemtype, J)  
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
     pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
-                     upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain)  
+                     upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
+                     startvalues=startvalues, freepars=freepars, parprior=parprior)  
     #Contraints, startvalues, and estimation
-	if(!is.list(constrain)){
+	if(!is.null(constrain)){
 	    if(constrain == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J)
@@ -389,7 +388,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	        return(returnedlist)
 	    }
 	}    
-	if(!is.list(startvalues)){
+	if(!is.null(startvalues)){
 	    if(startvalues == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J){
@@ -401,7 +400,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	        return(returnedlist)
 	    }
 	}
-    if(!is.list(freepars)){
+    if(!is.null(freepars)){
 	    if(freepars == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J){
@@ -412,15 +411,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	        names(returnedlist) <- itemnames
 	        return(returnedlist)
 	    }
-	}	
-	if(length(startvalues) > 0) {
-        for(i in 1:J)
-            pars[[i]]@par <- startvalues[[i]]        
-	}
-	if(length(freepars) > 0) {
-	    for(i in 1:J)
-	        pars[[i]]@est <- freepars[[i]]        
-	}
+	}		
 	startvalues <- pars
     npars <- 0    
 	for(i in 1:length(pars)) npars <- npars + sum(pars[[i]]@est)	

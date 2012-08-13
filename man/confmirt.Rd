@@ -133,42 +133,62 @@
   estimated with a beta priors included automatically.
 }
 \details{
-  \code{confmirt} follows a confirmatory item factor
-  analysis strategy that uses a stochastic version of
-  maximum likelihood estimation described by Cai (2010).
-  The general equation used for multidimensional item
-  response theory in this function is in the logistic form
-  with a scaling correction of 1.702. This correction is
-  applied to allow comparison to mainstream programs such
-  as TESTFACT (2003) and POLYFACT. Missing data are treated
-  as 'missing at random' so that each response vector is
-  included in the estimation (i.e., full-information).
-  Residuals are computed using the LD statistic (Chen &
-  Thissen, 1997) in the lower diagonal of the matrix
-  returned by \code{residuals}, and Cramer's V above the
-  diagonal. For computing the log-likelihood more
+  \code{confmirt} follows a confirmatory and exploratory
+  item factor analysis strategy that uses a stochastic
+  version of maximum likelihood estimation described by Cai
+  (2010a, 2010b). The general equation used for
+  multidimensional item response theory in this function is
+  in the logistic form with a scaling correction of 1.702.
+  This correction is applied to allow comparison to
+  mainstream programs such as TESTFACT (2003) and POLYFACT.
+  Missing data are treated as 'missing at random' so that
+  each response vector is included in the estimation (i.e.,
+  full-information). Residuals are computed using the LD
+  statistic (Chen & Thissen, 1997) in the lower diagonal of
+  the matrix returned by \code{residuals}, and Cramer's V
+  above the diagonal. For computing the log-likelihood more
   accurately see \code{\link{logLik}}.
 
-  Specification of the confirmatory item factor analysis
-  model follows many of the rules in the SEM framework for
-  confirmatory factor analysis. The variances of the latent
-  factors are automatically fixed to 1 to help facilitate
-  model identification. All parameters may be fixed to
-  constant values or set equal to other parameters using
-  the appropriate declarations. Guessing parameters may be
-  specified for dichotomous items and are estimated with
-  beta priors automatically, and if a guessing parameter is
-  declared for a polychotomous item it is ignored.
-
-  \code{coef} displays the item parameters with their
+  #' \code{coef} displays the item parameters with their
   associated standard errors, while use of \code{summary}
-  transforms the slopes into a factor loadings metric.
-  Also, nested models may be compared by using the
-  \code{anova} function, where a Chi-squared difference
+  transforms the slopes into a factor loadings metric and
+  if the model is exploratory allows for rotating the
+  parameters. Also, nested models may be compared by using
+  the \code{anova} function, where a Chi-squared difference
   test and AIC/BIC difference values are displayed.
+}
+\section{Confirmatory IRT
+
+Specification of the confirmatory item factor analysis model follows many of
+the rules in the SEM framework for confirmatory factor analysis. The
+variances of the latent factors are automatically fixed to 1 to help
+facilitate model identification. All parameters may be fixed to constant
+values or set equal to other parameters using the appropriate declarations.
+Guessing parameters may be specified for dichotomous items and are estimated
+with beta priors automatically, and if a guessing parameter is declared for
+a polychotomous item it is ignored.}{
+
+}
+
+\section{Exploratory IRT
+
+Specifying a number as the second input to confmirt an exploratory IRT model is estimatated and
+can be viewed as a stocastic analogue of \code{mirt}, with much of the same behaviour and
+specifications. Rotatation and target matrix options will be used in this subroutine and will be
+passed to the returned object for use in generic functions such as \code{summary()} and
+\code{fscores}. Again, factor means and variances are fixed to ensure proper identification. See
+\code{\link{mirt}} for more details.}{
+
 }
 \examples{
 \dontrun{
+#Exploratory model estimation, similar to mirt()
+data(LSAT7)
+fulldata <- expand.table(LSAT7)#'
+(mod1 <- confmirt(fulldata, 1))
+
+#Confirmatory models
+
 #simulate data
 a <- matrix(c(
 1.5,NA,
@@ -271,7 +291,11 @@ anova(mod.cube,mod.combo)
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
-  Cai, L. (2010). Metropolis-Hastings Robbins-Monro
+  Cai, L. (2010a). High-Dimensional exploratory item factor
+  analysis by a Metropolis-Hastings Robbins-Monro
+  algorithm. \emph{Psychometrika, 75}, 33-57.
+
+  Cai, L. (2010b). Metropolis-Hastings Robbins-Monro
   algorithm for confirmatory item factor analysis.
   \emph{Journal of Educational and Behavioral Statistics,
   35}, 307-335.

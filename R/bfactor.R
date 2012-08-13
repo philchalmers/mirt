@@ -198,8 +198,8 @@
 #'     }
 #' 
 bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
-                    startvalues = list(), constrain = list(), freepars = list(), prev.cor = NULL, 
-                    par.prior = FALSE,  quadpts = 20, verbose = FALSE, debug = FALSE, 
+                    startvalues = NULL, constrain = NULL, freepars = NULL,  parprior = NULL,
+                    prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
                     technical = list(), ...)
 { 		
 	Call <- match.call()		    
@@ -332,9 +332,9 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
 	pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
 	                 upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, 
-                     bfactor=logicalfact) 
+                     startvalues=startvalues, freepars=freepars, parprior=parprior, bfactor=logicalfact) 
 	#Contraints, startvalues, and estimation
-	if(!is.list(constrain)){
+	if(!is.null(constrain)){
 	    if(constrain == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J)
@@ -343,7 +343,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	        return(returnedlist)
 	    }
 	}    
-	if(!is.list(startvalues)){
+	if(!is.null(startvalues)){
 	    if(startvalues == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J){
@@ -355,7 +355,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	        return(returnedlist)
 	    }
 	}
-	if(!is.list(freepars)){
+	if(!is.null(freepars)){
 	    if(freepars == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J){
@@ -366,15 +366,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	        names(returnedlist) <- itemnames
 	        return(returnedlist)
 	    }
-	}
-	if(length(startvalues) > 0) {
-	    for(i in 1:J)
-	        pars[[i]]@par <- startvalues[[i]]        
-	}
-	if(length(freepars) > 0) {
-	    for(i in 1:J)
-	        pars[[i]]@est <- freepars[[i]]        
-	}
+	}		
     ########
 	startvalues <- pars
 	npars <- 0    
@@ -432,6 +424,41 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 			}	
 		    pars[[i]]@par[pars[[i]]@est] <- maxim$par
 		}
+		#items with constraints
+		if(length(constrain) > 0){
+		    constrpars <- constrlist <- list()
+		    tmp <- 1
+		    for(i in 1:J){ 
+		        if(pars[[i]]@constr){
+		            constrpars[[tmp]] <- pars[[i]] 
+		            tmp <- tmp + 1
+		        }
+		    }
+		    tmp <- numpars <- c()
+		    for(i in 1:length(constrpars)){
+		        tmp <- c(tmp, constrpars[[i]]@par[pars[[i]]@est])
+		        numpars <- c(numpars, constrpars[[i]]@parnum[pars[[i]]@est])                
+		    }
+		    estpar <- c(rep(NA, length(constrain)), tmp[!(numpars %in% attr(pars, 'uniqueconstr'))])
+		    for(i in 1:length(constrain)){                
+		        constrlist[[i]] <- numpars %in% constrain[[i]]
+		        estpar[i] <- mean(tmp[constrlist[[i]]])
+		    }            
+		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, 
+		                       Theta=Theta, prior=prior, constr=constrlist,
+		                       method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
+		                       lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
+		                       upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
+		                       control=list(maxit=MSTEPMAXIT)))            
+		    constrpars <- reloadConstr(maxim$par, constr=constrlist, obj=constrpars)
+		    tmp <- 1
+		    for(i in 1:J){ 
+		        if(pars[[i]]@constr){
+		            pars[[i]] <- constrpars[[tmp]]
+		            tmp <- tmp + 1
+		        }
+		    }
+		}
 		for(i in 1:J) listpars[[i]] <- pars[[i]]@par
 		maxdif <- max(do.call(c,listpars) - do.call(c,lastpars1))
 		if (maxdif < TOL && cycles > 5) break 	
@@ -484,7 +511,11 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	AIC <- (-2) * logLik + 2 * npars
 	BIC <- (-2) * logLik + npars*log(N)
 	X2 <- 2 * sum(r * log(r / (N*Pl)))  
-	df <- length(r) - 1 + nfact*(nfact - 1)/2 - npars - npatmissing	
+	nconstr <- 0
+	if(length(constrain) > 0)
+	    for(i in 1:length(constrain))
+	        nconstr <- nconstr + length(constrain[[i]]) - 1
+	df <- length(r) - 1 + nfact*(nfact - 1)/2 - npars - npatmissing	+ nconstr
 	p <- 1 - pchisq(X2,df)	
 	RMSEA <- ifelse((X2 - df) > 0, 
 	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)

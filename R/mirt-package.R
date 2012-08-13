@@ -5,7 +5,8 @@
 #' multivariate two- and three-parameter logistic models, confirmatory
 #' bifactor analysis, polytomous confirmatory and exploratory item response
 #' models, and partially-compensatory item response modeling in conjunction
-#' with non-linear (product) factor relationships.
+#' with non-linear (product) factor relationships. Item constraints may be imposed to
+#' fit anthing from a Rasch model to the multidimentional nominal model.
 #'
 #' 
 #' @name mirt-package

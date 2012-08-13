@@ -172,3 +172,23 @@ setMethod(
         tabdata
     }
 )
+
+setMethod(
+    f = "anova",
+    signature = signature(object = 'bfactorClass'),
+    definition = function(object, object2){           	
+        df <- object@df - object2@df  
+        if(df < 0){
+            temp <- object
+            object <- object2
+            object2 <- temp
+        }
+        X2 <- 2*object2@logLik - 2*object@logLik 		
+        AICdiff <- object@AIC - object2@AIC    
+        BICdiff <- object@BIC - object2@BIC
+        cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), ", df = ",
+            df, ", p = ", round(1 - pchisq(X2,abs(df)),4), "\n", sep="")
+        cat("AIC difference = ", round(AICdiff,3), "\n")  
+        cat("BIC difference = ", round(BICdiff,3), "\n")
+    }
+)

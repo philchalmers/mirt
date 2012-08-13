@@ -148,8 +148,7 @@ setMethod(
 setMethod(
     f = "anova",
     signature = signature(object = 'mirtClass'),
-    definition = function(object, object2, ...){
-        dots <- list(...)		
+    definition = function(object, object2){        
         df <- object@df - object2@df  
         if(df < 0){
             temp <- object

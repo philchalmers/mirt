@@ -5,11 +5,10 @@
 #' data under the item response theory paradigm using Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower and upper asymptote
 #' parameters are estimated with a beta priors included automatically.
-#' 
-#' 
-#' \code{confmirt} follows a confirmatory item factor analysis strategy that
+#'  
+#' \code{confmirt} follows a confirmatory and exploratory item factor analysis strategy that
 #' uses a stochastic version of maximum likelihood estimation described by Cai
-#' (2010). The general equation used for multidimensional item response theory
+#' (2010a, 2010b). The general equation used for multidimensional item response theory
 #' in this function is in the logistic form with a scaling correction of 1.702.
 #' This correction is applied to allow comparison to mainstream programs such
 #' as TESTFACT (2003) and POLYFACT. Missing data are treated as 'missing at
@@ -18,6 +17,15 @@
 #' Thissen, 1997) in the lower diagonal of the matrix returned by
 #' \code{residuals}, and Cramer's V above the diagonal. For computing the
 #' log-likelihood more accurately see \code{\link{logLik}}.
+#' 
+#' #' \code{coef} displays the item parameters with their associated standard
+#' errors, while use of \code{summary} transforms the slopes into a factor
+#' loadings metric and if the model is exploratory allows for rotating the parameters. 
+#' Also, nested models may be compared by using the
+#' \code{anova} function, where a Chi-squared difference test and AIC/BIC
+#' difference values are displayed.
+#' 
+#' @section Confirmatory IRT
 #' 
 #' Specification of the confirmatory item factor analysis model follows many of
 #' the rules in the SEM framework for confirmatory factor analysis. The
@@ -28,11 +36,15 @@
 #' with beta priors automatically, and if a guessing parameter is declared for
 #' a polychotomous item it is ignored.
 #' 
-#' \code{coef} displays the item parameters with their associated standard
-#' errors, while use of \code{summary} transforms the slopes into a factor
-#' loadings metric. Also, nested models may be compared by using the
-#' \code{anova} function, where a Chi-squared difference test and AIC/BIC
-#' difference values are displayed.
+#' @section Exploratory IRT
+#' 
+#' Specifying a number as the second input to confmirt an exploratory IRT model is estimatated and 
+#' can be viewed as a stocastic analogue of \code{mirt}, with much of the same behaviour and 
+#' specifications. Rotatation and target matrix options will be used in this subroutine and will be
+#' passed to the returned object for use in generic functions such as \code{summary()} and 
+#' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification. See
+#' \code{\link{mirt}} for more details.
+#' 
 #' 
 #' @aliases confmirt coef,confmirt-method summary,confmirt-method
 #' residuals,confmirt-method anova,confmirt-method fitted,confmirt-method
@@ -101,7 +113,11 @@
 #' \code{\link{fscores}}, \code{\link{confmirt.model}}
 #' @references
 #' 
-#' Cai, L. (2010). Metropolis-Hastings Robbins-Monro algorithm for confirmatory
+#' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a
+#' Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75},
+#' 33-57.
+#' 
+#' Cai, L. (2010b). Metropolis-Hastings Robbins-Monro algorithm for confirmatory
 #' item factor analysis. \emph{Journal of Educational and Behavioral
 #' Statistics, 35}, 307-335.
 #' 
@@ -133,6 +149,13 @@
 #' @examples
 #'  
 #' \dontrun{
+#' #Exploratory model estimation, similar to mirt()
+#' data(LSAT7)
+#' fulldata <- expand.table(LSAT7) 
+#' (mod1 <- confmirt(fulldata, 1))
+#' 
+#' #Confirmatory models
+#' 
 #' #simulate data
 #' a <- matrix(c(
 #' 1.5,NA,
@@ -231,17 +254,18 @@
 #' anova(mod.cube,mod.combo)
 #' }
 #' 
-confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUpper = NULL, 
-    verbose = TRUE, calcLL = TRUE, draws = 2000, returnindex = FALSE, debug = FALSE, 
-    rotate = 'varimax', Target = NULL, technical = list(),  ...)
+confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startvalues = NULL, 
+                     constrain = NULL, freepars = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
+                     draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
+                     technical = list(),  ...)
 {		
-	Call <- match.call()       
+	Call <- match.call()           
     ##########
     if(any(upper < 1)) stop('Upper bound estimation is not currently available.')
     ##########
 	set.seed(12345)	
 	itemnames <- colnames(data)
-	keywords <- c('SLOPE','INT','COV','MEAN','PARTCOMP','PRIOR')
+	keywords <- c('COV')
 	data <- as.matrix(data)		
 	colnames(data) <- itemnames	
 	J <- ncol(data)
@@ -253,21 +277,14 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
         model <- confmirt.model(tmp, quiet = TRUE)
         exploratory <- TRUE
         unlink(tmp)
-    }
-    
+    }    
 	##technical
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
     TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)        
-	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-	guess.prior.n <- ifelse(!is.null(technical$guess.prior.n), technical$guess.prior.n,
-		rep(50,J))
-	if(length(guess.prior.n) == 1) guess.prior.n <- rep(guess.prior.n,J)	
-	if(length(guess.prior.n) != J) 
-		stop('technical$guess.prior.n does not have the same number of values as items')
-	guess.prior.n[is.na(guess.prior.n)] <- 50
+	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)	
 	gain <- c(0.05,0.5,0.004)
 	if(!is.null(technical$gain)) {
 		if(length(technical$gain) == 3 && is.numeric(technical$gain))
@@ -287,11 +304,16 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 	K <- rep(0,J)
 	for(i in 1:J) K[i] <- length(uniques[[i]])	
 	guess[K > 2] <- 0
-	upper[K > 2] <- 1
-	if(is.null(estGuess))
-		estGuess <- guess > 0
-	if(is.null(estUpper))
-	    estUpper <- upper < 1
+	upper[K > 2] <- 1		
+	if(is.null(itemtype)) {
+	    itemtype <- rep('', J)
+	    for(i in 1:J){
+	        if(K[i] > 2) itemtype[i] <- 'grad'
+	        if(K[i] == 2) itemtype[i] <- '2PL'                            
+	    }        
+	} 
+	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
+	if(length(itemtype) == 1) itemtype <- rep(itemtype, J)
 	itemloc <- cumsum(c(1,K))	
 	model <- matrix(model$x,ncol=2)
 	factorNames <- setdiff(model[,1],keywords)
@@ -314,32 +336,64 @@ confmirt <- function(data, model, guess = 0, upper = 1, estGuess = NULL, estUppe
 			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
 		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy			
 	}	
-	fulldata[is.na(fulldata)] <- 0	
-	mod <- model.elements(model=model, factorNames=factorNames, nfactNames=nfactNames, nfact=nfact, 
-                          J=J, K=K, fulldata=fulldata, itemloc=itemloc, data=data, N=N, 
-                          estGuess=estGuess, guess=guess, upper=upper, estUpper=estUpper, 
-                          guess.prior.n=guess.prior.n, itemnames=itemnames, exploratory=exploratory)
-	parcount <- mod$parcount
-	npars <- mod$npars
-	if(returnindex) return(parcount)
-	if(debug) browser()      
-    if(any(rowSums(mod$est$estlam) == 0)){
-		tmp <- 1:J
-		tmp <- tmp[rowSums(mod$est$estlam) == 0]
-		stop('Item(s) ', paste(tmp,''), 'have no factor loadings specified.')
-	}	    
-	if(exploratory){
-        lamind <- mod$ind$lamind
+	fulldata[is.na(fulldata)] <- 0    
+    parnumber <- 1 #to be used later when looping over more than 1 group
+	pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
+                           nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
+                           itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
+                           itemnames=itemnames, exploratory=exploratory, constrain=constrain,
+                           startvalues=startvalues, freepars=freepars, parprior=parprior, 
+                           parnumber=parnumber)    
+	#Contraints, startvalues, and estimation
+	if(!is.null(constrain)){
+	    if(constrain == 'index'){
+	        returnedlist <- list()                        
+	        for(i in 1:J)
+	            returnedlist[[i]] <- pars[[i]]@parnum 
+	        names(returnedlist) <- itemnames
+	        return(returnedlist)
+	    }
+	}    
+	if(!is.null(startvalues)){
+	    if(startvalues == 'index'){
+	        returnedlist <- list()                        
+	        for(i in 1:J){
+	            par <- pars[[i]]@par
+	            names(par) <- names(pars[[i]]@parnum)
+	            returnedlist[[i]] <- par
+	        }
+	        names(returnedlist) <- itemnames
+	        return(returnedlist)
+	    }
+	}
+	if(!is.null(freepars)){
+	    if(freepars == 'index'){
+	        returnedlist <- list()                        
+	        for(i in 1:J){
+	            est <- pars[[i]]@est
+	            names(est) <- names(pars[[i]]@parnum)
+	            returnedlist[[i]] <- est
+	        }
+	        names(returnedlist) <- itemnames
+	        return(returnedlist)
+	    }
+	}    
+    npars <- 0
+    for(i in 1:length(pars))
+        npars <- npars + sum(pars[[i]]@est)			        
+	if(exploratory){        
 	    Rpoly <- cormod(na.omit(data),K,guess)
 	    FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
 	    loads <- unclass(loadings(FA))
 	    u <- FA$unique
 	    u[u < .001 ] <- .2
 	    cs <- sqrt(u)
-	    lambdas <- mod$val$lambdas <- loads/cs        
-        mod$val$pars[lamind] <- t(lambdas)
+	    lambdas <- loads/cs        
+        for(i in 1:J)
+            pars[[i]]@par[1:nfact] <- lambdas[i, ]        
 	}        
-	ESTIMATE <- MHRM(mod=mod, NCYCLES=NCYCLES, BURNIN=BURNIN, KDRAWS=KDRAWS, SEMCYCLES=SEMCYCLES,  
+	if(debug) browser()
+	ESTIMATE <- MHRM(mod=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, KDRAWS=KDRAWS, SEMCYCLES=SEMCYCLES,  
                      TOL=TOL, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, nfact=nfact,
                      N=N, gain=gain, K=K, J=J, verbose=verbose)	    	
 	if(verbose) cat("\n\n")

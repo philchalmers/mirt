@@ -1,8 +1,9 @@
 #MHRM optimimization algorithm for confmirt
 
-MHRM <- function(mod, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, fulldata, 
+MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, fulldata, 
                  nfact, N, K, J, verbose)
 {       
+    browser()
     pars <- mod$val$pars    
     VAL <- mod$val
     EST <- mod$est

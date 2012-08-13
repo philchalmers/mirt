@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.2.6-1
+Version: 0.2.7
 Date: 2012-01-25
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -58,4 +58,3 @@ Collate:
     'MHRM.R'
     '01-itemtypes.R'
     '02-item_methods.R'
-    '03-mirt_generics.R'
