@@ -50,9 +50,9 @@
 #' residuals,confmirt-method anova,confmirt-method fitted,confmirt-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data
-#' @param model an object returned from \code{confmirt.model()} declarating how
+#' @param model an object returned from \code{specifyModel()} declarating how
 #' the factor model is to be estimated, or a single numeric value indicating the number 
-#' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
+#' of exploratory factors to estimate. See \code{\link{specifyModel}} for
 #' more details
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
 #' entered as a single value to assign a global guessing parameter or may be entered as
@@ -60,13 +60,6 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
-#' @param estGuess a logical vector indicating which lower-asymptote parameters
-#' to be estimated (default is null, and therefore is contingent on the values
-#' in \code{guess}). By default, if any value in \code{guess} is greater than 0
-#' then its respective \code{estGuess} value is set to \code{TRUE}.
-#' Additionally, beta priors are automatically imposed for estimated parameters
-#' which correspond to the input guessing values.
-#' @param estUpper same function as \code{estGuess}, but for upper bound parameters
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
@@ -184,7 +177,7 @@
 #' #analyses
 #' #CIFA for 2 factor crossed structure
 #' 
-#' model.1 <- confmirt.model()
+#' model.1 <- specifyModel()
 #'   F1 = 1-4
 #'   F2 = 4-8
 #'   COV = F1*F2
@@ -195,20 +188,9 @@
 #' summary(mod1)
 #' residuals(mod1)
 #' 
-#' #fix first slope at 1.5, and set slopes 7 & 8 to be equal
-#' model.2 <- confmirt.model()
-#'   F1 = 1-4
-#'   F2 = 4-8
-#'   COV = F1*F2
-#'   SLOPE = F1@@1 eq 1.5, F2@@7 eq F2@@8
-#'   
-#' 
-#' mod2 <- confmirt(dataset,model.2)
-#' anova(mod2,mod1)
-#' 
 #' #####
 #' #bifactor 	
-#' model.3 <- confmirt.model()
+#' model.3 <- specifyModel()
 #'   G = 1-8
 #'   F1 = 1-4
 #'   F2 = 5-8
@@ -222,22 +204,22 @@
 #'
 #' #####
 #' #polynomial and combinations
-#' model.linear <- confmirt.model()
+#' model.linear <- specifyModel()
 #'       F = 1-8
 #'
 #' 
-#' model.quad <- confmirt.model()
+#' model.quad <- specifyModel()
 #'       F = 1-8
 #'   (F*F) = 1-8
 #'
 #' 
-#' model.cube <- confmirt.model()
+#' model.cube <- specifyModel()
 #'         F = 1-8
 #'     (F*F) = 1-8
 #'   (F*F*F) = 1-8
 #'
 #' 
-#' model.combo <- confmirt.model()
+#' model.combo <- specifyModel()
 #'        F1 = 1-4
 #'        F2 = 5-8
 #'   (F1*F2) = 1-8
@@ -274,7 +256,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     if(is(model, 'numeric')){
         tmp <- tempfile('tempfile')
         cat(paste('F',1:model,' = 1-', J, "\n", sep=''), file=tmp)
-        model <- confmirt.model(tmp, quiet = TRUE)
+        model <- specifyModel(tmp, quiet = TRUE)
         exploratory <- TRUE
         unlink(tmp)
     }    
@@ -393,9 +375,9 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
             pars[[i]]@par[1:nfact] <- lambdas[i, ]        
 	}        
 	if(debug) browser()
-	ESTIMATE <- MHRM(mod=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, KDRAWS=KDRAWS, SEMCYCLES=SEMCYCLES,  
+	ESTIMATE <- MHRM(pars=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, KDRAWS=KDRAWS, SEMCYCLES=SEMCYCLES,  
                      TOL=TOL, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, nfact=nfact,
-                     N=N, gain=gain, K=K, J=J, verbose=verbose)	    	
+                     N=N, gain=gain, K=K, J=J, npars=npars, verbose=verbose)	    	
 	if(verbose) cat("\n\n")
 	SEtmp <- diag(solve(ESTIMATE$info))		
 	if(any(SEtmp < 0)){

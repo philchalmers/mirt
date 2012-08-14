@@ -159,10 +159,10 @@ Mstep.mirt <- function(par, obj, Theta, prior, constr = list()){
 }
 
 # MH sampler for theta values
-draw.thetas <- function(theta0,lambdas,zetas,guess,upper = rep(1,length(K)),fulldata,K,itemloc,cand.t.var,
-	prior.t.var = diag(ncol(theta0)), prior.mu = rep(0,ncol(theta0)), estComp = rep(FALSE,length(K)),
-	prodlist = NULL, itemtype = NULL) 
-{ 			
+draw.thetas <- function(theta0, pars, fulldata, K, itemloc, cand.t.var, prior.t.var, 
+                        prior.mu, prodlist) 
+{ 	    
+    tol <- 1e-8
 	N <- nrow(fulldata)
 	J <- length(K)
 	nfact <- ncol(theta0)					
@@ -172,22 +172,30 @@ draw.thetas <- function(theta0,lambdas,zetas,guess,upper = rep(1,length(K)),full
 			diag(rep(cand.t.var,ncol(theta0)))) 
 	else
 		theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
-	den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var)
-	den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var)		
+	log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
+    log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)		
 	if(!is.null(prodlist)){
 		theta0 <- prodterms(theta0,prodlist)
 		theta1 <- prodterms(theta1,prodlist)	
 	}	
-	ThetaDraws <- .Call("drawThetas", unif, den0, den1, lambdas, zetas, guess, upper,
-					theta0, theta1,	fulldata, (itemloc-1), as.numeric(estComp))
-	log.lik <- ThetaDraws$cdloglik
-	accept <- as.logical(ThetaDraws$accept)				
-	theta1[!accept,] <- theta0[!accept,]	
+	itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))    
+	for (i in 1:J){
+	    itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta0)
+	    itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta1)        
+	}
+    itemtrace0[itemtrace0 < tol] <- itemtrace1[itemtrace1 < tol] <- tol
+    total_0 <- rowSums(log(itemtrace0)) + log_den0
+    total_1 <- rowSums(log(itemtrace1)) + log_den1
+    diff <- total_1 - total_0
+    accept <- unif < exp(diff)
+    theta0[accept, ] <- theta1[accept, ]
+    total_0[accept] <- total_1[accept]
+    log.lik <- sum(total_0)	
 	if(!is.null(prodlist)) 
-		theta1 <- theta1[ ,1:(ncol(lambdas) - length(prodlist)), drop=FALSE]
-	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
-	attr(theta1, "log.lik") <- log.lik	
-	return(theta1) 
+		theta0 <- theta0[ ,1:(ncol(lambdas) - length(prodlist)), drop=FALSE]
+	attr(theta0, "Proportion Accepted") <- sum(accept)/N 				
+	attr(theta0, "log.lik") <- log.lik	
+	return(theta0) 
 }	
 
 # Gamma correlation, mainly for obtaining a sign
@@ -549,8 +557,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(estpars)            
         }
         
-        if(itemtype[i] == 'grad'){
-            pars[[i]] <- new('grad', par=c(lambdas[i,], zetas[[i]]), nfact=nfact, ncat=K[i],
+        if(itemtype[i] == 'graded'){
+            pars[[i]] <- new('graded', par=c(lambdas[i,], zetas[[i]]), nfact=nfact, ncat=K[i],
                              dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
             pars[[i]]@est <- estpars
@@ -576,8 +584,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(estpars)
         }        
         
-        if(itemtype[i] == 'nom'){
-            pars[[i]] <- new('nom', par=c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i])), 
+        if(itemtype[i] == 'nominal'){
+            pars[[i]] <- new('nominal', par=c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i])), 
                              nfact=nfact, ncat=K[i], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
             estpars <- c(estLambdas[i, ], rep(TRUE, length(pars[[i]]@par) - nfact))
             #identifiction constraints
@@ -591,7 +599,20 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              paste('d', 0:(K[i]-1), sep=''))
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(estpars)
-        }         
+        } 
+        
+        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+            pars[[i]] <- new('partcomp', par=c(rep(.5, nfact), rep(-1, nfact), 0, 1), 
+                             nfact=nfact, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
+            estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
+            if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1] <- TRUE
+            pars[[i]]@est <- estpars
+            tmp2 <- parnumber:(parnumber + length(estpars) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE
+            names(tmp2) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(estpars)
+        }
     }
     if(!is.null(startvalues)) {
         if(startvalues != 'index')

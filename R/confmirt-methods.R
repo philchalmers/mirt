@@ -191,9 +191,8 @@ setMethod(
 setMethod(
     f = "anova",
     signature = signature(object = 'confmirtClass'),
-    definition = function(object, object2, ...)
-    {
-        dots <- list(...)				
+    definition = function(object, object2)
+    {        
         nitems <- length(object@K)
         if(length(object@df) == 0 || length(object2@df) == 0) 
             stop('Use \'logLik\' to obtain likelihood values') 	

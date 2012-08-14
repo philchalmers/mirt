@@ -47,7 +47,6 @@ Collate:
     'mirt.R'
     'polymirt.R'
     'simdata.R'
-    'confmirt.model.R'
     'read.mirt.R'
     '00-classes.R'
     'bfactor-methods.R'
@@ -58,3 +57,4 @@ Collate:
     'MHRM.R'
     '01-itemtypes.R'
     '02-item_methods.R'
+    'specifyModel.R'

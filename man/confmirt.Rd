@@ -30,10 +30,10 @@
   consists of numerically ordered data}
 
   \item{model}{an object returned from
-  \code{confmirt.model()} declarating how the factor model
-  is to be estimated, or a single numeric value indicating
-  the number of exploratory factors to estimate. See
-  \code{\link{confmirt.model}} for more details}
+  \code{specifyModel()} declarating how the factor model is
+  to be estimated, or a single numeric value indicating the
+  number of exploratory factors to estimate. See
+  \code{\link{specifyModel}} for more details}
 
   \item{guess}{initial (or fixed) values for the
   pseudo-guessing parameter. Can be entered as a single
@@ -44,18 +44,6 @@
   for 4-PL model. Can be entered as a single value to
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
-
-  \item{estGuess}{a logical vector indicating which
-  lower-asymptote parameters to be estimated (default is
-  null, and therefore is contingent on the values in
-  \code{guess}). By default, if any value in \code{guess}
-  is greater than 0 then its respective \code{estGuess}
-  value is set to \code{TRUE}. Additionally, beta priors
-  are automatically imposed for estimated parameters which
-  correspond to the input guessing values.}
-
-  \item{estUpper}{same function as \code{estGuess}, but for
-  upper bound parameters}
 
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns
@@ -184,7 +172,7 @@ passed to the returned object for use in generic functions such as \code{summary
 \dontrun{
 #Exploratory model estimation, similar to mirt()
 data(LSAT7)
-fulldata <- expand.table(LSAT7)#'
+fulldata <- expand.table(LSAT7)
 (mod1 <- confmirt(fulldata, 1))
 
 #Confirmatory models
@@ -217,7 +205,7 @@ dataset <- simdata(a,d,2000,sigma)
 #analyses
 #CIFA for 2 factor crossed structure
 
-model.1 <- confmirt.model()
+model.1 <- specifyModel()
   F1 = 1-4
   F2 = 4-8
   COV = F1*F2
@@ -228,20 +216,9 @@ coef(mod1)
 summary(mod1)
 residuals(mod1)
 
-#fix first slope at 1.5, and set slopes 7 & 8 to be equal
-model.2 <- confmirt.model()
-  F1 = 1-4
-  F2 = 4-8
-  COV = F1*F2
-  SLOPE = F1@1 eq 1.5, F2@7 eq F2@8
-
-
-mod2 <- confmirt(dataset,model.2)
-anova(mod2,mod1)
-
 #####
 #bifactor
-model.3 <- confmirt.model()
+model.3 <- specifyModel()
   G = 1-8
   F1 = 1-4
   F2 = 5-8
@@ -255,22 +232,22 @@ anova(mod1,mod3)
 
 #####
 #polynomial and combinations
-model.linear <- confmirt.model()
+model.linear <- specifyModel()
       F = 1-8
 
 
-model.quad <- confmirt.model()
+model.quad <- specifyModel()
       F = 1-8
   (F*F) = 1-8
 
 
-model.cube <- confmirt.model()
+model.cube <- specifyModel()
         F = 1-8
     (F*F) = 1-8
   (F*F*F) = 1-8
 
 
-model.combo <- confmirt.model()
+model.combo <- specifyModel()
        F1 = 1-4
        F2 = 5-8
   (F1*F2) = 1-8

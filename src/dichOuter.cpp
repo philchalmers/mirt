@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// NOTE REMOVE Rnfact in R
 RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
 {	
     BEGIN_RCPP

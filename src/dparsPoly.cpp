@@ -26,15 +26,16 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta)
 			dif2sq(N), tmp1(N), tmp2(N), tmp3(N), csums(nfact);			
 	NumericMatrix P(N,nzeta+2), PQfull(N,nzeta+2), mattmp(N,nfact), d2Louter;	   
 	double tmp;
-	IntegerVector factind(nfact);
+	IntegerVector zetaind(nfact);
 	for(j = 0; j < (nzeta + 2); j++){
 		for(i = 0; i < N; i++){
 			P(i,j) = prob(i,j);
 			PQfull(i,j) = prob(i,j) * (1.0 - prob(i,j));
 		}
 	}
-	for(j = 0; j < nfact; j++)
-		factind(j) = nzeta + j;
+	for(j = 0; j < nzeta; j++)
+		zetaind(j) = nfact + j;
+
 	for(j = 0; j < (nzeta + 1); j++){
 		if(j < nzeta){
 			for(i = 0; i < N; i++){
@@ -56,18 +57,18 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta)
 			tmp = 0.0;
 			for(i = 0; i < N; i++)
 				tmp += (-1.0) * PQ(i) * (dif1(i) - dif2(i));			
-			dL(j) = tmp;			
+			dL(zetaind(j)) = tmp;			
 			tmp = 0.0;
 			for(i = 0; i < N; i++)
 				tmp += (-1.0) * PQ(i) * PQ(i) * (dif1sq(i) + dif2sq(i)) -				
 					(dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));			
-			d2L(j,j) = tmp;
+			d2L(zetaind(j),zetaind(j)) = tmp;
 			if(j < (nzeta - 1)){
 				tmp = 0.0;
 				for(i = 0; i < N; i++)
 					tmp += dif2sq(i) * PQ_p1(i) * PQ(i);
-				d2L(j,j+1) = tmp;
-				d2L(j+1,j) = tmp;
+				d2L(zetaind(j),zetaind(j+1)) = tmp;
+				d2L(zetaind(j+1),zetaind(j)) = tmp;
 			}
 			for(i = 0; i < N; i++){
 				tmp1(i) = (-1.0) * dif2sq(i) * PQ(i) * (PQ(i) - PQ_p1(i));
@@ -83,8 +84,8 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta)
 				}
 			}
 			for(i = 0; i < nfact; i++){
-				d2L(j,factind(i)) = csums(i);
-				d2L(factind(i),j) = csums(i);
+				d2L(j,i) = csums(i);
+				d2L(i,j) = csums(i);
 			}			
 		} else {					
 			for(i = 0; i < N; i++){
@@ -106,12 +107,12 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta)
 			}
 		}
 		for(i = 0; i < nfact; i++)
-    		dL(factind(i)) += csums(i);			
+    		dL(i) += csums(i);			
 		
 		d2Louter = polyOuter(Thetas, Pk, Pk_1, PQ_1, PQ, dif1sq, dif1);		
 		for(k = 0; k < nfact; k++)
 			for(i = 0; i < nfact; i++)
-				d2L(factind(i),factind(k)) += d2Louter(i,k);				
+				d2L(i,k) += d2Louter(i,k);				
 	}
 
     List ret;

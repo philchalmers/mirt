@@ -21,6 +21,8 @@ setClass("AllItemsClass",
                         bfactor='logical',
                         gradient='numeric',
                         hessian='matrix',
+                        lbound='numeric',
+                        ubound='numeric',
                         'VIRTUAL')
 )
 
@@ -33,7 +35,7 @@ setClass("dich", contains = 'AllItemsClass',
                         u.prior='numeric')
 )
 
-setClass("grad", contains = 'AllItemsClass',
+setClass("graded", contains = 'AllItemsClass',
          representation(ncat='numeric',
                         a.prior='numeric', 
                         d.prior='numeric')
@@ -45,7 +47,7 @@ setClass("gpcm", contains = 'AllItemsClass',
                         d.prior='numeric')
 )
 
-setClass("nom", contains = 'AllItemsClass',
+setClass("nominal", contains = 'AllItemsClass',
          representation(ncat='numeric',
                         a.prior='numeric', 
                         d.prior='numeric')
@@ -66,6 +68,6 @@ setGeneric('LogLik', function(x, Theta) standardGeneric("LogLik"))
 
 setGeneric('ExtractLambdas', function(x) standardGeneric("ExtractLambdas"))
 
-setGeneric('Deriv', function(x) standardGeneric("Deriv"))
+setGeneric('Deriv', function(x, Theta) standardGeneric("Deriv"))
 
          

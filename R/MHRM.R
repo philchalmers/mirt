@@ -1,32 +1,30 @@
 #MHRM optimimization algorithm for confmirt
 
 MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, fulldata, 
-                 nfact, N, K, J, verbose)
-{       
-    browser()
-    pars <- mod$val$pars    
-    VAL <- mod$val
-    EST <- mod$est
-    IND <- mod$ind 
-    sind <- IND$sind
-    indlist <- IND$indlist
-    prodlist <- IND$prodlist
-    constvalues <- mod$val$constvalues
-    npars <- mod$npars
-    itemtype <- mod$itemtype    
-    parind <- IND$parind    
-    
-    #Burn in 
-    pars[constvalues[,1] == 1] <- constvalues[constvalues[,1] == 1,2]
+                 nfact, N, K, J, npars, nestpars, verbose)
+{          
+    #Burn in   
+    itempars <- list()
+    nfullpars <- 0
+    for(i in 1:J){
+        itempars[[i]] <- pars[[i]]    
+        nfullpars <- nfullpars + length(itempars[[i]]@par)
+    }    
+    grouppars <- pars[[length(pars)]]
+    nfullpars <- nfullpars + length(grouppars@est)
+    gmeans <- grouppars@par[1:nfact]
+    tmp <- grouppars@par[-(1:nfact)]
+    gcov <- matrix(0, nfact, nfact)
+    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+    gcov <- gcov + t(gcov) - diag(diag(gcov))
+    prodlist <- attr(pars, 'prodlist')
     theta0 <- matrix(0, N, nfact)	    
     cand.t.var <- 1
     tmp <- .1
     for(i in 1:30){			
-        theta0 <- draw.thetas(theta0=theta0, lambdas=VAL$lambdas, zetas=VAL$zetas, 
-                              guess=VAL$guess, upper=VAL$upper, fulldata=fulldata, K=K, 
-                              itemloc=itemloc, cand.t.var=cand.t.var, prior.t.var=VAL$gcov, 
-                              prior.mu=VAL$gmeans, estComp=EST$estComp, 
-                              prodlist=IND$prodlist, itemtype=itemtype)
+        theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, 
+                              itemloc=itemloc, cand.t.var=cand.t.var, prior.t.var=gcov, 
+                              prior.mu=gmeans, prodlist=prodlist)
         if(i > 5){		
             if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
             else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) 
@@ -44,19 +42,18 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
     m.thetas <- grouplist <- list()		
     SEM.stores <- matrix(0, SEMCYCLES, npars)
     SEM.stores2 <- list()
-    phi <- rep(0,sum(sind))	
+    phi <- rep(0,nfullpars)	
     h <- matrix(0,npars,npars)		
-    Tau <- info <- matrix(0,sum(sind),sum(sind))		
+    Tau <- info <- matrix(0,nfullpars,nfullpars)		
     m.list <- list()	  
     conv <- 0
     k <- 1	
     gamma <- .25
     startvalues <- pars	
     stagecycle <- 1	
-    converge <- 1
-    nconstvalues <- mod$nconstvalues
+    converge <- 1    
     noninvcount <- 0    
-       
+    browser()   
     ####Big MHRM loop 
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))								
     { 
@@ -65,7 +62,7 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
             gamma <- (gain[1] / (cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
         if(cycles == (BURNIN + SEMCYCLES + 1)){ 
             stagecycle <- 3		
-            pars <- rep(0, npars)
+            pars <- rep(0, nfullpars)
             for(i in 1:SEMCYCLES){
                 pars <- pars + SEM.stores[i,]
                 Tau <- Tau + SEM.stores2[[i]]
