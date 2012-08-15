@@ -524,3 +524,4 @@ P.gpcm <- function(a, d, Theta){
     return(P)   
 }
 
+

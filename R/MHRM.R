@@ -1,7 +1,10 @@
 #MHRM optimimization algorithm for confmirt
-MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, fulldata, 
-                 nfact, N, K, J, npars, constrain, verbose)
-{       
+MHRM <- function(pars, classes, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, 
+                 fulldata, nfact, N, npars, constrain, verbose)
+{   
+    ####STUPID WORKAROUND FOR S4 BUG    
+    for(i in 1:(length(pars))) class(pars[[i]]) <- classes[[i]]    
+    ####STUPID WORKAROUND FOR S4 BUG    
     #Burn in      
     nfullpars <- 0
     estpars <- c()
@@ -16,7 +19,7 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
     cand.t.var <- 1
     tmp <- .1    
     for(i in 1:30){			
-        theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, itemloc=itemloc, 
+        theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, itemloc=itemloc, 
                               cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
                               prior.mu=structgrouppars$gmeans, prodlist=prodlist)
         if(i > 5){		
@@ -95,11 +98,11 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
         
         #Step 1. Generate m_k datasets of theta 
         for(j in 1:4) 
-            theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, itemloc=itemloc, 
+            theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, itemloc=itemloc, 
                                   cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
                                   prior.mu=structgrouppars$gmeans, prodlist=prodlist)
         for(i in 1:k) 
-            m.thetas[[i]] <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, itemloc=itemloc, 
+            m.thetas[[i]] <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, itemloc=itemloc, 
                                          cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
                                          prior.mu=structgrouppars$gmeans, prodlist=prodlist)
         theta0 <- m.thetas[[1]]

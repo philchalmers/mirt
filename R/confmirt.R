@@ -370,10 +370,16 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
         for(i in 1:J)
             pars[[i]]@par[1:nfact] <- lambdas[i, ]        
 	}        
-	if(debug) browser()       
-	ESTIMATE <- MHRM(pars=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, KDRAWS=KDRAWS,
-                     TOL=TOL, gain=gain, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, 
-                     nfact=nfact, N=N,  K=K, J=J, npars=npars, constrain=constrain, verbose=verbose)
+	if(debug) browser()   
+    classes <- list()
+	for(i in 1:length(pars)){
+        classes[[i]] <- class(pars[[i]])        
+        pars[[i]] <- unclass(pars[[i]]) #STUPID S4 PASSING BUG FIX
+	}
+	ESTIMATE <- MHRM(pars=pars, classes=classes, NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
+                     KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=nfactNames, itemloc=itemloc, 
+                     fulldata=fulldata, nfact=nfact, N=N, npars=npars, constrain=constrain, 
+                     verbose=verbose)
     pars <- ESTIMATE$pars
 	if(verbose) cat("\n\n")    
 	lambdas <- Lambdas(pars)

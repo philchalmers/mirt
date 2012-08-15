@@ -159,12 +159,12 @@ Mstep.mirt <- function(par, obj, Theta, prior, constr = list()){
 }
 
 # MH sampler for theta values
-draw.thetas <- function(theta0, pars, fulldata, K, itemloc, cand.t.var, prior.t.var, 
+draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var, 
                         prior.mu, prodlist) 
 { 	    
     tol <- 1e-8
 	N <- nrow(fulldata)
-	J <- length(K)
+	J <- length(pars) - 1
 	nfact <- ncol(theta0)					
 	unif <- runif(N)
 	if(nfact > 1)		
@@ -544,7 +544,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              dat=fulldata[ ,tmp], est=c(FALSE,TRUE,FALSE,FALSE), constr=FALSE)
         
         if(itemtype[i] == 'NullModel' && K[i] > 2) 
-            pars[[i]] <- new('grad', par=c(0,zetas[[i]]), nfact=1, ncat=K[i], bfactor=BFACTOR,
+            pars[[i]] <- new('graded', par=c(0,zetas[[i]]), nfact=1, ncat=K[i], bfactor=BFACTOR,
                              dat=fulldata[ ,tmp], est=c(FALSE,rep(TRUE,K[i]-1)), constr=FALSE)
         
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){ 
