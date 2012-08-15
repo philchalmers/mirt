@@ -1,30 +1,25 @@
 #MHRM optimimization algorithm for confmirt
 
 MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, fulldata, 
-                 nfact, N, K, J, npars, nestpars, verbose)
-{          
-    #Burn in   
-    itempars <- list()
+                 nfact, N, K, J, npars, constrain, verbose)
+{       
+    #Burn in          
     nfullpars <- 0
-    for(i in 1:J){
-        itempars[[i]] <- pars[[i]]    
-        nfullpars <- nfullpars + length(itempars[[i]]@par)
-    }    
-    grouppars <- pars[[length(pars)]]
-    nfullpars <- nfullpars + length(grouppars@est)
-    gmeans <- grouppars@par[1:nfact]
-    tmp <- grouppars@par[-(1:nfact)]
-    gcov <- matrix(0, nfact, nfact)
-    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-    gcov <- gcov + t(gcov) - diag(diag(gcov))
-    prodlist <- attr(pars, 'prodlist')
+    estpars <- c()
+    for(i in 1:length(pars)){        
+        nfullpars <- nfullpars + length(pars[[i]]@par)                
+        estpars <- c(estpars, pars[[i]]@est)
+    }
+    index <- 1:nfullpars
+    structgrouppars <- ExtractGroupPars(pars[[length(pars)]])
+    prodlist <- attr(pars, 'prodlist')    
     theta0 <- matrix(0, N, nfact)	    
     cand.t.var <- 1
-    tmp <- .1
+    tmp <- .1    
     for(i in 1:30){			
-        theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, 
-                              itemloc=itemloc, cand.t.var=cand.t.var, prior.t.var=gcov, 
-                              prior.mu=gmeans, prodlist=prodlist)
+        theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, itemloc=itemloc, 
+                              cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
+                              prior.mu=structgrouppars$gmeans, prodlist=prodlist)
         if(i > 5){		
             if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
             else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) 
@@ -40,20 +35,38 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
         }
     }	
     m.thetas <- grouplist <- list()		
-    SEM.stores <- matrix(0, SEMCYCLES, npars)
-    SEM.stores2 <- list()
-    phi <- rep(0,nfullpars)	
-    h <- matrix(0,npars,npars)		
-    Tau <- info <- matrix(0,nfullpars,nfullpars)		
+    SEM.stores <- SEM.stores2 <- list()     
     m.list <- list()	  
     conv <- 0
     k <- 1	
     gamma <- .25
-    startvalues <- pars	
+    longpars <- c()    
+    for(i in 1:length(pars))
+        longpars <- c(longpars, pars[[i]]@par)    
     stagecycle <- 1	
     converge <- 1    
     noninvcount <- 0    
-    browser()   
+    L <- c()    
+    for(i in 1:(length(pars)))
+        L <- c(L, pars[[i]]@est)    
+    estindex <- index[estpars]
+    L <- diag(as.numeric(L))
+    redun_constr <- rep(FALSE, length(estpars)) 
+    if(!is.null(constrain)){
+        for(i in 1:length(constrain)){            
+            L[constrain[[i]], constrain[[i]]] <- 1/length(constrain[[i]]) 
+            for(j in 2:length(constrain[[i]]))
+                redun_constr[constrain[[i]][j]] <- TRUE
+        }
+    }
+    estindex_unique <- index[estpars & !redun_constr]
+    if(any(diag(L)[!estpars] > 0)){
+        redindex <- index[!estpars]        
+        stop('Constraint applied to fixed parameter(s) ', 
+             paste(redindex[diag(L)[!estpars_logical] > 0]), ' but should only be applied to 
+             estimated parameters. Please fix!')
+    }      
+    browser()
     ####Big MHRM loop 
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))								
     { 
@@ -62,95 +75,55 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
             gamma <- (gain[1] / (cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
         if(cycles == (BURNIN + SEMCYCLES + 1)){ 
             stagecycle <- 3		
-            pars <- rep(0, nfullpars)
-            for(i in 1:SEMCYCLES){
-                pars <- pars + SEM.stores[i,]
+            longpars <- SEM.stores[[1]]
+            Tau <- SEM.stores2[[1]]
+            for(i in 2:SEMCYCLES){
+                longpars <- longpars + SEM.stores[[i]]
                 Tau <- Tau + SEM.stores2[[i]]
             }	
-            pars <- pars/SEMCYCLES	
+            longpars <- longpars/SEMCYCLES	
             Tau <- Tau/SEMCYCLES	
             k <- KDRAWS	
             gamma <- .25
-        }	
+        }
         
-        normpars <- sortParsConfmirt(pars=pars, indlist=IND, nfact=nfact, nfactNames=nfactNames)		
-        lambdas <- normpars$lambdas
-        zetas <- normpars$zetas
-        guess <- normpars$guess	
-        upper <- normpars$upper
-        grouplist$u <- mu <- normpars$mu					
-        grouplist$sig <- sig <- normpars$sig			
+        ind1 <- 1
+        for(i in 1:length(pars)){
+            ind2 <- ind1 + length(pars[[i]]@par) - 1
+            pars[[i]]@par <- longpars[ind1:ind2]
+            ind1 <- ind2 + 1            
+        }        
+        structgrouppars <- ExtractGroupPars(pars[[length(pars)]])
         
         #Step 1. Generate m_k datasets of theta 
         for(j in 1:4) 
-            theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
-                                  upper=upper, fulldata=fulldata, K=K, itemloc=itemloc, 
-                                  cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, 
-                                  estComp=EST$estComp, prodlist=IND$prodlist, itemtype=itemtype)
+            theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, itemloc=itemloc, 
+                                  cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
+                                  prior.mu=structgrouppars$gmeans, prodlist=prodlist)
         for(i in 1:k) 
-            m.thetas[[i]] <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
-                                         upper=upper, fulldata=fulldata, K=K, itemloc=itemloc, 
-                                         cand.t.var=cand.t.var, prior.t.var=sig, prior.mu=mu, 
-                                         estComp=EST$estComp, prodlist=IND$prodlist, 
-                                         itemtype=itemtype)
+            m.thetas[[i]] <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, K=K, itemloc=itemloc, 
+                                         cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
+                                         prior.mu=structgrouppars$gmeans, prodlist=prodlist)
         theta0 <- m.thetas[[1]]
         
         #Step 2. Find average of simulated data gradients and hessian 		
         g.m <- h.m <- group.m <- list()
-        g <- rep(0, npars)
-        h <- matrix(0, npars, npars)	
-        for (j in 1:k) {
-            g <- rep(NA, npars)            
+        longpars <- g <- rep(0, nfullpars)
+        h <- matrix(0, nfullpars, nfullpars)        
+        for (j in 1:k) { 
+            ind1 <- 1
             thetatemp <- m.thetas[[j]]
             if(!is.null(prodlist)) thetatemp <- prodterms(thetatemp,prodlist)	
-            for (i in 1:J){			                
-                if(itemtype[i] == 'N2PL' || itemtype[i] == 'N3PL') {
-                    temp <- dpars.comp(lambdas[i,][EST$estlam[i,]], zetas[[i]], 
-                                       guess[i], fulldata[, itemloc[i]], thetatemp, EST$estGuess[i])
-                    ind <- parind[is.na(g)][1]
-                    ind2 <- ind + length(temp$grad) - 1
-                    g[ind:ind2] <- temp$grad
-                    h[ind:ind2, ind:ind2] <- temp$hess						
-                    if(!EST$estGuess[i]) g[ind2 + 1] <- 0 #zero for guess
-                    if(!EST$estUpper[i]) g[ind2 + 2] <- 0 #zero for upper
-                    next
-                }                
-                if(itemtype[i] == '2PL' || itemtype[i] == '3PL'){
-                    temp <- dpars.dich(lambda=lambdas[i, ], zeta=zetas[[i]], g=guess[i], u=upper[i],
-                                       dat=fulldata[ ,itemloc[i]], Thetas=thetatemp, 
-                                       estGuess=EST$estGuess[i])
-                    ind <- parind[is.na(g)][1]					
-                    ind2 <- ind + length(temp$g) - 1		                    
-                    g[ind:ind2] <- temp$grad
-                    h[ind:ind2,ind:ind2] <- temp$hess		
-                    if(!EST$estGuess[i]) g[ind2 + 1] <- 0
-                    if(!EST$estUpper[i]) g[ind2 + 2] <- 0
-                    next
-                }
-                if(itemtype[i] == 'ordinal'){
-                    temp <- dpars.poly(lambdas[i, ],zetas[[i]],
-                                       fulldata[ ,itemloc[i]:(itemloc[i+1]-1)],thetatemp)
-                    ind <- parind[is.na(g)][1]	
-                    ind2 <- ind + length(temp$g) - 1		
-                    g[ind:ind2] <- temp$grad
-                    h[ind:ind2,ind:ind2] <- temp$hess
-                    g[ind2 + 1] <- g[ind2 + 2] <- 0	#zeros for guess + upper
-                    next
-                }
-                if(itemtype[i] == '3PLu'){
-                    
-                    next
-                }
-                if(itemtype[i] == '4PL'){
-                
-                    next
-                }            
+            for (i in 1:length(pars)){	
+                deriv <- Deriv(x=pars[[i]], Theta=thetatemp)
+                ind2 <- ind1 + length(deriv$grad) - 1
+                longpars[ind1:ind2] <- pars[[i]]@par
+                g[ind1:ind2] <- pars[[i]]@gradient <- deriv$grad
+                h[ind1:ind2, ind1:ind2] <- pars[[i]]@hessian <- deriv$hess
+                ind1 <- ind2 + 1 
             }            
-            tmp <- d.group(grouplist,as.matrix(thetatemp[ ,1:nfact]))
-            g[IND$groupind] <- tmp$g
-            h[IND$groupind,IND$groupind] <- tmp$h
-            g.m[[j]] <- g
-            h.m[[j]] <- h			
+            g.m[[j]] <- g %*% L 
+            h.m[[j]] <- L %*% h %*% L 			
         }		
         ave.g <- rep(0,length(g))
         ave.h <- matrix(0,length(g),length(g))		
@@ -160,22 +133,22 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
         } 		
         grad <- ave.g/k
         ave.h <- (-1)*ave.h/k
-        if(length(IND$parpriors) > 0){
-            for(i in 1:length(IND$parpriors)){
-                tmp <- IND$parpriors[[i]]
-                if(tmp[1] == 1){
-                    grad[tmp[2]] <- grad[tmp[2]] - (pars[tmp[2]] - tmp[3])/ tmp[4]^2
-                    ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] +  1/tmp[4]^2
-                }				
-                else if(tmp[1] == 2){		
-                    tmp2 <- betaprior(tmp[3],tmp[4],pars[tmp[2]])					
-                    grad[tmp[2]] <- grad[tmp[2]] + tmp2$g
-                    ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + tmp2$h
-                }				
-            }
-        }		
-        grad <- grad[parind[sind]]		
-        ave.h <- ave.h[parind[sind],parind[sind]] 
+#         if(length(IND$parpriors) > 0){
+#             for(i in 1:length(IND$parpriors)){
+#                 tmp <- IND$parpriors[[i]]
+#                 if(tmp[1] == 1){
+#                     grad[tmp[2]] <- grad[tmp[2]] - (pars[tmp[2]] - tmp[3])/ tmp[4]^2
+#                     ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] +  1/tmp[4]^2
+#                 }				
+#                 else if(tmp[1] == 2){		
+#                     tmp2 <- betaprior(tmp[3],tmp[4],pars[tmp[2]])					
+#                     grad[tmp[2]] <- grad[tmp[2]] + tmp2$g
+#                     ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + tmp2$h
+#                 }				
+#             }
+#         }	                
+        grad <- grad[1, estpars & !redun_constr]		
+        ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr] 
         if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
         if(verbose){
             if((cycles + 1) %% 10 == 0){
@@ -200,30 +173,18 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
             correction <-  inv.ave.h %*% grad	
-            correction[correction > 1] <- 1
-            correction[correction < -1] <- -1			
-            parsold <- pars
-            correct <- rep(0,npars)
-            correct[sind] <- as.vector(correction)
-            correct[constvalues[,1] == 1] <- 0
-            if(length(IND$equalconstr) > 0)	
-                for(i in 1:length(IND$equalconstr))
-                    correct[IND$equalconstr[[i]]] <- mean(correct[IND$equalconstr[[i]]])			
-            correct[correct[IND$guessind] > .05] <- .05		
-            correct[correct[IND$guessind] < -.05] <- -.05
-            correct[correct[IND$upperind] > .05] <- .05    	
-            correct[correct[IND$upperind] < -.05] <- -.05
-            pars <- pars + gamma*correct
+            correction[correction > .5] <- .5
+            correction[correction < -.5] <- -.5
+            longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
+            if(!is.null(constrain))
+                for(i in 1:length(constrain))
+                    longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
             if(verbose && (cycles + 1) %% 10 == 0){ 
                 cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))), "\n")
                 flush.console()
-            }			
-            pars[IND$covind][pars[IND$covind] > .95] <- parsold[IND$covind][pars[IND$covind] > .95]
-            pars[IND$covind][pars[IND$covind] < -.95] <- parsold[IND$covind][pars[IND$covind] < -.95]
-            pars[IND$guessind][pars[IND$guessind] < 0] <- parsold[IND$guessind][pars[IND$guessind] < 0]
-            pars[IND$upperind][pars[IND$upperind] > 1] <- parsold[IND$upperind][pars[IND$upperind] > 1]
+            }			            
             if(stagecycle == 2){
-                SEM.stores[cycles - BURNIN,] <- pars
+                SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
             }	
             next
@@ -239,40 +200,46 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
             if(noninvcount == 3) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
         }		
-        correction <-  inv.Tau %*% grad
-        parsold <- pars
-        correct <- rep(0,npars)
-        correct[sind] <- as.vector(correction)
-        correct[constvalues[,1] == 1] <- 0
-        if(length(IND$equalconstr) > 0)		
-            for(i in 1:length(IND$equalconstr))
-                correct[IND$equalconstr[[i]]] <- mean(correct[IND$equalconstr[[i]]])	
+        correction <-  inv.Tau %*% grad                  
+        longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
+        if(!is.null(constrain))
+            for(i in 1:length(constrain))
+                longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
         if(verbose && (cycles + 1) %% 10 == 0){ 
             cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
                 sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
             flush.console()		
         }	
-        if(all(gamma*correct < TOL)) conv <- conv + 1
-        else conv <- 0		
-        if(conv == 3) break
-        correct[correct[IND$guessind] > .025] <- .025		
-        correct[correct[IND$guessind] < -.025] <- -.025	
-        correct[correct[IND$upperind] > .025] <- .025    	
-        correct[correct[IND$upperind] < -.025] <- -.025
-        pars <- pars + gamma*correct	
-        pars[IND$covind][pars[IND$covind] > .95] <- parsold[IND$covind][pars[IND$covind] > .95]
-        pars[IND$covind][pars[IND$covind] < -.95] <- parsold[IND$covind][pars[IND$covind] < -.95]
-        pars[IND$guessind][pars[IND$guessind] < 0] <- parsold[IND$guessind][pars[IND$guessind] < 0]
-        pars[IND$upperind][pars[IND$upperind] > 1] <- parsold[IND$upperind][pars[IND$upperind] > 1]
+        if(all(abs(gamma*correction) < TOL)) conv <- conv + 1
+            else conv <- 0		
+        if(conv == 3) break        
         
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
-        if(gamma == .25) gamma <- 1	
+        if(gamma == .25){
+            gamma <- 1	
+            phi <- rep(0, length(grad))            
+            info <- matrix(0, length(grad), length(grad))
+        }
         phi <- phi + gamma*(grad - phi)
         info <- info + gamma*(Tau - phi %*% t(phi) - info)		
-    } ###END BIG LOOP
+    } ###END BIG LOOP      
     
-    normpars <- sortParsConfmirt(pars=pars, indlist=IND, nfact=nfact, nfactNames=nfactNames)
-    ret <- list(pars=pars, info=info, normpars=normpars, theta0=theta0, 
-                cycles=cycles - SEMCYCLES - BURNIN, converge=converge)
-    ret    
+    SEtmp <- diag(solve(info))    	
+    if(any(SEtmp < 0)){
+        warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
+        SEtmp <- rep(NA, length(SEtmp))
+    } else SEtmp <- sqrt(SEtmp)
+    SE <- rep(NA, length(longpars))
+    SE[estindex_unique] <- SEtmp
+    if(!is.null(constrain))
+        for(i in 1:length(constrain))
+            SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
+    ind1 <- 1
+    for(i in 1:length(pars)){
+        ind2 <- ind1 + length(pars[[i]]@par) - 1
+        pars[[i]]@SEpar <- SE[ind1:ind2]
+        ind1 <- ind2 + 1            
+    }    
+    ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, converge=converge)
+    ret
 }

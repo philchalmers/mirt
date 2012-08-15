@@ -2,6 +2,7 @@
 
 setClass("GroupPars",
          representation(par='numeric',
+                        SEpar='numeric',
                         est='logical',
                         parnum='numeric',
                         nfact='numeric',

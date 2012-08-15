@@ -290,7 +290,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	if(is.null(itemtype)) {
 	    itemtype <- rep('', J)
 	    for(i in 1:J){
-	        if(K[i] > 2) itemtype[i] <- 'grad'
+	        if(K[i] > 2) itemtype[i] <- 'graded'
 	        if(K[i] == 2) itemtype[i] <- '2PL'                            
 	    }        
 	} 
@@ -302,24 +302,20 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	nfactNames <- length(factorNames)
 	nfact <- sum(!grepl('\\(',factorNames))
 	index <- 1:J	
-	fulldata <- matrix(0,N,sum(K))
+    fulldata <- matrix(0,N,sum(K))
 	Names <- NULL
 	for(i in 1:J)
-        Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
+	    Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
 	colnames(fulldata) <- Names			
 	for(i in 1:J){
-		ind <- index[i]
-		if(setequal(uniques[[i]], c(0,1))){
-			fulldata[ ,itemloc[ind]:(itemloc[ind]+1)] <- cbind(data[ ,ind],abs(1-data[ ,ind]))			
-			next
-		}
-		dummy <- matrix(0,N,K[ind])
-		for (j in 0:(K[ind]-1))  
-			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
-		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy			
+	    ind <- index[i]		
+	    dummy <- matrix(0,N,K[ind])
+	    for (j in 0:(K[ind]-1))  
+	        dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
+	    fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
 	}	
 	fulldata[is.na(fulldata)] <- 0    
-    parnumber <- 1 #to be used later when looping over more than 1 group
+    parnumber <- 1 #to be used later when looping over more than 1 group    
 	pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
@@ -374,94 +370,15 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
         for(i in 1:J)
             pars[[i]]@par[1:nfact] <- lambdas[i, ]        
 	}        
-	if(debug) browser()
-	ESTIMATE <- MHRM(pars=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, KDRAWS=KDRAWS, SEMCYCLES=SEMCYCLES,  
-                     TOL=TOL, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, nfact=nfact,
-                     N=N, gain=gain, K=K, J=J, npars=npars, verbose=verbose)	    	
-	if(verbose) cat("\n\n")
-	SEtmp <- diag(solve(ESTIMATE$info))		
-	if(any(SEtmp < 0)){
-		warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
-		SEtmp[SEtmp < 0] <- NA
-	}	    
+	if(debug) browser()    
+	ESTIMATE <- MHRM(pars=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, KDRAWS=KDRAWS,
+                     TOL=TOL, gain=gain, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, 
+                     nfact=nfact, N=N,  K=K, J=J, npars=npars, constrain=constrain, verbose=verbose)
     pars <- ESTIMATE$pars
-	SEtmp <- sqrt(SEtmp)	    
-	SE <- rep(NA,npars) 
-	SE[mod$ind$parind[mod$ind$sind]] <- SEtmp
-	SE[mod$val$constvalues[ ,1]==1] <- NA
-	if(length(mod$ind$equalconstr) > 0)
-		for(i in 1:length(mod$ind$equalconstr))
-			SE[mod$ind$equalconstr[[i]]] <- mean(SE[mod$ind$equalconstr[[i]]])
-	estpars <- pars[mod$ind$sind]
-	lambdas <- ESTIMATE$normpars$lambdas
-	lambdas[!mod$est$estlam & !lambdas != 0] <- NA	
-	guess <- rep(NA,J)
-	guess <- pars[mod$ind$guessind]
-	guess[!mod$est$estGuess] <- NA
-	guess[K == 2 & !mod$est$estGuess] <- 0
-	upper <- rep(NA,J)
-	upper <- pars[mod$ind$upperind]
-	upper[!mod$est$estUpper] <- NA
-	upper[K == 2 & !mod$est$estUpper] <- 1
-	zetas <- pars[mod$ind$zetaind]
-	u <- pars[mod$ind$meanind]	
-	sig <- matrix(0,nfact,nfact)
-	SElam <- matrix(SE[mod$ind$lamind],J,nfactNames,byrow=TRUE)
-	SEzetas <- SE[mod$ind$zetaind]	
-	SEg <- rep(NA,J)	
-	SEg <- SE[mod$ind$guessind]	
-	SEup <- SE[mod$ind$upperind]
-	SEg[!mod$est$estGuess] <- NA
-	SEup[!mod$est$estUpper] <- NA
-	SEu <- SE[mod$ind$meanind]	
-	SEsig <- matrix(0,nfact,nfact)	
-	tmp <- pars[mod$ind$covind]
-	tmp2 <- SE[mod$ind$covind]
-	loc <- 1
-	for(i in 1:nfact){
-		for(j in 1:nfact){
-			if(i <= j){
-				sig[i,j] <- tmp[loc]
-				SEsig[i,j] <- tmp2[loc]
-				loc <- loc + 1
-			}
-		}
-	}
-	if(nfact > 1) {	
-		sig <- sig + t(sig) - diag(diag(sig))
-		SEsig <- SEsig + t(SEsig) - diag(diag(SEsig))	
-	} else SEsig <- NA
-	if(any(mod$est$estComp)){
-		if((max(K)-1) > nfactNames) tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))
-		else tmp1 <- tmp2 <- matrix(NA,J,nfactNames)
-	} else tmp1 <- tmp2 <- matrix(NA,J,(max(K)-1))	
-	
-	#reload zetas to matrix
-	zetas <- pars[mod$ind$zetaind]    
-	loc <- 1
-	for(i in 1:J){
-		if(!mod$est$estComp[i]){
-			for(j in 1:(K[i]-1)){
-				tmp1[i,j] <- zetas[loc] 
-				tmp2[i,j] <- SEzetas[loc]
-				loc <- loc + 1
-			}
-		} else {
-			for(j in 1:nfactNames){
-				tmp1[i,j] <- zetas[loc]
-				tmp2[i,j] <- SEzetas[loc]
-				loc <- loc + 1
-			}	
-		}	
-	}	 
-	zetas <- tmp1
-	SEzetas <- tmp2	
-	parsprint <- cbind(ESTIMATE$normpars$lambdas, zetas)
-	SEpars <- cbind(SElam, SEzetas)
-	gpars <- list(u = ESTIMATE$normpars$mu, sig = ESTIMATE$normpars$sig)	
-	SEgpars <- list(SEu = SEu, SEsig = SEsig)
-	estpars <- mod$est
-		
+	if(verbose) cat("\n\n")
+    browser()
+    
+	lambdas <- Lambdas(pars)
 	if (nfactNames > 1){
         norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
 	} else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
@@ -473,20 +390,9 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	null.mod <- unclass(new('mirtClass'))
     if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0))
     
-    if(exploratory){
-        ret <- new('polymirtClass',pars=ESTIMATE$normpars, guess=guess, SEpars=SEpars, SEg=SEg,
-                   upper=upper, SEup=SEup, cycles=ESTIMATE$cycles, Theta=ESTIMATE$theta0, 
-                   fulldata=fulldata, data=data, K=K, F=F, h2=h2, itemloc=itemloc, 
-                   converge=ESTIMATE$converge, estGuess=estGuess, rotate=rotate, null.mod=null.mod, 
-                   Target=Target, Call=Call)
-    } else {
-    	ret <- new('confmirtClass', pars=ESTIMATE$normpars, parsprint=parsprint, guess=guess, upper=upper, 
-                   SEg=SEg, SEup=SEup, gpars=gpars, SEgpars=SEgpars, estpars=estpars, K=K, 
-                   itemloc=itemloc, cycles=ESTIMATE$cycles, Theta=ESTIMATE$theta0, 
-                   fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge, 
-                   nconstvalues=as.integer(mod$nconstvalues), SEpars=SEpars, estComp=mod$est$estComp, 
-                   prodlist=as.list(mod$ind$prodlist), null.mod=null.mod, Call=Call)
-    }
+    ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
+               fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
+               null.mod=null.mod, Call=Call)    
 	if(calcLL){
 		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()

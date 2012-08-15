@@ -182,20 +182,23 @@ draw.thetas <- function(theta0, pars, fulldata, K, itemloc, cand.t.var, prior.t.
 	for (i in 1:J){
 	    itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta0)
 	    itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta1)        
-	}
-    itemtrace0[itemtrace0 < tol] <- itemtrace1[itemtrace1 < tol] <- tol
-    total_0 <- rowSums(log(itemtrace0)) + log_den0
-    total_1 <- rowSums(log(itemtrace1)) + log_den1
-    diff <- total_1 - total_0
-    accept <- unif < exp(diff)
-    theta0[accept, ] <- theta1[accept, ]
-    total_0[accept] <- total_1[accept]
-    log.lik <- sum(total_0)	
+	}    
+    tmp0 <- itemtrace0*fulldata
+    tmp1 <- itemtrace1*fulldata
+    tmp0[tmp0 < tol] <- tmp1[tmp1 < tol] <- 1    
+    total_0 <- rowSums(log(tmp0)) + log_den0
+    total_1 <- rowSums(log(tmp1)) + log_den1
+    diff <- total_1 - total_0    
+    accept <- diff > 0
+    accept[unif < exp(diff)] <- TRUE    
+    theta1[!accept, ] <- theta0[!accept, ]
+    total_1[!accept] <- total_0[!accept]
+    log.lik <- sum(total_1)	
 	if(!is.null(prodlist)) 
-		theta0 <- theta0[ ,1:(ncol(lambdas) - length(prodlist)), drop=FALSE]
-	attr(theta0, "Proportion Accepted") <- sum(accept)/N 				
-	attr(theta0, "log.lik") <- log.lik	
-	return(theta0) 
+		theta1 <- theta1[ ,1:(pars[[1]]@nfact - length(prodlist)), drop=FALSE]
+	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
+	attr(theta1, "log.lik") <- log.lik	
+	return(theta1) 
 }	
 
 # Gamma correlation, mainly for obtaining a sign
@@ -390,7 +393,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
 #   }		
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
                  fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, startvalues=startvalues, 
-                 freepars=freepars, priordist=priordist, parnumber=parnumber)  
+                 freepars=freepars, parprior=parprior, parnumber=parnumber)  
     parnumber <- ret[[length(ret)]]@parnum[length(ret[[length(ret)]]@parnum)]
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
                                             estgcov=estgcov, parnumber=parnumber+1)
@@ -513,14 +516,15 @@ test_info <- function(a, d, Theta, Alist, guess, upper, K){
 
 Lambdas <- function(pars){
     lambdas <- list()
-    for(i in 1:length(pars))    
+    J <- ifelse(is(pars[[length(pars)]], 'GroupPars'), length(pars)-1, length(pars))
+    for(i in 1:J)    
         lambdas[[i]] <- ExtractLambdas(pars[[i]])    
     lambdas <- do.call(rbind,lambdas)
     lambdas
 }
 
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     constrain, startvalues, freepars, priordist, parnumber, bfactor = NULL){    
+                     constrain, startvalues, freepars, parprior, parnumber, bfactor = NULL){    
     pars <- list()   
     estLambdas <- matrix(TRUE, J, nfact)
     BFACTOR <- FALSE
@@ -640,6 +644,18 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber){
     ret <- new('GroupPars', par=par, est=c(estgmeans,estgcov[tri]), nfact=nfact, 
                parnum=parnum)
     ret    
+}
+
+#change long pars for groups into mean in sigma
+ExtractGroupPars <- function(x){
+    nfact <- x@nfact
+    gmeans <- x@par[1:nfact]
+    gmeans <- x@par[1:nfact]
+    tmp <- x@par[-(1:nfact)]
+    gcov <- matrix(0, nfact, nfact)
+    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+    gcov <- gcov + t(gcov) - diag(diag(gcov))
+    return(list(gmeans=gmeans, gcov=gcov))    
 }
 
 reloadConstr <- function(par, constr, obj){

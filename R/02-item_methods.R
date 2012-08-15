@@ -182,7 +182,7 @@ setMethod(
         a <- x@par[1:nfact]        
         P <- P.mirt(a, d, Theta, g, u)
         Q <- 1 - P
-        dat <- x@dat[,2, drop=FALSE] 
+        dat <- x@dat[,2] 
         d2L <- matrix(0,nfact+3, nfact+3)						
         if(!x@est[parlength] && !x@est[parlength-1]){ #'2PL'
             PQ <- P*Q
@@ -233,7 +233,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta){
+    definition = function(x, Theta){         
         nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[-(1:nfact)]

@@ -377,7 +377,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
     pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
                      upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
-                     startvalues=startvalues, freepars=freepars, parprior=parprior)  
+                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1)  
     #Contraints, startvalues, and estimation
 	if(!is.null(constrain)){
 	    if(constrain == 'index'){
