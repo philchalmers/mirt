@@ -1,9 +1,8 @@
 #MHRM optimimization algorithm for confmirt
-
 MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames, itemloc, fulldata, 
                  nfact, N, K, J, npars, constrain, verbose)
 {       
-    #Burn in          
+    #Burn in      
     nfullpars <- 0
     estpars <- c()
     for(i in 1:length(pars)){        
@@ -63,10 +62,9 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
     if(any(diag(L)[!estpars] > 0)){
         redindex <- index[!estpars]        
         stop('Constraint applied to fixed parameter(s) ', 
-             paste(redindex[diag(L)[!estpars_logical] > 0]), ' but should only be applied to 
+             paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to 
              estimated parameters. Please fix!')
-    }      
-    browser()
+    }          
     ####Big MHRM loop 
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))								
     { 
@@ -173,8 +171,8 @@ MHRM <- function(pars, NCYCLES, BURNIN, SEMCYCLES, KDRAWS, TOL, gain, nfactNames
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
             correction <-  inv.ave.h %*% grad	
-            correction[correction > .5] <- .5
-            correction[correction < -.5] <- -.5
+            correction[correction > .5] <- 1
+            correction[correction < -.5] <- -1
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
             if(!is.null(constrain))
                 for(i in 1:length(constrain))

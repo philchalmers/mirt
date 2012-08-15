@@ -370,14 +370,12 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
         for(i in 1:J)
             pars[[i]]@par[1:nfact] <- lambdas[i, ]        
 	}        
-	if(debug) browser()    
+	if(debug) browser()       
 	ESTIMATE <- MHRM(pars=pars, NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, KDRAWS=KDRAWS,
                      TOL=TOL, gain=gain, nfactNames=nfactNames, itemloc=itemloc, fulldata=fulldata, 
                      nfact=nfact, N=N,  K=K, J=J, npars=npars, constrain=constrain, verbose=verbose)
     pars <- ESTIMATE$pars
-	if(verbose) cat("\n\n")
-    browser()
-    
+	if(verbose) cat("\n\n")    
 	lambdas <- Lambdas(pars)
 	if (nfactNames > 1){
         norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
@@ -388,7 +386,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	colnames(F) <- factorNames
 	names(h2) <- itemnames  
 	null.mod <- unclass(new('mirtClass'))
-    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0))
+    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))
     
     ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
                fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 

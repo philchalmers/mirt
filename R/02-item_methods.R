@@ -233,14 +233,20 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta){         
+    definition = function(x, Theta){        
         nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[-(1:nfact)]
         nd <- length(d)    			
         P <- P.poly(a, d,Theta)			    	
-        ret <- .Call("dparsPoly", P, Theta, x@dat, nd)
-        return(ret)
+        ret <- .Call("dparsPoly", P, Theta, x@dat, nd) #switch the order
+        grad <- c(ret$grad[-(1:nd)], ret$grad[1:nd])
+        hess <- matrix(0,nfact+nd,nfact+nd)
+        hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
+        hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
+        hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
+            ret$hess[(nd+1):ncol(hess), 1:nd]
+        return(list(grad=grad, hess=hess))
     }
 )
 

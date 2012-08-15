@@ -397,8 +397,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     parnumber <- ret[[length(ret)]]@parnum[length(ret[[length(ret)]]@parnum)]
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
                                             estgcov=estgcov, parnumber=parnumber+1)
-    attr(ret, 'prodlist') <- prodlist
-    ret
+    attr(ret, 'prodlist') <- prodlist    
+    return(ret)    
 }
 
 # Take long parameter form and return list of pars for polymirt (obsolete)

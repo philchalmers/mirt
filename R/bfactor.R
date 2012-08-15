@@ -324,7 +324,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	if(is.null(itemtype)) {
 	    itemtype <- rep('', J)
 	    for(i in 1:J){
-	        if(K[i] > 2) itemtype[i] <- 'grad'
+	        if(K[i] > 2) itemtype[i] <- 'graded'
 	        if(K[i] == 2) itemtype[i] <- '2PL'                            
 	    }        
 	} 
