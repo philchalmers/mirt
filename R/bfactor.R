@@ -280,19 +280,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	tabdata <- cbind(tabdata,r) 
 	tabdata2 <- cbind(tabdata2,r)
 	colnames(tabdata) <- c(Names,'Freq')	
-	colnames(tabdata2) <- c(itemnames, 'Freq')	
-	if(is.logical(par.prior)) 
-	    if(par.prior) suppressAutoPrior <- FALSE  
-	        temp <- matrix(c(1,0,0),ncol = 3, nrow=J, byrow=TRUE)
-	if(!is.logical(par.prior)){
-		if(!is.null(par.prior$slope.items))
-			for(i in 1:length(par.prior$slope.items))
-				temp[par.prior$slope.items[i],1] <- par.prior$slope		
-		if(!is.null(par.prior$int.items))
-			for(i in 1:length(par.prior$int.items))
-				temp[par.prior$int.items[i],2:3] <- par.prior$int		 
-	}  
-	par.prior <- temp 	
+	colnames(tabdata2) <- c(itemnames, 'Freq')		
 	Rpoly <- cormod(na.omit(data.original),K,guess)
 	if(!is.null(prev.cor)){
 		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
@@ -332,7 +320,8 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
 	pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
 	                 upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, 
-                     startvalues=startvalues, freepars=freepars, parprior=parprior, bfactor=logicalfact) 
+                     startvalues=startvalues, freepars=freepars, parprior=parprior, bfactor=logicalfact,
+                     parnumber=1) 
 	#Contraints, startvalues, and estimation
 	if(!is.null(constrain)){
 	    if(constrain == 'index'){
@@ -535,7 +524,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		df=df, logLik=logLik, p=p, F=F, h2=h2, itemnames=itemnames, BIC=BIC,
 		tabdata=tabdata2, N=N, Pl=Pl, Theta=Theta, data=data.original, tabdatalong=tabdata, 
 		logicalfact=logicalfact, facility=facility, specific=specific, itemloc=itemloc,
-		cormat=Rpoly, converge=converge, par.prior=par.prior, quadpts=quadpts,
+		cormat=Rpoly, converge=converge, quadpts=quadpts,
 		RMSEA=RMSEA, K=K, null.mod=null.mod, TLI=TLI, Call=Call)  
 	return(mod)  
 } 

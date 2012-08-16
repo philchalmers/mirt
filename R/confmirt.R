@@ -370,16 +370,16 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
         for(i in 1:J)
             pars[[i]]@par[1:nfact] <- lambdas[i, ]        
 	}        
-	if(debug) browser()   
+	if(debug) browser()     
     classes <- list()
-	for(i in 1:length(pars)){
-        classes[[i]] <- class(pars[[i]])        
-        pars[[i]] <- unclass(pars[[i]]) #STUPID S4 PASSING BUG FIX
-	}
-	ESTIMATE <- MHRM(pars=pars, classes=classes, NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
-                     KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=nfactNames, itemloc=itemloc, 
-                     fulldata=fulldata, nfact=nfact, N=N, npars=npars, constrain=constrain, 
-                     verbose=verbose)
+    for(i in 1:length(pars)){
+        classes[[i]] <- class(pars[[i]])
+        #pars[[i]] <- unclass(pars[[i]])
+    }
+ 	ESTIMATE <- MHRM(pars=pars, list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
+ 	                                       KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=nfactNames, 
+                                           itemloc=itemloc, fulldata=fulldata, nfact=nfact, 
+                                           npars=npars, constrain=constrain, verbose=verbose))                     
     pars <- ESTIMATE$pars
 	if(verbose) cat("\n\n")    
 	lambdas <- Lambdas(pars)
@@ -393,14 +393,15 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	names(h2) <- itemnames  
 	null.mod <- unclass(new('mirtClass'))
     if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))
+    if(is.null(constrain)) constrain <- list()
     
     ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
                fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
-               null.mod=null.mod, Call=Call)    
+               null.mod=null.mod, constrain=constrain, nfact=nfact, Call=Call)    
 	if(calcLL){
 		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()
-		ret <- logLik(ret, draws)		        
+		ret <- calcLogLik(ret, draws)		        
 	}	
 	return(ret)
 }

@@ -392,8 +392,9 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
 #     }
 #   }		
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
-                 fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, startvalues=startvalues, 
-                 freepars=freepars, parprior=parprior, parnumber=parnumber)  
+                 fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, nfactNames=nfactNames,
+                    startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
+                    estLambdas=estlam)  
     parnumber <- ret[[length(ret)]]@parnum[length(ret[[length(ret)]]@parnum)]
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
                                             estgcov=estgcov, parnumber=parnumber+1)
@@ -524,9 +525,11 @@ Lambdas <- function(pars){
 }
 
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     constrain, startvalues, freepars, parprior, parnumber, bfactor = NULL){    
+                     constrain, startvalues, freepars, parprior, parnumber, bfactor = NULL, 
+                     nfactNames = NULL, estLambdas=NULL){    
     pars <- list()   
-    estLambdas <- matrix(TRUE, J, nfact)
+    if(is.null(nfactNames)) nfactNames <- nfact
+    if(is.null(estLambdas)) estLambdas <- matrix(TRUE, J, nfactNames)
     BFACTOR <- FALSE
     if(!is.null(bfactor)){
         estLambdas <- bfactor
@@ -549,7 +552,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){ 
             pars[[i]] <- new('dich', par=c(lambdas[i,], zetas[[i]], guess[i], upper[i]),
-                             nfact=nfact, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                    
+                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                    
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
             if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
             if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE            
@@ -562,7 +565,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         
         if(itemtype[i] == 'graded'){
-            pars[[i]] <- new('graded', par=c(lambdas[i,], zetas[[i]]), nfact=nfact, ncat=K[i],
+            pars[[i]] <- new('graded', par=c(lambdas[i,], zetas[[i]]), nfact=nfactNames, ncat=K[i],
                              dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
             pars[[i]]@est <- estpars
@@ -574,7 +577,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         
         if(itemtype[i] == 'gpcm'){            
-            pars[[i]] <- new('gpcm', par=c(lambdas[i,], zetas[[i]]), nfact=nfact, ncat=K[i],
+            pars[[i]] <- new('gpcm', par=c(lambdas[i,], zetas[[i]]), nfact=nfactNames, ncat=K[i],
                              dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]))
             #identifiction constraints
@@ -590,7 +593,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         
         if(itemtype[i] == 'nominal'){
             pars[[i]] <- new('nominal', par=c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i])), 
-                             nfact=nfact, ncat=K[i], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
+                             nfact=nfactNames, ncat=K[i], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
             estpars <- c(estLambdas[i, ], rep(TRUE, length(pars[[i]]@par) - nfact))
             #identifiction constraints
             estpars[c(nfact+1, nfact+ K[i], nfact + K[i] + 1)] <- FALSE
@@ -607,7 +610,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
             pars[[i]] <- new('partcomp', par=c(rep(.5, nfact), rep(-1, nfact), 0, 1), 
-                             nfact=nfact, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
+                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)
             estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
             if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1] <- TRUE
             pars[[i]]@est <- estpars

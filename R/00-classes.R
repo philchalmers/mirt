@@ -45,7 +45,7 @@ setClass(
                                     null.mod = 'S4', 
                                     TLI = 'numeric', 
                                     Target='numeric', 
-                                    logLik='numeric', 
+                                    logLik='numeric',                                    
                                     Call='call'),	
     validity = function(object) return(TRUE)
 )	
@@ -101,59 +101,7 @@ setClass(
                                     quadpts = 'numeric', 
                                     vcov = 'matrix', 
                                     null.mod = 'S4', 
-                                    TLI = 'numeric', 
-                                    Call = 'call'),	
-    validity = function(object) return(TRUE)
-)	
-
-#------------------------------------------------------------------------------
-# Class "polymirtClass"
-# 
-# Defines the object returned from \code{\link{polymirt}}.
-# 
-# 
-# @name polymirtClass-class
-# @aliases polymirtClass-class coef,polymirtClass-method
-# plot,polymirtClass,missing-method print,polymirtClass-method
-# residuals,polymirtClass-method show,polymirtClass-method
-# summary,polymirtClass-method anova,polymirtClass-method
-# @docType class
-# @section Objects from the Class: Objects can be created by calls of the form
-# \code{new("polymirtClass", ...)}.
-# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @exportClass polymirtClass
-# @keywords classes
-setClass(
-    Class = 'polymirtClass',
-    representation = representation(pars = 'list', 
-                                    guess = 'numeric', 
-                                    SEg = 'numeric',
-                                    upper = 'numeric', 
-                                    SEup = 'numeric',
-                                    SEpars = 'matrix', 
-                                    cycles = 'numeric', 
-                                    Theta = 'matrix', 
-                                    fulldata = 'matrix', 
-                                    data = 'matrix', 
-                                    K = 'numeric', 
-                                    F = 'matrix', 
-                                    h2 = 'numeric', 
-                                    itemloc = 'numeric', 
-                                    AIC = 'numeric',
-                                    converge = 'numeric', 
-                                    logLik = 'numeric', 
-                                    SElogLik = 'numeric', 
-                                    df = 'integer', 
-                                    G2 = 'numeric', 
-                                    p = 'numeric', 
-                                    tabdata = 'matrix', 
-                                    BIC = 'numeric', 
-                                    estGuess = 'logical', 
-                                    RMSEA = 'numeric', 
-                                    rotate='character', 
-                                    null.mod='S4', 
-                                    TLI = 'numeric', 
-                                    Target='numeric',
+                                    TLI = 'numeric',                                    
                                     Call = 'call'),	
     validity = function(object) return(TRUE)
 )	
@@ -210,6 +158,8 @@ setClass(
                                     RMSEA = 'numeric', 
                                     null.mod = 'S4', 
                                     TLI = 'numeric', 
+                                    constrain='list',
+                                    nfact='integer',
                                     Call = 'call'),	
     validity = function(object) return(TRUE)
 )	

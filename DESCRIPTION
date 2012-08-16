@@ -40,7 +40,6 @@ Collate:
     'expand.table.R'
     'itemplot.R'
     'key2binary.R'
-    'logLik.R'
     'fscores.R'
     'mirt-package.R'
     'confmirt.R'
@@ -58,3 +57,4 @@ Collate:
     '01-itemtypes.R'
     '02-item_methods.R'
     'specifyModel.R'
+    'calcLogLik.R'

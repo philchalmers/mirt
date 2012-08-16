@@ -6,7 +6,7 @@ setMethod(
     {
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")
-        cat("Full-information item factor analysis with ", ncol(x@Theta), " factors \n", sep="")
+        cat("Full-information item factor analysis with ", x@nfact, " factors \n", sep="")
         if(x@converge == 1)    
             cat("Converged in ", x@cycles, " iterations.\n", sep="")
         else 	
@@ -64,7 +64,7 @@ setMethod(
     signature = 'confmirtClass',
     definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
     {  
-        nfact <- ncol(object@Theta)
+        nfact <- ncol(object@nfact)
         nfactNames <- ifelse(length(object@prodlist) > 0, 
                              length(object@prodlist) + nfact, nfact)
         factorNames <- colnames(object@F)
