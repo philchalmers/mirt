@@ -57,4 +57,3 @@ Collate:
     '01-itemtypes.R'
     '02-item_methods.R'
     'specifyModel.R'
-    'calcLogLik.R'

@@ -253,8 +253,9 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
                  prev.cor = NULL, par.prior = FALSE, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
-{     
-	Call <- match.call()            
+{   
+    if(debug == 'Main') browser()
+	Call <- match.call()    
     ##technical
     MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
     MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
@@ -375,44 +376,26 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     } 
     if(length(itemtype) == 1) itemtype <- rep(itemtype, J)  
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
+    estlam <- matrix(TRUE, J, nfact)    
     pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
                      upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
-                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1)  
-    #Contraints, startvalues, and estimation
-	if(!is.null(constrain)){
-	    if(constrain == 'index'){
+                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1,
+                     estLambdas=estlam, debug=debug) 
+    if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
+        names(pars) <- itemnames        
+        attr(pars, 'parnumber') <- NULL
+        return(pars)  
+    } 
+	if(!is.null(constrain) || !is.null(parprior)){
+	    if(constrain == 'index' || parprior == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J)
 	            returnedlist[[i]] <- pars[[i]]@parnum 
 	        names(returnedlist) <- itemnames
 	        return(returnedlist)
 	    }
-	}    
-	if(!is.null(startvalues)){
-	    if(startvalues == 'index'){
-	        returnedlist <- list()                        
-	        for(i in 1:J){
-                par <- pars[[i]]@par
-                names(par) <- names(pars[[i]]@parnum)
-	            returnedlist[[i]] <- par
-	        }
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
-	}
-    if(!is.null(freepars)){
-	    if(freepars == 'index'){
-	        returnedlist <- list()                        
-	        for(i in 1:J){
-	            est <- pars[[i]]@est
-	            names(est) <- names(pars[[i]]@parnum)
-	            returnedlist[[i]] <- est
-	        }
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
-	}		
-	startvalues <- pars
+	}       
+	start <- pars
     npars <- 0    
 	for(i in 1:length(pars)) npars <- npars + sum(pars[[i]]@est)	
 	if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))  
@@ -427,11 +410,10 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	    listpars[[i]] <- pars[[i]]@par
 	lastpars2 <- lastpars1 <- listpars    
 	converge <- 1  	
-	index <- 1:J     
-	if(debug) browser()    
+	index <- 1:J     	   
     #EM cycles
 	for (cycles in 1:NCYCLES){       
-    	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc)
+    	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, debug=debug)
         if(verbose){
             print(Pl <- sum(r*log(rlist$expected)))                            
             flush.console()
@@ -447,7 +429,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
             if(pars[[i]]@constr) next    	       
             estpar <- pars[[i]]@par[pars[[i]]@est]
     		maxim <- try(optim(estpar, fn=Mstep.mirt, obj=pars[[i]], 
-                               Theta=Theta, prior=prior, 
+                               Theta=Theta, prior=prior, debug=debug,
                                method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
                                lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
                                upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
@@ -478,7 +460,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                 constrlist[[i]] <- numpars %in% constrain[[i]]
                 estpar[i] <- mean(tmp[constrlist[[i]]])
             }            
-            maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, 
+            maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, debug=debug,
                                Theta=Theta, prior=prior, constr=constrlist,
                                method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
                                lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
@@ -508,7 +490,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 		converge <- 0  
 		message("Estimation terminated after ", cycles, " EM loops and likely did not converge.")
 	}	    	 
-	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc)     	  
+	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, debug=debug)     	  
 	Pl <- rlist$expected  
 	logLik <- sum(r*log(Pl))			
 	logN <- 0

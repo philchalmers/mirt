@@ -240,7 +240,8 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                      constrain = NULL, freepars = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
                      draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      technical = list(),  ...)
-{		
+{
+    if(debug == 'Main') browser()
 	Call <- match.call()           
     ##########
     if(any(upper < 1)) stop('Upper bound estimation is not currently available.')
@@ -321,65 +322,29 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                            startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                           parnumber=parnumber)    
-	#Contraints, startvalues, and estimation
-	if(!is.null(constrain)){
-	    if(constrain == 'index'){
+                           parnumber=parnumber, debug=debug)    
+	if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
+        names(pars) <- c(itemnames, 'Group_Parameters')
+        attr(pars, 'parnumber') <- NULL
+        return(pars)  
+    }
+	if(!is.null(constrain) || !is.null(parprior)){
+	    if(constrain == 'index' || parprior == 'index'){
 	        returnedlist <- list()                        
-	        for(i in 1:J)
+	        for(i in 1:length(pars))
 	            returnedlist[[i]] <- pars[[i]]@parnum 
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
-	}    
-	if(!is.null(startvalues)){
-	    if(startvalues == 'index'){
-	        returnedlist <- list()                        
-	        for(i in 1:J){
-	            par <- pars[[i]]@par
-	            names(par) <- names(pars[[i]]@parnum)
-	            returnedlist[[i]] <- par
-	        }
-	        names(returnedlist) <- itemnames
+	        names(returnedlist) <- c(itemnames, 'Group_Parameters')            
 	        return(returnedlist)
 	    }
 	}
-	if(!is.null(freepars)){
-	    if(freepars == 'index'){
-	        returnedlist <- list()                        
-	        for(i in 1:J){
-	            est <- pars[[i]]@est
-	            names(est) <- names(pars[[i]]@parnum)
-	            returnedlist[[i]] <- est
-	        }
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
-	}    
     npars <- 0
     for(i in 1:length(pars))
         npars <- npars + sum(pars[[i]]@est)			        
-	if(exploratory){        
-	    Rpoly <- cormod(na.omit(data),K,guess)
-	    FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
-	    loads <- unclass(loadings(FA))
-	    u <- FA$unique
-	    u[u < .001 ] <- .2
-	    cs <- sqrt(u)
-	    lambdas <- loads/cs        
-        for(i in 1:J)
-            pars[[i]]@par[1:nfact] <- lambdas[i, ]        
-	}        
-	if(debug) browser()     
-    classes <- list()
-    for(i in 1:length(pars)){
-        classes[[i]] <- class(pars[[i]])
-        #pars[[i]] <- unclass(pars[[i]])
-    }
+	        	    
  	ESTIMATE <- MHRM(pars=pars, list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
  	                                       KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=nfactNames, 
                                            itemloc=itemloc, fulldata=fulldata, nfact=nfact, 
-                                           npars=npars, constrain=constrain, verbose=verbose))                     
+                                           npars=npars, constrain=constrain, verbose=verbose), debug=debug) 
     pars <- ESTIMATE$pars
 	if(verbose) cat("\n\n")    
 	lambdas <- Lambdas(pars)

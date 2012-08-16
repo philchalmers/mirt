@@ -1,13 +1,8 @@
 #MHRM optimimization algorithm for confmirt
 
-setGeneric('MHRM', function(pars, list) standardGeneric("MHRM"))
-
-setMethod(
-    f = "MHRM",
-    signature = signature(pars = 'list', list = 'list'),
-    definition = function(pars, list)
+MHRM <- function(pars, list, debug)
     {           
-        #for(i in 1:length(pars)) class(pars[[i]]) <- classes[[i]]
+        if(debug == 'MHRM') browser()        
         verbose <- list$verbose
         constrain <- list$constrain
         npars <- list$npars
@@ -38,7 +33,7 @@ setMethod(
         for(i in 1:30){			
             theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, itemloc=itemloc, 
                                   cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
-                                  prior.mu=structgrouppars$gmeans, prodlist=prodlist)
+                                  prior.mu=structgrouppars$gmeans, prodlist=prodlist, debug=debug)
             if(i > 5){		
                 if(attr(theta0,"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
                 else if(attr(theta0,"Proportion Accepted") > .25 && nfact > 3) 
@@ -121,11 +116,11 @@ setMethod(
             for(j in 1:4) 
                 theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, itemloc=itemloc, 
                                       cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
-                                      prior.mu=structgrouppars$gmeans, prodlist=prodlist)
+                                      prior.mu=structgrouppars$gmeans, prodlist=prodlist, debug=debug)
             for(i in 1:k) 
                 m.thetas[[i]] <- draw.thetas(theta0=theta0, pars=pars, fulldata=fulldata, itemloc=itemloc, 
                                              cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
-                                             prior.mu=structgrouppars$gmeans, prodlist=prodlist)
+                                             prior.mu=structgrouppars$gmeans, prodlist=prodlist, debug=debug)
             theta0 <- m.thetas[[1]]
             
             #Step 2. Find average of simulated data gradients and hessian 		
@@ -264,5 +259,5 @@ setMethod(
         }    
         ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, converge=converge)
         ret        
-    }
-)
+}
+

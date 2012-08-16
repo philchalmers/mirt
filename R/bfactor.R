@@ -202,6 +202,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
                     prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
                     technical = list(), ...)
 { 		
+    if(debug == 'Main') browser()
 	Call <- match.call()		    
 	##technical
 	MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
@@ -320,44 +321,23 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
 	pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
 	                 upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, 
-                     startvalues=startvalues, freepars=freepars, parprior=parprior, bfactor=logicalfact,
-                     parnumber=1) 
-	#Contraints, startvalues, and estimation
-	if(!is.null(constrain)){
-	    if(constrain == 'index'){
+                     startvalues=startvalues, freepars=freepars, parprior=parprior, estLambdas=logicalfact,
+                     parnumber=1, BFACTOR=TRUE, debug=debug) 
+    if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
+        names(pars) <- itemnames        
+        attr(pars, 'parnumber') <- NULL
+        return(pars)  
+    }
+	if(!is.null(constrain) || !is.null(parprior)){
+	    if(constrain == 'index' || parprior == 'index'){
 	        returnedlist <- list()                        
 	        for(i in 1:J)
 	            returnedlist[[i]] <- pars[[i]]@parnum 
 	        names(returnedlist) <- itemnames
 	        return(returnedlist)
 	    }
-	}    
-	if(!is.null(startvalues)){
-	    if(startvalues == 'index'){
-	        returnedlist <- list()                        
-	        for(i in 1:J){
-	            par <- pars[[i]]@par
-	            names(par) <- names(pars[[i]]@parnum)
-	            returnedlist[[i]] <- par
-	        }
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
 	}
-	if(!is.null(freepars)){
-	    if(freepars == 'index'){
-	        returnedlist <- list()                        
-	        for(i in 1:J){
-	            est <- pars[[i]]@est
-	            names(est) <- names(pars[[i]]@parnum)
-	            returnedlist[[i]] <- est
-	        }
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
-	}		
-    ########
-	startvalues <- pars
+	start <- pars
 	npars <- 0    
 	for(i in 1:length(pars)) npars <- npars + sum(pars[[i]]@est)	
 	listpars <- list()
@@ -381,13 +361,12 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 			sitems[ind, ] <- temp[i, ]
 			ind <- ind + 1
 		}		
-	}		
-	if(debug) browser()	
+	}			
 	#EM  loop  
 	for (cycles in 1:NCYCLES) 
 	{    
 		rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
-			specific=specific, sitems=sitems, itemloc=itemloc)
+			specific=specific, sitems=sitems, itemloc=itemloc, debug=debug)
 		if(verbose){
             print(sum(r * log(rlist$expected)))
             flush.console()
@@ -402,7 +381,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		    if(pars[[i]]@constr) next               
 		    estpar <- pars[[i]]@par[pars[[i]]@est]
 		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=pars[[i]], 
-		                       Theta=Theta, prior=prior, 
+		                       Theta=Theta, prior=prior, debug=debug,
 		                       method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
 		                       lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
 		                       upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
@@ -433,7 +412,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		        constrlist[[i]] <- numpars %in% constrain[[i]]
 		        estpar[i] <- mean(tmp[constrlist[[i]]])
 		    }            
-		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, 
+		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, debug=debug,
 		                       Theta=Theta, prior=prior, constr=constrlist,
 		                       method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
 		                       lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
@@ -467,7 +446,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 			round(max(abs(lastchange[,ncol(pars)])),4) ,"\n")
 	}	
 	rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
-	                       specific=specific, sitems=sitems, itemloc=itemloc)
+	                       specific=specific, sitems=sitems, itemloc=itemloc, debug=debug)
 	Pl <- rlist$expected	
 	logLik <- sum(r * log(Pl))	
 # 	parsSE <- list()

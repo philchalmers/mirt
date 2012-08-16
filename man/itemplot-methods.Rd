@@ -2,9 +2,9 @@
 \name{itemplot}
 \alias{itemplot}
 \alias{itemplot,bfactorClass-method}
+\alias{itemplot-method}
 \alias{itemplot,mirtClass-method}
 \alias{itemplot,polymirtClass-method}
-\alias{itemplot-method}
 \title{Displays item surface and information plots}
 \arguments{
   \item{object}{a computed model of class

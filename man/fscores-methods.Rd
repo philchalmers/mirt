@@ -3,9 +3,9 @@
 \alias{fscores}
 \alias{fscores,bfactorClass-method}
 \alias{fscores,confmirtClass-method}
+\alias{fscores-method}
 \alias{fscores,mirtClass-method}
 \alias{fscores,polymirtClass-method}
-\alias{fscores-method}
 \title{Methods for Function fscores}
 \arguments{
   \item{object}{a model of class \code{mirtClass},
