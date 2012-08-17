@@ -2,6 +2,7 @@
 \docType{class}
 \alias{bfactorClass-class}
 \alias{coef,bfactorClass-method}
+\alias{anova,bfactorClass-method}
 \alias{fitted,bfactorClass-method}
 \alias{print,bfactorClass-method}
 \alias{residuals,bfactorClass-method}
@@ -18,10 +19,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
 \section{Slots}{
   \describe{
     \item{\code{EMiter}:}{Object of class \code{"numeric"}, number of EM iterations  }
-    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameters }
-    \item{\code{parsSE}:}{Object of class \code{"list"}, estimated parameter standard errors  }    
-    \item{\code{guess}:}{Object of class \code{"numeric"}, guessing parameters }
-    \item{\code{upper}:}{Object of class \code{"numeric"}, upper bound parameters }
+    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }        
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }    
     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }     
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
@@ -41,12 +39,10 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{Pl}:}{Object of class \code{"numeric"},  likelihood-values for tabdata}
     \item{\code{Theta}:}{Object of class \code{"matrix"}, theta grid }
     \item{\code{data}:}{Object of class \code{"matrix"},  complete binary data}
-    \item{\code{logicalfact}:}{Object of class \code{"matrix"}, logical factor indicators }
-    \item{\code{facility}:}{Object of class \code{"numeric"},  item easiness}
+    \item{\code{logicalfact}:}{Object of class \code{"matrix"}, logical factor indicators }    
     \item{\code{specific}:}{Object of class \code{"numeric"}, specific item indicators }
     \item{\code{cormat}:}{Object of class \code{"matrix"}, quasi-correlation matrix }
-    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
-    \item{\code{par.prior}:}{Object of class \code{"matrix"},  prior parameter distribution specifications}
+    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }    
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number for quadrature points }
     \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }
     \item{\code{null.mod}:}{Object of class \code{"S4"}, null model}

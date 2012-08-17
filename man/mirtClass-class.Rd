@@ -20,10 +20,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
 \section{Slots}{
   \describe{
     \item{\code{EMiter}:}{Object of class \code{"numeric"}, number of iterations  }
-    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameters  }
-    \item{\code{parsSE}:}{Object of class \code{"list"}, estimated parameter standard errors  }
-    \item{\code{guess}:}{Object of class \code{"numeric", guessing parameters}  }
-    \item{\code{upper}:}{Object of class \code{"numeric", upper bound parameters}  }
+    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }        
     \item{\code{X2}:}{Object of class \code{"numeric"}, Chi-squared  }
@@ -41,12 +38,11 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
-    \item{\code{cormat}:}{Object of class \code{"matrix"}, quasi-correlation matrix }
-    \item{\code{facility}:}{Object of class \code{"numeric"}, item easiness }
+    \item{\code{cormat}:}{Object of class \code{"matrix"}, quasi-correlation matrix }    
     \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-    \item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters } 
+    %\item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters } 
     \item{\code{null.mod}:}{Object of class \code{"mirtClass"}, null model}    
     \item{\code{Target}:}{Object of class \code{"numeric"}, dummy rotation matrix}
     \item{\code{Call}:}{Object of class \code{"call"}, call }

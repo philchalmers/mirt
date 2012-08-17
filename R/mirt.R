@@ -56,7 +56,8 @@
 #' however they may be changed to the following: '1PL', '2PL', '3PL', '3PLu', 
 #' '4PL', 'graded', 'gpcm', 'nominal',  for the 1 and 2 parameter logistic, 3 parameter logistic (lower asymptote and upper), 
 #' 4 parameter logistic, graded response model, generalized partial credit model, and nominal model, respectively.
-#' Note that specifying a '1PL' model should be of length 1 (since there is only 1 slope parameter estimated)
+#' Note that specifying a '1PL' model should be of length 1 (since there is only 1 slope parameter estimated).
+#' If \code{NULL} the defaul assumes that the data follow a '2PL' or 'graded' format
 #' @param SE logical, estimate the standard errors?
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
@@ -65,28 +66,36 @@
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
 #' @param prev.cor use a previously computed correlation matrix to be used to
-#' estimate starting values for the EM estimation? Default in \code{NULL}
-#' @param par.prior a list declaring which items should have assumed priors
-#' distributions, and what these prior weights are. Elements are \code{slope}
-#' and \code{int} to specify the coefficients beta prior for the slopes and
-#' normal prior for the intercepts, and \code{slope.items} and \code{int.items}
-#' to specify which items to constrain. The value in \code{slope} is the
-#' \emph{p} meta-parameter for the beta distribution (where \emph{p} > 1
-#' constrains the slopes), and the two values in \code{int} are the normal
-#' distribution intercept and variance. Larger values of the variance have less
-#' impact on the solution. For example, if items 2 and 3 were Heywood cases
-#' with no extreme item facilities, and item 4 had a very large item facility
-#' (say, greater than .95) then a possible constraint might be \code{par.prior
-#' = list(int = c(0,2), slope = 1.2, int.items = 4, slope.items = c(2,3))}
+#' estimate starting values for the EM estimation? Default in \code{NULL}#' 
 #' @param rotate type of rotation to perform after the initial orthogonal
 #' parameters have been extracted by using \code{summary}; default is \code{'varimax'}. 
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
 #' input then the default from the object is ignored and the new rotation from the list 
 #' is used instead
+#' @param allpars logical; print all the item paramters instead of just the slopes?
 #' @param Target a dummy variable matrix indicing a target rotation pattern
+#' @param constrain a list of user declared equallity constraints. To see how to define the
+#' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
+#' To constrain parameters to be equal create a list with seperate concatenated vectors signifying which
+#' parameters to contrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
+#' use \code{constrain = list(c(1,5), c(2,6,10))}
+#' @param parprior a list of user declared prior item probabilities. To see how to define the
+#' parameters correctly use \code{parprior = 'index'} initially to see how the parameters are labeled.
+#' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
+#' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
+#' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
+#' are \code{parprior = list(c(parnumber, 'normal', mean, sd))} and betas are 
+#' \code{parprior = list(c(parnumber, 'beta', a, b, weight))}. 
+#' @param freepars a list of user declared logical values indicating which parameters to estimate. 
+#' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
+#' are labeled. These values may be modified and input back into the function by using 
+#' \code{freepars=newfreepars}. Note that user input values must match what the default structure 
+#' would have been
 #' @param startvalues a list of user declared start values for parameters. To see how to define the
 #' parameters correctly use \code{startvalues = 'index'} initially to see what the defaults would 
-#' noramlly be
+#' noramlly be. These values may be modified and input back into the function by using 
+#' \code{startavlues=newstartvalues}. Note that user input values must match what the default structure 
+#' would have been
 #' @param quadpts number of quadrature points per dimension
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
@@ -167,13 +176,15 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, nfact, guess = 0, upper = 1, SE = FALSE, equal_slopes = FALSE, rotate = 'varimax', 
-#' Target = NULL, prev.cor = NULL, par.prior = FALSE, startvalues = list(), quadpts = NULL, 
-#' verbose = FALSE, debug = FALSE, technical = list(), ...)
+#' mirt(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
+#' constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
+#' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
+#' technical = list(), ...)
 #' 
-#' \S4method{summary}{mirt}(object, rotate = '', suppress = 0, digits = 3, print = FALSE, ...)
+#' \S4method{summary}{mirt}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
+#' print = TRUE, ...)
 #' 
-#' \S4method{coef}{mirt}(object, rotate = '', digits = 3, ...)
+#' \S4method{coef}{mirt}(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...)
 #' 
 #' \S4method{anova}{mirt}(object, object2, ...)
 #' 
@@ -240,7 +251,7 @@
 #' 
 mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
                  constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
-                 prev.cor = NULL, par.prior = FALSE, quadpts = NULL, verbose = FALSE, debug = FALSE, 
+                 prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
 {   
     if(debug == 'Main') browser()

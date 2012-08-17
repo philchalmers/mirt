@@ -38,24 +38,79 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'confmirtClass',
-    definition = function(object, digits = 3, ...)
+    definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
+                          print = TRUE, ...)
     {        
-        if(length(object@prodlist) > 0) stop('No factor metric for models with product terms')
-        nfact <- ncol(object@F)
-        itemnames <- names(object@h2)	
-        F <- object@F
-        rownames(F) <- itemnames								
-        SS <- apply(F^2,2,sum)			
-        cat("\nFactor loadings metric: \n")
-        print(cbind(F),digits)		
-        cat("\nSS loadings: ",round(SS,digits), "\n")		
-        cat("\nFactor correlations: \n")
-        gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-        Phi <- cov2cor(gpars$gcov)	  
-        Phi <- round(Phi, digits)
-        colnames(Phi) <- rownames(Phi) <- colnames(F)
-        print(Phi)				
-        invisible(F)  	  
+        if(object@exploratory){
+            nfact <- ncol(object@F)
+            if (rotate == 'none' || nfact == 1) {
+                F <- object@F
+                F[abs(F) < suppress] <- NA
+                h2 <- as.matrix(object@h2)    			
+                SS <- apply(F^2,2,sum)
+                colnames(h2) <- "h2"			
+                names(SS) <- colnames(F)
+                loads <- round(cbind(F,h2),digits)
+                rownames(loads) <- colnames(object@data)
+                if(print){
+                    cat("\nUnrotated factor loadings: \n\n")
+                    print(loads)	    	 
+                    cat("\nSS loadings: ",round(SS,digits), "\n")
+                    cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+                }
+                invisible(list(rotF=F,h2=h2,fcor=matrix(1)))
+            } else {	
+                F <- object@F
+                h2 <- as.matrix(object@h2)
+                colnames(h2) <- "h2"
+                if(rotate == ''){
+                    rotate <- object@rotate
+                    Target <- object@Target
+                }
+                rotF <- Rotate(F, rotate, Target = Target, ...)            
+                SS <- apply(rotF$loadings^2,2,sum)
+                L <- rotF$loadings
+                L[abs(L) < suppress] <- NA	
+                loads <- round(cbind(L,h2),digits)
+                rownames(loads) <- colnames(object@data)			
+                Phi <- diag(ncol(F))			
+                if(!rotF$orthogonal){
+                    Phi <- rotF$Phi	  
+                    Phi <- round(Phi, digits)
+                    colnames(Phi) <- rownames(Phi) <- colnames(F)
+                    if(print){
+                        cat("\nFactor correlations: \n\n")
+                        print(Phi)            
+                    }
+                }			
+                if(print){
+                    cat("\nRotation: ", rotate, "\n")
+                    cat("\nRotated factor loadings: \n\n")
+                    print(loads,digits)
+                    cat("\nRotated SS loadings: ",round(SS,digits), "\n")		
+                }
+                if(any(h2 > 1)) 
+                    warning("Solution has heywood cases. Interpret with caution.") 
+                invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))  
+            }
+        } else {
+            if(length(object@prodlist) > 0) stop('No factor metric for models with product terms')
+            nfact <- ncol(object@F)
+            itemnames <- names(object@h2)	
+            F <- object@F
+            rownames(F) <- itemnames								
+            SS <- apply(F^2,2,sum)			
+            cat("\nFactor loadings metric: \n")
+            print(cbind(F),digits)		
+            cat("\nSS loadings: ",round(SS,digits), "\n")		
+            cat("\nFactor correlations: \n")
+            gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
+            Phi <- cov2cor(gpars$gcov)	  
+            Phi <- round(Phi, digits)
+            colnames(Phi) <- rownames(Phi) <- colnames(F)
+            print(Phi)				
+            invisible(F)  	  
+        }
     }
 )
 
