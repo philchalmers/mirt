@@ -329,7 +329,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
         return(pars)  
     }
 	if(!is.null(constrain) || !is.null(parprior)){
-	    if(constrain == 'index' || parprior == 'index'){
+	    if(any(constrain == 'index', parprior == 'index')){
 	        returnedlist <- list()                        
 	        for(i in 1:J)
 	            returnedlist[[i]] <- pars[[i]]@parnum 

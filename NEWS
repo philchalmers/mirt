@@ -1,3 +1,38 @@
+----------------------------------------------------------------
+mirt 0.3.0
+----------------------------------------------------------------
+
+* Radically changed the underlying mechanisms for the 
+  estimation functions and in doing so have decided that polymirt() was 
+  redundant and could be replaced completely by calling confmirt(data, number_of_factors). 
+
+* New univariate and MV models are available, including the 1-4 parameter logistic
+  generalized partial credit, and nominal models. These are called by specifying character
+  vector called 'itemtype' of length nitems with the options '2PL','3PL','4PL','graded','gpcm', 'nominal'. 
+  Partially-compensatory models available in confmirt can be called with 'partcomp'. If itemtype =
+  '1PL' or 'Rasch', then the 1-parameter logistic/1-parameter ordinal or Rasch/partial credit models are
+  estimated for all the data. The default assumes that items are either '2PL' or 'graded', as before. 
+
+* Flexible user defined linear restrictions may be imposed on all estimation functions, 
+  so too prior parameter distributions, start values, and choice of which parameters to 
+  estimate at all. These all follow the general 2 step for 
+
+    1) Call the function as you would normally would but use, for example, 
+       mirt(data, 1, startvalues = 'index') to return the start values
+    2) Edit them as you please (without changing the structure), then input them back into 
+       the function as mirt(data, 1, startvalues = editedstartvalues). 
+
+  This is true for the parprior (MAP priors), constrain (linear constraints), and 
+  freepars (parameters freely estimated), each with their own little quirk. All inputs are lists
+  with named parameters for easy identification and manipulation. Note that this means that
+  the partial credit model and Rasch models may be calculated 
+  as well by modifying either the start values and constraints accordingly (e.g., constrain all
+  slopes to be equal to 1/1.702 and not freely estimated for the classical Rasch model, or all equal 
+  but estimated for the 1PL model)
+
+* number confmirt.model() options decreased due to the new way to specify item types, startvalues, prior
+  parameter distributions, and constraints
+
 
 ----------------------------------------------------------------
 mirt 0.2.6-1

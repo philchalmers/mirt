@@ -1,8 +1,8 @@
-\name{specifyModel}
-\alias{specifyModel}
+\name{confmirt.model}
+\alias{confmirt.model}
 \title{Specify model loadings}
 \usage{
-  specifyModel(file = "", ...)
+  confmirt.model(file = "", ...)
 }
 \arguments{
   \item{file}{a string specifying an external file that
@@ -15,7 +15,7 @@
   \code{\link{confmirt}}.
 }
 \description{
-  The \code{specifyModel} function scans user input to
+  The \code{confmirt.model} function scans user input to
   specify the confirmatory model.
 }
 \details{
@@ -46,7 +46,7 @@
 \examples{
 \dontrun{
 
-model <- specifyModel()
+model <- confmirt.model()
   F1 = 1,2,3,4-10
   F2 = 10-20
   (F1*F2) = 1,2,3,4-10

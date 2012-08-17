@@ -30,10 +30,10 @@
   consists of numerically ordered data}
 
   \item{model}{an object returned from
-  \code{specifyModel()} declarating how the factor model is
-  to be estimated, or a single numeric value indicating the
-  number of exploratory factors to estimate. See
-  \code{\link{specifyModel}} for more details}
+  \code{confmirt.model()} declarating how the factor model
+  is to be estimated, or a single numeric value indicating
+  the number of exploratory factors to estimate. See
+  \code{\link{confmirt.model}} for more details}
 
   \item{guess}{initial (or fixed) values for the
   pseudo-guessing parameter. Can be entered as a single
@@ -205,7 +205,7 @@ dataset <- simdata(a,d,2000,sigma)
 #analyses
 #CIFA for 2 factor crossed structure
 
-model.1 <- specifyModel()
+model.1 <- confmirt.model()
   F1 = 1-4
   F2 = 4-8
   COV = F1*F2
@@ -218,7 +218,7 @@ residuals(mod1)
 
 #####
 #bifactor
-model.3 <- specifyModel()
+model.3 <- confmirt.model()
   G = 1-8
   F1 = 1-4
   F2 = 5-8
@@ -232,22 +232,22 @@ anova(mod1,mod3)
 
 #####
 #polynomial and combinations
-model.linear <- specifyModel()
+model.linear <- confmirt.model()
       F = 1-8
 
 
-model.quad <- specifyModel()
+model.quad <- confmirt.model()
       F = 1-8
   (F*F) = 1-8
 
 
-model.cube <- specifyModel()
+model.cube <- confmirt.model()
         F = 1-8
     (F*F) = 1-8
   (F*F*F) = 1-8
 
 
-model.combo <- specifyModel()
+model.combo <- confmirt.model()
        F1 = 1-4
        F2 = 5-8
   (F1*F2) = 1-8

@@ -5,11 +5,68 @@ thetaComb <- function(theta, nfact)
 	else if (nfact == 2) Theta <- expand.grid(theta,theta)   
 	else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)  
 	else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
-	else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        
-	else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)        	
-	if(nfact > 6) stop('Are you crazy?!?!? That\'s way too many factors for this quandrature method.')
+	else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        	
+	if(nfact > 5) stop('Are you crazy?!?!? That\'s way too many factors for this quandrature method.
+                       Try using confmirt() instead for better accuracy')
 	Theta <- as.matrix(Theta)	
 	return(Theta)     
+}
+
+# Product terms in confmirt
+prodterms <- function(theta0, prodlist)
+{
+    products <- matrix(1, ncol = length(prodlist), nrow = nrow(theta0))
+    for(i in 1:length(prodlist)){
+        tmp <- prodlist[[i]]
+        for(j in 1:length(tmp)) 
+            products[ ,i] <- products[ ,i] * theta0[ ,tmp[j]]	
+    }	
+    ret <- cbind(theta0,products)
+    ret
+}
+
+# MH sampler for theta values
+draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var, 
+                        prior.mu, prodlist, debug) 
+{         
+    if(debug == 'draw.thetas') browser()
+    tol <- 1e-8
+    N <- nrow(fulldata)
+    J <- length(pars) - 1
+    nfact <- ncol(theta0)					
+    unif <- runif(N)
+    if(nfact > 1)		
+        theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, 
+                                            diag(rep(cand.t.var,ncol(theta0)))) 
+    else
+        theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
+    log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
+    log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)		
+    if(!is.null(prodlist)){
+        theta0 <- prodterms(theta0,prodlist)
+        theta1 <- prodterms(theta1,prodlist)	
+    }	
+    itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))    
+    for (i in 1:J){
+        itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta0)
+        itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta1)        
+    }    
+    tmp0 <- itemtrace0*fulldata
+    tmp1 <- itemtrace1*fulldata
+    tmp0[tmp0 < tol] <- tmp1[tmp1 < tol] <- 1    
+    total_0 <- rowSums(log(tmp0)) + log_den0
+    total_1 <- rowSums(log(tmp1)) + log_den1
+    diff <- total_1 - total_0    
+    accept <- diff > 0
+    accept[unif < exp(diff)] <- TRUE    
+    theta1[!accept, ] <- theta0[!accept, ]
+    total_1[!accept] <- total_0[!accept]
+    log.lik <- sum(total_1)	
+    if(!is.null(prodlist)) 
+        theta1 <- theta1[ ,1:(pars[[1]]@nfact - length(prodlist)), drop=FALSE]
+    attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
+    attr(theta1, "log.lik") <- log.lik	
+    return(theta1) 
 }
 
 # start values
@@ -112,106 +169,6 @@ MAP.bfactor <- function(Theta, a, d, guess, upper, patdata, logicalfact, itemloc
 	L  
 }  
 
-# Estep for mirt
-Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug) 
-{   
-    if(debug == 'Estep') browser()
-	nfact <- ncol(Theta)
-	nquad <- nrow(Theta)	
-	r <- tabdata[ ,ncol(tabdata)]
-	X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
-	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
-	for (i in 1:length(pars))
-	    itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)    
-	return(retlist)
-} 
-
-# Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc, debug) 
-{	    
-    if(debug == 'Estep') browser()
-	nfact <- pars[[1]]@nfact
-	J <- length(pars)
-	nquad <- nrow(Theta)		
-	r <- tabdata[ ,ncol(tabdata)]
-	X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
-	itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
-	for (i in 1:J)
-	    itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)			
-	retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)	
-	r1 <- matrix(0, nrow(Theta), ncol(X))	
-	for (i in 1:J){
-        if(is.na(specific[i])){
-            for(j in 1:(nfact-1))
-                r1[ ,itemloc[i]:(itemloc[i+1]-1)] <- r1[ ,itemloc[i]:(itemloc[i+1]-1)] + 	
-                    retlist$r1[ ,itemloc[i]:(itemloc[i+1]-1) + (j - 1)*ncol(X) ]               
-        } else {
-	    r1[ ,itemloc[i]:(itemloc[i+1]-1)] <- 		
-			retlist$r1[ ,itemloc[i]:(itemloc[i+1]-1) + (specific[i] - 1)*ncol(X) ]		
-        }
-	}
-	return(list(r1=r1, expected=retlist$expected))	
-}      
-
-Mstep.mirt <- function(par, obj, Theta, prior, constr = list(), debug){     
-    if(debug == 'Mstep') browser()
-    if(length(constr) < 1){
-        obj@par[obj@est] <- par    
-        ret <- LogLik(x=obj, Theta=Theta)                
-    } else {        
-        obj <- reloadConstr(par=par, constr=constr, obj=obj)        
-        ret <- 0
-        for(i in 1:length(obj))            
-            ret <- ret + LogLik(x=obj[[i]], Theta=Theta)               
-    }
-    return(ret)
-}
-
-# MH sampler for theta values
-draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var, 
-                        prior.mu, prodlist, debug) 
-{ 	    
-    if(debug == 'draw.thetas') browser()
-    tol <- 1e-8
-	N <- nrow(fulldata)
-	J <- length(pars) - 1
-	nfact <- ncol(theta0)					
-	unif <- runif(N)
-	if(nfact > 1)		
-		theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, 
-			diag(rep(cand.t.var,ncol(theta0)))) 
-	else
-		theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
-	log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
-    log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)		
-	if(!is.null(prodlist)){
-		theta0 <- prodterms(theta0,prodlist)
-		theta1 <- prodterms(theta1,prodlist)	
-	}	
-	itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))    
-	for (i in 1:J){
-	    itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta0)
-	    itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta1)        
-	}    
-    tmp0 <- itemtrace0*fulldata
-    tmp1 <- itemtrace1*fulldata
-    tmp0[tmp0 < tol] <- tmp1[tmp1 < tol] <- 1    
-    total_0 <- rowSums(log(tmp0)) + log_den0
-    total_1 <- rowSums(log(tmp1)) + log_den1
-    diff <- total_1 - total_0    
-    accept <- diff > 0
-    accept[unif < exp(diff)] <- TRUE    
-    theta1[!accept, ] <- theta0[!accept, ]
-    total_1[!accept] <- total_0[!accept]
-    log.lik <- sum(total_1)	
-	if(!is.null(prodlist)) 
-		theta1 <- theta1[ ,1:(pars[[1]]@nfact - length(prodlist)), drop=FALSE]
-	attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
-	attr(theta1, "log.lik") <- log.lik	
-	return(theta1) 
-}	
-
 # Gamma correlation, mainly for obtaining a sign
 gamma.cor <- function(x)
 { 
@@ -298,17 +255,105 @@ cormod <- function(fulldata, K, guess, smooth = TRUE)
 	cormat
 }  
 
-# Product terms in confmirt
-prodterms <- function(theta0, prodlist)
-{
-	products <- matrix(1, ncol = length(prodlist), nrow = nrow(theta0))
-	for(i in 1:length(prodlist)){
-		tmp <- prodlist[[i]]
-		for(j in 1:length(tmp)) 
-			products[ ,i] <- products[ ,i] * theta0[ ,tmp[j]]	
-	}	
-	ret <- cbind(theta0,products)
-	ret
+# Ramsey rate acceleration adjustment for EM
+rateChange <- function(pars, listpars, lastpars1, lastpars2)
+{   
+	p <- unlist(listpars)	
+	lp1 <- unlist(lastpars1)
+	lp2 <- unlist(lastpars2)
+	rate <- rep(0, length(p))
+	d1 <- lp1 - p
+	d2 <- lp2 - p
+	rate <- ifelse(abs(d1) > 0.001 & (d1*d2 > 0.0) & (d1/d2 < 1.0),
+		(1 - (1 - rate) * (d1/d2)),
+		0)	    		
+	rate[p > 4] <- 0
+	rate[p < -4] <- 0    
+	p <- lp1*rate*(-2) + (1 - rate*(-2))*p
+    ind <- 1
+    for(i in 1:length(pars)){
+        pars[[i]]@par <- p[ind:(ind + length(pars[[i]]@par) - 1)]
+        ind <- ind + length(pars[[i]]@par)
+    }	
+	pars
+}
+
+# Rotate lambda coefficients
+rotateLambdas <- function(so){    
+    F <- so$rotF %*% t(chol(so$fcor))
+    h2 <- so$h2
+    h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))
+    a <- F / h
+    a    
+}
+
+d2r <-function(d) pi*d/180
+    
+test_info <- function(a, d, Theta, Alist, guess, upper, K){
+    infolist <- list()    
+    for(cut in 1:length(Alist)){
+        A <- Alist[[cut]]
+        info <- rep(0,nrow(Theta))
+        for(j in 1:length(K)){
+            if(K[j] > 2){
+                P <- P.poly(a[j,], d[[j]], Theta, itemexp = FALSE)    	
+                for(i in 1:K[j]){
+                    w1 <- P[,i]*(1-P[,i])*A[j]
+                    w2 <- P[,i+1]*(1-P[,i+1])*A[j]
+                    I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
+                    info <- info + I
+                }
+            } else {
+                P <- P.mirt(a[j,], d[[j]], Theta, guess[j], upper[j])
+                Pstar <- P.mirt(a[j,], d[[j]], Theta, 0)
+                info <- info + A[j]^2 * P * (1-P) * Pstar/P ###FIXME: might need new 4PL info
+            }			
+        }
+        infolist[[cut]] <- info
+    }    
+    tmp <- 0
+    for(i in 1:length(infolist)){
+        tmp <- tmp + infolist[[i]]
+    }
+    info <- tmp/length(infolist)
+    info
+}
+
+Lambdas <- function(pars){
+    lambdas <- list()
+    J <- ifelse(is(pars[[length(pars)]], 'GroupPars'), length(pars)-1, length(pars))
+    for(i in 1:J)    
+        lambdas[[i]] <- ExtractLambdas(pars[[i]])    
+    lambdas <- do.call(rbind,lambdas)
+    lambdas
+}
+
+#change long pars for groups into mean in sigma
+ExtractGroupPars <- function(x){
+    nfact <- x@nfact
+    gmeans <- x@par[1:nfact]
+    gmeans <- x@par[1:nfact]
+    tmp <- x@par[-(1:nfact)]
+    gcov <- matrix(0, nfact, nfact)
+    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+    gcov <- gcov + t(gcov) - diag(diag(gcov))
+    return(list(gmeans=gmeans, gcov=gcov))    
+}
+
+reloadConstr <- function(par, constr, obj){
+    par2 <- rep(NA, length(constr[[1]]))         
+    notconstr <- rep(TRUE, length(par2))
+    for(i in 1:length(constr)){
+        par2[constr[[i]]] <- par[i]           
+        notconstr[constr[[i]]] <- FALSE
+    }
+    par2[notconstr] <- par[(length(constr)+1):length(par)]
+    ind <- 1    
+    for(i in 1:length(obj)){
+        obj[[i]]@par[obj[[i]]@est] <- par2[ind:(ind + sum(obj[[i]]@est) - 1)]
+        ind <- ind + sum(obj[[i]]@est)                   
+    }
+    return(obj)
 }
 
 # Extract model matricies and values for user specified confmirt.model()
@@ -322,7 +367,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     if(hasProdTerms){
         tmp <- factorNames[grepl('\\(',factorNames)]
         tmp2 <- factorNames[!grepl('\\(',factorNames)] 
-        tmp <- gsub("\\(","",tmp)	
+        tmp <- gsub("\\(","",tmp)    
         tmp <- gsub("\\)","",tmp)
         tmp <- gsub(" ","",tmp)
         prodlist <- strsplit(tmp,"\\*")
@@ -390,19 +435,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     #MEAN
     gmeans <- rep(0, nfact)
     estgmeans <- rep(FALSE, nfact)
-#   #PRIOR, 1 == norm, 2== beta
-#   parpriors <- list()
-#   parpriorscount <- 1
-#   if(sum(estGuess) > 0){
-#     for(i in 1:J){
-#       if(estGuess[i]){
-#         a <- guess[i] * guess.prior.n[i]
-#         b <- (1 - guess[i]) * guess.prior.n
-#         parpriors[[parpriorscount]] <- c(2,guessind[i],a,b)						
-#         parpriorscount <- parpriorscount + 1			
-#       }
-#     }
-#   }
+    
     if(exploratory){        
         Rpoly <- cormod(na.omit(data),K,guess)
         FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
@@ -413,7 +446,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         lambdas <- loads/cs                
     }
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
-                 fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, nfactNames=nfactNames,
+                    fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, nfactNames=nfactNames,
                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
                     estLambdas=estlam, debug=debug)      
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
@@ -422,329 +455,4 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                                             constrain=constrain, debug=debug)
     attr(ret, 'prodlist') <- prodlist    
     return(ret)    
-}
-
-# Take long parameter form and return list of pars for polymirt (obsolete)
-sortPars <- function(pars, indlist, nfact, estGuess)
-{
-	lambdas <- matrix(pars[indlist$lamind],ncol=nfact,byrow=TRUE)	
-	J <- nrow(lambdas)		
-	zetas <- list()
-	for(i in 1:J)
-		zetas[[i]] <- pars[indlist$zetaind[[i]]]
-	guess <- upper <- rep(0,J)
-	guess[estGuess] <- pars[indlist$gind]		
-	
-	return(list(lambdas=lambdas, zetas=zetas, guess=guess))
-}
-
-# Take long parameter form and return list of pars for confmirt
-sortParsConfmirt <- function(pars, indlist, nfact, nfactNames)
-{
-	J <- length(indlist$guessind)
-	lambdas <- matrix(pars[indlist$lamind],J,nfactNames,byrow=TRUE)
-	zetas <- list()
-	for(i in 1:J)
-		zetas[[i]] <- pars[indlist$zetaindlist[[i]]]
-	guess <- pars[indlist$guessind]
-    upper <- pars[indlist$upperind]
-	mu <- pars[indlist$meanind]
-	sig <- matrix(0, nfact, nfact)
-	sig[lower.tri(sig, diag=TRUE)] <- pars[indlist$covind]
-	if(nfact > 1)
-		sig <- sig + t(sig) - diag(diag(sig))							
-	
-	return(list(lambdas=lambdas, zetas=zetas, guess=guess, upper=upper, mu=mu, sig=sig))
-}
-
-# Ramsey rate acceleration adjustment for EM
-rateChange <- function(pars, listpars, lastpars1, lastpars2)
-{   
-	p <- unlist(listpars)	
-	lp1 <- unlist(lastpars1)
-	lp2 <- unlist(lastpars2)
-	rate <- rep(0, length(p))
-	d1 <- lp1 - p
-	d2 <- lp2 - p
-	rate <- ifelse(abs(d1) > 0.001 & (d1*d2 > 0.0) & (d1/d2 < 1.0),
-		(1 - (1 - rate) * (d1/d2)),
-		0)	    		
-	rate[p > 4] <- 0
-	rate[p < -4] <- 0    
-	p <- lp1*rate*(-2) + (1 - rate*(-2))*p
-    ind <- 1
-    for(i in 1:length(pars)){
-        pars[[i]]@par <- p[ind:(ind + length(pars[[i]]@par) - 1)]
-        ind <- ind + length(pars[[i]]@par)
-    }	
-	pars
-}
-
-# Rebuild parameters given a list
-rebuildPars <- function(p, pars)
-{
-	names(p) <- NULL
-	pars2 <- pars
-	pars2$lambdas <- matrix(p[1:length(pars$lambdas)], ncol=ncol(pars$lambdas), 
-		nrow=nrow(pars$lambdas)) 
-	ind1 <- length(pars$lambdas) + 1
-	for(i in 1:length(pars$zetas) ){
-		ind2 <- ind1 + length(pars$zetas[[i]]) - 1
-		pars2$zetas[[i]] <- p[ind1:ind2]
-		ind1 <- ind1 + length(pars$zetas[[i]])
-	}			
-	return(pars2)
-}
-
-# Rotate lambda coefficients
-rotateLambdas <- function(so){    
-    F <- so$rotF %*% t(chol(so$fcor))
-    h2 <- so$h2
-    h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))
-    a <- F / h
-    a    
-}
-
-d2r <-function(d) pi*d/180
-    
-test_info <- function(a, d, Theta, Alist, guess, upper, K){
-    infolist <- list()    
-    for(cut in 1:length(Alist)){
-        A <- Alist[[cut]]
-        info <- rep(0,nrow(Theta))
-        for(j in 1:length(K)){
-            if(K[j] > 2){
-                P <- P.poly(a[j,], d[[j]], Theta, itemexp = FALSE)    	
-                for(i in 1:K[j]){
-                    w1 <- P[,i]*(1-P[,i])*A[j]
-                    w2 <- P[,i+1]*(1-P[,i+1])*A[j]
-                    I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
-                    info <- info + I
-                }
-            } else {
-                P <- P.mirt(a[j,], d[[j]], Theta, guess[j], upper[j])
-                Pstar <- P.mirt(a[j,], d[[j]], Theta, 0)
-                info <- info + A[j]^2 * P * (1-P) * Pstar/P ###FIXME: might need new 4PL info
-            }			
-        }
-        infolist[[cut]] <- info
-    }    
-    tmp <- 0
-    for(i in 1:length(infolist)){
-        tmp <- tmp + infolist[[i]]
-    }
-    info <- tmp/length(infolist)
-    info
-}
-
-Lambdas <- function(pars){
-    lambdas <- list()
-    J <- ifelse(is(pars[[length(pars)]], 'GroupPars'), length(pars)-1, length(pars))
-    for(i in 1:J)    
-        lambdas[[i]] <- ExtractLambdas(pars[[i]])    
-    lambdas <- do.call(rbind,lambdas)
-    lambdas
-}
-
-LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     constrain, startvalues, freepars, parprior, parnumber, 
-                     estLambdas, BFACTOR = FALSE, nfactNames = NULL, debug){   
-    
-    if(debug == 'LoadPars') browser() 
-    pars <- list()       
-    RETURNSTARTVALUES <- ifelse(!is.null(startvalues) && startvalues == 'index', TRUE, FALSE)
-    RETURNFREEPARS <- ifelse(!is.null(freepars) && freepars == 'index', TRUE, FALSE)
-    if(is.null(nfactNames)) nfactNames <- nfact        
-    constr <- c()
-    if(!is.null(constrain) && is.list(constrain)) 
-        for(i in 1:length(constrain))
-            constr <- c(constr, constrain[[i]])
-    constr <- unique(constr)
-    if(is.null(startvalues) || startvalues =='index') {        
-        startvalues <- list()
-        for(i in 1:J){
-            if(itemtype[i] == 'NullModel' && K[i] == 2) val <- c(0,zetas[[i]],0,1)                                
-            if(itemtype[i] == 'NullModel' && K[i] > 2) val <- c(0,zetas[[i]])           
-            if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
-                val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
-            }
-            if(itemtype[i] == 'graded'){
-                val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
-            }
-            if(itemtype[i] == 'gpcm'){
-                val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
-            }
-            if(itemtype[i] == 'nominal'){
-                val <- c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
-                                 paste('d', 0:(K[i]-1), sep=''))                
-            }
-            if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-                val <- c(rep(.5, nfact), rep(-1, nfact), 0, 1)
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
-            }
-            startvalues[[i]] <- val
-        } 
-    }    
-    if(is.null(freepars) || freepars =='index'){
-        freepars <- list()
-        for(i in 1:J){
-            if(itemtype[i] == 'NullModel' && K[i] == 2)
-                freepars[[i]] <- c(FALSE,TRUE,FALSE,FALSE)
-            if(itemtype[i] == 'NullModel' && K[i] > 2)    
-                freepars[[i]] <- c(FALSE,rep(TRUE,K[i]-1))
-            if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
-                estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
-                if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
-                if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
-                freepars[[i]] <- estpars
-            }
-            if(itemtype[i] == 'graded')
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
-            if(itemtype[i] == 'gpcm')            
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
-            if(itemtype[i] == 'nominal'){
-                estpars <- c(estLambdas[i, ], rep(TRUE, length(pars[[i]]@par) - nfact))
-                #identifiction constraints
-                estpars[c(nfact+1, nfact+ K[i], nfact + K[i] + 1)] <- FALSE
-                freepars[[i]] <- estpars
-            }
-            if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-                estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
-                if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1] <- TRUE
-                freepars[[i]] <- estpars
-            }
-        }         
-    }
-    for(i in 1:J) names(freepars[[i]]) <- names(startvalues[[i]])    
-    for(i in 1:J){
-        tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location 
-        if(itemtype[i] == 'NullModel' && K[i] == 2){ 
-            pars[[i]] <- new('dich', par=startvalues[[i]], nfact=1, bfactor=BFACTOR,
-                             dat=fulldata[ ,tmp], est=freepars[[i]], constr=FALSE)
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])            
-        }
-        
-        if(itemtype[i] == 'NullModel' && K[i] > 2){ 
-            pars[[i]] <- new('graded', par=startvalues[[i]], nfact=1, ncat=K[i], bfactor=BFACTOR,
-                             dat=fulldata[ ,tmp], est=freepars[[i]], constr=FALSE)
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-        }
-        
-        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){ 
-            pars[[i]] <- new('dich', par=startvalues[[i]], est=freepars[[i]],
-                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])            
-        }
-        
-        if(itemtype[i] == 'graded'){
-            pars[[i]] <- new('graded', par=startvalues[[i]], nfact=nfactNames, ncat=K[i],
-                             est=freepars[[i]], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                        
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-        }
-        
-        if(itemtype[i] == 'gpcm'){            
-            pars[[i]] <- new('gpcm', par=startvalues[[i]], nfact=nfactNames, ncat=K[i],
-                             est=freepars[[i]], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                        
-            pars[[i]]@par[nfact+1] <- 0            
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-        }        
-        
-        if(itemtype[i] == 'nominal'){
-            pars[[i]] <- new('nominal', par=startvalues[[i]], est=freepars[[i]], 
-                             nfact=nfactNames, ncat=K[i], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
-            pars[[i]]@par[c(nfact + 1, nfact + K[i] + 1)] <- 0
-            pars[[i]]@par[nfact + K[i]] <- K[i] - 1            
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-        } 
-        
-        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            pars[[i]] <- new('partcomp', par=startvalues[[i]], est=freepars[[i]],
-                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-        }
-    }
-    for(i in 1:J) names(pars[[i]]@parnum) <- names(startvalues[[i]])
-    attr(pars, 'uniqueconstr') <- constr     
-    attr(pars, 'parnumber') <- attr(startvalues, 'parnumber') <- attr(freepars, 'parnumber') <- 
-        parnumber - length(freepars[[length(pars)]])
-    if(RETURNSTARTVALUES) return(startvalues)
-    if(RETURNFREEPARS) return(freepars)
-    return(pars)
-}
-
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain, parprior, startvalues,
-                          freepars, debug){
-    if(debug == 'LoadGroupPars') browser()
-    nfact <- length(gmeans)
-    fn <- paste('COV_', 1:nfact, sep='')
-    FNCOV <- outer(fn, 1:nfact, FUN=paste, sep='')
-    FNMEANS <- paste('MEAN_', 1:nfact, sep='')  
-    tri <- lower.tri(gcov, diag=TRUE)
-    par <- c(gmeans, gcov[tri])
-    parnum <- parnumber:(parnumber + length(par) - 1)
-    names(parnum) <- names(par) <- c(FNMEANS,FNCOV[tri])
-    ret <- new('GroupPars', par=par, est=c(estgmeans,estgcov[tri]), nfact=nfact, 
-               parnum=parnum)    
-    if(!is.null(startvalues)){
-        if(startvalues == 'index')
-            return(ret@par)
-        else ret@par <- startvalues[[length(startvalues)]]
-    }
-    if(!is.null(freepars)){
-        if(freepars == 'index')
-            return(ret@est)
-        else ret@est <- freepars[[length(freepars)]]
-    }
-    return(ret)    
-}
-
-#change long pars for groups into mean in sigma
-ExtractGroupPars <- function(x){
-    nfact <- x@nfact
-    gmeans <- x@par[1:nfact]
-    gmeans <- x@par[1:nfact]
-    tmp <- x@par[-(1:nfact)]
-    gcov <- matrix(0, nfact, nfact)
-    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-    gcov <- gcov + t(gcov) - diag(diag(gcov))
-    return(list(gmeans=gmeans, gcov=gcov))    
-}
-
-reloadConstr <- function(par, constr, obj){
-    par2 <- rep(NA, length(constr[[1]]))         
-    notconstr <- rep(TRUE, length(par2))
-    for(i in 1:length(constr)){
-        par2[constr[[i]]] <- par[i]           
-        notconstr[constr[[i]]] <- FALSE
-    }
-    par2[notconstr] <- par[(length(constr)+1):length(par)]
-    ind <- 1    
-    for(i in 1:length(obj)){
-        obj[[i]]@par[obj[[i]]@est] <- par2[ind:(ind + sum(obj[[i]]@est) - 1)]
-        ind <- ind + sum(obj[[i]]@est)                   
-    }
-    return(obj)
 }

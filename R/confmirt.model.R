@@ -1,6 +1,6 @@
 #' Specify model loadings
 #' 
-#' The \code{specifyModel} function scans user input to specify the
+#' The \code{confmirt.model} function scans user input to specify the
 #' confirmatory model.
 #' 
 #' Factors are first named and then specify which numerical items they affect
@@ -28,12 +28,12 @@
 #' @return Returns a model specification object to be used in
 #' \code{\link{confmirt}}.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @export specifyModel
+#' @export confmirt.model
 #' @examples
 #' 
 #' \dontrun{
 #' 
-#' model <- specifyModel()
+#' model <- confmirt.model()
 #'   F1 = 1,2,3,4-10
 #'   F2 = 10-20
 #'   (F1*F2) = 1,2,3,4-10
@@ -41,7 +41,7 @@
 #'     
 #'     }
 #' 
-specifyModel <- function(file = "", ...)
+confmirt.model <- function(file = "", ...)
 {
     mod <- scan(file = file, what = list(type = "", pars = ""), 
 		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, ...)

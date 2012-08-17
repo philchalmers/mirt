@@ -1,8 +1,9 @@
 Things to do:
 
-- Parallel processing option for logLik()
-- Multiple-group estimation for confmirt
-- Multilevel structure function using lme4 or nlme (via multimirt function)
+- Parallel processing option for logLik(), should work better now that the draws are done mainly in
+R
+- Multiple-group estimation for confmirt, now possible!
+- Multilevel structure function using lme4 or nlme (via multimirt or confmirt extension )
 - Add limited-information model fit statistics
 
 

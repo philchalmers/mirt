@@ -95,8 +95,9 @@ setMethod(
         for(i in 1:length(pars))
             nestpars <- nestpars + sum(pars[[i]]@est)
         if(length(object@constrain) > 0)
-            for(i in 1:length(constrain))
-                nconstr <- nconstr + length(constr[[i]]) - 1        
+            for(i in 1:length(object@constrain))
+                nconstr <- nconstr + length(object@constrain[[i]]) - 1 
+        nfact <- object@nfact
         df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 #-nmissingtabdata					
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)				

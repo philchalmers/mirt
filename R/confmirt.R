@@ -50,9 +50,9 @@
 #' residuals,confmirt-method anova,confmirt-method fitted,confmirt-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data
-#' @param model an object returned from \code{specifyModel()} declarating how
+#' @param model an object returned from \code{confmirt.model()} declarating how
 #' the factor model is to be estimated, or a single numeric value indicating the number 
-#' of exploratory factors to estimate. See \code{\link{specifyModel}} for
+#' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
 #' more details
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
 #' entered as a single value to assign a global guessing parameter or may be entered as
@@ -177,7 +177,7 @@
 #' #analyses
 #' #CIFA for 2 factor crossed structure
 #' 
-#' model.1 <- specifyModel()
+#' model.1 <- confmirt.model()
 #'   F1 = 1-4
 #'   F2 = 4-8
 #'   COV = F1*F2
@@ -190,7 +190,7 @@
 #' 
 #' #####
 #' #bifactor 	
-#' model.3 <- specifyModel()
+#' model.3 <- confmirt.model()
 #'   G = 1-8
 #'   F1 = 1-4
 #'   F2 = 5-8
@@ -204,22 +204,22 @@
 #'
 #' #####
 #' #polynomial and combinations
-#' model.linear <- specifyModel()
+#' model.linear <- confmirt.model()
 #'       F = 1-8
 #'
 #' 
-#' model.quad <- specifyModel()
+#' model.quad <- confmirt.model()
 #'       F = 1-8
 #'   (F*F) = 1-8
 #'
 #' 
-#' model.cube <- specifyModel()
+#' model.cube <- confmirt.model()
 #'         F = 1-8
 #'     (F*F) = 1-8
 #'   (F*F*F) = 1-8
 #'
 #' 
-#' model.combo <- specifyModel()
+#' model.combo <- confmirt.model()
 #'        F1 = 1-4
 #'        F2 = 5-8
 #'   (F1*F2) = 1-8
@@ -257,7 +257,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     if(is(model, 'numeric')){
         tmp <- tempfile('tempfile')
         cat(paste('F',1:model,' = 1-', J, "\n", sep=''), file=tmp)
-        model <- specifyModel(tmp, quiet = TRUE)
+        model <- confmirt.model(tmp, quiet = TRUE)
         exploratory <- TRUE
         unlink(tmp)
     }    
@@ -329,7 +329,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
         return(pars)  
     }
 	if(!is.null(constrain) || !is.null(parprior)){
-	    if(constrain == 'index' || parprior == 'index'){
+	    if(any(constrain == 'index', parprior == 'index')){
 	        returnedlist <- list()                        
 	        for(i in 1:length(pars))
 	            returnedlist[[i]] <- pars[[i]]@parnum 
