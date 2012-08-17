@@ -63,7 +63,7 @@ setClass("partcomp", contains = 'AllItemsClass',
 
 #Generics
 
-setGeneric('ProbTrace', function(x, Theta) standardGeneric("ProbTrace"))
+setGeneric('ProbTrace', function(x, Theta, ...) standardGeneric("ProbTrace"))
 
 setGeneric('LogLik', function(x, Theta) standardGeneric("LogLik"))
 
@@ -73,3 +73,4 @@ setGeneric('Deriv', function(x, Theta) standardGeneric("Deriv"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))         
 
+setGeneric('ItemInfo', function(x, A, Theta) standardGeneric("ItemInfo"))

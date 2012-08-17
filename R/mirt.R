@@ -3,7 +3,8 @@
 #' 
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous and polychotomous data under the item response theory paradigm. 
-#' Pseudo-guessing and upper bound parameters may be included but must be declared as constant.
+#' Fits univariate and mutilvariate Rasch, 1-4PL, graded, (generalized) partial credit, 
+#' and nominal models using the EM algorithm.
 #' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
 #' likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
@@ -13,21 +14,9 @@
 #' via \code{\link{anova}}). The general equation used for 
 #' multidimensional item response theory is a logistic form with a scaling
 #' correction of 1.702. This correction is applied to allow comparison to
-#' mainstream programs such as TESTFACT (2003) and POLYFACT. The general IRT equation 
-#' for dichotomous items is 
+#' mainstream programs such as TESTFACT (2003) and POLYFACT. 
 #' 
-#' \deqn{P(X | \theta; \bold{a}_j; d_j; g_j, u_j) = g_j + (u_j - g_j) / (1 +
-#' exp(-1.702(\bold{a}_j' \theta + d_j)))}
-#' 
-#' where \emph{j} is the item index, \eqn{\bold{a}_j} is the vector of
-#' discrimination parameters (i.e., slopes), \deqn{\theta} is the vector of
-#' factor scores, \eqn{d_j} is the intercept, \eqn{g_j} is the
-#' pseudo-guessing parameter, and \eqn{u_j} is the upper bound parameter. 
-#' To avoid estimation difficulties the \eqn{g_j}'s and \eqn{u_j}'s
-#' must be pre-specified by the user. The polychotomous functions has a similar form
-#' that can be found in Muraki and Carlson (1995).
-#' 
-#' Estimation begins by computing a matrix of quasi-tetrachoric correlations,
+#' Estimation often begins by computing a matrix of quasi-tetrachoric correlations,
 #' potentially with Carroll's (1945) adjustment for chance responds. A MINRES
 #' factor analysis with \code{nfact} is then extracted and item parameters are
 #' estimated by \eqn{a_{ij} = f_{ij}/u_j}, where \eqn{f_{ij}} is the factor
@@ -375,12 +364,12 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
         }        
     } 
     if(length(itemtype) == 1) itemtype <- rep(itemtype, J)  
-	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
+	if(length(itemtype) != J) stop('itemtype specification is not the correct length')    
     estlam <- matrix(TRUE, J, nfact)    
     pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
                      upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
                      startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1,
-                     estLambdas=estlam, debug=debug) 
+                     estLambdas=estlam, debug=debug)             
     if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- itemnames        
         attr(pars, 'parnumber') <- NULL
@@ -394,7 +383,18 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	        names(returnedlist) <- itemnames
 	        return(returnedlist)
 	    }
-	}       
+	}     
+    onePLconstraint <- c()
+    if(itemtype[1] == '1PL'){
+        constrain <- list()
+        for(i in 1:J)
+            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1])    
+        constrain[[length(constrain) + 1]] <- onePLconstraint
+        pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
+                         upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
+                         startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1,
+                         estLambdas=estlam, debug=debug)
+    }
 	start <- pars
     npars <- 0    
 	for(i in 1:length(pars)) npars <- npars + sum(pars[[i]]@est)	
@@ -477,7 +477,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
         }
     	for(i in 1:J) listpars[[i]] <- pars[[i]]@par
     	maxdif <- max(do.call(c,listpars) - do.call(c,lastpars1))	
-    	if (maxdif < TOL && cycles > 5) break  
+    	if (maxdif < TOL && cycles > 10) break  
     	if (cycles %% 3 == 0 & cycles > 6)    	 
     	    pars <- rateChange(pars=pars, listpars=listpars, lastpars1=lastpars1, 
     	                       lastpars2=lastpars2)

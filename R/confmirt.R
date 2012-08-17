@@ -3,8 +3,9 @@
 #' \code{confmirt} fits a conditional (i.e., confirmatory) full-information
 #' maximum-likelihood factor analysis model to dichotomous and polychotomous
 #' data under the item response theory paradigm using Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm. If requested, lower and upper asymptote
-#' parameters are estimated with a beta priors included automatically.
+#' Metropolis-Hastings Robbins-Monro algorithm.Fits univariate and multivariate Rasch, 
+#' 1-4PL, graded, (generalized) partial credit, nominal, and partially-compensatory models, 
+#' potentially with polynomial and product constructed latent traits.
 #'  
 #' \code{confmirt} follows a confirmatory and exploratory item factor analysis strategy that
 #' uses a stochastic version of maximum likelihood estimation described by Cai
@@ -18,7 +19,7 @@
 #' \code{residuals}, and Cramer's V above the diagonal. For computing the
 #' log-likelihood more accurately see \code{\link{logLik}}.
 #' 
-#' #' \code{coef} displays the item parameters with their associated standard
+#' \code{coef} displays the item parameters with their associated standard
 #' errors, while use of \code{summary} transforms the slopes into a factor
 #' loadings metric and if the model is exploratory allows for rotating the parameters. 
 #' Also, nested models may be compared by using the
@@ -316,7 +317,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	    fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
 	}	
 	fulldata[is.na(fulldata)] <- 0    
-    parnumber <- 1 #to be used later when looping over more than 1 group    
+    parnumber <- 1 #to be used later when looping over more than 1 group       
 	pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
@@ -336,7 +337,20 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	        names(returnedlist) <- c(itemnames, 'Group_Parameters')            
 	        return(returnedlist)
 	    }
-	}
+	}   
+    onePLconstraint <- c()
+    if(itemtype[1] == '1PL'){
+        constrain <- list()
+        for(i in 1:J)
+            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1])    
+        constrain[[length(constrain) + 1]] <- onePLconstraint
+        pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
+                               nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
+                               itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
+                               itemnames=itemnames, exploratory=exploratory, constrain=constrain,
+                               startvalues=startvalues, freepars=freepars, parprior=parprior, 
+                               parnumber=parnumber, debug=debug)
+    }
     npars <- 0
     for(i in 1:length(pars))
         npars <- npars + sum(pars[[i]]@est)			        
@@ -362,7 +376,8 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     
     ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
                fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
-               null.mod=null.mod, constrain=constrain, nfact=nfact, Call=Call)    
+               null.mod=null.mod, constrain=constrain, nfact=nfact, exploratory=exploratory,
+               factorNames=factorNames, Call=Call)    
 	if(calcLL){
 		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()

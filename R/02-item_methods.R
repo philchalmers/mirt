@@ -16,11 +16,11 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta){                  
+    definition = function(x, Theta, itemexp = TRUE){                  
         a <- x@par[1:x@nfact]
         if(x@bfactor) a <- a[x@est[1:x@nfact]]
         d <- x@par[(x@nfact+1):length(x@par)]
-        P <- P.poly(a=a, d=d, Theta=Theta, itemexp=TRUE)
+        P <- P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp)
         return(P)
     }
 )
@@ -166,6 +166,33 @@ setMethod(
         par <- x@par
         a <- par[1:x@nfact]
         a        
+    }
+)
+
+#----------------------------------------------------------------------------
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'dich', A = 'matrix', Theta = 'matrix'),
+    definition = function(x, A, Theta){          
+        P <- ProbTrace(x, Theta)
+        Pstar <- P.mirt(a[j,], d[[j]], Theta, 0)
+        info <- A[j]^2 * P * (1-P) * Pstar/P ###FIXME: might need new 4PL info
+        info    
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'graded', A = 'matrix', Theta = 'matrix'),
+    definition = function(x, A, Theta){          
+        P <- ProbTrace(x, Theta, itemexp = FALSE)  
+        info <- 0
+        for(i in 1:(ncol(P)-1)){
+            w1 <- P[,i]*(1-P[,i])*A[j]
+            w2 <- P[,i+1]*(1-P[,i+1])*A[j]
+            info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]            
+        }    
+        info
     }
 )
 

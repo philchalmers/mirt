@@ -95,55 +95,47 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'mirtClass',
-    definition = function(object, rotate = '', Target = NULL, SE = TRUE, digits = 3, ...){  
+    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){  
         K <- object@K
-        a <- object@pars$lambdas		
-        d <- matrix(NA, nrow(a), max(K-1))
-        zetas <- object@pars$zetas
-        for(i in 1:length(K)){
-            d[i, 1:(K[i] - 1)] <- zetas[[i]]
-        }
-        A <- sqrt(apply(a^2,1,sum))
-        B <- -d/A  
+        J <- length(K)
+        nfact <- ncol(object@F)
+        a <- matrix(0, J, nfact)
+        for(i in 1:J)
+            a[i, ] <- ExtractLambdas(object@pars[[i]])        
+        A <- sqrt(apply(a^2,1,sum))                        
         if (ncol(a) > 1){ 
             rotname <- ifelse(rotate == '', object@rotate, rotate)
             so <- summary(object, rotate = rotate, Target = Target, print = FALSE, ...)             
             a <- rotateLambdas(so)
-            parameters <- cbind(a,d,object@guess,object@upper,A,B)    
-            colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),
-                                      "guess", "upper","mvdisc",paste("mvint_",1:max(K-1),sep=""))	
-            rownames(parameters) <- colnames(object@data)		
-            cat("\nParameters with", rotname, "rotation, multivariate discrimination and 
-                intercept: \n\n")
-			print(round(parameters, digits))  	
+        }   
+        rownames(a) <- colnames(object@data)
+        if(nfact > 1){
+            a <- round(cbind(a, A), digits)
+            colnames(a) <- c(paste('a', 1:nfact, sep=''), 'MV_disc')
         } else {
-            parameters <- cbind(a,d,object@guess, object@upper)
-            colnames(parameters) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),
-                                      "guess", "upper") 
-            rownames(parameters) <- colnames(object@data)	
-            cat("\nParameter slopes and intercepts: \n\n")	
-            print(round(parameters, digits))	  
+            a <- round(a, digits)
+            colnames(a) <- paste('a', 1:nfact, sep='')
         }
-        ret <- list(parameters)
-        if(length(object@parsSE) > 1){            
-            if(SE){
-                cat("\nStd. Errors: \n\n")
-                SEs <- parameters                
-                SEs[,ncol(SEs):(ncol(SEs)-1)] <- NA
-                SEs[,1:ncol(a)] <- object@parsSE$lambdas
-                for(i in 1:nrow(a)) 
-                    SEs[i,(ncol(a)+1):(ncol(a) + length(object@parsSE$zetas[[i]]))] <- 
-                        object@parsSE$zetas[[i]] 
-                colnames(SEs) <- c(paste("a_",1:ncol(a),sep=""),paste("d_",1:max(K-1),sep=""),
-                                   "guess", "upper") 
-                rownames(SEs) <- rownames(parameters)
-                print(SEs, digits)
-                ret <- list(parameters,SEs)
-            }
-        }
-        invisible(ret)
+        allPars <- list()
+        if(allpars){
+            if(length(object@pars[[1]]@SEpar) > 0){
+                for(i in 1:J){
+                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
+                                                 2, byrow = TRUE), digits)
+                    rownames(allPars[[i]]) <- c('pars', 'SE')
+                    colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
+                } 
+            } else {
+                for(i in 1:J)
+                    allPars[[i]] <- round(object@pars[[i]]@par, digits)                
+            }       
+            names(allPars) <- rownames(a)
+        }        
+        ret <- if(allpars) allPars else a
+        if(nfact > 1) cat('\nRotation:', rotname, '\n\n')
+        ret
     }
-            )
+)
 
 setMethod(
     f = "anova",
@@ -170,36 +162,24 @@ setMethod(
     signature = signature(object = 'mirtClass'),
     definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
     {   	
-        K <- object@K
-        Theta <- object@Theta
+        K <- object@K        
         data <- object@data	
         N <- nrow(data)	
         J <- ncol(data)
-        nfact <- ncol(object@F)
-        lambdas <- object@pars$lambdas
-        zetas <- object@pars$zetas
-        guess <- object@guess		
-        upper <- object@upper
+        nfact <- ncol(object@F)        
         itemloc <- object@itemloc
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
+        Theta <- object@Theta
         prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-        prior <- prior/sum(prior)	
+        prior <- prior/sum(prior)       	               
         if(restype == 'LD'){	
             for(i in 1:J){								
                 for(j in 1:J){			
                     if(i < j){
-                        if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[[i]],Theta,itemexp=TRUE)
-                        else { 
-                            P1 <- P.mirt(lambdas[i,],zetas[[i]], Theta, guess[i], upper[i])
-                            P1 <- cbind(1 - P1, P1)
-                        }	
-                        if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[[j]],Theta,itemexp=TRUE)
-                        else {
-                            P2 <- P.mirt(lambdas[j,],zetas[[j]], Theta, guess[j], upper[j])	
-                            P2 <- cbind(1 - P2, P2)
-                        }
+                        P1 <- ProbTrace(x=object@pars[[i]], Theta=Theta)
+                        P2 <- ProbTrace(x=object@pars[[j]], Theta=Theta)                        
                         tab <- table(data[,i],data[,j])		
                         Etab <- matrix(0,K[i],K[j])
                         for(k in 1:K[i])
@@ -240,8 +220,8 @@ setMethod(
     f = "plot",
     signature = signature(x = 'mirtClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
-                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10))
-    {          
+                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
+    {           
         if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
@@ -250,14 +230,11 @@ setMethod(
         K <- x@K		
         nfact <- ncol(x@Theta)
         if(nfact > 2) stop("Can't plot high dimensional solutions.")
-        a <- x@pars$lambdas
-        d <- x@pars$zetas
-        guess <- x@guess
-        upper <- x@upper
-        guess[is.na(guess)] <- 0
-        upper[is.na(upper)] <- 1
-        A <- list(a)
+        J <- length(x@pars)
+        a <- coef(x, ...)  
+        A <- list()
         if(nfact == 2){
+            a <- a[,1:2]
             theta_angle2 <- c(90 - theta_angle)
             angles <- rbind(theta_angle, theta_angle2)
             cosalpha <- cos(d2r(angles))            
@@ -266,11 +243,11 @@ setMethod(
             else                 
                 for(i in 1:ncol(cosalpha))
                     A[[i]] <- as.matrix(sqrt(rowSums((a * matrix(cosalpha[ ,i], nrow(a), 2, TRUE))^2)))                                
-        }   
+        } else A <- list(a)  
         theta <- if(length(theta_angle) == 1) seq(-4,4,length.out=npts) 
             else seq(-4,4,length.out=9)
         Theta <- thetaComb(theta, nfact)        
-        info <- test_info(a=a, d=d, Theta=Theta, Alist=A, guess=guess, upper=upper, K=K)                        
+        info <- test_info(pars=object@pars, Theta=Theta, Alist=A, K=K)         
         plt <- data.frame(cbind(info,Theta))
         if(nfact == 2){						
             colnames(plt) <- c("info", "Theta1", "Theta2")			

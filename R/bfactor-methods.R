@@ -56,41 +56,35 @@ setMethod(
 setMethod(
     f = "coef",
     signature = signature(object = 'bfactorClass'),
-    definition = function(object, digits = 3, ...){
+    definition = function(object, allpars = FALSE, digits = 3){
         K <- object@K
-        a <- object@pars$lambdas			
-        d <- matrix(NA, nrow(a), max(K-1))
-        zetas <- object@pars$zetas
-        for(i in 1:length(K)){
-            d[i, 1:(K[i] - 1)] <- zetas[[i]]
-        }
-        A <- sqrt(apply(a^2,1,sum))
-        B <- -d/A 
-        a[!attr(object@pars,'lamsel')] <- NA	
-        parameters <- round(cbind(a,d,object@guess,object@upper,A,B),digits)
-        colnames(parameters) <- c('a_G',paste("a_", 1:(ncol(object@F)-1),sep=""),
-                                  paste("d_", 1:(max(K)-1),sep=""), "guess", "upper", "mvdisc", 
-                                  paste("mvint_", 1:(max(K)-1),sep=""))  
-        rownames(parameters) <- colnames(object@data)	
-        cat("\nParameters with multivariate discrimination and intercept: \n\n")		
-        print(parameters)
-        ret <- list(parameters)
-        if(length(object@parsSE) > 1){
-            cat("\nStd. Errors: \n\n")	
-            a <- object@parsSE$lambdas			
-            d <- matrix(NA, nrow(a), max(K-1))
-            zetas <- object@parsSE$zetas
-            for(i in 1:length(K)){
-                d[i, 1:(K[i] - 1)] <- zetas[[i]]
-            }
-            SEs <- cbind(a,d)
-            colnames(SEs) <- c('a_G',paste("a_", 1:(ncol(object@F)-1),sep=""),
-                               paste("d_", 1:(max(K)-1),sep=""))
-            rownames(SEs) <- colnames(object@data)		
-            print(SEs, digits)
-            ret <- list(parameters, SEs)
-        }	
-        invisible(ret)
+        J <- length(K)
+        nfact <- ncol(object@F)
+        a <- matrix(0, J, nfact)
+        for(i in 1:J)
+            a[i, ] <- ExtractLambdas(object@pars[[i]])        
+        A <- sqrt(apply(a^2,1,sum))                                   
+        rownames(a) <- colnames(object@data)
+        a <- round(cbind(a, A), digits)
+        colnames(a) <- c('a_G', paste('a', 1:(nfact-1), sep=''), 'MV_disc')        
+        allPars <- list()
+        if(allpars){
+            if(length(object@pars[[1]]@SEpar) > 0){
+                for(i in 1:J){
+                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
+                                             2, byrow = TRUE), digits)
+                    rownames(allPars[[i]]) <- c('pars', 'SE')
+                    colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
+                    
+                }
+            } else {
+                for(i in 1:J)
+                    allPars[[i]] <- round(object@pars[[i]]@par, digits)
+            }            
+            names(allPars) <- rownames(a)
+        }        
+        ret <- if(allpars) allPars else a        
+        ret
     }
 )
 
@@ -99,32 +93,24 @@ setMethod(
     signature = signature(object = 'bfactorClass'),
     definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
     {       
-        K <- object@K
-        lf <- attr(object@pars, 'lamsel')
-        Theta <- object@Theta
-        data <- object@data	
+        K <- object@K        
+        data <- object@data    
         N <- nrow(data)	
-        J <- ncol(data)		
-        lambdas <- object@pars$lambdas
-        zetas <- object@pars$zetas
-        guess <- object@guess
-        upper <- object@upper
-        guess[is.na(guess)] <- 0
-        upper[is.na(upper)] <- 1
+        J <- ncol(data)
+        nfact <- ncol(object@F)        
         itemloc <- object@itemloc
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
+        Theta <- object@Theta
         prior <- mvtnorm::dmvnorm(Theta,rep(0,2),diag(2))
-        prior <- prior/sum(prior)	
+        prior <- prior/sum(prior)       	               
         if(restype == 'LD'){	
             for(i in 1:J){								
                 for(j in 1:J){			
                     if(i < j){
-                        P1 <- P.bfactor(lambdas[i, ], zetas[[i]], Theta, guess[i], upper[i], lf[i, ])
-                        P2 <- P.bfactor(lambdas[j, ], zetas[[j]], Theta, guess[j], upper[j], lf[j, ])
-                        if(K[i] == 2) P1 <- cbind(1-P1, P1)
-                        if(K[j] == 2) P2 <- cbind(1-P2, P2)						
+                        P1 <- ProbTrace(x=object@pars[[i]], Theta=Theta)
+                        P2 <- ProbTrace(x=object@pars[[j]], Theta=Theta)                        
                         tab <- table(data[,i],data[,j])		
                         Etab <- matrix(0,K[i],K[j])
                         for(k in 1:K[i])

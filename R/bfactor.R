@@ -2,7 +2,10 @@
 #' 
 #' \code{bfactor} fits a confirmatory maximum likelihood bifactor model to
 #' dichotomous and polychotomous data under the item response theory paradigm. 
-#' Pseudo-guessing parameters may be included but must be declared as constant.
+#' Fits univariate and mutilvariate Rasch, 1-4PL, graded, (generalized) partial credit, 
+#' and nominal models using a dimensional reduction EM algorithm so that regardless of the 
+#' number of specific factors estimated the model only uses a two-dimensional quadrature grid
+#' for integration.
 #' 
 #' 
 #' 
@@ -319,6 +322,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	} 
 	if(length(itemtype) == 1) itemtype <- rep(itemtype, J)      
 	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
+    if(any(itemtype[1] == c('Rasch','1PL'))) stop('Cannot estimate Rasch or 1PL model')    
 	pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
 	                 upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, 
                      startvalues=startvalues, freepars=freepars, parprior=parprior, estLambdas=logicalfact,

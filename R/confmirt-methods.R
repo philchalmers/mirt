@@ -39,8 +39,7 @@ setMethod(
     f = "summary",
     signature = 'confmirtClass',
     definition = function(object, digits = 3, ...)
-    {
-        if(any(object@estComp)) stop('No factor metric for noncompensatory models')
+    {        
         if(length(object@prodlist) > 0) stop('No factor metric for models with product terms')
         nfact <- ncol(object@F)
         itemnames <- names(object@h2)	
@@ -51,7 +50,8 @@ setMethod(
         print(cbind(F),digits)		
         cat("\nSS loadings: ",round(SS,digits), "\n")		
         cat("\nFactor correlations: \n")
-        Phi <- cov2cor(object@gpars$sig)	  
+        gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
+        Phi <- cov2cor(gpars$gcov)	  
         Phi <- round(Phi, digits)
         colnames(Phi) <- rownames(Phi) <- colnames(F)
         print(Phi)				
@@ -62,53 +62,85 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'confmirtClass',
-    definition = function(object, SE = TRUE, print.gmeans = FALSE, digits = 3, ...)
+    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...)
     {  
-        nfact <- ncol(object@nfact)
-        nfactNames <- ifelse(length(object@prodlist) > 0, 
-                             length(object@prodlist) + nfact, nfact)
-        factorNames <- colnames(object@F)
-        itemnames <- names(object@h2)
-        a <- matrix(object@parsprint[ ,1:nfactNames], ncol=nfactNames)
-        d <- matrix(object@parsprint[ ,(nfactNames+1):ncol(object@parsprint)],
-                    ncol = ncol(object@parsprint)-nfactNames)    	
-        parameters <- cbind(object@parsprint,object@guess,object@upper)
-        SEs <- cbind(object@SEpars,object@SEg,object@SEup)
-        rownames(parameters) <- itemnames
-        rownames(SEs) <- itemnames
-        colnames(SEs) <- colnames(parameters) <- c(paste("a_",factorNames[1:nfactNames],sep=""),
-                                                   paste("d_",1:(ncol(object@parsprint)-nfactNames),sep=""),"guess",'upper')
-        factorNames2 <- factorNames	
-        if(nfact < nfactNames)
-            factorNames2 <- factorNames[!grepl("\\(",factorNames)]			
-        cat("\nITEM PARAMETERS: \n")
-        print(parameters, digits)
-        if(SE){
-            cat("\nStd. Errors: \n")	
-            print(SEs, digits)
-        }	
-        u <- object@gpars$u	
-        SEu <- object@SEgpars$SEu
-        sig <- object@gpars$sig
-        SEsig <- as.matrix(object@SEgpars$SEsig)
-        names(u) <- colnames(sig) <- rownames(sig) <- factorNames2	
-        cat("\nGROUP PARAMETERS: \n")
-        if(print.gmeans){
-            cat("Means: \n")
-            print(u,digits)
-            cat("\nStd. Errors: \n")			
-            names(SEu) <- names(u) 	
-            print(SEu, digits)	
-        }
-        cat("Covariance: \n")
-        print(sig,digits)
-        if(SE){
-            cat("\nStd. Errors: \n")			
-            colnames(SEsig) <- rownames(SEsig) <- factorNames2	
-            print(SEsig, digits)	
-        }
-        invisible(list(parsprint = parameters,mu = u,sigma = sig, sigmaSE = SEsig,
-                       muSE = SEu))	
+        if(object@exploratory){
+            K <- object@K
+            J <- length(K)
+            nfact <- ncol(object@F)
+            a <- matrix(0, J, nfact)
+            for(i in 1:J)
+                a[i, ] <- ExtractLambdas(object@pars[[i]])        
+            A <- sqrt(apply(a^2,1,sum))                        
+            if (ncol(a) > 1){ 
+                rotname <- ifelse(rotate == '', object@rotate, rotate)
+                so <- summary(object, rotate = rotate, Target = Target, print = FALSE, ...)             
+                a <- rotateLambdas(so)
+            }   
+            rownames(a) <- colnames(object@data)
+            if(nfact > 1){
+                a <- round(cbind(a, A), digits)
+                colnames(a) <- c(paste('a', 1:nfact, sep=''), 'MV_disc')
+            } else {
+                a <- round(a, digits)
+                colnames(a) <- paste('a', 1:nfact, sep='')
+            }
+            allPars <- list()
+            if(allpars){
+                if(length(object@pars[[1]]@SEpar) > 0){
+                    for(i in 1:(J+1))
+                        allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
+                                                     2, byrow = TRUE), digits)
+                } else {
+                    for(i in 1:(J+1))
+                        allPars[[i]] <- round(object@pars[[i]]@par, digits)
+                }       
+                names(allPars) <- rownames(a)
+            }        
+            ret <- if(allpars) allPars else a
+            if(nfact > 1) cat('\nRotation:', rotname, '\n\n')
+            print(ret)
+            return(invisible(ret))
+        } else {               
+            K <- object@K
+            J <- length(K)
+            nfact <- ncol(object@F)
+            a <- matrix(0, J, nfact)
+            for(i in 1:J)
+                a[i, ] <- ExtractLambdas(object@pars[[i]])        
+            A <- sqrt(apply(a^2,1,sum))                                    
+            rownames(a) <- colnames(object@data)
+            a <- round(a, digits)
+            colnames(a) <- paste('a', 1:nfact, sep='')            
+            allPars <- list()
+            if(allpars){
+                if(length(object@pars[[1]]@SEpar) > 0){
+                    for(i in 1:(J+1)){
+                        allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
+                                                 2, byrow = TRUE), digits)
+                        rownames(allPars[[i]]) <- c('pars', 'SE')
+                        colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
+                    }
+                } else {
+                    for(i in 1:(J+1))
+                        allPars[[i]] <- round(object@pars[[i]]@par, digits)
+                }                  
+                names(allPars) <- c(rownames(a), 'GroupPars')                
+            }        
+            if(allpars) return(allPars)
+            cat('\nItem parameters:\n')
+            print(a)
+            gpars <- ExtractGroupPars(object@pars[[J+1]])
+            cat('\nGroup parameters:\n')
+            cat('\nMeans:\n')            
+            gmeans <- gpars$gmeans
+            gcov <- gpars$gcov
+            names(gmeans) <- colnames(gcov) <- rownames(gcov) <- object@factorNames
+            print(round(gmeans, digits))
+            cat('\nCovariance:\n')
+            print(round(gcov, digits))
+            invisible(list(a,gpars))
+        }       	
     }
 )
 
@@ -117,45 +149,27 @@ setMethod(
     signature = signature(object = 'confmirtClass'),
     definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
     { 
-        fulldata <- object@fulldata	
-        data <- object@data
-        data[data==99] <- NA		
-        N <- nrow(data)
-        K <- object@K
-        J <- length(K)
-        sig <- object@gpars$sig	
-        nfact <- ncol(sig)
-        nfactNames <- ncol(object@F)
-        theta <- seq(-4,4, length.out = round(20/nfact))
-        Theta <- thetaComb(theta,nfact)		
-        if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
-        lambdas <- object@pars$lambdas
-        zetas <- object@pars$zetas
-        guess <- object@guess
-        guess[is.na(guess)] <- 0	
-        upper <- object@upper
-        upper[is.na(upper)] <- 1
-        Ksums <- cumsum(K) - 1	
+        K <- object@K        
+        data <- object@data    
+        N <- nrow(data)	
+        J <- ncol(data)
+        nfact <- ncol(object@F)        
         itemloc <- object@itemloc
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
-        prior <- mvtnorm::dmvnorm(Theta[,1:nfact,drop=FALSE],rep(0,nfact),sig)
-        prior <- prior/sum(prior)		
+        theta <- seq(-4,4, length.out = round(20/nfact))
+        Theta <- thetaComb(theta,nfact)    	
+        if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
+        gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
+        prior <- mvtnorm::dmvnorm(Theta,gpars$gmeans,gpars$gcov)
+        prior <- prior/sum(prior)       	               
         if(restype == 'LD'){	
-            for(i in 1:J){				
+            for(i in 1:J){								
                 for(j in 1:J){			
                     if(i < j){
-                        if(K[i] > 2) P1 <- P.poly(lambdas[i,],zetas[[i]],Theta,itemexp=TRUE)
-                        else { 
-                            P1 <- P.mirt(lambdas[i,],zetas[[i]], Theta, guess[i], upper[i])
-                            P1 <- cbind(1 - P1, P1)
-                        }	
-                        if(K[j] > 2) P2 <- P.poly(lambdas[j,],zetas[[j]],Theta,itemexp=TRUE)
-                        else {
-                            P2 <- P.mirt(lambdas[j,],zetas[[j]], Theta, guess[j], upper[j])	
-                            P2 <- cbind(1 - P2, P2)
-                        }
+                        P1 <- ProbTrace(x=object@pars[[i]], Theta=Theta)
+                        P2 <- ProbTrace(x=object@pars[[j]], Theta=Theta)                        
                         tab <- table(data[,i],data[,j])		
                         Etab <- matrix(0,K[i],K[j])
                         for(k in 1:K[i])
@@ -163,30 +177,34 @@ setMethod(
                                 Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
                         s <- gamma.cor(tab) - gamma.cor(Etab)
                         if(s == 0) s <- 1				
-                        res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
-                        res[i,j] <- sqrt(abs(res[j,i]) / (N * min(c(K[i],K[j]) - 1))) 					
-                    }					
+                        res[j,i] <- sum(((tab - Etab)^2)/Etab) /
+                            ((K[i] - 1) * (K[j] - 1)) * sign(s)
+                        res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
+                    }
                 }
-            }		
-            if(is.null(printvalue)) cat("LD matrix:\n\n")	
-            res <- round(res,digits)    	
+            }	
+            cat("LD matrix:\n\n")	
+            res <- round(res,digits)
             return(res)
-        }
-        if(restype == 'exp'){
-            if(length(object@tabdata) == 0) stop('Expected response vectors cannot be computed 
-                because logLik() has not been run or the data contains missing responses.')
-			tabdata <- object@tabdata
-            res <- (tabdata[,J+1] - tabdata[,J+2]) / sqrt(tabdata[,J+2])
-            tabdata <- round(cbind(tabdata,res),digits)
-            colnames(tabdata) <- c(colnames(object@data), 'freq', 'exp', 'std_res')
+        } 
+        if(restype == 'exp'){	
+            r <- object@tabdata[ ,ncol(object@tabdata)]
+            res <- round((r - object@Pl * nrow(object@data)) / 
+                sqrt(object@Pl * nrow(object@data)),digits)
+            expected <- round(N * object@Pl/sum(object@Pl),digits)  
+            tabdata <- object@tabdata
+            ISNA <- is.na(rowSums(tabdata))
+            expected[ISNA] <- res[ISNA] <- NA
+            tabdata <- data.frame(tabdata,expected,res)
+            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
             if(!is.null(printvalue)){
                 if(!is.numeric(printvalue)) stop('printvalue is not a number.')
                 tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
-            }
-            return(tabdata)
-        }
-    }
-            )
+            }			
+            return(tabdata)				
+        }					
+    }       
+)
 
 setMethod(
     f = "anova",

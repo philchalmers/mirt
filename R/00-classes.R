@@ -125,17 +125,8 @@ setClass(
 # @keywords classes
 setClass(
     Class = 'confmirtClass',
-    representation = representation(pars = 'list', 
-                                    parsprint = 'matrix', 
-                                    guess = 'numeric', 
-                                    SEpars = 'matrix', 
-                                    SEup='numeric',
-                                    SEg='numeric', 
-                                    gpars = 'list', 
-                                    SEgpars = 'list', 
-                                    estpars = 'list',
-                                    cycles = 'numeric', 
-                                    Theta = 'matrix', 
+    representation = representation(pars = 'list',                                                                                                             
+                                    cycles = 'numeric',                                     
                                     fulldata = 'matrix', 
                                     data = 'matrix', 
                                     K = 'numeric', 
@@ -151,8 +142,7 @@ setClass(
                                     G2 = 'numeric', 
                                     p = 'numeric',
                                     tabdata = 'matrix', 
-                                    BIC = 'numeric', 
-                                    estComp = 'logical', 
+                                    BIC = 'numeric',                                      
                                     prodlist = 'list', 
                                     upper = 'numeric', 
                                     RMSEA = 'numeric', 
@@ -160,6 +150,8 @@ setClass(
                                     TLI = 'numeric', 
                                     constrain='list',
                                     nfact='integer',
+                                    exploratory='logical',
+                                    factorNames='character',
                                     Call = 'call'),	
     validity = function(object) return(TRUE)
 )	

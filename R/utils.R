@@ -288,26 +288,14 @@ rotateLambdas <- function(so){
 }
 
 d2r <-function(d) pi*d/180
-    
-test_info <- function(a, d, Theta, Alist, guess, upper, K){
+
+test_info <- function(pars, Theta, Alist, K){
     infolist <- list()    
     for(cut in 1:length(Alist)){
         A <- Alist[[cut]]
         info <- rep(0,nrow(Theta))
         for(j in 1:length(K)){
-            if(K[j] > 2){
-                P <- P.poly(a[j,], d[[j]], Theta, itemexp = FALSE)    	
-                for(i in 1:K[j]){
-                    w1 <- P[,i]*(1-P[,i])*A[j]
-                    w2 <- P[,i+1]*(1-P[,i+1])*A[j]
-                    I <- ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]
-                    info <- info + I
-                }
-            } else {
-                P <- P.mirt(a[j,], d[[j]], Theta, guess[j], upper[j])
-                Pstar <- P.mirt(a[j,], d[[j]], Theta, 0)
-                info <- info + A[j]^2 * P * (1-P) * Pstar/P ###FIXME: might need new 4PL info
-            }			
+            info <- info + ItemInfo(pars[[j]], A, Theta)
         }
         infolist[[cut]] <- info
     }    
@@ -453,6 +441,6 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber')+1,
                                             startvalues=startvalues, freepars=freepars, parprior=parprior,
                                             constrain=constrain, debug=debug)
-    attr(ret, 'prodlist') <- prodlist    
+    attr(ret, 'prodlist') <- prodlist     
     return(ret)    
 }
