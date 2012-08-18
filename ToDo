@@ -1,5 +1,9 @@
 Things to do:
 
+- parprior implementation for all functions
+- different bounded estimation for guess and upper in Mstep.mirt
+- rework tests to make use of new features
+
 - Parallel processing option for logLik(), should work better now that the draws are done mainly in
 R
 - Multiple-group estimation for confmirt, now possible!

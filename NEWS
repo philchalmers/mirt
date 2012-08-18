@@ -2,18 +2,18 @@
 mirt 0.3.0
 ----------------------------------------------------------------
 
-* Radically changed the underlying mechanisms for the 
+* radically changed the underlying mechanisms for the 
   estimation functions and in doing so have decided that polymirt() was 
   redundant and could be replaced completely by calling confmirt(data, number_of_factors). 
 
-* New univariate and MV models are available, including the 1-4 parameter logistic
+* new univariate and MV models are available, including the 1-4 parameter logistic
   generalized partial credit, and nominal models. These are called by specifying character
   vector called 'itemtype' of length nitems with the options '2PL','3PL','4PL','graded','gpcm', 'nominal'. 
   Partially-compensatory models available in confmirt can be called with 'partcomp'. If itemtype =
   '1PL' or 'Rasch', then the 1-parameter logistic/1-parameter ordinal or Rasch/partial credit models are
   estimated for all the data. The default assumes that items are either '2PL' or 'graded', as before. 
 
-* Flexible user defined linear restrictions may be imposed on all estimation functions, 
+* flexible user defined linear restrictions may be imposed on all estimation functions, 
   so too prior parameter distributions, start values, and choice of which parameters to 
   estimate at all. These all follow the general 2 step for 
 
@@ -30,7 +30,7 @@ mirt 0.3.0
   slopes to be equal to 1/1.702 and not freely estimated for the classical Rasch model, or all equal 
   but estimated for the 1PL model)
 
-* number confmirt.model() options decreased due to the new way to specify item types, startvalues, prior
+* number of confmirt.model() options decreased due to the new way to specify item types, startvalues, prior
   parameter distributions, and constraints
 
 * plink package has not kept up with item information curves, so I'll implement my own for now.
@@ -42,6 +42,9 @@ mirt 0.3.0
   the item and group parameters
 
 * simdata() updated to support new item types 
+
+* more accurate standard errors for MAP and ML factor scores, and specific factors in bfactorClass
+  objects can now be estimated for all methods
 
 
 ----------------------------------------------------------------

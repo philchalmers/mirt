@@ -3,9 +3,8 @@
 \title{Simulate response patterns from an underlying multivariate normal
 distribution}
 \usage{
-  simdata(a, d, N, sigma = NULL, mu = NULL, guess = 0,
-    upper = 1, partcomp = FALSE, factor.loads = FALSE,
-    Theta = NULL)
+  simdata(a, d, N, itemtype, sigma = NULL, mu = NULL,
+    guess = 0, upper = 1, nominal = NULL, Theta = NULL)
 }
 \arguments{
   \item{a}{a matrix of slope parameters. If slopes are to
@@ -16,6 +15,26 @@ distribution}
   \item{d}{a matrix of intercepts. The matrix should have
   as many columns as the item with the largest number of
   categories, and filled empty locations with \code{NA}}
+
+  \item{itemtype}{a character vector of length
+  \code{nrow(a)} specifying the type of items to simulate.
+  Can be \code{'dich', 'graded', 'gpcm','nominal'}, or
+  \code{'partcomp'}, for dichotomous, graded, generalized
+  partial credit, nominal, and partially compensatory
+  models. Note that for the gpcm and nominal model there
+  should be as many parameters as desired categories,
+  however to parameterized them for meaningful
+  interpretation the first category intercept should equal
+  0 for both models, and the final category should equal
+  the number of categories minus one for the nominal model}
+
+  \item{nominal}{a matrix of specific item category slopes
+  for nominal models. Should be the dimensions as the
+  intecept specification with one less column, with
+  \code{NA} in locations where not applicable. Note that
+  during estimation the first slope will be constrained to
+  1, so it is best to set this as the value for the first
+  category as well}
 
   \item{N}{sample size}
 
@@ -33,16 +52,6 @@ distribution}
 
   \item{mu}{a mean vector of the underlying distribution.
   Default is a vector of zeros}
-
-  \item{partcomp}{a logical vector used to specify which
-  items are to be treated as partially compensatory items
-  (see Reckase, 2009), and single values are repeated for
-  each item. Note that when simulating noncompensatory data
-  the slope parameters must equal the number of intercept
-  parameters}
-
-  \item{factor.loads}{logical; are the slope parameters in
-  \code{a} in the factor loadings metric?}
 
   \item{Theta}{a user specified matrix of the underlying
   ability parameters, where \code{nrow(Theta) == N} and
@@ -99,12 +108,12 @@ d <- matrix(c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
 
 mu <- c(-.4, -.7, .1)
 sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
+itemtype <- rep('dich', nrow(a))
 
-dataset1 <- simdata(a, d, 2000)
-dataset2 <- simdata(a, d, 2000, mu = mu, sigma = sigma)
+dataset1 <- simdata(a, d, 2000, itemtype)
+dataset2 <- simdata(a, d, 2000, itemtype, mu = mu, sigma = sigma)
 
 ###An example of a mixed item, bifactor loadings pattern with correlated specific factors
-# can use factor loadings metric
 a <- matrix(c(
 .8,.4,NA,
 .4,.4,NA,
@@ -113,40 +122,22 @@ a <- matrix(c(
 .4,NA,.4,
 .7,NA,.4),ncol=3,byrow=TRUE)
 
-#first three items are dichotomous, next two have 4 categories, and the last has 3
 d <- matrix(c(
 -1.0,NA,NA,
  1.5,NA,NA,
  0.0,NA,NA,
-3.0,2.0,-0.5,
-2.5,1.0,-1,
+0.0,-1.0,2.0, #the first 0.0 and last (ncat - 1) = 2 values are the recommended constraints for nominal models
+0.0,1.0,-1, #the first 0 here is the recommended constraint for gpcm
 2.0,0.0,NA),ncol=3,byrow=TRUE)
+
+nominal <- matrix(NA, nrow(d), ncol(d))
+nominal[4, ] <- c(1,1.2,.8) #note that 1 as the first column is the recommended value
 
 sigma <- diag(3)
 sigma[2,3] <- sigma[3,2] <- .25
+items <- c('dich','dich','dich','nominal','gpcm','graded')
 
-dataset <- simdata(a,d,1000,sigma=sigma,factor.loads=TRUE)
-
-####Noncompensatory item example
-a <- matrix(c(
-  1,NA,
-1.5,NA,
- NA, 1,
- NA,1.6,
-1.5,.5,
- .7, 1), ncol=2,byrow=TRUE)
-
-#notice that the partially compensatory items have the same number of intercepts as
-#factors influencing the item
-d <- matrix(c(
--1.0,NA,
- 1.5,NA,
- 0.0,NA,
- 3.0,NA,
-2.5,1.0,
-2.0, -1),ncol=2,byrow=TRUE)
-
-compdata <- simdata(a,d,3000, partcomp = c(F,F,F,F,T,T))
+dataset <- simdata(a,d,1000,items,sigma=sigma,nominal=nominal)
 
 ####Unidimensional nonlinear factor pattern
 theta <- rnorm(2000)
@@ -160,8 +151,9 @@ a <- matrix(c(
 .4,NA,
 .7,NA),ncol=2,byrow=TRUE)
 d <- matrix(rnorm(6))
+itemtype <- rep('dich',6)
 
-nonlindata <- simdata(a,d,2000,Theta=Theta)
+nonlindata <- simdata(a,d,2000,itemtype,Theta=Theta)
 
    }
 }

@@ -3,14 +3,12 @@
 \alias{fscores}
 \alias{fscores,bfactorClass-method}
 \alias{fscores,confmirtClass-method}
-\alias{fscores,mirtClass-method}
-\alias{fscores,polymirtClass-method}
 \alias{fscores-method}
+\alias{fscores,mirtClass-method}
 \title{Methods for Function fscores}
 \arguments{
   \item{object}{a model of class \code{mirtClass},
-  \code{bfactorClass}, \code{polymirtClass}, or
-  \code{confmirtClass}}
+  \code{bfactorClass}, or \code{confmirtClass}}
 
   \item{full.scores}{if \code{FALSE} (default) then a
   summary table with factor scores for each unique pattern
@@ -28,15 +26,17 @@
   applicable to \code{mirtClass} and \code{bfactorClass}
   objects}
 
+  \item{quadpts}{number of quadratures to use per
+  dimension. Only applicable for \code{mirtClass} and
+  \code{bfactorClass} objects}
+
   \item{ndraws}{number of MH samples to draw for each
-  response pattern for \code{polymirtClass} or
-  \code{confmirtClass} objects}
+  response pattern for \code{confmirtClass} objects}
 
   \item{thin}{controls how much the chain should be thinned
   by, default collects every 5th draw (\code{thin = 5}).
   Note that \code{ndraws/thin} must be a whole number. for
-  \code{polymirtClass} or \code{confmirtClass} objects
-  only}
+  \code{confmirtClass} objects only}
 
   \item{verbose}{logical; print verbose output messages?}
 }
@@ -56,8 +56,7 @@
   \describe{ \item{fscores}{\code{signature(object =
   "bfactorClass")}} \item{fscores}{\code{signature(object =
   "mirtClass")}} \item{fscores}{\code{signature(object =
-  "polymirtClass")}} \item{fscores}{\code{signature(object
-  = "confmirtClass")}} }
+  "confmirtClass")}} }
 }
 \examples{
 \dontrun{
@@ -67,7 +66,7 @@ tabscores <- fscores(mod)
 fullscores <- fscores(mod, full.scores = TRUE)
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 
-mod2 <- polymirt(Science, 1)
+mod2 <- confmirt(Science, 1)
 tabscores2 <- fscores(mod2, ndraws = 5000)
 
   }

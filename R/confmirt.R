@@ -383,6 +383,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
 	null.mod <- unclass(new('mirtClass'))
     if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))
     if(is.null(constrain)) constrain <- list()
+    if(is.null(prodlist)) prodlist <- list()
     
     ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
                fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
