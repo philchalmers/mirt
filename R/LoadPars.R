@@ -21,27 +21,27 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'NullModel' && K[i] > 2) val <- c(0,zetas[[i]]) 
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
                 val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), 'd', 'g','u')
             }
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] > 2){
                 val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 0:(K[i]-1), sep=''))
             }
             if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
                 val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), 'd', 'g','u')
             }
             if(itemtype[i] == 'graded'){
                 val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 1:(K[i]-1), sep=''))    
             }
             if(itemtype[i] == 'gpcm'){
                 val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 0:(K[i]-1), sep=''))                
             }
             if(itemtype[i] == 'nominal'){
-                val <- c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
+                val <- c(rep(.5, nfactNames), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
                                 paste('d', 0:(K[i]-1), sep=''))                
             }
             if(any(itemtype[i] == c('PC2PL','PC3PL'))){
