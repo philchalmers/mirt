@@ -174,9 +174,9 @@ setMethod(
     f = "ItemInfo",
     signature = signature(x = 'dich', A = 'matrix', Theta = 'matrix'),
     definition = function(x, A, Theta){          
-        P <- ProbTrace(x, Theta)
-        Pstar <- P.mirt(a[j,], d[[j]], Theta, 0)
-        info <- A[j]^2 * P * (1-P) * Pstar/P ###FIXME: might need new 4PL info
+        P <- ProbTrace(x, Theta)[,2]
+        Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0)
+        info <- A[j]^2 * P * (1-P) * Pstar/P 
         info    
     }
 )

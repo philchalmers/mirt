@@ -204,10 +204,7 @@
   factors are automatically fixed to 1 to help facilitate
   model identification. All parameters may be fixed to
   constant values or set equal to other parameters using
-  the appropriate declarations. Guessing parameters may be
-  specified for dichotomous items and are estimated with
-  beta priors automatically, and if a guessing parameter is
-  declared for a polychotomous item it is ignored.
+  the appropriate declarations.
 }
 
 \section{Exploratory IRT}{
@@ -285,37 +282,26 @@ residuals(mod3)
 anova(mod1,mod3)
 
 #####
-#polynomial and combinations
-model.linear <- confmirt.model()
-      F = 1-8
-
+#polynomial/combinations
+data(SAT12)
+data <- key2binary(SAT12,
+                  key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 model.quad <- confmirt.model()
-      F = 1-8
-  (F*F) = 1-8
-
-
-model.cube <- confmirt.model()
-        F = 1-8
-    (F*F) = 1-8
-  (F*F*F) = 1-8
+       F1 = 1-32
+  (F1*F1) = 1-32
 
 
 model.combo <- confmirt.model()
-       F1 = 1-4
-       F2 = 5-8
+       F1 = 1-16
+       F2 = 17-32
   (F1*F2) = 1-8
 
 
-mod.linear <- confmirt(dataset, model.linear)
-mod.quad <- confmirt(dataset, model.quad)
-mod.cube <- confmirt(dataset, model.cube)
-mod.combo <- confmirt(dataset, model.combo)
+(mod.quad <- confmirt(data, model.quad))
+(mod.combo <- confmirt(data, model.combo))
+anova(mod.quad, mod.combo)
 
-anova(mod.linear,mod.quad)
-anova(mod.linear,mod.cube)
-anova(mod.linear,mod.combo)
-anova(mod.cube,mod.combo)
 }
 }
 \author{

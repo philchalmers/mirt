@@ -10,11 +10,12 @@ Description: Analysis of dichotomous and polychotomous response data using
     univariate and multivariate (MV) one-, two-, three-, and four-parameter
     logistic models, graded response models, generalized partial credit models,
     nominal models, and multivariate partially-compensatory models. These can
-    be used in an exploratory or confirmatory manner with user defined linear
-    constraints. Exploratory models can be estimated via quadrature or
+    be used in an exploratory or confirmatory manner with optional user defined
+    linear constraints. Exploratory models can be estimated via quadrature or
     stochastic methods, a generalized confirmatory bifactor analysis is
-    included, and confirmatory IRT models can be fit which can use polynomial
-    or product constructed latent traits.
+    included, and confirmatory IRT models can be fit stochastically with an
+    MH-RM algorithm and can include polynomial or product constructed latent
+    traits.
 Depends:
     R (>= 2.14),
     stats4,

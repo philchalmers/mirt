@@ -118,7 +118,7 @@ setMethod(
     f = "coef",
     signature = 'confmirtClass',
     definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...)
-    {  
+    {          
         if(object@exploratory){
             K <- object@K
             J <- length(K)
@@ -190,7 +190,9 @@ setMethod(
             cat('\nMeans:\n')            
             gmeans <- gpars$gmeans
             gcov <- gpars$gcov
-            names(gmeans) <- colnames(gcov) <- rownames(gcov) <- object@factorNames
+            fnames <- object@factorNames
+            fnames <- fnames[!grepl(pattern='\\(', fnames)]
+            names(gmeans) <- colnames(gcov) <- rownames(gcov) <- fnames
             print(round(gmeans, digits))
             cat('\nCovariance:\n')
             print(round(gcov, digits))

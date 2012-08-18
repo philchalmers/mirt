@@ -47,7 +47,7 @@ MHRM <- function(pars, list, debug)
                     tmp <- tmp / 2
                 }		
             }
-        }	
+        }	        
         m.thetas <- grouplist <- list()		
         SEM.stores <- SEM.stores2 <- list()     
         m.list <- list()	  
@@ -131,14 +131,20 @@ MHRM <- function(pars, list, debug)
                 ind1 <- 1
                 thetatemp <- m.thetas[[j]]
                 if(!is.null(prodlist)) thetatemp <- prodterms(thetatemp,prodlist)	
-                for (i in 1:length(pars)){	
+                for (i in 1:(length(pars)-1)){	
                     deriv <- Deriv(x=pars[[i]], Theta=thetatemp)
                     ind2 <- ind1 + length(deriv$grad) - 1
                     longpars[ind1:ind2] <- pars[[i]]@par
                     g[ind1:ind2] <- pars[[i]]@gradient <- deriv$grad
                     h[ind1:ind2, ind1:ind2] <- pars[[i]]@hessian <- deriv$hess
                     ind1 <- ind2 + 1 
-                }            
+                }          
+                i <- i + 1
+                deriv <- Deriv(x=pars[[i]], Theta=m.thetas[[j]])
+                ind2 <- ind1 + length(deriv$grad) - 1
+                longpars[ind1:ind2] <- pars[[i]]@par
+                g[ind1:ind2] <- pars[[i]]@gradient <- deriv$grad
+                h[ind1:ind2, ind1:ind2] <- pars[[i]]@hessian <- deriv$hess                
                 g.m[[j]] <- g %*% L 
                 h.m[[j]] <- L %*% h %*% L 			
             }		
@@ -189,7 +195,7 @@ MHRM <- function(pars, list, debug)
                     if(noninvcount == 3) 
                         stop('\nEstimation halted during burn in stages, solution is unstable')
                 }
-                correction <-  as.numeric(inv.ave.h %*% grad)
+                correction <- as.numeric(inv.ave.h %*% grad)
                 correction[correction > .5] <- 1
                 correction[correction < -.5] <- -1
                 longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           

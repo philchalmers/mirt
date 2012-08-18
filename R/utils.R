@@ -55,8 +55,9 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     tmp1 <- itemtrace1*fulldata
     tmp0[tmp0 < tol] <- tmp1[tmp1 < tol] <- 1    
     total_0 <- rowSums(log(tmp0)) + log_den0
-    total_1 <- rowSums(log(tmp1)) + log_den1
-    diff <- total_1 - total_0    
+    total_1 <- rowSums(log(tmp1)) + log_den1    
+    diff <- total_1 - total_0
+    diff[is.nan(diff)] <- -50
     accept <- diff > 0
     accept[unif < exp(diff)] <- TRUE    
     theta1[!accept, ] <- theta0[!accept, ]

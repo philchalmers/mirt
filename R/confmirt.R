@@ -33,9 +33,6 @@
 #' variances of the latent factors are automatically fixed to 1 to help
 #' facilitate model identification. All parameters may be fixed to constant
 #' values or set equal to other parameters using the appropriate declarations.
-#' Guessing parameters may be specified for dichotomous items and are estimated
-#' with beta priors automatically, and if a guessing parameter is declared for
-#' a polychotomous item it is ignored.
 #' 
 #' @section Exploratory IRT:
 #' 
@@ -231,37 +228,26 @@
 #' anova(mod1,mod3)
 #'
 #' #####
-#' #polynomial and combinations
-#' model.linear <- confmirt.model()
-#'       F = 1-8
-#'
+#' #polynomial/combinations
+#' data(SAT12)
+#' data <- key2binary(SAT12,
+#'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' 
 #' model.quad <- confmirt.model()
-#'       F = 1-8
-#'   (F*F) = 1-8
-#'
-#' 
-#' model.cube <- confmirt.model()
-#'         F = 1-8
-#'     (F*F) = 1-8
-#'   (F*F*F) = 1-8
-#'
+#'        F1 = 1-32
+#'   (F1*F1) = 1-32       
+#'   
 #' 
 #' model.combo <- confmirt.model()
-#'        F1 = 1-4
-#'        F2 = 5-8
+#'        F1 = 1-16
+#'        F2 = 17-32
 #'   (F1*F2) = 1-8
 #'
 #' 
-#' mod.linear <- confmirt(dataset, model.linear)
-#' mod.quad <- confmirt(dataset, model.quad)
-#' mod.cube <- confmirt(dataset, model.cube)
-#' mod.combo <- confmirt(dataset, model.combo)
-#'
-#' anova(mod.linear,mod.quad)
-#' anova(mod.linear,mod.cube)
-#' anova(mod.linear,mod.combo)
-#' anova(mod.cube,mod.combo)
+#' (mod.quad <- confmirt(data, model.quad))
+#' (mod.combo <- confmirt(data, model.combo))
+#' anova(mod.quad, mod.combo)
+#' 
 #' }
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startvalues = NULL, 
@@ -270,10 +256,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                      technical = list(),  ...)
 {
     if(debug == 'Main') browser()
-	Call <- match.call()           
-    ##########
-    if(any(upper < 1)) stop('Upper bound estimation is not currently available.')
-    ##########
+	Call <- match.call()               
 	set.seed(12345)	
 	itemnames <- colnames(data)
 	keywords <- c('COV')
@@ -350,7 +333,8 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                            startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                           parnumber=parnumber, debug=debug)    
+                           parnumber=parnumber, debug=debug)   
+    prodlist <- attr(pars, 'prodlist')
 	if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')
         attr(pars, 'parnumber') <- NULL
@@ -380,8 +364,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     }
     npars <- 0
     for(i in 1:length(pars))
-        npars <- npars + sum(pars[[i]]@est)			        
-	        	    
+        npars <- npars + sum(pars[[i]]@est)	        	    
  	ESTIMATE <- MHRM(pars=pars, list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
  	                                       KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=nfactNames, 
                                            itemloc=itemloc, fulldata=fulldata, nfact=nfact, 
@@ -404,7 +387,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
                fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
                null.mod=null.mod, constrain=constrain, nfact=nfact, exploratory=exploratory,
-               factorNames=factorNames, rotate=rotate, Call=Call)    
+               factorNames=factorNames, rotate=rotate, prodlist=prodlist, Call=Call)    
 	if(calcLL){
 		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()

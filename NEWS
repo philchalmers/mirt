@@ -33,6 +33,13 @@ mirt 0.3.0
 * number confmirt.model() options decreased due to the new way to specify item types, startvalues, prior
   parameter distributions, and constraints
 
+* package descriptions updated
+
+* coef() now prints slightly different output, with the new option 'allpars = TRUE' to display all
+  the item and group parameters
+
+* simdata() updated to support new item types 
+
 
 ----------------------------------------------------------------
 mirt 0.2.6-1
