@@ -171,10 +171,62 @@ setMethod(
 
 #----------------------------------------------------------------------------
 setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'dich'),
+    definition = function(x){          
+        par <- x@par
+        d <- par[1:x@nfact]
+        d        
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'graded'),
+    definition = function(x){          
+        par <- x@par
+        d <- par[-(1:x@nfact)]
+        d        
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'gpcm'),
+    definition = function(x){          
+        par <- x@par
+        d <- par[-(1:x@nfact)]
+        d        
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'nominal'),
+    definition = function(x){          
+        par <- x@par
+        d <- x@par[length(x@par):(length(x@par) - x@ncat + 1)]
+        d        
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'partcomp'),
+    definition = function(x){          
+        par <- x@par
+        d <- x@par[(nfact+1):(length(x@par)-2)]
+        d
+    }
+)
+
+#----------------------------------------------------------------------------
+setMethod(
     f = "ItemInfo",
     signature = signature(x = 'dich', A = 'matrix', Theta = 'matrix'),
     definition = function(x, A, Theta){          
         P <- ProbTrace(x, Theta)[,2]
+        nfact <- ncol(Theta)
         Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0)
         info <- A[j]^2 * P * (1-P) * Pstar/P 
         info    
@@ -188,8 +240,8 @@ setMethod(
         P <- ProbTrace(x, Theta, itemexp = FALSE)  
         info <- 0
         for(i in 1:(ncol(P)-1)){
-            w1 <- P[,i]*(1-P[,i])*A[j]
-            w2 <- P[,i+1]*(1-P[,i+1])*A[j]
+            w1 <- P[,i]*(1-P[,i])*A
+            w2 <- P[,i+1]*(1-P[,i+1])*A
             info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]            
         }    
         info

@@ -28,7 +28,6 @@ Imports:
     GPArotation,
     mvtnorm,
     Rcpp,
-    plink,
     Matrix
 Suggests:
     plink
@@ -50,7 +49,6 @@ Collate:
     'mirt.R'
     'polymirt.R'
     'simdata.R'
-    'read.mirt.R'
     '00-classes.R'
     'bfactor-methods.R'
     'confmirt-methods.R'

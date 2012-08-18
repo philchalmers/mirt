@@ -129,40 +129,13 @@ Rotate <- function(F, rotate, Target = NULL, ...)
 }  
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta, a, d, guess, upper, patdata, itemloc, ML=FALSE)
+MAP.mirt <- function(Theta, pars, patdata, itemloc, ML=FALSE)
 {	
 	itemtrace <- rep(0, ncol=length(patdata))
-	Theta <- matrix(Theta, 1)
-	for (i in 1:length(guess)){
-		if(length(d[[i]]) == 1){
-			itemtrace[itemloc[i]] <- P.mirt(a[i, ], d[[i]], Theta, guess[i], upper[i]) 
-			itemtrace[itemloc[i] + 1] <- 1.0 - itemtrace[itemloc[i]]
-		} else {
-			itemtrace[itemloc[i]:(itemloc[i+1] - 1)] <- 
-				P.poly(a[i, ], d[[i]], Theta, TRUE)	
-		}
-	}		
-	L <- sum(log(itemtrace)[as.logical(patdata)])
-	mu <- 0
-	sigma <- 1
-    L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
-	L  
-}  
-
-# MAP scoring for bfactor
-MAP.bfactor <- function(Theta, a, d, guess, upper, patdata, logicalfact, itemloc, ML=FALSE)
-{	
-	itemtrace <- rep(0, ncol=length(patdata))
-	Theta <- matrix(Theta, 1)
-	for (i in 1:length(guess)){
-		if(length(d[[i]]) == 1){
-			itemtrace[itemloc[i]] <- P.mirt(a[i, logicalfact[i, ]], d[[i]], Theta, guess[i], upper[i]) 
-			itemtrace[itemloc[i] + 1] <- 1.0 - itemtrace[itemloc[i]]
-		} else {
-			itemtrace[itemloc[i]:(itemloc[i+1] - 1)] <- 
-				P.poly(a[i, logicalfact[i, ]], d[[i]], Theta, TRUE)	
-		}
-	}		
+	Theta <- matrix(Theta, 1)    
+	itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))        
+	for (i in 1:(length(pars)))
+	    itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)		
 	L <- sum(log(itemtrace)[as.logical(patdata)])
 	mu <- 0
 	sigma <- 1

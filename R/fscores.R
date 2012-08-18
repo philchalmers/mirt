@@ -70,13 +70,11 @@ setMethod(
 	f = "fscores",
 	signature = 'mirtClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", verbose = TRUE)
-	{           
+	{          
+        pars <- object@pars
 		K <- object@K				
         so <- summary(object, rotate = rotate, print = FALSE)
-        a <- rotateLambdas(so)
-		d <- object@pars$zetas		
-		g <- object@guess				
-		u <- object@upper
+        a <- rotateLambdas(so)		
 		itemloc <- object@itemloc
 		J <- nrow(a)
 		nfact <- ncol(a)
@@ -88,16 +86,9 @@ setMethod(
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			
 		W <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
 		W <- W/sum(W)
-		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
-		for (i in 1:J){
-			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i] + 1] <- P.mirt(a[i, ], d[[i]], Theta, g[i], u[i]) 
-				itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
-			} else {
-				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-					P.poly(a[i, ], d[[i]], Theta, TRUE)	
-			}
-		}	        
+		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        
+        for (i in 1:J)
+            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)                    
 		for (i in 1:nrow(tabdata)){				
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
 			thetas <- colSums(Theta * exp(L) * W / sum(exp(L) * W))
@@ -108,7 +99,7 @@ setMethod(
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,tmp,a=a,d=d,guess=g,upper=u,patdata=tabdata[i, ],
+				thetas <- nlm(MAP.mirt,tmp,pars=pars,patdata=tabdata[i, ],
                               itemloc=itemloc)$estimate 
 				scores[i, ] <- thetas
 			}  
@@ -121,9 +112,10 @@ setMethod(
 			for (i in 1:nrow(scores)){
 				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
 				Theta <- scores[i, ]	  
-				thetas <- nlm(MAP.mirt,Theta,a=a,d=d,guess=g,upper=u,patdata=tabdata[i, ],
+				thetas <- nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
                               itemloc=itemloc, ML=TRUE)$estimate 
 				scores[i, ] <- thetas
+                SEscores[scores == Inf, ] <- SEscores[scores == -Inf, ] <- NA
 			}  
 		}
 		colnames(scores) <- colnames(object@F)
@@ -153,13 +145,10 @@ setMethod(
 	signature = 'bfactorClass',
 	definition = function(object, full.scores = FALSE, method = "EAP", verbose = TRUE)
 	{  
-		K <- object@K		
-		a <- object@pars$lambdas		
-		d <- object@pars$zetas		
-		g <- object@guess				
-		u <- object@upper
+        pars <- object@pars
+		K <- object@K				
 		itemloc <- object@itemloc
-		J <- nrow(a)
+		J <- length(K)
 		nfact <- 2
 		theta <- as.matrix(seq(-4,4,length.out = 15))
 		Theta <- thetaComb(theta,nfact)
@@ -171,17 +160,9 @@ setMethod(
 		logicalfact <- object@logicalfact
 		W <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
 		W <- W/sum(W)
-		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))
-		for (i in 1:J){
-			if(length(d[[i]]) == 1){
-				itemtrace[ ,itemloc[i] + 1] <- P.bfactor(a[i, ], d[[i]], Theta, g[i], u[i], 
-                                                         logicalfact[i, ]) 
-				itemtrace[ ,itemloc[i]] <- 1.0 - itemtrace[ ,itemloc[i] + 1]
-			} else {
-				itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-					P.bfactor(a[i, ], d[[i]], Theta, 0, 1, logicalfact[i, ])	
-			}
-		}		        
+		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        
+		for (i in 1:J)
+		    itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)	        
 		for (i in 1:nrow(tabdata)){							
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])				
 			thetas <- sum(Theta[ ,1] * exp(L) * W / sum(exp(L) * W))
@@ -189,10 +170,10 @@ setMethod(
 			scores[i] <- thetas
 			SEscores[i] <- SE
 		}
-		if(method == "MAP"){ 
+		if(method == "MAP"){ #Fix
 			for (i in 1:length(scores)) {       
 				Theta <- scores[i]	  
-				thetas <- nlm(MAP.bfactor,Theta,a=a,d=d,guess=g,upper=u,
+				thetas <- nlm(MAP.mirt,Theta,pars=pars,
 					patdata=tabdata[i, ],logicalfact=logicalfact,itemloc=itemloc)$estimate 
 				scores[i] <- thetas
 			}  
@@ -233,81 +214,6 @@ setMethod(
 			return(cbind(object@tabdata,scores))			
 		}   
 	}  
-)
-
-#------------------------------------------------------------------------------
-#' @rdname fscores-methods  
-setMethod(
-	f = "fscores",
-	signature = 'polymirtClass',
-	definition = function(object, rotate = '', full.scores = FALSE, ndraws = 3000, thin = 5)
-	{ 	        
-		cand.t.var <- 1
-		theta0 <- object@Theta
-		K <- object@K				
-		so <- summary(object, rotate = rotate, print = FALSE)
-		lambdas <- rotateLambdas(so)        
-        nfact <- ncol(lambdas)
-		zetas <- object@pars$zetas
-		guess <- object@guess	   
-		guess[is.na(guess)] <- 0
-	    upper <- object@upper       
-	    upper[is.na(upper)] <- 1
-		data <- cbind(object@data,object@fulldata)
-		Names <- c(colnames(object@data[,1:length(K)]),colnames(object@F),
-			paste("SE_F",1:nfact,sep=''))
-		tabdata <- unique(data)[ ,-c(1:length(K))]			
-		itemloc <- object@itemloc            		
-		Theta <- list()
-		for(i in 1:nfact)
-			Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))		
-		theta0 <- matrix(0,nrow(tabdata),nfact)        
-		for(i in 1:30){			
-			theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
-			                      upper=upper, fulldata=tabdata, K=K, itemloc=itemloc, 
-			                      cand.t.var=cand.t.var)
-			if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
-			if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
-		}
-		ind <- 1
-		for(i in 1:ndraws){			
-		    theta0 <- draw.thetas(theta0=theta0, lambdas=lambdas, zetas=zetas, guess=guess, 
-		                upper=upper, fulldata=tabdata, K=K, itemloc=itemloc, 
-		                cand.t.var=cand.t.var)			
-			if(i %% thin == 0){
-				for(j in 1:nfact)
-					Theta[[j]][,ind] <- theta0[,j]									
-				ind <- ind + 1
-			}			
-		}
-
-		expscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		sdscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		for(i in 1:nfact){
-			expscores[,i] <- rowMeans(Theta[[i]])
-			sdscores[,i] <- apply(Theta[[i]],1,sd)
-		}        
-			
-		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
-		colnames(ret) <- Names
-		
-		if(!full.scores){ 
-			ret <- ret[order(expscores[,1]),]
-			rownames(ret) <- NULL
-			return(ret)
-		} else {
-			fulldata <- object@data
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=nfact)
-			colnames(scoremat) <- paste("F",1:nfact,sep='')
-			tmp <- unique(data)[,1:length(K)]
-			for (j in 1:nrow(tabdata)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata) 
-                tmp2 <- matrix(rep(expscores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
-				scoremat[TFvec, ] <- tmp2
-			}              
-			return(cbind(object@data,scoremat))
-		}	
-	}	
 )
 
 #------------------------------------------------------------------------------

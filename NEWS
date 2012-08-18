@@ -33,6 +33,9 @@ mirt 0.3.0
 * number confmirt.model() options decreased due to the new way to specify item types, startvalues, prior
   parameter distributions, and constraints
 
+* plink package has not kept up with item information curves, so I'll implement my own for now.
+  Replaced plink item plots from 'itemplots' function with ones that I rolled
+
 * package descriptions updated
 
 * coef() now prints slightly different output, with the new option 'allpars = TRUE' to display all

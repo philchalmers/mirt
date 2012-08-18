@@ -69,6 +69,8 @@ setGeneric('LogLik', function(x, Theta) standardGeneric("LogLik"))
 
 setGeneric('ExtractLambdas', function(x) standardGeneric("ExtractLambdas"))
 
+setGeneric('ExtractZetas', function(x) standardGeneric("ExtractZetas"))
+
 setGeneric('Deriv', function(x, Theta) standardGeneric("Deriv"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))         
