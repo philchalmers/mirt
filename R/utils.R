@@ -270,7 +270,7 @@ test_info <- function(pars, Theta, Alist, K){
         A <- Alist[[cut]]
         info <- rep(0,nrow(Theta))
         for(j in 1:length(K)){
-            info <- info + ItemInfo(pars[[j]], A, Theta)
+            info <- info + ItemInfo(pars[[j]], A[j,], Theta)
         }
         infolist[[cut]] <- info
     }    

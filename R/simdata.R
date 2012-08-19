@@ -1,5 +1,4 @@
-#' Simulate response patterns from an underlying multivariate normal
-#' distribution
+#' Simulate response patterns 
 #' 
 #' Simulates response patterns for compensetory and noncompensatory MIRT models
 #' from multivariate normally distributed factor (\eqn{\theta}) scores, or from

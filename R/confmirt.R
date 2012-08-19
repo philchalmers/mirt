@@ -1,9 +1,9 @@
-#' Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats
+#' Confirmatory Full-Information Item Factor Analysis
 #' 
 #' \code{confmirt} fits a conditional (i.e., confirmatory) full-information
 #' maximum-likelihood factor analysis model to dichotomous and polychotomous
 #' data under the item response theory paradigm using Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm.Fits univariate and multivariate Rasch, 
+#' Metropolis-Hastings Robbins-Monro algorithm. Fits univariate and multivariate Rasch, 
 #' 1-4PL, graded, (generalized) partial credit, nominal, and partially-compensatory models, 
 #' potentially with polynomial and product constructed latent traits.
 #'  
@@ -65,7 +65,7 @@
 #' @param calcLL logical; calculate the log-likelihood via Monte Carlo
 #' integration?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
-#' @param allpars logical; print all the item paramters instead of just the slopes?
+#' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern

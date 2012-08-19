@@ -14,7 +14,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         for(i in 1:length(constrain))
             constr <- c(constr, constrain[[i]])
     constr <- unique(constr)
-    if(is.null(startvalues) || startvalues =='index') {        
+    if(is.null(startvalues) || startvalues =='index'){        
         startvalues <- list()
         for(i in 1:J){
             if(itemtype[i] == 'NullModel' && K[i] == 2) val <- c(0,zetas[[i]],0,1)                                
@@ -94,16 +94,32 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     for(i in 1:J){
         tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location 
         if(itemtype[i] == 'NullModel' && K[i] == 2){ 
-            pars[[i]] <- new('dich', par=startvalues[[i]], nfact=1, bfactor=BFACTOR,
-                             dat=fulldata[ ,tmp], est=freepars[[i]], constr=FALSE)
+            pars[[i]] <- new('dich', 
+                             par=startvalues[[i]], nfact=1, 
+                             bfactor=BFACTOR,
+                             dat=fulldata[ ,tmp], 
+                             est=freepars[[i]], 
+                             constr=FALSE,
+                             lbound=-25,
+                             ubound=25,
+                             method='Brent')
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])            
         }
         
         if(itemtype[i] == 'NullModel' && K[i] > 2){ 
-            pars[[i]] <- new('graded', par=startvalues[[i]], nfact=1, ncat=K[i], bfactor=BFACTOR,
-                             dat=fulldata[ ,tmp], est=freepars[[i]], constr=FALSE)
+            pars[[i]] <- new('graded', 
+                             par=startvalues[[i]], 
+                             nfact=1, 
+                             ncat=K[i], 
+                             bfactor=BFACTOR,
+                             dat=fulldata[ ,tmp], 
+                             est=freepars[[i]], 
+                             constr=FALSE,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead')
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
@@ -111,7 +127,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         
         if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){ 
             pars[[i]] <- new('dich', par=startvalues[[i]], est=freepars[[i]],
-                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
+                             nfact=nfactNames, 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead')            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
@@ -119,8 +141,17 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
 
         if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] > 2){ 
-            pars[[i]] <- new('gpcm', par=startvalues[[i]], nfact=nfactNames, ncat=K[i],
-                             est=freepars[[i]], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                        
+            pars[[i]] <- new('gpcm', 
+                             par=startvalues[[i]], 
+                             nfact=nfactNames, 
+                             ncat=K[i],
+                             est=freepars[[i]], 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead')                        
             pars[[i]]@par[nfact+1] <- 0            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
@@ -129,8 +160,22 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){ 
-            pars[[i]] <- new('dich', par=startvalues[[i]], est=freepars[[i]],
-                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
+            pars[[i]] <- new('dich', 
+                             par=startvalues[[i]], 
+                             est=freepars[[i]],
+                             nfact=nfactNames, 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,                                           
+                             ubound=Inf,
+                             method=ifelse(itemtype[i] == '2PL', 'Nelder-Mead', 'L-BFGS-B'))            
+            if(itemtype[i] != '2PL'){       
+                tmp2 <- c(rep(-Inf, length(startvalues[[i]]) - 2),0,0)
+                tmp3 <- c(rep(Inf, length(startvalues[[i]]) - 2),1,1)
+                pars[[i]]@lbound <- tmp2[freepars[[i]]]
+                pars[[i]]@ubound <- tmp3[freepars[[i]]]
+            }
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
@@ -138,8 +183,17 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         
         if(itemtype[i] == 'graded'){
-            pars[[i]] <- new('graded', par=startvalues[[i]], nfact=nfactNames, ncat=K[i],
-                             est=freepars[[i]], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                        
+            pars[[i]] <- new('graded', 
+                             par=startvalues[[i]], 
+                             nfact=nfactNames, 
+                             ncat=K[i],
+                             est=freepars[[i]], 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead')                        
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
@@ -147,8 +201,17 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         
         if(itemtype[i] == 'gpcm'){            
-            pars[[i]] <- new('gpcm', par=startvalues[[i]], nfact=nfactNames, ncat=K[i],
-                             est=freepars[[i]], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)                        
+            pars[[i]] <- new('gpcm', 
+                             par=startvalues[[i]], 
+                             nfact=nfactNames, 
+                             ncat=K[i],
+                             est=freepars[[i]], 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead')                        
             pars[[i]]@par[nfact+1] <- 0            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
@@ -157,8 +220,17 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }        
         
         if(itemtype[i] == 'nominal'){
-            pars[[i]] <- new('nominal', par=startvalues[[i]], est=freepars[[i]], 
-                             nfact=nfactNames, ncat=K[i], dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
+            pars[[i]] <- new('nominal', 
+                             par=startvalues[[i]], 
+                             est=freepars[[i]], 
+                             nfact=nfactNames, 
+                             ncat=K[i], 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead')            
             pars[[i]]@par[c(nfact + 1, nfact + K[i] + 1)] <- 0
             pars[[i]]@par[nfact + K[i]] <- K[i] - 1            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
@@ -168,15 +240,29 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } 
         
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            pars[[i]] <- new('partcomp', par=startvalues[[i]], est=freepars[[i]],
-                             nfact=nfactNames, dat=fulldata[ ,tmp], constr=FALSE, bfactor=BFACTOR)            
+            pars[[i]] <- new('partcomp', 
+                             par=startvalues[[i]], 
+                             est=freepars[[i]],
+                             nfact=nfactNames, 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method=ifelse(itemtype[i] == 'PC2PL', 'Nelder-Mead', 'L-BFGS-B'))
+            if(itemtype[i] != 'PC2PL'){       
+                tmp2 <- c(rep(-Inf, length(startvalues[[i]]) - 2),0,0)
+                tmp3 <- c(rep(Inf, length(startvalues[[i]]) - 2),1,1)
+                pars[[i]]@lbound <- tmp2[freepars[[i]]]
+                pars[[i]]@ubound <- tmp3[freepars[[i]]]
+            }
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
     }
-    for(i in 1:J) names(pars[[i]]@parnum) <- names(startvalues[[i]])    
+    for(i in 1:J) names(pars[[i]]@parnum) <- names(startvalues[[i]])
     attr(pars, 'uniqueconstr') <- constr     
     attr(pars, 'parnumber') <- attr(startvalues, 'parnumber') <- attr(freepars, 'parnumber') <- 
         parnumber - length(freepars[[length(pars)]])

@@ -72,7 +72,7 @@
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
 #' input then the default from the object is ignored and the new rotation from the list 
 #' is used instead
-#' @param allpars logical; print all the item paramters instead of just the slopes?
+#' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param Target a dummy variable matrix indicing a target rotation pattern
 #' @param constrain a list of user declared equallity constraints. To see how to define the
 #' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
@@ -226,7 +226,7 @@
 #' coef(pmod2)
 #' residuals(pmod2)
 #' plot(pmod2)
-#' itemplot(pmod2)
+#' itemplot(pmod2, 1)
 #' anova(pmod1, pmod2)
 #'
 #' ###########
@@ -240,7 +240,7 @@
 #' anova(mod1,mod2)
 #' anova(mod2, mod3) #negative AIC, 2 factors probably best
 #' 
-#' #with guessing
+#' #with fixed guessing parameters
 #' mod1g <- mirt(data, 1, guess = .1)
 #' coef(mod1g)
 #' mod2g <- mirt(data, 2, guess = .1)
@@ -261,10 +261,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
 	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
-    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)
-    LOWER <- c(-Inf, -20)
-    UPPER <- c(Inf, 20)	
-    METHOD <- c('Nelder-Mead', 'Brent')
+    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        
 	NULL.MODEL <- ifelse(nfact == 0, TRUE, FALSE)    
     ##              
     Target <- ifelse(is.null(Target), NaN, Target)    
@@ -409,7 +406,8 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	    listpars[[i]] <- pars[[i]]@par
 	lastpars2 <- lastpars1 <- listpars    
 	converge <- 1  	
-	index <- 1:J     	   
+	index <- 1:J   
+    if(debug == 'PreEM') browser()
     #EM cycles
 	for (cycles in 1:NCYCLES){       
     	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, debug=debug)
@@ -429,9 +427,9 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
             estpar <- pars[[i]]@par[pars[[i]]@est]
     		maxim <- try(optim(estpar, fn=Mstep.mirt, obj=pars[[i]], 
                                Theta=Theta, prior=prior, debug=debug,
-                               method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
-                               lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
-                               upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
+                               method=pars[[i]]@method,
+                               lower=pars[[i]]@lbound, 
+                               upper=pars[[i]]@ubound,
                                control=list(maxit=MSTEPMAXIT)))
     		if(class(maxim) == "try-error"){    			
     			converge <- 0

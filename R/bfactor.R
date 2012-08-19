@@ -71,7 +71,7 @@
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
 #' @param SE logical; estimate parameter standard errors?
-#' @param allpars logical; print all the item paramters instead of just the slopes?
+#' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param constrain a list of user declared equallity constraints. To see how to define the
 #' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with seperate concatenated vectors signifying which
@@ -382,7 +382,8 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 			sitems[ind, ] <- temp[i, ]
 			ind <- ind + 1
 		}		
-	}			
+	}	
+    if(debug == 'PreEM') browser()
 	#EM  loop  
 	for (cycles in 1:NCYCLES) 
 	{    
@@ -403,9 +404,9 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		    estpar <- pars[[i]]@par[pars[[i]]@est]
 		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=pars[[i]], 
 		                       Theta=Theta, prior=prior, debug=debug,
-		                       method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
-		                       lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
-		                       upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
+		                       method=pars[[i]]@method,
+		                       lower=pars[[i]]@lbound, 
+		                       upper=pars[[i]]@ubound,
 		                       control=list(maxit=MSTEPMAXIT)))
 			if(class(maxim) == "try-error") {				
 				converge <- 0

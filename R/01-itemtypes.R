@@ -7,7 +7,9 @@ setClass("GroupPars",
                         parnum='numeric',
                         nfact='numeric',
                         gradient='numeric',
-                        hessian='matrix')
+                        hessian='matrix',
+                        n.prior='numeric',
+                        b.prior='numeric')
 )
 
 setClass("AllItemsClass",
@@ -22,42 +24,28 @@ setClass("AllItemsClass",
                         bfactor='logical',
                         gradient='numeric',
                         hessian='matrix',
+                        method='character',
                         lbound='numeric',
                         ubound='numeric',
+                        n.prior='numeric',
+                        b.prior='numeric',
                         'VIRTUAL')
 )
 
 setClass("NullModel", contains = 'AllItemsClass')
 
-setClass("dich", contains = 'AllItemsClass',
-         representation(a.prior='numeric', 
-                        d.prior='numeric',
-                        g.prior='numeric',
-                        u.prior='numeric')
-)
+setClass("dich", contains = 'AllItemsClass')
 
 setClass("graded", contains = 'AllItemsClass',
-         representation(ncat='numeric',
-                        a.prior='numeric', 
-                        d.prior='numeric')
-)
+         representation(ncat='numeric'))
 
 setClass("gpcm", contains = 'AllItemsClass',
-         representation(ncat='numeric',
-                        a.prior='numeric', 
-                        d.prior='numeric')
-)
+         representation(ncat='numeric'))
 
 setClass("nominal", contains = 'AllItemsClass',
-         representation(ncat='numeric',
-                        a.prior='numeric', 
-                        d.prior='numeric')
-)
+         representation(ncat='numeric'))
 
-setClass("partcomp", contains = 'AllItemsClass',
-         representation(a.prior='numeric', 
-                        d.prior='numeric')
-)
+setClass("partcomp", contains = 'AllItemsClass')
 
 #--------------------------------------------------------------------------
 

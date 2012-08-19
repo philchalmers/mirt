@@ -247,7 +247,7 @@ setMethod(
         theta <- if(length(theta_angle) == 1) seq(-4,4,length.out=npts) 
             else seq(-4,4,length.out=9)
         Theta <- thetaComb(theta, nfact)        
-        info <- test_info(pars=object@pars, Theta=Theta, Alist=A, K=K)         
+        info <- test_info(pars=x@pars, Theta=Theta, Alist=A, K=K)         
         plt <- data.frame(cbind(info,Theta))
         if(nfact == 2){						
             colnames(plt) <- c("info", "Theta1", "Theta2")			

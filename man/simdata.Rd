@@ -1,7 +1,6 @@
 \name{simdata}
 \alias{simdata}
-\title{Simulate response patterns from an underlying multivariate normal
-distribution}
+\title{Simulate response patterns}
 \usage{
   simdata(a, d, N, itemtype, sigma = NULL, mu = NULL,
     guess = 0, upper = 1, nominal = NULL, Theta = NULL)

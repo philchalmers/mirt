@@ -2,8 +2,8 @@
 \name{itemplot}
 \alias{itemplot}
 \alias{itemplot,bfactorClass-method}
-\alias{itemplot-method}
 \alias{itemplot,mirtClass-method}
+\alias{itemplot-method}
 \title{Displays item surface and information plots}
 \arguments{
   \item{object}{a computed model of class
@@ -26,7 +26,7 @@ data(LSAT7)
 fulldata <- expand.table(LSAT7)
 mod1 <- mirt(fulldata,1)
 
-itemplot(mod1)
+itemplot(mod1, 2)
     }
 }
 \author{

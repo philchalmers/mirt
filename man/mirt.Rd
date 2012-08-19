@@ -79,7 +79,7 @@ Theory)}
   object is ignored and the new rotation from the list is
   used instead}
 
-  \item{allpars}{logical; print all the item paramters
+  \item{allpars}{logical; print all the item parameters
   instead of just the slopes?}
 
   \item{Target}{a dummy variable matrix indicing a target
@@ -292,7 +292,7 @@ pmod2 <- mirt(Science, 2)
 coef(pmod2)
 residuals(pmod2)
 plot(pmod2)
-itemplot(pmod2)
+itemplot(pmod2, 1)
 anova(pmod1, pmod2)
 
 ###########
@@ -306,7 +306,7 @@ mod3 <- mirt(data, 3)
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 
-#with guessing
+#with fixed guessing parameters
 mod1g <- mirt(data, 1, guess = .1)
 coef(mod1g)
 mod2g <- mirt(data, 2, guess = .1)

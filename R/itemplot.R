@@ -4,11 +4,11 @@
 #' 
 #'
 #' @usage 
-#' itemplot(object, ...)
+#' itemplot(object, item, ...)
 #' 
-#' \S4method{itemplot}{mirtClass}(object, type = 'trace', ...)
+#' \S4method{itemplot}{mirtClass}(object, item, type = 'trace', ...)
 #'
-#' \S4method{itemplot}{bfactorClass}(object, type = 'trace' , ...) 
+#' \S4method{itemplot}{bfactorClass}(object, item, type = 'trace' , ...) 
 #'
 #' @aliases itemplot-method itemplot,mirtClass-method 
 #' itemplot,bfactorClass-method
@@ -32,11 +32,11 @@
 #' fulldata <- expand.table(LSAT7)
 #' mod1 <- mirt(fulldata,1)
 #' 
-#' itemplot(mod1)
+#' itemplot(mod1, 2)
 #'     }
 #' 
 setGeneric("itemplot", 
-           def = function(object, ...) standardGeneric("itemplot")
+           def = function(object, item, ...) standardGeneric("itemplot")
 )
 
 #------------------------------------------------------------------------------
@@ -53,8 +53,8 @@ setGeneric("itemplot",
 # @keywords methods
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'mirtClass'),
-	definition = function(object, item = 1, type = 'trace', ...)
+	signature = signature(object = 'mirtClass', item = 'numeric'),
+	definition = function(object, item, type = 'trace', ...)
 	{  			
 		x <- itemplot.main(object, item, type, ...)		        
 		return(x)
@@ -65,16 +65,15 @@ setMethod(
 # @rdname itemplot-methods  
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'bfactorClass'),
-	definition = function(object, item = 1, type = 'trace', ...)
+	signature = signature(object = 'bfactorClass', item = 'numeric'),
+	definition = function(object, item, type = 'trace', ...)
 	{
 	    x <- itemplot.main(object, item, type, ...)    	
 	    return(x)
 	}
 )
 
-itemplot.main <- function(x, item, type, ...){
-    browser()
+itemplot.main <- function(x, item, type, ...){    
     nfact <- ncol(x@F)
     if(nfact > 2) stop('Can not plot high dimensional models')
     Theta <- x@Theta    
@@ -82,14 +81,14 @@ itemplot.main <- function(x, item, type, ...){
     a <- ExtractLambdas(x@pars[[item]])
     if(x@pars[[item]]@bfactor) a <- a[x@pars[[item]]@est[1:nfact]]
     A <- sqrt(sum(a^2))
-    info <- ItemInfo(x=x@pars[[item]], as.matrix(A), Theta=Theta)
+    info <- ItemInfo(x=x@pars[[item]], A, Theta=Theta)
     if(nfact == 1){
         if(type == 'trace'){
             P <- ProbTrace(x=x@pars[[item]], Theta=Theta)
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
-                 ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1))
+                 ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1), ...)
             for(i in 2:ncol(P))
-                lines(Theta, P[,i], col = i)        
+                lines(Theta, P[,i], col = i)                 
         }
         if(type == 'info'){            
             plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
@@ -106,7 +105,7 @@ itemplot.main <- function(x, item, type, ...){
         if(type == 'infocontour')												
             return(contourplot(info ~ Theta1 * Theta2, data = plt, 
                                main = paste("Item", item, "Information Contour"), xlab = expression(theta[1]), 
-                               ylab = expression(theta[2])))
+                               ylab = expression(theta[2])), ...)
         if(type == 'info')
             return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item ", item, "Information"), 
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 

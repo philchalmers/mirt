@@ -67,7 +67,7 @@
 
   \item{SE}{logical; estimate parameter standard errors?}
 
-  \item{allpars}{logical; print all the item paramters
+  \item{allpars}{logical; print all the item parameters
   instead of just the slopes?}
 
   \item{constrain}{a list of user declared equallity

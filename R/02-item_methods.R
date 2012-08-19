@@ -223,19 +223,19 @@ setMethod(
 #----------------------------------------------------------------------------
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'dich', A = 'matrix', Theta = 'matrix'),
+    signature = signature(x = 'dich', A = 'numeric', Theta = 'matrix'),
     definition = function(x, A, Theta){          
         P <- ProbTrace(x, Theta)[,2]
         nfact <- ncol(Theta)
-        Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0)
-        info <- A[j]^2 * P * (1-P) * Pstar/P 
+        Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0, 1)
+        info <- A^2 * P * (1-P) * Pstar/P 
         info    
     }
 )
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'graded', A = 'matrix', Theta = 'matrix'),
+    signature = signature(x = 'graded', A = 'numeric', Theta = 'matrix'),
     definition = function(x, A, Theta){          
         P <- ProbTrace(x, Theta, itemexp = FALSE)  
         info <- 0
@@ -245,6 +245,30 @@ setMethod(
             info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]            
         }    
         info
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'gpcm', A = 'matrix', Theta = 'matrix'),
+    definition = function(x, A, Theta){          
+        stop('Information functions not yet written for ', class(x))
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'nominal', A = 'matrix', Theta = 'matrix'),
+    definition = function(x, A, Theta){          
+        stop('Information functions not yet written for ', class(x))
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'partcomp', A = 'matrix', Theta = 'matrix'),
+    definition = function(x, A, Theta){          
+        stop('Information functions not yet written for ', class(x))
     }
 )
 

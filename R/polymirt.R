@@ -13,8 +13,8 @@
 #' \code{\link{itemplot}}
 polymirt <- function(...){         
     ret <- confmirt(...)    
-    message('NOTE: polymirt() is now obsolete and will be removed completely in version 0.3.0,  
-         use confmirt(data, nfact) for exploratory models instead.')    
+    message('NOTE: polymirt() is now obsolete and will be removed completely sometime after version 0.3.0.  
+         Use confmirt(data, nfact) for exploratory models instead.')    
     ret    
 }
 

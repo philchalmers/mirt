@@ -5,7 +5,7 @@
 \alias{fitted,confmirt-method}
 \alias{residuals,confmirt-method}
 \alias{summary,confmirt-method}
-\title{Confirmatory Full-Information Item Factor Analysis for Mixed Data Formats}
+\title{Confirmatory Full-Information Item Factor Analysis}
 \usage{
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
     1, startvalues = NULL, constrain = NULL, freepars =
@@ -60,7 +60,7 @@
   \item{draws}{the number of Monte Carlo draws to estimate
   the log-likelihood}
 
-  \item{allpars}{logical; print all the item paramters
+  \item{allpars}{logical; print all the item parameters
   instead of just the slopes?}
 
   \item{restype}{type of residuals to be displayed. Can be
@@ -166,7 +166,7 @@
   full-information maximum-likelihood factor analysis model
   to dichotomous and polychotomous data under the item
   response theory paradigm using Cai's (2010)
-  Metropolis-Hastings Robbins-Monro algorithm.Fits
+  Metropolis-Hastings Robbins-Monro algorithm. Fits
   univariate and multivariate Rasch, 1-4PL, graded,
   (generalized) partial credit, nominal, and
   partially-compensatory models, potentially with
