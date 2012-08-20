@@ -691,16 +691,16 @@ setMethod(
 )
 
 setMethod(
-    f = "gpcm",
-    signature = signature(x = 'GroupPars', Theta = 'matrix'),
+    f = "Deriv",
+    signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta){
         stop('Derivatives have not be written for generalized partial credit models yet')
     }
 )
 
 setMethod(
-    f = "nominal",
-    signature = signature(x = 'GroupPars', Theta = 'matrix'),
+    f = "Deriv",
+    signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta){
         stop('Derivatives have not be written for nominal models yet')
     }
