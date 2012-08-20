@@ -18,12 +18,12 @@
 #' partial credit, nominal, and partially compensatory models. Note that 
 #' for the gpcm and nominal model there should be as many parameters as desired categories,
 #' however to parameterized them for meaningful interpretation the first category intercept should 
-#' equal 0 for both models, and the final category should equal the number of categories minus one
-#' for the nominal model
+#' equal 0 for both models
 #' @param nominal a matrix of specific item category slopes for nominal models.
 #' Should be the dimensions as the intecept specification with one less column, with \code{NA}
 #' in locations where not applicable. Note that during estimation the first slope will be constrained
-#' to 1, so it is best to set this as the value for the first category as well
+#' to 0 and the last will be constrained to the number of categories minus 1, 
+#' so it is best to set these as the values for the first and last categories as well
 #' @param N sample size
 #' @param guess a vector of guessing parameters for each item; only applicable
 #' for dichotomous items. Must be either a scalar value that will affect all of

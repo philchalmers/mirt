@@ -102,13 +102,18 @@ MHRM <- function(pars, list, debug)
                 Tau <- Tau/SEMCYCLES	
                 k <- KDRAWS	
                 gamma <- .25
-            }
-            
+            }            
             ind1 <- 1
             for(i in 1:length(pars)){
                 ind2 <- ind1 + length(pars[[i]]@par) - 1
                 pars[[i]]@par <- longpars[ind1:ind2]
-                ind1 <- ind2 + 1            
+                ind1 <- ind2 + 1       
+                if(any(class(pars[[i]]) == c('dich', 'partcomp'))){
+                    if(pars[[i]]@par[length(pars[[i]]@par)] > 1) 
+                        pars[[i]]@par[length(pars[[i]]@par)] <- 1
+                    if(pars[[i]]@par[length(pars[[i]]@par)-1] < 0) 
+                        pars[[i]]@par[length(pars[[i]]@par)-1] <- 0
+                }
             }        
             structgrouppars <- ExtractGroupPars(pars[[length(pars)]])
             
@@ -155,21 +160,7 @@ MHRM <- function(pars, list, debug)
                 ave.h <- ave.h + h.m[[i]]
             } 		
             grad <- ave.g/k
-            ave.h <- (-1)*ave.h/k
-    #         if(length(IND$parpriors) > 0){
-    #             for(i in 1:length(IND$parpriors)){
-    #                 tmp <- IND$parpriors[[i]]
-    #                 if(tmp[1] == 1){
-    #                     grad[tmp[2]] <- grad[tmp[2]] - (pars[tmp[2]] - tmp[3])/ tmp[4]^2
-    #                     ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] +  1/tmp[4]^2
-    #                 }				
-    #                 else if(tmp[1] == 2){		
-    #                     tmp2 <- betaprior(tmp[3],tmp[4],pars[tmp[2]])					
-    #                     grad[tmp[2]] <- grad[tmp[2]] + tmp2$g
-    #                     ave.h[tmp[2],tmp[2]] <- ave.h[tmp[2],tmp[2]] + tmp2$h
-    #                 }				
-    #             }
-    #         }	                
+            ave.h <- (-1)*ave.h/k   
             grad <- grad[1, estpars & !redun_constr]		
             ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr] 
             if(is.na(attr(theta0,"log.lik"))) stop('Estimation halted. Model did not converge.')		
@@ -245,8 +236,20 @@ MHRM <- function(pars, list, debug)
             }
             phi <- phi + gamma*(grad - phi)
             info <- info + gamma*(Tau - phi %*% t(phi) - info)		
-        } ###END BIG LOOP      
+        } ###END BIG LOOP   
         
+        ind1 <- 1 #reload final pars
+        for(i in 1:length(pars)){
+            ind2 <- ind1 + length(pars[[i]]@par) - 1
+            pars[[i]]@par <- longpars[ind1:ind2]
+            ind1 <- ind2 + 1       
+            if(any(class(pars[[i]]) == c('dich', 'partcomp'))){
+                if(pars[[i]]@par[length(pars[[i]]@par)] > 1) 
+                    pars[[i]]@par[length(pars[[i]]@par)] <- 1
+                if(pars[[i]]@par[length(pars[[i]]@par)-1] < 0) 
+                    pars[[i]]@par[length(pars[[i]]@par)-1] <- 0
+            }
+        }         
         SEtmp <- diag(solve(info))    	
         if(any(SEtmp < 0)){
             warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")

@@ -24,16 +24,16 @@
   should be as many parameters as desired categories,
   however to parameterized them for meaningful
   interpretation the first category intercept should equal
-  0 for both models, and the final category should equal
-  the number of categories minus one for the nominal model}
+  0 for both models}
 
   \item{nominal}{a matrix of specific item category slopes
   for nominal models. Should be the dimensions as the
   intecept specification with one less column, with
   \code{NA} in locations where not applicable. Note that
   during estimation the first slope will be constrained to
-  1, so it is best to set this as the value for the first
-  category as well}
+  0 and the last will be constrained to the number of
+  categories minus 1, so it is best to set these as the
+  values for the first and last categories as well}
 
   \item{N}{sample size}
 

@@ -36,16 +36,16 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 1:(K[i]-1), sep=''))    
             }
             if(itemtype[i] == 'gpcm'){
-                val <- c(lambdas[i,], zetas[[i]])
+                val <- c(lambdas[i,], 0, zetas[[i]])
                 names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 0:(K[i]-1), sep=''))                
             }
             if(itemtype[i] == 'nominal'){
-                val <- c(rep(.5, nfactNames), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
+                val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
                 names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
                                 paste('d', 0:(K[i]-1), sep=''))                
             }
             if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-                val <- c(rep(.5, nfact), rep(-1, nfact), 0, 1)
+                val <- c(lambdas[i,], rep(-1, nfact), 0, 1)
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
             }
             startvalues[[i]] <- val
@@ -75,9 +75,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'gpcm')            
                 freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))            
             if(itemtype[i] == 'nominal'){
-                estpars <- c(estLambdas[i, ], rep(TRUE, length(pars[[i]]@par) - nfact))
+                estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
                 #identifiction constraints
-                estpars[c(nfact+1, nfact+ K[i], nfact + K[i] + 1)] <- FALSE
+                estpars[c(nfact+1, nfact + K[i], nfact + K[i] + 1)] <- FALSE
                 freepars[[i]] <- estpars
             }
             if(any(itemtype[i] == c('PC2PL','PC3PL'))){
@@ -140,9 +140,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE, 
                              bfactor=BFACTOR,
-                             lbound=-Inf,
-                             ubound=Inf,
-                             method='Nelder-Mead',
+                             lbound=ifelse(itemtype[i] == 'Rasch', -25, -Inf),
+                             ubound=ifelse(itemtype[i] == 'Rasch', 25, Inf),
+                             method=ifelse(itemtype[i] == 'Rasch', 'Brent', 'Nelder-Mead'),
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),

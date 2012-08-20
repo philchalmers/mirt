@@ -135,7 +135,7 @@ setMethod(
 		}
 		colnames(scores) <- colnames(object@F)
 		if (full.scores){      
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(Theta))
+			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(scores))
 			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
 			for (j in 1:nrow(tabdata)){          
 				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)

@@ -6,8 +6,11 @@ test_that('dich data', {
                        key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
     specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
     mod1 <- bfactor(data, specific)
+    mod2 <- bfactor(data, specific, itemtype = c(rep('2PL', 29), '3PL', rep('2PL',2)))
     expect_is(mod1, 'bfactorClass')              
+    expect_is(mod2, 'bfactorClass')
     fs <- fscores(mod1, verbose = FALSE)
+    fs <- fscores(mod2, full.scores = TRUE, verbose = FALSE)
     expect_is(fs, 'matrix')
 })
 
@@ -36,8 +39,8 @@ test_that('mix data', {
         -1.5,NA,NA,
         1.5,NA,NA,
         0.0,NA,NA,
-        2.5,1.0,-1,
-        3.0,2.0,-0.5,
+        0.0,1.0,2.0,
+        0.0,2.0,-0.5,
         3.0,2.0,-0.5,
         3.0,2.0,-0.5,
         2.5,1.0,-1,
@@ -45,14 +48,16 @@ test_that('mix data', {
         -1.0,NA,NA,
         -1.5,NA,NA,
         1.5,NA,NA,
-        0.0,NA,NA,
-        1.0,NA,NA),ncol=3,byrow=TRUE)
+        0.0,NA,NA),ncol=3,byrow=TRUE)
     
     sigma <- diag(3)
     set.seed(1234)
-    dataset <- simdata(a,d,2000,sigma)    
+    items <- itemtype <- c(rep('dich', 4), 'nominal', 'gpcm', rep('graded',4),rep('dich', 4))
+    dataset <- simdata(a,d,2000,itemtype, sigma=sigma)  
+     
     specific <- c(rep(1,7),rep(2,7))
-    simmod <- bfactor(dataset, specific)
+    items[items == 'dich'] <- '2PL'
+    simmod <- bfactor(dataset, specific, itemtype = items)
     expect_is(simmod, 'bfactorClass')              
     fs <- fscores(simmod, verbose = FALSE)
     expect_is(fs, 'matrix')
