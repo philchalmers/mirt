@@ -125,12 +125,12 @@ d <- matrix(c(
 -1.0,NA,NA,
  1.5,NA,NA,
  0.0,NA,NA,
-0.0,-1.0,2.0, #the first 0.0 and last (ncat - 1) = 2 values are the recommended constraints for nominal models
+0.0,-1.0,1.5,  #the first 0 here is the recommended constraint for nominal
 0.0,1.0,-1, #the first 0 here is the recommended constraint for gpcm
 2.0,0.0,NA),ncol=3,byrow=TRUE)
 
 nominal <- matrix(NA, nrow(d), ncol(d))
-nominal[4, ] <- c(1,1.2,.8) #note that 1 as the first column is the recommended value
+nominal[4, ] <- c(0,1.2,2) #the first 0 and last (ncat - 1) = 2 values are the recommended constraints
 
 sigma <- diag(3)
 sigma[2,3] <- sigma[3,2] <- .25

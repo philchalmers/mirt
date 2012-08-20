@@ -15,14 +15,14 @@ mirt 0.3.0
 
 * flexible user defined linear restrictions may be imposed on all estimation functions, 
   so too prior parameter distributions, start values, and choice of which parameters to 
-  estimate at all. These all follow the general 2 step for 
+  estimate at all. These all follow these general 2 steps: 
 
     1) Call the function as you would normally would but use, for example, 
-       mirt(data, 1, startvalues = 'index') to return the start values
+       mirt(data, 1, startvalues = 'index') to return the start values as they are indexed
     2) Edit them as you please (without changing the structure), then input them back into 
        the function as mirt(data, 1, startvalues = editedstartvalues). 
 
-  This is true for the parprior (MAP priors), constrain (linear constraints), and 
+  This is true for the parprior (MAP priors), constrain (linear equality constraints), and 
   freepars (parameters freely estimated), each with their own little quirk. All inputs are lists
   with named parameters for easy identification and manipulation. Note that this means that
   the partial credit model and Rasch models may be calculated 
@@ -36,7 +36,7 @@ mirt 0.3.0
 * plink package has not kept up with item information curves, so I'll implement my own for now.
   Replaced plink item plots from 'itemplots' function with ones that I rolled
 
-* package descriptions updated
+* package descriptions and documentation updated
 
 * coef() now prints slightly different output, with the new option 'allpars = TRUE' to display all
   the item and group parameters
