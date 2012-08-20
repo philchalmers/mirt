@@ -73,6 +73,7 @@ setMethod(
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)        
+        itemtrace[itemtrace < 1e-8] <- 1e-8
         LL <- (-1) * sum(x@rs * log(itemtrace))
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
@@ -87,8 +88,10 @@ setMethod(
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
         }        
         return(LL)
     }
@@ -99,6 +102,7 @@ setMethod(
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace[itemtrace < 1e-8] <- 1e-8
         LL <- (-1) * sum(x@rs * log(itemtrace))
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
@@ -113,8 +117,10 @@ setMethod(
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
         }
         return(LL)
     }
@@ -125,6 +131,7 @@ setMethod(
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace[itemtrace < 1e-8] <- 1e-8
         LL <- (-1) * sum(x@rs * log(itemtrace))
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
@@ -139,8 +146,10 @@ setMethod(
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
         }
         return(LL)
     }
@@ -151,6 +160,7 @@ setMethod(
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace[itemtrace < 1e-8] <- 1e-8
         LL <- (-1) * sum(x@rs * log(itemtrace))
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
@@ -165,8 +175,10 @@ setMethod(
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
         }
         return(LL)
     }
@@ -177,6 +189,7 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace[itemtrace < 1e-8] <- 1e-8
         LL <- (-1) * sum(x@rs * log(itemtrace))
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
@@ -191,8 +204,10 @@ setMethod(
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
         }
         return(LL)
     }
@@ -412,11 +427,11 @@ setMethod(
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)            
             val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
+            mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
             h <- g <- rep(0, length(val))
             for(i in 1:length(val)){
-                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                g[i] <- -(val[i] - mu[i])/(s[i]^2)
                 h[i] <- -1/(s[i]^2)
             }
             grad[ind] <- grad[ind] + g
@@ -460,11 +475,11 @@ setMethod(
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)            
             val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
+            mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
             h <- g <- rep(0, length(val))
             for(i in 1:length(val)){
-                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                g[i] <- -(val[i] - mu[i])/(s[i]^2)
                 h[i] <- -1/(s[i]^2)
             }
             grad[ind] <- grad[ind] + g
@@ -646,11 +661,11 @@ setMethod(
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)            
             val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
+            mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
             h <- g <- rep(0, length(val))
             for(i in 1:length(val)){
-                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                g[i] <- -(val[i] - mu[i])/(s[i]^2)
                 h[i] <- -1/(s[i]^2)
             }
             grad[ind] <- grad[ind] + g
@@ -672,6 +687,22 @@ setMethod(
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
         }
         return(list(grad = grad, hess = hess))
+    }
+)
+
+setMethod(
+    f = "gpcm",
+    signature = signature(x = 'GroupPars', Theta = 'matrix'),
+    definition = function(x, Theta){
+        stop('Derivatives have not be written for generalized partial credit models yet')
+    }
+)
+
+setMethod(
+    f = "nominal",
+    signature = signature(x = 'GroupPars', Theta = 'matrix'),
+    definition = function(x, Theta){
+        stop('Derivatives have not be written for nominal models yet')
     }
 )
 
@@ -710,11 +741,11 @@ setMethod(
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)            
             val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
+            mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
             h <- g <- rep(0, length(val))
             for(i in 1:length(val)){
-                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                g[i] <- -(val[i] - mu[i])/(s[i]^2)
                 h[i] <- -1/(s[i]^2)
             }
             grad[ind] <- grad[ind] + g

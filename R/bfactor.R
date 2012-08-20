@@ -406,7 +406,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		                       method=pars[[i]]@method,
 		                       lower=pars[[i]]@lbound, 
 		                       upper=pars[[i]]@ubound,
-		                       control=list(maxit=MSTEPMAXIT)))
+		                       control=list(maxit=MSTEPMAXIT)))            
 			if(class(maxim) == "try-error") {				
 				converge <- 0
 				next
