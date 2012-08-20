@@ -90,8 +90,8 @@
   that the lower and upper bounds can function the same. To
   specify a prior the form is c('priortype', ...), where
   normal priors are \code{parprior = list(c(parnumber,
-  'normal', mean, sd))} and betas are \code{parprior =
-  list(c(parnumber, 'beta', a, b, weight))}.}
+  'norm', mean, sd))} and betas are \code{parprior =
+  list(c(parnumber, 'beta', alpha, beta))}.}
 
   \item{freepars}{a list of user declared logical values
   indicating which parameters to estimate. To see how to
@@ -214,7 +214,7 @@ specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
 mod1 <- bfactor(data, specific)
 coef(mod1)
 
-###Try with guessing parameters added
+###Try with fixed guessing parameters added
 guess <- rep(.1,32)
 mod2 <- bfactor(data, specific, guess = guess)
 coef(mod2)
@@ -252,9 +252,11 @@ d <- matrix(c(
 -1.5,NA,NA,
  1.5,NA,NA,
  0.0,NA,NA),ncol=3,byrow=TRUE)
+items <- rep('dich', 14)
+items[5:10] <- 'graded'
 
 sigma <- diag(3)
-dataset <- simdata(a,d,2000,sigma)
+dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 
 specific <- c(rep(1,7),rep(2,7))
 simmod <- bfactor(dataset, specific)

@@ -86,8 +86,8 @@
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
 #' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
 #' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
-#' are \code{parprior = list(c(parnumber, 'normal', mean, sd))} and betas are 
-#' \code{parprior = list(c(parnumber, 'beta', a, b, weight))}. 
+#' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
+#' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
 #' @param freepars a list of user declared logical values indicating which parameters to estimate. 
 #' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
 #' are labeled. These values may be modified and input back into the function by using 
@@ -197,7 +197,8 @@
 #' 
 #' sigma <- diag(2)
 #' sigma[1,2] <- sigma[2,1] <- .4
-#' dataset <- simdata(a,d,2000,sigma)
+#' items <- c(rep('dich',4), rep('graded',3), 'dich')
+#' dataset <- simdata(a,d,2000,items,sigma)
 #' 
 #' #analyses
 #' #CIFA for 2 factor crossed structure

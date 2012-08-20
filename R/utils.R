@@ -172,10 +172,8 @@ gamma.cor <- function(x)
 } 
 
 # Beta prior for grad and hess
-betaprior <- function(a,b,g,W=20)
-{
-	a <- a + (1-g)*W
-	b <- b + g*W
+betaprior <- function(g,a,b)
+{	
 	grad <- ((a-1) * g^(a-1) * (1-g)^(b-1) - (b-1)*g^(a-1)*(1-g)^(b-1))/ 
 		(g^(a-1) * (1-g)^(b-1))
 	hess <- -((g^(a-1)*(a-1)^2*(1-g)^(b-1)/g^2 - g^(a-1)*(a-1)*(1-g)^(b-1)/g^2 
@@ -183,7 +181,7 @@ betaprior <- function(a,b,g,W=20)
 		- g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g)^2)/(g^(a-1)*(1-g)^(b-1))	
 		- ((g^(a-1)*(a-1)*(1-g)^(b-1)/g-g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g))*(a-1)/(g^(a-1)*(1-g)^(b-1)*g))
 		+ ((g^(a-1)*(a-1)*(1-g)^(b-1)/g-g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g))*(b-1)/(g^(a-1)*(1-g)^(b-1)*(1-g))))
-	return(list(g=grad, h=hess))	
+	return(list(grad=grad, hess=hess))	
 }
 
 # Approximation to polychoric matrix for initial values

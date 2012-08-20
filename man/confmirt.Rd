@@ -102,8 +102,8 @@
   that the lower and upper bounds can function the same. To
   specify a prior the form is c('priortype', ...), where
   normal priors are \code{parprior = list(c(parnumber,
-  'normal', mean, sd))} and betas are \code{parprior =
-  list(c(parnumber, 'beta', a, b, weight))}.}
+  'norm', mean, sd))} and betas are \code{parprior =
+  list(c(parnumber, 'beta', alpha, beta))}.}
 
   \item{freepars}{a list of user declared logical values
   indicating which parameters to estimate. To see how to
@@ -251,7 +251,8 @@ d <- matrix(c(
 
 sigma <- diag(2)
 sigma[1,2] <- sigma[2,1] <- .4
-dataset <- simdata(a,d,2000,sigma)
+items <- c(rep('dich',4), rep('graded',3), 'dich')
+dataset <- simdata(a,d,2000,items,sigma)
 
 #analyses
 #CIFA for 2 factor crossed structure

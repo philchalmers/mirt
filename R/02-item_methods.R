@@ -72,8 +72,24 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace <- ProbTrace(x=x, Theta=Theta)        
         LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+        }        
         return(LL)
     }
 )
@@ -84,6 +100,22 @@ setMethod(
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+        }
         return(LL)
     }
 )
@@ -94,6 +126,22 @@ setMethod(
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+        }
         return(LL)
     }
 )
@@ -104,6 +152,22 @@ setMethod(
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+        }
         return(LL)
     }
 )
@@ -114,6 +178,22 @@ setMethod(
     definition = function(x, Theta){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dbeta(val[i], u[i], s[i]))
+        }
         return(LL)
     }
 )
@@ -276,7 +356,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta){          
+    definition = function(x, Theta){                  
         nfact <- x@nfact
         parlength <- length(x@par)
         u <- x@par[parlength]
@@ -286,16 +366,16 @@ setMethod(
         P <- P.mirt(a, d, Theta, g, u)
         Q <- 1 - P
         dat <- x@dat[,2] 
-        d2L <- matrix(0,nfact+3, nfact+3)						
+        hess <- matrix(0,nfact+3, nfact+3)						
         if(!x@est[parlength] && !x@est[parlength-1]){ #'2PL'
             PQ <- P*Q
             L1 <- colSums((dat-P) * Theta)
             L2 <- sum(dat-P)
-            dL <- c(L1,L2,0,0)    	
+            grad <- c(L1,L2,0,0)    	
             L11 <- .Call("dichOuter", Theta, PQ, nrow(Theta))
-            d2L[1:nfact, 1:nfact] <- -L11
-            d2L[nfact+1, nfact+1] <- (-1)*sum(PQ)		
-            d2L[nfact+1, 1:nfact] <- d2L[1:nfact, nfact+1] <- (-1)*colSums(PQ * Theta)
+            hess[1:nfact, 1:nfact] <- -L11
+            hess[nfact+1, nfact+1] <- (-1)*sum(PQ)		
+            hess[nfact+1, 1:nfact] <- hess[1:nfact, nfact+1] <- (-1)*colSums(PQ * Theta)
         } else if(!x@est[parlength] && x@est[parlength-1]){ #'3PL'
             f <- 1		
             Pstar <- P.mirt(a,d,Theta,0,1)		
@@ -306,30 +386,58 @@ setMethod(
             for(i in 1:nfact){
                 da[i] <- sum(Theta[,i]*Pstar*Qstar*(1-g)*(dat/P - (f-dat)/Q))
             }
-            dL <- c(da,dd,dc,0)				
+            grad <- c(da,dd,dc,0)				
             gloc <- nfact+2
             const1 <- (dat/P - (f-dat)/Q)*(Qstar-Pstar)
             const2 <- (dat/P^2 + (f-dat)/Q^2)	
-            d2L[nfact+1,nfact+1] <- sum((1-g)*Pstar*Qstar*(const1 - 
+            hess[nfact+1,nfact+1] <- sum((1-g)*Pstar*Qstar*(const1 - 
                 Pstar*Qstar*(1-g)*const2))		
-            d2L[gloc,gloc] <- -sum(Qstar^2 *(dat/P^2 + (f-dat)/Q^2))
-            d2L[gloc,nfact+1] <- d2L[nfact+1,gloc] <- sum(-Pstar*Qstar*((dat/P - (f-dat)/Q) + Qstar*(1-g)*const2)) 
+            hess[gloc,gloc] <- -sum(Qstar^2 *(dat/P^2 + (f-dat)/Q^2))
+            hess[gloc,nfact+1] <- hess[nfact+1,gloc] <- sum(-Pstar*Qstar*((dat/P - (f-dat)/Q) + Qstar*(1-g)*const2)) 
             for(i in 1:nfact){
-                d2L[nfact+1,i] <- d2L[i,nfact+1] <- sum((1-g)*Theta[,i]*Pstar*Qstar*(const1 - 
+                hess[nfact+1,i] <- hess[i,nfact+1] <- sum((1-g)*Theta[,i]*Pstar*Qstar*(const1 - 
                     Pstar*Qstar*(1-g)*const2))			
-                d2L[gloc,i] <- d2L[i,gloc] <- sum(-Theta[,i]*Pstar*Qstar*((dat/P - (f-dat)/Q) + 
+                hess[gloc,i] <- hess[i,gloc] <- sum(-Theta[,i]*Pstar*Qstar*((dat/P - (f-dat)/Q) + 
                     Qstar*(1-g)*const2))		
                 for(j in 1:nfact){
                     if(i == j)
-                        d2L[i,i] <- sum(Theta[,i]^2 *Pstar*Qstar*(1-g)*(const1 - 
+                        hess[i,i] <- sum(Theta[,i]^2 *Pstar*Qstar*(1-g)*(const1 - 
                             (1-g)*Pstar*Qstar*const2))
                     if(i < j)
-                        d2L[i,j] <- d2L[j,i] <- sum(Theta[,i]*Theta[,j] *Pstar*Qstar*(1-g)*
+                        hess[i,j] <- hess[j,i] <- sum(Theta[,i]*Theta[,j] *Pstar*Qstar*(1-g)*
                             (const1 - (1-g)*Pstar*Qstar*const2))					
                 }
             }	
-        }  	
-        return(list(grad = dL, hess = d2L))
+        }        
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)            
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            h <- g <- rep(0, length(val))
+            for(i in 1:length(val)){
+                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                h[i] <- -1/(s[i]^2)
+            }
+            grad[ind] <- grad[ind] + g
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            bphess <- bpgrad <- rep(0, length(val))
+            for(i in 1:length(val)){
+                tmp <- betaprior(val[i], a[i], b[i])
+                bpgrad[i] <- tmp$grad
+                bphess[i] <- tmp$hess
+            }
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
+        }
+        return(list(grad = grad, hess = hess))
     }
 )
 
@@ -349,6 +457,34 @@ setMethod(
         hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
         hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
             ret$hess[(nd+1):ncol(hess), 1:nd]
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)            
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            h <- g <- rep(0, length(val))
+            for(i in 1:length(val)){
+                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                h[i] <- -1/(s[i]^2)
+            }
+            grad[ind] <- grad[ind] + g
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            bphess <- bpgrad <- rep(0, length(val))
+            for(i in 1:length(val)){
+                tmp <- betaprior(val[i], a[i], b[i])
+                bpgrad[i] <- tmp$grad
+                bphess[i] <- tmp$hess
+            }
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
+        }
         return(list(grad=grad, hess=hess))
     }
 )
@@ -382,7 +518,7 @@ setMethod(
             }		
             hess <- function(a, d, g, u, r, Theta){ 
                 nfact <- length(a)
-                d2L <- matrix(0, nfact*2 + 2, nfact*2 + 2)
+                hess <- matrix(0, nfact*2 + 2, nfact*2 + 2)
                 f <- 1			
                 P <- P.comp(a,d,Theta,g, 1)		
                 Pstar <- P.comp(a,d,Theta,0, 1)		
@@ -403,54 +539,55 @@ setMethod(
                             Pm <- P.mirt(a[m],d[m],Theta[ , m, drop=FALSE],0)
                             Qm <- 1 - Pm									
                             if(i == j && d1[1] == 'd'){
-                                d2L[i,i] <- sum((1-g)*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*(1-g)*const2))
+                                hess[i,i] <- sum((1-g)*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*(1-g)*const2))
                                 next
                             }
                             if(i == j && d1[1] == 'a'){
-                                d2L[i,i] <- sum((1-g)*Theta[,k]^2*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*
+                                hess[i,i] <- sum((1-g)*Theta[,k]^2*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*
                                     (1-g)*const2))
                                 next		
                             }
                             if(i == j && d1[1] == 'g'){
-                                d2L[i,i] <- -sum(Qstar^2 * const2)
+                                hess[i,i] <- -sum(Qstar^2 * const2)
                                 next		
                             }	
                             if(d1[1] == 'a' && d2[1] == 'a'){
-                                d2L[i,j] <- d2L[j,i] <- sum((1-g)*Theta[,k]*Theta[,m]*Qk*Pstar*Qm*(const1 - 
+                                hess[i,j] <- hess[j,i] <- sum((1-g)*Theta[,k]*Theta[,m]*Qk*Pstar*Qm*(const1 - 
                                     Pstar*(1-g)*const2))
                                 next
                             }
                             if(d1[1] == 'd' && d2[1] == 'd'){
-                                d2L[i,j] <- d2L[j,i] <- sum((1-g)*Qk*Pstar*Qm*(const1 - Pstar*(1-g)*const2))
+                                hess[i,j] <- hess[j,i] <- sum((1-g)*Qk*Pstar*Qm*(const1 - Pstar*(1-g)*const2))
                                 next
                             }
                             if(d1[1] == 'a' && d2[1] == 'g'){
-                                d2L[i,j] <- d2L[j,i] <- -sum(Theta[,k]*Pstar*Qk*(const1 + Qstar*(1-g)*const2))
+                                hess[i,j] <- hess[j,i] <- -sum(Theta[,k]*Pstar*Qk*(const1 + Qstar*(1-g)*const2))
                                 next
                             }
                             if(d1[1] == 'd' && d2[1] == 'g'){
-                                d2L[i,j] <- d2L[j,i] <- -sum(Pstar*Qk*(const1 + Qstar*(1-g)*const2))
+                                hess[i,j] <- hess[j,i] <- -sum(Pstar*Qk*(const1 + Qstar*(1-g)*const2))
                                 next
                             }
                             if(d1[1] == 'd' && d2[1] == 'a' && d1[2] == d2[2]){
-                                d2L[i,j] <- d2L[j,i] <- sum((1-g)*Theta[,k]*Pstar*Qk*(const1*((1-g)*Qk - Pk) - 
+                                hess[i,j] <- hess[j,i] <- sum((1-g)*Theta[,k]*Pstar*Qk*(const1*((1-g)*Qk - Pk) - 
                                     Pstar*Qk*(1-g)*const2))
                                 next	
                             }
                             if(d1[1] == 'd' && d2[1] == 'a' && d1[2] != d2[2]){
-                                d2L[i,j] <- d2L[j,i] <- sum((1-g)*Qk*Theta[,m]*Pstar*Qm*(const1 - 
+                                hess[i,j] <- hess[j,i] <- sum((1-g)*Qk*Theta[,m]*Pstar*Qm*(const1 - 
                                     Pstar*(1-g)*const2))
                                 next
                             }						
                         }
                     }
                 }	
-                return(d2L)
+                return(hess)
             }		
-            return(list(grad = grad(a, d, g, u, x@dat, Theta), hess = hess(a, d, g, u, x@dat, Theta)))
+            grad <- grad(a, d, g, u, x@dat, Theta)
+            hess <- hess(a, d, g, u, x@dat, Theta)
         }
         if(!x@est[nfact*2 + 1] && !x@est[nfact*2+2]){
-            d2L <- matrix(0, nfact*2 + 2, nfact*2 + 2)
+            hess <- matrix(0, nfact*2 + 2, nfact*2 + 2)
             P <- P.comp(a,d,Theta)	
             Q <- 1 - P	
             da <- dd <- rep(0,nfact)	
@@ -461,6 +598,7 @@ setMethod(
                 dd[i] <- sum(Qk*(dat - const))
                 da[i] <- sum(Theta[,i]*Qk*(dat - const))
             }
+            grad <- c(da,dd,0,0)
             Names <- c(paste("a",1:nfact,sep='_'),paste("d",1:nfact,sep='_'))
             f <- 1
             r <- dat
@@ -476,36 +614,64 @@ setMethod(
                         Pm <- P.mirt(a[m],d[m],Theta[ , m, drop=FALSE],0)
                         Qm <- 1 - Pm									
                         if(i == j && d1[1] == 'd'){
-                            d2L[k,k] <- sum(-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2)
+                            hess[k,k] <- sum(-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2)
                             next
                         }
                         if(i == j && d1[1] == 'a'){
-                            d2L[k+nfact,k+nfact] <- sum(Theta[,k]^2 *
+                            hess[k+nfact,k+nfact] <- sum(Theta[,k]^2 *
                                 (-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2))
                             next		
                         }				
                         if(d1[1] == 'a' && d2[1] == 'a'){
-                            d2L[i,j] <- d2L[j,i] <- -sum(Theta[,k]*Theta[,m]*Qk*Qm*(f-r)*P/Q^2) 
+                            hess[i,j] <- hess[j,i] <- -sum(Theta[,k]*Theta[,m]*Qk*Qm*(f-r)*P/Q^2) 
                             next
                         }
                         if(d1[1] == 'd' && d2[1] == 'd'){
-                            d2L[i,j] <- d2L[j,i] <- -sum(Qk*Qm*(f-r)*P/Q^2)
+                            hess[i,j] <- hess[j,i] <- -sum(Qk*Qm*(f-r)*P/Q^2)
                             next
                         }	
                         if(d1[1] == 'd' && d2[1] == 'a' && d1[2] == d2[2]){
-                            d2L[i,j] <- d2L[j,i] <- sum(Theta[,k]*Qk*(-Pk*(r - (f-r)*P/Q) - 
+                            hess[i,j] <- hess[j,i] <- sum(Theta[,k]*Qk*(-Pk*(r - (f-r)*P/Q) - 
                                 Qk*(f-r)*P/Q^2))
                             next	
                         }
                         if(d1[1] == 'd' && d2[1] == 'a' && d1[2] != d2[2]){
-                            d2L[i,j] <- d2L[j,i] <- -sum(Qk*Qm*Theta[,m]*(f-r)*P/Q^2)
+                            hess[i,j] <- hess[j,i] <- -sum(Qk*Qm*Theta[,m]*(f-r)*P/Q^2)
                             next
                         }						
                     }
                 }
-            }		
-            return(list(grad = c(da,dd,0,0), hess = d2L)) 
+            }                        
         }	
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)            
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            h <- g <- rep(0, length(val))
+            for(i in 1:length(val)){
+                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                h[i] <- -1/(s[i]^2)
+            }
+            grad[ind] <- grad[ind] + g
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            bphess <- bpgrad <- rep(0, length(val))
+            for(i in 1:length(val)){
+                tmp <- betaprior(val[i], a[i], b[i])
+                bpgrad[i] <- tmp$grad
+                bphess[i] <- tmp$hess
+            }
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
+        }
+        return(list(grad = grad, hess = hess))
     }
 )
 
@@ -523,17 +689,16 @@ setMethod(
         sig[selcov] <- siglong
         sig <- sig + t(sig) - diag(diag(sig))
         npars <- length(sig) + nfact	
-        g <- rep(0,nfact + nfact*(nfact+1)/2)	
+        grad <- rep(0,nfact + nfact*(nfact+1)/2)	
         invSig <- solve(sig)	
         Z <- t(Theta-u) %*% (Theta-u)
-        g[1:nfact] <- N * invSig %*% (colMeans(Theta) - u) 		
+        grad[1:nfact] <- N * invSig %*% (colMeans(Theta) - u) 		
         tmp <- .5 * invSig %*% (Z - N * sig) %*% invSig  
-        g[(nfact+1):length(g)] <- tmp[selcov]
-        h <- matrix(0,npars,npars)
+        grad[(nfact+1):length(grad)] <- tmp[selcov]        
         sel <- 1:npars		
         cMeans <- N*(colMeans(Theta) - u)
         Zdif <- (Z - N * sig)		
-        h <- .Call("dgroup",				
+        hess <- .Call("dgroup",				
                    as.numeric(invSig),
                    as.numeric(cMeans),				
                    as.numeric(Zdif),
@@ -541,8 +706,36 @@ setMethod(
                    as.integer(nfact),
                    as.integer(npars))				
         sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]	
-        h <- h[sel,sel] 
-        return(list(hess=h,grad=g))
+        hess <- hess[sel,sel] 
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)            
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            h <- g <- rep(0, length(val))
+            for(i in 1:length(val)){
+                g[i] <- -(val[i] - u[i])/(s[i]^2)
+                h[i] <- -1/(s[i]^2)
+            }
+            grad[ind] <- grad[ind] + g
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            bphess <- bpgrad <- rep(0, length(val))
+            for(i in 1:length(val)){
+                tmp <- betaprior(val[i], a[i], b[i])
+                bpgrad[i] <- tmp$grad
+                bphess[i] <- tmp$hess
+            }
+            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
+        }
+        return(list(hess=hess,grad=grad))
     }
 )
 

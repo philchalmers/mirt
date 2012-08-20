@@ -82,8 +82,8 @@
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
 #' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
 #' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
-#' are \code{parprior = list(c(parnumber, 'normal', mean, sd))} and betas are 
-#' \code{parprior = list(c(parnumber, 'beta', a, b, weight))}. 
+#' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
+#' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
 #' @param freepars a list of user declared logical values indicating which parameters to estimate. 
 #' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
 #' are labeled. These values may be modified and input back into the function by using 
@@ -169,7 +169,7 @@
 #' mod1 <- bfactor(data, specific)
 #' coef(mod1)
 #' 
-#' ###Try with guessing parameters added
+#' ###Try with fixed guessing parameters added
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)
 #' coef(mod2) 
@@ -207,9 +207,11 @@
 #' -1.5,NA,NA,
 #'  1.5,NA,NA,
 #'  0.0,NA,NA),ncol=3,byrow=TRUE)
+#' items <- rep('dich', 14)
+#' items[5:10] <- 'graded'
 #' 
 #' sigma <- diag(3)
-#' dataset <- simdata(a,d,2000,sigma)
+#' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 #'
 #' specific <- c(rep(1,7),rep(2,7))
 #' simmod <- bfactor(dataset, specific)
@@ -230,9 +232,6 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)	
 	NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)
-	LOWER <- c(-Inf, -20)
-	UPPER <- c(Inf, 20)    
-	METHOD <- c('Nelder-Mead', 'Brent')	
 	##
 	itemnames <- colnames(data)
 	data <- as.matrix(data)
@@ -436,10 +435,10 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		    }            
 		    maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, debug=debug,
 		                       Theta=Theta, prior=prior, constr=constrlist,
-		                       method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
-		                       lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
-		                       upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
-		                       control=list(maxit=MSTEPMAXIT)))            
+		                       method='Nelder-Mead',
+		                       lower=-Inf, 
+		                       upper=Inf,
+		                       control=list(maxit=MSTEPMAXIT)))
 		    constrpars <- reloadConstr(maxim$par, constr=constrlist, obj=constrpars)
 		    tmp <- 1
 		    for(i in 1:J){ 

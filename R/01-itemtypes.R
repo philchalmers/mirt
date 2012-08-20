@@ -8,8 +8,10 @@ setClass("GroupPars",
                         nfact='numeric',
                         gradient='numeric',
                         hessian='matrix',
-                        n.prior='numeric',
-                        b.prior='numeric')
+                        n.prior.mu='numeric',
+                        n.prior.sd='numeric',
+                        b.prior.alpha='numeric',
+                        b.prior.beta='numeric')
 )
 
 setClass("AllItemsClass",
@@ -27,8 +29,10 @@ setClass("AllItemsClass",
                         method='character',
                         lbound='numeric',
                         ubound='numeric',
-                        n.prior='numeric',
-                        b.prior='numeric',
+                        n.prior.mu='numeric',
+                        n.prior.sd='numeric',
+                        b.prior.alpha='numeric',
+                        b.prior.beta='numeric',
                         'VIRTUAL')
 )
 

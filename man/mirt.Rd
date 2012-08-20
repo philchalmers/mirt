@@ -105,8 +105,8 @@ Theory)}
   that the lower and upper bounds can function the same. To
   specify a prior the form is c('priortype', ...), where
   normal priors are \code{parprior = list(c(parnumber,
-  'normal', mean, sd))} and betas are \code{parprior =
-  list(c(parnumber, 'beta', a, b, weight))}.}
+  'norm', mean, sd))} and betas are \code{parprior =
+  list(c(parnumber, 'beta', alpha, beta))}.}
 
   \item{freepars}{a list of user declared logical values
   indicating which parameters to estimate. To see how to
@@ -273,6 +273,10 @@ summary(mod1)
 residuals(mod1)
 plot(mod1) #test information function
 
+#estimated 3PL model for item 5 only
+(mod1.4PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
+coef(mod1.4PL, allpars = TRUE)
+
 (mod2 <- mirt(data, 2))
 summary(mod2)
 coef(mod2)
@@ -288,12 +292,19 @@ pmod1 <- mirt(Science, 1)
 plot(pmod1)
 summary(pmod1)
 
+#Constrain all slopes to be equal
+#first obtain parameter index
+mirt(Science,1, constrain = 'index') #note that slopes are numbered 1,5,9,13
+(pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
+coef(pmod1_equalslopes)
+
 pmod2 <- mirt(Science, 2)
 coef(pmod2)
 residuals(pmod2)
-plot(pmod2)
+plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
 itemplot(pmod2, 1)
 anova(pmod1, pmod2)
+
 
 ###########
 data(SAT12)

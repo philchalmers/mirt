@@ -2,12 +2,15 @@
 \name{itemplot}
 \alias{itemplot}
 \alias{itemplot,bfactorClass-method}
-\alias{itemplot,mirtClass-method}
 \alias{itemplot-method}
+\alias{itemplot,mirtClass-method}
 \title{Displays item surface and information plots}
 \arguments{
   \item{object}{a computed model of class
   \code{bfactorClass} or \code{mirtClass}}
+
+  \item{item}{a single numeric value indicating which item
+  to plot}
 
   \item{type}{plot type to use, information
   (\code{'info'}), information contours

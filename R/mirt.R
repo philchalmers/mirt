@@ -84,8 +84,8 @@
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
 #' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
 #' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
-#' are \code{parprior = list(c(parnumber, 'normal', mean, sd))} and betas are 
-#' \code{parprior = list(c(parnumber, 'beta', a, b, weight))}. 
+#' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
+#' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
 #' @param freepars a list of user declared logical values indicating which parameters to estimate. 
 #' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
 #' are labeled. These values may be modified and input back into the function by using 
@@ -207,6 +207,10 @@
 #' residuals(mod1)
 #' plot(mod1) #test information function
 #' 
+#' #estimated 3PL model for item 5 only
+#' (mod1.4PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
+#' coef(mod1.4PL, allpars = TRUE)
+#' 
 #' (mod2 <- mirt(data, 2))
 #' summary(mod2)
 #' coef(mod2)
@@ -222,12 +226,19 @@
 #' plot(pmod1)
 #' summary(pmod1)
 #'
+#' #Constrain all slopes to be equal
+#' #first obtain parameter index
+#' mirt(Science,1, constrain = 'index') #note that slopes are numbered 1,5,9,13
+#' (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
+#' coef(pmod1_equalslopes)
+#' 
 #' pmod2 <- mirt(Science, 2)
 #' coef(pmod2)
 #' residuals(pmod2)
-#' plot(pmod2)
+#' plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
 #' itemplot(pmod2, 1)
 #' anova(pmod1, pmod2)
+#' 
 #'
 #' ###########
 #' data(SAT12)
@@ -459,9 +470,9 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
             }            
             maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, debug=debug,
                                Theta=Theta, prior=prior, constr=constrlist,
-                               method=ifelse(length(estpar) > 1, METHOD[1], METHOD[2]),
-                               lower=ifelse(length(estpar) > 1, LOWER[1], LOWER[2]), 
-                               upper=ifelse(length(estpar) > 1, UPPER[1], UPPER[2]),
+                               method='Nelder-Mead',
+                               lower=-Inf, 
+                               upper=Inf,
                                control=list(maxit=MSTEPMAXIT)))            
             constrpars <- reloadConstr(maxim$par, constr=constrlist, obj=constrpars)
             tmp <- 1

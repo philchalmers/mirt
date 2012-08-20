@@ -4,7 +4,7 @@
 #' 
 #'
 #' @usage 
-#' itemplot(object, item, ...)
+#' itemplot(object, ...)
 #' 
 #' \S4method{itemplot}{mirtClass}(object, item, type = 'trace', ...)
 #'
@@ -14,6 +14,7 @@
 #' itemplot,bfactorClass-method
 #' @param object a computed model of class \code{bfactorClass} or
 #' \code{mirtClass}
+#' @param item a single numeric value indicating which item to plot
 #' @param type plot type to use, information (\code{'info'}), information contours \code{('infocontour')},
 #'  or item trace lines (\code{'trace'})
 #' @param ... additional arguments to be passed to lattice 
@@ -36,7 +37,7 @@
 #'     }
 #' 
 setGeneric("itemplot", 
-           def = function(object, item, ...) standardGeneric("itemplot")
+           def = function(object, ...) standardGeneric("itemplot")
 )
 
 #------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ setGeneric("itemplot",
 # @keywords methods
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'mirtClass', item = 'numeric'),
+	signature = signature(object = 'mirtClass'),
 	definition = function(object, item, type = 'trace', ...)
 	{  			
 		x <- itemplot.main(object, item, type, ...)		        
@@ -65,7 +66,7 @@ setMethod(
 # @rdname itemplot-methods  
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'bfactorClass', item = 'numeric'),
+	signature = signature(object = 'bfactorClass'),
 	definition = function(object, item, type = 'trace', ...)
 	{
 	    x <- itemplot.main(object, item, type, ...)    	
