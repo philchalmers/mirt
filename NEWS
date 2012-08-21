@@ -7,14 +7,14 @@ mirt 0.3.0
   redundant and could be replaced completely by calling confmirt(data, number_of_factors). 
 
 * new univariate and MV models are available, including the 1-4 parameter logistic
-  generalized partial credit, and nominal models. These are called by specifying character
-  vector called 'itemtype' of length nitems with the options '2PL','3PL','4PL','graded','gpcm', 'nominal'. 
-  Partially-compensatory models available in confmirt can be called with 'partcomp'. If itemtype =
-  '1PL' or 'Rasch', then the 1-parameter logistic/1-parameter ordinal or Rasch/partial credit models are
-  estimated for all the data. The default assumes that items are either '2PL' or 'graded', as before. 
+  generalized partial credit, and nominal models. These are called by specifying a character
+  vector called 'itemtype' of length nitems with the options '2PL','3PL','4PL','graded','gpcm',
+  'nominal', or 'partcomp'. If itemtype = '1PL' or 'Rasch', then the 1-parameter logistic/1-parameter
+  ordinal or Rasch/partial credit models are estimated for all the data. The default assumes that
+  items are either '2PL' or 'graded', as before. 
 
-* flexible user defined linear restrictions may be imposed on all estimation functions, 
-  so too prior parameter distributions, start values, and choice of which parameters to 
+* flexible user defined linear equality restrictions may be imposed on all estimation functions, 
+  so too can prior parameter distributions, start values, and choice of which parameters to 
   estimate at all. These all follow these general 2 steps: 
 
     1) Call the function as you would normally would but use, for example, 
@@ -39,7 +39,7 @@ mirt 0.3.0
 * package descriptions and documentation updated
 
 * coef() now prints slightly different output, with the new option 'allpars = TRUE' to display all
-  the item and group parameters
+  the item and group parameters, returned as a list 
 
 * simdata() updated to support new item types 
 
