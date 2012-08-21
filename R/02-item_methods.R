@@ -337,7 +337,7 @@ setMethod(
         for(i in 1:(ncol(P)-1)){
             w1 <- P[,i]*(1-P[,i])*A
             w2 <- P[,i+1]*(1-P[,i+1])*A
-            info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1]) * P[,i]            
+            info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1])             
         }    
         info
     }

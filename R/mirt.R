@@ -208,8 +208,8 @@
 #' plot(mod1) #test information function
 #' 
 #' #estimated 3PL model for item 5 only
-#' (mod1.4PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
-#' coef(mod1.4PL, allpars = TRUE)
+#' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
+#' coef(mod1.3PL, allpars = TRUE)
 #' 
 #' (mod2 <- mirt(data, 2))
 #' summary(mod2)
