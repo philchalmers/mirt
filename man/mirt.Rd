@@ -193,11 +193,11 @@ Theory)}
 }
 \description{
   \code{mirt} fits an unconditional maximum likelihood
-  factor analysis model to dichotomous and polychotomous
-  data under the item response theory paradigm. Fits
-  univariate and multivariate Rasch, 1-4PL, graded,
-  (generalized) partial credit, nominal, and multiple
-  choice models using the EM algorithm.
+  factor analysis model to dichotomous and polytomous data
+  under the item response theory paradigm. Fits univariate
+  and multivariate Rasch, 1-4PL, graded, (generalized)
+  partial credit, nominal, and multiple choice models using
+  the EM algorithm.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by

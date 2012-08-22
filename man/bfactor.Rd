@@ -4,7 +4,7 @@
 \alias{fitted,bfactor-method}
 \alias{residuals,bfactor-method}
 \alias{summary,bfactor-method}
-\title{Full-Information Item Bifactor Analysis}
+\title{Full-Information Item Bi-factor Analysis}
 \usage{
   bfactor(data, specific, itemtype = NULL, guess = 0, upper
     = 1, SE = FALSE, startvalues = NULL, constrain = NULL,
@@ -145,13 +145,13 @@
 }
 \description{
   \code{bfactor} fits a confirmatory maximum likelihood
-  bifactor model to dichotomous and polychotomous data
-  under the item response theory paradigm. Fits univariate
-  and multivariate 1-4PL, graded, (generalized) partial
-  credit, nominal, and multiple choice models using a
-  dimensional reduction EM algorithm so that regardless of
-  the number of specific factors estimated the model only
-  uses a two-dimensional quadrature grid for integration.
+  bi-factor model to dichotomous and polytomous data under
+  the item response theory paradigm. Fits univariate and
+  multivariate 1-4PL, graded, (generalized) partial credit,
+  nominal, and multiple choice models using a dimensional
+  reduction EM algorithm so that regardless of the number
+  of specific factors estimated the model only uses a
+  two-dimensional quadrature grid for integration.
 }
 \details{
 
@@ -164,10 +164,10 @@
   that this only makes sense when comparing class
   \code{bfactorClass} models to class \code{mirtClass} or
   \code{polymirtClass}. The general equation used for item
-  bifactor analysis in this package is in the logistic form
-  with a scaling correction of 1.702. This correction is
-  applied to allow comparison to mainstream programs such
-  as TESTFACT 4 (2003) and POLYFACT.
+  bi-factor analysis in this package is in the logistic
+  form with a scaling correction of 1.702. This correction
+  is applied to allow comparison to mainstream programs
+  such as TESTFACT 4 (2003) and POLYFACT.
 
   Unlike TESTFACT 4 (2003) initial start values are
   computed by using information from a quasi-tetrachoric

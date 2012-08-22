@@ -167,7 +167,7 @@
 \description{
   \code{confmirt} fits a conditional (i.e., confirmatory)
   full-information maximum-likelihood factor analysis model
-  to dichotomous and polychotomous data under the item
+  to dichotomous and polytomous data under the item
   response theory paradigm using Cai's (2010)
   Metropolis-Hastings Robbins-Monro algorithm. Fits
   univariate and multivariate Rasch, 1-4PL, graded,

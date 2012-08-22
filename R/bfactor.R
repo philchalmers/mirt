@@ -1,7 +1,7 @@
-#' Full-Information Item Bifactor Analysis
+#' Full-Information Item Bi-factor Analysis
 #' 
-#' \code{bfactor} fits a confirmatory maximum likelihood bifactor model to
-#' dichotomous and polychotomous data under the item response theory paradigm. 
+#' \code{bfactor} fits a confirmatory maximum likelihood bi-factor model to
+#' dichotomous and polytomous data under the item response theory paradigm. 
 #' Fits univariate and multivariate 1-4PL, graded, (generalized) partial credit, 
 #' nominal, and multiple choice models using 
 #' a dimensional reduction EM algorithm so that regardless 
@@ -16,7 +16,7 @@
 #' chi-squared difference test or by a reduction in AIC or BIC (accessible via
 #' \code{\link{anova}}); note that this only makes sense when comparing class
 #' \code{bfactorClass} models to class \code{mirtClass} or \code{polymirtClass}. 
-#' The general equation used for item bifactor analysis in this package is in the logistic 
+#' The general equation used for item bi-factor analysis in this package is in the logistic 
 #' form with a scaling correction of 1.702. This correction is applied to allow
 #' comparison to mainstream programs such as TESTFACT 4 (2003) and POLYFACT.
 #' 

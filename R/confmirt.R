@@ -1,7 +1,7 @@
 #' Confirmatory Full-Information Item Factor Analysis
 #' 
 #' \code{confmirt} fits a conditional (i.e., confirmatory) full-information
-#' maximum-likelihood factor analysis model to dichotomous and polychotomous
+#' maximum-likelihood factor analysis model to dichotomous and polytomous
 #' data under the item response theory paradigm using Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro algorithm. Fits univariate and multivariate Rasch, 
 #' 1-4PL, graded, (generalized) partial credit, nominal, multiple choice, and partially-compensatory models, 
