@@ -44,7 +44,8 @@
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
 #' the diagonal.
 #' 
-#' @aliases mirt summary,mirt-method coef,mirt-method anova,mirt-method
+#' @aliases mirt summary,mirt-method coef,mirt-method anova,mirt-method fitted,mirt-method
+#' plot,mirt-method residuals,mirt-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param nfact number of factors to be extracted

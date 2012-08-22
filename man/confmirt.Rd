@@ -26,6 +26,10 @@
   \S4method{fitted}{confmirt}(object, digits = 3, ...)
 }
 \arguments{
+  \item{data}{a \code{matrix} or \code{data.frame} that
+  consists of numerically ordered data, with missing data
+  coded as \code{NA}}
+
   \item{model}{an object returned from
   \code{confmirt.model()} declaring how the factor model is
   to be estimated, or a single numeric value indicating the

@@ -1,7 +1,10 @@
 \name{mirt}
 \alias{anova,mirt-method}
 \alias{coef,mirt-method}
+\alias{fitted,mirt-method}
 \alias{mirt}
+\alias{plot,mirt-method}
+\alias{residuals,mirt-method}
 \alias{summary,mirt-method}
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}

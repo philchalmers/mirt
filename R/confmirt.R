@@ -46,7 +46,8 @@
 #' 
 #' @aliases confmirt coef,confmirt-method summary,confmirt-method
 #' residuals,confmirt-method anova,confmirt-method fitted,confmirt-method
-
+#' @param data a \code{matrix} or \code{data.frame} that consists of
+#' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object returned from \code{confmirt.model()} declaring how
 #' the factor model is to be estimated, or a single numeric value indicating the number 
 #' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
