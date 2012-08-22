@@ -9,7 +9,7 @@ Description: Analysis of dichotomous and polychotomous response data using
     latent trait models under the Item Response Theory paradigm. Includes
     univariate and multivariate (MV) one-, two-, three-, and four-parameter
     logistic models, graded response models, generalized partial credit models,
-    nominal models, and multivariate partially-compensatory models. These can
+    nominal models, multiple choice models, and multivariate partially-compensatory models. These can
     be used in an exploratory or confirmatory manner with optional user defined
     linear constraints. Exploratory models can be estimated via quadrature or
     stochastic methods, a generalized confirmatory bifactor analysis is

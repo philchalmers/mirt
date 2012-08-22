@@ -11,7 +11,7 @@ mirt 0.3.0
 * new univariate and MV models are available, including the 1-4 parameter logistic
   generalized partial credit, nominal, and multiple choice models. These are called by specifying a character
   vector called 'itemtype' of length nitems with the options '2PL','3PL','4PL','graded','gpcm',
-  'nominal', or 'mcm'; use 'PC2PL' and 'PC3PL'for partially-compensatory items. If itemtype = '1PL' or 'Rasch', 
+  'nominal', or 'mcm'; use 'PC2PL' and 'PC3PL' for partially-compensatory items. If itemtype = '1PL' or 'Rasch', 
   then the 1-parameter logistic/1-parameter ordinal or Rasch/partial credit models are estimated for 
   all the data. The default assumes that items are either '2PL' or 'graded', as before. 
 
