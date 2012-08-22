@@ -1,10 +1,7 @@
 \name{mirt}
 \alias{anova,mirt-method}
 \alias{coef,mirt-method}
-\alias{fitted,mirt-method}
 \alias{mirt}
-\alias{plot,mirt-method}
-\alias{residuals,mirt-method}
 \alias{summary,mirt-method}
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
@@ -34,25 +31,24 @@ Theory)}
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
-  consists of only 0, 1, and \code{NA} values to be factor
-  analyzed. If scores have been recorded by the response
-  pattern then they can be recoded to dichotomous format
-  using the \code{\link{key2binary}} function}
+  consists of numerically ordered data, with missing data
+  coded as \code{NA}}
 
   \item{nfact}{number of factors to be extracted}
 
-  \item{itemtype}{type of items to be modeled, decalred as
+  \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
   repeated globally. The NULL default assumes that the
   items are ordinal or 2PL, however they may be changed to
-  the following: '1PL', '2PL', '3PL', '3PLu', '4PL',
-  'graded', 'gpcm', 'nominal', and 'mcm' for the 1 and 2
-  parameter logistic, 3 parameter logistic (lower asymptote
-  and upper), 4 parameter logistic, graded response model,
-  generalized partial credit model, nominal model, and
-  multiple choice model, respectively. Note that specifying
-  a '1PL' model should be of length 1 (since there is only
-  1 slope parameter estimated). If \code{NULL} the defaul
+  the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
+  '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the
+  Rasch/partial credit, 1 and 2 parameter logistic, 3
+  parameter logistic (lower asymptote and upper), 4
+  parameter logistic, graded response model, generalized
+  partial credit model, nominal model, and multiple choice
+  model, respectively. Note that specifying a '1PL' or
+  'Rasch' model should be of length 1 (since there is only
+  1 slope parameter estimated). If \code{NULL} the default
   assumes that the data follow a '2PL' or 'graded' format}
 
   \item{SE}{logical, estimate the standard errors?}
@@ -69,7 +65,7 @@ Theory)}
 
   \item{prev.cor}{use a previously computed correlation
   matrix to be used to estimate starting values for the EM
-  estimation? Default in \code{NULL}#'}
+  estimation? Default in \code{NULL}}
 
   \item{rotate}{type of rotation to perform after the
   initial orthogonal parameters have been extracted by
@@ -82,15 +78,15 @@ Theory)}
   \item{allpars}{logical; print all the item parameters
   instead of just the slopes?}
 
-  \item{Target}{a dummy variable matrix indicing a target
+  \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
 
-  \item{constrain}{a list of user declared equallity
+  \item{constrain}{a list of user declared equality
   constraints. To see how to define the parameters
   correctly use \code{constrain = 'index'} initially to see
   how the parameters are labeled. To constrain parameters
-  to be equal create a list with seperate concatenated
-  vectors signifying which parameters to contrain. For
+  to be equal create a list with separate concatenated
+  vectors signifying which parameters to constrain. For
   example, to set parameters 1 and 5 equal, and also set
   parameters 2, 6, and 10 equal use \code{constrain =
   list(c(1,5), c(2,6,10))}}
@@ -160,7 +156,7 @@ Theory)}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}. If a vector is used then a bubble
-  plot is created with the summed information accross the
+  plot is created with the summed information across the
   angles specified (e.g., \code{theta_angle = seq(0, 90,
   by=10)})}
 
@@ -196,7 +192,7 @@ Theory)}
   \code{mirt} fits an unconditional maximum likelihood
   factor analysis model to dichotomous and polychotomous
   data under the item response theory paradigm. Fits
-  univariate and mutilvariate Rasch, 1-4PL, graded,
+  univariate and multivariate Rasch, 1-4PL, graded,
   (generalized) partial credit, nominal, and multiple
   choice models using the EM algorithm.
 }
@@ -245,7 +241,7 @@ Theory)}
   function or the test information function for 1 and 2
   dimensional solutions. To examine individual item plots
   use \code{\link{itemplot}}. Residuals are computed using
-  the LD statistic (Chen \& Thissen, 1997) in the lower
+  the LD statistic (Chen & Thissen, 1997) in the lower
   diagonal of the matrix returned by \code{residuals}, and
   Cramer's V above the diagonal.
 }

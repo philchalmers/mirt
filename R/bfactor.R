@@ -2,7 +2,7 @@
 #' 
 #' \code{bfactor} fits a confirmatory maximum likelihood bifactor model to
 #' dichotomous and polychotomous data under the item response theory paradigm. 
-#' Fits univariate and mutilvariate Rasch, 1-4PL, graded, (generalized) partial credit, 
+#' Fits univariate and multivariate 1-4PL, graded, (generalized) partial credit, 
 #' nominal, and multiple choice models using 
 #' a dimensional reduction EM algorithm so that regardless 
 #' of the number of specific factors estimated the model only uses a two-dimensional quadrature grid
@@ -47,23 +47,19 @@
 #' 
 #' @aliases bfactor summary,bfactor-method coef,bfactor-method
 #' fitted,bfactor-method residuals,bfactor-method
-#' @param data a complete \code{matrix} or \code{data.frame} of item
-#' responses that consists of only 0, 1, and \code{NA} values to be factor
-#' analyzed. If scores have been recorded by the response pattern then they can
-#' be recoded to dichotomous format using the \code{\link{key2binary}}
-#' function.
+#' @param data a \code{matrix} or \code{data.frame} that consists of
+#' numerically ordered data, with missing data coded as \code{NA}
 #' @param specific a numeric vector specifying which factor loads on which
 #' item. For example, if for a 4 item test with two specific factors, the first
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
-#' @param itemtype type of items to be modeled, decalred as a vector for each item or a single value
+#' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
-#' however they may be changed to the following: '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the 1 and 2 parameter logistic, 
+#' however they may be changed to the following: '2PL', '3PL', '3PLu', 
+#' '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
 #' generalized partial credit model, nominal model, and multiple choice models,
-#' respectively. Note that specifying a '1PL' model should be of length 1 (since there is only 1 slope parameter estimated).
-#' If \code{NULL} the defaul assumes that the data follow a '2PL' or 'graded' format
+#' respectively. If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
@@ -75,10 +71,10 @@
 #' vector corresponding to each item
 #' @param SE logical; estimate parameter standard errors?
 #' @param allpars logical; print all the item parameters instead of just the slopes?
-#' @param constrain a list of user declared equallity constraints. To see how to define the
+#' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
-#' To constrain parameters to be equal create a list with seperate concatenated vectors signifying which
-#' parameters to contrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
+#' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
+#' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
 #' use \code{constrain = list(c(1,5), c(2,6,10))}
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
 #' parameters correctly use \code{parprior = 'index'} initially to see how the parameters are labeled.
