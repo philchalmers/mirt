@@ -66,6 +66,23 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'mcm', Theta = 'matrix'),
+    definition = function(x, Theta){    
+        a <- x@par[1:x@nfact]
+        if(x@bfactor) a <- a[x@est[1:x@nfact]]
+        ind <- x@nfact + 1
+        ak <- x@par[ind:(ind + x@ncat - 1)]
+        ind <- ind + x@ncat
+        d <- x@par[ind:(ind + x@ncat - 1)]
+        ind <- ind + x@ncat
+        t <- x@par[ind:length(x@par)]        
+        P <- P.mcm(a=a, ak=ak, d=d, t=t, Theta=Theta)
+        return(P)
+    }
+)
+
 #----------------------------------------------------------------------------
 #LogLik
 setMethod(
@@ -213,6 +230,35 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "LogLik",
+    signature = signature(x = 'mcm', Theta = 'matrix'),
+    definition = function(x, Theta){          
+        itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace[itemtrace < 1e-8] <- 1e-8
+        LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
+        }
+        return(LL)
+    }
+)
+
 #----------------------------------------------------------------------------
 setMethod(
     f = "ExtractLambdas",
@@ -257,6 +303,16 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'partcomp'),
+    definition = function(x){          
+        par <- x@par
+        a <- par[1:x@nfact]
+        a        
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'mcm'),
     definition = function(x){          
         par <- x@par
         a <- par[1:x@nfact]
@@ -315,6 +371,16 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'mcm'),
+    definition = function(x){          
+        par <- x@par
+        d <- x@par[(x@nfact + x@ncat +1):(x@nfact - x@ncat*2)]
+        d        
+    }
+)
+
 #----------------------------------------------------------------------------
 setMethod(
     f = "ItemInfo",
@@ -345,7 +411,31 @@ setMethod(
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'gpcm', A = 'matrix', Theta = 'matrix'),
+    signature = signature(x = 'gpcm', A = 'numeric', Theta = 'matrix'),
+    definition = function(x, A, Theta){
+        a <- ExtractLambdas(x)
+        d <- ExtractZetas(x)
+        ak <- seq(0, x@ncat-1, by = 1)
+        info <- Info.nominal(Theta=Theta, a=a, ak=ak, A=A, d=d)
+        info
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'nominal', A = 'numeric', Theta = 'matrix'),
+    definition = function(x, A, Theta){          
+        a <- ExtractLambdas(x)
+        d <- ExtractZetas(x)
+        ak <- x@par[(length(a)+1):(length(a) + length(d))]
+        info <- Info.nominal(Theta=Theta, a=a, ak=ak, A=A, d=d)
+        info
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'partcomp', A = 'numeric', Theta = 'matrix'),
     definition = function(x, A, Theta){          
         stop('Information functions not yet written for ', class(x))
     }
@@ -353,15 +443,7 @@ setMethod(
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'nominal', A = 'matrix', Theta = 'matrix'),
-    definition = function(x, A, Theta){          
-        stop('Information functions not yet written for ', class(x))
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'partcomp', A = 'matrix', Theta = 'matrix'),
+    signature = signature(x = 'mcm', A = 'numeric', Theta = 'matrix'),
     definition = function(x, A, Theta){          
         stop('Information functions not yet written for ', class(x))
     }
@@ -708,6 +790,14 @@ setMethod(
 
 setMethod(
     f = "Deriv",
+    signature = signature(x = 'mcm', Theta = 'matrix'),
+    definition = function(x, Theta){
+        stop('Derivatives have not be written for multiple choice models yet')
+    }
+)
+
+setMethod(
+    f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta){
         tr <- function(y) sum(diag(y))
@@ -851,4 +941,37 @@ P.gpcm <- function(a, d, Theta){
     return(P)   
 }
 
+#ak[1] == 0, ak[length(ak)] == length(ak) - 1, d[1] ==0, sum(t) == 1 
+P.mcm <- function(a, ak, d, t, Theta){
+    ncat <- length(d)
+    nfact <- ncol(Theta)    
+    a <- matrix(a)    
+    P <- numerator <- matrix(0, nrow(Theta), ncat)  
+    
+    for(i in 1:ncat)
+        numerator[ ,i] <- exp(1.702 * ak[i] * (Theta %*% a) + 1.702 * d[i])
+    denominator <- rowSums(numerator)
+    C0 <- 1 / denominator
+    t[1] <- 1 - sum(t[2:length(t)])
+    T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
+    P <- C0 * T + (1 - C0) * numerator/denominator
+    return(P)   
+}
 
+#nominal/gpcm item info
+Info.nominal <- function(Theta, a, ak, A, d){
+    P <- P.nominal(a, ak, d, Theta)    
+    AK <- matrix(ak, nrow(Theta), length(ak), byrow = TRUE)
+    M <- AK * P
+    M2 <- AK^2 * P
+    d2P <- dP <- matrix(0,nrow(AK), ncol(AK))
+    for(i in 1:ncol(dP))        
+        dP[,i] <- A * P[,i] * (ak[i] - rowSums(M)) 
+    for(i in 1:ncol(dP))        
+        d2P[,i] <- ak[i]^2 * A^2 * P[,i] - 
+            2 * ak[i] * A^2 * P[,i] * rowSums(M) + 
+            2 * A^2 * P[,i] * rowSums(M^2) - 
+            A^2 * P[,i] * rowSums(M2)
+    info <- rowSums((dP)^2 / P - d2P)    
+    info
+}

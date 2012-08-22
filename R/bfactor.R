@@ -3,8 +3,9 @@
 #' \code{bfactor} fits a confirmatory maximum likelihood bifactor model to
 #' dichotomous and polychotomous data under the item response theory paradigm. 
 #' Fits univariate and mutilvariate Rasch, 1-4PL, graded, (generalized) partial credit, 
-#' and nominal models using a dimensional reduction EM algorithm so that regardless of the 
-#' number of specific factors estimated the model only uses a two-dimensional quadrature grid
+#' nominal, and multiple choice models using 
+#' a dimensional reduction EM algorithm so that regardless 
+#' of the number of specific factors estimated the model only uses a two-dimensional quadrature grid
 #' for integration.
 #' 
 #' 
@@ -57,9 +58,11 @@
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
 #' @param itemtype type of items to be modeled, decalred as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
-#' however they may be changed to the following: '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal',  for the 2 parameter logistic, 3 parameter logistic (lower asymptote and upper), 
-#' 4 parameter logistic, graded response model, generalized partial credit model, and nominal model, respectively. 
+#' however they may be changed to the following: '1PL', '2PL', '3PL', '3PLu', 
+#' '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the 1 and 2 parameter logistic, 
+#' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
+#' generalized partial credit model, nominal model, and multiple choice models,
+#' respectively. Note that specifying a '1PL' model should be of length 1 (since there is only 1 slope parameter estimated).
 #' If \code{NULL} the defaul assumes that the data follow a '2PL' or 'graded' format
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
@@ -447,6 +450,12 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 		            tmp <- tmp + 1
 		        }
 		    }
+		}
+		#apply sum(t) ==1 constraint for mcm
+		if(is(pars[[i]], 'mcm')){
+		    tmp <- pars[[i]]@par
+		    tmp[length(tmp) - K[i] + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - K[i] + 2)])
+		    pars[[i]]@par <- tmp
 		}
 		for(i in 1:J) listpars[[i]] <- pars[[i]]@par
 		maxdif <- max(do.call(c,listpars) - do.call(c,lastpars1))

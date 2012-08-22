@@ -73,14 +73,16 @@
   repeated globally. The NULL default assumes that the
   items are ordinal or 2PL, however they may be changed to
   the following: '1PL', '2PL', '3PL', '3PLu', '4PL',
-  'graded', 'gpcm', 'nominal', for the 1 and 2 parameter
-  logistic, 3 parameter logistic (lower asymptote and
-  upper), 4 parameter logistic, graded response model,
-  generalized partial credit model, and nominal model,
-  respectively. Note that specifying a '1PL' model should
-  be of length 1 (since there is only 1 slope parameter
-  estimated). If \code{NULL} the defaul assumes that the
-  data follow a '2PL' or 'graded' format}
+  'graded', 'gpcm', 'nominal', 'mcm', 'PC2PL' and 'PC3PL'
+  for the 1 and 2 parameter logistic, 3 parameter logistic
+  (lower asymptote and upper), 4 parameter logistic, graded
+  response model, generalized partial credit model, nominal
+  model, multiple choice model, and 2 and 3PL
+  partially-compensatory models, respectively. Note that
+  specifying a '1PL' model should be of length 1 (since
+  there is only 1 slope parameter estimated). If
+  \code{NULL} the defaul assumes that the data follow a
+  '2PL' or 'graded' format}
 
   \item{constrain}{a list of user declared equallity
   constraints. To see how to define the parameters
@@ -168,8 +170,8 @@
   response theory paradigm using Cai's (2010)
   Metropolis-Hastings Robbins-Monro algorithm. Fits
   univariate and multivariate Rasch, 1-4PL, graded,
-  (generalized) partial credit, nominal, and
-  partially-compensatory models, potentially with
+  (generalized) partial credit, nominal, multiple choice,
+  and partially-compensatory models, potentially with
   polynomial and product constructed latent traits.
 }
 \details{

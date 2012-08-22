@@ -51,6 +51,9 @@ setClass("nominal", contains = 'AllItemsClass',
 
 setClass("partcomp", contains = 'AllItemsClass')
 
+setClass("mcm", contains = 'AllItemsClass',
+         representation(ncat='numeric'))
+
 #--------------------------------------------------------------------------
 
 #Generics

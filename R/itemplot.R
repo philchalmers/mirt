@@ -76,7 +76,7 @@ setMethod(
 
 itemplot.main <- function(x, item, type, ...){    
     nfact <- ncol(x@F)
-    if(nfact > 2) stop('Can not plot high dimensional models')
+    if(nfact > 2 && !x[[1]]@bfactor) stop('Can not plot high dimensional models')
     Theta <- x@Theta    
     P <- ProbTrace(x=x@pars[[item]], Theta=Theta)     
     a <- ExtractLambdas(x@pars[[item]])

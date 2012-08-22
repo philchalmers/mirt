@@ -4,7 +4,7 @@
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous and polychotomous data under the item response theory paradigm. 
 #' Fits univariate and mutilvariate Rasch, 1-4PL, graded, (generalized) partial credit, 
-#' and nominal models using the EM algorithm.
+#' nominal, and multiple choice models using the EM algorithm.
 #' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
 #' likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
@@ -54,9 +54,10 @@
 #' @param itemtype type of items to be modeled, decalred as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
 #' however they may be changed to the following: '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal',  for the 1 and 2 parameter logistic, 3 parameter logistic (lower asymptote and upper), 
-#' 4 parameter logistic, graded response model, generalized partial credit model, and nominal model, respectively.
-#' Note that specifying a '1PL' model should be of length 1 (since there is only 1 slope parameter estimated).
+#' '4PL', 'graded', 'gpcm', 'nominal', and 'mcm' for the 1 and 2 parameter logistic, 
+#' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
+#' generalized partial credit model, nominal model, and multiple choice model,
+#' respectively. Note that specifying a '1PL' model should be of length 1 (since there is only 1 slope parameter estimated).
 #' If \code{NULL} the defaul assumes that the data follow a '2PL' or 'graded' format
 #' @param SE logical, estimate the standard errors?
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
@@ -446,7 +447,7 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     			converge <- 0
     			next
     		}		  
-    		pars[[i]]@par[pars[[i]]@est] <- maxim$par          	                
+    		pars[[i]]@par[pars[[i]]@est] <- maxim$par            
         }               
     	#items with constraints
         if(length(constrain) > 0){
@@ -483,13 +484,19 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                 }
             }
         }
+    	#apply sum(t) ==1 constraint for mcm
+    	if(is(pars[[i]], 'mcm')){
+    	    tmp <- pars[[i]]@par
+    	    tmp[length(tmp) - K[i] + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - K[i] + 2)])
+    	    pars[[i]]@par <- tmp
+    	}    	
     	for(i in 1:J) listpars[[i]] <- pars[[i]]@par
     	maxdif <- max(do.call(c,listpars) - do.call(c,lastpars1))	
     	if (maxdif < TOL && cycles > 10) break  
     	if (cycles %% 3 == 0 & cycles > 6)    	 
     	    pars <- rateChange(pars=pars, listpars=listpars, lastpars1=lastpars1, 
     	                       lastpars2=lastpars2)
-    }###END EM	
+    }###END EM	    
 	if(converge == 0) 
 		warning("Parameter estimation reached unacceptable values. 
 			Model probably did not converged.")  		

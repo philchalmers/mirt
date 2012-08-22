@@ -46,14 +46,14 @@ Theory)}
   repeated globally. The NULL default assumes that the
   items are ordinal or 2PL, however they may be changed to
   the following: '1PL', '2PL', '3PL', '3PLu', '4PL',
-  'graded', 'gpcm', 'nominal', for the 1 and 2 parameter
-  logistic, 3 parameter logistic (lower asymptote and
-  upper), 4 parameter logistic, graded response model,
-  generalized partial credit model, and nominal model,
-  respectively. Note that specifying a '1PL' model should
-  be of length 1 (since there is only 1 slope parameter
-  estimated). If \code{NULL} the defaul assumes that the
-  data follow a '2PL' or 'graded' format}
+  'graded', 'gpcm', 'nominal', and 'mcm' for the 1 and 2
+  parameter logistic, 3 parameter logistic (lower asymptote
+  and upper), 4 parameter logistic, graded response model,
+  generalized partial credit model, nominal model, and
+  multiple choice model, respectively. Note that specifying
+  a '1PL' model should be of length 1 (since there is only
+  1 slope parameter estimated). If \code{NULL} the defaul
+  assumes that the data follow a '2PL' or 'graded' format}
 
   \item{SE}{logical, estimate the standard errors?}
 
@@ -197,8 +197,8 @@ Theory)}
   factor analysis model to dichotomous and polychotomous
   data under the item response theory paradigm. Fits
   univariate and mutilvariate Rasch, 1-4PL, graded,
-  (generalized) partial credit, and nominal models using
-  the EM algorithm.
+  (generalized) partial credit, nominal, and multiple
+  choice models using the EM algorithm.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by
@@ -274,8 +274,8 @@ residuals(mod1)
 plot(mod1) #test information function
 
 #estimated 3PL model for item 5 only
-(mod1.4PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
-coef(mod1.4PL, allpars = TRUE)
+(mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
+coef(mod1.3PL, allpars = TRUE)
 
 (mod2 <- mirt(data, 2))
 summary(mod2)

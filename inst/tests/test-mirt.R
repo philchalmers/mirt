@@ -5,7 +5,7 @@ test_that('dich', {
     modm1 <- mirt(data, 1)
     modm2 <- mirt(data, 2)
     modm3 <- mirt(data, 1, itemtype = 'Rasch')
-    modm4 <- mirt(data, 1, itemtype = '1PL')
+    modm4 <- mirt(data, 1, itemtype = '1PL')    
     sv <- mirt(data,1, startvalues = 'index')
     fp <- mirt(data,1, freepars = 'index')
     modm5 <- mirt(data,1, startvalues = sv, freepars = fp)
@@ -27,9 +27,11 @@ test_that('poly', {
     modp1 <- mirt(Science, 1)
     modp2 <- mirt(Science, 2)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)))
+    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'mcm'))
     expect_is(modp1, 'mirtClass')          
     expect_is(modp2, 'mirtClass')
     expect_is(modp3, 'mirtClass')
+    expect_is(modp4, 'mirtClass')
     
     fm1 <- fscores(modp1, verbose = FALSE)
     expect_is(fm1, 'matrix')
@@ -37,5 +39,7 @@ test_that('poly', {
     expect_is(fm2, 'matrix')
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
+    fm4 <- fscores(modp4, verbose = FALSE)
+    expect_is(fm4, 'matrix')
 })
 

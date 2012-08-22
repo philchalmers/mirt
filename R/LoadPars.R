@@ -14,6 +14,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         for(i in 1:length(constrain))
             constr <- c(constr, constrain[[i]])
     constr <- unique(constr)
+    #startvalues
     if(is.null(startvalues) || startvalues =='index'){        
         startvalues <- list()
         for(i in 1:J){
@@ -48,9 +49,16 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 val <- c(lambdas[i,], rep(-1, nfact), 0, 1)
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
             }
+            if(itemtype[i] == 'mcm'){
+                val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]), 
+                         rep(1/K[i], K[i]))
+                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
+                                paste('d', 0:(K[i]-1), sep=''), paste('t', 0:(K[i]-1), sep=''))                
+            }
             startvalues[[i]] <- val
         } 
-    }        
+    }  
+    #freepars
     if(is.null(freepars) || freepars == 'index'){
         freepars <- list()
         for(i in 1:J){
@@ -73,7 +81,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'graded')
                 freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
             if(itemtype[i] == 'gpcm')            
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))            
+                freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-1))            
             if(itemtype[i] == 'nominal'){
                 estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
                 #identifiction constraints
@@ -85,12 +93,19 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1] <- TRUE
                 freepars[[i]] <- estpars
             }
+            if(itemtype[i] == 'mcm'){
+                estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*3))
+                #identifiction constraints
+                estpars[c(nfact+1, nfact + K[i], nfact + K[i] + 1, length(estpars) - K[i] + 1)] <- FALSE
+                freepars[[i]] <- estpars
+            }
         }         
     }
     for(i in 1:J) names(freepars[[i]]) <- names(startvalues[[i]])
     if(itemtype[1] == 'Rasch') 
         for(i in 1:J)
-            startvalues[[i]][1] <- 1/1.702            
+            startvalues[[i]][1] <- 1/1.702 
+    #load items
     for(i in 1:J){
         tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location 
         if(itemtype[i] == 'NullModel' && K[i] == 2){ 
@@ -298,7 +313,30 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
+        
+        if(itemtype[i] == 'mcm'){
+            pars[[i]] <- new('mcm', 
+                             par=startvalues[[i]], 
+                             est=freepars[[i]], 
+                             nfact=nfactNames, 
+                             ncat=K[i], 
+                             dat=fulldata[ ,tmp], 
+                             constr=FALSE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead',
+                             n.prior.mu=rep(NaN,length(startvalues[[i]])),
+                             n.prior.sd=rep(NaN,length(startvalues[[i]])),
+                             b.prior.alpha=rep(NaN,length(startvalues[[i]])),
+                             b.prior.beta=rep(NaN,length(startvalues[[i]])))                            
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+        }
     }   
+    #priors
     for(i in 1:J){
         names(pars[[i]]@parnum) <- names(startvalues[[i]])
         if(!is.null(parprior) && parprior != 'index'){

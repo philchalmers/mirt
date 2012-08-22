@@ -7,7 +7,7 @@ test_that('dich data', {
     specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
     mod1 <- bfactor(data, specific)
     mod2 <- bfactor(data, specific, itemtype = c(rep('2PL', 29), '3PL', rep('2PL',2)),
-                    parprior = list(c(209, 'beta',10,40)))
+                    parprior = list(c(209, 'beta',10,40)))    
     expect_is(mod1, 'bfactorClass')              
     expect_is(mod2, 'bfactorClass')
     fs <- fscores(mod1, verbose = FALSE)
@@ -52,7 +52,7 @@ test_that('mix data', {
         0.0,NA,NA),ncol=3,byrow=TRUE)
     
     nominal <- matrix(NA, nrow(d), ncol(d))
-    nominal[5, ] <- c(1,1.2,3)    
+    nominal[5, ] <- c(0,1.2,2)    
     sigma <- diag(3)
     set.seed(1234)
     items <- itemtype <- c(rep('dich', 4), 'nominal', 'gpcm', rep('graded',4),rep('dich', 4))

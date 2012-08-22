@@ -4,18 +4,20 @@ mirt 0.3.0
 
 * radically changed the underlying mechanisms for the 
   estimation functions and in doing so have decided that polymirt() was 
-  redundant and could be replaced completely by calling confmirt(data, number_of_factors). 
+  redundant and could be replaced completely by calling confmirt(data, number_of_factors). The
+  reason for the change was to facilitate a wider range or MIRT models and to allow for easier
+  extensions to future multiple group analysis and multilevel modelling 
 
 * new univariate and MV models are available, including the 1-4 parameter logistic
-  generalized partial credit, and nominal models. These are called by specifying a character
+  generalized partial credit, nominal, and multiple choice models. These are called by specifying a character
   vector called 'itemtype' of length nitems with the options '2PL','3PL','4PL','graded','gpcm',
-  'nominal', or 'partcomp'. If itemtype = '1PL' or 'Rasch', then the 1-parameter logistic/1-parameter
-  ordinal or Rasch/partial credit models are estimated for all the data. The default assumes that
-  items are either '2PL' or 'graded', as before. 
+  'nominal', or 'mcm'; use 'PC2PL' and 'PC3PL'for partially-compensatory items. If itemtype = '1PL' or 'Rasch', 
+  then the 1-parameter logistic/1-parameter ordinal or Rasch/partial credit models are estimated for 
+  all the data. The default assumes that items are either '2PL' or 'graded', as before. 
 
 * flexible user defined linear equality restrictions may be imposed on all estimation functions, 
   so too can prior parameter distributions, start values, and choice of which parameters to 
-  estimate at all. These all follow these general 2 steps: 
+  estimate. These all follow these general 2 steps: 
 
     1) Call the function as you would normally would but use, for example, 
        mirt(data, 1, startvalues = 'index') to return the start values as they are indexed
