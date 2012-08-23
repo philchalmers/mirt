@@ -259,7 +259,7 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
                  constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
                  prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
@@ -274,6 +274,11 @@ mirt <- function(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        
 	NULL.MODEL <- ifelse(nfact == 0, TRUE, FALSE)    
     ##              
+  
+
+
+
+
     Target <- ifelse(is.null(Target), NaN, Target)    
 	nfact <- ifelse(nfact == 0, 1, nfact) #for null model
 	itemnames <- colnames(data)	

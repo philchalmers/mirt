@@ -105,6 +105,7 @@ setMethod(
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
 		}		
+        browser()
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  
@@ -235,3 +236,17 @@ setMethod(
 	}	
 )
 
+# MAP scoring for mirt
+MAP.mirt <- function(Theta, pars, patdata, itemloc, ML=FALSE)
+{    
+    itemtrace <- rep(0, ncol=length(patdata))
+    Theta <- matrix(Theta, nrow=1)    
+    itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))        
+    for (i in 1:(length(pars)))
+        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)		
+    L <- sum(log(itemtrace)[as.logical(patdata)])
+    mu <- 0
+    sigma <- 1
+    L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
+    L  
+}

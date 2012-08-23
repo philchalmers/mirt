@@ -70,7 +70,7 @@ MHRM <- function(pars, list, debug)
         estindex <- index[estpars]
         L <- diag(as.numeric(L))
         redun_constr <- rep(FALSE, length(estpars)) 
-        if(!is.null(constrain)){
+        if(length(constrain) > 0){
             for(i in 1:length(constrain)){            
                 L[constrain[[i]], constrain[[i]]] <- 1/length(constrain[[i]]) 
                 for(j in 2:length(constrain[[i]]))
@@ -135,7 +135,7 @@ MHRM <- function(pars, list, debug)
             for (j in 1:k) { 
                 ind1 <- 1
                 thetatemp <- m.thetas[[j]]
-                if(!is.null(prodlist)) thetatemp <- prodterms(thetatemp,prodlist)	
+                if(length(prodlist) > 0) thetatemp <- prodterms(thetatemp,prodlist)	
                 for (i in 1:(length(pars)-1)){	
                     deriv <- Deriv(x=pars[[i]], Theta=thetatemp)
                     ind2 <- ind1 + length(deriv$grad) - 1
@@ -190,7 +190,7 @@ MHRM <- function(pars, list, debug)
                 correction[correction > .5] <- 1
                 correction[correction < -.5] <- -1
                 longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
-                if(!is.null(constrain))
+                if(length(constrain) > 0)
                     for(i in 1:length(constrain))
                         longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
                 if(verbose && (cycles + 1) %% 10 == 0){ 
@@ -216,7 +216,7 @@ MHRM <- function(pars, list, debug)
             }		
             correction <-  as.numeric(inv.Tau %*% grad)
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
-            if(!is.null(constrain))
+            if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
             if(verbose && (cycles + 1) %% 10 == 0){ 
@@ -257,7 +257,7 @@ MHRM <- function(pars, list, debug)
         } else SEtmp <- sqrt(SEtmp)
         SE <- rep(NA, length(longpars))
         SE[estindex_unique] <- SEtmp
-        if(!is.null(constrain))
+        if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
         ind1 <- 1

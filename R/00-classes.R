@@ -144,3 +144,35 @@ setClass(
                                     Call = 'call'),	
     validity = function(object) return(TRUE)
 )	
+
+#' @exportClass multipleGroupClass
+setClass(
+    Class = 'multipleGroupClass',
+    representation = representation(EMiter='numeric', 
+                                    pars='list', 
+                                    K='numeric', 
+                                    X2='numeric', 
+                                    df='numeric', 
+                                    p='numeric', 
+                                    AIC='numeric', 
+                                    F='matrix', 
+                                    h2='numeric', 
+                                    tabdata='matrix', 
+                                    tabdatalong='matrix', 
+                                    Theta='matrix', 
+                                    Pl='numeric',
+                                    data='matrix', 
+                                    cormat='matrix', 
+                                    converge='numeric', 
+                                    itemloc = 'numeric',
+                                    quadpts='numeric', 
+                                    BIC='numeric', 
+                                    RMSEA='numeric', 
+                                    rotate='character', 
+                                    null.mod = 'S4', 
+                                    TLI = 'numeric', 
+                                    Target='numeric', 
+                                    logLik='numeric',                                    
+                                    Call='call'),    
+    validity = function(object) return(TRUE)
+)

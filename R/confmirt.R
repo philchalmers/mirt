@@ -253,145 +253,58 @@
 #' 
 #' }
 #' 
-confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startvalues = NULL, 
+confmirt <- function(data, model, itemtype = NULL, group = NULL, guess = 0, upper = 1, startvalues = NULL, 
                      constrain = NULL, freepars = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
                      draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      technical = list(),  ...)
-{
-    if(debug == 'Main') browser()
+{    
+    ##technical
 	Call <- match.call()               
-	set.seed(12345)	
-	itemnames <- colnames(data)
-	keywords <- c('COV')
-	data <- as.matrix(data)		
-	colnames(data) <- itemnames	
-	J <- ncol(data)
-	N <- nrow(data)
-	exploratory <- FALSE
-    if(is(model, 'numeric')){
-        tmp <- tempfile('tempfile')
-        cat(paste('F',1:model,' = 1-', J, "\n", sep=''), file=tmp)
-        model <- confmirt.model(tmp, quiet = TRUE)
-        exploratory <- TRUE
-        unlink(tmp)
-    }    
-	##technical
-	NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
+	set.seed(12345)	    
+    NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
     TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)        
-	if(!is.null(technical$set.seed)) set.seed(technical$set.seed)	
-	gain <- c(0.05,0.5,0.004)
-	if(!is.null(technical$gain)) {
-		if(length(technical$gain) == 3 && is.numeric(technical$gain))
-			gain <- technical$gain
-	}
-	##
-	Target <- ifelse(is.null(Target), NaN, Target)
-	if(length(guess) == 1) guess <- rep(guess,J)
-	if(length(guess) > J || length(guess) < J) 
-		stop("The number of guessing parameters is incorrect.")					
-	if(length(upper) == 1) upper <- rep(upper,J)
-	if(length(upper) > J || length(upper) < J) 
-	    stop("The number of upper bound parameters is incorrect.")
-	uniques <- list()
-	for(i in 1:J)
-		uniques[[i]] <- sort(unique(data[,i]))
-	K <- rep(0,J)
-	for(i in 1:J) K[i] <- length(uniques[[i]])	
-	guess[K > 2] <- 0
-	upper[K > 2] <- 1		
-	if(is.null(itemtype)) {
-	    itemtype <- rep('', J)
-	    for(i in 1:J){
-	        if(K[i] > 2) itemtype[i] <- 'graded'
-	        if(K[i] == 2) itemtype[i] <- '2PL'                            
-	    }        
-	} 
-	if(length(itemtype) != J) stop('itemtype specification is not the correct length')
-	if(length(itemtype) == 1) itemtype <- rep(itemtype, J)
-	itemloc <- cumsum(c(1,K))	
-	model <- matrix(model$x,ncol=2)
-	factorNames <- setdiff(model[,1],keywords)
-	nfactNames <- length(factorNames)
-	nfact <- sum(!grepl('\\(',factorNames))
-	index <- 1:J	
-    fulldata <- matrix(0,N,sum(K))
-	Names <- NULL
-	for(i in 1:J)
-	    Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
-	colnames(fulldata) <- Names			
-	for(i in 1:J){
-	    ind <- index[i]		
-	    dummy <- matrix(0,N,K[ind])
-	    for (j in 0:(K[ind]-1))  
-	        dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
-	    fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
-	}	
-	fulldata[is.na(fulldata)] <- 0    
-    parnumber <- 1 #to be used later when looping over more than 1 group       
-	pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
-                           nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
-                           itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
-                           itemnames=itemnames, exploratory=exploratory, constrain=constrain,
-                           startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                           parnumber=parnumber, debug=debug)   
-    prodlist <- attr(pars, 'prodlist')
-	if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
-        names(pars) <- c(itemnames, 'Group_Parameters')
-        attr(pars, 'parnumber') <- NULL
-        return(pars)  
-    }
-	if(!is.null(constrain) || !is.null(parprior)){
-	    if(any(constrain == 'index', parprior == 'index')){
-	        returnedlist <- list()                        
-	        for(i in 1:length(pars))
-	            returnedlist[[i]] <- pars[[i]]@parnum 
-	        names(returnedlist) <- c(itemnames, 'Group_Parameters')            
-	        return(returnedlist)
-	    }
-	}   
-    onePLconstraint <- c()
-    if(itemtype[1] == '1PL'){
-        constrain <- list()
-        for(i in 1:J)
-            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1])    
-        constrain[[length(constrain) + 1]] <- onePLconstraint
-        pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
-                               nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
-                               itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
-                               itemnames=itemnames, exploratory=exploratory, constrain=constrain,
-                               startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                               parnumber=parnumber, debug=debug)
-    }
-    npars <- 0
-    for(i in 1:length(pars))
-        npars <- npars + sum(pars[[i]]@est)	        	    
- 	ESTIMATE <- MHRM(pars=pars, list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
- 	                                       KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=nfactNames, 
-                                           itemloc=itemloc, fulldata=fulldata, nfact=nfact, 
-                                           npars=npars, constrain=constrain, verbose=verbose), debug=debug) 
+    if(!is.null(technical$set.seed)) set.seed(technical$set.seed)	
+    gain <- c(0.05,0.5,0.004)
+    if(!is.null(technical$gain)) {
+        if(length(technical$gain) == 3 && is.numeric(technical$gain))
+            gain <- technical$gain
+    }	
+    ##
+	if(debug == 'Main') browser()
+    Target <- ifelse(is.null(Target), NaN, Target)
+    data <- as.matrix(data)
+	PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
+                         startvalues=startvalues, constrain=constrain, freepars=freepars, 
+	                     parprior=parprior, verbose=verbose, calcLL=calcLL, debug=debug, 
+                         technical=technical)           
+ 	ESTIMATE <- MHRM(pars=PrepList$pars, 
+                      list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
+                                KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=PrepList$nfactNames, 
+                                itemloc=PrepList$itemloc, fulldata=PrepList$fulldata, 
+                                nfact=PrepList$nfact, npars=PrepList$npars, 
+                                constrain=PrepList$constrain, verbose=verbose), 
+                      debug=debug) 
     pars <- ESTIMATE$pars
 	if(verbose) cat("\n\n")    
 	lambdas <- Lambdas(pars)
-	if (nfactNames > 1){
-        norm <- sqrt(1 + rowSums(lambdas[ ,1:nfactNames]^2,na.rm = TRUE))
+	if (PrepList$nfactNames > 1){
+        norm <- sqrt(1 + rowSums(lambdas[ ,1:PrepList$nfactNames]^2,na.rm = TRUE))
 	} else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
-	F <- as.matrix(lambdas[ ,1:nfactNames]/norm)
+	F <- as.matrix(lambdas[ ,1:PrepList$nfactNames]/norm)
 	F[is.na(F)] <- 0		
 	h2 <- rowSums(F^2)
-	colnames(F) <- factorNames
-	names(h2) <- itemnames  
+	colnames(F) <- PrepList$factorNames
+	names(h2) <- PrepList$itemnames  
 	null.mod <- unclass(new('mirtClass'))
-    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))
-    if(is.null(constrain)) constrain <- list()
-    if(is.null(prodlist)) prodlist <- list()
-    
-    ret <- new('confmirtClass', pars=pars, K=K, itemloc=itemloc, cycles=ESTIMATE$cycles,                
-               fulldata=fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
-               null.mod=null.mod, constrain=constrain, nfact=nfact, exploratory=exploratory,
-               factorNames=factorNames, rotate=rotate, prodlist=prodlist, Call=Call)    
+    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))    
+    ret <- new('confmirtClass', pars=pars, K=PrepList$K, itemloc=PrepList$itemloc, cycles=ESTIMATE$cycles,                
+               fulldata=PrepList$fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
+               null.mod=null.mod, constrain=PrepList$constrain, nfact=PrepList$nfact, 
+               exploratory=PrepList$exploratory, factorNames=PrepList$factorNames, rotate=rotate, 
+               prodlist=PrepList$prodlist, Call=Call)    
 	if(calcLL){
 		if(verbose) cat("Calculating log-likelihood...\n")
 		flush.console()

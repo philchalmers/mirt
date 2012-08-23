@@ -41,7 +41,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 }      
 
 Mstep.mirt <- function(par, obj, Theta, prior, constr = list(), debug){     
-    if(debug == 'Mstep') browser()
+    if(debug == 'Mstep.mirt') browser()
     if(length(constr) < 1){
         obj@par[obj@est] <- par    
         ret <- LogLik(x=obj, Theta=Theta)                
@@ -52,4 +52,20 @@ Mstep.mirt <- function(par, obj, Theta, prior, constr = list(), debug){
             ret <- ret + LogLik(x=obj[[i]], Theta=Theta)               
     }
     return(ret)
+}
+
+# Mstep for group pars
+Mstep.group <- function(par, pars, gobj, Theta, tabdata, r, itemloc, constr = list(), debug)
+{   
+    if(debug == 'Mstep.group') browser()
+    gobj@par[gobj@est] <- par    
+    gpars <- ExtractGroupPars(gobj)
+    mu <- gpars$gmeans
+    sigma <- gpars$gcov    
+    prior <- dmvnorm(Theta, mean=mu, sigma=sigma)
+    prior <- prior/sum(prior)    
+    rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, 
+                        debug=debug)
+    L <- sum(r*log(Pl))
+    L   
 }
