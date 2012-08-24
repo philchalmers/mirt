@@ -1,5 +1,5 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
-                     parprior, verbose, calcLL, debug, technical)
+                     parprior, verbose, debug, technical, BFACTOR = FALSE)
 {
     if(debug == 'PrepData') browser()
     itemnames <- colnames(data)
@@ -9,13 +9,31 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     J <- ncol(data)
     N <- nrow(data)
     exploratory <- FALSE
-    if(is(model, 'numeric')){
+    if(is(model, 'numeric') && length(model) == 1){
         tmp <- tempfile('tempfile')
         cat(paste('F',1:model,' = 1-', J, "\n", sep=''), file=tmp)
         model <- confmirt.model(tmp, quiet = TRUE)
         exploratory <- TRUE
         unlink(tmp)
-    }    
+    }
+    if(is(model, 'numeric') && length(model) > 1){
+        tmp <- tempfile('tempfile')
+        unique <- unique(model)
+        index <- 1:J
+        tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
+        for(i in 1:length(unique)){
+            ind <- index[model == unique[i]]
+            comma <- rep(',', 2*length(ind))
+            TF <- rep(c(TRUE,FALSE), length(ind))
+            comma[TF] <- ind
+            comma[length(comma)] <- ""
+            tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
+        }
+        cat(tmp2, file=tmp)
+        model <- confmirt.model(tmp, quiet = TRUE)
+        BFACTOR <- TRUE
+        unlink(tmp)
+    }
     if(length(guess) == 1) guess <- rep(guess,J)
     if(length(guess) > J || length(guess) < J) 
         stop("The number of guessing parameters is incorrect.")					
@@ -36,8 +54,8 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
             if(K[i] == 2) itemtype[i] <- '2PL'                            
         }        
     } 
-    if(length(itemtype) != J) stop('itemtype specification is not the correct length')
     if(length(itemtype) == 1) itemtype <- rep(itemtype, J)
+    if(length(itemtype) != J) stop('itemtype specification is not the correct length')    
     itemloc <- cumsum(c(1,K))	
     model <- matrix(model$x,ncol=2)
     factorNames <- setdiff(model[,1],keywords)
@@ -57,13 +75,44 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
         fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
     }	
     fulldata[is.na(fulldata)] <- 0    
+    pats <- apply(fulldata, 1, paste, collapse = "/") 
+    freqs <- rev(table(pats))
+    nfreqs <- length(freqs)
+    r <- as.vector(freqs)	
+    tabdata <- unlist(strsplit(cbind(names(freqs)), "/"))
+    tabdata <- matrix(as.numeric(tabdata), nfreqs, sum(K), TRUE)	
+    tabdata2 <- matrix(NA, nfreqs, J)
+    tmp <- c()
+    for(i in 1:J){ 
+        if(K[i] == 2) tmp <- c(tmp,0,1)
+        else tmp <- c(tmp, 1:K[i])
+    }
+    for(i in 1:nfreqs){
+        if(sum(tabdata[i, ]) < J){
+            tmp2 <- rep(NA,J)
+            ind <- tmp[as.logical(tabdata[i, ])]
+            logicalind <- as.logical(tabdata[i, ])
+            k <- 1
+            for(j in 1:J){
+                if(sum(logicalind[itemloc[j]:(itemloc[j+1]-1)]) != 0){
+                    tmp2[j] <- ind[k]
+                    k <- k + 1
+                }
+            }
+            tabdata2[i, ] <- tmp2
+        } else tabdata2[i, ] <- tmp[as.logical(tabdata[i, ])]
+    }
+    tabdata <- cbind(tabdata,r) 
+    tabdata2 <- cbind(tabdata2,r)
+    colnames(tabdata) <- c(Names,'Freq')	
+    colnames(tabdata2) <- c(itemnames, 'Freq')    
     parnumber <- 1 #to be used later when looping over more than 1 group       
     pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                            startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                           parnumber=parnumber, debug=debug)   
+                           parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)   
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')
@@ -90,7 +139,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                                itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                                itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                               parnumber=parnumber, debug=debug)
+                               parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)
     }
     npars <- 0
     for(i in 1:length(pars))
@@ -99,6 +148,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     if(is.null(prodlist)) prodlist <- list()
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,
                 K=K, fulldata=fulldata, nfactNames=nfactNames, nfact=nfact, npars=npars, 
-                exploratory=exploratory, J=J, itemloc=itemloc, factorNames=factorNames)
+                exploratory=exploratory, J=J, itemloc=itemloc, factorNames=factorNames, 
+                itemtype=itemtype, tabdata=tabdata, tabdata2=tabdata2)
     ret
 }

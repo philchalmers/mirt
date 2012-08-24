@@ -7,16 +7,20 @@
   multidimensional IRT models
 }
 \details{
-  Analysis of dichotomous and polychotomous response data
+  Analysis of dichotomous and polytomous response data
   using latent trait models under the Item Response Theory
-  paradigm. Includes the multivariate two- and
-  three-parameter logistic models, confirmatory bifactor
-  analysis, polytomous confirmatory and exploratory item
-  response models, and partially-compensatory item response
-  modeling in conjunction with non-linear (product) factor
-  relationships. Item constraints may be imposed to fit
-  anthing from a Rasch model to the multidimentional
-  nominal model.
+  paradigm. Includes univariate and multivariate one-,
+  two-, three-, and four-parameter logistic models, graded
+  response models, generalized partial credit models,
+  nominal models, multiple choice models, and multivariate
+  partially-compensatory models. These can be used in an
+  exploratory or confirmatory manner with optional user
+  defined linear constraints. Exploratory models can be
+  estimated via quadrature or stochastic methods, a
+  generalized confirmatory bi-factor analysis is included,
+  and confirmatory models can be fit with a
+  Metropolis-Hastings Robbins-Monro algorithm which can
+  include polynomial or product constructed latent traits.
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}

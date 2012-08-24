@@ -104,8 +104,7 @@ setMethod(
 			SE <- sqrt(colSums(t((t(Theta) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
-		}		
-        browser()
+		}		        
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  

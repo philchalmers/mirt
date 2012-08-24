@@ -1,6 +1,6 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata, 
                            itemloc, data, N, guess, upper, itemnames, exploratory, constrain, 
-                           startvalues, freepars, parprior, parnumber, debug)
+                           startvalues, freepars, parprior, parnumber, BFACTOR = FALSE, debug)
 {       
     if(debug == 'model.elements') browser()
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
@@ -75,8 +75,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     diag(gcov) <- 1	  
     #MEAN
     gmeans <- rep(0, nfact)
-    estgmeans <- rep(FALSE, nfact)
-    
+    estgmeans <- rep(FALSE, nfact)    
     if(exploratory){        
         Rpoly <- cormod(na.omit(data),K,guess)
         FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
@@ -89,7 +88,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
                     fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, nfactNames=nfactNames,
                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
-                    estLambdas=estlam, debug=debug)      
+                    estLambdas=estlam, BFACTOR=BFACTOR, debug=debug)      
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber')+1,
                                             startvalues=startvalues, freepars=freepars, parprior=parprior,

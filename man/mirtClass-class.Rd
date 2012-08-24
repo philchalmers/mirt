@@ -23,7 +23,7 @@ Objects can be created by calls of the form \code{new("mirtClass", ...).}.
     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }        
-    \item{\code{X2}:}{Object of class \code{"numeric"}, Chi-squared  }
+    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom for X2 }
     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for X2  }
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }

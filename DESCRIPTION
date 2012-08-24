@@ -61,3 +61,5 @@ Collate:
     'EMstep.R'
     'LoadPars.R'
     'confmirt.model.R'
+    'model.elements.R'
+    'PrepData.R'

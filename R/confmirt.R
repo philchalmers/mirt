@@ -258,9 +258,11 @@ confmirt <- function(data, model, itemtype = NULL, group = NULL, guess = 0, uppe
                      draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      technical = list(),  ...)
 {    
+    if(debug == 'Main') browser()
     ##technical
 	Call <- match.call()               
 	set.seed(12345)	    
+    RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
     NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
@@ -272,14 +274,14 @@ confmirt <- function(data, model, itemtype = NULL, group = NULL, guess = 0, uppe
         if(length(technical$gain) == 3 && is.numeric(technical$gain))
             gain <- technical$gain
     }	
-    ##
-	if(debug == 'Main') browser()
+    ##	
     Target <- ifelse(is.null(Target), NaN, Target)
     data <- as.matrix(data)
 	PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
                          startvalues=startvalues, constrain=constrain, freepars=freepars, 
-	                     parprior=parprior, verbose=verbose, calcLL=calcLL, debug=debug, 
+	                     parprior=parprior, verbose=verbose, debug=debug, 
                          technical=technical)           
+    if(RETURN) return(PrepList)
  	ESTIMATE <- MHRM(pars=PrepList$pars, 
                       list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
                                 KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=PrepList$nfactNames, 
@@ -299,7 +301,7 @@ confmirt <- function(data, model, itemtype = NULL, group = NULL, guess = 0, uppe
 	colnames(F) <- PrepList$factorNames
 	names(h2) <- PrepList$itemnames  
 	null.mod <- unclass(new('mirtClass'))
-    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 0, itemtype = 'NullModel'))    
+    if(!any(is.na(data))) null.mod <- unclass(mirt(data, 1, itemtype = 'NullModel'))    
     ret <- new('confmirtClass', pars=pars, K=PrepList$K, itemloc=PrepList$itemloc, cycles=ESTIMATE$cycles,                
                fulldata=PrepList$fulldata, data=data, h2=h2, F=F, converge=ESTIMATE$converge,                 
                null.mod=null.mod, constrain=PrepList$constrain, nfact=PrepList$nfact, 

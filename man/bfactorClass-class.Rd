@@ -24,7 +24,7 @@ Objects can be created by calls of the form \code{new("bfactorClass", ...)}.
     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }     
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-    \item{\code{X2}:}{Object of class \code{"numeric"}, chi-squared value }
+    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
     \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
     \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index}

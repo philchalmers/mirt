@@ -197,7 +197,7 @@
 #' @examples
 #' 
 #' \dontrun{
-#' #load LSAT section 7 data and compute 1 and 2 factor models
+#' #load LSAT section 7 data and computmire 1 and 2 factor models
 #' data(LSAT7)
 #' data <- expand.table(LSAT7)
 #' 
@@ -271,275 +271,29 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
 	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
-    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        
-	NULL.MODEL <- ifelse(nfact == 0, TRUE, FALSE)    
+    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        	       
+    RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
     ##              
-  
-
-
-
-
-    Target <- ifelse(is.null(Target), NaN, Target)    
-	nfact <- ifelse(nfact == 0, 1, nfact) #for null model
-	itemnames <- colnames(data)	
-	data <- as.matrix(data)	
-	data.original <- data
-	if(!any(data %in% c(0:20,NA))) 
-		stop("Data must contain only numeric values (including NA).")	
-	J <- ncol(data)
-    index <- 1:J
-	N <- nrow(data)	
-	if(length(guess) == 1) guess <- rep(guess,J)
-	if(length(upper) == 1) upper <- rep(upper,J)
-	colnames(data) <- itemnames
-	if(length(guess) > J || length(guess) < J) 
-		stop("The number of guessing parameters is incorrect.")
-	if(length(upper) > J || length(upper) < J) 
-	    stop("The number of upper bound parameters is incorrect.")
-	facility <- colMeans(na.omit(data))		
-	uniques <- list()
-	for(i in 1:J)
-		uniques[[i]] <- sort(unique(data[,i]))
-	K <- rep(0,J)
-	for(i in 1:J) K[i] <- length(uniques[[i]])	
-	guess[K > 2] <- 0	
-	upper[K > 2] <- 1
-	itemloc <- cumsum(c(1,K))	
-	fulldata <- matrix(0,N,sum(K))
-	Names <- NULL
-	for(i in 1:J)
-        Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
-	colnames(fulldata) <- Names			
-	for(i in 1:J){
-		ind <- index[i]		
-		dummy <- matrix(0,N,K[ind])
-		for (j in 0:(K[ind]-1))  
-			dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
-		fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
-	}	
-	fulldata[is.na(fulldata)] <- 0
-	pats <- apply(fulldata, 1, paste, collapse = "/") 
-	freqs <- rev(table(pats))
-	nfreqs <- length(freqs)
-	r <- as.vector(freqs)	
-	tabdata <- unlist(strsplit(cbind(names(freqs)), "/"))
-	tabdata <- matrix(as.numeric(tabdata), nfreqs, sum(K), TRUE)	
-	tabdata2 <- matrix(NA, nfreqs, J)
-	tmp <- c()
-	for(i in 1:J){ 
-		if(K[i] == 2) tmp <- c(tmp,0,1)
-		else tmp <- c(tmp, 1:K[i])
-	}
-	for(i in 1:nfreqs){
-		if(sum(tabdata[i, ]) < J){
-			tmp2 <- rep(NA,J)
-			ind <- tmp[as.logical(tabdata[i, ])]
-			logicalind <- as.logical(tabdata[i, ])
-			k <- 1
-			for(j in 1:J){
-				if(sum(logicalind[itemloc[j]:(itemloc[j+1]-1)]) != 0){
-					tmp2[j] <- ind[k]
-					k <- k + 1
-				}
-			}
-			tabdata2[i, ] <- tmp2
-		} else tabdata2[i, ] <- tmp[as.logical(tabdata[i, ])]
-	}		
-	tabdata <- cbind(tabdata,r) 
-	tabdata2 <- cbind(tabdata2,r) 
-	colnames(tabdata) <- c(Names, 'Freq')
-	colnames(tabdata2) <- c(itemnames, 'Freq')		
-	Rpoly <- cormod(na.omit(data),K,guess)
-	if(!is.null(prev.cor)){
-		if (ncol(prev.cor) == nrow(prev.cor)) Rpoly <- prev.cor
-			else stop("Correlation matrix is not square.\n")
-	} 
-	if(det(Rpoly) < 1e-15) Rpoly <- cor(na.omit(data.original))
-	FA <- suppressWarnings(psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres"))	
-	loads <- unclass(loadings(FA))    
-	u <- FA$unique
-	u[u < .1 ] <- .25	
-	cs <- sqrt(u)
-	lambdas <- loads/cs    	
-    zetas <- list()	
-    for(i in 1:J){        
-        temp <- table(data[,i])[1:(K[i]-1)]/N
-        temp <- cumsum(temp)			
-        zetas[[i]] <- qnorm(1 - temp)/cs[i]        			        
-    }    
-    if(is.null(itemtype)) {
-        itemtype <- rep('', J)
-        for(i in 1:J){
-            if(K[i] > 2) itemtype[i] <- 'graded'
-            if(K[i] == 2) itemtype[i] <- '2PL'                            
-        }        
-    } 
-    if(length(itemtype) == 1) itemtype <- rep(itemtype, J)  
-	if(length(itemtype) != J) stop('itemtype specification is not the correct length')    
-    estlam <- matrix(TRUE, J, nfact)    
-    pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
-                     upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
-                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1,
-                     estLambdas=estlam, debug=debug)             
-    if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
-        names(pars) <- itemnames        
-        attr(pars, 'parnumber') <- NULL
-        return(pars)  
-    } 
-	if(!is.null(constrain) || !is.null(parprior)){
-	    if(any(constrain == 'index', parprior == 'index')){
-	        returnedlist <- list()                        
-	        for(i in 1:J)
-	            returnedlist[[i]] <- pars[[i]]@parnum 
-	        names(returnedlist) <- itemnames
-	        return(returnedlist)
-	    }
-	}     
-    onePLconstraint <- c()
-    if(itemtype[1] == '1PL'){
-        constrain <- list()
-        for(i in 1:J)
-            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1])    
-        constrain[[length(constrain) + 1]] <- onePLconstraint
-        pars <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, 
-                         upper=upper, fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain,
-                         startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=1,
-                         estLambdas=estlam, debug=debug)
-    }
-	start <- pars
-    npars <- 0    
-	for(i in 1:length(pars)) npars <- npars + sum(pars[[i]]@est)	
-	if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))  
-	theta <- as.matrix(seq(-4,4,length.out = quadpts))
+    Target <- ifelse(is.null(Target), NaN, Target)   
+    data <- as.matrix(data)
+    PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
+                         startvalues=startvalues, constrain=constrain, freepars=freepars, 
+                         parprior=parprior, verbose=verbose, debug=debug, 
+                         technical=technical)
+    if(RETURN) return(PrepList)
+    NULL.MODEL <- ifelse(PrepList$itemtype[1] == 'NullModel' && !any(is.na(data)), TRUE, FALSE)    
+    nfact <- PrepList$nfact
+	if (is.null(quadpts)) quadpts <- ceiling(40/(PrepList$nfact^1.5))  
+	Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	if(quadpts^nfact <= MAXQUAD){
-		Theta <- thetaComb(theta,nfact)
-		prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-		prior <- prior/sum(prior)
-	} else stop('Greater than ', MAXQUAD, ' quadrature points.')
-	listpars <- list()
-	for(i in 1:J)
-	    listpars[[i]] <- pars[[i]]@par
-	lastpars2 <- lastpars1 <- listpars    
-	converge <- 1  	
-	index <- 1:J   
-    if(debug == 'PreEM') browser()
-    #EM cycles
-	for (cycles in 1:NCYCLES){       
-    	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, debug=debug)
-        if(verbose){
-            print(Pl <- sum(r*log(rlist$expected)))                            
-            flush.console()
-        }
-        for(i in 1:J){
-            tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
-            pars[[i]]@rs <- rlist$r1[, tmp]           
-        }            
-    	lastpars2 <- lastpars1
-    	lastpars1 <- listpars
-        #items without constraints
-    	for(i in 1:J){ 
-            if(pars[[i]]@constr) next    	       
-            estpar <- pars[[i]]@par[pars[[i]]@est]
-    		maxim <- try(optim(estpar, fn=Mstep.mirt, obj=pars[[i]], 
-                               Theta=Theta, prior=prior, debug=debug,
-                               method=pars[[i]]@method,
-                               lower=pars[[i]]@lbound, 
-                               upper=pars[[i]]@ubound,
-                               control=list(maxit=MSTEPMAXIT)))
-    		if(class(maxim) == "try-error"){    			
-    			converge <- 0
-    			next
-    		}		  
-    		pars[[i]]@par[pars[[i]]@est] <- maxim$par            
-        }               
-    	#items with constraints
-        if(length(constrain) > 0){
-            constrpars <- constrlist <- list()
-            tmp <- 1
-            for(i in 1:J){ 
-                if(pars[[i]]@constr){
-                    constrpars[[tmp]] <- pars[[i]] 
-                    tmp <- tmp + 1
-                }
-            }
-            tmp <- numpars <- c()
-            for(i in 1:length(constrpars)){
-                tmp <- c(tmp, constrpars[[i]]@par[pars[[i]]@est])
-                numpars <- c(numpars, constrpars[[i]]@parnum[pars[[i]]@est])                
-            }
-            estpar <- c(rep(NA, length(constrain)), tmp[!(numpars %in% attr(pars, 'uniqueconstr'))])
-            for(i in 1:length(constrain)){                
-                constrlist[[i]] <- numpars %in% constrain[[i]]
-                estpar[i] <- mean(tmp[constrlist[[i]]])
-            }            
-            maxim <- try(optim(estpar, fn=Mstep.mirt, obj=constrpars, debug=debug,
-                               Theta=Theta, prior=prior, constr=constrlist,
-                               method='Nelder-Mead',
-                               lower=-Inf, 
-                               upper=Inf,
-                               control=list(maxit=MSTEPMAXIT)))            
-            constrpars <- reloadConstr(maxim$par, constr=constrlist, obj=constrpars)
-            tmp <- 1
-            for(i in 1:J){ 
-                if(pars[[i]]@constr){
-                    pars[[i]] <- constrpars[[tmp]]
-                    tmp <- tmp + 1
-                }
-            }
-        }
-    	#apply sum(t) ==1 constraint for mcm
-    	if(is(pars[[i]], 'mcm')){
-    	    tmp <- pars[[i]]@par
-    	    tmp[length(tmp) - K[i] + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - K[i] + 2)])
-    	    pars[[i]]@par <- tmp
-    	}    	
-    	for(i in 1:J) listpars[[i]] <- pars[[i]]@par
-    	maxdif <- max(do.call(c,listpars) - do.call(c,lastpars1))	
-    	if (maxdif < TOL && cycles > 10) break  
-    	if (cycles %% 3 == 0 & cycles > 6)    	 
-    	    pars <- rateChange(pars=pars, listpars=listpars, lastpars1=lastpars1, 
-    	                       lastpars2=lastpars2)
-    }###END EM	    
-	if(converge == 0) 
-		warning("Parameter estimation reached unacceptable values. 
-			Model probably did not converged.")  		
-	lastchange <- do.call(c,listpars) - do.call(c,lastpars1)
-	if (cycles == NCYCLES){
-		converge <- 0  
-		message("Estimation terminated after ", cycles, " EM loops and likely did not converge.")
-	}	    	 
-	rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, debug=debug)     	  
-	Pl <- rlist$expected  
-	logLik <- sum(r*log(Pl))			
-	logN <- 0
-	npatmissing <- sum(is.na(rowSums(tabdata2)))
-	logr <- rep(0,length(r))	
-	for (i in 1:N) logN <- logN + log(i)
-	for (i in 1:length(r)) 
-		for (j in 1:r[i]) 
-			logr[i] <- logr[i] + log(j)    	
-    nconstr <- 0
-    if(length(constrain) > 0)
-        for(i in 1:length(constrain))
-            nconstr <- nconstr + length(constrain[[i]]) - 1
-	df <- (length(r) - 1) - npars + nfact*(nfact - 1)/2  - npatmissing + nconstr	
-    if(NULL.MODEL) df <- (length(r) - 1) - npars - npatmissing
-	X2 <- 2 * sum(r * log(r/(N*Pl)))	
-	logLik <- logLik + logN/sum(logr)	
-	p <- 1 - pchisq(X2,df)  
-	AIC <- (-2) * logLik + 2 * npars
-	BIC <- (-2) * logLik + npars*log(N)
-	RMSEA <- ifelse((X2 - df) > 0, 
-	    sqrt(X2 - df) / sqrt(df * (N-1)), 0)	
-	guess[K > 2] <- upper[K > 2] <- NA	
-	null.mod <- unclass(new('mirtClass'))
-	if(!NULL.MODEL && !any(is.na(data.original))) 
-        null.mod <- unclass(mirt(data, 0, itemtype='NullModel'))
-    TLI <- NaN    
-	if(!NULL.MODEL)
-        TLI <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
-	if(any(is.na(data.original))) p <- RMSEA <- X2 <- TLI <- NaN
+		Theta <- thetaComb(theta,nfact)		
+	} else stop('Greater than ', MAXQUAD, ' quadrature points.')		  
+    ESTIMATE <- EM(pars=PrepList$pars, NCYCLES=NCYCLES, MSTEPMAXIT=MSTEPMAXIT, TOL=TOL,                    
+                   tabdata=PrepList$tabdata, tabdata2=PrepList$tabdata2, npars=PrepList$npars,
+                   Theta=Theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
+                   constrain=PrepList$constrain, data=data, NULL.MODEL=NULL.MODEL)	
 	# pars to FA loadings
+    pars <- ESTIMATE$pars
     lambdas <- Lambdas(pars)
 	if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
 		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
@@ -552,10 +306,11 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	if (sum(F[ ,1] < 0)) F <- (-1) * F 
 	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
 	h2 <- rowSums(F^2) 
-	mod <- new('mirtClass', EMiter=cycles, pars=pars, X2=X2, 
-        df=df, p=p, itemloc=itemloc, AIC=AIC, BIC=BIC, logLik=logLik, F=F, h2=h2, tabdata=tabdata2, 
-		Theta=Theta, Pl=Pl, data=data.original, cormat=Rpoly, converge=converge, 
-		quadpts=quadpts, RMSEA=RMSEA, K=K, tabdatalong=tabdata, rotate=rotate, 
-        null.mod=null.mod, TLI=TLI, Target=Target, Call=Call)	  
+	mod <- new('mirtClass', EMiter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
+               df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
+               BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
+		       Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge,                
+		       quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
+               rotate=rotate, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Target=Target, Call=Call)	  
 	return(mod)    
 }

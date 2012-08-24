@@ -112,7 +112,7 @@ setMethod(
 				object@RMSEA <- ifelse((G2 - df) > 0, 
 				    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
 				null.mod <- object@null.mod
-				object@TLI <- (null.mod@X2 / null.mod@df - G2/df) / (null.mod@X2 / null.mod@df - 1)
+				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
 			}	            
 		}        
 		object@tabdata <- tabdata

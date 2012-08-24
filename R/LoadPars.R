@@ -376,16 +376,14 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain
     ret <- new('GroupPars', par=par, est=c(estgmeans,estgcov[tri]), nfact=nfact, 
                parnum=parnum)    
     if(!is.null(startvalues)){
-        if(startvalues == 'index')
-            return(ret@par)
-        else ret@par <- startvalues[[length(startvalues)]]
+        if(is.list(startvalues)) ret@par <- startvalues[[length(startvalues)]]
+        else return(ret@par)        
     }
     if(!is.null(freepars)){
-        if(freepars == 'index')
-            return(ret@est)
-        else ret@est <- freepars[[length(freepars)]]
+        if(is.list(freepars)) ret@est <- freepars[[length(freepars)]]
+        else return(ret@est)        
     }
-    if(!is.null(parprior) && parprior != 'index'){
+    if(!is.null(parprior) && is.list(parprior)){
         for(j in 1:length(parprior)){
             tmp <- parnum %in% as.numeric(parprior[[j]][1])
             if(any(tmp)){
