@@ -593,9 +593,9 @@ setMethod(
         nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[(nfact+1):(nfact*2)]
-        g <- x@par(length(x@par)-1)
-        u <- x@par(length(x@par))
-        if(x@est[nfact*2 + 1] && !x@est[nfact*2+2]){
+        g <- x@par[length(x@par)-1]
+        u <- x@par[length(x@par)]
+        if(x@est[nfact*2 + 1] && !x@est[nfact*2+2]){#3PL
             grad <- function(a, d, g, u, r, Theta){
                 f <- 1			
                 P <- P.comp(a,d,Theta,g,1)		
@@ -683,7 +683,8 @@ setMethod(
             grad <- grad(a, d, g, u, x@dat, Theta)
             hess <- hess(a, d, g, u, x@dat, Theta)
         }
-        if(!x@est[nfact*2 + 1] && !x@est[nfact*2+2]){
+        if(!x@est[nfact*2 + 1] && !x@est[nfact*2+2]){ #2PL
+            dat <- x@dat
             hess <- matrix(0, nfact*2 + 2, nfact*2 + 2)
             P <- P.comp(a,d,Theta)	
             Q <- 1 - P	
@@ -706,9 +707,9 @@ setMethod(
                         d2 <- strsplit(Names[c(i,j)],"_")[[2]]
                         k <- as.numeric(d1[2])
                         m <- as.numeric(d2[2])
-                        Pk <- P.mirt(a[k],d[k],Theta[ , k, drop=FALSE],0)
+                        Pk <- P.mirt(a[k],d[k],Theta[ , k, drop=FALSE],0,1)
                         Qk <- 1 - Pk	
-                        Pm <- P.mirt(a[m],d[m],Theta[ , m, drop=FALSE],0)
+                        Pm <- P.mirt(a[m],d[m],Theta[ , m, drop=FALSE],0,1)
                         Qm <- 1 - Pm									
                         if(i == j && d1[1] == 'd'){
                             hess[k,k] <- sum(-Pk*Qk*(r - (f-r)*P/Q) - Qk^2 * (f-r)*P/Q^2)
