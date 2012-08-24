@@ -135,7 +135,7 @@
 #' 
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0, 
 	upper = 1, nominal = NULL, Theta = NULL)
-{    
+{     
 	nfact <- ncol(a)
 	nitems <- nrow(a)		
 	K <- rep(0,nitems)	
@@ -145,6 +145,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	if(length(upper) != nitems) stop("Upper bound parameter is incorrect")
     for(i in 1:length(K)){
         K[i] <- length(na.omit(d[i, ])) + 1
+        if(itemtype[i] =='partcomp') K[i] <- 2
         if(any(itemtype[i] == c('gpcm', 'nominal'))) K[i] <- K[i] - 1
     }
     guess[K > 2] <- upper[K > 2] <- NA	
@@ -165,7 +166,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         P <- ProbTrace(obj, Theta)
 		for (j in 1:N) 
             data[j,i] <- sample(1:ncol(P), 1, prob = P[j,])        
-        if(any(itemtype[i] == c('dich', 'gpcm'))) data[ ,i] <- data[ ,i] - 1 
+        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp'))) data[ ,i] <- data[ ,i] - 1 
 	}
 	colnames(data) <- paste("Item_", 1:nitems, sep="") 
 	return(data)

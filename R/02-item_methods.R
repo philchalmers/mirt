@@ -62,7 +62,7 @@ setMethod(
         if(x@bfactor) a <- a[x@est[1:nfact]]
         if(x@bfactor) d <- d[x@est[(nfact+1):(nfact*2)]]        
         P <- P.comp(a=a, d=d, Theta=Theta, g=g, u=u)
-        return(P)
+        return(cbind(1.0 - P, P))
     }
 )
 
