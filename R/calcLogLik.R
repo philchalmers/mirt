@@ -33,7 +33,7 @@
 #'
 setMethod(
 	f = "calcLogLik",
-	signature = signature(object = 'confmirtClass'),
+	signature = signature(object = 'ExploratoryClass'),
 	definition = function(object, draws = 2000, G2 = TRUE)
 	{	        
         pars <- object@pars
@@ -98,7 +98,7 @@ setMethod(
             for(i in 1:length(object@constrain))
                 nconstr <- nconstr + length(object@constrain[[i]]) - 1 
         nfact <- object@nfact
-        df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 #-nmissingtabdata					
+        df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 #-nmissingtabdata	#FIX				
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)				
 		if(G2){						
@@ -124,3 +124,16 @@ setMethod(
 		return(object)
 	} 	
 )
+
+setMethod(
+    f = "calcLogLik",
+    signature = signature(object = 'ConfirmatoryClass'),
+    definition = function(object, draws = 2000, G2 = TRUE)
+    {	        
+        class(object) <- 'ExploratoryClass'
+        ret <- calcLogLik(object, draws=draws, G2=G2)
+        class(object) <- 'ConfirmatoryClass'
+        return(ret)
+    } 	
+)
+

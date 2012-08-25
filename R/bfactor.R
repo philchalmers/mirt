@@ -3,7 +3,7 @@
 #' \code{bfactor} fits a confirmatory maximum likelihood bi-factor model to
 #' dichotomous and polytomous data under the item response theory paradigm. 
 #' Fits univariate and multivariate 1-4PL, graded, (generalized) partial credit, 
-#' nominal, and multiple choice models using 
+#' nominal, multiple choice, and partially compensatory models using 
 #' a dimensional reduction EM algorithm so that regardless 
 #' of the number of specific factors estimated the model only uses a two-dimensional quadrature grid
 #' for integration.
@@ -54,11 +54,11 @@
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
-#' however they may be changed to the following: '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the 2 parameter logistic, 
+#' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
+#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and 'partcomp', for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
-#' generalized partial credit model, nominal model, and multiple choice models,
-#' respectively. If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
+#' generalized partial credit model, nominal model, multiple choice model, and partially compensatory model,
+#' respectively. The default assumes that items follow a '2PL' or 'graded' format
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
@@ -258,18 +258,21 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
                    Theta=Theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
                    constrain=PrepList$constrain, data=data, BFACTOR=TRUE,
                    sitems=sitems, specific=specific, theta=theta)
+    # pars to FA loadings
     pars <- ESTIMATE$pars
     lambdas <- Lambdas(pars)
-    norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))    
-    F <- as.matrix(lambdas[ ,1:nfact]/norm)    
-    colnames(F) <- paste("F_", 1:ncol(F),sep="")	
-    h2 <- rowSums(F^2)
-    
-	mod <- new('bfactorClass',EMiter=ESTIMATE$cycles, pars=pars, AIC=ESTIMATE$AIC, G2=ESTIMATE$G2, 
-		       df=ESTIMATE$df, logLik=ESTIMATE$logLik, p=ESTIMATE$p, F=F, h2=h2, 
-               itemnames=PrepList$itemnames, BIC=ESTIMATE$BIC, tabdata=PrepList$tabdata2, N=nrow(data), 
-               Pl=ESTIMATE$Pl, Theta=Theta, data=data, tabdatalong=PrepList$tabdata, 
-               specific=specific, itemloc=PrepList$itemloc, converge=ESTIMATE$converge, quadpts=quadpts,
-		       RMSEA=ESTIMATE$RMSEA, K=K, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Call=Call)  
+    if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
+    else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
+    alp <- as.matrix(lambdas[ ,1:nfact]/norm)
+    F <- alp
+    colnames(F) <- paste("F_", 1:ncol(F),sep="")    
+    h2 <- rowSums(F^2)       
+    mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
+               df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
+               BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
+               Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge,                
+               quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
+               null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
+               Call=Call)    
 	return(mod)  
 } 

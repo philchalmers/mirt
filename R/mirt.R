@@ -4,7 +4,7 @@
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous and polytomous data under the item response theory paradigm. 
 #' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit, 
-#' nominal, and multiple choice models using the EM algorithm.
+#' nominal, multiple choice, and partially compenatory models using the EM algorithm.
 #' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
 #' likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
@@ -44,19 +44,40 @@
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
 #' the diagonal.
 #' 
+#' @section Confirmatory IRT:
+#' 
+#' Specification of the confirmatory item factor analysis model follows many of
+#' the rules in the SEM framework for confirmatory factor analysis. The
+#' variances of the latent factors are automatically fixed to 1 to help
+#' facilitate model identification. All parameters may be fixed to constant
+#' values or set equal to other parameters using the appropriate declarations.
+#' 
+#' @section Exploratory IRT:
+#' 
+#' Specifying a number as the second input to confmirt an exploratory IRT model is estimated and 
+#' can be viewed as a stochastic analogue of \code{mirt}, with much of the same behaviour and 
+#' specifications. Rotation and target matrix options will be used in this subroutine and will be
+#' passed to the returned object for use in generic functions such as \code{summary()} and 
+#' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification. See
+#' \code{\link{mirt}} for more details.
+#' 
+#'
+#' 
 #' @aliases mirt summary,mirt-method coef,mirt-method anova,mirt-method fitted,mirt-method
 #' plot,mirt-method residuals,mirt-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
-#' @param nfact number of factors to be extracted
+#' @param model an object returned from \code{confmirt.model()} declaring how
+#' the factor model is to be estimated, or a single numeric value indicating the number 
+#' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
+#' more details
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the Rasch/partial credit, 1 and 2 parameter logistic, 
+#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and 'partcomp', for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
-#' generalized partial credit model, nominal model, and multiple choice model,
-#' respectively. Note that specifying a '1PL' or 'Rasch' model should be of length 1 (since there is only 1 slope parameter estimated).
-#' If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
+#' generalized partial credit model, nominal model, multiple choice model, and partially compensatory model,
+#' respectively. If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
 #' @param SE logical, estimate the standard errors?
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
@@ -175,7 +196,7 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, nfact, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
 #' constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
 #' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
@@ -287,10 +308,10 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	if(quadpts^nfact <= MAXQUAD){
 		Theta <- thetaComb(theta,nfact)		
-	} else stop('Greater than ', MAXQUAD, ' quadrature points.')		  
+	} else stop('Greater than ', MAXQUAD, ' quadrature points.')           
     ESTIMATE <- EM(pars=PrepList$pars, NCYCLES=NCYCLES, MSTEPMAXIT=MSTEPMAXIT, TOL=TOL,                    
                    tabdata=PrepList$tabdata, tabdata2=PrepList$tabdata2, npars=PrepList$npars,
-                   Theta=Theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
+                   Theta=Theta, theta=theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
                    constrain=PrepList$constrain, data=data, NULL.MODEL=NULL.MODEL)	
 	# pars to FA loadings
     pars <- ESTIMATE$pars
@@ -298,19 +319,34 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
 		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
 	alp <- as.matrix(lambdas[ ,1:nfact]/norm)
-	FF <- alp %*% t(alp)
-	V <- eigen(FF)$vector[ ,1:nfact]
-	L <- eigen(FF)$values[1:nfact]
-	if (nfact == 1) F <- as.matrix(V * sqrt(L))
-		else F <- V %*% sqrt(diag(L))  
-	if (sum(F[ ,1] < 0)) F <- (-1) * F 
-	colnames(F) <- paste("F_", 1:ncol(F),sep="")	
-	h2 <- rowSums(F^2) 
-	mod <- new('mirtClass', EMiter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
-               df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
-               BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
-		       Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge,                
-		       quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
-               rotate=rotate, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Target=Target, Call=Call)	  
+    if(PrepList$exploratory){
+    	FF <- alp %*% t(alp)
+    	V <- eigen(FF)$vector[ ,1:nfact]
+    	L <- eigen(FF)$values[1:nfact]
+    	if (nfact == 1) F <- as.matrix(V * sqrt(L))
+    		else F <- V %*% sqrt(diag(L))  
+    	if (sum(F[ ,1] < 0)) F <- (-1) * F 
+    	colnames(F) <- paste("F_", 1:ncol(F),sep="")
+    	h2 <- rowSums(F^2)
+    	mod <- new('ExploratoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
+    	           df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
+    	           BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
+    	           Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge,                
+    	           quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
+    	           rotate=rotate, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Target=Target, 
+    	           factorNames=PrepList$factorNames, Call=Call)
+    } else {
+        F <- alp
+        colnames(F) <- paste("F_", 1:ncol(F),sep="")    
+        h2 <- rowSums(F^2)       
+        mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
+                   df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
+                   BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
+                   Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge,                
+                   quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
+                   null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI,  factorNames=PrepList$factorNames, 
+                   Call=Call)
+    }
+		  
 	return(mod)    
 }

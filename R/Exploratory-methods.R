@@ -1,17 +1,17 @@
 #Methods 
 setMethod(
     f = "print",
-    signature = signature(x = 'mirtClass'),
+    signature = signature(x = 'ExploratoryClass'),
     definition = function(x){  
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")
         cat("Full-information factor analysis with ", ncol(x@F), " factor",
             if(ncol(x@F)>1) "s", "\n", sep="")
         if(x@converge == 1)	
-            cat("Converged in ", x@EMiter, " iterations using ", x@quadpts,
+            cat("Converged in ", x@iter, " iterations using ", x@quadpts,
                 " quadrature points.\n", sep="")
         else 	
-            cat("Estimation stopped after ", x@EMiter, " iterations using ", 
+            cat("Estimation stopped after ", x@iter, " iterations using ", 
                 x@quadpts, " quadrature points.\n", sep="")
         cat("Log-likelihood =", x@logLik, "\n")
         cat("AIC =", x@AIC, "\n")		
@@ -27,7 +27,7 @@ setMethod(
 
 setMethod(
     f = "show",
-    signature = signature(object = 'mirtClass'),
+    signature = signature(object = 'ExploratoryClass'),
     definition = function(object){  
         print(object)
     }
@@ -35,7 +35,7 @@ setMethod(
 
 setMethod(
     f = "summary",
-    signature = 'mirtClass',
+    signature = 'ExploratoryClass',
     definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
                           print = TRUE, ...){        
         nfact <- ncol(object@F)
@@ -94,7 +94,7 @@ setMethod(
 
 setMethod(
     f = "coef",
-    signature = 'mirtClass',
+    signature = 'ExploratoryClass',
     definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){  
         K <- object@K
         J <- length(K)
@@ -139,7 +139,7 @@ setMethod(
 
 setMethod(
     f = "anova",
-    signature = signature(object = 'mirtClass'),
+    signature = signature(object = 'ExploratoryClass'),
     definition = function(object, object2){        
         df <- object@df - object2@df  
         if(df < 0){
@@ -159,7 +159,7 @@ setMethod(
 
 setMethod(
     f = "residuals",
-    signature = signature(object = 'mirtClass'),
+    signature = signature(object = 'ExploratoryClass'),
     definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
     {   	
         K <- object@K        
@@ -218,7 +218,7 @@ setMethod(
 
 setMethod(
     f = "plot",
-    signature = signature(x = 'mirtClass', y = 'missing'),
+    signature = signature(x = 'ExploratoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
     {           
@@ -276,7 +276,7 @@ setMethod(
 
 setMethod(
     f = "fitted",
-    signature = signature(object = 'mirtClass'),
+    signature = signature(object = 'ExploratoryClass'),
     definition = function(object, digits = 3, ...){  
         Exp <- round(nrow(object@data) * object@Pl,digits)  
         tabdata <- object@tabdata

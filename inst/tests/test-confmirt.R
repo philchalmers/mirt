@@ -4,7 +4,7 @@ test_that('all mods', {
     data(LSAT7)
     fulldata <- expand.table(LSAT7)
     explor <- confmirt(fulldata, 1, verbose = FALSE)
-    expect_is(explor, 'confmirtClass')
+    expect_is(explor, 'ConfirmatoryClass')
     
     set.seed(1234)
     a <- matrix(c(
@@ -40,21 +40,21 @@ test_that('all mods', {
     model.combo <- confmirt.model('confmods/modelcombo', quiet = TRUE)    
     
     mod1 <- confmirt(dataset,model.1, verbose = FALSE)    
-    expect_is(mod1, 'confmirtClass')
+    expect_is(mod1, 'ConfirmatoryClass')
 
     mod2 <- confmirt(dataset,model.1, constrain = list(c(1,5)), parprior = list(c(2, 'norm', 0, 1)),
                      verbose = FALSE)
-    expect_is(mod2, 'confmirtClass')
+    expect_is(mod2, 'ConfirmatoryClass')
     
     mod3 <- confmirt(dataset,model.1, itemtype = c(rep('2PL',3), '3PL', rep('graded',3), '2PL'), 
                      verbose = FALSE)
-    expect_is(mod3, 'confmirtClass')
+    expect_is(mod3, 'ConfirmatoryClass')
 
     mod.quad <- confmirt(dataset, model.quad, verbose = FALSE)
-    expect_is(mod.quad, 'confmirtClass')
+    expect_is(mod.quad, 'ConfirmatoryClass')
     
     mod.combo <- confmirt(dataset, model.combo, verbose = FALSE)
-    expect_is(mod.combo, 'confmirtClass')
+    expect_is(mod.combo, 'ConfirmatoryClass')
         
     fs1 <- fscores(mod1)
     expect_is(fs1, 'matrix')

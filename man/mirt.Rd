@@ -9,7 +9,7 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-  mirt(data, nfact, itemtype = NULL, guess = 0, upper = 1,
+  mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
     SE = FALSE, startvalues = NULL, constrain = NULL,
     freepars = NULL, parprior = NULL, rotate = 'varimax',
     Target = NULL, prev.cor = NULL, quadpts = NULL, verbose
@@ -37,22 +37,25 @@ Theory)}
   consists of numerically ordered data, with missing data
   coded as \code{NA}}
 
-  \item{nfact}{number of factors to be extracted}
+  \item{model}{an object returned from
+  \code{confmirt.model()} declaring how the factor model is
+  to be estimated, or a single numeric value indicating the
+  number of exploratory factors to estimate. See
+  \code{\link{confmirt.model}} for more details}
 
   \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
   repeated globally. The NULL default assumes that the
   items are ordinal or 2PL, however they may be changed to
   the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
-  '4PL', 'graded', 'gpcm', 'nominal', and 'mcm', for the
-  Rasch/partial credit, 1 and 2 parameter logistic, 3
-  parameter logistic (lower asymptote and upper), 4
-  parameter logistic, graded response model, generalized
-  partial credit model, nominal model, and multiple choice
-  model, respectively. Note that specifying a '1PL' or
-  'Rasch' model should be of length 1 (since there is only
-  1 slope parameter estimated). If \code{NULL} the default
-  assumes that the data follow a '2PL' or 'graded' format}
+  '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and
+  'partcomp', for the Rasch/partial credit, 1 and 2
+  parameter logistic, 3 parameter logistic (lower asymptote
+  and upper), 4 parameter logistic, graded response model,
+  generalized partial credit model, nominal model, multiple
+  choice model, and partially compensatory model,
+  respectively. If \code{NULL} the default assumes that the
+  data follow a '2PL' or 'graded' format}
 
   \item{SE}{logical, estimate the standard errors?}
 
@@ -196,8 +199,8 @@ Theory)}
   factor analysis model to dichotomous and polytomous data
   under the item response theory paradigm. Fits univariate
   and multivariate Rasch, 1-4PL, graded, (generalized)
-  partial credit, nominal, and multiple choice models using
-  the EM algorithm.
+  partial credit, nominal, multiple choice, and partially
+  compenatory models using the EM algorithm.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by
@@ -248,6 +251,29 @@ Theory)}
   diagonal of the matrix returned by \code{residuals}, and
   Cramer's V above the diagonal.
 }
+\section{Confirmatory IRT}{
+  Specification of the confirmatory item factor analysis
+  model follows many of the rules in the SEM framework for
+  confirmatory factor analysis. The variances of the latent
+  factors are automatically fixed to 1 to help facilitate
+  model identification. All parameters may be fixed to
+  constant values or set equal to other parameters using
+  the appropriate declarations.
+}
+
+\section{Exploratory IRT}{
+  Specifying a number as the second input to confmirt an
+  exploratory IRT model is estimated and can be viewed as a
+  stochastic analogue of \code{mirt}, with much of the same
+  behaviour and specifications. Rotation and target matrix
+  options will be used in this subroutine and will be
+  passed to the returned object for use in generic
+  functions such as \code{summary()} and \code{fscores}.
+  Again, factor means and variances are fixed to ensure
+  proper identification. See \code{\link{mirt}} for more
+  details.
+}
+
 \section{Convergence}{
   Unrestricted full-information factor analysis is known to
   have problems with convergence, and some items may need
@@ -263,7 +289,7 @@ Theory)}
 }
 \examples{
 \dontrun{
-#load LSAT section 7 data and compute 1 and 2 factor models
+#load LSAT section 7 data and computmire 1 and 2 factor models
 data(LSAT7)
 data <- expand.table(LSAT7)
 

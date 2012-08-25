@@ -9,13 +9,12 @@
 #' @usage 
 #' fscores(object, ...)
 #' 
-#' @aliases fscores-method fscores,bfactorClass-method
-#' fscores,mirtClass-method fscores,confmirtClass-method
+#' @aliases fscores-method fscores,ExploratoryClass-method
+#' fscores,ConfirmatoryClass-method
 #' @docType methods
 #' @section Methods: 
 #' \describe{ \item{fscores}{\code{signature(object =
-#' "bfactorClass")}} \item{fscores}{\code{signature(object = "mirtClass")}}
-#' \item{fscores}{\code{signature(object = "confmirtClass")}} }
+#' "ExploratoryClass")}} \item{fscores}{\code{signature(object = "ConfirmatoryClass")}}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @rdname fscores-methods   
 #' @exportMethod fscores
@@ -28,7 +27,7 @@ setGeneric("fscores",
 # Methods for Function fscores
 #
 #' @name fscores
-#' @param object a model of class \code{mirtClass}, \code{bfactorClass}, or \code{confmirtClass}
+#' @param object a model of class \code{ExploratoryClass} or \code{ConfirmatoryClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
 #' factor scores for each unique pattern is displayed. Otherwise the original
 #' data matrix is returned with the computed factor scores appended to the
@@ -37,10 +36,9 @@ setGeneric("fscores",
 #' \code{object@@rotate} default value is used
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
-#' (\code{"ML"}). Only applicable to \code{mirtClass} and \code{bfactorClass} objects 
-#' @param quadpts number of quadratures to use per dimension. Only applicable for \code{mirtClass}
-#' and \code{bfactorClass} objects
-#' @param ndraws number of MH samples to draw for each response pattern for \code{confmirtClass} objects
+#' (\code{"ML"})
+#' @param quadpts number of quadratures to use per dimension
+#' @param ndraws number of MH samples to draw for each response pattern 
 #' @param thin controls how much the chain should be thinned by, default
 #' collects every 5th draw (\code{thin = 5}). Note that \code{ndraws/thin} must be a whole number.
 #' for \code{confmirtClass} objects only
@@ -67,7 +65,7 @@ setGeneric("fscores",
 #' 
 setMethod(
 	f = "fscores",
-	signature = 'mirtClass',
+	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
 	{           
@@ -153,23 +151,10 @@ setMethod(
 )
 
 #------------------------------------------------------------------------------
-#' @rdname fscores-methods
-setMethod(
-	f = "fscores",
-	signature = 'bfactorClass',
-	definition = function(object, full.scores = FALSE, method = "EAP", quadpts = NULL, verbose = TRUE)
-	{  
-        class(object) <- 'mirtClass'
-        f <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts, verbose=verbose)
-        return(f)
-	}
-)
-
-#------------------------------------------------------------------------------
 #' @rdname fscores-methods  	
 setMethod(
 	f = "fscores",
-	signature = 'confmirtClass',
+	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, ndraws = 3000, thin = 5)
 	{ 	        
         cand.t.var <- 1    	

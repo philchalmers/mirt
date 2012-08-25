@@ -90,7 +90,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
                     estLambdas=estlam, BFACTOR=BFACTOR, debug=debug)      
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
-                                            estgcov=estgcov, parnumber=attr(ret, 'parnumber')+1,
+                                            estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             startvalues=startvalues, freepars=freepars, parprior=parprior,
                                             constrain=constrain, debug=debug)
     attr(ret, 'prodlist') <- prodlist     

@@ -38,14 +38,15 @@
   a vector for each item or a single value which will be
   repeated globally. The NULL default assumes that the
   items are ordinal or 2PL, however they may be changed to
-  the following: '2PL', '3PL', '3PLu', '4PL', 'graded',
-  'gpcm', 'nominal', and 'mcm', for the 2 parameter
-  logistic, 3 parameter logistic (lower asymptote and
-  upper), 4 parameter logistic, graded response model,
-  generalized partial credit model, nominal model, and
-  multiple choice models, respectively. If \code{NULL} the
-  default assumes that the data follow a '2PL' or 'graded'
-  format}
+  the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
+  '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and
+  'partcomp', for the Rasch/partial credit, 1 and 2
+  parameter logistic, 3 parameter logistic (lower asymptote
+  and upper), 4 parameter logistic, graded response model,
+  generalized partial credit model, nominal model, multiple
+  choice model, and partially compensatory model,
+  respectively. The default assumes that items follow a
+  '2PL' or 'graded' format}
 
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns
@@ -148,14 +149,13 @@
   bi-factor model to dichotomous and polytomous data under
   the item response theory paradigm. Fits univariate and
   multivariate 1-4PL, graded, (generalized) partial credit,
-  nominal, and multiple choice models using a dimensional
-  reduction EM algorithm so that regardless of the number
-  of specific factors estimated the model only uses a
-  two-dimensional quadrature grid for integration.
+  nominal, multiple choice, and partially compensatory
+  models using a dimensional reduction EM algorithm so that
+  regardless of the number of specific factors estimated
+  the model only uses a two-dimensional quadrature grid for
+  integration.
 }
 \details{
-
-
   \code{bfactor} follows the item factor analysis strategy
   explicated by Gibbons and Hedeker (1992) and Gibbons et
   al. (2007). Nested models may be compared via an

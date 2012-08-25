@@ -8,7 +8,7 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
     converge <- 1
     J <- length(itemloc) - 1
     listpars <- list()
-    for(i in 1:J)
+    for(i in 1:length(pars))
         listpars[[i]] <- pars[[i]]@par
     lastpars2 <- lastpars1 <- listpars
     nfact <- pars[[length(pars)]]@nfact
@@ -17,11 +17,12 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
         prior <- dnorm(theta)
         prior <- prior/sum(prior)
     } else {        
-        prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
+        gp <- ExtractGroupPars(pars[[length(pars)]])
+        prior <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov)
         prior <- prior/sum(prior)
     }
     #EM cycles
-    for (cycles in 1:NCYCLES){
+    for (cycles in 1:NCYCLES){        
         if(BFACTOR) 
             rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior,
                                    specific=specific, sitems=sitems, itemloc=itemloc, debug=debug)
@@ -38,6 +39,7 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
         }            
         lastpars2 <- lastpars1
         lastpars1 <- listpars
+        #####
         #items without constraints
         for(i in 1:J){ 
             if(pars[[i]]@constr) next    	       
@@ -53,7 +55,28 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
                 next
             }		  
             pars[[i]]@par[pars[[i]]@est] <- maxim$par            
-        }               
+        }
+        #group      
+        i = i + 1         
+        estpar <- pars[[i]]@par[pars[[i]]@est]        
+        if(length(estpar) > 0){
+            maxim <- try(optim(estpar, fn=Mstep.group, 
+                               pars=pars, gobj=pars[[i]], Theta=Theta, tabdata=tabdata, 
+                               r=r, itemloc=itemloc, constr=pars[[i]]@constr, debug=debug,                                                          
+                               method=pars[[i]]@method, 
+                               lower=pars[[i]]@lbound, 
+                               upper=pars[[i]]@ubound,
+                               control=list(maxit=MSTEPMAXIT)))
+            if(class(maxim) == "try-error"){        		
+                converge <- 0
+                next
+            }		  
+            pars[[i]]@par[pars[[i]]@est] <- maxim$par 
+            gp <- ExtractGroupPars(pars[[i]])
+            prior <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov)
+            prior <- prior/sum(prior)
+        }
+        ####    
         #items with constraints
         if(length(constrain) > 0){
             constrpars <- constrlist <- list()
@@ -133,7 +156,7 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
     BIC <- (-2) * logLik + npars*log(N)
     RMSEA <- ifelse((G2 - df) > 0, 
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)	    	
-    null.mod <- unclass(new('mirtClass'))
+    null.mod <- unclass(new('ExploratoryClass'))
     if(!NULL.MODEL) 
         null.mod <- unclass(mirt(data, 1, itemtype='NullModel'))
     TLI <- NaN    
@@ -206,6 +229,6 @@ Mstep.group <- function(par, pars, gobj, Theta, tabdata, r, itemloc, constr = li
     prior <- prior/sum(prior)    
     rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, 
                         debug=debug)
-    L <- sum(r*log(Pl))
+    L <- (-1)*sum(r*log(rlist$expected))
     L   
 }

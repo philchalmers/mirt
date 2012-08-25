@@ -8,8 +8,8 @@ test_that('dich data', {
     mod1 <- bfactor(data, specific)
     mod2 <- bfactor(data, specific, itemtype = c(rep('2PL', 29), '3PL', rep('2PL',2)),
                     parprior = list(c(209, 'beta',10,40)))    
-    expect_is(mod1, 'bfactorClass')              
-    expect_is(mod2, 'bfactorClass')
+    expect_is(mod1, 'ConfirmatoryClass')              
+    expect_is(mod2, 'ConfirmatoryClass')
     fs <- fscores(mod1, verbose = FALSE)
     fs <- fscores(mod2, full.scores = TRUE, verbose = FALSE)
     expect_is(fs, 'matrix')
@@ -61,7 +61,7 @@ test_that('mix data', {
     specific <- c(rep(1,7),rep(2,7))
     items[items == 'dich'] <- '2PL'
     simmod <- bfactor(dataset, specific, itemtype = items)
-    expect_is(simmod, 'bfactorClass')              
+    expect_is(simmod, 'ConfirmatoryClass')              
     fs <- fscores(simmod, verbose = FALSE)
     expect_is(fs, 'matrix')
 })

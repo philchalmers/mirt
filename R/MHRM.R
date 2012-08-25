@@ -265,7 +265,7 @@ MHRM <- function(pars, list, debug)
             ind2 <- ind1 + length(pars[[i]]@par) - 1
             pars[[i]]@SEpar <- SE[ind1:ind2]
             ind1 <- ind2 + 1            
-        }    
+        }         
         ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, converge=converge)
         ret        
 }

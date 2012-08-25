@@ -1,5 +1,8 @@
 Things to do:
 
+- replace classes with more structurally meaningful result, like 'ExploratoryClass',
+'ConfirmatoryClass', 'MultipleGroupClass'
+
 - Parallel processing option for draw.thetas(), should work better now that the draws are done mainly in
 R
 - Multiple-group estimation for confmirt, now possible!

@@ -1,14 +1,13 @@
 \docType{methods}
 \name{fscores}
 \alias{fscores}
-\alias{fscores,bfactorClass-method}
-\alias{fscores,confmirtClass-method}
+\alias{fscores,ConfirmatoryClass-method}
+\alias{fscores,ExploratoryClass-method}
 \alias{fscores-method}
-\alias{fscores,mirtClass-method}
 \title{Methods for Function fscores}
 \arguments{
-  \item{object}{a model of class \code{mirtClass},
-  \code{bfactorClass}, or \code{confmirtClass}}
+  \item{object}{a model of class \code{ExploratoryClass} or
+  \code{ConfirmatoryClass}}
 
   \item{full.scores}{if \code{FALSE} (default) then a
   summary table with factor scores for each unique pattern
@@ -22,16 +21,13 @@
 
   \item{method}{type of factor score estimation method. Can
   be expected a-posteriori (\code{"EAP"}), Bayes modal
-  (\code{"MAP"}), or maximum likelihood (\code{"ML"}). Only
-  applicable to \code{mirtClass} and \code{bfactorClass}
-  objects}
+  (\code{"MAP"}), or maximum likelihood (\code{"ML"})}
 
   \item{quadpts}{number of quadratures to use per
-  dimension. Only applicable for \code{mirtClass} and
-  \code{bfactorClass} objects}
+  dimension}
 
   \item{ndraws}{number of MH samples to draw for each
-  response pattern for \code{confmirtClass} objects}
+  response pattern}
 
   \item{thin}{controls how much the chain should be thinned
   by, default collects every 5th draw (\code{thin = 5}).
@@ -54,9 +50,9 @@
 }
 \section{Methods}{
   \describe{ \item{fscores}{\code{signature(object =
-  "bfactorClass")}} \item{fscores}{\code{signature(object =
-  "mirtClass")}} \item{fscores}{\code{signature(object =
-  "confmirtClass")}} }
+  "ExploratoryClass")}}
+  \item{fscores}{\code{signature(object =
+  "ConfirmatoryClass")}}}
 }
 \examples{
 \dontrun{

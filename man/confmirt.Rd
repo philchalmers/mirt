@@ -74,15 +74,14 @@
   repeated globally. The NULL default assumes that the
   items are ordinal or 2PL, however they may be changed to
   the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
-  '4PL', 'graded', 'gpcm', 'nominal', 'mcm', 'PC2PL' and
-  'PC3PL', for the Rasch/partial credit, 1 and 2 parameter
-  logistic, 3 parameter logistic (lower asymptote and
-  upper), 4 parameter logistic, graded response model,
+  '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and
+  'partcomp', for the Rasch/partial credit, 1 and 2
+  parameter logistic, 3 parameter logistic (lower asymptote
+  and upper), 4 parameter logistic, graded response model,
   generalized partial credit model, nominal model, multiple
-  choice model, and 2 and 3PL partially-compensatory
-  models, respectively. Note that specifying a '1PL' or
-  'Rasch' model should be of length 1 (since there is only
-  1 slope parameter estimated). If \code{NULL} the default
+  choice model, and partially compensatory model,
+  respectively. The default assumes that items follow a
+  '2PL' or 'graded' format If \code{NULL} the default
   assumes that the data follow a '2PL' or 'graded' format}
 
   \item{constrain}{a list of user declared equality

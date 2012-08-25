@@ -355,8 +355,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
     } 
     attr(pars, 'uniqueconstr') <- constr     
-    attr(pars, 'parnumber') <- attr(startvalues, 'parnumber') <- attr(freepars, 'parnumber') <- 
-        parnumber - length(freepars[[length(pars)]])
+    attr(pars, 'parnumber') <- attr(startvalues, 'parnumber') <- 
+        attr(freepars, 'parnumber') <- parnumber 
     if(RETURNSTARTVALUES) return(startvalues)
     if(RETURNFREEPARS) return(freepars)
     return(pars)
@@ -368,13 +368,15 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain
     nfact <- length(gmeans)
     fn <- paste('COV_', 1:nfact, sep='')
     FNCOV <- outer(fn, 1:nfact, FUN=paste, sep='')
-    FNMEANS <- paste('MEAN_', 1:nfact, sep='')  
+    FNMEANS <- paste('MEAN_', 1:nfact, sep='')      
     tri <- lower.tri(gcov, diag=TRUE)
     par <- c(gmeans, gcov[tri])
     parnum <- parnumber:(parnumber + length(par) - 1)
-    names(parnum) <- names(par) <- c(FNMEANS,FNCOV[tri])
+    names(parnum) <- names(par) <- c(FNMEANS,FNCOV[tri])    
     ret <- new('GroupPars', par=par, est=c(estgmeans,estgcov[tri]), nfact=nfact, 
-               parnum=parnum)    
+               parnum=parnum, method='Nelder-Mead', lbound=-1, ubound=1)    
+    if(sum(ret@est) == 1)
+        ret@method <- 'Brent'                  
     if(!is.null(startvalues)){
         if(is.list(startvalues)) ret@par <- startvalues[[length(startvalues)]]
         else return(ret@par)        

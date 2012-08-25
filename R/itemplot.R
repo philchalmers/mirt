@@ -6,14 +6,13 @@
 #' @usage 
 #' itemplot(object, ...)
 #' 
-#' \S4method{itemplot}{mirtClass}(object, item, type = 'trace', ...)
+#' \S4method{itemplot}{ExploratoryClass}(object, item, type = 'trace', ...)
 #'
-#' \S4method{itemplot}{bfactorClass}(object, item, type = 'trace' , ...) 
+#' \S4method{itemplot}{ConfirmatoryClass}(object, item, type = 'trace' , ...) 
 #'
-#' @aliases itemplot-method itemplot,mirtClass-method 
-#' itemplot,bfactorClass-method
-#' @param object a computed model of class \code{bfactorClass} or
-#' \code{mirtClass}
+#' @aliases itemplot-method itemplot,ExploratoryClass-method 
+#' itemplot,ConfirmatoryClass-method
+#' @param object a computed model object
 #' @param item a single numeric value indicating which item to plot
 #' @param type plot type to use, information (\code{'info'}), information contours \code{('infocontour')},
 #'  or item trace lines (\code{'trace'})
@@ -54,7 +53,7 @@ setGeneric("itemplot",
 # @keywords methods
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'mirtClass'),
+	signature = signature(object = 'ExploratoryClass'),
 	definition = function(object, item, type = 'trace', ...)
 	{  			
 		x <- itemplot.main(object, item, type, ...)		        
@@ -66,7 +65,7 @@ setMethod(
 # @rdname itemplot-methods  
 setMethod(
 	f = "itemplot",
-	signature = signature(object = 'bfactorClass'),
+	signature = signature(object = 'ConfirmatoryClass'),
 	definition = function(object, item, type = 'trace', ...)
 	{
 	    x <- itemplot.main(object, item, type, ...)    	
@@ -108,12 +107,12 @@ itemplot.main <- function(x, item, type, ...){
                                main = paste("Item", item, "Information Contour"), xlab = expression(theta[1]), 
                                ylab = expression(theta[2])), ...)
         if(type == 'info')
-            return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item ", item, "Information"), 
+            return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Information"), 
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
         if(type == 'trace'){
-            return(lattice::wireframe(P ~ Theta1 + Theta2|time, data = plt2, main = paste("Item ", item, "Trace"), 
-                             zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
+            return(lattice::wireframe(P ~ Theta1 + Theta2|time, data = plt2, main = paste("Item", item, "Trace"), 
+                             zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))            
         }        
     }    
