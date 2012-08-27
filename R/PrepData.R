@@ -16,6 +16,8 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
         exploratory <- TRUE
         unlink(tmp)
     }
+    if(exploratory && any(itemtype == c('PC2PL', 'PC3PL'))) 
+        stop('Partially compensatory models can only be estimated within a confirmatory model')
     if(is(model, 'numeric') && length(model) > 1){
         tmp <- tempfile('tempfile')
         unique <- unique(model)

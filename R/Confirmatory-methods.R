@@ -211,3 +211,14 @@ setMethod(
         invisible(tabdata)
     }
 )
+
+setMethod(
+    f = "plot",
+    signature = signature(x = 'ConfirmatoryClass', y = 'missing'),
+    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
+                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
+    {
+        class(x) <- 'ExploratoryClass'
+        plot(x, type=type, npts=npts, theta_angle=theta_angle, rot=rot, ...)
+    }
+)

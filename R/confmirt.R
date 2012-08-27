@@ -288,7 +288,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                                 nfact=PrepList$nfact, npars=PrepList$npars, 
                                 constrain=PrepList$constrain, verbose=verbose), 
                       debug=debug) 
-    null.mod <- mirt(data,1,itemtype='NullModel')
+    null.mod <- unclass(mirt(data,1,itemtype='NullModel'))
     # pars to FA loadings    
     pars <- ESTIMATE$pars    
     nfact <- pars[[length(pars)]]@nfact
@@ -303,24 +303,27 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
         if (nfact == 1) F <- as.matrix(V * sqrt(L))
         else F <- V %*% sqrt(diag(L))  
         if (sum(F[ ,1] < 0)) F <- (-1) * F 
+        colnames(F) <- paste("F_", 1:ncol(F),sep="")    
+        h2 <- rowSums(F^2)
         mod <- new('ExploratoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, itemloc=PrepList$itemloc, 
                    F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
-                   K=PrepList$K, tabdatalong=PrepList$tabdata, 
+                   K=PrepList$K, tabdatalong=PrepList$tabdata, nfact=nfact, constrain=PrepList$constrain,
                    rotate=rotate, null.mod=null.mod, Target=Target, factorNames=PrepList$factorNames,
-                   Call=Call)
+                   fulldata=PrepList$fulldata, Call=Call)
     } else {
         F <- alp
         colnames(F) <- paste("F_", 1:ncol(F),sep="")    
         h2 <- rowSums(F^2)       
         mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, itemloc=PrepList$itemloc, 
                    F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
-                   K=PrepList$K, tabdatalong=PrepList$tabdata, 
-                   null.mod=null.mod, factorNames=PrepList$factorNames, Call=Call)
+                   K=PrepList$K, tabdatalong=PrepList$tabdata, nfact=nfact, constrain=PrepList$constrain,
+                   fulldata=PrepList$fulldata, null.mod=null.mod, factorNames=PrepList$factorNames, 
+                   Call=Call)
     }        
 	if(calcLL){
-		if(verbose) cat("Calculating log-likelihood...\n")
+		if(verbose) cat("\nCalculating log-likelihood...\n")
 		flush.console()
-		mod <- calcLogLik(mod, draws)		        
+		mod <- calcLogLik(mod, draws)
 	}	
 	return(mod)
 }

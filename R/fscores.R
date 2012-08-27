@@ -68,11 +68,11 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
-	{           
+	{     
         pars <- object@pars        
 		K <- object@K        
-        J <- length(K)
-        nfact <- pars[[1]]@nfact
+        J <- length(K)        
+        nfact <- object@nfact
         if(!pars[[1]]@bfactor){
             so <- summary(object, rotate = rotate, print = FALSE)
             a <- rotateLambdas(so)		
@@ -82,7 +82,7 @@ setMethod(
                 a[i, ] <- ExtractLambdas(pars[[i]])            
                 pars[[i]]@bfactor <- FALSE
             }
-        }
+        }        
 		itemloc <- object@itemloc	
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))
@@ -91,7 +91,8 @@ setMethod(
 		tabdata <- object@tabdatalong
 		tabdata <- tabdata[ ,-ncol(tabdata)]
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			
-		W <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact)) 
+        gp <- ExtractGroupPars(object@pars[[length(itemloc)]])        
+		W <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov) 
 		W <- W/sum(W)
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        
         for (i in 1:J)
@@ -106,8 +107,8 @@ setMethod(
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  
-                estimate <- nlm(MAP.mirt,tmp,pars=pars,patdata=tabdata[i, ],
-                                itemloc=itemloc, hessian=TRUE)				
+                estimate <- nlm(MAP.mirt,tmp,pars=pars, patdata=tabdata[i, ],
+                                itemloc=itemloc, gp=gp, hessian=TRUE)				
 				scores[i, ] <- estimate$estimate
 				SEest <- try(sqrt(diag(solve(estimate$hessian))))
 				if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
@@ -124,7 +125,7 @@ setMethod(
 				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
 				Theta <- scores[i, ]	  
 				estimate <- nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
-				    itemloc=itemloc, ML=TRUE, hessian = TRUE)
+				    itemloc=itemloc, gp=gp, ML=TRUE, hessian = TRUE)
 				scores[i, ] <- estimate$estimate                
                 SEest <- try(sqrt(diag(solve(estimate$hessian))))
                 if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
@@ -155,82 +156,27 @@ setMethod(
 setMethod(
 	f = "fscores",
 	signature = 'ConfirmatoryClass',
-	definition = function(object, rotate = '', full.scores = FALSE, ndraws = 3000, thin = 5)
+	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
+	                      quadpts = NULL, verbose = TRUE)
 	{ 	        
-        cand.t.var <- 1    	
-        pars <- object@pars
-        K <- object@K
-        nfact <- pars[[length(pars)]]@nfact
-        nfactNames <- ncol(object@F)
-        factorNames <- colnames(object@F)		
-        data <- cbind(object@data,object@fulldata)		
-        Names <- c(colnames(object@data[,1:length(K)]),paste('F_',1:nfact,sep=''),
-                   paste("SE_",1:nfact,sep=''))
-        tabdata <- unique(data)[,-c(1:length(K))]			
-        fulldata <- object@fulldata
-        itemloc <- object@itemloc
-        Theta <- list()
-        for(i in 1:nfact)
-            Theta[[i]] <- matrix(0,ncol=ndraws/thin,nrow=nrow(tabdata))
-        structgrouppars <- ExtractGroupPars(pars[[length(pars)]])
-        prodlist <- attr(pars, 'prodlist')
-        theta0 <- matrix(0, nrow(tabdata), nfact)        
-        for(i in 1:30){
-            theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=tabdata, itemloc=itemloc, 
-                                  cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
-                                  prior.mu=structgrouppars$gmeans, prodlist=prodlist, debug=FALSE)			
-            if(attr(theta0,'Proportion Accepted') > .4) cand.t.var <- cand.t.var + .2
-            if(attr(theta0,'Proportion Accepted') < .3) cand.t.var <- cand.t.var - .2
-        }
-        ind <- 1
-        for(i in 1:ndraws){			
-            theta0 <- draw.thetas(theta0=theta0, pars=pars, fulldata=tabdata, itemloc=itemloc, 
-                                  cand.t.var=cand.t.var, prior.t.var=structgrouppars$gcov, 
-                                  prior.mu=structgrouppars$gmeans, prodlist=prodlist, debug=FALSE)
-            if(i %% thin == 0){
-                for(j in 1:nfact)
-                    Theta[[j]][,ind] <- theta0[,j]									
-                ind <- ind + 1
-            }			
-        }        
-		expscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		sdscores <- matrix(0,ncol=nfact,nrow=nrow(tabdata))
-		for(i in 1:nfact){
-			expscores[,i] <- rowMeans(Theta[[i]])
-			sdscores[,i] <- apply(Theta[[i]],1,sd)
-		}				
-		ret <- cbind(unique(data)[,1:length(K)],expscores,sdscores)
-		colnames(ret) <- Names		
-		if(!full.scores){ 
-			ret <- ret[order(expscores[,1]),]
-			rownames(ret) <- NULL
-			return(ret)
-		} else {
-			fulldata <- object@data
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=nfact)
-			colnames(scoremat) <- factorNames
-			tmp <- unique(data)[,1:length(K)]
-			for (j in 1:nrow(tabdata)){          
-			    TFvec <- colSums(ifelse(t(fulldata) == tmp[j, ],1,0)) == ncol(fulldata) 
-			    tmp2 <- matrix(rep(expscores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
-			    scoremat[TFvec, ] <- tmp2
-			}              
-			return(cbind(object@data,scoremat))
-		}	
+        class(object) <- 'ExploratoryClass'
+        ret <- fscores(object, rotate = 'none', full.scores=full.scores, method=method, quadpts=quadpts, 
+                       verbose=verbose)
+        return(ret)
 	}	
 )
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta, pars, patdata, itemloc, ML=FALSE)
-{    
+MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, ML=FALSE)
+{       
     itemtrace <- rep(0, ncol=length(patdata))
     Theta <- matrix(Theta, nrow=1)    
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))        
-    for (i in 1:(length(pars)))
+    for (i in 1:(length(itemloc)-1))
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)		
-    L <- sum(log(itemtrace)[as.logical(patdata)])
-    mu <- 0
-    sigma <- 1
-    L <- ifelse(ML, -L, (-1)*(L + sum(log(exp(-0.5*((Theta - mu)/sigma)^2)))))
+    itemtrace[itemtrace < 1e-8] <- 1e-8
+    L <- sum(log(itemtrace)[as.logical(patdata)])    
+    prior <- mvtnorm::dmvnorm(Theta, gp$gmeans, gp$gcov)
+    L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L  
 }

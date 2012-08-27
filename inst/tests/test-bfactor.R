@@ -11,6 +11,7 @@ test_that('dich data', {
     expect_is(mod1, 'ConfirmatoryClass')              
     expect_is(mod2, 'ConfirmatoryClass')
     fs <- fscores(mod1, verbose = FALSE)
+    expect_is(fs, 'matrix')
     fs <- fscores(mod2, full.scores = TRUE, verbose = FALSE)
     expect_is(fs, 'matrix')
 })

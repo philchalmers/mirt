@@ -132,7 +132,7 @@ setMethod(
     {	        
         class(object) <- 'ExploratoryClass'
         ret <- calcLogLik(object, draws=draws, G2=G2)
-        class(object) <- 'ConfirmatoryClass'
+        class(ret) <- 'ConfirmatoryClass'
         return(ret)
     } 	
 )

@@ -4,7 +4,7 @@ test_that('all mods', {
     data(LSAT7)
     fulldata <- expand.table(LSAT7)
     explor <- confmirt(fulldata, 1, verbose = FALSE)
-    expect_is(explor, 'ConfirmatoryClass')
+    expect_is(explor, 'ExploratoryClass')
     
     set.seed(1234)
     a <- matrix(c(

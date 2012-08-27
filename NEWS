@@ -1,4 +1,24 @@
 ----------------------------------------------------------------
+mirt 0.3.1
+----------------------------------------------------------------
+
+* Individual classes now correspond to the type of method, ExploratoryClass and 
+  ConfirmatoryClass. 
+
+* plot now works for confmirt
+
+* mirt can now make use of confmirt.model objects and hence be confirmatory. No standard
+  errors for this method yet, however
+
+* stochastic estimation of factor scores removed entirely, now only quadrature based methods
+  for all objects. Also, bfactor returned objects now will estimate all the factors scores instead
+  of just the general dimension
+
+
+
+
+
+----------------------------------------------------------------
 mirt 0.3.0
 ----------------------------------------------------------------
 
