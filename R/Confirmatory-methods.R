@@ -42,8 +42,7 @@ setMethod(
     signature = 'ConfirmatoryClass',
     definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
                           print = TRUE, ...)
-    {        
-        if(length(object@prodlist) > 0) stop('No factor metric for models with product terms')
+    {           
         nfact <- ncol(object@F)
         itemnames <- names(object@h2)	
         F <- object@F
@@ -56,7 +55,7 @@ setMethod(
         gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
         Phi <- cov2cor(gpars$gcov)	  
         Phi <- round(Phi, digits)
-        colnames(Phi) <- rownames(Phi) <- colnames(F)
+        colnames(Phi) <- rownames(Phi) <- paste('F',1:ncol(Phi), sep='')
         print(Phi)				
         invisible(F)  	          
     }
@@ -66,17 +65,17 @@ setMethod(
     f = "coef",
     signature = 'ConfirmatoryClass',
     definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...)
-    {                     
+    {                             
         K <- object@K
         J <- length(K)
-        nfact <- ncol(object@F)
-        a <- matrix(0, J, nfact)
+        nLambdas <- ncol(object@F)
+        a <- matrix(0, J, nLambdas)        
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@pars[[i]])        
-        A <- sqrt(apply(a^2,1,sum))                                    
+        A <- sqrt(apply(a^2,1,sum)) 
         rownames(a) <- colnames(object@data)
         a <- round(a, digits)
-        colnames(a) <- paste('a', 1:nfact, sep='')            
+        colnames(a) <- paste('a_', object@factorNames, sep='')            
         allPars <- list()
         if(allpars){
             if(length(object@pars[[1]]@SEpar) > 0){
@@ -119,7 +118,7 @@ setMethod(
         data <- object@data    
         N <- nrow(data)	
         J <- ncol(data)
-        nfact <- ncol(object@F) 
+        nfact <- ncol(object@F) - length(attr(object@pars, 'prodlist'))
         if(object@pars[[1]]@bfactor) nfact <- 2
         itemloc <- object@itemloc
         res <- matrix(0,J,J)
@@ -127,10 +126,11 @@ setMethod(
         colnames(res) <- rownames(res) <- colnames(data)
         theta <- seq(-4,4, length.out = round(20/nfact))
         Theta <- thetaComb(theta,nfact)    	
+        ThetaShort <- Theta
         if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
         gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
         if(object@pars[[1]]@bfactor) prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-            else prior <- mvtnorm::dmvnorm(Theta,gpars$gmeans,gpars$gcov)        
+            else prior <- mvtnorm::dmvnorm(ThetaShort,gpars$gmeans,gpars$gcov)        
         prior <- prior/sum(prior)       	               
         if(restype == 'LD'){	
             for(i in 1:J){								
@@ -207,7 +207,7 @@ setMethod(
         tabdata <- object@tabdata
         N <- nrow(object@data)
         expected <- round(N * object@Pl/sum(object@Pl),digits)
-        print(cbind(tabdata,expected ))
+        print(cbind(tabdata,expected))
         invisible(tabdata)
     }
 )
@@ -217,8 +217,12 @@ setMethod(
     signature = signature(x = 'ConfirmatoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
-    {
+    {           
         class(x) <- 'ExploratoryClass'
+        if(length(attr(x@pars, 'prodlist')) > 0 ) stop('No plots for models with polynomial and 
+                                                       product terms')
         plot(x, type=type, npts=npts, theta_angle=theta_angle, rot=rot, ...)
-    }
+        
+    }		
 )
+

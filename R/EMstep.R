@@ -21,6 +21,11 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
         prior <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov)
         prior <- prior/sum(prior)
     }
+    prodlist <- attr(pars, 'prodlist')
+    ThetaShort <- Theta
+    if(length(prodlist) > 0)        
+        Theta <- prodterms(Theta,prodlist)    
+    
     #EM cycles
     for (cycles in 1:NCYCLES){        
         if(BFACTOR) 
@@ -61,13 +66,14 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
         estpar <- pars[[i]]@par[pars[[i]]@est]        
         if(length(estpar) > 0){
             maxim <- try(optim(estpar, fn=Mstep.group, 
-                               pars=pars, gobj=pars[[i]], Theta=Theta, tabdata=tabdata, 
-                               r=r, itemloc=itemloc, constr=pars[[i]]@constr, debug=debug,                                                          
+                               pars=pars, gobj=pars[[i]], Theta=Theta, ThetaShort=ThetaShort,
+                               tabdata=tabdata, r=r, itemloc=itemloc, constr=pars[[i]]@constr, 
+                               debug=debug, 
                                method=pars[[i]]@method, 
                                lower=pars[[i]]@lbound, 
                                upper=pars[[i]]@ubound,
                                control=list(maxit=MSTEPMAXIT)))
-            if(class(maxim) == "try-error"){        		
+            if(class(maxim) == "try-error"){
                 converge <- 0
                 next
             }		  
@@ -218,15 +224,15 @@ Mstep.mirt <- function(par, obj, Theta, prior, constr = list(), debug){
 }
 
 # Mstep for group pars
-Mstep.group <- function(par, pars, gobj, Theta, tabdata, r, itemloc, constr = list(), debug)
+Mstep.group <- function(par, pars, gobj, Theta, ThetaShort, tabdata, r, itemloc, constr = list(), debug)
 {   
     if(debug == 'Mstep.group') browser()
     gobj@par[gobj@est] <- par    
     gpars <- ExtractGroupPars(gobj)
     mu <- gpars$gmeans
-    sigma <- gpars$gcov    
-    prior <- dmvnorm(Theta, mean=mu, sigma=sigma)
-    prior <- prior/sum(prior)    
+    sigma <- gpars$gcov
+    prior <- dmvnorm(ThetaShort, mean=mu, sigma=sigma)
+    prior <- prior/sum(prior)
     rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, 
                         debug=debug)
     L <- (-1)*sum(r*log(rlist$expected))

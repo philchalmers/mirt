@@ -151,6 +151,6 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,
                 K=K, fulldata=fulldata, nfactNames=nfactNames, nfact=nfact, npars=npars, 
                 exploratory=exploratory, J=J, itemloc=itemloc, factorNames=factorNames, 
-                itemtype=itemtype, tabdata=tabdata, tabdata2=tabdata2)
+                itemtype=itemtype, tabdata=tabdata, tabdata2=tabdata2, nLambdas=nfact+length(prodlist))
     ret
 }

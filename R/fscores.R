@@ -94,6 +94,10 @@ setMethod(
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])        
 		W <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov) 
 		W <- W/sum(W)
+        prodlist <- attr(pars, 'prodlist')
+        ThetaShort <- Theta
+        if(length(prodlist) > 0)        
+            Theta <- prodterms(Theta,prodlist)
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        
         for (i in 1:J)
             itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)                    
@@ -108,7 +112,7 @@ setMethod(
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  
                 estimate <- nlm(MAP.mirt,tmp,pars=pars, patdata=tabdata[i, ],
-                                itemloc=itemloc, gp=gp, hessian=TRUE)				
+                                itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE)				
 				scores[i, ] <- estimate$estimate
 				SEest <- try(sqrt(diag(solve(estimate$hessian))))
 				if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
@@ -118,14 +122,14 @@ setMethod(
 		if(method == "ML"){
 			tmp <- tabdata[,itemloc[-length(itemloc)]]			 
 			tmp2 <- tabdata[,itemloc[-1] - 1]			 
-            scores[rowSums(tmp) == J, ] <- Inf
-			scores[rowSums(tmp2) == J,] <- -Inf
+            scores[rowSums(tmp) == J, ] <- NA
+			scores[rowSums(tmp2) == J,] <- NA
 			SEscores[rowSums(tmp) == J, ] <- SEscores[rowSums(tmp2) == J, ] <- rep(NA, nfact)
 			for (i in 1:nrow(scores)){
-				if(any((scores[i, ]) == -Inf | scores[i, ] == Inf)) next 
+				if(any(is.na(scores[i, ]))) next 
 				Theta <- scores[i, ]	  
 				estimate <- nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
-				    itemloc=itemloc, gp=gp, ML=TRUE, hessian = TRUE)
+				    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian = TRUE)
 				scores[i, ] <- estimate$estimate                
                 SEest <- try(sqrt(diag(solve(estimate$hessian))))
                 if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
@@ -167,16 +171,18 @@ setMethod(
 )
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, ML=FALSE)
+MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
 {       
-    itemtrace <- rep(0, ncol=length(patdata))
-    Theta <- matrix(Theta, nrow=1)    
+    ThetaShort <- Theta
+    Theta <- matrix(Theta, nrow=1)
+    if(length(prodlist) > 0)
+        Theta <- prodterms(Theta,prodlist)
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))        
     for (i in 1:(length(itemloc)-1))
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)		
     itemtrace[itemtrace < 1e-8] <- 1e-8
     L <- sum(log(itemtrace)[as.logical(patdata)])    
-    prior <- mvtnorm::dmvnorm(Theta, gp$gmeans, gp$gcov)
+    prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L  
 }

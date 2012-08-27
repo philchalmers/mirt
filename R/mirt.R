@@ -304,6 +304,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     if(RETURN) return(PrepList)
     NULL.MODEL <- ifelse(PrepList$itemtype[1] == 'NullModel' && !any(is.na(data)), TRUE, FALSE)    
     nfact <- PrepList$nfact
+    nLambdas <- PrepList$nLambdas
+    if(nLambdas > nfact) stop('Polynominals and product terms not supported for EM method')
 	if (is.null(quadpts)) quadpts <- ceiling(40/(PrepList$nfact^1.5))  
 	Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	if(quadpts^nfact <= MAXQUAD){
@@ -316,9 +318,9 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 	# pars to FA loadings
     pars <- ESTIMATE$pars
     lambdas <- Lambdas(pars)
-	if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
+	if (nLambdas > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nLambdas]^2))
 		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
-	alp <- as.matrix(lambdas[ ,1:nfact]/norm)
+	alp <- as.matrix(lambdas[ ,1:nLambdas]/norm)
     if(PrepList$exploratory){
     	FF <- alp %*% t(alp)
     	V <- eigen(FF)$vector[ ,1:nfact]
@@ -337,7 +339,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     	           factorNames=PrepList$factorNames, Call=Call)
     } else {
         F <- alp
-        colnames(F) <- paste("F_", 1:ncol(F),sep="")    
+        colnames(F) <- PrepList$factorNames    
         h2 <- rowSums(F^2)       
         mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
                    df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
@@ -346,7 +348,6 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                    quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                    null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                    Call=Call)
-    }
-		  
+    }		  
 	return(mod)    
 }

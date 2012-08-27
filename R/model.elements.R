@@ -84,9 +84,9 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         u[u < .001 ] <- .2
         cs <- sqrt(u)
         lambdas <- loads/cs                
-    }
+    }        
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
-                    fulldata=fulldata, J=J, K=K, nfact=nfact, constrain=constrain, nfactNames=nfactNames,
+                    fulldata=fulldata, J=J, K=K, nfact=nfact+length(prodlist), constrain=constrain, 
                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
                     estLambdas=estlam, BFACTOR=BFACTOR, debug=debug)      
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 

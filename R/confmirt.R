@@ -291,7 +291,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     null.mod <- unclass(mirt(data,1,itemtype='NullModel'))
     # pars to FA loadings    
     pars <- ESTIMATE$pars    
-    nfact <- pars[[length(pars)]]@nfact
+    nfact <- pars[[1]]@nfact
     lambdas <- Lambdas(pars)
     if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
     else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
@@ -312,7 +312,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                    fulldata=PrepList$fulldata, Call=Call)
     } else {
         F <- alp
-        colnames(F) <- paste("F_", 1:ncol(F),sep="")    
+        colnames(F) <- PrepList$factorNames
         h2 <- rowSums(F^2)       
         mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, itemloc=PrepList$itemloc, 
                    F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                

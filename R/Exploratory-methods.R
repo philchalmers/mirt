@@ -95,7 +95,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){  
+    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){ 
         K <- object@K
         J <- length(K)
         nfact <- ncol(object@F)
@@ -133,7 +133,15 @@ setMethod(
         }        
         ret <- if(allpars) allPars else a
         if(nfact > 1) cat('\nRotation:', rotname, '\n\n')
-        ret
+        fcor <- 1
+        if (ncol(a) > 1 && !allpars){
+            fcor <- so$fcor
+            colnames(fcor) <- rownames(fcor) <- paste('F', 1:nfact, sep='')            
+            print(round(fcor, 3))
+            cat('\n')
+        }
+        print(ret)        
+        return(invisible(list(ret, fcor)))
     }
 )
 
@@ -228,10 +236,12 @@ setMethod(
         if(length(theta_angle) > 1) type = 'infoangle'
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         K <- x@K		
-        nfact <- ncol(x@Theta)
+        nfact <- x@pars[[1]]@nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.")
-        J <- length(x@pars)
-        a <- coef(x, ...)  
+        J <- length(x@pars) - 1
+        a <- matrix(0, J, nfact)
+        for(i in 1:J)
+            a[i,] <- ExtractLambdas(x@pars[[i]])
         A <- list()
         if(nfact == 2){
             a <- a[,1:2]

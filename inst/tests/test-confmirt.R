@@ -59,10 +59,6 @@ test_that('all mods', {
     fs1 <- fscores(mod1)
     expect_is(fs1, 'matrix')
     fs2 <- fscores(mod2)
-    expect_is(fs2, 'matrix')
-    fs3 <- fscores(mod.quad)
-    expect_is(fs3, 'matrix')
-    fs4 <- fscores(mod.combo)
-    expect_is(fs4, 'matrix')    
+    expect_is(fs2, 'matrix')    
 })
  

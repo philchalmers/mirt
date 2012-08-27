@@ -265,7 +265,7 @@ test_info <- function(pars, Theta, Alist, K){
     info
 }
 
-Lambdas <- function(pars){
+Lambdas <- function(pars){    
     lambdas <- list()
     J <- ifelse(is(pars[[length(pars)]], 'GroupPars'), length(pars)-1, length(pars))
     for(i in 1:J)    

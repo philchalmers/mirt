@@ -1,14 +1,13 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
                      constrain, startvalues, freepars, parprior, parnumber, 
-                     estLambdas, BFACTOR = FALSE, nfactNames = NULL, debug)
+                     estLambdas, BFACTOR = FALSE, debug)
     {       
     if(debug == 'LoadPars') browser() 
     if(any(itemtype[1] == c('Rasch', '1PL') && nfact > 1)) 
         stop('Rasch and 1PL models can only be estimated for unidimensional models')
     pars <- list()       
     RETURNSTARTVALUES <- ifelse(!is.null(startvalues) && startvalues == 'index', TRUE, FALSE)
-    RETURNFREEPARS <- ifelse(!is.null(freepars) && freepars == 'index', TRUE, FALSE)
-    if(is.null(nfactNames)) nfactNames <- nfact        
+    RETURNFREEPARS <- ifelse(!is.null(freepars) && freepars == 'index', TRUE, FALSE)    
     constr <- c()
     if(!is.null(constrain) && is.list(constrain)) 
         for(i in 1:length(constrain))
@@ -22,27 +21,27 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'NullModel' && K[i] > 2) val <- c(0,zetas[[i]]) 
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
                 val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), 'd', 'g','u')
+                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
             }
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] > 2){
                 val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 0:(K[i]-1), sep=''))
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
             }
             if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
                 val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), 'd', 'g','u')
+                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
             }
             if(itemtype[i] == 'graded'){
                 val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 1:(K[i]-1), sep=''))    
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
             }
             if(itemtype[i] == 'gpcm'){
                 val <- c(lambdas[i,], 0, zetas[[i]])
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('d', 0:(K[i]-1), sep=''))                
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
             }
             if(itemtype[i] == 'nominal'){
                 val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
                                 paste('d', 0:(K[i]-1), sep=''))                
             }
             if(any(itemtype[i] == c('PC2PL','PC3PL'))){
@@ -52,7 +51,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'mcm'){
                 val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]), 
                          rep(1/K[i], K[i]))
-                names(val) <- c(paste('a', 1:nfactNames, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
                                 paste('d', 0:(K[i]-1), sep=''), paste('t', 0:(K[i]-1), sep=''))                
             }
             startvalues[[i]] <- val
@@ -151,7 +150,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         
         if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){ 
             pars[[i]] <- new('dich', par=startvalues[[i]], est=freepars[[i]],
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE, 
                              bfactor=BFACTOR,
@@ -171,7 +170,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] > 2){ 
             pars[[i]] <- new('gpcm', 
                              par=startvalues[[i]], 
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              ncat=K[i],
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -195,7 +194,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]] <- new('dich', 
                              par=startvalues[[i]], 
                              est=freepars[[i]],
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE, 
                              bfactor=BFACTOR,
@@ -221,7 +220,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(itemtype[i] == 'graded'){
             pars[[i]] <- new('graded', 
                              par=startvalues[[i]], 
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              ncat=K[i],
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -243,7 +242,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(itemtype[i] == 'gpcm'){            
             pars[[i]] <- new('gpcm', 
                              par=startvalues[[i]], 
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              ncat=K[i],
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -267,7 +266,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]] <- new('nominal', 
                              par=startvalues[[i]], 
                              est=freepars[[i]], 
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              ncat=K[i], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE, 
@@ -291,7 +290,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]] <- new('partcomp', 
                              par=startvalues[[i]], 
                              est=freepars[[i]],
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE, 
                              bfactor=BFACTOR,
@@ -318,7 +317,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]] <- new('mcm', 
                              par=startvalues[[i]], 
                              est=freepars[[i]], 
-                             nfact=nfactNames, 
+                             nfact=nfact, 
                              ncat=K[i], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE, 
