@@ -68,16 +68,18 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
-	{     
+	{           
         pars <- object@pars        
 		K <- object@K        
         J <- length(K)        
-        nfact <- object@nfact
-        if(!pars[[1]]@bfactor){
-            so <- summary(object, rotate = rotate, print = FALSE)
+        prodlist <- attr(pars, 'prodlist')
+        nfact <- object@nfact - length(prodlist)
+        nLambdas <- object@nfact
+        if(!pars[[1]]@bfactor && rotate != 'CONFIRMATORY'){
+            so <- summary(object, rotate = rotate, print = FALSE)            
             a <- rotateLambdas(so)		
         } else {
-            a <- matrix(0, J, nfact)
+            a <- matrix(0, J, nLambdas)
             for(i in 1:J){
                 a[i, ] <- ExtractLambdas(pars[[i]])            
                 pars[[i]]@bfactor <- FALSE
@@ -86,25 +88,23 @@ setMethod(
 		itemloc <- object@itemloc	
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))
-		Theta <- thetaComb(theta,nfact)
+		ThetaShort <- Theta <- thetaComb(theta,nfact)         
+        if(length(prodlist) > 0)        
+            Theta <- prodterms(Theta,prodlist)
 		fulldata <- object@data 
 		tabdata <- object@tabdatalong
 		tabdata <- tabdata[ ,-ncol(tabdata)]
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])        
-		W <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov) 
-		W <- W/sum(W)
-        prodlist <- attr(pars, 'prodlist')
-        ThetaShort <- Theta
-        if(length(prodlist) > 0)        
-            Theta <- prodterms(Theta,prodlist)
+		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov) 
+		W <- W/sum(W)                
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        
         for (i in 1:J)
             itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)                    
 		for (i in 1:nrow(tabdata)){				
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
-			thetas <- colSums(Theta * exp(L) * W / sum(exp(L) * W))
-			SE <- sqrt(colSums(t((t(Theta) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))	
+			thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
+			SE <- sqrt(colSums(t((t(ThetaShort) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i, ] <- thetas
 			SEscores[i, ] <- SE
 		}		        
@@ -136,16 +136,17 @@ setMethod(
 				SEscores[i, ] <- SEest
 			}  			
 		}
-		colnames(scores) <- colnames(object@F)
-		if (full.scores){      
+		colnames(scores) <- paste('F', 1:ncol(scores), sep='')        
+		if (full.scores){               
 			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(scores))
-			tabdata2 <- object@tabdata[,-(ncol(fulldata)+1)]	
-			for (j in 1:nrow(tabdata)){          
+			tabdata2 <- object@tabdata
+            tabdata2 <- tabdata2[,-ncol(tabdata2)]
+			for (j in 1:nrow(tabdata2)){          
 				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)
                 tmp <- matrix(rep(scores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
                 scoremat[TFvec, ] <- tmp
 			} 
-			colnames(scoremat) <- colnames(object@F)	
+			colnames(scoremat) <- colnames(scores)	
 			return(cbind(fulldata,scoremat))
 		} else {						
 			if(verbose) cat("\nMethod: ", method,"\n\n")
@@ -164,7 +165,7 @@ setMethod(
 	                      quadpts = NULL, verbose = TRUE)
 	{ 	        
         class(object) <- 'ExploratoryClass'
-        ret <- fscores(object, rotate = 'none', full.scores=full.scores, method=method, quadpts=quadpts, 
+        ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts, 
                        verbose=verbose)
         return(ret)
 	}	

@@ -56,9 +56,13 @@ test_that('all mods', {
     mod.combo <- confmirt(dataset, model.combo, verbose = FALSE)
     expect_is(mod.combo, 'ConfirmatoryClass')
         
-    fs1 <- fscores(mod1)
+    fs1 <- fscores(mod1, verbose = FALSE)
     expect_is(fs1, 'matrix')
-    fs2 <- fscores(mod2)
-    expect_is(fs2, 'matrix')    
+    fs2 <- fscores(mod2, verbose = FALSE)
+    expect_is(fs2, 'matrix') 
+    fs3 <- fscores(mod.quad, full.scores=TRUE, verbose = FALSE)
+    expect_is(fs3, 'matrix')
+    fs4 <- fscores(mod.combo, verbose = FALSE)
+    expect_is(fs4, 'matrix')
 })
  

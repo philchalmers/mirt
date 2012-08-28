@@ -80,8 +80,7 @@ setMethod(
 			rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
 		}
 		expected[is.nan(expected)] <- NA
-		tabdata <- cbind(tabdata,expected*N)
-		object@tabdata <- tabdata		
+		tabdata <- cbind(tabdata,expected*N)		
 		logN <- 0
 		logr <- rep(0,length(r))
 		for (i in 1:N) logN <- logN + log(i)
@@ -97,8 +96,9 @@ setMethod(
         if(length(object@constrain) > 0)
             for(i in 1:length(object@constrain))
                 nconstr <- nconstr + length(object@constrain[[i]]) - 1 
-        nfact <- object@nfact
-        df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 #-nmissingtabdata	#FIX				
+        nfact <- object@nfact - length(prodlist)        
+        nmissingtabdata <- sum(is.na(rowSums(object@tabdata)))
+        df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata	
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)				
 		if(G2){						
@@ -114,8 +114,7 @@ setMethod(
 				null.mod <- object@null.mod
 				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
 			}	            
-		}        
-		object@tabdata <- tabdata
+		}        		
 		object@logLik <- logLik
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
