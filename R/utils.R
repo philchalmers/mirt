@@ -302,6 +302,33 @@ reloadConstr <- function(par, constr, obj){
     return(obj)
 }
 
+calcEMSE <- function(object, data, model, constrain, parprior, verbose){  
+    startvalues <- coef(object, allpars = T)  
+    if(is(model, 'numeric') && length(model) > 1){
+        J <- ncol(data)
+        tmp <- tempfile('tempfile')
+        unique <- unique(model)
+        index <- 1:J
+        tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
+        for(i in 1:length(unique)){
+            ind <- index[model == unique[i]]
+            comma <- rep(',', 2*length(ind))
+            TF <- rep(c(TRUE,FALSE), length(ind))
+            comma[TF] <- ind
+            comma[length(comma)] <- ""
+            tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
+        }
+        cat(tmp2, file=tmp)
+        model <- confmirt.model(tmp, quiet = TRUE)        
+        unlink(tmp)
+    }
+    pars <- confmirt(data, model, startvalues=startvalues, constrain=constrain, parprior=parprior, 
+                    technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
+                                    EMSE = TRUE), verbose = verbose)
+    for(i in 1:length(pars))
+        object@pars[[i]]@SEpar <- pars[[i]]@SEpar    
+    return(object)
+}
 
 
 

@@ -64,7 +64,8 @@
   guessing parameter or may be entered as a numeric vector
   corresponding to each item}
 
-  \item{SE}{logical; estimate parameter standard errors?}
+  \item{SE}{logical, estimate the standard errors? Calls
+  the MHRM subroutine for a stochastic approximation}
 
   \item{allpars}{logical; print all the item parameters
   instead of just the slopes?}

@@ -266,7 +266,8 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
-    TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)        
+    TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)  
+    EMSE <- ifelse(is.null(technical$EMSE), FALSE, technical$EMSE)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)	
     gain <- c(0.05,0.5,0.004)
     if(!is.null(technical$gain)) {
@@ -287,7 +288,8 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                                 itemloc=PrepList$itemloc, fulldata=PrepList$fulldata, 
                                 nfact=PrepList$nfact, npars=PrepList$npars, 
                                 constrain=PrepList$constrain, verbose=verbose), 
-                      debug=debug) 
+                      debug=debug, startvalues=startvalues, EMSE=EMSE) 
+    if(EMSE) return(ESTIMATE$pars)
     null.mod <- unclass(mirt(data,1,itemtype='NullModel'))
     # pars to FA loadings    
     pars <- ESTIMATE$pars    

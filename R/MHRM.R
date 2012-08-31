@@ -1,6 +1,6 @@
 #MHRM optimimization algorithm for confmirt
 
-MHRM <- function(pars, list, debug)
+MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
     {           
         if(debug == 'MHRM') browser()        
         verbose <- list$verbose
@@ -102,7 +102,8 @@ MHRM <- function(pars, list, debug)
                 Tau <- Tau/SEMCYCLES	
                 k <- KDRAWS	
                 gamma <- .25
-            }            
+            }  
+            #Reload pars list
             ind1 <- 1
             for(i in 1:length(pars)){
                 ind2 <- ind1 + length(pars[[i]]@par) - 1
@@ -115,6 +116,10 @@ MHRM <- function(pars, list, debug)
                         pars[[i]]@par[length(pars[[i]]@par)-1] <- 0
                 }
             }        
+            if(EMSE){ #for calculating EM standard errors
+                for(i in 1:length(pars))                    
+                    pars[[i]]@par <- startvalues[[i]]
+            }
             structgrouppars <- ExtractGroupPars(pars[[length(pars)]])
             
             #Step 1. Generate m_k datasets of theta 
@@ -249,7 +254,11 @@ MHRM <- function(pars, list, debug)
                 if(pars[[i]]@par[length(pars[[i]]@par)-1] < 0) 
                     pars[[i]]@par[length(pars[[i]]@par)-1] <- 0
             }
-        }         
+        }  
+        if(EMSE){ #for calculating EM standard errors
+            for(i in 1:length(pars))                    
+                pars[[i]]@par <- startvalues[[i]]
+        }
         SEtmp <- diag(solve(info))    	
         if(any(SEtmp < 0)){
             warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")

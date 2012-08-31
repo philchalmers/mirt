@@ -14,6 +14,9 @@ mirt 0.3.1
   for all objects. Also, bfactor returned objects now will estimate all the factors scores instead
   of just the general dimension
 
+* Standard errors for bfactor and mirt now automatically calculated (borrowed from running a tweaked
+  MHRM run)
+
 
 
 

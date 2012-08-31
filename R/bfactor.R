@@ -68,7 +68,7 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
-#' @param SE logical; estimate parameter standard errors?
+#' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
@@ -273,6 +273,8 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
                Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
                quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
-               Call=Call)    
+               Call=Call)     
+    if(SE) mod <- calcEMSE(object=mod, data=data, model=specific, constrain=constrain, 
+                           parprior=parprior)
 	return(mod)  
 } 

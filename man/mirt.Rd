@@ -10,7 +10,7 @@
 Theory)}
 \usage{
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-    SE = FALSE, startvalues = NULL, constrain = NULL,
+    SE = TRUE, startvalues = NULL, constrain = NULL,
     freepars = NULL, parprior = NULL, rotate = 'varimax',
     Target = NULL, prev.cor = NULL, quadpts = NULL, verbose
     = FALSE, debug = FALSE, technical = list(), ...)
@@ -57,7 +57,8 @@ Theory)}
   respectively. If \code{NULL} the default assumes that the
   data follow a '2PL' or 'graded' format}
 
-  \item{SE}{logical, estimate the standard errors?}
+  \item{SE}{logical, estimate the standard errors? Calls
+  the MHRM subroutine for a stochastic approximation}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing

@@ -78,7 +78,7 @@
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
 #' generalized partial credit model, nominal model, multiple choice model, and partially compensatory model,
 #' respectively. If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
-#' @param SE logical, estimate the standard errors?
+#' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
@@ -196,7 +196,7 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, startvalues = NULL,
 #' constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
 #' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
@@ -280,7 +280,7 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, startvalues = NULL,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, startvalues = NULL,
                  constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
                  prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
@@ -316,7 +316,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                    Theta=Theta, theta=theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
                    constrain=PrepList$constrain, data=data, NULL.MODEL=NULL.MODEL)	
 	# pars to FA loadings
-    pars <- ESTIMATE$pars
+    pars <- ESTIMATE$pars    
     lambdas <- Lambdas(pars)
 	if (nLambdas > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nLambdas]^2))
 		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
@@ -348,6 +348,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                    quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                    null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                    Call=Call)
-    }		  
+    }   
+    if(SE) mod <- calcEMSE(object=mod, data=data, model=model, constrain=constrain, 
+                           parprior=parprior, verbose=verbose)
 	return(mod)    
 }
