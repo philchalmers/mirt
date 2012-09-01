@@ -1,5 +1,5 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
-                     parprior, verbose, debug, technical, BFACTOR = FALSE)
+                     parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE)
 {
     if(debug == 'PrepData') browser()
     itemnames <- colnames(data)
@@ -107,8 +107,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     tabdata <- cbind(tabdata,r) 
     tabdata2 <- cbind(tabdata2,r)
     colnames(tabdata) <- c(Names,'Freq')	
-    colnames(tabdata2) <- c(itemnames, 'Freq')    
-    parnumber <- 1 #to be used later when looping over more than 1 group       
+    colnames(tabdata2) <- c(itemnames, 'Freq')             
     pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  

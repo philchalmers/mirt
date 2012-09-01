@@ -277,10 +277,11 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
     ##	
     Target <- ifelse(is.null(Target), NaN, Target)
     data <- as.matrix(data)
+    parnumber <- 1
 	PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
                          startvalues=startvalues, constrain=constrain, freepars=freepars, 
 	                     parprior=parprior, verbose=verbose, debug=debug, 
-                         technical=technical)           
+                         technical=technical, parnumber=parnumber)           
     if(RETURN) return(PrepList)
  	ESTIMATE <- MHRM(pars=PrepList$pars, 
                       list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
