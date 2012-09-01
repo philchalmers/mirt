@@ -371,8 +371,9 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain
     tri <- lower.tri(gcov, diag=TRUE)
     par <- c(gmeans, gcov[tri])
     parnum <- parnumber:(parnumber + length(par) - 1)
-    names(parnum) <- names(par) <- c(FNMEANS,FNCOV[tri])    
-    ret <- new('GroupPars', par=par, est=c(estgmeans,estgcov[tri]), nfact=nfact, 
+    est <- c(estgmeans,estgcov[tri])
+    names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])     
+    ret <- new('GroupPars', par=par, est=est, nfact=nfact, 
                parnum=parnum, method='Nelder-Mead', lbound=-1, ubound=1) #u+lbound diff for MG    
     if(sum(ret@est) == 1)
         ret@method <- 'Brent'                  

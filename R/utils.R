@@ -330,6 +330,66 @@ calcEMSE <- function(object, data, model, constrain, parprior, verbose){
     return(object)
 }
 
-
-
-
+UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups){
+    if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
+        tmpmat <- matrix(NA, nfact, nfact)
+        low_tri <- lower.tri(tmpmat)
+        tmp <- c()                
+        tmpmats <- tmpestmats <- matrix(NA, ngroups, nfact*(nfact+1)/2)
+        for(g in 1:ngroups){
+            tmpmats[g,] <- pars[[g]][[J + 1]]@parnum[(nfact+1):length(pars[[g]][[J + 1]]@parnum)] 
+            tmpestmats[g,] <- pars[[g]][[J + 1]]@est[(nfact+1):length(pars[[g]][[J + 1]]@est)]
+        }
+        select <- colSums(tmpestmats) == ngroups
+        for(i in 1:length(select))
+            if(select[i])
+                constrain[[length(constrain) + 1]] <- tmpmats[1:ngroups, i]
+        
+    }    
+    if('slopes' %in% invariance){ #Equal factor loadings
+        tmpmats <- tmpests <- list()
+        for(g in 1:ngroups)
+            tmpmats[[g]] <- tmpests[[g]] <- matrix(NA, J, nLambdas)                
+        for(g in 1:ngroups){            
+            for(i in 1:J){
+                tmpmats[[g]][i,] <- pars[[g]][[i]]@parnum[1:nLambdas]
+                tmpests[[g]][i,] <- pars[[g]][[i]]@est[1:nLambdas]
+            }
+        }
+        for(i in 1:J){
+            for(j in 1:nLambdas){
+                tmp <- c()
+                for(g in 1:ngroups){                    
+                    if(tmpests[[1]][[i, j]])
+                        tmp <- c(tmp, tmpmats[[g]][i,j])
+                }
+                constrain[[length(constrain) + 1]] <- tmp
+            }
+        }        
+    }
+    if('intercepts' %in% invariance){ #Equal item intercepts (and all other item pars)
+        tmpmats <- tmpests <- list()
+        for(g in 1:ngroups)
+            tmpmats[[g]] <- tmpests[[g]] <- list() 
+        for(g in 1:ngroups){            
+            for(i in 1:J){
+                ind <- (nLambdas+1):length(pars[[g]][[i]]@parnum)
+                if(is(pars[[g]][[i]], 'dich')) ind <- ind[1:(length(ind)-2)]
+                if(is(pars[[g]][[i]], 'partcomp')) ind <- ind[1:(length(ind)-1)]
+                tmpmats[[g]][[i]] <- pars[[g]][[i]]@parnum[ind]
+                tmpests[[g]][[i]] <- pars[[g]][[i]]@est[ind]
+            }
+        }
+        for(i in 1:J){
+            for(j in 1:length(tmpmats[[1]][[i]])){
+                tmp <- c()
+                for(g in 1:ngroups){                    
+                    if(tmpests[[1]][[i]][j])
+                        tmp <- c(tmp, tmpmats[[g]][[i]][j])
+                }
+                constrain[[length(constrain) + 1]] <- tmp
+            }
+        }
+    }
+    return(constrain)
+}
