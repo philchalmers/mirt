@@ -24,11 +24,9 @@ setClass("AllModelClass",
                         esttype='character',
                         iter='numeric',                        
                         quadpts='numeric',
-                        nfact='numeric',
-                        factorNames='character',
+                        nfact='numeric',                        
                         prodlist='list',
-                        constrain='list',
-                        fulldata='matrix',
+                        constrain='list',                        
                         'VIRTUAL'),    
          validity = function(object) return(TRUE)
 )                       
@@ -52,10 +50,12 @@ setClass(
 )	
 
 #------------------------------------------------------------------------------
-# #' @exportClass multipleGroupClass
-# setClass(
-#     Class = 'multipleGroupClass', contains = 'AllModelClass',
-#     representation = representation(groups='numeric',
-#                                     groupNames='character'),    
-#     validity = function(object) return(TRUE)
-# )
+#' @exportClass MultipleGroupClass
+setClass(
+    Class = 'MultipleGroupClass', contains = 'AllModelClass',
+    representation = representation(group='factor',
+                                    groupNames='factor',
+                                    invariance='character',
+                                    cmods='list'),    
+    validity = function(object) return(TRUE)
+)

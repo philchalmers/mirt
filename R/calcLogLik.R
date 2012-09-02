@@ -63,6 +63,8 @@ setMethod(
         LL[is.nan(LL)] <- 0 
         rwmeans <- rowMeans(LL) 
         logLik <- sum(log(rwmeans))
+        SElogLik <- sqrt(var(log(rowMeans(LL))) / draws) 
+        if(G2 == 'return') return(c(logLik, SElogLik))
 		data <- object@data
 		pats <- apply(data,1,paste,collapse = "/")			
 		freqs <- table(pats)
@@ -80,7 +82,7 @@ setMethod(
 			rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
 		}
 		expected[is.nan(expected)] <- NA
-		tabdata <- cbind(tabdata,expected*N)		
+		tabdata <- cbind(tabdata,expected*N)        
 		logN <- 0
 		logr <- rep(0,length(r))
 		for (i in 1:N) logN <- logN + log(i)
@@ -88,8 +90,7 @@ setMethod(
 			for (j in 1:r[i]) 
 				logr[i] <- logr[i] + log(j)    		
 		if(sum(logr) != 0)		
-			logLik <- logLik + logN/sum(logr)			
-		SElogLik <- sqrt(var(log(rowMeans(LL))) / draws)		
+			logLik <- logLik + logN/sum(logr)							
         nestpars <- nconstr <- 0
         for(i in 1:length(pars))
             nestpars <- nestpars + sum(pars[[i]]@est)

@@ -1,3 +1,20 @@
+#' Confirmatory Full-Information Item Factor Analysis
+#' 
+#' \code{MultipleGroup} performes a full-information
+#' maximum-likelihood multiple group analysis for dichotomous and polytomous
+#' data under the item response theory paradigm using Cai's (2010)
+#' Metropolis-Hastings Robbins-Monro algorithm. 
+#'  
+#'  
+#' 
+#' @aliases multipleGroup coef,multipleGroup-method 
+#' anova,multipleGroup-method 
+#' @param data a \code{matrix} or \code{data.frame} that consists of
+#' numerically ordered data, with missing data coded as \code{NA}
+#' @param model an object returned from \code{confmirt.model()} declaring how
+#' the factor model is to be estimated. See \code{\link{confmirt.model}} for
+#' more details
+#' @param group a character vector indicating group membership
 #' @param invariance a character vector containing the following possible options: 
 #' \describe{ 
 #' \item{'free_means'}{for freely estimating all latent means (reference group constrained to 0)}
@@ -10,9 +27,86 @@
 #' \item{'intercepts'}{to constrain all the intercepts to be equal across all groups, note for 
 #' nominal models this also includes the category specific slope parameters}
 #'}
-multipleGroup <- function(data, model, itemtype = NULL, guess = 0, upper = 1, group = NULL, 
+#' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
+#' entered as a single value to assign a global guessing parameter or may be entered as
+#' a numeric vector for each item
+#' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
+#' entered as a single value to assign a global upper bound parameter or may be entered as a 
+#' numeric vector corresponding to each item
+#' @param verbose logical; display iteration history during estimation?
+#' @param draws the number of Monte Carlo draws to estimate the log-likelihood
+#' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
+#' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
+#' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
+#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and 'partcomp', for the Rasch/partial credit, 1 and 2 parameter logistic, 
+#' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
+#' generalized partial credit model, nominal model, multiple choice model, and partially compensatory model,
+#' respectively. The default assumes that items follow a '2PL' or 'graded' format
+#' If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
+#' @param constrain a list of user declared equality constraints. To see how to define the
+#' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
+#' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
+#' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
+#' use \code{constrain = list(c(1,5), c(2,6,10))}
+#' @param parprior a list of user declared prior item probabilities. To see how to define the
+#' parameters correctly use \code{parprior = 'index'} initially to see how the parameters are labeled.
+#' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
+#' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
+#' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
+#' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
+#' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
+#' @param freepars a list of user declared logical values indicating which parameters to estimate. 
+#' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
+#' are labeled. These values may be modified and input back into the function by using 
+#' \code{freepars=newfreepars}. Note that user input values must match what the default structure 
+#' would have been
+#' @param startvalues a list of user declared start values for parameters. To see how to define the
+#' parameters correctly use \code{startvalues = 'index'} initially to see what the defaults would 
+#' noramlly be. These values may be modified and input back into the function by using 
+#' \code{startavlues=newstartvalues}. Note that user input values must match what the default structure 
+#' would have been
+#' @param debug logical; turn on debugging features?
+#' @param object an object of class \code{confmirtClass}
+#' @param object2 an object of class \code{confmirtClass}
+#' @param digits the number of significant digits to be rounded
+#' @param technical list specifying subtle parameters that can be adjusted. These 
+#' values are 
+#' \describe{
+#' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
+#' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
+#' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
+#' \item{KDRAWS}{number of parallel MH sets to be drawn; default 1}
+#' \item{TOL}{minimum threshold tolerance for convergence of MH-RM, must occur on three consecutive
+#' occations; default .001} 
+#'   \item{set.seed}{seed number used during estimation. Default is 12345}
+#'      \item{guess.prior.n}{a scalar or vector for the weighting of the beta priors for 
+#'		guessing parameters (default is 50, typical ranges are from 2 to 500). If a 
+#'      scalar is specified this is used globally, otherwise a numeric vector of size
+#' 	    \code{ncol(data)} can be used to correspond to particular items (NA values use 
+#'      the default)} 
+#'   \item{gain}{a vector of three values specifying the numerator, exponent, and subtracted
+#'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}   	
+#' }
+#' @param ... additional arguments to be passed
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @seealso
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
+#' \code{\link{confmirt.model}}
+#' @keywords models
+#' @usage 
+#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
+#'                           invariance = '', constrain = NULL, startvalues = NULL, 
+#'                           parprior = NULL, freepars = NULL, draws = 2000,
+#'                           technical = list(), debug = FALSE, verbose = TRUE)
+#' 
+#' \S4method{coef}{multipleGroup}(object, digits = 3, verbose = TRUE, ...)
+#' 
+#' \S4method{anova}{multipleGroup}(object, object2, ...)
+#'
+#' @export multipleGroup
+multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
                           invariance = '', constrain = NULL, startvalues = NULL, 
-                          parprior = NULL, freepars = NULL, calcLL = TRUE, draws = 2000,
+                          parprior = NULL, freepars = NULL, draws = 2000,
                           technical = list(), debug = FALSE, verbose = TRUE)
 {
     if(debug == 'Main') browser()
@@ -91,16 +185,58 @@ multipleGroup <- function(data, model, itemtype = NULL, guess = 0, upper = 1, gr
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=nfact, 
                                  nLambdas=nLambdas, J=J, ngroups=ngroups)    
     if(!is.null(technical$return_newconstrain)) return(constrain)    
-    #ESTIMATE <- MHRM.group()
-    
-    
-    
-    
-#     mod <- new('MultipleGroupClass', ...)
-#     if(calcLL){
-#         if(verbose) cat("\nCalculating log-likelihood...\n")
-#         flush.console()
-#         mod <- calcLogLik(mod, draws)
-#     }
-    
+    ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+                           list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
+                                       KDRAWS=KDRAWS, TOL=TOL, gain=gain, 
+                                       nfactNames=PrepList[[1]]$nfactNames, 
+                                       itemloc=PrepList[[1]]$itemloc,  
+                                       nfact=nfact, constrain=constrain, verbose=verbose), 
+                           debug=debug)   
+    cmods <- list()
+    for(g in 1:ngroups){
+        cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc, 
+                          tabdata=PrepList[[g]]$tabdata2, data=data[group == groupNames[[g]], ], 
+                          converge=ESTIMATE$converge, esttype='MHRM',                
+                          K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
+                          constrain=constrain,
+                          fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
+    }            
+    if(verbose) cat("\nCalculating log-likelihood...\n")
+    flush.console()      
+    LLs <- matrix(0, ngroups, 2)
+    for(g in 1:ngroups){
+        LLs[g, ] <- calcLogLik(cmods[[g]], draws, G2 = 'return')[1:2]
+        
+    }
+    LL <- colSums(LLs)  
+    logLik <- LL[1]
+    SElogLik <- LL[2]
+    r <- PrepListFull$tabdata
+    r <- r[, ncol(r)]
+    N <- sum(r)
+    logN <- 0
+    logr <- rep(0,length(r))
+    for (i in 1:N) logN <- logN + log(i)
+    for (i in 1:length(r)) 
+        for (j in 1:r[i]) 
+            logr[i] <- logr[i] + log(j)    		
+    if(sum(logr) != 0)		
+        logLik <- logLik + logN/sum(logr)							
+    nestpars <- nconstr <- 0
+    for(g in 1:ngroups)
+        for(i in 1:(J+1))
+            nestpars <- nestpars + sum(pars[[g]][[i]]@est)
+    if(length(constrain) > 0)
+        for(i in 1:length(constrain))
+            nconstr <- nconstr + length(constrain[[i]]) - 1     
+    nmissingtabdata <- sum(is.na(rowSums(PrepListFull$tabdata2)))
+    df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata	
+    AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
+    BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)    			    	    
+    mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, cmods=cmods, itemloc=PrepListFull$itemloc, 
+               tabdata=PrepListFull$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
+               K=PrepListFull$K, tabdatalong=PrepListFull$tabdata, constrain=constrain,               
+               group=group, groupNames=groupNames, invariance=invariance, df=as.integer(df),
+               logLik=logLik, SElogLik=SElogLik, AIC=AIC, BIC=BIC, Call=Call)  
+    return(mod)        
 }

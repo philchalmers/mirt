@@ -62,3 +62,6 @@ Collate:
     'PrepData.R'
     'Confirmatory-methods.R'
     'Exploratory-methods.R'
+    'MHRM.group.R'
+    'MultipleGroup-methods.R'
+    'multipleGroup.R'

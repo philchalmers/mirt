@@ -261,8 +261,8 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
         }
         SEtmp <- diag(solve(info))    	
         if(any(SEtmp < 0)){
-            warning("Information matrix is not positive definite, negative SEs set to 'NA'.\n")
-            SEtmp <- rep(NA, length(SEtmp))
+            warning("Information matrix is not positive definite, negative SEs set to 0.\n")
+            SEtmp <- rep(0, length(SEtmp))
         } else SEtmp <- sqrt(SEtmp)
         SE <- rep(NA, length(longpars))
         SE[estindex_unique] <- SEtmp

@@ -14,7 +14,7 @@ setMethod(
         
         if(length(x@logLik) > 0){
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
-                                                               paste('SE = ', round(x@SElogLik,3)),
+                                                               paste(', SE = ', round(x@SElogLik,3)),
                                                                ''), "\n",sep='')			
             cat("AIC =", x@AIC, "\n")			
             cat("BIC =", x@BIC, "\n")
