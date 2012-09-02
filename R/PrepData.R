@@ -10,10 +10,10 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     N <- nrow(data)
     exploratory <- FALSE
     if(is(model, 'numeric') && length(model) == 1){
+        if(model != 1) exploratory <- TRUE        
         tmp <- tempfile('tempfile')
         cat(paste('F',1:model,' = 1-', J, "\n", sep=''), file=tmp)
-        model <- confmirt.model(tmp, quiet = TRUE)
-        exploratory <- TRUE
+        model <- confmirt.model(tmp, quiet = TRUE)        
         unlink(tmp)
     }
     if(exploratory && any(itemtype == c('PC2PL', 'PC3PL'))) 

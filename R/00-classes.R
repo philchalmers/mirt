@@ -26,7 +26,9 @@ setClass("AllModelClass",
                         quadpts='numeric',
                         nfact='numeric',                        
                         prodlist='list',
-                        constrain='list',                        
+                        constrain='list',
+                        fulldata='matrix',
+                        factorNames='character',
                         'VIRTUAL'),    
          validity = function(object) return(TRUE)
 )                       

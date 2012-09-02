@@ -40,6 +40,7 @@ setMethod(
         allPars <- vector('list', ngroups)
         names(allPars) <- object@groupNames
         itemnames <- colnames(object@data)
+        J <- length(itemnames)
         for(g in 1:ngroups){              
             allPars[[g]] <- list()
             for(i in 1:(J+1)){
@@ -51,7 +52,7 @@ setMethod(
             }                       
             names(allPars[[g]]) <- c(itemnames, 'GroupPars')                
         }
-        if(allpars) return(allPars)                  	
+        return(allPars)                  	
     }
 )
 

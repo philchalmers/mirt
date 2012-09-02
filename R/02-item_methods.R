@@ -453,7 +453,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta){                  
+    definition = function(x, Theta){        
         nfact <- x@nfact
         parlength <- length(x@par)
         u <- x@par[parlength]
@@ -801,22 +801,25 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta){
-        tr <- function(y) sum(diag(y))
+        tr <- function(y) sum(diag(y))         
         nfact <- x@nfact
         N <- nrow(Theta)
         u <- x@par[1:nfact]
+        MU <- matrix(rep(u, N), N, byrow = TRUE)
         siglong <- x@par[-(1:nfact)]
         sig <- matrix(0,nfact,nfact)
         selcov <- lower.tri(sig, diag=TRUE) 
         sig[selcov] <- siglong
-        sig <- sig + t(sig) - diag(diag(sig))
-        npars <- length(sig) + nfact	
-        grad <- rep(0,nfact + nfact*(nfact+1)/2)	
+        if(nfact != 1)
+            sig <- sig + t(sig) - diag(diag(sig))
+        npars <- length(sig) + nfact	        
         invSig <- solve(sig)	
-        Z <- t(Theta-u) %*% (Theta-u)
-        grad[1:nfact] <- N * invSig %*% (colMeans(Theta) - u) 		
-        tmp <- .5 * invSig %*% (Z - N * sig) %*% invSig  
-        grad[(nfact+1):length(grad)] <- tmp[selcov]        
+        Z <- t(Theta-MU) %*% (Theta-MU)
+        g1 <- (N) * invSig %*% (colMeans(Theta) - u) 		
+        tmp <- invSig %*% (Z - N * sig) %*% invSig         
+        diag(tmp) <- diag(tmp)/2 #correct for symmetry
+        g2 <- tmp[selcov]        
+        grad <- c(g1, g2)
         sel <- 1:npars		
         cMeans <- N*(colMeans(Theta) - u)
         Zdif <- (Z - N * sig)		

@@ -71,29 +71,6 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     return(theta1) 
 }
 
-# start values
-start.values <- function(fulldata, guess, Rpoly, nfact=2, bfactor = FALSE, nowarn = TRUE)
-{	  	
-	if (bfactor){ 
-		suppressWarnings(FA <- psych::fa(Rpoly, 1, warnings = !nowarn))
-		loads <- unclass(FA$load)
-		cs <- sqrt(abs(FA$u))      
-		dstart <- qnorm(colMeans(fulldata))/cs
-		astart <- loads/cs
-		startvalues <- cbind(astart,astart/2,dstart)
-	} else {    
-		suppressWarnings(FA <- psych::fa(Rpoly,nfact,rotate = 'none', warnings= !nowarn))	
-		loads <- unclass(loadings(FA))
-		u <- FA$unique
-		u[u < .001 ] <- .2
-		cs <- sqrt(u)
-		dstart <- qnorm(colMeans(fulldata))/cs
-		astart <- loads/cs
-		startvalues <- cbind(astart,dstart)
-	}  	
-	startvalues
-}
-
 # Rotation function
 Rotate <- function(F, rotate, Target = NULL, ...)
 {	
@@ -277,12 +254,12 @@ Lambdas <- function(pars){
 #change long pars for groups into mean in sigma
 ExtractGroupPars <- function(x){
     nfact <- x@nfact
-    gmeans <- x@par[1:nfact]
-    gmeans <- x@par[1:nfact]
-    tmp <- x@par[-(1:nfact)]
+    gmeans <- x@par[1:nfact]    
+    tmp <- x@par[-(1:nfact)]    
     gcov <- matrix(0, nfact, nfact)
     gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-    gcov <- gcov + t(gcov) - diag(diag(gcov))
+    if(nfact != 1)
+        gcov <- gcov + t(gcov) - diag(diag(gcov))
     return(list(gmeans=gmeans, gcov=gcov))    
 }
 

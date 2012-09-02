@@ -57,7 +57,7 @@ setMethod(
 	definition = function(object, item, type = 'trace', ...)
 	{  			
 		x <- itemplot.main(object, item, type, ...)		        
-		return(x)
+		return(invisible(x))
 	}
 )
 
@@ -69,11 +69,11 @@ setMethod(
 	definition = function(object, item, type = 'trace', ...)
 	{
 	    x <- itemplot.main(object, item, type, ...)    	
-	    return(x)
+	    return(invisible(x))
 	}
 )
 
-itemplot.main <- function(x, item, type, ...){    
+itemplot.main <- function(x, item, type, ...){       
     nfact <- ncol(x@F)
     if(nfact > 2 && !x[[1]]@bfactor) stop('Can not plot high dimensional models')
     Theta <- x@Theta    
@@ -94,7 +94,7 @@ itemplot.main <- function(x, item, type, ...){
             plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
                  ylab = expression(I(theta)), xlab = expression(theta))
         }
-        if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')
+        if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')        
     } else {
         plt <- data.frame(info = info, Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])

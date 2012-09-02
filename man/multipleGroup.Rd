@@ -30,18 +30,19 @@
 
   \item{invariance}{a character vector containing the
   following possible options: \describe{
-  \item{'free_means'}{for freely estimating all latent
-  means (reference group constrained to 0)}
-  \item{'free_varcov'}{for freely estimating the
+  \item{\code{'free_means'}}{for freely estimating all
+  latent means (reference group constrained to 0)}
+  \item{\code{'free_varcov'}}{for freely estimating the
   variance-covariance matrix accross groups (reference
   group has variances equal to 1, but freely estimated
   covariance terms if specified in the model)}
-  \item{'covariances'}{to constrain all the covariance
-  parameters to be equal, note that this only makes sense
-  if the factor variances are the same (i.e., unity)}
-  \item{'slopes'}{to constrain all the slopes to be equal
-  across all groups} \item{'intercepts'}{to constrain all
-  the intercepts to be equal across all groups, note for
+  \item{\code{'covariances'}}{to constrain all the
+  covariance parameters to be equal, note that this only
+  makes sense if the factor variances are the same (i.e.,
+  unity)} \item{\code{'slopes'}}{to constrain all the
+  slopes to be equal across all groups}
+  \item{\code{'intercepts'}}{to constrain all the
+  intercepts to be equal across all groups, note for
   nominal models this also includes the category specific
   slope parameters} }}
 
@@ -144,16 +145,30 @@
   correspond to particular items (NA values use the
   default)} \item{gain}{a vector of three values specifying
   the numerator, exponent, and subtracted values for the RM
-  gain value. Default is \code{c(0.05,0.5,0.004)}} }}
+  gain value. Default is \code{c(0.05,0.5,0.004)}}
+  \item{return_newconstrain}{if \code{TRUE} returns a list
+  consisting of the constraints to be used just before
+  estimation begins} }}
 
   \item{...}{additional arguments to be passed}
 }
 \description{
-  \code{MultipleGroup} performes a full-information
+  \code{multipleGroup} performes a full-information
   maximum-likelihood multiple group analysis for
   dichotomous and polytomous data under the item response
   theory paradigm using Cai's (2010) Metropolis-Hastings
   Robbins-Monro algorithm.
+}
+\details{
+  By default the estimation in \code{multipleGroup} assumes
+  that the models are maximimally independent, and
+  therefore could initially be performed by subsetting the
+  data and running identical models with \code{confmirt} or
+  \code{mirt} and aggregating the results (e.g.,
+  log-likelihood). However, constrains may be imposed
+  accross groups by invoking various \code{invariance}
+  keywords or by inputing user defined \code{freepars},
+  \code{constrain}, and \code{startvalues} lists.
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}

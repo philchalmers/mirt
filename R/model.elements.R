@@ -46,7 +46,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     for(i in 1:J){        
         if(K[i] == 2){
             div <- ifelse(cs[i] > .25, cs[i], .25)		
-            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i]]))/div            
+            zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div            
         } else {			
             temp <- table(data[,i])[1:(K[i]-1)]/N
             temp <- cumsum(temp)
