@@ -20,10 +20,12 @@
   consists of numerically ordered data, with missing data
   coded as \code{NA}}
 
-  \item{model}{an object returned from
-  \code{confmirt.model()} declaring how the factor model is
-  to be estimated. See \code{\link{confmirt.model}} for
-  more details}
+  \item{model}{an object or named list of objects returned
+  from \code{confmirt.model()} declaring how the factor
+  model is to be estimated. The names of the list input
+  must correspond to the unique values in the \code{group}
+  variable. See \code{\link{confmirt.model}} for more
+  details}
 
   \item{group}{a character vector indicating group
   membership}
