@@ -3,8 +3,10 @@ context('confmirt')
 test_that('all mods', {
     data(LSAT7)
     fulldata <- expand.table(LSAT7)
-    explor <- confmirt(fulldata, 1, verbose = FALSE)
-    expect_is(explor, 'ExploratoryClass')
+    onefact <- confmirt(fulldata, 1, verbose = FALSE)
+    expect_is(onefact, 'ConfirmatoryClass')
+    twofact <- confmirt(fulldata, 2, verbose = FALSE)
+    expect_is(twofact, 'ExploratoryClass')
     
     set.seed(1234)
     a <- matrix(c(

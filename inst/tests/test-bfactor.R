@@ -5,15 +5,10 @@ test_that('dich data', {
     data <- key2binary(SAT12,
                        key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
     specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
-    mod1 <- bfactor(data, specific)
-    mod2 <- bfactor(data, specific, itemtype = c(rep('2PL', 29), '3PL', rep('2PL',2)),
-                    parprior = list(c(209, 'beta',10,40)))    
-    expect_is(mod1, 'ConfirmatoryClass')              
-    expect_is(mod2, 'ConfirmatoryClass')
+    mod1 <- bfactor(data, specific)    
+    expect_is(mod1, 'ConfirmatoryClass')                  
     fs <- fscores(mod1, verbose = FALSE)
-    expect_is(fs, 'matrix')
-    fs <- fscores(mod2, full.scores = TRUE, verbose = FALSE)
-    expect_is(fs, 'matrix')
+    expect_is(fs, 'matrix')    
 })
 
 

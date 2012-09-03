@@ -90,7 +90,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
     }          
     ####Big MHRM loop
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
-    {         
+    {     
+        if(is.list(debug)) print(longpars[debug[[1]]])
         if(cycles == BURNIN + 1) stagecycle <- 2			
         if(stagecycle == 3)
             gamma <- (gain[1] / (cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
@@ -126,7 +127,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         
         #Step 1. Generate m_k datasets of theta 
-        for(g in 1:ngroups){             
+        for(g in 1:ngroups){            
             for(i in 1:5)    		
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]], 
                                       itemloc=itemloc, cand.t.var=cand.t.var, 
@@ -270,6 +271,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             ind1 <- ind2 + 1            
         }         
     }
-    ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, converge=converge)
+    ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, longpars=longpars,
+                converge=converge)
     ret    
 }

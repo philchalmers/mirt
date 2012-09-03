@@ -87,6 +87,7 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
         ####Big MHRM loop 
         for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))								
         { 
+            if(is.list(debug)) print(longpars[debug[[1]]])
             if(cycles == BURNIN + 1) stagecycle <- 2			
             if(stagecycle == 3)
                 gamma <- (gain[1] / (cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
@@ -275,7 +276,8 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
             pars[[i]]@SEpar <- SE[ind1:ind2]
             ind1 <- ind2 + 1            
         }         
-        ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, converge=converge)
+        ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=as.matrix(info), 
+                    longpars=longpars, converge=converge)
         ret        
 }
 

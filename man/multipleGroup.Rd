@@ -2,7 +2,7 @@
 \alias{anova,multipleGroup-method}
 \alias{coef,multipleGroup-method}
 \alias{multipleGroup}
-\title{Confirmatory Full-Information Item Factor Analysis}
+\title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
     = 0, upper = 1, invariance = '', constrain = NULL,

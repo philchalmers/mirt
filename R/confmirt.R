@@ -290,7 +290,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                                 nfact=PrepList$nfact, npars=PrepList$npars, 
                                 constrain=PrepList$constrain, verbose=verbose), 
                       debug=debug, startvalues=startvalues, EMSE=EMSE) 
-    if(EMSE) return(ESTIMATE$pars)
+    if(EMSE) return(ESTIMATE)
     null.mod <- unclass(mirt(data,1,itemtype='NullModel'))
     # pars to FA loadings    
     pars <- ESTIMATE$pars    
@@ -312,7 +312,8 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                    F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
                    K=PrepList$K, tabdatalong=PrepList$tabdata, nfact=nfact, constrain=PrepList$constrain,
                    rotate=rotate, null.mod=null.mod, Target=Target, factorNames=PrepList$factorNames,
-                   fulldata=PrepList$fulldata, Call=Call)
+                   fulldata=PrepList$fulldata, information=ESTIMATE$info, longpars=ESTIMATE$longpars, 
+                   Call=Call)
     } else {
         F <- alp
         colnames(F) <- PrepList$factorNames
@@ -321,7 +322,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                    F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
                    K=PrepList$K, tabdatalong=PrepList$tabdata, nfact=nfact, constrain=PrepList$constrain,
                    fulldata=PrepList$fulldata, null.mod=null.mod, factorNames=PrepList$factorNames, 
-                   Call=Call)
+                   information=ESTIMATE$info, longpars=ESTIMATE$longpars, Call=Call)
     }        
 	if(calcLL){
 		if(verbose) cat("\nCalculating log-likelihood...\n")

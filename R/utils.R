@@ -303,7 +303,9 @@ calcEMSE <- function(object, data, model, constrain, parprior, verbose){
                     technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
                                     EMSE = TRUE), verbose = verbose)
     for(i in 1:length(pars))
-        object@pars[[i]]@SEpar <- pars[[i]]@SEpar    
+        object@pars[[i]]@SEpar <- pars$pars[[i]]@SEpar     
+    object@information <- pars$info
+    object@longpars <- pars$longpars
     return(object)
 }
 

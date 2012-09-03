@@ -1,4 +1,4 @@
-#' Confirmatory Full-Information Item Factor Analysis
+#' Multiple Group Estimation
 #' 
 #' \code{multipleGroup} performes a full-information
 #' maximum-likelihood multiple group analysis for dichotomous and polytomous

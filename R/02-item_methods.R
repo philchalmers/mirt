@@ -507,7 +507,7 @@ setMethod(
             }	
         }        
         if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)            
+            ind <- !is.na(x@n.prior.mu)            
             val <- x@par[ind]
             mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
@@ -521,7 +521,7 @@ setMethod(
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
         }
         if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
+            ind <- !is.na(x@b.prior.alpha)
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
@@ -555,7 +555,7 @@ setMethod(
         hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
             ret$hess[(nd+1):ncol(hess), 1:nd]
         if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)            
+            ind <- !is.na(x@n.prior.mu)            
             val <- x@par[ind]
             mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
@@ -569,7 +569,7 @@ setMethod(
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
         }
         if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
+            ind <- !is.na(x@b.prior.alpha)
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
@@ -742,7 +742,7 @@ setMethod(
             }                        
         }	
         if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)            
+            ind <- !is.na(x@n.prior.mu)            
             val <- x@par[ind]
             mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
@@ -756,7 +756,7 @@ setMethod(
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
         }
         if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
+            ind <- !is.na(x@b.prior.alpha)
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
@@ -815,7 +815,7 @@ setMethod(
         npars <- length(sig) + nfact	        
         invSig <- solve(sig)	
         Z <- t(Theta-MU) %*% (Theta-MU)
-        g1 <- (N) * invSig %*% (colMeans(Theta) - u) 		
+        g1 <- N * invSig %*% (colMeans(Theta) - u) 		
         tmp <- invSig %*% (Z - N * sig) %*% invSig         
         diag(tmp) <- diag(tmp)/2 #correct for symmetry
         g2 <- tmp[selcov]        
@@ -832,8 +832,8 @@ setMethod(
                    as.integer(npars))				
         sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]	
         hess <- hess[sel,sel] 
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)            
+        if(any(!is.nan(x@n.prior.mu))){            
+            ind <- !is.na(x@n.prior.mu)            
             val <- x@par[ind]
             mu <- x@n.prior.mu[ind]
             s <- x@n.prior.sd[ind]
@@ -847,7 +847,7 @@ setMethod(
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
         }
         if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
+            ind <- !is.na(x@b.prior.alpha)
             val <- x@par[ind]
             a <- x@b.prior.alpha[ind]
             b <- x@b.prior.beta[ind]
