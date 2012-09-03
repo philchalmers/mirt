@@ -3,6 +3,7 @@
 \alias{fscores}
 \alias{fscores,ConfirmatoryClass-method}
 \alias{fscores,ExploratoryClass-method}
+\alias{fscores,MultipleGroupClass-method}
 \alias{fscores-method}
 \title{Methods for Function fscores}
 \arguments{
@@ -26,33 +27,19 @@
   \item{quadpts}{number of quadratures to use per
   dimension}
 
-  \item{ndraws}{number of MH samples to draw for each
-  response pattern}
-
-  \item{thin}{controls how much the chain should be thinned
-  by, default collects every 5th draw (\code{thin = 5}).
-  Note that \code{ndraws/thin} must be a whole number. for
-  \code{confmirtClass} objects only}
-
   \item{verbose}{logical; print verbose output messages?}
 }
-\value{
-  Returns either a summary table with the response patterns
-  and expected factor scores, or a complete data matrix
-  with factor scores appended to the last column.
-}
 \description{
-  Computes MAP, EAP, or ML factor scores for \code{mirt}
-  and \code{bfactor} models, or a stochastic approximation
-  with a multivariate normal prior for \code{polymirt} and
-  \code{confmirt}. Note that only the general factor scores
-  are computed for bifactor models.
+  Computes MAP, EAP, or ML factor scores with a
+  multivariate normal prior distribution.
 }
 \section{Methods}{
   \describe{ \item{fscores}{\code{signature(object =
   "ExploratoryClass")}}
   \item{fscores}{\code{signature(object =
-  "ConfirmatoryClass")}}}
+  "ConfirmatoryClass")}}
+  \item{fscores}{\code{signature(object =
+  "MultipleGroupClass")}}}
 }
 \examples{
 \dontrun{
@@ -62,8 +49,6 @@ tabscores <- fscores(mod)
 fullscores <- fscores(mod, full.scores = TRUE)
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 
-mod2 <- confmirt(Science, 1)
-tabscores2 <- fscores(mod2, ndraws = 5000)
 
   }
 }

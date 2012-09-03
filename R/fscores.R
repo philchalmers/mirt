@@ -1,20 +1,18 @@
 #' Methods for Function fscores
 #' 
-#' Computes MAP, EAP, or ML factor scores for \code{mirt} and \code{bfactor} models,
-#' or a stochastic approximation with a multivariate normal prior for \code{polymirt} and 
-#' \code{confmirt}. Note that only the general factor scores are computed for bifactor 
-#' models.
+#' Computes MAP, EAP, or ML factor scores with a multivariate normal prior distribution. 
 #'
 #' 
 #' @usage 
 #' fscores(object, ...)
 #' 
 #' @aliases fscores-method fscores,ExploratoryClass-method
-#' fscores,ConfirmatoryClass-method
+#' fscores,ConfirmatoryClass-method fscores,MultipleGroupClass-method
 #' @docType methods
 #' @section Methods: 
 #' \describe{ \item{fscores}{\code{signature(object =
-#' "ExploratoryClass")}} \item{fscores}{\code{signature(object = "ConfirmatoryClass")}}}
+#' "ExploratoryClass")}} \item{fscores}{\code{signature(object = "ConfirmatoryClass")}}
+#' \item{fscores}{\code{signature(object = "MultipleGroupClass")}}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @rdname fscores-methods   
 #' @exportMethod fscores
@@ -38,14 +36,7 @@ setGeneric("fscores",
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
 #' (\code{"ML"})
 #' @param quadpts number of quadratures to use per dimension
-#' @param ndraws number of MH samples to draw for each response pattern 
-#' @param thin controls how much the chain should be thinned by, default
-#' collects every 5th draw (\code{thin = 5}). Note that \code{ndraws/thin} must be a whole number.
-#' for \code{confmirtClass} objects only
 #' @param verbose logical; print verbose output messages?
-#' @return Returns either a summary table with the response patterns and
-#' expected factor scores, or a complete data matrix with factor scores
-#' appended to the last column.
 #' @keywords factor.scores
 #' @rdname fscores-methods   
 #' @export fscores
@@ -58,8 +49,6 @@ setGeneric("fscores",
 #' fullscores <- fscores(mod, full.scores = TRUE)
 #' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 #' 
-#' mod2 <- confmirt(Science, 1)
-#' tabscores2 <- fscores(mod2, ndraws = 5000)
 #' 
 #'   }
 #' 
@@ -169,6 +158,38 @@ setMethod(
                        verbose=verbose)
         return(ret)
 	}	
+)
+
+#------------------------------------------------------------------------------
+#' @rdname fscores-methods      
+setMethod(
+    f = "fscores",
+    signature = 'MultipleGroupClass',
+    definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
+                          quadpts = NULL, verbose = TRUE)
+    { 	        
+        cmods <- object@cmods
+        ngroups <- length(cmods)
+        for(g in 1:ngroups)
+            class(cmods[[g]]) <- 'ConfirmatoryClass'
+        ret <- vector('list', length(cmods))
+        for(g in 1:ngroups)
+            ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, 
+                           quadpts=quadpts, verbose=verbose)
+        if(full.scores){
+            id <- c()
+            fulldata <- matrix(NA, 1, ncol(ret[[1]]))
+            for(g in 1:ngroups){
+                id <- c(id, rownames(ret[[g]]))
+                fulldata <- rbind(fulldata, ret[[g]])
+            }
+            fulldata <- fulldata[-1, ]
+            fulldata <- data.frame(id=as.numeric(id), fulldata)
+            ret <- fulldata[order(fulldata$id), ]
+            ret <- ret[ ,-1]        
+        }         
+        return(ret)
+    }	
 )
 
 # MAP scoring for mirt
