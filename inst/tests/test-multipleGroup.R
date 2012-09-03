@@ -2,12 +2,12 @@ context('multipleGroup')
 
 test_that('one factor', {    
     set.seed(12345)
-    a2 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+    a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
     d <- matrix(rnorm(15,0,.7),ncol=1)    
     itemtype <- rep('dich', nrow(a))
     N <- 1000    
-    dataset1 <- simdata(a2, d, N, itemtype)
-    dataset2 <- simdata(a2, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+    dataset1 <- simdata(a, d, N, itemtype)
+    dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
     dat <- rbind(dataset1, dataset2)
     group <- c(rep('D1', N), rep('D2', N))    
     models <- confmirt.model('confmods/MGmodel1', quiet = TRUE)
