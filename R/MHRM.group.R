@@ -127,6 +127,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         
         #Step 1. Generate m_k datasets of theta 
+        LL <- 0
         for(g in 1:ngroups){            
             for(i in 1:5)    		
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]], 
@@ -134,6 +135,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                                       prior.t.var=gstructgrouppars[[g]]$gcov, 
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
                                       debug=debug)            
+            LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
         
         #Step 2. Find average of simulated data gradients and hessian 		
@@ -169,13 +171,13 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             if((cycles + 1) %% 10 == 0){
                 if(cycles < BURNIN)
                     cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-                        sprintf("%.1f",attr(gtheta0[[1]],"log.lik")), sep="")
+                        sprintf("%.1f", LL), sep="")
                 if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
                     cat("Stage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
-                        sprintf("%.1f",attr(gtheta0[[1]],"log.lik")), sep="")
+                        sprintf("%.1f", LL), sep="")
                 if(cycles > BURNIN + SEMCYCLES)
                     cat("Stage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
-                        ", Log-Lik = ", sprintf("%.1f",attr(gtheta0[[1]],"log.lik")), sep="")					
+                        ", Log-Lik = ", sprintf("%.1f",LL), sep="")					
             }
         }			
         if(stagecycle < 3){	
