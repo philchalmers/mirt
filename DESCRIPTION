@@ -65,3 +65,4 @@ Collate:
     'MHRM.group.R'
     'MultipleGroup-methods.R'
     'multipleGroup.R'
+    'wald.R'

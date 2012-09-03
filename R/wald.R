@@ -2,10 +2,13 @@
 #' 
 #' Compute a Wald test given an \code{L} vector or matrix of contrasts.
 #' 
+#' @aliases wald
 #' @param L a coefficient matrix with dimensions nconstrasts x npars. Use \code{constrain = 'index'}
 #' on the initially estimated model to obtain the parameter indicators  
 #' @param object estimated object from mirt, confmirt, or multipleGroup
 #' @param C a constant vector to be compared along side L. Default is 0
+#' @keywords wald
+#' @export wald
 #' @examples
 #' \dontrun{
 #' #View parnumber index
@@ -51,7 +54,12 @@ wald <- function(L, object, C = 0){
     ret
 }
 
-print.wald <- function(x){
+#' @S3method print wald
+#' @rdname wald
+#' @method print wald
+#' @param x an object of class 'wald'
+#' @param ... additional arguments to be passed
+print.wald <- function(x, ...){
     W <- x$W
     df <- x$df
     p <- 1 - pchisq(x$W, x$df)
