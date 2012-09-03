@@ -31,10 +31,11 @@ wald <- function(L, object, C = 0){
     covB <- solve(object@information)
     estB <- B <- c()
     if(is(object, 'MultipleGroupClass')){
+        pars <- object@cmods
         for(g in 1:length(pars)){
-            for(i in 1:length(pars[[g]])){
-                B <- c(B, pars[[g]][[i]]@par)        
-                estB <- c(estB, pars[[g]][[i]]@est)
+            for(i in 1:length(pars[[g]]@pars)){
+                B <- c(B, pars[[g]]@pars[[i]]@par)        
+                estB <- c(estB, pars[[g]]@pars[[i]]@est)
             }
         }        
     } else {
@@ -42,6 +43,12 @@ wald <- function(L, object, C = 0){
             B <- c(B, pars[[i]]@par)        
             estB <- c(estB, pars[[i]]@est)
         }
+    }
+    if(length(object@constrain) > 0){        
+        constr <- object@constrain
+        for(i in 1:length(constr))
+            for(j in 2:length(constr[[i]]))
+                estB[constr[[i]][j]] <- FALSE        
     }
     estB <- matrix(estB, 1)
     B <- B[estB[1,]]       

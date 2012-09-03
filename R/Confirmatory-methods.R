@@ -64,8 +64,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ConfirmatoryClass',
-    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, 
-                          verbose = TRUE, ...)
+    definition = function(object, allpars = FALSE, digits = 3, verbose = TRUE, ...)
     {                             
         K <- object@K
         J <- length(K)

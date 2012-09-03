@@ -172,6 +172,91 @@
   keywords or by inputing user defined \code{freepars},
   \code{constrain}, and \code{startvalues} lists.
 }
+\examples{
+\dontrun{
+#single factor
+set.seed(12345)
+a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+itemtype <- rep('dich', nrow(a))
+N <- 1000
+dataset1 <- simdata(a, d, N, itemtype)
+dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+dat <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+models <- confmirt.model()
+   F1 = 1-15
+
+
+mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
+mod_scalar2 <- multipleGroup(dat, models, group = group,  #equal intercepts, free variance and means
+                             invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
+mod_scalar1 <- multipleGroup(dat, models, group = group, #fixed means
+                             invariance=c('slopes', 'intercepts', 'free_varcov'))
+mod_fullconstrain <- mirt(data, models) #fix variance (equivelent to full constrain)
+
+anova(mod_metric, mod_configural) #equal slopes only
+anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
+anova(mod_scalar1, mod_scalar2) #fix mean
+anova(mod_fullconstrain, mod_scalar1) #fix variance
+
+
+#Wald test can be useful here
+#compare whether intercepts should be equal
+index <- multipleGroup(dat, models, group = group, constrain = 'index')
+index
+nitems <- ncol(dat)
+L <- matrix(0, nitems, 124)
+for(i in 1:nitems){
+     L[i, index[[1]][[i]][2]] <- 1
+     L[i, index[[2]][[i]][2]] <- -1
+ }
+wald(L, mod_configural)
+
+
+#############
+#multiple factors
+
+a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
+rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+mu <- c(-.4, -.7, .1)
+sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
+itemtype <- rep('dich', nrow(a))
+N <- 1000
+dataset1 <- simdata(a, d, N, itemtype)
+dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
+dat <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+
+#group models
+model1 <- confmirt.model()
+   F1 = 1-5
+   F2 = 6-10
+   F3 = 11-15
+
+
+model2 <- confmirt.model()
+   F1 = 1-5
+   F2 = 6-10
+   F3 = 11-15
+   COV = F1*F2, F1*F3, F2*F3
+
+
+models <- list(D1=model1, D2=model2) #note the names match the groups
+
+mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
+mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
+                             invariance=c('slopes', 'intercepts', 'free_varcov'))
+mod_fullconstrain <- confmirt(data, models)
+
+anova(mod_metric, mod_configural)
+anova(mod_scalar, mod_metric)
+anova(mod_fullconstrain, mod_scalar)
+}
+}
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }

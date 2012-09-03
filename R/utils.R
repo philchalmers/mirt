@@ -280,7 +280,9 @@ reloadConstr <- function(par, constr, obj){
 }
 
 calcEMSE <- function(object, data, model, constrain, parprior, verbose){  
-    startvalues <- coef(object, allpars = T)  
+    startvalues <- list()
+    for(i in 1:(ncol(data)+1))
+        startvalues[[i]] <- object@pars[[i]]@par
     if(is(model, 'numeric') && length(model) > 1){
         J <- ncol(data)
         tmp <- tempfile('tempfile')
@@ -301,9 +303,9 @@ calcEMSE <- function(object, data, model, constrain, parprior, verbose){
     }
     pars <- confmirt(data, model, startvalues=startvalues, constrain=constrain, parprior=parprior, 
                     technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
-                                    EMSE = TRUE), verbose = verbose)
-    for(i in 1:length(pars))
-        object@pars[[i]]@SEpar <- pars$pars[[i]]@SEpar     
+                                    EMSE = TRUE), verbose = verbose)    
+    for(i in 1:length(pars$pars))
+        object@pars[[i]]@SEpar <- pars$pars[[i]]@SEpar                            
     object@information <- pars$info
     object@longpars <- pars$longpars
     return(object)

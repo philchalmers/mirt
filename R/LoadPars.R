@@ -4,7 +4,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     {       
     if(debug == 'LoadPars') browser() 
     if(any(itemtype[1] == c('Rasch', '1PL') && nfact > 1)) 
-        stop('Rasch and 1PL models can only be estimated for unidimensional models')
+        stop('Rasch and 1PL models zzan only be estimated for unidimensional models')
     pars <- list()       
     RETURNSTARTVALUES <- ifelse(!is.null(startvalues) && startvalues == 'index', TRUE, FALSE)
     RETURNFREEPARS <- ifelse(!is.null(freepars) && freepars == 'index', TRUE, FALSE)    

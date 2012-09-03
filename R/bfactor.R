@@ -275,6 +275,6 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
                null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                Call=Call)     
     if(SE) mod <- calcEMSE(object=mod, data=data, model=specific, constrain=constrain, 
-                           parprior=parprior)
+                           parprior=parprior, verbose=verbose)
 	return(mod)  
 } 

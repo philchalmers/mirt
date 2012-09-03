@@ -232,13 +232,23 @@
 #' coef(mod1.3PL, allpars = TRUE)
 #' 
 #' (mod2 <- mirt(data, 2))
-#' summary(mod2)
+#' summary(mod2, rotate = 'oblimin')
 #' coef(mod2)
 #' residuals(mod2)
 #' plot(mod2)
 #' 
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table
+#' 
+#' #' #confirmatory
+#' cmodel <- confmirt.model()
+#' F1 = 1,4,5
+#' F2 = 2,3
+#'  
+#' 
+#' cmod <- mirt(data, cmodel)
+#' coef(cmod)
+#' anova(cmod, mod2)
 #' 
 #' ###########
 #' #data from the 'ltm' package in numeric format
@@ -259,7 +269,7 @@
 #' itemplot(pmod2, 1)
 #' anova(pmod1, pmod2)
 #' 
-#'
+#' 
 #' ###########
 #' data(SAT12)
 #' data <- key2binary(SAT12,
@@ -336,7 +346,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
     	           Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
     	           quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
     	           rotate=rotate, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Target=Target, 
-    	           factorNames=PrepList$factorNames, Call=Call)
+    	           factorNames=PrepList$factorNames, constrain=PrepList$constrain, Call=Call)
     } else {
         F <- alp
         colnames(F) <- PrepList$factorNames    
@@ -347,7 +357,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
                    Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
                    quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                    null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
-                   Call=Call)
+                   constrain=PrepList$constrain, Call=Call)
     }   
     if(SE) mod <- calcEMSE(object=mod, data=data, model=model, constrain=constrain, 
                            parprior=parprior, verbose=verbose)

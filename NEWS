@@ -2,19 +2,27 @@
 mirt 0.3.1
 ----------------------------------------------------------------
 
-* Individual classes now correspond to the type of method, ExploratoryClass and 
-  ConfirmatoryClass. 
+* Individual classes now correspond to the type of methods: ExploratoryClass, 
+  ConfirmatoryClass, and MultipleGroupClass
 
 * plot and itemplot now works for confmirt objects
 
-* mirt can now make use of confmirt.model objects and hence be confirmatory. 
+* mirt can now make use of confmirt.model specified objects and hence be confirmatory as well 
 
 * stochastic estimation of factor scores removed entirely, now only quadrature based methods
   for all objects. Also, bfactor returned objects now will estimate all the factors scores instead
   of just the general dimension
 
-* Standard errors for bfactor and mirt now automatically calculated (borrowed from running a tweaked
+* Standard errors for mirt now automatically calculated (borrowed from running a tweaked
   MHRM run)
+
+* Multiple group estimation available with the multipleGroup() function. Currently only uses MHRM
+  as the estimation engine
+
+* wald() function added for testing linear constraints. Useful in multiple group situations
+  for testing individual parameters rather than always estimating a new model
+
+* General bug fixes as usual that were spawned from all the added features 
 
 ----------------------------------------------------------------
 mirt 0.3.0
@@ -114,7 +122,7 @@ mirt 0.2.5
   bfactor()
 
 * pass rotate='rotation' from mirt and polymirt to override default 
-  default 'varimax' rotation at estimation time (suggested by 
+  'varimax' rotation at estimation time (suggested by 
   Niels Waller)
 
 * RMSEA, G^2, and p set to NaN instead of internal placeholder when 

@@ -272,8 +272,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
             ind1 <- ind2 + 1            
         }         
-    }
-    ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, longpars=longpars,
-                converge=converge)
+    }    
+    ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=as.matrix(info), 
+                longpars=longpars, converge=converge)
     ret    
 }

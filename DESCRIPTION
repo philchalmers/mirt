@@ -15,7 +15,9 @@ Description: Analysis of dichotomous and polytomous response data using latent
     quadrature or stochastic methods, a generalized confirmatory bi-factor
     analysis is included, and confirmatory models can be fit with a
     Metropolis-Hastings Robbins-Monro algorithm which can include polynomial or
-    product constructed latent traits.
+    product constructed latent traits. Additionally, multiple group analyses may
+    be performed for unidimensional or multidimensional item response models for
+    detecting differential item functioning.
 Depends:
     R (>= 2.14),
     stats4,

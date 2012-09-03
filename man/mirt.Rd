@@ -304,13 +304,23 @@ plot(mod1) #test information function
 coef(mod1.3PL, allpars = TRUE)
 
 (mod2 <- mirt(data, 2))
-summary(mod2)
+summary(mod2, rotate = 'oblimin')
 coef(mod2)
 residuals(mod2)
 plot(mod2)
 
 anova(mod1, mod2) #compare the two models
 scores <- fscores(mod2) #save factor score table
+
+#' #confirmatory
+cmodel <- confmirt.model()
+F1 = 1,4,5
+F2 = 2,3
+
+
+cmod <- mirt(data, cmodel)
+coef(cmod)
+anova(cmod, mod2)
 
 ###########
 #data from the 'ltm' package in numeric format
