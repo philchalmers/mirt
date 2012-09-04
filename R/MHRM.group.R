@@ -7,13 +7,12 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
     BURNIN <- list$BURNIN
     SEMCYCLES <- list$SEMCYCLES
     KDRAWS <- list$KDRAWS
-    TOL <- list$TOL
+    TOL <- list$TOL    
     gain <- list$gain    
     itemloc <- list$itemloc
     ngroups <- length(pars)
     J <- length(itemloc) - 1
-    prodlist <- PrepList[[1]]$prodlist
-    #Burn in          
+    prodlist <- PrepList[[1]]$prodlist            
     nfullpars <- 0
     estpars <- c()
     gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
@@ -26,7 +25,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             estpars <- c(estpars, pars[[g]][[i]]@est)
         }
     }
-    index <- 1:nfullpars           
+    index <- 1:nfullpars    
+    #Burn in
     cand.t.var <- 1
     tmp <- .1
     for(g in 1:ngroups){             
@@ -109,6 +109,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             gamma <- .25
         }  
         #Reload pars list
+        if(list$USEEM) longpars <- list$startlongpars
         ind1 <- 1
         for(g in 1:ngroups){
             for(i in 1:(J+1)){
@@ -241,6 +242,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         info <- info + gamma*(Tau - phi %*% t(phi) - info)		
     } ###END BIG LOOP       
     #Reload final pars list
+    if(list$USEEM) longpars <- list$startlongpars
     ind1 <- 1
     for(g in 1:ngroups){
         for(i in 1:(J+1)){

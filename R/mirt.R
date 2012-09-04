@@ -218,7 +218,7 @@
 #' @examples
 #' 
 #' \dontrun{
-#' #load LSAT section 7 data and computmire 1 and 2 factor models
+#' #load LSAT section 7 data and compute 1 and 2 factor models
 #' data(LSAT7)
 #' data <- expand.table(LSAT7)
 #' 

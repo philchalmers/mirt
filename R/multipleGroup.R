@@ -39,6 +39,9 @@
 #' numeric vector corresponding to each item
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
+#' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
+#' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM 
+#' (\code{'MHRM'}) algorithm; only the MHRM method is available for now
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
@@ -76,18 +79,15 @@
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
 #' \describe{
-#' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
+#' \item{NCYCLES}{max number of cycles; default 2000 for MHRM and 300 for EM}
+#' \item{MAXQUAD}{maximum number of quadratures; default 10000}
+#' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
 #' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
 #' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
 #' \item{KDRAWS}{number of parallel MH sets to be drawn; default 1}
 #' \item{TOL}{minimum threshold tolerance for convergence of MH-RM, must occur on three consecutive
 #' occations; default .001} 
-#'   \item{set.seed}{seed number used during estimation. Default is 12345}
-#'      \item{guess.prior.n}{a scalar or vector for the weighting of the beta priors for 
-#'		guessing parameters (default is 50, typical ranges are from 2 to 500). If a 
-#'      scalar is specified this is used globally, otherwise a numeric vector of size
-#' 	    \code{ncol(data)} can be used to correspond to particular items (NA values use 
-#'      the default)} 
+#'   \item{set.seed}{seed number used during estimation. Default is 12345}       
 #'   \item{gain}{a vector of three values specifying the numerator, exponent, and subtracted
 #'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}   	
 #'  \item{return_newconstrain}{if \code{TRUE} returns a list consisting of the constraints to be used
@@ -101,9 +101,9 @@
 #' @keywords models
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
-#'                           invariance = '', constrain = NULL, startvalues = NULL, 
-#'                           parprior = NULL, freepars = NULL, draws = 2000,
-#'                           technical = list(), debug = FALSE, verbose = TRUE)
+#' invariance = '', method = 'MHRM', constrain = NULL, startvalues = NULL, 
+#' parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
+#' technical = list(), debug = FALSE, verbose = TRUE)
 #' 
 #' \S4method{coef}{multipleGroup}(object, digits = 3, verbose = TRUE, ...)
 #' 
@@ -196,16 +196,20 @@
 
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
-                          invariance = '', constrain = NULL, startvalues = NULL, 
-                          parprior = NULL, freepars = NULL, draws = 2000,
+                          invariance = '', method = 'MHRM', constrain = NULL, startvalues = NULL, 
+                          parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
                           technical = list(), debug = FALSE, verbose = TRUE)
 {
     if(debug == 'Main') browser()
     ##technical
     Call <- match.call()               
-    set.seed(12345)	    
+    set.seed(12345)	   
+    MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
+    MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)        
     RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
     NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
+    if(method == 'EM')
+        NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
     BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
@@ -217,7 +221,13 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
             gain <- technical$gain
     }	 
     RETURNFREEPARS <- RETURNSTARTVALUES <- RETURNPARINDEX <- FALSE
-    ##	    
+    NULL.MODEL <- ifelse(!is.null(itemtype) && itemtype[1] == 'NullModel', TRUE, FALSE)
+    USEEM <- ifelse(method =='EM', TRUE, FALSE)
+    ##	        
+    #############
+    if(method == 'EM' && is.null(technical$SUDO)) 
+        stop('EM method is not currently available')
+    #################    
     data <- as.matrix(data)
     rownames(data) <- 1:nrow(data)
     group <- factor(group)
@@ -273,7 +283,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     J <- length(PrepList[[1]]$itemtype)
     nfact <- PrepList[[1]]$pars[[J+1]]@nfact
     nLambdas <- PrepList[[1]]$pars[[1]]@nfact
-    if(is.null(constrain)) constrain <- list()
+    if(is.null(constrain)) constrain <- list()         
     #default MG uses configural model (independent groups but each identified)        
     if('free_means' %in% invariance ){ #Free factor means (means 0 for ref)
         for(g in 2:ngroups)
@@ -286,13 +296,34 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=nfact, 
                                  nLambdas=nLambdas, J=J, ngroups=ngroups)    
     if(!is.null(technical$return_newconstrain)) return(constrain)    
-    ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
-                           list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
-                                       KDRAWS=KDRAWS, TOL=TOL, gain=gain, 
-                                       nfactNames=PrepList[[1]]$nfactNames, 
-                                       itemloc=PrepList[[1]]$itemloc,  
-                                       nfact=nfact, constrain=constrain, verbose=verbose), 
-                           debug=debug)   
+    startlongpars <- c()
+    if(method == 'EM'){
+        if(method == 'EM' && nLambdas > nfact) 
+            stop('Polynominals and product terms not supported for EM method')
+        if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
+        Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
+        if(quadpts^nfact <= MAXQUAD){
+            Theta <- thetaComb(theta,nfact)    	
+        } else stop('Greater than ', MAXQUAD, ' quadrature points.')
+        ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+                               list = list(NCYCLES=NCYCLES, TOL=TOL, MSTEPMAXIT=MSTEPMAXIT,
+                                           nfactNames=PrepList[[1]]$nfactNames, 
+                                           itemloc=PrepList[[1]]$itemloc,  
+                                           nfact=nfact, constrain=constrain, verbose=verbose), 
+                               Theta=Theta, debug=debug)
+        logLik <- ESTIMATE$logLik
+        startlongpars <- ESTIMATE$longpars   
+        SElogLik <- 0
+    } else if(method == 'MHRM'){
+        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+                               list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
+                                           KDRAWS=KDRAWS, TOL=TOL, USEEM=USEEM, gain=gain, 
+                                           nfactNames=PrepList[[1]]$nfactNames, 
+                                           itemloc=PrepList[[1]]$itemloc,  
+                                           nfact=nfact, constrain=constrain, verbose=verbose,
+                                           startlongpars=startlongpars), 
+                               debug=debug)        
+    }   
     cmods <- list()
     for(g in 1:ngroups){
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc, 
@@ -302,16 +333,18 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           constrain=constrain,
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
     }            
-    if(verbose) cat("\nCalculating log-likelihood...\n")
-    flush.console()      
-    LLs <- matrix(0, ngroups, 2)
-    for(g in 1:ngroups){
-        LLs[g, ] <- calcLogLik(cmods[[g]], draws, G2 = 'return')[1:2]
-        
-    }
-    LL <- colSums(LLs)  
-    logLik <- LL[1]
-    SElogLik <- LL[2]
+    if(method =='MHRM'){
+        if(verbose) cat("\nCalculating log-likelihood...\n")
+        flush.console()      
+        LLs <- matrix(0, ngroups, 2)
+        for(g in 1:ngroups){
+            LLs[g, ] <- calcLogLik(cmods[[g]], draws, G2 = 'return')[1:2]
+            
+        }
+        LL <- colSums(LLs)  
+        logLik <- LL[1]
+        SElogLik <- LL[2]
+    } 
     r <- PrepListFull$tabdata
     r <- r[, ncol(r)]
     N <- sum(r)

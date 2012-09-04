@@ -69,3 +69,4 @@ Collate:
     'MultipleGroup-methods.R'
     'multipleGroup.R'
     'wald.R'
+    'EMstep.group.R'

@@ -5,10 +5,10 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, invariance = '', constrain = NULL,
-    startvalues = NULL, parprior = NULL, freepars = NULL,
-    draws = 2000, technical = list(), debug = FALSE,
-    verbose = TRUE)
+    = 0, upper = 1, invariance = '', method = 'MHRM',
+    constrain = NULL, startvalues = NULL, parprior = NULL,
+    freepars = NULL, draws = 2000, quadpts = NULL,
+    technical = list(), debug = FALSE, verbose = TRUE)
 
   \S4method{coef}{multipleGroup}(object, digits = 3,
     verbose = TRUE, ...)
@@ -63,6 +63,13 @@
 
   \item{draws}{the number of Monte Carlo draws to estimate
   the log-likelihood}
+
+  \item{quadpts}{the number of quadratures to be used per
+  dimensions when \code{method = 'EM'}}
+
+  \item{method}{a character indicating whether to use the
+  EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm;
+  only the MHRM method is available for now}
 
   \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
@@ -131,26 +138,22 @@
 
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are \describe{
-  \item{NCYCLES}{max number of MH-RM cycles; default 2000}
-  \item{BURNIN}{number of burn in cycles (stage 1); default
-  150} \item{SEMCYCLES}{number of SEM cycles (stage 2);
-  default 50} \item{KDRAWS}{number of parallel MH sets to
-  be drawn; default 1} \item{TOL}{minimum threshold
-  tolerance for convergence of MH-RM, must occur on three
-  consecutive occations; default .001} \item{set.seed}{seed
-  number used during estimation. Default is 12345}
-  \item{guess.prior.n}{a scalar or vector for the weighting
-  of the beta priors for guessing parameters (default is
-  50, typical ranges are from 2 to 500). If a scalar is
-  specified this is used globally, otherwise a numeric
-  vector of size \code{ncol(data)} can be used to
-  correspond to particular items (NA values use the
-  default)} \item{gain}{a vector of three values specifying
-  the numerator, exponent, and subtracted values for the RM
-  gain value. Default is \code{c(0.05,0.5,0.004)}}
-  \item{return_newconstrain}{if \code{TRUE} returns a list
-  consisting of the constraints to be used just before
-  estimation begins} }}
+  \item{NCYCLES}{max number of cycles; default 2000 for
+  MHRM and 300 for EM} \item{MAXQUAD}{maximum number of
+  quadratures; default 10000} \item{MSTEPMAXIT}{number of
+  M-step iterations; default 25} \item{BURNIN}{number of
+  burn in cycles (stage 1); default 150}
+  \item{SEMCYCLES}{number of SEM cycles (stage 2); default
+  50} \item{KDRAWS}{number of parallel MH sets to be drawn;
+  default 1} \item{TOL}{minimum threshold tolerance for
+  convergence of MH-RM, must occur on three consecutive
+  occations; default .001} \item{set.seed}{seed number used
+  during estimation. Default is 12345} \item{gain}{a vector
+  of three values specifying the numerator, exponent, and
+  subtracted values for the RM gain value. Default is
+  \code{c(0.05,0.5,0.004)}} \item{return_newconstrain}{if
+  \code{TRUE} returns a list consisting of the constraints
+  to be used just before estimation begins} }}
 
   \item{...}{additional arguments to be passed}
 }
