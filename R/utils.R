@@ -74,7 +74,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
 # Rotation function
 Rotate <- function(F, rotate, Target = NULL, ...)
 {	
-    if(ncol(F) == 1) rotF <- list()
+    if(ncol(F) == 1) rotF <- list()    
+    if(rotate == 'none') rotF <- list(loadings=F, Phi=diag(ncol(F)), orthogonal=TRUE)            
 	if(rotate == 'promax'){
         rotF <- psych::Promax(F)
         rotF$orthogonal <- FALSE
