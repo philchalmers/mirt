@@ -30,6 +30,7 @@ Imports:
     GPArotation,
     mvtnorm,
     Rcpp,
+    numDeriv,
     Matrix
 Suggests:
     plink

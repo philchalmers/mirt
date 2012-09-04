@@ -505,7 +505,13 @@ setMethod(
                             (const1 - (1-g)*Pstar*Qstar*const2))					
                 }
             }	
-        }        
+        } else { #4PL
+            grad <- rep(0, length(x@par))
+            hess <- matrix(0, length(x@par), length(x@par))
+            grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
+            return(list(grad=grad, hess=hess))
+        }       
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.na(x@n.prior.mu)            
             val <- x@par[ind]
@@ -533,7 +539,7 @@ setMethod(
             }
             if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
-        }
+        }        
         return(list(grad = grad, hess = hess))
     }
 )
@@ -777,7 +783,11 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('Derivatives have not be written for generalized partial credit models yet')
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
+        return(list(grad = grad, hess = hess))
     }
 )
 
@@ -785,7 +795,12 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('Derivatives have not be written for nominal models yet')
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
+        browser()
+        return(list(grad = grad, hess = hess))
     }
 )
 
@@ -793,7 +808,11 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('Derivatives have not be written for multiple choice models yet')
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
+        return(list(grad = grad, hess = hess))
     }
 )
 
@@ -978,4 +997,32 @@ Info.nominal <- function(Theta, a, ak, A, d){
             A^2 * P[,i] * rowSums(M2)
     info <- rowSums((dP)^2 / P - d2P)    
     info
+}
+
+#TEMPORARY, until i calculate the analytical derivatives sometime
+L <- function(par, obj, Theta){
+    obj@par[obj@est] <- par
+    P <- ProbTrace(obj, Theta)
+    LL <- obj@dat * P
+    LL[LL < 1e-8] <- 1
+    LL <- sum(log(LL))
+    if(any(!is.nan(obj@n.prior.mu))){
+        ind <- !is.nan(obj@n.prior.mu)
+        val <- obj@par[ind]
+        u <- obj@n.prior.mu[ind]
+        s <- obj@n.prior.sd[ind]
+        for(i in 1:length(val))            
+            LL <- LL + log(dnorm(val[i], u[i], s[i]))
+    }
+    if(any(!is.nan(obj@b.prior.alpha))){
+        ind <- !is.nan(obj@b.prior.alpha)
+        val <- obj@par[ind]
+        a <- obj@b.prior.alpha[ind]
+        b <- obj@b.prior.beta[ind]
+        for(i in 1:length(val)){            
+            tmp <- dbeta(val[i], a[i], b[i])
+            LL <- LL + log(ifelse(tmp == 0, 1, tmp))
+        }
+    }    
+    return(LL)
 }
