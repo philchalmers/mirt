@@ -312,7 +312,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
                          parprior=parprior, verbose=verbose, debug=debug, 
                          technical=technical)
     if(RETURN) return(PrepList)
-    NULL.MODEL <- ifelse(PrepList$itemtype[1] == 'NullModel' && !any(is.na(data)), TRUE, FALSE)    
+    NULL.MODEL <- ifelse(PrepList$itemtype[1] == 'NullModel', TRUE, FALSE)    
     nfact <- PrepList$nfact
     nLambdas <- PrepList$nLambdas
     if(nLambdas > nfact) stop('Polynominals and product terms not supported for EM method')
@@ -320,7 +320,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
 	Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
 	if(quadpts^nfact <= MAXQUAD){
 		Theta <- thetaComb(theta,nfact)		
-	} else stop('Greater than ', MAXQUAD, ' quadrature points.')           
+	} else stop('Greater than ', MAXQUAD, ' quadrature points.')        
     ESTIMATE <- EM(pars=PrepList$pars, NCYCLES=NCYCLES, MSTEPMAXIT=MSTEPMAXIT, TOL=TOL,                    
                    tabdata=PrepList$tabdata, tabdata2=PrepList$tabdata2, npars=PrepList$npars,
                    Theta=Theta, theta=theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 

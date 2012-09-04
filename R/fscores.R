@@ -108,12 +108,10 @@ setMethod(
 				SEscores[i, ] <- SEest
 			}  
 		}
-		if(method == "ML"){
-			tmp <- tabdata[,itemloc[-length(itemloc)]]			 
-			tmp2 <- tabdata[,itemloc[-1] - 1]			 
-            scores[rowSums(tmp) == J, ] <- NA
-			scores[rowSums(tmp2) == J,] <- NA
-			SEscores[rowSums(tmp) == J, ] <- SEscores[rowSums(tmp2) == J, ] <- rep(NA, nfact)
+		if(method == "ML"){            				 
+			tmp2 <- tabdata[,itemloc[-1] - 1]			             
+			scores[rowSums(tmp2) == J,] <- scores[rowSums(tmp2) == 0,] <- NA
+			SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
 			for (i in 1:nrow(scores)){
 				if(any(is.na(scores[i, ]))) next 
 				Theta <- scores[i, ]	  
@@ -125,13 +123,15 @@ setMethod(
 				SEscores[i, ] <- SEest
 			}  			
 		}
-		colnames(scores) <- paste('F', 1:ncol(scores), sep='')        
+		colnames(scores) <- paste('F', 1:ncol(scores), sep='')          
 		if (full.scores){               
 			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(scores))
 			tabdata2 <- object@tabdata
             tabdata2 <- tabdata2[,-ncol(tabdata2)]
+            fulldata2 <- fulldata
+            fulldata2[is.na(fulldata2)] <- tabdata2[is.na(tabdata2)] <- 999
 			for (j in 1:nrow(tabdata2)){          
-				TFvec <- colSums(ifelse(t(fulldata) == tabdata2[j, ],1,0)) == ncol(fulldata)
+				TFvec <- colSums(ifelse(t(fulldata2) == tabdata2[j, ],1,0)) == ncol(fulldata2)
                 tmp <- matrix(rep(scores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
                 scoremat[TFvec, ] <- tmp
 			} 

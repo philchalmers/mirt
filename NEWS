@@ -10,7 +10,7 @@ mirt 0.3.2
 
 * Methods that use the MHRM can now estimate the nominal, gpcm, mcm, and 4PL models
 
-* fscores computable for multiple group objects
+* fscores computable for multiple group objects and in general play nicer with missing data
 
 * General bug fixes as usual that were spawned from all the added features 
 

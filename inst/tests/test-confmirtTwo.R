@@ -1,13 +1,6 @@
-context('confmirt')
+context('confmirtTwo')
 
-test_that('all mods', {
-    data(LSAT7)
-    fulldata <- expand.table(LSAT7)
-    onefact <- confmirt(fulldata, 1, verbose = FALSE)
-    expect_is(onefact, 'ConfirmatoryClass')
-    twofact <- confmirt(fulldata, 2, verbose = FALSE)
-    expect_is(twofact, 'ExploratoryClass')
-    
+test_that('confirmatory mods', {
     set.seed(1234)
     a <- matrix(c(
         1.5,NA,
