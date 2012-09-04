@@ -27,13 +27,13 @@ test_that('one factor', {
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))
     expect_is(mod_scalar1, 'MultipleGroupClass')
     
-    fs1 <- fscores(mod_metric)
+    fs1 <- fscores(mod_metric, verbose = FALSE)
     fs2 <- fscores(mod_metric, full.scores = TRUE)
-    fs3 <- fscores(mod_missing)
+    fs3 <- fscores(mod_missing, verbose = FALSE)
     fs4 <- fscores(mod_missing, full.scores = TRUE)
     expect_is(fs1, 'list')
-    expect_is(fs2, 'matrix')
+    expect_is(fs2, 'data.frame')
     expect_is(fs3, 'list')
-    expect_is(fs4, 'matrix')    
+    expect_is(fs4, 'data.frame')    
 })
 
