@@ -116,6 +116,13 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
                     if(pars[[i]]@par[length(pars[[i]]@par)-1] < 0) 
                         pars[[i]]@par[length(pars[[i]]@par)-1] <- 0
                 }
+                #apply sum(t) == 1 constraint for mcm
+                if(is(pars[[i]], 'mcm')){
+                    tmp <- pars[[i]]@par
+                    tmp[length(tmp) - pars[[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                        pars[[i]]@ncat + 2)])
+                    pars[[i]]@par <- tmp
+                }
             }        
             if(EMSE){ #for calculating EM standard errors
                 for(i in 1:length(pars))                    
@@ -245,7 +252,7 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
         } ###END BIG LOOP   
         
         ind1 <- 1 #reload final pars
-        for(i in 1:length(pars)){
+        for(i in 1:length(pars)){            
             ind2 <- ind1 + length(pars[[i]]@par) - 1
             pars[[i]]@par <- longpars[ind1:ind2]
             ind1 <- ind2 + 1       
@@ -255,7 +262,15 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
                 if(pars[[i]]@par[length(pars[[i]]@par)-1] < 0) 
                     pars[[i]]@par[length(pars[[i]]@par)-1] <- 0
             }
+            #apply sum(t) == 1 constraint for mcm
+            if(is(pars[[i]], 'mcm')){
+                tmp <- pars[[i]]@par
+                tmp[length(tmp) - pars[[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                    pars[[i]]@ncat + 2)])
+                pars[[i]]@par <- tmp
+            }
         }  
+        
         if(EMSE){ #for calculating EM standard errors
             for(i in 1:length(pars))                    
                 pars[[i]]@par <- startvalues[[i]]

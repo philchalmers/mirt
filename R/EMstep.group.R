@@ -112,7 +112,14 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                         if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
                     }
-                }        
+                }
+                #apply sum(t) == 1 constraint for mcm
+                if(is(pars[[i]], 'mcm')){
+                    tmp <- pars[[g]][[i]]@par
+                    tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                        pars[[g]][[i]]@ncat + 2)])
+                    pars[[g]][[i]]@par <- tmp
+                }
             }
             #reset longpars and gradient
             g <- rep(0, nfullpars)
@@ -161,7 +168,30 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             for(g in 1:ngroups)
                 pars[[g]] <- rateChange(pars=pars[[g]], listpars=listpars[[g]], lastpars1=lastpars1[[g]], 
                                    lastpars2=lastpars2[[g]])
-    } #END EM    
+    } #END EM  
+    
+    #Reload pars list
+    ind1 <- 1
+    for(g in 1:ngroups){
+        for(i in 1:(J+1)){
+            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+            pars[[g]][[i]]@par <- longpars[ind1:ind2]
+            ind1 <- ind2 + 1       
+            if(any(class(pars[[g]][[i]]) == c('dich', 'partcomp'))){
+                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > 1) 
+                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
+                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
+                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
+            }
+        }
+        #apply sum(t) == 1 constraint for mcm
+        if(is(pars[[i]], 'mcm')){
+            tmp <- pars[[g]][[i]]@par
+            tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                pars[[g]][[i]]@ncat + 2)])
+            pars[[g]][[i]]@par <- tmp
+        }
+    }
     
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL)

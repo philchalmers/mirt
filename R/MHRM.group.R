@@ -122,7 +122,14 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                     if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                         pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
                 }
-            }        
+            }
+            #apply sum(t) == 1 constraint for mcm
+            if(is(pars[[i]], 'mcm')){
+                tmp <- pars[[g]][[i]]@par
+                tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                    pars[[g]][[i]]@ncat + 2)])
+                pars[[g]][[i]]@par <- tmp
+            }
         }        
         for(g in 1:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
@@ -254,6 +261,13 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                     pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
                 if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                     pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
+            }
+            #apply sum(t) == 1 constraint for mcm
+            if(is(pars[[i]], 'mcm')){
+                tmp <- pars[[g]][[i]]@par
+                tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                    pars[[g]][[i]]@ncat + 2)])
+                pars[[g]][[i]]@par <- tmp
             }
         }        
     }    
