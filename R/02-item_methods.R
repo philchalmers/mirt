@@ -471,7 +471,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){        
-        if(EM){                            
+        if(EM){                  
             grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
             hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)        
             return(list(grad = grad, hess = hess))            
@@ -571,10 +571,8 @@ setMethod(
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){ 
         if(EM){                
-            grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)        
+            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
+            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)      
             return(list(grad = grad, hess = hess))            
         }
         nfact <- x@nfact
@@ -626,10 +624,8 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){
         if(EM){                
-            grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)        
+            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
+            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
             return(list(grad = grad, hess = hess))            
         }
         nfact <- x@nfact
@@ -820,10 +816,8 @@ setMethod(
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){
         if(EM){                
-            grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)        
+            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
+            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
             return(list(grad = grad, hess = hess))            
         }
         grad <- rep(0, length(x@par))
@@ -858,10 +852,8 @@ setMethod(
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){
         if(EM){                
-            grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)        
+            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
+            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)     
             return(list(grad = grad, hess = hess))            
         }
         grad <- rep(0, length(x@par))
