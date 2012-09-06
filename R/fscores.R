@@ -57,13 +57,14 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
-	{           
+	{          
         pars <- object@pars        
 		K <- object@K        
         J <- length(K)        
         prodlist <- attr(pars, 'prodlist')
         nfact <- object@nfact - length(prodlist)
         nLambdas <- object@nfact
+        itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
         if(!pars[[1]]@bfactor && rotate != 'CONFIRMATORY'){
             so <- summary(object, rotate = rotate, print = FALSE)            
@@ -76,8 +77,7 @@ setMethod(
                 a[i, ] <- ExtractLambdas(pars[[i]])            
                 pars[[i]]@bfactor <- FALSE
             }
-        }        
-		itemloc <- object@itemloc	
+        }        			
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))
 		ThetaShort <- Theta <- thetaComb(theta,nfact)         

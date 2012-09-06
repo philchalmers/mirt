@@ -5,7 +5,7 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, invariance = '', method = 'EM',
+    = 0, upper = 1, invariance = '', method = 'MHRM',
     constrain = NULL, startvalues = NULL, parprior = NULL,
     freepars = NULL, draws = 2000, quadpts = NULL,
     technical = list(), debug = FALSE, verbose = TRUE)
@@ -191,11 +191,11 @@ models <- confmirt.model()
    F1 = 1-15
 
 
-mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
-mod_scalar2 <- multipleGroup(dat, models, group = group,  #equal intercepts, free variance and means
+mod_configural <- multipleGroup(dat, models, group = group, method = 'EM') #completely seperate analyses
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'EM') #equal slopes
+mod_scalar2 <- multipleGroup(dat, models, group = group, method = 'EM',  #equal intercepts, free variance and means
                              invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
-mod_scalar1 <- multipleGroup(dat, models, group = group, #fixed means
+mod_scalar1 <- multipleGroup(dat, models, group = group, method = 'EM', #fixed means
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
 mod_fullconstrain <- mirt(data, models) #fix variance (equivelent to full constrain)
 
