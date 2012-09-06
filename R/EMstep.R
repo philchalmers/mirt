@@ -175,7 +175,7 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug) 
+Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, deriv = FALSE) 
 {   
     if(debug == 'Estep.mirt') browser()
     nfact <- ncol(Theta)
@@ -187,6 +187,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug)
     for (i in 1:J)
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)    
+    if(deriv) retlist$itemtrace <- itemtrace        
     return(retlist)
 } 
 

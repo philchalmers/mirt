@@ -64,6 +64,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                  estimated parameters. Please fix!')
     }   
     prior <- gstructgrouppars <- rlist <- r <- list()
+    LL <- 0
     for(g in 1:ngroups)
         r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
     #EM     
@@ -76,6 +77,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             prior[[g]] <- prior[[g]]/sum(prior[[g]])
         }
         #Estep
+        lastLL <- LL
         LL <- 0
         for(g in 1:ngroups){
             rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
@@ -98,7 +100,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         lastpars2 <- lastpars1
         lastpars1 <- listpars
         preMstep.longpars <- longpars
-        for(mstep in 1:MSTEPMAXIT){
+        lastgrad <- 0
+        stepLimit <- .1        
+        for(mstep in 1:MSTEPMAXIT){            
             #Reload pars list
             ind1 <- 1
             for(g in 1:ngroups){
@@ -114,7 +118,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                     }
                 }
                 #apply sum(t) == 1 constraint for mcm
-                if(is(pars[[i]], 'mcm')){
+                if(is(pars[[g]][[i]], 'mcm')){
                     tmp <- pars[[g]][[i]]@par
                     tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
                         pars[[g]][[i]]@ncat + 2)])
@@ -145,31 +149,41 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 ind1 <- ind2 + 1
             }
             grad <- g %*% L 
-            hess <- (-1)*L %*% h %*% L 			       
+            hess <- L %*% h %*% L 			       
             grad <- grad[1, estpars & !redun_constr]		
-            hess <- hess[estpars & !redun_constr, estpars & !redun_constr]                        
+            hess <- hess[estpars & !redun_constr, estpars & !redun_constr]                         
             inv.hess <- try(solve(hess))    		
-            if(class(inv.hess) == 'try-error')                
-                stop('\nHessian is not positive definite')            
-            correction <- as.numeric(inv.hess %*% grad)
-            correction[correction > .15] <- .15
-            correction[correction < -.15] <- -.15
-            if(all(abs(correction) < .001)) break            
-            longpars[estindex_unique] <- longpars[estindex_unique] + correction           
+            if(class(inv.hess) == 'try-error'){                                
+                converge <- 0
+                inv.hess <- try(solve(hess - diag(ncol(hess))))
+            }
+            correction <- as.numeric(inv.hess %*% grad)  
+            #keep steps smaller
+            correction[correction > stepLimit] <- stepLimit
+            correction[correction < -stepLimit] <- -stepLimit
+            longpars[estindex_unique] <- longpars[estindex_unique] - correction                       
+            if(mstep > 4){
+                if (any(grad*lastgrad < 0.0)){    				# any changed sign
+                    newcorrection <- rep(0, length(correction))
+                    newcorrection[grad*lastgrad < 0.0] <- .5*correction[grad*lastgrad < 0.0]
+                    longpars[estindex_unique] <- longpars[estindex_unique] + newcorrection	# back up 1/2
+                    stepLimit <- 0.5*stepLimit				# split the difference                    
+                    lastgrad <- 0
+                } else {
+                    lastgrad <- grad
+                }        
+            }            
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
+            if(all(abs(correction) < .001)) break            
+            if(is.list(debug)) print(longpars[debug[[1]]])
         }#END MSTEP        
-        if(all(abs(preMstep.longpars - longpars) < TOL)) break 
+        if(all(abs(preMstep.longpars - longpars) < TOL) | abs(lastLL - LL) < .05) break 
         for(g in 1:ngroups)
             for(i in 1:J) 
-                listpars[[g]][[i]] <- pars[[g]][[i]]@par
-        if(cycles %% 3 == 0 & cycles > 6)
-            for(g in 1:ngroups)
-                pars[[g]] <- rateChange(pars=pars[[g]], listpars=listpars[[g]], lastpars1=lastpars1[[g]], 
-                                   lastpars2=lastpars2[[g]])
-    } #END EM  
-    
+                listpars[[g]][[i]] <- pars[[g]][[i]]@par         
+    } #END EM      
     #Reload pars list
     ind1 <- 1
     for(g in 1:ngroups){
@@ -185,13 +199,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             }
         }
         #apply sum(t) == 1 constraint for mcm
-        if(is(pars[[i]], 'mcm')){
+        if(is(pars[[g]][[i]], 'mcm')){
             tmp <- pars[[g]][[i]]@par
             tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
                 pars[[g]][[i]]@ncat + 2)])
             pars[[g]][[i]]@par <- tmp
         }
-    }
+    } 
     
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL)

@@ -2,8 +2,8 @@
 #' 
 #' \code{multipleGroup} performes a full-information
 #' maximum-likelihood multiple group analysis for dichotomous and polytomous
-#' data under the item response theory paradigm using Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm. 
+#' data under the item response theory paradigm using either Cai's (2010)
+#' Metropolis-Hastings Robbins-Monro algorithm or with an EM approach. 
 #'  
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximimally 
 #' independent, and therefore could initially be performed by subsetting the data and running identical
@@ -41,7 +41,7 @@
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
 #' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM 
-#' (\code{'MHRM'}) algorithm; only the MHRM method is available for now
+#' (\code{'MHRM'}) algorithm
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items are ordinal or 2PL,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
@@ -101,7 +101,7 @@
 #' @keywords models
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
-#' invariance = '', method = 'MHRM', constrain = NULL, startvalues = NULL, 
+#' invariance = '', method = 'EM', constrain = NULL, startvalues = NULL, 
 #' parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
 #' technical = list(), debug = FALSE, verbose = TRUE)
 #' 
@@ -140,7 +140,7 @@
 #' anova(mod_fullconstrain, mod_scalar1) #fix variance
 #'
 #' 
-#' #Wald test can be useful here
+#' #Wald test can be useful here too
 #' #compare whether intercepts should be equal
 #' index <- multipleGroup(dat, models, group = group, constrain = 'index') 
 #' index
@@ -196,8 +196,9 @@
 
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
-                          invariance = '', method = 'MHRM', constrain = NULL, startvalues = NULL, 
-                          parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
+                          invariance = '', method = 'EM', constrain = NULL, 
+                          startvalues = NULL, parprior = NULL, freepars = NULL, draws = 2000, 
+                          quadpts = NULL,
                           technical = list(), debug = FALSE, verbose = TRUE)
 {
     if(debug == 'Main') browser()
@@ -216,18 +217,14 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)      
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)	
     gain <- c(0.05,0.5,0.004)
-    if(!is.null(technical$gain)) {
+    if(!is.null(technical$gain)){
         if(length(technical$gain) == 3 && is.numeric(technical$gain))
             gain <- technical$gain
     }	 
     RETURNFREEPARS <- RETURNSTARTVALUES <- RETURNPARINDEX <- FALSE
     NULL.MODEL <- ifelse(!is.null(itemtype) && itemtype[1] == 'NullModel', TRUE, FALSE)
-    USEEM <- ifelse(method =='EM', TRUE, FALSE)
-    ##	        
-    #############
-    if(method == 'EM' && is.null(technical$SUDO)) 
-        stop('EM method is not currently available')
-    #################    
+    USEEM <- ifelse(method == 'EM', TRUE, FALSE)
+    ##	            
     data <- as.matrix(data)
     rownames(data) <- 1:nrow(data)
     group <- factor(group)
@@ -272,7 +269,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         }
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
-    }
+    }    
     if(RETURN){
         names(PrepList) <- groupNames
         return(PrepList)
@@ -298,6 +295,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     if(!is.null(technical$return_newconstrain)) return(constrain)    
     startlongpars <- c()
     if(method == 'EM'){
+        esttype <- 'EM'
         if(method == 'EM' && nLambdas > nfact) 
             stop('Polynominals and product terms not supported for EM method')
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
@@ -308,16 +306,25 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, TOL=TOL, MSTEPMAXIT=MSTEPMAXIT,
                                            nfactNames=PrepList[[1]]$nfactNames, 
-                                           itemloc=PrepList[[1]]$itemloc,  
+                                           itemloc=PrepList[[1]]$itemloc,
                                            nfact=nfact, constrain=constrain, verbose=verbose), 
                                Theta=Theta, debug=debug)
+        startlongpars <- ESTIMATE$longpars
         logLik <- ESTIMATE$logLik
-        startlongpars <- ESTIMATE$longpars   
-        SElogLik <- 0
+        SElogLik <- 0                
+        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+                      list = list(NCYCLES=NCYCLES, BURNIN=1, SEMCYCLES=5,
+                                  KDRAWS=KDRAWS, TOL=.01, USEEM=USEEM, gain=gain, 
+                                  nfactNames=PrepList[[1]]$nfactNames, 
+                                  itemloc=PrepList[[1]]$itemloc,  
+                                  nfact=nfact, constrain=constrain, verbose=FALSE,
+                                  startlongpars=startlongpars), 
+                      debug=debug)                 
     } else if(method == 'MHRM'){
+        esttype <- 'MHRM'
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
-                                           KDRAWS=KDRAWS, TOL=TOL, USEEM=USEEM, gain=gain, 
+                                           KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
                                            nfactNames=PrepList[[1]]$nfactNames, 
                                            itemloc=PrepList[[1]]$itemloc,  
                                            nfact=nfact, constrain=constrain, verbose=verbose,
@@ -337,10 +344,8 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         if(verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()      
         LLs <- matrix(0, ngroups, 2)
-        for(g in 1:ngroups){
-            LLs[g, ] <- calcLogLik(cmods[[g]], draws, G2 = 'return')[1:2]
-            
-        }
+        for(g in 1:ngroups)
+            LLs[g, ] <- calcLogLik(cmods[[g]], draws, G2 = 'return')[1:2]       
         LL <- colSums(LLs)  
         logLik <- LL[1]
         SElogLik <- LL[2]
@@ -368,7 +373,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
     BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)    			    	    
     mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, cmods=cmods, itemloc=PrepListFull$itemloc, 
-               tabdata=PrepListFull$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
+               tabdata=PrepListFull$tabdata2, data=data, converge=ESTIMATE$converge, esttype=esttype,                
                K=PrepListFull$K, tabdatalong=PrepListFull$tabdata, constrain=constrain,               
                group=group, groupNames=groupNames, invariance=invariance, df=as.integer(df),
                logLik=logLik, SElogLik=SElogLik, AIC=AIC, BIC=BIC, information=ESTIMATE$info, 

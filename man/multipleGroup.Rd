@@ -5,7 +5,7 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, invariance = '', method = 'MHRM',
+    = 0, upper = 1, invariance = '', method = 'EM',
     constrain = NULL, startvalues = NULL, parprior = NULL,
     freepars = NULL, draws = 2000, quadpts = NULL,
     technical = list(), debug = FALSE, verbose = TRUE)
@@ -68,8 +68,7 @@
   dimensions when \code{method = 'EM'}}
 
   \item{method}{a character indicating whether to use the
-  EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm;
-  only the MHRM method is available for now}
+  EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm}
 
   \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
@@ -161,8 +160,9 @@
   \code{multipleGroup} performes a full-information
   maximum-likelihood multiple group analysis for
   dichotomous and polytomous data under the item response
-  theory paradigm using Cai's (2010) Metropolis-Hastings
-  Robbins-Monro algorithm.
+  theory paradigm using either Cai's (2010)
+  Metropolis-Hastings Robbins-Monro algorithm or with an EM
+  approach.
 }
 \details{
   By default the estimation in \code{multipleGroup} assumes
@@ -205,7 +205,7 @@ anova(mod_scalar1, mod_scalar2) #fix mean
 anova(mod_fullconstrain, mod_scalar1) #fix variance
 
 
-#Wald test can be useful here
+#Wald test can be useful here too
 #compare whether intercepts should be equal
 index <- multipleGroup(dat, models, group = group, constrain = 'index')
 index
