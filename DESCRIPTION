@@ -3,8 +3,9 @@ Version: 0.3.2
 Date: 2012-08-15
 Type: Package
 Title: Multidimensional Item Response Theory
-Author: Phil Chalmers <rphilip.chalmers@gmail.com>
-Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
+Authors@R: c( 
+    person("Phil", "Chalmers", 
+      email = "rphilip.chalmers@gmail.com", role = c("aut", "cre")))
 Description: Analysis of dichotomous and polytomous response data using latent
     trait models under the Item Response Theory paradigm. Includes univariate
     and multivariate one-, two-, three-, and four-parameter logistic models,
@@ -15,7 +16,7 @@ Description: Analysis of dichotomous and polytomous response data using latent
     quadrature or stochastic methods, a generalized confirmatory bi-factor
     analysis is included, and confirmatory models can be fit with a
     Metropolis-Hastings Robbins-Monro algorithm which can include polynomial or
-    product constructed latent traits. Additionally, multiple group analyses may
+    product constructed latent traits. Additionally, multiple group analysis may
     be performed for unidimensional or multidimensional item response models for
     detecting differential item functioning.
 Depends:
