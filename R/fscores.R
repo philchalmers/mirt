@@ -64,9 +64,12 @@ setMethod(
         prodlist <- attr(pars, 'prodlist')
         nfact <- object@nfact - length(prodlist)
         nLambdas <- object@nfact
+        gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
         if(!pars[[1]]@bfactor && rotate != 'CONFIRMATORY'){
             so <- summary(object, rotate = rotate, print = FALSE)            
-            a <- rotateLambdas(so)		
+            a <- rotateLambdas(so)
+            gp$gmeans <- rep(0, nfact)
+            gp$gcov <- so$fcor
         } else {
             a <- matrix(0, J, nLambdas)
             for(i in 1:J){
@@ -83,8 +86,7 @@ setMethod(
 		fulldata <- object@data 
 		tabdata <- object@tabdatalong
 		tabdata <- tabdata[ ,-ncol(tabdata)]
-		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			
-        gp <- ExtractGroupPars(object@pars[[length(itemloc)]])        
+		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			                
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov) 
 		W <- W/sum(W)                
 		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        

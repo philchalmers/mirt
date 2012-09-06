@@ -19,7 +19,7 @@ test_that('one factor', {
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, 
                                  invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
     expect_is(mod_scalar2, 'MultipleGroupClass')
-    mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE,
+    mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))    
     expect_is(mod_scalar1, 'MultipleGroupClass')
     dat[1,1] <- dat[2,2] <- NA

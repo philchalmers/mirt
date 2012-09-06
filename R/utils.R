@@ -216,7 +216,7 @@ rateChange <- function(pars, listpars, lastpars1, lastpars2)
 
 # Rotate lambda coefficients
 rotateLambdas <- function(so){    
-    F <- so$rotF %*% t(chol(so$fcor))
+    F <- so$rotF
     h2 <- so$h2
     h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))
     a <- F / h

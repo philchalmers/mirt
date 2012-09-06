@@ -95,7 +95,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){        
+    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){         
         K <- object@K
         J <- length(K)
         nfact <- ncol(object@F)

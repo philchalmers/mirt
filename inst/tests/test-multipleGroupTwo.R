@@ -21,9 +21,10 @@ test_that('three factor', {
     
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE)
     expect_is(mod_configural, 'MultipleGroupClass')
-    mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE)
+    mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
+                                verbose = FALSE)
     expect_is(mod_metric, 'MultipleGroupClass')    
-    mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE,
+    mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))    
     expect_is(mod_scalar1, 'MultipleGroupClass')
     
