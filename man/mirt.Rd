@@ -288,6 +288,46 @@ Theory)}
   increasing the number of quadrature points per dimension
   may help to stabilize the estimation process.
 }
+
+\section{IRT Models}{
+  The parameter labels use follow the convention, here
+  using two factors and \eqn{k} as the number of
+  categories:
+
+  \describe{ \item{Rasch}{ Only one intercept estimated.
+  Note the 1.702 constant. \deqn{P(x = 1|\theta, d) =
+  \frac{1}{1 + exp(-1.702 * (\theta + d}))} } \item{1-4PL}{
+  Depending on the model \eqn{u} may be equal to 1 and
+  \eqn{g} may be equal to 0. \deqn{P(x = 1|\theta, \psi) =
+  g + \frac{(u - g)}{1 + exp(-1.702 * (a_1 * \theta_1 + a_2
+  * \theta_2 + d}))} } \item{graded}{ The graded model
+  consists of sequential 2PL models, and here \eqn{k} is
+  the predicted category. \deqn{P(x = k | \theta, \psi) =
+  P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
+  \phi)} } \item{gpcm/nominal}{For the gpcm the \eqn{d_k}
+  values are treated as fixed and orded values from 0:(k-1)
+  (in the nominal model \eqn{d_0} is also set to 0).
+  Additionally, for identification in the nominal model
+  \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}. \deqn{P(x = k |
+  \theta, \psi) = \frac{exp(-1.702 * ak_k * (a_1 * \theta_1
+  + a_2 * \theta_2) + d_k)} {\sum_i^k exp(-1.702 * ak_k *
+  (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}} }
+  \item{mcm}{For identification \eqn{ak_0 = d_0 = 0} and
+  \eqn{\sum_0^k t_k = 1}. \deqn{P(x = k | \theta, \psi) =
+  C_0 (\theta) * t_k + (1 - C_0 (\theta)) *
+  \frac{exp(-1.702 * ak_k * (a_1 * \theta_1 + a_2 *
+  \theta_2) + d_k} {\sum_i^k exp(-1.702 * ak_k * (a_1 *
+  \theta_1 + a_2 * \theta_2) + d_k)}}
+
+  where \eqn{C_0 (\theta) = \frac{exp(-1.702 * ak_0 * (a_1
+  * \theta_1 + a_2 * \theta_2) + d_0} {\sum_i^k exp(-1.702
+  * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}} }
+  \item{partcomp}{Partially compensatory models consist of
+  the products of 2PL probability curves. \deqn{P(x = 1 |
+  \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-1.702 *
+  (a_1 * \theta_1 + d_1} * \frac{1}{1 + exp(-1.702 * (a_2 *
+  \theta_2 + d_2}))} } }
+}
 \examples{
 \dontrun{
 #load LSAT section 7 data and compute 1 and 2 factor models
@@ -314,8 +354,8 @@ scores <- fscores(mod2) #save factor score table
 
 #' #confirmatory
 cmodel <- confmirt.model()
-F1 = 1,4,5
-F2 = 2,3
+   F1 = 1,4,5
+   F2 = 2,3
 
 
 cmod <- mirt(data, cmodel)

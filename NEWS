@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
-mirt 0.3.2
+mirt 0.4.0
 ----------------------------------------------------------------
 
 * Multiple group estimation available with the multipleGroup() function. Uses the EM and MHRM
@@ -15,6 +15,8 @@ mirt 0.3.2
   (reported by Judith Conijn)
 
 * Oblique rotation bug fix for fscores and coef (reported by Pedro A. Barbetta)  
+
+* Added the item probability functions in the ?mirt documentation for reference
 
 * General bug fixes as usual that were spawned from all the added features 
 

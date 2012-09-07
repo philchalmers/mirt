@@ -1,11 +1,11 @@
 Package: mirt
-Version: 0.3.2
+Version: 0.4.0
 Date: 2012-08-15
 Type: Package
 Title: Multidimensional Item Response Theory
-Authors@R: c( 
-    person("Phil", "Chalmers", 
-      email = "rphilip.chalmers@gmail.com", role = c("aut", "cre")))
+Authors@R: c(
+    person("Phil", "Chalmers",
+    email = "rphilip.chalmers@gmail.com", role = c("aut", "cre")))
 Description: Analysis of dichotomous and polytomous response data using latent
     trait models under the Item Response Theory paradigm. Includes univariate
     and multivariate one-, two-, three-, and four-parameter logistic models,
