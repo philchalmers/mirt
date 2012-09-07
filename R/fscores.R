@@ -67,7 +67,7 @@ setMethod(
         itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
         if(!pars[[1]]@bfactor && rotate != 'CONFIRMATORY'){
-            so <- summary(object, rotate = rotate, print = FALSE)            
+            so <- summary(object, rotate = rotate, verbose = FALSE)            
             a <- rotateLambdas(so)
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor

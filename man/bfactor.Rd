@@ -1,9 +1,5 @@
 \name{bfactor}
 \alias{bfactor}
-\alias{coef,bfactor-method}
-\alias{fitted,bfactor-method}
-\alias{residuals,bfactor-method}
-\alias{summary,bfactor-method}
 \title{Full-Information Item Bi-factor Analysis}
 \usage{
   bfactor(data, specific, itemtype = NULL, guess = 0, upper
@@ -11,16 +7,6 @@
     freepars = NULL, parprior = NULL, prev.cor = NULL,
     quadpts = 20, verbose = FALSE, debug = FALSE, technical
     = list(), ...)
-
-  \S4method{summary}{bfactor}(object, digits = 3, ...)
-
-  \S4method{coef}{bfactor}(object, allpars = FALSE, digits
-    = 3)
-
-  \S4method{fitted}{bfactor}(object, digits = 3, ...)
-
-  \S4method{residuals}{bfactor}(object, restype = 'LD',
-    digits = 3, printvalue = NULL, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -48,12 +34,6 @@
   respectively. The default assumes that items follow a
   '2PL' or 'graded' format}
 
-  \item{printvalue}{a numeric value to be specified when
-  using the \code{res='exp'} option. Only prints patterns
-  that have standardized residuals greater than
-  \code{abs(printvalue)}. The default (NULL) prints all
-  response patterns}
-
   \item{guess}{fixed pseudo-guessing parameter. Can be
   entered as a single value to assign a global value or may
   be entered as a numeric vector for each item of length
@@ -66,9 +46,6 @@
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
-
-  \item{allpars}{logical; print all the item parameters
-  instead of just the slopes?}
 
   \item{constrain}{a list of user declared equality
   constraints. To see how to define the parameters
@@ -118,16 +95,6 @@
   \item{quadpts}{number of quadrature points per
   dimension.}
 
-  \item{object}{a model estimated from \code{bfactor} of
-  class \code{bfactorClass}}
-
-  \item{restype}{type of residuals to be displayed. Can be
-  either \code{'LD'} for a local dependence matrix (Chen &
-  Thissen, 1997) or \code{'exp'} for the expected values
-  for the frequencies of every response pattern}
-
-  \item{digits}{number of significant digits to be rounded}
-
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
 
@@ -154,7 +121,9 @@
   models using a dimensional reduction EM algorithm so that
   regardless of the number of specific factors estimated
   the model only uses a two-dimensional quadrature grid for
-  integration.
+  integration. See \code{\link{confmirt}} for apprioriate
+  methods to be used on the objects returned from the
+  estimation.
 }
 \details{
   \code{bfactor} follows the item factor analysis strategy

@@ -40,24 +40,25 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'ConfirmatoryClass',
-    definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
-                          print = TRUE, ...)
+    definition = function(object, suppress = 0, digits = 3, verbose = TRUE, ...)
     {           
         nfact <- ncol(object@F)
         itemnames <- names(object@h2)	
         F <- object@F
         rownames(F) <- itemnames								
-        SS <- apply(F^2,2,sum)			
-        cat("\nFactor loadings metric: \n")
-        print(cbind(F),digits)		
-        cat("\nSS loadings: ",round(SS,digits), "\n")		
-        cat("\nFactor correlations: \n")
+        SS <- apply(F^2,2,sum)
         gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-        Phi <- cov2cor(gpars$gcov)	  
+        Phi <- cov2cor(gpars$gcov)      
         Phi <- round(Phi, digits)
         colnames(Phi) <- rownames(Phi) <- paste('F',1:ncol(Phi), sep='')
-        print(Phi)				
-        invisible(F)  	          
+        if(verbose){
+            cat("\nFactor loadings metric: \n")
+            print(cbind(F),digits)		
+            cat("\nSS loadings: ",round(SS,digits), "\n")		
+            cat("\nFactor correlations: \n")
+            print(Phi)
+        }                
+        invisible(list(F=F, fcor=Phi))  	          
     }
 )
 
@@ -92,19 +93,23 @@ setMethod(
             names(allPars) <- c(rownames(a), 'GroupPars')                
         }        
         if(allpars) return(allPars)
+        if(verbose){ 
             cat('\nItem parameters:\n')
-        print(a)
-        gpars <- ExtractGroupPars(object@pars[[J+1]])
-        cat('\nGroup parameters:\n')
-        cat('\nMeans:\n')            
+            print(a)
+            cat('\nGroup parameters:\n')
+            cat('\nMeans:\n')
+        }
+        gpars <- ExtractGroupPars(object@pars[[J+1]])        
         gmeans <- gpars$gmeans
         gcov <- gpars$gcov
         fnames <- object@factorNames
         fnames <- fnames[!grepl(pattern='\\(', fnames)]
         names(gmeans) <- colnames(gcov) <- rownames(gcov) <- fnames
-        print(round(gmeans, digits))
-        cat('\nCovariance:\n')
-        print(round(gcov, digits))
+        if(verbose){
+            print(round(gmeans, digits))
+            cat('\nCovariance:\n')
+            print(round(gcov, digits))
+        }
         invisible(list(a,gpars))               	
     }
 )
@@ -112,7 +117,7 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
+    definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, verbose = TRUE, ...)
     { 
         K <- object@K        
         data <- object@data    
@@ -151,7 +156,7 @@ setMethod(
                     }
                 }
             }	
-            cat("LD matrix:\n\n")	
+            if(verbose) cat("LD matrix:\n\n")	
             res <- round(res,digits)
             return(res)
         } 
@@ -207,8 +212,7 @@ setMethod(
         tabdata <- object@tabdata
         N <- nrow(object@data)
         expected <- round(N * object@Pl/sum(object@Pl),digits)
-        print(cbind(tabdata,expected))
-        invisible(tabdata)
+        return(cbind(tabdata,expected))        
     }
 )
 

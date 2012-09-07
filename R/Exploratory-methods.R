@@ -37,7 +37,7 @@ setMethod(
     f = "summary",
     signature = 'ExploratoryClass',
     definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
-                          print = TRUE, ...){        
+                          verbose = TRUE, ...){        
         nfact <- ncol(object@F)
         if (rotate == 'none' || nfact == 1) {
             F <- object@F
@@ -48,7 +48,7 @@ setMethod(
             names(SS) <- colnames(F)
             loads <- round(cbind(F,h2),digits)
             rownames(loads) <- colnames(object@data)
-            if(print){
+            if(verbose){
                 cat("\nUnrotated factor loadings: \n\n")
                 print(loads)	    	 
                 cat("\nSS loadings: ",round(SS,digits), "\n")
@@ -73,13 +73,11 @@ setMethod(
             if(!rotF$orthogonal){
                 Phi <- rotF$Phi	  
                 Phi <- round(Phi, digits)
-                colnames(Phi) <- rownames(Phi) <- colnames(F)
-                if(print){
-                    cat("\nFactor correlations: \n\n")
-                    print(Phi)            
-                }
+                colnames(Phi) <- rownames(Phi) <- colnames(F)                
             }			
-            if(print){
+            if(verbose){
+                cat("\nFactor correlations: \n\n")
+                print(Phi)
                 cat("\nRotation: ", rotate, "\n")
                 cat("\nRotated factor loadings: \n\n")
                 print(loads,digits)
@@ -95,7 +93,8 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...){         
+    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, 
+                          verbose = TRUE, ...){         
         K <- object@K
         J <- length(K)
         nfact <- ncol(object@F)
@@ -105,7 +104,7 @@ setMethod(
         A <- sqrt(apply(a^2,1,sum))                        
         if (ncol(a) > 1){ 
             rotname <- ifelse(rotate == '', object@rotate, rotate)
-            so <- summary(object, rotate = rotate, Target = Target, print = FALSE, ...)             
+            so <- summary(object, rotate = rotate, Target = Target, verbose = FALSE, ...)             
             a <- rotateLambdas(so)
         }   
         rownames(a) <- colnames(object@data)
@@ -132,15 +131,17 @@ setMethod(
             names(allPars) <- c(rownames(a), 'GroupPars')
         }        
         ret <- if(allpars) return(allPars) else a
-        if(nfact > 1) cat('\nRotation:', rotname, '\n\n')
+        if(nfact > 1 && verbose) cat('\nRotation:', rotname, '\n\n')
         fcor <- 1
         if (ncol(a) > 1 && !allpars){
             fcor <- so$fcor
             colnames(fcor) <- rownames(fcor) <- paste('F', 1:nfact, sep='')            
-            print(round(fcor, 3))
-            cat('\n')
+            if(verbose) {
+                print(round(fcor, 3))
+                cat('\n')
+            }
         }
-        print(ret)        
+        if(verbose) print(ret)        
         return(invisible(list(ret, fcor)))
     }
 )
@@ -168,7 +169,7 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'ExploratoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
+    definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, verbose = TRUE, ...)
     {   	
         K <- object@K        
         data <- object@data	
@@ -201,7 +202,7 @@ setMethod(
                     }
                 }
             }	
-            cat("LD matrix:\n\n")	
+            if(verbose) cat("LD matrix:\n\n")	
             res <- round(res,digits)
             return(res)
         } 
@@ -292,7 +293,6 @@ setMethod(
         tabdata <- object@tabdata
         Exp[is.na(rowSums(tabdata))] <- NA				
         tabdata <- cbind(tabdata,Exp)			
-        print(tabdata)
-        invisible(tabdata)
+        return(tabdata)        
     }
 )

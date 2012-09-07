@@ -73,18 +73,18 @@ setMethod(
 	}
 )
 
-itemplot.main <- function(x, item, type, ...){       
+itemplot.main <- function(x, item, type, ...){        
     nfact <- ncol(x@F)
     if(nfact > 2 && !x[[1]]@bfactor) stop('Can not plot high dimensional models')
-    Theta <- x@Theta    
+    theta <- seq(-4,4, length.out=40)
+    Theta <- thetaComb(theta, nfact)
     P <- ProbTrace(x=x@pars[[item]], Theta=Theta)     
     a <- ExtractLambdas(x@pars[[item]])
     if(x@pars[[item]]@bfactor) a <- a[x@pars[[item]]@est[1:nfact]]
     A <- sqrt(sum(a^2))
     info <- ItemInfo(x=x@pars[[item]], A, Theta=Theta)
     if(nfact == 1){
-        if(type == 'trace'){
-            P <- ProbTrace(x=x@pars[[item]], Theta=Theta)
+        if(type == 'trace'){            
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
                  ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1), ...)
             for(i in 2:ncol(P))
@@ -95,7 +95,7 @@ itemplot.main <- function(x, item, type, ...){
                  ylab = expression(I(theta)), xlab = expression(theta))
         }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')        
-    } else {
+    } else {        
         plt <- data.frame(info = info, Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])
         colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta1", "Theta2")
@@ -105,7 +105,7 @@ itemplot.main <- function(x, item, type, ...){
         if(type == 'infocontour')												
             return(contourplot(info ~ Theta1 * Theta2, data = plt, 
                                main = paste("Item", item, "Information Contour"), xlab = expression(theta[1]), 
-                               ylab = expression(theta[2])), ...)
+                               ylab = expression(theta[2]), ...))
         if(type == 'info')
             return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Information"), 
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 

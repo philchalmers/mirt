@@ -1,11 +1,11 @@
 \name{mirt}
-\alias{anova,mirt-method}
-\alias{coef,mirt-method}
-\alias{fitted,mirt-method}
+\alias{anova,ExploratoryClass-method}
+\alias{coef,ExploratoryClass-method}
+\alias{fitted,ExploratoryClass-method}
 \alias{mirt}
-\alias{plot,mirt-method}
-\alias{residuals,mirt-method}
-\alias{summary,mirt-method}
+\alias{plot,ExploratoryClass-method}
+\alias{residuals,ExploratoryClass-method}
+\alias{summary,ExploratoryClass-method}
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
@@ -15,22 +15,26 @@ Theory)}
     Target = NULL, prev.cor = NULL, quadpts = NULL, verbose
     = FALSE, debug = FALSE, technical = list(), ...)
 
-  \S4method{summary}{mirt}(object, rotate = '', Target =
-    NULL, suppress = 0, digits = 3, print = TRUE, ...)
+  \S4method{summary}{ExploratoryClass}(object, rotate = '',
+    Target = NULL, suppress = 0, digits = 3, verbose =
+    TRUE, ...)
 
-  \S4method{coef}{mirt}(object, rotate = '', Target = NULL,
-    allpars = FALSE, digits = 3, ...)
+  \S4method{coef}{ExploratoryClass}(object, rotate = '',
+    Target = NULL, allpars = FALSE, digits = 3, verbose =
+    TRUE, ...)
 
-  \S4method{anova}{mirt}(object, object2, ...)
+  \S4method{anova}{ExploratoryClass}(object, object2)
 
-  \S4method{fitted}{mirt}(object, digits = 3, ...)
-
-  \S4method{plot}{mirt}(x, type = 'info', npts = 50,
-    theta_angle = 45, rot = list(x = -70, y = 30, z = 10),
+  \S4method{fitted}{ExploratoryClass}(object, digits = 3,
     ...)
 
-  \S4method{residuals}{mirt}(object, restype = 'LD', digits
-    = 3, printvalue = NULL, ...)
+  \S4method{plot}{ExploratoryClass}(x, y, type = 'info',
+    npts = 50, theta_angle = 45, rot = list(xaxis = -70,
+    yaxis = 30, zaxis = 10), ...)
+
+  \S4method{residuals}{ExploratoryClass}(object, restype =
+    'LD', digits = 3, printvalue = NULL, verbose = TRUE,
+    ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -137,17 +141,17 @@ Theory)}
   \code{abs(printvalue)}. The default (NULL) prints all
   response patterns}
 
-  \item{print}{logical; print output to console?}
-
   \item{x}{an object of class \code{mirt} to be plotted or
   printed}
 
-  \item{object}{a model estimated from \code{mirt} of class
-  \code{mirtClass}}
+  \item{y}{an unused variable to be ignored}
 
-  \item{object2}{a second model estimated from \code{mirt}
-  of class \code{mirtClass} with more estimated parameters
-  than \code{object}}
+  \item{object}{a model estimated from \code{mirt} of class
+  \code{ExploratoryClass} or \code{ConfirmatoryClass}}
+
+  \item{object2}{a second model estimated from any of the
+  mirt package estimation methods \code{ExploratoryClass}
+  with more estimated parameters than \code{object}}
 
   \item{suppress}{a numeric value indicating which
   (possibly rotated) factor loadings should be suppressed.
@@ -259,7 +263,9 @@ Theory)}
   factors are automatically fixed to 1 to help facilitate
   model identification. All parameters may be fixed to
   constant values or set equal to other parameters using
-  the appropriate declarations.
+  the appropriate declarations. If the model is
+  confirmatory then the returned class will be
+  'ConfirmatoryClass'.
 }
 
 \section{Exploratory IRT}{
@@ -271,8 +277,8 @@ Theory)}
   passed to the returned object for use in generic
   functions such as \code{summary()} and \code{fscores}.
   Again, factor means and variances are fixed to ensure
-  proper identification. See \code{\link{mirt}} for more
-  details.
+  proper identification. If the model is confirmatory then
+  the returned class will be 'ExploratoryClass'.
 }
 
 \section{Convergence}{

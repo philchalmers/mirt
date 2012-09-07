@@ -38,14 +38,16 @@
 #' 
 #' Specifying a number as the second input to confmirt an exploratory IRT model is estimated and 
 #' can be viewed as a stochastic analogue of \code{mirt}, with much of the same behaviour and 
-#' specifications. Rotation and target matrix options will be used in this subroutine and will be
+#' specifications. 
+#' Rotation and target matrix options will be used in this subroutine and will be
 #' passed to the returned object for use in generic functions such as \code{summary()} and 
 #' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification. See
 #' \code{\link{mirt}} for more details.
 #' 
 #' 
-#' @aliases confmirt coef,confmirt-method summary,confmirt-method
-#' residuals,confmirt-method anova,confmirt-method fitted,confmirt-method
+#' @aliases confmirt coef,ConfirmatoryClass-method summary,ConfirmatoryClass-method
+#' residuals,ConfirmatoryClass-method anova,ConfirmatoryClass-method fitted,ConfirmatoryClass-method
+#' plot,ConfirmatoryClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object returned from \code{confmirt.model()} declaring how
@@ -100,14 +102,28 @@
 #' \code{startavlues=newstartvalues}. Note that user input values must match what the default structure 
 #' would have been
 #' @param debug logical; turn on debugging features?
-#' @param object an object of class \code{confmirtClass}
-#' @param object2 an object of class \code{confmirtClass}
+#' @param object an object of class \code{ConfirmatoryClass}
+#' @param object2 an object of class \code{ConfirmatoryClass}
 #' @param digits the number of significant digits to be rounded
 #' @param rotate if \code{model} is numeric (indicating an exploratory item FA) then this 
 #' rotation is used. Default is \code{'varimax'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
+#' @param suppress a numeric value indicating which factor
+#' loadings should be suppressed. Typical values are around .3 in most
+#' statistical software. Default is 0 for no suppression
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
+#' @param x an object of class \code{mirt} to be plotted or printed
+#' @param y an unused variable to be ignored
+#' @param type type of plot to view; can be \code{'curve'} for the total test
+#' score as a function of two dimensions, or \code{'info'} to show the test
+#' information function for two dimensions
+#' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is 
+#' used then a bubble plot is created with the summed information across the angles specified 
+#' (e.g., \code{theta_angle = seq(0, 90, by=10)})
+#' @param npts number of quadrature points to be used for plotting features.
+#' Larger values make plots look smoother
+#' @param rot allows rotation of the 3D graphics
 #' \describe{
 #' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
 #' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
@@ -149,15 +165,19 @@
 #' draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
 #' technical = list(),  ...)
 #' 
-#' \S4method{coef}{confmirt}(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...)
+#' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #' 
-#' \S4method{summary}{confmirt}(object, digits = 3, ...)
+#' \S4method{coef}{ConfirmatoryClass}(object, allpars = FALSE, digits = 3, verbose = TRUE, ...)
 #' 
-#' \S4method{residuals}{confmirt}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
+#' \S4method{anova}{ConfirmatoryClass}(object, object2)
 #' 
-#' \S4method{anova}{confmirt}(object, object2, ...)
-#'
-#' \S4method{fitted}{confmirt}(object, digits = 3, ...)
+#' \S4method{fitted}{ConfirmatoryClass}(object, digits = 3, ...)
+#' 
+#' \S4method{plot}{ConfirmatoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45, 
+#' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
+#' 
+#' \S4method{residuals}{ConfirmatoryClass}(object, restype = 'LD', digits = 3, printvalue = NULL, 
+#' verbose = TRUE, ...)
 #'
 #' @export confmirt
 #' @examples
@@ -286,7 +306,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, startva
                                 constrain=PrepList$constrain, verbose=verbose), 
                       debug=debug, startvalues=startvalues, EMSE=EMSE) 
     if(EMSE) return(ESTIMATE)
-    null.mod <- unclass(mirt(data,1,itemtype='NullModel'))
+    null.mod <- unclass(mirt(data,1,itemtype='NullModel', SE = FALSE))
     # pars to FA loadings    
     pars <- ESTIMATE$pars    
     nfact <- pars[[1]]@nfact

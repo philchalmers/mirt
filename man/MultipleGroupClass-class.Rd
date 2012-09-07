@@ -1,13 +1,9 @@
 \name{MultipleGroupClass-class}
 \docType{class}
 \alias{MultipleGroupClass-class}
-\alias{coef,MultipleGroupClass-method}
 \alias{print,MultipleGroupClass-method}
-\alias{residuals,MultipleGroupClass-method}
 \alias{show,MultipleGroupClass-method}
-\alias{summary,MultipleGroupClass-method}
-\alias{anova,MultipleGroupClass-method}
-\alias{fitted,MultipleGroupClass-method}
+
 
 \title{Class "MultipleGroupClass"}
 \description{

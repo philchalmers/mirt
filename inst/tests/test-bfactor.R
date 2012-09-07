@@ -8,13 +8,18 @@ test_that('dich data', {
     mod1 <- bfactor(data, specific)    
     expect_is(mod1, 'ConfirmatoryClass')                  
     fs <- fscores(mod1, verbose = FALSE)
-    expect_is(fs, 'matrix')    
+    expect_is(fs, 'matrix')        
+    cof <- coef(mod1, verbose = FALSE)
+    expect_is(cof, 'list')
+    sum <- summary(mod1, verbose = FALSE)
+    expect_is(sum, 'list')    
 })
 
 
 
 test_that('mix data', {
     #simulate data
+    set.seed(1234)
     a <- matrix(c(
         1,0.5,NA,
         1,0.5,NA,
@@ -60,4 +65,11 @@ test_that('mix data', {
     expect_is(simmod, 'ConfirmatoryClass')              
     fs <- fscores(simmod, verbose = FALSE)
     expect_is(fs, 'matrix')
+    
+    res <- residuals(simmod, verbose = FALSE)
+    expect_is(res, 'matrix')
+    fit <- fitted(simmod)
+    expect_is(fit, 'matrix')  
+    sum <- summary(simmod, verbose = FALSE)
+    expect_is(sum, 'list')
 })

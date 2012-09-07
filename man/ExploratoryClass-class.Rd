@@ -1,14 +1,8 @@
 \name{ExploratoryClass-class}
 \docType{class}
 \alias{ExploratoryClass-class}
-\alias{anova,ExploratoryClass-method}
-\alias{coef,ExploratoryClass-method}
-\alias{fitted,ExploratoryClass-method}
-\alias{plot,ExploratoryClass,missing-method}
 \alias{print,ExploratoryClass-method}
-\alias{residuals,ExploratoryClass-method}
 \alias{show,ExploratoryClass-method}
-\alias{summary,ExploratoryClass-method}
 
 \title{Class "ExploratoryClass"}
 \description{

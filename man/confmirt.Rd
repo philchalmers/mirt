@@ -1,10 +1,11 @@
 \name{confmirt}
-\alias{anova,confmirt-method}
-\alias{coef,confmirt-method}
+\alias{anova,ConfirmatoryClass-method}
+\alias{coef,ConfirmatoryClass-method}
 \alias{confmirt}
-\alias{fitted,confmirt-method}
-\alias{residuals,confmirt-method}
-\alias{summary,confmirt-method}
+\alias{fitted,ConfirmatoryClass-method}
+\alias{plot,ConfirmatoryClass-method}
+\alias{residuals,ConfirmatoryClass-method}
+\alias{summary,ConfirmatoryClass-method}
 \title{Confirmatory Full-Information Item Factor Analysis}
 \usage{
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
@@ -13,17 +14,24 @@
     draws = 2000, debug = FALSE, rotate = 'varimax', Target
     = NULL, technical = list(), ...)
 
-  \S4method{coef}{confmirt}(object, rotate = '', Target =
-    NULL, allpars = FALSE, digits = 3, ...)
+  \S4method{summary}{ConfirmatoryClass}(object, suppress =
+    0, digits = 3, verbose = TRUE, ...)
 
-  \S4method{summary}{confmirt}(object, digits = 3, ...)
+  \S4method{coef}{ConfirmatoryClass}(object, allpars =
+    FALSE, digits = 3, verbose = TRUE, ...)
 
-  \S4method{residuals}{confmirt}(object, restype = 'LD',
-    digits = 3, printvalue = NULL, ...)
+  \S4method{anova}{ConfirmatoryClass}(object, object2)
 
-  \S4method{anova}{confmirt}(object, object2, ...)
+  \S4method{fitted}{ConfirmatoryClass}(object, digits = 3,
+    ...)
 
-  \S4method{fitted}{confmirt}(object, digits = 3, ...)
+  \S4method{plot}{ConfirmatoryClass}(x, y, type = 'info',
+    npts = 50, theta_angle = 45, rot = list(xaxis = -70,
+    yaxis = 30, zaxis = 10), ...)
+
+  \S4method{residuals}{ConfirmatoryClass}(object, restype =
+    'LD', digits = 3, printvalue = NULL, verbose = TRUE,
+    ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -127,9 +135,11 @@
 
   \item{debug}{logical; turn on debugging features?}
 
-  \item{object}{an object of class \code{confmirtClass}}
+  \item{object}{an object of class
+  \code{ConfirmatoryClass}}
 
-  \item{object2}{an object of class \code{confmirtClass}}
+  \item{object2}{an object of class
+  \code{ConfirmatoryClass}}
 
   \item{digits}{the number of significant digits to be
   rounded}
@@ -141,8 +151,35 @@
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
 
+  \item{suppress}{a numeric value indicating which factor
+  loadings should be suppressed. Typical values are around
+  .3 in most statistical software. Default is 0 for no
+  suppression}
+
   \item{technical}{list specifying subtle parameters that
-  can be adjusted. These values are \describe{
+  can be adjusted. These values are}
+
+  \item{x}{an object of class \code{mirt} to be plotted or
+  printed}
+
+  \item{y}{an unused variable to be ignored}
+
+  \item{type}{type of plot to view; can be \code{'curve'}
+  for the total test score as a function of two dimensions,
+  or \code{'info'} to show the test information function
+  for two dimensions}
+
+  \item{theta_angle}{numeric values ranging from 0 to 90
+  used in \code{plot}. If a vector is used then a bubble
+  plot is created with the summed information across the
+  angles specified (e.g., \code{theta_angle = seq(0, 90,
+  by=10)})}
+
+  \item{npts}{number of quadrature points to be used for
+  plotting features. Larger values make plots look
+  smoother}
+
+  \item{rot}{allows rotation of the 3D graphics \describe{
   \item{NCYCLES}{max number of MH-RM cycles; default 2000}
   \item{BURNIN}{number of burn in cycles (stage 1); default
   150} \item{SEMCYCLES}{number of SEM cycles (stage 2);

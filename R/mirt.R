@@ -51,6 +51,7 @@
 #' variances of the latent factors are automatically fixed to 1 to help
 #' facilitate model identification. All parameters may be fixed to constant
 #' values or set equal to other parameters using the appropriate declarations.
+#' If the model is confirmatory then the returned class will be 'ConfirmatoryClass'.
 #' 
 #' @section Exploratory IRT:
 #' 
@@ -58,13 +59,13 @@
 #' can be viewed as a stochastic analogue of \code{mirt}, with much of the same behaviour and 
 #' specifications. Rotation and target matrix options will be used in this subroutine and will be
 #' passed to the returned object for use in generic functions such as \code{summary()} and 
-#' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification. See
-#' \code{\link{mirt}} for more details.
+#' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification. 
+#' If the model is confirmatory then the returned class will be 'ExploratoryClass'.
 #' 
 #'
 #' 
-#' @aliases mirt summary,mirt-method coef,mirt-method anova,mirt-method fitted,mirt-method
-#' plot,mirt-method residuals,mirt-method
+#' @aliases mirt summary,ExploratoryClass-method coef,ExploratoryClass-method anova,ExploratoryClass-method 
+#' fitted,ExploratoryClass-method plot,ExploratoryClass-method residuals,ExploratoryClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object returned from \code{confmirt.model()} declaring how
@@ -120,11 +121,12 @@
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
-#' @param print logical; print output to console?
 #' @param x an object of class \code{mirt} to be plotted or printed
-#' @param object a model estimated from \code{mirt} of class \code{mirtClass}
-#' @param object2 a second model estimated from \code{mirt} of class
-#' \code{mirtClass} with more estimated parameters than \code{object}
+#' @param y an unused variable to be ignored
+#' @param object a model estimated from \code{mirt} of class \code{ExploratoryClass} or 
+#' \code{ConfirmatoryClass}
+#' @param object2 a second model estimated from any of the mirt package estimation methods
+#' \code{ExploratoryClass} with more estimated parameters than \code{object}
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
@@ -242,19 +244,21 @@
 #' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
 #' 
-#' \S4method{summary}{mirt}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
-#' print = TRUE, ...)
+#' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
+#' verbose = TRUE, ...)
 #' 
-#' \S4method{coef}{mirt}(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, ...)
+#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, 
+#' verbose = TRUE, ...)
 #' 
-#' \S4method{anova}{mirt}(object, object2, ...)
+#' \S4method{anova}{ExploratoryClass}(object, object2)
 #' 
-#' \S4method{fitted}{mirt}(object, digits = 3, ...)
+#' \S4method{fitted}{ExploratoryClass}(object, digits = 3, ...)
 #' 
-#' \S4method{plot}{mirt}(x, type = 'info', npts = 50, theta_angle = 45, 
-#' rot = list(x = -70, y = 30, z = 10), ...)
+#' \S4method{plot}{ExploratoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45, 
+#' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #' 
-#' \S4method{residuals}{mirt}(object, restype = 'LD', digits = 3, printvalue = NULL, ...)
+#' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, printvalue = NULL, 
+#' verbose = TRUE, ...)
 #' @export mirt
 #' @examples
 #' 

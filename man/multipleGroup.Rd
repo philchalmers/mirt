@@ -1,6 +1,6 @@
 \name{multipleGroup}
-\alias{anova,multipleGroup-method}
-\alias{coef,multipleGroup-method}
+\alias{anova,MultipleGroupClass-method}
+\alias{coef,MultipleGroupClass-method}
 \alias{multipleGroup}
 \title{Multiple Group Estimation}
 \usage{
@@ -10,10 +10,10 @@
     freepars = NULL, draws = 2000, quadpts = NULL,
     technical = list(), debug = FALSE, verbose = TRUE)
 
-  \S4method{coef}{multipleGroup}(object, digits = 3,
+  \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
 
-  \S4method{anova}{multipleGroup}(object, object2, ...)
+  \S4method{anova}{MultipleGroupClass}(object, object2)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that

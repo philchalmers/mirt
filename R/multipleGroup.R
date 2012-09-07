@@ -11,8 +11,8 @@
 #' However, constrains may be imposed accross groups by invoking various \code{invariance} keywords
 #' or by inputing user defined \code{freepars}, \code{constrain}, and \code{startvalues} lists.  
 #' 
-#' @aliases multipleGroup coef,multipleGroup-method 
-#' anova,multipleGroup-method 
+#' @aliases multipleGroup coef,MultipleGroupClass-method 
+#' anova,MultipleGroupClass-method 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object or named list of objects returned from \code{confmirt.model()} declaring how
@@ -105,9 +105,9 @@
 #' parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
 #' technical = list(), debug = FALSE, verbose = TRUE)
 #' 
-#' \S4method{coef}{multipleGroup}(object, digits = 3, verbose = TRUE, ...)
+#' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #' 
-#' \S4method{anova}{multipleGroup}(object, object2, ...)
+#' \S4method{anova}{MultipleGroupClass}(object, object2)
 #'
 #' @export multipleGroup
 #' @examples

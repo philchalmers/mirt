@@ -1,4 +1,4 @@
-context('mirt')
+context('mirtOne')
 
 test_that('dich', {
     data <- expand.table(LSAT7)        
@@ -28,25 +28,20 @@ test_that('dich', {
     expect_is(fm4, 'matrix')
     fm5 <- fscores(modm6, method = 'ML', full.scores = FALSE, verbose = FALSE)
     expect_is(fm5, 'matrix')
+    
+    res1 <- residuals(modm1, verbose = FALSE)
+    res2 <- residuals(modm2, verbose = FALSE)
+    expect_is(res1, 'matrix')
+    expect_is(res2, 'matrix')
+    IP1 <- itemplot(modm1, 1)
+    IP2 <- itemplot(modm2, 1)
+    expect_is(IP1, 'NULL')
+    expect_is(IP2, 'trellis')
+    TP1 <- plot(modm1)
+    TP2 <- plot(modm1)
+    expect_is(TP1, 'trellis')    
+    expect_is(TP2, 'trellis')
 })
 
-test_that('poly', {
-    modp1 <- mirt(Science, 1, SE = FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')          
-    modp2 <- mirt(Science, 2)
-    expect_is(modp2, 'ExploratoryClass')
-    modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)))
-    expect_is(modp3, 'ConfirmatoryClass')
-    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'mcm'), SE = FALSE)
-    expect_is(modp4, 'ConfirmatoryClass')
-    
-    fm1 <- fscores(modp1, verbose = FALSE)
-    expect_is(fm1, 'matrix')
-    fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
-    expect_is(fm2, 'matrix')
-    fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
-    expect_is(fm3, 'matrix')
-    fm4 <- fscores(modp4, verbose = FALSE)
-    expect_is(fm4, 'matrix')
-})
+
 

@@ -1,13 +1,8 @@
 \name{ConfirmatoryClass-class}
 \docType{class}
 \alias{ConfirmatoryClass-class}
-\alias{coef,ConfirmatoryClass-method}
-\alias{print,ConfirmatoryClass-method}
-\alias{residuals,ConfirmatoryClass-method}
 \alias{show,ConfirmatoryClass-method}
-\alias{summary,ConfirmatoryClass-method}
-\alias{anova,ConfirmatoryClass-method}
-\alias{fitted,ConfirmatoryClass-method}
+\alias{print,ConfirmatoryClass-method}
 
 \title{Class "ConfirmatoryClass"}
 \description{
