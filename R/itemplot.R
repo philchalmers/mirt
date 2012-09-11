@@ -85,6 +85,8 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
         for(i in 1:length(degrees))
             info <- info + iteminfo(x=x@pars[[item]], Theta=Theta, degrees=c(degrees[i], 
                                                                              90 - degrees[i]))
+    } else {
+        info <- iteminfo(x=x@pars[[item]], Theta=Theta, degrees=0)
     }
     if(nfact == 1){
         if(type == 'trace'){            

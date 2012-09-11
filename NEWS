@@ -2,6 +2,9 @@
 mirt 0.4.0
 ----------------------------------------------------------------
 
+* Added iteminfo() and extract.item() to calculate the item information and extract 
+  desired items
+
 * Multiple group estimation available with the multipleGroup() function. Uses the EM and MHRM
   as the estimation engines, with the EM as default. The MHRM seems to be faster at two factors+
   though and naturally should be more accurate, therefore it is set as the default
