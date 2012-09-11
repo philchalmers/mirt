@@ -6,9 +6,9 @@
 #' @usage 
 #' itemplot(object, ...)
 #' 
-#' \S4method{itemplot}{ExploratoryClass}(object, item, type = 'trace', ...)
+#' \S4method{itemplot}{ExploratoryClass}(object, item, type = 'trace', degrees = NULL, ...)
 #'
-#' \S4method{itemplot}{ConfirmatoryClass}(object, item, type = 'trace' , ...) 
+#' \S4method{itemplot}{ConfirmatoryClass}(object, item, type = 'trace' , degrees = NULL, ...) 
 #'
 #' @aliases itemplot-method itemplot,ExploratoryClass-method 
 #' itemplot,ConfirmatoryClass-method
@@ -16,6 +16,8 @@
 #' @param item a single numeric value indicating which item to plot
 #' @param type plot type to use, information (\code{'info'}), information contours \code{('infocontour')},
 #'  or item trace lines (\code{'trace'})
+#' @param degrees the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
+#' for more detail
 #' @param ... additional arguments to be passed to lattice 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{plot}}, \code{\link{mirt}}, \code{\link{bfactor}},
@@ -54,9 +56,9 @@ setGeneric("itemplot",
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, item, type = 'trace', ...)
+	definition = function(object, item, type = 'trace', degrees = 45, ...)
 	{  			
-		x <- itemplot.main(object, item, type, ...)		        
+		x <- itemplot.main(object, item, type, degrees, ...)		        
 		return(invisible(x))
 	}
 )
@@ -66,23 +68,26 @@ setMethod(
 setMethod(
 	f = "itemplot",
 	signature = signature(object = 'ConfirmatoryClass'),
-	definition = function(object, item, type = 'trace', ...)
+	definition = function(object, item, type = 'trace', degrees = 45, ...)
 	{
-	    x <- itemplot.main(object, item, type, ...)    	
+	    x <- itemplot.main(object, item, type, degrees, ...)    	
 	    return(invisible(x))
 	}
 )
 
-itemplot.main <- function(x, item, type, ...){        
+itemplot.main <- function(x, item, type, degrees = 45, ...){        
     nfact <- ncol(x@F)
     if(nfact > 2 && !x[[1]]@bfactor) stop('Can not plot high dimensional models')
+    if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')    
     theta <- seq(-4,4, length.out=40)
-    Theta <- thetaComb(theta, nfact)
-    P <- ProbTrace(x=x@pars[[item]], Theta=Theta)     
-    a <- ExtractLambdas(x@pars[[item]])
-    if(x@pars[[item]]@bfactor) a <- a[x@pars[[item]]@est[1:nfact]]
-    A <- sqrt(sum(a^2))
-    info <- ItemInfo(x=x@pars[[item]], A, Theta=Theta)
+    Theta <- thetaComb(theta, nfact)   
+    P <- ProbTrace(x=x@pars[[item]], Theta=Theta)         
+    info <- 0 
+    if(nfact == 2){
+        for(i in 1:length(degrees))
+            info <- info + iteminfo(x=x@pars[[item]], Theta=Theta, degrees=c(degrees[i], 
+                                                                             90 - degrees[i]))
+    }
     if(nfact == 1){
         if(type == 'trace'){            
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 

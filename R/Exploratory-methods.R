@@ -235,30 +235,20 @@ setMethod(
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
-        rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
-        K <- x@K		
+        rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])       
         nfact <- x@pars[[1]]@nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.")
-        J <- length(x@pars) - 1
-        a <- matrix(0, J, nfact)
-        for(i in 1:J)
-            a[i,] <- ExtractLambdas(x@pars[[i]])
-        A <- list()
-        if(nfact == 2){
-            a <- a[,1:2]
-            theta_angle2 <- c(90 - theta_angle)
-            angles <- rbind(theta_angle, theta_angle2)
-            cosalpha <- cos(d2r(angles))            
-            if(length(theta_angle) == 1)
-                A[[1]] <- as.matrix(sqrt(rowSums((a * matrix(cosalpha[ ,1], nrow(a), 2, TRUE))^2)))
-            else                 
-                for(i in 1:ncol(cosalpha))
-                    A[[i]] <- as.matrix(sqrt(rowSums((a * matrix(cosalpha[ ,i], nrow(a), 2, TRUE))^2)))                                
-        } else A <- list(a)  
-        theta <- if(length(theta_angle) == 1) seq(-4,4,length.out=npts) 
-            else seq(-4,4,length.out=9)
+        if(nfact == 1) theta_angle <- 0        
+        J <- length(x@pars) - 1        
+        theta <- seq(-4,4,length.out=npts)             
         Theta <- thetaComb(theta, nfact)        
-        info <- test_info(pars=x@pars, Theta=Theta, Alist=A, K=K)         
+        info <- 0        
+        for(l in 1:length(theta_angle)){
+            ta <- theta_angle[l]
+            if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
+            for(i in 1:J)
+                info <- info + iteminfo(x=x@pars[[i]], Theta=Theta, degrees=ta)            
+        }
         plt <- data.frame(cbind(info,Theta))
         if(nfact == 2){						
             colnames(plt) <- c("info", "Theta1", "Theta2")			

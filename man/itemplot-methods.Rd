@@ -16,6 +16,10 @@
   \code{('infocontour')}, or item trace lines
   (\code{'trace'})}
 
+  \item{degrees}{the degrees argument to be used if there
+  are exactly two factors. See \code{\link{iteminfo}} for
+  more detail}
+
   \item{...}{additional arguments to be passed to lattice}
 }
 \description{

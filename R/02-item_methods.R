@@ -1,3 +1,101 @@
+#----------------------------------------------------------------------------
+setMethod(
+    f = "print",
+    signature = signature(x = 'dich'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'graded'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'gpcm'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'nominal'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'partcomp'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'mcm'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'dich'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'graded'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'gpcm'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'nominal'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'partcomp'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'mcm'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#----------------------------------------------------------------------------
 #Probability Traces
 setMethod(
     f = "ProbTrace",
@@ -401,25 +499,29 @@ setMethod(
 #----------------------------------------------------------------------------
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'dich', A = 'numeric', Theta = 'matrix'),
-    definition = function(x, A, Theta){          
+    signature = signature(x = 'dich', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){          
         P <- ProbTrace(x, Theta)[,2]
         nfact <- ncol(Theta)
+        a <- ExtractLambdas(x)
+        A <- sum((a * cosangle)^2)
         Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0, 1)
-        info <- A^2 * P * (1-P) * Pstar/P 
+        info <- A * P * (1-P) * Pstar/P 
         info    
     }
 )
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'graded', A = 'numeric', Theta = 'matrix'),
-    definition = function(x, A, Theta){          
-        P <- ProbTrace(x, Theta, itemexp = FALSE)  
+    signature = signature(x = 'graded', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){
+        P <- ProbTrace(x, Theta, itemexp = FALSE) 
+        a <- ExtractLambdas(x)
+        A <- sum((a * cosangle)^2)
         info <- 0
         for(i in 1:(ncol(P)-1)){
-            w1 <- P[,i]*(1-P[,i])*A
-            w2 <- P[,i+1]*(1-P[,i+1])*A
+            w1 <- P[,i]*(1-P[,i]) * A
+            w2 <- P[,i+1]*(1-P[,i+1]) * A
             info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1])             
         }    
         info
@@ -428,40 +530,40 @@ setMethod(
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'gpcm', A = 'numeric', Theta = 'matrix'),
-    definition = function(x, A, Theta){
+    signature = signature(x = 'gpcm', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
         ak <- seq(0, x@ncat-1, by = 1)
-        info <- Info.nominal(Theta=Theta, a=a, ak=ak, A=A, d=d)
+        info <- Info.nominal(Theta=Theta, a=a, ak=ak, d=d, cosangle=cosangle)
         info
     }
 )
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'nominal', A = 'numeric', Theta = 'matrix'),
-    definition = function(x, A, Theta){          
+    signature = signature(x = 'nominal', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
         ak <- x@par[(length(a)+1):(length(a) + length(d))]
-        info <- Info.nominal(Theta=Theta, a=a, ak=ak, A=A, d=d)
+        info <- Info.nominal(Theta=Theta, a=a, ak=ak, d=d, cosangle=cosangle)
         info
     }
 )
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'partcomp', A = 'numeric', Theta = 'matrix'),
-    definition = function(x, A, Theta){          
+    signature = signature(x = 'partcomp', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){
         stop('Information functions not yet written for ', class(x))
     }
 )
 
 setMethod(
     f = "ItemInfo",
-    signature = signature(x = 'mcm', A = 'numeric', Theta = 'matrix'),
-    definition = function(x, A, Theta){          
+    signature = signature(x = 'mcm', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){
         stop('Information functions not yet written for ', class(x))
     }
 )
@@ -964,21 +1066,26 @@ P.mcm <- function(a, ak, d, t, Theta){
     return(P)   
 }
 
-#nominal/gpcm item info
-Info.nominal <- function(Theta, a, ak, A, d){
-    P <- P.nominal(a, ak, d, Theta)    
+#nominal and gpcm
+Info.nominal <- function(Theta, a, ak, d, cosangle = 1){
+    P <- P.nominal(a, ak, d, Theta)
+    A <- a * cosangle
+    nfact <- ncol(Theta)
     AK <- matrix(ak, nrow(Theta), length(ak), byrow = TRUE)
     M <- AK * P
     M2 <- AK^2 * P
     d2P <- dP <- matrix(0,nrow(AK), ncol(AK))
-    for(i in 1:ncol(dP))        
-        dP[,i] <- A * P[,i] * (ak[i] - rowSums(M)) 
-    for(i in 1:ncol(dP))        
-        d2P[,i] <- ak[i]^2 * A^2 * P[,i] - 
-            2 * ak[i] * A^2 * P[,i] * rowSums(M) + 
-            2 * A^2 * P[,i] * rowSums(M^2) - 
-            A^2 * P[,i] * rowSums(M2)
-    info <- rowSums((dP)^2 / P - d2P)    
+    info <- 0
+    for(n in 1:nfact){
+        for(i in 1:ncol(dP))        
+            dP[,i] <- A[n] * P[,i] * (ak[i] - rowSums(M)) 
+        for(i in 1:ncol(dP))        
+            d2P[,i] <- ak[i]^2 * A[n]^2 * P[,i] - 
+                2 * ak[i] * A[n]^2 * P[,i] * rowSums(M) + 
+                2 * A[n]^2 * P[,i] * rowSums(M^2) - 
+                A[n]^2 * P[,i] * rowSums(M2)
+        info <- info + rowSums((dP)^2 / P - d2P)    
+    }
     info
 }
 

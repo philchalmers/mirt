@@ -71,3 +71,5 @@ Collate:
     'multipleGroup.R'
     'wald.R'
     'EMstep.group.R'
+    'extract.item.R'
+    'iteminfo.R'

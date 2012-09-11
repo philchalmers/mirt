@@ -38,7 +38,7 @@ test_that('dich', {
     expect_is(IP1, 'NULL')
     expect_is(IP2, 'trellis')
     TP1 <- plot(modm1)
-    TP2 <- plot(modm1)
+    TP2 <- plot(modm2)
     expect_is(TP1, 'trellis')    
     expect_is(TP2, 'trellis')
 })
