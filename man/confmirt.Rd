@@ -220,7 +220,7 @@
   statistic (Chen & Thissen, 1997) in the lower diagonal of
   the matrix returned by \code{residuals}, and Cramer's V
   above the diagonal. For computing the log-likelihood more
-  accurately see \code{\link{logLik}}.
+  accurately see \code{\link{calcLogLik}}.
 
   \code{coef} displays the item parameters with their
   associated standard errors, while use of \code{summary}

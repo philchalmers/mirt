@@ -3,8 +3,8 @@
 \alias{fscores}
 \alias{fscores,ConfirmatoryClass-method}
 \alias{fscores,ExploratoryClass-method}
-\alias{fscores-method}
 \alias{fscores,MultipleGroupClass-method}
+\alias{fscores-method}
 \title{Methods for Function fscores}
 \arguments{
   \item{object}{a model of class \code{ExploratoryClass} or

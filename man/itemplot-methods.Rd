@@ -38,9 +38,5 @@ itemplot(mod1, 2)
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
-\seealso{
-  \code{\link{plot}}, \code{\link{mirt}},
-  \code{\link{bfactor}}, \code{\link{polymirt}}
-}
 \keyword{plot}
 

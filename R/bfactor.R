@@ -14,36 +14,9 @@
 #' Gibbons and Hedeker (1992) and Gibbons et al. (2007). 
 #' Nested models may be compared via an approximate
 #' chi-squared difference test or by a reduction in AIC or BIC (accessible via
-#' \code{\link{anova}}); note that this only makes sense when comparing class
-#' \code{bfactorClass} models to class \code{mirtClass} or \code{polymirtClass}. 
-#' The general equation used for item bi-factor analysis in this package is in the logistic 
-#' form with a scaling correction of 1.702. This correction is applied to allow
-#' comparison to mainstream programs such as TESTFACT 4 (2003) and POLYFACT.
+#' \code{\link{anova}}). See \code{\link{mirt}} for more details regarding the 
+#' IRT estimation approach used in this package.
 #' 
-#' Unlike TESTFACT 4 (2003) initial start values are computed by using
-#' information from a quasi-tetrachoric correlation matrix, potentially
-#' with Carroll's (1945) adjustment for chance responses. To begin, a MINRES
-#' factor analysis with one factor is extracted, and the transformed loadings
-#' and intercepts (see \link{mirt} for more details) are used as starting
-#' values for the general factor loadings and item intercepts. Values for the
-#' specific factor loadings are taken to be half the magnitude of the extracted
-#' general factor loadings. Note that while the sign of the loading may be
-#' incorrect for specific factors (and possibly for some of the general factor
-#' loadings) the intercepts and general factor loadings will be relatively
-#' close to the final solution. These initial values should be an improvement
-#' over the TESTFACT initial starting values of 1.414 for all the general
-#' factor slopes, 1 for all the specific factor slopes, and 0 for all the
-#' intercepts.
-#' 
-#' Factor scores are estimated assuming a normal prior distribution and can be
-#' appended to the input data matrix (\code{full.scores = TRUE}) or displayed
-#' in a summary table for all the unique response patterns. Fitted and residual
-#' values can be observed by using the \code{fitted} and \code{residuals}
-#' functions. To examine individuals item plots use \code{\link{itemplot}}
-#' which will also plot information and surface functions.
-#' Residuals are computed using the LD statistic (Chen & Thissen, 1997) in the
-#' lower diagonal of the matrix returned by \code{residuals}, and Cramer's V
-#' above the diagonal.
 #' 
 #' @aliases bfactor 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
@@ -99,8 +72,6 @@
 #' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
 #' \item{TOL}{EM convergence threshold; default .001}
 #' \item{NCYCLES}{maximum number of EM cycles; default 300}
-#' \item{NOWARN}{a logical indicating whether dependent packages warnings should be printed; 
-#' default \code{TRUE}}
 #' }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -121,14 +92,6 @@
 #' Full-Information item bifactor analysis of graded response data. 
 #' \emph{Applied Psychological Measurement, 31}, 4-19
 #' 
-#' Carroll, J. B. (1945). The effect of difficulty and chance success on
-#' correlations between items and between tests. \emph{Psychometrika, 26},
-#' 347-372.
-#' 
-#' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
-#' Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics,
-#' and Full-information Item Factor Analysis [Computer software]. Lincolnwood,
-#' IL: Scientific Software International.
 #' @keywords models
 #' @usage
 #' bfactor(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 

@@ -20,8 +20,6 @@
 #' for more detail
 #' @param ... additional arguments to be passed to lattice 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{plot}}, \code{\link{mirt}}, \code{\link{bfactor}},
-#' \code{\link{polymirt}}
 #' @rdname itemplot-methods  
 #' @keywords plot
 #' @docType methods
@@ -91,13 +89,14 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
     if(nfact == 1){
         if(type == 'trace'){            
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
-                 ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1), ...)
+                 ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1), las = 1, 
+                 ...)
             for(i in 2:ncol(P))
                 lines(Theta, P[,i], col = i)                 
         }
         if(type == 'info'){            
             plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
-                 ylab = expression(I(theta)), xlab = expression(theta))
+                 ylab = expression(I(theta)), xlab = expression(theta), las = 1)
         }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')        
     } else {        

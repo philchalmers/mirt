@@ -151,8 +151,6 @@
 #' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
 #' \item{TOL}{EM convergence threshold; default .001}
 #' \item{NCYCLES}{maximum number of EM cycles; default 300}
-#' \item{NOWARN}{a logical indicating whether dependent packages warnings should be printed; 
-#' default \code{TRUE}}
 #' }
 #' @param ... additional arguments to be passed
 #' @section Convergence:
@@ -208,8 +206,9 @@
 #' 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{polymirt}},
-#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{itemplot}}
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, 
+#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{itemplot}}, \code{\link{fscores}}
+#' 
 #' @references
 #' 
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of

@@ -193,9 +193,7 @@ Theory)}
   10000} \item{MSTEPMAXIT}{number of M-step iterations;
   default 25} \item{TOL}{EM convergence threshold; default
   .001} \item{NCYCLES}{maximum number of EM cycles; default
-  300} \item{NOWARN}{a logical indicating whether dependent
-  packages warnings should be printed; default \code{TRUE}}
-  }}
+  300} }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -445,8 +443,8 @@ summary(mod2g, rotate='promax')
 }
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
-  \code{\link{polymirt}}, \code{\link{confmirt}},
-  \code{\link{bfactor}}, \code{\link{itemplot}}
+  \code{\link{confmirt}}, \code{\link{bfactor}},
+  \code{\link{itemplot}}, \code{\link{fscores}}
 }
 \keyword{models}
 
