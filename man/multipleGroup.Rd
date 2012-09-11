@@ -5,10 +5,11 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, invariance = '', method = 'MHRM',
-    constrain = NULL, startvalues = NULL, parprior = NULL,
-    freepars = NULL, draws = 2000, quadpts = NULL,
-    technical = list(), debug = FALSE, verbose = TRUE)
+    = 0, upper = 1, free.start = NULL, invariance = '',
+    method = 'MHRM', constrain = NULL, startvalues = NULL,
+    parprior = NULL, freepars = NULL, draws = 2000, quadpts
+    = NULL, technical = list(), debug = FALSE, verbose =
+    TRUE)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -57,6 +58,22 @@
   for 4-PL model. Can be entered as a single value to
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
+
+  \item{free.start}{a list containing the start value and
+  logical indicating whether a given parameter is to be
+  freely estimated. Each element of the list consists of
+  three components, the parameter number, the starting (or
+  fixed) value, and a logical to indicate whether the
+  parameter is free. For example, \code{free.start =
+  list(c(20,0.0,FALSE), c(10,1.5,TRUE))} would fix
+  parameter 20 to 0.0 while parameter 10 would be freely
+  estimated from a starting value of 1.5. Note that this
+  will override the values specified by a user defined
+  \code{startvalues} or \code{freepars} input for the
+  specified parameters, and this may conflict with the
+  \code{invariance} input (e.g., freeing slopes manually
+  while specifying \code{invariance = 'slopes'} is
+  ambiguous and should be avoided).}
 
   \item{verbose}{logical; display iteration history during
   estimation?}

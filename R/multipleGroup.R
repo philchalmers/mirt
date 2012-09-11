@@ -37,6 +37,14 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
+#' @param free.start a list containing the start value and logical indicating whether a given parameter 
+#' is to be freely estimated. Each element of the list consists of three components, the parameter
+#' number, the starting (or fixed) value, and a logical to indicate whether the parameter is free. For
+#' example, \code{free.start = list(c(20,0.0,FALSE), c(10,1.5,TRUE))} would fix parameter 20 to 0.0 while
+#' parameter 10 would be freely estimated from a starting value of 1.5. Note that this will override 
+#' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
+#' parameters, and this may conflict with the \code{invariance} input (e.g., freeing slopes manually
+#' while specifying \code{invariance = 'slopes'} is ambiguous and should be avoided). 
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
@@ -100,7 +108,7 @@
 #' \code{\link{confmirt.model}}
 #' @keywords models
 #' @usage 
-#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
+#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, free.start = NULL, 
 #' invariance = '', method = 'MHRM', constrain = NULL, startvalues = NULL, 
 #' parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
 #' technical = list(), debug = FALSE, verbose = TRUE)
@@ -195,7 +203,7 @@
 #' anova(mod_fullconstrain, mod_scalar)
 
 #' }
-multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
+multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, free.start = NULL, 
                           invariance = '', method = 'MHRM', constrain = NULL, 
                           startvalues = NULL, parprior = NULL, freepars = NULL, draws = 2000, 
                           quadpts = NULL,
@@ -251,7 +259,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         RETURNPARINDEX <- TRUE 
     PrepListFull <- PrepData(data=data, model=model[[1]], itemtype=itemtype, guess=guess, upper=upper, 
                              startvalues=NULL, constrain=NULL, freepars=NULL, 
-                             parprior=NULL, verbose=verbose, debug=debug, 
+                             parprior=NULL, verbose=verbose, debug=debug, free.start=NULL,
                              technical=technical) #just a dummy model to collect fulldata stuff
     for(g in 1:ngroups){    
         select <- group == groupNames[g]        
@@ -259,7 +267,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         selectmod <- model[[tmp[names(model) == groupNames[g]]]]
         PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, upper=upper, 
                              startvalues=startvalues[g], constrain=constrain, freepars=freepars[g], 
-                             parprior=parprior, verbose=verbose, debug=debug, 
+                             parprior=parprior, verbose=verbose, debug=debug, free.start=free.start,
                              technical=technical, parnumber=parnumber)
         if(RETURNFREEPARS || RETURNSTARTVALUES) next
         if(RETURNPARINDEX){

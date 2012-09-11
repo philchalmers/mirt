@@ -9,10 +9,10 @@
 \title{Confirmatory Full-Information Item Factor Analysis}
 \usage{
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
-    1, startvalues = NULL, constrain = NULL, freepars =
-    NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE,
-    draws = 2000, debug = FALSE, rotate = 'varimax', Target
-    = NULL, technical = list(), ...)
+    1, free.start = NULL, startvalues = NULL, constrain =
+    NULL, freepars = NULL, parprior = NULL, verbose = TRUE,
+    calcLL = TRUE, draws = 2000, debug = FALSE, rotate =
+    'varimax', Target = NULL, technical = list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -53,6 +53,18 @@
   for 4-PL model. Can be entered as a single value to
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
+
+  \item{free.start}{a list containing the start value and
+  logical indicating whether a given parameter is to be
+  freely estimated. Each element of the list consists of
+  three components, the parameter number, the starting (or
+  fixed) value, and a logical to indicate whether the
+  parameter is free. For example, \code{free.start =
+  list(c(20,0,FALSE), c(10,1.5,TRUE))} would fix parameter
+  20 to 0 while parameter 10 would be freely estimated with
+  a starting value of 1.5. Note that this will override the
+  values specified by a user defined \code{startvalues} or
+  \code{freepars} input for the specified parameters}
 
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns

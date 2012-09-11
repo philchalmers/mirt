@@ -1,5 +1,5 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
-                     parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE)
+                     free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE)
 {
     if(debug == 'PrepData') browser()
     itemnames <- colnames(data)
@@ -141,6 +141,20 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                                itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
                                parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)
+    }    
+    #update and overwrite from free.start
+    if(!is.null(free.start)){
+        if(!is.list(free.start)) stop('free.start must be a list')
+        for(i in 1:length(free.start)){
+            for(j in 1:length(pars)){
+                if(free.start[[i]][1] %in% pars[[j]]@parnum){
+                    pars[[j]]@par[pars[[j]]@parnum == free.start[[i]][1]] <- 
+                        free.start[[i]][2]
+                    pars[[j]]@est[pars[[j]]@parnum == free.start[[i]][1]] <-
+                        as.logical(free.start[[i]][3])
+                }
+            }
+        }
     }
     npars <- 0
     for(i in 1:length(pars))

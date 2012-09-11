@@ -3,10 +3,10 @@
 \title{Full-Information Item Bi-factor Analysis}
 \usage{
   bfactor(data, specific, itemtype = NULL, guess = 0, upper
-    = 1, SE = FALSE, startvalues = NULL, constrain = NULL,
-    freepars = NULL, parprior = NULL, prev.cor = NULL,
-    quadpts = 20, verbose = FALSE, debug = FALSE, technical
-    = list(), ...)
+    = 1, SE = FALSE, free.start = NULL, startvalues = NULL,
+    constrain = NULL, freepars = NULL, parprior = NULL,
+    prev.cor = NULL, quadpts = 20, verbose = FALSE, debug =
+    FALSE, technical = list(), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -43,6 +43,18 @@
   Can be entered as a single value to assign a global
   guessing parameter or may be entered as a numeric vector
   corresponding to each item}
+
+  \item{free.start}{a list containing the start value and
+  logical indicating whether a given parameter is to be
+  freely estimated. Each element of the list consists of
+  three components, the parameter number, the starting (or
+  fixed) value, and a logical to indicate whether the
+  parameter is free. For example, \code{free.start =
+  list(c(20,0,FALSE), c(10,1.5,TRUE))} would fix parameter
+  20 to 0 while parameter 10 would be freely estimated with
+  a starting value of 1.5. Note that this will override the
+  values specified by a user defined \code{startvalues} or
+  \code{freepars} input for the specified parameters}
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}

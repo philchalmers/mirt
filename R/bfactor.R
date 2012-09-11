@@ -38,6 +38,13 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
+#' @param free.start a list containing the start value and logical indicating whether a given parameter 
+#' is to be freely estimated. Each element of the list consists of three components, the parameter
+#' number, the starting (or fixed) value, and a logical to indicate whether the parameter is free. For
+#' example, \code{free.start = list(c(20,0,FALSE), c(10,1.5,TRUE))} would fix parameter 20 to 0 while
+#' parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
+#' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
+#' parameters
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
@@ -94,7 +101,7 @@
 #' 
 #' @keywords models
 #' @usage
-#' bfactor(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
+#' bfactor(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, free.start = NULL,
 #' startvalues = NULL, constrain = NULL, freepars = NULL,  parprior = NULL,
 #' prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
@@ -163,7 +170,7 @@
 #'
 #'     }
 #' 
-bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
+bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, free.start = NULL,
                     startvalues = NULL, constrain = NULL, freepars = NULL,  parprior = NULL,
                     prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
                     technical = list(), ...)
@@ -181,7 +188,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
 	data <- as.matrix(data)
     PrepList <- PrepData(data=data, model=specific, itemtype=itemtype, guess=guess, upper=upper, 
                          startvalues=startvalues, constrain=constrain, freepars=freepars, 
-                         parprior=parprior, verbose=verbose, debug=debug, 
+                         parprior=parprior, verbose=verbose, debug=debug, free.start=free.start,
                          technical=technical, BFACTOR=TRUE)
     if(RETURN) return(PrepList)
     J <- PrepList$J

@@ -86,6 +86,15 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
+#' @param free.start a list containing the start value and logical indicating whether a given parameter 
+#' is to be freely estimated. Each element of the list consists of three components, the parameter
+#' number, the starting (or fixed) value, and a logical to indicate whether the parameter is free. For
+#' example, \code{free.start = list(c(20,0,FALSE), c(10,1.5,TRUE))} would fix parameter 20 to 0 while
+#' parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
+#' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
+#' parameters
+#' 
+#' 
 #' @param prev.cor use a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation? Default in \code{NULL} 
 #' @param rotate type of rotation to perform after the initial orthogonal
@@ -238,7 +247,8 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, startvalues = NULL,
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, free.start = NULL, 
+#' startvalues = NULL,
 #' constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
 #' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
@@ -296,7 +306,7 @@
 #' 
 #' ###########
 #' #data from the 'ltm' package in numeric format
-#' pmod1 <- mirt(Science, 1)
+#' pmod1 <- mirt(Science, 1, SE = FALSE)
 #' plot(pmod1)
 #' summary(pmod1)
 #'
@@ -305,6 +315,8 @@
 #' mirt(Science,1, constrain = 'index') #note that slopes are numbered 1,5,9,13
 #' (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
 #' coef(pmod1_equalslopes)
+#' #manually fix the first slope to .6
+#' (pmod1_fixedslope <- mirt(Science, 1, free.start = list(c(1, .6, FALSE))))
 #' 
 #' pmod2 <- mirt(Science, 2)
 #' coef(pmod2)
@@ -334,7 +346,8 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, startvalues = NULL,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, free.start = NULL, 
+                 startvalues = NULL,
                  constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
                  prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
@@ -353,7 +366,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
     data <- as.matrix(data)
     PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
                          startvalues=startvalues, constrain=constrain, freepars=freepars, 
-                         parprior=parprior, verbose=verbose, debug=debug, 
+                         parprior=parprior, verbose=verbose, free.start=free.start, debug=debug, 
                          technical=technical)
     if(RETURN) return(PrepList)
     NULL.MODEL <- ifelse(PrepList$itemtype[1] == 'NullModel', TRUE, FALSE)    
