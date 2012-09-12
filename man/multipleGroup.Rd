@@ -157,7 +157,7 @@
   \item{NCYCLES}{max number of cycles; default 2000 for
   MHRM and 300 for EM} \item{MAXQUAD}{maximum number of
   quadratures; default 10000} \item{MSTEPMAXIT}{number of
-  M-step iterations; default 25} \item{BURNIN}{number of
+  M-step iterations; default 15} \item{BURNIN}{number of
   burn in cycles (stage 1); default 150}
   \item{SEMCYCLES}{number of SEM cycles (stage 2); default
   50} \item{KDRAWS}{number of parallel MH sets to be drawn;

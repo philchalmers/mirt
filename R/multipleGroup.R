@@ -89,7 +89,7 @@
 #' \describe{
 #' \item{NCYCLES}{max number of cycles; default 2000 for MHRM and 300 for EM}
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
-#' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
+#' \item{MSTEPMAXIT}{number of M-step iterations; default 15}
 #' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
 #' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
 #' \item{KDRAWS}{number of parallel MH sets to be drawn; default 1}
@@ -214,7 +214,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     Call <- match.call()               
     set.seed(12345)	   
     MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
-    MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)        
+    MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 15, technical$MSTEPMAXIT)        
     RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
     NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     if(method == 'EM')
