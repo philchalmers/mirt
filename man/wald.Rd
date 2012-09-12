@@ -29,18 +29,27 @@
 \examples{
 \dontrun{
 #View parnumber index
-mirt(Science, 2, constrain = 'index')
-mod <- mirt(Science, 2)
+data(LSAT7)
+data <- expand.table(LSAT7)
+cmodel <- confmirt.model()
+   F1 = 1,4,5
+   F2 = 2,3
 
-#all first factor slopes equal to 0
-L <- rep(0, 25)
-L[c(1,6,11,16)] <- 1
+
+mod <- mirt(data, cmodel)
+coef(mod, allpars = TRUE)
+index <- mirt(data, cmodel, constrain = 'index')
+index
+
+#second factor slopes equal to 0?
+L <- rep(0, 30)
+L[c(7, 12)] <- 1
 wald(L, mod)
 
-#first two items same factor 1 slope, last two items same factor 1 slope
-L <- matrix(0, 2, 25)
-L[1,1] <- L[2, 11] <- 1
-L[1,6] <- L[2, 16] <- -1
+#last two items same factor 1 slope, and item 2 and 3 same factor slope
+L <- matrix(0, 2, 30)
+L[1,16] <- L[2, 7] <- 1
+L[1,21] <- L[2, 12] <- -1
 wald(L, mod)
 }
 }

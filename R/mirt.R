@@ -294,7 +294,7 @@
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table
 #' 
-#' #' #confirmatory
+#' #confirmatory
 #' cmodel <- confmirt.model()
 #'    F1 = 1,4,5
 #'    F2 = 2,3
