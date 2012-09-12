@@ -1,12 +1,9 @@
 Things to do:
 
-- replace classes with more structurally meaningful result, like 'ExploratoryClass',
-'ConfirmatoryClass', 'MultipleGroupClass'
-
-- Parallel processing option for draw.thetas(), should work better now that the draws are done mainly in
-R
-- Multiple-group estimation for confmirt, now possible!
-- Multilevel structure function using lme4 or nlme (via multimirt or confmirt extension )
+- Parallel processing option for draw.thetas(), should work better now that the draws are done
+mainly in R. Will be especially useful in multilevel models
+- Multilevel structure function using lme4 or nlme via multimirt extension 
 - Add limited-information model fit statistics
+- Optimize EM function when there are free group parameters (calculate derivs)
 
 
