@@ -231,26 +231,6 @@ Theory)}
   applied to allow comparison to mainstream programs such
   as TESTFACT (2003) and POLYFACT.
 
-  Estimation often begins by computing a matrix of
-  quasi-tetrachoric correlations, potentially with
-  Carroll's (1945) adjustment for chance responds. A MINRES
-  factor analysis with \code{nfact} is then extracted and
-  item parameters are estimated by \eqn{a_{ij} =
-  f_{ij}/u_j}, where \eqn{f_{ij}} is the factor loading for
-  the \emph{j}th item on the \emph{i}th factor, and
-  \eqn{u_j} is the square root of the factor uniqueness,
-  \eqn{\sqrt{1 - h_j^2}}. The initial intercept parameters
-  are determined by calculating the inverse normal of the
-  item facility (i.e., item easiness), \eqn{q_j}, to obtain
-  \eqn{d_j = q_j / u_j}. A similar implementation is also
-  used for obtaining initial values for polychotomous
-  items. Following these initial estimates the model is
-  iterated using the EM estimation strategy with fixed
-  quadrature points. Implicit equation accelerations
-  described by Ramsey (1975) are also added to facilitate
-  parameter convergence speed, and these are adjusted every
-  third cycle.
-
   Factor scores are estimated assuming a normal prior
   distribution and can be appended to the input data matrix
   (\code{full.data = TRUE}) or displayed in a summary table
@@ -290,6 +270,26 @@ Theory)}
   Again, factor means and variances are fixed to ensure
   proper identification. If the model is confirmatory then
   the returned class will be 'ExploratoryClass'.
+
+  Estimation often begins by computing a matrix of
+  quasi-tetrachoric correlations, potentially with
+  Carroll's (1945) adjustment for chance responds. A MINRES
+  factor analysis with \code{nfact} is then extracted and
+  item parameters are estimated by \eqn{a_{ij} =
+  f_{ij}/u_j}, where \eqn{f_{ij}} is the factor loading for
+  the \emph{j}th item on the \emph{i}th factor, and
+  \eqn{u_j} is the square root of the factor uniqueness,
+  \eqn{\sqrt{1 - h_j^2}}. The initial intercept parameters
+  are determined by calculating the inverse normal of the
+  item facility (i.e., item easiness), \eqn{q_j}, to obtain
+  \eqn{d_j = q_j / u_j}. A similar implementation is also
+  used for obtaining initial values for polychotomous
+  items. Following these initial estimates the model is
+  iterated using the EM estimation strategy with fixed
+  quadrature points. Implicit equation accelerations
+  described by Ramsey (1975) are also added to facilitate
+  parameter convergence speed, and these are adjusted every
+  third cycle.
 }
 
 \section{Convergence}{
@@ -459,6 +459,7 @@ summary(mod2g, rotate='promax')
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{confmirt}}, \code{\link{bfactor}},
+  \code{\link{multipleGroup}}, \code{\link{wald}}
   \code{\link{itemplot}}, \code{\link{fscores}}
 }
 \keyword{models}

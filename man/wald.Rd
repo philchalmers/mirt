@@ -15,8 +15,8 @@
   \item{object}{estimated object from mirt, confmirt, or
   multipleGroup}
 
-  \item{C}{a constant vector to be compared along side L.
-  Default is 0}
+  \item{C}{a constant vector/matrix to be compared along
+  side L}
 
   \item{x}{an object of class 'wald'}
 

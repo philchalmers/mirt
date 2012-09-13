@@ -146,7 +146,8 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
-#' \code{\link{fscores}}, \code{\link{confmirt.model}}
+#' \code{\link{fscores}}, \code{\link{confmirt.model}}, \code{\link{wald}}, 
+#' \code{\link{multipleGroup}}, \code{\link{itemplot}}
 #' @references
 #' 
 #' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a

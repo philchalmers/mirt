@@ -6,7 +6,7 @@
 #' @param L a coefficient matrix with dimensions nconstrasts x npars. Use \code{constrain = 'index'}
 #' on the initially estimated model to obtain the parameter indicators  
 #' @param object estimated object from mirt, confmirt, or multipleGroup
-#' @param C a constant vector to be compared along side L. Default is 0
+#' @param C a constant vector/matrix to be compared along side L
 #' @keywords wald
 #' @export wald
 #' @examples
@@ -66,7 +66,7 @@ wald <- function(L, object, C = 0){
     estB <- matrix(estB, 1)
     B <- B[estB[1,]]       
     if(!is.matrix(L))
-        L <- matrix(L, 1)    
+        L <- matrix(L, 1)        
     if(ncol(L) == ncol(estB)) L <- L[, estB, drop = FALSE]    
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
     ret <- list(W=W, df = nrow(L))

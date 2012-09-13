@@ -105,7 +105,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
-#' \code{\link{confmirt.model}}
+#' \code{\link{confmirt.model}}, \code{\link{fscores}}
 #' @keywords models
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, free.start = NULL, 
