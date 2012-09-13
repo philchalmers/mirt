@@ -2,6 +2,8 @@
 mirt 0.4.0
 ----------------------------------------------------------------
 
+* Wraped itemplot() and fscores() into S3 function for better documentation   
+
 * Added free.start list option for all estimation functions. Allows a quicker way to 
   specify free and fixed parameters
 
@@ -12,8 +14,8 @@ mirt 0.4.0
   as the estimation engines, with the EM as default. The MHRM seems to be faster at two factors+
   though and naturally should be more accurate, therefore it is set as the default
 
-* wald() function added for testing linear constraints. Useful in multiple group situations
-  for testing individual parameters rather than always estimating a new model
+* wald() function added for testing linear constraints. Useful in situations
+  for testing sets of parameters rather than estimating a new model for a liklihood ratio test
 
 * Methods that use the MHRM can now estimate the nominal, gpcm, mcm, and 4PL models
 

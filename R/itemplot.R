@@ -3,16 +3,10 @@
 #' \code{itemplot} displays various item based IRT plots.
 #' 
 #'
-#' @usage 
-#' itemplot(object, ...)
 #' 
-#' \S4method{itemplot}{ExploratoryClass}(object, item, type = 'trace', degrees = NULL, ...)
 #'
-#' \S4method{itemplot}{ConfirmatoryClass}(object, item, type = 'trace' , degrees = NULL, ...) 
-#'
-#' @aliases itemplot-method itemplot,ExploratoryClass-method 
-#' itemplot,ConfirmatoryClass-method
-#' @param object a computed model object
+#' @aliases itemplot
+#' @param object a computed model object of class \code{ExploratoryClass} or \code{ConfirmatoryClass}
 #' @param item a single numeric value indicating which item to plot
 #' @param type plot type to use, information (\code{'info'}), information contours \code{('infocontour')},
 #'  or item trace lines (\code{'trace'})
@@ -20,12 +14,9 @@
 #' for more detail
 #' @param ... additional arguments to be passed to lattice 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @rdname itemplot-methods  
 #' @keywords plot
-#' @docType methods
-#' @exportMethod itemplot
+#' @export itemplot
 #' @examples
-#' 
 #' \dontrun{
 #' 
 #' data(LSAT7)
@@ -35,24 +26,19 @@
 #' itemplot(mod1, 2)
 #'     }
 #' 
-setGeneric("itemplot", 
-           def = function(object, ...) standardGeneric("itemplot")
-)
+itemplot <- function(object, item, type = 'trace', degrees = 45, ...){
+    ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, ...)
+    invisible(ret)    
+}
+
 
 #------------------------------------------------------------------------------
-# Methods for Function itemplot
-# 
-# Plot individual items for fitted \code{mirt}, \code{bfactor}, or
-# \code{polymirt} models.
-# 
-# 
-# @name itemplot
-# @docType methods
-# @rdname itemplot-methods  
-#' @export itemplot
-# @keywords methods
+setGeneric("itemplot.internal", 
+           def = function(object, ...) standardGeneric("itemplot.internal")
+)
+
 setMethod(
-	f = "itemplot",
+	f = "itemplot.internal",
 	signature = signature(object = 'ExploratoryClass'),
 	definition = function(object, item, type = 'trace', degrees = 45, ...)
 	{  			
@@ -62,9 +48,8 @@ setMethod(
 )
 
 #------------------------------------------------------------------------------
-# @rdname itemplot-methods  
 setMethod(
-	f = "itemplot",
+	f = "itemplot.internal",
 	signature = signature(object = 'ConfirmatoryClass'),
 	definition = function(object, item, type = 'trace', degrees = 45, ...)
 	{

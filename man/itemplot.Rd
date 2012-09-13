@@ -1,12 +1,12 @@
-\docType{methods}
 \name{itemplot}
 \alias{itemplot}
-\alias{itemplot,ConfirmatoryClass-method}
-\alias{itemplot,ExploratoryClass-method}
-\alias{itemplot-method}
 \title{Displays item surface and information plots}
+\usage{
+  itemplot(object, item, type = "trace", degrees = 45, ...)
+}
 \arguments{
-  \item{object}{a computed model object}
+  \item{object}{a computed model object of class
+  \code{ExploratoryClass} or \code{ConfirmatoryClass}}
 
   \item{item}{a single numeric value indicating which item
   to plot}

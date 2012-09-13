@@ -1,44 +1,24 @@
 #' Methods for Function fscores
 #' 
-#' Computes MAP, EAP, or ML factor scores with a multivariate normal prior distribution. 
+#' Computes MAP, EAP, or ML factor scores with a multivariate normal prior distribution.
+#' 
 #'
-#' 
-#' @usage 
-#' fscores(object, ...)
-#' 
-#' @aliases fscores-method fscores,ExploratoryClass-method
-#' fscores,ConfirmatoryClass-method fscores,MultipleGroupClass-method
-#' @docType methods
-#' @section Methods: 
-#' \describe{ \item{fscores}{\code{signature(object =
-#' "ExploratoryClass")}} \item{fscores}{\code{signature(object = "ConfirmatoryClass")}}
-#' \item{fscores}{\code{signature(object = "MultipleGroupClass")}}}
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @rdname fscores-methods   
-#' @exportMethod fscores
-#' @keywords methods
-setGeneric("fscores", 
-           def = function(object, ...) standardGeneric("fscores")
-)
-
-#------------------------------------------------------------------------------
-# Methods for Function fscores
-#
-#' @name fscores
-#' @param object a model of class \code{ExploratoryClass} or \code{ConfirmatoryClass}
+#' @aliases fscores
+#' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
+#' \code{MultipleGroupClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
 #' factor scores for each unique pattern is displayed. Otherwise the original
 #' data matrix is returned with the computed factor scores appended to the
 #' rightmost column
 #' @param rotate rotation declaration to be used when estimating the factor scores. If \code{""} then the 
-#' \code{object@@rotate} default value is used
+#' \code{object@@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
 #' (\code{"ML"})
 #' @param quadpts number of quadratures to use per dimension
 #' @param verbose logical; print verbose output messages?
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
-#' @rdname fscores-methods   
 #' @export fscores
 #' @examples
 #' 
@@ -51,9 +31,23 @@ setGeneric("fscores",
 #' 
 #' 
 #'   }
-#' 
+#'
+fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP", 
+                    quadpts = NULL, verbose = TRUE)
+{
+    ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method, 
+                            quadpts=quadpts, verbose=verbose)
+    ret    
+}
+
+ 
+#------------------------------------------------------------------------------
+setGeneric("fscores.internal", 
+           def = function(object, ...) standardGeneric("fscores.internal")
+)
+
 setMethod(
-	f = "fscores",
+	f = "fscores.internal",
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
@@ -148,9 +142,8 @@ setMethod(
 )
 
 #------------------------------------------------------------------------------
-#' @rdname fscores-methods  	
 setMethod(
-	f = "fscores",
+	f = "fscores.internal",
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
 	                      quadpts = NULL, verbose = TRUE)
@@ -163,9 +156,8 @@ setMethod(
 )
 
 #------------------------------------------------------------------------------
-#' @rdname fscores-methods      
 setMethod(
-    f = "fscores",
+    f = "fscores.internal",
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
