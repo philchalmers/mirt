@@ -95,8 +95,8 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
             }
             tmp <- numpars <- c()
             for(i in 1:length(constrpars)){
-                tmp <- c(tmp, constrpars[[i]]@par[pars[[i]]@est])
-                numpars <- c(numpars, constrpars[[i]]@parnum[pars[[i]]@est])                
+                tmp <- c(tmp, constrpars[[i]]@par[constrpars[[i]]@est])
+                numpars <- c(numpars, constrpars[[i]]@parnum[constrpars[[i]]@est])                
             }
             estpar <- c(rep(NA, length(constrain)), tmp[!(numpars %in% attr(pars, 'uniqueconstr'))])
             for(i in 1:length(constrain)){                

@@ -34,6 +34,10 @@
 #' L[1,16] <- L[2, 7] <- 1
 #' L[1,21] <- L[2, 12] <- -1
 #' wald(L, mod)
+#' 
+#' #logLiklihood tests (requires estimating a new model)
+#' mod2 <- mirt(data, cmodel, constrain = list(c(7,12), c(16,21)))
+#' anova(mod2, mod)
 #' }
 wald <- function(L, object, C = 0){
     pars <- object@pars
