@@ -1,27 +1,33 @@
 #' Monte Carlo Log-Likelihood Calculation
 #' 
 #' Calculates a new object that contain the Monte Carlo estimated observed
-#' log-likelihood values for \code{polymirt} and \code{confmirt} objects
+#' log-likelihood values for mirt objects estimated with the MH-RM algorithm
 #' 
 #' @name calcLogLik
 #' @usage 
 #' calcLogLik(object, ...)
 #'
-#' \S4method{calcLogLik}{confmirtClass}(object,
+#' \S4method{calcLogLik}{ExploratoryClass}(object,
 #'    draws = 2000, G2 = TRUE)
-#' @aliases calcLogLik-method calcLogLik,confmirtClass-method
-#' @param object a model of class \code{confmirtClass}
+#' \S4method{calcLogLik}{ConfirmatoryClass}(object,
+#'    draws = 2000, G2 = TRUE)
+#' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
+#' calcLogLik,ConfirmatoryClass-method
+#' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
 #' @param ... parameters that are passed
-#' @section Methods: \describe{ \item{calcLogLik}{\code{signature(object = "confmirtClass")}} }
-#' @return Returns an object of class \code{confmirtClass} with the log-likelihood, standard error,
-#' and (possibly) the G^2 model fit statistic if there is no missing data.
+#' @section Methods: 
+#' \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")}, 
+#' \code{signature(object = "ExploratoryClass")} }
+#' } 
+#' @return Returns an object with the log-likelihood, standard errors, information matrix, 
+#' and (possibly) the G^2 and other model fit statistic if there is no missing data.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @docType methods
 #' @rdname calcLogLik-methods  
 #' @seealso
-#' \code{\link{confmirt}}
+#' \code{\link{confmirt}}, \code{\link{multipleGroup}}
 #' @keywords calcLogLik
 #' @examples
 #' 

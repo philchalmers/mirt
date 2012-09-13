@@ -38,10 +38,7 @@
   \describe{ \item{COV}{Specify the relationship between
   the latent factors. Estimating a correlation between
   factors is declared by joining the two factors with an
-  asterisk (e.g., F1*F2), while fixing this value to a
-  constant is performed by using the keyword 'eq' followed
-  by some numeric value (e.g., \code{F1*F2 eq .5} fixes the
-  correlation between F1 and F2 to .5).} }
+  asterisk (e.g., F1*F2).} }
 }
 \examples{
 \dontrun{

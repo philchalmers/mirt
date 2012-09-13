@@ -36,9 +36,9 @@
   \item{\code{'free_means'}}{for freely estimating all
   latent means (reference group constrained to 0)}
   \item{\code{'free_varcov'}}{for freely estimating the
-  variance-covariance matrix accross groups (reference
-  group has variances equal to 1, but freely estimated
-  covariance terms if specified in the model)}
+  variance-covariance matrix across groups (reference group
+  has variances equal to 1, but freely estimated covariance
+  terms if specified in the model)}
   \item{\code{'covariances'}}{to constrain all the
   covariance parameters to be equal, note that this only
   makes sense if the factor variances are the same (i.e.,
@@ -183,12 +183,12 @@
 }
 \details{
   By default the estimation in \code{multipleGroup} assumes
-  that the models are maximimally independent, and
-  therefore could initially be performed by subsetting the
-  data and running identical models with \code{confmirt} or
+  that the models are maximally independent, and therefore
+  could initially be performed by sub setting the data and
+  running identical models with \code{confmirt} or
   \code{mirt} and aggregating the results (e.g.,
   log-likelihood). However, constrains may be imposed
-  accross groups by invoking various \code{invariance}
+  across groups by invoking various \code{invariance}
   keywords or by inputing user defined \code{freepars},
   \code{constrain}, and \code{startvalues} lists.
 }

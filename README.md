@@ -1,6 +1,6 @@
 #mirt
 
-Multidimentional item response theory in R. 
+Multidimensional item response theory in R. 
 
 ##Description
 
@@ -20,6 +20,6 @@ Analysis of dichotomous and polytomous response data using latent
  
 #Extra
 
-Bug reports are always welcome and the prefered way to address these bugs is through
+Bug reports are always welcome and the preferred way to address these bugs is through
 the github 'issues'. Feel free to submit issues or feature requests on the site, and I'll 
 address them ASAP. Cheers!

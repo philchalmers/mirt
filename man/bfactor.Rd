@@ -131,7 +131,7 @@
   models using a dimensional reduction EM algorithm so that
   regardless of the number of specific factors estimated
   the model only uses a two-dimensional quadrature grid for
-  integration. See \code{\link{confmirt}} for apprioriate
+  integration. See \code{\link{confmirt}} for appropriate
   methods to be used on the objects returned from the
   estimation.
 }
