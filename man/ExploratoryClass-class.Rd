@@ -6,7 +6,8 @@
 
 \title{Class "ExploratoryClass"}
 \description{
-Defines the object returned from \code{\link{mirt}}. 
+Defines the object returned from \code{\link{mirt}} and \code{\link{confmirt}} when the 
+mirt model is exploratory. 
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("ExploratoryClass", ...).}.

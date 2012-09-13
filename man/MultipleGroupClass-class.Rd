@@ -7,7 +7,7 @@
 
 \title{Class "MultipleGroupClass"}
 \description{
-Defines the object returned from \code{\link{confmirt}}.
+Defines the object returned from \code{\link{multipleGroup}}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("MultipleGroupClass", ...)}.
