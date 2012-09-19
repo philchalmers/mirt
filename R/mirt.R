@@ -402,7 +402,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
     	           Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
     	           quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
     	           rotate=rotate, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Target=Target, 
-    	           factorNames=PrepList$factorNames, constrain=PrepList$constrain, Call=Call)
+    	           factorNames=PrepList$factorNames, constrain=PrepList$constrain, 
+    	           fulldata=PrepList$fulldata, Call=Call)
     } else {
         F <- alp
         colnames(F) <- PrepList$factorNames    
@@ -413,7 +414,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
                    Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
                    quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                    null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
-                   constrain=PrepList$constrain, Call=Call)
+                   constrain=PrepList$constrain, fulldata=PrepList$fulldata, Call=Call)
     }   
     if(SE) mod <- calcEMSE(object=mod, data=data, model=model, constrain=constrain, 
                            parprior=parprior, verbose=verbose)

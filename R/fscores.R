@@ -51,7 +51,7 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
-	{          
+	{           
         pars <- object@pars        
 		K <- object@K        
         J <- length(K)        
@@ -120,12 +120,11 @@ setMethod(
 			}  			
 		}
 		colnames(scores) <- paste('F', 1:ncol(scores), sep='')          
-		if (full.scores){               
+		if (full.scores){                           
 			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(scores))
-			tabdata2 <- object@tabdata
+			tabdata2 <- object@tabdatalong
             tabdata2 <- tabdata2[,-ncol(tabdata2)]
-            fulldata2 <- fulldata
-            fulldata2[is.na(fulldata2)] <- tabdata2[is.na(tabdata2)] <- 999
+            fulldata2 <- object@fulldata            
 			for (j in 1:nrow(tabdata2)){          
 				TFvec <- colSums(ifelse(t(fulldata2) == tabdata2[j, ],1,0)) == ncol(fulldata2)
                 tmp <- matrix(rep(scores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
