@@ -22,7 +22,8 @@ mirt 0.4.0
 * Methods that use the MHRM can now estimate the nominal, gpcm, mcm, and 4PL models
 
 * fscores computable for multiple group objects and in general play nicer with missing data
-  (reported by Judith Conijn)
+  (reported by Judith Conijn). Also, using the options full.scores = TRUE has been optimized
+  with Rcpp
 
 * Oblique rotation bug fix for fscores and coef (reported by Pedro A. Barbetta)  
 

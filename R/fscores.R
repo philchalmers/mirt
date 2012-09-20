@@ -120,16 +120,10 @@ setMethod(
 			}  			
 		}
 		colnames(scores) <- paste('F', 1:ncol(scores), sep='')          
-		if (full.scores){                           
-			scoremat <- matrix(0,nrow=nrow(fulldata),ncol=ncol(scores))
-			tabdata2 <- object@tabdatalong
+		if (full.scores){                                       
+            tabdata2 <- object@tabdatalong
             tabdata2 <- tabdata2[,-ncol(tabdata2)]
-            fulldata2 <- object@fulldata            
-			for (j in 1:nrow(tabdata2)){          
-				TFvec <- colSums(ifelse(t(fulldata2) == tabdata2[j, ],1,0)) == ncol(fulldata2)
-                tmp <- matrix(rep(scores[j, ], sum(TFvec)), nrow=sum(TFvec), byrow=TRUE)
-                scoremat[TFvec, ] <- tmp
-			} 
+            scoremat <- .Call("fullScores", object@fulldata, tabdata2, scores)			 
 			colnames(scoremat) <- colnames(scores)	
 			return(cbind(fulldata,scoremat))
 		} else {						
