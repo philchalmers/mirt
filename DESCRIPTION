@@ -73,3 +73,5 @@ Collate:
     'EMstep.group.R'
     'extract.item.R'
     'iteminfo.R'
+    'itemfit.R'
+    'personfit.R'

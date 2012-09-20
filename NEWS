@@ -2,6 +2,8 @@
 mirt 0.4.0
 ----------------------------------------------------------------
 
+* Added itemfit and person fit functions for uni and multidimensional models
+
 * Wraped itemplot() and fscores() into S3 function for better documentation   
 
 * Added free.start list option for all estimation functions. Allows a quicker way to 

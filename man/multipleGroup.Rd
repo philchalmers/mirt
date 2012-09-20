@@ -2,6 +2,7 @@
 \alias{anova,MultipleGroupClass-method}
 \alias{coef,MultipleGroupClass-method}
 \alias{multipleGroup}
+\alias{summary,MultipleGroupClass-method}
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
@@ -13,6 +14,9 @@
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
+
+  \S4method{summary}{MultipleGroupClass}(object, digits =
+    3, verbose = TRUE, ...)
 
   \S4method{anova}{MultipleGroupClass}(object, object2)
 }

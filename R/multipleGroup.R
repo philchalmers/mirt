@@ -11,7 +11,7 @@
 #' However, constrains may be imposed across groups by invoking various \code{invariance} keywords
 #' or by inputing user defined \code{freepars}, \code{constrain}, and \code{startvalues} lists.  
 #' 
-#' @aliases multipleGroup coef,MultipleGroupClass-method 
+#' @aliases multipleGroup coef,MultipleGroupClass-method summary,MultipleGroupClass-method
 #' anova,MultipleGroupClass-method 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
@@ -114,6 +114,8 @@
 #' technical = list(), debug = FALSE, verbose = TRUE)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
+#'
+#' \S4method{summary}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #' 
 #' \S4method{anova}{MultipleGroupClass}(object, object2)
 #'
@@ -341,9 +343,16 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     }   
     cmods <- list()
     for(g in 1:ngroups){
+        lambdas <- Lambdas(ESTIMATE$pars[[g]])
+        if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
+        else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
+        alp <- as.matrix(lambdas[ ,1:nfact]/norm)
+        F <- alp
+        colnames(F) <- PrepList[[g]]$factorNames
+        h2 <- rowSums(F^2)
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc, 
                           tabdata=PrepList[[g]]$tabdata2, data=data[group == groupNames[[g]], ], 
-                          converge=ESTIMATE$converge, esttype='MHRM',                
+                          converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2,                
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
                           constrain=constrain,
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        

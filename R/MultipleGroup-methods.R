@@ -57,6 +57,20 @@ setMethod(
 )
 
 setMethod(
+    f = "summary",
+    signature = signature(object = 'MultipleGroupClass'),
+    definition = function(object, digits = 3, verbose = TRUE, ...) {        
+        ngroups <- length(object@cmods)       
+        ret <- list()
+        for(g in 1:ngroups){
+            if(verbose) cat('\n----------\nGROUP:', as.character(object@groupNames[g]), '\n')
+            ret[[g]] <- summary(object@cmods[[g]], digits=digits, verbose=verbose, ...)
+        }
+        invisible(ret)
+    } 
+)
+
+setMethod(
     f = "anova",
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, object2)

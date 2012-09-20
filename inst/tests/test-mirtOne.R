@@ -41,6 +41,8 @@ test_that('dich', {
     TP2 <- plot(modm2)
     expect_is(TP1, 'trellis')    
     expect_is(TP2, 'trellis')
+    ifit <- itemfit(modm1, type = 'X2')
+    expect_is(ifit, 'data.frame')
 })
 
 
