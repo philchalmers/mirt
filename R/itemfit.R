@@ -1,7 +1,7 @@
 #' Item fit statistics
 #' 
 #' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985) for 
-#' unidimensional and multidimensional models, or \eqn{chi^2} values for unidimensional models.
+#' unidimensional and multidimensional models, or \eqn{\chi^2} values for unidimensional models.
 #' 
 #' 
 #' @aliases itemfit
@@ -11,6 +11,9 @@
 #' should be computed. Not that \code{'X2'} can only be used for unidimensional models
 #' @param ngroups the number of theta groupings to use when computing \code{'X2'}. Cells that have 
 #' any expected values less than 5 are dropped and the degrees of freedom are adjusted accordingly
+#' @param empirical.plot a single numeric value indicating which item to plot (via \code{itemplot}) and
+#' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}. 
+#' The default is \code{NULL}, therefore no plots are drawn 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit
@@ -39,9 +42,11 @@
 #' fit <- itemfit(x)
 #' fit
 #' 
+#' itemfit(x, type = 'X2', empirical.plot = 1) #empirical item plot
+#' 
 #'   }
 #'
-itemfit <- function(x, type = 'Zh', ngroups = 10){
+itemfit <- function(x, type = 'Zh', ngroups = 10, empirical.plot = NULL){
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
@@ -69,13 +74,17 @@ itemfit <- function(x, type = 'Zh', ngroups = 10){
         for(i in 1:20)
             Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i        
         n.uniqueGroups <- length(unique(Groups))
-        X2 <- df <- RMSEA <- rep(0, J)    
-        for (i in 1:J){        
+        X2 <- df <- RMSEA <- rep(0, J)            
+        if(!is.null(empirical.plot)) itemplot(x, empirical.plot)
+        for (i in 1:J){    
+            if(!is.null(empirical.plot) && i != empirical.plot) next            
             for(j in 1:n.uniqueGroups){                                    
                 dat <- fulldata[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]            
                 r <- colSums(dat)
-                N <- nrow(dat)
+                N <- nrow(dat)                  
                 mtheta <- matrix(mean(Theta[Groups == j,]), nrow=1)
+                if(!is.null(empirical.plot))
+                    points(rep(mtheta, length(r)), r/N)               
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)            
                 if(any(N * P < 2)){
                     df[i] <- df[i] - 1
@@ -85,6 +94,7 @@ itemfit <- function(x, type = 'Zh', ngroups = 10){
             }
             df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)            
         }
+        if(!is.null(empirical.plot)) return(invisible(NULL))
         p <- pchisq(X2, df, lower.tail = FALSE)               
         ret <- data.frame(item=colnames(x@data), X2=X2, df=df, p=round(p,3)) 
         return(ret)

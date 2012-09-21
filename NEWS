@@ -2,9 +2,10 @@
 mirt 0.4.0
 ----------------------------------------------------------------
 
-* Added itemfit and person fit functions for uni and multidimensional models
+* Added itemfit() and personfit() functions for uni and multidimensional models. Within itemfit
+  empirical response curves can also be plotted for unidimensional models
 
-* Wraped itemplot() and fscores() into S3 function for better documentation   
+* Wrapped itemplot() and fscores() into S3 function for better documentation   
 
 * Added free.start list option for all estimation functions. Allows a quicker way to 
   specify free and fixed parameters
@@ -17,7 +18,7 @@ mirt 0.4.0
   though and naturally should be more accurate, therefore it is set as the default
 
 * wald() function added for testing linear constraints. Useful in situations
-  for testing sets of parameters rather than estimating a new model for a liklihood ratio test
+  for testing sets of parameters rather than estimating a new model for a likelihood ratio test
 
 * Methods that use the MHRM can now estimate the nominal, gpcm, mcm, and 4PL models
 

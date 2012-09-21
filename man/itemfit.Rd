@@ -2,7 +2,8 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-  itemfit(x, type = "Zh", ngroups = 10)
+  itemfit(x, type = "Zh", ngroups = 10,
+    empirical.plot = NULL)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -18,11 +19,17 @@
   computing \code{'X2'}. Cells that have any expected
   values less than 5 are dropped and the degrees of freedom
   are adjusted accordingly}
+
+  \item{empirical.plot}{a single numeric value indicating
+  which item to plot (via \code{itemplot}) and overlay with
+  the empirical \eqn{\theta} groupings. Only applicable
+  when \code{type = 'X2'}. The default is \code{NULL},
+  therefore no plots are drawn}
 }
 \description{
   \code{itemfit} calculates the Zh values from Drasgow,
   Levine and Williams (1985) for unidimensional and
-  multidimensional models, or \eqn{chi^2} values for
+  multidimensional models, or \eqn{\chi^2} values for
   unidimensional models.
 }
 \examples{
@@ -38,6 +45,8 @@ data <- simdata(a,d, 2000, items)
 x <- mirt(data, 1, SE = FALSE)
 fit <- itemfit(x)
 fit
+
+itemfit(x, type = 'X2', empirical.plot = 1) #empirical item plot
 
   }
 }
