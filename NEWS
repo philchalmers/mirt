@@ -15,7 +15,7 @@ mirt 0.4.0
   desired items
 
 * Multiple group estimation available with the multipleGroup() function. Uses the EM and MHRM
-  as the estimation engines, with the EM as default. The MHRM seems to be faster at two factors+
+  as the estimation engines. The MHRM seems to be faster at two factors+
   though and naturally should be more accurate, therefore it is set as the default
 
 * wald() function added for testing linear constraints. Useful in situations
@@ -29,9 +29,9 @@ mirt 0.4.0
 
 * Oblique rotation bug fix for fscores and coef (reported by Pedro A. Barbetta)  
 
-* Added the item probability functions in the ?mirt documentation for reference
+* Added the item probability equations in the ?mirt documentation for reference
 
-* General bug fixes as usual that were spawned from all the added features 
+* General bug fixes as usual that were spawned from all the added features. Overall, stay frosty.
 
 ----------------------------------------------------------------
 mirt 0.3.1
