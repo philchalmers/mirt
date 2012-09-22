@@ -322,9 +322,9 @@ Theory)}
   the predicted category. \deqn{P(x = k | \theta, \psi) =
   P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
   \phi)} } \item{gpcm/nominal}{For the gpcm the \eqn{d_k}
-  values are treated as fixed and orded values from 0:(k-1)
-  (in the nominal model \eqn{d_0} is also set to 0).
-  Additionally, for identification in the nominal model
+  values are treated as fixed and orderd values from
+  0:(k-1) (in the nominal model \eqn{d_0} is also set to
+  0). Additionally, for identification in the nominal model
   \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}. \deqn{P(x = k |
   \theta, \psi) = \frac{exp(-1.702 * ak_k * (a_1 * \theta_1
   + a_2 * \theta_2) + d_k)} {\sum_i^k exp(-1.702 * ak_k *

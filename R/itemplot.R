@@ -87,7 +87,7 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
                  ylab = expression(I(theta)), xlab = expression(theta), las = 1)
         }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')        
-    } else {        
+    } else {                
         plt <- data.frame(info = info, Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])
         colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta1", "Theta2")
@@ -103,7 +103,7 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
         if(type == 'trace'){
-            return(lattice::wireframe(P ~ Theta1 + Theta2|time, data = plt2, main = paste("Item", item, "Trace"), 
+            return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time, main = paste("Item", item, "Trace"), 
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))            
         }        
