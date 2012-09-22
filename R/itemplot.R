@@ -28,7 +28,8 @@
 #' 
 itemplot <- function(object, item, type = 'trace', degrees = 45, ...){
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, ...)
-    invisible(ret)    
+    if(is.null(ret)) return(invisible(ret))
+    else return(ret)
 }
 
 
