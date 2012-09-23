@@ -76,12 +76,12 @@ setMethod(
                 colnames(Phi) <- rownames(Phi) <- colnames(F)                
             }			
             if(verbose){
-                cat("\nFactor correlations: \n\n")
-                print(Phi)
-                cat("\nRotation: ", rotate, "\n")
+                cat("\nRotation: ", rotate, "\n")                            
                 cat("\nRotated factor loadings: \n\n")
                 print(loads,digits)
                 cat("\nRotated SS loadings: ",round(SS,digits), "\n")		
+                cat("\nFactor correlations: \n\n")
+                print(Phi)
             }
             if(any(h2 > 1)) 
                 warning("Solution has heywood cases. Interpret with caution.") 
