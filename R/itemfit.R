@@ -83,8 +83,11 @@ itemfit <- function(x, type = 'Zh', ngroups = 10, empirical.plot = NULL){
                 r <- colSums(dat)
                 N <- nrow(dat)                  
                 mtheta <- matrix(mean(Theta[Groups == j,]), nrow=1)
-                if(!is.null(empirical.plot))
-                    points(rep(mtheta, length(r)), r/N)               
+                if(!is.null(empirical.plot)){
+                    tmp <- r/N
+                    col <- 2:length(tmp)
+                    points(rep(mtheta, length(tmp) - 1), tmp[-1], col = col)                  
+                }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)            
                 if(any(N * P < 2)){
                     df[i] <- df[i] - 1
