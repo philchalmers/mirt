@@ -124,6 +124,8 @@ itemfit <- function(x, type = 'Zh', ngroups = 10, empirical.plot = NULL){
         }        
         Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
         p <- round(pnorm(Zh), 3)
+        p[Zh > 0] <- 1 - p[Zh > 0]
+        p <- 2*p
         ret <- data.frame(item=colnames(x@data), Zh=Zh, p=p)                
         return(ret)
     }    
