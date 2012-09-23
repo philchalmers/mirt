@@ -17,7 +17,30 @@ Analysis of dichotomous and polytomous response data using latent
     product constructed latent traits. Additionally, multiple group analysis may
     be performed for unidimensional or multidimensional item response models for
     detecting differential item functioning.
+    
+##Installing from source
+
+It's recommended to use the development version of this package since it is most likely to be more up to date 
+than the version on CRAN. To install this package from source there are a few necessary tools to obtain:
+
+1) Obtain recent gcc and g++ compilers. Windows users can install the 
+[Rtools](http://cran.r-project.org/bin/windows/Rtools/) suite while Mac users will have to download the 
+necessary tools from the [Xcode](https://developer.apple.com/xcode/) suite; most Linux distributions should already have 
+up to date compilers (or if not they can be updated easily).  
+
+2) Install the package dependencies (if necessary). In R, paste the following into the console:
+
+```r
+install.packages(c('psych','GPArotation','mvtnorm','Rcpp','numDeriv', 'devtools'))
+```
+
+3) Load the `devtools` package and install from the github source code. 
  
+```r
+library(devtools)
+install_github('mirt','philchalmers')
+```
+
 #Extra
 
 Bug reports are always welcome and the preferred way to address these bugs is through
