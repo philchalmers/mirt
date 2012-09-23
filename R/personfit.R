@@ -87,7 +87,8 @@ personfit <- function(x, full.scores = FALSE){
         Zh[n] <- (LL[n] - mu) / sqrt(sigma2)
     }    
     p <- round(pnorm(Zh), 3) 
-    p[Zh > 0] <- round(pnorm(Zh[Zh>0], lower.tail = FALSE), 3) 
+    p[Zh > 0] <- round(pnorm(Zh[Zh>0], lower.tail = FALSE), 3)
+    p <- 2*p
     if(full.scores) ret <- data.frame(x@data, Zh=Zh, p=p)
     else ret <- data.frame(x@tabdata, Zh=Zh, p=p)
     ret
