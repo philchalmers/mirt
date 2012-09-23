@@ -416,7 +416,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
                    null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                    constrain=PrepList$constrain, fulldata=PrepList$fulldata, Call=Call)
     }   
-    if(SE) mod <- calcEMSE(object=mod, data=data, model=model, constrain=constrain, 
+    if(SE) mod <- calcEMSE(object=mod, data=data, model=model, itemtype=itemtype, constrain=constrain, 
                            parprior=parprior, verbose=verbose)
 	return(mod)    
 }

@@ -280,7 +280,7 @@ reloadConstr <- function(par, constr, obj){
     return(obj)
 }
 
-calcEMSE <- function(object, data, model, constrain, parprior, verbose){  
+calcEMSE <- function(object, data, model, itemtype, constrain, parprior, verbose){  
     startvalues <- list()
     for(i in 1:(ncol(data)+1))
         startvalues[[i]] <- object@pars[[i]]@par
@@ -302,8 +302,9 @@ calcEMSE <- function(object, data, model, constrain, parprior, verbose){
         model <- confmirt.model(tmp, quiet = TRUE)        
         unlink(tmp)
     }
-    pars <- confmirt(data, model, startvalues=startvalues, constrain=constrain, parprior=parprior, 
-                    technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
+    pars <- confmirt(data, model, itemtype=itemtype, startvalues=startvalues, constrain=constrain, 
+                     parprior=parprior, 
+                     technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
                                     EMSE = TRUE), verbose = verbose)    
     for(i in 1:length(pars$pars))
         object@pars[[i]]@SEpar <- pars$pars[[i]]@SEpar                            

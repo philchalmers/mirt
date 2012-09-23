@@ -227,7 +227,7 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
                quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                fulldata=PrepList$fulldata, Call=Call)     
-    if(SE) mod <- calcEMSE(object=mod, data=data, model=specific, constrain=constrain, 
+    if(SE) mod <- calcEMSE(object=mod, data=data, model=specific, itemtype=itemtype, constrain=constrain, 
                            parprior=parprior, verbose=verbose)
 	return(mod)  
 } 
