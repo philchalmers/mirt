@@ -178,8 +178,8 @@
 #' 
 #' \describe{ 
 #' \item{Rasch}{
-#' Only one intercept estimated. Note the 1.702 constant. \deqn{P(x = 1|\theta, d) = \frac{1}{1 + 
-#' exp(-1.702 * (\theta + d}))}
+#' Only one intercept estimated. \deqn{P(x = 1|\theta, d) = \frac{1}{1 + 
+#' exp(-1*(\theta + d}))}
 #' }
 #' \item{1-4PL}{
 #' Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0. 

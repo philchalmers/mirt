@@ -4,24 +4,21 @@ Multidimensional item response theory in R.
 
 ##Description
 
-Analysis of dichotomous and polytomous response data using latent
-    trait models under the Item Response Theory paradigm. Includes univariate
-    and multivariate one-, two-, three-, and four-parameter logistic models,
-    graded response models, generalized partial credit models, nominal models,
-    multiple choice models, and multivariate partially-compensatory models.
-    These can be used in an exploratory or confirmatory manner with optional
-    user defined linear constraints. Exploratory models can be estimated via
-    quadrature or stochastic methods, a generalized confirmatory bi-factor
-    analysis is included, and confirmatory models can be fit with a
-    Metropolis-Hastings Robbins-Monro algorithm which can include polynomial or
-    product constructed latent traits. Additionally, multiple group analysis may
-    be performed for unidimensional or multidimensional item response models for
-    detecting differential item functioning.
+Analysis of dichotomous and polytomous response data using latent trait models under the Item
+Response Theory paradigm. Includes univariate and multivariate one-, two-, three-, and
+four-parameter logistic models, graded response models, generalized partial credit models, nominal
+models, multiple choice models, and multivariate partially-compensatory models. These can be used in
+an exploratory or confirmatory manner with optional user defined linear constraints. Exploratory
+models can be estimated via quadrature or stochastic methods, a generalized confirmatory bi-factor
+analysis is included, and confirmatory models can be fit with a Metropolis-Hastings Robbins-Monro
+algorithm which can include polynomial or product constructed latent traits. Additionally, multiple
+group analysis may be performed for unidimensional or multidimensional item response models for
+detecting differential item functioning.
     
 ##Installing from source
 
-It's recommended to use the development version of this package since it is most likely to be more up to date 
-than the version on CRAN. To install this package from source there are a few necessary tools to obtain:
+It's recommended to use the development version of this package since it is more likely to be up to date 
+than the version on CRAN. To install this package from source: 
 
 1) Obtain recent gcc and g++ compilers. Windows users can install the 
 [Rtools](http://cran.r-project.org/bin/windows/Rtools/) suite while Mac users will have to download the 
@@ -31,7 +28,7 @@ up to date compilers (or if not they can be updated easily).
 2) Install the package dependencies (if necessary). In R, paste the following into the console:
 
 ```r
-install.packages(c('psych','GPArotation','mvtnorm','Rcpp','numDeriv', 'devtools'))
+install.packages(c('psych','GPArotation','mvtnorm','Rcpp','numDeriv','devtools'))
 ```
 
 3) Load the `devtools` package and install from the github source code. 
