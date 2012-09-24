@@ -84,15 +84,12 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
-#' @param free.start a list containing the start value and logical indicating whether a given parameter 
-#' is to be freely estimated. Each element of the list consists of three components, the parameter
-#' number, the starting (or fixed) value, and a logical to indicate whether the parameter is free. For
-#' example, \code{free.start = list(c(20,0,FALSE), c(10,1.5,TRUE))} would fix parameter 20 to 0 while
-#' parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
+#' @param free.start a matrix or data.frame containing the parameter number, starting/fixed value, and logical 
+#' indicating whether the parameter should be freely estimated. free.start therefore must only have 3 columns. For
+#' example, \code{free.start = data.frame(c(20,10), c(0,1.5), c(FALSE,TRUE))} would fix parameter 20 to 0 
+#' while parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
 #' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
 #' parameters
-#' 
-#' 
 #' @param prev.cor use a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation? Default in \code{NULL} 
 #' @param rotate type of rotation to perform after the initial orthogonal
