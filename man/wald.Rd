@@ -41,12 +41,13 @@ coef(mod, allpars = TRUE)
 index <- mirt(data, cmodel, pars = 'values')
 index
 
+
 #second factor slopes equal to 0?
 L <- rep(0, 30)
 L[c(7, 12)] <- 1
 wald(L, mod)
 
-#last two items same factor 1 slope, and item 2 and 3 same factor slope
+#simultaniously test equal factor slopes for item 2 and 3, and 4 and 5
 L <- matrix(0, 2, 30)
 L[1,16] <- L[2, 7] <- 1
 L[1,21] <- L[2, 12] <- -1
