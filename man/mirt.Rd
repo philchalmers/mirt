@@ -362,11 +362,13 @@ summary(pmod1)
 
 #Constrain all slopes to be equal
 #first obtain parameter index
-mirt(Science,1, constrain = 'index') #note that slopes are numbered 1,5,9,13
+values <- mirt(Science,1, pars = 'values')
+values #note that slopes are numbered 1,5,9,13
 (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
 coef(pmod1_equalslopes)
 #manually fix the first slope to .6
-(pmod1_fixedslope <- mirt(Science, 1, free.start = list(c(1, .6, FALSE))))
+
+(pmod1_fixedslope <- mirt(Science, 1, pars = values)
 
 pmod2 <- mirt(Science, 2)
 coef(pmod2)

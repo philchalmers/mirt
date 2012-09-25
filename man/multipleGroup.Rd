@@ -198,18 +198,12 @@ anova(mod_scalar1, mod_scalar2) #fix mean
 anova(mod_fullconstrain, mod_scalar1) #fix variance
 
 
-#Wald test can be useful here too
-#compare whether intercepts should be equal
-index <- multipleGroup(dat, models, group = group, constrain = 'index')
-index
-nitems <- ncol(dat)
-L <- matrix(0, nitems, 124)
-for(i in 1:nitems){
-     L[i, index[[1]][[i]][2]] <- 1
-     L[i, index[[2]][[i]][2]] <- -1
- }
-wald(L, mod_configural)
-
+#test whether first 6 slopes should be equal accross groups
+values <- multipleGroup(dat, models, group = group, pars = 'values')
+values
+constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
+equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain, method = 'EM')
+anova(equalslopes, mod_configural)
 
 #############
 #multiple factors

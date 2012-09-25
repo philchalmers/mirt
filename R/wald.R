@@ -3,7 +3,7 @@
 #' Compute a Wald test given an \code{L} vector or matrix of contrasts.
 #' 
 #' @aliases wald
-#' @param L a coefficient matrix with dimensions nconstrasts x npars. Use \code{constrain = 'index'}
+#' @param L a coefficient matrix with dimensions nconstrasts x npars. Use \code{pars = 'values'}
 #' on the initially estimated model to obtain the parameter indicators  
 #' @param object estimated object from mirt, confmirt, or multipleGroup
 #' @param C a constant vector/matrix to be compared along side L
@@ -21,7 +21,7 @@
 #'    
 #' mod <- mirt(data, cmodel)
 #' coef(mod, allpars = TRUE)
-#' index <- mirt(data, cmodel, constrain = 'index')
+#' index <- mirt(data, cmodel, pars = 'values')
 #' index
 #'        
 #' #second factor slopes equal to 0?

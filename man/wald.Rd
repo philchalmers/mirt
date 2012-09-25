@@ -9,7 +9,7 @@
 }
 \arguments{
   \item{L}{a coefficient matrix with dimensions nconstrasts
-  x npars. Use \code{constrain = 'index'} on the initially
+  x npars. Use \code{pars = 'values'} on the initially
   estimated model to obtain the parameter indicators}
 
   \item{object}{estimated object from mirt, confmirt, or
@@ -38,7 +38,7 @@ cmodel <- confmirt.model()
 
 mod <- mirt(data, cmodel)
 coef(mod, allpars = TRUE)
-index <- mirt(data, cmodel, constrain = 'index')
+index <- mirt(data, cmodel, pars = 'values')
 index
 
 #second factor slopes equal to 0?
