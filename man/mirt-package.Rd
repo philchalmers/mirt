@@ -21,6 +21,14 @@
   and confirmatory models can be fit with a
   Metropolis-Hastings Robbins-Monro algorithm which can
   include polynomial or product constructed latent traits.
+  Additionally, multiple group analysis may be performed
+  for unidimensional or multidimensional item response
+  models for detecting differential item functioning.
+
+  Users interested in the most recent version of this
+  package can visit
+  \code{https://github.com/philchalmers/mirt} and follow
+  the instructions for installing the package from source.
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}

@@ -50,16 +50,15 @@ Theory)}
   \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
   repeated globally. The NULL default assumes that the
-  items are ordinal or 2PL, however they may be changed to
-  the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
-  '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and
-  'partcomp', for the Rasch/partial credit, 1 and 2
+  items follow a graded or 2PL structure, however they may
+  be changed to the following: 'Rasch', '1PL', '2PL',
+  '3PL', '3PLu', '4PL', 'graded', 'gpcm', 'nominal', 'mcm',
+  and 'partcomp', for the Rasch/partial credit, 1 and 2
   parameter logistic, 3 parameter logistic (lower asymptote
   and upper), 4 parameter logistic, graded response model,
   generalized partial credit model, nominal model, multiple
   choice model, and partially compensatory model,
-  respectively. If \code{NULL} the default assumes that the
-  data follow a '2PL' or 'graded' format}
+  respectively}
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}

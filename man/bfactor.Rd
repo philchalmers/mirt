@@ -22,16 +22,14 @@
   \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
   repeated globally. The NULL default assumes that the
-  items are ordinal or 2PL, however they may be changed to
-  the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
-  '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and
-  'partcomp', for the Rasch/partial credit, 1 and 2
-  parameter logistic, 3 parameter logistic (lower asymptote
-  and upper), 4 parameter logistic, graded response model,
-  generalized partial credit model, nominal model, multiple
-  choice model, and partially compensatory model,
-  respectively. The default assumes that items follow a
-  '2PL' or 'graded' format}
+  items follow a graded or 2PL structure, however they may
+  be changed to the following: '2PL', '3PL', '3PLu', '4PL',
+  'graded', 'gpcm', 'nominal', 'mcm', and 'partcomp', for
+  the 2 parameter logistic, 3 parameter logistic (lower
+  asymptote and upper), 4 parameter logistic, graded
+  response model, generalized partial credit model, nominal
+  model, multiple choice model, and partially compensatory
+  model, respectively}
 
   \item{guess}{fixed pseudo-guessing parameter. Can be
   entered as a single value to assign a global value or may
