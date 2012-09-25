@@ -60,12 +60,6 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
-#' @param free.start a matrix or data.frame containing the parameter number, starting/fixed value, and logical 
-#' indicating whether the parameter should be freely estimated. free.start therefore must only have 3 columns. For
-#' example, \code{free.start = data.frame(c(20,10), c(0,1.5), c(FALSE,TRUE))} would fix parameter 20 to 0 
-#' while parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
-#' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
-#' parameters
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
@@ -86,27 +80,21 @@
 #' respectively. The default assumes that items follow a '2PL' or 'graded' format
 #' If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
 #' @param constrain a list of user declared equality constraints. To see how to define the
-#' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
+#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
 #' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
 #' use \code{constrain = list(c(1,5), c(2,6,10))}
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
-#' parameters correctly use \code{parprior = 'index'} initially to see how the parameters are labeled.
+#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
 #' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
 #' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
 #' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
 #' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
-#' @param freepars a list of user declared logical values indicating which parameters to estimate. 
-#' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
-#' are labeled. These values may be modified and input back into the function by using 
-#' \code{freepars=newfreepars}. Note that user input values must match what the default structure 
-#' would have been
-#' @param startvalues a list of user declared start values for parameters. To see how to define the
-#' parameters correctly use \code{startvalues = 'index'} initially to see what the defaults would 
-#' noramlly be. These values may be modified and input back into the function by using 
-#' \code{startavlues=newstartvalues}. Note that user input values must match what the default structure 
-#' would have been
+#' @param pars a data.frame with the structure of how the starting values, parameter numbers, and estimation
+#' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
+#' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
+#' mymodifiedpars}
 #' @param debug logical; turn on debugging features?
 #' @param object an object of class \code{ConfirmatoryClass}
 #' @param object2 an object of class \code{ConfirmatoryClass}
@@ -167,8 +155,8 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, free.start = NULL, startvalues = NULL, 
-#' constrain = NULL, freepars = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
+#' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
+#' constrain = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
 #' draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
 #' technical = list(),  ...)
 #' 
@@ -274,17 +262,15 @@
 #' 
 #' }
 #' 
-confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, free.start = NULL,
-                     startvalues = NULL, 
-                     constrain = NULL, freepars = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
+confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
+                     constrain = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
                      draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      technical = list(),  ...)
 {    
     if(debug == 'Main') browser()
     ##technical
 	Call <- match.call()               
-	set.seed(12345)	    
-    RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
+	set.seed(12345)	        
     NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
@@ -302,19 +288,26 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, free.st
     data <- as.matrix(data)
     parnumber <- 1
 	PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
-                         startvalues=startvalues, constrain=constrain, freepars=freepars, 
-	                     parprior=parprior, verbose=verbose, debug=debug, free.start=free.start,
+                         startvalues=NULL, constrain=constrain, freepars=NULL, 
+	                     parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
                          technical=technical, parnumber=parnumber)           
-    if(RETURN) return(PrepList)
+    if(!is.null(pars)){
+        if(is(pars, 'matrix') || is(pars, 'data.frame')){
+            PrepList <- UpdatePrepList(PrepList, pars)
+        } else if(pars == 'values'){
+            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
+        }                
+    }
  	ESTIMATE <- MHRM(pars=PrepList$pars, 
                       list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
                                 KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=PrepList$nfactNames, 
                                 itemloc=PrepList$itemloc, fulldata=PrepList$fulldata, 
                                 nfact=PrepList$nfact, npars=PrepList$npars, 
                                 constrain=PrepList$constrain, verbose=verbose), 
-                      debug=debug, startvalues=startvalues, EMSE=EMSE) 
+                      debug=debug, startvalues=pars, EMSE=EMSE) 
     if(EMSE) return(ESTIMATE)
-    null.mod <- unclass(mirt(data,1,itemtype='NullModel', SE = FALSE))
+    null.mod <- unclass(mirt(data, 1, itemtype=itemtype, technical = list(NULL.MODEL = TRUE), 
+                             SE = FALSE))
     # pars to FA loadings    
     pars <- ESTIMATE$pars    
     nfact <- pars[[1]]@nfact

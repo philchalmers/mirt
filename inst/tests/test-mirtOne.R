@@ -10,9 +10,9 @@ test_that('dich', {
     expect_is(modm3, 'ConfirmatoryClass')
     modm4 <- mirt(data, 1, itemtype = '1PL')    
     expect_is(modm4, 'ConfirmatoryClass')
-    sv <- mirt(data,1, startvalues = 'index')
-    fp <- mirt(data,1, freepars = 'index')
-    modm5 <- mirt(data,1, startvalues = sv, freepars = fp)
+    svalues <- mirt(data, 1, pars = 'values')
+    svalues[22, 5] <- 2
+    modm5 <- mirt(data, 1, pars = svalues)    
     expect_is(modm5, 'ConfirmatoryClass')
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1)

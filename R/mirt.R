@@ -84,12 +84,6 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
-#' @param free.start a matrix or data.frame containing the parameter number, starting/fixed value, and logical 
-#' indicating whether the parameter should be freely estimated. free.start therefore must only have 3 columns. For
-#' example, \code{free.start = data.frame(c(20,10), c(0,1.5), c(FALSE,TRUE))} would fix parameter 20 to 0 
-#' while parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
-#' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
-#' parameters
 #' @param prev.cor use a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation? Default in \code{NULL} 
 #' @param rotate type of rotation to perform after the initial orthogonal
@@ -100,27 +94,21 @@
 #' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param constrain a list of user declared equality constraints. To see how to define the
-#' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
+#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
 #' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
 #' use \code{constrain = list(c(1,5), c(2,6,10))}
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
-#' parameters correctly use \code{parprior = 'index'} initially to see how the parameters are labeled.
+#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
 #' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
 #' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
 #' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
 #' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
-#' @param freepars a list of user declared logical values indicating which parameters to estimate. 
-#' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
-#' are labeled. These values may be modified and input back into the function by using 
-#' \code{freepars=newfreepars}. Note that user input values must match what the default structure 
-#' would have been
-#' @param startvalues a list of user declared start values for parameters. To see how to define the
-#' parameters correctly use \code{startvalues = 'index'} initially to see what the defaults would 
-#' noramlly be. These values may be modified and input back into the function by using 
-#' \code{startavlues=newstartvalues}. Note that user input values must match what the default structure 
-#' would have been
+#' @param pars a data.frame with the structure of how the starting values, parameter numbers, and estimation
+#' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
+#' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
+#' mymodifiedpars}
 #' @param quadpts number of quadrature points per dimension
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
@@ -243,9 +231,8 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, free.start = NULL, 
-#' startvalues = NULL,
-#' constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, pars = NULL, 
+#' constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NULL, 
 #' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
 #' 
@@ -342,9 +329,8 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, free.start = NULL, 
-                 startvalues = NULL,
-                 constrain = NULL, freepars = NULL,  parprior = NULL, rotate = 'varimax', Target = NULL, 
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
+                 pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NULL, 
                  prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                  technical = list(), ...)
 {   
@@ -355,17 +341,22 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
     MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
 	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
 	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
-    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        	       
-    RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
+    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        	           
+    NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, technical$NULL.MODEL)    
     ##              
     Target <- ifelse(is.null(Target), NaN, Target)   
-    data <- as.matrix(data)
+    data <- as.matrix(data)    
     PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
-                         startvalues=startvalues, constrain=constrain, freepars=freepars, 
-                         parprior=parprior, verbose=verbose, free.start=free.start, debug=debug, 
+                         startvalues=NULL, constrain=constrain, freepars=NULL, 
+                         parprior=parprior, verbose=verbose, free.start=NULL, debug=debug, 
                          technical=technical)
-    if(RETURN) return(PrepList)
-    NULL.MODEL <- ifelse(PrepList$itemtype[1] == 'NullModel', TRUE, FALSE)    
+    if(!is.null(pars)){
+        if(is(pars, 'matrix') || is(pars, 'data.frame')){
+            PrepList <- UpdatePrepList(PrepList, pars)
+        } else if(pars == 'values'){
+            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
+        }                
+    }    
     nfact <- PrepList$nfact
     nLambdas <- PrepList$nLambdas
     if(nLambdas > nfact) stop('Polynominals and product terms not supported for EM method')
@@ -374,10 +365,23 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
 	if(quadpts^nfact <= MAXQUAD){
 		Theta <- thetaComb(theta,nfact)		
 	} else stop('Greater than ', MAXQUAD, ' quadrature points.')        
+    if(NULL.MODEL){        
+        PrepList$constrain <- list()
+        for(i in 1:(length(PrepList$pars)-1)){
+            PrepList$pars[[i]]@par[1] <- 0
+            PrepList$pars[[i]]@est[1] <- FALSE            
+            if(sum(PrepList$pars[[i]]@est) == 1){
+                PrepList$pars[[i]]@lbound=-25
+                PrepList$pars[[i]]@ubound=25
+                PrepList$pars[[i]]@method='Brent'                
+            } 
+        }            
+    }
     ESTIMATE <- EM(pars=PrepList$pars, NCYCLES=NCYCLES, MSTEPMAXIT=MSTEPMAXIT, TOL=TOL,                    
                    tabdata=PrepList$tabdata, tabdata2=PrepList$tabdata2, npars=PrepList$npars,
                    Theta=Theta, theta=theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
-                   constrain=PrepList$constrain, data=data, NULL.MODEL=NULL.MODEL)	
+                   constrain=PrepList$constrain, data=data, NULL.MODEL=NULL.MODEL, 
+                   itemtype=PrepList$itemtype)	
 	# pars to FA loadings
     pars <- ESTIMATE$pars    
     lambdas <- Lambdas(pars)

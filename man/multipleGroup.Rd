@@ -6,11 +6,10 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, free.start = NULL, invariance = '',
-    method = 'MHRM', constrain = NULL, startvalues = NULL,
-    parprior = NULL, freepars = NULL, draws = 2000, quadpts
-    = NULL, technical = list(), debug = FALSE, verbose =
-    TRUE)
+    = 0, upper = 1, invariance = '', pars = NULL, method =
+    'MHRM', constrain = NULL, parprior = NULL, draws =
+    2000, quadpts = NULL, technical = list(), debug =
+    FALSE, verbose = TRUE)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -63,20 +62,6 @@
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
 
-  \item{free.start}{a matrix or data.frame containing the
-  parameter number, starting/fixed value, and logical
-  indicating whether the parameter should be freely
-  estimated. free.start therefore must only have 3 columns.
-  For example, \code{free.start = data.frame(c(20,10),
-  c(0,1.5), c(FALSE,TRUE))} would fix parameter 20 to 0
-  while parameter 10 would be freely estimated with a
-  starting value of 1.5. Note that this will override the
-  values specified by a user defined \code{startvalues} or
-  \code{freepars} input for the specified parameters, and
-  this may conflict with the \code{invariance} input (e.g.,
-  freeing slopes manually while specifying \code{invariance
-  = 'slopes'} is ambiguous and should be avoided).}
-
   \item{verbose}{logical; display iteration history during
   estimation?}
 
@@ -106,18 +91,18 @@
 
   \item{constrain}{a list of user declared equality
   constraints. To see how to define the parameters
-  correctly use \code{constrain = 'index'} initially to see
-  how the parameters are labeled. To constrain parameters
-  to be equal create a list with separate concatenated
-  vectors signifying which parameters to constrain. For
-  example, to set parameters 1 and 5 equal, and also set
-  parameters 2, 6, and 10 equal use \code{constrain =
-  list(c(1,5), c(2,6,10))}}
+  correctly use \code{pars = 'values'} initially to see how
+  the parameters are labeled. To constrain parameters to be
+  equal create a list with separate concatenated vectors
+  signifying which parameters to constrain. For example, to
+  set parameters 1 and 5 equal, and also set parameters 2,
+  6, and 10 equal use \code{constrain = list(c(1,5),
+  c(2,6,10))}}
 
   \item{parprior}{a list of user declared prior item
   probabilities. To see how to define the parameters
-  correctly use \code{parprior = 'index'} initially to see
-  how the parameters are labeled. Can define either normal
+  correctly use \code{pars = 'values'} initially to see how
+  the parameters are labeled. Can define either normal
   (normally for slopes and intercepts) or beta (for
   guessing and upper bounds) prior probabilities. Note that
   for upper bounds the value used in the prior is 1 - u so
@@ -127,23 +112,12 @@
   'norm', mean, sd))} and betas are \code{parprior =
   list(c(parnumber, 'beta', alpha, beta))}.}
 
-  \item{freepars}{a list of user declared logical values
-  indicating which parameters to estimate. To see how to
-  define the parameters correctly use \code{freepars =
-  'index'} initially to see how the parameters are labeled.
-  These values may be modified and input back into the
-  function by using \code{freepars=newfreepars}. Note that
-  user input values must match what the default structure
-  would have been}
-
-  \item{startvalues}{a list of user declared start values
-  for parameters. To see how to define the parameters
-  correctly use \code{startvalues = 'index'} initially to
-  see what the defaults would noramlly be. These values may
-  be modified and input back into the function by using
-  \code{startavlues=newstartvalues}. Note that user input
-  values must match what the default structure would have
-  been}
+  \item{pars}{a data.frame with the structure of how the
+  starting values, parameter numbers, and estimation
+  logical values are defined. The user may observe how the
+  model defines the values by using \code{pars = 'values'},
+  and this object can in turn be modified and input back
+  into the estimation with \code{pars = mymodifiedpars}}
 
   \item{debug}{logical; turn on debugging features?}
 

@@ -280,10 +280,8 @@ reloadConstr <- function(par, constr, obj){
     return(obj)
 }
 
-calcEMSE <- function(object, data, model, itemtype, constrain, parprior, verbose){  
-    startvalues <- list()
-    for(i in 1:(ncol(data)+1))
-        startvalues[[i]] <- object@pars[[i]]@par
+calcEMSE <- function(object, data, model, itemtype, constrain, parprior, verbose){      
+    startvalues <- mirt(data, model, itemtype=itemtype, pars = 'values')
     if(is(model, 'numeric') && length(model) > 1){
         J <- ncol(data)
         tmp <- tempfile('tempfile')
@@ -302,7 +300,7 @@ calcEMSE <- function(object, data, model, itemtype, constrain, parprior, verbose
         model <- confmirt.model(tmp, quiet = TRUE)        
         unlink(tmp)
     }
-    pars <- confmirt(data, model, itemtype=itemtype, startvalues=startvalues, constrain=constrain, 
+    pars <- confmirt(data, model, itemtype=itemtype, pars=startvalues, constrain=constrain, 
                      parprior=parprior, 
                      technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
                                     EMSE = TRUE), verbose = verbose)    
@@ -375,4 +373,40 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         }
     }
     return(constrain)
+}
+
+ReturnPars <- function(PrepList, itemnames, MG = FALSE){
+    parnum <- par <- est <- item <- parname <- gnames <- itemtype <- c()                                    
+    if(!MG) PrepList <- list(full=PrepList)                        
+    for(g in 1:length(PrepList)){
+        tmpgroup <- PrepList[[g]]$pars                                
+        for(i in 1:length(tmpgroup)){
+            if(i <= length(itemnames))
+                item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
+            parname <- c(parname, names(tmpgroup[[i]]@parnum))
+            parnum <- c(parnum, tmpgroup[[i]]@parnum) 
+            par <- c(par, tmpgroup[[i]]@par)
+            est <- c(est, tmpgroup[[i]]@est)                    
+        }
+        item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))                                
+    }
+    gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
+    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par, est=est)
+    ret
+}
+
+UpdatePrepList <- function(PrepList, pars, MG = FALSE){
+    if(!MG) PrepList <- list(PrepList)
+    ind <- 1    
+    for(g in 1:length(PrepList)){
+        for(i in 1:length(PrepList[[g]]$pars)){ 
+            for(j in 1:length(PrepList[[g]]$pars[[i]]@par)){
+                PrepList[[g]]$pars[[i]]@par[j] <- pars[ind,5]
+                PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,6])                
+                ind <- ind + 1
+            }
+        }
+    }    
+    if(!MG) PrepList <- PrepList[[1]]
+    return(PrepList)
 }

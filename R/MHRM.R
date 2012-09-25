@@ -125,8 +125,13 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
                 }
             }        
             if(EMSE){ #for calculating EM standard errors
-                for(i in 1:length(pars))                    
-                    pars[[i]]@par <- startvalues[[i]]
+                tmp <- 1
+                for(i in 1:length(pars)){    
+                    for(j in 1:length(pars[[i]]@par)){
+                        pars[[i]]@par[j] <- startvalues[tmp, 5]
+                        tmp <- tmp + 1
+                    }
+                }
             }
             structgrouppars <- ExtractGroupPars(pars[[length(pars)]])
             
@@ -272,8 +277,13 @@ MHRM <- function(pars, list, debug, startvalues = NULL, EMSE = FALSE)
         }  
         
         if(EMSE){ #for calculating EM standard errors
-            for(i in 1:length(pars))                    
-                pars[[i]]@par <- startvalues[[i]]
+            tmp <- 1
+            for(i in 1:length(pars)){    
+                for(j in 1:length(pars[[i]]@par)){
+                    pars[[i]]@par[j] <- startvalues[tmp, 5]
+                    tmp <- tmp + 1
+                }
+            }
         }
         SEtmp <- diag(solve(info))    	
         if(any(SEtmp < 0)){

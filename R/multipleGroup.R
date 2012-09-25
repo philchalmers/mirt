@@ -37,13 +37,6 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
-#' @param free.start a matrix or data.frame containing the parameter number, starting/fixed value, and logical 
-#' indicating whether the parameter should be freely estimated. free.start therefore must only have 3 columns. For
-#' example, \code{free.start = data.frame(c(20,10), c(0,1.5), c(FALSE,TRUE))} would fix parameter 20 to 0 
-#' while parameter 10 would be freely estimated with a starting value of 1.5. Note that this will override 
-#' the values specified by a user defined \code{startvalues} or \code{freepars} input for the specified
-#' parameters, and this may conflict with the \code{invariance} input (e.g., freeing slopes manually
-#' while specifying \code{invariance = 'slopes'} is ambiguous and should be avoided). 
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
@@ -58,27 +51,21 @@
 #' respectively. The default assumes that items follow a '2PL' or 'graded' format
 #' If \code{NULL} the default assumes that the data follow a '2PL' or 'graded' format
 #' @param constrain a list of user declared equality constraints. To see how to define the
-#' parameters correctly use \code{constrain = 'index'} initially to see how the parameters are labeled.
+#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
 #' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
 #' use \code{constrain = list(c(1,5), c(2,6,10))}
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
-#' parameters correctly use \code{parprior = 'index'} initially to see how the parameters are labeled.
+#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
 #' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
 #' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
 #' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
 #' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
-#' @param freepars a list of user declared logical values indicating which parameters to estimate. 
-#' To see how to define the parameters correctly use \code{freepars = 'index'} initially to see how the parameters
-#' are labeled. These values may be modified and input back into the function by using 
-#' \code{freepars=newfreepars}. Note that user input values must match what the default structure 
-#' would have been
-#' @param startvalues a list of user declared start values for parameters. To see how to define the
-#' parameters correctly use \code{startvalues = 'index'} initially to see what the defaults would 
-#' noramlly be. These values may be modified and input back into the function by using 
-#' \code{startavlues=newstartvalues}. Note that user input values must match what the default structure 
-#' would have been
+#' @param pars a data.frame with the structure of how the starting values, parameter numbers, and estimation
+#' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
+#' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
+#' mymodifiedpars}
 #' @param debug logical; turn on debugging features?
 #' @param object an object of class \code{confmirtClass}
 #' @param object2 an object of class \code{confmirtClass}
@@ -107,9 +94,9 @@
 #' \code{\link{confmirt.model}}, \code{\link{fscores}}
 #' @keywords models
 #' @usage 
-#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, free.start = NULL, 
-#' invariance = '', method = 'MHRM', constrain = NULL, startvalues = NULL, 
-#' parprior = NULL, freepars = NULL, draws = 2000, quadpts = NULL,
+#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
+#' invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
+#' parprior = NULL, draws = 2000, quadpts = NULL,
 #' technical = list(), debug = FALSE, verbose = TRUE)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
@@ -204,9 +191,9 @@
 #' anova(mod_fullconstrain, mod_scalar)
 
 #' }
-multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, free.start = NULL, 
-                          invariance = '', method = 'MHRM', constrain = NULL, 
-                          startvalues = NULL, parprior = NULL, freepars = NULL, draws = 2000, 
+multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
+                          invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
+                          parprior = NULL, draws = 2000, 
                           quadpts = NULL,
                           technical = list(), debug = FALSE, verbose = TRUE)
 {
@@ -216,7 +203,6 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     set.seed(12345)	   
     MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
     MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 15, technical$MSTEPMAXIT)        
-    RETURN <- ifelse(any('index' == c(startvalues, freepars, parprior, constrain)), TRUE, FALSE)
     NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     if(method == 'EM')
         NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
@@ -230,7 +216,6 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         if(length(technical$gain) == 3 && is.numeric(technical$gain))
             gain <- technical$gain
     }	 
-    RETURNFREEPARS <- RETURNSTARTVALUES <- RETURNPARINDEX <- FALSE
     NULL.MODEL <- ifelse(!is.null(itemtype) && itemtype[1] == 'NullModel', TRUE, FALSE)
     USEEM <- ifelse(method == 'EM', TRUE, FALSE)
     ##	            
@@ -247,17 +232,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         names(model) <- groupNames
     } 
     parnumber <- 1
-    PrepList <- vector('list', ngroups)
-    if(!is.null(freepars) && freepars == 'index'){
-        freepars <- rep('index', ngroups)    
-        RETURNFREEPARS <- TRUE
-    }
-    if(!is.null(startvalues) && startvalues == 'index'){
-        startvalues <- rep('index', ngroups)
-        RETURNSTARTVALUES <- TRUE
-    }
-    if((!is.null(constrain) && constrain == 'index') || (!is.null(parprior) && parprior =='index'))
-        RETURNPARINDEX <- TRUE 
+    PrepList <- vector('list', ngroups)    
     PrepListFull <- PrepData(data=data, model=model[[1]], itemtype=itemtype, guess=guess, upper=upper, 
                              startvalues=NULL, constrain=NULL, freepars=NULL, 
                              parprior=NULL, verbose=verbose, debug=debug, free.start=NULL,
@@ -266,23 +241,20 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         select <- group == groupNames[g]        
         tmp <- 1:ngroups
         selectmod <- model[[tmp[names(model) == groupNames[g]]]]
-        PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, upper=upper, 
-                             startvalues=startvalues[g], constrain=constrain, freepars=freepars[g], 
-                             parprior=parprior, verbose=verbose, debug=debug, free.start=free.start,
-                             technical=technical, parnumber=parnumber)
-        if(RETURNFREEPARS || RETURNSTARTVALUES) next
-        if(RETURNPARINDEX){
-            tmp <- PrepList[[g]][[length(PrepList[[g]])]]
-            parnumber <- tmp[length(tmp)] + 1
-            next            
-        }
+        PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, 
+                                  upper=upper, startvalues=NULL, constrain=constrain, freepars=NULL, 
+                                  parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
+                                  technical=technical, parnumber=parnumber)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
-    if(RETURN){
-        names(PrepList) <- groupNames
-        return(PrepList)
-    }      
+    if(!is.null(pars)){
+        if(is(pars, 'matrix') || is(pars, 'data.frame')){
+            PrepList <- UpdatePrepList(PrepList, pars)
+        } else if(pars == 'values'){
+            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
+        }                
+    }    
     pars <- vector('list', ngroups)
     for(g in 1:ngroups)
         pars[[g]] <- PrepList[[g]]$pars

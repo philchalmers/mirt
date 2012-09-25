@@ -1,7 +1,7 @@
 EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabdata2, Theta, 
                itemloc, debug, verbose, constrain, npars, data, sitems = NULL, specific = NULL, 
-               theta = NULL, BFACTOR = FALSE)
-    {
+               theta = NULL, BFACTOR = FALSE, itemtype)
+{
     if(debug == 'EM') browser()
     r <- tabdata[, ncol(tabdata)]    
     N <- sum(r)
@@ -163,8 +163,9 @@ EM <- function(pars, NCYCLES, MSTEPMAXIT, TOL, NULL.MODEL = FALSE, tabdata, tabd
     RMSEA <- ifelse((G2 - df) > 0, 
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)	    	
     null.mod <- unclass(new('ExploratoryClass'))
-    if(!NULL.MODEL) 
-        null.mod <- unclass(mirt(data, 1, itemtype='NullModel'))
+    if(!NULL.MODEL)        
+        null.mod <- unclass(mirt(data, 1, itemtype=itemtype, technical = list(NULL.MODEL = TRUE), 
+                                 SE = FALSE))    
     TLI <- NaN    
     if(!NULL.MODEL)
         TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
