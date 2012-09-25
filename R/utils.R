@@ -280,8 +280,7 @@ reloadConstr <- function(par, constr, obj){
     return(obj)
 }
 
-calcEMSE <- function(object, data, model, itemtype, constrain, parprior, verbose){      
-    startvalues <- mirt(data, model, itemtype=itemtype, pars = 'values')
+calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parprior, verbose){          
     if(is(model, 'numeric') && length(model) > 1){
         J <- ncol(data)
         tmp <- tempfile('tempfile')
@@ -300,7 +299,7 @@ calcEMSE <- function(object, data, model, itemtype, constrain, parprior, verbose
         model <- confmirt.model(tmp, quiet = TRUE)        
         unlink(tmp)
     }
-    pars <- confmirt(data, model, itemtype=itemtype, pars=startvalues, constrain=constrain, 
+    pars <- confmirt(data, model, itemtype=itemtype, pars=fitvalues, constrain=constrain, 
                      parprior=parprior, 
                      technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 
                                     EMSE = TRUE), verbose = verbose)    
@@ -375,7 +374,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     return(constrain)
 }
 
-ReturnPars <- function(PrepList, itemnames, MG = FALSE){
+ReturnPars <- function(PrepList, itemnames, MG = FALSE){    
     parnum <- par <- est <- item <- parname <- gnames <- itemtype <- c()                                    
     if(!MG) PrepList <- list(full=PrepList)                        
     for(g in 1:length(PrepList)){

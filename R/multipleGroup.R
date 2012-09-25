@@ -248,11 +248,12 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
+    names(PrepList) <- groupNames
     if(!is.null(pars)){
         if(is(pars, 'matrix') || is(pars, 'data.frame')){
-            PrepList <- UpdatePrepList(PrepList, pars)
-        } else if(pars == 'values'){
-            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
+            PrepList <- UpdatePrepList(PrepList, pars, MG = TRUE)
+        } else if(pars == 'values'){            
+            return(ReturnPars(PrepList, PrepList[[1]]$itemnames, MG = TRUE))            
         }                
     }    
     pars <- vector('list', ngroups)

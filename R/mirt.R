@@ -354,7 +354,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE,
         if(is(pars, 'matrix') || is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars)
         } else if(pars == 'values'){
-            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
+            return(ReturnPars(PrepList, PrepList$itemnames))            
         }                
     }    
     nfact <- PrepList$nfact
@@ -417,7 +417,11 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE,
                    null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                    constrain=PrepList$constrain, fulldata=PrepList$fulldata, Call=Call)
     }   
-    if(SE) mod <- calcEMSE(object=mod, data=data, model=model, itemtype=itemtype, constrain=constrain, 
-                           parprior=parprior, verbose=verbose)
+    if(SE){        
+        PrepList$pars <- ESTIMATE$pars
+        fitvalues <- ReturnPars(PrepList, PrepList$itemnames, MG = FALSE)
+        mod <- calcEMSE(object=mod, data=data, model=model, itemtype=itemtype, fitvalues=fitvalues,
+                           constrain=constrain, parprior=parprior, verbose=verbose)
+    }
 	return(mod)    
 }

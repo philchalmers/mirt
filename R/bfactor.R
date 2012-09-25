@@ -219,7 +219,11 @@ bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = 
                quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
                null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
                fulldata=PrepList$fulldata, Call=Call)     
-    if(SE) mod <- calcEMSE(object=mod, data=data, model=specific, itemtype=itemtype, constrain=constrain, 
-                           parprior=parprior, verbose=verbose)
+    if(SE){
+        PrepList$pars <- ESTIMATE$pars
+        fitvalues <- ReturnPars(PrepList, PrepList$itemnames, MG = FALSE)
+        mod <- calcEMSE(object=mod, data=data, model=model, itemtype=itemtype, fitvalues=fitvalues,
+                        constrain=constrain, parprior=parprior, verbose=verbose)        
+    } 
 	return(mod)  
 } 
