@@ -27,10 +27,10 @@
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
-#' however they may be changed to the following: '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', and 'partcomp', for the 2 parameter logistic, 
+#' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
+#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
-#' generalized partial credit model, nominal model, multiple choice model, and partially compensatory model,
+#' generalized partial credit model, nominal model, multiple choice model, and 2-3PL partially compensatory model,
 #' respectively
 #' @param guess fixed pseudo-guessing parameter. Can be entered as a single
 #' value to assign a global value or may be entered as a numeric vector for

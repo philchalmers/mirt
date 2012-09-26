@@ -3,11 +3,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                      estLambdas, BFACTOR = FALSE, debug)
     {       
     if(debug == 'LoadPars') browser() 
-    if(any(itemtype[1] == c('Rasch', '1PL') && nfact > 1)) 
-        stop('Rasch and 1PL models can only be estimated for unidimensional models')
-    pars <- list()       
-    RETURNSTARTVALUES <- ifelse(!is.null(startvalues) && startvalues == 'index', TRUE, FALSE)
-    RETURNFREEPARS <- ifelse(!is.null(freepars) && freepars == 'index', TRUE, FALSE)    
+    if(any(itemtype[1] == c('Rasch', '1PL', 'rating') && nfact > 1)) 
+        stop('Rasch, 1PL, and rating scale models can only be estimated for unidimensional models')
+    pars <- list()           
     constr <- c()
     if(!is.null(constrain) && is.list(constrain)) 
         for(i in 1:length(constrain))
@@ -16,15 +14,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     #startvalues
     if(is.null(startvalues) || startvalues =='index'){        
         startvalues <- list()
-        for(i in 1:J){
-            if(itemtype[i] == 'NullModel' && K[i] == 2) val <- c(0,zetas[[i]],0,1)                                
-            if(itemtype[i] == 'NullModel' && K[i] > 2) val <- c(0,zetas[[i]]) 
+        for(i in 1:J){            
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
-                val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
+                val <- c(1/1.702, zetas[[i]], guess[i], upper[i])
                 names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
             }
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] > 2){
-                val <- c(lambdas[i,], zetas[[i]])
+                val <- c(1/1.702, zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
             }
             if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
@@ -34,6 +30,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'graded'){
                 val <- c(lambdas[i,], zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
+            }
+            if(itemtype[i] == 'rating'){
+                val <- c(1/1.702, seq(2, -2, length = K[i]), 0)
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:K[i], sep=''), 't')    
+            }
+            if(itemtype[i] == 'grating'){
+                val <- c(lambdas[i,], seq(2, -2, length = K[i]), 0)
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:K[i], sep=''), 't')
             }
             if(itemtype[i] == 'gpcm'){
                 val <- c(lambdas[i,], 0, zetas[[i]])
@@ -60,11 +64,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     #freepars
     if(is.null(freepars) || freepars == 'index'){
         freepars <- list()
-        for(i in 1:J){
-            if(itemtype[i] == 'NullModel' && K[i] == 2)
-                freepars[[i]] <- c(FALSE,TRUE,FALSE,FALSE)
-            if(itemtype[i] == 'NullModel' && K[i] > 2)    
-                freepars[[i]] <- c(FALSE,rep(TRUE,K[i]-1))            
+        for(i in 1:J){                        
             if(itemtype[i] == 'Rasch' && K[i] == 2)
                 freepars[[i]] <- c(FALSE,TRUE,FALSE,FALSE)            
             if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){
@@ -77,6 +77,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 freepars[[i]] <- c(FALSE, rep(TRUE, K[i]))
             if(itemtype[i] == '1PL' && K[i] > 2)            
                 freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
+            if(itemtype[i] == 'rating')
+                freepars[[i]] <- c(FALSE, rep(TRUE, K[i]+1))
+            if(itemtype[i] == 'grating')
+                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]+1))
             if(itemtype[i] == 'graded')
                 freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
             if(itemtype[i] == 'gpcm')            
@@ -100,53 +104,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             }
         }         
     }
-    for(i in 1:J) names(freepars[[i]]) <- names(startvalues[[i]])
-    if(itemtype[1] == 'Rasch') 
-        for(i in 1:J)
-            startvalues[[i]][1] <- 1/1.702 
+    for(i in 1:J) names(freepars[[i]]) <- names(startvalues[[i]])    
     #load items
     for(i in 1:J){
-        tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location 
-        if(itemtype[i] == 'NullModel' && K[i] == 2){ 
-            pars[[i]] <- new('dich', 
-                             par=startvalues[[i]], 
-                             nfact=1, 
-                             bfactor=BFACTOR,
-                             dat=fulldata[ ,tmp], 
-                             est=freepars[[i]], 
-                             constr=FALSE,
-                             lbound=-25,
-                             ubound=25,
-                             method='Brent',
-                             n.prior.mu=rep(NaN,length(startvalues[[i]])),
-                             n.prior.sd=rep(NaN,length(startvalues[[i]])),
-                             b.prior.alpha=rep(NaN,length(startvalues[[i]])),
-                             b.prior.beta=rep(NaN,length(startvalues[[i]])))
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])            
-        }
-        
-        if(itemtype[i] == 'NullModel' && K[i] > 2){ 
-            pars[[i]] <- new('graded', 
-                             par=startvalues[[i]], 
-                             nfact=1, 
-                             ncat=K[i], 
-                             bfactor=BFACTOR,
-                             dat=fulldata[ ,tmp], 
-                             est=freepars[[i]], 
-                             constr=FALSE,
-                             lbound=-Inf,
-                             ubound=Inf,
-                             method='Nelder-Mead',
-                             n.prior.mu=rep(NaN,length(startvalues[[i]])),
-                             n.prior.sd=rep(NaN,length(startvalues[[i]])),
-                             b.prior.alpha=rep(NaN,length(startvalues[[i]])),
-                             b.prior.beta=rep(NaN,length(startvalues[[i]])))
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)            
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-        }
+        tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location         
         
         if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){ 
             pars[[i]] <- new('dich', par=startvalues[[i]], est=freepars[[i]],
@@ -215,6 +176,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])            
+        }
+        
+        if(any(itemtype[i] == c('rating', 'grating'))){
+            pars[[i]] <- new('rating', 
+                             par=startvalues[[i]], 
+                             nfact=nfact, 
+                             ncat=K[i],
+                             est=freepars[[i]], 
+                             dat=fulldata[ ,tmp], 
+                             constr=TRUE, 
+                             bfactor=BFACTOR,
+                             lbound=-Inf,
+                             ubound=Inf,
+                             method='Nelder-Mead',
+                             n.prior.mu=rep(NaN,length(startvalues[[i]])),
+                             n.prior.sd=rep(NaN,length(startvalues[[i]])),
+                             b.prior.alpha=rep(NaN,length(startvalues[[i]])),
+                             b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
+            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
         }
         
         if(itemtype[i] == 'graded'){
@@ -355,9 +338,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     } 
     attr(pars, 'uniqueconstr') <- constr     
     attr(pars, 'parnumber') <- attr(startvalues, 'parnumber') <- 
-        attr(freepars, 'parnumber') <- parnumber 
-    if(RETURNSTARTVALUES) return(startvalues)
-    if(RETURNFREEPARS) return(freepars)
+        attr(freepars, 'parnumber') <- parnumber     
     return(pars)
 }
 

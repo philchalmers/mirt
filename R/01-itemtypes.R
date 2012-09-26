@@ -46,6 +46,9 @@ setClass("dich", contains = 'AllItemsClass')
 setClass("graded", contains = 'AllItemsClass',
          representation(ncat='numeric'))
 
+setClass("rating", contains = 'AllItemsClass',
+         representation(ncat='numeric'))
+
 setClass("gpcm", contains = 'AllItemsClass',
          representation(ncat='numeric'))
 

@@ -65,6 +65,14 @@ setMethod(
 
 setMethod(
     f = "show",
+    signature = signature(object = 'rating'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
     signature = signature(object = 'gpcm'),
     definition = function(object){
         print(object)
@@ -120,6 +128,15 @@ setMethod(
         d <- x@par[(x@nfact+1):length(x@par)]
         P <- P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp)
         return(P)
+    }
+)
+
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'rating', Theta = 'matrix'),
+    definition = function(x, Theta, itemexp = TRUE){                  
+        stop('Not defined yet')
     }
 )
 
@@ -238,6 +255,14 @@ setMethod(
             }
         }
         return(LL)
+    }
+)
+
+setMethod(
+    f = "LogLik",
+    signature = signature(x = 'rating', Theta = 'matrix'),
+    definition = function(x, Theta){          
+        stop('Not defined yet')
     }
 )
 
@@ -397,6 +422,16 @@ setMethod(
 
 setMethod(
     f = "ExtractLambdas",
+    signature = signature(x = 'rating'),
+    definition = function(x){          
+        par <- x@par
+        a <- par[1:x@nfact]
+        a        
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
     signature = signature(x = 'gpcm'),
     definition = function(x){          
         par <- x@par
@@ -453,6 +488,14 @@ setMethod(
         par <- x@par
         d <- par[-(1:x@nfact)]
         d        
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'rating'),
+    definition = function(x){          
+        stop('Not defined yet')
     }
 )
 
@@ -525,6 +568,14 @@ setMethod(
             info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1])             
         }    
         info
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'rating', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){
+        stop('Not defined yet')
     }
 )
 
@@ -703,6 +754,14 @@ setMethod(
             else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
         }
         return(list(grad=grad, hess=hess))
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'rating', Theta = 'matrix'),
+    definition = function(x, Theta, EM = FALSE){ 
+        stop('Not defined yet')
     }
 )
 
@@ -1054,8 +1113,7 @@ P.mcm <- function(a, ak, d, t, Theta){
     ncat <- length(d)
     nfact <- ncol(Theta)    
     a <- matrix(a)    
-    P <- numerator <- matrix(0, nrow(Theta), ncat)  
-    
+    P <- numerator <- matrix(0, nrow(Theta), ncat)      
     for(i in 1:ncat)
         numerator[ ,i] <- exp(1.702 * ak[i] * (Theta %*% a) + 1.702 * d[i])
     denominator <- rowSums(numerator)
@@ -1064,6 +1122,11 @@ P.mcm <- function(a, ak, d, t, Theta){
     T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
     P <- C0 * T + (1 - C0) * numerator/denominator
     return(P)   
+}
+
+#t is the constant for each item
+P.rating <- function(a, d, t, Theta){
+    
 }
 
 #nominal and gpcm

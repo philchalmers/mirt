@@ -83,12 +83,12 @@
   items follow a graded or 2PL structure, however they may
   be changed to the following: 'Rasch', '1PL', '2PL',
   '3PL', '3PLu', '4PL', 'graded', 'gpcm', 'nominal', 'mcm',
-  and 'partcomp', for the Rasch/partial credit, 1 and 2
-  parameter logistic, 3 parameter logistic (lower asymptote
-  and upper), 4 parameter logistic, graded response model,
-  generalized partial credit model, nominal model, multiple
-  choice model, and partially compensatory model,
-  respectively}
+  'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and
+  2 parameter logistic, 3 parameter logistic (lower
+  asymptote and upper), 4 parameter logistic, graded
+  response model, generalized partial credit model, nominal
+  model, multiple choice model, and 2-3PL partially
+  compensatory model, respectively}
 
   \item{constrain}{a list of user declared equality
   constraints. To see how to define the parameters
