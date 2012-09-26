@@ -17,6 +17,14 @@ setMethod(
 
 setMethod(
     f = "print",
+    signature = signature(x = 'rating'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
     signature = signature(x = 'gpcm'),
     definition = function(x, ...){
         cat('Item object of class:', class(x))
@@ -136,7 +144,11 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, itemexp = TRUE){                  
-        stop('Not defined yet')
+        a <- x@par[1:nfact]
+        d <- x@par[(nfact+1):(length(x@par)-1)]
+        t <- x@par[length(x@par)]
+        P <- P.gpcm(a=a, d=(d + t), Theta=Theta)
+        return(P)
     }
 )
 
@@ -262,7 +274,28 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta){          
-        stop('Not defined yet')
+        itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace[itemtrace < 1e-8] <- 1e-8
+        LL <- (-1) * sum(x@rs * log(itemtrace))
+        if(any(!is.nan(x@n.prior.mu))){
+            ind <- !is.nan(x@n.prior.mu)
+            val <- x@par[ind]
+            u <- x@n.prior.mu[ind]
+            s <- x@n.prior.sd[ind]
+            for(i in 1:length(val))            
+                LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        }
+        if(any(!is.nan(x@b.prior.alpha))){
+            ind <- !is.nan(x@b.prior.alpha)
+            val <- x@par[ind]
+            a <- x@b.prior.alpha[ind]
+            b <- x@b.prior.beta[ind]
+            for(i in 1:length(val)){            
+                tmp <- dbeta(val[i], a[i], b[i])
+                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            }
+        }
+        return(LL)
     }
 )
 
@@ -495,7 +528,9 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'rating'),
     definition = function(x){          
-        stop('Not defined yet')
+        par <- x@par
+        d <- par[-c(1:x@nfact, length(par))]
+        d
     }
 )
 
@@ -575,7 +610,12 @@ setMethod(
     f = "ItemInfo",
     signature = signature(x = 'rating', Theta = 'matrix', cosangle = 'numeric'),
     definition = function(x, Theta, cosangle = 1){
-        stop('Not defined yet')
+        a <- x@par[1:nfact]
+        d <- x@par[(nfact+1):(length(x@par)-1)]
+        t <- x@par[length(x@par)]
+        ak <- seq(0, x@ncat-1, by = 1)
+        info <- Info.nominal(Theta=Theta, a=a, ak=ak, d=(d+t), cosangle=cosangle)
+        info        
     }
 )
 
@@ -761,7 +801,16 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){ 
-        stop('Not defined yet')
+        if(EM){                
+            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
+            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
+            return(list(grad = grad, hess = hess))            
+        }
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
+        return(list(grad = grad, hess = hess))
     }
 )
 
@@ -1065,24 +1114,6 @@ P.comp <- function(a, d, Theta, g = 0, u = 1)
     P	
 }
 
-# Trace lines for bfactor
-P.bfactor <- function(a, d, Theta, g, u, patload)
-{ 
-    a <- a[patload]	
-    if(length(d) > 1){
-        ncat <- length(d) + 1
-        nfact <- length(a)
-        Pk <- matrix(0,nrow(Theta),ncat+1)
-        Pk[,1] <- 1	
-        for(i in 1:(ncat-1))			
-            Pk[ ,i+1] <- P.mirt(a, d[i], Theta, 0)				
-        P <- matrix(0,nrow(Theta),ncat)		
-        for(i in ncat:1)
-            P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]		
-    } else P <- .Call("traceLinePts", a, d, g, u, Theta)		
-    return(P)
-}
-
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1 
 P.nominal <- function(a, ak, d, Theta){
     ncat <- length(d)
@@ -1122,11 +1153,6 @@ P.mcm <- function(a, ak, d, t, Theta){
     T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
     P <- C0 * T + (1 - C0) * numerator/denominator
     return(P)   
-}
-
-#t is the constant for each item
-P.rating <- function(a, d, t, Theta){
-    
 }
 
 #nominal and gpcm

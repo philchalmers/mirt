@@ -119,16 +119,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
         names(pars) <- c(itemnames, 'Group_Parameters')
         attr(pars, 'parnumber') <- NULL
         return(pars)  
-    }
-    if(!is.null(constrain) || !is.null(parprior)){
-        if(any(constrain == 'index', parprior == 'index')){
-            returnedlist <- list()                        
-            for(i in 1:length(pars))
-                returnedlist[[i]] <- pars[[i]]@parnum 
-            names(returnedlist) <- c(itemnames, 'Group_Parameters')            
-            return(returnedlist)
-        }
-    }   
+    }     
     onePLconstraint <- c()
     if(itemtype[1] == '1PL'){
         constrain <- list()
@@ -141,22 +132,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                                itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
                                parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)
-    }    
-    #update and overwrite from free.start
-    if(!is.null(free.start)){
-        if(!is.matrix(free.start) || !is.data.frame(free.start)) 
-            stop('free.start must be a data.frame or matrix')
-        for(i in 1:nrow(free.start)){
-            for(j in 1:length(pars)){
-                if(free.start[i, 1] %in% pars[[j]]@parnum){
-                    pars[[j]]@par[pars[[j]]@parnum == free.start[i, 1]] <- 
-                        free.start[i, 2]
-                    pars[[j]]@est[pars[[j]]@parnum == free.start[i, 1]] <-
-                        as.logical(free.start[i, 3])
-                }
-            }
-        }
-    }
+    }        
     npars <- 0
     for(i in 1:length(pars))
         npars <- npars + sum(pars[[i]]@est)    
