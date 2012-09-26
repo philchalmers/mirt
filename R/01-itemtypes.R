@@ -25,6 +25,7 @@ setClass("AllItemsClass",
                         parnum='numeric',
                         nfact='numeric',
                         dat='matrix',
+                        ncat='numeric',
                         rs='matrix',
                         bfactor='logical',
                         gradient='numeric',
@@ -39,26 +40,19 @@ setClass("AllItemsClass",
                         'VIRTUAL')
 )
 
-setClass("NullModel", contains = 'AllItemsClass')
-
 setClass("dich", contains = 'AllItemsClass')
 
-setClass("graded", contains = 'AllItemsClass',
-         representation(ncat='numeric'))
+setClass("graded", contains = 'AllItemsClass')
 
-setClass("rating", contains = 'AllItemsClass',
-         representation(ncat='numeric'))
+setClass("rating", contains = 'AllItemsClass')
 
-setClass("gpcm", contains = 'AllItemsClass',
-         representation(ncat='numeric'))
+setClass("gpcm", contains = 'AllItemsClass')
 
-setClass("nominal", contains = 'AllItemsClass',
-         representation(ncat='numeric'))
+setClass("nominal", contains = 'AllItemsClass')
 
 setClass("partcomp", contains = 'AllItemsClass')
 
-setClass("mcm", contains = 'AllItemsClass',
-         representation(ncat='numeric'))
+setClass("mcm", contains = 'AllItemsClass')
 
 #--------------------------------------------------------------------------
 
