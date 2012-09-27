@@ -15,11 +15,17 @@ setMethod(
         if(length(x@logLik) > 0){
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
                                                                paste(', SE = ', round(x@SElogLik,3)),
-                                                               ''), "\n",sep='')			
-            cat("df =", x@df, "\n")
+                                                               ''), "\n",sep='')			            
             cat("AIC =", x@AIC, "\n")			
             cat("BIC =", x@BIC, "\n")            	
         }		
+        if(!is.nan(x@p))
+            cat("G^2 = ", round(x@G2,2), ", df = ", 
+                x@df, ", p = ", round(x@p,4), "\nTLI = ", round(x@TLI,3),
+                ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
+        else 
+            cat("G^2 = ", NA, ", df = ", 
+                x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")
     } 
 )
 

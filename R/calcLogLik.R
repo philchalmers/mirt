@@ -70,7 +70,11 @@ setMethod(
         rwmeans <- rowMeans(LL) 
         logLik <- sum(log(rwmeans))
         SElogLik <- sqrt(var(log(rowMeans(LL))) / draws) 
-        if(G2 == 'return') return(c(logLik, SElogLik))
+        logLikpre <- 0
+        if(G2 == 'return'){
+            logLikpre <- logLik                       
+            G2 <- TRUE
+        }
 		data <- object@data
 		pats <- apply(data,1,paste,collapse = "/")			
 		freqs <- table(pats)
@@ -107,7 +111,7 @@ setMethod(
         nmissingtabdata <- sum(is.na(rowSums(object@tabdata)))
         df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata	
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)				
+		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)        
 		if(G2){						
 			if(any(is.na(data))){
 			    object@G2 <- object@p <- object@RMSEA <- object@TLI <- NaN
@@ -118,11 +122,15 @@ setMethod(
 				object@p <- p				
 				object@RMSEA <- ifelse((G2 - df) > 0, 
 				    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
-				null.mod <- object@null.mod
-				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
+                if(logLikpre == 0){
+    				null.mod <- object@null.mod
+    				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
+                }
 			}	            
-		}        		
+		}                
 		object@logLik <- logLik
+        if(logLikpre < 0)
+            object@logLik <- logLikpre
 		object@SElogLik <- SElogLik		
 		object@AIC <- AIC
 		object@BIC <- BIC

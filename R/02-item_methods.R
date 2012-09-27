@@ -663,7 +663,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){        
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){        
         f <- 1
         dat <- x@dat[ ,2]
         if(EM){
@@ -750,8 +750,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){ 
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){ 
         dat <- x@dat
+        if(TEMPBUGFIX){                
+            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
+            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
+            return(list(grad = grad, hess = hess))            
+        }
         if(EM) dat <- x@rs                    
         nfact <- x@nfact
         a <- x@par[1:nfact]
@@ -800,7 +805,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){ 
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){ 
         if(EM){                
             grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
             hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
@@ -817,7 +822,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){
         f <- 1
         r <- x@dat
         if(EM){       
@@ -950,7 +955,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){
         if(EM){                
             grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
             hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
@@ -967,7 +972,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){
         if(EM){                
             grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
             hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
@@ -984,7 +989,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, TEMPBUGFIX = FALSE){
         if(EM){                
             grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
             hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)     

@@ -283,10 +283,19 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                                            nfactNames=PrepList[[1]]$nfactNames, 
                                            itemloc=PrepList[[1]]$itemloc,
                                            nfact=nfact, constrain=constrain, verbose=verbose), 
-                               Theta=Theta, debug=debug)
+                               Theta=Theta, debug=debug)        
         startlongpars <- ESTIMATE$longpars
         logLik <- ESTIMATE$logLik
-        SElogLik <- 0                
+        SElogLik <- 0     
+        rlist <- ESTIMATE$rlist
+        logLik <- G2 <- 0
+        for(g in 1:ngroups){
+            Pl <- rlist[[g]]$expected
+            rg <- PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)]
+            Ng <- sum(rg)            
+            G2 <- G2 + 2 * sum(rg * log(rg/(Ng*Pl)))
+            logLik <- logLik + sum(rg*log(Pl))
+        }
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                       list = list(NCYCLES=NCYCLES, BURNIN=1, SEMCYCLES=5,
                                   KDRAWS=KDRAWS, TOL=.01, USEEM=USEEM, gain=gain, 
@@ -321,16 +330,18 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
                           constrain=constrain,
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
-    }            
+    }  
+    
     if(method =='MHRM'){
         if(verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()      
-        LLs <- matrix(0, ngroups, 2)
-        for(g in 1:ngroups)
-            LLs[g, ] <- calcLogLik(cmods[[g]], draws, G2 = 'return')[1:2]       
-        LL <- colSums(LLs)  
-        logLik <- LL[1]
-        SElogLik <- LL[2]
+        logLik <- G2 <- SElogLik <- 0        
+        for(g in 1:ngroups){
+            cmods[[g]] <- calcLogLik(cmods[[g]], draws, G2 = 'return')                
+            logLik <- logLik + cmods[[g]]@logLik
+            SElogLik <- SElogLik + cmods[[g]]@SElogLik
+            G2 <- G2 + cmods[[g]]@G2
+        }            
     } 
     r <- PrepListFull$tabdata
     r <- r[, ncol(r)]
@@ -353,12 +364,19 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     nmissingtabdata <- sum(is.na(rowSums(PrepListFull$tabdata2)))
     df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata	
     AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-    BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)    			    	    
+    BIC <- (-2) * logLik + (length(r) - df - 1)*log(N) 
+    p <- 1 - pchisq(G2,df)
+    RMSEA <- ifelse((G2 - df) > 0, 
+                    sqrt(G2 - df) / sqrt(df * (N-1)), 0)    
+    null.mod <- unclass(mirt(data, 1, itemtype=itemtype, technical = list(NULL.MODEL = TRUE), 
+                                 SE = FALSE))        
+    TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
+    if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
     mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, cmods=cmods, itemloc=PrepListFull$itemloc, 
                tabdata=PrepListFull$tabdata2, data=data, converge=ESTIMATE$converge, esttype=esttype,                
                K=PrepListFull$K, tabdatalong=PrepListFull$tabdata, constrain=constrain,               
                group=group, groupNames=groupNames, invariance=invariance, df=as.integer(df),
                logLik=logLik, SElogLik=SElogLik, AIC=AIC, BIC=BIC, information=ESTIMATE$info, 
-               Call=Call)  
+               p=p, RMSEA=RMSEA, G2=G2, TLI=TLI, Call=Call)  
     return(mod)        
 }
