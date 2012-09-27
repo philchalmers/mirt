@@ -131,7 +131,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             ind1 <- 1                    
             for(group in 1:ngroups){
                 for (i in 1:J){	                
-                    deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, TEMPBUGFIX = TRUE)
+                    deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE)
                     ind2 <- ind1 + length(deriv$grad) - 1
                     longpars[ind1:ind2] <- pars[[group]][[i]]@par
                     g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad

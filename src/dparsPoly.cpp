@@ -13,7 +13,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta)
 	int i, j, k, nzeta, nfact, N; 
 	NumericMatrix prob(Rprob);
 	NumericMatrix Thetas(RThetas);
-    IntegerMatrix dat(Rdat);
+    NumericMatrix dat(Rdat);
     IntegerVector Pnzeta(Rnzeta);
     nzeta = Pnzeta[0];
     nfact = Thetas.ncol();
