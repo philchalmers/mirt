@@ -7,11 +7,12 @@ setMethod(
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")
         cat("Full-information item factor analysis with ", x@nfact, " factors \n", sep="")
+        EMquad <- ''
+        if(x@method == 'EM') EMquad <- c(' with ', x@quadpts, ' quadrature')
         if(x@converge == 1)    
-            cat("Converged in ", x@iter, " iterations.\n", sep="")
+            cat("Converged in ", x@iter, " iterations", EMquad, ". \n", sep = "")
         else 	
-            cat("Estimation stopped after ", x@iter, " iterations.\n", sep="")
-        
+            cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")        
         if(length(x@logLik) > 0){
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
                                                                paste(', SE = ', round(x@SElogLik,3)),

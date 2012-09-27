@@ -63,9 +63,6 @@
   \item{verbose}{logical; display iteration history during
   estimation?}
 
-  \item{calcLL}{logical; calculate the log-likelihood via
-  Monte Carlo integration?}
-
   \item{draws}{the number of Monte Carlo draws to estimate
   the log-likelihood}
 

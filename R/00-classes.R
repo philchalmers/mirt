@@ -9,8 +9,7 @@ setClass("AllModelClass",
                         h2='numeric', 
                         tabdata='matrix', 
                         tabdatalong='matrix', 
-                        Theta='matrix', 
-                        Pl='numeric',
+                        Theta='matrix',                         
                         data='matrix',                         
                         converge='numeric', 
                         itemloc = 'numeric',                        
@@ -31,6 +30,7 @@ setClass("AllModelClass",
                         information='matrix',
                         longpars='numeric',
                         factorNames='character',
+                        method='character',
                         'VIRTUAL'),    
          validity = function(object) return(TRUE)
 )                       
@@ -40,7 +40,8 @@ setClass("AllModelClass",
 # @keywords classes
 setClass(
     Class = 'ExploratoryClass', contains = 'AllModelClass',
-    representation = representation(Target='numeric',
+    representation = representation(Pl='numeric',
+                                    Target='numeric',
                                     rotate='character'),	
     validity = function(object) return(TRUE)
 )	
@@ -50,6 +51,7 @@ setClass(
 # @keywords classes
 setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',    	
+    representation = representation(Pl='numeric'),
     validity = function(object) return(TRUE)
 )	
 
@@ -57,7 +59,8 @@ setClass(
 #' @exportClass MultipleGroupClass
 setClass(
     Class = 'MultipleGroupClass', contains = 'AllModelClass',
-    representation = representation(group='factor',
+    representation = representation(Pl='list',
+                                    group='factor',
                                     groupNames='factor',
                                     invariance='character',
                                     cmods='list'),    

@@ -1,7 +1,7 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
                        invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
-                       parprior = NULL, draws = 2000, 
-                       quadpts = NULL, rotate = 'varimax', Target = NaN,
+                       parprior = NULL, draws = 2000, calcLL = TRUE,
+                       quadpts = NaN, rotate = 'varimax', Target = NaN,
                        technical = list(), debug = FALSE, verbose = TRUE)
 {    
     if(debug == 'ESTIMATION') browser()
@@ -21,7 +21,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(length(technical$gain) == 3 && is.numeric(technical$gain))
             gain <- technical$gain
     }	 
-    NULL.MODEL <- ifelse(!is.null(itemtype) && itemtype[1] == 'NullModel', TRUE, FALSE)
+    NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
     USEEM <- ifelse(method == 'EM', TRUE, FALSE)
     ##	            
     data <- as.matrix(data)
@@ -81,6 +81,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                  nLambdas=nLambdas, J=J, ngroups=ngroups)    
     if(!is.null(technical$return_newconstrain)) return(constrain)    
     startlongpars <- c()
+    if(NULL.MODEL){
+        for(i in 1:J){
+            pars[[1]][[i]]@par[1] <- 0
+            pars[[1]][[i]]@est[1] <- FALSE            
+        }       
+    }
     if(method == 'EM'){
         esttype <- 'EM'
         if(method == 'EM' && nLambdas > nfact) 
@@ -109,7 +115,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             G2 <- G2 + 2 * sum(rg * log(rg/(Ng*Pl)))
             logLik <- logLik + sum(rg*log(Pl))
         }
-        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+        Pl <- list(Pl)
+        if(!NULL.MODEL){
+            ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, BURNIN=1, SEMCYCLES=5,
                                            KDRAWS=KDRAWS, TOL=.01, USEEM=USEEM, gain=gain, 
                                            nfactNames=PrepList[[1]]$nfactNames, 
@@ -117,7 +125,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfact=nfact, constrain=constrain, verbose=FALSE,
                                            startlongpars=startlongpars), 
                                debug=debug)                 
+        }
     } else if(method == 'MHRM'){
+        Theta <- matrix(0, nrow(data), J)
         esttype <- 'MHRM'
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
@@ -150,11 +160,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()      
         logLik <- G2 <- SElogLik <- 0        
+        Pl <- list()
         for(g in 1:ngroups){
             cmods[[g]] <- calcLogLik(cmods[[g]], draws, G2 = 'return')                
             logLik <- logLik + cmods[[g]]@logLik
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
             G2 <- G2 + cmods[[g]]@G2
+            Pl[[g]] <- cmods[[g]]@Pl
         }            
     } 
     r <- PrepListFull$tabdata
@@ -206,6 +218,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        df=df, 
                        p=p, 
                        itemloc=PrepListFull$itemloc, 
+                       method=method,
                        AIC=AIC, 
                        BIC=BIC, 
                        logLik=logLik, 
@@ -213,7 +226,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        h2=h2, 
                        tabdata=PrepListFull$tabdata2, 
                        Theta=Theta, 
-                       Pl=Pl, 
+                       Pl=Pl[[1]], 
                        data=data, 
                        converge=ESTIMATE$converge, 
                        nfact=nfact,               
@@ -245,7 +258,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        h2=h2, 
                        tabdata=PrepListFull$tabdata2, 
                        Theta=Theta, 
-                       Pl=Pl, 
+                       method=method,
+                       Pl=Pl[[1]], 
                        data=data, 
                        converge=ESTIMATE$converge, 
                        nfact=nfact,               
@@ -275,11 +289,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    invariance=invariance, 
                    df=as.integer(df),
                    logLik=logLik, 
+                   method=method,
                    SElogLik=SElogLik, 
                    AIC=AIC, 
                    BIC=BIC, 
-                   information=ESTIMATE$info, 
-                   Call=Call)  
+                   G2=G2,
+                   RMSEA=RMSEA,
+                   TLI=TLI,
+                   p=p,
+                   Theta=Theta,
+                   Pl=Pl,
+                   information=ESTIMATE$info)  
     }
     return(mod)
 }

@@ -93,6 +93,7 @@ setMethod(
 		}
 		expected[is.nan(expected)] <- NA
 		tabdata <- cbind(tabdata,expected*N)        
+        object@Pl <- expected
 		logN <- 0
 		logr <- rep(0,length(r))
 		for (i in 1:N) logN <- logN + log(i)

@@ -7,12 +7,12 @@ setMethod(
             "\n\n", sep = "")
         cat("Full-information factor analysis with ", ncol(x@F), " factor",
             if(ncol(x@F)>1) "s", "\n", sep="")
+        EMquad <- ''
+        if(x@method == 'EM') EMquad <- c(' with ', x@quadpts, ' quadrature')
         if(x@converge == 1)	
-            cat("Converged in ", x@iter, " iterations using ", x@quadpts,
-                " quadrature points.\n", sep="")
+            cat("Converged in ", x@iter, " iterations", EMquad, ". \n", sep = "")
         else 	
-            cat("Estimation stopped after ", x@iter, " iterations using ", 
-                x@quadpts, " quadrature points.\n", sep="")
+            cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")
         cat("Log-likelihood =", x@logLik, "\n")
         cat("AIC =", x@AIC, "\n")		
         cat("BIC =", x@BIC, "\n")

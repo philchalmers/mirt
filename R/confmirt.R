@@ -64,8 +64,6 @@
 #' option. Only prints patterns that have standardized residuals greater than 
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param verbose logical; display iteration history during estimation?
-#' @param calcLL logical; calculate the log-likelihood via Monte Carlo
-#' integration?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
@@ -262,87 +260,17 @@
 #' }
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
-                     constrain = NULL, parprior = NULL, verbose = TRUE, calcLL = TRUE, 
+                     constrain = NULL, parprior = NULL, verbose = TRUE, 
                      draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      technical = list(),  ...)
-{    
+{   
     if(debug == 'Main') browser()
-    ##technical
-	Call <- match.call()               
-	set.seed(12345)	        
-    NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
-    BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
-    SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
-    KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
-    TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)  
-    EMSE <- ifelse(is.null(technical$EMSE), FALSE, technical$EMSE)
-    if(!is.null(technical$set.seed)) set.seed(technical$set.seed)	
-    gain <- c(0.05,0.5,0.004)
-    if(!is.null(technical$gain)) {
-        if(length(technical$gain) == 3 && is.numeric(technical$gain))
-            gain <- technical$gain
-    }	
-    ##	
-    Target <- ifelse(is.null(Target), NaN, Target)
-    data <- as.matrix(data)
-    parnumber <- 1
-	PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
-                         startvalues=NULL, constrain=constrain, freepars=NULL, 
-	                     parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
-                         technical=technical, parnumber=parnumber)           
-    if(!is.null(pars)){
-        if(is(pars, 'matrix') || is(pars, 'data.frame')){
-            PrepList <- UpdatePrepList(PrepList, pars)
-        } else if(pars == 'values'){
-            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
-        }                
-    }
- 	ESTIMATE <- MHRM(pars=PrepList$pars, 
-                      list=list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES, 
-                                KDRAWS=KDRAWS, TOL=TOL, gain=gain, nfactNames=PrepList$nfactNames, 
-                                itemloc=PrepList$itemloc, fulldata=PrepList$fulldata, 
-                                nfact=PrepList$nfact, npars=PrepList$npars, 
-                                constrain=PrepList$constrain, verbose=verbose), 
-                      debug=debug, startvalues=pars, EMSE=EMSE) 
-    if(EMSE) return(ESTIMATE)
-    null.mod <- unclass(mirt(data, 1, itemtype=itemtype, technical = list(NULL.MODEL = TRUE), 
-                             SE = FALSE))
-    # pars to FA loadings    
-    pars <- ESTIMATE$pars    
-    nfact <- pars[[1]]@nfact
-    lambdas <- Lambdas(pars)
-    if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
-    else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
-    alp <- as.matrix(lambdas[ ,1:nfact]/norm)
-    if(PrepList$exploratory){
-        FF <- alp %*% t(alp)
-        V <- eigen(FF)$vector[ ,1:nfact]
-        L <- eigen(FF)$values[1:nfact]
-        if (nfact == 1) F <- as.matrix(V * sqrt(L))
-        else F <- V %*% sqrt(diag(L))  
-        if (sum(F[ ,1] < 0)) F <- (-1) * F 
-        colnames(F) <- paste("F_", 1:ncol(F),sep="")    
-        h2 <- rowSums(F^2)
-        mod <- new('ExploratoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, itemloc=PrepList$itemloc, 
-                   F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
-                   K=PrepList$K, tabdatalong=PrepList$tabdata, nfact=nfact, constrain=PrepList$constrain,
-                   rotate=rotate, null.mod=null.mod, Target=Target, factorNames=PrepList$factorNames,
-                   fulldata=PrepList$fulldata, information=ESTIMATE$info, longpars=ESTIMATE$longpars, 
-                   Call=Call)
-    } else {
-        F <- alp
-        colnames(F) <- PrepList$factorNames
-        h2 <- rowSums(F^2)       
-        mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, itemloc=PrepList$itemloc, 
-                   F=F, h2=h2, tabdata=PrepList$tabdata2, data=data, converge=ESTIMATE$converge, esttype='MHRM',                
-                   K=PrepList$K, tabdatalong=PrepList$tabdata, nfact=nfact, constrain=PrepList$constrain,
-                   fulldata=PrepList$fulldata, null.mod=null.mod, factorNames=PrepList$factorNames, 
-                   information=ESTIMATE$info, longpars=ESTIMATE$longpars, Call=Call)
-    }        
-	if(calcLL){
-		if(verbose) cat("\nCalculating log-likelihood...\n")
-		flush.console()
-		mod <- calcLogLik(mod, draws)
-	}	
-	return(mod)
+    Call <- match.call()    
+    mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype, 
+                      guess=guess, upper=upper, 
+                      pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, 
+                      draws=draws, debug=debug, technical = list(),  ...)
+    if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
+        mod@Call <- Call
+    return(mod)    
 }
