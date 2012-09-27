@@ -289,6 +289,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         SElogLik <- 0     
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- 0
+        iter <- ESTIMATE$cycles
         for(g in 1:ngroups){
             Pl <- rlist[[g]]$expected
             rg <- PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)]
@@ -314,6 +315,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                                            nfact=nfact, constrain=constrain, verbose=verbose,
                                            startlongpars=startlongpars), 
                                debug=debug)        
+        iter <- ESTIMATE$cycles
     }   
     cmods <- list()
     for(g in 1:ngroups){
@@ -372,7 +374,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                                  SE = FALSE))        
     TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
     if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
-    mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, cmods=cmods, itemloc=PrepListFull$itemloc, 
+    mod <- new('MultipleGroupClass', iter=iter, cmods=cmods, itemloc=PrepListFull$itemloc, 
                tabdata=PrepListFull$tabdata2, data=data, converge=ESTIMATE$converge, esttype=esttype,                
                K=PrepListFull$K, tabdatalong=PrepListFull$tabdata, constrain=constrain,               
                group=group, groupNames=groupNames, invariance=invariance, df=as.integer(df),

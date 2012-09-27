@@ -299,9 +299,6 @@
 #' values #note that slopes are numbered 1,5,9,13
 #' (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
 #' coef(pmod1_equalslopes)
-#' #manually fix the first slope to .6
-#' 
-#' (pmod1_fixedslope <- mirt(Science, 1, pars = values)
 #' 
 #' pmod2 <- mirt(Science, 2)
 #' coef(pmod2)
@@ -332,98 +329,18 @@
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
-                 pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NULL, 
-                 prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
-                 technical = list(), ...)
+                  pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
+                  prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
+                  technical = list(), ...)
 {   
     if(debug == 'Main') browser()
-	Call <- match.call()    
-    ##technical
-    MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
-    MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
-	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
-	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
-    NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)        	           
-    NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, technical$NULL.MODEL)    
-    ##              
-    Target <- ifelse(is.null(Target), NaN, Target)   
-    data <- as.matrix(data)    
-    PrepList <- PrepData(data=data, model=model, itemtype=itemtype, guess=guess, upper=upper, 
-                         startvalues=NULL, constrain=constrain, freepars=NULL, 
-                         parprior=parprior, verbose=verbose, free.start=NULL, debug=debug, 
-                         technical=technical)
-    if(!is.null(pars)){
-        if(is(pars, 'matrix') || is(pars, 'data.frame')){
-            PrepList <- UpdatePrepList(PrepList, pars)
-        } else if(pars == 'values'){
-            return(ReturnPars(PrepList, PrepList$itemnames))            
-        }                
-    }    
-    nfact <- PrepList$nfact
-    nLambdas <- PrepList$nLambdas
-    if(nLambdas > nfact) stop('Polynominals and product terms not supported for EM method')
-	if (is.null(quadpts)) quadpts <- ceiling(40/(PrepList$nfact^1.5))  
-	Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
-	if(quadpts^nfact <= MAXQUAD){
-		Theta <- thetaComb(theta,nfact)		
-	} else stop('Greater than ', MAXQUAD, ' quadrature points.')        
-    if(NULL.MODEL){        
-        PrepList$constrain <- list()
-        for(i in 1:(length(PrepList$pars)-1)){
-            PrepList$pars[[i]]@par[1] <- 0
-            PrepList$pars[[i]]@est[1] <- FALSE            
-            if(sum(PrepList$pars[[i]]@est) == 1){
-                PrepList$pars[[i]]@lbound=-25
-                PrepList$pars[[i]]@ubound=25
-                PrepList$pars[[i]]@method='Brent'                
-            } 
-        }            
-    }
-    ESTIMATE <- EM(pars=PrepList$pars, NCYCLES=NCYCLES, MSTEPMAXIT=MSTEPMAXIT, TOL=TOL,                    
-                   tabdata=PrepList$tabdata, tabdata2=PrepList$tabdata2, npars=PrepList$npars,
-                   Theta=Theta, theta=theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
-                   constrain=PrepList$constrain, data=data, NULL.MODEL=NULL.MODEL, 
-                   itemtype=PrepList$itemtype)	
-	# pars to FA loadings
-    pars <- ESTIMATE$pars    
-    lambdas <- Lambdas(pars)
-	if (nLambdas > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nLambdas]^2))
-		else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
-	alp <- as.matrix(lambdas[ ,1:nLambdas]/norm)
-    if(PrepList$exploratory){
-    	FF <- alp %*% t(alp)
-    	V <- eigen(FF)$vector[ ,1:nfact]
-    	L <- eigen(FF)$values[1:nfact]
-    	if (nfact == 1) F <- as.matrix(V * sqrt(L))
-    		else F <- V %*% sqrt(diag(L))  
-    	if (sum(F[ ,1] < 0)) F <- (-1) * F 
-    	colnames(F) <- paste("F_", 1:ncol(F),sep="")
-    	h2 <- rowSums(F^2)
-    	mod <- new('ExploratoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
-    	           df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
-    	           BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
-    	           Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
-    	           quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
-    	           rotate=rotate, null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, Target=Target, 
-    	           factorNames=PrepList$factorNames, constrain=PrepList$constrain, 
-    	           fulldata=PrepList$fulldata, Call=Call)
-    } else {
-        F <- alp
-        colnames(F) <- PrepList$factorNames    
-        h2 <- rowSums(F^2)       
-        mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
-                   df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
-                   BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
-                   Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
-                   quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
-                   null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
-                   constrain=PrepList$constrain, fulldata=PrepList$fulldata, Call=Call)
-    }   
-    if(SE){        
-        PrepList$pars <- ESTIMATE$pars
-        fitvalues <- ReturnPars(PrepList, PrepList$itemnames, MG = FALSE)
-        mod <- calcEMSE(object=mod, data=data, model=model, itemtype=itemtype, fitvalues=fitvalues,
-                           constrain=constrain, parprior=parprior, verbose=verbose)
-    }
-	return(mod)    
+    Call <- match.call()    
+    mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
+                      itemtype=itemtype, guess=guess, upper=upper, 
+                      pars=pars, method = 'EM', constrain=constrain, 
+                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
+                      technical = technical, debug = debug, verbose = verbose, ...)
+    if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
+        mod@Call <- Call
+    return(mod)    
 }
