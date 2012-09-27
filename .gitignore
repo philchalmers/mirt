@@ -1,2 +1,5 @@
 src/*.o
 src/*.so
+.Rproj.user
+mirt.Rproj
+.Rprofile
