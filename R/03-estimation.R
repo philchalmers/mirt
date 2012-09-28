@@ -31,7 +31,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     ngroups <- length(groupNames)
     oldmodel <- model
     if(is(model, 'numeric') && length(model) > 1)
-        model <- bfactor2mod(model, data)
+        model <- bfactor2mod(model, ncol(data))
     if(length(model) == 1){
         newmodel <- list()
         for(g in 1:ngroups)
@@ -98,7 +98,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
         temp <- matrix(0,nrow=J,ncol=(nfact-1))
         sitems <- matrix(0, nrow=sum(PrepListFull$K), ncol=(nfact-1))
-        if(BFACTOR){            
+        if(BFACTOR){                
             for(i in 1:J) temp[i,oldmodel[i]] <- 1
             ind <- 1
             for(i in 1:J){
@@ -107,7 +107,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ind <- ind + 1
                 }		
             }    
-            theta <- as.matrix(seq(-4,4,length.out = quadpts))    
+            theta <- seq(-4,4,length.out = quadpts)
             Theta <- thetaComb(theta, 2)
             Theta <- cbind(Theta[,1], matrix(Theta[,2], nrow=nrow(Theta), ncol=ncol(sitems)))            
         } else {

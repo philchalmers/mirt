@@ -18,24 +18,8 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     }
     if(exploratory && any(itemtype == c('PC2PL', 'PC3PL'))) 
         stop('Partially compensatory models can only be estimated within a confirmatory model')
-    if(is(model, 'numeric') && length(model) > 1){
-        tmp <- tempfile('tempfile')
-        unique <- unique(model)
-        index <- 1:J
-        tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
-        for(i in 1:length(unique)){
-            ind <- index[model == unique[i]]
-            comma <- rep(',', 2*length(ind))
-            TF <- rep(c(TRUE,FALSE), length(ind))
-            comma[TF] <- ind
-            comma[length(comma)] <- ""
-            tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
-        }
-        cat(tmp2, file=tmp)
-        model <- confmirt.model(tmp, quiet = TRUE)
-        BFACTOR <- TRUE
-        unlink(tmp)
-    }
+    if(is(model, 'numeric') && length(model) > 1)
+        model <- bfactor2mod(model, J)
     if(length(guess) == 1) guess <- rep(guess,J)
     if(length(guess) > J || length(guess) < J) 
         stop("The number of guessing parameters is incorrect.")					

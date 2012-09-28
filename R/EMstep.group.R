@@ -12,6 +12,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     ngroups <- length(pars)
     specific <- list$specific
     sitems <- list$sitems
+    theta <- list$theta
     J <- length(itemloc) - 1
     nfullpars <- 0
     estpars <- c()
@@ -77,7 +78,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(g in 1:ngroups){
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])        
             if(BFACTOR){
-                prior <- dnorm(list$theta)
+                prior <- dnorm(theta)
                 prior <- list(prior/sum(prior))
                 next  
             } 
@@ -178,7 +179,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             correction[correction > stepLimit] <- stepLimit
             correction[correction < -stepLimit] <- -stepLimit
             longpars[estindex_unique] <- longpars[estindex_unique] - correction                       
-            if(mstep > 4){
+            if(mstep > 1){
                 if (any(grad*lastgrad < 0.0)){    				# any changed sign
                     newcorrection <- rep(0, length(correction))
                     newcorrection[grad*lastgrad < 0.0] <- .5*correction[grad*lastgrad < 0.0]
