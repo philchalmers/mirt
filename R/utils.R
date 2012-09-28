@@ -283,7 +283,7 @@ reloadConstr <- function(par, constr, obj){
 bfactor2mod <- function(model, data){    
     J <- ncol(data)
     tmp <- tempfile('tempfile')
-    unique <- sort(unique(model))
+    unique <- unique(model)
     index <- 1:J
     tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
     for(i in 1:length(unique)){

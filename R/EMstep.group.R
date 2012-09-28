@@ -91,7 +91,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(g in 1:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
-                                            Theta=Theta[,1:2], prior=prior[[1]],
+                                            Theta=Theta, prior=prior[[1]],
                                             specific=specific, sitems=sitems, 
                                             itemloc=itemloc, debug=debug)
             } else {
@@ -171,11 +171,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             inv.hess <- try(solve(hess))    		
             if(class(inv.hess) == 'try-error'){                                                
                 diag(hess) <- 1.2*diag(hess)
-                inv.hess <- try(solve(hess))
-                if(class(inv.hess) == 'try-error'){
-                    converge <- 0
-                    inv.hess <- diag(ncol(hess))
-                } 
+                inv.hess <- try(solve(hess))                
             }
             correction <- as.numeric(inv.hess %*% grad)  
             #keep steps smaller

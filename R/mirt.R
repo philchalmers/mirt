@@ -337,7 +337,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE,
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, 
-                      pars=pars, method = 'EM', constrain=constrain, 
+                      pars=pars, method = 'EM', constrain=constrain, SE=SE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
                       technical = technical, debug = debug, verbose = verbose, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
