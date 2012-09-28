@@ -57,6 +57,20 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
     names(PrepList) <- groupNames
+    if(BFACTOR){
+        #better start values        
+        J <- length(PrepList[[1]]$pars) - 1
+        Rpoly <- cormod(na.omit(data), PrepListFull$K, guess = rep(0,J))
+        suppressWarnings(FA <- psych::fa(Rpoly, 1, warnings = FALSE))
+        loads <- unclass(FA$load)
+        cs <- sqrt(abs(FA$u))              
+        astart <- loads/cs
+        astart <- cbind(astart,astart/2)
+        nfact <- PrepList[[1]]$pars[[1]]@nfact
+        for(g in 1:ngroups)
+            for(i in 1:J)
+                PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1:2] <- astart[i, ]                
+    }
     if(!is.null(pars)){
         if(is(pars, 'matrix') || is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, MG = TRUE)

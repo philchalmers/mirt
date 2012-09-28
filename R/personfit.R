@@ -64,10 +64,8 @@ personfit <- function(x, full.scores = FALSE){
         Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1) - nfact, drop = FALSE]        
     }
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=nrow(Theta))        
-    for (i in 1:J){
-        if(x@pars[[1]]@bfactor) pars[[i]]@bfactor <- FALSE
+    for (i in 1:J)
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-    }
     LL <- itemtrace * fulldata
     LL[LL < 1e-8] <- 1
     LL <- rowSums(log(LL)) 

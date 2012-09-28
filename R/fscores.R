@@ -60,17 +60,15 @@ setMethod(
         nLambdas <- object@nfact
         itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
-        if(!pars[[1]]@bfactor && rotate != 'CONFIRMATORY'){
+        if(rotate != 'CONFIRMATORY'){
             so <- summary(object, rotate = rotate, verbose = FALSE)            
             a <- rotateLambdas(so)
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor
         } else {
             a <- matrix(0, J, nLambdas)
-            for(i in 1:J){
-                a[i, ] <- ExtractLambdas(pars[[i]])            
-                pars[[i]]@bfactor <- FALSE
-            }
+            for(i in 1:J)
+                a[i, ] <- ExtractLambdas(pars[[i]])                                        
         }        			
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))

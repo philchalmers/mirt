@@ -61,7 +61,7 @@ setMethod(
 
 itemplot.main <- function(x, item, type, degrees = 45, ...){        
     nfact <- ncol(x@F)
-    if(nfact > 2 && !x[[1]]@bfactor) stop('Can not plot high dimensional models')
+    if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')    
     theta <- seq(-4,4, length.out=40)
     Theta <- thetaComb(theta, nfact)   

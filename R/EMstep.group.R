@@ -1,6 +1,5 @@
 EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
-{
-    #Theta has only 2 columns when BFACTOR is true
+{    
     if(debug == 'EM.group') browser()
     verbose <- list$verbose        
     nfact <- list$nfact
@@ -147,7 +146,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             h <- matrix(0, nfullpars, nfullpars)
             ind1 <- 1                    
             for(group in 1:ngroups){
-                for (i in 1:J){	                        
+                for (i in 1:J){                    
                     deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE)
                     ind2 <- ind1 + length(deriv$grad) - 1
                     longpars[ind1:ind2] <- pars[[group]][[i]]@par

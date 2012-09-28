@@ -708,8 +708,10 @@ setMethod(
                 }
             }	
         } else { #4PL            
-            grad <- numDeriv::grad(L, x@par, obj=x, Theta=Theta)
-            hess <- numDeriv::hessian(L, x@par, obj=x, Theta=Theta)            
+            grad <- rep(0, length(x@par))
+            hess <- matrix(0, length(x@par), length(x@par))
+            grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
             return(list(grad=grad, hess=hess))
         }       
         if(any(!is.nan(x@n.prior.mu))){
@@ -798,13 +800,13 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){ 
-        if(EM){                
-            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
-            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
-            return(list(grad = grad, hess = hess))            
-        }
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
+        if(EM){                
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)       
+            return(list(grad = grad, hess = hess))            
+        }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
         return(list(grad = grad, hess = hess))
@@ -954,13 +956,13 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){
-        if(EM){                
-            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
-            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
-            return(list(grad = grad, hess = hess))            
-        }
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
+        if(EM){            
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)       
+            return(list(grad = grad, hess = hess))            
+        }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
         return(list(grad = grad, hess = hess))
@@ -971,13 +973,13 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){
-        if(EM){                
-            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
-            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)       
-            return(list(grad = grad, hess = hess))            
-        }
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
+        if(EM){                
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)       
+            return(list(grad = grad, hess = hess))            
+        }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
         return(list(grad = grad, hess = hess))
@@ -988,13 +990,13 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE){
-        if(EM){                
-            grad <- numDeriv::grad(EML, x@par, obj=x, Theta=Theta)
-            hess <- numDeriv::hessian(EML, x@par, obj=x, Theta=Theta)     
-            return(list(grad = grad, hess = hess))            
-        }
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
+        if(EM){                
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)     
+            return(list(grad = grad, hess = hess))            
+        }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
         return(list(grad = grad, hess = hess))

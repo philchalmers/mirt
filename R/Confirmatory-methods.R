@@ -125,7 +125,6 @@ setMethod(
         N <- nrow(data)	
         J <- ncol(data)
         nfact <- ncol(object@F) - length(attr(object@pars, 'prodlist'))
-        if(object@pars[[1]]@bfactor) nfact <- 2
         itemloc <- object@itemloc
         res <- matrix(0,J,J)
         diag(res) <- NA
@@ -135,8 +134,7 @@ setMethod(
         ThetaShort <- Theta
         if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
         gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-        if(object@pars[[1]]@bfactor) prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-            else prior <- mvtnorm::dmvnorm(ThetaShort,gpars$gmeans,gpars$gcov)        
+        prior <- mvtnorm::dmvnorm(ThetaShort,gpars$gmeans,gpars$gcov)        
         prior <- prior/sum(prior)       	               
         if(restype == 'LD'){	
             for(i in 1:J){								
