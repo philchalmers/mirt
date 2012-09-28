@@ -157,73 +157,20 @@
 #'
 #'     }
 #' 
-bfactor <- function(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, pars = NULL, 
-                    constrain = NULL, parprior = NULL,
-                    prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
-                    technical = list(), ...)
-{ 		
+bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, pars = NULL, 
+                     constrain = NULL, parprior = NULL,
+                     prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
+                     technical = list(), ...)
+{         
     if(debug == 'Main') browser()
-	Call <- match.call()		    
-	##technical
-	MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
-	MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 25, technical$MSTEPMAXIT)
-	TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
-	NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)	
-	NOWARN <- ifelse(is.null(technical$NOWARN), TRUE, technical$NOWARN)    
-	##	
-	data <- as.matrix(data)
-    PrepList <- PrepData(data=data, model=specific, itemtype=itemtype, guess=guess, upper=upper, 
-                         startvalues=NULL, constrain=constrain, freepars=NULL, 
-                         parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
-                         technical=technical, BFACTOR=TRUE)
-    if(!is.null(pars)){
-        if(is(pars, 'matrix') || is(pars, 'data.frame')){
-            PrepList <- UpdatePrepList(PrepList, pars)
-        } else if(pars == 'values'){
-            return(ReturnPars(PrepList, PrepList$itemnames, MG = FALSE))            
-        }                
-    }
-    J <- PrepList$J
-    K <- PrepList$K
-    nfact <- PrepList$nfact   
-	temp <- matrix(0,nrow=J,ncol=(nfact-1))
-	sitems <- matrix(0, nrow=sum(K), ncol=(nfact-1))
-	for(i in 1:J) temp[i,specific[i]] <- 1
-	ind <- 1
-	for(i in 1:J){
-		for(j in 1:K[i]){
-			sitems[ind, ] <- temp[i, ]
-			ind <- ind + 1
-		}		
-	}    
-    theta <- as.matrix(seq(-4,4,length.out = quadpts))    
-    Theta <- thetaComb(theta, 2)
-    ESTIMATE <- EM(pars=PrepList$pars, NCYCLES=NCYCLES, MSTEPMAXIT=MSTEPMAXIT, TOL=TOL,                    
-                   tabdata=PrepList$tabdata, tabdata2=PrepList$tabdata2, npars=PrepList$npars,
-                   Theta=Theta, itemloc=PrepList$itemloc, debug=debug, verbose=verbose, 
-                   constrain=PrepList$constrain, data=data, BFACTOR=TRUE,
-                   sitems=sitems, specific=specific, theta=theta, itemtype=itemtype)
-    # pars to FA loadings
-    pars <- ESTIMATE$pars
-    lambdas <- Lambdas(pars)
-    if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
-    else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
-    alp <- as.matrix(lambdas[ ,1:nfact]/norm)
-    F <- alp
-    colnames(F) <- paste("F_", 1:ncol(F),sep="")    
-    h2 <- rowSums(F^2)       
-    mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, pars=ESTIMATE$pars, G2=ESTIMATE$G2, 
-               df=ESTIMATE$df, p=ESTIMATE$p, itemloc=PrepList$itemloc, AIC=ESTIMATE$AIC, 
-               BIC=ESTIMATE$BIC, logLik=ESTIMATE$logLik, F=F, h2=h2, tabdata=PrepList$tabdata2, 
-               Theta=Theta, Pl=ESTIMATE$Pl, data=data, converge=ESTIMATE$converge, nfact=nfact,               
-               quadpts=quadpts, RMSEA=ESTIMATE$RMSEA, K=PrepList$K, tabdatalong=PrepList$tabdata, 
-               null.mod=ESTIMATE$null.mod, TLI=ESTIMATE$TLI, factorNames=PrepList$factorNames, 
-               fulldata=PrepList$fulldata, method = 'EM', Call=Call)     
-    if(SE){
-        PrepList$pars <- ESTIMATE$pars
-        fitvalues <- ReturnPars(PrepList, PrepList$itemnames, MG = FALSE)
-        mod <- calcEMSE(object=mod, data=data, model=specific, itemtype=itemtype, fitvalues=fitvalues,
-                        constrain=constrain, parprior=parprior, verbose=verbose)        
-    } 
-	return(mod)  
+    Call <- match.call()		    
+    mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
+                      itemtype=itemtype, guess=guess, upper=upper, 
+                      pars=pars, method = 'EM', constrain=constrain, SE = SE, 
+                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
+                      technical = technical, debug = debug, verbose = verbose, 
+                      BFACTOR = TRUE, ...)
+    if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
+        mod@Call <- Call
+    return(mod)
 } 

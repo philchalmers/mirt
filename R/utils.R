@@ -280,25 +280,29 @@ reloadConstr <- function(par, constr, obj){
     return(obj)
 }
 
-calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parprior, verbose){          
-    if(is(model, 'numeric') && length(model) > 1){
-        J <- ncol(data)
-        tmp <- tempfile('tempfile')
-        unique <- unique(model)
-        index <- 1:J
-        tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
-        for(i in 1:length(unique)){
-            ind <- index[model == unique[i]]
-            comma <- rep(',', 2*length(ind))
-            TF <- rep(c(TRUE,FALSE), length(ind))
-            comma[TF] <- ind
-            comma[length(comma)] <- ""
-            tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
-        }
-        cat(tmp2, file=tmp)
-        model <- confmirt.model(tmp, quiet = TRUE)        
-        unlink(tmp)
+bfactor2mod <- function(model, data){    
+    J <- ncol(data)
+    tmp <- tempfile('tempfile')
+    unique <- sort(unique(model))
+    index <- 1:J
+    tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
+    for(i in 1:length(unique)){
+        ind <- index[model == unique[i]]
+        comma <- rep(',', 2*length(ind))
+        TF <- rep(c(TRUE,FALSE), length(ind))
+        comma[TF] <- ind
+        comma[length(comma)] <- ""
+        tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
     }
+    cat(tmp2, file=tmp)
+    model <- confmirt.model(tmp, quiet = TRUE)        
+    unlink(tmp)
+    return(model)
+}
+
+calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parprior, verbose){          
+    if(is(model, 'numeric') && length(model) > 1)
+        model <- bfactor2mod(model, data)
     pars <- confmirt(data, model, itemtype=itemtype, pars=fitvalues, constrain=constrain, 
                      parprior=parprior, 
                      technical = list(BURNIN = 1, SEMCYCLES = 5, TOL = .01, 

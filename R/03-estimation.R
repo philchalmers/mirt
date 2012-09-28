@@ -1,8 +1,8 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
                        invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
                        parprior = NULL, draws = 2000, calcLL = TRUE,
-                       quadpts = NaN, rotate = 'varimax', Target = NaN,
-                       technical = list(), debug = FALSE, verbose = TRUE)
+                       quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
+                       technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE)
 {    
     if(debug == 'ESTIMATION') browser()
     set.seed(12345)       
@@ -30,12 +30,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     groupNames <- unique(group)
     ngroups <- length(groupNames)
     oldmodel <- model
+    if(is(model, 'numeric') && length(model) > 1)
+        model <- bfactor2mod(model, data)
     if(length(model) == 1){
-        model <- list()
+        newmodel <- list()
         for(g in 1:ngroups)
-            model[[g]] <- oldmodel
-        names(model) <- groupNames
-    } 
+            newmodel[[g]] <- model
+        names(newmodel) <- groupNames
+        model <- newmodel
+    }     
     parnumber <- 1
     PrepList <- vector('list', ngroups)    
     PrepListFull <- PrepData(data=data, model=model[[1]], itemtype=itemtype, guess=guess, upper=upper, 
@@ -49,7 +52,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, 
                                   upper=upper, startvalues=NULL, constrain=constrain, freepars=NULL, 
                                   parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
-                                  technical=technical, parnumber=parnumber)        
+                                  technical=technical, parnumber=parnumber, BFACTOR=BFACTOR)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
@@ -93,15 +96,32 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             stop('Polynominals and product terms not supported for EM method')
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
         Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
-        if(quadpts^nfact <= MAXQUAD){
-            Theta <- thetaComb(theta,nfact)    	
-        } else stop('Greater than ', MAXQUAD, ' quadrature points.')
+        temp <- matrix(0,nrow=J,ncol=(nfact-1))
+        sitems <- matrix(0, nrow=sum(PrepListFull$K), ncol=(nfact-1))
+        if(BFACTOR){            
+            for(i in 1:J) temp[i,oldmodel[i]] <- 1
+            ind <- 1
+            for(i in 1:J){
+                for(j in 1:PrepListFull$K[i]){
+                    sitems[ind, ] <- temp[i, ]
+                    ind <- ind + 1
+                }		
+            }    
+            theta <- as.matrix(seq(-4,4,length.out = quadpts))    
+            Theta <- thetaComb(theta, 2)
+            Theta <- cbind(Theta[,1], matrix(Theta[,2], nrow=nrow(Theta), ncol=ncol(sitems)))            
+        } else {
+            if(quadpts^nfact <= MAXQUAD){
+                Theta <- thetaComb(theta,nfact)    	
+            } else stop('Greater than ', MAXQUAD, ' quadrature points.')
+        }
         ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                              list = list(NCYCLES=NCYCLES, TOL=TOL, MSTEPMAXIT=MSTEPMAXIT,
-                                         nfactNames=PrepList[[1]]$nfactNames, 
-                                         itemloc=PrepList[[1]]$itemloc,
+                                         nfactNames=PrepList[[1]]$nfactNames, theta=theta,
+                                         itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR,
+                                         sitems=sitems, specific=oldmodel,
                                          nfact=nfact, constrain=constrain, verbose=verbose), 
-                             Theta=Theta, debug=debug)        
+                             Theta=Theta, debug=debug)                
         startlongpars <- ESTIMATE$longpars
         logLik <- ESTIMATE$logLik
         SElogLik <- 0     
@@ -116,12 +136,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             logLik <- logLik + sum(rg*log(Pl))
         }
         Pl <- list(Pl)
-        if(!NULL.MODEL){
+        if(!NULL.MODEL && SE){
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, BURNIN=1, SEMCYCLES=5,
                                            KDRAWS=KDRAWS, TOL=.01, USEEM=USEEM, gain=gain, 
                                            nfactNames=PrepList[[1]]$nfactNames, 
-                                           itemloc=PrepList[[1]]$itemloc,  
+                                           itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR,  
                                            nfact=nfact, constrain=constrain, verbose=FALSE,
                                            startlongpars=startlongpars), 
                                debug=debug)                 
@@ -133,7 +153,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
                                            KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
                                            nfactNames=PrepList[[1]]$nfactNames, 
-                                           itemloc=PrepList[[1]]$itemloc,  
+                                           itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
                                            nfact=nfact, constrain=constrain, verbose=verbose,
                                            startlongpars=startlongpars), 
                                debug=debug)        

@@ -120,8 +120,7 @@ setMethod(
         u <- x@par[length(x@par)]
         g <- x@par[length(x@par)-1]
         d <- x@par[length(x@par)-2]
-        a <- x@par[1:x@nfact]
-        if(x@bfactor) a <- a[x@est[1:x@nfact]]
+        a <- x@par[1:x@nfact]        
         P <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u)
         return(cbind(1.0 - P, P))
     }
@@ -131,8 +130,7 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta, itemexp = TRUE){                  
-        a <- x@par[1:x@nfact]
-        if(x@bfactor) a <- a[x@est[1:x@nfact]]
+        a <- x@par[1:x@nfact]        
         d <- x@par[(x@nfact+1):length(x@par)]
         P <- P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp)
         return(P)
@@ -156,8 +154,7 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta){                  
-        a <- x@par[1:x@nfact]
-        if(x@bfactor) a <- a[x@est[1:x@nfact]]
+        a <- x@par[1:x@nfact]        
         d <- x@par[-(1:x@nfact)]
         P <- P.gpcm(a=a, d=d, Theta=Theta)
         return(P)
@@ -168,8 +165,7 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta){         
-        a <- x@par[1:x@nfact]
-        if(x@bfactor) a <- a[x@est[1:x@nfact]]
+        a <- x@par[1:x@nfact]        
         ak <- x@par[(x@nfact+1):(x@nfact + x@ncat)]
         d <- x@par[length(x@par):(length(x@par) - x@ncat + 1)]
         P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta)
@@ -185,9 +181,7 @@ setMethod(
         a <- x@par[1:nfact]
         d <- x@par[(nfact+1):(length(x@par)-2)]
         g <- x@par[length(x@par)-1]
-        u <- x@par[length(x@par)]
-        if(x@bfactor) a <- a[x@est[1:nfact]]
-        if(x@bfactor) d <- d[x@est[(nfact+1):(nfact*2)]]        
+        u <- x@par[length(x@par)]        
         P <- P.comp(a=a, d=d, Theta=Theta, g=g, u=u)
         return(cbind(1.0 - P, P))
     }
@@ -197,8 +191,7 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta){    
-        a <- x@par[1:x@nfact]
-        if(x@bfactor) a <- a[x@est[1:x@nfact]]
+        a <- x@par[1:x@nfact]        
         ind <- x@nfact + 1
         ak <- x@par[ind:(ind + x@ncat - 1)]
         ind <- ind + x@ncat
@@ -677,10 +670,14 @@ setMethod(
         d <- x@par[parlength - 2]
         a <- x@par[1:nfact]        
         P <- P.mirt(a, d, Theta, g, u)
+        P[P < 1e-8] <- 1e-8
+        P[P > .99999999] <- .99999999
         Q <- 1 - P        
         hess <- matrix(0,nfact+3, nfact+3)						
         if(x@par[parlength] == 1){ #'3PL'            	
             Pstar <- P.mirt(a,d,Theta,0,1)		
+            Pstar[Pstar < 1e-8] <- 1e-8
+            Pstar[Pstar > .99999999] <- .99999999
             Qstar <- 1 - Pstar
             da <- rep(0,nfact)	
             dd <- sum((1-g)*Pstar*Qstar*(dat/P - (f-dat)/Q))
@@ -833,6 +830,10 @@ setMethod(
             grad <- function(a, d, g, u, r, f, Theta){                			
                 P <- P.comp(a,d,Theta,g,1)		
                 Pstar <- P.comp(a,d,Theta,0)		
+                P[P < 1e-8] <- 1e-8
+                P[P > .99999999] <- .99999999
+                Pstar[Pstar < 1e-8] <- 1e-8
+                Pstar[Pstar > .99999999] <- .99999999
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 const1 <- (r/P - (f-r)/Q)
@@ -850,7 +851,9 @@ setMethod(
                 nfact <- length(a)
                 hess <- matrix(0, nfact*2 + 2, nfact*2 + 2)                		
                 P <- P.comp(a,d,Theta,g, 1)		
-                Pstar <- P.comp(a,d,Theta,0, 1)		
+                Pstar <- P.comp(a,d,Theta,0, 1)
+                P[P < 1e-8] <- 1e-8
+                Pstart[Pstart < 1e-8] <- 1e-8
                 Qstar <- 1 - Pstar
                 Q <- 1 - P	
                 const1 <- (r/P - (f-r)/Q)
