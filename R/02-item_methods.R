@@ -209,9 +209,11 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)        
+        itemtrace <- ProbTrace(x=x, Theta=Theta, EM = FALSE, prior = NULL)        
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -238,9 +240,11 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)
+        itemtrace <- ProbTrace(x=x, Theta=Theta, EM = FALSE, prior = NULL)
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -266,10 +270,12 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta){          
+    definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -295,10 +301,12 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
-    definition = function(x, Theta){          
+    definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -324,10 +332,12 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta){          
+    definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -353,10 +363,12 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
-    definition = function(x, Theta){          
+    definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -382,10 +394,12 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta){          
+    definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
         itemtrace[itemtrace < 1e-8] <- 1e-8
-        LL <- (-1) * sum(x@rs * log(itemtrace))
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
         if(any(!is.nan(x@n.prior.mu))){
             ind <- !is.nan(x@n.prior.mu)
             val <- x@par[ind]
@@ -656,11 +670,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){        
+    definition = function(x, Theta, EM = FALSE, prior = NULL){        
         f <- 1
         dat <- x@dat[ ,2]
+        Prior <- rep(1, length(dat))
         if(EM){
-            dat <- x@rs[,2]
+            Prior <- prior
+            dat <- x@rs[,2] 
             f <- rowSums(x@rs)
         }
         nfact <- x@nfact
@@ -680,36 +696,42 @@ setMethod(
             Pstar[Pstar > .99999999] <- .99999999
             Qstar <- 1 - Pstar
             da <- rep(0,nfact)	
-            dd <- sum((1-g)*Pstar*Qstar*(dat/P - (f-dat)/Q))
-            dc <- sum(Qstar*(dat/P - (f-dat)/Q))
+            dd <- sum((1-g)*Pstar*Qstar*(dat/P - (f-dat)/Q)*Prior)
+            dc <- sum(Qstar*(dat/P - (f-dat)/Q)*Prior)
             for(i in 1:nfact){
-                da[i] <- sum(Theta[,i]*Pstar*Qstar*(1-g)*(dat/P - (f-dat)/Q))
+                da[i] <- sum(Theta[,i]*Pstar*Qstar*(1-g)*(dat/P - (f-dat)/Q)*Prior)
             }
             grad <- c(da,dd,dc,0)				
             gloc <- nfact+2
             const1 <- (dat/P - (f-dat)/Q)*(Qstar-Pstar)
             const2 <- (dat/P^2 + (f-dat)/Q^2)	
             hess[nfact+1,nfact+1] <- sum((1-g)*Pstar*Qstar*(const1 - 
-                Pstar*Qstar*(1-g)*const2))		
-            hess[gloc,gloc] <- -sum(Qstar^2 *(dat/P^2 + (f-dat)/Q^2))
-            hess[gloc,nfact+1] <- hess[nfact+1,gloc] <- sum(-Pstar*Qstar*((dat/P - (f-dat)/Q) + Qstar*(1-g)*const2)) 
+                Pstar*Qstar*(1-g)*const2)*Prior)		
+            hess[gloc,gloc] <- -sum(Qstar^2 *(dat/P^2 + (f-dat)/Q^2)*Prior)
+            hess[gloc,nfact+1] <- hess[nfact+1,gloc] <- sum(-Pstar*Qstar*((dat/P - (f-dat)/Q) + 
+                Qstar*(1-g)*const2)*Prior) 
             for(i in 1:nfact){
                 hess[nfact+1,i] <- hess[i,nfact+1] <- sum((1-g)*Theta[,i]*Pstar*Qstar*(const1 - 
-                    Pstar*Qstar*(1-g)*const2))			
+                    Pstar*Qstar*(1-g)*const2)*Prior)			
                 hess[gloc,i] <- hess[i,gloc] <- sum(-Theta[,i]*Pstar*Qstar*((dat/P - (f-dat)/Q) + 
-                    Qstar*(1-g)*const2))		
+                    Qstar*(1-g)*const2)*Prior)		
                 for(j in 1:nfact){
                     if(i == j)
                         hess[i,i] <- sum(Theta[,i]^2 *Pstar*Qstar*(1-g)*(const1 - 
-                            (1-g)*Pstar*Qstar*const2))
+                            (1-g)*Pstar*Qstar*const2)*Prior)
                     if(i < j)
                         hess[i,j] <- hess[j,i] <- sum(Theta[,i]*Theta[,j] *Pstar*Qstar*(1-g)*
-                            (const1 - (1-g)*Pstar*Qstar*const2))					
+                            (const1 - (1-g)*Pstar*Qstar*const2)*Prior)					
                 }
             }	
-        } else { #4PL            
+        } else { #4PL 
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
+            if(EM){                
+                grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
+                return(list(grad = grad, hess = hess))            
+            }            
             grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
             hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
             return(list(grad=grad, hess=hess))
@@ -749,15 +771,19 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){ 
-        dat <- x@dat        
-        if(EM) dat <- x@rs / sum(x@rs)                          
+    definition = function(x, Theta, EM = FALSE, prior = NULL){ 
+        dat <- x@dat 
+        Prior <- rep(1, nrow(dat))
+        if(EM){
+            dat <- x@rs / sum(x@rs)                          
+            Prior <- prior
+        } 
         nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[-(1:nfact)]
         nd <- length(d)    			
         P <- P.poly(a, d,Theta)			    	
-        ret <- .Call("dparsPoly", P, Theta, dat, nd) #switch the order
+        ret <- .Call("dparsPoly", P, Theta, Prior, dat, nd) 
         grad <- c(ret$grad[-(1:nd)], ret$grad[1:nd])
         hess <- matrix(0,nfact+nd,nfact+nd)
         hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
@@ -799,12 +825,12 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){ 
+    definition = function(x, Theta, EM = FALSE, prior = NULL){ 
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){                
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)       
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
@@ -816,7 +842,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, prior = NULL){
         f <- 1
         r <- x@dat
         if(EM){       
@@ -955,12 +981,12 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){            
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)       
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
@@ -972,12 +998,12 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){                
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)       
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
@@ -989,12 +1015,12 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE){
+    definition = function(x, Theta, EM = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){                
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)     
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)     
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)

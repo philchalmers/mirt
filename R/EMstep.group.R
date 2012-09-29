@@ -67,7 +67,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
              paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to 
                  estimated parameters. Please fix!')
     }   
-    prior <- gstructgrouppars <- rlist <- r <- list()    
+    Prior <- prior <- gstructgrouppars <- rlist <- r <- list()    
     LL <- 0
     for(g in 1:ngroups)
         r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
@@ -77,13 +77,15 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(g in 1:ngroups){
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])        
             if(BFACTOR){
-                prior <- dnorm(theta)
-                prior <- list(prior/sum(prior))
+                prior[[g]] <- dnorm(theta, 0, 1)
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                
                 next  
             } 
-            prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+            Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
-            prior[[g]] <- prior[[g]]/sum(prior[[g]])
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
         #Estep
         lastLL <- LL
@@ -91,12 +93,12 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(g in 1:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
-                                            Theta=Theta, prior=prior[[1]],
+                                            Theta=Theta, prior=prior[[g]],
                                             specific=specific, sitems=sitems, 
                                             itemloc=itemloc, debug=debug)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
-                                         Theta=Theta, prior=prior[[g]], itemloc=itemloc, 
+                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
                                          debug=debug)                      
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
@@ -147,7 +149,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             ind1 <- 1                    
             for(group in 1:ngroups){
                 for (i in 1:J){                    
-                    deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE)
+                    deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]])
                     ind2 <- ind1 + length(deriv$grad) - 1
                     longpars[ind1:ind2] <- pars[[group]][[i]]@par
                     g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad

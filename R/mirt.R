@@ -328,7 +328,7 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, 
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
                   pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
                   prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                   technical = list(), ...)

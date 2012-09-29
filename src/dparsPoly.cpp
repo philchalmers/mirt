@@ -1,6 +1,6 @@
 #include"Misc.h"
 
-RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta) 
+RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP Rnzeta) 
 {		
     BEGIN_RCPP
     /* 
@@ -13,6 +13,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta)
 	int i, j, k, nzeta, nfact, N; 
 	NumericMatrix prob(Rprob);
 	NumericMatrix Thetas(RThetas);
+    NumericMatrix Prior(RPrior);
     NumericMatrix dat(Rdat);
     IntegerVector Pnzeta(Rnzeta);
     nzeta = Pnzeta[0];
