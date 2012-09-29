@@ -208,8 +208,8 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta, EM = FALSE, prior = NULL)        
+    definition = function(x, Theta, EM=FALSE, prior=NULL){          
+        itemtrace <- ProbTrace(x=x, Theta=Theta)        
         itemtrace[itemtrace < 1e-8] <- 1e-8
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
@@ -239,8 +239,8 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta, EM = FALSE, prior = NULL)
+    definition = function(x, Theta, EM = FALSE, prior = NULL){          
+        itemtrace <- ProbTrace(x=x, Theta=Theta)
         itemtrace[itemtrace < 1e-8] <- 1e-8
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
@@ -771,7 +771,9 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){ 
+    definition = function(x, Theta, EM = FALSE, prior = NULL){         
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))        
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
@@ -1237,8 +1239,8 @@ L <- function(par, obj, Theta){
     return(LL)
 }
 
-EML <- function(par, obj, Theta, ...){
+EML <- function(par, obj, Theta, ...){    
     obj@par[obj@est] <- par
-    L <- (-1)*LogLik(x=obj, Theta=Theta, ...)
+    L <- (-1)*LogLik(x=obj, Theta=Theta, EM=TRUE, ...)
     return(L)
 }

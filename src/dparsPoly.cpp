@@ -13,12 +13,13 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 	int i, j, k, nzeta, nfact, N; 
 	NumericMatrix prob(Rprob);
 	NumericMatrix Thetas(RThetas);
-    NumericMatrix Prior(RPrior);
-    NumericMatrix dat(Rdat);
+    NumericVector Prior(RPrior);
+    NumericMatrix dat2(Rdat);
     IntegerVector Pnzeta(Rnzeta);
     nzeta = Pnzeta[0];
     nfact = Thetas.ncol();
     N = Thetas.nrow();
+    NumericMatrix dat(dat2.nrow(), dat2.ncol());
     NumericMatrix d2L(nfact + nzeta, nfact + nzeta);
     NumericVector dL(nfact + nzeta);
 
@@ -32,6 +33,11 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 		for(i = 0; i < N; i++){
 			P(i,j) = prob(i,j);
 			PQfull(i,j) = prob(i,j) * (1.0 - prob(i,j));
+		}
+	}
+	for(j = 0; j < dat2.ncol(); j++){
+		for(i = 0; i < N; i++){
+		    dat(i,j) = dat2(i,j) * Prior(i);
 		}
 	}
 	for(j = 0; j < nfact; j++)
