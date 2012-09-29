@@ -2,17 +2,18 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor Analysis}
 \usage{
-  bfactor(data, specific, itemtype = NULL, guess = 0, upper
-    = 1, SE = FALSE, pars = NULL, constrain = NULL,
-    parprior = NULL, prev.cor = NULL, quadpts = 20, verbose
-    = FALSE, debug = FALSE, technical = list(), ...)
+  bfactor(data, model, itemtype = NULL, guess = 0, upper =
+    1, SE = FALSE, SEtol = .01, pars = NULL, constrain =
+    NULL, parprior = NULL, prev.cor = NULL, quadpts = 20,
+    verbose = FALSE, debug = FALSE, technical = list(),
+    ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
   consists of numerically ordered data, with missing data
   coded as \code{NA}}
 
-  \item{specific}{a numeric vector specifying which factor
+  \item{model}{a numeric vector specifying which factor
   loads on which item. For example, if for a 4 item test
   with two specific factors, the first specific factor
   loads on the first two items and the second specific
@@ -44,6 +45,11 @@
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
+
+  \item{SEtol}{tollerance value used to stop the MHRM
+  estimation when \code{SE = TRUE}. Lower values will take
+  longer but may be more stable for computing the
+  information matrix}
 
   \item{constrain}{a list of user declared equality
   constraints. To see how to define the parameters

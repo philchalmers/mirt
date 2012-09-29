@@ -58,7 +58,6 @@ Collate:
     '01-itemtypes.R'
     '02-item_methods.R'
     'calcLogLik.R'
-    'EMstep.R'
     'LoadPars.R'
     'confmirt.model.R'
     'model.elements.R'

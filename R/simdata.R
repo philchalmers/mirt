@@ -160,7 +160,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     a[is.na(a)] <- 0    
 	for(i in 1:nitems){
         par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
-        obj <- new(itemtype[i], par=par, nfact=nfact, bfactor=FALSE)
+        obj <- new(itemtype[i], par=par, nfact=nfact)
         if(any(itemtype[i] == c('gpcm','nominal'))) 
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)

@@ -10,9 +10,8 @@
 \usage{
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
     1, pars = NULL, constrain = NULL, parprior = NULL,
-    verbose = TRUE, calcLL = TRUE, draws = 2000, debug =
-    FALSE, rotate = 'varimax', Target = NULL, technical =
-    list(), ...)
+    verbose = TRUE, draws = 2000, debug = FALSE, rotate =
+    'varimax', Target = NULL, technical = list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)

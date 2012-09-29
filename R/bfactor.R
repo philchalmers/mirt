@@ -21,7 +21,7 @@
 #' @aliases bfactor 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
-#' @param specific a numeric vector specifying which factor loads on which
+#' @param model a numeric vector specifying which factor loads on which
 #' item. For example, if for a 4 item test with two specific factors, the first
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
@@ -39,6 +39,8 @@
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
+#' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
+#' will take longer but may be more stable for computing the information matrix
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
@@ -88,7 +90,7 @@
 #' 
 #' @keywords models
 #' @usage
-#' bfactor(data, specific, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, pars = NULL,
+#' bfactor(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .01, pars = NULL,
 #' constrain = NULL, parprior = NULL,
 #' prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
@@ -157,8 +159,8 @@
 #'
 #'     }
 #' 
-bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, pars = NULL, 
-                     constrain = NULL, parprior = NULL,
+bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .01,
+                    pars = NULL, constrain = NULL, parprior = NULL,
                      prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
                      technical = list(), ...)
 {         
@@ -166,8 +168,8 @@ bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FAL
     Call <- match.call()		    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, 
-                      pars=pars, method = 'EM', constrain=constrain, SE = SE, 
-                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
+                      pars=pars, method = 'EM', constrain=constrain, SE = SE, SEtol=SEtol,
+                      parprior=parprior, quadpts=quadpts, 
                       technical = technical, debug = debug, verbose = verbose, 
                       BFACTOR = TRUE, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))

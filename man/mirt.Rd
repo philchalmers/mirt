@@ -10,10 +10,10 @@
 Theory)}
 \usage{
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-    SE = TRUE, pars = NULL, constrain = NULL, parprior =
-    NULL, rotate = 'varimax', Target = NULL, prev.cor =
-    NULL, quadpts = NULL, verbose = FALSE, debug = FALSE,
-    technical = list(), ...)
+    SE = FALSE, SEtol = .01, pars = NULL, constrain = NULL,
+    parprior = NULL, rotate = 'varimax', Target = NaN,
+    prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug
+    = FALSE, technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -62,6 +62,11 @@ Theory)}
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
+
+  \item{SEtol}{tollerance value used to stop the MHRM
+  estimation when \code{SE = TRUE}. Lower values will take
+  longer but may be more stable for computing the
+  information matrix}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing

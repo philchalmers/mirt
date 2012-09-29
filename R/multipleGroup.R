@@ -37,6 +37,10 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
+#' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation.
+#' Only applicable when \code{method = 'EM'}
+#' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
+#' will take longer but may be more stable for computing the information matrix
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
@@ -69,6 +73,7 @@
 #' @param object an object of class \code{confmirtClass}
 #' @param object2 an object of class \code{confmirtClass}
 #' @param digits the number of significant digits to be rounded
+#' @param ... additional arguments to be passed
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
 #' \describe{
@@ -86,17 +91,16 @@
 #'  \item{return_newconstrain}{if \code{TRUE} returns a list consisting of the constraints to be used
 #'  just before estimation begins} 
 #' }
-#' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
 #' \code{\link{confmirt.model}}, \code{\link{fscores}}
 #' @keywords models
 #' @usage 
-#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,  
+#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, SEtol = .01,  
 #' invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
 #' parprior = NULL, draws = 2000, quadpts = NULL,
-#' technical = list(), debug = FALSE, verbose = TRUE)
+#' technical = list(), debug = FALSE, verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -184,8 +188,8 @@
 #' anova(mod_fullconstrain, mod_scalar)
 
 #' }
-multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                          invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
+multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = TRUE,
+                          SEtol = .01, invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
                           parprior = NULL, draws = 2000, 
                           quadpts = NULL,
                           technical = list(), debug = FALSE, verbose = TRUE, ...)
@@ -194,7 +198,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, 
                       itemtype=itemtype, guess=guess, upper=upper, 
-                      pars=pars, constrain=constrain, 
+                      pars=pars, constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, method=method,
                       technical = technical, debug = debug, verbose = verbose, ...)
     if(is(mod, 'MultipleGroupClass'))

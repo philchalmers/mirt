@@ -6,10 +6,10 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, invariance = '', pars = NULL, method =
-    'MHRM', constrain = NULL, parprior = NULL, draws =
-    2000, quadpts = NULL, technical = list(), debug =
-    FALSE, verbose = TRUE)
+    = 0, upper = 1, SE = TRUE, SEtol = .01, invariance =
+    '', pars = NULL, method = 'MHRM', constrain = NULL,
+    parprior = NULL, draws = 2000, quadpts = NULL,
+    technical = list(), debug = FALSE, verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -61,6 +61,15 @@
   for 4-PL model. Can be entered as a single value to
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
+
+  \item{SE}{logical, estimate the standard errors? Calls
+  the MHRM subroutine for a stochastic approximation. Only
+  applicable when \code{method = 'EM'}}
+
+  \item{SEtol}{tollerance value used to stop the MHRM
+  estimation when \code{SE = TRUE}. Lower values will take
+  longer but may be more stable for computing the
+  information matrix}
 
   \item{verbose}{logical; display iteration history during
   estimation?}
@@ -126,6 +135,8 @@
   \item{digits}{the number of significant digits to be
   rounded}
 
+  \item{...}{additional arguments to be passed}
+
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are \describe{
   \item{NCYCLES}{max number of cycles; default 2000 for
@@ -144,8 +155,6 @@
   \code{c(0.05,0.5,0.004)}} \item{return_newconstrain}{if
   \code{TRUE} returns a list consisting of the constraints
   to be used just before estimation begins} }}
-
-  \item{...}{additional arguments to be passed}
 }
 \description{
   \code{multipleGroup} performes a full-information

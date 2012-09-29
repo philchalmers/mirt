@@ -78,6 +78,8 @@
 #' generalized partial credit model, nominal model, multiple choice model, and 2-3PL partially compensatory model,
 #' respectively 
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
+#' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
+#' will take longer but may be more stable for computing the information matrix
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
@@ -231,8 +233,8 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, pars = NULL, 
-#' constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NULL, 
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .01, pars = NULL, 
+#' constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
 #' 
@@ -328,7 +330,7 @@
 #' summary(mod2g, rotate='promax')
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .01,
                   pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
                   prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug = FALSE, 
                   technical = list(), ...)
@@ -337,7 +339,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, 
-                      pars=pars, method = 'EM', constrain=constrain, SE=SE,
+                      pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
                       technical = technical, debug = debug, verbose = verbose, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))

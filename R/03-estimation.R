@@ -2,7 +2,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
                        parprior = NULL, draws = 2000, calcLL = TRUE,
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
-                       technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE)
+                       technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
+                       SEtol = .01)
 {    
     if(debug == 'ESTIMATION') browser()
     set.seed(12345)       
@@ -82,6 +83,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     for(g in 1:ngroups)
         pars[[g]] <- PrepList[[g]]$pars
     J <- length(PrepList[[1]]$itemtype)
+    K <- PrepListFull$K
     nfact <- PrepList[[1]]$pars[[J+1]]@nfact
     nLambdas <- PrepList[[1]]$pars[[1]]@nfact
     if(is.null(constrain)) constrain <- list()         
@@ -102,6 +104,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1:J){
             pars[[1]][[i]]@par[1] <- 0
             pars[[1]][[i]]@est[1] <- FALSE            
+            if(is(pars[[1]][[i]], 'nominal'))
+                pars[[1]][[i]]@est[(nfact+1):(nfact + K[i])] <- FALSE                            
+            if(is(pars[[1]][[i]], 'mcm'))
+                pars[[1]][[i]]@est[c((nfact+1):(nfact + K[i]), 
+                    length(pars[[1]][[i]]@est):(length(pars[[1]][[i]]@est)-K[i]+1))] <- FALSE                           
         }       
     }
     if(method == 'EM'){
@@ -153,7 +160,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(!NULL.MODEL && SE){
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, BURNIN=1, SEMCYCLES=5,
-                                           KDRAWS=KDRAWS, TOL=.01, USEEM=USEEM, gain=gain, 
+                                           KDRAWS=KDRAWS, TOL=SEtol, USEEM=USEEM, gain=gain, 
                                            nfactNames=PrepList[[1]]$nfactNames, 
                                            itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR,  
                                            nfact=nfact, constrain=constrain, verbose=FALSE,
@@ -231,9 +238,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI <- NaN
     if(!NULL.MODEL){
-        null.mod <- unclass(mirt(data, 1, itemtype=itemtype, technical = list(NULL.MODEL = TRUE), 
-                                 SE = FALSE))        
-        TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
+        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE))))
+        if(is(null.mod, 'try-error')){
+            message('Null model calculation did not converge.')
+            null.mod <- unclass(new('ConfirmatoryClass'))            
+        } else {
+            TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
+        }
     }
     if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
     if(ngroups == 1){        

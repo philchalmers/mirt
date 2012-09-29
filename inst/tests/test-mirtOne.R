@@ -4,7 +4,7 @@ test_that('dich', {
     data <- expand.table(LSAT7)        
     modm1 <- mirt(data, 1)
     expect_is(modm1, 'ConfirmatoryClass')          
-    modm2 <- mirt(data, 2)
+    modm2 <- mirt(data, 2, SE = TRUE)
     expect_is(modm2, 'ExploratoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch', SE = FALSE)
     expect_is(modm3, 'ConfirmatoryClass')

@@ -1,14 +1,16 @@
 context('mirtTwo')
 
 test_that('poly', {
-    modp1 <- mirt(Science, 1, SE = FALSE)
+    modp1 <- mirt(Science, 1)
     expect_is(modp1, 'ConfirmatoryClass')          
     modp2 <- mirt(Science, 2)
     expect_is(modp2, 'ExploratoryClass')
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)))
     expect_is(modp3, 'ConfirmatoryClass')
-    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'mcm'), SE = FALSE)
+    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'mcm'))
     expect_is(modp4, 'ConfirmatoryClass')
+    modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE)
+    expect_is(modp5, 'ConfirmatoryClass')
     
     fm1 <- fscores(modp1, verbose = FALSE)
     expect_is(fm1, 'matrix')
@@ -18,6 +20,8 @@ test_that('poly', {
     expect_is(fm3, 'matrix')
     fm4 <- fscores(modp4, verbose = FALSE)
     expect_is(fm4, 'matrix')
+    fm5 <- fscores(modp5, verbose = FALSE)
+    expect_is(fm5, 'matrix')
     
     cof1 <- coef(modp1, verbose = FALSE)
     expect_is(cof1, 'list')

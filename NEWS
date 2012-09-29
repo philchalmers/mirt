@@ -5,8 +5,13 @@ mirt 0.4.1
 * better system to specify fixed/free parameters and starting values using
   pars = 'values'. 
 
+* analytical derivatives much more stable
+
 * updated documentation and beamer slide show included for some background on MIRT and some 
   of the packages capabilities
+
+* kernel estimation moved entirely to one method. Much easier to maintain and guarantees consistency
+  across methods (no more quasi-Newton algorithms)
 
 ----------------------------------------------------------------
 mirt 0.4.0
