@@ -183,9 +183,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     cmods <- list()
     for(g in 1:ngroups){
         lambdas <- Lambdas(ESTIMATE$pars[[g]])
-        if (nfact > 1) norm <- sqrt(1 + rowSums(lambdas[ ,1:nfact]^2))
+        if (ncol(lambdas) > 1) norm <- sqrt(1 + rowSums(lambdas^2))
         else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
-        alp <- as.matrix(lambdas[ ,1:nfact]/norm)
+        alp <- as.matrix(lambdas/norm)
         F <- alp
         colnames(F) <- PrepList[[g]]$factorNames
         h2 <- rowSums(F^2)
@@ -286,10 +286,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
                        fulldata=PrepListFull$fulldata)
-        } else {
-            F <- alp
-            colnames(F) <- PrepList[[1]]$factorNames    
-            h2 <- rowSums(F^2)       
+        } else {                        
             mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars, 
                        G2=G2, 

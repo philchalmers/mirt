@@ -64,15 +64,18 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
     if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')    
     theta <- seq(-4,4, length.out=40)
-    Theta <- thetaComb(theta, nfact)   
+    Theta <- ThetaFull <- thetaComb(theta, nfact)   
+    prodlist <- attr(x@pars, 'prodlist')
+    if(length(prodlist) > 0)        
+        ThetaFull <- prodterms(Theta,prodlist)
     P <- ProbTrace(x=x@pars[[item]], Theta=Theta)         
     info <- 0 
     if(nfact == 2){
         for(i in 1:length(degrees))
-            info <- info + iteminfo(x=x@pars[[item]], Theta=Theta, degrees=c(degrees[i], 
+            info <- info + iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=c(degrees[i], 
                                                                              90 - degrees[i]))
     } else {
-        info <- iteminfo(x=x@pars[[item]], Theta=Theta, degrees=0)
+        info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
     }
     if(nfact == 1){
         if(type == 'trace'){            

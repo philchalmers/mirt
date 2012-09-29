@@ -51,12 +51,12 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
                           quadpts = NULL, verbose = TRUE)
-	{           
+	{          
         pars <- object@pars        
 		K <- object@K        
         J <- length(K)        
         prodlist <- attr(pars, 'prodlist')
-        nfact <- object@nfact - length(prodlist)
+        nfact <- object@nfact
         nLambdas <- object@nfact
         itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
@@ -66,7 +66,7 @@ setMethod(
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor
         } else {
-            a <- matrix(0, J, nLambdas)
+            a <- matrix(0, J, pars[[1]]@nfact)
             for(i in 1:J)
                 a[i, ] <- ExtractLambdas(pars[[i]])                                        
         }        			

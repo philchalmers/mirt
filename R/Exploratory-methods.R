@@ -241,13 +241,16 @@ setMethod(
         if(nfact == 1) theta_angle <- 0        
         J <- length(x@pars) - 1        
         theta <- seq(-4,4,length.out=npts)             
-        Theta <- thetaComb(theta, nfact)        
+        ThetaFull <- Theta <- thetaComb(theta, nfact)        
+        prodlist <- attr(x@pars, 'prodlist')
+        if(length(prodlist) > 0)        
+            ThetaFull <- prodterms(Theta,prodlist)        
         info <- 0        
         for(l in 1:length(theta_angle)){
             ta <- theta_angle[l]
             if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
             for(i in 1:J)
-                info <- info + iteminfo(x=x@pars[[i]], Theta=Theta, degrees=ta)            
+                info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)            
         }
         plt <- data.frame(cbind(info,Theta))
         if(nfact == 2){						

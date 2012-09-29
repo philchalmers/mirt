@@ -53,8 +53,9 @@ personfit <- function(x, full.scores = FALSE){
     sc <- fscores(x, verbose = FALSE, full.scores=full.scores) 
     J <- ncol(x@data)
     itemloc <- x@itemloc
-    nfact <- x@nfact        
     pars <- x@pars
+    prodlist <- attr(pars, 'prodlist')    
+    nfact <- x@nfact + length(prodlist)   
     if(full.scores){
         fulldata <- x@fulldata    
         Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]

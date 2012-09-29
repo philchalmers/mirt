@@ -56,9 +56,10 @@ itemfit <- function(x, type = 'Zh', ngroups = 10, empirical.plot = NULL){
     }    
     sc <- fscores(x, verbose = FALSE, full.scores = TRUE) 
     J <- ncol(x@data)
-    itemloc <- x@itemloc
-    nfact <- x@nfact
+    itemloc <- x@itemloc    
     pars <- x@pars
+    prodlist <- attr(pars, 'prodlist')    
+    nfact <- x@nfact + length(prodlist)
     fulldata <- x@fulldata    
     Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]
     if(type == 'X2'){
