@@ -425,7 +425,7 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
-    definition = function(x, Theta, pars, tabdata, itemloc){
+    definition = function(x, Theta, pars, tabdata, itemloc, EM = TRUE){
         r <- tabdata[, ncol(tabdata)]
         gpars <- ExtractGroupPars(x)
         mu <- gpars$gmeans

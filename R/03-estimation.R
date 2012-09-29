@@ -3,7 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, draws = 2000, calcLL = TRUE,
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
-                       SEtol = .01)
+                       SEtol = .01, nested.mod = NULL)
 {    
     if(debug == 'ESTIMATION') browser()
     set.seed(12345)       
@@ -57,7 +57,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
-    names(PrepList) <- groupNames
+    names(PrepList) <- groupNames    
     if(BFACTOR){
         #better start values        
         J <- length(PrepList[[1]]$pars) - 1
@@ -71,6 +71,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1:ngroups)
             for(i in 1:J)
                 PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1:2] <- astart[i, ]                
+    }
+    if(!is.null(nested.mod) && is(nested.mod, 'MultipleGroupClass')){          
+        for(g in 1:ngroups){
+            for(i in 1:length(PrepList[[g]]$pars)){
+                tmp <- nested.mod@cmods[[g]]@pars
+                tmp2 <- PrepList[[g]]$pars[[i]]@est
+                PrepList[[g]]$pars[[i]]@par[tmp2] <- tmp[[i]]@par[tmp2]                
+            }            
+        }       
     }
     if(!is.null(pars)){
         if(is(pars, 'matrix') || is(pars, 'data.frame')){

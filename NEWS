@@ -3,15 +3,19 @@ mirt 0.4.1
 ----------------------------------------------------------------
 
 * better system to specify fixed/free parameters and starting values using
-  pars = 'values'. 
+  pars = 'values' 
 
-* analytical derivatives much more stable
+* for multipleGroup(), optional input added to change the current freely estimated parameters 
+  to values of a previously computed model. This will save needless iterations in the EM and MHRM
+  since these parameters should be much closer to the new ML estimates 
+
+* analytical derivatives much more stable, although some are not yet optimized
 
 * updated documentation and beamer slide show included for some background on MIRT and some 
   of the packages capabilities
 
 * kernel estimation moved entirely to one method. Much easier to maintain and guarantees consistency
-  across methods (no more quasi-Newton algorithms)
+  across methods (i.e., no more quasi-Newton algorithms)
 
 ----------------------------------------------------------------
 mirt 0.4.0

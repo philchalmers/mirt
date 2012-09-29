@@ -44,6 +44,12 @@
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
+#' @param nested.mod an optional input object of class \code{'MultipleGroupClass'} to quickly 
+#' change the starting values of the current estimation.
+#' If a parameter in the current model is being freely estimated then it's value will be set to whatever the 
+#' corresponding value was in this input object. This is useful when testing nested models since the starting 
+#' values should be much closer to the new ML values. Note that this method requires that all the \code{itemtype}
+#' values be identical between models
 #' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM 
 #' (\code{'MHRM'}) algorithm
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
@@ -99,7 +105,7 @@
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, SEtol = .01,  
 #' invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
-#' parprior = NULL, draws = 2000, quadpts = NULL,
+#' parprior = NULL, draws = 2000, quadpts = NULL, nested.mod = NULL,
 #' technical = list(), debug = FALSE, verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
@@ -191,13 +197,13 @@
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = TRUE,
                           SEtol = .01, invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
                           parprior = NULL, draws = 2000, 
-                          quadpts = NULL,
+                          quadpts = NULL, nested.mod = NULL,
                           technical = list(), debug = FALSE, verbose = TRUE, ...)
 {   
     if(debug == 'Main') browser()
-    Call <- match.call()    
+    Call <- match.call()        
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, 
-                      itemtype=itemtype, guess=guess, upper=upper, 
+                      itemtype=itemtype, guess=guess, upper=upper, nested.mod=nested.mod, 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, method=method,
                       technical = technical, debug = debug, verbose = verbose, ...)

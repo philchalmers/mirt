@@ -9,7 +9,8 @@
     = 0, upper = 1, SE = TRUE, SEtol = .01, invariance =
     '', pars = NULL, method = 'MHRM', constrain = NULL,
     parprior = NULL, draws = 2000, quadpts = NULL,
-    technical = list(), debug = FALSE, verbose = TRUE, ...)
+    nested.mod = NULL, technical = list(), debug = FALSE,
+    verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -79,6 +80,17 @@
 
   \item{quadpts}{the number of quadratures to be used per
   dimensions when \code{method = 'EM'}}
+
+  \item{nested.mod}{an optional input object of class
+  \code{'MultipleGroupClass'} to quickly change the
+  starting values of the current estimation. If a parameter
+  in the current model is being freely estimated then it's
+  value will be set to whatever the corresponding value was
+  in this input object. This is useful when testing nested
+  models since the starting values should be much closer to
+  the new ML values. Note that this method requires that
+  all the \code{itemtype} values be identical between
+  models}
 
   \item{method}{a character indicating whether to use the
   EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm}
