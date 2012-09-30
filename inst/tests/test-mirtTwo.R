@@ -31,4 +31,15 @@ test_that('poly', {
     IP2 <- itemplot(modp2, 1)
     expect_is(IP1, 'NULL')
     expect_is(IP2, 'trellis')
+    
+    ##rating scale test
+    set.seed(1234)
+    a <- matrix(rep(1/1.702, 10))
+    d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
+    c <- seq(-1, 1, length.out=10)
+    data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
+    sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values')
+    sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1)    
+    grsm <- mirt(data, 1, itemtype = 'grsm', pars = sv)
+    expect_is(grsm, 'ConfirmatoryClass')    
 })
