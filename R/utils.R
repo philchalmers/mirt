@@ -313,7 +313,11 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
     return(object)
 }
 
-UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups){
+UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList){
+    
+    for(g in 1:ngroups)        
+        for(i in 1:length(PrepList[[g]]$constrain))
+            constrain[[length(constrain) + 1]] <- PrepList[[g]]$constrain[[i]]        
     if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
         tmpmat <- matrix(NA, nfact, nfact)
         low_tri <- lower.tri(tmpmat)

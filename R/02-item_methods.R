@@ -141,7 +141,8 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, itemexp = TRUE){                  
+    definition = function(x, Theta, itemexp = TRUE){
+        nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[(nfact+1):(length(x@par)-1)]
         t <- x@par[length(x@par)]
@@ -617,6 +618,7 @@ setMethod(
     f = "ItemInfo",
     signature = signature(x = 'rating', Theta = 'matrix', cosangle = 'numeric'),
     definition = function(x, Theta, cosangle = 1){
+        nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[(nfact+1):(length(x@par)-1)]
         t <- x@par[length(x@par)]

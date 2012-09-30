@@ -106,7 +106,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             pars[[g]][[J + 1]]@est[(nfact+1):length(pars[[g]][[J + 1]]@est)] <- TRUE            
     } 
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=nfact, 
-                                 nLambdas=nLambdas, J=J, ngroups=ngroups)    
+                                 nLambdas=nLambdas, J=J, ngroups=ngroups, PrepList=PrepList)    
     if(!is.null(technical$return_newconstrain)) return(constrain)    
     startlongpars <- c()
     if(NULL.MODEL){

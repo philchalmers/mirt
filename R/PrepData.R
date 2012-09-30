@@ -1,7 +1,9 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
-                     free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE)
+                     free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
+                     rsm.group = NULL)
 {
     if(debug == 'PrepData') browser()
+    if(is.null(rsm.group)) rsm.group <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV')
     data <- as.matrix(data)    	
@@ -117,6 +119,26 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
                                parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)
     }        
+    if(any(itemtype == c('rsm','grsm'))){          
+        unique.rsmgroups <- unique(na.omit(rsm.group))        
+        for(group in unique.rsmgroups){                
+            Kk <- unique(K[rsm.group[rsm.group == unique.rsmgroups[group]]])
+            if(length(Kk) > 1) stop('Rating scale models require that items to have the 
+                                       same number of categories')
+            for(k in 2:(Kk-1)){
+                rsmConstraint <- c()    
+                for(i in 1:J){
+                    if(rsm.group[i] == unique.rsmgroups[group]){
+                        if(length(rsmConstraint) == 0){ 
+                            pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
+                            rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[nfact+k])
+                        } else rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[nfact+k])    
+                    }
+                }
+                constrain[[length(constrain) + 1]] <- rsmConstraint
+            }
+        }            
+    }
     npars <- 0
     for(i in 1:length(pars))
         npars <- npars + sum(pars[[i]]@est)    
