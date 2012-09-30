@@ -27,11 +27,16 @@
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
-#' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and 2 parameter logistic, 
+#' however they may be changed to the following: '2PL', '3PL', '3PLu', 
+#' '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
-#' generalized partial credit model, nominal model, multiple choice model, and 2-3PL partially compensatory model,
-#' respectively
+#' rating scale graded response model, generalized partial credit model, nominal model, 
+#' multiple choice model, and 2-3PL partially compensatory model, respectively
+#' @param grsm.block an optional numeric vector indicating where the blocking should occur when using 
+#' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
+#' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
+#' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
+#' group and therefore have the same number of item categories
 #' @param guess fixed pseudo-guessing parameter. Can be entered as a single
 #' value to assign a global value or may be entered as a numeric vector for
 #' each item of length \code{ncol(data)}.
@@ -92,7 +97,7 @@
 #' @usage
 #' bfactor(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .01, pars = NULL,
 #' constrain = NULL, parprior = NULL,
-#' prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
+#' prev.cor = NULL, quadpts = 20, grsm.block = NULL, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
 #' 
 #'
@@ -161,13 +166,13 @@
 #' 
 bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .01,
                     pars = NULL, constrain = NULL, parprior = NULL,
-                     prev.cor = NULL, quadpts = 20, verbose = FALSE, debug = FALSE, 
+                     prev.cor = NULL, quadpts = 20, grsm.block = NULL, verbose = FALSE, debug = FALSE, 
                      technical = list(), ...)
 {         
     if(debug == 'Main') browser()
     Call <- match.call()		    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
-                      itemtype=itemtype, guess=guess, upper=upper, 
+                      itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE = SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, 
                       technical = technical, debug = debug, verbose = verbose, 

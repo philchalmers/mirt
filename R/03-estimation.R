@@ -3,7 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, draws = 2000, calcLL = TRUE,
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
-                       SEtol = .01, nested.mod = NULL)
+                       SEtol = .01, nested.mod = NULL, grsm.block = NULL)
 {    
     if(debug == 'ESTIMATION') browser()
     set.seed(12345)       
@@ -23,9 +23,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             gain <- technical$gain
     }	 
     NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
-    USEEM <- ifelse(method == 'EM', TRUE, FALSE)
+    USEEM <- ifelse(method == 'EM', TRUE, FALSE)    
     ##	            
     data <- as.matrix(data)
+    if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     rownames(data) <- 1:nrow(data)
     group <- factor(group)
     groupNames <- unique(group)
@@ -53,7 +54,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, 
                                   upper=upper, startvalues=NULL, constrain=constrain, freepars=NULL, 
                                   parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
-                                  technical=technical, parnumber=parnumber, BFACTOR=BFACTOR)        
+                                  technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
+                                  grsm.block=grsm.block)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
@@ -120,6 +122,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     length(pars[[1]][[i]]@est):(length(pars[[1]][[i]]@est)-K[i]+1))] <- FALSE                           
         }       
     }
+    #EM estimation
     if(method == 'EM'){
         esttype <- 'EM'
         if(method == 'EM' && nLambdas > nfact) 
@@ -176,7 +179,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars), 
                                debug=debug)                 
         }
-    } else if(method == 'MHRM'){
+    } else if(method == 'MHRM'){ #MHRM estimation
         Theta <- matrix(0, nrow(data), J)
         esttype <- 'MHRM'
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
@@ -204,8 +207,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
                           constrain=constrain,
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
-    }  
-    
+    }
+    #missing stats for MHRM
     if(method =='MHRM'){
         if(verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()      
@@ -219,6 +222,30 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             Pl[[g]] <- cmods[[g]]@Pl
         }            
     } 
+    #constraint for grsm blocks
+    if(any(itemtype == 'grsm')){
+        for(g in 1:ngroups){
+            for(u in unique(na.omit(grsm.block))){
+                tmp <- grsm.block == u
+                tmp2 <- rep(0, J)                
+                for(i in 1:J){
+                    if(tmp[i]){
+                        ind <- length(ESTIMATE$pars[[g]][[i]]@par)
+                        tmp2[i] <- ESTIMATE$pars[[g]][[i]]@par[ind]
+                    }
+                }
+                tmp2 <- tmp2 - mean(tmp2)
+                for(i in 1:J){
+                    if(tmp[i]){
+                        ind <- length(ESTIMATE$pars[[g]][[i]]@par)
+                        ESTIMATE$pars[[g]][[i]]@par[ind] <- tmp2[i]
+                    }               
+                }
+            }
+        }       
+    }
+    
+    ####post estimation stats
     r <- PrepListFull$tabdata
     r <- r[, ncol(r)]
     N <- sum(r)

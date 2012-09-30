@@ -1,6 +1,6 @@
 MHRM.group <- function(pars, constrain, PrepList, list, debug)
 {
-    if(debug == 'MHRM.group') browser()    
+    if(debug == 'MHRM') browser()    
     verbose <- list$verbose        
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES

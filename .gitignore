@@ -3,3 +3,4 @@ src/*.so
 .Rproj.user
 mirt.Rproj
 .Rprofile
+src/*.dll

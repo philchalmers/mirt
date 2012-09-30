@@ -30,14 +30,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'graded'){
                 val <- c(lambdas[i,], zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
-            }
-            if(itemtype[i] == 'rsm'){
-                val <- c(1/1.702, 0, seq(2, -2, length = (K[i]-2)), 0, 0)
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:K[i], sep=''), 't')    
-            }
+            }            
             if(itemtype[i] == 'grsm'){
-                val <- c(lambdas[i,], 0, seq(2, -2, length = (K[i]-2)), 0, 0)
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:K[i], sep=''), 't')
+                val <- c(lambdas[i,], zetas[[1]], 0) #first item intercepts
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''), 'c')
             }
             if(itemtype[i] == 'gpcm'){
                 val <- c(lambdas[i,], 0, zetas[[i]])
@@ -57,7 +53,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                          rep(1/K[i], K[i]))
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
                                 paste('d', 0:(K[i]-1), sep=''), paste('t', 0:(K[i]-1), sep=''))                
-            }
+            }            
             startvalues[[i]] <- val
         } 
     }  
@@ -76,11 +72,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'Rasch' && K[i] > 2)            
                 freepars[[i]] <- c(FALSE, rep(TRUE, K[i]))
             if(itemtype[i] == '1PL' && K[i] > 2)            
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
-            if(itemtype[i] == 'rsm')
-                freepars[[i]] <- c(FALSE, FALSE, rep(TRUE, K[i]-2), FALSE, FALSE)
+                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))            
             if(itemtype[i] == 'grsm')
-                freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-2), FALSE, FALSE)
+                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
             if(itemtype[i] == 'graded')
                 freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
             if(itemtype[i] == 'gpcm')            
@@ -178,7 +172,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(freepars[[i]])            
         }
         
-        if(any(itemtype[i] == c('rsm', 'grsm'))){
+        if(any(itemtype[i] == 'grsm')){
             pars[[i]] <- new('rating', 
                              par=startvalues[[i]], 
                              nfact=nfact, 

@@ -1,9 +1,9 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
                      free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
-                     rsm.group = NULL)
+                     grsm.block = NULL)
 {
-    if(debug == 'PrepData') browser()
-    if(is.null(rsm.group)) rsm.group <- rep(1, ncol(data))
+    if(debug == 'PrepData') browser()  
+    if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV')
     data <- as.matrix(data)    	
@@ -105,10 +105,10 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
         names(pars) <- c(itemnames, 'Group_Parameters')
         attr(pars, 'parnumber') <- NULL
         return(pars)  
-    }     
+    }   
+    if(is.null(constrain)) constrain <- list()
     onePLconstraint <- c()
-    if(itemtype[1] == '1PL'){
-        constrain <- list()
+    if(itemtype[1] == '1PL'){        
         for(i in 1:J)
             onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1])    
         constrain[[length(constrain) + 1]] <- onePLconstraint
@@ -119,30 +119,29 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
                                parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)
     }        
-    if(any(itemtype == c('rsm','grsm'))){          
-        unique.rsmgroups <- unique(na.omit(rsm.group))        
-        for(group in unique.rsmgroups){                
-            Kk <- unique(K[rsm.group[rsm.group == unique.rsmgroups[group]]])
+    if(any(itemtype == 'grsm')){           
+        unique.grsmgroups <- unique(na.omit(grsm.block))        
+        for(group in unique.grsmgroups){                
+            Kk <- unique(K[grsm.block[grsm.block == unique.grsmgroups[group]]])
             if(length(Kk) > 1) stop('Rating scale models require that items to have the 
                                        same number of categories')
-            for(k in 2:(Kk-1)){
-                rsmConstraint <- c()    
+            for(k in 1:(Kk-1)){
+                grsmConstraint <- c()    
                 for(i in 1:J){
-                    if(rsm.group[i] == unique.rsmgroups[group]){
-                        if(length(rsmConstraint) == 0){ 
+                    if(grsm.block[i] == unique.grsmgroups[group]){
+                        if(length(grsmConstraint) == 0){ 
                             pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
-                            rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[nfact+k])
-                        } else rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[nfact+k])    
+                            grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[nfact+k])
+                        } else grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[nfact+k])    
                     }
                 }
-                constrain[[length(constrain) + 1]] <- rsmConstraint
+                constrain[[length(constrain) + 1]] <- grsmConstraint
             }
         }            
-    }
+    }    
     npars <- 0
     for(i in 1:length(pars))
-        npars <- npars + sum(pars[[i]]@est)    
-    if(is.null(constrain)) constrain <- list()
+        npars <- npars + sum(pars[[i]]@est)     
     if(is.null(prodlist)) prodlist <- list()
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,
                 K=K, fulldata=fulldata, nfactNames=nfactNames, nfact=nfact, npars=npars, 

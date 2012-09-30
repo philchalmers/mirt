@@ -50,13 +50,20 @@ setMethod(
         J <- length(itemnames)
         for(g in 1:ngroups){              
             allPars[[g]] <- list()
-            for(i in 1:(J+1)){
-                allPars[[g]][[i]] <- round(matrix(c(object@cmods[[g]]@pars[[i]]@par, 
-                                               object@cmods[[g]]@pars[[i]]@SEpar), 
-                                         2, byrow = TRUE), digits)
-                rownames(allPars[[g]][[i]]) <- c('pars', 'SE')
-                colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
-            }                       
+            if(length(object@cmods[[1]]@pars[[1]]@SEpar) > 0){
+                for(i in 1:(J+1)){
+                    allPars[[g]][[i]] <- round(matrix(c(object@cmods[[g]]@pars[[i]]@par, 
+                                                   object@cmods[[g]]@pars[[i]]@SEpar), 
+                                             2, byrow = TRUE), digits)
+                    rownames(allPars[[g]][[i]]) <- c('pars', 'SE')
+                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
+                }
+            } else {
+                for(i in 1:(J+1)){
+                    allPars[[g]][[i]] <- round(object@cmods[[g]]@pars[[i]]@par, digits)
+                    names(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)            
+                }
+            }                      
             names(allPars[[g]]) <- c(itemnames, 'GroupPars')                
         }
         return(allPars)                  	

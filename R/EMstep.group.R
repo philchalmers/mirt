@@ -1,6 +1,6 @@
 EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
 {    
-    if(debug == 'EM.group') browser()
+    if(debug == 'EM') browser()
     verbose <- list$verbose        
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES    

@@ -12,8 +12,9 @@ Theory)}
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
     SE = FALSE, SEtol = .01, pars = NULL, constrain = NULL,
     parprior = NULL, rotate = 'varimax', Target = NaN,
-    prev.cor = NULL, quadpts = NULL, verbose = FALSE, debug
-    = FALSE, technical = list(), ...)
+    prev.cor = NULL, quadpts = NULL, grsm.block = NULL,
+    verbose = FALSE, debug = FALSE, technical = list(),
+    ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -52,13 +53,24 @@ Theory)}
   repeated globally. The NULL default assumes that the
   items follow a graded or 2PL structure, however they may
   be changed to the following: 'Rasch', '1PL', '2PL',
-  '3PL', '3PLu', '4PL', 'graded', 'gpcm', 'nominal', 'mcm',
-  'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and
-  2 parameter logistic, 3 parameter logistic (lower
-  asymptote and upper), 4 parameter logistic, graded
-  response model, generalized partial credit model, nominal
-  model, multiple choice model, and 2-3PL partially
+  '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
+  'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the
+  Rasch/partial credit, 1 and 2 parameter logistic, 3
+  parameter logistic (lower asymptote and upper), 4
+  parameter logistic, graded response model, rating scale
+  graded response model, generalized partial credit model,
+  nominal model, multiple choice model, and 2-3PL partially
   compensatory model, respectively}
+
+  \item{grsm.block}{an optional numeric vector indicating
+  where the blocking should occur when using the grsm, NA
+  represents items that do not belong to the grsm block
+  (other items that may be estimated in the test data). For
+  example, to specify two blocks of 3 with a 2PL item for
+  the last item: \code{grsm.block = c(rep(1,3), rep(2,3),
+  NA)}. If NULL the all items are assumed to be within the
+  same group and therefore have the same number of item
+  categories}
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
@@ -300,14 +312,21 @@ Theory)}
   The graded model consists of sequential 2PL models, and
   here \eqn{k} is the predicted category. \deqn{P(x = k |
   \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1
-  | \theta, \phi)} } \item{gpcm/nominal}{For the gpcm the
-  \eqn{d_k} values are treated as fixed and orderd values
-  from 0:(k-1) (in the nominal model \eqn{d_0} is also set
-  to 0). Additionally, for identification in the nominal
-  model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}. \deqn{P(x = k
-  | \theta, \psi) = \frac{exp(-1.702 * ak_k * (a_1 *
-  \theta_1 + a_2 * \theta_2) + d_k)} {\sum_i^k exp(-1.702 *
-  ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}} }
+  | \theta, \phi)} } \item{grsm}{ A more constrained
+  version of the graded model where graded spacing is equal
+  accross item blocks and only adjusted by a single
+  'difficulty' parameter (c). Again, \deqn{P(x = k |
+  \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1
+  | \theta, \phi)}#' but now \deqn{P = \frac{1}{1 +
+  exp(-1.702 * (a_1 * \theta_1 + a_2 * \theta_2 + d_k +
+  c}))} } \item{gpcm/nominal}{For the gpcm the \eqn{d_k}
+  values are treated as fixed and orderd values from
+  0:(k-1) (in the nominal model \eqn{d_0} is also set to
+  0). Additionally, for identification in the nominal model
+  \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}. \deqn{P(x = k |
+  \theta, \psi) = \frac{exp(-1.702 * ak_k * (a_1 * \theta_1
+  + a_2 * \theta_2) + d_k)} {\sum_i^k exp(-1.702 * ak_k *
+  (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}} }
   \item{mcm}{For identification \eqn{ak_0 = d_0 = 0} and
   \eqn{\sum_0^k t_k = 1}. \deqn{P(x = k | \theta, \psi) =
   C_0 (\theta) * t_k + (1 - C_0 (\theta)) *
@@ -397,6 +416,24 @@ mod2g <- mirt(data, 2, guess = .1)
 coef(mod2g)
 anova(mod1g, mod2g)
 summary(mod2g, rotate='promax')
+
+###########
+#graded rating scale example
+
+#make some data
+a <- matrix(rep(1/1.702, 10))
+d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
+c <- seq(-1, 1, length.out=10)
+data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
+
+#use much better start values to save iterations
+sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values')
+sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1)
+
+mod1 <- mirt(data, 1)
+mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv)
+coef(mod2, allpars = TRUE)
+anova(mod2, mod1) #not sig, mod2 should be prefered
 }
 }
 \author{

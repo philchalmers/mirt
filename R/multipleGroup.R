@@ -55,15 +55,20 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'gpcm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and 2 parameter logistic, 
+#' '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
-#' generalized partial credit model, nominal model, multiple choice model, and 2-3PL partially compensatory model,
-#' respectively
+#' rating scale graded response model, generalized partial credit model, nominal model, 
+#' multiple choice model, and 2-3PL partially compensatory model, respectively
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
 #' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
 #' use \code{constrain = list(c(1,5), c(2,6,10))}
+#' @param grsm.block an optional numeric vector indicating where the blocking should occur when using 
+#' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
+#' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
+#' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
+#' group and therefore have the same number of item categories
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
@@ -105,7 +110,7 @@
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = TRUE, SEtol = .01,  
 #' invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
-#' parprior = NULL, draws = 2000, quadpts = NULL, nested.mod = NULL,
+#' parprior = NULL, draws = 2000, quadpts = NULL, grsm.block = NULL, nested.mod = NULL,
 #' technical = list(), debug = FALSE, verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
@@ -197,14 +202,14 @@
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = TRUE,
                           SEtol = .01, invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
                           parprior = NULL, draws = 2000, 
-                          quadpts = NULL, nested.mod = NULL,
+                          quadpts = NULL, grsm.block = NULL, nested.mod = NULL,
                           technical = list(), debug = FALSE, verbose = TRUE, ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()        
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, 
                       itemtype=itemtype, guess=guess, upper=upper, nested.mod=nested.mod, 
-                      pars=pars, constrain=constrain, SE=SE, SEtol=SEtol,
+                      pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method,
                       technical = technical, debug = debug, verbose = verbose, ...)
     if(is(mod, 'MultipleGroupClass'))

@@ -7,8 +7,8 @@ thetaComb <- function(theta, nfact)
 	else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
 	else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)        	
 	else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)
-	if(nfact > 6) stop('Are you crazy?!?!? That\'s way too many factors for this quandrature method.
-                       Try using confmirt() instead for better accuracy')
+	if(nfact > 6) stop('Are you crazy?!?!? That is way too many factors for this quadrature method.
+                       Try using confmirt() instead for better numerical accuracy')
 	Theta <- as.matrix(Theta)	
 	return(Theta)     
 }
@@ -313,11 +313,11 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
     return(object)
 }
 
-UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList){
-    
-    for(g in 1:ngroups)        
-        for(i in 1:length(PrepList[[g]]$constrain))
-            constrain[[length(constrain) + 1]] <- PrepList[[g]]$constrain[[i]]        
+UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList){    
+    for(g in 1:ngroups)  
+        if(length(PrepList[[g]]$constrain) > 0)
+            for(i in 1:length(PrepList[[g]]$constrain))
+                constrain[[length(constrain) + 1]] <- PrepList[[g]]$constrain[[i]]        
     if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
         tmpmat <- matrix(NA, nfact, nfact)
         low_tri <- lower.tri(tmpmat)

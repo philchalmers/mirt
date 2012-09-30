@@ -146,7 +146,7 @@ setMethod(
         a <- x@par[1:nfact]
         d <- x@par[(nfact+1):(length(x@par)-1)]
         t <- x@par[length(x@par)]
-        P <- P.gpcm(a=a, d=(d + t), Theta=Theta)
+        P <- P.poly(a=a, d=(d + t), Theta=Theta, itemexp=itemexp)
         return(P)
     }
 )
