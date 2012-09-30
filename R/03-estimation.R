@@ -96,6 +96,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     J <- length(PrepList[[1]]$itemtype)
     K <- PrepListFull$K
     nfact <- PrepList[[1]]$pars[[J+1]]@nfact
+    if(nfact != 1 && any(c('1PL', 'Rasch') %in% itemtype )) 
+       stop('1PL and Rasch itemtypes are for unidimensional models only.')
     nLambdas <- PrepList[[1]]$pars[[1]]@nfact
     if(is.null(constrain)) constrain <- list()         
     #default MG uses configural model (independent groups but each identified)        
@@ -112,6 +114,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!is.null(technical$return_newconstrain)) return(constrain)    
     startlongpars <- c()
     if(NULL.MODEL){
+        constrain <- list()
         for(i in 1:J){
             pars[[1]][[i]]@par[1] <- 0
             pars[[1]][[i]]@est[1] <- FALSE            

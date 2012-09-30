@@ -618,13 +618,16 @@ setMethod(
     f = "ItemInfo",
     signature = signature(x = 'rating', Theta = 'matrix', cosangle = 'numeric'),
     definition = function(x, Theta, cosangle = 1){
-        nfact <- x@nfact
-        a <- x@par[1:nfact]
-        d <- x@par[(nfact+1):(length(x@par)-1)]
-        t <- x@par[length(x@par)]
-        ak <- seq(0, x@ncat-1, by = 1)
-        info <- Info.nominal(Theta=Theta, a=a, ak=ak, d=(d+t), cosangle=cosangle)
-        info        
+        P <- ProbTrace(x, Theta, itemexp = FALSE) 
+        a <- ExtractLambdas(x)
+        A <- sum((a * cosangle)^2)
+        info <- 0
+        for(i in 1:(ncol(P)-1)){
+            w1 <- P[,i]*(1-P[,i]) * A
+            w2 <- P[,i+1]*(1-P[,i+1]) * A
+            info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1])             
+        }    
+        info      
     }
 )
 
