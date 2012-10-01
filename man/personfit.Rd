@@ -17,11 +17,10 @@
 \description{
   \code{personfit} calculates the Zh values from Drasgow,
   Levine and Williams (1985) for unidimensional and
-  multidimensional models. The returned values approximate
-  a standard normal distribution and therefore p-values are
-  also returned. The returned object is a \code{data.frame}
+  multidimensional models, as well as infit and outfit
+  statistics. The returned object is a \code{data.frame}
   consisting either of the tabulated data or full data with
-  the Zh and p-values appended to the last columns.
+  the statistics appended to the last columns.
 }
 \examples{
 \dontrun{
