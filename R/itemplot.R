@@ -3,8 +3,6 @@
 #' \code{itemplot} displays various item based IRT plots.
 #' 
 #'
-#' 
-#'
 #' @aliases itemplot
 #' @param object a computed model object of class \code{ExploratoryClass} or \code{ConfirmatoryClass}
 #' @param item a single numeric value indicating which item to plot
@@ -24,6 +22,7 @@
 #' mod1 <- mirt(fulldata,1)
 #' 
 #' itemplot(mod1, 2)
+#' itemplot(mod1, 2, type = 'info')
 #'     }
 #' 
 itemplot <- function(object, item, type = 'trace', degrees = 45, ...){

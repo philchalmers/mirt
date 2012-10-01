@@ -10,11 +10,11 @@
 Theory)}
 \usage{
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-    SE = FALSE, SEtol = .01, pars = NULL, constrain = NULL,
-    parprior = NULL, rotate = 'varimax', Target = NaN,
-    prev.cor = NULL, quadpts = NULL, grsm.block = NULL,
-    verbose = FALSE, debug = FALSE, technical = list(),
-    ...)
+    SE = FALSE, SEtol = .001, pars = NULL, constrain =
+    NULL, parprior = NULL, rotate = 'varimax', Target =
+    NaN, prev.cor = NULL, quadpts = NULL, grsm.block =
+    NULL, verbose = FALSE, debug = FALSE, technical =
+    list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -358,7 +358,7 @@ plot(mod1) #test information function
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL, allpars = TRUE)
 
-(mod2 <- mirt(data, 2))
+(mod2 <- mirt(data, 2, SE = TRUE))
 summary(mod2, rotate = 'oblimin')
 coef(mod2)
 residuals(mod2)

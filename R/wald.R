@@ -1,6 +1,8 @@
 #' Wald test for mirt models
 #' 
-#' Compute a Wald test given an \code{L} vector or matrix of contrasts.
+#' Compute a Wald test given an \code{L} vector or matrix of contrasts. Requires that the 
+#' information matrix already be computed (using \code{SE = TRUE} when using EM estimation). 
+#' 
 #' 
 #' @aliases wald
 #' @param L a coefficient matrix with dimensions nconstrasts x npars. Use \code{pars = 'values'}
@@ -19,7 +21,7 @@
 #'    F2 = 2,3
 #'    
 #'    
-#' mod <- mirt(data, cmodel)
+#' mod <- mirt(data, cmodel, SE = TRUE)
 #' coef(mod, allpars = TRUE)
 #' index <- mirt(data, cmodel, pars = 'values')
 #' index
@@ -84,7 +86,7 @@ print.wald <- function(x, ...){
     W <- x$W
     df <- x$df
     p <- 1 - pchisq(x$W, x$df)
-    cat('Wald test: \nW = ', round(W, 3), ', df = ', df, ', p = ', 
+    cat('\nWald test: \nW = ', round(W, 3), ', df = ', df, ', p = ', 
         round(p, 3), sep='')       
 }
 

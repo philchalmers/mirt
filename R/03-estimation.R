@@ -324,7 +324,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        Target=Target, #missing
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
-                       fulldata=PrepListFull$fulldata)
+                       fulldata=PrepListFull$fulldata,
+                       information=ESTIMATE$info)
         } else {                        
             mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars, 
@@ -352,7 +353,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        TLI=TLI, 
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
-                       fulldata=PrepListFull$fulldata)
+                       fulldata=PrepListFull$fulldata,
+                       information=ESTIMATE$info)
         }        
     } else {
         mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, 

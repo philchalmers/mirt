@@ -33,6 +33,7 @@ fulldata <- expand.table(LSAT7)
 mod1 <- mirt(fulldata,1)
 
 itemplot(mod1, 2)
+itemplot(mod1, 2, type = 'info')
     }
 }
 \author{

@@ -30,7 +30,7 @@ d <- matrix(rnorm(20),ncol=1)
 items <- rep('dich', 20)
 data <- simdata(a,d, 2000, items)
 
-x <- mirt(data, 1, SE = FALSE)
+x <- mirt(data, 1)
 fit <- personfit(x)
 head(fit)
 

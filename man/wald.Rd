@@ -24,7 +24,9 @@
 }
 \description{
   Compute a Wald test given an \code{L} vector or matrix of
-  contrasts.
+  contrasts. Requires that the information matrix already
+  be computed (using \code{SE = TRUE} when using EM
+  estimation).
 }
 \examples{
 \dontrun{
@@ -36,7 +38,7 @@ cmodel <- confmirt.model()
    F2 = 2,3
 
 
-mod <- mirt(data, cmodel)
+mod <- mirt(data, cmodel, SE = TRUE)
 coef(mod, allpars = TRUE)
 index <- mirt(data, cmodel, pars = 'values')
 index
