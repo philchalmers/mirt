@@ -3,7 +3,7 @@
 \title{Item fit statistics}
 \usage{
   itemfit(x, X2 = FALSE, group.size = 150,
-    empirical.plot = NULL)
+    empirical.plot = NULL, degrees = NULL)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -21,6 +21,9 @@
   the empirical \eqn{\theta} groupings. Only applicable
   when \code{type = 'X2'}. The default is \code{NULL},
   therefore no plots are drawn}
+
+  \item{degrees}{the degrees angle to be passed to the
+  \code{\link{iteminfo}} function}
 }
 \description{
   \code{itemfit} calculates the Zh values from Drasgow,
@@ -38,7 +41,7 @@ d <- matrix(rnorm(20),ncol=1)
 items <- rep('dich', 20)
 data <- simdata(a,d, 2000, items)
 
-x <- mirt(data, 1, SE = FALSE)
+x <- mirt(data, 1)
 fit <- itemfit(x)
 fit
 

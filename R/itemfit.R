@@ -12,6 +12,7 @@
 #' @param empirical.plot a single numeric value indicating which item to plot (via \code{itemplot}) and
 #' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}. 
 #' The default is \code{NULL}, therefore no plots are drawn 
+#' @param degrees the degrees angle to be passed to the \code{\link{iteminfo}} function
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit
@@ -36,7 +37,7 @@
 #' items <- rep('dich', 20)
 #' data <- simdata(a,d, 2000, items)
 #'  
-#' x <- mirt(data, 1, SE = FALSE)
+#' x <- mirt(data, 1)
 #' fit <- itemfit(x)
 #' fit
 #' 
@@ -44,7 +45,7 @@
 #' 
 #'   }
 #'
-itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL){    
+itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, degrees = NULL){    
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
@@ -80,14 +81,13 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL){
             }                               
         }               
     }        
-    Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
-    pf <- personfit(x)
+    Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)    
     attr(x, 'inoutfitreturn') <- TRUE
-    pf <- personfit(x)
+    pf <- personfit(x, degrees=degrees)
     outfit <- colSums(pf$Z^2) / J
     infit <- colSums(pf$Z^2 * pf$info) / colSums(pf$info)        
     ret <- data.frame(item=colnames(x@data), outfit=outfit, infit=infit, Zh=Zh)
-    if(X2 && nfact == 1){                
+    if((X2 || !is.null(empirical.plot)) && nfact == 1){                
         ord <- order(Theta[,1])    
         fulldata <- fulldata[ord,]
         Theta <- Theta[ord, , drop = FALSE]

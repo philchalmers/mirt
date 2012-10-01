@@ -7,7 +7,7 @@ test_that('poly', {
     expect_is(modp2, 'ExploratoryClass')
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)))
     expect_is(modp3, 'ConfirmatoryClass')
-    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'mcm'))
+    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'))
     expect_is(modp4, 'ConfirmatoryClass')
     modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE)
     expect_is(modp5, 'ConfirmatoryClass')

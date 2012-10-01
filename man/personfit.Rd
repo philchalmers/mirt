@@ -2,17 +2,15 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-  personfit(x, full.scores = FALSE)
+  personfit(x, degrees = NULL)
 }
 \arguments{
   \item{x}{a computed model object of class
   \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
   \code{MultipleGroupClass}}
 
-  \item{full.scores}{if \code{FALSE} (default) then a
-  summary table with the Zh and p-values is returned,
-  otherwise the original data matrix is returned with
-  values appended to the rightmost column}
+  \item{degrees}{the degrees angle to be passed to the
+  \code{\link{iteminfo}} function}
 }
 \description{
   \code{personfit} calculates the Zh values from Drasgow,
@@ -33,8 +31,8 @@ items <- rep('dich', 20)
 data <- simdata(a,d, 2000, items)
 
 x <- mirt(data, 1, SE = FALSE)
-tabdatafit <- personfit(x)
-head(tabdatafit)
+fit <- personfit(x)
+head(fit)
 
   }
 }

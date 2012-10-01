@@ -10,8 +10,7 @@
 #' @aliases personfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
 #' \code{MultipleGroupClass}
-#' @param full.scores if \code{FALSE} (default) then a summary table with the Zh and p-values is returned,
-#' otherwise the original data matrix is returned with values appended to the rightmost column 
+#' @param degrees the degrees angle to be passed to the \code{\link{iteminfo}} function
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit
 #' @export personfit
@@ -37,19 +36,20 @@
 #' data <- simdata(a,d, 2000, items)
 #'  
 #' x <- mirt(data, 1, SE = FALSE)
-#' tabdatafit <- personfit(x)
-#' head(tabdatafit)
+#' fit <- personfit(x)
+#' head(fit)
 #' 
 #'   }
 #' 
-personfit <- function(x, full.scores = FALSE){    
+personfit <- function(x, degrees = NULL){        
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
-            ret[[g]] <- personfit(x@cmods[[g]], full.scores=full.scores)
+            ret[[g]] <- personfit(x@cmods[[g]], degrees=degrees)
         names(ret) <- names(x@cmods)
         return(ret)
     }
+    full.scores <- TRUE
     sc <- fscores(x, verbose = FALSE, full.scores=full.scores) 
     J <- ncol(x@data)
     itemloc <- x@itemloc
@@ -87,11 +87,13 @@ personfit <- function(x, full.scores = FALSE){
         Zh[n] <- (LL[n] - mu) / sqrt(sigma2)
     }               
     V <- Z <- info <- matrix(0, ncol=J, nrow=N)        
+    if(is.null(degrees))
+        if(nfact > 1) degrees <- rep(90/nfact, nfact)            
     for (i in 1:J){
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]            
         item <- extract.item(x, i)
-        info[,i] <- iteminfo(item, Theta)
+        info[,i] <- iteminfo(item, Theta, degrees=degrees)
         Z[ ,i] <- rowSums(dat - dat * P) / sqrt(info[,i])                         
     }
     if(!is.null(attr(x, 'inoutfitreturn'))) return(list(Z=Z, info=info))
