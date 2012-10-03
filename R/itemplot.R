@@ -68,6 +68,7 @@ setMethod(
         Pinfo <- list()        
         gnames <- object@groupNames
         nfact <- object@nfact        
+        K <- object@cmods[[1]]@pars[[item]]@ncat
         for(g in 1:length(gnames)){
             Pinfo[[g]] <- itemplot.main(object@cmods[[g]], item=item, type='RETURN', 
                                         degrees=degrees, ...)
@@ -76,13 +77,13 @@ setMethod(
         dat <- Pinfo[[1]]        
         for(i in 2:length(gnames))
             dat <- rbind(dat, Pinfo[[g]])           
-        Plist <- unclass(dat[, 1:(ncol(dat)-3)])
+        Plist <- unclass(dat[, 1:K])
         P <- c()
-        dat2 <- dat[, ncol(dat):(ncol(dat)-2)]
+        dat2 <- dat[, (K+1):ncol(dat)]
         for(i in 1:length(Plist))
             P <- c(P, Plist[[i]])
         for(i in 2:length(Plist))
-            dat2 <- rbind(dat2, dat[, ncol(dat):(ncol(dat)-2)])
+            dat2 <- rbind(dat2, dat[, (K+1):ncol(dat)])
         dat2$P <- P
         dat2$cat <- rep(as.character(0:(length(Plist)-1)), each = nrow(dat))
         if(nfact == 1){
@@ -101,22 +102,22 @@ setMethod(
             Names2 <- colnames(dat2)
             Names2[2:3] <- c('Theta2', 'Theta1')
             colnames(dat) <- Names
-            colnames(dat2) <- Names2
+            colnames(dat2) <- Names2            
             if(type == 'info')            
-                return(lattice::wireframe(info ~ Theta1 + Theta2|group, data = dat, 
+                return(lattice::wireframe(info ~ Theta1 + Theta2, data = dat, group=group, 
                                           main=paste("Item", item, "Information"), 
                                           zlab=expression(I(theta)), xlab=expression(theta[1]), 
                                           ylab=expression(theta[2]), 
-                                          scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, 
-                                          ...))            
+                                          scales = list(arrows = FALSE), 
+                                          auto.key = TRUE, ...))            
             if(type == 'trace')
-                return(lattice::wireframe(P ~ Theta1 + Theta2|group, data = dat2, group = cat, 
+                return(lattice::wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = group, 
                                           main = paste("Item", item, "Trace"), 
                                           zlab=expression(P(theta)), 
                                           xlab=expression(theta[1]), 
                                           ylab=expression(theta[2]), 
                                           scales = list(arrows = FALSE), 
-                                          colorkey = TRUE, drape = TRUE, ...))           
+                                          auto.key = TRUE, ...))           
         }
     }
 )
