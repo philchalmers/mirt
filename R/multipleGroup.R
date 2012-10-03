@@ -147,7 +147,7 @@
 #' mod_scalar1 <- multipleGroup(dat, models, group = group, method = 'EM', #fixed means
 #'                              invariance=c('slopes', 'intercepts', 'free_varcov'),
 #'                              nested.mod = mod_configural)    
-#' mod_fullconstrain <- mirt(data, models) #fix variance (equivalent to full constrain)
+#' mod_fullconstrain <- mirt(dat, models) #fix variance (equivalent to full constrain)
 #' 
 #' anova(mod_metric, mod_configural) #equal slopes only
 #' anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
@@ -197,7 +197,7 @@
 #' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 #' mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
 #'                              invariance=c('slopes', 'intercepts', 'free_varcov'))    
-#' mod_fullconstrain <- confmirt(data, models)
+#' mod_fullconstrain <- confmirt(dat, models)
 #' 
 #' anova(mod_metric, mod_configural)
 #' anova(mod_scalar, mod_metric)
