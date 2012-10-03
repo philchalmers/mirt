@@ -6,15 +6,15 @@
 #' Metropolis-Hastings Robbins-Monro algorithm. The function is currently depreciated 
 #' and instead should be run by using the \code{\link{confmirt}} function.
 #'
-#'
+#' @aliases polymirt
+#' @export polymirt
 #' @param ... arguments to be passed to the \code{\link{confmirt}} estimation engine
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt}},
 #' \code{\link{itemplot}}
-polymirt <- function(...){         
-    ret <- confmirt(...)    
-    message('NOTE: polymirt() is now obsolete and will be removed completely sometime after version 0.3.0.  
-         Use confmirt(data, nfact) for exploratory models instead.')    
+polymirt <- function(...){ 
+    .Deprecated(new = "confmirt")
+    ret <- confmirt(...)        
     ret    
 }
 
