@@ -14,6 +14,8 @@ mirt 0.4.1
   to values of a previously computed model. This will save needless iterations in the EM and MHRM
   since these parameters should be much closer to the new ML estimates 
 
+* itemplot() supports multipleGroup objects now
+
 * analytical derivatives much more stable, although some are not yet optimized
 
 * updated documentation and beamer slide show included for some background on MIRT and some 

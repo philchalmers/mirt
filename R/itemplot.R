@@ -4,10 +4,11 @@
 #' 
 #'
 #' @aliases itemplot
-#' @param object a computed model object of class \code{ExploratoryClass} or \code{ConfirmatoryClass}
+#' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
+#' \code{MultipleGroupClass}
 #' @param item a single numeric value indicating which item to plot
-#' @param type plot type to use, information (\code{'info'}), information contours \code{('infocontour')},
-#'  or item trace lines (\code{'trace'})
+#' @param type plot type to use, information (\code{'info'}), or item trace lines (\code{'trace'}),
+#' or information contours \code{('infocontour')} (not for \code{MultipleGroupClass} objects)
 #' @param degrees the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
 #' for more detail
 #' @param ... additional arguments to be passed to lattice 
@@ -58,6 +59,69 @@ setMethod(
 	}
 )
 
+#------------------------------------------------------------------------------
+setMethod(
+    f = "itemplot.internal",
+    signature = signature(object = 'MultipleGroupClass'),
+    definition = function(object, item, type = 'trace', degrees = 45, ...)
+    {           
+        Pinfo <- list()        
+        gnames <- object@groupNames
+        nfact <- object@nfact        
+        for(g in 1:length(gnames)){
+            Pinfo[[g]] <- itemplot.main(object@cmods[[g]], item=item, type='RETURN', 
+                                        degrees=degrees, ...)
+            Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
+        }
+        dat <- Pinfo[[1]]        
+        for(i in 2:length(gnames))
+            dat <- rbind(dat, Pinfo[[g]])           
+        Plist <- unclass(dat[, 1:(ncol(dat)-3)])
+        P <- c()
+        dat2 <- dat[, ncol(dat):(ncol(dat)-2)]
+        for(i in 1:length(Plist))
+            P <- c(P, Plist[[i]])
+        for(i in 2:length(Plist))
+            dat2 <- rbind(dat2, dat[, ncol(dat):(ncol(dat)-2)])
+        dat2$P <- P
+        dat2$cat <- rep(as.character(0:(length(Plist)-1)), each = nrow(dat))
+        if(nfact == 1){
+            if(type == 'info')            
+                return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l', 
+                                       auto.key = TRUE, main = paste('Information for item', item), 
+                                       ylab = expression(I(theta)), xlab = expression(theta), ...))            
+            if(type == 'trace')
+                return(lattice::xyplot(P ~ Theta | cat, dat2, group=group, type = 'l', 
+                                auto.key = TRUE, main = paste("Item", item, "Trace"), 
+                                ylab = expression(P(theta)), xlab = expression(theta), ...))
+        }
+        if(nfact == 2){
+            Names <- colnames(dat)
+            Names[c(length(Names) - 2,length(Names) - 1)] <- c('Theta1', 'Theta2')
+            Names2 <- colnames(dat2)
+            Names2[2:3] <- c('Theta2', 'Theta1')
+            colnames(dat) <- Names
+            colnames(dat2) <- Names2
+            if(type == 'info')            
+                return(lattice::wireframe(info ~ Theta1 + Theta2|group, data = dat, 
+                                          main=paste("Item", item, "Information"), 
+                                          zlab=expression(I(theta)), xlab=expression(theta[1]), 
+                                          ylab=expression(theta[2]), 
+                                          scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, 
+                                          ...))            
+            if(type == 'trace')
+                return(lattice::wireframe(P ~ Theta1 + Theta2|group, data = dat2, group = cat, 
+                                          main = paste("Item", item, "Trace"), 
+                                          zlab=expression(P(theta)), 
+                                          xlab=expression(theta[1]), 
+                                          ylab=expression(theta[2]), 
+                                          scales = list(arrows = FALSE), 
+                                          colorkey = TRUE, drape = TRUE, ...))           
+        }
+    }
+)
+
+
 itemplot.main <- function(x, item, type, degrees = 45, ...){        
     nfact <- ncol(x@F)
     if(nfact > 2) stop('Can not plot high dimensional models')
@@ -76,6 +140,7 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
     } else {
         info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
     }
+    if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
     if(nfact == 1){
         if(type == 'trace'){            
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
