@@ -9,8 +9,8 @@
     = 0, upper = 1, SE = FALSE, SEtol = .001, invariance =
     '', pars = NULL, method = 'MHRM', constrain = NULL,
     parprior = NULL, draws = 2000, quadpts = NULL,
-    grsm.block = NULL, nested.mod = NULL, technical =
-    list(), debug = FALSE, verbose = TRUE, ...)
+    grsm.block = NULL, prev.mod = NULL, technical = list(),
+    debug = FALSE, verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -82,7 +82,7 @@
   \item{quadpts}{the number of quadratures to be used per
   dimensions when \code{method = 'EM'}}
 
-  \item{nested.mod}{an optional input object of class
+  \item{prev.mod}{an optional input object of class
   \code{'MultipleGroupClass'} to quickly change the
   starting values of the current estimation. If a parameter
   in the current model is being freely estimated then it's
@@ -217,15 +217,15 @@ models <- confmirt.model()
 
 mod_configural <- multipleGroup(dat, models, group = group, method = 'EM') #completely seperate analyses
 
-# nested.mod can save precious iterations and help to avoid local minimums
+# prev.mod can save precious iterations and help to avoid local minimums
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'EM',
-                            nested.mod = mod_configural) #equal slopes
+                            prev.mod = mod_configural) #equal slopes
 mod_scalar2 <- multipleGroup(dat, models, group = group, method = 'EM',  #equal intercepts, free variance and means
                              invariance=c('slopes', 'intercepts', 'free_varcov','free_means'),
-                             nested.mod = mod_configural)
+                             prev.mod = mod_configural)
 mod_scalar1 <- multipleGroup(dat, models, group = group, method = 'EM', #fixed means
                              invariance=c('slopes', 'intercepts', 'free_varcov'),
-                             nested.mod = mod_configural)
+                             prev.mod = mod_configural)
 mod_fullconstrain <- mirt(dat, models) #fix variance (equivalent to full constrain)
 
 anova(mod_metric, mod_configural) #equal slopes only
