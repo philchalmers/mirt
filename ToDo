@@ -1,5 +1,7 @@
 Things to do:
 
+- WLE and BME factor score estimation options
+- Optional data vector input to estimate response patterns that weren't present in the dataset
 - Parallel processing option for draw.thetas(), should work better now that the draws are done
 mainly in R. Will be especially useful in multilevel models
 - Multilevel structure function using lme4 or nlme via multimirt extension 
