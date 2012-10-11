@@ -379,7 +379,7 @@ anova(cmod, mod2)
 
 ###########
 #data from the 'ltm' package in numeric format
-pmod1 <- mirt(Science, 1, SE = FALSE)
+pmod1 <- mirt(Science, 1)
 plot(pmod1)
 summary(pmod1)
 
