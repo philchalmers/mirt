@@ -124,10 +124,24 @@ setMethod(
             scoremat <- .Call("fullScores", object@fulldata, tabdata2, scores)			 
 			colnames(scoremat) <- colnames(scores)	
 			return(cbind(fulldata,scoremat))
-		} else {						
-			if(verbose) cat("\nMethod: ", method,"\n\n")
+		} else {						            
+            r <- object@tabdata[,ncol(object@tabdata)]            
+            T <- E <- matrix(NA, 1, ncol(scores))
+            for(i in 1:nrow(scores)){
+                T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
+                E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
+            }            
+            T <- na.omit(T)
+            E <- na.omit(E)
+            reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
+            names(reliability) <- colnames(scores)
+			if(verbose){
+                cat("\nMethod: ", method)                
+                cat("\n\nEmpirical Reliability:\n")
+                print(round(reliability, 4))                
+			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
-			return(cbind(object@tabdata,scores,SEscores))				
+			return(cbind(object@tabdata,scores,SEscores))
 		}   
 	}  
 )
