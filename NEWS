@@ -4,8 +4,10 @@ mirt 0.4.1
 
 * infit and outfit statistics added to personfit() and itemfit()
 
+* empirical reliability printed for each dimension when fscores(..., fulldata = FALSE) called
+
 * better system to specify fixed/free parameters and starting values using
-  pars = 'values' 
+  pars = 'values'. Should allow for much better simulation based work 
 
 * graded model type rating scale added (Muraki, 1990) with optional estimation 'blocks'. Use 
   itemtype = 'grsm', and the grsm.block option
@@ -18,10 +20,13 @@ mirt 0.4.1
 
 * analytical derivatives much more stable, although some are not yet optimized
 
+* estimation bug fix in bfactor(), and slight bias fix in mirt() estimation (introduced in version
+  4.0.0 when multipleGroup() added) 
+
 * updated documentation and beamer slide show included for some background on MIRT and some 
   of the packages capabilities
 
-* labels added to coef(..., allpars = TRUE) when standard erros not computed
+* labels added to coef() when standard errors not computed. Also allpars = TRUE is now the default
 
 * kernel estimation moved entirely to one method. Much easier to maintain and guarantees consistency
   across methods (i.e., no more quasi-Newton algorithms used)

@@ -144,7 +144,7 @@ data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
 mod1 <- bfactor(data, specific)
-coef(mod1)
+summary(mod1)
 
 ###Try with fixed guessing parameters added
 guess <- rep(.1,32)

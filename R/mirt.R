@@ -253,7 +253,7 @@
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
 #' verbose = TRUE, ...)
 #' 
-#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, 
+#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, allpars = TRUE, digits = 3, 
 #' verbose = TRUE, ...)
 #' 
 #' \S4method{anova}{ExploratoryClass}(object, object2)
@@ -280,7 +280,7 @@
 #' 
 #' #estimated 3PL model for item 5 only
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
-#' coef(mod1.3PL, allpars = TRUE)
+#' coef(mod1.3PL)
 #' 
 #' (mod2 <- mirt(data, 2, SE = TRUE))
 #' summary(mod2, rotate = 'oblimin')
@@ -315,7 +315,7 @@
 #' coef(pmod1_equalslopes)
 #' 
 #' pmod2 <- mirt(Science, 2)
-#' coef(pmod2)
+#' summary(pmod2)
 #' residuals(pmod2)
 #' plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
 #' itemplot(pmod2, 1)
@@ -356,7 +356,7 @@
 #'
 #' mod1 <- mirt(data, 1)
 #' mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv)
-#' coef(mod2, allpars = TRUE)
+#' coef(mod2)
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
 #' }
 #' 

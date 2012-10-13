@@ -93,7 +93,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, allpars = FALSE, digits = 3, 
+    definition = function(object, rotate = '', Target = NULL, allpars = TRUE, digits = 3, 
                           verbose = TRUE, ...){         
         K <- object@K
         J <- length(K)

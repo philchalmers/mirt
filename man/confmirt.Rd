@@ -18,7 +18,7 @@
     0, digits = 3, verbose = TRUE, ...)
 
   \S4method{coef}{ConfirmatoryClass}(object, allpars =
-    FALSE, digits = 3, verbose = TRUE, ...)
+    TRUE, digits = 3, verbose = TRUE, ...)
 
   \S4method{anova}{ConfirmatoryClass}(object, object2)
 
