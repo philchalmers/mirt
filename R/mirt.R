@@ -142,6 +142,7 @@
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
+#' @param df.p logical; print the degrees of freedom and p-values?
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param debug logical; turn on debugging features?
 #' @param technical a list containing lower level technical parameters for estimation. May be:
@@ -263,7 +264,7 @@
 #' \S4method{plot}{ExploratoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45, 
 #' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #' 
-#' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, printvalue = NULL, 
+#' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL, 
 #' verbose = TRUE, ...)
 #' @export mirt
 #' @examples

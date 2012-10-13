@@ -34,8 +34,8 @@ Theory)}
     yaxis = 30, zaxis = 10), ...)
 
   \S4method{residuals}{ExploratoryClass}(object, restype =
-    'LD', digits = 3, printvalue = NULL, verbose = TRUE,
-    ...)
+    'LD', digits = 3, df.p = FALSE, printvalue = NULL,
+    verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -186,6 +186,9 @@ Theory)}
   either \code{'LD'} for a local dependence matrix (Chen &
   Thissen, 1997) or \code{'exp'} for the expected values
   for the frequencies of every response pattern}
+
+  \item{df.p}{logical; print the degrees of freedom and
+  p-values?}
 
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}

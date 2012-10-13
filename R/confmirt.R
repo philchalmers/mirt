@@ -109,6 +109,7 @@
 #' statistical software. Default is 0 for no suppression
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
+#' @param df.p logical; print the degrees of freedom and p-values?
 #' @param x an object of class \code{mirt} to be plotted or printed
 #' @param y an unused variable to be ignored
 #' @param type type of plot to view; can be \code{'curve'} for the total test
@@ -173,7 +174,7 @@
 #' \S4method{plot}{ConfirmatoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45, 
 #' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #' 
-#' \S4method{residuals}{ConfirmatoryClass}(object, restype = 'LD', digits = 3, printvalue = NULL, 
+#' \S4method{residuals}{ConfirmatoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL, 
 #' verbose = TRUE, ...)
 #'
 #' @export confmirt

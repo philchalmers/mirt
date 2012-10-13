@@ -171,7 +171,8 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'ExploratoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, printvalue = NULL, verbose = TRUE, ...)
+    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL, 
+                          verbose = TRUE, ...)
     {   	
         K <- object@K        
         data <- object@data	
@@ -184,7 +185,10 @@ setMethod(
         colnames(res) <- rownames(res) <- colnames(data)
         Theta <- object@Theta
         prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-        prior <- prior/sum(prior)       	               
+        prior <- prior/sum(prior) 
+        df <- (object@K - 1) %o% (object@K - 1)
+        diag(df) <- NA
+        colnames(df) <- rownames(df) <- colnames(res)
         if(restype == 'LD'){	
             for(i in 1:J){								
                 for(j in 1:J){			
@@ -200,11 +204,19 @@ setMethod(
                         if(s == 0) s <- 1				
                         res[j,i] <- sum(((tab - Etab)^2)/Etab) /
                             ((K[i] - 1) * (K[j] - 1)) * sign(s)
-                        res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))	
+                        res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
+                        df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
                     }
                 }
             }	
-            if(verbose) cat("LD matrix:\n\n")	
+            if(df.p){
+                cat("Degrees of freedom (lower triangle) and p-values:\n\n")
+                print(round(df, digits))
+                cat("\n")
+            }
+            if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")    
+            res <- round(res,digits)
+            return(res)	
             res <- round(res,digits)
             return(res)
         } 

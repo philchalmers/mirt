@@ -30,8 +30,8 @@
     yaxis = 30, zaxis = 10), ...)
 
   \S4method{residuals}{ConfirmatoryClass}(object, restype =
-    'LD', digits = 3, printvalue = NULL, verbose = TRUE,
-    ...)
+    'LD', digits = 3, df.p = FALSE, printvalue = NULL,
+    verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -153,6 +153,9 @@
 
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are}
+
+  \item{df.p}{logical; print the degrees of freedom and
+  p-values?}
 
   \item{x}{an object of class \code{mirt} to be plotted or
   printed}
