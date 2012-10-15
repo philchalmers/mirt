@@ -2,6 +2,9 @@
 mirt 0.4.1
 ----------------------------------------------------------------
 
+* relative efficiency plots added to itemplot(). Works directly for multipleGroup analysis
+  and for comparing different item types (e.g., 1PL vs 2PL) can be wrapped into a named list
+
 * infit and outfit statistics added to personfit() and itemfit()
 
 * empirical reliability printed for each dimension when fscores(..., fulldata = FALSE) called

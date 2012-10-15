@@ -5,10 +5,11 @@
 #'
 #' @aliases itemplot
 #' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
-#' \code{MultipleGroupClass}
+#' \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types (e.g., 1PL vs 2PL)
 #' @param item a single numeric value indicating which item to plot
-#' @param type plot type to use, information (\code{'info'}), or item trace lines (\code{'trace'}),
-#' or information contours \code{('infocontour')} (not for \code{MultipleGroupClass} objects)
+#' @param type plot type to use, information (\code{'info'}), item trace lines (\code{'trace'}), relative 
+#' efficiency lines (\code{'RE'}), or information contours \code{('infocontour')} 
+#' (not for \code{MultipleGroupClass} objects)
 #' @param degrees the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
 #' for more detail
 #' @param ... additional arguments to be passed to lattice 
@@ -21,9 +22,18 @@
 #' data(LSAT7)
 #' fulldata <- expand.table(LSAT7)
 #' mod1 <- mirt(fulldata,1)
+#' mod2 <- mirt(fulldata,1, itemtype = '1PL')
+#' mod3 <- mirt(fulldata,2)
 #' 
 #' itemplot(mod1, 2)
 #' itemplot(mod1, 2, type = 'info')
+#' 
+#' mods <- list(twoPL = mod1, onePL = mod2)
+#' itemplot(mods, 1, type = 'RE')
+#' 
+#' itemplot(mod3, 3, type = 'info')
+#' 
+#' 
 #'     }
 #' 
 itemplot <- function(object, item, type = 'trace', degrees = 45, ...){
@@ -62,9 +72,22 @@ setMethod(
 #------------------------------------------------------------------------------
 setMethod(
     f = "itemplot.internal",
+    signature = signature(object = 'list'),
+    definition = function(object, item, type = 'trace', degrees = 45, ...)
+    {        
+        newobject <- new('MultipleGroupClass', cmods=object, nfact=object[[1]]@nfact, 
+                         groupNames=factor(names(object)))        
+        x <- itemplot.internal(newobject, item, type, degrees, ...)    	
+        return(invisible(x))
+    }
+)
+
+#------------------------------------------------------------------------------
+setMethod(
+    f = "itemplot.internal",
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, item, type = 'trace', degrees = 45, ...)
-    {           
+    {       
         Pinfo <- list()        
         gnames <- object@groupNames
         nfact <- object@nfact        
@@ -73,9 +96,13 @@ setMethod(
             Pinfo[[g]] <- itemplot.main(object@cmods[[g]], item=item, type='RETURN', 
                                         degrees=degrees, ...)
             Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
+        }        
+        if(type == 'RE'){
+            for(g in length(gnames):1)
+                Pinfo[[g]]$info <- Pinfo[[g]]$info / Pinfo[[1]]$info
         }
         dat <- Pinfo[[1]]        
-        for(i in 2:length(gnames))
+        for(g in 2:length(gnames))
             dat <- rbind(dat, Pinfo[[g]])           
         Plist <- unclass(dat[, 1:K])
         P <- c()
@@ -95,6 +122,10 @@ setMethod(
                 return(lattice::xyplot(P ~ Theta | cat, dat2, group=group, type = 'l', 
                                 auto.key = TRUE, main = paste("Item", item, "Trace"), 
                                 ylab = expression(P(theta)), xlab = expression(theta), ...))
+            if(type == 'RE')
+                return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l', 
+                                       auto.key = TRUE, main = paste('Relative efficiency for item', item), 
+                                       ylab = expression(RE(theta)), xlab = expression(theta), ...))
         }
         if(nfact == 2){
             Names <- colnames(dat)
@@ -117,7 +148,14 @@ setMethod(
                                           xlab=expression(theta[1]), 
                                           ylab=expression(theta[2]), 
                                           scales = list(arrows = FALSE), 
-                                          auto.key = TRUE, ...))           
+                                          auto.key = TRUE, ...))   
+            if(type == 'RE')            
+                return(lattice::wireframe(info ~ Theta1 + Theta2, data = dat, group=group, 
+                                          main=paste("Relative efficiency for item", item), 
+                                          zlab=expression(RE(theta)), xlab=expression(theta[1]), 
+                                          ylab=expression(theta[2]), 
+                                          scales = list(arrows = FALSE), 
+                                          auto.key = TRUE, ...))
         }
     }
 )
