@@ -72,6 +72,7 @@ setMethod(
             newmod@tabdatalong <- newmod@tabdatalong[index, , drop = FALSE]
             ret <- fscores(newmod, rotate=rotate, full.scores=FALSE, method=method, 
                            quadpts=quadpts, verbose=FALSE)
+            ret <- ret[, -(ncol(ret) - nfact*2)]            
             return(ret)
         }
         pars <- object@pars        
