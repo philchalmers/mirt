@@ -3,7 +3,8 @@
 \title{Methods for Function fscores}
 \usage{
   fscores(object, rotate = "", full.scores = FALSE,
-    method = "EAP", quadpts = NULL, verbose = TRUE)
+    method = "EAP", quadpts = NULL, response.vector = NULL,
+    verbose = TRUE)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -28,6 +29,11 @@
   \item{quadpts}{number of quadratures to use per
   dimension}
 
+  \item{response.vector}{an optional argument used to
+  calculate the factor scores and standard errors for a
+  given response vector that may or may not have been in
+  the original dataset}
+
   \item{verbose}{logical; print verbose output messages?}
 }
 \description{
@@ -42,7 +48,8 @@ tabscores <- fscores(mod)
 fullscores <- fscores(mod, full.scores = TRUE)
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 
-
+#calculate MAP for a given response vector
+fscores(mod, method='MAP', response.vector = c(1,2,3,4))
   }
 }
 \author{
