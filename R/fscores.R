@@ -187,7 +187,7 @@ setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                          quadpts = NULL, verbose = TRUE)
+                          quadpts = NULL, response.vector = NULL, verbose = TRUE)
     { 	        
         cmods <- object@cmods
         ngroups <- length(cmods)
