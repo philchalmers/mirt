@@ -20,10 +20,11 @@ detecting differential item functioning.
 It's recommended to use the development version of this package since it is more likely to be up to date 
 than the version on CRAN. To install this package from source: 
 
-1) Obtain recent gcc and g++ compilers. Windows users can install the 
-[Rtools](http://cran.r-project.org/bin/windows/Rtools/) suite while Mac users will have to download the 
-necessary tools from the [Xcode](https://developer.apple.com/xcode/) suite; most Linux distributions should already have 
-up to date compilers (or if not they can be updated easily).  
+1) Obtain recent gcc and g++ compilers. Windows users can install the
+   [Rtools](http://cran.r-project.org/bin/windows/Rtools/) suite while Mac users will have to
+   download the necessary tools from the [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12) suite and its
+   related command line tools (found within Xcode's Preference Pane under Downloads/Components); most Linux
+   distributions should already have up to date compilers (or if not they can be updated easily). 
 
 2) Install the package dependencies (if necessary). In R, paste the following into the console:
 
