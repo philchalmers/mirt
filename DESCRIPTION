@@ -1,6 +1,6 @@
 Package: mirt
-Version: 0.4.0-2
-Date: 2012-10-1
+Version: 0.4.1
+Date: 2012-10-19
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c(

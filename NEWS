@@ -24,7 +24,7 @@ mirt 0.4.1
 * analytical derivatives much more stable, although some are not yet optimized
 
 * estimation bug fix in bfactor(), and slight bias fix in mirt() estimation (introduced in version
-  4.0.0 when multipleGroup() added) 
+  0.4.0 when multipleGroup() added) 
 
 * updated documentation and beamer slide show included for some background on MIRT and some 
   of the packages capabilities
