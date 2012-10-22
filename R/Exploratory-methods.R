@@ -105,7 +105,9 @@ setMethod(
         if (ncol(a) > 1){ 
             rotname <- ifelse(rotate == '', object@rotate, rotate)
             so <- summary(object, rotate = rotate, Target = Target, verbose = FALSE, ...)             
-            a <- rotateLambdas(so)
+            a <- rotateLambdas(so)            
+            for(i in 1:J)
+                object@pars[[i]]@par[1:nfact] <- a[i, ] 
         }   
         rownames(a) <- colnames(object@data)
         if(nfact > 1){
