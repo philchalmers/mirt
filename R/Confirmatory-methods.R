@@ -46,6 +46,8 @@ setMethod(
         nfact <- ncol(object@F)
         itemnames <- names(object@h2)	
         F <- object@F
+        h2 <- as.matrix(object@h2)
+        colnames(h2) <- 'h2'
         rownames(F) <- itemnames								
         SS <- apply(F^2,2,sum)
         gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
@@ -54,7 +56,7 @@ setMethod(
         colnames(Phi) <- rownames(Phi) <- paste('F',1:ncol(Phi), sep='')
         if(verbose){
             cat("\nFactor loadings metric: \n")
-            print(cbind(F),digits)		
+            print(cbind(F, h2),digits)		
             cat("\nSS loadings: ",round(SS,digits), "\n")		
             cat("\nFactor correlations: \n")
             print(Phi)
