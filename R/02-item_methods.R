@@ -556,7 +556,6 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'nominal'),
     definition = function(x){          
-        par <- x@par
         d <- x@par[length(x@par):(length(x@par) - x@ncat + 1)]
         d        
     }
@@ -566,8 +565,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'partcomp'),
     definition = function(x){          
-        par <- x@par
-        d <- x@par[(nfact+1):(length(x@par)-2)]
+        d <- x@par[(x@nfact+1):(length(x@par)-2)]
         d
     }
 )
@@ -576,7 +574,6 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'mcm'),
     definition = function(x){          
-        par <- x@par
         d <- x@par[(x@nfact + x@ncat +1):(x@nfact - x@ncat*2)]
         d        
     }
