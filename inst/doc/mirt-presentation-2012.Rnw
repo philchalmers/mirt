@@ -1,0 +1,4 @@
+%\VignetteIndexEntry{Presentation 2012}
+\documentclass{article}
+\begin{document}
+\end{document}
