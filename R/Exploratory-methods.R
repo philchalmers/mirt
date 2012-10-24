@@ -107,7 +107,8 @@ setMethod(
             so <- summary(object, rotate = rotate, Target = Target, verbose = FALSE, ...)             
             a <- rotateLambdas(so)            
             for(i in 1:J)
-                object@pars[[i]]@par[1:nfact] <- a[i, ] 
+                object@pars[[i]]@par[1:nfact] <- a[i, ]            
+            object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]            
         }   
         rownames(a) <- colnames(object@data)
         if(nfact > 1){
