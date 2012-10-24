@@ -1,3 +1,6 @@
+* more than one parameter can now be passed to parprior to make specifying identical priors more 
+  convenient 
+
 ----------------------------------------------------------------
 mirt 0.4.1
 ----------------------------------------------------------------

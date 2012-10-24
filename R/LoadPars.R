@@ -324,15 +324,15 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     for(i in 1:J){
         names(pars[[i]]@parnum) <- names(startvalues[[i]])
         if(!is.null(parprior) && parprior != 'index'){
-            for(j in 1:length(parprior)){
-                tmp <- pars[[i]]@parnum %in% as.numeric(parprior[[j]][1])
+            for(j in 1:length(parprior)){                                
+                tmp <- pars[[i]]@parnum %in% as.numeric(parprior[[j]][1:(length(parprior[[j]])-3)])
                 if(any(tmp)){
-                    if(parprior[[j]][2] == 'norm'){
-                        pars[[i]]@n.prior.mu[tmp] <- as.numeric(parprior[[j]][3])
-                        pars[[i]]@n.prior.sd[tmp] <- as.numeric(parprior[[j]][4])
-                    } else {
-                        pars[[i]]@b.prior.alpha[tmp] <- as.numeric(parprior[[j]][3])
-                        pars[[i]]@b.prior.beta[tmp] <- as.numeric(parprior[[j]][4])
+                    if(parprior[[j]][length(parprior[[j]]) - 2] == 'norm'){
+                        pars[[i]]@n.prior.mu[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1])
+                        pars[[i]]@n.prior.sd[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
+                    } else if(parprior[[j]][length(parprior[[j]]) - 2] == 'beta'){
+                        pars[[i]]@b.prior.alpha[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1])
+                        pars[[i]]@b.prior.beta[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
                     }                
                 }          
             }
@@ -367,18 +367,18 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain
         else return(ret@est)        
     }
     if(!is.null(parprior) && is.list(parprior)){
-        for(j in 1:length(parprior)){
-            tmp <- parnum %in% as.numeric(parprior[[j]][1])
+        for(j in 1:length(parprior)){            
+            tmp <- parnum %in% as.numeric(parprior[[j]][1:(length(parprior[[j]])-3)])
             if(any(tmp)){
-                if(parprior[[j]][2] == 'norm'){
-                    ret@n.prior.mu[tmp] <- as.numeric(parprior[[j]][3])
-                    ret@n.prior.sd[tmp] <- as.numeric(parprior[[j]][4])
-                } else {
-                    ret@b.prior.alpha[tmp] <- as.numeric(parprior[[j]][3])
-                    ret@b.prior.beta[tmp] <- as.numeric(parprior[[j]][4])
+                if(parprior[[j]][length(parprior[[j]]) - 2] == 'norm'){
+                    ret@n.prior.mu[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1])
+                    ret@n.prior.sd[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
+                } else if(parprior[[j]][length(parprior[[j]]) - 2] == 'beta'){
+                    ret@b.prior.alpha[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1])
+                    ret@b.prior.beta[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
                 }                
             }          
         }    
-    }
+    }    
     return(ret)    
 }
