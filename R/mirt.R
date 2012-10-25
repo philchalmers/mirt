@@ -108,10 +108,9 @@
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' Can define either normal (normally for slopes and intercepts) or beta (for guessing and upper bounds) prior
-#' probabilities. Note that for upper bounds the value used in the prior is 1 - u so that the lower and upper 
-#' bounds can function the same. To specify a prior the form is c('priortype', ...), where normal priors 
-#' are \code{parprior = list(c(parnumber, 'norm', mean, sd))} and betas are 
-#' \code{parprior = list(c(parnumber, 'beta', alpha, beta))}. 
+#' probabilities. To specify a prior the form is c('priortype', ...), where normal priors 
+#' are \code{parprior = list(c(parnumbers, 'norm', mean, sd))} and betas are 
+#' \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} 
 #' @param pars a data.frame with the structure of how the starting values, parameter numbers, and estimation
 #' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
 #' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
@@ -329,18 +328,23 @@
 #'   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' 
 #' mod1 <- mirt(data, 1)
-#' mod2 <- mirt(data, 2)
-#' mod3 <- mirt(data, 3)
+#' mod2 <- mirt(data, 2, quadpts = 15)
+#' mod3 <- mirt(data, 3, quadpts = 10)
 #' anova(mod1,mod2)
 #' anova(mod2, mod3) #negative AIC, 2 factors probably best
 #' 
 #' #with fixed guessing parameters
 #' mod1g <- mirt(data, 1, guess = .1)
 #' coef(mod1g)
-#' mod2g <- mirt(data, 2, guess = .1)
-#' coef(mod2g)
-#' anova(mod1g, mod2g)
-#' summary(mod2g, rotate='promax')
+#' 
+#' #with estimated guessing and beta priors (for better stability)
+#' itemtype <- rep('3PL', 32)
+#' sv <- mirt(data, 1, itemtype, pars = 'values')
+#' gindex <- sv$parnum[sv$name == 'g']
+#' parprior <- list(c(gindex, 'beta', 10, 90)) 
+#' mod1wg <- mirt(data, 1, itemtype, guess = .1, parprior=parprior, verbose=TRUE)
+#' coef(mod1wg)
+#' anova(mod1g, mod1wg)
 #' 
 #' ###########
 #' #graded rating scale example

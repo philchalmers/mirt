@@ -135,13 +135,11 @@
   correctly use \code{pars = 'values'} initially to see how
   the parameters are labeled. Can define either normal
   (normally for slopes and intercepts) or beta (for
-  guessing and upper bounds) prior probabilities. Note that
-  for upper bounds the value used in the prior is 1 - u so
-  that the lower and upper bounds can function the same. To
+  guessing and upper bounds) prior probabilities. To
   specify a prior the form is c('priortype', ...), where
-  normal priors are \code{parprior = list(c(parnumber,
+  normal priors are \code{parprior = list(c(parnumbers,
   'norm', mean, sd))} and betas are \code{parprior =
-  list(c(parnumber, 'beta', alpha, beta))}.}
+  list(c(parnumbers, 'beta', alpha, beta))}}
 
   \item{pars}{a data.frame with the structure of how the
   starting values, parameter numbers, and estimation
