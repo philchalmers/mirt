@@ -215,24 +215,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }        
+        LL <- LL.Priors(x=x, LL=LL)        
         return(LL)
     }
 )
@@ -246,24 +229,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
 )
@@ -277,24 +243,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
 )
@@ -308,24 +257,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
 )
@@ -339,24 +271,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
 )
@@ -370,24 +285,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
 )
@@ -401,24 +299,7 @@ setMethod(
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.nan(x@n.prior.mu)
-            val <- x@par[ind]
-            u <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            for(i in 1:length(val))            
-                LL <- LL - log(dnorm(val[i], u[i], s[i]))
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.nan(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            for(i in 1:length(val)){            
-                tmp <- dbeta(val[i], a[i], b[i])
-                LL <- LL - log(ifelse(tmp == 0, 1, tmp))
-            }
-        }
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
 )
@@ -435,7 +316,8 @@ setMethod(
         prior <- prior/sum(prior)
         rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, 
                             debug='')
-        LL <- (-1)*sum(r*log(rlist$expected))                 
+        LL <- (-1)*sum(r*log(rlist$expected)) 
+        LL <- LL.Priors(x=x, LL=LL)
         return(LL)        
     }
 )
@@ -738,35 +620,8 @@ setMethod(
             hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
             return(list(grad=grad, hess=hess))
         }       
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.na(x@n.prior.mu)            
-            val <- x@par[ind]
-            mu <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            h <- g <- rep(0, length(val))
-            for(i in 1:length(val)){
-                g[i] <- -(val[i] - mu[i])/(s[i]^2)
-                h[i] <- -1/(s[i]^2)
-            }
-            grad[ind] <- grad[ind] + g
-            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.na(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            bphess <- bpgrad <- rep(0, length(val))
-            for(i in 1:length(val)){
-                tmp <- betaprior(val[i], a[i], b[i])
-                bpgrad[i] <- tmp$grad
-                bphess[i] <- tmp$hess
-            }
-            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
-        }        
-        return(list(grad = grad, hess = hess))
+        ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+        return(ret)
     }
 )
 
@@ -794,35 +649,8 @@ setMethod(
         hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
         hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
             ret$hess[(nd+1):ncol(hess), 1:nd]
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.na(x@n.prior.mu)            
-            val <- x@par[ind]
-            mu <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            h <- g <- rep(0, length(val))
-            for(i in 1:length(val)){
-                g[i] <- -(val[i] - mu[i])/(s[i]^2)
-                h[i] <- -1/(s[i]^2)
-            }
-            grad[ind] <- grad[ind] + g
-            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.na(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            bphess <- bpgrad <- rep(0, length(val))
-            for(i in 1:length(val)){
-                tmp <- betaprior(val[i], a[i], b[i])
-                bpgrad[i] <- tmp$grad
-                bphess[i] <- tmp$hess
-            }
-            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
-        }
-        return(list(grad=grad, hess=hess))
+        ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+        return(ret)
     }
 )
 
@@ -838,8 +666,10 @@ setMethod(
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
-        return(list(grad = grad, hess = hess))
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
+        return(list(grad=grad, hess=hess))
+        #ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+        #return(ret)
     }
 )
 
@@ -859,126 +689,115 @@ setMethod(
         g <- x@par[length(x@par)-1]
         u <- x@par[length(x@par)]
         if(TRUE){#3PL
-            grad <- function(a, d, g, u, r, f, Theta){                			
-                P <- P.comp(a,d,Theta,g,1)		
-                Pstar <- P.comp(a,d,Theta,0)		
-                P[P < 1e-8] <- 1e-8
-                P[P > .99999999] <- .99999999
-                Pstar[Pstar < 1e-8] <- 1e-8
-                Pstar[Pstar > .99999999] <- .99999999
-                Qstar <- 1 - Pstar
-                Q <- 1 - P
-                const1 <- (r/P - (f-r)/Q)
-                dd <- da <- rep(0,nfact)		
-                dg <- sum(Qstar*const1)
-                for(i in 1:nfact){
-                    Pk <- P.mirt(a[i],d[i],Theta[ , i, drop=FALSE],0)
-                    Qk <- 1 - Pk
-                    dd[i] <- sum((1-g)*Pstar*Qk*const1)
-                    da[i] <- sum((1-g)*Pstar*Qk*Theta[,i]*const1)
-                }
-                return(c(da,dd,dg,0))
-            }		
-            hess <- function(a, d, g, u, r, f, Theta){ 
-                nfact <- length(a)
-                hess <- matrix(0, nfact*2 + 2, nfact*2 + 2)                		
-                P <- P.comp(a,d,Theta,g, 1)		
-                Pstar <- P.comp(a,d,Theta,0, 1)
-                P[P < 1e-8] <- 1e-8
-                Pstart[Pstart < 1e-8] <- 1e-8
-                Qstar <- 1 - Pstar
-                Q <- 1 - P	
-                const1 <- (r/P - (f-r)/Q)
-                const2 <- (r/P^2 + (f-r)/Q^2)	
-                Names <- c(paste("a",1:nfact,sep='_'),paste("d",1:nfact,sep='_'),'g_0')
-                for(i in 1:(nfact*2+1)){		
-                    for(j in 1:(nfact*2+1)){
-                        if(i <= j){
-                            d1 <- strsplit(Names[c(i,j)],"_")[[1]]
-                            d2 <- strsplit(Names[c(i,j)],"_")[[2]]
-                            k <- as.numeric(d1[2])
-                            m <- as.numeric(d2[2])
-                            Pk <- P.mirt(a[k],d[k],Theta[ , k, drop=FALSE],0)
-                            Qk <- 1 - Pk	
-                            Pm <- P.mirt(a[m],d[m],Theta[ , m, drop=FALSE],0)
-                            Qm <- 1 - Pm									
-                            if(i == j && d1[1] == 'd'){
-                                hess[i,i] <- sum((1-g)*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*(1-g)*const2))
-                                next
-                            }
-                            if(i == j && d1[1] == 'a'){
-                                hess[i,i] <- sum((1-g)*Theta[,k]^2*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*
-                                    (1-g)*const2))
-                                next		
-                            }
-                            if(i == j && d1[1] == 'g'){
-                                hess[i,i] <- -sum(Qstar^2 * const2)
-                                next		
-                            }	
-                            if(d1[1] == 'a' && d2[1] == 'a'){
-                                hess[i,j] <- hess[j,i] <- sum((1-g)*Theta[,k]*Theta[,m]*Qk*Pstar*Qm*(const1 - 
-                                    Pstar*(1-g)*const2))
-                                next
-                            }
-                            if(d1[1] == 'd' && d2[1] == 'd'){
-                                hess[i,j] <- hess[j,i] <- sum((1-g)*Qk*Pstar*Qm*(const1 - Pstar*(1-g)*const2))
-                                next
-                            }
-                            if(d1[1] == 'a' && d2[1] == 'g'){
-                                hess[i,j] <- hess[j,i] <- -sum(Theta[,k]*Pstar*Qk*(const1 + Qstar*(1-g)*const2))
-                                next
-                            }
-                            if(d1[1] == 'd' && d2[1] == 'g'){
-                                hess[i,j] <- hess[j,i] <- -sum(Pstar*Qk*(const1 + Qstar*(1-g)*const2))
-                                next
-                            }
-                            if(d1[1] == 'd' && d2[1] == 'a' && d1[2] == d2[2]){
-                                hess[i,j] <- hess[j,i] <- sum((1-g)*Theta[,k]*Pstar*Qk*(const1*((1-g)*Qk - Pk) - 
-                                    Pstar*Qk*(1-g)*const2))
-                                next	
-                            }
-                            if(d1[1] == 'd' && d2[1] == 'a' && d1[2] != d2[2]){
-                                hess[i,j] <- hess[j,i] <- sum((1-g)*Qk*Theta[,m]*Pstar*Qm*(const1 - 
-                                    Pstar*(1-g)*const2))
-                                next
-                            }						
-                        }
-                    }
-                }	
-                return(hess)
-            }		
-            grad <- grad(a=a, d=d, g=g, u=u, r=r, f=f, Theta=Theta)
-            hess <- hess(a=a, d=d, g=g, u=u, r=r, f=f, Theta=Theta)
-        }        
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.na(x@n.prior.mu)            
-            val <- x@par[ind]
-            mu <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            h <- g <- rep(0, length(val))
-            for(i in 1:length(val)){
-                g[i] <- -(val[i] - mu[i])/(s[i]^2)
-                h[i] <- -1/(s[i]^2)
-            }
-            grad[ind] <- grad[ind] + g
-            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.na(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            bphess <- bpgrad <- rep(0, length(val))
-            for(i in 1:length(val)){
-                tmp <- betaprior(val[i], a[i], b[i])
-                bpgrad[i] <- tmp$grad
-                bphess[i] <- tmp$hess
-            }
-            if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
-        }
-        return(list(grad = grad, hess = hess))
+#             grad <- function(a, d, g, u, r, f, Theta){                			
+#                 P <- P.comp(a,d,Theta,g,1)		
+#                 Pstar <- P.comp(a,d,Theta,0)		
+#                 P[P < 1e-8] <- 1e-8
+#                 P[P > .99999999] <- .99999999
+#                 Pstar[Pstar < 1e-8] <- 1e-8
+#                 Pstar[Pstar > .99999999] <- .99999999
+#                 Qstar <- 1 - Pstar
+#                 Q <- 1 - P
+#                 const1 <- (r/P - (f-r)/Q)
+#                 dd <- da <- rep(0,nfact)		
+#                 dg <- sum(Qstar*const1)                
+#                 for(i in 1:nfact){
+#                     Pk <- P.mirt(a[i],d[i],Theta[ , i, drop=FALSE],0)
+#                     Qk <- 1 - Pk
+#                     dd[i] <- sum((1-g)*Pstar*Qk*const1)
+#                     da[i] <- sum((1-g)*Pstar*Qk*Theta[,i]*const1)
+#                 }
+#                 return(c(da,dd,dg,0))
+#             }		
+#             hess <- function(a, d, g, u, r, f, Theta){                 
+#                 nfact <- length(a)
+#                 hess <- matrix(0, nfact*2 + 2, nfact*2 + 2)                		
+#                 P <- P.comp(a,d,Theta,g, 1)		
+#                 Pstar <- P.comp(a,d,Theta,0, 1)
+#                 P[P < 1e-8] <- 1e-8
+#                 Pstar[Pstar < 1e-8] <- 1e-8
+#                 Qstar <- 1 - Pstar
+#                 Q <- 1 - P	
+#                 const1 <- (r/P - (f-r)/Q)
+#                 const2 <- (r/P^2 + (f-r)/Q^2)	
+#                 Names <- c(paste("a",1:nfact,sep='_'),paste("d",1:nfact,sep='_'),'g_0')
+#                 for(i in 1:(nfact*2+1)){		
+#                     for(j in 1:(nfact*2+1)){
+#                         if(i <= j){
+#                             d1 <- strsplit(Names[c(i,j)],"_")[[1]]
+#                             d2 <- strsplit(Names[c(i,j)],"_")[[2]]
+#                             k <- as.numeric(d1[2])
+#                             m <- as.numeric(d2[2])
+#                             if(i <= nfact*2){
+#                                 Pk <- P.mirt(a[k],d[k],Theta[ , k, drop=FALSE],0)
+#                                 Qk <- 1 - Pk	
+#                             }
+#                             if(j <= nfact*2){
+#                                 Pm <- P.mirt(a[m],d[m],Theta[ , m, drop=FALSE],0)
+#                                 Qm <- 1 - Pm	
+#                             }
+#                             if(i == j && d1[1] == 'd'){
+#                                 hess[i,i] <- sum((1-g)*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*(1-g)*const2))
+#                                 next
+#                             }
+#                             if(i == j && d1[1] == 'a'){
+#                                 hess[i,i] <- sum((1-g)*Theta[,k]^2*Pstar*Qk*(const1*((1-g)*Qk - Pk) - Pstar*Qk*
+#                                     (1-g)*const2))
+#                                 next		
+#                             }
+#                             if(i == j && d1[1] == 'g'){
+#                                 hess[i,i] <- -sum(Qstar^2 * const2)
+#                                 next		
+#                             }	
+#                             if(d1[1] == 'a' && d2[1] == 'a'){
+#                                 hess[i,j] <- hess[j,i] <- sum((1-g)*Theta[,k]*Theta[,m]*Qk*Pstar*Qm*(const1 - 
+#                                     Pstar*(1-g)*const2))
+#                                 next
+#                             }
+#                             if(d1[1] == 'd' && d2[1] == 'd'){
+#                                 hess[i,j] <- hess[j,i] <- sum((1-g)*Qk*Pstar*Qm*(const1 - Pstar*(1-g)*const2))
+#                                 next
+#                             }
+#                             if(d1[1] == 'a' && d2[1] == 'g'){
+#                                 hess[i,j] <- hess[j,i] <- -sum(Theta[,k]*Pstar*Qk*(const1 + Qstar*(1-g)*const2))
+#                                 next
+#                             }
+#                             if(d1[1] == 'd' && d2[1] == 'g'){
+#                                 hess[i,j] <- hess[j,i] <- -sum(Pstar*Qk*(const1 + Qstar*(1-g)*const2))
+#                                 next
+#                             }
+#                             if(d1[1] == 'a' && d2[1] == 'd' && d1[2] == d2[2]){
+#                                 hess[i,j] <- hess[j,i] <- sum((1-g)*Theta[,k]*Pstar*Qk*(const1*((1-g)*Qk - Pk) - 
+#                                     Pstar*Qk*(1-g)*const2))
+#                                 next	
+#                             }
+#                             if(d1[1] == 'a' && d2[1] == 'd' && d1[2] != d2[2]){
+#                                 hess[i,j] <- hess[j,i] <- sum((1-g)*Qk*Theta[,m]*Pstar*Qm*(const1 - 
+#                                     Pstar*(1-g)*const2))
+#                                 next
+#                             }						
+#                         }
+#                     }
+#                 }	
+#                 return(hess)
+#             }
+#             grad <- grad(a=a, d=d, g=g, u=u, r=r, f=f, Theta=Theta)
+#             hess <- hess(a=a, d=d, g=g, u=u, r=r, f=f, Theta=Theta)
+#             return(list(grad=grad, hess=hess))
+            ##### FIX ME: analytical gradient/hessian broken, temp fix for now
+            grad <- rep(0, length(x@par))
+            hess <- matrix(0, length(x@par), length(x@par))
+            if(EM){            
+                grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
+                return(list(grad = grad, hess = hess))            
+            }        
+            grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)       
+            return(list(grad=grad, hess=hess))
+        }           
+#         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+#         return(ret)
     }
 )
 
@@ -994,8 +813,10 @@ setMethod(
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
-        return(list(grad = grad, hess = hess))
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta) 
+        return(list(grad=grad, hess=hess))
+#         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+#         return(ret)        
     }
 )
 
@@ -1012,7 +833,9 @@ setMethod(
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)        
-        return(list(grad = grad, hess = hess))
+        return(list(grad=grad, hess=hess))
+#         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+#         return(ret)
     }
 )
 
@@ -1029,7 +852,9 @@ setMethod(
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
-        return(list(grad = grad, hess = hess))
+        return(list(grad=grad, hess=hess))
+#         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+#         return(ret)
     }
 )
 
@@ -1079,6 +904,7 @@ setMethod(
                    as.integer(npars))				
         sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]	
         hess <- hess[sel,sel] 
+        #prior parameter constraints
         if(any(!is.nan(x@n.prior.mu))){            
             ind <- !is.na(x@n.prior.mu)            
             val <- x@par[ind]
@@ -1132,14 +958,14 @@ P.poly <- function(a, d, Theta, itemexp = FALSE)
 }
 
 # Trace lines for mirt models
-P.mirt <- function(a, d, Theta, g, u)
+P.mirt <- function(a, d, Theta, g = 0, u = 1)
 { 		
     traces <- .Call("traceLinePts", a, d, g, u, Theta)
     return(traces)
 }
 
 # Trace lines for partially compensetory models
-P.comp <- function(a, d, Theta, g = 0, u = 1)
+P.comp <- function(a, d, Theta, g, u = 1)
 {
     nfact <- length(a)
     P <- rep(1,nrow(Theta))

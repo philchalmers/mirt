@@ -417,3 +417,59 @@ UpdatePrepList <- function(PrepList, pars, MG = FALSE){
     if(!MG) PrepList <- PrepList[[1]]
     return(PrepList)
 }
+
+#new gradient and hessian with priors
+DerivativePriors <- function(x, grad, hess){
+    if(any(!is.nan(x@n.prior.mu))){
+        ind <- !is.na(x@n.prior.mu)            
+        val <- x@par[ind]
+        mu <- x@n.prior.mu[ind]
+        s <- x@n.prior.sd[ind]
+        h <- g <- rep(0, length(val))
+        for(i in 1:length(val)){
+            g[i] <- -(val[i] - mu[i])/(s[i]^2)
+            h[i] <- -1/(s[i]^2)
+        }
+        grad[ind] <- grad[ind] + g
+        if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + h
+        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h           
+    }
+    if(any(!is.nan(x@b.prior.alpha))){
+        ind <- !is.na(x@b.prior.alpha)
+        val <- x@par[ind]
+        a <- x@b.prior.alpha[ind]
+        b <- x@b.prior.beta[ind]
+        bphess <- bpgrad <- rep(0, length(val))
+        for(i in 1:length(val)){
+            tmp <- betaprior(val[i], a[i], b[i])
+            bpgrad[i] <- tmp$grad
+            bphess[i] <- tmp$hess
+        }
+        if(length(val) == 1) hess[ind, ind] <- hess[ind, ind] + bpgrad
+        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess                
+    }
+    return(list(grad=grad, hess=hess))    
+}
+
+#new likelihood with priors
+LL.Priors <- function(x, LL){
+    if(any(!is.nan(x@n.prior.mu))){
+        ind <- !is.nan(x@n.prior.mu)
+        val <- x@par[ind]
+        u <- x@n.prior.mu[ind]
+        s <- x@n.prior.sd[ind]
+        for(i in 1:length(val))            
+            LL <- LL - log(dnorm(val[i], u[i], s[i]))
+    }
+    if(any(!is.nan(x@b.prior.alpha))){
+        ind <- !is.nan(x@b.prior.alpha)
+        val <- x@par[ind]
+        a <- x@b.prior.alpha[ind]
+        b <- x@b.prior.beta[ind]
+        for(i in 1:length(val)){            
+            tmp <- dbeta(val[i], a[i], b[i])
+            LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+        }        
+    }
+    return(LL)
+}
