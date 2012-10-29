@@ -4,3 +4,4 @@ ToDo
 COPYING
 ^\.Rproj\.user$
 mirt.Rproj
+^.*\.Rproj$
