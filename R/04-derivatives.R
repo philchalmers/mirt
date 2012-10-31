@@ -433,13 +433,32 @@ EML <- function(par, obj, Theta, ...){
 
 
 #----------------------------------------------------------------------------
-# Derivatives wrt Theta
+# Derivatives wrt Theta, returns list with number of categories, and 
+#    inside a matrix with the number of factors
 
 setMethod(
     f = "DerivTheta",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('DerivTheta for class \'', class(x), '\' not yet written.')    
+        N <- nrow(Theta)
+        nfact <- ncol(Theta)
+        parlength <- length(x@par)
+        u <- x@par[parlength]
+        g <- x@par[parlength - 1]
+        d <- x@par[parlength - 2]
+        a <- x@par[1:nfact]   
+        D <- x@D
+        Pstar <- P.mirt(a, d, Theta, g=g, u=u, D=x@D) - g
+        grad <- hess <- vector('list', 2)
+        grad[[1]] <- grad[[2]] <- hess[[1]] <- hess[[2]] <- matrix(0, N, nfact)
+        for(i in 1:nfact){            
+            grad[[2]][ ,i] <- (u-g) * D * a[i] * (Pstar * (1 - Pstar))
+            grad[[1]][ ,i] <- -1 * grad[[2]][ ,i]            
+            hess[[2]][ ,i] <- 2 * (u - g) * D^2 * a[i]^2 * ((1 - Pstar)^2 * Pstar) - 
+                (u - g) * D^2 * a[i]^2 * (Pstar * (1 - Pstar))
+            hess[[1]][ ,i] <- -1 * hess[[2]][ ,i]
+        }
+        return(list(grad=grad, hess=hess))
     }
 )
 
@@ -488,5 +507,20 @@ setMethod(
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta){
         stop('DerivTheta for class \'', class(x), '\' not yet written.')
+    }
+)
+
+setMethod(
+    f = "ItemInfo",
+    signature = signature(x = 'dich', Theta = 'matrix', cosangle = 'numeric'),
+    definition = function(x, Theta, cosangle = 1){              
+        P <- ProbTrace(x, Theta)
+        x@par[1:x@nfact] <- sum( sqrt((x@par[1:x@nfact] * cosangle)^2))
+        dx <- DerivTheta(x, Theta)
+        info <- 0
+        for(i in 1:x@ncat)
+            for(j in 1:x@nfact)
+                info <- info + ((dx$grad[[i]][ ,j]^2) / P[ ,i] - dx$hess[[i]][ ,j])
+        return(info)
     }
 )

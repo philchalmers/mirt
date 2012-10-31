@@ -378,7 +378,7 @@ setMethod(
         nfact <- ncol(Theta)
         a <- ExtractLambdas(x)
         A <- sum((a * cosangle)^2)
-        Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0, 1)
+        Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0, 1, D=x@D)
         info <- A * P * (1-P) * Pstar/P 
         info    
     }
