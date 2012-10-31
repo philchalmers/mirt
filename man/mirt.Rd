@@ -105,6 +105,10 @@ Theory)}
   \item{allpars}{logical; print all the item parameters
   instead of just the slopes?}
 
+  \item{D}{a numeric value used to adjust the logistic
+  metric to be more similar to a normal cumulative density
+  curve. Default is 1.702}
+
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
 

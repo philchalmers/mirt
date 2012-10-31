@@ -68,6 +68,10 @@
   applicable when \code{method = 'EM'} since the MHRM
   method calculates them automatically}
 
+  \item{D}{a numeric value used to adjust the logistic
+  metric to be more similar to a normal cumulative density
+  curve. Default is 1.702}
+
   \item{SEtol}{tollerance value used to stop the MHRM
   estimation when \code{SE = TRUE}. Lower values will take
   longer but may be more stable for computing the

@@ -1,6 +1,6 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
                      free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
-                     grsm.block = NULL)
+                     grsm.block = NULL, D)
 {
     if(debug == 'PrepData') browser()  
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
@@ -99,7 +99,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                            startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                           parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)   
+                           parnumber=parnumber, BFACTOR=BFACTOR, D=D, debug=debug)   
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')
@@ -117,7 +117,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                                itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                                itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                               parnumber=parnumber, BFACTOR=BFACTOR, debug=debug)
+                               parnumber=parnumber, BFACTOR=BFACTOR, D=D, debug=debug)
     }        
     if(any(itemtype == 'grsm')){           
         unique.grsmgroups <- unique(na.omit(grsm.block))        

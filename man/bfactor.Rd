@@ -90,6 +90,10 @@
   and this object can in turn be modified and input back
   into the estimation with \code{pars = mymodifiedpars}}
 
+  \item{D}{a numeric value used to adjust the logistic
+  metric to be more similar to a normal cumulative density
+  curve. Default is 1.702}
+
   \item{prev.cor}{uses a previously computed correlation
   matrix to be used to estimate starting values for the EM
   estimation}

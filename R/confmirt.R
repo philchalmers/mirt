@@ -106,6 +106,8 @@
 #' @param suppress a numeric value indicating which factor
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
+#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
+#' cumulative density curve. Default is 1.702
 #' @param technical list specifying subtle parameters that can be adjusted. These 
 #' values are 
 #' @param df.p logical; print the degrees of freedom and p-values?
@@ -267,12 +269,12 @@
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
                      constrain = NULL, parprior = NULL, grsm.block = NULL, verbose = TRUE, 
                      draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
-                     technical = list(),  ...)
+                     D = 1.702, technical = list(),  ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype, 
-                      guess=guess, upper=upper, grsm.block=grsm.block,
+                      guess=guess, upper=upper, grsm.block=grsm.block, D=D,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, 
                       draws=draws, debug=debug, technical = list(),  ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))

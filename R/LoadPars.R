@@ -1,5 +1,5 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     constrain, startvalues, freepars, parprior, parnumber, 
+                     constrain, startvalues, freepars, parprior, parnumber, D, 
                      estLambdas, BFACTOR = FALSE, debug)
     {       
     if(debug == 'LoadPars') browser() 
@@ -16,15 +16,15 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         startvalues <- list()
         for(i in 1:J){            
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
-                val <- c(1/1.702, zetas[[i]], guess[i], upper[i])
+                val <- c(1/D, zetas[[i]], guess[i], upper[i])
                 names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
             }
             if(itemtype[i] == 'Rasch' && K[i] > 2){
-                val <- c(1/1.702, 0, zetas[[i]])
+                val <- c(1/D, 0, zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
             }
             if(itemtype[i] == '1PL' && K[i] > 2){
-                val <- c(1/1.702, zetas[[i]])
+                val <- c(1/D, zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))
             }
             if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
@@ -113,6 +113,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                              
                              ncat=2,
+                             D=D,
                              lbound=ifelse(itemtype[i] == 'Rasch', -25, -Inf),
                              ubound=ifelse(itemtype[i] == 'Rasch', 25, Inf),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -130,6 +131,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                                                           
@@ -151,6 +153,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
@@ -174,6 +177,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
                              ncat=2,
+                             D=D,
                              lbound=-Inf,                                           
                              ubound=Inf,                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -197,6 +201,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                              
@@ -217,6 +222,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
@@ -237,6 +243,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
@@ -259,6 +266,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              nfact=nfact, 
                              ncat=K[i], 
+                             D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
                              lbound=-Inf,
@@ -280,6 +288,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              est=freepars[[i]],
                              nfact=nfact, 
+                             ncat=2, 
+                             D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
                              lbound=-Inf,
@@ -306,6 +316,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              nfact=nfact, 
                              ncat=K[i], 
+                             D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
                              lbound=-Inf,

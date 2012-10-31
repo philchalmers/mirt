@@ -3,7 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, draws = 2000, calcLL = TRUE,
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
-                       SEtol = .01, nested.mod = NULL, grsm.block = NULL)
+                       SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702)
 {    
     if(debug == 'ESTIMATION') browser()
     set.seed(12345)       
@@ -45,7 +45,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     PrepList <- vector('list', ngroups)    
     PrepListFull <- PrepData(data=data, model=model[[1]], itemtype=itemtype, guess=guess, upper=upper, 
                              startvalues=NULL, constrain=NULL, freepars=NULL, 
-                             parprior=NULL, verbose=verbose, debug=debug, free.start=NULL,
+                             parprior=NULL, verbose=verbose, debug=debug, free.start=NULL, D=D,
                              technical=technical) #just a dummy model to collect fulldata stuff
     for(g in 1:ngroups){    
         select <- group == groupNames[g]        
@@ -55,7 +55,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                   upper=upper, startvalues=NULL, constrain=constrain, freepars=NULL, 
                                   parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
                                   technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
-                                  grsm.block=grsm.block)        
+                                  grsm.block=grsm.block, D=D)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
@@ -68,7 +68,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         loads <- unclass(FA$load)
         cs <- sqrt(abs(FA$u))              
         astart <- loads/cs
-        astart <- cbind(astart,astart/2)
+        astart <- cbind(astart,astart/2)* (1.702 / D) #reweight due to D
         nfact <- PrepList[[1]]$pars[[1]]@nfact
         for(g in 1:ngroups)
             for(i in 1:J)

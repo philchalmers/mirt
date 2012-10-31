@@ -34,6 +34,7 @@ setClass("AllItemsClass",
                         n.prior.sd='numeric',
                         b.prior.alpha='numeric',
                         b.prior.beta='numeric',
+                        D='numeric', #scaling correction
                         'VIRTUAL')
 )
 
@@ -64,6 +65,8 @@ setGeneric('ExtractLambdas', function(x) standardGeneric("ExtractLambdas"))
 setGeneric('ExtractZetas', function(x) standardGeneric("ExtractZetas"))
 
 setGeneric('Deriv', function(x, Theta, ...) standardGeneric("Deriv"))
+
+setGeneric('DerivTheta', function(x, Theta) standardGeneric("DerivTheta"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))         
 

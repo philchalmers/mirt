@@ -1,6 +1,6 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata, 
                            itemloc, data, N, guess, upper, itemnames, exploratory, constrain, 
-                           startvalues, freepars, parprior, parnumber, BFACTOR = FALSE, debug)
+                           startvalues, freepars, parprior, parnumber, BFACTOR = FALSE, D, debug)
 {       
     if(debug == 'model.elements') browser()
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
@@ -41,17 +41,18 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     lambdas <- ifelse(estlam, .5, 0)	  
     #INT
     cs <- sqrt(abs(1-rowSums(lambdas^2)))	
+    lambdas <- lambdas * 1.702/D
     zetas <- list()
     loc <- 1	
     for(i in 1:J){        
         if(K[i] == 2){
             div <- ifelse(cs[i] > .25, cs[i], .25)		
-            zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div            
+            zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div * 1.702/D  
         } else {			
             temp <- table(data[,i])[1:(K[i]-1)]/N
             temp <- cumsum(temp)
             div <- ifelse(cs[i] > .25, cs[i], .25)		
-            zetas[[i]] <- qnorm(1 - temp)/div	            
+            zetas[[i]] <- qnorm(1 - temp)/div * 1.702/D            
         }		
     }    
     estzetas <- list()        
@@ -83,12 +84,12 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         u <- FA$unique
         u[u < .001 ] <- .2
         cs <- sqrt(u)
-        lambdas <- loads/cs                
+        lambdas <- loads/cs * (1.702/D)                  
     }        
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
                     fulldata=fulldata, J=J, K=K, nfact=nfact+length(prodlist), constrain=constrain, 
                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
-                    estLambdas=estlam, BFACTOR=BFACTOR, debug=debug)      
+                    estLambdas=estlam, BFACTOR=BFACTOR, D=D, debug=debug)      
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             startvalues=startvalues, freepars=freepars, parprior=parprior,

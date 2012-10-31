@@ -149,6 +149,10 @@
   .3 in most statistical software. Default is 0 for no
   suppression}
 
+  \item{D}{a numeric value used to adjust the logistic
+  metric to be more similar to a normal cumulative density
+  curve. Default is 1.702}
+
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are}
 

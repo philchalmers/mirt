@@ -99,6 +99,8 @@
 #' input then the default from the object is ignored and the new rotation from the list 
 #' is used instead
 #' @param allpars logical; print all the item parameters instead of just the slopes?
+#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
+#' cumulative density curve. Default is 1.702
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
@@ -366,16 +368,16 @@
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
-                  pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
-                  prev.cor = NULL, quadpts = NULL, grsm.block = NULL, verbose = FALSE, debug = FALSE, 
-                  technical = list(), ...)
+                 pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
+                 prev.cor = NULL, quadpts = NULL, grsm.block = NULL, D = 1.702, verbose = FALSE, 
+                 debug = FALSE, technical = list(), ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
-                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
+                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
                       technical = technical, debug = debug, verbose = verbose, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call

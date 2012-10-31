@@ -62,6 +62,8 @@
 #' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
 #' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
 #' mymodifiedpars}
+#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
+#' cumulative density curve. Default is 1.702
 #' @param prev.cor uses a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation
 #' @param quadpts number of quadrature points per dimension. 
@@ -165,16 +167,16 @@
 #'     }
 #' 
 bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
-                    pars = NULL, constrain = NULL, parprior = NULL,
-                     prev.cor = NULL, quadpts = 20, grsm.block = NULL, verbose = FALSE, debug = FALSE, 
-                     technical = list(), ...)
+                    pars = NULL, constrain = NULL, parprior = NULL, prev.cor = NULL, quadpts = 20, 
+                    grsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, 
+                    technical = list(), ...)
 {         
     if(debug == 'Main') browser()
     Call <- match.call()		    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE = SE, SEtol=SEtol,
-                      parprior=parprior, quadpts=quadpts, 
+                      parprior=parprior, quadpts=quadpts, D=D,
                       technical = technical, debug = debug, verbose = verbose, 
                       BFACTOR = TRUE, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))

@@ -39,6 +39,8 @@
 #' numeric vector corresponding to each item
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation.
 #' Only applicable when \code{method = 'EM'} since the MHRM method calculates them automatically
+#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
+#' cumulative density curve. Default is 1.702
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
 #' @param verbose logical; display iteration history during estimation?
@@ -208,14 +210,14 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           method = 'MHRM', constrain = NULL, 
                           parprior = NULL, draws = 2000, 
                           quadpts = NULL, grsm.block = NULL, prev.mod = NULL,
-                          technical = list(), debug = FALSE, verbose = TRUE, ...)
+                          D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()        
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, 
                       itemtype=itemtype, guess=guess, upper=upper, nested.mod=prev.mod, 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
-                      parprior=parprior, quadpts=quadpts, method=method,
+                      parprior=parprior, quadpts=quadpts, method=method, D=D, 
                       technical = technical, debug = debug, verbose = verbose, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
