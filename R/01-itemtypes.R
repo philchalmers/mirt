@@ -69,5 +69,3 @@ setGeneric('Deriv', function(x, Theta, ...) standardGeneric("Deriv"))
 setGeneric('DerivTheta', function(x, Theta) standardGeneric("DerivTheta"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))         
-
-setGeneric('ItemInfo', function(x, Theta, cosangle) standardGeneric("ItemInfo"))

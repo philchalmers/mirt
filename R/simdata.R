@@ -30,6 +30,7 @@
 #' the dichotomous items, or a vector with as many values as to be simulated
 #' items
 #' @param upper same as \code{guess}, but for upper bound parameters
+#' @param D logistic scaling parameter, default 1.702
 #' @param sigma a covariance matrix of the underlying distribution. Default is
 #' the identity matrix
 #' @param mu a mean vector of the underlying distribution. Default is a vector
@@ -134,7 +135,7 @@
 #'    }
 #' 
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0, 
-	upper = 1, nominal = NULL, Theta = NULL)
+	upper = 1, nominal = NULL, Theta = NULL, D = 1.702)
 {     
 	nfact <- ncol(a)
 	nitems <- nrow(a)		
@@ -160,7 +161,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     a[is.na(a)] <- 0    
 	for(i in 1:nitems){
         par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
-        obj <- new(itemtype[i], par=par, nfact=nfact)
+        obj <- new(itemtype[i], par=par, nfact=nfact, D=D)
         if(any(itemtype[i] == c('gpcm','nominal'))) 
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)

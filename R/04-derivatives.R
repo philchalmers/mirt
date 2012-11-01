@@ -466,7 +466,24 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('DerivTheta for class \'', class(x), '\' not yet written.')    
+        a <- ExtractLambdas(x)
+        D <- x@D
+        P <- ProbTrace(x, Theta, itemexp = FALSE) 
+        grad <- hess <- vector('list', x@ncat)
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
+        for(j in 1:x@nfact){
+            for(i in 1:(ncol(P)-1)){
+                w1 <- P[,i] * (1-P[,i]) * a[j] * D
+                w2 <- P[,i+1] * (1-P[,i+1]) * a[j] * D
+                grad[[i]][ ,j] <- w1 - w2                
+                hess[[i]][ ,j] <- D^2 * a[j]^2 * (2 * P[ ,i] * (1 - P[,i])^2 - 
+                                                P[ ,i] * (1 - P[,i]) - 
+                                                2 * P[ ,i+1] * (1 - P[,i+1])^2 + 
+                                                P[ ,i+1] * (1 - P[,i+1]))
+            }    
+        }        
+        return(list(grad=grad, hess=hess))
     }
 )
 
@@ -474,7 +491,24 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('DerivTheta for class \'', class(x), '\' not yet written.')    
+        a <- ExtractLambdas(x)
+        D <- x@D
+        P <- ProbTrace(x, Theta, itemexp = FALSE) 
+        grad <- hess <- vector('list', x@ncat)
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
+        for(j in 1:x@nfact){
+            for(i in 1:(ncol(P)-1)){
+                w1 <- P[,i] * (1-P[,i]) * a[j] * D 
+                w2 <- P[,i+1] * (1-P[,i+1]) * a[j] * D
+                grad[[i]][ ,j] <- w1 - w2                
+                hess[[i]][ ,j] <- D^2 * a[j]^2 * (2 * P[ ,i] * (1 - P[,i])^2 - 
+                                                P[ ,i] * (1 - P[,i]) - 
+                                                2 * P[ ,i+1] * (1 - P[ ,i+1])^2 + 
+                                                P[ ,i+1] * (1 - P[ ,i+1]))
+            }    
+        }        
+        return(list(grad=grad, hess=hess))
     }
 )
 
@@ -482,6 +516,26 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta){
+        N <- nrow(Theta)
+        nfact <- ncol(Theta)
+        parlength <- length(x@par)
+        u <- x@par[parlength]
+        g <- x@par[parlength - 1]
+        d <- ExtractZetas(x)
+        a <- ExtractLambdas(x)
+        D <- x@D
+        P <- P.comp(a, d, Theta, g, 1, D=D)
+        Pdich <- P.mirt(a, d, Theta, 0, 1, D=D)
+        Pstar <- P - g
+        grad <- hess <- vector('list', 2)
+        grad[[1]] <- grad[[2]] <- hess[[1]] <- hess[[2]] <- matrix(0, N, nfact)
+        for(j in 1:nfact){            
+            grad[[2]][ ,j] <- (u - g) * D * a[j] * Pstar * (1 - Pdich) 
+            grad[[1]][ ,j] <- 1 - grad[[2]][ ,j]
+            hess[[2]][ ,j] <- (u - g) * D^2 * a[j]^2 * ( 2 * (1 - Pdich)^2 * Pstar - 
+                                                             (1 - Pdich) * Pstar)
+            hess[[1]][ ,j] <- 1 - hess[[2]][ ,j]                
+        }
         stop('DerivTheta for class \'', class(x), '\' not yet written.')    
     }
 )
@@ -490,7 +544,27 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('DerivTheta for class \'', class(x), '\' not yet written.')    
+        D <- x@D
+        a <- ExtractLambdas(x)
+        d <- ExtractZetas(x)
+        ak <- 0:(x@ncat - 1)        
+        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
+        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum = TRUE)
+        Den <- rowSums(Num)        
+        grad <- hess <- vector('list', x@ncat)
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
+        for(j in 1:x@nfact){
+            AK <- matrix(a[j] * ak)
+            for(i in 1:x@ncat){                
+                grad[[i]][ ,j] <- D * (a[j] * P[ ,i] - P[ ,i] * (Num %*% AK) / Den )
+                hess[[i]][ ,j] <- D^2 * a[j]^2 * P[ ,i] - 
+                    2 * D^2 * a[j] * P[,i] * ((Num %*% AK) / Den) + 
+                    2 * D * P[,i] * ((Num %*% AK) / Den)^2 - 
+                    D^2 * P[,i] * ((Num %*% AK^2) / Den)
+            }    
+        }               
+        return(list(grad=grad, hess=hess))
     }
 )
 
@@ -498,7 +572,27 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('DerivTheta for class \'', class(x), '\' not yet written.')    
+        D <- x@D
+        a <- ExtractLambdas(x)
+        d <- ExtractZetas(x)
+        ak <- x@par[(x@nfact+1):(x@nfact+x@ncat)]
+        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
+        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum = TRUE)
+        Den <- rowSums(Num)        
+        grad <- hess <- vector('list', x@ncat)
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
+        for(j in 1:x@nfact){
+            AK <- matrix(a[j] * ak)
+            for(i in 1:x@ncat){                
+                grad[[i]][ ,j] <- D * (a[j] * P[ ,i] - P[ ,i] * (Num %*% AK) / Den )
+                hess[[i]][ ,j] <- D^2 * a[j]^2 * P[ ,i] - 
+                    2 * D^2 * a[j] * P[,i] * ((Num %*% AK) / Den) + 
+                    2 * D * P[,i] * ((Num %*% AK) / Den)^2 - 
+                    D^2 * P[,i] * ((Num %*% AK^2) / Den)
+            }    
+        }               
+        return(list(grad=grad, hess=hess))
     }
 )
 
@@ -510,17 +604,3 @@ setMethod(
     }
 )
 
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'dich', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){              
-        P <- ProbTrace(x, Theta)
-        x@par[1:x@nfact] <- sum( sqrt((x@par[1:x@nfact] * cosangle)^2))
-        dx <- DerivTheta(x, Theta)
-        info <- 0
-        for(i in 1:x@ncat)
-            for(j in 1:x@nfact)
-                info <- info + ((dx$grad[[i]][ ,j]^2) / P[ ,i] - dx$hess[[i]][ ,j])
-        return(info)
-    }
-)

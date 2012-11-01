@@ -112,7 +112,7 @@
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,  
 #' invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
 #' parprior = NULL, draws = 2000, quadpts = NULL, grsm.block = NULL, prev.mod = NULL,
-#' technical = list(), debug = FALSE, verbose = TRUE, ...)
+#' D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'

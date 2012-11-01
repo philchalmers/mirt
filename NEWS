@@ -1,3 +1,7 @@
+* information functions slightly biased due to logistic constant adjustment, fixed for all models
+
+* constant used in estimation functions can now be modified (default is 1.702)
+
 * partcomp models recently broken, fixed now
 
 * more than one parameter can now be passed to parprior to make specifying identical priors more 

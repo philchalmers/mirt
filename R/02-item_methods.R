@@ -370,118 +370,6 @@ setMethod(
 )
 
 #----------------------------------------------------------------------------
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'dich', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){          
-        P <- ProbTrace(x, Theta)[,2]
-        nfact <- ncol(Theta)
-        a <- ExtractLambdas(x)
-        A <- sum((a * cosangle)^2)
-        Pstar <- P.mirt(x@par[1:nfact], x@par[nfact + 1], Theta, 0, 1, D=x@D)
-        info <- A * P * (1-P) * Pstar/P 
-        info    
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'graded', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){
-        P <- ProbTrace(x, Theta, itemexp = FALSE) 
-        a <- ExtractLambdas(x)
-        A <- sum((a * cosangle)^2)
-        info <- 0
-        for(i in 1:(ncol(P)-1)){
-            w1 <- P[,i]*(1-P[,i]) * A
-            w2 <- P[,i+1]*(1-P[,i+1]) * A
-            info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1])             
-        }    
-        info
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'rating', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){
-        P <- ProbTrace(x, Theta, itemexp = FALSE) 
-        a <- ExtractLambdas(x)
-        A <- sum((a * cosangle)^2)
-        info <- 0
-        for(i in 1:(ncol(P)-1)){
-            w1 <- P[,i]*(1-P[,i]) * A
-            w2 <- P[,i+1]*(1-P[,i+1]) * A
-            info <- info + ((w1 - w2)^2) / (P[,i] - P[,i+1])             
-        }    
-        info      
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'gpcm', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){
-        a <- ExtractLambdas(x)
-        d <- ExtractZetas(x)
-        ak <- seq(0, x@ncat-1, by = 1)
-        info <- Info.nominal(Theta=Theta, a=a, ak=ak, d=d, cosangle=cosangle)
-        info
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'nominal', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){
-        a <- ExtractLambdas(x)
-        d <- ExtractZetas(x)
-        ak <- x@par[(length(a)+1):(length(a) + length(d))]
-        info <- Info.nominal(Theta=Theta, a=a, ak=ak, d=d, cosangle=cosangle)
-        info
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'partcomp', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){
-        stop('Information functions not yet written for ', class(x))
-    }
-)
-
-setMethod(
-    f = "ItemInfo",
-    signature = signature(x = 'mcm', Theta = 'matrix', cosangle = 'numeric'),
-    definition = function(x, Theta, cosangle = 1){
-        stop('Information functions not yet written for ', class(x))
-    }
-)
-
-#nominal and gpcm
-Info.nominal <- function(Theta, a, ak, d, cosangle = 1){
-    P <- P.nominal(a, ak, d, Theta)
-    A <- a * cosangle
-    nfact <- ncol(Theta)
-    AK <- matrix(ak, nrow(Theta), length(ak), byrow = TRUE)
-    M <- AK * P
-    M2 <- AK^2 * P
-    d2P <- dP <- matrix(0,nrow(AK), ncol(AK))
-    info <- 0
-    for(n in 1:nfact){
-        for(i in 1:ncol(dP))        
-            dP[,i] <- A[n] * P[,i] * (ak[i] - rowSums(M)) 
-        for(i in 1:ncol(dP))        
-            d2P[,i] <- ak[i]^2 * A[n]^2 * P[,i] - 
-                2 * ak[i] * A[n]^2 * P[,i] * rowSums(M) + 
-                2 * A[n]^2 * P[,i] * rowSums(M^2) - 
-                A[n]^2 * P[,i] * rowSums(M2)
-        info <- info + rowSums((dP)^2 / P - d2P)    
-    }
-    info
-}
-
-#----------------------------------------------------------------------------
 #Probability Traces
 setMethod(
     f = "ProbTrace",
@@ -611,7 +499,7 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
 }
 
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1 
-P.nominal <- function(a, ak, d, Theta, D){
+P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
     ncat <- length(d)
     nfact <- ncol(Theta)    
     a <- matrix(a)    
@@ -619,6 +507,7 @@ P.nominal <- function(a, ak, d, Theta, D){
     for(i in 1:ncat)
         numerator[ ,i] <- exp(D * ak[i] * (Theta %*% a) + D * d[i])
     P <- numerator/rowSums(numerator)
+    if(returnNum) return(numerator)
     return(P)   
 }
 
@@ -631,7 +520,7 @@ P.gpcm <- function(a, d, Theta, D){
     a <- matrix(a)    
     for(i in 1:ncat)
         numerator[ ,i] <- exp(D * k[i] * (Theta %*% a) + D * d[i])
-    P <- numerator/rowSums(numerator)
+    P <- numerator/rowSums(numerator)    
     return(P)   
 }
 

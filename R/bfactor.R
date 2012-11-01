@@ -99,7 +99,7 @@
 #' @usage
 #' bfactor(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001, pars = NULL,
 #' constrain = NULL, parprior = NULL,
-#' prev.cor = NULL, quadpts = 20, grsm.block = NULL, verbose = FALSE, debug = FALSE, 
+#' prev.cor = NULL, quadpts = 20, grsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, 
 #' technical = list(), ...)
 #' 
 #'

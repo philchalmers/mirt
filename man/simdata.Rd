@@ -3,7 +3,8 @@
 \title{Simulate response patterns}
 \usage{
   simdata(a, d, N, itemtype, sigma = NULL, mu = NULL,
-    guess = 0, upper = 1, nominal = NULL, Theta = NULL)
+    guess = 0, upper = 1, nominal = NULL, Theta = NULL,
+    D = 1.702)
 }
 \arguments{
   \item{a}{a matrix of slope parameters. If slopes are to
@@ -45,6 +46,8 @@
 
   \item{upper}{same as \code{guess}, but for upper bound
   parameters}
+
+  \item{D}{logistic scaling parameter, default 1.702}
 
   \item{sigma}{a covariance matrix of the underlying
   distribution. Default is the identity matrix}
