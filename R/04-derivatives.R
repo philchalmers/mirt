@@ -557,9 +557,9 @@ setMethod(
         for(j in 1:x@nfact){
             AK <- matrix(a[j] * ak)
             for(i in 1:x@ncat){                
-                grad[[i]][ ,j] <- D * (a[j] * P[ ,i] - P[ ,i] * (Num %*% AK) / Den )
-                hess[[i]][ ,j] <- D^2 * a[j]^2 * P[ ,i] - 
-                    2 * D^2 * a[j] * P[,i] * ((Num %*% AK) / Den) + 
+                grad[[i]][ ,j] <- D * (AK[j,] * P[ ,i] - P[ ,i] * (Num %*% AK) / Den )
+                hess[[i]][ ,j] <- D^2 * AK[j,]^2 * P[ ,i] - 
+                    2 * D^2 * AK[j,] * P[,i] * ((Num %*% AK) / Den) + 
                     2 * D * P[,i] * ((Num %*% AK) / Den)^2 - 
                     D^2 * P[,i] * ((Num %*% AK^2) / Den)
             }    
@@ -585,13 +585,13 @@ setMethod(
         for(j in 1:x@nfact){
             AK <- matrix(a[j] * ak)
             for(i in 1:x@ncat){                
-                grad[[i]][ ,j] <- D * (a[j] * P[ ,i] - P[ ,i] * (Num %*% AK) / Den )
-                hess[[i]][ ,j] <- D^2 * a[j]^2 * P[ ,i] - 
-                    2 * D^2 * a[j] * P[,i] * ((Num %*% AK) / Den) + 
+                grad[[i]][ ,j] <- D * (AK[j,] * P[ ,i] - P[ ,i] * (Num %*% AK) / Den )
+                hess[[i]][ ,j] <- D^2 * AK[j,]^2 * P[ ,i] - 
+                    2 * D^2 * AK[j,] * P[,i] * ((Num %*% AK) / Den) + 
                     2 * D * P[,i] * ((Num %*% AK) / Den)^2 - 
                     D^2 * P[,i] * ((Num %*% AK^2) / Den)
             }    
-        }               
+        }                
         return(list(grad=grad, hess=hess))
     }
 )
@@ -601,6 +601,39 @@ setMethod(
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta){
         stop('DerivTheta for class \'', class(x), '\' not yet written.')
+        
+        D <- x@D
+        a <- x@par[1:x@nfact]        
+        ind <- x@nfact + 1
+        ak <- x@par[ind:(ind + x@ncat - 1)]
+        ind <- ind + x@ncat
+        d <- x@par[ind:(ind + x@ncat - 1)]
+        ind <- ind + x@ncat
+        t <- x@par[ind:length(x@par)]           
+        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
+        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum = TRUE)
+        Den <- rowSums(Num)        
+        grad <- hess <- vector('list', x@ncat)
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
+        for(j in 1:x@nfact){
+            AK <- matrix(a[j] * ak)
+            for(i in 1:x@ncat){                
+                #C * t
+                grad[[i]][ ,j] <- D * (AK[j,] * P[ ,i] - P[ ,i] * t[i] * (Num %*% AK) / Den )                
+                hess[[i]][ ,j] <- t*(D^2 * AK[j,]^2 * P[ ,i] - 
+                2 * D^2 * AK[j,] * P[,i] * ((Num %*% AK) / Den) + 
+                    2 * D * P[,i] * ((Num %*% AK) / Den)^2 - 
+                    D^2 * P[,i] * ((Num %*% AK^2) / Den))
+                
+                #(1 - C) * Pn
+                #grad[[i]][ ,j] <- grad[[i]][ ,j] + 
+                #hess[[i]][ ,j] <- hess[[i]][ ,j] + 
+                
+                
+            }    
+        }           
+        return(list(grad=grad, hess=hess))       
     }
 )
 

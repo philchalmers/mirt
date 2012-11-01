@@ -123,7 +123,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(mstep in 1:MSTEPMAXIT){                        
             #Reload pars list
             ind1 <- 1
-            for(g in 1:ngroups){
+            for(g in 1:ngroups){                
                 for(i in 1:(J+1)){
                     ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
                     pars[[g]][[i]]@par <- longpars[ind1:ind2]
@@ -133,14 +133,14 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
                         if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
+                    }                
+                    #apply sum(t) == 1 constraint for mcm
+                    if(is(pars[[g]][[i]], 'mcm')){
+                        tmp <- pars[[g]][[i]]@par
+                        tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                            pars[[g]][[i]]@ncat + 2)])
+                        pars[[g]][[i]]@par <- tmp
                     }
-                }
-                #apply sum(t) == 1 constraint for mcm
-                if(is(pars[[g]][[i]], 'mcm')){
-                    tmp <- pars[[g]][[i]]@par
-                    tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
-                        pars[[g]][[i]]@ncat + 2)])
-                    pars[[g]][[i]]@par <- tmp
                 }
             }
             #reset longpars and gradient
@@ -202,7 +202,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             for(i in 1:J) 
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
     } #END EM      
-    #Reload pars list
+    #Reload pars list    
     ind1 <- 1
     for(g in 1:ngroups){
         for(i in 1:(J+1)){
@@ -214,14 +214,14 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                     pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
                 if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                     pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
+            }        
+            #apply sum(t) == 1 constraint for mcm
+            if(is(pars[[g]][[i]], 'mcm')){
+                tmp <- pars[[g]][[i]]@par
+                tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
+                    pars[[g]][[i]]@ncat + 2)])
+                pars[[g]][[i]]@par <- tmp
             }
-        }
-        #apply sum(t) == 1 constraint for mcm
-        if(is(pars[[g]][[i]], 'mcm')){
-            tmp <- pars[[g]][[i]]@par
-            tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
-                pars[[g]][[i]]@ncat + 2)])
-            pars[[g]][[i]]@par <- tmp
         }
     } 
     
