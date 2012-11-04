@@ -65,7 +65,6 @@
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
-#' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
@@ -166,7 +165,7 @@
 #' 
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #' 
-#' \S4method{coef}{ConfirmatoryClass}(object, allpars = TRUE, digits = 3, verbose = TRUE, ...)
+#' \S4method{coef}{ConfirmatoryClass}(object, digits = 3, ...)
 #' 
 #' \S4method{anova}{ConfirmatoryClass}(object, object2)
 #' 

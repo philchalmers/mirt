@@ -93,61 +93,37 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, allpars = TRUE, digits = 3, 
-                          verbose = TRUE, ...){         
+    definition = function(object, rotate = '', Target = NULL, digits = 3, ...){         
         K <- object@K
         J <- length(K)
         nfact <- ncol(object@F)
         a <- matrix(0, J, nfact)
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@pars[[i]])        
-        A <- sqrt(apply(a^2,1,sum))                        
         if (ncol(a) > 1){ 
             rotname <- ifelse(rotate == '', object@rotate, rotate)
-            so <- summary(object, rotate = rotate, Target = Target, verbose = FALSE, ...)             
-            a <- rotateLambdas(so)            
+            so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)             
+            a <- rotateLambdas(so) * 1.702/object@pars[[1]]@D
             for(i in 1:J)
                 object@pars[[i]]@par[1:nfact] <- a[i, ]            
             object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]            
         }   
-        rownames(a) <- colnames(object@data)
-        if(nfact > 1){
-            a <- round(cbind(a, A), digits)
-            colnames(a) <- c(paste('a', 1:nfact, sep=''), 'MV_disc')
-        } else {
-            a <- round(a, digits)
-            colnames(a) <- paste('a', 1:nfact, sep='')
-        }
         allPars <- list()        
-        if(allpars){
-            if(length(object@pars[[1]]@SEpar) > 0){
-                for(i in 1:(J+1)){
-                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
-                                                 2, byrow = TRUE), digits)
-                    rownames(allPars[[i]]) <- c('pars', 'SE')
-                    colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
-                } 
-            } else {
-                for(i in 1:(J+1)){
-                    allPars[[i]] <- round(object@pars[[i]]@par, digits)
-                    names(allPars[[i]]) <- names(object@pars[[i]]@parnum)
-                }
-            }                  
-            names(allPars) <- c(rownames(a), 'GroupPars')
-        }        
-        ret <- if(allpars) return(allPars) else a
-        if(nfact > 1 && verbose) cat('\nRotation:', rotname, '\n\n')
-        fcor <- 1
-        if (ncol(a) > 1 && !allpars){
-            fcor <- so$fcor
-            colnames(fcor) <- rownames(fcor) <- paste('F', 1:nfact, sep='')            
-            if(verbose) {
-                print(round(fcor, 3))
-                cat('\n')
+        if(length(object@pars[[1]]@SEpar) > 0){
+            for(i in 1:(J+1)){
+                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
+                                             2, byrow = TRUE), digits)
+                rownames(allPars[[i]]) <- c('pars', 'SE')
+                colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
+            } 
+        } else {
+            for(i in 1:(J+1)){
+                allPars[[i]] <- round(object@pars[[i]]@par, digits)
+                names(allPars[[i]]) <- names(object@pars[[i]]@parnum)
             }
-        }
-        if(verbose) print(ret)        
-        return(invisible(list(ret, fcor)))
+        }                  
+        names(allPars) <- c(rownames(a), 'GroupPars')
+        return(allPars) 
     }
 )
 
@@ -220,8 +196,6 @@ setMethod(
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")    
             res <- round(res,digits)
             return(res)	
-            res <- round(res,digits)
-            return(res)
         } 
         if(restype == 'exp'){	
             r <- object@tabdata[ ,ncol(object@tabdata)]

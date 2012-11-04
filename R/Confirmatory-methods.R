@@ -68,54 +68,28 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ConfirmatoryClass',
-    definition = function(object, allpars = TRUE, digits = 3, verbose = TRUE, ...)
+    definition = function(object, digits = 3, ...)
     {                             
         K <- object@K
         J <- length(K)
         nLambdas <- ncol(object@F)
         a <- matrix(0, J, nLambdas)        
-        for(i in 1:J)
-            a[i, ] <- ExtractLambdas(object@pars[[i]])        
-        A <- sqrt(apply(a^2,1,sum)) 
-        rownames(a) <- colnames(object@data)
-        a <- round(a, digits)
-        colnames(a) <- paste('a_', object@factorNames, sep='')            
         allPars <- list()
-        if(allpars){
-            if(length(object@pars[[1]]@SEpar) > 0){
-                for(i in 1:(J+1)){
-                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
-                                             2, byrow = TRUE), digits)
-                    rownames(allPars[[i]]) <- c('pars', 'SE')
-                    colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
-                }
-            } else {
-                for(i in 1:(J+1)){
-                    allPars[[i]] <- round(object@pars[[i]]@par, digits)
-                    names(allPars[[i]]) <- names(object@pars[[i]]@parnum)
-                }
-            }                  
-            names(allPars) <- c(rownames(a), 'GroupPars')                
-        }        
-        if(allpars) return(allPars)
-        if(verbose){ 
-            cat('\nItem parameters:\n')
-            print(a)
-            cat('\nGroup parameters:\n')
-            cat('\nMeans:\n')
-        }
-        gpars <- ExtractGroupPars(object@pars[[J+1]])        
-        gmeans <- gpars$gmeans
-        gcov <- gpars$gcov
-        fnames <- object@factorNames
-        fnames <- fnames[!grepl(pattern='\\(', fnames)]
-        names(gmeans) <- colnames(gcov) <- rownames(gcov) <- fnames
-        if(verbose){
-            print(round(gmeans, digits))
-            cat('\nCovariance:\n')
-            print(round(gcov, digits))
-        }
-        invisible(list(a,gpars))               	
+        if(length(object@pars[[1]]@SEpar) > 0){
+            for(i in 1:(J+1)){
+                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
+                                         2, byrow = TRUE), digits)
+                rownames(allPars[[i]]) <- c('pars', 'SE')
+                colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
+            }
+        } else {
+            for(i in 1:(J+1)){
+                allPars[[i]] <- round(object@pars[[i]]@par, digits)
+                names(allPars[[i]]) <- names(object@pars[[i]]@parnum)
+            }
+        }                  
+        names(allPars) <- c(rownames(a), 'GroupPars')                
+        return(allPars)
     }
 )
 

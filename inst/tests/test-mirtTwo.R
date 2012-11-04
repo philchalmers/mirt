@@ -23,9 +23,9 @@ test_that('poly', {
     fm5 <- fscores(modp5, verbose = FALSE)
     expect_is(fm5, 'matrix')
     
-    cof1 <- coef(modp1, verbose = FALSE)
+    cof1 <- coef(modp1)
     expect_is(cof1, 'list')
-    cof2 <- coef(modp2, verbose = FALSE)
+    cof2 <- coef(modp2)
     expect_is(cof2, 'list')
     IP1 <- itemplot(modp1, 1)
     IP2 <- itemplot(modp2, 1)

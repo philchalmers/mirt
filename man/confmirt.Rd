@@ -17,8 +17,8 @@
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
 
-  \S4method{coef}{ConfirmatoryClass}(object, allpars =
-    TRUE, digits = 3, verbose = TRUE, ...)
+  \S4method{coef}{ConfirmatoryClass}(object, digits = 3,
+    ...)
 
   \S4method{anova}{ConfirmatoryClass}(object, object2)
 
@@ -65,9 +65,6 @@
 
   \item{draws}{the number of Monte Carlo draws to estimate
   the log-likelihood}
-
-  \item{allpars}{logical; print all the item parameters
-  instead of just the slopes?}
 
   \item{restype}{type of residuals to be displayed. Can be
   either \code{'LD'} for a local dependence matrix (Chen &

@@ -1,3 +1,6 @@
+* removed the allpars option to coef() generics and only return a named list with the (possibly 
+  rotated) item and group coefficients
+
 * information functions slightly positively biased due to logistic constant adjustment, 
   fixed for all models. Also, information functions are now available for all item response models 
 

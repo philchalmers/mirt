@@ -197,7 +197,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }   
     cmods <- list()
     for(g in 1:ngroups){
-        lambdas <- Lambdas(ESTIMATE$pars[[g]])
+        lambdas <- Lambdas(ESTIMATE$pars[[g]]) * 1.702/D
         if (ncol(lambdas) > 1) norm <- sqrt(1 + rowSums(lambdas^2))
         else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
         alp <- as.matrix(lambdas/norm)

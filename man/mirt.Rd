@@ -21,8 +21,7 @@ Theory)}
     TRUE, ...)
 
   \S4method{coef}{ExploratoryClass}(object, rotate = '',
-    Target = NULL, allpars = TRUE, digits = 3, verbose =
-    TRUE, ...)
+    Target = NULL, digits = 3, ...)
 
   \S4method{anova}{ExploratoryClass}(object, object2)
 
@@ -101,9 +100,6 @@ Theory)}
   ''} in the \code{summary} input then the default from the
   object is ignored and the new rotation from the list is
   used instead}
-
-  \item{allpars}{logical; print all the item parameters
-  instead of just the slopes?}
 
   \item{D}{a numeric value used to adjust the logistic
   metric to be more similar to a normal cumulative density

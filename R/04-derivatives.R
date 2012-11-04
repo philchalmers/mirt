@@ -614,12 +614,8 @@ setMethod(
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
         for(j in 1:x@nfact){            
             for(i in 1:x@ncat){   
-                
                 const <- (Num %*% (D * ak * a[j])) / Den
-                
                 const2 <- (Num %*% (D^2 * ak^2 * a[j]^2)) / Den
-                
-
                 
                 #C * t
                 grad[[i]][ ,j] <- t[i] * (D * ak[1] * a[j] * P[ ,1] - P[ ,1] * const)
@@ -627,7 +623,6 @@ setMethod(
                     2 * D * ak[1] * a[j] * P[,1] * const + 
                     2 * P[ ,1] * const^2 - 
                     P[ ,1] * const2)
-                                          
                 
                 #Pn - C * Pn               
                 grad[[i]][ ,j] <- grad[[i]][ ,j] + 
@@ -636,8 +631,6 @@ setMethod(
                     D * ak[1] * a[j] * P[, 1] * P[ ,i] + 
                     2 * P[, 1] * P[, i] * const - 
                     D * ak[i] * a[j] * P[ ,1] * P[ ,i]
-                                          
-                                          
                 hess[[i]][ ,j] <- hess[[i]][ ,j] +     
                     D^2 * ak[i]^2 * a[j]^2 * P[ ,i] - 
                     2 * D * ak[i] * a[j] * P[,i] * const + 

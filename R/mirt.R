@@ -98,7 +98,6 @@
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
 #' input then the default from the object is ignored and the new rotation from the list 
 #' is used instead
-#' @param allpars logical; print all the item parameters instead of just the slopes?
 #' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
 #' cumulative density curve. Default is 1.702
 #' @param Target a dummy variable matrix indicting a target rotation pattern
@@ -255,8 +254,7 @@
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
 #' verbose = TRUE, ...)
 #' 
-#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, allpars = TRUE, digits = 3, 
-#' verbose = TRUE, ...)
+#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, digits = 3,  ...)
 #' 
 #' \S4method{anova}{ExploratoryClass}(object, object2)
 #' 
