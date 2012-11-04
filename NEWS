@@ -1,4 +1,5 @@
-* information functions slightly biased due to logistic constant adjustment, fixed for all models
+* information functions slightly positively biased due to logistic constant adjustment, 
+  fixed for all models. Also, information functions are now available for all item response models 
 
 * constant used in estimation functions can now be modified (default is 1.702)
 
