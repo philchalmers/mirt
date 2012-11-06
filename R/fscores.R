@@ -1,6 +1,6 @@
 #' Methods for Function fscores
 #' 
-#' Computes MAP, EAP, or ML factor scores with a multivariate normal prior distribution.
+#' Computes MAP, EAP, WLE, or ML factor scores with a multivariate normal prior distribution.
 #' 
 #'
 #' @aliases fscores
@@ -13,8 +13,9 @@
 #' @param rotate rotation declaration to be used when estimating the factor scores. If \code{""} then the 
 #' \code{object@@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)
 #' @param method type of factor score estimation method. Can be expected
-#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), or maximum likelihood 
-#' (\code{"ML"})
+#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation 
+#' (\code{"WLE"}), or maximum likelihood (\code{"ML"}). Note that \code{'WLE'} is only available 
+#' for unidimensional models
 #' @param quadpts number of quadratures to use per dimension
 #' @param response.vector an optional argument used to calculate the factor scores and standard errors
 #' for a given response vector that may or may not have been in the original dataset 
@@ -140,6 +141,24 @@ setMethod(
 				SEscores[i, ] <- SEest
 			}  			
 		}
+        if(method == 'WLE'){                            
+            tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]    		             
+            scores[rowSums(tmp2) == J,] <- NA
+            tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
+            scores[rowSums(tmp2) == J,] <- NA
+            SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
+            for (i in 1:nrow(scores)){
+                if(any(is.na(scores[i, ]))) next 
+                Theta <- scores[i, ]	  
+                estimate <- nlm(gradnorm.WLE,Theta,pars=pars,patdata=tabdata[i, ],
+                                itemloc=itemloc, gp=gp, prodlist=prodlist, hessian = TRUE)
+                scores[i, ] <- estimate$estimate                
+                #SEest <- try(sqrt(diag(solve(estimate$hessian))))
+                #if(is(SEest, 'try-error')) 
+                SEest <- rep(NA, nfact)
+                SEscores[i, ] <- SEest
+            }  
+        }
 		colnames(scores) <- paste('F', 1:ncol(scores), sep='')          
 		if (full.scores){                                       
             tabdata2 <- object@tabdatalong
@@ -229,4 +248,33 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
     prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L  
+}
+
+gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees = NULL){    
+    ThetaShort <- Theta
+    Theta <- matrix(Theta, nrow=1)
+    if(length(prodlist) > 0)
+        Theta <- prodterms(Theta,prodlist)
+    nfact <- ncol(Theta)
+    if(nfact > 1) stop('WLE estimation only available for unidimensional models.')
+    itemtrace <- dP <- d2P <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))        
+    I <- dW <- numeric(1)
+    for (i in 1:(length(itemloc)-1)){
+        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)		
+        deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
+        dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1]]))
+        for(j in 1:length(deriv[[1]])){
+            dPitem[1, j] <- deriv$grad[[j]][ ,1]
+            d2Pitem[1, j] <- deriv$hess[[j]][ ,1]           
+        }
+        dP[ ,itemloc[i]:(itemloc[i+1] - 1)] <- dPitem
+        d2P[ ,itemloc[i]:(itemloc[i+1] - 1)] <- d2Pitem
+        dW <- dW + sum(dPitem * d2Pitem / itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)])
+        I <- I + iteminfo(x=pars[[i]], Theta=Theta, degrees = degrees)       
+    }
+    dW <- 1/(2*I^2) * dW
+    dL <- sum(patdata * dP / itemtrace)
+    grad <- dL - dW*I    
+    MIN <- sum(grad^2)
+    MIN
 }

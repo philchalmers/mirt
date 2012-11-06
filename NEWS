@@ -1,3 +1,5 @@
+* WLE factor score estimation for unidimensional models now available (without standard errors)
+
 * removed the allpars option to coef() generics and only return a named list with the (possibly 
   rotated) item and group coefficients
 
