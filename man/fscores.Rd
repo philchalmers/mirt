@@ -4,7 +4,7 @@
 \usage{
   fscores(object, rotate = "", full.scores = FALSE,
     method = "EAP", quadpts = NULL, response.vector = NULL,
-    verbose = TRUE)
+    degrees = NULL, verbose = TRUE)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -25,12 +25,14 @@
   \item{method}{type of factor score estimation method. Can
   be expected a-posteriori (\code{"EAP"}), Bayes modal
   (\code{"MAP"}), weighted likelihood estimation
-  (\code{"WLE"}), or maximum likelihood (\code{"ML"}). Note
-  that \code{'WLE'} is only available for unidimensional
-  models}
+  (\code{"WLE"}), or maximum likelihood (\code{"ML"})}
 
   \item{quadpts}{number of quadratures to use per
   dimension}
+
+  \item{degrees}{the degrees argument to be passed to
+  \code{\link{iteminfo}}, only necessary for
+  multidimensional models when \code{method = 'WLE'}}
 
   \item{response.vector}{an optional argument used to
   calculate the factor scores and standard errors for a

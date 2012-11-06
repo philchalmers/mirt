@@ -14,9 +14,10 @@
 #' \code{object@@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation 
-#' (\code{"WLE"}), or maximum likelihood (\code{"ML"}). Note that \code{'WLE'} is only available 
-#' for unidimensional models
+#' (\code{"WLE"}), or maximum likelihood (\code{"ML"}) 
 #' @param quadpts number of quadratures to use per dimension
+#' @param degrees the degrees argument to be passed to \code{\link{iteminfo}}, only necessary for 
+#' multidimensional models when \code{method = 'WLE'}
 #' @param response.vector an optional argument used to calculate the factor scores and standard errors
 #' for a given response vector that may or may not have been in the original dataset 
 #' @param verbose logical; print verbose output messages?
@@ -37,10 +38,11 @@
 #'   }
 #'
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                    quadpts = NULL, response.vector = NULL, verbose = TRUE)
+                    quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method, 
-                            quadpts=quadpts, response.vector=response.vector, verbose=verbose)
+                            quadpts=quadpts, response.vector=response.vector, degrees=degrees,
+                            verbose=verbose)
     ret    
 }
 
@@ -54,7 +56,7 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                          quadpts = NULL, response.vector = NULL, verbose = TRUE)
+                          quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
 	{          
         if(!is.null(response.vector)){            
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
@@ -116,8 +118,12 @@ setMethod(
 		if(method == "MAP"){ 
 			for (i in 1:nrow(scores)){       
 				tmp <- scores[i, ]	  
-                estimate <- nlm(MAP.mirt,tmp,pars=pars, patdata=tabdata[i, ],
-                                itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE)				
+                estimate <- try(nlm(MAP.mirt,tmp,pars=pars, patdata=tabdata[i, ],
+                                itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE))
+                if(is(estimate, 'try-error')) {
+                    scores[i, ] <- SEscores[i, ] <- NA
+                    next
+                }
 				scores[i, ] <- estimate$estimate
 				SEest <- try(sqrt(diag(solve(estimate$hessian))))
 				if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
@@ -133,8 +139,12 @@ setMethod(
 			for (i in 1:nrow(scores)){
 				if(any(is.na(scores[i, ]))) next 
 				Theta <- scores[i, ]	  
-				estimate <- nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
-				    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian = TRUE)
+				estimate <- try(nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
+				    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian = TRUE))
+				if(is(estimate, 'try-error')) {
+				    scores[i, ] <- SEscores[i, ] <- NA
+				    next
+				}
 				scores[i, ] <- estimate$estimate                
                 SEest <- try(sqrt(diag(solve(estimate$hessian))))
                 if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
@@ -150,8 +160,13 @@ setMethod(
             for (i in 1:nrow(scores)){
                 if(any(is.na(scores[i, ]))) next 
                 Theta <- scores[i, ]	  
-                estimate <- nlm(gradnorm.WLE,Theta,pars=pars,patdata=tabdata[i, ],
-                                itemloc=itemloc, gp=gp, prodlist=prodlist, hessian = TRUE)
+                estimate <- try(nlm(gradnorm.WLE,Theta,pars=pars,patdata=tabdata[i, ],
+                                itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees,
+                                hessian = TRUE))
+                if(is(estimate, 'try-error')) {
+                    scores[i, ] <- SEscores[i, ] <- NA
+                    next
+                }
                 scores[i, ] <- estimate$estimate                
                 #SEest <- try(sqrt(diag(solve(estimate$hessian))))
                 #if(is(SEest, 'try-error')) 
@@ -166,7 +181,7 @@ setMethod(
             scoremat <- .Call("fullScores", object@fulldata, tabdata2, scores)			 
 			colnames(scoremat) <- colnames(scores)	
 			return(cbind(fulldata,scoremat))
-		} else {						            
+		} else {			
             r <- object@tabdata[,ncol(object@tabdata)]            
             T <- E <- matrix(NA, 1, ncol(scores))
             for(i in 1:nrow(scores)){
@@ -193,11 +208,11 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-	                      quadpts = NULL, response.vector = NULL, verbose = TRUE)
+	                      quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
 	{ 	        
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts, 
-                       response.vector=response.vector, verbose=verbose)
+                       response.vector=response.vector, degrees=degrees, verbose=verbose)
         return(ret)
 	}	
 )
@@ -207,7 +222,7 @@ setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                          quadpts = NULL, response.vector = NULL, verbose = TRUE)
+                          quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
     { 	        
         cmods <- object@cmods
         ngroups <- length(cmods)
@@ -216,7 +231,7 @@ setMethod(
         ret <- vector('list', length(cmods))
         for(g in 1:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, 
-                           quadpts=quadpts, verbose=verbose)
+                           quadpts=quadpts, degrees=degrees, verbose=verbose)
         if(full.scores){
             id <- c()
             fulldata <- matrix(NA, 1, ncol(ret[[1]]))
@@ -250,30 +265,36 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
     L  
 }
 
-gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees = NULL){    
+gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){    
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
     if(length(prodlist) > 0)
         Theta <- prodterms(Theta,prodlist)
     nfact <- ncol(Theta)
-    if(nfact > 1) stop('WLE estimation only available for unidimensional models.')
-    itemtrace <- dP <- d2P <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))        
-    I <- dW <- numeric(1)
+    itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))  
+    dP <- d2P <- vector('list', nfact)
+    for(i in 1:nfact)
+        dP[[i]] <- d2P[[i]] <- itemtrace 
+    I <- numeric(1)
+    dW <- dL <- numeric(nfact)
     for (i in 1:(length(itemloc)-1)){
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)		
         deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
-        dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1]]))
-        for(j in 1:length(deriv[[1]])){
-            dPitem[1, j] <- deriv$grad[[j]][ ,1]
-            d2Pitem[1, j] <- deriv$hess[[j]][ ,1]           
-        }
-        dP[ ,itemloc[i]:(itemloc[i+1] - 1)] <- dPitem
-        d2P[ ,itemloc[i]:(itemloc[i+1] - 1)] <- d2Pitem
-        dW <- dW + sum(dPitem * d2Pitem / itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)])
-        I <- I + iteminfo(x=pars[[i]], Theta=Theta, degrees = degrees)       
+        for(k in 1:nfact){
+            dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1]]))
+            for(j in 1:length(deriv[[1]])){
+                dPitem[1, j] <- deriv$grad[[j]][ ,k]
+                d2Pitem[1, j] <- deriv$hess[[j]][ ,k]           
+            }
+            dP[[k]][ ,itemloc[i]:(itemloc[i+1] - 1)] <- dPitem
+            d2P[[k]][ ,itemloc[i]:(itemloc[i+1] - 1)] <- d2Pitem            
+            dW[k] <- dW[k] + sum(dPitem * d2Pitem / itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)])
+        }        
+        I <- I + iteminfo(x=pars[[i]], Theta=Theta, degrees=degrees)       
     }
     dW <- 1/(2*I^2) * dW
-    dL <- sum(patdata * dP / itemtrace)
+    for(i in 1:nfact)
+        dL[i] <- sum(patdata * dP[[i]] / itemtrace)
     grad <- dL - dW*I    
     MIN <- sum(grad^2)
     MIN
