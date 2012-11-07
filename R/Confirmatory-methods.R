@@ -44,7 +44,7 @@ setMethod(
     definition = function(object, suppress = 0, digits = 3, verbose = TRUE, ...)
     {           
         nfact <- ncol(object@F)
-        itemnames <- names(object@h2)	
+        itemnames <- colnames(object@data)	
         F <- object@F
         h2 <- as.matrix(object@h2)
         colnames(h2) <- 'h2'
@@ -73,7 +73,6 @@ setMethod(
         K <- object@K
         J <- length(K)
         nLambdas <- ncol(object@F)
-        a <- matrix(0, J, nLambdas)        
         allPars <- list()
         if(length(object@pars[[1]]@SEpar) > 0){
             for(i in 1:(J+1)){
@@ -88,7 +87,7 @@ setMethod(
                 names(allPars[[i]]) <- names(object@pars[[i]]@parnum)
             }
         }                  
-        names(allPars) <- c(rownames(a), 'GroupPars')                
+        names(allPars) <- c(colnames(object@data), 'GroupPars')                
         return(allPars)
     }
 )

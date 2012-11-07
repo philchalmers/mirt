@@ -122,7 +122,7 @@ setMethod(
                 names(allPars[[i]]) <- names(object@pars[[i]]@parnum)
             }
         }                  
-        names(allPars) <- c(rownames(a), 'GroupPars')
+        names(allPars) <- c(colnames(object@data), 'GroupPars')
         return(allPars) 
     }
 )
