@@ -249,6 +249,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     
     ####post estimation stats
+    df <- 0
+    for(g in 1:ngroups){
+        r <- PrepList[[g]]$tabdata
+        r <- r[, ncol(r)]
+        df <- df + length(r) - 1 
+    }
     r <- PrepListFull$tabdata
     r <- r[, ncol(r)]
     N <- sum(r)
@@ -268,7 +274,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1     
     nmissingtabdata <- sum(is.na(rowSums(PrepListFull$tabdata2)))
-    df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata	
+    df <- df - nestpars + nconstr + nfact*(nfact - 1)/2 - nmissingtabdata	
     AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
     BIC <- (-2) * logLik + (length(r) - df - 1)*log(N) 
     p <- 1 - pchisq(G2,df)
