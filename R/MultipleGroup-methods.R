@@ -20,13 +20,17 @@ setMethod(
             cat("AIC =", x@AIC, "\n")			
             cat("BIC =", x@BIC, "\n")            	
         }		
-        if(!is.nan(x@p))
-            cat("G^2 = ", round(x@G2,2), ", df = ", 
+        if(!is.nan(x@p)){            
+            for(g in 1:length(x@cmods))
+                cat('G^2 (', as.character(x@groupNames[g]), ') = ', 
+                    round(x@cmods[[g]]@G2,2), '\n', sep = '')  
+            cat("G^2 (Total) = ", round(x@G2,2), ", df = ", 
                 x@df, ", p = ", round(x@p,4), "\nTLI = ", round(x@TLI,3),
-                ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
-        else 
+                ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")                                       
+        } else { 
             cat("G^2 = ", NA, ", df = ", 
                 x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")
+        }
     } 
 )
 

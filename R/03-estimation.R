@@ -126,6 +126,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }       
     }
     #EM estimation
+    G2group <- numeric(ngroups)
     if(method == 'EM'){
         esttype <- 'EM'
         if(method == 'EM' && nLambdas > nfact) 
@@ -167,8 +168,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1:ngroups){
             Pl <- rlist[[g]]$expected
             rg <- PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)]
-            Ng <- sum(rg)            
-            G2 <- G2 + 2 * sum(rg * log(rg/(Ng*Pl)))
+            Ng <- sum(rg) 
+            G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pl)))
+            G2 <- G2 + G2group[g]
             logLik <- logLik + sum(rg*log(Pl))
         }
         Pl <- list(Pl)
@@ -208,7 +210,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           tabdata=PrepList[[g]]$tabdata2, data=data[group == groupNames[[g]], ], 
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2,                
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
-                          constrain=constrain,
+                          constrain=constrain, G2=G2group[g], 
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
     }
     #missing stats for MHRM
