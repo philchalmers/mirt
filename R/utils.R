@@ -474,13 +474,14 @@ LL.Priors <- function(x, LL){
     return(LL)
 }
 
-ItemInfo <- function(x, Theta, cosangle){
-    P <- ProbTrace(x, Theta)
-    x@par[1:x@nfact] <- sum(sqrt((x@par[1:x@nfact] * cosangle)^2))
-    dx <- DerivTheta(x, Theta)
-    info <- 0
+ItemInfo <- function(x, Theta, cosangle){       
+    P <- ProbTrace(x, Theta)    
+    dx <- DerivTheta(x, Theta)    
+    info <- 0 
+    dx$grad[[1]] <- dx$grad[[1]]
     for(i in 1:x@ncat)
         for(j in 1:x@nfact)
-            info <- info + ((dx$grad[[i]][ ,j]^2) / P[ ,i] - dx$hess[[i]][ ,j])
+            info <- info + (( (cosangle[j]*dx$grad[[i]][ ,j])^2) / P[ ,i] - 
+                                sqrt(cosangle[j])*dx$hess[[i]][ ,j])    
     return(info)
 }
