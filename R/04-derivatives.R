@@ -601,50 +601,8 @@ setMethod(
         D <- x@D
         a <- x@par[1:x@nfact]        
         ind <- x@nfact + 1
-        ak <- x@par[ind:(ind + x@ncat - 1)]
-        ind <- ind + x@ncat
-        d <- x@par[ind:(ind + x@ncat - 1)]
-        ind <- ind + x@ncat
-        t <- x@par[ind:length(x@par)]           
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
-        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum = TRUE)
-        Den <- rowSums(Num)        
-        grad <- hess <- vector('list', x@ncat)
-        for(i in 1:x@ncat)
-            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1:x@nfact){            
-            for(i in 1:x@ncat){   
-                const <- (Num %*% (D * ak * a[j])) / Den
-                const2 <- (Num %*% (D^2 * ak^2 * a[j]^2)) / Den
-                
-                #C * t
-                grad[[i]][ ,j] <- t[i] * (D * ak[1] * a[j] * P[ ,1] - P[ ,1] * const)
-                hess[[i]][ ,j] <- t[i] * (D^2 * ak[1]^2 * a[j]^2 * P[ ,1] - 
-                    2 * D * ak[1] * a[j] * P[,1] * const + 
-                    2 * P[ ,1] * const^2 - 
-                    P[ ,1] * const2)
-                
-                #Pn - C * Pn               
-                grad[[i]][ ,j] <- grad[[i]][ ,j] + 
-                    D * ak[i] * a[j] * P[ ,i] - 
-                    P[ ,i] * const -
-                    D * ak[1] * a[j] * P[, 1] * P[ ,i] + 
-                    2 * P[, 1] * P[, i] * const - 
-                    D * ak[i] * a[j] * P[ ,1] * P[ ,i]
-                hess[[i]][ ,j] <- hess[[i]][ ,j] +     
-                    D^2 * ak[i]^2 * a[j]^2 * P[ ,i] - 
-                    2 * D * ak[i] * a[j] * P[,i] * const + 
-                    2 * P[,i] * const^2 - 
-                    P[,i] * const2 - 
-                    D^2 * ak[1]^2 * a[j]^2 * P[ ,1] * P[ ,i] +
-                    4 * D * ak[1] * a[j] * P[ ,1] * P[ ,i] * const - 
-                    2 * D^2 * ak[1] * ak[i] * a[j]^2 * P[,1] * P[,i] - 
-                    6 * P[,1] * P[,i] * const^2 + 
-                    4 * D * ak[i] * a[j] * P[,1] * P[,i] * const    +
-                    2 * P[,1] * P[,i] * const2 -
-                    D^2 * ak[i]^2 * a[j]^2 * P[ ,1] * P[ ,i]                
-            }    
-        }           
+        stop('Derivatives for mcm items not yet written')
+        
         return(list(grad=grad, hess=hess))       
     }
 )

@@ -10,7 +10,8 @@
   rotated) item and group coefficients
 
 * information functions slightly positively biased due to logistic constant adjustment, 
-  fixed for all models. Also, information functions are now available for all item response models 
+  fixed for all models. Also, information functions are now available for almost all item response models
+  (mcm items missing)
 
 * constant (D) used in estimating logistic functions can now be modified (default is 1.702)
 
@@ -171,7 +172,7 @@ mirt 0.2.6-1
   function for better maintenance
 
 * theta_angle added to mirt and polymirt plots for changing the viewing angle 
-  w.r..t theta_1 
+  w.r.t theta_1 
 
 * null model no longer calculated when missing data present
 

@@ -53,7 +53,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
             }
             if(itemtype[i] == 'mcm'){
-                val <- c(lambdas[i,], 0, rep(.5, K[i] - 1), K[i]-1, rep(0, K[i]+1), 
+                val <- c(lambdas[i,], 1, 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]+1), 
                          rep(1/K[i], K[i]))
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]), sep=''), 
                                 paste('d', 0:(K[i]), sep=''), paste('t', 1:(K[i]), sep=''))                
@@ -99,7 +99,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 #identifiction constraints
                 tmp <- names(startvalues[[i]])
                 tmp2 <- 1:length(tmp)
-                estpars[tmp2[tmp %in% c('ak0', paste('ak',i,sep=''), 'd0', 't1')]] <- FALSE                
+                estpars[tmp2[tmp %in% c('ak0', 'ak1', paste('ak',i,sep=''), 'd0', 'd1', 't1')]] <- FALSE                
                 freepars[[i]] <- estpars
             }
         }         
