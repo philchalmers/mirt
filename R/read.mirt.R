@@ -38,7 +38,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
     cat <- numeric(nitems)
     D <- x@pars[[1]]@D               
     nfact <- x@pars[[1]]@nfact
-    pars <- matrix(NA, nitems, 30)
+    pars <- matrix(NA, nitems, 40)
     for(i in 1:nitems){
         
         if(mirt.items[i] == 'dich'){            
@@ -99,14 +99,15 @@ read.mirt <- function (x, as.irt.pars = TRUE)
             pars[i, 1:length(newab)] <- newab
         }
         
-        if(mirt.items[i] == 'mcm'){             
-            stop('mcm items not yet supported')
+        if(mirt.items[i] == 'mcm'){                                     
             acd <- listpars[[i]]
             a <- acd[1:nfact]
             acd <- acd[-(1:nfact)]
             cat[i] <- x@pars[[i]]@ncat 
             newacd <- c()
-                                              
+            for(j in 1:nfact)              
+                newacd <- c(newacd, a[j] * acd[1:(cat[i]+1)])
+            newacd <- c(newacd, acd[(length(acd) - 2*cat[i]):length(acd)])                                              
             pars[i, 1:length(newacd)] <- newacd
         }
         
@@ -114,8 +115,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
             stop('Partially compensatory models not supported in plink')
         }
         
-    }
-    browser()
+    }    
     model <- unique(plink.items)
     items <- vector('list', length(model))
     index <- 1:nitems
