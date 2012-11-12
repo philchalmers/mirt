@@ -100,14 +100,13 @@ read.mirt <- function (x, as.irt.pars = TRUE)
         }
         
         if(mirt.items[i] == 'mcm'){             
+            stop('mcm items not yet supported')
             acd <- listpars[[i]]
             a <- acd[1:nfact]
             acd <- acd[-(1:nfact)]
             cat[i] <- x@pars[[i]]@ncat 
             newacd <- c()
-            for(j in 1:nfact)              
-                newacd <- c(newacd, a[j] * acd[1:cat[i]])
-            newacd <- c(newacd, acd[(length(acd)-(2*cat[i]-1)):length(acd)])                                   
+                                              
             pars[i, 1:length(newacd)] <- newacd
         }
         

@@ -5,7 +5,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
                        SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702)
 {    
-    if(debug == 'ESTIMATION') browser()
+    if(debug == 'ESTIMATION') browser()    
     set.seed(12345)       
     MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
     MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 15, technical$MSTEPMAXIT)        

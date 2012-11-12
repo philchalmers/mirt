@@ -1,4 +1,4 @@
-* read.mirt added back into the package to allow for translating estimating models into a format
+* read.mirt() re-added into the package to allow for translating estimating models into a format
   usable by the plink package
 
 * test standard error added to plot() generic using type = 'SE', and expected score plot added 
