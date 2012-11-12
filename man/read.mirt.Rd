@@ -12,9 +12,8 @@
   output as an \code{irt.pars} object}
 }
 \description{
-  A plotting function for displaying the individuals
-  trajectories and their modelled functional form. Useful
-  for detecting aberrant individual trajectories.
+  This function exports item parameters from the
+  \code{mirt} package to the \code{\link{plink}} package.
 }
 \examples{
 \dontrun{
@@ -22,6 +21,9 @@ data(LSAT7)
 data <- expand.table(LSAT7)
 (mod1 <- mirt(data, 1))
 plinkpars <- read.mirt(mod1)
+
+(mod2 <- mirt(data, 2))
+plinkpars2 <- read.mirt(mod2)
 
 }
 }
