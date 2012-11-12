@@ -22,8 +22,8 @@
 #' for all the rotations available from the \code{GPArotation} package (e.g., \code{rotate = 'oblimin'})
 #' as well as a \code{'promax'} rotation. 
 #' 
-#' Using \code{plot} will plot the either the test surface function or the test
-#' information function for 1 and 2 dimensional solutions. To examine
+#' Using \code{plot} will plot the test information function or the test standard errors 
+#' for 1 and 2 dimensional solutions. To examine
 #' individual item plots use \code{\link{itemplot}}. Residuals are
 #' computed using the LD statistic (Chen & Thissen, 1997) in the lower
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
@@ -130,9 +130,9 @@
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
 #' @param digits number of significant digits to be rounded
-#' @param type type of plot to view; can be \code{'curve'} for the total test
-#' score as a function of two dimensions, or \code{'info'} to show the test
-#' information function for two dimensions
+#' @param type type of plot to view; can be \code{'info'} to show the test
+#' information function, \code{'infocontour'} for the test information contours, 
+#' or \code{'SE'} for the test standard error function
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is 
 #' used then a bubble plot is created with the summed information across the angles specified 
 #' (e.g., \code{theta_angle = seq(0, 90, by=10)})

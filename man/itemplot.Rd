@@ -16,9 +16,10 @@
 
   \item{type}{plot type to use, information
   (\code{'info'}), item trace lines (\code{'trace'}),
-  relative efficiency lines (\code{'RE'}), or information
-  contours \code{('infocontour')} (not for
-  \code{MultipleGroupClass} objects)}
+  relative efficiency lines (\code{'RE'}), expected score
+  \code{'score'}, or information contours
+  \code{('infocontour')} (not for \code{MultipleGroupClass}
+  objects)}
 
   \item{degrees}{the degrees argument to be used if there
   are exactly two factors. See \code{\link{iteminfo}} for

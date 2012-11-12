@@ -1,3 +1,6 @@
+* test standard error added to plot() generic using type = 'SE', and expected score plot added 
+  to itemplot() using type = 'score'
+
 * weighted likelihood estimation (WLE) factor scores now available (without standard errors)
 
 * removed the allpars option to coef() generics and only return a named list with the (possibly 

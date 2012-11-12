@@ -161,10 +161,10 @@
 
   \item{y}{an unused variable to be ignored}
 
-  \item{type}{type of plot to view; can be \code{'curve'}
-  for the total test score as a function of two dimensions,
-  or \code{'info'} to show the test information function
-  for two dimensions}
+  \item{type}{type of plot to view; can be \code{'info'} to
+  show the test information function, \code{'infocontour'}
+  for the test information contours, or \code{'SE'} for the
+  test standard error function}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}. If a vector is used then a bubble

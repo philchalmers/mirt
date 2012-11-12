@@ -112,9 +112,9 @@
 #' @param df.p logical; print the degrees of freedom and p-values?
 #' @param x an object of class \code{mirt} to be plotted or printed
 #' @param y an unused variable to be ignored
-#' @param type type of plot to view; can be \code{'curve'} for the total test
-#' score as a function of two dimensions, or \code{'info'} to show the test
-#' information function for two dimensions
+#' @param type type of plot to view; can be \code{'info'} to show the test
+#' information function, \code{'infocontour'} for the test information contours, 
+#' or \code{'SE'} for the test standard error function
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is 
 #' used then a bubble plot is created with the summed information across the angles specified 
 #' (e.g., \code{theta_angle = seq(0, 90, by=10)})

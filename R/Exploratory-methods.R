@@ -222,7 +222,7 @@ setMethod(
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
     {           
-        if (!type %in% c('info','infocontour')) stop(type, " is not a valid plot type.")
+        if (!type %in% c('info','infocontour', 'SE')) stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
@@ -236,16 +236,17 @@ setMethod(
         prodlist <- attr(x@pars, 'prodlist')
         if(length(prodlist) > 0)        
             ThetaFull <- prodterms(Theta,prodlist)        
-        info <- 0        
+        info <- 0            
         for(l in 1:length(theta_angle)){
             ta <- theta_angle[l]
             if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
             for(i in 1:J)
                 info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)            
         }
-        plt <- data.frame(cbind(info,Theta))
+        plt <- data.frame(cbind(info,Theta))         
         if(nfact == 2){						
             colnames(plt) <- c("info", "Theta1", "Theta2")			
+            plt$SE <- 1 / sqrt(plt$info)
             if(type == 'infocontour')												
                 return(contourplot(info ~ Theta1 * Theta2, data = plt, 
                                    main = paste("Test Information Contour"), xlab = expression(theta[1]), 
@@ -258,13 +259,21 @@ setMethod(
                 symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue', 
                         xlab = expression(theta[1]), ylab = expression(theta[2]), 
                         main = 'Information across different angles')
+            if(type == 'SE')                
+                return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = "Test Standard Errors", 
+                                 zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))            
         } else {
             colnames(plt) <- c("info", "Theta")
+            plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
                 return(xyplot(info~Theta, plt, type='l',main = 'Test Information', 
                               xlab = expression(theta), ylab=expression(I(theta))))				
             if(type == 'infocontour') 
                 cat('No \'contour\' plots for 1-dimensional models\n')
+            if(type == 'SE')                
+                xyplot(SE~Theta, plt, type='l',main = 'Test Standard Errors', 
+                       xlab = expression(theta), ylab=expression(SE(theta)))
         }		
     }		
 )	

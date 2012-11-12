@@ -8,7 +8,7 @@
 #' \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types (e.g., 1PL vs 2PL)
 #' @param item a single numeric value indicating which item to plot
 #' @param type plot type to use, information (\code{'info'}), item trace lines (\code{'trace'}), relative 
-#' efficiency lines (\code{'RE'}), or information contours \code{('infocontour')} 
+#' efficiency lines (\code{'RE'}), expected score \code{'score'}, or information contours \code{('infocontour')} 
 #' (not for \code{MultipleGroupClass} objects)
 #' @param degrees the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
 #' for more detail
@@ -180,6 +180,10 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
         info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
+    score <- matrix(0:(ncol(P) - 1), nrow(Theta), ncol(P), byrow = TRUE)
+    score <- rowSums(score * P)
+    if(class(x@pars[[item]]) %in% c('nominal', 'graded', 'rating')) 
+        score <- score + 1     
     if(nfact == 1){
         if(type == 'trace'){            
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
@@ -192,14 +196,20 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
             plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
                  ylab = expression(I(theta)), xlab = expression(theta), las = 1)
         }
+        if(type == 'score'){            
+            plot(Theta, score, col = 1, type='l', main = paste('Expected score for item', item), 
+                 ylab = expression(E(theta)), xlab = expression(theta), 
+                 ylim = c(min(floor(score)),max(ceiling(score))), las = 1)            
+        }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')        
-    } else {                
+    } else {
         plt <- data.frame(info = info, Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])
         colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta1", "Theta2")
         plt2 <- reshape(plt2, direction='long', varying = paste("P", 1:ncol(P), sep=''), v.names = 'P', 
                 times = paste("P", 1:ncol(P), sep=''))
-        colnames(plt) <- c("info", "Theta1", "Theta2")            
+        colnames(plt) <- c("info", "Theta1", "Theta2")  
+        plt$score <- score
         if(type == 'infocontour')												
             return(contourplot(info ~ Theta1 * Theta2, data = plt, 
                                main = paste("Item", item, "Information Contour"), xlab = expression(theta[1]), 
@@ -212,6 +222,12 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
             return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time, main = paste("Item", item, "Trace"), 
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))            
-        }        
+        } 
+        if(type == 'score'){            
+            return(lattice::wireframe(score ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Expected Score"), 
+                                      zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
+                                      zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE), 
+                                      colorkey = TRUE, drape = TRUE, ...))
+        }
     }    
 }

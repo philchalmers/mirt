@@ -163,10 +163,10 @@ Theory)}
 
   \item{digits}{number of significant digits to be rounded}
 
-  \item{type}{type of plot to view; can be \code{'curve'}
-  for the total test score as a function of two dimensions,
-  or \code{'info'} to show the test information function
-  for two dimensions}
+  \item{type}{type of plot to view; can be \code{'info'} to
+  show the test information function, \code{'infocontour'}
+  for the test information contours, or \code{'SE'} for the
+  test standard error function}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}. If a vector is used then a bubble
@@ -232,13 +232,13 @@ Theory)}
   the \code{GPArotation} package (e.g., \code{rotate =
   'oblimin'}) as well as a \code{'promax'} rotation.
 
-  Using \code{plot} will plot the either the test surface
-  function or the test information function for 1 and 2
-  dimensional solutions. To examine individual item plots
-  use \code{\link{itemplot}}. Residuals are computed using
-  the LD statistic (Chen & Thissen, 1997) in the lower
-  diagonal of the matrix returned by \code{residuals}, and
-  Cramer's V above the diagonal.
+  Using \code{plot} will plot the test information function
+  or the test standard errors for 1 and 2 dimensional
+  solutions. To examine individual item plots use
+  \code{\link{itemplot}}. Residuals are computed using the
+  LD statistic (Chen & Thissen, 1997) in the lower diagonal
+  of the matrix returned by \code{residuals}, and Cramer's
+  V above the diagonal.
 }
 \section{Confirmatory IRT}{
   Specification of the confirmatory item factor analysis
