@@ -171,13 +171,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             grad <- g %*% L 
             hess <- L %*% h %*% L 			       
             grad <- grad[1, estpars & !redun_constr]		
-            hess <- hess[estpars & !redun_constr, estpars & !redun_constr]            
-            inv.hess <- try(solve(hess))    		
-            if(class(inv.hess) == 'try-error'){                                                
-                diag(hess) <- 1.2*diag(hess)
-                inv.hess <- try(solve(hess))                
+            Hess <- Matrix(hess[estpars & !redun_constr, estpars & !redun_constr], sparse = TRUE)            
+            inv.Hess <- try(solve(Hess))        	            
+            if(class(inv.Hess) == 'try-error'){                                                
+                diag(Hess) <- 1.2*diag(Hess)
+                inv.Hess <- try(solve(Hess))                
             }
-            correction <- as.numeric(inv.hess %*% grad)  
+            correction <- as.vector(inv.Hess %*% grad)
             #keep steps smaller
             correction[correction > stepLimit] <- stepLimit
             correction[correction < -stepLimit] <- -stepLimit

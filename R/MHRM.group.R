@@ -191,15 +191,15 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             }
         }			
         if(stagecycle < 3){	
-            ave.h <- as(ave.h,'sparseMatrix')
-            inv.ave.h <- try(solve(ave.h))			
+            ave.h <- Matrix(ave.h, sparse = TRUE)
+            inv.ave.h <- try(Matrix::solve(ave.h))			
             if(class(inv.ave.h) == 'try-error'){
                 inv.ave.h <- try(qr.solve(ave.h + 2*diag(ncol(ave.h))))
                 noninvcount <- noninvcount + 1
                 if(noninvcount == 3) 
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
-            correction <- as.numeric(inv.ave.h %*% grad)
+            correction <- as.vector(inv.ave.h %*% grad)
             correction[correction > .5] <- 1
             correction[correction < -.5] <- -1
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
@@ -219,15 +219,15 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         
         #Step 3. Update R-M step		
         Tau <- Tau + gamma*(ave.h - Tau)
-        Tau <- as(Tau,'sparseMatrix')	
-        inv.Tau <- solve(Tau)
+        Tau <- Matrix(Tau, sparse = TRUE)	
+        inv.Tau <- try(solve(Tau))
         if(class(inv.Tau) == 'try-error'){
             inv.Tau <- try(qr.solve(Tau + 2 * diag(ncol(Tau))))
             noninvcount <- noninvcount + 1
             if(noninvcount == 3) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
         }		
-        correction <-  as.numeric(inv.Tau %*% grad)
+        correction <- as.vector(inv.Tau %*% grad)
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
@@ -248,7 +248,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             info <- matrix(0, length(grad), length(grad))
         }
         phi <- phi + gamma*(grad - phi)
-        info <- info + gamma*(Tau - phi %*% t(phi) - info)		
+        info <- info + gamma*(as.matrix(Tau) - phi %*% t(phi) - info)		
     } ###END BIG LOOP       
     #Reload final pars list
     if(list$USEEM) longpars <- list$startlongpars
