@@ -76,3 +76,4 @@ Collate:
     'personfit.R'
     '03-estimation.R'
     '04-derivatives.R'
+    'read.mirt.R'

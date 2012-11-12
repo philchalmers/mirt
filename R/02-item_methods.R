@@ -449,13 +449,13 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta){    
+    definition = function(x, Theta){        
         a <- x@par[1:x@nfact]        
         ind <- x@nfact + 1
-        ak <- x@par[ind:(ind + x@ncat - 1)]
-        ind <- ind + x@ncat
-        d <- x@par[ind:(ind + x@ncat - 1)]
-        ind <- ind + x@ncat
+        ak <- x@par[ind:(ind + x@ncat)]
+        ind <- ind + x@ncat + 1
+        d <- x@par[ind:(ind + x@ncat)]
+        ind <- ind + x@ncat + 1
         t <- x@par[ind:length(x@par)]        
         P <- P.mcm(a=a, ak=ak, d=d, t=t, Theta=Theta, D=x@D)
         return(P)
@@ -524,16 +524,20 @@ P.gpcm <- function(a, d, Theta, D){
     return(P)   
 }
 
-#ak[1] == 0, ak[length(ak)] == length(ak) - 1, d[1] ==0, sum(t) == 1 
+#ak[1] and d[1] are latent process
 P.mcm <- function(a, ak, d, t, Theta, D){
-    ncat <- length(d)
+    ncat <- length(t)
     nfact <- ncol(Theta)    
     a <- matrix(a)    
     P <- numerator <- matrix(0, nrow(Theta), ncat)      
+    numerator0 <- cbind(numerator, 0)
     for(i in 1:ncat)
-        numerator[ ,i] <- exp(D * ak[i] * (Theta %*% a) + D * d[i])
+        numerator0[ ,i+1] <- numerator[ ,i] <- exp(D * ak[i+1] * (Theta %*% a) + D * d[i+1])
+    numerator0[, 1] <- exp(D * ak[1] * (Theta %*% a) + D * d[1])
     denominator <- rowSums(numerator)
-    C0 <- 1 / denominator
+    denominator0 <- rowSums(numerator0)
+    C0 <- numerator0[,1] / denominator0
+    C0 <- matrix(C0, nrow(P), ncat)
     t[1] <- 1 - sum(t[2:length(t)])
     T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
     P <- C0 * T + (1 - C0) * numerator/denominator

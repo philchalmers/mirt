@@ -119,9 +119,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             pars[[1]][[i]]@par[1] <- 0
             pars[[1]][[i]]@est[1] <- FALSE            
             if(is(pars[[1]][[i]], 'nominal'))
-                pars[[1]][[i]]@est[(nfact+1):(nfact + K[i])] <- FALSE                            
-            if(is(pars[[1]][[i]], 'mcm'))
-                pars[[1]][[i]]@est[c((nfact+1):(nfact + K[i]), 
+                pars[[1]][[i]]@est[(nfact+1):(nfact + K[i])] <- FALSE             
+            if(is(pars[[1]][[i]], 'mcm'))                                                       #####FIXME
+                pars[[1]][[i]]@est[c((nfact+1):(nfact + K[i]+1), 
                     length(pars[[1]][[i]]@est):(length(pars[[1]][[i]]@est)-K[i]+1))] <- FALSE                           
         }       
     }

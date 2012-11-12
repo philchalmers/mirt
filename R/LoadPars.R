@@ -53,10 +53,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
             }
             if(itemtype[i] == 'mcm'){
-                val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]), 
+                val <- c(lambdas[i,], 1, 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]+1), 
                          rep(1/K[i], K[i]))
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
-                                paste('d', 0:(K[i]-1), sep=''), paste('t', 0:(K[i]-1), sep=''))                
+                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]), sep=''), 
+                                paste('d', 0:(K[i]), sep=''), paste('t', 1:(K[i]), sep=''))                
             }            
             startvalues[[i]] <- val
         } 
@@ -95,9 +95,11 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 freepars[[i]] <- estpars
             }
             if(itemtype[i] == 'mcm'){
-                estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*3))
+                estpars <- c(estLambdas[i, ], rep(TRUE, 2+K[i]*3))
                 #identifiction constraints
-                estpars[c(nfact+1, nfact + K[i], nfact + K[i] + 1, length(estpars) - K[i] + 1)] <- FALSE
+                tmp <- names(startvalues[[i]])
+                tmp2 <- 1:length(tmp)
+                estpars[tmp2[tmp %in% c('ak1', paste('ak',i,sep=''), 'd1', 't1')]] <- FALSE                
                 freepars[[i]] <- estpars
             }
         }         

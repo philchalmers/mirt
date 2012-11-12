@@ -133,13 +133,15 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
                         if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
-                    }                
+                    }    
                     #apply sum(t) == 1 constraint for mcm
-                    if(is(pars[[g]][[i]], 'mcm')){
+                    if(is(pars[[g]][[i]], 'mcm')){                
                         tmp <- pars[[g]][[i]]@par
-                        tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
-                            pars[[g]][[i]]@ncat + 2)])
-                        pars[[g]][[i]]@par <- tmp
+                        cat <- pars[[g]][[i]]@ncat
+                        tmp2 <- (length(tmp) - (cat-1)):length(tmp) 
+                        Num <- exp(tmp[tmp2])
+                        tmp <- Num/sum(Num)                                    
+                        pars[[g]][[i]]@par[tmp2] <- tmp
                     }
                 }
             }
@@ -201,29 +203,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(g in 1:ngroups)
             for(i in 1:J) 
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
-    } #END EM      
-    #Reload pars list    
-    ind1 <- 1
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-            pars[[g]][[i]]@par <- longpars[ind1:ind2]
-            ind1 <- ind2 + 1       
-            if(any(class(pars[[g]][[i]]) == c('dich', 'partcomp'))){
-                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > 1) 
-                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
-                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
-                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
-            }        
-            #apply sum(t) == 1 constraint for mcm
-            if(is(pars[[g]][[i]], 'mcm')){
-                tmp <- pars[[g]][[i]]@par
-                tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
-                    pars[[g]][[i]]@ncat + 2)])
-                pars[[g]][[i]]@par <- tmp
-            }
-        }
-    } 
+    } #END EM          
     
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist)

@@ -125,9 +125,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                 #apply sum(t) == 1 constraint for mcm
                 if(is(pars[[g]][[i]], 'mcm')){
                     tmp <- pars[[g]][[i]]@par
-                    tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
-                        pars[[g]][[i]]@ncat + 2)])
-                    pars[[g]][[i]]@par <- tmp
+                    cat <- pars[[g]][[i]]@ncat
+                    tmp2 <- (length(tmp) - (cat-1)):length(tmp) 
+                    Num <- exp(tmp[tmp2])
+                    tmp <- Num/sum(Num)                                    
+                    pars[[g]][[i]]@par[tmp2] <- tmp
                 }
             }
         }        
@@ -265,9 +267,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             #apply sum(t) == 1 constraint for mcm
             if(is(pars[[g]][[i]], 'mcm')){
                 tmp <- pars[[g]][[i]]@par
-                tmp[length(tmp) - pars[[g]][[i]]@ncat + 1] <- 1 - sum(tmp[length(tmp):(length(tmp) - 
-                    pars[[g]][[i]]@ncat + 2)])
-                pars[[g]][[i]]@par <- tmp
+                cat <- pars[[g]][[i]]@ncat
+                tmp2 <- (length(tmp) - (cat-1)):length(tmp) 
+                Num <- exp(tmp[tmp2])
+                tmp <- Num/sum(Num)                                    
+                pars[[g]][[i]]@par[tmp2] <- tmp
             }
         }        
     }    
