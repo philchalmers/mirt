@@ -192,9 +192,13 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         }			
         if(stagecycle < 3){	
             ave.h <- Matrix(ave.h, sparse = TRUE)
-            inv.ave.h <- try(Matrix::solve(ave.h))			
+            inv.ave.h <- try(Matrix::solve(ave.h))			            
             if(class(inv.ave.h) == 'try-error'){
-                inv.ave.h <- try(qr.solve(ave.h + 2*diag(ncol(ave.h))))
+                inv.ave.h <- ave.h 
+                tmp <- .1*diag(inv.ave.h)
+                tmp[tmp < 1] <- 1
+                diag(inv.ave.h) <- diag(inv.ave.h) + tmp
+                inv.ave.h <- try(solve(inv.ave.h))
                 noninvcount <- noninvcount + 1
                 if(noninvcount == 3) 
                     stop('\nEstimation halted during burn in stages, solution is unstable')
@@ -222,7 +226,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         Tau <- Matrix(Tau, sparse = TRUE)	
         inv.Tau <- try(solve(Tau))
         if(class(inv.Tau) == 'try-error'){
-            inv.Tau <- try(qr.solve(Tau + 2 * diag(ncol(Tau))))
+            inv.Tau <- Tau
+            tmp <- .1*diag(inv.Tau)
+            tmp[tmp < 1] <- 1
+            diag(inv.Tau) <- diag(inv.Tau) + tmp
+            inv.Tau <- try(solve(inv.Tau))
             noninvcount <- noninvcount + 1
             if(noninvcount == 3) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
