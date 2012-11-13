@@ -3,7 +3,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, draws = 2000, calcLL = TRUE,
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
-                       SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702)
+                       SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
+                       multilevel=NULL, ...)
 {    
     if(debug == 'ESTIMATION') browser()    
     set.seed(12345)       
@@ -120,7 +121,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             pars[[1]][[i]]@est[1] <- FALSE            
             if(is(pars[[1]][[i]], 'nominal'))
                 pars[[1]][[i]]@est[(nfact+1):(nfact + K[i])] <- FALSE             
-            if(is(pars[[1]][[i]], 'mcm'))                                                       #####FIXME
+            if(is(pars[[1]][[i]], 'mcm')) 
                 pars[[1]][[i]]@est[c((nfact+1):(nfact + K[i]+1), 
                     length(pars[[1]][[i]]@est):(length(pars[[1]][[i]]@est)-K[i]+1))] <- FALSE                           
         }       
@@ -195,6 +196,28 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfact=nfact, constrain=constrain, verbose=verbose,
                                            startlongpars=startlongpars), 
                                debug=debug)        
+        iter <- ESTIMATE$cycles
+    } else if(method == 'MULTILEVEL'){        
+        if(is.null(pars)) {
+            burninmod <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+                                   list = list(NCYCLES=2, BURNIN=BURNIN, SEMCYCLES=2,
+                                               KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
+                                               nfactNames=PrepList[[1]]$nfactNames, 
+                                               itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
+                                               nfact=nfact, constrain=constrain, verbose=verbose,
+                                               startlongpars=startlongpars), 
+                                   debug=debug)        
+            pars <- burninmod@pars        
+        }
+        ESTIMATE <- MHRM.multilevel(pars=pars, constrain=constrain, 
+                                    PrepList=PrepList, multilevel=multilevel,                                    
+                               list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
+                                           KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
+                                           nfactNames=PrepList[[1]]$nfactNames, 
+                                           itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
+                                           nfact=nfact, constrain=constrain, verbose=verbose,
+                                           startlongpars=startlongpars), 
+                               debug=debug, ...)        
         iter <- ESTIMATE$cycles
     }   
     cmods <- list()
@@ -295,7 +318,35 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
     if(ngroups == 1){        
-        if(PrepList[[1]]$exploratory){
+        if(method == 'MULTILEVEL'){
+            mod <- new('MultilevelClass', 
+                       iter=ESTIMATE$cycles, 
+                       pars=cmods[[1]]@pars, 
+                       G2=G2, 
+                       df=df, 
+                       p=p, 
+                       itemloc=PrepListFull$itemloc, 
+                       method=method,
+                       AIC=AIC, 
+                       BIC=BIC, 
+                       logLik=logLik, 
+                       F=F, 
+                       h2=h2, 
+                       tabdata=PrepListFull$tabdata2, 
+                       Pl=Pl[[1]], 
+                       data=data, 
+                       converge=ESTIMATE$converge, 
+                       nfact=nfact,               
+                       RMSEA=RMSEA, 
+                       K=PrepListFull$K, 
+                       tabdatalong=PrepListFull$tabdata, 
+                       null.mod=null.mod, #? what to do about this....
+                       TLI=TLI, 
+                       factorNames=PrepListFull$factorNames, 
+                       constrain=PrepList[[1]]$constrain, 
+                       fulldata=PrepListFull$fulldata,
+                       information=ESTIMATE$info)
+        } else if(PrepList[[1]]$exploratory){
             FF <- alp %*% t(alp)
             V <- eigen(FF)$vector[ ,1:nfact]
             L <- eigen(FF)$values[1:nfact]

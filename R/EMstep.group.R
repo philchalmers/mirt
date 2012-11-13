@@ -45,6 +45,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     }
     stagecycle <- 1    
     converge <- 1
+    inverse_fail_count <- 1
     ##
     L <- c()    
     for(g in 1:ngroups)
@@ -172,8 +173,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             hess <- L %*% h %*% L 			       
             grad <- grad[1, estpars & !redun_constr]		
             Hess <- Matrix(hess[estpars & !redun_constr, estpars & !redun_constr], sparse = TRUE)            
-            inv.Hess <- try(solve(Hess))        	                        
-            if(class(inv.Hess) == 'try-error'){                                                
+            inv.Hess <- try(solve(Hess), silent = TRUE)        	                        
+            if(class(inv.Hess) == 'try-error'){             
+                if(inverse_fail_count == 5) 
+                    stop('Hessian is not invertable. Likelihood surface is likely too flat.') 
+                inverse_fail_count <- inverse_fail_count + 1
                 inv.Hess <- Hess
                 tmp <- .1*diag(inv.Hess)
                 tmp[tmp > -25] <- -.25

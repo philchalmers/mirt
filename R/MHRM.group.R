@@ -192,7 +192,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         }			
         if(stagecycle < 3){	
             ave.h <- Matrix(ave.h, sparse = TRUE)
-            inv.ave.h <- try(Matrix::solve(ave.h))			            
+            inv.ave.h <- try(Matrix::solve(ave.h), silent = TRUE)			            
             if(class(inv.ave.h) == 'try-error'){
                 inv.ave.h <- ave.h 
                 tmp <- .1*diag(inv.ave.h)
@@ -224,7 +224,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         #Step 3. Update R-M step		
         Tau <- Tau + gamma*(ave.h - Tau)
         Tau <- Matrix(Tau, sparse = TRUE)	
-        inv.Tau <- try(solve(Tau))
+        inv.Tau <- try(solve(Tau), silent = TRUE)
         if(class(inv.Tau) == 'try-error'){
             inv.Tau <- Tau
             tmp <- .1*diag(inv.Tau)
@@ -232,7 +232,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             diag(inv.Tau) <- diag(inv.Tau) + tmp
             inv.Tau <- try(solve(inv.Tau))
             noninvcount <- noninvcount + 1
-            if(noninvcount == 3) 
+            if(noninvcount == 5) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
         }		
         correction <- as.vector(inv.Tau %*% grad)
