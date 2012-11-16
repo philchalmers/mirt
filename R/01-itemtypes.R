@@ -69,3 +69,7 @@ setGeneric('Deriv', function(x, Theta, ...) standardGeneric("Deriv"))
 setGeneric('DerivTheta', function(x, Theta) standardGeneric("DerivTheta"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))         
+
+setGeneric("itemplot.internal",  function(object, ...) standardGeneric("itemplot.internal"))
+
+setGeneric("fscores.internal", function(object, ...) standardGeneric("fscores.internal"))
