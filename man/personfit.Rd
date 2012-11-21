@@ -2,30 +2,27 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-  personfit(x, degrees = NULL)
+  personfit(x)
 }
 \arguments{
   \item{x}{a computed model object of class
   \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
   \code{MultipleGroupClass}}
-
-  \item{degrees}{the degrees angle to be passed to the
-  \code{\link{iteminfo}} function}
 }
 \description{
   \code{personfit} calculates the Zh values from Drasgow,
   Levine and Williams (1985) for unidimensional and
-  multidimensional models, as well as infit and outfit
-  statistics. The returned object is a \code{data.frame}
-  consisting either of the tabulated data or full data with
-  the statistics appended to the last columns.
+  multidimensional models. The returned object is a
+  \code{data.frame} consisting either of the tabulated data
+  or full data with the statistics appended to the last
+  columns.
 }
 \examples{
 \dontrun{
 
 #make some data
 set.seed(1234)
-a <- matrix(rnorm(20),ncol=1)
+a <- matrix(rlnorm(20),ncol=1)
 d <- matrix(rnorm(20),ncol=1)
 items <- rep('dich', 20)
 data <- simdata(a,d, 2000, items)

@@ -13,7 +13,7 @@
 }
 \description{
   This function exports item parameters from the
-  \code{mirt} package to the \code{\link{plink}} package.
+  \code{mirt} package to the \code{plink} package.
 }
 \examples{
 \dontrun{

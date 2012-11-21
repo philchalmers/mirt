@@ -602,6 +602,7 @@ setMethod(
         a <- x@par[1:x@nfact]        
         ind <- x@nfact + 1
         stop('Derivatives for mcm items not yet written')
+        grad <- hess <- NULL
         
         return(list(grad=grad, hess=hess))       
     }

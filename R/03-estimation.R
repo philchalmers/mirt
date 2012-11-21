@@ -197,28 +197,28 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars), 
                                debug=debug)        
         iter <- ESTIMATE$cycles
-    } else if(method == 'MULTILEVEL'){        
-        if(is.null(pars)) {
-            burninmod <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
-                                   list = list(NCYCLES=2, BURNIN=BURNIN, SEMCYCLES=2,
-                                               KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
-                                               nfactNames=PrepList[[1]]$nfactNames, 
-                                               itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
-                                               nfact=nfact, constrain=constrain, verbose=verbose,
-                                               startlongpars=startlongpars), 
-                                   debug=debug)        
-            pars <- burninmod@pars        
-        }
-        ESTIMATE <- MHRM.multilevel(pars=pars, constrain=constrain, 
-                                    PrepList=PrepList, multilevel=multilevel,                                    
-                               list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
-                                           KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
-                                           nfactNames=PrepList[[1]]$nfactNames, 
-                                           itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
-                                           nfact=nfact, constrain=constrain, verbose=verbose,
-                                           startlongpars=startlongpars), 
-                               debug=debug, ...)        
-        iter <- ESTIMATE$cycles
+#     } else if(method == 'MULTILEVEL'){        
+#         if(is.null(pars)) {
+#             burninmod <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+#                                    list = list(NCYCLES=2, BURNIN=BURNIN, SEMCYCLES=2,
+#                                                KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
+#                                                nfactNames=PrepList[[1]]$nfactNames, 
+#                                                itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
+#                                                nfact=nfact, constrain=constrain, verbose=verbose,
+#                                                startlongpars=startlongpars), 
+#                                    debug=debug)        
+#             pars <- burninmod@pars        
+#         }
+#         ESTIMATE <- MHRM.multilevel(pars=pars, constrain=constrain, 
+#                                     PrepList=PrepList, multilevel=multilevel,                                    
+#                                list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
+#                                            KDRAWS=KDRAWS, TOL=TOL, USEEM=FALSE, gain=gain, 
+#                                            nfactNames=PrepList[[1]]$nfactNames, 
+#                                            itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR, 
+#                                            nfact=nfact, constrain=constrain, verbose=verbose,
+#                                            startlongpars=startlongpars), 
+#                                debug=debug, ...)        
+#         iter <- ESTIMATE$cycles
     }   
     cmods <- list()
     for(g in 1:ngroups){

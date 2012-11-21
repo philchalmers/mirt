@@ -1,7 +1,7 @@
 #' Item fit statistics
 #' 
-#' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985), infits, and outfits for 
-#' unidimensional and multidimensional models, and \eqn{\chi^2} values for unidimensional models.
+#' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985) 
+#' and \eqn{\chi^2} values for unidimensional models.
 #' 
 #' 
 #' @aliases itemfit
@@ -12,7 +12,7 @@
 #' @param empirical.plot a single numeric value indicating which item to plot (via \code{itemplot}) and
 #' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}. 
 #' The default is \code{NULL}, therefore no plots are drawn 
-#' @param degrees the degrees angle to be passed to the \code{\link{iteminfo}} function
+# @param degrees the degrees angle to be passed to the \code{\link{iteminfo}} function
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit
@@ -35,7 +35,7 @@
 #'
 #' #make some data
 #' set.seed(1234)
-#' a <- matrix(rnorm(20),ncol=1)
+#' a <- matrix(rlnorm(20),ncol=1)
 #' d <- matrix(rnorm(20),ncol=1)
 #' items <- rep('dich', 20)
 #' data <- simdata(a,d, 2000, items)
@@ -48,7 +48,7 @@
 #' 
 #'   }
 #'
-itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, degrees = NULL){    
+itemfit <- function(x, X2 = TRUE, group.size = 150, empirical.plot = NULL){    
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
@@ -85,11 +85,12 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, degr
         }               
     }        
     Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)    
-    attr(x, 'inoutfitreturn') <- TRUE
-    pf <- personfit(x, degrees=degrees)
-    outfit <- colSums(pf$Z^2) / J
-    infit <- colSums(pf$Z^2 * pf$info) / colSums(pf$info)        
-    ret <- data.frame(item=colnames(x@data), outfit=outfit, infit=infit, Zh=Zh)
+#     attr(x, 'inoutfitreturn') <- TRUE
+#     pf <- personfit(x, degrees=degrees)
+#     outfit <- colSums(pf$Z^2) / N
+#     infit <- colSums(pf$Z^2 * pf$info) / colSums(pf$info)        
+#     ret <- data.frame(item=colnames(x@data), outfit=outfit, infit=infit, Zh=Zh)
+    ret <- data.frame(item=colnames(x@data), Zh=Zh)
     if((X2 || !is.null(empirical.plot)) && nfact == 1){                
         ord <- order(Theta[,1])    
         fulldata <- fulldata[ord,]

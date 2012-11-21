@@ -2,8 +2,8 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-  itemfit(x, X2 = FALSE, group.size = 150,
-    empirical.plot = NULL, degrees = NULL)
+  itemfit(x, X2 = TRUE, group.size = 150,
+    empirical.plot = NULL)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -21,22 +21,18 @@
   the empirical \eqn{\theta} groupings. Only applicable
   when \code{type = 'X2'}. The default is \code{NULL},
   therefore no plots are drawn}
-
-  \item{degrees}{the degrees angle to be passed to the
-  \code{\link{iteminfo}} function}
 }
 \description{
   \code{itemfit} calculates the Zh values from Drasgow,
-  Levine and Williams (1985), infits, and outfits for
-  unidimensional and multidimensional models, and
-  \eqn{\chi^2} values for unidimensional models.
+  Levine and Williams (1985) and \eqn{\chi^2} values for
+  unidimensional models.
 }
 \examples{
 \dontrun{
 
 #make some data
 set.seed(1234)
-a <- matrix(rnorm(20),ncol=1)
+a <- matrix(rlnorm(20),ncol=1)
 d <- matrix(rnorm(20),ncol=1)
 items <- rep('dich', 20)
 data <- simdata(a,d, 2000, items)

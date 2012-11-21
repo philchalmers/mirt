@@ -1,3 +1,6 @@
+* removed infit and outfit stats since they only are applicable to Rasch models (and are available in
+  the eRm package)
+
 * read.mirt() re-added into the package to allow for translating estimating models into a format
   usable by the plink package
 
