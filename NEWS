@@ -1,11 +1,15 @@
+----------------------------------------------------------------
+mirt 0.4.2
+----------------------------------------------------------------
+
 * item probability functions now only permit permissible values, and models may converge even when
   the log-likelihood decreases during estimation. In the EM if the model does not have a strictly 
   increasing log-likelihood then a warning message will be printed
 
-* removed infit and outfit stats since they only are applicable to Rasch models (and are available in
-  the eRm package)
+* removed infit and outfit statistics since they only are applicable to Rasch models (and are available in
+  the eRm package for those interested in Rasch modelling)
 
-* read.mirt() re-added into the package to allow for translating estimating models into a format
+* read.mirt() re-added into the package to allow for translating estimated models into a format
   usable by the plink package
 
 * test standard error added to plot() generic using type = 'SE', and expected score plot added 
@@ -20,7 +24,7 @@
   fixed for all models. Also, information functions are now available for almost all item response models
   (mcm items missing)
 
-* constant (D) used in estimating logistic functions can now be modified (default is 1.702)
+* constant (D) used in estimating logistic functions can now be modified (default is still 1.702)
 
 * partcomp models recently broken, fixed now
 
