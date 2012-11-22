@@ -37,7 +37,7 @@
 #'
 #' #make some data
 #' set.seed(1234)
-#' a <- matrix(rlnorm(20),ncol=1)
+#' a <- matrix(rlnorm(20, meanlog=0, sdlog = .1),ncol=1)
 #' d <- matrix(rnorm(20),ncol=1)
 #' items <- rep('dich', 20)
 #' data <- simdata(a,d, 2000, items)
@@ -47,8 +47,8 @@
 #' fit <- itemfit(x)
 #' fit
 #' 
-#' itemfit(x, type = 'X2', empirical.plot = 1) #empirical item plot
-#' itemfit(raschfit) #infit and outfit stats
+#' itemfit(x, empirical.plot = 1) #empirical item plot
+#' itemfit(raschfit, method = 'ML') #infit and outfit stats (method='ML' agrees better with eRm package)
 #' 
 #'   }
 #'

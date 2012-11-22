@@ -70,6 +70,14 @@ personfit <- function(x, method = 'EAP'){
         fulldata <- fulldata[,-ncol(fulldata)]
         Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1) - nfact, drop = FALSE]        
     }
+    if(method %in% c('ML', 'WLE')){
+        for(i in 1:ncol(Theta)){
+            tmp <- Theta[,i]
+            tmp[tmp %in% c(-Inf, Inf)] <- NA
+            Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
+            Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
+        }       
+    }
     N <- nrow(Theta)
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)        
     for (i in 1:J)

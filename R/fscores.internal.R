@@ -78,12 +78,12 @@ setMethod(
 		}
 		if(method == "ML"){            		            
 			tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]			             
-			scores[rowSums(tmp2) == J,] <- NA
+			scores[rowSums(tmp2) == J,] <- Inf
             tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
-            scores[rowSums(tmp2) == J,] <- NA
+            scores[rowSums(tmp2) == J,] <- -Inf
 			SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
 			for (i in 1:nrow(scores)){
-				if(any(is.na(scores[i, ]))) next 
+				if(any(scores[i, ] %in% c(-Inf, Inf))) next 
 				Theta <- scores[i, ]	  
 				estimate <- try(nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
 				    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian = TRUE))
@@ -99,12 +99,12 @@ setMethod(
 		}
         if(method == 'WLE'){                            
             tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]    		             
-            scores[rowSums(tmp2) == J,] <- NA
+            scores[rowSums(tmp2) == J,] <- Inf
             tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
-            scores[rowSums(tmp2) == J,] <- NA
+            scores[rowSums(tmp2) == J,] <- -Inf
             SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
             for (i in 1:nrow(scores)){
-                if(any(is.na(scores[i, ]))) next 
+                if(any(scores[i, ] %in% c(-Inf, Inf))) next
                 Theta <- scores[i, ]	  
                 estimate <- try(nlm(gradnorm.WLE,Theta,pars=pars,patdata=tabdata[i, ],
                                 itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees,
@@ -127,10 +127,11 @@ setMethod(
             scoremat <- .Call("fullScores", object@fulldata, tabdata2, scores)			 
 			colnames(scoremat) <- colnames(scores)	
 			return(cbind(fulldata,scoremat))
-		} else {			
+		} else {            
             r <- object@tabdata[,ncol(object@tabdata)]            
             T <- E <- matrix(NA, 1, ncol(scores))
             for(i in 1:nrow(scores)){
+                if(scores[i, ] %in% c(Inf, -Inf)) next
                 T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
                 E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
             }            
