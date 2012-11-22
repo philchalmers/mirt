@@ -6,8 +6,9 @@ mirt 0.4.2
   the log-likelihood decreases during estimation. In the EM if the model does not have a strictly 
   increasing log-likelihood then a warning message will be printed
 
-* removed infit and outfit statistics since they only are applicable to Rasch models (and are available in
-  the eRm package for those interested in Rasch modelling)
+* infit and outfit statistics are now only applicable to Rasch models (as they should be), 
+  and in itemfit/personfit() a 'method' argument has been added to specify which factor score 
+  estimates should be used
 
 * read.mirt() re-added into the package to allow for translating estimated models into a format
   usable by the plink package

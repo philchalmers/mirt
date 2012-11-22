@@ -2,8 +2,8 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-  itemfit(x, X2 = TRUE, group.size = 150,
-    empirical.plot = NULL)
+  itemfit(x, X2 = FALSE, group.size = 150,
+    empirical.plot = NULL, method = "EAP")
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -21,11 +21,17 @@
   the empirical \eqn{\theta} groupings. Only applicable
   when \code{type = 'X2'}. The default is \code{NULL},
   therefore no plots are drawn}
+
+  \item{method}{type of factor score estimation method. Can
+  be expected a-posteriori (\code{"EAP"}), Bayes modal
+  (\code{"MAP"}), weighted likelihood estimation
+  (\code{"WLE"}), or maximum likelihood (\code{"ML"})}
 }
 \description{
   \code{itemfit} calculates the Zh values from Drasgow,
   Levine and Williams (1985) and \eqn{\chi^2} values for
-  unidimensional models.
+  unidimensional models. For Rasch models infit and outfit
+  statistics are also produced.
 }
 \examples{
 \dontrun{
@@ -38,10 +44,12 @@ items <- rep('dich', 20)
 data <- simdata(a,d, 2000, items)
 
 x <- mirt(data, 1)
+raschfit <- mirt(data, 1, itemtype='Rasch')
 fit <- itemfit(x)
 fit
 
 itemfit(x, type = 'X2', empirical.plot = 1) #empirical item plot
+itemfit(raschfit) #infit and outfit stats
 
   }
 }

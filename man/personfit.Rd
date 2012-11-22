@@ -2,20 +2,26 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-  personfit(x)
+  personfit(x, method = "EAP")
 }
 \arguments{
   \item{x}{a computed model object of class
   \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
   \code{MultipleGroupClass}}
+
+  \item{method}{type of factor score estimation method. Can
+  be expected a-posteriori (\code{"EAP"}), Bayes modal
+  (\code{"MAP"}), weighted likelihood estimation
+  (\code{"WLE"}), or maximum likelihood (\code{"ML"})}
 }
 \description{
   \code{personfit} calculates the Zh values from Drasgow,
   Levine and Williams (1985) for unidimensional and
-  multidimensional models. The returned object is a
-  \code{data.frame} consisting either of the tabulated data
-  or full data with the statistics appended to the last
-  columns.
+  multidimensional models. For Rasch models infit and
+  outfit statistics are also produced. The returned object
+  is a \code{data.frame} consisting either of the tabulated
+  data or full data with the statistics appended to the
+  last columns.
 }
 \examples{
 \dontrun{

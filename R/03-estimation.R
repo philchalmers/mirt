@@ -157,7 +157,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                              list = list(NCYCLES=NCYCLES, TOL=TOL, MSTEPMAXIT=MSTEPMAXIT,
                                          nfactNames=PrepList[[1]]$nfactNames, theta=theta,
                                          itemloc=PrepList[[1]]$itemloc, BFACTOR=BFACTOR,
-                                         sitems=sitems, specific=oldmodel,
+                                         sitems=sitems, specific=oldmodel, NULL.MODEL=NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=verbose), 
                              Theta=Theta, debug=debug)                
         startlongpars <- ESTIMATE$longpars
@@ -345,6 +345,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
                        fulldata=PrepListFull$fulldata,
+                       itemtype=PrepListFull$itemtype,
                        information=ESTIMATE$info)
         } else if(PrepList[[1]]$exploratory){
             FF <- alp %*% t(alp)
@@ -384,6 +385,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
                        fulldata=PrepListFull$fulldata,
+                       itemtype=PrepListFull$itemtype,
                        information=ESTIMATE$info)
         } else {                        
             mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, 
@@ -413,6 +415,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
                        fulldata=PrepListFull$fulldata,
+                       itemtype=PrepListFull$itemtype,
                        information=ESTIMATE$info)
         }        
     } else {
@@ -442,6 +445,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    p=p,
                    Theta=Theta,
                    Pl=Pl,
+                   itemtype=PrepListFull$itemtype,
                    information=ESTIMATE$info)  
     }
     return(mod)

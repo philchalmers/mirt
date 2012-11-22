@@ -31,6 +31,7 @@ setClass("AllModelClass",
                         longpars='numeric',
                         factorNames='character',
                         method='character',
+                        itemtype='character',
                         'VIRTUAL'),    
          validity = function(object) return(TRUE)
 )                       

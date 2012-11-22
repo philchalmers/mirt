@@ -216,7 +216,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
     } #END EM          
     
-    if(LLwarn) 
+    if(LLwarn && !list$NULL.MODEL) 
         warning('Log-likelihood did not strictly decrease during estimation. 
                 Solution may not be a maximum.')
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,

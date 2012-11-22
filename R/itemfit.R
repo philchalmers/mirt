@@ -1,8 +1,8 @@
 #' Item fit statistics
 #' 
 #' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985) 
-#' and \eqn{\chi^2} values for unidimensional models.
-#' 
+#' and \eqn{\chi^2} values for unidimensional models. For Rasch models infit and outfit statistics are 
+#' also produced.
 #' 
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
@@ -12,7 +12,9 @@
 #' @param empirical.plot a single numeric value indicating which item to plot (via \code{itemplot}) and
 #' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}. 
 #' The default is \code{NULL}, therefore no plots are drawn 
-# @param degrees the degrees angle to be passed to the \code{\link{iteminfo}} function
+#' @param method type of factor score estimation method. Can be expected
+#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation 
+#' (\code{"WLE"}), or maximum likelihood (\code{"ML"}) 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit
@@ -41,14 +43,16 @@
 #' data <- simdata(a,d, 2000, items)
 #'  
 #' x <- mirt(data, 1)
+#' raschfit <- mirt(data, 1, itemtype='Rasch')
 #' fit <- itemfit(x)
 #' fit
 #' 
 #' itemfit(x, type = 'X2', empirical.plot = 1) #empirical item plot
+#' itemfit(raschfit) #infit and outfit stats
 #' 
 #'   }
 #'
-itemfit <- function(x, X2 = TRUE, group.size = 150, empirical.plot = NULL){    
+itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, method = 'EAP'){    
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
@@ -84,13 +88,17 @@ itemfit <- function(x, X2 = TRUE, group.size = 150, empirical.plot = NULL){
             }                               
         }               
     }        
-    Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)    
-#     attr(x, 'inoutfitreturn') <- TRUE
-#     pf <- personfit(x, degrees=degrees)
-#     outfit <- colSums(pf$Z^2) / N
-#     infit <- colSums(pf$Z^2 * pf$info) / colSums(pf$info)        
-#     ret <- data.frame(item=colnames(x@data), outfit=outfit, infit=infit, Zh=Zh)
-    ret <- data.frame(item=colnames(x@data), Zh=Zh)
+    Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2) 
+    #if all Rasch models, infit and outfit    
+    if(all(x@itemtype %in% 'Rasch')){
+        attr(x, 'inoutfitreturn') <- TRUE
+        pf <- personfit(x, method=method)        
+        outfit <- colSums(pf$resid2 / pf$info) / N
+        infit <- colSums(pf$resid2) / colSums(pf$info)        
+        ret <- data.frame(item=colnames(x@data), outfit=outfit, infit=infit, Zh=Zh)        
+    } else {
+        ret <- data.frame(item=colnames(x@data), Zh=Zh)    
+    }    
     if((X2 || !is.null(empirical.plot)) && nfact == 1){                
         ord <- order(Theta[,1])    
         fulldata <- fulldata[ord,]
