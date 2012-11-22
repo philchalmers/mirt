@@ -34,8 +34,11 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 		}
 		z(j) += d(0) * D(0);
 	}	
-	for (i = 0; i < nquad; i++) 
+	for (i = 0; i < nquad; i++){ 
 		P(i) = g(0) + (u(0) - g(0)) * (exp(z(i))/(1 + exp(z(i))));		
+        if(P(i) < 1e-8) P(i) = 1e-8;
+        if((1.0 - P(i)) < 1e-8) P(i) = 1.0 - 1e-8;        
+	}
 		
 	return(P);
 

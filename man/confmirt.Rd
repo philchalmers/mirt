@@ -227,6 +227,20 @@
   the \code{anova} function, where a Chi-squared difference
   test and AIC/BIC difference values are displayed.
 }
+\section{Congergence}{
+  The MHRM algorithm often is more stable than the EM
+  counterpart in \code{mirt} and congergence of the
+  algorithm should be taken with caution. When the number
+  of iterations reaches a large number (e.g., greater than
+  1500) or when \code{Max Change = .2500} values are
+  repeatedly printed to the console too often (indicating
+  that the parameters were being constrained since they are
+  naturally moving in steps greater than 0.25, and hence
+  unstable) then the model may either be ill defined or
+  have a very flat likelihood surface, and genuine maximum
+  likelihood estimates may be difficult to find.
+}
+
 \section{Confirmatory IRT}{
   Specification of the confirmatory item factor analysis
   model follows many of the rules in the SEM framework for

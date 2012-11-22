@@ -26,6 +26,15 @@
 #' \code{anova} function, where a Chi-squared difference test and AIC/BIC
 #' difference values are displayed.
 #' 
+#' @section Congergence:
+#' 
+#' The MHRM algorithm often is more stable than the EM counterpart in \code{mirt} and 
+#' congergence of the algorithm should be taken with caution. When the number of iterations reaches
+#' a large number (e.g., greater than 1500) or when \code{Max Change = .2500} values are repeatedly printed
+#' to the console too often (indicating that the parameters were being constrained since they are naturally 
+#' moving in steps greater than 0.25, and hence unstable) then the model may either be ill defined or have a 
+#' very flat likelihood surface, and genuine maximum likelihood estimates may be difficult to find. 
+#' 
 #' @section Confirmatory IRT:
 #' 
 #' Specification of the confirmatory item factor analysis model follows many of
@@ -38,8 +47,7 @@
 #' 
 #' Specifying a number as the second input to confmirt an exploratory IRT model is estimated and 
 #' can be viewed as a stochastic analogue of \code{mirt}, with much of the same behaviour and 
-#' specifications. 
-#' Rotation and target matrix options will be used in this subroutine and will be
+#' specifications. Rotation and target matrix options will be used in this subroutine and will be
 #' passed to the returned object for use in generic functions such as \code{summary()} and 
 #' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification. See
 #' \code{\link{mirt}} for more details.

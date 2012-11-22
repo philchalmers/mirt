@@ -24,7 +24,6 @@ setMethod(
         hess <- matrix(0,nfact+3, nfact+3)						
         if(x@par[parlength] == 1){ #'3PL'            	
             Pstar <- P.mirt(a,d,Theta,0,1, D=x@D)		
-            Pstar[Pstar < 1e-8] <- 1e-8
             Qstar <- 1 - Pstar
             da <- rep(0,nfact)	
             dd <- sum((1-g)*Pstar*Qstar*(dat/P - (f-dat)/Q)*Prior)
@@ -603,7 +602,6 @@ setMethod(
         ind <- x@nfact + 1
         stop('Derivatives for mcm items not yet written')
         grad <- hess <- NULL
-        
         return(list(grad=grad, hess=hess))       
     }
 )

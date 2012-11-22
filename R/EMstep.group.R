@@ -45,6 +45,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     }
     stagecycle <- 1    
     converge <- 1
+    LLwarn <- FALSE
     inverse_fail_count <- 1
     ##
     L <- c()    
@@ -73,7 +74,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     for(g in 1:ngroups)
         r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
     #EM     
-    for (cycles in 1:NCYCLES){        
+    for (cycles in 1:NCYCLES){  
         #priors
         for(g in 1:ngroups){
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])        
@@ -104,6 +105,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
         }
+        if(LL < lastLL && cycles > 1) LLwarn <- TRUE
         for(g in 1:ngroups){
             for(i in 1:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
@@ -170,8 +172,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 ind1 <- ind2 + 1
             }
             grad <- g %*% L 
-            hess <- L %*% h %*% L 			       
-            grad <- grad[1, estpars & !redun_constr]		
+            hess <- L %*% h %*% L 			                   
+            grad <- grad[1, estpars & !redun_constr]
+            if(any(is.na(grad))) 
+                stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')            
             Hess <- Matrix(hess[estpars & !redun_constr, estpars & !redun_constr], sparse = TRUE)            
             inv.Hess <- try(solve(Hess), silent = TRUE)        	                        
             if(class(inv.Hess) == 'try-error'){             
@@ -212,6 +216,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
     } #END EM          
     
+    if(LLwarn) 
+        warning('Log-likelihood did not strictly decrease during estimation. 
+                Solution may not be a maximum.')
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist)
     ret

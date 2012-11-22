@@ -56,6 +56,14 @@ setMethod(
 )
 
 setMethod(
+    f = "print",
+    signature = signature(x = 'GroupPars'),
+    definition = function(x, ...){
+        cat('Object of class:', class(x))
+    }
+)
+
+setMethod(
     f = "show",
     signature = signature(object = 'dich'),
     definition = function(object){
@@ -111,6 +119,14 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "show",
+    signature = signature(object = 'GroupPars'),
+    definition = function(object){
+        print(object)
+    }
+)
+
 
 #----------------------------------------------------------------------------
 #LogLik
@@ -118,8 +134,7 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, EM=FALSE, prior=NULL){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)        
-        itemtrace[itemtrace < 1e-8] <- 1e-8
+        itemtrace <- ProbTrace(x=x, Theta=Theta)                
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -132,8 +147,7 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)
-        itemtrace[itemtrace < 1e-8] <- 1e-8
+        itemtrace <- ProbTrace(x=x, Theta=Theta)        
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -146,8 +160,7 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)
-        itemtrace[itemtrace < 1e-8] <- 1e-8
+        itemtrace <- ProbTrace(x=x, Theta=Theta)        
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -161,7 +174,6 @@ setMethod(
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        itemtrace[itemtrace < 1e-8] <- 1e-8
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -175,7 +187,6 @@ setMethod(
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        itemtrace[itemtrace < 1e-8] <- 1e-8
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -189,7 +200,6 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        itemtrace[itemtrace < 1e-8] <- 1e-8
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -203,7 +213,6 @@ setMethod(
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        itemtrace[itemtrace < 1e-8] <- 1e-8
         Prior <- rep(1, nrow(itemtrace))
         if(EM) Prior <- prior
         LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
@@ -475,15 +484,17 @@ P.poly <- function(a, d, Theta, itemexp = FALSE, D)
         P <- matrix(0,nrow(Theta),ncat)		
         for(i in ncat:1)
             P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]						
-        Pk <- P
-    }	
+        P[P < 1e-8] <- 1e-8
+        P[(1 - P) < 1e-8] <- 1 - 1e-8
+        Pk <- P        
+    }	    
     return(Pk)
 }
 
 # Trace lines for mirt models
 P.mirt <- function(a, d, Theta, g = 0, u = 1, D)
 { 		
-    traces <- .Call("traceLinePts", a, d, g, u, Theta, D) ###FIX RCPP CODE
+    traces <- .Call("traceLinePts", a, d, g, u, Theta, D) 
     return(traces)
 }
 
@@ -495,6 +506,8 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
     for(i in 1:nfact)
         P <- P * P.mirt(a[i], d[i], Theta[ ,i, drop=FALSE], g=0, u=1, D=D)
     P <- g + (u - g) * P
+    P[P < 1e-8] <- 1e-8
+    P[(1 - P) < 1e-8] <- 1 - 1e-8
     P	
 }
 
@@ -507,6 +520,8 @@ P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
     for(i in 1:ncat)
         numerator[ ,i] <- exp(D * ak[i] * (Theta %*% a) + D * d[i])
     P <- numerator/rowSums(numerator)
+    P[P < 1e-8] <- 1e-8
+    P[(1 - P) < 1e-8] <- 1 - 1e-8
     if(returnNum) return(numerator)
     return(P)   
 }
@@ -521,6 +536,8 @@ P.gpcm <- function(a, d, Theta, D){
     for(i in 1:ncat)
         numerator[ ,i] <- exp(D * k[i] * (Theta %*% a) + D * d[i])
     P <- numerator/rowSums(numerator)    
+    P[P < 1e-8] <- 1e-8
+    P[(1 - P) < 1e-8] <- 1 - 1e-8
     return(P)   
 }
 
@@ -541,6 +558,8 @@ P.mcm <- function(a, ak, d, t, Theta, D){
     t[1] <- 1 - sum(t[2:length(t)])
     T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
     P <- C0 * T + (1 - C0) * numerator/denominator
+    P[P < 1e-8] <- 1e-8
+    P[(1 - P) < 1e-8] <- 1 - 1e-8
     return(P)   
 }
 

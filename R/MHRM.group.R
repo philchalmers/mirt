@@ -175,8 +175,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         grad <- g %*% L 
         ave.h <- (-1)*L %*% h %*% L 			       
         grad <- grad[1, estpars & !redun_constr]		
-        ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr] 
-        if(is.na(attr(gtheta0[[1]],"log.lik"))) stop('Estimation halted. Model did not converge.')		
+        ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
+        if(any(is.na(grad))) 
+            stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')   
+        if(is.na(attr(gtheta0[[1]],"log.lik"))) 
+            stop('Estimation halted. Model did not converge.')		
         if(verbose){
             if((cycles + 1) %% 10 == 0){
                 if(cycles < BURNIN)
