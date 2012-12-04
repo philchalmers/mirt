@@ -48,7 +48,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
             cat[i] <- 2
             abc <- listpars[[i]][1:(nfact+2)]
             if(nfact == 1)
-                abc[2] <- -abc[2]/(abc[1] * D)
+                abc[2] <- -abc[2]/(abc[1])
             pars[i, 1:length(abc)] <- abc
         }
         
@@ -58,7 +58,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
             cat[i] <- x@pars[[i]]@ncat 
             if(nfact == 1)
                 for(j in 1:(cat[i] - 1))
-                    ab[j + 1] <- -ab[j+1]/(ab[1] * D)
+                    ab[j + 1] <- -ab[j+1]/(ab[1])
             pars[i, 1:length(ab)] <- ab            
         }
         
@@ -72,7 +72,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
                 ab[j + nfact] <- ab[j+1] + adj
             if(nfact == 1)
                 for(j in 1:(cat[i] - 1))
-                    ab[j + 1] <- -ab[j+1]/(ab[1] * D)
+                    ab[j + 1] <- -ab[j+1]/(ab[1])
             pars[i, 1:length(ab)] <- ab 
         }
         

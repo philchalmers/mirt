@@ -131,7 +131,7 @@ setMethod(
             r <- object@tabdata[,ncol(object@tabdata)]            
             T <- E <- matrix(NA, 1, ncol(scores))
             for(i in 1:nrow(scores)){
-                if(scores[i, ] %in% c(Inf, -Inf)) next
+                if(any(scores[i, ] %in% c(Inf, -Inf))) next
                 T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
                 E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
             }            
