@@ -1,3 +1,5 @@
+* standard errors no longer slightly positively biased when parameter contraints are imposed 
+
 ----------------------------------------------------------------
 mirt 0.4.2
 ----------------------------------------------------------------

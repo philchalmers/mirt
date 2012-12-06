@@ -57,7 +57,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     redun_constr <- rep(FALSE, length(estpars)) 
     if(length(constrain) > 0){
         for(i in 1:length(constrain)){            
-            L[constrain[[i]], constrain[[i]]] <- 1/length(constrain[[i]]) 
+            L[constrain[[i]], constrain[[i]]] <- 1
             for(j in 2:length(constrain[[i]]))
                 redun_constr[constrain[[i]][j]] <- TRUE
         }
