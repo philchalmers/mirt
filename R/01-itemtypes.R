@@ -23,6 +23,7 @@ setClass("AllItemsClass",
                         constr='logical',
                         parnum='numeric',
                         nfact='numeric',
+                        nfixedeffects='numeric', #number of fixed effect predictors
                         dat='matrix',
                         ncat='numeric',
                         rs='matrix',

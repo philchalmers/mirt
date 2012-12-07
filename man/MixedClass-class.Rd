@@ -1,16 +1,15 @@
-\name{ConfirmatoryClass-class}
+\name{MixedClass-class}
 \docType{class}
-\alias{ConfirmatoryClass-class}
-\alias{show,ConfirmatoryClass-method}
-\alias{print,ConfirmatoryClass-method}
+\alias{MixedClass-class}
+\alias{show,MixedClass-method}
+\alias{print,MixedClass-method}
 
-\title{Class "ConfirmatoryClass"}
+\title{Class "MixedClass"}
 \description{
-Defines the object returned from \code{\link{confmirt}}, \code{\link{bfactor}}, and \code{\link{mirt}}
-when the estimated model is confirmatory.
+Defines the object returned from \code{\link{mixedmirt}}.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("ConfirmatoryClass", ...)}.
+Objects can be created by calls of the form \code{new("MixedClass", ...)}.
 }
 \section{Slots}{
   \describe{
@@ -38,22 +37,22 @@ Objects can be created by calls of the form \code{new("ConfirmatoryClass", ...)}
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
+    \item{\code{mixedlist}:}{Object of class \code{"list"}, contains info about the mixed effect design}
     %\item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters } 
-    \item{\code{fixed.design}:}{Object of class \code{"matrix"}, typicall null, except for internal mixed model usage}  
     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}        
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }
 \section{Methods}{
   \describe{
-    \item{coef}{\code{signature(object = "ConfirmatoryClass")}}
-    \item{print}{\code{signature(x = "ConfirmatoryClass")} }
-    \item{residuals}{\code{signature(object = "ConfirmatoryClass")}}
-    \item{show}{\code{signature(object = "ConfirmatoryClass")} }
-    \item{summary}{\code{signature(object = "ConfirmatoryClass")} }
-    \item{logLik}{\code{signature(object = "ConfirmatoryClass")} }
-    \item{anova}{\code{signature(object = "ConfirmatoryClass")} }
-	\item{fitted}{\code{signature(object = "ConfirmatoryClass")} }
+    \item{coef}{\code{signature(object = "MixedClass")}}
+    \item{print}{\code{signature(x = "MixedClass")} }
+    \item{residuals}{\code{signature(object = "MixedClass")}}
+    \item{show}{\code{signature(object = "MixedClass")} }
+    \item{summary}{\code{signature(object = "MixedClass")} }
+    \item{logLik}{\code{signature(object = "MixedClass")} }
+    \item{anova}{\code{signature(object = "MixedClass")} }
+    \item{fitted}{\code{signature(object = "MixedClass")} }
 	 }
 }
 

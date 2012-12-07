@@ -1,6 +1,6 @@
 PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
                      free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
-                     grsm.block = NULL, D)
+                     grsm.block = NULL, D, mixedlist)
 {
     if(debug == 'PrepData') browser()  
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
@@ -99,7 +99,8 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                            startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                           parnumber=parnumber, BFACTOR=BFACTOR, D=D, debug=debug)   
+                           parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist, 
+                           debug=debug)   
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')
@@ -107,17 +108,18 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
         return(pars)  
     }   
     if(is.null(constrain)) constrain <- list()
-    onePLconstraint <- c()
+    onePLconstraint <- c()    
     if(itemtype[1] == '1PL'){        
         for(i in 1:J)
-            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1])    
+            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1 + pars[[1]]@nfixedeffects])    
         constrain[[length(constrain) + 1]] <- onePLconstraint
         pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                                nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                                itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                                itemnames=itemnames, exploratory=exploratory, constrain=constrain,
                                startvalues=startvalues, freepars=freepars, parprior=parprior, 
-                               parnumber=parnumber, BFACTOR=BFACTOR, D=D, debug=debug)
+                               parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist, 
+                               debug=debug)
     }        
     if(any(itemtype == 'grsm')){           
         unique.grsmgroups <- unique(na.omit(grsm.block))        

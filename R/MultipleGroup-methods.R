@@ -102,14 +102,19 @@ setMethod(
             object <- object2
             object2 <- tmp
         }
-        X2 <- 2*object2@logLik - 2*object@logLik 
-        AICdiff <- object@AIC - object2@AIC  
-        BICdiff <- object@BIC - object2@BIC  
-        se <- round(object@SElogLik + object2@SElogLik,3)
-        cat("\nChi-squared difference: \n\nX2 = ", round(X2,3), 
-            ", df = ", df, ", p = ", round(1 - pchisq(X2,abs(df)),4), 
-            "\n", sep="")
-        cat("AIC difference = ", round(AICdiff,3),"\n", sep='')
-        cat("BIC difference = ", round(BICdiff,3),"\n", sep='')
+        X2 <- round(2*object2@logLik - 2*object@logLik, 3)
+        cat('\nModel 1: ')
+        print(object@Call)
+        cat('Model 2: ')
+        print(object2@Call)
+        cat('\n')
+        ret <- data.frame(Df = c(object@df, object2@df),
+                          AIC = c(object@AIC, object2@AIC),
+                          BIC = c(object@BIC, object2@BIC), 
+                          logLik = c(object@logLik, object2@logLik),
+                          X2 = c('', X2),
+                          df = c('', abs(df)),
+                          p = c('', round(1 - pchisq(X2,abs(df)),3)))        
+        return(ret)
     }		
 )

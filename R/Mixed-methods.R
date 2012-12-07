@@ -1,7 +1,7 @@
 # Methods
 setMethod(
     f = "print",
-    signature = signature(x = 'ConfirmatoryClass'),
+    signature = signature(x = 'MixedClass'),
     definition = function(x)
     {
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
@@ -11,12 +11,12 @@ setMethod(
         if(x@method == 'EM') EMquad <- c(' with ', x@quadpts, ' quadrature')
         if(x@converge == 1)    
             cat("Converged in ", x@iter, " iterations", EMquad, ". \n", sep = "")
-        else 	
+        else     
             cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")        
         if(length(x@logLik) > 0){
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
-                                                               paste(', SE = ', round(x@SElogLik,3)),
-                                                               ''), "\n",sep='')			
+                                                      paste(', SE = ', round(x@SElogLik,3)),
+                                                      ''), "\n",sep='')			
             cat("AIC =", x@AIC, "\n")			
             cat("BIC =", x@BIC, "\n")
             if(!is.nan(x@p))
@@ -26,13 +26,20 @@ setMethod(
             else 
                 cat("G^2 = ", NA, ", df = ", 
                     x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
-        }		
+        }
+        
+        cat('\nFixed Effect Coefficients:\n\n')
+        nfixed <- ncol(x@mixedlist$fixed.design)
+        out <- x@pars[[1]]@par[1:nfixed]
+        names(out) <- names(x@pars[[1]]@est[1:nfixed])
+        print(out)
+        cat('\n')
     } 
 )
 
 setMethod(
     f = "show",
-    signature = signature(object = 'ConfirmatoryClass'),
+    signature = signature(object = 'MixedClass'),
     definition = function(object) {
         print(object)
     } 
@@ -40,34 +47,23 @@ setMethod(
 
 setMethod(
     f = "summary",
-    signature = 'ConfirmatoryClass',
-    definition = function(object, suppress = 0, digits = 3, verbose = TRUE, ...)
+    signature = 'MixedClass',
+    definition = function(object, digits = 3, ...)
     {           
-        nfact <- ncol(object@F)
-        itemnames <- colnames(object@data)	
-        F <- object@F
-        h2 <- as.matrix(object@h2)
-        colnames(h2) <- 'h2'
-        rownames(F) <- itemnames								
-        SS <- apply(F^2,2,sum)
-        gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-        Phi <- cov2cor(gpars$gcov)      
-        Phi <- round(Phi, digits)
-        colnames(Phi) <- rownames(Phi) <- paste('F',1:ncol(Phi), sep='')
-        if(verbose){
-            cat("\nFactor loadings metric: \n")
-            print(cbind(F, h2),digits)		
-            cat("\nSS loadings: ",round(SS,digits), "\n")		
-            cat("\nFactor correlations: \n")
-            print(Phi)
-        }                
-        invisible(list(F=F, fcor=Phi))  	          
+        cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"), 
+            "\n\n", sep = "")  
+        cat('Fixed effects:\n')
+        fixed <- data.frame(Estimate=object@mixedlist$betas, 'Std.Error'=object@mixedlist$SEbetas, 
+                            row.names=names(object@mixedlist$SEbetas))
+        fixed$'t.value' <- fixed$Estimate / fixed$'Std.Error'
+        print(round(fixed, digits))
+        cat('\n')
     }
 )
 
 setMethod(
     f = "coef",
-    signature = 'ConfirmatoryClass',
+    signature = 'MixedClass',
     definition = function(object, digits = 3, ...)
     {                             
         K <- object@K
@@ -77,7 +73,7 @@ setMethod(
         if(length(object@pars[[1]]@SEpar) > 0){
             for(i in 1:(J+1)){
                 allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar), 
-                                         2, byrow = TRUE), digits)
+                                             2, byrow = TRUE), digits)
                 rownames(allPars[[i]]) <- c('pars', 'SE')
                 colnames(allPars[[i]]) <- names(object@pars[[i]]@parnum)
             }
@@ -94,15 +90,15 @@ setMethod(
 
 setMethod(
     f = "residuals",
-    signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL, 
-                          verbose = TRUE, ...)
-    { 
+    signature = signature(object = 'MixedClass'),
+    definition = function(object, digits = 3, printvalue = NULL, verbose = TRUE, ...)
+    {        
+        restype = 'exp'
         K <- object@K        
         data <- object@data    
         N <- nrow(data)	
         J <- ncol(data)
-        nfact <- ncol(object@F) - length(attr(object@pars, 'prodlist'))
+        nfact <- ncol(object@F) - length(attr(object@pars, 'prodlist')) 
         itemloc <- object@itemloc
         res <- matrix(0,J,J)
         diag(res) <- NA
@@ -117,39 +113,39 @@ setMethod(
         df <- (object@K - 1) %o% (object@K - 1)
         diag(df) <- NA
         colnames(df) <- rownames(df) <- colnames(res)
-        if(restype == 'LD'){	
-            for(i in 1:J){								
-                for(j in 1:J){			
-                    if(i < j){
-                        P1 <- ProbTrace(x=object@pars[[i]], Theta=Theta)
-                        P2 <- ProbTrace(x=object@pars[[j]], Theta=Theta)                        
-                        tab <- table(data[,i],data[,j])		
-                        Etab <- matrix(0,K[i],K[j])
-                        for(k in 1:K[i])
-                            for(m in 1:K[j])						
-                                Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-                        s <- gamma.cor(tab) - gamma.cor(Etab)
-                        if(s == 0) s <- 1				
-                        res[j,i] <- sum(((tab - Etab)^2)/Etab) /
-                            ((K[i] - 1) * (K[j] - 1)) * sign(s)
-                        res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
-                        df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
-                    }
-                }
-            }	            
-            if(df.p){
-                cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-                print(round(df, digits))
-                cat("\n")
-            }
-            if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")	
-            res <- round(res,digits)
-            return(res)
-        } 
+#         if(restype == 'LD'){	
+#             for(i in 1:J){								
+#                 for(j in 1:J){			
+#                     if(i < j){
+#                         P1 <- ProbTrace(x=object@pars[[i]], Theta=cbind(fixed.design, Theta))
+#                         P2 <- ProbTrace(x=object@pars[[j]], Theta=cbind(fixed.design, Theta))                        
+#                         tab <- table(data[,i],data[,j])		
+#                         Etab <- matrix(0,K[i],K[j])
+#                         for(k in 1:K[i])
+#                             for(m in 1:K[j])						
+#                                 Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
+#                         s <- gamma.cor(tab) - gamma.cor(Etab)
+#                         if(s == 0) s <- 1				
+#                         res[j,i] <- sum(((tab - Etab)^2)/Etab) /
+#                             ((K[i] - 1) * (K[j] - 1)) * sign(s)
+#                         res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
+#                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
+#                     }
+#                 }
+#             }	            
+#             if(df.p){
+#                 cat("Degrees of freedom (lower triangle) and p-values:\n\n")
+#                 print(round(df, digits))
+#                 cat("\n")
+#             }
+#             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")	
+#             res <- round(res,digits)
+#             return(res)
+#         } 
         if(restype == 'exp'){	
             r <- object@tabdata[ ,ncol(object@tabdata)]
             res <- round((r - object@Pl * nrow(object@data)) / 
-                sqrt(object@Pl * nrow(object@data)),digits)
+                             sqrt(object@Pl * nrow(object@data)),digits)
             expected <- round(N * object@Pl/sum(object@Pl),digits)  
             tabdata <- object@tabdata
             ISNA <- is.na(rowSums(tabdata))
@@ -167,7 +163,7 @@ setMethod(
 
 setMethod(
     f = "anova",
-    signature = signature(object = 'ConfirmatoryClass'),
+    signature = signature(object = 'MixedClass'),
     definition = function(object, object2)
     {        
         nitems <- length(object@K)
@@ -198,7 +194,7 @@ setMethod(
 
 setMethod(
     f = "fitted",
-    signature = signature(object = 'ConfirmatoryClass'),
+    signature = signature(object = 'MixedClass'),
     definition = function(object, digits = 3, ...){  
         tabdata <- object@tabdata
         N <- nrow(object@data)
@@ -209,7 +205,7 @@ setMethod(
 
 setMethod(
     f = "plot",
-    signature = signature(x = 'ConfirmatoryClass', y = 'missing'),
+    signature = signature(x = 'MixedClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
     {           
@@ -220,4 +216,3 @@ setMethod(
         
     }		
 )
-

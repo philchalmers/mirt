@@ -28,7 +28,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var, 
-                        prior.mu, prodlist, debug) 
+                        prior.mu, prodlist, fixed.design = NULL, debug) 
 {         
     if(debug == 'draw.thetas') browser()
     tol <- 1e-8
@@ -36,21 +36,23 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     J <- length(pars) - 1
     nfact <- ncol(theta0)					
     unif <- runif(N)
-    if(nfact > 1)		
+    if(nfact > 1){		
         theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, 
                                             diag(rep(cand.t.var,ncol(theta0)))) 
-    else
+    } else
         theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
     log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
     log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)		
     if(length(prodlist) > 0){
         theta0 <- prodterms(theta0,prodlist)
         theta1 <- prodterms(theta1,prodlist)	
-    }	
+    }	    
     itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))    
     for (i in 1:J){
-        itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta0)
-        itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=theta1)        
+        itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+            ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design)
+        itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+            ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design)        
     }    
     tmp0 <- itemtrace0*fulldata
     tmp1 <- itemtrace1*fulldata
@@ -65,7 +67,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     total_1[!accept] <- total_0[!accept]
     log.lik <- sum(total_1)	
     if(!is.null(prodlist)) 
-        theta1 <- theta1[ ,1:(pars[[1]]@nfact - length(prodlist)), drop=FALSE]
+        theta1 <- theta1[ ,1:(pars[[1]]@nfact - pars[[1]]@nfixedeffects - 
+                                  length(prodlist)), drop=FALSE]
     attr(theta1, "Proportion Accepted") <- sum(accept)/N 				
     attr(theta1, "log.lik") <- log.lik	
     return(theta1) 

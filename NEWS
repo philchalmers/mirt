@@ -1,3 +1,8 @@
+* new mixedmirt() function for estimating IRT models with person level covariates. Currently only
+  supports fixed effect predictors, but random effect predictors are being developed
+
+* more structured output when using the anova() generic
+
 * standard errors no longer slightly positively biased when parameter contraints are imposed 
 
 ----------------------------------------------------------------

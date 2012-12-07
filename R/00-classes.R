@@ -52,7 +52,8 @@ setClass(
 # @keywords classes
 setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',    	
-    representation = representation(Pl='numeric'),
+    representation = representation(Pl='numeric',
+                                    fixed.design='matrix'),
     validity = function(object) return(TRUE)
 )	
 
@@ -65,5 +66,14 @@ setClass(
                                     groupNames='factor',
                                     invariance='character',
                                     cmods='list'),    
+    validity = function(object) return(TRUE)
+)
+
+#------------------------------------------------------------------------------
+#' @exportClass MixedClass
+setClass(
+    Class = 'MixedClass', contains = 'AllModelClass',
+    representation = representation(Pl='numeric',
+        mixedlist='list'),    
     validity = function(object) return(TRUE)
 )

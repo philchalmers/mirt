@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.4.2
+Version: 0.4.2-1
 Date: 2012-10-19
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -79,3 +79,6 @@ Collate:
     'read.mirt.R'
     'fscores.internal.R'
     'itemplot.internal.R'
+    'mixedmirt.R'
+    'MHRM.mixed.R'
+    'Mixed-methods.R'

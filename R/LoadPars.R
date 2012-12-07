@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
                      constrain, startvalues, freepars, parprior, parnumber, D, 
-                     estLambdas, BFACTOR = FALSE, debug)
+                     estLambdas, BFACTOR = FALSE, mixedlist, debug)
     {       
     if(debug == 'LoadPars') browser() 
     if(any(itemtype[1] == c('Rasch', '1PL', 'rating') && nfact > 1)) 
@@ -99,12 +99,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 #identifiction constraints
                 tmp <- names(startvalues[[i]])
                 tmp2 <- 1:length(tmp)
-                estpars[tmp2[tmp %in% c('ak0', 'ak1', paste('ak',i,sep=''), 'd0', 'd1', 't1')]] <- FALSE                
+                estpars[tmp2[tmp %in% c('ak0', 'ak1', 
+                                        paste('ak',i,sep=''), 'd0', 'd1', 't1')]] <- FALSE                
                 freepars[[i]] <- estpars
             }
         }         
     }
     for(i in 1:J) names(freepars[[i]]) <- names(startvalues[[i]])    
+    
+    #augment startvalues and fixedpars for mixed effects
+    nfixedeffects <- 0    
+    if(!is.null(mixedlist)){
+        betas <- mixedlist$betas
+        estbetas <- rep(TRUE, length(betas))
+        names(estbetas) <- names(betas) <- colnames(mixedlist$fixed.design)
+        nfixedeffects <- length(betas)
+        nfact <- nfact + nfixedeffects
+        for(i in 1:J){
+            freepars[[i]] <- c(estbetas, freepars[[i]])
+            startvalues[[i]] <- c(betas, startvalues[[i]])            
+        }        
+    }    
+    
     #load items
     for(i in 1:J){
         tmp <- c(itemloc[i]:(itemloc[i+1] - 1)) #item location         
@@ -115,6 +131,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                              
                              ncat=2,
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              lbound=ifelse(itemtype[i] == 'Rasch', -25, -Inf),
                              ubound=ifelse(itemtype[i] == 'Rasch', 25, Inf),                             
@@ -133,6 +150,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -155,6 +173,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -176,6 +195,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              est=freepars[[i]],
                              nfact=nfact, 
+                             nfixedeffects=nfixedeffects, 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
                              ncat=2,
@@ -203,6 +223,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -224,6 +245,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -245,6 +267,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              par=startvalues[[i]], 
                              nfact=nfact, 
                              ncat=K[i],
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
@@ -268,6 +291,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              nfact=nfact, 
                              ncat=K[i], 
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
@@ -291,6 +315,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]],
                              nfact=nfact, 
                              ncat=2, 
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
@@ -318,6 +343,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              nfact=nfact, 
                              ncat=K[i], 
+                             nfixedeffects=nfixedeffects, 
                              D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
