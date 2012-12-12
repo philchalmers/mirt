@@ -89,7 +89,6 @@ setMethod(
 			TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull 
 			TFvec[is.na(TFvec)] <- FALSE	
 			expected[j] <- mean(rwmeans[TFvec])			
-			rwmeans[TFvec] <- rwmeans[TFvec]/r[j]
 		}
 		expected[is.nan(expected)] <- NA
 		tabdata <- cbind(tabdata,expected*N)        

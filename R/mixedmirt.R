@@ -5,8 +5,7 @@
 #' algorithm exclusively. The D scaling parameter is automatically fixed to 1 so that all 
 #' coefficients can be interpreted on the exponential metric. 
 #' 
-#' @aliases mixedmirt coef,MixedClass-method summary,MixedClass-method
-#' residuals,MixedClass-method anova,MixedClass-method fitted,MixedClass-method
+#' @aliases mixedmirt coef,MixedClass-method summary,MixedClass-method anova,MixedClass-method 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param covdata a \code{data.frame} that consists of the \code{nrow(data)} by \code{K} 

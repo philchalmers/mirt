@@ -1,9 +1,7 @@
 \name{mixedmirt}
 \alias{anova,MixedClass-method}
 \alias{coef,MixedClass-method}
-\alias{fitted,MixedClass-method}
 \alias{mixedmirt}
-\alias{residuals,MixedClass-method}
 \alias{summary,MixedClass-method}
 \title{Mixed effects modeling for MIRT models}
 \usage{

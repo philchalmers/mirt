@@ -17,15 +17,10 @@ setMethod(
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
                                                       paste(', SE = ', round(x@SElogLik,3)),
                                                       ''), "\n",sep='')			
-            cat("AIC =", x@AIC, "\n")			
+            cat("AIC =", x@AIC, "\n")	
+            cat("AICc =", x@AICc, "\n")
             cat("BIC =", x@BIC, "\n")
-            if(!is.nan(x@p))
-                cat("G^2 = ", round(x@G2,2), ", df = ", 
-                    x@df, ", p = ", round(x@p,4), "\nTLI = ", round(x@TLI,3),
-                    ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
-            else 
-                cat("G^2 = ", NA, ", df = ", 
-                    x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="")		
+            cat("SABIC =", x@SABIC, "\n")
         }
         
         cat('\nFixed Effect Coefficients:\n\n')
@@ -89,79 +84,6 @@ setMethod(
 )
 
 setMethod(
-    f = "residuals",
-    signature = signature(object = 'MixedClass'),
-    definition = function(object, digits = 3, printvalue = NULL, verbose = TRUE, ...)
-    {        
-        restype = 'exp'
-        K <- object@K        
-        data <- object@data    
-        N <- nrow(data)	
-        J <- ncol(data)
-        nfact <- ncol(object@F) - length(attr(object@pars, 'prodlist')) 
-        itemloc <- object@itemloc
-        res <- matrix(0,J,J)
-        diag(res) <- NA
-        colnames(res) <- rownames(res) <- colnames(data)
-        theta <- seq(-4,4, length.out = round(20/nfact))
-        Theta <- thetaComb(theta,nfact)    	
-        ThetaShort <- Theta
-        if(length(object@prodlist) > 0) Theta <- prodterms(Theta, object@prodlist)
-        gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-        prior <- mvtnorm::dmvnorm(ThetaShort,gpars$gmeans,gpars$gcov)        
-        prior <- prior/sum(prior)  
-        df <- (object@K - 1) %o% (object@K - 1)
-        diag(df) <- NA
-        colnames(df) <- rownames(df) <- colnames(res)
-#         if(restype == 'LD'){	
-#             for(i in 1:J){								
-#                 for(j in 1:J){			
-#                     if(i < j){
-#                         P1 <- ProbTrace(x=object@pars[[i]], Theta=cbind(fixed.design, Theta))
-#                         P2 <- ProbTrace(x=object@pars[[j]], Theta=cbind(fixed.design, Theta))                        
-#                         tab <- table(data[,i],data[,j])		
-#                         Etab <- matrix(0,K[i],K[j])
-#                         for(k in 1:K[i])
-#                             for(m in 1:K[j])						
-#                                 Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)	
-#                         s <- gamma.cor(tab) - gamma.cor(Etab)
-#                         if(s == 0) s <- 1				
-#                         res[j,i] <- sum(((tab - Etab)^2)/Etab) /
-#                             ((K[i] - 1) * (K[j] - 1)) * sign(s)
-#                         res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
-#                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
-#                     }
-#                 }
-#             }	            
-#             if(df.p){
-#                 cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-#                 print(round(df, digits))
-#                 cat("\n")
-#             }
-#             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")	
-#             res <- round(res,digits)
-#             return(res)
-#         } 
-        if(restype == 'exp'){	
-            r <- object@tabdata[ ,ncol(object@tabdata)]
-            res <- round((r - object@Pl * nrow(object@data)) / 
-                             sqrt(object@Pl * nrow(object@data)),digits)
-            expected <- round(N * object@Pl/sum(object@Pl),digits)  
-            tabdata <- object@tabdata
-            ISNA <- is.na(rowSums(tabdata))
-            expected[ISNA] <- res[ISNA] <- NA
-            tabdata <- data.frame(tabdata,expected,res)
-            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
-            if(!is.null(printvalue)){
-                if(!is.numeric(printvalue)) stop('printvalue is not a number.')
-                tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
-            }			
-            return(tabdata)				
-        }					
-    }       
-)
-
-setMethod(
     f = "anova",
     signature = signature(object = 'MixedClass'),
     definition = function(object, object2)
@@ -183,7 +105,9 @@ setMethod(
         cat('\n')
         ret <- data.frame(Df = c(object@df, object2@df),
                           AIC = c(object@AIC, object2@AIC),
+                          AICc = c(object@AICc, object2@AICc),
                           BIC = c(object@BIC, object2@BIC), 
+                          SABIC = c(object@SABIC, object2@SABIC),
                           logLik = c(object@logLik, object2@logLik),
                           X2 = c('', X2),
                           df = c('', abs(df)),
@@ -192,27 +116,3 @@ setMethod(
     }		
 )
 
-setMethod(
-    f = "fitted",
-    signature = signature(object = 'MixedClass'),
-    definition = function(object, digits = 3, ...){  
-        tabdata <- object@tabdata
-        N <- nrow(object@data)
-        expected <- round(N * object@Pl/sum(object@Pl),digits)
-        return(cbind(tabdata,expected))        
-    }
-)
-
-setMethod(
-    f = "plot",
-    signature = signature(x = 'MixedClass', y = 'missing'),
-    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
-                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
-    {           
-        class(x) <- 'ExploratoryClass'
-        if(length(attr(x@pars, 'prodlist')) > 0 ) stop('No plots for models with polynomial and 
-                                                       product terms')
-        plot(x, type=type, npts=npts, theta_angle=theta_angle, rot=rot, ...)
-        
-    }		
-)

@@ -300,14 +300,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             nconstr <- nconstr + length(constrain[[i]]) - 1     
     nmissingtabdata <- sum(is.na(rowSums(PrepListFull$tabdata2)))
     df <- df - nestpars + nconstr + nfact*(nfact - 1)/2 - nmissingtabdata	
-    AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-    BIC <- (-2) * logLik + (length(r) - df - 1)*log(N) 
+    tmp <- (length(r) - df - 1)
+    AIC <- (-2) * logLik + 2 * tmp
+    AICc <- AIC + 2 * tmp * (tmp + 1) / (length(r) - tmp - 1)
+    BIC <- (-2) * logLik + tmp*log(N) 
+    SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     p <- 1 - pchisq(G2,df)
     RMSEA <- ifelse((G2 - df) > 0, 
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI <- NaN    
-    if(!NULL.MODEL){
+    if(!NULL.MODEL && method != 'MIXED'){
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE))))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')
@@ -325,14 +328,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 colnames(mixedlist$fixed.design)
             mod <- new('MixedClass', 
                        iter=ESTIMATE$cycles, 
-                       pars=cmods[[1]]@pars, 
-                       G2=G2, 
-                       df=df, 
-                       p=p, 
+                       pars=cmods[[1]]@pars,                         
+                       df=df,                        
                        itemloc=PrepListFull$itemloc, 
                        method=method,
                        AIC=AIC, 
+                       AICc=AICc,
                        BIC=BIC, 
+                       SABIC=SABIC,
                        logLik=logLik, 
                        F=F, 
                        h2=h2, 
@@ -340,13 +343,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        Pl=Pl[[1]], 
                        data=data, 
                        converge=ESTIMATE$converge, 
-                       nfact=nfact,               
-                       RMSEA=RMSEA, 
+                       nfact=nfact,                                       
                        K=PrepListFull$K, 
-                       tabdatalong=PrepListFull$tabdata, 
-                       null.mod=null.mod, #? what to do about this....
-                       mixedlist=mixedlist,
-                       TLI=TLI, 
+                       tabdatalong=PrepListFull$tabdata,                        
+                       mixedlist=mixedlist,                       
                        factorNames=PrepListFull$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
                        fulldata=PrepListFull$fulldata,
@@ -369,7 +369,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        itemloc=PrepListFull$itemloc, 
                        method=method,
                        AIC=AIC, 
-                       BIC=BIC, 
+                       AICc=AICc,
+                       BIC=BIC,
+                       SABIC=SABIC,
                        logLik=logLik, 
                        F=F, 
                        h2=h2, 
@@ -400,7 +402,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        p=p, 
                        itemloc=PrepListFull$itemloc, 
                        AIC=AIC, 
+                       AICc=AICc,
                        BIC=BIC, 
+                       SABIC=SABIC,
                        logLik=logLik, 
                        F=F, 
                        h2=h2, 
@@ -442,7 +446,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    method=method,
                    SElogLik=SElogLik, 
                    AIC=AIC, 
+                   AICc=AICc,
                    BIC=BIC,
+                   SABIC=SABIC,
                    nfact=nfact,
                    G2=G2,
                    RMSEA=RMSEA,

@@ -17,8 +17,10 @@ setMethod(
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
                                                                paste(', SE = ', round(x@SElogLik,3)),
                                                                ''), "\n",sep='')			            
-            cat("AIC =", x@AIC, "\n")			
-            cat("BIC =", x@BIC, "\n")            	
+            cat("AIC =", x@AIC, "\n")	
+            cat("AICc =", x@AICc, "\n")
+            cat("BIC =", x@BIC, "\n")  
+            cat("SABIC =", x@SABIC, "\n")
         }		
         if(!is.nan(x@p)){            
             for(g in 1:length(x@cmods))
@@ -110,11 +112,13 @@ setMethod(
         cat('\n')
         ret <- data.frame(Df = c(object@df, object2@df),
                           AIC = c(object@AIC, object2@AIC),
+                          AICc = c(object@AICc, object2@AICc),
                           BIC = c(object@BIC, object2@BIC), 
+                          SABIC = c(object@SABIC, object2@SABIC),
                           logLik = c(object@logLik, object2@logLik),
                           X2 = c('', X2),
                           df = c('', abs(df)),
-                          p = c('', round(1 - pchisq(X2,abs(df)),3)))        
+                          p = c('', round(1 - pchisq(X2,abs(df)),3)))         
         return(ret)
     }		
 )
