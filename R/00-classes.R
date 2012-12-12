@@ -55,7 +55,7 @@ setClass(
 setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',    	
     representation = representation(Pl='numeric',
-                                    fixed.design='matrix'),
+                                    mixedlist='list'),
     validity = function(object) return(TRUE)
 )	
 

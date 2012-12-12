@@ -28,7 +28,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var, 
-                        prior.mu, prodlist, fixed.design = NULL, debug) 
+                        prior.mu, prodlist, mixedlist = NULL, debug) 
 {         
     if(debug == 'draw.thetas') browser()
     tol <- 1e-8
@@ -48,11 +48,17 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         theta1 <- prodterms(theta1,prodlist)	
     }	    
     itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))    
+    fixed.design0 <- fixed.design1 <- NULL    
+    if(!is.null(mixedlist)){
+        colnames(theta0) <- colnames(theta1) <- mixedlist$factorNames
+        fixed.design0 <- designMats(mixedlist$covdata, mixedlist$fixed, theta0)
+        fixed.design1 <- designMats(mixedlist$covdata, mixedlist$fixed, theta1)
+    }
     for (i in 1:J){
         itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-            ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design)
+            ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design0)
         itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-            ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design)        
+            ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design1)        
     }    
     tmp0 <- itemtrace0*fulldata
     tmp1 <- itemtrace1*fulldata
@@ -317,7 +323,10 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
     return(object)
 }
 
-UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList){    
+UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
+                            mixedlist, method)
+{        
+    #within group item constraints only
     for(g in 1:ngroups)  
         if(length(PrepList[[g]]$constrain) > 0)
             for(i in 1:length(PrepList[[g]]$constrain))
@@ -381,6 +390,15 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 constrain[[length(constrain) + 1]] <- tmp
             }
         }
+    }
+    #accross item constraints for mixedmirt
+    if(method == 'MIXED' && mixedlist$fixed.constrain){                    
+        for(i in 1:pars[[1]][[1]]@nfixedeffects){
+            tmp <- c()
+            for(j in 1:J)
+                tmp <- c(tmp, pars[[1]][[j]]@parnum[i])
+            constrain[[length(constrain) + 1]] <- tmp           
+        }        
     }
     return(constrain)
 }
@@ -489,4 +507,18 @@ ItemInfo <- function(x, Theta, cosangle){
     for(i in 1:x@ncat)        
         info <- info + ( (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]])    
     return(info)
+}
+
+designMats <- function(covdata, fixed, Thetas, random = NULL){    
+    dat <- data.frame(covdata, Thetas)
+    if(fixed == ~ 1) {
+        fixed.design <- NULL
+    } else fixed.design <- model.matrix(fixed, dat)[ ,-1, drop = FALSE]
+    cn <- colnames(Thetas)
+    CN <- colnames(fixed.design)
+    drop <- rep(FALSE, length(CN))
+    for(i in 1:ncol(Thetas))
+        drop <- drop | CN == cn[i]
+    fixed.design <- fixed.design[ , !drop, drop = FALSE]   
+    return(fixed.design)    
 }

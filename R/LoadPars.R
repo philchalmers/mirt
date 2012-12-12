@@ -109,10 +109,11 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     
     #augment startvalues and fixedpars for mixed effects
     nfixedeffects <- 0    
-    if(!is.null(mixedlist)){
-        betas <- mixedlist$betas
+    if(!is.null(mixedlist)){        
+        fixed.design <- designMats(mixedlist$covdata, mixedlist$fixed, mixedlist$Theta)
+        betas <- rep(0, ncol(fixed.design))
         estbetas <- rep(TRUE, length(betas))
-        names(estbetas) <- names(betas) <- colnames(mixedlist$fixed.design)
+        names(estbetas) <- names(betas) <- colnames(fixed.design)
         nfixedeffects <- length(betas)
         nfact <- nfact + nfixedeffects
         for(i in 1:J){

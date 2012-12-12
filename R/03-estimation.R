@@ -53,7 +53,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- 1:ngroups
         selectmod <- model[[tmp[names(model) == groupNames[g]]]]
         PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, 
-                                  upper=upper, startvalues=NULL, constrain=constrain, freepars=NULL, 
+                                  upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
                                   parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
                                   technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
                                   grsm.block=grsm.block, D=D, mixedlist=mixedlist)        
@@ -110,16 +110,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 2:ngroups)
             pars[[g]][[J + 1]]@est[(nfact+1):length(pars[[g]][[J + 1]]@est)] <- TRUE            
     }     
-    if(method == 'MIXED'){                    
-        for(i in 1:pars[[1]][[1]]@nfixedeffects){
-            tmp <- c()
-            for(j in 1:J)
-                tmp <- c(tmp, pars[[1]][[j]]@parnum[i])
-            constrain[[length(constrain) + 1]] <- tmp           
-        }        
-    }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=nfact, 
-                                 nLambdas=nLambdas, J=J, ngroups=ngroups, PrepList=PrepList)    
+                                 nLambdas=nLambdas, J=J, ngroups=ngroups, PrepList=PrepList, 
+                                 mixedlist=mixedlist, method=method)        
     if(!is.null(technical$return_newconstrain)) return(constrain)    
     startlongpars <- c()
     if(NULL.MODEL){
@@ -205,7 +198,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars), 
                                debug=debug)        
         iter <- ESTIMATE$cycles
-    } else if(method == 'MIXED'){           
+    } else if(method == 'MIXED'){  
         ESTIMATE <- MHRM.mixed(pars=pars, constrain=constrain, 
                                     PrepList=PrepList, mixedlist=mixedlist,                                    
                                list = list(NCYCLES=NCYCLES, BURNIN=BURNIN, SEMCYCLES=SEMCYCLES,
@@ -220,20 +213,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     cmods <- list()
     for(g in 1:ngroups){
         lambdas <- Lambdas(ESTIMATE$pars[[g]]) * D/1.702
-        if(!is.null(mixedlist))
-            lambdas <- lambdas[ ,(ncol(mixedlist$fixed.design)+1):ncol(lambdas), drop = FALSE]
         if (ncol(lambdas) > 1) norm <- sqrt(1 + rowSums(lambdas^2))
         else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
         alp <- as.matrix(lambdas/norm)
         F <- alp
-        colnames(F) <- PrepList[[g]]$factorNames
+        if(method != 'MIXED')
+            colnames(F) <- PrepList[[g]]$factorNames
         h2 <- rowSums(F^2)        
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc, 
                           tabdata=PrepList[[g]]$tabdata2, data=data[group == groupNames[[g]], ], 
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2,                
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
                           constrain=constrain, G2=G2group[g], 
-                          fixed.design=if(method == 'MIXED') mixedlist$fixed.design else matrix(NA),
+                          mixedlist=if(method == 'MIXED') mixedlist else list(),
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
     }
     #missing stats for MHRM
@@ -322,10 +314,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
     if(ngroups == 1){        
         if(method == 'MIXED'){            
-            mixedlist$betas <- cmods[[1]]@pars[[1]]@par[1:length(mixedlist$betas)]
-            mixedlist$SEbetas <- cmods[[1]]@pars[[1]]@SEpar[1:length(mixedlist$betas)]
+            mixedlist$betas <- cmods[[1]]@pars[[1]]@par[1:ncol(mixedlist$FD)]
+            mixedlist$SEbetas <- cmods[[1]]@pars[[1]]@SEpar[1:ncol(mixedlist$FD)]
             names(mixedlist$SEbetas) <- names(mixedlist$betas) <- 
-                colnames(mixedlist$fixed.design)
+                colnames(mixedlist$FD)
             mod <- new('MixedClass', 
                        iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars,                         

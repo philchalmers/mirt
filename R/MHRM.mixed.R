@@ -1,7 +1,5 @@
 MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
-{    
-    fixed.design <- mixedlist$fixed.design
-    random.design <- mixedlist$RD
+{       
     verbose <- list$verbose        
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES
@@ -36,7 +34,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
                                         itemloc=itemloc, cand.t.var=cand.t.var, 
                                         prior.t.var=gstructgrouppars[[g]]$gcov, 
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
-                                        fixed.design=fixed.design, debug=debug)
+                                        mixedlist=mixedlist, debug=debug)
             if(i > 5){		
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
                 else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3) 
@@ -142,7 +140,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             for(i in 1:5)    		
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]], 
                                       itemloc=itemloc, cand.t.var=cand.t.var, 
-                                      prior.t.var=gstructgrouppars[[g]]$gcov, fixed.design=fixed.design,
+                                      prior.t.var=gstructgrouppars[[g]]$gcov, mixedlist=mixedlist,
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
                                       debug=debug)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
@@ -152,11 +150,12 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         g.m <- h.m <- group.m <- list()
         longpars <- g <- rep(0, nfullpars)
         h <- matrix(0, nfullpars, nfullpars) 
-        ind1 <- 1
+        ind1 <- 1        
         for(group in 1:ngroups){            
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0) thetatemp <- prodterms(thetatemp,prodlist)	
-            thetatemp <- cbind(fixed.design, thetatemp)
+            colnames(thetatemp) <- mixedlist$factorNames
+            thetatemp <- cbind(designMats(mixedlist$covdata, mixedlist$fixed, thetatemp), thetatemp)
             for (i in 1:J){	
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp)
                 ind2 <- ind1 + length(deriv$grad) - 1

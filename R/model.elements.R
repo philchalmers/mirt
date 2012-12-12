@@ -86,7 +86,13 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         u[u < .001 ] <- .2
         cs <- sqrt(u)
         lambdas <- loads/cs * (1.702/D)                  
-    }        
+    }
+    if(!is.null(mixedlist)){
+        covdata <- mixedlist$covdata
+        Theta <- matrix(0, N, nrow(model))
+        colnames(Theta) <- model[ ,1]
+        mixedlist$Theta <- Theta        
+    }
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
                     fulldata=fulldata, J=J, K=K, nfact=nfact+length(prodlist), constrain=constrain, 
                     startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
