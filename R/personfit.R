@@ -2,8 +2,7 @@
 #' 
 #' \code{personfit} calculates the Zh values from Drasgow, Levine and Williams (1985) for 
 #' unidimensional and multidimensional models. For Rasch models infit and outfit statistics are 
-#' also produced.
-#' The returned object is a \code{data.frame}
+#' also produced. The returned object is a \code{data.frame}
 #' consisting either of the tabulated data or full data with the statistics appended to the last 
 #' columns. 
 #' 
@@ -99,8 +98,10 @@ personfit <- function(x, method = 'EAP'){
             }            
         }
         Zh[n] <- (LL[n] - mu) / sqrt(sigma2)
-    }               
-    if(all(x@itemtype %in% 'Rasch')){
+    }  
+    if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+        for(i in 1:length(x@itemtype))
+            if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
         V <- resid2 <- info <- matrix(0, ncol=J, nrow=N)  
         K <- x@K
         for (i in 1:J){            

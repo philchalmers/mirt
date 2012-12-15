@@ -30,8 +30,9 @@
 \description{
   \code{itemfit} calculates the Zh values from Drasgow,
   Levine and Williams (1985) and \eqn{\chi^2} values for
-  unidimensional models. For Rasch models infit and outfit
-  statistics are also produced.
+  unidimensional models. For Rasch, partial credit, and
+  rating scale models infit and outfit statistics are also
+  produced.
 }
 \examples{
 \dontrun{

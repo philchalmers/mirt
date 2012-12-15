@@ -1,8 +1,8 @@
 #' Item fit statistics
 #' 
 #' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985) 
-#' and \eqn{\chi^2} values for unidimensional models. For Rasch models infit and outfit statistics are 
-#' also produced.
+#' and \eqn{\chi^2} values for unidimensional models. For Rasch, partial credit, and rating scale models 
+#' infit and outfit statistics are also produced.
 #' 
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
@@ -89,8 +89,10 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, meth
         }               
     }        
     Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2) 
-    #if all Rasch models, infit and outfit    
-    if(all(x@itemtype %in% 'Rasch')){
+    #if all Rasch models, infit and outfit        
+    if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+        for(i in 1:length(x@itemtype))
+            if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
         attr(x, 'inoutfitreturn') <- TRUE
         pf <- personfit(x, method=method)        
         outfit <- colSums(pf$resid2 / pf$info) / N
