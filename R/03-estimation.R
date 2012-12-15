@@ -4,7 +4,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
                        SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
-                       mixedlist=NULL, ...)
+                       rsm.block = NULL, mixedlist=NULL, ...)
 {    
     if(debug == 'ESTIMATION') browser()    
     set.seed(12345)       
@@ -109,7 +109,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if('free_varcov' %in% invariance){ #Free factor vars and covs (vars 1 for ref)        
         for(g in 2:ngroups)
             pars[[g]][[J + 1]]@est[(nfact+1):length(pars[[g]][[J + 1]]@est)] <- TRUE            
-    }     
+    }   
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=nfact, 
                                  nLambdas=nLambdas, J=J, ngroups=ngroups, PrepList=PrepList, 
                                  mixedlist=mixedlist, method=method)        

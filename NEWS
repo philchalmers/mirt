@@ -1,3 +1,7 @@
+* Rasch rating scale models can now be estimated with potential rsm.blocks (same as grsm model). 
+  "Generalized" rating scale models can also be estimated, though this requires manipulating the 
+  starting values directly
+
 * added AICc and sample size adjusted BIC (SABIC) information statistics
 
 * new mixedmirt() function for estimating IRT models with person level covariates. Currently only

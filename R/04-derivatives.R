@@ -279,6 +279,23 @@ setMethod(
 
 setMethod(
     f = "Deriv",
+    signature = signature(x = 'rsm', Theta = 'matrix'),
+    definition = function(x, Theta, EM = FALSE, prior = NULL){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(EM){            
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
+            return(list(grad = grad, hess = hess))            
+        }        
+        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta) 
+        return(list(grad=grad, hess=hess))
+    }
+)
+
+setMethod(
+    f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
@@ -546,6 +563,36 @@ setMethod(
         D <- x@D
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
+        ak <- 0:(x@ncat - 1)        
+        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
+        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum = TRUE)
+        Den <- rowSums(Num)        
+        grad <- hess <- vector('list', x@ncat)
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
+        for(j in 1:x@nfact){            
+            for(i in 1:x@ncat){                
+                grad[[i]][ ,j] <- D * ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (D * ak * a[j])) / Den               
+                hess[[i]][ ,j] <- D^2 * ak[i]^2 * a[j]^2 * P[ ,i] - 
+                    2 * D * ak[i] * a[j] * P[,i] * (Num %*% (D * ak * a[j])) / Den + 
+                    2 * P[,i] * ((Num %*% (D * ak * a[j])) / Den)^2 - 
+                    P[,i] * ((Num %*% (D^2 * ak^2 * a[j]^2)) / Den)
+            }    
+        }               
+        return(list(grad=grad, hess=hess))
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'rsm', Theta = 'matrix'),
+    definition = function(x, Theta){
+        D <- x@D
+        a <- ExtractLambdas(x)
+        d <- ExtractZetas(x)
+        t <- d[length(d)]
+        d <- d[-length(d)]
+        d[-1] <- d[-1] + t
         ak <- 0:(x@ncat - 1)        
         P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
         Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum = TRUE)

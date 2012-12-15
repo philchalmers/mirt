@@ -13,8 +13,8 @@ Theory)}
     SE = FALSE, SEtol = .001, pars = NULL, constrain =
     NULL, parprior = NULL, rotate = 'varimax', Target =
     NaN, prev.cor = NULL, quadpts = NULL, grsm.block =
-    NULL, D = 1.702, verbose = FALSE, debug = FALSE,
-    technical = list(), ...)
+    NULL, rsm.block = NULL, D = 1.702, verbose = FALSE,
+    debug = FALSE, technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -52,14 +52,15 @@ Theory)}
   repeated globally. The NULL default assumes that the
   items follow a graded or 2PL structure, however they may
   be changed to the following: 'Rasch', '1PL', '2PL',
-  '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
+  '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'rsm',
   'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the
   Rasch/partial credit, 1 and 2 parameter logistic, 3
   parameter logistic (lower asymptote and upper), 4
   parameter logistic, graded response model, rating scale
   graded response model, generalized partial credit model,
-  nominal model, multiple choice model, and 2-3PL partially
-  compensatory model, respectively}
+  Rasch rating scale model, nominal model, multiple choice
+  model, and 2-3PL partially compensatory model,
+  respectively}
 
   \item{grsm.block}{an optional numeric vector indicating
   where the blocking should occur when using the grsm, NA
@@ -70,6 +71,9 @@ Theory)}
   NA)}. If NULL the all items are assumed to be within the
   same group and therefore have the same number of item
   categories}
+
+  \item{rsm.block}{same as \code{rgrsm.block}, but for
+  \code{'rsm'} blocks}
 
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}

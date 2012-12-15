@@ -47,6 +47,8 @@ setClass("rating", contains = 'AllItemsClass')
 
 setClass("gpcm", contains = 'AllItemsClass')
 
+setClass("rsm", contains = 'AllItemsClass')
+
 setClass("nominal", contains = 'AllItemsClass')
 
 setClass("partcomp", contains = 'AllItemsClass')

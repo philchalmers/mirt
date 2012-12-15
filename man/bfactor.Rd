@@ -5,8 +5,8 @@
   bfactor(data, model, itemtype = NULL, guess = 0, upper =
     1, SE = FALSE, SEtol = .001, pars = NULL, constrain =
     NULL, parprior = NULL, prev.cor = NULL, quadpts = 20,
-    grsm.block = NULL, D = 1.702, verbose = FALSE, debug =
-    FALSE, technical = list(), ...)
+    grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose
+    = FALSE, debug = FALSE, technical = list(), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -20,28 +20,11 @@
   factor on the last two, then the vector is
   \code{c(1,1,2,2)}.}
 
-  \item{itemtype}{type of items to be modeled, declared as
-  a vector for each item or a single value which will be
-  repeated globally. The NULL default assumes that the
-  items follow a graded or 2PL structure, however they may
-  be changed to the following: '2PL', '3PL', '3PLu', '4PL',
-  'graded', 'grsm', 'gpcm', 'nominal', 'mcm', 'PC2PL', and
-  'PC3PL', 1 and 2 parameter logistic, 3 parameter logistic
-  (lower asymptote and upper), 4 parameter logistic, graded
-  response model, rating scale graded response model,
-  generalized partial credit model, nominal model, multiple
-  choice model, and 2-3PL partially compensatory model,
-  respectively}
+  \item{itemtype}{see \code{\link{mirt}} for details}
 
-  \item{grsm.block}{an optional numeric vector indicating
-  where the blocking should occur when using the grsm, NA
-  represents items that do not belong to the grsm block
-  (other items that may be estimated in the test data). For
-  example, to specify two blocks of 3 with a 2PL item for
-  the last item: \code{grsm.block = c(rep(1,3), rep(2,3),
-  NA)}. If NULL the all items are assumed to be within the
-  same group and therefore have the same number of item
-  categories}
+  \item{grsm.block}{see \code{\link{mirt}} for details}
+
+  \item{rsm.block}{see \code{\link{mirt}} for details}
 
   \item{guess}{fixed pseudo-guessing parameter. Can be
   entered as a single value to assign a global value or may
@@ -61,34 +44,11 @@
   longer but may be more stable for computing the
   information matrix}
 
-  \item{constrain}{a list of user declared equality
-  constraints. To see how to define the parameters
-  correctly use \code{pars = 'values'} initially to see how
-  the parameters are labeled. To constrain parameters to be
-  equal create a list with separate concatenated vectors
-  signifying which parameters to constrain. For example, to
-  set parameters 1 and 5 equal, and also set parameters 2,
-  6, and 10 equal use \code{constrain = list(c(1,5),
-  c(2,6,10))}}
+  \item{constrain}{see \code{\link{mirt}} for details}
 
-  \item{parprior}{a list of user declared prior item
-  probabilities. To see how to define the parameters
-  correctly use \code{pars = 'values'} initially to see how
-  the parameters are labeled. Can define either normal
-  (normally for slopes and intercepts) or beta (for
-  guessing and upper bounds) prior probabilities. To
-  specify a prior the form is c('priortype', ...), where
-  normal priors are \code{parprior = list(c(parnumbers,
-  'norm', mean, sd))} and betas are \code{parprior =
-  list(c(parnumbers, 'beta', alpha, beta))} \code{parprior
-  = list(c(parnumber, 'beta', alpha, beta))}.}
+  \item{parprior}{see \code{\link{mirt}} for details}
 
-  \item{pars}{a data.frame with the structure of how the
-  starting values, parameter numbers, and estimation
-  logical values are defined. The user may observe how the
-  model defines the values by using \code{pars = 'values'},
-  and this object can in turn be modified and input back
-  into the estimation with \code{pars = mymodifiedpars}}
+  \item{pars}{see \code{\link{mirt}} for details}
 
   \item{D}{a numeric value used to adjust the logistic
   metric to be more similar to a normal cumulative density
@@ -106,13 +66,7 @@
 
   \item{debug}{logical; turn on debugging features?}
 
-  \item{technical}{a list containing lower level technical
-  parameters for estimation \describe{
-  \item{MAXQUAD}{maximum number of quadratures; default
-  10000} \item{MSTEPMAXIT}{number of M-step iterations;
-  default 25} \item{TOL}{EM convergence threshold; default
-  .001} \item{NCYCLES}{maximum number of EM cycles; default
-  300} }}
+  \item{technical}{see \code{\link{mirt}} for details}
 
   \item{...}{additional arguments to be passed}
 }

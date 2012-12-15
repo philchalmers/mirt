@@ -73,15 +73,17 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', for the Rasch/partial credit, 1 and 2 parameter logistic, 
+#' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', 
+#' for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
-#' rating scale graded response model, generalized partial credit model, nominal model, 
+#' rating scale graded response model, generalized partial credit model, Rasch rating scale model, nominal model, 
 #' multiple choice model, and 2-3PL partially compensatory model, respectively 
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using 
 #' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
 #' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
 #' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
 #' group and therefore have the same number of item categories
+#' @param rsm.block same as \code{rgrsm.block}, but for \code{'rsm'} blocks
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
@@ -248,8 +250,8 @@
 #' @usage 
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001, pars = NULL, 
 #' constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
-#' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, 
-#' technical = list(), ...)
+#' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
+#' debug = FALSE, technical = list(), ...)
 #' 
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
 #' verbose = TRUE, ...)
@@ -367,8 +369,8 @@
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
-                 prev.cor = NULL, quadpts = NULL, grsm.block = NULL, D = 1.702, verbose = FALSE, 
-                 debug = FALSE, technical = list(), ...)
+                 prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, 
+                 verbose = FALSE, debug = FALSE, technical = list(), ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()    
@@ -376,7 +378,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
-                      technical = technical, debug = debug, verbose = verbose, ...)
+                      rsm.block=rsm.block, technical=technical, debug=debug, verbose=verbose, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    
