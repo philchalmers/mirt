@@ -83,7 +83,7 @@
 #' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
 #' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
 #' group and therefore have the same number of item categories
-#' @param rsm.block same as \code{rgrsm.block}, but for \code{'rsm'} blocks
+#' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
@@ -198,6 +198,14 @@
 #' in the nominal model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}.
 #' \deqn{P(x = k | \theta, \psi) = \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
 #' {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
+#' }
+#' \item{rsm}{
+#' A more constrained version of the generalized partial credit model where the spacing is equal 
+#' accross item blocks and only adjusted by a single 'difficulty' parameter (c), and the discrimination
+#' parameter is constrained to be a constant. Note that this is analogous to the relationship 
+#' between the graded model and the grsm (with an additional constraint regarding the discrimination 
+#' parameters; the discrimination constraint can, however, be relaxed by adjusting the starting values
+#' manually).
 #' }
 #' \item{mcm}{For identification \eqn{ak_0 = d_0 = 0} and \eqn{\sum_0^k t_k = 1}.
 #' \deqn{P(x = k | \theta, \psi) = C_0 (\theta) * t_k  + (1 - C_0 (\theta)) * 

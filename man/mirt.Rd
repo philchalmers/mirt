@@ -72,7 +72,7 @@ Theory)}
   same group and therefore have the same number of item
   categories}
 
-  \item{rsm.block}{same as \code{rgrsm.block}, but for
+  \item{rsm.block}{same as \code{grsm.block}, but for
   \code{'rsm'} blocks}
 
   \item{SE}{logical, estimate the standard errors? Calls
@@ -332,12 +332,21 @@ Theory)}
   \eqn{ak_k = (k - 1)}. \deqn{P(x = k | \theta, \psi) =
   \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
   d_k)} {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 *
-  \theta_2) + d_k)}} } \item{mcm}{For identification
-  \eqn{ak_0 = d_0 = 0} and \eqn{\sum_0^k t_k = 1}.
-  \deqn{P(x = k | \theta, \psi) = C_0 (\theta) * t_k + (1 -
-  C_0 (\theta)) * \frac{exp(-D * ak_k * (a_1 * \theta_1 +
-  a_2 * \theta_2) + d_k)} {\sum_i^k exp(-D * ak_k * (a_1 *
-  \theta_1 + a_2 * \theta_2) + d_k)}}
+  \theta_2) + d_k)}} } \item{rsm}{ A more constrained
+  version of the generalized partial credit model where the
+  spacing is equal accross item blocks and only adjusted by
+  a single 'difficulty' parameter (c), and the
+  discrimination parameter is constrained to be a constant.
+  Note that this is analogous to the relationship between
+  the graded model and the grsm (with an additional
+  constraint regarding the discrimination parameters; the
+  discrimination constraint can, however, be relaxed by
+  adjusting the starting values manually). } \item{mcm}{For
+  identification \eqn{ak_0 = d_0 = 0} and \eqn{\sum_0^k t_k
+  = 1}. \deqn{P(x = k | \theta, \psi) = C_0 (\theta) * t_k
+  + (1 - C_0 (\theta)) * \frac{exp(-D * ak_k * (a_1 *
+  \theta_1 + a_2 * \theta_2) + d_k)} {\sum_i^k exp(-D *
+  ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
 
   where \eqn{C_0 (\theta) = \frac{exp(-D * ak_0 * (a_1 *
   \theta_1 + a_2 * \theta_2) + d_0)} {\sum_i^k exp(-D *
