@@ -53,7 +53,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                 paste('d', 0:(K[i]-1), sep=''))                
             }
             if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-                val <- c(lambdas[i,], rep(-1, nfact), 0, 1)
+                val <- c(lambdas[i,], rep(1, nfact), 0, 1)
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
             }
             if(itemtype[i] == 'mcm'){
