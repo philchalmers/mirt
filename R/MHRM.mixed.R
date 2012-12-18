@@ -239,7 +239,10 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
                 stop('\nEstimation halted during stage 3, solution is unstable')
         }		
         correction <- as.vector(inv.Tau %*% grad)
-        longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
+        #stepsize limit
+        correction[gamma*correction > .25] <- .25/gamma
+        correction[gamma*correction < -.25] <- -.25/gamma
+        longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction          
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
@@ -262,6 +265,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         info <- info + gamma*(as.matrix(Tau) - phi %*% t(phi) - info)		
     } ###END BIG LOOP       
     #Reload final pars list
+    if(cycles == NCYCLES + BURNIN + SEMCYCLES) converge <- 0
     ind1 <- 1
     for(g in 1:ngroups){
         for(i in 1:(J+1)){

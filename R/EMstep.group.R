@@ -216,6 +216,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
     } #END EM          
     
+    if(cycles == NCYCLES) converge <- 0
     if(LLwarn && !list$NULL.MODEL) 
         warning('Log-likelihood did not strictly decrease during estimation. 
                 Solution may not be a maximum.')
