@@ -3,8 +3,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                      estLambdas, BFACTOR = FALSE, mixedlist, debug)
     {       
     if(debug == 'LoadPars') browser() 
-    if(any(itemtype[1] == c('Rasch', '1PL', 'rating', 'rsm') && nfact > 1)) 
-        stop('Rasch, 1PL, and rating scale models can only be estimated for unidimensional models')
+    if(any(itemtype[1] == c('Rasch', '1PL') && nfact > 1)) 
+        stop('Rasch and 1PL models can only be estimated for unidimensional models')
     pars <- list()           
     constr <- c()
     if(!is.null(constrain) && is.list(constrain)) 
@@ -44,7 +44,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
             }
             if(itemtype[i] == 'rsm'){                
-                val <- c(1/D, 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+                val <- c(rep(1/D, nfact), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''), 'c')                
             }
             if(itemtype[i] == 'nominal'){
@@ -88,7 +88,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(itemtype[i] == 'gpcm')            
                 freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-1))  
             if(itemtype[i] == 'rsm')            
-                freepars[[i]] <- c(FALSE, FALSE, rep(TRUE, K[i]))
+                freepars[[i]] <- c(rep(FALSE, nfact), FALSE, rep(TRUE, K[i]))
             if(itemtype[i] == 'nominal'){
                 estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
                 #identifiction constraints
@@ -301,7 +301,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
+                             constr=TRUE,                              
                              lbound=-Inf,
                              ubound=Inf,                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
