@@ -4,9 +4,10 @@
 \usage{
   bfactor(data, model, itemtype = NULL, guess = 0, upper =
     1, SE = FALSE, SEtol = .001, pars = NULL, constrain =
-    NULL, parprior = NULL, prev.cor = NULL, quadpts = 20,
-    grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose
-    = FALSE, debug = FALSE, technical = list(), ...)
+    NULL, parprior = NULL, calcNull = TRUE, prev.cor =
+    NULL, quadpts = 20, grsm.block = NULL, rsm.block =
+    NULL, D = 1.702, verbose = FALSE, debug = FALSE,
+    technical = list(), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -25,6 +26,9 @@
   \item{grsm.block}{see \code{\link{mirt}} for details}
 
   \item{rsm.block}{see \code{\link{mirt}} for details}
+
+  \item{calcNull}{logical; calculate the Null model for fit
+  statics (e.g., TLI)?}
 
   \item{guess}{fixed pseudo-guessing parameter. Can be
   entered as a single value to assign a global value or may

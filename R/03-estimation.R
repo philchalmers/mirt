@@ -4,7 +4,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
                        SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
-                       rsm.block = NULL, mixedlist=NULL, ...)
+                       rsm.block = NULL, mixedlist=NULL, calcNull=TRUE, ...)
 {    
     if(debug == 'ESTIMATION') browser()    
     set.seed(12345)       
@@ -302,7 +302,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI <- NaN    
-    if(!NULL.MODEL && method != 'MIXED'){
+    if(!NULL.MODEL && method != 'MIXED' && calcNull){
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE))))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')

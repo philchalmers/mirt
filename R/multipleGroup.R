@@ -46,6 +46,7 @@
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
+#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
 #' @param prev.mod an optional input object of class \code{'MultipleGroupClass'} to quickly 
 #' change the starting values of the current estimation.
 #' If a parameter in the current model is being freely estimated then it's value will be set to whatever the 
@@ -90,8 +91,8 @@
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,  
 #' invariance = '', pars = NULL, method = 'MHRM', constrain = NULL, 
-#' parprior = NULL, draws = 2000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,
-#' D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
+#' parprior = NULL, calcNull = TRUE, draws = 2000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
+#' prev.mod = NULL, D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -189,7 +190,7 @@
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
                           SE = FALSE, SEtol = .001, invariance = '', pars = NULL, 
                           method = 'MHRM', constrain = NULL, 
-                          parprior = NULL, draws = 2000, 
+                          parprior = NULL, calcNull = TRUE, draws = 2000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,
                           D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
 {   
@@ -199,7 +200,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       itemtype=itemtype, guess=guess, upper=upper, nested.mod=prev.mod, 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
-                      technical = technical, debug = debug, verbose = verbose, ...)
+                      technical = technical, debug = debug, verbose = verbose, calcNull=calcNull, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)    

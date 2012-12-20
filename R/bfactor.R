@@ -28,6 +28,7 @@
 #' @param itemtype see \code{\link{mirt}} for details
 #' @param grsm.block see \code{\link{mirt}} for details
 #' @param rsm.block see \code{\link{mirt}} for details
+#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
 #' @param guess fixed pseudo-guessing parameter. Can be entered as a single
 #' value to assign a global value or may be entered as a numeric vector for
 #' each item of length \code{ncol(data)}.
@@ -70,7 +71,7 @@
 #' @keywords models
 #' @usage
 #' bfactor(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001, pars = NULL,
-#' constrain = NULL, parprior = NULL, prev.cor = NULL, quadpts = 20, grsm.block = NULL, 
+#' constrain = NULL, parprior = NULL, calcNull = TRUE, prev.cor = NULL, quadpts = 20, grsm.block = NULL, 
 #' rsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)
 #' 
 #'
@@ -138,8 +139,8 @@
 #'     }
 #' 
 bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
-                    pars = NULL, constrain = NULL, parprior = NULL, prev.cor = NULL, quadpts = 20, 
-                    grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, 
+                    pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, prev.cor = NULL, 
+                    quadpts = 20, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, 
                     technical = list(), ...)
 {         
     if(debug == 'Main') browser()
@@ -149,7 +150,7 @@ bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FAL
                       pars=pars, method = 'EM', constrain=constrain, SE = SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, D=D, rsm.block=rsm.block,
                       technical = technical, debug = debug, verbose = verbose, 
-                      BFACTOR = TRUE, ...)
+                      BFACTOR = TRUE, calcNull=calcNull, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

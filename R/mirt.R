@@ -118,6 +118,7 @@
 #' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
 #' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
 #' mymodifiedpars}
+#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
 #' @param quadpts number of quadrature points per dimension
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #' option. Only prints patterns that have standardized residuals greater than 
@@ -257,7 +258,7 @@
 #' @keywords models
 #' @usage 
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001, pars = NULL, 
-#' constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
+#' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'varimax', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
 #' debug = FALSE, technical = list(), ...)
 #' 
@@ -360,6 +361,7 @@
 #' #graded rating scale example
 #' 
 #' #make some data
+#' set.seed(1234)
 #' a <- matrix(rep(1/1.702, 10))
 #' d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
 #' c <- seq(-1, 1, length.out=10)
@@ -370,15 +372,15 @@
 #' sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1) 
 #'
 #' mod1 <- mirt(data, 1)
-#' mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv)
+#' mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv, calcNull = FALSE)
 #' coef(mod2)
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
-                 pars = NULL, constrain = NULL, parprior = NULL, rotate = 'varimax', Target = NaN, 
-                 prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, 
-                 verbose = FALSE, debug = FALSE, technical = list(), ...)
+                 pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'varimax', 
+                 Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
+                 D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()    
@@ -386,7 +388,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
-                      rsm.block=rsm.block, technical=technical, debug=debug, verbose=verbose, ...)
+                      rsm.block=rsm.block, technical=technical, debug=debug, verbose=verbose,
+                      calcNull=calcNull, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    

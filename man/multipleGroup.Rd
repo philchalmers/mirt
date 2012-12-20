@@ -8,10 +8,10 @@
   multipleGroup(data, model, group, itemtype = NULL, guess
     = 0, upper = 1, SE = FALSE, SEtol = .001, invariance =
     '', pars = NULL, method = 'MHRM', constrain = NULL,
-    parprior = NULL, draws = 2000, quadpts = NULL,
-    grsm.block = NULL, rsm.block = NULL, prev.mod = NULL, D
-    = 1.702, technical = list(), debug = FALSE, verbose =
-    TRUE, ...)
+    parprior = NULL, calcNull = TRUE, draws = 2000, quadpts
+    = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod =
+    NULL, D = 1.702, technical = list(), debug = FALSE,
+    verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -86,6 +86,9 @@
 
   \item{quadpts}{the number of quadratures to be used per
   dimensions when \code{method = 'EM'}}
+
+  \item{calcNull}{logical; calculate the Null model for fit
+  statics (e.g., TLI)?}
 
   \item{prev.mod}{an optional input object of class
   \code{'MultipleGroupClass'} to quickly change the

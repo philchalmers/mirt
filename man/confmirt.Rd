@@ -10,9 +10,10 @@
 \usage{
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
     1, pars = NULL, constrain = NULL, parprior = NULL,
-    grsm.block = NULL, rsm.block = NULL, verbose = TRUE,
-    draws = 2000, debug = FALSE, rotate = 'varimax', Target
-    = NULL, D = 1.702, technical = list(), ...)
+    calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
+    verbose = TRUE, draws = 2000, debug = FALSE, rotate =
+    'varimax', Target = NULL, D = 1.702, technical =
+    list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -65,6 +66,9 @@
 
   \item{draws}{the number of Monte Carlo draws to estimate
   the log-likelihood}
+
+  \item{calcNull}{logical; calculate the Null model for fit
+  statics (e.g., TLI)?}
 
   \item{restype}{type of residuals to be displayed. Can be
   either \code{'LD'} for a local dependence matrix (Chen &

@@ -73,6 +73,7 @@
 #' \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
+#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
@@ -146,7 +147,7 @@
 #' @keywords models
 #' @usage 
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
-#' constrain = NULL, parprior = NULL, grsm.block = NULL, rsm.block = NULL, verbose = TRUE, 
+#' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE, 
 #' draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, D = 1.702, 
 #' technical = list(),  ...)
 #' 
@@ -253,14 +254,14 @@
 #' }
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
-                     constrain = NULL, parprior = NULL, grsm.block = NULL, rsm.block = NULL, 
+                     constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, 
                      verbose = TRUE, draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      D = 1.702, technical = list(),  ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype, 
-                      guess=guess, upper=upper, grsm.block=grsm.block, D=D,
+                      guess=guess, upper=upper, grsm.block=grsm.block, D=D, calcNull=calcNull,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, 
                       rsm.block=rsm.block, draws=draws, debug=debug, technical = list(),  ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
