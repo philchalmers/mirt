@@ -1,5 +1,6 @@
 S3method(print,wald)
 export(bfactor)
+export(calcLogLik)
 export(confmirt)
 export(confmirt.model)
 export(expand.table)

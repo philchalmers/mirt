@@ -26,6 +26,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @docType methods
 #' @rdname calcLogLik-methods  
+#' @export calcLogLik
 #' @seealso
 #' \code{\link{confmirt}}, \code{\link{multipleGroup}}
 #' @keywords calcLogLik
