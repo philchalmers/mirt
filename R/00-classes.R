@@ -34,6 +34,7 @@ setClass("AllModelClass",
                         factorNames='character',
                         method='character',
                         itemtype='character',
+                        time='numeric',
                         'VIRTUAL'),    
          validity = function(object) return(TRUE)
 )                       

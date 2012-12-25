@@ -6,6 +6,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
                        rsm.block = NULL, mixedlist=NULL, calcNull=TRUE, ...)
 {    
+    start.time <- proc.time()[3]
     if(debug == 'ESTIMATION') browser()    
     set.seed(12345)       
     MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
@@ -451,5 +452,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    itemtype=PrepListFull$itemtype,
                    information=ESTIMATE$info)  
     }
+    mod@time <- proc.time()[3] - start.time  
     return(mod)
 }
