@@ -132,8 +132,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                     pars[[g]][[i]]@par <- longpars[ind1:ind2]
                     ind1 <- ind2 + 1       
                     if(any(class(pars[[g]][[i]]) == c('dich', 'partcomp'))){
-                        if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > .7) 
-                            pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- .7
+                        if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > 1) 
+                            pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
                         if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
                     }    
