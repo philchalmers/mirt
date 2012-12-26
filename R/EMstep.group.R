@@ -136,6 +136,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
                         if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
                             pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
+                        if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] > .6){
+                            warning('lower bound parameter larger than .6 during estimation.')
+                            pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- .6            
+                        }
                     }    
                     #apply sum(t) == 1 constraint for mcm
                     if(is(pars[[g]][[i]], 'mcm')){                
