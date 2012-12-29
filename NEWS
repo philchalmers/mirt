@@ -1,3 +1,6 @@
+* lower bound parameters under more stringent control during estimation and are bounded to never 
+  be higher than .6
+
 * infit and outfit stats in itemfit() now work for Rasch parital credit and rating scale models
 
 * Rasch rating scale models can now be estimated with potential rsm.blocks (same as grsm model). 

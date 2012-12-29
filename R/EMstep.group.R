@@ -72,7 +72,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     Prior <- prior <- gstructgrouppars <- rlist <- r <- list()    
     LL <- 0
     for(g in 1:ngroups)
-        r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
+        r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]    
     #EM     
     for (cycles in 1:NCYCLES){  
         #priors
@@ -177,7 +177,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             }
             grad <- g %*% L 
             hess <- L %*% h %*% L 			                   
-            grad <- grad[1, estpars & !redun_constr]
+            grad <- grad[1, estpars & !redun_constr]            
             if(any(is.na(grad))) 
                 stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')            
             Hess <- Matrix(hess[estpars & !redun_constr, estpars & !redun_constr], sparse = TRUE)            
@@ -196,6 +196,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             #keep steps smaller
             correction[correction > stepLimit] <- stepLimit
             correction[correction < -stepLimit] <- -stepLimit
+            #prevent guessing pars from moving more than .002 at all times
+            names(correction) <- names(estpars[estpars & !redun_constr])
+            if(stepLimit > .002){                
+                tmp <- correction[names(correction) == 'g']
+                tmp[abs(tmp) > .002] <- sign(tmp[abs(tmp) > .002]) * .002
+                correction[names(correction) == 'g'] <- tmp
+            }
             longpars[estindex_unique] <- longpars[estindex_unique] - correction                       
             if(mstep > 1){
                 if (any(grad*lastgrad < 0.0)){    				# any changed sign
