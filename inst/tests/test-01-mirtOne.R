@@ -43,6 +43,11 @@ test_that('dich', {
     expect_is(TP2, 'trellis')
     ifit <- itemfit(modm1, X2 = TRUE)
     expect_is(ifit, 'data.frame')
+    
+    fitm1 <- fitIndices(modm1)
+    fitm2 <- fitIndices(modm2)
+    expect_is(fitm1, 'list')
+    expect_is(fitm2, 'list')
 })
 
 

@@ -38,6 +38,9 @@ test_that('one factor', {
     expect_is(fs1, 'list')
     expect_is(fs2, 'data.frame')
     expect_is(fs3, 'list')
-    expect_is(fs4, 'data.frame')    
+    expect_is(fs4, 'data.frame') 
+    
+    fit1 <- fitIndices(mod_metric)
+    expect_is(fit1, 'list')
 })
 

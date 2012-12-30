@@ -199,6 +199,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars), 
                                debug=debug)        
         iter <- ESTIMATE$cycles
+        rlist <- vector('list', ngroups)        
+        for(g in 1:ngroups)
+            rlist[[g]]$expected = numeric(1)
     } else if(method == 'MIXED'){  
         ESTIMATE <- MHRM.mixed(pars=pars, constrain=constrain, 
                                     PrepList=PrepList, mixedlist=mixedlist,                                    
@@ -210,6 +213,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars), 
                                debug=debug, ...)        
         iter <- ESTIMATE$cycles
+        rlist <- vector('list', ngroups)        
+        for(g in 1:ngroups)
+            rlist[[g]]$expected = numeric(1)
     }   
     cmods <- list()
     for(g in 1:ngroups){

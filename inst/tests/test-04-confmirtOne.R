@@ -14,6 +14,8 @@ test_that('exploratory mods', {
     W2 <- wald(L2, onefact)
     expect_is(W1, 'wald')
     expect_is(W2, 'wald')
+    fitonefact <- fitIndices(onefact)
+    expect_is(fitonefact, 'list')
     twofact <- confmirt(fulldata, 2, verbose = FALSE)
     expect_is(twofact, 'ExploratoryClass')
     fulldata[1,1] <- fulldata[2,2] <- NA
