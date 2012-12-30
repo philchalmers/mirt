@@ -225,7 +225,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           tabdata=PrepList[[g]]$tabdata2, data=data[group == groupNames[[g]], ], 
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2,                
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact, 
-                          constrain=constrain, G2=G2group[g], 
+                          constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
                           mixedlist=if(method == 'MIXED') mixedlist else list(),
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)        
     }

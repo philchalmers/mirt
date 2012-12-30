@@ -6,7 +6,7 @@
 #' 
 #'
 #' @aliases fitIndices
-#' @param data matrix or data.frame 
+#' @param obj an estimated model object from the mirt package
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in 
@@ -26,6 +26,31 @@
 #' }
 fitIndices <- function(obj){
     #if MG loop    
+    if(is(obj, 'MixedClass'))
+        stop('mixedmirt objects not yet supported')       
+    if(is(obj, 'MultipleGroupClass')){        
+        cmods <- obj@cmods
+        r <- obj@tabdata[, ncol(obj@tabdata)]
+        ngroups <- length(cmods)
+        ret <- vector('list', length(cmods))
+        for(g in 1:ngroups){
+            attr(cmods[[g]], 'MG') <- TRUE
+            ret[[g]] <- fitIndices(cmods[[g]])
+        }        
+        newret <- list()
+        newret$M2 <- numeric(ngroups)   
+        names(newret$M2) <- obj@groupNames
+        for(g in 1:ngroups)            
+            newret$M2[g] <- ret[[g]]$M2
+        newret$M2Total <- sum(newret$M2)
+        Tsum <- 0
+        for(g in 1:ngroups) Tsum <- Tsum + ret[[g]]$nrowT
+        newret$dfM2 <- obj@df - (nrow(obj@tabdata) - Tsum)
+        newret$p.M2 <- 1 - pchisq(newret$M2Total, newret$dfM2)
+        newret$RMSEA.M2 <- ifelse((newret$M2Total - newret$dfM2) > 0, 
+                           sqrt(newret$M2Total - newret$dfM2) / sqrt(newret$dfM2 * (sum(r)-1)), 0) 
+        return(newret)
+    }
     ret <- list()        
     tabdata <- obj@tabdatalong
     K <- obj@K
@@ -67,8 +92,7 @@ fitIndices <- function(obj){
     T <- na.omit(T)
     Eta <- T %*% Gamma %*% t(T)
     T.p <- T %*% p
-    T.p_theta <- T %*% p_theta
-    dfM2 <- obj@df - (nrow(tabdata) -  nrow(T))    
+    T.p_theta <- T %*% p_theta       
     inv.Eta <- try(solve(Eta), silent = TRUE)
     if(is(inv.Eta, 'try-error')){        
         diag(Eta) <- diag(Eta) + .01 * diag(Eta)
@@ -102,13 +126,15 @@ fitIndices <- function(obj){
     delta2 <- T %*% delta    
     C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(t(delta2) %*% inv.Eta %*% delta2) %*% 
         t(delta2) %*% inv.Eta
-    M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta) 
-    p.M2 <- 1 - pchisq(M2, dfM2)
-    RMSEA.M2 <- ifelse((M2 - dfM2) > 0, 
-                    sqrt(M2 - dfM2) / sqrt(dfM2 * (sum(r)-1)), 0)    
-    ret$M2 <- M2
-    ret$dfM2 <- dfM2
-    ret$p.M2 <- p.M2
-    ret$RMSEA.M2 <- RMSEA.M2        
+    M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)
+    ret$M2 <- M2  
+    if(is.null(attr(obj, 'MG'))){
+        ret$dfM2 <- obj@df - (nrow(tabdata) -  nrow(T))    
+        ret$p.M2 <- 1 - pchisq(M2, ret$dfM2)
+        ret$RMSEA.M2 <- ifelse((M2 - ret$dfM2) > 0, 
+                        sqrt(M2 - ret$dfM2) / sqrt(ret$dfM2 * (sum(r)-1)), 0)                  
+    } else {
+        ret$nrowT <- nrow(T)        
+    }
     ret    
 }

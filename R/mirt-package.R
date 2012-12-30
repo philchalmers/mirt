@@ -81,3 +81,19 @@ NULL
 #'
 #' @keywords data
 NULL
+
+#' Description of LSAT6 data
+#' 
+#' Data from Thissen (1982); contains 5 dichotomously scored 
+#' items obtained from the Law School Admissions Test, section 6.
+#' 
+#' 
+#' @name LSAT6
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
+#' \emph{Psychometrika, 47}, 175-186.
+#'
+#' @keywords data
+NULL

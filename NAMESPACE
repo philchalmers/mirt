@@ -1,4 +1,3 @@
-S3method(print,mirtFitIndices)
 S3method(print,wald)
 export(bfactor)
 export(calcLogLik)

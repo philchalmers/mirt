@@ -1,18 +1,12 @@
 \name{fitIndices}
 \alias{fitIndices}
-\alias{print.mirtFitIndices}
 \title{Compute Extra Model Fit Indices}
 \usage{
   fitIndices(obj)
-
-  \method{print}{mirtFitIndices} (x, ...)
 }
 \arguments{
-  \item{data}{matrix or data.frame}
-
-  \item{x}{an estimated model object from the mirt package}
-
-  \item{...}{additional arguments}
+  \item{obj}{an estimated model object from the mirt
+  package}
 }
 \description{
   Compute additional model fit indecies that do not come as
