@@ -53,7 +53,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt}},
-#' \code{\link{fscores}}, \code{\link{multipleGroup}}, \code{\link{wald}}
+#' \code{\link{fscores}}, \code{\link{multipleGroup}}, \code{\link{wald}}, \code{\link{fitIndices}}
 #' @references
 #' 
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory

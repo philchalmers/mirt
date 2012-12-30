@@ -181,6 +181,8 @@
 #' Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0. 
 #' \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-D * 
 #' (a_1 * \theta_1 + a_2 * \theta_2 + d))}} 
+#' For the 1PL model the number of factors must equal 1, and all the \eqn{a_1} values are constrained
+#' to be equal accross all items.
 #' }
 #' \item{graded}{
 #' The graded model consists of sequential 2PL models, and here \eqn{k} is 
@@ -226,7 +228,7 @@
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, 
 #' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{wald}}
-#' \code{\link{itemplot}}, \code{\link{fscores}}
+#' \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}
 #' 
 #' @references
 #' 

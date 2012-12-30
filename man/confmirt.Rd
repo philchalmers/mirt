@@ -341,7 +341,8 @@ anova(mod.quad, mod.combo)
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{simdata}}, \code{\link{fscores}},
   \code{\link{confmirt.model}}, \code{\link{wald}},
-  \code{\link{multipleGroup}}, \code{\link{itemplot}}
+  \code{\link{multipleGroup}}, \code{\link{itemplot}},
+  \code{\link{fitIndices}}
 }
 \keyword{models}
 

@@ -10,9 +10,10 @@
 }
 \description{
   Compute additional model fit indecies that do not come as
-  direct results following parameter convergence. Will
-  always compute the M2 (Maydeu-Olivares & Joe, 2006)
-  statistic by default.
+  direct results following parameter convergence. Will only
+  compute the M2 (Maydeu-Olivares & Joe, 2006) statistic by
+  default, and returns a list containing the requested
+  statistics.
 }
 \examples{
 \dontrun{

@@ -258,7 +258,7 @@ anova(mod_fullconstrain, mod_scalar)
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{simdata}}, \code{\link{confmirt.model}},
-  \code{\link{fscores}}
+  \code{\link{fscores}}, \code{\link{fitIndices}}
 }
 \keyword{models}
 

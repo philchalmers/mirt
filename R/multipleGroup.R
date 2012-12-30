@@ -86,7 +86,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
-#' \code{\link{confmirt.model}}, \code{\link{fscores}}
+#' \code{\link{confmirt.model}}, \code{\link{fscores}}, \code{\link{fitIndices}}
 #' @keywords models
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,  

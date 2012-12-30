@@ -318,17 +318,19 @@ Theory)}
   d))}} } \item{1-4PL}{ Depending on the model \eqn{u} may
   be equal to 1 and \eqn{g} may be equal to 0. \deqn{P(x =
   1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-D * (a_1 *
-  \theta_1 + a_2 * \theta_2 + d))}} } \item{graded}{ The
-  graded model consists of sequential 2PL models, and here
-  \eqn{k} is the predicted category. \deqn{P(x = k |
-  \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1
-  | \theta, \phi)} } \item{grsm}{ A more constrained
-  version of the graded model where graded spacing is equal
-  accross item blocks and only adjusted by a single
-  'difficulty' parameter (c). Again, \deqn{P(x = k |
-  \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1
-  | \theta, \phi)} but now \deqn{P = \frac{1}{1 + exp(-D *
-  (a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}} }
+  \theta_1 + a_2 * \theta_2 + d))}} For the 1PL model the
+  number of factors must equal 1, and all the \eqn{a_1}
+  values are constrained to be equal accross all items. }
+  \item{graded}{ The graded model consists of sequential
+  2PL models, and here \eqn{k} is the predicted category.
+  \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi)
+  - P(x \ge k + 1 | \theta, \phi)} } \item{grsm}{ A more
+  constrained version of the graded model where graded
+  spacing is equal accross item blocks and only adjusted by
+  a single 'difficulty' parameter (c). Again, \deqn{P(x = k
+  | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k +
+  1 | \theta, \phi)} but now \deqn{P = \frac{1}{1 + exp(-D
+  * (a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}} }
   \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are
   treated as fixed and orderd values from 0:(k-1) (in the
   nominal model \eqn{d_0} is also set to 0). Additionally,
@@ -499,7 +501,8 @@ anova(mod2, mod1) #not sig, mod2 should be prefered
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{confmirt}}, \code{\link{bfactor}},
   \code{\link{multipleGroup}}, \code{\link{wald}}
-  \code{\link{itemplot}}, \code{\link{fscores}}
+  \code{\link{itemplot}}, \code{\link{fscores}},
+  \code{\link{fitIndices}}
 }
 \keyword{models}
 

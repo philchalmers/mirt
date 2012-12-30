@@ -175,6 +175,7 @@ setMethod(
         for(g in 1:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, 
                            quadpts=quadpts, degrees=degrees, verbose=verbose)
+        names(ret) <- object@groupNames
         if(full.scores){
             id <- c()
             fulldata <- matrix(NA, 1, ncol(ret[[1]]))

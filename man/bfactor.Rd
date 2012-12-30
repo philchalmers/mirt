@@ -179,7 +179,8 @@ coef(simmod)
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{confmirt}}, \code{\link{fscores}},
-  \code{\link{multipleGroup}}, \code{\link{wald}}
+  \code{\link{multipleGroup}}, \code{\link{wald}},
+  \code{\link{fitIndices}}
 }
 \keyword{models}
 

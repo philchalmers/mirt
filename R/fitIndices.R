@@ -1,7 +1,8 @@
 #' Compute Extra Model Fit Indices
 #' 
 #' Compute additional model fit indecies that do not come as direct results following parameter
-#' convergence. Will always compute the M2 (Maydeu-Olivares & Joe, 2006) statistic by default.
+#' convergence. Will only compute the M2 (Maydeu-Olivares & Joe, 2006) statistic by default, and 
+#' returns a list containing the requested statistics.
 #' 
 #' 
 #'
@@ -45,10 +46,10 @@ fitIndices <- function(obj){
         newret$M2Total <- sum(newret$M2)
         Tsum <- 0
         for(g in 1:ngroups) Tsum <- Tsum + ret[[g]]$nrowT
-        newret$dfM2 <- obj@df - (nrow(obj@tabdata) - Tsum)
-        newret$p.M2 <- 1 - pchisq(newret$M2Total, newret$dfM2)
-        newret$RMSEA.M2 <- ifelse((newret$M2Total - newret$dfM2) > 0, 
-                           sqrt(newret$M2Total - newret$dfM2) / sqrt(newret$dfM2 * (sum(r)-1)), 0) 
+        newret$df.M2 <- obj@df - (nrow(obj@tabdata) - Tsum) + 1
+        newret$p.M2 <- 1 - pchisq(newret$M2Total, newret$df.M2)
+        newret$RMSEA.M2 <- ifelse((newret$M2Total - newret$df.M2) > 0, 
+                           sqrt(newret$M2Total - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0) 
         return(newret)
     }
     ret <- list()        
@@ -59,6 +60,7 @@ fitIndices <- function(obj){
     N <- sum(r)
     p <- r/N
     p_theta <- obj@Pl
+    p_theta <- p_theta/sum(p_theta)
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
     T <- matrix(NA, nrow(tabdata), nrow(tabdata))
@@ -93,15 +95,15 @@ fitIndices <- function(obj){
     Eta <- T %*% Gamma %*% t(T)
     T.p <- T %*% p
     T.p_theta <- T %*% p_theta       
-    inv.Eta <- try(solve(Eta), silent = TRUE)
-    if(is(inv.Eta, 'try-error')){        
-        diag(Eta) <- diag(Eta) + .01 * diag(Eta)
-        inv.Eta <- try(solve(Eta), silent = TRUE)
-        if(is(inv.Eta, 'try-error'))
-            stop('M2 cannot be computed')
+    Etarank <- qr(Eta)$rank
+    while(Etarank < ncol(Eta)){
+        diag(Eta) <- diag(Eta) + .001 * diag(Eta)
+        Etarank <- qr(Eta)$rank
     }
+    inv.Eta <- solve(Eta)
     pars <- obj@pars
-    theta <- seq(-4, 4, length.out = 40)
+    quadpts <- ceiling(40/(obj@nfact^1.5))
+    theta <- seq(-4, 4, length.out = quadpts)
     Theta <- thetaComb(theta, obj@nfact)
     gstructgrouppars <- ExtractGroupPars(pars[[nitems+1]])
     Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
@@ -122,17 +124,22 @@ fitIndices <- function(obj){
         } 
         if(is.null(delta)) delta <- matrix(NA, nrow(tabdata), length(DX), byrow = TRUE)
         delta[pat, ] <- DX
-    }
+    }    
+    deltarank <- qr(delta)$rank
+    while(deltarank < ncol(delta)){
+        diag(delta) <- diag(delta) + .001 * diag(delta)
+        deltarank <- qr(delta)$rank      
+    }    
     delta2 <- T %*% delta    
     C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(t(delta2) %*% inv.Eta %*% delta2) %*% 
         t(delta2) %*% inv.Eta
     M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)
-    ret$M2 <- M2  
-    if(is.null(attr(obj, 'MG'))){
-        ret$dfM2 <- obj@df - (nrow(tabdata) -  nrow(T))    
-        ret$p.M2 <- 1 - pchisq(M2, ret$dfM2)
-        ret$RMSEA.M2 <- ifelse((M2 - ret$dfM2) > 0, 
-                        sqrt(M2 - ret$dfM2) / sqrt(ret$dfM2 * (sum(r)-1)), 0)                  
+    ret$M2 <- M2      
+    if(is.null(attr(obj, 'MG'))){        
+        ret$df.M2 <- obj@df - (nrow(tabdata) -  nrow(T)) + 1  
+        ret$p.M2 <- 1 - pchisq(M2, ret$df.M2)
+        ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0, 
+                        sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (sum(r)-1)), 0)                  
     } else {
         ret$nrowT <- nrow(T)        
     }
