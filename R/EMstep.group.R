@@ -228,9 +228,6 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     } #END EM          
     
     if(cycles == NCYCLES) converge <- 0
-    if(LLwarn && !list$NULL.MODEL) 
-        warning('Log-likelihood did not strictly decrease during estimation. 
-                Solution may not be a maximum.')
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist)
     ret
@@ -244,7 +241,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, deriv = FALS
     nquad <- nrow(Theta)    
     J <- length(itemloc) - 1
     r <- tabdata[ ,ncol(tabdata)]
-    X <- tabdata[ ,1:(ncol(tabdata) - 1)]    
+    X <- tabdata[ ,1:(ncol(tabdata) - 1), drop = FALSE]    
     itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
     for (i in 1:J)
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
