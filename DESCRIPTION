@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.4.2-2
+Version: 0.4.2-3
 Date: 2012-10-19
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -9,10 +9,10 @@ Authors@R: c(
 Description: Analysis of dichotomous and polytomous response data using latent
     trait models under the Item Response Theory paradigm. Includes univariate
     and multivariate one-, two-, three-, and four-parameter logistic models,
-    graded response models, rating scale graded response models, generalized
-    partial credit models, nominal models, multiple choice models, and
-    multivariate partially-compensatory models. These can be used in an
-    exploratory or confirmatory manner with optional user defined linear
+    graded response models, rating scale graded response models, (generalized)
+    partial credit models, rating scale models, nominal models, multiple choice
+    models, and multivariate partially-compensatory models. Many of these models 
+    can be used in an exploratory or confirmatory manner with optional user defined 
     constraints. Exploratory models can be estimated via quadrature or
     stochastic methods, a generalized confirmatory bi-factor analysis is
     included, and confirmatory models can be fit with a Metropolis-Hastings
