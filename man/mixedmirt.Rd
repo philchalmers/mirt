@@ -5,9 +5,9 @@
 \alias{summary,MixedClass-method}
 \title{Mixed effects modeling for MIRT models}
 \usage{
-  mixedmirt(data, covdata, model, fixed = ~1,
-    random = NULL, itemtype = NULL, fixed.constrain = TRUE,
-    ...)
+  mixedmirt(data, covdata = NULL, model, fixed = ~1,
+    random = NULL, itemtype = NULL, itemdesign = NULL,
+    fixed.constrain = FALSE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -24,10 +24,11 @@
   more details}
 
   \item{fixed}{a standard R formula for specifying the
-  fixed effect predictors from \code{covdata}. By default
-  constraints are created so that the fixed effects are
-  equal accross items, but this can be disabled using
-  \code{fixed.constrain = FALSE}}
+  fixed effect predictors from \code{covdata} and
+  \code{itemdesign}. By default constraints are not
+  imposed, so the fixed person effects are not equal
+  accross items, but this can be enabled using
+  \code{fixed.constrain = TRUE}}
 
   \item{random}{a formula similar to the \code{nlme} random
   variable sepcifications for declaring the random slope
@@ -36,8 +37,18 @@
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}}}
 
+  \item{itemdesign}{a data.frame object used to create a
+  design matrix for the items, where each
+  \code{nrow(itemdesign) == nitems} and the number of
+  columns is equal to the number of fixed effect predictors
+  (i.e., item intercepts). For design based effects use a
+  matrix of 1's, and apply the appropriate item constraints
+  (see examples below)}
+
   \item{fixed.constrain}{logical; constrain the fixed
-  effects to be equal accross items?}
+  person effects to be equal accross items? Disable this
+  when modelling item level covariates and apply the
+  constraints manually}
 
   \item{...}{additinonal arguments to be passed to the
   MH-RM estimation engine. See \code{\link{confmirt}} for
@@ -71,8 +82,9 @@ model <- confmirt.model()
 
 #model with no person predictors
 mod0 <- mirt(data, model, itemtype = 'Rasch')
-#group as a fixed effect predictor (aka, uniform dif)
-mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch')
+#group as a fixed effect predictor (aka, uniform dif) and equal effect for all items with
+#   fixed.constrain = TRUE
+mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', fixed.constrain = TRUE)
 anova(mod0, mod1)
 summary(mod1)
 coef(mod1)
@@ -85,14 +97,14 @@ lmod0 <- lmer(value ~ 0 + variable + (1|id), long, family = binomial)
 lmod1 <- lmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
 anova(lmod0, lmod1)
 
-#model using 2PL items instead of only Rasch
-mod1b <- mixedmirt(data, covdata, model, fixed = ~ group)
+#model using 2PL items instead of Rasch
+mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', fixed.constrain = TRUE)
 anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 
 #global nonuniform dif (group interaction with latent variable)
-(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta))
+(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = TRUE))
 anova(mod1b, dif)
-#free the interaction terms for each item to detect dif
+#free the interaction terms for each item to detect dif (less power for each item though)
 sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
 constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3']) # main effects
 itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = FALSE,
@@ -100,52 +112,47 @@ itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constr
 anova(dif, itemdif)
 
 #continuous predictor and interaction model with group
-mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ)
-mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ)
+mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, fixed.constrain = TRUE)
+mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ, fixed.constrain = TRUE)
 summary(mod2)
 anova(mod1b, mod2)
 anova(mod2, mod3)
 
-#################################
+###############################################################
 ###### Advanced use of mixedmirt: LLTM, and 2PL version of LLTM
-#################################
+###############################################################
 
 # flexible LLTM model by customizing the structure
 data(SAT12)
 data <- key2binary(SAT12,
-                  key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 model <- confmirt.model()
-     Theta = 1-32
+Theta = 1-32
 
 
-# suppose that the first 16 items were suspected to be easier than the last 16 items, and we wish
-# to test this item level hypothesis. First, create a predictor matrix entirely of 1's for each
-# item design effect (only one here)
-covdata <- data.frame(itemorder = matrix(1, nrow(data), 1))
+itemdesign <- data.frame(itemorder = matrix(1, 32))
 
-# obtain starting values and identify parameters that are to be equal (first 16, last 16), and
-# fix item intercepts to 0
-sv <- mixedmirt(data, covdata, model, fixed = ~ itemorder, itemtype = 'Rasch', pars = 'values')
+sv <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch',
+                itemdesign = itemdesign, pars = 'values')
 constrain <- list()
 constrain[[1]] <- sv$parnum[sv$name == 'itemorder'][1:16]
 constrain[[2]] <- sv$parnum[sv$name == 'itemorder'][-(1:16)]
 sv$value[sv$name == 'd'] <- 0
 sv$est[sv$name == 'd'] <- FALSE
-
-#estimate LLTM using new starting values (with adjusted fixed parameters) and constraints
-LLTM <- mixedmirt(data, covdata, model, fixed = ~ itemorder, itemtype = 'Rasch',
-                  pars = sv, constrain = constrain, fixed.constrain = FALSE)
+#estimate the LLTM model using the new starting values and constraints
+LLTM <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch',
+        itemdesign = itemdesign, pars = sv, constrain = constrain)
 coef(LLTM)
 #compare to standard items with estimated slopes (2PL)?
 sv$est[sv$name == 'a1'] <- TRUE
-twoPL <- mixedmirt(data, covdata, model, fixed = ~ itemorder,
-                  pars = sv, constrain = constrain, fixed.constrain = FALSE)
+twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder,
+        itemdesign = itemdesign, pars = sv, constrain = constrain)
 coef(twoPL)
 anova(twoPL, LLTM)
 #twoPL model better than LLTM, and don't draw the (spurious?) conclusion that the first
 #    half of the test is any easier/harder than the last
 
-### Similar example, but with simulated data
+### Similar example, but with simulated data instead
 
 set.seed(1234)
 N <- 750
@@ -153,10 +160,13 @@ a <- matrix(rep(1,10))
 d <- matrix(c(rep(-1,5), rep(1,5)))
 Theta <- matrix(rnorm(N))
 data <- simdata(a, d, N, itemtype = rep('dich',10), Theta=Theta, D=1)
-covdata <- data.frame(itempred=rep(1, nrow(data)))
-model <- confmirt.model('confmods/mixedmirt1', quiet = TRUE)
-sv <- mixedmirt(data, covdata, model, fixed= ~ itempred, pars = 'values',
-      itemtype = 'Rasch')
+itemdesign <- data.frame(itempred=rep(1, ncol(data)))
+model <- confmirt.model()
+   Theta = 1-10
+
+
+sv <- mixedmirt(data, model = model, fixed = ~ itempred, pars = 'values',
+                 itemtype = 'Rasch', itemdesign = itemdesign)
 sv$value[sv$name == 'd'] <- 0
 sv$est[sv$name == 'd'] <- FALSE
 
@@ -164,9 +174,8 @@ sv$est[sv$name == 'd'] <- FALSE
 constrain <- list()
 constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
 constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
-mod <- mixedmirt(data, covdata, model, fixed= ~ itempred, pars = sv,
-                 itemtype = 'Rasch', constrain = constrain, fixed.constrain = FALSE,
-                 verbose = TRUE)
+mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv,
+                 itemtype = 'Rasch', constrain = constrain, itemdesign = itemdesign)
 coef(mod)
 rasch <- mirt(data, 1, itemtype = 'Rasch', D=1)
 anova(mod, rasch) #n.s., LLTM model a much better choice compared to Rasch

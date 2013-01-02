@@ -25,7 +25,7 @@ setMethod(
         
         if(x@mixedlist$fixed.constrain){
             cat('\nFixed Effect Coefficients:\n\n')
-            nfixed <- ncol(x@mixedlist$FD)
+            nfixed <- ncol(x@mixedlist$FDL[[1]])
             out <- x@pars[[1]]@par[1:nfixed]
             names(out) <- names(x@pars[[1]]@est[1:nfixed])
             print(out)

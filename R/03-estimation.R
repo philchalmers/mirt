@@ -320,11 +320,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
     if(ngroups == 1){        
-        if(method == 'MIXED'){            
-            mixedlist$betas <- cmods[[1]]@pars[[1]]@par[1:ncol(mixedlist$FD)]
-            mixedlist$SEbetas <- cmods[[1]]@pars[[1]]@SEpar[1:ncol(mixedlist$FD)]
+        if(method == 'MIXED'){                        
+            mixedlist$betas <- cmods[[1]]@pars[[1]]@par[1:ncol(mixedlist$FDL[[1]])]
+            mixedlist$SEbetas <- cmods[[1]]@pars[[1]]@SEpar[1:ncol(mixedlist$FDL[[1]])]
             names(mixedlist$SEbetas) <- names(mixedlist$betas) <- 
-                colnames(mixedlist$FD)
+                colnames(mixedlist$FDL[[1]])
             mod <- new('MixedClass', 
                        iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars,                         

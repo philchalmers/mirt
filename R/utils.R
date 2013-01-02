@@ -51,14 +51,20 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     fixed.design0 <- fixed.design1 <- NULL    
     if(!is.null(mixedlist)){
         colnames(theta0) <- colnames(theta1) <- mixedlist$factorNames
-        fixed.design0 <- designMats(mixedlist$covdata, mixedlist$fixed, theta0)
-        fixed.design1 <- designMats(mixedlist$covdata, mixedlist$fixed, theta1)
-    }
+        fixed.design0 <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed, 
+                                    Thetas=theta0, nitems=J, 
+                                    itemdesign=mixedlist$itemdesign, 
+                                    fixed.identical=mixedlist$fixed.identical)
+        fixed.design1 <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed, 
+                                    Thetas=theta1, nitems=J, 
+                                    itemdesign=mixedlist$itemdesign, 
+                                    fixed.identical=mixedlist$fixed.identical)
+    }    
     for (i in 1:J){
         itemtrace0[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-            ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design0)
+            ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design0[[i]])
         itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-            ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design1)        
+            ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design1[[i]])        
     }    
     tmp0 <- itemtrace0*fulldata
     tmp1 <- itemtrace1*fulldata
@@ -509,18 +515,28 @@ ItemInfo <- function(x, Theta, cosangle){
     return(info)
 }
 
-designMats <- function(covdata, fixed, Thetas, random = NULL){    
-    dat <- data.frame(covdata, Thetas)
-    if(fixed == ~ 1) {
-        fixed.design <- NULL
-    } else fixed.design <- model.matrix(fixed, dat)[ ,-1, drop = FALSE]
-    cn <- colnames(Thetas)
-    CN <- colnames(fixed.design)
-    drop <- rep(FALSE, length(CN))
-    for(i in 1:ncol(Thetas))
-        drop <- drop | CN == cn[i]
-    fixed.design <- fixed.design[ , !drop, drop = FALSE]  
-    zerocols <- colSums(abs(fixed.design))    
-    fixed.design[ ,zerocols == 0] <- 1     
-    return(fixed.design)    
+designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random = NULL, 
+                       fixed.identical = FALSE){ 
+    fixed.design.list <- vector('list', nitems)     
+    for(item in 1:nitems){
+        if(item > 1 && fixed.identical){
+            fixed.design.list[[item]] <- fixed.design.list[[1]]
+            next            
+        }
+        if(!is.null(itemdesign)){
+            dat <- data.frame(matrix(itemdesign[item, ], nrow(data), ncol(itemdesign), byrow=TRUE), 
+                                   covdata, Thetas)
+            colnames(dat) <- c(colnames(itemdesign), colnames(covdata), colnames(Thetas))
+        } else dat <- data.frame(covdata, Thetas)        
+        if(fixed == ~ 1) {
+            fixed.design <- NULL
+        } else fixed.design <- model.matrix(fixed, dat)[ ,-1, drop = FALSE]
+        cn <- colnames(Thetas)
+        CN <- colnames(fixed.design)
+        drop <- rep(FALSE, length(CN))
+        for(i in 1:ncol(Thetas))
+            drop <- drop | CN == cn[i]        
+        fixed.design.list[[item]] <- fixed.design[ , !drop, drop = FALSE]          
+    }
+    return(fixed.design.list)    
 }

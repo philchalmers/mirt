@@ -52,8 +52,8 @@ setMethod(
 	    J <- length(pars)-1
 	    nfact <- length(ExtractLambdas(pars[[1]])) - length(object@prodlist) - pars[[1]]@nfixedeffects	    
         LL <- matrix(0, N, draws)
-        grp <- ExtractGroupPars(pars[[length(pars)]])
-        fixed.design <- NULL          
+        grp <- ExtractGroupPars(pars[[length(pars)]]) 
+        fixed.design.list <- vector('list', J)
         for(draw in 1:draws){
 	        if(nfact > 1) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
 	        else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
@@ -62,10 +62,14 @@ setMethod(
 	        itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)    
 	        if(length(object@mixedlist) > 1){ 
                 colnames(theta) <- object@mixedlist$factorNames
-	            fixed.design <- designMats(object@mixedlist$covdata, object@mixedlist$fixed, theta)                
+                fixed.design.list <- designMats(covdata=object@mixedlist$covdata, 
+                                                fixed=object@mixedlist$fixed, 
+                                                Thetas=theta, nitems=J, 
+                                                itemdesign=object@mixedlist$itemdesign, 
+                                                fixed.identical=object@mixedlist$fixed.identical)	            
 	        }
 	        for (i in 1:J) itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design)	            	        
+                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])	            	        
 	        tmp <- itemtrace*fulldata	        
 	        tmp[tmp < tol] <- 1    
 	        LL[ ,draw] <- exp(rowSums(log(tmp)))

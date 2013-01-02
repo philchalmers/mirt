@@ -1,9 +1,6 @@
 * multipleGroup() now has the logical options bfactor = TRUE to use the dimensional reduction algorithm 
   for when the factor pattern is structured like a bifactor model
 
-* mixedmirt() can now model item level design matricies (e.g., LLTM) that the user must manually 
-  customize. Examples of how to do this are in the documentation in ?mixedmirt
-
 * new fitIndices() function added to compute additional model fit statistics such as M2
 
 * lower bound parameters under more stringent control during estimation and are bounded to never 
@@ -17,9 +14,11 @@
 
 * added AICc and sample size adjusted BIC (SABIC) information statistics
 
-* new mixedmirt() function for estimating IRT models with person level covariates. Currently only
-  supports fixed effect predictors, but random effect predictors are being developed
-
+* new mixedmirt() function for estimating IRT models with person and item level (e.g., LLTM) covariates.
+  Item level design matricies and constraints must manually be created by the user, with examples of how to do 
+  this in ?mixedmirt. Currently only supports fixed effect predictors, but random effect predictors 
+  are being developed
+ 
 * more structured output when using the anova() generic
 
 * standard errors no longer slightly positively biased when parameter contraints are imposed 

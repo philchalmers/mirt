@@ -86,7 +86,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         stop('Constraint applied to fixed parameter(s) ', 
              paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to 
                  estimated parameters. Please fix!')
-    }      
+    }          
     ####Big MHRM loop    
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
     {     
@@ -159,9 +159,12 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0) thetatemp <- prodterms(thetatemp,prodlist)	
             colnames(thetatemp) <- mixedlist$factorNames
-            thetatemp <- cbind(designMats(mixedlist$covdata, mixedlist$fixed, thetatemp), thetatemp)
+            thetatemplist <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed, 
+                                        Thetas=thetatemp, nitems=J, 
+                                        itemdesign=mixedlist$itemdesign, 
+                                        fixed.identical=mixedlist$fixed.identical)                              
             for (i in 1:J){	
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=cbind(thetatemplist[[i]], thetatemp))
                 ind2 <- ind1 + length(deriv$grad) - 1
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
                 g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad
