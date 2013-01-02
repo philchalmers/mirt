@@ -80,14 +80,79 @@
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)  
+#' 
+#' #################################
+#' ###### Advanced use of mixedmirt: LLTM, and 2PL version of LLTM
+#' #################################
+#'  
+#' # flexible LLTM model by customizing the structure
+#' data(SAT12)
+#' data <- key2binary(SAT12,
+#'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' model <- confmirt.model()
+#'      Theta = 1-32
+#'                  
+#'                    
+#' # suppose that the first 16 items were suspected to be easier than the last 16 items, and we wish
+#' # to test this item level hypothesis. First, create a predictor matrix entirely of 1's for each
+#' # item design effect (only one here)
+#' covdata <- data.frame(itemorder = matrix(1, nrow(data), 1))
 #'      
+#' # obtain starting values and identify parameters that are to be equal (first 16, last 16), and 
+#' # fix item intercepts to 0
+#' sv <- mixedmirt(data, covdata, model, fixed = ~ itemorder, itemtype = 'Rasch', pars = 'values')
+#' constrain <- list()
+#' constrain[[1]] <- sv$parnum[sv$name == 'itemorder'][1:16]
+#' constrain[[2]] <- sv$parnum[sv$name == 'itemorder'][-(1:16)]
+#' sv$value[sv$name == 'd'] <- 0
+#' sv$est[sv$name == 'd'] <- FALSE
+#'      
+#' #estimate LLTM using new starting values (with adjusted fixed parameters) and constraints
+#' LLTM <- mixedmirt(data, covdata, model, fixed = ~ itemorder, itemtype = 'Rasch', 
+#'                   pars = sv, constrain = constrain, fixed.constrain = FALSE)
+#' coef(LLTM)
+#' #compare to standard items with estimated slopes (2PL)?
+#' sv$est[sv$name == 'a1'] <- TRUE
+#' twoPL <- mixedmirt(data, covdata, model, fixed = ~ itemorder, 
+#'                   pars = sv, constrain = constrain, fixed.constrain = FALSE)
+#' coef(twoPL)
+#' anova(twoPL, LLTM) 
+#' #twoPL model better than LLTM, and don't draw the (spurious?) conclusion that the first 
+#' #    half of the test is any easier/harder than the last
+#' 
+#' ### Similar example, but with simulated data
+#' 
+#' set.seed(1234)
+#' N <- 750
+#' a <- matrix(rep(1,10))
+#' d <- matrix(c(rep(-1,5), rep(1,5)))    
+#' Theta <- matrix(rnorm(N))
+#' data <- simdata(a, d, N, itemtype = rep('dich',10), Theta=Theta, D=1)
+#' covdata <- data.frame(itempred=rep(1, nrow(data)))
+#' model <- confmirt.model('confmods/mixedmirt1', quiet = TRUE)  
+#' sv <- mixedmirt(data, covdata, model, fixed= ~ itempred, pars = 'values', 
+#'       itemtype = 'Rasch')
+#' sv$value[sv$name == 'd'] <- 0
+#' sv$est[sv$name == 'd'] <- FALSE
+#'
+#' #make design such that the first 5 items are systematically more difficult than the last 5
+#' constrain <- list()
+#' constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
+#' constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
+#' mod <- mixedmirt(data, covdata, model, fixed= ~ itempred, pars = sv, 
+#'                  itemtype = 'Rasch', constrain = constrain, fixed.constrain = FALSE, 
+#'                  verbose = TRUE)
+#' coef(mod)                 
+#' rasch <- mirt(data, 1, itemtype = 'Rasch', D=1)
+#' anova(mod, rasch) #n.s., LLTM model a much better choice compared to Rasch
+#' 
 #' }
 mixedmirt <- function(data, covdata, model, fixed = ~ 1, random = NULL, itemtype = NULL, 
                       fixed.constrain = TRUE, ...)
 {       
     Call <- match.call() 
     for(i in 1:ncol(covdata))
-        if(is(covdata[,i], 'numeric') || is(covdata[,i], 'integer'))
+        if(is(covdata[,i], 'numeric') || is(covdata[,i], 'integer'))            
             covdata[,i] <- matrix(scale(covdata[,i], scale = FALSE))    
     ### TEMPORARY    
     if(!is.null(random)) 
@@ -95,12 +160,12 @@ mixedmirt <- function(data, covdata, model, fixed = ~ 1, random = NULL, itemtype
     random <- ~ 1 
     ###
     if(fixed == ~ 1 && random == ~ 1)
-        stop('No fixed or random effects have been specified.')        
+        stop('No fixed or random effects have been specified.')
     Theta <- matrix(0, nrow(data), nrow(model$x))
-    colnames(Theta) <- model$x[,1]    
+    colnames(Theta) <- model$x[,1]
     fixed.design <- designMats(covdata, fixed, Theta)
     mixedlist <- list(fixed=fixed, random=random, covdata=covdata, factorNames=model$x[,1], 
-                      FD=fixed.design, fixed.constrain=fixed.constrain)    
+                      FD=fixed.design, fixed.constrain=fixed.constrain)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, 
                       D=1, mixedlist=mixedlist, method='MIXED', ...)
     if(is(mod, 'MixedClass'))

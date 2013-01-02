@@ -40,3 +40,26 @@ test_that('mixed poly', {
     covdata <- data.frame(group, pseudoIQ)
     
 })
+
+test_that('item covs', {
+    set.seed(1234)
+    N <- 750
+    a <- matrix(rep(1,10))
+    d <- matrix(c(rep(-1,5), rep(1,5)))    
+    Theta <- matrix(rnorm(N))
+    data <- simdata(a, d, N, itemtype = rep('dich',10), Theta=Theta, D=1)
+    covdata <- data.frame(itempred=rep(1, nrow(data)))
+    # d > 0
+    model <- confmirt.model('confmods/mixedmirt1', quiet = TRUE)  
+    sv <- mixedmirt(data, covdata, model, fixed= ~ itempred, pars = 'values', 
+                               itemtype = 'Rasch')
+    sv$value[sv$name == 'd'] <- 0
+    sv$est[sv$name == 'd'] <- FALSE
+    constrain <- list()
+    constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
+    constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
+    mod <- mixedmirt(data, covdata, model, fixed= ~ itempred, pars = sv, 
+                     itemtype = 'Rasch', constrain = constrain, fixed.constrain = FALSE, 
+                     verbose = FALSE)    
+    expect_is(mod, 'MixedClass')                          
+})    

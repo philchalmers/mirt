@@ -97,3 +97,17 @@ NULL
 #'
 #' @keywords data
 NULL
+
+#' Description of deAyala data
+#' 
+#' Mathematics data from de Ayala (2009; pg. 14); 5 item dataset in table format.
+#' 
+#' 
+#' @name deAyala
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
+#'
+#' @keywords data
+NULL

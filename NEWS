@@ -1,3 +1,6 @@
+* mixedmirt() can now model item level design matricies (e.g., LLTM) that the user must manually 
+  customize. Examples of how to do this are in the documentation in ?mixedmirt
+
 * new fitIndices() function added to compute additional model fit statistics such as M2
 
 * lower bound parameters under more stringent control during estimation and are bounded to never 

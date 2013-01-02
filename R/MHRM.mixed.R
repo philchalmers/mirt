@@ -86,7 +86,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         stop('Constraint applied to fixed parameter(s) ', 
              paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to 
                  estimated parameters. Please fix!')
-    }              
+    }      
     ####Big MHRM loop    
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
     {     
@@ -175,7 +175,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
             ind1 <- ind2 + 1
-        }
+        }        
         grad <- g %*% L 
         ave.h <- (-1)*L %*% h %*% L 			       
         grad <- grad[1, estpars & !redun_constr]		

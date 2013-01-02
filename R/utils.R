@@ -519,6 +519,8 @@ designMats <- function(covdata, fixed, Thetas, random = NULL){
     drop <- rep(FALSE, length(CN))
     for(i in 1:ncol(Thetas))
         drop <- drop | CN == cn[i]
-    fixed.design <- fixed.design[ , !drop, drop = FALSE]   
+    fixed.design <- fixed.design[ , !drop, drop = FALSE]  
+    zerocols <- colSums(abs(fixed.design))    
+    fixed.design[ ,zerocols == 0] <- 1     
     return(fixed.design)    
 }
