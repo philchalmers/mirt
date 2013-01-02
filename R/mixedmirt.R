@@ -161,6 +161,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     Call <- match.call() 
     if(is.null(covdata))
         covdata <- data.frame(InTeRnAlUsElESsNaMe = matrix(1, nrow(data)))
+    if(!is.null(itemdesign) && fixed.constrain)
+        stop('fixed.constrain must be set to FALSE when using an itemdesign matrix input.')
     if(is.null(itemdesign))
         itemdesign <- data.frame(InTeRnAlUsElESsNaMe2 = matrix(1, ncol(data)))
     for(i in 1:ncol(covdata))
