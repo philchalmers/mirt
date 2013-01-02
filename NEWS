@@ -1,3 +1,6 @@
+* multipleGroup() now has the logical options bfactor = TRUE to use the dimensional reduction algorithm 
+  for when the factor pattern is structured like a bifactor model
+
 * mixedmirt() can now model item level design matricies (e.g., LLTM) that the user must manually 
   customize. Examples of how to do this are in the documentation in ?mixedmirt
 

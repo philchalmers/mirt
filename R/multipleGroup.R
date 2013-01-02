@@ -47,6 +47,9 @@
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
+#' @param bfactor logical; use the dimensional reduction algorithm if the factor pattern is a bifactor
+#' model (has exactly 1 general factor and 1 specific factor for each item). Only applicable when 
+#' \code{method = 'EM'}
 #' @param prev.mod an optional input object of class \code{'MultipleGroupClass'} to quickly 
 #' change the starting values of the current estimation.
 #' If a parameter in the current model is being freely estimated then it's value will be set to whatever the 
@@ -188,11 +191,11 @@
 #' anova(mod_fullconstrain, mod_scalar)
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                          SE = FALSE, SEtol = .001, invariance = '', pars = NULL, 
-                          method = 'MHRM', constrain = NULL, 
-                          parprior = NULL, calcNull = TRUE, draws = 2000, 
+                          SE = FALSE, SEtol = .001, invariance = '', pars = NULL,  method = 'MHRM',
+                          constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 2000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,
-                          D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
+                          bfactor = FALSE, D = 1.702, technical = list(), debug = FALSE, 
+                          verbose = TRUE, ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()        
@@ -200,7 +203,8 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       itemtype=itemtype, guess=guess, upper=upper, nested.mod=prev.mod, 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
-                      technical = technical, debug = debug, verbose = verbose, calcNull=calcNull, ...)
+                      technical = technical, debug = debug, verbose = verbose, calcNull=calcNull, 
+                      BFACTOR=bfactor, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)    

@@ -90,6 +90,11 @@
   \item{calcNull}{logical; calculate the Null model for fit
   statics (e.g., TLI)?}
 
+  \item{bfactor}{logical; use the dimensional reduction
+  algorithm if the factor pattern is a bifactor model (has
+  exactly 1 general factor and 1 specific factor for each
+  item). Only applicable when \code{method = 'EM'}}
+
   \item{prev.mod}{an optional input object of class
   \code{'MultipleGroupClass'} to quickly change the
   starting values of the current estimation. If a parameter
