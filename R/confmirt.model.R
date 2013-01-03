@@ -1,6 +1,6 @@
 #' Specify model loadings
 #' 
-#' The \code{confmirt.model} function scans user input to specify the
+#' The \code{confmirt.model} function scans/reads user input to specify the
 #' confirmatory model.
 #' 
 #' Factors are first named and then specify which numerical items they affect
@@ -8,7 +8,7 @@
 #' - to indicate a range of items. Products between factors may be specified 
 #' by enclosing the left hand term within brackets. To finish the declaration of
 #' a model simply enter a blank line with only a carriage return (i.e., the 
-#' 'enter' or 'return' key).
+#' 'enter' or 'return' key), or instead read in a string version of the model syntax.
 #'
 #' There is an optional keyword for specifying the correlation between relationships between factors 
 #' called \code{COV}, and nonlinear factor products can be included by enclosing the product combination
@@ -21,6 +21,7 @@
 #' factors with an asterisk (e.g., F1*F2).}
 #' }
 #' 
+#' @param string a string input for writting out the model syntax.
 #' @param file a string specifying an external file that declares the input.
 #' @param ... additional arguments for \code{scan()}
 #' @return Returns a model specification object to be used in
@@ -37,10 +38,23 @@
 #'   (F1*F2) = 1,2,3,4-10
 #'   COV = F1*F2
 #'     
+#'     
+#' #Or alternatively
+#' s <- 'F1 = 1,2,3,4-10
+#'       F2 = 10-20
+#'       (F1*F2) = 1,2,3,4-10
+#'       COV = F1*F2'
+#' model <- confmirt.model(s)  
+#'           
 #'     }
 #' 
-confmirt.model <- function(file = "", ...)
-{
+confmirt.model <- function(string = NULL, file = "",  ...)
+{    
+    if(!is.null(string)){
+        mstring <- strsplit(string, '\\n')
+        file <- tempfile()
+        write.table(mstring, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+    }
     mod <- scan(file = file, what = list(type = "", pars = ""), 
 		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, ...)
 	mod <- cbind(mod$type, mod$pars)

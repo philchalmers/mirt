@@ -1,3 +1,6 @@
+* confmirt.model() can accept a string inputs, which may be useful for knitr/sweave documents
+  since the scan() function tends to hang
+
 * multipleGroup() now has the logical options bfactor = TRUE to use the dimensional reduction algorithm 
   for when the factor pattern is structured like a bifactor model
 

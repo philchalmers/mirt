@@ -2,9 +2,12 @@
 \alias{confmirt.model}
 \title{Specify model loadings}
 \usage{
-  confmirt.model(file = "", ...)
+  confmirt.model(string = NULL, file = "", ...)
 }
 \arguments{
+  \item{string}{a string input for writting out the model
+  syntax.}
+
   \item{file}{a string specifying an external file that
   declares the input.}
 
@@ -15,8 +18,8 @@
   \code{\link{confmirt}}.
 }
 \description{
-  The \code{confmirt.model} function scans user input to
-  specify the confirmatory model.
+  The \code{confmirt.model} function scans/reads user input
+  to specify the confirmatory model.
 }
 \details{
   Factors are first named and then specify which numerical
@@ -26,7 +29,8 @@
   by enclosing the left hand term within brackets. To
   finish the declaration of a model simply enter a blank
   line with only a carriage return (i.e., the 'enter' or
-  'return' key).
+  'return' key), or instead read in a string version of the
+  model syntax.
 
   There is an optional keyword for specifying the
   correlation between relationships between factors called
@@ -48,6 +52,14 @@ model <- confmirt.model()
   F2 = 10-20
   (F1*F2) = 1,2,3,4-10
   COV = F1*F2
+
+
+#Or alternatively
+s <- 'F1 = 1,2,3,4-10
+      F2 = 10-20
+      (F1*F2) = 1,2,3,4-10
+      COV = F1*F2'
+model <- confmirt.model(s)
 
     }
 }
