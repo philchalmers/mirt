@@ -310,7 +310,7 @@ bfactor2mod <- function(model, J){
         tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
     }
     cat(tmp2, file=tmp)
-    model <- confmirt.model(tmp, quiet = TRUE)        
+    model <- confmirt.model(file=tmp, quiet = TRUE)        
     unlink(tmp)
     return(model)
 }
