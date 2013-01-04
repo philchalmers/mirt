@@ -29,10 +29,25 @@ test_that('confirmatory mods', {
     
     #analyses
     #CIFA for 2 factor crossed structure    
+    model1 <- '
+    F1 = 1-4
+    F2 = 4-8
+    COV = F1*F2'
+    
+    modelquad <- '
+    F = 1-8
+    (F*F) = 1-4
+    '
+    
+    modelcombo <- '
+    F1 = 1-4
+    F2 = 5-8
+    (F1*F2) = 1,5
+    '    
         
-    model.1 <- confmirt.model('confmods/model1', quiet = TRUE)    
-    model.quad <- confmirt.model('confmods/modelquad', quiet = TRUE)
-    model.combo <- confmirt.model('confmods/modelcombo', quiet = TRUE)    
+    model.1 <- confmirt.model(model1, quiet = TRUE)    
+    model.quad <- confmirt.model(modelquad, quiet = TRUE)
+    model.combo <- confmirt.model(modelcombo, quiet = TRUE)    
     
     mod1 <- confmirt(dataset,model.1, verbose = FALSE)    
     expect_is(mod1, 'ConfirmatoryClass')    

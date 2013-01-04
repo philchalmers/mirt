@@ -11,12 +11,14 @@ test_that('mixed dich', {
     group <- factor(rep(c('G1','G2','G3'), each = N/3))
     data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
     covdata <- data.frame(group, pseudoIQ)
+    mixedmirt1 <- 'Theta = 1-10'
+    model <- confmirt.model(mixedmirt1, quiet = TRUE)  
     
-    model <- confmirt.model('confmods/mixedmirt1', quiet = TRUE)  
     #group as a fixed effect predictor (aka, uniform dif)
     mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', verbose = FALSE,
                       fixed.constrain = TRUE)
     expect_is(mod1, 'MixedClass')                  
+    
     #model using 2PL items instead of only Rasch
     mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, verbose = FALSE, fixed.constrain = TRUE)    
     expect_is(mod1b, 'MixedClass')                      
@@ -37,7 +39,8 @@ test_that('item covs', {
     Theta <- matrix(rnorm(N))
     data <- simdata(a, d, N, itemtype = rep('dich',10), Theta=Theta, D=1)
     itemdesign <- data.frame(itempred=rep(1, ncol(data)))
-    model <- confmirt.model('confmods/mixedmirt1', quiet = TRUE)      
+    mixedmirt1 <- 'Theta = 1-10'
+    model <- confmirt.model(mixedmirt1, quiet = TRUE)     
     sv <- mixedmirt(data, model = model, fixed = ~ itempred, pars = 'values', 
                       itemtype = 'Rasch', itemdesign = itemdesign)
     sv$value[sv$name == 'd'] <- 0

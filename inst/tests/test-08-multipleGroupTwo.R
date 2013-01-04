@@ -13,10 +13,20 @@ test_that('three factor', {
     dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
     dat <- rbind(dataset1, dataset2)
     group <- c(rep('D1', N), rep('D2', N))
+    MGmodelg1 <- '
+    F1 = 1-5
+    F2 = 6-10
+    F3 = 11-15'
+    
+    MGmodelg2 <- '
+    F1 = 1-5
+    F2 = 6-10
+    F3 = 11-15
+    COV = F1*F2, F1*F3, F2*F3'
     
     #group models
-    model1 <- confmirt.model('confmods/MGmodelg1', quiet = TRUE)    
-    model2 <- confmirt.model('confmods/MGmodelg2', quiet = TRUE)    
+    model1 <- confmirt.model(MGmodelg1, quiet = TRUE)    
+    model2 <- confmirt.model(MGmodelg2, quiet = TRUE)    
     models <- list(D1=model1, D2=model2)    
     
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
