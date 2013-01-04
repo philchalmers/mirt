@@ -69,7 +69,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
              paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to 
                  estimated parameters. Please fix!')
     }   
-    Prior <- prior <- gstructgrouppars <- rlist <- r <- list()    
+    Prior <- prior <- gstructgrouppars <- rlist <- r <- list()        
+    #make sure constrained pars are equal    
+    tmp <- rowSums(L)
+    tmp[tmp == 0] <- 1
+    tmp <- matrix(1/tmp, length(longpars), length(longpars), byrow = TRUE)
+    tmp2 <- abs(diag(L) - 1)
+    longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
     LL <- 0
     for(g in 1:ngroups)
         r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]    

@@ -87,7 +87,13 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         stop('Constraint applied to fixed parameter(s) ', 
              paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to 
                  estimated parameters. Please fix!')
-    }          
+    }  
+    #make sure constrained pars are equal    
+    tmp <- rowSums(L)
+    tmp[tmp == 0] <- 1
+    tmp <- matrix(1/tmp, length(longpars), length(longpars), byrow = TRUE)
+    tmp2 <- abs(diag(L) - 1)
+    longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
     ####Big MHRM loop
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
     {     
