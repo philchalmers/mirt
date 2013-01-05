@@ -222,11 +222,14 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             correction <- as.vector(inv.ave.h %*% grad)
             correction[correction > .5] <- 1
             correction[correction < -.5] <- -1
-            #prevent guessing pars from moving more than .002 at all times
+            #prevent guessing pars from moving more than .001 at all times
             names(correction) <- names(estpars[estpars & !redun_constr])                   
             tmp <- correction[names(correction) == 'g']
-            tmp[abs(tmp) > .002] <- sign(tmp[abs(tmp) > .002]) * .002/gamma
+            tmp[abs(tmp) > .001] <- sign(tmp[abs(tmp) > .001]) * .001/gamma
             correction[names(correction) == 'g'] <- tmp
+            tmp <- correction[names(correction) == 'u']
+            tmp[abs(tmp*gamma) > .001] <- sign(tmp[abs(tmp*gamma) > .001]) * .001/gamma
+            correction[names(correction) == 'u'] <- tmp
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
@@ -260,11 +263,14 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         #stepsize limit
         correction[gamma*correction > .25] <- .25/gamma
         correction[gamma*correction < -.25] <- -.25/gamma
-        #prevent guessing pars from moving more than .002 at all times
+        #prevent guessing pars from moving more than .001 at all times
         names(correction) <- names(estpars[estpars & !redun_constr])                   
         tmp <- correction[names(correction) == 'g']
-        tmp[abs(tmp*gamma) > .002] <- sign(tmp[abs(tmp*gamma) > .002]) * .002/gamma
+        tmp[abs(tmp*gamma) > .001] <- sign(tmp[abs(tmp*gamma) > .001]) * .001/gamma
         correction[names(correction) == 'g'] <- tmp
+        tmp <- correction[names(correction) == 'u']
+        tmp[abs(tmp*gamma) > .001] <- sign(tmp[abs(tmp*gamma) > .001]) * .001/gamma
+        correction[names(correction) == 'u'] <- tmp
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction          
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
