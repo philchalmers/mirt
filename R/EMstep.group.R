@@ -204,12 +204,12 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             correction[correction < -stepLimit] <- -stepLimit
             #prevent guessing/upper pars from moving more than .001 at all times
             names(correction) <- names(estpars[estpars & !redun_constr])
-            if(stepLimit > .001){                
+            if(stepLimit > .002){                
                 tmp <- correction[names(correction) == 'g']
-                tmp[abs(tmp) > .001] <- sign(tmp[abs(tmp) > .001]) * .001
+                tmp[abs(tmp) > .002] <- sign(tmp[abs(tmp) > .002]) * .002
                 correction[names(correction) == 'g'] <- tmp
                 tmp <- correction[names(correction) == 'u']
-                tmp[abs(tmp) > .001] <- sign(tmp[abs(tmp) > .001]) * .001
+                tmp[abs(tmp) > .002] <- sign(tmp[abs(tmp) > .002]) * .002
                 correction[names(correction) == 'u'] <- tmp
             }
             longpars[estindex_unique] <- longpars[estindex_unique] - correction                       
