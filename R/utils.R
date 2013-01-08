@@ -516,14 +516,14 @@ ItemInfo <- function(x, Theta, cosangle){
 }
 
 designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random = NULL, 
-                       fixed.identical = FALSE){ 
+                       fixed.identical = FALSE){     
     fixed.design.list <- vector('list', nitems)     
     for(item in 1:nitems){
         if(item > 1 && fixed.identical){
             fixed.design.list[[item]] <- fixed.design.list[[1]]
             next            
-        }
-        if(!is.null(itemdesign)){
+        }        
+        if(colnames(itemdesign)[1] != 'InTeRnAlUsElESsNaMe2'){
             dat <- data.frame(matrix(itemdesign[item, ], nrow(data), ncol(itemdesign), byrow=TRUE), 
                                    covdata, Thetas)
             colnames(dat) <- c(colnames(itemdesign), colnames(covdata), colnames(Thetas))
