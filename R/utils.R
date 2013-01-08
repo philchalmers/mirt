@@ -522,9 +522,9 @@ designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random
         if(item > 1 && fixed.identical){
             fixed.design.list[[item]] <- fixed.design.list[[1]]
             next            
-        }        
+        }                
         if(colnames(itemdesign)[1] != 'InTeRnAlUsElESsNaMe2'){
-            dat <- data.frame(matrix(itemdesign[item, ], nrow(data), ncol(itemdesign), byrow=TRUE), 
+            dat <- data.frame(matrix(itemdesign[item, ], nrow(covdata), ncol(itemdesign), byrow=TRUE), 
                                    covdata, Thetas)
             colnames(dat) <- c(colnames(itemdesign), colnames(covdata), colnames(Thetas))
         } else dat <- data.frame(covdata, Thetas)        
