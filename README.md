@@ -43,8 +43,8 @@ library('devtools')
 install_github('mirt', 'philchalmers', quick = TRUE)
 ```
 
-If the install fails because an appropriate `pdflatex` compiler is missing install the developement 
-version devtools (`devtools::install_github('devtools', 'wch')`) and re-run the above install chunk.
+If the install fails because an appropriate `pdflatex` compiler is missing then install the development 
+version devtools (`devtools::install_github('devtools', 'hadley')`) and re-run the above install chunk.
 
 #Extra
 
