@@ -540,3 +540,26 @@ designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random
     }
     return(fixed.design.list)    
 }
+
+nameInfoMatrix <- function(info, correction, L, npars){
+    #give info meaningful names for wald test    
+    parnames <- names(correction)
+    tmp <- outer(1:npars, rep(1, npars))
+    matind <- matrix(0, ncol(tmp), nrow(tmp))
+    matind[lower.tri(matind, diag = TRUE)] <- tmp[lower.tri(tmp, diag = TRUE)]    
+    matind <- matind * L
+    matind[matind == 0 ] <- NA  
+    shortnames <- c()
+    for(i in 1:length(correction)){
+        keep <- is.na(matind[ , 1])
+        while(all(keep)){            
+            matind <- matind[-1, -1, drop = FALSE]        
+            keep <- is.na(matind[ , 1])
+        }            
+        tmp <- paste0(parnames[i], paste0('.', matind[!keep, 1], collapse=''))
+        shortnames <- c(shortnames, tmp)
+        matind <- matind[keep, keep, drop = FALSE]        
+    }
+    colnames(info) <- rownames(info) <- shortnames
+    return(info)
+}

@@ -1,15 +1,19 @@
 #' Wald test for mirt models
 #' 
 #' Compute a Wald test given an \code{L} vector or matrix of numeric contrasts. Requires that the 
-#' model information matrix be computed (including \code{SE = TRUE} when using the EM method). 
+#' model information matrix be computed (including \code{SE = TRUE} when using the EM method). Use
+#' \code{wald(model)} to observe how the information matrix columns are named, especially if 
+#' the estimated model contains constrained parameters (e.g., 1PL). The information matrix names 
+#' are labelled according to which parameter number(s) they correspeond to (to check the original 
+#' numbering use the option \code{pars = 'values'} in the original estimation function).
 #' 
 #' 
 #' @aliases wald
 #' @param L a coefficient matrix with dimensions nconstrasts x npars, or a vector if only one
-#' set of contrasts is being tested. Use \code{pars = 'values'}
-#' on the initially estimated model to obtain the parameter indicators  
+#' set of contrasts is being tested. Ommiting this value will return the column names of the 
+#' information matrix used to identify the (potentially constrained) parameters  
 #' @param object estimated object from \code{mirt}, \code{bfactor}, \code{confmirt},
-#' or \code{multipleGroup}
+#' \code{multipleGroup}, or \code{mixedmirt}
 #' @param C a constant vector/matrix to be compared along side L
 #' @keywords wald
 #' @export wald
@@ -24,28 +28,34 @@
 #'    
 #'    
 #' mod <- mirt(data, cmodel, SE = TRUE)
-#' coef(mod, allpars = TRUE)
+#' coef(mod)
+#' 
+#' #see how the infomation matrix relates to estimated parameters, and how it lines up with the index
+#' (infonames <- wald(mod))
 #' index <- mirt(data, cmodel, pars = 'values')
 #' index
 #' 
-#'        
-#' #second factor slopes equal to 0?
-#' L <- rep(0, 30)
-#' names(L) <- index$name
-#' L[index$name == 'a2' & index$est] <- 1
-#' wald(L, mod)
+#' #second factor slope equal to 0?
+#' L <- rep(0, 10)
+#' names(L) <- infonames
+#' L[3] <- 1
+#' wald(mod, L)
 #' 
 #' #simultaneously test equal factor slopes for item 2 and 3, and 4 and 5
-#' L <- matrix(0, 2, 30)
-#' L[1,16] <- L[2, 7] <- 1
-#' L[1,21] <- L[2, 12] <- -1
-#' wald(L, mod)
+#' L <- matrix(0, 2, 10)
+#' colnames(L) <- infonames #colnames() not required
+#' L[1,3] <- L[2, 7] <- 1
+#' L[1,5] <- L[2, 9] <- -1
+#' L
+#' wald(mod, L)
 #' 
 #' #logLiklihood tests (requires estimating a new model)
 #' mod2 <- mirt(data, cmodel, constrain = list(c(7,12), c(16,21)))
 #' anova(mod2, mod)
 #' }
-wald <- function(L, object, C = 0){
+wald <- function(object, L, C = 0){
+    if(missing(L))
+        return(colnames(object@information))    
     pars <- object@pars
     covB <- solve(object@information)
     estB <- B <- c()
@@ -72,8 +82,7 @@ wald <- function(L, object, C = 0){
     estB <- matrix(estB, 1)
     B <- B[estB[1,]]       
     if(!is.matrix(L))
-        L <- matrix(L, 1)        
-    if(ncol(L) == ncol(estB)) L <- L[, estB, drop = FALSE]    
+        L <- matrix(L, 1)            
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
     ret <- list(W=W, df = nrow(L))
     class(ret) <- 'wald'
