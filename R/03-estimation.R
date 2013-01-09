@@ -135,7 +135,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(method == 'EM' && nLambdas > nfact) 
             stop('Polynominals and product terms not supported for EM method')
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
-        Theta <- theta <- as.matrix(seq(-4,4,length.out = quadpts))
+        Theta <- theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts),
+                                        length.out = quadpts))        
         temp <- matrix(0,nrow=J,ncol=(nfact-1))
         sitems <- matrix(0, nrow=sum(PrepListFull$K), ncol=(nfact-1))
         if(BFACTOR){                
