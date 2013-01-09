@@ -179,6 +179,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         Pl <- list(Pl)
         if(!NULL.MODEL && SE){
+            tmp <- ESTIMATE
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=NCYCLES, BURNIN=1, SEMCYCLES=5,
                                            KDRAWS=KDRAWS, TOL=SEtol, USEEM=USEEM, gain=gain, 
@@ -187,6 +188,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfact=nfact, constrain=constrain, verbose=FALSE,
                                            startlongpars=startlongpars), 
                                debug=debug)                 
+            ESTIMATE$cycles <- tmp$cycles
         }
     } else if(method == 'MHRM'){ #MHRM estimation
         Theta <- matrix(0, nrow(data), J)
