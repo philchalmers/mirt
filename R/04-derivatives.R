@@ -4,7 +4,7 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){        
+    definition = function(x, Theta, EM = FALSE, prior = NULL){         
         f <- 1
         dat <- x@dat[ ,2]
         Prior <- rep(1, length(dat))
@@ -21,51 +21,76 @@ setMethod(
         a <- x@par[1:nfact]        
         P <- P.mirt(a, d, Theta, g=g, u=u, D=x@D)
         Q <- 1 - P        
-        hess <- matrix(0,nfact+3, nfact+3)						
-        if(x@par[parlength] == 1){ #'3PL'            	
-            Pstar <- P.mirt(a,d,Theta,0,1, D=x@D)		
-            Qstar <- 1 - Pstar
-            da <- rep(0,nfact)	
-            dd <- sum((1-g)*Pstar*Qstar*(dat/P - (f-dat)/Q)*Prior)
-            dc <- sum(Qstar*(dat/P - (f-dat)/Q)*Prior)
-            for(i in 1:nfact){
-                da[i] <- sum(Theta[,i]*Pstar*Qstar*(1-g)*(dat/P - (f-dat)/Q)*Prior)
-            }
-            grad <- c(da,dd,dc,0)				
-            gloc <- nfact+2
-            const1 <- (dat/P - (f-dat)/Q)*(Qstar-Pstar)
-            const2 <- (dat/P^2 + (f-dat)/Q^2)	
-            hess[nfact+1,nfact+1] <- sum((1-g)*Pstar*Qstar*(const1 - 
-                Pstar*Qstar*(1-g)*const2)*Prior)		
-            hess[gloc,gloc] <- -sum(Qstar^2 *(dat/P^2 + (f-dat)/Q^2)*Prior)
-            hess[gloc,nfact+1] <- hess[nfact+1,gloc] <- sum(-Pstar*Qstar*((dat/P - (f-dat)/Q) + 
-                Qstar*(1-g)*const2)*Prior) 
-            for(i in 1:nfact){
-                hess[nfact+1,i] <- hess[i,nfact+1] <- sum((1-g)*Theta[,i]*Pstar*Qstar*(const1 - 
-                    Pstar*Qstar*(1-g)*const2)*Prior)			
-                hess[gloc,i] <- hess[i,gloc] <- sum(-Theta[,i]*Pstar*Qstar*((dat/P - (f-dat)/Q) + 
-                    Qstar*(1-g)*const2)*Prior)		
-                for(j in 1:nfact){
-                    if(i == j)
-                        hess[i,i] <- sum(Theta[,i]^2 *Pstar*Qstar*(1-g)*(const1 - 
-                            (1-g)*Pstar*Qstar*const2)*Prior)
-                    if(i < j)
-                        hess[i,j] <- hess[j,i] <- sum(Theta[,i]*Theta[,j] *Pstar*Qstar*(1-g)*
-                            (const1 - (1-g)*Pstar*Qstar*const2)*Prior)					
-                }
-            }	
-        } else { #4PL 
-            grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))
-            if(EM){                
-                grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
-                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
-                return(list(grad = grad, hess = hess))            
-            }            
-            grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
-            return(list(grad=grad, hess=hess))
+        hess <- matrix(0,nfact+3, nfact+3)						                
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))       
+        Pstar <- P.mirt(a,d,Theta,0,1, D=x@D)    	
+        Qstar <- 1 - Pstar
+        D <- x@D
+        da <- rep(0,nfact)	
+        r1 <- dat
+        r2 <- f - dat
+        r1_P <- r1/P; r1_P2 <- r1/P^2;
+        r2_Q <- r2/Q; r2_Q2 <- r2/Q^2;
+        dd <- sum((u-g)*D*Pstar*Qstar*(r1_P - r2_Q)*Prior)
+        dc <- sum(Qstar*(r1_P - r2_Q)*Prior)
+        du <- sum(Pstar*(r1_P - r2_Q)*Prior)
+        for(i in 1:nfact)
+            da[i] <- sum(Theta[,i]*D*Pstar*Qstar*(u-g)*(r1_P - r2_Q)*Prior)            
+        grad <- c(da,dd,dc,du)
+        #handy collections
+        gloc <- nfact+2; uloc <- nfact+3
+        ugD2 <- (u-g) * D^2; ugD <- (u-g) * D; Pstar2 <- Pstar^2; Pstar3 <- Pstar^3        
+        ###
+        hess[nfact+1,nfact+1] <- sum((r1_P * (ugD2 * (Pstar - 3*Pstar2 + 2*Pstar3)) -
+                                          r1_P2 * (ugD * (Pstar - Pstar2))^2 +  
+                                          r2_Q * (ugD2 * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
+                                          r2_Q2 * (ugD * (-Pstar + Pstar2))^2)*Prior)
+        hess[gloc,gloc] <- -sum(Qstar^2 *(r1_P2 + r2_Q2)*Prior) 
+        hess[uloc,uloc] <- -sum(Pstar2 *(r1_P2 + r2_Q2)*Prior) 
+        hess[nfact + 1, gloc] <- hess[gloc, nfact + 1] <- 
+            sum((r1_P * (D * (-Pstar + Pstar2)) -
+                     r1_P2 * (ugD * (Pstar - Pstar2)) * Qstar +  
+                     r2_Q * (D * (Pstar - Pstar2)) -
+                     r2_Q2 * (ugD * (-Pstar + Pstar2)) * -Qstar) * Prior)
+        hess[nfact + 1, uloc] <- hess[uloc, nfact + 1] <-
+            sum((r1_P * (D * (Pstar - Pstar2)) -
+                     r1_P2 * (ugD * (Pstar - Pstar2)) * Pstar +  
+                     r2_Q * (D * (-Pstar + Pstar2)) +
+                     r2_Q2 * (ugD * (-Pstar + Pstar2)) * Pstar) * Prior)
+        hess[gloc, uloc] <- hess[uloc, gloc] <-
+            sum((-r1_P2 * Pstar * Qstar + r2_Q2 * Pstar * (-1 + Pstar )) * Prior)
+        for(i in 1:nfact)
+            for(j in 1:nfact)
+                if(i <= j)
+                    hess[i, j] <- sum((r1_P * (ugD2 * Theta[,i] * Theta[,j] * 
+                                                     (Pstar - 3*Pstar2 + 2*Pstar3)) -
+                                           r1_P2 * (ugD * Theta[,i] * (Pstar - Pstar2)) * 
+                                              (ugD * Theta[,j] * (Pstar - Pstar2)) +  
+                                           r2_Q * (ugD2 * Theta[,i] * Theta[,j] * 
+                                               (-Pstar + 3*Pstar2 - 2*Pstar3)) -
+                                           r2_Q2 * (ugD * Theta[,i] * (-Pstar + Pstar2)) * 
+                                              (ugD * Theta[,j] * (-Pstar + Pstar2))) * Prior)
+        for(i in 1:nfact){
+            hess[i, nfact + 1] <- hess[nfact + 1, i] <- 
+                sum((r1_P * (ugD2 * Theta[,i] * (Pstar - 3*Pstar2 + 2*Pstar3)) -
+                         r1_P2 * (ugD * Theta[,i] * (Pstar - Pstar2)) * 
+                            (ugD * (Pstar - Pstar2)) +  
+                         r2_Q * (ugD2 * Theta[,i] * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
+                         r2_Q2 * (ugD * Theta[,i] * (-Pstar + Pstar2)) * 
+                         (ugD * (-Pstar + Pstar2))) * Prior)
+            hess[i, gloc] <- hess[gloc, i] <- 
+                sum((r1_P * (D * Theta[,i] * (-Pstar + Pstar2)) -
+                         r1_P2 * (ugD * Theta[,i] * (Pstar - Pstar2)) * Qstar +  
+                         r2_Q * (D * Theta[,i] * (Pstar - Pstar2)) -
+                         r2_Q2 * (ugD * Theta[,i] * (-Pstar + Pstar2) ) * (-1 + Pstar)) * Prior)
+            hess[i, uloc] <- hess[uloc, i] <- 
+                sum((r1_P * (D * Theta[,i] * (Pstar - Pstar2)) -
+                         r1_P2 * (ugD * Theta[,i] * (Pstar - Pstar2)) * Pstar +  
+                         r2_Q * (D * Theta[,i] * (-Pstar + Pstar2)) +
+                         r2_Q2 * (ugD * Theta[,i] * (-Pstar + Pstar2) ) * Pstar) * Prior)
         }       
+           
         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
         return(ret)
     }

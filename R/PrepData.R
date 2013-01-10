@@ -46,6 +46,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     if(length(itemtype) == 1) itemtype <- rep(itemtype, J)
     if(length(itemtype) != J) stop('itemtype specification is not the correct length')    
     guess[guess == 0 & itemtype %in% c('3PL', '4PL', 'PC3PL')] <- .15
+    upper[upper == 1 & itemtype %in% c('4PL', '3PLu')] <- .85
     itemloc <- cumsum(c(1,K))	
     model <- matrix(model$x,ncol=2)
     factorNames <- setdiff(model[,1],keywords)

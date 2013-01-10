@@ -1,3 +1,5 @@
+* dichotomous models optimized (including 4PL)
+
 * wald() will now support information matricies that contain constrained parameters
 
 * confmirt.model() can accept a string inputs, which may be useful for knitr/sweave documents

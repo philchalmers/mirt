@@ -481,7 +481,7 @@ setMethod(
         d <- x@par[-(1:x@nfact)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
-        P <- P.gpcm(a=a, d=d, Theta=Theta, D=x@D)
+        P <- P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D)
         return(P)
     }
 )
@@ -496,7 +496,7 @@ setMethod(
         d[-1] <- d[-1] + t
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)        
-        P <- P.gpcm(a=a, d=d, Theta=Theta, D=x@D)
+        P <- P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D)
         return(P)
     }
 )
@@ -601,21 +601,6 @@ P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
     P[P < 1e-8] <- 1e-8
     P[(1 - P) < 1e-8] <- 1 - 1e-8
     if(returnNum) return(numerator)
-    return(P)   
-}
-
-#d[1] == 0
-P.gpcm <- function(a, d, Theta, D){ 
-    ncat <- length(d)
-    nfact <- ncol(Theta)            
-    k <- 0:(ncat-1)
-    numerator <- matrix(0, nrow(Theta), ncat)    
-    a <- matrix(a)    
-    for(i in 1:ncat)
-        numerator[ ,i] <- exp(D * k[i] * (Theta %*% a) + D * d[i])
-    P <- numerator/rowSums(numerator)    
-    P[P < 1e-8] <- 1e-8
-    P[(1 - P) < 1e-8] <- 1 - 1e-8
     return(P)   
 }
 
