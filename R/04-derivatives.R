@@ -99,13 +99,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){         
+    definition = function(x, Theta, EM = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))        
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
-            dat <- x@rs / sum(x@rs)                          
+            dat <- x@rs
             Prior <- prior
         } 
         nfact <- x@nfact
@@ -113,13 +113,14 @@ setMethod(
         d <- x@par[-(1:nfact)]
         nd <- length(d)    			
         P <- P.poly(a, d,Theta, D=x@D)			    	
-        ret <- .Call("dparsPoly", P, Theta, Prior, dat, nd) 
+        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd) 
         grad <- c(ret$grad[-(1:nd)], ret$grad[1:nd])
         hess <- matrix(0,nfact+nd,nfact+nd)
         hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
         hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
         hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
             ret$hess[(nd+1):ncol(hess), 1:nd]
+        hess <- hess * x@D
         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
         return(ret)
     }
@@ -128,19 +129,69 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){ 
-        grad <- rep(0, length(x@par))
-        hess <- matrix(0, length(x@par), length(x@par))
-        if(EM){                
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
-            return(list(grad = grad, hess = hess))            
-        }        
-        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
-        return(list(grad=grad, hess=hess))
-        #ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
-        #return(ret)
+    definition = function(x, Theta, EM = FALSE, prior = NULL){         
+        hess <- matrix(0, length(x@par), length(x@par))        
+        dat <- x@dat 
+        Prior <- rep(1, nrow(dat))
+        if(EM){
+            dat <- x@rs
+            Prior <- prior
+        } 
+        nfact <- x@nfact
+        a <- x@par[1:nfact]
+        d <- ExtractZetas(x)
+        nzetas <- length(d)
+        shiftind <- length(x@par)
+        shift <- x@par[shiftind]        
+        nd <- length(d)    			
+        P <- P.poly(a, d + shift, Theta, D=x@D)			    	
+        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd) 
+        grad <- c(ret$grad[-(1:nd)], ret$grad[1:nd])
+        hess <- matrix(0,nfact+nd,nfact+nd)
+        hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
+        hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
+        hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
+            ret$hess[(nd+1):ncol(hess), 1:nd]
+        hess <- hess * x@D        
+        dc <- numeric(1)
+        D <- x@D
+        D2 <- D^2
+        Pfull <- P
+        PQfull <- Pfull * (1-Pfull)
+        P <- P.poly(a, d + shift, Theta, D=x@D, itemexp=TRUE)   
+        rs <- dat
+        for(i in 1:ncol(rs))
+            dc <- dc + rs[,i]/P[,i] * D * (PQfull[,i] - PQfull[,i+1])         
+        dc <- sum(dc * Prior)
+        grad <- c(grad, dc)
+        hess <- cbind(hess, rep(0, nrow(hess)))
+        hess <- rbind(hess, rep(0, ncol(hess)))
+        cind <- ncol(hess)
+        ddc <- ddd <- numeric(length(Prior))        
+        dda <- matrix(0, length(Prior), nfact)        
+        for(i in 1:ncol(rs))
+            ddc <- ddc + rs[,i]/P[,i] * D2 * (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -  
+                Pfull[,i+1] + 3*Pfull[,i+1]^2 - 2*Pfull[,i+1]^3) - 
+                rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1])^2                
+        hess[cind, cind] <- sum(ddc * Prior)
+        for(i in 1:nzetas)
+            hess[cind, nfact + i] <- hess[nfact + i, cind] <- 
+                sum((rs[,i]/P[,i] * D2 * (-Pfull[,i+1] + 3*Pfull[,i+1]^2 - 2*Pfull[,i+1]^3) - 
+                rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1]) * (-PQfull[,i+1]) +
+                rs[,i+1]/P[,i+1] * D2 * (Pfull[,i+1] - 3*Pfull[,i+1]^2 + 2*Pfull[,i+1]^3) - 
+                rs[,i+1]/P[,i+1]^2 * D2 * (PQfull[,i+1] - PQfull[,i+2]) * (PQfull[,i+1]))*Prior)
+        for(j in 1:nfact){
+            tmp <- 0
+            for(i in 1:ncol(rs))
+                    tmp <- tmp + (rs[,i]/P[,i] * D2 * Theta[,j] * 
+                                      (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -  
+                                           Pfull[,i+1] + 3*Pfull[,i+1]^2 - 2*Pfull[,i+1]^3) - 
+                             rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1]) * Theta[,j] *
+                                  (PQfull[,i] - PQfull[,i+1]))
+            hess[cind, j] <- hess[j, cind] <- sum(tmp * Prior)
+        }
+        ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
+        return(ret)
     }
 )
 
