@@ -54,35 +54,31 @@
 #' anova(mod2, mod)
 #' }
 wald <- function(object, L, C = 0){
+    Names <- colnames(object@information)
     if(missing(L))
-        return(colnames(object@information))    
+        return(Names)    
+    if(!is.matrix(L))
+        L <- matrix(L, 1)    
     pars <- object@pars
     covB <- solve(object@information)
-    estB <- B <- c()
+    B <- parnum <- c()
     if(is(object, 'MultipleGroupClass')){
-        pars <- object@cmods
         for(g in 1:length(pars)){
             for(i in 1:length(pars[[g]]@pars)){
-                B <- c(B, pars[[g]]@pars[[i]]@par)        
-                estB <- c(estB, pars[[g]]@pars[[i]]@est)
+                B <- c(B, pars[[g]]@pars[[i]]@par)
+                parnum <- c(parnum, pars[[g]]@pars[[i]]@parnum)
             }
-        }        
+        }                
     } else {
         for(i in 1:length(pars)){
-            B <- c(B, pars[[i]]@par)        
-            estB <- c(estB, pars[[i]]@est)
+            B <- c(B, pars[[i]]@par)
+            parnum <- c(parnum, pars[[i]]@parnum)
         }
-    }
-    if(length(object@constrain) > 0){        
-        constr <- object@constrain
-        for(i in 1:length(constr))
-            for(j in 2:length(constr[[i]]))
-                estB[constr[[i]][j]] <- FALSE        
-    }
-    estB <- matrix(estB, 1)
-    B <- B[estB[1,]]       
-    if(!is.matrix(L))
-        L <- matrix(L, 1)            
+    }    
+    keep <- c()
+    for(i in 1:length(Names))
+        keep <- c(keep, as.numeric(strsplit(Names[i], '.', fixed = TRUE)[[1]][2]))
+    B <- B[keep]    
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
     ret <- list(W=W, df = nrow(L))
     class(ret) <- 'wald'
