@@ -1,4 +1,4 @@
-* dichotomous models optimized (including 4PL)
+* dichotomous models (including 4PL), and graded rating scale have been optimized
 
 * wald() will now support information matricies that contain constrained parameters
 
@@ -22,9 +22,7 @@
 * added AICc and sample size adjusted BIC (SABIC) information statistics
 
 * new mixedmirt() function for estimating IRT models with person and item level (e.g., LLTM) covariates.
-  Item level design matricies and constraints must manually be created by the user, with examples of how to do 
-  this in ?mixedmirt. Currently only supports fixed effect predictors, but random effect predictors 
-  are being developed
+  Currently only supports fixed effect predictors, but random effect predictors are being developed
  
 * more structured output when using the anova() generic
 

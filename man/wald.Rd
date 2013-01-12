@@ -31,12 +31,11 @@
   matrix be computed (including \code{SE = TRUE} when using
   the EM method). Use \code{wald(model)} to observe how the
   information matrix columns are named, especially if the
-  estimated model contain constrained parameters (e.g.,
+  estimated model contains constrained parameters (e.g.,
   1PL). The information matrix names are labelled according
-  to which parameter number(s) they correspeond to, so
-  using the option \code{pars = 'values'} in the original
-  estimation function will shed light on what the names
-  represent.
+  to which parameter number(s) they correspeond to (to
+  check the original numbering use the option \code{pars =
+  'values'} in the original estimation function).
 }
 \examples{
 \dontrun{
@@ -56,8 +55,7 @@ coef(mod)
 index <- mirt(data, cmodel, pars = 'values')
 index
 
-
-#second factor slopes equal to 0?
+#second factor slope equal to 0?
 L <- rep(0, 10)
 names(L) <- infonames
 L[3] <- 1
@@ -65,7 +63,7 @@ wald(mod, L)
 
 #simultaneously test equal factor slopes for item 2 and 3, and 4 and 5
 L <- matrix(0, 2, 10)
-colnames(L) <- infonames
+colnames(L) <- infonames #colnames() not required
 L[1,3] <- L[2, 7] <- 1
 L[1,5] <- L[2, 9] <- -1
 L

@@ -7,7 +7,8 @@
 \usage{
   mixedmirt(data, covdata = NULL, model, fixed = ~1,
     random = NULL, itemtype = NULL, itemdesign = NULL,
-    fixed.constrain = FALSE, ...)
+    fixed.constrain = FALSE, constrain = NULL, pars = NULL,
+    ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -41,14 +42,23 @@
   design matrix for the items, where each
   \code{nrow(itemdesign) == nitems} and the number of
   columns is equal to the number of fixed effect predictors
-  (i.e., item intercepts). For design based effects use a
-  matrix of 1's, and apply the appropriate item constraints
-  (see examples below)}
+  (i.e., item intercepts). If the intput consists of
+  variables with \code{factor} indicators then appropriate
+  constraints and identification parameteres are imposed.
+  However, design based effects using a matrix of 1's or
+  other numerics may also be included so long as an
+  appropriate \code{constrain} list is supplied}
 
   \item{fixed.constrain}{logical; constrain the fixed
   person effects to be equal accross items? Disable this
   when modelling item level covariates and apply the
   constraints manually}
+
+  \item{constrain}{a list indicating parameter equality
+  constrains. See \code{\link{mirt}} for more detail}
+
+  \item{pars}{used for parameter starting values. See
+  \code{\link{mirt}} for more detail}
 
   \item{...}{additinonal arguments to be passed to the
   MH-RM estimation engine. See \code{\link{confmirt}} for
@@ -118,11 +128,8 @@ summary(mod2)
 anova(mod1b, mod2)
 anova(mod2, mod3)
 
-###############################################################
-###### Advanced use of mixedmirt: LLTM, and 2PL version of LLTM
-###############################################################
-
-# flexible LLTM model by customizing the structure
+###########
+##LLTM, and 2PL version of LLTM
 data(SAT12)
 data <- key2binary(SAT12,
                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -130,29 +137,27 @@ model <- confmirt.model()
 Theta = 1-32
 
 
-itemdesign <- data.frame(itemorder = matrix(1, 32))
+itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 
-sv <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch',
-                itemdesign = itemdesign, pars = 'values')
-constrain <- list()
-constrain[[1]] <- sv$parnum[sv$name == 'itemorder'][1:16]
-constrain[[2]] <- sv$parnum[sv$name == 'itemorder'][-(1:16)]
-sv$value[sv$name == 'd'] <- 0
-sv$est[sv$name == 'd'] <- FALSE
-#estimate the LLTM model using the new starting values and constraints
-LLTM <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch',
-        itemdesign = itemdesign, pars = sv, constrain = constrain)
+LLTM <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch', itemdesign = itemdesign)
 coef(LLTM)
+wald(LLTM)
+L <- matrix(c(-1, 1), 1)
+wald(LLTM, L) #first half different from second
+
 #compare to standard items with estimated slopes (2PL)?
-sv$est[sv$name == 'a1'] <- TRUE
-twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder,
-        itemdesign = itemdesign, pars = sv, constrain = constrain)
+twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = '2PL', itemdesign = itemdesign)
 coef(twoPL)
+wald(twoPL)
+L <- matrix(0, 1, 34)
+L[1, 1] <- 1
+L[1, 18] <- -1
+wald(twoPL, L) #n.s.
 anova(twoPL, LLTM)
 #twoPL model better than LLTM, and don't draw the (spurious?) conclusion that the first
 #    half of the test is any easier/harder than the last
 
-### Similar example, but with simulated data instead
+### Similar example, but with simulated data instead and using numeric item desing matrix
 
 set.seed(1234)
 N <- 750
