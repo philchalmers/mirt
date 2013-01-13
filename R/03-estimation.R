@@ -133,9 +133,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(method == 'EM'){
         esttype <- 'EM'
         if(method == 'EM' && nLambdas > nfact) 
-            stop('Polynominals and product terms not supported for EM method')
-        if(any(itemtype %in% c('PC2PL', 'PC3PL'))) 
-            stop('Partially compensatory items not supported for EM estimation')
+            stop('Polynominals and product terms not supported for EM method')        
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts),
                                         length.out = quadpts))        
