@@ -406,9 +406,10 @@ summary(pmod1)
 #Constrain all slopes to be equal
 #first obtain parameter index
 values <- mirt(Science,1, pars = 'values')
-values #note that slopes are numbered 1,5,9,13
+values #note that slopes are numbered 1,5,9,13, or index with values$parnum[values$name == 'a1']
 (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
 coef(pmod1_equalslopes)
+anova(pmod1_equalslopes, pmod1) #significantly worse fit with all criteria
 
 pmod2 <- mirt(Science, 2)
 summary(pmod2)
@@ -417,8 +418,17 @@ plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
 itemplot(pmod2, 1)
 anova(pmod1, pmod2)
 
+#unidimensional fit with a generalized partial credit and nominal model
+(gpcmod <- mirt(Science, 1, 'gpcm'))
+coef(gpcmod)
+(nomod <- mirt(Science, 1, 'nominal'))
+anova(gpcmod, nomod)
+itemplot(nomod, 3)
+
 
 ###########
+#empirical dimensionality testing that includes 'guessing'
+
 data(SAT12)
 data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))

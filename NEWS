@@ -1,6 +1,8 @@
-* dichotomous models (including 4PL), and graded rating scale have been optimized
+* all dichotomous, graded rating scale, (generalized) partial credit, and nominal models 
+  have been better optimized. Are on all pretty much on par in the MH-RM method, though 
+  some are slightly slower using the EM
 
-* wald() will now support information matricies that contain constrained parameters
+* wald() will now support information matrices that contain constrained parameters
 
 * confmirt.model() can accept a string inputs, which may be useful for knitr/sweave documents
   since the scan() function tends to hang
@@ -13,7 +15,7 @@
 * lower bound parameters under more stringent control during estimation and are bounded to never 
   be higher than .6
 
-* infit and outfit stats in itemfit() now work for Rasch parital credit and rating scale models
+* infit and outfit stats in itemfit() now work for Rasch partial credit and rating scale models
 
 * Rasch rating scale models can now be estimated with potential rsm.blocks (same as grsm model). 
   "Generalized" rating scale models can also be estimated, though this requires manipulating the 
@@ -26,7 +28,7 @@
  
 * more structured output when using the anova() generic
 
-* standard errors no longer slightly positively biased when parameter contraints are imposed 
+* standard errors no longer slightly positively biased when parameter constraints are imposed 
 
 ----------------------------------------------------------------
 mirt 0.4.2
