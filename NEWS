@@ -11,6 +11,8 @@
 
 * new fitIndices() function added to compute additional model fit statistics such as M2
 
+* testinfo() function added for test information
+
 * lower bound parameters under more stringent control during estimation and are bounded to never 
   be higher than .6
 
