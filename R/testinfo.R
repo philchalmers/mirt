@@ -21,6 +21,19 @@
 #' tinfo <- testinfo(mod, Theta)
 #' plot(Theta, tinfo, type = 'l')
 #' 
+#' #compare information loss between two tests
+#' dat.smaller <- dat[,-c(1,2)]
+#' mod2 <- mirt(dat.smaller, 1, '1PL')
+#' tinfo2 <- testinfo(mod2, Theta)
+#' 
+#' #removed item informations
+#' plot(Theta, iteminfo(extract.item(mod, 1), Theta), type = 'l')
+#' plot(Theta, iteminfo(extract.item(mod, 2), Theta), type = 'l')
+#' 
+#' #most loss of info around -1 when removing items 1 and 2; expected given item info functions
+#' plot(Theta, tinfo2 - tinfo, type = 'l') 
+#' 
+#' 
 #' } 
 testinfo <- function(x, Theta, degrees = NULL, group = NULL){
     if(is(x, 'MultipleGroupClass')) 
