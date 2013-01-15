@@ -25,11 +25,12 @@ expand.table <- function(tabdata) {
   itemnames <- colnames(tabdata[,1:(ncol(tabdata) - 1)])
   tabdata <- as.matrix(tabdata)  
   fulldata <- c()  
-    for (i in 1:nrow(tabdata)) {
-      for (j in 1:tabdata[i,ncol(tabdata)]){ 
-        fulldata <- rbind(fulldata, tabdata[i,1:(ncol(tabdata) - 1)])
-      }  
-    }
+  for (i in 1:nrow(tabdata)) {        
+      tmp <- matrix(tabdata[i,1:(ncol(tabdata) - 1)], 
+                      tabdata[i,ncol(tabdata)], 
+                      length(tabdata[i,1:(ncol(tabdata) - 1)]), byrow = TRUE)      
+      fulldata <- rbind(fulldata, tmp)        
+  }
   colnames(fulldata) <- itemnames  
   fulldata 
 }
