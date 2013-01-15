@@ -1,6 +1,5 @@
 * all dichotomous, graded rating scale, (generalized) partial credit, and nominal models 
-  have been better optimized. Are on all pretty much on par in the MH-RM method, though 
-  some are slightly slower using the EM
+  have been better optimized
 
 * wald() will now support information matrices that contain constrained parameters
 
