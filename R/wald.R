@@ -55,8 +55,10 @@
 #' }
 wald <- function(object, L, C = 0){
     Names <- colnames(object@information)
-    if(missing(L))
-        return(t(as.matrix(Names)))    
+    if(missing(L)){
+        names(Names) <- 1:length(Names)
+        return(Names)    
+    }
     if(!is.matrix(L))
         L <- matrix(L, 1)    
     pars <- object@pars
