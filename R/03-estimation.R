@@ -25,7 +25,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             gain <- technical$gain
     }	 
     NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
-    USEEM <- ifelse(method == 'EM', TRUE, FALSE)    
+    USEEM <- ifelse(method == 'EM', TRUE, FALSE)
+    #change itemtypes if NULL.MODEL 
+    if(NULL.MODEL){
+        constrain <- NULL        
+        if(!is.null(itemtype)){
+            itemtype[itemtype == 'grsm'] <- 'graded'
+            itemtype[itemtype == 'rsm'] <- 'gpcm'        
+        }
+    }
     ##	            
     data <- as.matrix(data)
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
