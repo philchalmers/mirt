@@ -44,4 +44,13 @@ test_that('poly', {
     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE)
     expect_is(grsm, 'ConfirmatoryClass')    
     expect_is(rsm, 'ConfirmatoryClass')    
+    
+    #item and test info
+    Theta <- matrix(seq(-4,4,.01))
+    x <- extract.item(modp1, 1)
+    iinfo <- iteminfo(x, Theta)
+    expect_is(iinfo, 'matrix')    
+    tinfo <- testinfo(modp1, Theta)
+    expect_is(tinfo, 'matrix')
+    
 })
