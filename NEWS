@@ -1,4 +1,4 @@
-* all dichotomous, graded rating scale, (generalized) partial credit, and nominal models 
+* all dichotomous, graded rating scale, (generalized) partial credit, rating scale, and nominal models 
   have been better optimized
 
 * wald() will now support information matrices that contain constrained parameters

@@ -374,16 +374,87 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){
-        grad <- rep(0, length(x@par))
-        hess <- matrix(0, length(x@par), length(x@par))
-        if(EM){            
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)       
-            return(list(grad = grad, hess = hess))            
-        }        
-        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta) 
-        return(list(grad=grad, hess=hess))
+        dat <- x@dat 
+        Prior <- rep(1, nrow(dat))
+        if(EM){
+            dat <- x@rs
+            Prior <- prior
+        } 
+        nfact <- x@nfact
+        nzetas <- ncol(dat)
+        a <- ExtractLambdas(x)                
+        d <- ExtractZetas(x)
+        shift <- d[length(d)]
+        dshift <- d <- d[-length(d)]
+        dshift[-1] <- d[-1] + shift
+        ak <- 0:(length(d)-1)
+        D <- x@D
+        P <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D)
+        num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D, returnNum=TRUE)         
+        tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, 
+                               D=D, Prior=Prior, P=P, num=num, dat=dat)
+        sel <- -c((nfact+1):(length(d)+nfact))
+        swtch1 <- (nfact+1):(length(x@par)-1) 
+        swtch2 <- rev(swtch1)
+        grad <- tmp$grad[sel]
+        grad[swtch1] <- grad[swtch2]        
+        grad <- c(grad, 0)
+        hess <- tmp$hess[sel, sel]        
+        for(i in 1:nfact)
+            hess[i, swtch1] <- hess[swtch1, i] <- hess[swtch2, i]
+        hess[swtch1, swtch1] <- hess[swtch2, swtch2]
+        hess <- cbind(hess, rep(0, nrow(hess)))
+        hess <- rbind(hess, rep(0, ncol(hess)))
+        
+        #quick calcs for derivs
+        nfact <- length(a)
+        ncat <- length(d)
+        akind <- nfact 
+        dind <- nfact + ncat*2 + 1 #go backwards
+        D2 <- D^2
+        ak2 <- ak^2
+        P2 <- P^2
+        P3 <- P^3
+        aTheta <- as.vector(Theta %*% a)
+        aTheta2 <- aTheta^2
+        dat_num <- dat/num
+        numsum <- rowSums(num) 
+        numD <- num %*% c(0, rep(1, ncol(num)-1)) * D                
+        numakThetaD <- num %*% ak * D * Theta
+        numD2 <- num %*% c(0, rep(1, ncol(num)-1)) * D2  
+        numakThetaD2 <- num %*% ak * D2 * Theta
+        ak0 <- ak
+        ak0[1] <- 0
+        cind <- length(grad)
+#         tmp <- 0        
+#         for(i in 1:nzetas)
+#             tmp <- tmp - dat[,i]*numD/numsum
+#         grad[cind] <- sum(tmp*Prior)
+        tmp <- 0
+        for(i in 1:nzetas)
+            tmp <- tmp + dat[,i]*numD^2 / numsum^2 - dat[,i]*numD2/numsum 
+        hess[cind, cind] <- sum(tmp*Prior)
+        for(j in 1:nzetas){
+            tmp <- 0
+            for(i in 1:nzetas)
+                tmp <- tmp + dat[,i]*P[,j]*D*numD/numsum - dat[,i]*D2*P[,j]
+            hess[cind, nfact+j] <- hess[nfact+j, cind] <- sum(tmp*Prior)                
+        }
+        for(j in 1:nfact){
+            tmp <- 0
+            for(i in 1:nzetas)
+                tmp <- tmp + dat[,i]*numD*numakThetaD[,j]/numsum^2 - 
+                    dat[,i]* (num %*% ak0*D2*Theta[,j])/numsum
+            hess[cind, j] <- hess[j, cind] <- sum(tmp*Prior) 
+        }
+        ####
+        #TEMP - can't seem to get the last value of the gradient quite right for some reason....
+        x2 <- x
+        x2@est <- c(rep(FALSE, length(x2@est)-1), TRUE)
+        grad[x2@est] <- numDeriv::grad(EML, x@par[x2@est], obj=x2, Theta=Theta, prior=prior)        
+        ####
+        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        ret
     }
 )
 
@@ -564,7 +635,7 @@ L <- function(par, obj, Theta){
 }
 
 EML <- function(par, obj, Theta, ...){    
-    obj@par[obj@est] <- par    
+    obj@par[obj@est] <- par
     L <- (-1)*LogLik(x=obj, Theta=Theta, EM=TRUE, ...)
     return(L)
 }
