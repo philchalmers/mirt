@@ -4,8 +4,11 @@
 #' maximum-likelihood factor analysis model to dichotomous and polytomous
 #' data under the item response theory paradigm using Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro algorithm. Fits univariate and multivariate Rasch, 
-#' 1-4PL, graded, (generalized) partial credit, nominal, multiple choice, and partially-compensatory models, 
-#' potentially with polynomial and product constructed latent traits.
+#' 1-4PL, graded, (generalized) partial credit, nominal, multiple choice, graded rating scale, Rasch rating scale,
+#' and partially-compensatory models, potentially with polynomial and product constructed latent traits. 
+#' Models may also contain 'explanatory' 
+#' person or item level predictors, though these can only be included by using the 
+#' \code{\link{mixedmirt}} function.
 #'  
 #' \code{confmirt} follows a confirmatory and exploratory item factor analysis strategy that
 #' uses a stochastic version of maximum likelihood estimation described by Cai
@@ -125,7 +128,8 @@
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
 #' \code{\link{fscores}}, \code{\link{confmirt.model}}, \code{\link{wald}}, 
-#' \code{\link{multipleGroup}}, \code{\link{itemplot}}, \code{\link{fitIndices}}
+#' \code{\link{multipleGroup}}, \code{\link{itemplot}}, \code{\link{fitIndices}}, 
+#' \code{\link{mixedmirt}}, \code{\link{testinfo}}, \code{\link{iteminfo}},
 #' @references
 #' 
 #' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a

@@ -163,8 +163,12 @@
   Metropolis-Hastings Robbins-Monro algorithm. Fits
   univariate and multivariate Rasch, 1-4PL, graded,
   (generalized) partial credit, nominal, multiple choice,
-  and partially-compensatory models, potentially with
-  polynomial and product constructed latent traits.
+  graded rating scale, Rasch rating scale, and
+  partially-compensatory models, potentially with
+  polynomial and product constructed latent traits. Models
+  may also contain 'explanatory' person or item level
+  predictors, though these can only be included by using
+  the \code{\link{mixedmirt}} function.
 }
 \details{
   \code{confmirt} follows a confirmatory and exploratory
@@ -342,7 +346,8 @@ anova(mod.quad, mod.combo)
   \code{\link{simdata}}, \code{\link{fscores}},
   \code{\link{confmirt.model}}, \code{\link{wald}},
   \code{\link{multipleGroup}}, \code{\link{itemplot}},
-  \code{\link{fitIndices}}
+  \code{\link{fitIndices}}, \code{\link{mixedmirt}},
+  \code{\link{testinfo}}, \code{\link{iteminfo}},
 }
 \keyword{models}
 

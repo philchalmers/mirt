@@ -4,7 +4,10 @@
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous and polytomous data under the item response theory paradigm. 
 #' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit, 
-#' nominal, multiple choice, and partially compenatory models using the EM algorithm.
+#' nominal, multiple choice, graded rating scale, Rasch rating scale, 
+#' and partially compenatory models using the EM algorithm. Models may also contain 'explanatory' 
+#' person or item level predictors, though these can only be included by using the 
+#' \code{\link{mixedmirt}} function.
 #' 
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
 #' likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
@@ -36,7 +39,9 @@
 #' variances of the latent factors are automatically fixed to 1 to help
 #' facilitate model identification. All parameters may be fixed to constant
 #' values or set equal to other parameters using the appropriate declarations.
-#' If the model is confirmatory then the returned class will be 'ConfirmatoryClass'.
+#' If the model is confirmatory then the returned class will be 'ConfirmatoryClass'. Confirmatory
+#' models may also contain 'explanatory' person or item level predictors, though including predictors
+#' is limited only to the \code{\link{mixedmirt}} function.
 #' 
 #' @section Exploratory IRT:
 #' 
@@ -227,8 +232,9 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, 
-#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{wald}}
-#' \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}
+#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, 
+#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}, 
+#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}
 #' 
 #' @references
 #' 

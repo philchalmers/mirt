@@ -216,8 +216,12 @@ Theory)}
   factor analysis model to dichotomous and polytomous data
   under the item response theory paradigm. Fits univariate
   and multivariate Rasch, 1-4PL, graded, (generalized)
-  partial credit, nominal, multiple choice, and partially
-  compenatory models using the EM algorithm.
+  partial credit, nominal, multiple choice, graded rating
+  scale, Rasch rating scale, and partially compenatory
+  models using the EM algorithm. Models may also contain
+  'explanatory' person or item level predictors, though
+  these can only be included by using the
+  \code{\link{mixedmirt}} function.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by
@@ -257,7 +261,10 @@ Theory)}
   constant values or set equal to other parameters using
   the appropriate declarations. If the model is
   confirmatory then the returned class will be
-  'ConfirmatoryClass'.
+  'ConfirmatoryClass'. Confirmatory models may also contain
+  'explanatory' person or item level predictors, though
+  including predictors is limited only to the
+  \code{\link{mixedmirt}} function.
 }
 
 \section{Exploratory IRT}{
@@ -510,9 +517,11 @@ anova(mod2, mod1) #not sig, mod2 should be prefered
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{confmirt}}, \code{\link{bfactor}},
-  \code{\link{multipleGroup}}, \code{\link{wald}}
-  \code{\link{itemplot}}, \code{\link{fscores}},
-  \code{\link{fitIndices}}
+  \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+  \code{\link{wald}}, \code{\link{itemplot}},
+  \code{\link{fscores}}, \code{\link{fitIndices}},
+  \code{\link{extract.item}}, \code{\link{iteminfo}},
+  \code{\link{testinfo}}
 }
 \keyword{models}
 

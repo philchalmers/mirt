@@ -1,7 +1,7 @@
 #' Mixed effects modeling for MIRT models
 #' 
 #' \code{mixedmirt} fits MIRT models using FIML estimation to dichotomous and polytomous
-#' IRT models conditional on fixed and random effect covariates. The method uses the MH-RM 
+#' IRT models conditional on fixed and random effect of person and item level covariates. The method uses the MH-RM 
 #' algorithm exclusively. The D scaling parameter is automatically fixed to 1 so that all 
 #' coefficients can be interpreted on the exponential metric. 
 #' 
@@ -17,13 +17,13 @@
 #' \code{itemdesign}. By default constraints are not imposed, so the fixed person effects are 
 #' not equal accross items, but this can be enabled using \code{fixed.constrain = TRUE} 
 #' @param random a formula similar to the \code{nlme} random variable sepcifications for declaring
-#' the random slope and intercept predictors. Not currently available, but will be soon (hopefully)....
+#' the random slope and intercept predictors. Not currently available, but will be available some time in the future
 #' @param itemtype same as itemtype in \code{\link{mirt}}
 #' @param itemdesign a data.frame object used to create a design matrix for the items, where each 
 #' \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed effect 
 #' predictors (i.e., item intercepts). If the intput consists of variables with \code{factor} indicators then 
 #' appropriate constraints and identification parameteres are imposed. However, design based effects using
-#' a matrix of 1's or other numerics may also be included so long as an appropriate \code{constrain} list 
+#' a numeric matrix of 1's or other numerics may also be included so long as an appropriate \code{constrain} list 
 #' is supplied
 #' @param fixed.constrain logical; constrain the fixed person effects to be equal accross items? Disable
 #' this when modelling item level covariates and apply the constraints manually

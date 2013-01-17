@@ -34,7 +34,7 @@
   \item{random}{a formula similar to the \code{nlme} random
   variable sepcifications for declaring the random slope
   and intercept predictors. Not currently available, but
-  will be soon (hopefully)....}
+  will be available some time in the future}
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}}}
 
@@ -45,8 +45,8 @@
   (i.e., item intercepts). If the intput consists of
   variables with \code{factor} indicators then appropriate
   constraints and identification parameteres are imposed.
-  However, design based effects using a matrix of 1's or
-  other numerics may also be included so long as an
+  However, design based effects using a numeric matrix of
+  1's or other numerics may also be included so long as an
   appropriate \code{constrain} list is supplied}
 
   \item{fixed.constrain}{logical; constrain the fixed
@@ -67,10 +67,11 @@
 \description{
   \code{mixedmirt} fits MIRT models using FIML estimation
   to dichotomous and polytomous IRT models conditional on
-  fixed and random effect covariates. The method uses the
-  MH-RM algorithm exclusively. The D scaling parameter is
-  automatically fixed to 1 so that all coefficients can be
-  interpreted on the exponential metric.
+  fixed and random effect of person and item level
+  covariates. The method uses the MH-RM algorithm
+  exclusively. The D scaling parameter is automatically
+  fixed to 1 so that all coefficients can be interpreted on
+  the exponential metric.
 }
 \examples{
 \dontrun{
