@@ -198,6 +198,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         stop('No fixed or random effects have been specified.')
     Theta <- matrix(0, nrow(data), nrow(model$x))
     colnames(Theta) <- model$x[,1]
+    if(any(colnames(Theta) %in% colnames(covdata)) || any(colnames(Theta) %in% colnames(itemdesign)))
+        stop('Predictor variable names must be different from latent variable names.')
     fixed.identical <- FALSE
     if(all(itemdesign == 1)) fixed.identical <- TRUE
     fixed.design.list <- designMats(covdata=covdata, fixed=fixed, Thetas=Theta, nitems=ncol(data),
