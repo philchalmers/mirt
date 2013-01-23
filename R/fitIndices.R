@@ -54,6 +54,8 @@ fitIndices <- function(obj){
     }
     ret <- list()        
     tabdata <- obj@tabdatalong
+    if(any(is.na(obj@tabdata)))
+        stop('M2 can not be calulated for data with missing values.')
     NOROWNA <- rowSums(is.na(obj@tabdata)) == 0
     tabdata <- tabdata[NOROWNA, ]
     K <- obj@K
