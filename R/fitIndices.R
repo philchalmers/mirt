@@ -54,18 +54,20 @@ fitIndices <- function(obj){
     }
     ret <- list()        
     tabdata <- obj@tabdatalong
+    NOROWNA <- rowSums(is.na(obj@tabdata)) == 0
+    tabdata <- tabdata[NOROWNA, ]
     K <- obj@K
     nitems <- length(K)    
     r <- tabdata[, ncol(tabdata)]
     N <- sum(r)
     p <- r/N
-    p_theta <- obj@Pl
+    p_theta <- obj@Pl[NOROWNA]
     p_theta <- p_theta/sum(p_theta)
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
     T <- matrix(NA, nrow(tabdata), nrow(tabdata))
     Gamma <- diag(p_theta) - outer(p_theta, p_theta)    
-    ind <- 1
+    ind <- 1    
     
     ## M2 stat
     #find univariate marginals
