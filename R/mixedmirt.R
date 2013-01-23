@@ -196,7 +196,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     ###
     if(fixed == ~ 1 && random == ~ 1)
         stop('No fixed or random effects have been specified.')
-    model.noCOV <- model$x[model$x[,1] != 'COV', ]
+    model.noCOV <- model$x[model$x[,1] != 'COV', , drop = FALSE]
     Theta <- matrix(0, nrow(data), nrow(model.noCOV))
     colnames(Theta) <- model.noCOV[,1]
     if(any(colnames(Theta) %in% colnames(covdata)) || any(colnames(Theta) %in% colnames(itemdesign)))
