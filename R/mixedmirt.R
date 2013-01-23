@@ -196,15 +196,16 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     ###
     if(fixed == ~ 1 && random == ~ 1)
         stop('No fixed or random effects have been specified.')
-    Theta <- matrix(0, nrow(data), nrow(model$x))
-    colnames(Theta) <- model$x[,1]
+    model.noCOV <- model$x[model$x[,1] != 'COV', ]
+    Theta <- matrix(0, nrow(data), nrow(model.noCOV))
+    colnames(Theta) <- model.noCOV[,1]
     if(any(colnames(Theta) %in% colnames(covdata)) || any(colnames(Theta) %in% colnames(itemdesign)))
         stop('Predictor variable names must be different from latent variable names.')
     fixed.identical <- FALSE
     if(all(itemdesign == 1)) fixed.identical <- TRUE
     fixed.design.list <- designMats(covdata=covdata, fixed=fixed, Thetas=Theta, nitems=ncol(data),
                                    itemdesign=itemdesign, fixed.identical=fixed.identical)    
-    mixedlist <- list(fixed=fixed, random=random, covdata=covdata, factorNames=model$x[,1], 
+    mixedlist <- list(fixed=fixed, random=random, covdata=covdata, factorNames=model.noCOV[,1], 
                       FDL=fixed.design.list, itemdesign=itemdesign, fixed.constrain=fixed.constrain,
                       fixed.identical=fixed.identical)        
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, 
