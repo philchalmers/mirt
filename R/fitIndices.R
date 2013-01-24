@@ -8,6 +8,7 @@
 #'
 #' @aliases fitIndices
 #' @param obj an estimated model object from the mirt package
+#' @param prompt logical; prompt user for input if the internal matricies are too large?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in 
@@ -25,7 +26,7 @@
 #' (mod2 <- mirt(Science, 1))
 #' fitIndices(mod2)
 #' }
-fitIndices <- function(obj){
+fitIndices <- function(obj, prompt = TRUE){
     #if MG loop    
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')       
@@ -51,7 +52,7 @@ fitIndices <- function(obj){
         newret$RMSEA.M2 <- ifelse((newret$M2Total - newret$df.M2) > 0, 
                            sqrt(newret$M2Total - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0) 
         return(newret)
-    }
+    }        
     ret <- list()        
     tabdata <- obj@tabdatalong
     if(any(is.na(obj@tabdata)))
@@ -67,7 +68,7 @@ fitIndices <- function(obj){
     p_theta <- p_theta/sum(p_theta)
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
-    T <- matrix(NA, nrow(tabdata), nrow(tabdata))
+    T <- matrix(NA, sum(K) + sum(K*(sum(K))), nrow(tabdata))
     Gamma <- diag(p_theta) - outer(p_theta, p_theta)    
     ind <- 1    
     
@@ -95,7 +96,15 @@ fitIndices <- function(obj){
             }
         }
     }    
-    T <- na.omit(T)
+    T <- T[1:(ind-1), ]
+    if(nrow(T) > 4000 && prompt){ 
+        cat('Internal matricies are very large and computations will therefore take an extended 
+            amount of time and require large amounts of RAM. The largest matrix has', nrow(T), 'columns. 
+            Do you wish to continue anyways?')
+        input <- readline("(yes/no): ")
+        if(input == 'no' || input == 'n') stop('Execution halted.')
+        if(input != 'yes' || input != 'y') stop('Illegal user input')        
+    }        
     Eta <- T %*% Gamma %*% t(T)
     T.p <- T %*% p
     T.p_theta <- T %*% p_theta       

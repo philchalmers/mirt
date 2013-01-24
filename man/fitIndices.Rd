@@ -2,11 +2,14 @@
 \alias{fitIndices}
 \title{Compute Extra Model Fit Indices}
 \usage{
-  fitIndices(obj)
+  fitIndices(obj, prompt = TRUE)
 }
 \arguments{
   \item{obj}{an estimated model object from the mirt
   package}
+
+  \item{prompt}{logical; prompt user for input if the
+  internal matricies are too large?}
 }
 \description{
   Compute additional model fit indecies that do not come as
