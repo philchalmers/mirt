@@ -3,8 +3,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                      estLambdas, BFACTOR = FALSE, mixedlist, debug)
     {       
     if(debug == 'LoadPars') browser() 
-    if(any(itemtype[1] == c('Rasch', '1PL') && nfact > 1)) 
-        stop('Rasch and 1PL models can only be estimated for unidimensional models')
     pars <- list()           
     constr <- c()
     if(!is.null(constrain) && is.list(constrain)) 
@@ -16,15 +14,21 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         startvalues <- list()
         for(i in 1:J){            
             if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
-                val <- c(1/D, zetas[[i]], guess[i], upper[i])
+                tmpval <- rep(0, nfact)
+                tmpval[lambdas[i,] != 0] <- 1/D                
+                val <- c(tmpval, zetas[[i]], guess[i], upper[i])
                 names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
             }
             if(itemtype[i] == 'Rasch' && K[i] > 2){
-                val <- c(1/D, 0, zetas[[i]])
+                tmpval <- rep(0, nfact)
+                tmpval[lambdas[i,] != 0] <- 1/D                
+                val <- c(tmpval, 0, zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
             }
             if(itemtype[i] == '1PL' && K[i] > 2){
-                val <- c(1/D, zetas[[i]])
+                tmpval <- rep(0, nfact)
+                tmpval[lambdas[i,] != 0] <- 1/D                
+                val <- c(tmpval, zetas[[i]])
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))
             }
             if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
@@ -44,7 +48,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
             }
             if(itemtype[i] == 'rsm'){                
-                val <- c(rep(1/D, nfact), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+                tmpval <- rep(0, nfact)
+                tmpval[lambdas[i,] != 0] <- 1/D                
+                val <- c(tmpval, 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
                 names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''), 'c')                
             }
             if(itemtype[i] == 'nominal'){
@@ -70,7 +76,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         freepars <- list()
         for(i in 1:J){                        
             if(itemtype[i] == 'Rasch' && K[i] == 2)
-                freepars[[i]] <- c(FALSE,TRUE,FALSE,FALSE)            
+                freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)            
             if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){
                 estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
                 if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
@@ -78,7 +84,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 freepars[[i]] <- estpars
             }
             if(itemtype[i] == 'Rasch' && K[i] > 2)            
-                freepars[[i]] <- c(FALSE, FALSE, rep(TRUE, K[i]-1))
+                freepars[[i]] <- c(rep(FALSE,nfact), FALSE, rep(TRUE, K[i]-1))
             if(itemtype[i] == '1PL' && K[i] > 2)            
                 freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))            
             if(itemtype[i] == 'grsm')

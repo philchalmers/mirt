@@ -105,9 +105,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         pars[[g]] <- PrepList[[g]]$pars
     J <- length(PrepList[[1]]$itemtype)
     K <- PrepListFull$K
-    nfact <- PrepList[[1]]$pars[[J+1]]@nfact
-    if(nfact != 1 && any(c('1PL', 'Rasch') %in% itemtype )) 
-       stop('1PL and Rasch itemtypes are for unidimensional models only.')
+    nfact <- PrepList[[1]]$pars[[J+1]]@nfact    
+    if(nfact != 1 && any(c('1PL') %in% itemtype )) 
+        stop('1PL itemtype for multidimenional models is ambiguous. Please specify the 
+             appropriate constraints manually using the 2PL model and the constrain argument.')
+    if(nfact != 1 && any(c('Rasch') %in% itemtype ) && PrepList[[1]]$exploratory) 
+       stop('Rasch itemtypes are for confimatory models only.')
     nLambdas <- PrepList[[1]]$pars[[1]]@nfact
     if(is.null(constrain)) constrain <- list()         
     #default MG uses configural model (independent groups but each identified)        

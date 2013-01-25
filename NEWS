@@ -1,5 +1,7 @@
 
 
+* allow for Rasch itemtype in multidimesional confirmatory models
+
 * more flexible calculation of M2 statistic in fitIndicies(), with user prompt option if the internal
   variables grow too large and cause time/RAM problems
 
