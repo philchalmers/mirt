@@ -47,6 +47,8 @@
 #'   }
 #' 
 personfit <- function(x, method = 'EAP'){        
+    if(any(is.na(x@data)))
+        stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
