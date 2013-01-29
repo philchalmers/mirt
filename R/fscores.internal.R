@@ -55,7 +55,7 @@ setMethod(
         for (i in 1:J)
             itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)                    
 		for (i in 1:nrow(tabdata)){				
-			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,])])			
+			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,]), drop = FALSE])			
 			thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
 			SE <- sqrt(colSums(t((t(ThetaShort) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))	
 			scores[i, ] <- thetas
