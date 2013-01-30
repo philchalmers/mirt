@@ -77,9 +77,11 @@ setMethod(
 			}  
 		}
 		if(method == "ML"){            		            
-			tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]			             
+			tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]	
+            tmp2[is.na(rowSums(object@tabdata))] <- 0
 			scores[rowSums(tmp2) == J,] <- Inf
             tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
+            tmp2[is.na(rowSums(object@tabdata))] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf
 			SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
 			for (i in 1:nrow(scores)){
@@ -98,9 +100,11 @@ setMethod(
 			}  			
 		}
         if(method == 'WLE'){                            
-            tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]    		             
+            tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE] 
+            tmp2[is.na(rowSums(object@tabdata))] <- 0
             scores[rowSums(tmp2) == J,] <- Inf
             tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
+            tmp2[is.na(rowSums(object@tabdata))] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf            
             SEscores <- matrix(NA, nrow(SEscores), ncol(SEscores))
             for (i in 1:nrow(scores)){
