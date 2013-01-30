@@ -79,3 +79,4 @@ Collate:
     'Mixed-methods.R'
     'fitIndices.R'
     'testinfo.R'
+    'imputeMissing.R'

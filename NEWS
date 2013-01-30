@@ -1,5 +1,8 @@
 
 
+* added imputeMissing() function to impute missing values given an estimated mirt model. Useful
+  for checking item and person fit diagnostics and obtaining overall model fit statistics
+
 * allow for Rasch itemtype in multidimesional confirmatory models
 
 * more flexible calculation of M2 statistic in fitIndicies(), with user prompt option if the internal
