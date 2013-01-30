@@ -53,13 +53,15 @@
 #'   }
 #'
 itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, method = 'EAP'){    
+    if(any(is.na(x@data)))
+        stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
             ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size)
         names(ret) <- names(x@cmods)
         return(ret)
-    }    
+    }        
     sc <- fscores(x, verbose = FALSE, full.scores = TRUE) 
     J <- ncol(x@data)
     itemloc <- x@itemloc    
