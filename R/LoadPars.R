@@ -149,8 +149,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=2,
                              nfixedeffects=nfixedeffects, 
                              D=D,
-                             lbound=ifelse(itemtype[i] == 'Rasch', -25, -Inf),
-                             ubound=ifelse(itemtype[i] == 'Rasch', 25, Inf),                             
+                             lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
+                             ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -171,8 +171,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                                                           
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -194,8 +194,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -216,18 +216,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              constr=FALSE,                              
                              ncat=2,
                              D=D,
-                             lbound=-Inf,                                           
-                             ubound=Inf,                             
+                             lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),                                           
+                             ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
-                             b.prior.beta=rep(NaN,length(startvalues[[i]])))       
-            if(itemtype[i] != '2PL'){       
-                tmp2 <- c(rep(-Inf, length(startvalues[[i]]) - 2),0,0)
-                tmp3 <- c(rep(Inf, length(startvalues[[i]]) - 2),1,1)
-                pars[[i]]@lbound <- tmp2[freepars[[i]]]
-                pars[[i]]@ubound <- tmp3[freepars[[i]]]
-            }
+                             b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
@@ -244,8 +238,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -266,8 +260,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -288,8 +282,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -311,8 +305,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
                              constr=TRUE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -334,8 +328,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -358,18 +352,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
+                             ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
-                             b.prior.beta=rep(NaN,length(startvalues[[i]])))
-            if(itemtype[i] != 'PC2PL'){       
-                tmp2 <- c(rep(-Inf, length(startvalues[[i]]) - 2),0,0)
-                tmp3 <- c(rep(Inf, length(startvalues[[i]]) - 2),1,1)
-                pars[[i]]@lbound <- tmp2[freepars[[i]]]
-                pars[[i]]@ubound <- tmp3[freepars[[i]]]
-            }
+                             b.prior.beta=rep(NaN,length(startvalues[[i]])))            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
@@ -386,8 +374,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              dat=fulldata[ ,tmp], 
                              constr=FALSE,                              
-                             lbound=-Inf,
-                             ubound=Inf,                             
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -435,7 +423,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain
     est <- c(estgmeans,estgcov[tri])
     names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])     
     ret <- new('GroupPars', par=par, est=est, nfact=nfact, 
-               parnum=parnum, lbound=-Inf, ubound=Inf)                      
+               parnum=parnum, lbound=rep(-Inf, length(par)), ubound=rep(Inf, length(par)))                      
     if(!is.null(startvalues)){
         if(is.list(startvalues)) ret@par <- startvalues[[length(startvalues)]]
         else return(ret@par)        

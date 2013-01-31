@@ -78,7 +78,15 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
     LL <- 0
     for(g in 1:ngroups)
-        r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]    
+        r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]        
+    LBOUND <- UBOUND <- c()
+    for(g in 1:ngroups){
+        for(i in 1:(J+1)){
+            LBOUND <- c(LBOUND, pars[[g]][[i]]@lbound)    
+            UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)    
+        }
+    }
+    
     #EM     
     for (cycles in 1:NCYCLES){  
         #priors
@@ -136,17 +144,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 for(i in 1:(J+1)){
                     ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
                     pars[[g]][[i]]@par <- longpars[ind1:ind2]
-                    ind1 <- ind2 + 1       
-                    if(any(class(pars[[g]][[i]]) == c('dich', 'partcomp'))){
-                        if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > 1) 
-                            pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
-                        if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
-                            pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
-                        if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] > .6){
-                            warning('lower bound parameter larger than .6 during estimation.')
-                            pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- .6            
-                        }
-                    }    
+                    ind1 <- ind2 + 1
+                }
+                for(i in 1:(J+1)){                        
                     #apply sum(t) == 1 constraint for mcm
                     if(is(pars[[g]][[i]], 'mcm')){                
                         tmp <- pars[[g]][[i]]@par
@@ -212,7 +212,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 tmp[abs(tmp) > .002] <- sign(tmp[abs(tmp) > .002]) * .002
                 correction[names(correction) == 'u'] <- tmp
             }
-            longpars[estindex_unique] <- longpars[estindex_unique] - correction                       
+            longpars[estindex_unique] <- longpars[estindex_unique] - correction             
+            longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
+            longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
             if(mstep > 1){
                 if (any(grad*lastgrad < 0.0)){    				# any changed sign
                     newcorrection <- rep(0, length(correction))

@@ -1,5 +1,8 @@
 
 
+* lbound and ubound parameter bounds are now availble to the user for restricting the parameter
+  estimation space
+
 * mod2values() function added to convert an estimated mirt model into the appropriate data.frame 
   used to determine parameter estimation characteristics (starting values, group names, etc)  
 

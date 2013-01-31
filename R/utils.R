@@ -410,7 +410,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
 }
 
 ReturnPars <- function(PrepList, itemnames, MG = FALSE){    
-    parnum <- par <- est <- item <- parname <- gnames <- itemtype <- c()                                    
+    parnum <- par <- est <- item <- parname <- gnames <- itemtype <- 
+        lbound <- ubound <- c()                                    
     if(!MG) PrepList <- list(full=PrepList)                        
     for(g in 1:length(PrepList)){
         tmpgroup <- PrepList[[g]]$pars                                
@@ -421,22 +422,27 @@ ReturnPars <- function(PrepList, itemnames, MG = FALSE){
             parnum <- c(parnum, tmpgroup[[i]]@parnum) 
             par <- c(par, tmpgroup[[i]]@par)
             est <- c(est, tmpgroup[[i]]@est)                    
+            lbound <- c(lbound, tmpgroup[[i]]@lbound)
+            ubound <- c(ubound, tmpgroup[[i]]@ubound)
         }
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))                                
     }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
-    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par, est=est)
+    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par, 
+                      lbound=lbound, ubound=ubound, est=est)
     ret
 }
 
 UpdatePrepList <- function(PrepList, pars, MG = FALSE){
-    if(!MG) PrepList <- list(PrepList)
+    if(!MG) PrepList <- list(PrepList)    
     ind <- 1    
     for(g in 1:length(PrepList)){
         for(i in 1:length(PrepList[[g]]$pars)){ 
             for(j in 1:length(PrepList[[g]]$pars[[i]]@par)){
-                PrepList[[g]]$pars[[i]]@par[j] <- pars[ind,5]
-                PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,6])                
+                PrepList[[g]]$pars[[i]]@par[j] <- pars[ind,'value']
+                PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,'est'])                
+                PrepList[[g]]$pars[[i]]@lbound[j] <- pars[ind,'lbound']
+                PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']                
                 ind <- ind + 1
             }
         }

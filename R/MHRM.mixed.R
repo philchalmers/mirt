@@ -93,6 +93,14 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
     tmp <- matrix(1/tmp, length(longpars), length(longpars), byrow = TRUE)
     tmp2 <- abs(diag(L) - 1)
     longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
+    LBOUND <- UBOUND <- c()
+    for(g in 1:ngroups){
+        for(i in 1:(J+1)){
+            LBOUND <- c(LBOUND, pars[[g]][[i]]@lbound)    
+            UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)    
+        }
+    }
+    
     ####Big MHRM loop    
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
     {     
@@ -119,17 +127,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             for(i in 1:(J+1)){
                 ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
                 pars[[g]][[i]]@par <- longpars[ind1:ind2]
-                ind1 <- ind2 + 1       
-                if(any(class(pars[[g]][[i]]) == c('dich', 'partcomp'))){
-                    if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > 1) 
-                        pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
-                    if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
-                        pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
-                    if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] > .6){ 
-                        warning('lower bound parameter larger than .6 during estimation.')
-                        pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- .6
-                    }
-                }            
+                ind1 <- ind2 + 1                       
                 #apply sum(t) == 1 constraint for mcm
                 if(is(pars[[g]][[i]], 'mcm')){
                     tmp <- pars[[g]][[i]]@par
@@ -231,6 +229,8 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             tmp[abs(tmp*gamma) > .001] <- sign(tmp[abs(tmp*gamma) > .001]) * .001/gamma
             correction[names(correction) == 'u'] <- tmp
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction           
+            longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
+            longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
@@ -272,6 +272,8 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         tmp[abs(tmp*gamma) > .001] <- sign(tmp[abs(tmp*gamma) > .001]) * .001/gamma
         correction[names(correction) == 'u'] <- tmp
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction          
+        longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
+        longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
@@ -300,17 +302,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         for(i in 1:(J+1)){
             ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
             pars[[g]][[i]]@par <- longpars[ind1:ind2]
-            ind1 <- ind2 + 1       
-            if(any(class(pars[[g]][[i]]) == c('dich', 'partcomp'))){
-                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] > 1) 
-                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)] <- 1
-                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] < 0) 
-                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- 0
-                if(pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] > .6){ 
-                    warning('lower bound parameter larger than .6 during estimation.')
-                    pars[[g]][[i]]@par[length(pars[[g]][[i]]@par)-1] <- .6
-                }
-            }
+            ind1 <- ind2 + 1                   
             #apply sum(t) == 1 constraint for mcm
             if(is(pars[[g]][[i]], 'mcm')){
                 tmp <- pars[[g]][[i]]@par

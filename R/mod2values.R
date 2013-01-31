@@ -31,7 +31,8 @@ mod2values <- function(x){
         MG <- FALSE        
     }
     itemnames <- colnames(x@data)
-    parnum <- par <- est <- item <- parname <- gnames <- itemtype <- c()                                        
+    parnum <- par <- est <- item <- parname <- gnames <- itemtype <- 
+        lbound <- ubound <- c()                                        
     for(g in 1:length(PrepList)){
         if(MG) tmpgroup <- PrepList[[g]]@pars                                
         else tmpgroup <- PrepList[[g]]
@@ -41,11 +42,14 @@ mod2values <- function(x){
             parname <- c(parname, names(tmpgroup[[i]]@parnum))
             parnum <- c(parnum, tmpgroup[[i]]@parnum) 
             par <- c(par, tmpgroup[[i]]@par)
-            est <- c(est, tmpgroup[[i]]@est)                    
+            est <- c(est, tmpgroup[[i]]@est)
+            lbound <- c(lbound, tmpgroup[[i]]@lbound)
+            ubound <- c(ubound, tmpgroup[[i]]@ubound)
         }
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))                                
     }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
-    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par, est=est)
+    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par, 
+                      lbound=lbound, ubound=ubound, est=est)
     ret
 }
