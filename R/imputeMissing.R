@@ -29,9 +29,20 @@
 #' 
 #' }
 imputeMissing <- function(x, Theta){    
-    set.seed(proc.time()[3])
+    set.seed(proc.time()[3])    
     if(is(x, 'MixedClass'))
         stop('mixedmirt xs not yet supported')       
+    if(is(x, 'MultipleGroupClass')){
+        cmods <- x@cmods
+        group <- x@group                
+        data <- x@data
+        for(i in 1:length(cmods)){
+            sel <- group == x@groupNames[i]
+            Thetatmp <- Theta[sel, , drop = FALSE]
+            data[sel, ] <- imputeMissing(cmods[[i]], Thetatmp)            
+        }
+        return(data)
+    }
     pars <- x@pars        
     K <- x@K        
     J <- length(K)                
