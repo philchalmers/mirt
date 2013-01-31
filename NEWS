@@ -1,5 +1,8 @@
 
 
+* mod2values() function added to convert an estimated mirt model into the appropriate data.frame 
+  used to determine parameter estimation characteristics (starting values, group names, etc)  
+
 * added imputeMissing() function to impute missing values given an estimated mirt model. Useful
   for checking item and person fit diagnostics and obtaining overall model fit statistics
 

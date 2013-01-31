@@ -80,3 +80,4 @@ Collate:
     'fitIndices.R'
     'testinfo.R'
     'imputeMissing.R'
+    'mod2values.R'
