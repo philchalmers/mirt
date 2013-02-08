@@ -56,7 +56,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     PrepListFull <- PrepData(data=data, model=model[[1]], itemtype=itemtype, guess=guess, upper=upper, 
                              startvalues=NULL, constrain=NULL, freepars=NULL, 
                              parprior=NULL, verbose=verbose, debug=debug, free.start=NULL, D=D,
-                             technical=technical, mixedlist=mixedlist) #just a dummy model to collect fulldata stuff
+                             technical=technical, mixedlist=mixedlist, ...) #just a dummy model to collect fulldata stuff
     for(g in 1:ngroups){    
         select <- group == groupNames[g]        
         tmp <- 1:ngroups
@@ -65,7 +65,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                   upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
                                   parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
                                   technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
-                                  grsm.block=grsm.block, D=D, mixedlist=mixedlist)        
+                                  grsm.block=grsm.block, D=D, mixedlist=mixedlist, ...)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    

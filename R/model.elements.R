@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata, 
                            itemloc, data, N, guess, upper, itemnames, exploratory, constrain, 
                            startvalues, freepars, parprior, parnumber, BFACTOR = FALSE, D, mixedlist,
-                           debug)
+                           debug, ...)
 {       
     if(debug == 'model.elements') browser()
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)    
@@ -79,7 +79,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     gmeans <- rep(0, nfact)
     estgmeans <- rep(FALSE, nfact)    
     if(exploratory){        
-        Rpoly <- cormod(na.omit(data),K,guess)
+        Rpoly <- cormod(data, K, guess, ...)
         FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
         loads <- unclass(loadings(FA))
         u <- FA$unique
