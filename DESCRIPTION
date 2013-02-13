@@ -23,14 +23,14 @@ Depends:
     methods
 Imports:
     stats4,
-    psych,
     GPArotation,
     mvtnorm,
     Rcpp,
     numDeriv,
     Matrix
 Suggests:
-    plink
+    plink,
+    psych
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes

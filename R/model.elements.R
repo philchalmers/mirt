@@ -79,10 +79,9 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     gmeans <- rep(0, nfact)
     estgmeans <- rep(FALSE, nfact)    
     if(exploratory){        
-        Rpoly <- cormod(data, K, guess, ...)
-        FA <- psych::fa(Rpoly, nfact, rotate = 'none', warnings= FALSE, fm="minres")    
-        loads <- unclass(loadings(FA))
-        u <- FA$unique
+        Rpoly <- cormod(data, K, guess, ...)        
+        loads <- eigen(Rpoly)$vector[,1:nfact, drop = FALSE]
+        u <- 1 - rowSums(loads^2)       
         u[u < .001 ] <- .2
         cs <- sqrt(u)
         lambdas <- loads/cs * (1.702/D)                  
