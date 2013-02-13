@@ -92,8 +92,27 @@ Rotate <- function(F, rotate, Target = NULL, ...)
     if(ncol(F) == 1) rotF <- list()    
     if(rotate == 'none') rotF <- list(loadings=F, Phi=diag(ncol(F)), orthogonal=TRUE)            
 	if(rotate == 'promax'){
-        rotF <- psych::Promax(F)
-        rotF$orthogonal <- FALSE
+        mypromax <- function (x, m = 4) {
+                #borrowed and modified from stats::promax on Febuary 13, 2013
+                if (ncol(x) < 2) 
+                    return(x)
+                dn <- dimnames(x)
+                xx <- varimax(x)
+                x <- xx$loadings
+                Q <- x * abs(x)^(m - 1)
+                U <- lm.fit(x, Q)$coefficients
+                d <- diag(solve(t(U) %*% U))
+                U <- U %*% diag(sqrt(d))
+                dimnames(U) <- NULL
+                z <- x %*% U
+                U <- xx$rotmat %*% U
+                ui <- solve(U)
+                Phi <- ui %*% t(ui)
+                dimnames(z) <- dn
+                class(z) <- "loadings"
+                list(loadings = z, rotmat = U, Phi = Phi, orthogonal = FALSE)
+            }               
+        rotF <- mypromax(F, ...)                
 	}    
     if(rotate == 'oblimin') rotF <- GPArotation::oblimin(F, ...)     
 	if(rotate == 'quartimin') rotF <- GPArotation::quartimin(F, ...)
