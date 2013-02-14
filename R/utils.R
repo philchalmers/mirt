@@ -189,7 +189,7 @@ cormod <- function(fulldata, K, guess, smooth = TRUE, ...)
 	nitems <- ncol(fulldata)             
     dots <- list(...)    
 	use <- dots$use        
-    if(is.null(use)) use <- 'complete.obs'        
+    if(is.null(use)) use <- 'pairwise.complete.obs'        
 	cormat <- cor(fulldata, use=use)      	
 	cormat <- abs(cormat)^(1/1.15) * sign(cormat)  
 	if(smooth){  
