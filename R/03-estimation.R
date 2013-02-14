@@ -52,16 +52,25 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         model <- newmodel
     }     
     parnumber <- 1
-    PrepList <- vector('list', ngroups)    
-    PrepListFull <- PrepData(data=data, model=model[[1]], itemtype=itemtype, guess=guess, upper=upper, 
-                             startvalues=NULL, constrain=NULL, freepars=NULL, 
-                             parprior=NULL, verbose=verbose, debug=debug, free.start=NULL, D=D,
-                             technical=technical, mixedlist=mixedlist, ...) #just a dummy model to collect fulldata stuff
-    for(g in 1:ngroups){    
+    PrepList <- vector('list', ngroups)        
+    names(PrepList) <- groupNames    
+    tmp <- 1:ngroups
+    selectmod <- model[[tmp[names(model) == groupNames[1]]]]
+    PrepListFull <- PrepList[[1]] <- 
+        PrepData(data=data, model=selectmod, itemtype=itemtype, guess=guess, 
+                             upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
+                             parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
+                             technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
+                             grsm.block=grsm.block, D=D, mixedlist=mixedlist, ...)            
+    stringtabdata <- apply(PrepListFull$tabdata[, -ncol(PrepListFull$tabdata)], 
+                           1, paste, sep='', collapse = '/')
+    stringfulldata <- apply(PrepListFull$fulldata, 1, paste, sep='', collapse = '/')        
+    for(g in 1:ngroups){            
         select <- group == groupNames[g]        
         tmp <- 1:ngroups
         selectmod <- model[[tmp[names(model) == groupNames[g]]]]
-        PrepList[[g]] <- PrepData(data=data[select,], model=selectmod, itemtype=itemtype, guess=guess, 
+        if(g != 1)
+            PrepList[[g]] <- PrepData(data=data, model=selectmod, itemtype=itemtype, guess=guess, 
                                   upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
                                   parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
                                   technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
@@ -69,7 +78,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
-    names(PrepList) <- groupNames    
+    if(ngroups > 1) {
+        tmprs <- makerData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,                                
+                               r=PrepListFull$tabdata[,ncol(PrepListFull$tabdata)], 
+                               group=group, groupNames=groupNames)
+        for(g in 1:ngroups){
+            PrepList[[g]]$tabdata[,ncol(PrepListFull$tabdata)] <- tmprs[,g]
+            PrepList[[g]]$tabdata2[,ncol(PrepListFull$tabdata2)] <- tmprs[,g]
+        }        
+    }    
     if(BFACTOR){
         #better start values        
         J <- length(PrepList[[1]]$pars) - 1
@@ -183,6 +200,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1:ngroups){
             Pl <- rlist[[g]]$expected
             rg <- PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)]
+            Pl <- Pl[rg != 0]
+            rg <- rg[rg != 0]            
             Ng <- sum(rg) 
             G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pl)))
             G2 <- G2 + G2group[g]
@@ -287,11 +306,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     
     ####post estimation stats
-    df <- 0
+    df <- 0    
     for(g in 1:ngroups){
         r <- PrepList[[g]]$tabdata
         r <- r[, ncol(r)]
-        df <- df + length(r) - 1 
+        df <- df + sum(r != 0) - 1 
     }
     r <- PrepListFull$tabdata
     r <- r[, ncol(r)]
@@ -318,7 +337,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     AICc <- AIC + 2 * tmp * (tmp + 1) / (length(r) - tmp - 1)
     BIC <- (-2) * logLik + tmp*log(N) 
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
-    p <- 1 - pchisq(G2,df)
+    p <- 1 - pchisq(G2,df)    
     RMSEA <- ifelse((G2 - df) > 0, 
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))

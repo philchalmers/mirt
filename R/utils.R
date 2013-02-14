@@ -568,3 +568,15 @@ nameInfoMatrix <- function(info, correction, L, npars){
     colnames(info) <- rownames(info) <- shortnames
     return(info)
 }
+
+makerData <- function(stringfulldata, stringtabdata, r, group, groupNames){
+    ret <- matrix(0, length(stringtabdata), length(groupNames))    
+    for(g in 1:length(groupNames)){
+        tmpstringdata <- stringfulldata[group == groupNames[g]]
+        rtmp <- numeric(length(r))
+        for(i in 1:length(stringtabdata))
+            rtmp[i] <- sum(tmpstringdata == stringtabdata[i])
+        ret[,g] <- rtmp 
+    }
+    ret 
+}

@@ -1,4 +1,5 @@
-
+* bug fix for multipleGroup when independent groups don't contain all potential response options
+  (reported by Scot McNary)
 
 * lbound and ubound parameter bounds are now availble to the user for restricting the parameter
   estimation space
