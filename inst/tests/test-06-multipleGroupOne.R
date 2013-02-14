@@ -62,4 +62,4 @@ test_that('one factor polynomial and missing', {
     dat[1,1] <- dat[2,2] <- NA
     x2 <- multipleGroup(dat, 1, group=group, method='EM', verbose = FALSE)
     expect_is(x, 'MultipleGroupClass')
-}
+})

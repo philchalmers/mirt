@@ -82,7 +82,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmprs <- makerData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,                                
                                r=PrepListFull$tabdata[,ncol(PrepListFull$tabdata)], 
                                group=group, groupNames=groupNames)
-        for(g in 1:ngroups){
+        for(g in 1:ngroups){            
+            PrepList[[g]]$fulldata <- PrepListFull$fulldata[group == groupNames[g], ]
             PrepList[[g]]$tabdata[,ncol(PrepListFull$tabdata)] <- tmprs[,g]
             PrepList[[g]]$tabdata2[,ncol(PrepListFull$tabdata2)] <- tmprs[,g]
         }        
