@@ -19,7 +19,6 @@ Depends:
     R (>= 2.14),
     stats4,
     lattice,
-    MASS,
     methods
 Imports:
     stats4,
