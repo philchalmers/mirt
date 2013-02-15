@@ -186,7 +186,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             grad <- grad[1, estpars & !redun_constr]            
             if(any(is.na(grad))) 
                 stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')            
-            Hess <- Matrix(hess[estpars & !redun_constr, estpars & !redun_constr], sparse = TRUE)            
+            Hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
             inv.Hess <- try(solve(Hess), silent = TRUE)        	                        
             if(class(inv.Hess) == 'try-error'){             
                 if(inverse_fail_count == 5) 

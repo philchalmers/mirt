@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.5.1
+Version: 0.5.2
 Date: 2013-01-16
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -25,8 +25,7 @@ Imports:
     GPArotation,
     mvtnorm,
     Rcpp,
-    numDeriv,
-    Matrix
+    numDeriv
 Suggests:
     plink,
     psych

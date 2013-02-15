@@ -201,9 +201,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                         ", Log-Lik = ", sprintf("%.1f",LL), sep="")					
             }
         }			
-        if(stagecycle < 3){	
-            ave.h <- Matrix(ave.h, sparse = TRUE)
-            inv.ave.h <- try(Matrix::solve(ave.h), silent = TRUE)			            
+        if(stagecycle < 3){	            
+            inv.ave.h <- try(solve(ave.h), silent = TRUE)			            
             if(class(inv.ave.h) == 'try-error'){
                 inv.ave.h <- ave.h 
                 tmp <- .1*diag(inv.ave.h)
@@ -243,8 +242,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         }	                 
         
         #Step 3. Update R-M step		
-        Tau <- Tau + gamma*(ave.h - Tau)
-        Tau <- Matrix(Tau, sparse = TRUE)	
+        Tau <- Tau + gamma*(ave.h - Tau)        
         inv.Tau <- try(solve(Tau), silent = TRUE)
         if(class(inv.Tau) == 'try-error'){
             inv.Tau <- Tau

@@ -76,3 +76,5 @@ setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))
 setGeneric("itemplot.internal",  function(object, ...) standardGeneric("itemplot.internal"))
 
 setGeneric("fscores.internal", function(object, ...) standardGeneric("fscores.internal"))
+
+setGeneric("summary", function(object, ...) standardGeneric("summary"))
