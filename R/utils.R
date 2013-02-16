@@ -569,14 +569,26 @@ nameInfoMatrix <- function(info, correction, L, npars){
     return(info)
 }
 
-makerData <- function(stringfulldata, stringtabdata, r, group, groupNames){
-    ret <- matrix(0, length(stringtabdata), length(groupNames))    
+maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem, K, itemloc){    
+    tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.numeric)
+    tabdata2 <- do.call(rbind, tabdata2)
+    tabdata2[tabdata2 == 99999] <- NA
+    tabdata <- matrix(0, nrow(tabdata2), sum(K))
+    for(i in 1:nitem){
+        uniq <- sort(na.omit(unique(tabdata2[,i])))
+        if(K[i] == 2) uniq <- rev(uniq)
+        for(j in 1:length(uniq))
+            tabdata[,itemloc[i] + j - 1] <- as.numeric(tabdata2[,i] == uniq[j])        
+    }        
+    ret1 <- ret2 <- vector('list', length(groupNames))    
     for(g in 1:length(groupNames)){
         tmpstringdata <- stringfulldata[group == groupNames[g]]
-        rtmp <- numeric(length(r))
+        rtmp <- numeric(nrow(tabdata))
         for(i in 1:length(stringtabdata))
             rtmp[i] <- sum(tmpstringdata == stringtabdata[i])
-        ret[,g] <- rtmp 
+        ret1[[g]] <- cbind(tabdata, rtmp)
+        ret2[[g]] <- cbind(tabdata2, rtmp)
     }
-    ret 
+    ret <- list(tabdata=ret1, tabdata2=ret2)
+    ret
 }

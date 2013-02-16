@@ -61,10 +61,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                              upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
                              parprior=parprior, verbose=verbose, debug=debug, free.start=NULL,
                              technical=technical, parnumber=parnumber, BFACTOR=BFACTOR,
-                             grsm.block=grsm.block, D=D, mixedlist=mixedlist, ...)            
-    stringtabdata <- apply(PrepListFull$tabdata2[, -ncol(PrepListFull$tabdata2)], 
-                           1, paste, sep='', collapse = '/')
-    stringfulldata <- apply(data, 1, paste, sep='', collapse = '/')     
+                             grsm.block=grsm.block, D=D, mixedlist=mixedlist, ...)                    
     for(g in 1:ngroups){                    
         tmp <- 1:ngroups
         selectmod <- model[[tmp[names(model) == groupNames[g]]]]
@@ -77,17 +74,21 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
-    if(ngroups > 1) {
-        tmprs <- makerData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,                                
-                               r=PrepListFull$tabdata[,ncol(PrepListFull$tabdata)], 
-                               group=group, groupNames=groupNames)
+    if(ngroups > 1) {                
+        tmpdata <- data
+        tmpdata[is.na(tmpdata)] <- 99999
+        stringfulldata <- apply(tmpdata, 1, paste, sep='', collapse = '/')
+        stringtabdata <- unique(stringfulldata)          
+        tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,                               
+                                  group=group, groupNames=groupNames, nitem=ncol(data), 
+                                  K=PrepListFull$K, itemloc=PrepListFull$itemloc)
         for(g in 1:ngroups){              
             select <- group == groupNames[g]
             for(i in 1:ncol(data))
                 PrepList[[g]]$pars[[i]]@dat <- PrepList[[g]]$pars[[i]]@dat[select, , drop = FALSE]
             PrepList[[g]]$fulldata <- PrepListFull$fulldata[select, ]
-            PrepList[[g]]$tabdata[,ncol(PrepListFull$tabdata)] <- tmprs[,g]
-            PrepList[[g]]$tabdata2[,ncol(PrepListFull$tabdata2)] <- tmprs[,g]
+            PrepList[[g]]$tabdata <- tmptabdata$tabdata[[g]]
+            PrepList[[g]]$tabdata2 <- tmptabdata$tabdata2[[g]]
         }        
     }    
     if(BFACTOR){

@@ -27,9 +27,9 @@ test_that('one factor', {
                                  prev.mod = mod_configural)    
     expect_is(mod_scalar1, 'MultipleGroupClass')
     dat[1,1] <- dat[2,2] <- NA
-    mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
+    mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'), 
-                                 prev.mod = mod_configural)
+                                 prev.mod = mod_configural)    
     expect_is(mod_scalar1, 'MultipleGroupClass')
     
     fs1 <- fscores(mod_metric, verbose = FALSE)
