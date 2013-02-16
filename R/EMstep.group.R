@@ -188,15 +188,17 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')            
             Hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
             inv.Hess <- try(solve(Hess), silent = TRUE)        	                        
-            if(class(inv.Hess) == 'try-error'){             
+            if(class(inv.Hess) == 'try-error'){                
                 if(inverse_fail_count == 5) 
                     stop('Hessian is not invertable. Likelihood surface is likely too flat.') 
                 inverse_fail_count <- inverse_fail_count + 1
-                inv.Hess <- Hess
-                tmp <- .1*diag(inv.Hess)
-                tmp[tmp > -25] <- -.25
-                diag(inv.Hess) <- diag(inv.Hess) + tmp
-                inv.Hess <- try(solve(inv.Hess))                
+                tmp <- Hess
+                while(1){
+                    tmp <- tmp + .01*diag(diag(tmp))
+                    QR <- qr(tmp)
+                    if(QR$rank == ncol(tmp)) break
+                }
+                inv.Hess <- solve(tmp)
             }
             correction <- as.vector(inv.Hess %*% grad)
             #keep steps smaller

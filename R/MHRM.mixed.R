@@ -207,11 +207,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         if(stagecycle < 3){	            
             inv.ave.h <- try(solve(ave.h), silent = TRUE)			            
             if(class(inv.ave.h) == 'try-error'){
-                inv.ave.h <- ave.h 
-                tmp <- .1*diag(inv.ave.h)
-                tmp[tmp < 1] <- 1
-                diag(inv.ave.h) <- diag(inv.ave.h) + tmp
-                inv.ave.h <- try(solve(inv.ave.h))
+                tmp <- ave.h                 
+                while(1){
+                    tmp <- tmp + .01*diag(diag(tmp))
+                    QR <- qr(tmp)
+                    if(QR$rank == ncol(tmp)) break
+                }
+                inv.ave.h <- solve(tmp)
                 noninvcount <- noninvcount + 1
                 if(noninvcount == 3) 
                     stop('\nEstimation halted during burn in stages, solution is unstable')
@@ -248,11 +250,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         Tau <- Tau + gamma*(ave.h - Tau)        	
         inv.Tau <- try(solve(Tau), silent = TRUE)
         if(class(inv.Tau) == 'try-error'){
-            inv.Tau <- Tau
-            tmp <- .1*diag(inv.Tau)
-            tmp[tmp < 1] <- 1
-            diag(inv.Tau) <- diag(inv.Tau) + tmp
-            inv.Tau <- try(solve(inv.Tau))
+            tmp <- Tau            
+            while(1){
+                tmp <- tmp + .01*diag(diag(tmp))
+                QR <- qr(tmp)
+                if(QR$rank == ncol(tmp)) break
+            }
+            inv.Tau <- solve(tmp)           
             noninvcount <- noninvcount + 1
             if(noninvcount == 5) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
