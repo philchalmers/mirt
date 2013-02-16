@@ -32,6 +32,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(!is.null(itemtype)){
             itemtype[itemtype == 'grsm'] <- 'graded'
             itemtype[itemtype == 'rsm'] <- 'gpcm'        
+            itemtype[itemtype == '3PL' | itemtype == '3PLu' | itemtype == '4PL'] <- '2PL'
         }
     }
     ##	            
@@ -93,12 +94,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }        
     }        
     if(BFACTOR){
-        #better start values        
+        #better start values                
         J <- length(PrepList[[1]]$pars) - 1
-        Rpoly <- cormod(na.omit(data), PrepList[[1]]$K, guess = rep(0,J))
-        suppressWarnings(FA <- psych::fa(Rpoly, 1, warnings = FALSE))
-        loads <- unclass(FA$load)
-        cs <- sqrt(abs(FA$u))              
+        Rpoly <- cormod(data, K, guess, ...)        
+        loads <- abs(eigen(Rpoly)$vector[,1, drop = FALSE])
+        u <- 1 - rowSums(loads^2)       
+        u[u < .001 ] <- .2
+        cs <- sqrt(u)              
         astart <- loads/cs
         astart <- cbind(astart,astart/2)* (1.702 / D) #reweight due to D
         nfact <- PrepList[[1]]$pars[[1]]@nfact
