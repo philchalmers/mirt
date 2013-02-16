@@ -576,8 +576,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     tabdata2[tabdata2 == 99999] <- NA
     tabdata <- matrix(0, nrow(tabdata2), sum(K))
     for(i in 1:nitem){
-        uniq <- sort(na.omit(unique(tabdata2[,i])))
-        if(K[i] == 2) uniq <- rev(uniq)
+        uniq <- sort(na.omit(unique(tabdata2[,i])))        
         for(j in 1:length(uniq))
             tabdata[,itemloc[i] + j - 1] <- as.numeric(tabdata2[,i] == uniq[j])        
     }        
