@@ -569,7 +569,8 @@ nameInfoMatrix <- function(info, correction, L, npars){
     return(info)
 }
 
-maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem, K, itemloc){    
+maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem, K, itemloc,
+                        Names, itemnames){    
     tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.numeric)
     tabdata2 <- do.call(rbind, tabdata2)
     tabdata2[tabdata2 == 99999] <- NA

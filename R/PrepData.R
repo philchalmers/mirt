@@ -65,38 +65,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
             dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
         fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
     }	
-    fulldata[is.na(fulldata)] <- 0    
-    pats <- apply(fulldata, 1, paste, collapse = "/") 
-    freqs <- rev(table(pats))
-    nfreqs <- length(freqs)
-    r <- as.vector(freqs)	
-    tabdata <- unlist(strsplit(cbind(names(freqs)), "/"))
-    tabdata <- matrix(as.numeric(tabdata), nfreqs, sum(K), TRUE)	
-    tabdata2 <- matrix(NA, nfreqs, J)
-    tmp <- c()
-    for(i in 1:J){ 
-        if(K[i] == 2) tmp <- c(tmp,0,1)
-        else tmp <- c(tmp, 1:K[i])
-    }
-    for(i in 1:nfreqs){
-        if(sum(tabdata[i, ]) < J){
-            tmp2 <- rep(NA,J)
-            ind <- tmp[as.logical(tabdata[i, ])]
-            logicalind <- as.logical(tabdata[i, ])
-            k <- 1
-            for(j in 1:J){
-                if(sum(logicalind[itemloc[j]:(itemloc[j+1]-1)]) != 0){
-                    tmp2[j] <- ind[k]
-                    k <- k + 1
-                }
-            }
-            tabdata2[i, ] <- tmp2
-        } else tabdata2[i, ] <- tmp[as.logical(tabdata[i, ])]
-    }
-    tabdata <- cbind(tabdata,r) 
-    tabdata2 <- cbind(tabdata2,r)
-    colnames(tabdata) <- c(Names,'Freq')	
-    colnames(tabdata2) <- c(itemnames, 'Freq')             
+    fulldata[is.na(fulldata)] <- 0        
     pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
@@ -163,7 +132,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     if(is.null(prodlist)) prodlist <- list()
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,
                 K=K, fulldata=fulldata, nfactNames=nfactNames, nfact=nfact, npars=npars, 
-                exploratory=exploratory, J=J, itemloc=itemloc, factorNames=factorNames, 
-                itemtype=itemtype, tabdata=tabdata, tabdata2=tabdata2, nLambdas=nfact+length(prodlist))
+                exploratory=exploratory, J=J, itemloc=itemloc, factorNames=factorNames, Names=Names,
+                itemtype=itemtype, nLambdas=nfact+length(prodlist))
     ret
 }

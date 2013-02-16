@@ -74,14 +74,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }    
-    if(ngroups > 1) {                
+    if(ngroups > 0) {                
         tmpdata <- data
         tmpdata[is.na(tmpdata)] <- 99999
         stringfulldata <- apply(tmpdata, 1, paste, sep='', collapse = '/')
         stringtabdata <- unique(stringfulldata)          
         tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,                               
                                   group=group, groupNames=groupNames, nitem=ncol(data), 
-                                  K=PrepListFull$K, itemloc=PrepListFull$itemloc)
+                                  K=PrepListFull$K, itemloc=PrepListFull$itemloc, 
+                                  Names=PrepListFull$Names, itemnames=PrepListFull$itemnames)
         for(g in 1:ngroups){              
             select <- group == groupNames[g]
             for(i in 1:ncol(data))
@@ -90,11 +91,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             PrepList[[g]]$tabdata <- tmptabdata$tabdata[[g]]
             PrepList[[g]]$tabdata2 <- tmptabdata$tabdata2[[g]]
         }        
-    }    
+    }        
     if(BFACTOR){
         #better start values        
         J <- length(PrepList[[1]]$pars) - 1
-        Rpoly <- cormod(na.omit(data), PrepListFull$K, guess = rep(0,J))
+        Rpoly <- cormod(na.omit(data), PrepList[[1]]$K, guess = rep(0,J))
         suppressWarnings(FA <- psych::fa(Rpoly, 1, warnings = FALSE))
         loads <- unclass(FA$load)
         cs <- sqrt(abs(FA$u))              
@@ -125,7 +126,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     for(g in 1:ngroups)
         pars[[g]] <- PrepList[[g]]$pars
     J <- length(PrepList[[1]]$itemtype)
-    K <- PrepListFull$K
+    K <- PrepList[[1]]$K
     nfact <- PrepList[[1]]$pars[[J+1]]@nfact    
     if(nfact != 1 && any(c('1PL') %in% itemtype )) 
         stop('1PL itemtype for multidimenional models is ambiguous. Please specify the 
@@ -170,12 +171,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts),
                                         length.out = quadpts))        
         temp <- matrix(0,nrow=J,ncol=(nfact-1))
-        sitems <- matrix(0, nrow=sum(PrepListFull$K), ncol=(nfact-1))
+        sitems <- matrix(0, nrow=sum(PrepList[[1]]$K), ncol=(nfact-1))
         if(BFACTOR){                
             for(i in 1:J) temp[i,oldmodel[i]] <- 1
             ind <- 1
             for(i in 1:J){
-                for(j in 1:PrepListFull$K[i]){
+                for(j in 1:PrepList[[1]]$K[i]){
                     sitems[ind, ] <- temp[i, ]
                     ind <- ind + 1
                 }		
@@ -310,14 +311,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     
     ####post estimation stats
-    df <- 0    
+    df <- rr <- 0    
     for(g in 1:ngroups){
         r <- PrepList[[g]]$tabdata
         r <- r[, ncol(r)]
+        rr <- rr + r
         df <- df + sum(r != 0) - 1 
     }
-    r <- PrepListFull$tabdata
-    r <- r[, ncol(r)]
+    r <- rr    
     N <- sum(r)
     logN <- 0
     logr <- rep(0,length(r))
@@ -334,7 +335,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(length(constrain) > 0)
         for(i in 1:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1     
-    nmissingtabdata <- sum(is.na(rowSums(PrepListFull$tabdata2)))
+    nmissingtabdata <- sum(is.na(rowSums(PrepList[[1]]$tabdata2)))
     df <- df - nestpars + nconstr + nfact*(nfact - 1)/2 - nmissingtabdata	
     tmp <- (length(r) - df - 1)
     AIC <- (-2) * logLik + 2 * tmp
@@ -366,7 +367,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars,                         
                        df=df,                        
-                       itemloc=PrepListFull$itemloc, 
+                       itemloc=PrepList[[1]]$itemloc, 
                        method=method,
                        AIC=AIC, 
                        AICc=AICc,
@@ -375,18 +376,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        logLik=logLik, 
                        F=F, 
                        h2=h2, 
-                       tabdata=PrepListFull$tabdata2, 
+                       tabdata=PrepList[[1]]$tabdata2, 
                        Pl=Pl[[1]], 
                        data=data, 
                        converge=ESTIMATE$converge, 
                        nfact=nfact,                                       
-                       K=PrepListFull$K, 
-                       tabdatalong=PrepListFull$tabdata,                        
+                       K=PrepList[[1]]$K, 
+                       tabdatalong=PrepList[[1]]$tabdata,                        
                        mixedlist=mixedlist,                       
-                       factorNames=PrepListFull$factorNames, 
+                       factorNames=PrepList[[1]]$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
-                       fulldata=PrepListFull$fulldata,
-                       itemtype=PrepListFull$itemtype,
+                       fulldata=PrepList[[1]]$fulldata,
+                       itemtype=PrepList[[1]]$itemtype,
                        information=ESTIMATE$info)
         } else if(PrepList[[1]]$exploratory){
             FF <- alp %*% t(alp)
@@ -402,7 +403,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        G2=G2, 
                        df=df, 
                        p=p, 
-                       itemloc=PrepListFull$itemloc, 
+                       itemloc=PrepList[[1]]$itemloc, 
                        method=method,
                        AIC=AIC, 
                        AICc=AICc,
@@ -411,7 +412,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        logLik=logLik, 
                        F=F, 
                        h2=h2, 
-                       tabdata=PrepListFull$tabdata2, 
+                       tabdata=PrepList[[1]]$tabdata2, 
                        Theta=Theta, 
                        Pl=Pl[[1]], 
                        data=data, 
@@ -419,16 +420,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        nfact=nfact,               
                        quadpts=quadpts, 
                        RMSEA=RMSEA, 
-                       K=PrepListFull$K, 
-                       tabdatalong=PrepListFull$tabdata, 
+                       K=PrepList[[1]]$K, 
+                       tabdatalong=PrepList[[1]]$tabdata, 
                        rotate=rotate,  #missing
                        null.mod=null.mod, 
                        TLI=TLI, 
                        Target=Target, #missing
-                       factorNames=PrepListFull$factorNames, 
+                       factorNames=PrepList[[1]]$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
-                       fulldata=PrepListFull$fulldata,
-                       itemtype=PrepListFull$itemtype,
+                       fulldata=PrepList[[1]]$fulldata,
+                       itemtype=PrepList[[1]]$itemtype,
                        information=ESTIMATE$info)
         } else {                        
             mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, 
@@ -436,7 +437,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        G2=G2, 
                        df=df, 
                        p=p, 
-                       itemloc=PrepListFull$itemloc, 
+                       itemloc=PrepList[[1]]$itemloc, 
                        AIC=AIC, 
                        AICc=AICc,
                        BIC=BIC, 
@@ -444,7 +445,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        logLik=logLik, 
                        F=F, 
                        h2=h2, 
-                       tabdata=PrepListFull$tabdata2, 
+                       tabdata=PrepList[[1]]$tabdata2, 
                        Theta=Theta, 
                        method=method,
                        Pl=Pl[[1]], 
@@ -453,26 +454,29 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        nfact=nfact,               
                        quadpts=quadpts, 
                        RMSEA=RMSEA, 
-                       K=PrepListFull$K, 
-                       tabdatalong=PrepListFull$tabdata, 
+                       K=PrepList[[1]]$K, 
+                       tabdatalong=PrepList[[1]]$tabdata, 
                        null.mod=null.mod, 
                        TLI=TLI, 
-                       factorNames=PrepListFull$factorNames, 
+                       factorNames=PrepList[[1]]$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
-                       fulldata=PrepListFull$fulldata,
-                       itemtype=PrepListFull$itemtype,
+                       fulldata=PrepList[[1]]$fulldata,
+                       itemtype=PrepList[[1]]$itemtype,
                        information=ESTIMATE$info)
         }        
     } else {
+        tabdatalong <- PrepList[[1]]$tabdata
+        tabdata <- PrepList[[1]]$tabdata2
+        tabdata[,ncol(tabdata)] <- tabdatalong[,ncol(tabdatalong)] <- r
         mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, 
                    cmods=cmods, 
-                   itemloc=PrepListFull$itemloc, 
-                   tabdata=PrepListFull$tabdata2, 
+                   itemloc=PrepList[[1]]$itemloc, 
+                   tabdata=tabdata, 
                    data=data, 
                    converge=ESTIMATE$converge, 
                    esttype=esttype,                
                    K=PrepListFull$K, 
-                   tabdatalong=PrepListFull$tabdata, 
+                   tabdatalong=tabdatalong, 
                    constrain=constrain,               
                    group=group, 
                    groupNames=groupNames, 
@@ -492,7 +496,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    p=p,
                    Theta=Theta,
                    Pl=Pl,
-                   itemtype=PrepListFull$itemtype,
+                   itemtype=PrepList[[1]]$itemtype,
                    information=ESTIMATE$info)  
     }
     mod@time <- proc.time()[3] - start.time  
