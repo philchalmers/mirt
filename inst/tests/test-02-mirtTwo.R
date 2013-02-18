@@ -29,7 +29,7 @@ test_that('poly', {
     expect_is(cof2, 'list')
     IP1 <- itemplot(modp1, 1)
     IP2 <- itemplot(modp2, 1)
-    expect_is(IP1, 'NULL')
+    expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
     
     ##rating scale test

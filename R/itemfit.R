@@ -116,8 +116,17 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, meth
         for(i in 1:20)
             Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i        
         n.uniqueGroups <- length(unique(Groups))
-        X2 <- df <- RMSEA <- rep(0, J)            
-        if(!is.null(empirical.plot)) itemplot(x, empirical.plot)
+        X2 <- df <- RMSEA <- rep(0, J)                    
+        if(!is.null(empirical.plot)){
+            if(nfact > 1) stop('Cannot make empirical plot for multidimensional models')
+            theta <- seq(-4,4, length.out=40)
+            ThetaFull <- thetaComb(theta, nfact)
+            P <- ProbTrace(pars[[empirical.plot]], ThetaFull)            
+            plot(ThetaFull, P[,1], type = 'l', ylim = c(0,1), las = 1, 
+                 main =paste('Item', empirical.plot), ylab = expression(P(theta)), xlab = expression(theta))
+            for(i in 2:ncol(P))
+                lines(ThetaFull, P[,i], col = i)
+        }
         for (i in 1:J){    
             if(!is.null(empirical.plot) && i != empirical.plot) next            
             for(j in 1:n.uniqueGroups){                                    
