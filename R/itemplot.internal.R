@@ -133,7 +133,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
     }
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
-    if(CE){                   
+    if(CE){                    
         tmpitem <- x@pars[[item]]
         if(length(tmpitem@SEpar) == 0) stop('Must calculate the information matrix first.')
         splt <- strsplit(colnames(x@information), '\\.')
@@ -146,18 +146,21 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
         tmp <- parnums %in% tmp        
         mu <- tmpitem@par[x@pars[[item]]@est]        
         smallinfo <- solve(x@information[tmp, tmp])        
-        delta <- mvtnorm::rmvnorm(CEdraws, mu, smallinfo)
+        #make symetric
+        smallinfo <-(smallinfo + t(smallinfo))/2
+        delta <- mvtnorm::rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
         tmp <- mvtnorm::dmvnorm(delta, mu, smallinfo)
         sorttmp <- sort(tmp)
         lower <- sorttmp[floor(length(tmp) * CEalpha/2)]
         upper <- sorttmp[ceiling(length(tmp) * (1-CEalpha/2))]
         delta <- delta[tmp < upper & tmp > lower, , drop=FALSE]
         tmpitem@par[tmpitem@est] <- delta[1, ] 
-        CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFull)
+        degrees <- if(nfact == 2) c(degrees[i], 90 - degrees[i]) else 0
+        CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFull, degrees=degrees) 
         CEprobupper <- CEproblower <- ProbTrace(tmpitem, ThetaFull)
         for(i in 2:nrow(delta)){
             tmpitem@par[tmpitem@est] <- delta[i, ] 
-            CEinfo <- iteminfo(tmpitem, ThetaFull)
+            CEinfo <- iteminfo(tmpitem, ThetaFull, degrees=degrees)
             CEprob <- ProbTrace(tmpitem, ThetaFull)
             CEinfoupper <- apply(cbind(CEinfoupper, CEinfo), 1, max)
             CEinfolower <- apply(cbind(CEinfolower, CEinfo), 1, min)
@@ -171,39 +174,49 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
     score <- matrix(0:(ncol(P) - 1), nrow(Theta), ncol(P), byrow = TRUE)
     score <- rowSums(score * P)
     if(class(x@pars[[item]]) %in% c('nominal', 'graded', 'rating')) 
-        score <- score + 1         
+        score <- score + 1     
     if(nfact == 1){
-        if(type == 'trace'){            
-            plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
-                 ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1), las = 1, 
-                 ...)
-            for(i in 2:ncol(P))
-                lines(Theta, P[,i], col = i)   
+        plt <- data.frame(info = info, Theta = Theta)
+        plt2 <- data.frame(P = P, Theta = Theta)        
+        colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta")                
+        plt2 <- reshape(plt2, direction='long', varying = paste("P", 1:ncol(P), sep=''), v.names = 'P', 
+                        times = paste("P", 1:ncol(P), sep=''))        
+        colnames(plt) <- c("info", "Theta")  
+        plt$score <- score
+        plt$CEinfoupper <- CEinfoupper
+        plt$CEinfolower <- CEinfolower        
+        plt2$upper <- as.numeric(CEprobupper)
+        plt2$lower <- as.numeric(CEproblower)
+        if(type == 'trace'){
             if(CE){
-                for(i in 1:ncol(P)){
-                    lines(Theta, CEprobupper[,i], col = i, lty = 'dashed')   
-                    lines(Theta, CEproblower[,i], col = i, lty = 'dashed')   
-                }
-            }   
+                return(lattice::xyplot(P + upper + lower ~ Theta|time, plt2, type = 'l', 
+                                col = c('black', 'red', 'red'), lty = c(1,2,2),
+                                main = paste('Trace lines for item', item), ylim = c(-0.1,1.1),
+                                ylab = expression(P(theta)), xlab = expression(theta), ... ))                
+            }
+            else
+                return(lattice::xyplot(P ~ Theta, plt2, group = time, type = 'l', auto.key = TRUE,
+                                main = paste('Trace lines for item', item), ylim = c(-0.1,1.1),
+                                ylab = expression(P(theta)), xlab = expression(theta), ... ))               
         }
         if(type == 'info'){                        
-            if(CE){ 
-                plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
-                     ylab = expression(I(theta)), xlab = expression(theta), las = 1, 
-                     ylim = c(min(CEinfolower), max(CEinfoupper)))
-                lines(Theta, CEinfoupper, col = 'red', lty = 'dashed')   
-                lines(Theta, CEinfolower, col = 'red', lty = 'dashed')                   
-            } else
-                plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
-                     ylab = expression(I(theta)), xlab = expression(theta), las = 1)
+            if(CE){                       
+                return(lattice::xyplot(info + CEinfoupper + CEinfolower ~ Theta, plt, type = 'l', 
+                                col = c('black', 'red', 'red'), lty = c(1,2,2),
+                                main = paste('Information for item', item), 
+                                ylab = expression(I(theta)), xlab = expression(theta), ... ))                                  
+            } else 
+                return(lattice::xyplot(info ~ Theta, plt, type = 'l', 
+                                auto.key = TRUE, main = paste('Information for item', item), 
+                                ylab = expression(I(theta)), xlab = expression(theta), ...))
         }
-        if(type == 'score'){            
-            plot(Theta, score, col = 1, type='l', main = paste('Expected score for item', item), 
-                 ylab = expression(E(theta)), xlab = expression(theta), 
-                 ylim = c(min(floor(score)),max(ceiling(score))), las = 1)            
+        if(type == 'score'){       
+            return(lattice::xyplot(score ~ Theta, plt, type = 'l', 
+                            auto.key = TRUE, main = paste('Expected score for item', item), 
+                            ylab = expression(E(theta)), xlab = expression(theta), ...))                     
         }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')        
-    } else {
+    } else {        
         plt <- data.frame(info = info, Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])
         colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta1", "Theta2")
@@ -211,16 +224,36 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
                 times = paste("P", 1:ncol(P), sep=''))
         colnames(plt) <- c("info", "Theta1", "Theta2")  
         plt$score <- score
+        plt$CEinfoupper <- CEinfoupper
+        plt$CEinfolower <- CEinfolower        
+        plt2$upper <- as.numeric(CEprobupper)
+        plt2$lower <- as.numeric(CEproblower)
         if(type == 'infocontour')												
             return(contourplot(info ~ Theta1 * Theta2, data = plt, 
                                main = paste("Item", item, "Information Contour"), xlab = expression(theta[1]), 
                                ylab = expression(theta[2]), ...))
         if(type == 'info')
-            return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Information"), 
+            if(CE) 
+                return(lattice::wireframe(info + CEinfolower + CEinfoupper ~ Theta1 + Theta2, data = plt, 
+                                   main = paste("Item", item, "Information"), col = c('black', 'red', 'red'),
+                                   zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
+                                   scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
+            else 
+                return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt, 
+                             main = paste("Item", item, "Information"), 
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
         if(type == 'trace'){
-            return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time, main = paste("Item", item, "Trace"), 
+            if(CE) 
+                return(lattice::wireframe(P + upper + lower ~ Theta1 + Theta2 | time, data = plt2, 
+                                          main = paste("Item", item, "Trace"), 
+                                          zlab=expression(P(theta)), xlab=expression(theta[1]), 
+                                          ylab=expression(theta[2]), col = c('black', 'red', 'red'),
+                                          scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...)) 
+                
+            else
+                return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time, 
+                             main = paste("Item", item, "Trace"), 
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))            
         } 
