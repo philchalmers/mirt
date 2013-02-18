@@ -1,9 +1,9 @@
 setMethod(
 	f = "itemplot.internal",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, item, type = 'trace', degrees = 45, ...)
+	definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
 	{  			
-		x <- itemplot.main(object, item, type, degrees, ...)		        
+		x <- itemplot.main(object, item, type, degrees, CE, CEalpha, CEdraws, ...)		        
 		return(invisible(x))
 	}
 )
@@ -12,9 +12,9 @@ setMethod(
 setMethod(
 	f = "itemplot.internal",
 	signature = signature(object = 'ConfirmatoryClass'),
-	definition = function(object, item, type = 'trace', degrees = 45, ...)
+	definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
 	{
-	    x <- itemplot.main(object, item, type, degrees, ...)    	
+	    x <- itemplot.main(object, item, type, degrees, CE, CEalpha, CEdraws, ...)    	
 	    return(invisible(x))
 	}
 )
@@ -23,11 +23,11 @@ setMethod(
 setMethod(
     f = "itemplot.internal",
     signature = signature(object = 'list'),
-    definition = function(object, item, type = 'trace', degrees = 45, ...)
+    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
     {        
         newobject <- new('MultipleGroupClass', cmods=object, nfact=object[[1]]@nfact, 
                          groupNames=factor(names(object)))        
-        x <- itemplot.internal(newobject, item, type, degrees, ...)    	
+        x <- itemplot.internal(newobject, item, type, degrees, CE, CEalpha, CEdraws, ...)    	
         return(invisible(x))
     }
 )
@@ -36,15 +36,17 @@ setMethod(
 setMethod(
     f = "itemplot.internal",
     signature = signature(object = 'MultipleGroupClass'),
-    definition = function(object, item, type = 'trace', degrees = 45, ...)
-    {       
+    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+    {           
         Pinfo <- list()        
         gnames <- object@groupNames
         nfact <- object@nfact        
         K <- object@cmods[[1]]@pars[[item]]@ncat
         for(g in 1:length(gnames)){
+            object@cmods[[g]]@information <- object@information
             Pinfo[[g]] <- itemplot.main(object@cmods[[g]], item=item, type='RETURN', 
-                                        degrees=degrees, ...)
+                                        degrees=degrees, CE=FALSE, CEalpha=CEalpha, 
+                                        CEdraws=CEdraws, ...)
             Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
         }        
         if(type == 'RE'){
@@ -62,14 +64,14 @@ setMethod(
         for(i in 2:length(Plist))
             dat2 <- rbind(dat2, dat[, (K+1):ncol(dat)])
         dat2$P <- P
-        dat2$cat <- rep(as.character(0:(length(Plist)-1)), each = nrow(dat))
+        dat2$cat <- rep(as.character(0:(length(Plist)-1)), each = nrow(dat))        
         if(nfact == 1){
             if(type == 'info')            
                 return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l', 
                                        auto.key = TRUE, main = paste('Information for item', item), 
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))            
             if(type == 'trace')
-                return(lattice::xyplot(P ~ Theta | cat, dat2, group=group, type = 'l', 
+                return(lattice::xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l', 
                                 auto.key = TRUE, main = paste("Item", item, "Trace"), 
                                 ylab = expression(P(theta)), xlab = expression(theta), ...))
             if(type == 'RE')
@@ -111,7 +113,7 @@ setMethod(
 )
 
 
-itemplot.main <- function(x, item, type, degrees = 45, ...){        
+itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){        
     nfact <- ncol(x@F)
     if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')    
@@ -129,22 +131,71 @@ itemplot.main <- function(x, item, type, degrees = 45, ...){
     } else {
         info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
     }
+    CEinfoupper <- CEinfolower <- info
+    CEprobupper <- CEproblower <- P
+    if(CE){                   
+        tmpitem <- x@pars[[item]]
+        if(length(tmpitem@SEpar) == 0) stop('Must calculate the information matrix first.')
+        splt <- strsplit(colnames(x@information), '\\.')
+        parnums <- as.numeric(do.call(rbind, splt)[,2])
+        tmp <- x@pars[[item]]@parnum[x@pars[[item]]@est]
+        if(length(x@constrain) > 0)
+            for(i in 1:length(x@constrain))
+                if(any(tmp %in% x@constrain[[i]]))
+                    tmp[tmp %in% x@constrain[[i]]] <- x@constrain[[i]][1]
+        tmp <- parnums %in% tmp        
+        mu <- tmpitem@par[x@pars[[item]]@est]        
+        smallinfo <- solve(x@information[tmp, tmp])        
+        delta <- mvtnorm::rmvnorm(CEdraws, mu, smallinfo)
+        tmp <- mvtnorm::dmvnorm(delta, mu, smallinfo)
+        sorttmp <- sort(tmp)
+        lower <- sorttmp[floor(length(tmp) * CEalpha/2)]
+        upper <- sorttmp[ceiling(length(tmp) * (1-CEalpha/2))]
+        delta <- delta[tmp < upper & tmp > lower, , drop=FALSE]
+        tmpitem@par[tmpitem@est] <- delta[1, ] 
+        CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFull)
+        CEprobupper <- CEproblower <- ProbTrace(tmpitem, ThetaFull)
+        for(i in 2:nrow(delta)){
+            tmpitem@par[tmpitem@est] <- delta[i, ] 
+            CEinfo <- iteminfo(tmpitem, ThetaFull)
+            CEprob <- ProbTrace(tmpitem, ThetaFull)
+            CEinfoupper <- apply(cbind(CEinfoupper, CEinfo), 1, max)
+            CEinfolower <- apply(cbind(CEinfolower, CEinfo), 1, min)
+            for(j in 1:ncol(CEprobupper)){
+                CEprobupper[,j] <- apply(cbind(CEprobupper[,j], CEprob[,j]), 1, max)
+                CEproblower[,j] <- apply(cbind(CEproblower[,j], CEprob[,j]), 1, min)                
+            }
+        }
+    }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
     score <- matrix(0:(ncol(P) - 1), nrow(Theta), ncol(P), byrow = TRUE)
     score <- rowSums(score * P)
     if(class(x@pars[[item]]) %in% c('nominal', 'graded', 'rating')) 
-        score <- score + 1     
+        score <- score + 1         
     if(nfact == 1){
         if(type == 'trace'){            
             plot(Theta, P[,1], col = 1, type='l', main = paste('Item', item), 
                  ylab = expression(P(theta)), xlab = expression(theta), ylim = c(0,1), las = 1, 
                  ...)
             for(i in 2:ncol(P))
-                lines(Theta, P[,i], col = i)                 
+                lines(Theta, P[,i], col = i)   
+            if(CE){
+                for(i in 1:ncol(P)){
+                    lines(Theta, CEprobupper[,i], col = i, lty = 'dashed')   
+                    lines(Theta, CEproblower[,i], col = i, lty = 'dashed')   
+                }
+            }   
         }
-        if(type == 'info'){            
-            plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
-                 ylab = expression(I(theta)), xlab = expression(theta), las = 1)
+        if(type == 'info'){                        
+            if(CE){ 
+                plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
+                     ylab = expression(I(theta)), xlab = expression(theta), las = 1, 
+                     ylim = c(min(CEinfolower), max(CEinfoupper)))
+                lines(Theta, CEinfoupper, col = 'red', lty = 'dashed')   
+                lines(Theta, CEinfolower, col = 'red', lty = 'dashed')                   
+            } else
+                plot(Theta, info, col = 1, type='l', main = paste('Information for item', item), 
+                     ylab = expression(I(theta)), xlab = expression(theta), las = 1)
         }
         if(type == 'score'){            
             plot(Theta, score, col = 1, type='l', main = paste('Expected score for item', item), 

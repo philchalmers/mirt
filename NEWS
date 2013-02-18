@@ -1,3 +1,5 @@
+* Confidence envelopes option added to itemplot() for trace lines and information plots
+
 * bug fix for multipleGroup when independent groups don't contain all potential response options
   (reported by Scot McNary)
 

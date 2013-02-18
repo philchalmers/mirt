@@ -2,7 +2,8 @@
 \alias{itemplot}
 \title{Displays item surface and information plots}
 \usage{
-  itemplot(object, item, type = "trace", degrees = 45, ...)
+  itemplot(object, item, type = "trace", degrees = 45,
+    CE = FALSE, CEalpha = 0.05, CEdraws = 1000, ...)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -25,6 +26,14 @@
   are exactly two factors. See \code{\link{iteminfo}} for
   more detail}
 
+  \item{CE}{logical; plot confidence envelope?}
+
+  \item{CEalpha}{area remaining in the tail for confidence
+  envolope. Default gives 95% confidence region}
+
+  \item{CEdraws}{draws number of draws to use for
+  confidence envelope}
+
   \item{...}{additional arguments to be passed to lattice}
 }
 \description{
@@ -35,18 +44,25 @@
 
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
-mod1 <- mirt(fulldata,1)
+mod1 <- mirt(fulldata,1,SE=TRUE)
 mod2 <- mirt(fulldata,1, itemtype = '1PL')
 mod3 <- mirt(fulldata,2)
 
 itemplot(mod1, 2)
+itemplot(mod1, 2, CE = TRUE)
 itemplot(mod1, 2, type = 'info')
+itemplot(mod1, 2, type = 'info', CE = TRUE)
 
 mods <- list(twoPL = mod1, onePL = mod2)
 itemplot(mods, 1, type = 'RE')
 
+#multidimensional info
 itemplot(mod3, 3, type = 'info')
 
+#polytomous items
+pmod <- mirt(Science, 1, SE=TRUE)
+itemplot(pmod, 3)
+itemplot(pmod, 3, CE = TRUE)
 
     }
 }
