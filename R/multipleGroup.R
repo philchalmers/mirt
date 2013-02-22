@@ -198,7 +198,10 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           verbose = TRUE, ...)
 {   
     if(debug == 'Main') browser()
-    Call <- match.call()        
+    Call <- match.call()            
+    invariance.check <- invariance %in% c('free_means', 'free_varcov')
+    if(all(invariance.check) && length(constrain) == 0)
+        stop('Model is not identified without further constrains (may require additional anchoring items).')
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, 
                       itemtype=itemtype, guess=guess, upper=upper, nested.mod=prev.mod, 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
