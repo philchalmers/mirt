@@ -16,12 +16,12 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     */
     
     NumericVector prior(Rprior);
-    NumericVector log_prior = prior;
+    NumericVector log_prior(prior.length());
     IntegerVector nfact(Rnfact);
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     NumericMatrix itemtrace(Ritemtrace);
-    NumericMatrix log_itemtrace = itemtrace;    
+    NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol());    
     int nquad = prior.length();
     int nitems = data.ncol();
     int npat = r.length();      
@@ -85,8 +85,9 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
         Rsitems = integer matrix. Specific factor indicator
     */
     NumericMatrix itemtrace(Ritemtrace);
-    NumericMatrix log_itemtrace = itemtrace; 
+    NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol()); 
     NumericVector prior(Rprior);
+    NumericVector log_prior(prior.length());
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     IntegerMatrix sitems(Rsitems);
@@ -100,6 +101,8 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     for (item = 0; item < nitems; item++)
         for (k = 0; k < nquad; k++)
             log_itemtrace(k,item) = log(itemtrace(k,item));
+    for (k = 0; k < npquad; k++)
+        log_prior(k) = log(prior(k));
         
 	//declare dependent arrays 
 	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
@@ -117,10 +120,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 					    for (k = 0; k < nquad; k++)
 					  	    likelihoods(k,fact) += log_itemtrace(k,item);					
 			}
-		} 
-        for (fact = 0; fact < sfact; fact++)
-            for (k = 0; k < nquad; k++)
-		        likelihoods(k,fact) = exp(likelihoods(k,fact));					
+		}         					
 		for (fact = 0; fact < sfact; fact++){
 			k = 0;
 			for (j = 0; j < npquad; j++){
@@ -132,13 +132,16 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 			}
 			for (j = 0; j < npquad; j++)				
 			    for (i = 0; i < npquad; i++)
-			  	    L(i,j) = L(i,j) * prior(j);
+			  	    L(i,j) = exp(L(i,j) + log_prior(j));
 			for (j = 0; j < npquad; j++)				
 		        for (i = 0; i < npquad; i++)
 			        tempsum(j) += L(j,i);
 			for (i = 0; i < npquad; i++)
 			    Plk(i,fact) = tempsum(i);    			
-		}				
+		}		
+        for (fact = 0; fact < sfact; fact++)
+            for (k = 0; k < nquad; k++)
+    	        likelihoods(k,fact) = exp(likelihoods(k,fact));
 		expected(pat) = 0.0;
 		for (i = 0; i < npquad; i++){
 		    Pls(i) = 1.0; 		  		
