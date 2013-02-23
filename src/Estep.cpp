@@ -16,6 +16,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     */
     
     NumericVector prior(Rprior);
+    NumericVector log_prior = prior;
     IntegerVector nfact(Rnfact);
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
@@ -25,13 +26,15 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     int nitems = data.ncol();
     int npat = r.length();      
     double expd = 0.0;
-    int i = 0, k = 0, item = 0;	
+    int i = 0, k = 0, item = 0;    
     NumericMatrix r1(nquad, nitems);    
     NumericVector expected(npat), posterior(nquad);
     List ret;
     for (item = 0; item < nitems; item++)
         for (k = 0; k < nquad; k++)
             log_itemtrace(k,item) = log(itemtrace(k,item));
+    for (k = 0; k < nquad; k++)
+        log_prior(k) = log(prior(k));
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; pat++){		
@@ -44,7 +47,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 			        posterior(k) += log_itemtrace(k,item);
 		}    
         for (i = 0; i < nquad; i++)
-            posterior(i) = prior(i) * exp(posterior(i));
+            posterior(i) = exp(log_prior(i) + posterior(i));
 	    expd = 0.0;
 	    for (i = 0; i < nquad; i++)
 	        expd += posterior(i);	
@@ -58,7 +61,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 	                r1(k,item) += posterior(k);
 		    			
 	    }
-	} //end main 		
+	} //end main  		
  
     //return R list of length 3 with list("r1","r0","expected") 
     ret["r1"] = r1;
