@@ -508,6 +508,9 @@ ItemInfo <- function(x, Theta, cosangle){
     dx <- DerivTheta(x, Theta)    
     info <- 0     
     cosanglefull <- matrix(cosangle, nrow(P), length(cosangle), byrow = TRUE)
+    if(ncol(cosanglefull) < ncol(dx$grad[[1]]))
+        cosanglefull <- cbind(cosanglefull, matrix(1, nrow(cosanglefull),
+                                                   ncol(dx$grad[[1]]) - ncol(cosanglefull)))    
     for(i in 1:x@ncat){        
         dx$grad[[i]] <- matrix(rowSums(dx$grad[[i]] * cosanglefull))
         dx$hess[[i]] <- matrix(rowSums(dx$hess[[i]] * cosanglefull))

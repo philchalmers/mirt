@@ -217,9 +217,7 @@ setMethod(
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
     {           
-        class(x) <- 'ExploratoryClass'
-        if(length(attr(x@pars, 'prodlist')) > 0 ) stop('No plots for models with polynomial and 
-                                                       product terms')
+        class(x) <- 'ExploratoryClass'        
         plot(x, type=type, npts=npts, theta_angle=theta_angle, rot=rot, ...)
         
     }		

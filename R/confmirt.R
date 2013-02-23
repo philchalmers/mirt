@@ -258,6 +258,13 @@
 #' (mod.combo <- confmirt(data, model.combo))
 #' anova(mod.quad, mod.combo)
 #' 
+#' #nonlinear item and test plots
+#' plot(mod.quad)
+#' plot(mod.combo, type = 'SE')
+#' itemplot(mod.quad, 1, type = 'score')
+#' itemplot(mod.combo, 2, type = 'score')
+#' itemplot(mod.combo, 2, type = 'infocontour')
+#' 
 #' }
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
@@ -270,7 +277,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = 
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype, 
                       guess=guess, upper=upper, grsm.block=grsm.block, D=D, calcNull=calcNull,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, 
-                      rsm.block=rsm.block, draws=draws, debug=debug, technical = list(),  ...)
+                      rsm.block=rsm.block, draws=draws, debug=debug, technical = technical,  ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    

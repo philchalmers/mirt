@@ -113,8 +113,8 @@ setMethod(
 )
 
 
-itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){        
-    nfact <- ncol(x@F)
+itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){      
+    nfact <- x@nfact
     if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')    
     theta <- seq(-4,4, length.out=40)
@@ -122,7 +122,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
     prodlist <- attr(x@pars, 'prodlist')
     if(length(prodlist) > 0)        
         ThetaFull <- prodterms(Theta,prodlist)
-    P <- ProbTrace(x=x@pars[[item]], Theta=Theta)         
+    P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)         
     info <- 0 
     if(nfact == 2){
         for(i in 1:length(degrees))

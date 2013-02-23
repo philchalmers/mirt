@@ -238,7 +238,7 @@ setMethod(
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])       
-        nfact <- x@pars[[1]]@nfact
+        nfact <- x@nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.")
         if(nfact == 1) theta_angle <- 0        
         J <- length(x@pars) - 1        
@@ -254,7 +254,7 @@ setMethod(
             for(i in 1:J)
                 info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)            
         }
-        plt <- data.frame(cbind(info,Theta))         
+        plt <- data.frame(cbind(info,Theta=Theta))         
         if(nfact == 2){						
             colnames(plt) <- c("info", "Theta1", "Theta2")			
             plt$SE <- 1 / sqrt(plt$info)
@@ -274,7 +274,7 @@ setMethod(
                 return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = "Test Standard Errors", 
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))            
-        } else {
+        } else {            
             colnames(plt) <- c("info", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
@@ -283,8 +283,8 @@ setMethod(
             if(type == 'infocontour') 
                 cat('No \'contour\' plots for 1-dimensional models\n')
             if(type == 'SE')                
-                xyplot(SE~Theta, plt, type='l',main = 'Test Standard Errors', 
-                       xlab = expression(theta), ylab=expression(SE(theta)))
+                return(xyplot(SE~Theta, plt, type='l',main = 'Test Standard Errors', 
+                       xlab = expression(theta), ylab=expression(SE(theta))))
         }		
     }		
 )	

@@ -318,6 +318,13 @@ model.combo <- confmirt.model()
 (mod.combo <- confmirt(data, model.combo))
 anova(mod.quad, mod.combo)
 
+#nonlinear item and test plots
+plot(mod.quad)
+plot(mod.combo, type = 'SE')
+itemplot(mod.quad, 1, type = 'score')
+itemplot(mod.combo, 2, type = 'score')
+itemplot(mod.combo, 2, type = 'infocontour')
+
 }
 }
 \author{
