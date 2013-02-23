@@ -275,7 +275,10 @@ model.1 <- confmirt.model()
   COV = F1*F2
 
 
-mod1 <- confmirt(dataset,model.1)
+#compute model, and use parallel computation of the log-likelhood
+library(parallel)
+cl <- makeCluster(4)
+mod1 <- confmirt(dataset, model.1, cl=cl)
 coef(mod1)
 summary(mod1)
 residuals(mod1)

@@ -16,7 +16,7 @@ Description: Analysis of dichotomous and polytomous response data using latent
     multidimensional item response models for detecting differential item
     functioning and modelling item and person covariates.
 Depends:
-    R (>= 2.14),
+    R (>= 2.15),
     stats4,
     lattice,
     methods
@@ -28,7 +28,8 @@ Imports:
     numDeriv
 Suggests:
     plink,
-    psych
+    psych,
+    parallel
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes

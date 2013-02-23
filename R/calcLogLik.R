@@ -8,14 +8,15 @@
 #' calcLogLik(object, ...)
 #'
 #' \S4method{calcLogLik}{ExploratoryClass}(object,
-#'    draws = 2000, G2 = TRUE)
+#'    draws = 3000, G2 = TRUE)
 #' \S4method{calcLogLik}{ConfirmatoryClass}(object,
-#'    draws = 2000, G2 = TRUE)
+#'    draws = 3000, G2 = TRUE)
 #' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
 #' calcLogLik,ConfirmatoryClass-method
 #' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
+#' @param cl a cluster object from the \code{parallel} package
 #' @param ... parameters that are passed
 #' @section Methods: 
 #' \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")}, 
@@ -34,15 +35,41 @@
 #' 
 #' \dontrun{
 #' 
-#' mod1withLogLik <- calcLogLik(mod1, draws = 5000)
+#' # no parallel
+#' mod1withLogLik <- calcLogLik(mod1, draws=5000)
+#' 
+#' #with parallel using 4 cores
+#' library(parallel)
+#' cl <- makeCluster(4)
+#' mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)
 #' 
 #'   }
 #'
 setMethod(
 	f = "calcLogLik",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, draws = 2000, G2 = TRUE)
-	{	   
+	definition = function(object, draws = 3000, G2 = TRUE, cl = NULL)
+	{
+        LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J){
+            if(nfact > 1) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
+            else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
+            if(length(prodlist) > 0)
+                theta <- prodterms(theta,prodlist)	        	    	
+            itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)    
+            if(length(object@mixedlist) > 1){ 
+                colnames(theta) <- object@mixedlist$factorNames
+                fixed.design.list <- designMats(covdata=object@mixedlist$covdata, 
+                                                fixed=object@mixedlist$fixed, 
+                                                Thetas=theta, nitems=J, 
+                                                itemdesign=object@mixedlist$itemdesign, 
+                                                fixed.identical=object@mixedlist$fixed.identical)	            
+            }
+            for (i in 1:J) itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
+                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])	            	        
+            tmp <- itemtrace*fulldata	        
+            tmp[tmp < tol] <- 1    
+            return(exp(rowSums(log(tmp))))           
+        }
         pars <- object@pars
 	    tol <- 1e-8	    
         fulldata <- object@fulldata
@@ -53,27 +80,14 @@ setMethod(
 	    nfact <- length(ExtractLambdas(pars[[1]])) - length(object@prodlist) - pars[[1]]@nfixedeffects	    
         LL <- matrix(0, N, draws)
         grp <- ExtractGroupPars(pars[[length(pars)]]) 
-        fixed.design.list <- vector('list', J)
-        for(draw in 1:draws){
-	        if(nfact > 1) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
-	        else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
-	        if(length(prodlist) > 0)
-	            theta <- prodterms(theta,prodlist)	        	    	
-	        itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)    
-	        if(length(object@mixedlist) > 1){ 
-                colnames(theta) <- object@mixedlist$factorNames
-                fixed.design.list <- designMats(covdata=object@mixedlist$covdata, 
-                                                fixed=object@mixedlist$fixed, 
-                                                Thetas=theta, nitems=J, 
-                                                itemdesign=object@mixedlist$itemdesign, 
-                                                fixed.identical=object@mixedlist$fixed.identical)	            
-	        }
-	        for (i in 1:J) itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])	            	        
-	        tmp <- itemtrace*fulldata	        
-	        tmp[tmp < tol] <- 1    
-	        LL[ ,draw] <- exp(rowSums(log(tmp)))
-        }
+        fixed.design.list <- vector('list', J)         
+        if(!is.null(cl))            
+            LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist, 
+                           fulldata=fulldata, object=object, J=J)
+        else
+            for(draw in 1:draws)
+                LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist, 
+                                      fulldata=fulldata, object=object, J=J)    
         LL[is.nan(LL)] <- 0 
         rwmeans <- rowMeans(LL) 
         logLik <- sum(log(rwmeans))
@@ -150,10 +164,10 @@ setMethod(
 setMethod(
     f = "calcLogLik",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, draws = 2000, G2 = TRUE)
+    definition = function(object, draws = 2000, G2 = TRUE, cl = NULL)
     {	        
         class(object) <- 'ExploratoryClass'
-        ret <- calcLogLik(object, draws=draws, G2=G2)
+        ret <- calcLogLik(object, draws=draws, G2=G2, cl=cl)
         class(ret) <- 'ConfirmatoryClass'
         return(ret)
     } 	

@@ -215,7 +215,10 @@
 #'   COV = F1*F2
 #' 
 #' 
-#' mod1 <- confmirt(dataset,model.1)
+#' #compute model, and use parallel computation of the log-likelhood
+#' library(parallel)
+#' cl <- makeCluster(4)
+#' mod1 <- confmirt(dataset, model.1, cl=cl)
 #' coef(mod1)
 #' summary(mod1)
 #' residuals(mod1)
@@ -259,7 +262,7 @@
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, 
-                     verbose = TRUE, draws = 2000, debug = FALSE, rotate = 'varimax', Target = NULL, 
+                     verbose = TRUE, draws = 3000, debug = FALSE, rotate = 'varimax', Target = NULL, 
                      D = 1.702, technical = list(),  ...)
 {   
     if(debug == 'Main') browser()

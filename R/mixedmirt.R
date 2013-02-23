@@ -47,6 +47,10 @@
 #' group <- factor(rep(c('G1','G2','G3'), each = N/3))
 #' data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
 #' covdata <- data.frame(group, pseudoIQ) 
+#' #use cl for parallel computing
+#' library(parallel)
+#' cl <- makeCluster(4)
+#' 
 #' 
 #' #specify IRT model 
 #' model <- confmirt.model()
@@ -57,7 +61,7 @@
 #' mod0 <- mirt(data, model, itemtype = 'Rasch')
 #' #group as a fixed effect predictor (aka, uniform dif) and equal effect for all items with 
 #' #   fixed.constrain = TRUE
-#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', fixed.constrain = TRUE)   
+#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', fixed.constrain = TRUE, cl=cl)   
 #' anova(mod0, mod1)
 #' summary(mod1)
 #' coef(mod1) 
@@ -71,22 +75,22 @@
 #' anova(lmod0, lmod1)
 #' 
 #' #model using 2PL items instead of Rasch
-#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', fixed.constrain = TRUE)
+#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', fixed.constrain = TRUE, cl=cl)
 #' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 #' 
 #' #global nonuniform dif (group interaction with latent variable)
-#' (dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = TRUE))
+#' (dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = TRUE, cl=cl))
 #' anova(mod1b, dif)
 #' #free the interaction terms for each item to detect dif (less power for each item though)
 #' sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
 #' constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3']) # main effects
 #' itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = FALSE, 
-#'      constrain=constrain)
+#'      constrain=constrain, cl=cl)
 #' anova(dif, itemdif)
 #'                                       
 #' #continuous predictor and interaction model with group 
-#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, fixed.constrain = TRUE)
-#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ, fixed.constrain = TRUE)
+#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, fixed.constrain = TRUE, cl=cl)
+#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ, fixed.constrain = TRUE, cl=cl)
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)  
@@ -104,14 +108,14 @@
 # #to test this item structure hypothesis (other intercept predictors are also possible by including more columns). 
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #' 
-#' LLTM <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch', itemdesign = itemdesign)
+#' LLTM <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch', itemdesign = itemdesign, cl=cl)
 #' coef(LLTM)
 #' wald(LLTM)
 #' L <- matrix(c(-1, 1), 1)
 #' wald(LLTM, L) #first half different from second
 #' 
 #' #compare to standard items with estimated slopes (2PL)?
-#' twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = '2PL', itemdesign = itemdesign)
+#' twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = '2PL', itemdesign = itemdesign, cl=cl)
 #' coef(twoPL)
 #' wald(twoPL)
 #' L <- matrix(0, 1, 34)
@@ -136,7 +140,7 @@
 #' 
 #' 
 #' sv <- mixedmirt(data, model = model, fixed = ~ itempred, pars = 'values', 
-#'                  itemtype = 'Rasch', itemdesign = itemdesign)
+#'                  itemtype = 'Rasch', itemdesign = itemdesign, cl=cl)
 #' sv$value[sv$name == 'd'] <- 0
 #' sv$est[sv$name == 'd'] <- FALSE
 #' 
@@ -145,7 +149,7 @@
 #' constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
 #' constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
 #' mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv, 
-#'                  itemtype = 'Rasch', constrain = constrain, itemdesign = itemdesign)
+#'                  itemtype = 'Rasch', constrain = constrain, itemdesign = itemdesign, cl=cl)
 #' coef(mod)                 
 #' rasch <- mirt(data, 1, itemtype = 'Rasch', D=1)
 #' anova(mod, rasch) #n.s., LLTM model a much better choice compared to Rasch

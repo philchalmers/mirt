@@ -4,7 +4,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        quadpts = NaN, rotate = 'varimax', Target = NaN, SE = TRUE,
                        technical = list(), debug = FALSE, verbose = TRUE, BFACTOR = FALSE,
                        SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
-                       rsm.block = NULL, mixedlist=NULL, calcNull=TRUE, ...)
+                       rsm.block = NULL, mixedlist=NULL, calcNull=TRUE, cl = NULL, ...)
 {    
     start.time <- proc.time()[3]
     if(debug == 'ESTIMATION') browser()    
@@ -26,6 +26,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }	 
     NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
     USEEM <- ifelse(method == 'EM', TRUE, FALSE)
+    if(!is.null(cl)) require(parallel)
     #change itemtypes if NULL.MODEL 
     if(NULL.MODEL){
         constrain <- NULL        
@@ -282,7 +283,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         logLik <- G2 <- SElogLik <- 0        
         Pl <- list()
         for(g in 1:ngroups){
-            cmods[[g]] <- calcLogLik(cmods[[g]], draws, G2 = 'return')                
+            cmods[[g]] <- calcLogLik(cmods[[g]], draws, G2 = 'return', cl=cl)                
             logLik <- logLik + cmods[[g]]@logLik
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
             G2 <- G2 + cmods[[g]]@G2

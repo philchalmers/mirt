@@ -1,3 +1,6 @@
+* Parallel option passed to calcLogLik to compute Monte Carlo log-likelihood more quickly. Can also 
+  be passed down the call stack from confmirt, multipleGroup, and mixedmirt
+
 * Prevent only using 'free_means' and 'free_varcov' in multipleGroup since this would not be 
   identified without further constraints (reported by Ken Beath)
 
