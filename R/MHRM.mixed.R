@@ -336,6 +336,6 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
     }    
     info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=as.matrix(info), 
-                longpars=longpars, converge=converge)
+                longpars=longpars, converge=converge, SElogLik=0)
     ret    
 }

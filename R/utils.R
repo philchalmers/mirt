@@ -183,13 +183,10 @@ betaprior <- function(g,a,b)
 }
 
 # Approximation to polychoric matrix for initial values
-cormod <- function(fulldata, K, guess, smooth = TRUE, ...) 
+cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.obs') 
 {  
 	fulldata <- as.matrix(fulldata) 
-	nitems <- ncol(fulldata)             
-    dots <- list(...)    
-	use <- dots$use        
-    if(is.null(use)) use <- 'pairwise.complete.obs'        
+	nitems <- ncol(fulldata)                 
 	cormat <- cor(fulldata, use=use)      	
 	cormat <- abs(cormat)^(1/1.15) * sign(cormat)  
 	if(smooth){  
@@ -593,4 +590,52 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     }
     ret <- list(tabdata=ret1, tabdata2=ret2)
     ret
+}
+
+makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN, 
+                     rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE, 
+                     SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
+                     rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
+                     technical = list(), use = 'pairwise.complete.obs', debug = FALSE)
+{    
+    opts <- list()
+    opts$method = method
+    opts$draws = draws
+    opts$calcLL = calcLL
+    opts$quadpts = quadpts 
+    opts$rotate = rotate 
+    opts$Target = Target
+    opts$SE = SE 
+    opts$verbose = verbose 
+    opts$SEtol = SEtol
+    opts$nested.mod = nested.mod
+    opts$grsm.block = grsm.block
+    opts$D = D 
+    opts$rsm.block = rsm.block
+    opts$calcNull = calcNull
+    opts$cl = cl 
+    opts$BFACTOR = BFACTOR 
+    opts$debug = debug    
+    opts$technical <- technical
+    opts$use <- use
+    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
+    opts$MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 15, technical$MSTEPMAXIT)        
+    opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
+    if(opts$method == 'EM')
+        opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
+    opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
+    opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
+    opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
+    opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
+    set.seed(12345)
+    if(!is.null(technical$set.seed)) set.seed(technical$set.seed)    
+    opts$gain <- c(0.05,0.5,0.004)
+    if(!is.null(technical$gain)){
+        if(length(technical$gain) == 3 && is.numeric(technical$gain))
+            opts$gain <- technical$gain
+    }	 
+    opts$NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
+    opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)    
+    if(!is.null(cl)) require(parallel)    
+    return(opts)
 }

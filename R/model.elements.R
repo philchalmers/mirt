@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata, 
                            itemloc, data, N, guess, upper, itemnames, exploratory, constrain, 
                            startvalues, freepars, parprior, parnumber, BFACTOR = FALSE, D, mixedlist,
-                           debug, ...)
+                           debug)
 {       
     if(debug == 'model.elements') browser()
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)    
@@ -79,7 +79,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     gmeans <- rep(0, nfact)
     estgmeans <- rep(FALSE, nfact)    
     if(exploratory){        
-        Rpoly <- cormod(data, K, guess, ...)        
+        Rpoly <- cormod(data, K, guess)        
         loads <- eigen(Rpoly)$vector[,1:nfact, drop = FALSE]
         u <- 1 - rowSums(loads^2)       
         u[u < .001 ] <- .2

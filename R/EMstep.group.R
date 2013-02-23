@@ -242,7 +242,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     
     if(cycles == NCYCLES) converge <- 0
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
-                logLik=LL, rlist=rlist)
+                logLik=LL, rlist=rlist, SElogLik=0)
     ret
 }
 
