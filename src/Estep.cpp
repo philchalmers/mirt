@@ -20,6 +20,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     NumericMatrix itemtrace(Ritemtrace);
+    NumericMatrix log_itemtrace = itemtrace;    
     int nquad = prior.length();
     int nitems = data.ncol();
     int npat = r.length();      
@@ -28,17 +29,22 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     NumericMatrix r1(nquad, nitems);    
     NumericVector expected(npat), posterior(nquad);
     List ret;
+    for (item = 0; item < nitems; item++)
+        for (k = 0; k < nquad; k++)
+            log_itemtrace(k,item) = log(itemtrace(k,item));
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; pat++){		
   	    for (k = 0; k < nquad; k++)
-		    posterior(k) = prior(k);
+		    posterior(k) = 0.0;
 			
 		for (item = 0; item < nitems; item++){
             if (data(pat,item))
                 for (k = 0; k < nquad; k++)
-			        posterior(k) = posterior(k) * itemtrace(k,item);
+			        posterior(k) += log_itemtrace(k,item);
 		}    
+        for (i = 0; i < nquad; i++)
+            posterior(i) = prior(i) * exp(posterior(i));
 	    expd = 0.0;
 	    for (i = 0; i < nquad; i++)
 	        expd += posterior(i);	
@@ -76,6 +82,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
         Rsitems = integer matrix. Specific factor indicator
     */
     NumericMatrix itemtrace(Ritemtrace);
+    NumericMatrix log_itemtrace = itemtrace; 
     NumericVector prior(Rprior);
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
@@ -86,7 +93,10 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     int npquad = prior.length();
     int nquad = npquad * npquad;  
     int npat = r.length();      
-    int i=0, j=0, k=0, item=0, fact=0;	          
+    int i=0, j=0, k=0, item=0, fact=0;
+    for (item = 0; item < nitems; item++)
+        for (k = 0; k < nquad; k++)
+            log_itemtrace(k,item) = log(itemtrace(k,item));
         
 	//declare dependent arrays 
 	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
@@ -97,14 +107,17 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 	for (int pat = 0; pat < npat; pat++){		
 		for (fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
-				likelihoods(k,fact) = 1;				
+				likelihoods(k,fact) = 0;				
 			for (item = 0; item < nitems; item++){
 				if (data(pat,item))	
 					if(sitems(item,fact))
 					    for (k = 0; k < nquad; k++)
-					  	    likelihoods(k,fact) = likelihoods(k,fact) * itemtrace(k,item);					
+					  	    likelihoods(k,fact) += log_itemtrace(k,item);					
 			}
-		}			
+		} 
+        for (fact = 0; fact < sfact; fact++)
+            for (k = 0; k < nquad; k++)
+		        likelihoods(k,fact) = exp(likelihoods(k,fact));					
 		for (fact = 0; fact < sfact; fact++){
 			k = 0;
 			for (j = 0; j < npquad; j++){
