@@ -52,19 +52,25 @@ setMethod(
         if(type == 'RE'){
             for(g in length(gnames):1)
                 Pinfo[[g]]$info <- Pinfo[[g]]$info / Pinfo[[1]]$info
-        }
-        dat <- Pinfo[[1]]        
+        }        
+        dat <- Pinfo[[1]]         
         for(g in 2:length(gnames))
             dat <- rbind(dat, Pinfo[[g]])           
-        Plist <- unclass(dat[, 1:K])
+        if(K == 2){
+            K <- 1            
+            dat <- dat[ , -1]
+        }            
+        Plist <- unclass(dat[, 1:K, drop = FALSE])
         P <- c()
         dat2 <- dat[, (K+1):ncol(dat)]
         for(i in 1:length(Plist))
             P <- c(P, Plist[[i]])
-        for(i in 2:length(Plist))
-            dat2 <- rbind(dat2, dat[, (K+1):ncol(dat)])
+        if(length(Plist) > 1)
+            for(i in 2:length(Plist))
+                dat2 <- rbind(dat2, dat[, (K+1):ncol(dat)])        
         dat2$P <- P
-        dat2$cat <- rep(as.character(0:(length(Plist)-1)), each = nrow(dat))        
+        dat2$cat <- rep(as.character(1:(length(Plist))), each = nrow(dat))        
+        if(all(dat2$cat == '0')) dat2$cat <- rep('1', length(dat2$cat))
         if(nfact == 1){
             if(type == 'info')            
                 return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l', 
@@ -72,11 +78,12 @@ setMethod(
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))            
             if(type == 'trace')
                 return(lattice::xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l', 
-                                auto.key = TRUE, main = paste("Item", item, "Trace"), 
-                                ylab = expression(P(theta)), xlab = expression(theta), ...))
+                            auto.key = TRUE, main = paste("Item", item, "Trace"), 
+                            ylab = expression(P(theta)), xlab = expression(theta), ...))            
             if(type == 'RE')
                 return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l', 
-                                       auto.key = TRUE, main = paste('Relative efficiency for item', item), 
+                                       auto.key = TRUE, 
+                                       main = paste('Relative efficiency for item', item), 
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
         }
         if(nfact == 2){
@@ -116,13 +123,14 @@ setMethod(
 itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){      
     nfact <- x@nfact
     if(nfact > 2) stop('Can not plot high dimensional models')
-    if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')    
+    if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')        
     theta <- seq(-4,4, length.out=40)
     Theta <- ThetaFull <- thetaComb(theta, nfact)   
     prodlist <- attr(x@pars, 'prodlist')
     if(length(prodlist) > 0)        
         ThetaFull <- prodterms(Theta,prodlist)
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)         
+    K <- x@pars[[item]]@ncat      
     info <- 0 
     if(nfact == 2){
         for(i in 1:length(degrees))
@@ -170,11 +178,28 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
             }
         }
     }
+    if(nfact > 1){        
+        P2 <- P
+        CEu2 <- CEl2 <- CEprobupper 
+        for(i in 1:K){
+            P2[,i] <- P[ ,ncol(P) + 1 - i]
+            CEu2[,i] <- CEprobupper[ ,ncol(P) + 1 - i]
+            CEl2[,i] <- CEproblower[ ,ncol(P) + 1 - i]
+        }
+        P <- P2
+        CEprobupper <- CEu2
+        CEproblower <- CEl2        
+    }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
     score <- matrix(0:(ncol(P) - 1), nrow(Theta), ncol(P), byrow = TRUE)
     score <- rowSums(score * P)
     if(class(x@pars[[item]]) %in% c('nominal', 'graded', 'rating')) 
-        score <- score + 1     
+        score <- score + 1       
+    if(ncol(P) == 2){                
+        P <- P[ ,-1, drop = FALSE]
+        CEprobupper <- CEprobupper[ ,-1, drop = FALSE]
+        CEproblower <- CEproblower[ ,-1, drop = FALSE]        
+    }
     if(nfact == 1){
         plt <- data.frame(info = info, Theta = Theta)
         plt2 <- data.frame(P = P, Theta = Theta)        
