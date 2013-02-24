@@ -1,3 +1,5 @@
+* added probtrace() function for front end users to generate probability trace functions from models
+
 * plotting item tracelines with only two categories now ommits the lowest 
   category (as is more common)
 

@@ -80,3 +80,4 @@ Collate:
     'testinfo.R'
     'imputeMissing.R'
     'mod2values.R'
+    'probtrace.R'
