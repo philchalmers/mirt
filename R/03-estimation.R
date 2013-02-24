@@ -4,6 +4,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
 {       
     opts <- makeopts(...)    
     opts$start.time <- proc.time()[3]                 
+    # on exit, reset the seed to override internal
+    on.exit(set.seed((as.numeric(Sys.time()) - floor(as.numeric(Sys.time()))) * 1e8))
     #change itemtypes if NULL.MODEL 
     if(opts$NULL.MODEL){
         constrain <- NULL        
