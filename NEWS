@@ -1,3 +1,6 @@
+* indexing items in itemplot, itemfit, and extract.item can be called using either a number or the 
+  original item name
+
 * added probtrace() function for front end users to generate probability trace functions from models
 
 * plotting item tracelines with only two categories now ommits the lowest 

@@ -8,7 +8,8 @@
   \item{x}{mirt model of class 'ExploratoryClass',
   'ConfirmatoryClass', or 'MultipleGroupClass'}
 
-  \item{item}{a number signifying which item to extract}
+  \item{item}{a number or character signifying which item
+  to extract}
 
   \item{group}{a number signifying which group the item
   should be extracted from (applies to 'MultipleGroupClass'

@@ -4,7 +4,7 @@
 #' 
 #' @aliases extract.item
 #' @param x mirt model of class 'ExploratoryClass', 'ConfirmatoryClass', or 'MultipleGroupClass'
-#' @param item a number signifying which item to extract
+#' @param item a number or character signifying which item to extract
 #' @param group a number signifying which group the item should be extracted from (applies to 
 #' 'MultipleGroupClass' only)
 #' @keywords extract
@@ -16,6 +16,9 @@
 #' extr.1 <- extract.item(mod, 1)
 #' }
 extract.item <- function(x, item, group = NULL){
+    inames <- colnames(x@data)
+    ind <- 1:length(inames)
+    if(!is.numeric(item)) item <- ind[inames == item]      
     if(is(x, 'MultipleGroupClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?')
         ret <- x@cmods[[group]]@pars[[item]]

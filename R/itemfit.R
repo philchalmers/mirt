@@ -9,7 +9,8 @@
 #' \code{MultipleGroupClass}
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} statistic
-#' @param empirical.plot a single numeric value indicating which item to plot (via \code{itemplot}) and
+#' @param empirical.plot a single numeric value or character of the item name  indicating which item to plot
+#'  (via \code{itemplot}) and
 #' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}. 
 #' The default is \code{NULL}, therefore no plots are drawn 
 #' @param method type of factor score estimation method. Can be expected
@@ -121,6 +122,11 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, meth
             if(nfact > 1) stop('Cannot make empirical plot for multidimensional models')
             theta <- seq(-4,4, length.out=40)
             ThetaFull <- thetaComb(theta, nfact)
+            if(!is.numeric(empirical.plot)){
+                inames <- colnames(x@data)
+                ind <- 1:length(inames)
+                empirical.plot <- ind[inames == empirical.plot]              
+            }
             P <- ProbTrace(pars[[empirical.plot]], ThetaFull)            
             plot(ThetaFull, P[,1], type = 'l', ylim = c(0,1), las = 1, 
                  main =paste('Item', empirical.plot), ylab = expression(P(theta)), xlab = expression(theta))
@@ -137,7 +143,7 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, meth
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
                     col <- 2:length(tmp)
-                    points(rep(mtheta, length(tmp) - 1), tmp[-1], col = col)                  
+                    points(rep(mtheta, length(tmp) - 1), tmp[-1], col = col, pch = col+2)                  
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)            
                 if(any(N * P < 2)){

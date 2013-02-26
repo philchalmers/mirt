@@ -12,8 +12,8 @@
   \code{list} for comparing similar item types (e.g., 1PL
   vs 2PL)}
 
-  \item{item}{a single numeric value indicating which item
-  to plot}
+  \item{item}{a single numeric value, or the item name,
+  indicating which item to plot}
 
   \item{type}{plot type to use, information
   (\code{'info'}), item trace lines (\code{'trace'}),

@@ -16,11 +16,12 @@
   \item{group.size}{approximate size of each group to be
   used in calculating the \eqn{\chi^2} statistic}
 
-  \item{empirical.plot}{a single numeric value indicating
-  which item to plot (via \code{itemplot}) and overlay with
-  the empirical \eqn{\theta} groupings. Only applicable
-  when \code{type = 'X2'}. The default is \code{NULL},
-  therefore no plots are drawn}
+  \item{empirical.plot}{a single numeric value or character
+  of the item name indicating which item to plot (via
+  \code{itemplot}) and overlay with the empirical
+  \eqn{\theta} groupings. Only applicable when \code{type =
+  'X2'}. The default is \code{NULL}, therefore no plots are
+  drawn}
 
   \item{method}{type of factor score estimation method. Can
   be expected a-posteriori (\code{"EAP"}), Bayes modal

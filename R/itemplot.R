@@ -6,7 +6,7 @@
 #' @aliases itemplot
 #' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
 #' \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types (e.g., 1PL vs 2PL)
-#' @param item a single numeric value indicating which item to plot
+#' @param item a single numeric value, or the item name, indicating which item to plot
 #' @param type plot type to use, information (\code{'info'}), item trace lines (\code{'trace'}), relative 
 #' efficiency lines (\code{'RE'}), expected score \code{'score'}, or information contours \code{('infocontour')} 
 #' (not for \code{MultipleGroupClass} objects)
@@ -48,6 +48,9 @@
 #' 
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05, 
                      CEdraws = 1000, ...){
+    inames <- colnames(object@data)
+    ind <- 1:length(inames)
+    if(!is.numeric(item)) item <- ind[inames == item]    
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE, 
                              CEalpha=CEalpha, CEdraws=CEdraws, ...)
     if(is.null(ret)) return(invisible(ret))
