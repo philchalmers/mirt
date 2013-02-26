@@ -29,6 +29,7 @@ Imports:
 Suggests:
     plink,
     psych,
+    boot,
     parallel
 ByteCompile: yes
 LazyLoad: yes
@@ -81,3 +82,4 @@ Collate:
     'imputeMissing.R'
     'mod2values.R'
     'probtrace.R'
+    'calcSE.R'

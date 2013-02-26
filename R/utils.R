@@ -630,7 +630,8 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
     opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
-    set.seed(12345)
+    if(opts$method == 'MHRM' || opts$method =='MIXED')
+        set.seed(12345)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)    
     opts$gain <- c(0.05,0.5,0.004)
     if(!is.null(technical$gain)){

@@ -16,6 +16,7 @@ Objects can be created by calls of the form \code{new("ExploratoryClass", ...).}
   \describe{
     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
+    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }    
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }        
     \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }

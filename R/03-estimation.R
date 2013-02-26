@@ -5,7 +5,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts <- makeopts(...)    
     opts$start.time <- proc.time()[3]                 
     # on exit, reset the seed to override internal
-    on.exit(set.seed((as.numeric(Sys.time()) - floor(as.numeric(Sys.time()))) * 1e8))
+    if(opts$method == 'MHRM' || opts$method == 'MIXED')
+        on.exit(set.seed((as.numeric(Sys.time()) - floor(as.numeric(Sys.time()))) * 1e8))
     #change itemtypes if NULL.MODEL 
     if(opts$NULL.MODEL){
         constrain <- NULL        
@@ -344,6 +345,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     if(nmissingtabdata > 0) p <- RMSEA <- G2 <- TLI <- NaN
+    if(is.null(parprior)) parprior <- list()
     if(Data$ngroups == 1){        
         if(opts$method == 'MIXED'){                        
             mixedlist$betas <- cmods[[1]]@pars[[1]]@par[1:ncol(mixedlist$FDL[[1]])]
@@ -353,6 +355,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             mod <- new('MixedClass', 
                        iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars,                         
+                       model=list(oldmodel),
                        df=df,                        
                        itemloc=PrepList[[1]]$itemloc, 
                        method=opts$method,
@@ -373,6 +376,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        mixedlist=mixedlist,                       
                        factorNames=PrepList[[1]]$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
+                       parprior=parprior,
                        fulldata=PrepList[[1]]$fulldata,
                        itemtype=PrepList[[1]]$itemtype,
                        information=ESTIMATE$info)
@@ -387,6 +391,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             h2 <- rowSums(F^2)
             mod <- new('ExploratoryClass', iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars, 
+                       model=list(oldmodel),
                        G2=G2, 
                        df=df, 
                        p=p, 
@@ -415,12 +420,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        Target=opts$Target,
                        factorNames=PrepList[[1]]$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
+                       parprior=parprior,
                        fulldata=PrepList[[1]]$fulldata,
                        itemtype=PrepList[[1]]$itemtype,
                        information=ESTIMATE$info)
         } else {                        
             mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles, 
                        pars=cmods[[1]]@pars, 
+                       model=list(oldmodel),
                        G2=G2, 
                        df=df, 
                        p=p, 
@@ -447,6 +454,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        TLI=TLI, 
                        factorNames=PrepList[[1]]$factorNames, 
                        constrain=PrepList[[1]]$constrain, 
+                       parprior=parprior,
                        fulldata=PrepList[[1]]$fulldata,
                        itemtype=PrepList[[1]]$itemtype,
                        information=ESTIMATE$info)
@@ -457,6 +465,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tabdata[,ncol(tabdata)] <- tabdatalong[,ncol(tabdatalong)] <- r
         mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, 
                    cmods=cmods, 
+                   model=list(oldmodel),
                    itemloc=PrepList[[1]]$itemloc, 
                    tabdata=tabdata, 
                    data=Data$data, 
@@ -464,7 +473,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    esttype=opts$method,                
                    K=PrepList[[1]]$K, 
                    tabdatalong=tabdatalong, 
-                   constrain=constrain,               
+                   constrain=constrain,  
+                   parprior=parprior,
                    group=Data$group, 
                    groupNames=Data$groupNames, 
                    invariance=invariance, 
