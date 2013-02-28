@@ -82,4 +82,4 @@ Collate:
     'imputeMissing.R'
     'mod2values.R'
     'probtrace.R'
-    'calcSE.R'
+    'boot.mirt.R'

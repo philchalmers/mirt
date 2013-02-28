@@ -1,30 +1,28 @@
-#' Calculate standard errors for estimated model
+#' Calculate bootstrapped standard errors for estimated models
 #'
-#' Given an internal mirt object estimate the standard errors, and, if possible, 
-#' the parameter information matrix.
+#' Given an internal mirt object estimate the bootstrapped standard errors. If possible, it will 
+#' be benifitial to run the computations using multicore architecher (e.g., using the \code{parallel} 
+#' package).
 #' 
-#' @aliases calcSE
-#' @param x an estimated object
-#' @param SE.type a character indicating which class of standard errors to compute. Can be 
-#' \code{'boot'} for boostrapped standard errors (does not compute the information matrix), 
-#' \code{'BL'} for Bock and Leiberman computed standard errors, or \code{'MC'} for Monte Carlo
-#' compution of the information matrix to obtain stanard errors. 
-#' If \code{SE = TRUE} was used at estimation runtime (indicating that 
-#' MH-RM standard errors were computed) then these will be overwritten in the returned object. 
-#' @param R number of draws to use (also passed to the \code{boot()} function)
-#' @param return.boot logical; return the estimated object from the \code{boot} package?
-#' @param ... additional arguments to be passed
-#' @keywords standard errors
-#' @export calcSE
+#' @aliases boot.mirt
+#' @param x an estimated object from \code{mirt}, \code{bfactor}, or \code{multipleGroup}
+#' @param R number of draws to use (passed to the \code{boot()} function)
+#' @param return.boot logical; return the estimated object from the \code{boot} package? If \code{FALSE}
+#' the estimated model is returned with the bootstrapped standard errors 
+#' @param ... additional arguments to be passed on to \code{boot(...)}
+#' @keywords bootstrapped standard errors
+#' @export boot.mirt
 #' @examples 
 #' 
 #' \dontrun{
 #' mod <- mirt(Science, 1)
-#' modwithSE <- calcSE(mod)
-#' coef(modwithSE)
+#' booted <- boot.mirt(mod, R = 100)
+#' booted
+#' modwithboot <- boot.mirt(mod, R = 100, return.boot = FALSE)
+#' coef(modwithboot)
+#' 
 #' } 
-calcSE <- function(x, SE.type = 'boot', R = 1000, return.boot = FALSE, ...){
-    BL.LL <- function(pars, constrain){}
+boot.mirt <- function(x, R = 1000, return.boot = TRUE, ...){    
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group) { 
         ngroup <- length(unique(group))             
         while(TRUE){
@@ -72,6 +70,8 @@ calcSE <- function(x, SE.type = 'boot', R = 1000, return.boot = FALSE, ...){
         }
         return(pars)
     }    
+    if(is(x, 'MixedClass')) 
+        stop('Bootstapped standard errors not supported for MixedClass objects')
     dat <- x@data
     method <- x@method
     itemtype <- x@itemtype
@@ -84,35 +84,28 @@ calcSE <- function(x, SE.type = 'boot', R = 1000, return.boot = FALSE, ...){
     constrain <- x@constrain    
     if(length(parprior) == 0) parprior <- NULL
     if(length(constrain) == 0) constrain <- NULL
-    prodlist <- x@prodlist
-    if(method == 'MHRM' || method == 'MIXED' && SE.type == 'MHRM')
-        stop('MHRM standard errors already calculated during estimation.')
+    prodlist <- x@prodlist    
     ret <- x
-    if(SE.type == 'boot'){
-        if(!require(boot)) require(boot)        
-        if(MG){
-            longpars <- c()
-            tmp <- coef(x)
-            for(g in 1:length(tmp))
-                longpars <- c(longpars, do.call(c, tmp[[g]]))                
-        } else longpars <- do.call(c, coef(x))
-        npars <- length(longpars)        
-        boots <- boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
-                      parprior=parprior, model=model, itemtype=itemtype, group=group, ...)                  
-        if(return.boot) return(boots)                   
-        ret@information <- matrix(0)
-        SEs <- apply(boots$t,2, sd)
-        SEs[SEs == 0] <- NA
-        retpars <- loadSE(pars=pars, SEs=SEs, nfact=x@nfact, MG=MG, explor=explor)
-        if(MG) ret@cmods <- retpars else ret@pars <- retpars    
+    if(!require(boot)) require(boot)        
+    if(MG){
+        longpars <- c()
+        tmp <- coef(x)
+        for(g in 1:length(tmp))
+            longpars <- c(longpars, do.call(c, tmp[[g]]))                
+    } else longpars <- do.call(c, coef(x))
+    npars <- length(longpars)        
+    boots <- boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
+                  parprior=parprior, model=model, itemtype=itemtype, group=group, ...)                  
+    if(return.boot){
+        if(explor) message('Note: bootstrapped standard errors for slope parameters for exploratory 
+                           models are not meaningful.')
+        return(boots)                           
     }
-    if(SE.type == 'MHRM'){
-        stop('MHRM standard errors must be calulated during the estimation runtime.')
-    }
-    if(SE.type == 'MC'){    
-        
-        
-    }
+    ret@information <- matrix(0)
+    SEs <- apply(boots$t,2, sd)
+    SEs[SEs == 0] <- NA
+    retpars <- loadSE(pars=pars, SEs=SEs, nfact=x@nfact, MG=MG, explor=explor)
+    if(MG) ret@cmods <- retpars else ret@pars <- retpars            
     return(ret)
 }
     
