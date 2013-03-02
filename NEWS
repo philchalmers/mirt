@@ -1,3 +1,7 @@
+----------------------------------------------------------------
+mirt 0.5.2
+----------------------------------------------------------------
+
 * boot.mirt() function added for computing bootstrapped standard errors with via the boot 
   package (which supports parallel computing as well)
 
