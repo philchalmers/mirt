@@ -200,9 +200,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             logLik <- logLik + sum(rg*log(Pl))
         }
         Pl <- list(Pl)
-        if(!opts$NULL.MODEL && opts$SE){
-            tmp <- ESTIMATE
-            ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+        if(!opts$NULL.MODEL && opts$SE){            
+            tmp <- ESTIMATE               
+            if(opts$SE.type == 'BL')
+                ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList, 
+                                  BFACTOR=opts$BFACTOR, itemloc=PrepList[[1]]$itemloc, ESTIMATE=ESTIMATE, 
+                                  constrain=constrain)
+            if(opts$SE.type == 'MHRM')            
+                ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=1, SEMCYCLES=5,
                                            KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=opts$USEEM, 
                                            gain=opts$gain, 

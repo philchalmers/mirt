@@ -6,12 +6,13 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, SE = FALSE, SEtol = .001, invariance =
-    '', pars = NULL, method = 'MHRM', constrain = NULL,
-    parprior = NULL, calcNull = TRUE, draws = 3000, quadpts
-    = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod =
-    NULL, bfactor = FALSE, D = 1.702, technical = list(),
-    debug = FALSE, verbose = TRUE, ...)
+    = 0, upper = 1, SE = FALSE, SE.type = 'BL', SEtol =
+    .001, invariance = '', pars = NULL, method = 'EM',
+    constrain = NULL, parprior = NULL, calcNull = TRUE,
+    draws = 3000, quadpts = NULL, grsm.block = NULL,
+    rsm.block = NULL, prev.mod = NULL, bfactor = FALSE, D =
+    1.702, technical = list(), debug = FALSE, verbose =
+    TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -64,10 +65,18 @@
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
 
-  \item{SE}{logical, estimate the standard errors? Calls
-  the MHRM subroutine for a stochastic approximation. Only
-  applicable when \code{method = 'EM'} since the MHRM
-  method calculates them automatically}
+  \item{SE}{logical; estimate the standard errors? Calls
+  the MHRM subroutine for a stochastic approximation or the
+  Bock and Leiberman method (for EM only)}
+
+  \item{SE.type}{type of estimation method to use for
+  calculating the parameter information matrix. Can be
+  \code{'MHRM'} for stocastic estimation, or \code{'BL'}
+  for the Bock and Leiberman approach (EM only). Note that
+  \code{'MHRM'} may be faster and more accurate than
+  \code{'BL'} when there are 2 or more factors.
+  Bootstrapped standard errors are also possible but must
+  be run with the \code{\link{boot.mirt}} function}
 
   \item{D}{a numeric value used to adjust the logistic
   metric to be more similar to a normal cumulative density
@@ -186,18 +195,18 @@ models <- confmirt.model()
    F1 = 1-15
 
 
-mod_configural <- multipleGroup(dat, models, group = group, method = 'EM') #completely seperate analyses
+mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
 
 # prev.mod can save precious iterations and help to avoid local minimums
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'EM',
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'),
                             prev.mod = mod_configural) #equal slopes
-mod_scalar2 <- multipleGroup(dat, models, group = group, method = 'EM',  #equal intercepts, free variance and means
+mod_scalar2 <- multipleGroup(dat, models, group = group, #equal intercepts, free variance and means
                              invariance=c('slopes', 'intercepts', 'free_varcov','free_means'),
                              prev.mod = mod_configural)
-mod_scalar1 <- multipleGroup(dat, models, group = group, method = 'EM', #fixed means
+mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
                              invariance=c('slopes', 'intercepts', 'free_varcov'),
                              prev.mod = mod_configural)
-mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'EM',
+mod_fullconstrain <- multipleGroup(dat, models, group = group,
                              invariance=c('slopes', 'intercepts'),
                              prev.mod = mod_configural)
 
@@ -211,7 +220,7 @@ anova(mod_fullconstrain, mod_scalar1) #fix variance
 values <- multipleGroup(dat, models, group = group, pars = 'values')
 values
 constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
-equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain, method = 'EM')
+equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain, )
 anova(equalslopes, mod_configural)
 
 #############
@@ -245,11 +254,11 @@ model2 <- confmirt.model()
 
 models <- list(D1=model1, D2=model2) #note the names match the groups
 
-mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
-mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
+mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') #completely seperate analyses
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM') #equal slopes
+mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
-mod_fullconstrain <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
+mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)

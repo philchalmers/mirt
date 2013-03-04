@@ -138,26 +138,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         lastgrad <- 0
         stepLimit <- .1        
         for(mstep in 1:MSTEPMAXIT){                        
-            #Reload pars list
-            ind1 <- 1
-            for(g in 1:ngroups){                
-                for(i in 1:(J+1)){
-                    ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-                    pars[[g]][[i]]@par <- longpars[ind1:ind2]
-                    ind1 <- ind2 + 1
-                }
-                for(i in 1:(J+1)){                        
-                    #apply sum(t) == 1 constraint for mcm
-                    if(is(pars[[g]][[i]], 'mcm')){                
-                        tmp <- pars[[g]][[i]]@par
-                        cat <- pars[[g]][[i]]@ncat
-                        tmp2 <- (length(tmp) - (cat-1)):length(tmp) 
-                        Num <- exp(tmp[tmp2])
-                        tmp <- Num/sum(Num)                                    
-                        pars[[g]][[i]]@par[tmp2] <- tmp
-                    }
-                }
-            }
+            #Reload pars list            
+            pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
             #reset longpars and gradient
             g <- rep(0, nfullpars)
             h <- matrix(0, nfullpars, nfullpars)
@@ -238,11 +220,12 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(g in 1:ngroups)
             for(i in 1:J) 
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
-    } #END EM          
-    
-    if(cycles == NCYCLES) converge <- 0
+    } #END EM   
+    if(cycles == NCYCLES) converge <- 0    
+    infological <- estpars & !redun_constr    
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
-                logLik=LL, rlist=rlist, SElogLik=0)
+                logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, correction=correction,
+                estindex_unique=estindex_unique)
     ret
 }
 

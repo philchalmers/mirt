@@ -2,8 +2,12 @@
 mirt 0.5.2
 ----------------------------------------------------------------
 
+* default method in multipleGroup() switched to 'EM' with 'BL' estimated standard errors
+
 * boot.mirt() function added for computing bootstrapped standard errors with via the boot 
-  package (which supports parallel computing as well)
+  package (which supports parallel computing as well), as well as a new option SE.type = ''
+  for choosing between Bock and Leiberman or MHRM type information matrix computations (BL is the 
+  new default when EM is the default estimation)
 
 * indexing items in itemplot, itemfit, and extract.item can be called using either a number or the 
   original item name
