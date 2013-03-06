@@ -386,22 +386,23 @@ Theory)}
 \examples{
 \dontrun{
 #load LSAT section 7 data and compute 1 and 2 factor models
-data(LSAT7)
 data <- expand.table(LSAT7)
 
 (mod1 <- mirt(data, 1))
 summary(mod1)
 residuals(mod1)
 plot(mod1) #test information function
-plot(mod1, type = 'trace') #test information function
+plot(mod1, type = 'trace') #trace lines
 
 #estimated 3PL model for item 5 only
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
 
-(mod2 <- mirt(data, 2, SE = TRUE))
-summary(mod2, rotate = 'oblimin')
+(mod <- mirt(data, 2, SE = TRUE)) #standard errors with BL method
+coef(mod)
+(mod2 <- mirt(data, 2, SE = TRUE, SE.type = 'MHRM')) #standard errors with MHRM method
 coef(mod2)
+summary(mod2, rotate = 'oblimin') #oblimin rotation
 residuals(mod2)
 plot(mod2)
 
