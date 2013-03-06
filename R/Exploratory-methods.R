@@ -231,9 +231,10 @@ setMethod(
     f = "plot",
     signature = signature(x = 'ExploratoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
-                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
+                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10), 
+                          auto.key = TRUE, ...)
     {           
-        if (!type %in% c('info','infocontour', 'SE')) stop(type, " is not a valid plot type.")
+        if (!type %in% c('info','infocontour', 'SE', 'trace')) stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
@@ -285,6 +286,20 @@ setMethod(
             if(type == 'SE')                
                 return(xyplot(SE~Theta, plt, type='l',main = 'Test Standard Errors', 
                        xlab = expression(theta), ylab=expression(SE(theta))))
+            if(type == 'trace'){                
+                if(!all(x@K == 2)) stop('trace line plot only available for tests 
+                                        with dichotomous items')
+                P <- matrix(NA, nrow(Theta), J)
+                for(i in 1:J)
+                    P[,i] <- probtrace(extract.item(x, i), Theta)[,2]
+                items <- gl(n=J, k=nrow(Theta), labels = paste('Item', 1:J))
+                plotobj <- data.frame(P = as.numeric(P), Theta=Theta, item=items)
+                xyplot(P ~ Theta, plotobj, group = item, ylim = c(0,1), 
+                       xlab = expression(theta), ylab = expression(P(theta)), 
+                       auto.key = auto.key, type = 'l', main = 'Item trace lines', ...)
+                
+                
+            }
         }		
     }		
 )	

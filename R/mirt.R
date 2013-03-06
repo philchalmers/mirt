@@ -26,7 +26,8 @@
 #' as well as a \code{'promax'} rotation. 
 #' 
 #' Using \code{plot} will plot the test information function or the test standard errors 
-#' for 1 and 2 dimensional solutions. To examine
+#' for 1 and 2 dimensional solutions, or all item trace lines if only 1 dimensional the test is only
+#' dichotomous items. To examine
 #' individual item plots use \code{\link{itemplot}}. Residuals are
 #' computed using the LD statistic (Chen & Thissen, 1997) in the lower
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
@@ -145,7 +146,8 @@
 #' @param digits number of significant digits to be rounded
 #' @param type type of plot to view; can be \code{'info'} to show the test
 #' information function, \code{'infocontour'} for the test information contours, 
-#' or \code{'SE'} for the test standard error function
+#' \code{'SE'} for the test standard error function, or \code{'trace'} for all item trace lines
+#' (only available when all items are dichotomous)
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is 
 #' used then a bubble plot is created with the summed information across the angles specified 
 #' (e.g., \code{theta_angle = seq(0, 90, by=10)})
@@ -301,6 +303,7 @@
 #' summary(mod1)
 #' residuals(mod1)
 #' plot(mod1) #test information function
+#' plot(mod1, type = 'trace') #test information function
 #' 
 #' #estimated 3PL model for item 5 only
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))

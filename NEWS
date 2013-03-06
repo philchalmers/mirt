@@ -2,6 +2,9 @@ Changes in mirt 0.5.2
 
 NEW FEATURES
 
+- type = 'trace' option added to plot() to display all item trace lines on a single 
+  graph (dichotoums items only)
+
 - default method in multipleGroup() switched to 'EM' with 'BL' estimated standard errors
 
 - boot.mirt() function added for computing bootstrapped standard errors with via the boot 
