@@ -288,17 +288,15 @@ setMethod(
                        xlab = expression(theta), ylab=expression(SE(theta))))
             if(type == 'trace'){                
                 if(!all(x@K == 2)) stop('trace line plot only available for tests 
-                                        with dichotomous items')
+                                        with dichotomous items')                
                 P <- matrix(NA, nrow(Theta), J)
                 for(i in 1:J)
-                    P[,i] <- probtrace(extract.item(x, i), Theta)[,2]
+                    P[,i] <- probtrace(extract.item(x, i), ThetaFull)[,2]
                 items <- gl(n=J, k=nrow(Theta), labels = paste('Item', 1:J))
                 plotobj <- data.frame(P = as.numeric(P), Theta=Theta, item=items)
-                xyplot(P ~ Theta, plotobj, group = item, ylim = c(0,1), 
+                return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(0,1), 
                        xlab = expression(theta), ylab = expression(P(theta)), 
-                       auto.key = auto.key, type = 'l', main = 'Item trace lines', ...)
-                
-                
+                       auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))            
             }
         }		
     }		
