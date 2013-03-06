@@ -3,13 +3,13 @@ Changes in mirt 0.5.2
 NEW FEATURES
 
 - type = 'trace' option added to plot() to display all item trace lines on a single 
-  graph (dichotoums items only)
+  graph (dichotomous items only)
 
 - default method in multipleGroup() switched to 'EM' with 'BL' estimated standard errors
 
 - boot.mirt() function added for computing bootstrapped standard errors with via the boot 
   package (which supports parallel computing as well), as well as a new option SE.type = ''
-  for choosing between Bock and Leiberman or MHRM type information matrix computations (BL is the 
+  for choosing between Bock and Lieberman or MHRM type information matrix computations (BL is the 
   new default when EM is the default estimation)
 
 - indexing items in itemplot, itemfit, and extract.item can be called using either a number or the 
@@ -17,7 +17,7 @@ NEW FEATURES
 
 - added probtrace() function for front end users to generate probability trace functions from models
 
-- plotting item tracelines with only two categories now ommits the lowest 
+- plotting item tracelines with only two categories now omits the lowest 
   category (as is more common)
 
 - parallel option passed to calcLogLik to compute Monte Carlo log-likelihood more quickly. Can also 
@@ -25,7 +25,7 @@ NEW FEATURES
 
 - Confidence envelopes option added to itemplot() for trace lines and information plots
 
-- lbound and ubound parameter bounds are now availble to the user for restricting the parameter
+- lbound and ubound parameter bounds are now available to the user for restricting the parameter
   estimation space
 
 - mod2values() function added to convert an estimated mirt model into the appropriate data.frame 
@@ -34,7 +34,7 @@ NEW FEATURES
 - added imputeMissing() function to impute missing values given an estimated mirt model. Useful
   for checking item and person fit diagnostics and obtaining overall model fit statistics
 
-- allow for Rasch itemtype in multidimesional confirmatory models
+- allow for Rasch itemtype in multidimensional confirmatory models
 
 - more flexible calculation of M2 statistic in fitIndicies(), with user prompt option if the internal
   variables grow too large and cause time/RAM problems
