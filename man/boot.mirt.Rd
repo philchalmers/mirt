@@ -2,7 +2,7 @@
 \alias{boot.mirt}
 \title{Calculate bootstrapped standard errors for estimated models}
 \usage{
-  boot.mirt(x, R = 1000, return.boot = TRUE, ...)
+  boot.mirt(x, R = 100, return.boot = TRUE, ...)
 }
 \arguments{
   \item{x}{an estimated object from \code{mirt},
@@ -28,9 +28,9 @@
 \examples{
 \dontrun{
 mod <- mirt(Science, 1)
-booted <- boot.mirt(mod, R = 100)
+booted <- boot.mirt(mod)
 booted
-modwithboot <- boot.mirt(mod, R = 100, return.boot = FALSE)
+modwithboot <- boot.mirt(mod, return.boot = FALSE)
 coef(modwithboot)
 
 }

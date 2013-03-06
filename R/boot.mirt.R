@@ -16,13 +16,13 @@
 #' 
 #' \dontrun{
 #' mod <- mirt(Science, 1)
-#' booted <- boot.mirt(mod, R = 100)
+#' booted <- boot.mirt(mod)
 #' booted
-#' modwithboot <- boot.mirt(mod, R = 100, return.boot = FALSE)
+#' modwithboot <- boot.mirt(mod, return.boot = FALSE)
 #' coef(modwithboot)
 #' 
 #' } 
-boot.mirt <- function(x, R = 1000, return.boot = TRUE, ...){    
+boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){    
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group) { 
         ngroup <- length(unique(group))             
         while(TRUE){
