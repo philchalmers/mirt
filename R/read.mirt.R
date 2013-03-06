@@ -33,20 +33,23 @@ read.mirt <- function (x, as.irt.pars = TRUE)
     }
     if(length(x@prodlist)) 
         stop('Polynomial factor models not supported in plink')
-    listpars <- coef(x)    
+    listpars <- coef(x)        
     nitems <- length(listpars) - 1
+    if(!is(listpars[[1]], 'matrix'))
+        for(i in 1:nitems)
+            listpars[[i]] <- t(matrix(listpars[[i]]))
     mirt.items <- as.character(lapply(x@pars, class))    
     mirt.items <- plink.items <- mirt.items[-(nitems+1)]
     cat <- numeric(nitems)
     D <- x@pars[[1]]@D               
     nfact <- x@pars[[1]]@nfact
     pars <- matrix(NA, nitems, 40)
-    for(i in 1:nitems){
+    for(i in 1:nitems){        
         
         if(mirt.items[i] == 'dich'){            
             plink.items[i] <- 'drm' 
             cat[i] <- 2
-            abc <- listpars[[i]][1:(nfact+2)]
+            abc <- listpars[[i]][1, 1:(nfact+2)]
             if(nfact == 1)
                 abc[2] <- -abc[2]/(abc[1])
             pars[i, 1:length(abc)] <- abc
@@ -54,7 +57,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
         
         if(mirt.items[i] == 'graded'){
             plink.items[i] <- 'grm'
-            ab <- listpars[[i]]
+            ab <- listpars[[i]][1, ]
             cat[i] <- x@pars[[i]]@ncat 
             if(nfact == 1)
                 for(j in 1:(cat[i] - 1))
@@ -64,7 +67,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
         
         if(mirt.items[i] == 'rating'){
             plink.items[i] <- 'grm'            
-            ab <- listpars[[i]]
+            ab <- listpars[[i]][1, ]
             adj <- ab[length(ab)]
             ab <- ab[-length(ab)]
             cat[i] <- x@pars[[i]]@ncat 
@@ -77,7 +80,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
         }
         
         if(mirt.items[i] == 'gpcm'){
-            ab <- listpars[[i]]
+            ab <- listpars[[i]][1, ]
             a <- ab[1:nfact]
             ab <- ab[-(1:nfact)]
             cat[i] <- x@pars[[i]]@ncat 
@@ -90,7 +93,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
         
         if(mirt.items[i] == 'nominal'){            
             plink.items[i] <- 'nrm'
-            ab <- listpars[[i]]
+            ab <- listpars[[i]][1, ]
             a <- ab[1:nfact]
             ab <- ab[-(1:nfact)]
             cat[i] <- x@pars[[i]]@ncat             
@@ -102,7 +105,7 @@ read.mirt <- function (x, as.irt.pars = TRUE)
         }
         
         if(mirt.items[i] == 'mcm'){                                     
-            acd <- listpars[[i]]
+            acd <- listpars[[i]][1, ]
             a <- acd[1:nfact]
             acd <- acd[-(1:nfact)]
             cat[i] <- x@pars[[i]]@ncat 
