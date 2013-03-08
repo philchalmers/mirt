@@ -238,10 +238,12 @@
 #' 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, 
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}
 #' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, 
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}, 
-#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}
+#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}}, 
+#' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
+#' \code{\link{read.mirt}}, \code{\link{simdata}}
 #' 
 #' @references
 #' 
@@ -272,7 +274,7 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'BL', SEtol = .001, pars = NULL, 
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'varimax', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
 #' debug = FALSE, technical = list(), ...)
@@ -308,9 +310,9 @@
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
 #' 
-#' (mod <- mirt(data, 2, SE = TRUE)) #standard errors with BL method
+#' (mod <- mirt(data, 2, SE = TRUE)) #standard errors with MHRM method
 #' coef(mod)
-#' (mod2 <- mirt(data, 2, SE = TRUE, SE.type = 'MHRM')) #standard errors with MHRM method
+#' (mod2 <- mirt(data, 2, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 #' coef(mod2)
 #' summary(mod2, rotate = 'oblimin') #oblimin rotation 
 #' residuals(mod2)
@@ -404,7 +406,7 @@
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'BL', SEtol = .001,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'varimax', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
                  D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)

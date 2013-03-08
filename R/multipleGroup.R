@@ -96,7 +96,7 @@
 #' \code{\link{confmirt.model}}, \code{\link{fscores}}, \code{\link{fitIndices}}
 #' @keywords models
 #' @usage 
-#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'BL',
+#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM',
 #' SEtol = .001,  invariance = '', pars = NULL, method = 'EM', constrain = NULL, 
 #' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
 #' prev.mod = NULL, bfactor = FALSE, D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
@@ -195,7 +195,7 @@
 #' anova(mod_fullconstrain, mod_scalar)
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                          SE = FALSE, SE.type = 'BL', SEtol = .001, invariance = '', pars = NULL,  
+                          SE = FALSE, SE.type = 'MHRM', SEtol = .001, invariance = '', pars = NULL,  
                           method = 'EM',
                           constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 3000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,

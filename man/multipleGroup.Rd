@@ -6,7 +6,7 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, SE = FALSE, SE.type = 'BL', SEtol =
+    = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol =
     .001, invariance = '', pars = NULL, method = 'EM',
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     draws = 3000, quadpts = NULL, grsm.block = NULL,
