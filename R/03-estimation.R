@@ -119,7 +119,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         pars[[g]] <- PrepList[[g]]$pars
     nitems <- Data$nitems
     K <- PrepList[[1]]$K
-    nfact <- PrepList[[1]]$pars[[nitems+1]]@nfact      
+    Data$nfact <- nfact <- PrepList[[1]]$pars[[nitems+1]]@nfact      
     if(nfact != 1 && any(c('1PL') %in% itemtype )) 
         stop('1PL itemtype for multidimenional models is ambiguous. Please specify the 
              appropriate constraints manually using the 2PL model and the constrain argument.')
