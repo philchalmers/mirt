@@ -53,7 +53,13 @@
   \item{\code{'intercepts'}}{to constrain all the
   intercepts to be equal across all groups, note for
   nominal models this also includes the category specific
-  slope parameters} }}
+  slope parameters}} Additionally, specifying specific item
+  name bundles (from \code{colnames(data)}) will constrain
+  all freely estimated parameters in each item to be equal
+  accross groups. This is useful for selecting 'anchor'
+  items for vertical and horizontal scaling, and for
+  detecting differential item functioning (DIF) accross
+  groups}
 
   \item{guess}{initial (or fixed) values for the
   pseudo-guessing parameter. Can be entered as a single
@@ -222,6 +228,25 @@ values
 constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain, )
 anova(equalslopes, mod_configural)
+
+#############
+#DIF test for each item (using all other items as anchors)
+itemnames <- colnames(dat)
+refmodel <- multipleGroup(dat, models, group = group,
+                             invariance=c('free_means', 'free_varcov', itemnames))
+estmodels <- vector('list', ncol(dat))
+for(i in 1:ncol(dat))
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, prev.mod=refmodel,
+                             invariance=c('free_means', 'free_varcov', itemnames[-i]),
+                             verbose = FALSE)
+
+lapply(estmodels, anova, object2=refmodel)
+
+#family-wise error control
+p <- do.call(c, lapply(estmodels, function(y, x) 1 - pchisq(2*(y@logLik - x@logLik), y@df-x@df),
+             y=refmodel))
+p.adjust(p, method = 'BH')
+
 
 #############
 #multiple factors

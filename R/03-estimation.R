@@ -138,7 +138,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }   
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact, 
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList, 
-                                 mixedlist=mixedlist, method=opts$method)     
+                                 mixedlist=mixedlist, method=opts$method, itemnames=PrepList[[1]]$itemnames)     
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()

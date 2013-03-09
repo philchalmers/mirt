@@ -326,13 +326,13 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
-                            mixedlist, method)
+                            mixedlist, method, itemnames)
 {        
     #within group item constraints only
     for(g in 1:ngroups)  
         if(length(PrepList[[g]]$constrain) > 0)
             for(i in 1:length(PrepList[[g]]$constrain))
-                constrain[[length(constrain) + 1]] <- PrepList[[g]]$constrain[[i]]        
+                constrain[[length(constrain) + 1]] <- PrepList[[g]]$constrain[[i]]            
     if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
         tmpmat <- matrix(NA, nfact, nfact)
         low_tri <- lower.tri(tmpmat)
@@ -348,6 +348,22 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 constrain[[length(constrain) + 1]] <- tmpmats[1:ngroups, i]
         
     }    
+    if(any(itemnames %in% invariance)){
+        if('slopes' %in% invariance) message('invariance = \'slopes\' argument ignored')
+        if('intercepts' %in% invariance) message('invariance = \'intercepts\' argument ignored')
+        matched <- na.omit(match(invariance, itemnames))        
+        for(i in matched){            
+            jj <- sum(pars[[1]][[i]]@est)
+            stopifnot(jj > 0)
+            for(j in 1:jj){
+                tmp <- c()
+                for(g in 1:ngroups)            
+                    tmp <- c(tmp, pars[[g]][[i]]@parnum[pars[[g]][[i]]@est][j])
+                constrain[[length(constrain) + 1]] <- tmp                
+            }
+        } 
+        return(constrain)
+    }
     if('slopes' %in% invariance){ #Equal factor loadings
         tmpmats <- tmpests <- list()
         for(g in 1:ngroups)
