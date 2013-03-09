@@ -119,15 +119,17 @@ setMethod(
         cat('Model 2: ')
         print(object2@Call)
         cat('\n')
-        ret <- data.frame(Df = c(object@df, object2@df),
+        ret <- cbind(Df = c(object@df, object2@df),
                           AIC = c(object@AIC, object2@AIC),
                           AICc = c(object@AICc, object2@AICc),
                           BIC = c(object@BIC, object2@BIC), 
                           SABIC = c(object@SABIC, object2@SABIC),
                           logLik = c(object@logLik, object2@logLik),
-                          X2 = c('', X2),
-                          df = c('', abs(df)),
-                          p = c('', round(1 - pchisq(X2,abs(df)),3)))         
-        return(ret)
+                          X2 = c(NA, X2),
+                          df = c(NA, abs(df)),
+                          p = c(NA, round(1 - pchisq(X2,abs(df)),3)))         
+        ret
     }		
 )
+
+    
