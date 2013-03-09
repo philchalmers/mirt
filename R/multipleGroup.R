@@ -167,7 +167,7 @@
 #' (anovas <- lapply(estmodels, anova, object2=refmodel))
 #' 
 #' #family-wise error control
-#' p <- do.call(c, lapply(anovas, function(x) x[2,9])
+#' p <- do.call(c, lapply(anovas, function(x) x[2,9]))
 #' p.adjust(p, method = 'BH') 
 #' 
 #' 
