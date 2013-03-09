@@ -197,9 +197,7 @@ dataset1 <- simdata(a, d, N, itemtype)
 dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
-models <- confmirt.model()
-   F1 = 1-15
-
+models <- confmirt.model('F1 = 1-15')
 
 mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
 
@@ -240,11 +238,10 @@ for(i in 1:ncol(dat))
                              invariance=c('free_means', 'free_varcov', itemnames[-i]),
                              verbose = FALSE)
 
-lapply(estmodels, anova, object2=refmodel)
+(anovas <- lapply(estmodels, anova, object2=refmodel))
 
 #family-wise error control
-p <- do.call(c, lapply(estmodels, function(y, x) 1 - pchisq(2*(y@logLik - x@logLik), y@df-x@df),
-             y=refmodel))
+p <- do.call(c, lapply(anovas, function(x) x[2,9])
 p.adjust(p, method = 'BH')
 
 

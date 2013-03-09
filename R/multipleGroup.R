@@ -164,11 +164,10 @@
 #'                              invariance=c('free_means', 'free_varcov', itemnames[-i]),
 #'                              verbose = FALSE) 
 #'                              
-#' lapply(estmodels, anova, object2=refmodel)
+#' (anovas <- lapply(estmodels, anova, object2=refmodel))
 #' 
 #' #family-wise error control
-#' p <- do.call(c, lapply(estmodels, function(y, x) 1 - pchisq(2*(y@@logLik - x@@logLik), y@@df-x@@df), 
-#'              y=refmodel))
+#' p <- do.call(c, lapply(anovas, function(x) x[2,9])
 #' p.adjust(p, method = 'BH') 
 #' 
 #' 
