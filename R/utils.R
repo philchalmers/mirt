@@ -328,6 +328,7 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
                             mixedlist, method, itemnames)
 {        
+    anyitems <- FALSE
     #within group item constraints only
     for(g in 1:ngroups)  
         if(length(PrepList[[g]]$constrain) > 0)
@@ -349,6 +350,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         
     }    
     if(any(itemnames %in% invariance)){
+        anyitems <- TRUE
         if('slopes' %in% invariance) message('invariance = \'slopes\' argument ignored')
         if('intercepts' %in% invariance) message('invariance = \'intercepts\' argument ignored')
         matched <- na.omit(match(invariance, itemnames))        
@@ -364,7 +366,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         } 
         return(constrain)
     }
-    if('slopes' %in% invariance){ #Equal factor loadings
+    if('slopes' %in% invariance && !anyitems){ #Equal factor loadings
         tmpmats <- tmpests <- list()
         for(g in 1:ngroups)
             tmpmats[[g]] <- tmpests[[g]] <- matrix(NA, J, nLambdas)                
@@ -385,7 +387,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }        
     }
-    if('intercepts' %in% invariance){ #Equal item intercepts (and all other item pars)
+    if('intercepts' %in% invariance && !anyitems){ #Equal item intercepts (and all other item pars)
         tmpmats <- tmpests <- list()
         for(g in 1:ngroups)
             tmpmats[[g]] <- tmpests[[g]] <- list() 
@@ -417,7 +419,23 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 tmp <- c(tmp, pars[[1]][[j]]@parnum[i])
             constrain[[length(constrain) + 1]] <- tmp           
         }        
+    }    
+    #remove redundent constraints    
+    redun <- rep(FALSE, length(constrain)) 
+    if(length(constrain) > 0){
+        for(i in 1:length(redun)){
+            for(j in 1:length(redun)){
+                if(j < i){
+                    if(all(constrain[[i]] %in% constrain[[j]] || 
+                            all(constrain[[j]] %in% constrain[[i]]))){
+                        if(length(constrain[[i]]) < length(constrain[[j]])) redun[i] <- TRUE
+                        else redun[j] <- TRUE           
+                    }
+                }
+            }        
+        }    
     }
+    constrain[redun] <- NULL       
     return(constrain)
 }
 
