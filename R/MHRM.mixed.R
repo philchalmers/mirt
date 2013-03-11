@@ -122,11 +122,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             gamma <- .25
         }  
         #Reload pars list        
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        for(g in 1:ngroups){
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gtheta0[[g]], itemloc=itemloc)
-            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
-        }
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)        
         for(g in 1:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         
@@ -141,6 +137,9 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
                                       debug=debug)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
+        for(g in 1:ngroups){
+            
+        }
         
         #Step 2. Find average of simulated data gradients and hessian 		
         g.m <- h.m <- group.m <- list()
@@ -154,7 +153,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
             thetatemplist <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed, 
                                         Thetas=thetatemp, nitems=J, 
                                         itemdesign=mixedlist$itemdesign, 
-                                        fixed.identical=mixedlist$fixed.identical)                              
+                                        fixed.identical=mixedlist$fixed.identical) 
+            gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]], 
+                                                Theta=cbind(thetatemplist[[i]], thetatemp), 
+                                                itemloc=itemloc)
+            pars[[group]] <- assignItemtrace(pars=pars[[group]], 
+                                         itemtrace=gitemtrace[[group]], 
+                                         itemloc=itemloc)
             for (i in 1:J){	
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=cbind(thetatemplist[[i]], thetatemp))
                 ind2 <- ind1 + length(deriv$grad) - 1

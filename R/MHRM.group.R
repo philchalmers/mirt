@@ -124,11 +124,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         }  
         #Reload pars list
         if(list$USEEM) longpars <- list$startlongpars
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        for(g in 1:ngroups){
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gtheta0[[g]], itemloc=itemloc)
-            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
-        }
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)        
         for(g in 1:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         
@@ -142,6 +138,10 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
                                       debug=debug)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
+        }
+        for(g in 1:ngroups){
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gtheta0[[g]], itemloc=itemloc)
+            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
         }
         
         #Step 2. Find average of simulated data gradients and hessian 		

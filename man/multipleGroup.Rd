@@ -232,6 +232,8 @@ anova(equalslopes, mod_configural)
 itemnames <- colnames(dat)
 refmodel <- multipleGroup(dat, models, group = group,
                              invariance=c('free_means', 'free_varcov', itemnames))
+
+#loop over items (in practice, run in parallel to increase speed)
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
     estmodels[[i]] <- multipleGroup(dat, models, group = group, prev.mod=refmodel,

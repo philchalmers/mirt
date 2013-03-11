@@ -613,7 +613,8 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
         uniq <- sort(na.omit(unique(tabdata2[,i])))        
         for(j in 1:length(uniq))
             tabdata[,itemloc[i] + j - 1] <- as.numeric(tabdata2[,i] == uniq[j])        
-    }        
+    }     
+    tabdata[is.na(tabdata)] <- 0
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
     ret1 <- ret2 <- vector('list', length(groupNames))    
@@ -624,7 +625,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
             Freq[i] <- sum(tmpstringdata == stringtabdata[i])
         ret1[[g]] <- cbind(tabdata, Freq)
         ret2[[g]] <- cbind(tabdata2, Freq)
-    }
+    }    
     ret <- list(tabdata=ret1, tabdata2=ret2)
     ret
 }

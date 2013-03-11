@@ -87,8 +87,10 @@ setMethod(
         coeflist <- coef(object)        
         for(g in 1:ngroups){
             if(verbose) cat('\n----------\nGROUP:', as.character(object@groupNames[g]), '\n')
-            ret[[g]] <- summary(object@cmods[[g]], digits=digits, verbose=verbose, ...)            
-            ret[[g]]$mean <- coeflist[[g]][[groupind]][1:nfact]
+            ret[[g]] <- summary(object@cmods[[g]], digits=digits, verbose=verbose, ...)
+            if(is(coeflist[[g]][[groupind]], 'matrix'))
+                ret[[g]]$mean <- coeflist[[g]][[groupind]][1, 1:nfact]
+            else ret[[g]]$mean <- coeflist[[g]][[groupind]][1:nfact]
             names(ret[[g]]$mean) <- colnames(ret[[g]]$fcor)
             if(verbose){
                 cat('\nFactor means:\n') 

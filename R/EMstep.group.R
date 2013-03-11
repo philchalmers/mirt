@@ -88,7 +88,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     }
     
     #EM     
-    for (cycles in 1:NCYCLES){  
+    for (cycles in 1:NCYCLES){          
         #priors        
         for(g in 1:ngroups){            
             gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)
@@ -159,7 +159,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                     h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                     ind1 <- ind2 + 1 
                 }
-                i <- i + 1                        
+                i <- i + 1                     
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, 
                                pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
                                itemloc=itemloc, prior=Prior[[group]])
