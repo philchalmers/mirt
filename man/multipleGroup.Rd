@@ -214,6 +214,11 @@ mod_fullconstrain <- multipleGroup(dat, models, group = group,
                              invariance=c('slopes', 'intercepts'),
                              prev.mod = mod_configural)
 
+summary(mod_scalar2)
+coef(mod_scalar2)
+itemplot(mod_configural, 2)
+itemplot(mod_configural, 2, type = 'RE')
+
 anova(mod_metric, mod_configural) #equal slopes only
 anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
 anova(mod_scalar1, mod_scalar2) #fix mean
