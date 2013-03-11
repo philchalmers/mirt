@@ -327,8 +327,7 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
                             mixedlist, method, itemnames)
-{        
-    anyitems <- FALSE
+{       
     #within group item constraints only
     for(g in 1:ngroups)  
         if(length(PrepList[[g]]$constrain) > 0)
@@ -349,10 +348,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 constrain[[length(constrain) + 1]] <- tmpmats[1:ngroups, i]
         
     }    
-    if(any(itemnames %in% invariance)){
-        anyitems <- TRUE
-        if('slopes' %in% invariance) message('invariance = \'slopes\' argument ignored')
-        if('intercepts' %in% invariance) message('invariance = \'intercepts\' argument ignored')
+    if(any(itemnames %in% invariance)){            
         matched <- na.omit(match(invariance, itemnames))        
         for(i in matched){            
             jj <- sum(pars[[1]][[i]]@est)
@@ -363,10 +359,9 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                     tmp <- c(tmp, pars[[g]][[i]]@parnum[pars[[g]][[i]]@est][j])
                 constrain[[length(constrain) + 1]] <- tmp                
             }
-        } 
-        return(constrain)
+        }         
     }
-    if('slopes' %in% invariance && !anyitems){ #Equal factor loadings
+    if('slopes' %in% invariance){ #Equal factor loadings
         tmpmats <- tmpests <- list()
         for(g in 1:ngroups)
             tmpmats[[g]] <- tmpests[[g]] <- matrix(NA, J, nLambdas)                
@@ -387,7 +382,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }        
     }
-    if('intercepts' %in% invariance && !anyitems){ #Equal item intercepts (and all other item pars)
+    if('intercepts' %in% invariance){ #Equal item intercepts (and all other item pars)
         tmpmats <- tmpests <- list()
         for(g in 1:ngroups)
             tmpmats[[g]] <- tmpests[[g]] <- list() 

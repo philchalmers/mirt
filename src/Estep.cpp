@@ -174,3 +174,68 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     END_RCPP
 }
 
+//EAP estimates used in multipleGroup
+RcppExport SEXP EAPgroup(SEXP Rlog_itemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu) 
+{
+    BEGIN_RCPP
+
+    NumericMatrix log_itemtrace(Rlog_itemtrace); 
+    NumericMatrix tabdata(Rtabdata); 
+    NumericMatrix Theta(RTheta); 
+    NumericVector prior(Rprior);
+    NumericVector mu(Rmu);
+    int i, j, k, ind;
+    int n = prior.length(); //nquad
+    int nitems = tabdata.ncol();
+    int nfact = Theta.ncol();
+
+    NumericVector L(n), thetas(nfact), thetas2(nfact*(nfact+1)/2); 
+    NumericMatrix scores(tabdata.nrow(), nfact), scores2(tabdata.nrow(), nfact*(nfact + 1)/2);
+    double LL, denom;
+
+    for(int pat = 0; pat < tabdata.nrow(); pat++){
+        
+        for(j = 0; j < n; j++){
+            LL = 0.0;
+            for(i = 0; i < nitems; i++)
+               LL += tabdata(pat, i) * log_itemtrace(j, i); 
+            L(j) = exp(LL);
+        }
+        
+        thetas.fill(0.0);
+        denom = 0.0;
+        for(j = 0; j < n; j++)
+            denom += (L(j)*prior(j));
+        
+        for(k = 0; k < nfact; k++){            
+            for(j = 0; j < n; j++)
+                thetas(k) += Theta(j, k) * L(j) * prior(j) / denom;
+            scores(pat, k) = thetas(k);
+        }
+
+        ind = 0;
+        thetas2.fill(0.0);
+        for(i = 0; i < nfact; i++){
+            for(k = 0; k < nfact; k++){
+                if(i <= k){
+                    for(j = 0; j < n; j++)
+                        thetas2(ind) += (Theta(j, i) - thetas(i)) * (Theta(j, k) - thetas(k)) *
+                            L(j) * prior(j) / denom;
+                    thetas2(ind) += (thetas(i) - mu(i)) * (thetas(k) - mu(k));
+                    scores2(pat, ind) = thetas2(ind);
+                    ind += 1;
+                }
+            }
+        }
+    }
+
+    List ret;    
+    ret["scores"] = scores;
+    ret["scores2"] = scores2;
+    return(ret);
+
+    END_RCPP
+}
+
+
+

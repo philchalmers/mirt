@@ -548,26 +548,9 @@ setMethod(
                 selcov <- lower.tri(sig, diag=TRUE)
                 scores2 <- matrix(0, nrow(tabdata), sum(selcov))
                 thetas2 <- numeric(sum(selcov))
-                log_itemtrace <- log(itemtrace)
-                for(i in 1:nrow(tabdata)){				
-                    L <- rowSums(log_itemtrace[ ,as.logical(tabdata[i,]), drop = FALSE])			
-                    thetas <- colSums(Theta * exp(L) * prior / sum(exp(L) * prior)) 
-                    scores[i, ] <- thetas                     
-                    ind <- 1 
-                    for(j in 1:nfact){
-                        for(k in 1:nfact){                            
-                            if(j <= k){                                
-                                thetas2[ind] <- (thetas[j] - mu[j]) * (thetas[k] - mu[k])
-                                thetas2[ind] <- thetas2[ind] + sum(((Theta[,j] - thetas[j]) * 
-                                                                        (Theta[,k] - thetas[k])  *
-                                                                exp(L) * prior / sum(exp(L) * prior)))
-                                ind <- ind + 1
-                            }
-                        }
-                    } 
-                    scores2[i, ] <- thetas2
-                }                            
-                tmp <- cbind(scores,scores2) * r
+                log_itemtrace <- log(itemtrace)                
+                ret <- .Call('EAPgroup', log_itemtrace, tabdata, Theta, prior, mu)                
+                tmp <- cbind(ret$scores, ret$scores2) * r
                 newpars <- apply(tmp, 2, sum) / N                
                 grad <- newpars - c(mu, siglong)
                 hess <- -diag(length(grad))                    

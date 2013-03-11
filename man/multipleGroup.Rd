@@ -251,6 +251,14 @@ for(i in 1:ncol(dat))
 p <- do.call(c, lapply(anovas, function(x) x[2,9]))
 p.adjust(p, method = 'BH')
 
+#same as above, except only test if slopes vary (1 df)
+estmodels <- vector('list', ncol(dat))
+for(i in 1:ncol(dat))
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, prev.mod=refmodel,
+                             invariance=c('free_means', 'free_varcov', 'intercepts', itemnames[-i]),
+                             verbose = FALSE)  #constrain all intercepts
+
+(anovas <- lapply(estmodels, anova, object2=refmodel))
 
 #############
 #multiple factors
@@ -283,6 +291,20 @@ model2 <- confmirt.model()
 
 models <- list(D1=model1, D2=model2) #note the names match the groups
 
+#EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
+mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'),
+     prev.mod=mod_configural) #equal slopes
+mod_scalar <- multipleGroup(dat, models, group = group, prev.mod=mod_configural, #equal means, slopes, intercepts
+                             invariance=c('slopes', 'intercepts', 'free_varcov'))
+mod_fullconstrain <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
+                             invariance=c('slopes', 'intercepts'), prev.mod=mod_configural)
+
+anova(mod_metric, mod_configural)
+anova(mod_scalar, mod_metric)
+anova(mod_fullconstrain, mod_scalar)
+
+#same as above, but with MHRM (more accurate with 3 factors, but slower)
 mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') #completely seperate analyses
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM') #equal slopes
 mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
