@@ -15,7 +15,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
     prodlist <- PrepList[[1]]$prodlist            
     nfullpars <- 0
     estpars <- c()
-    gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
+    gfulldata <- gtheta0 <- gstructgrouppars <- gitemtrace <- vector('list', ngroups)
     for(g in 1:ngroups){
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         gfulldata[[g]] <- PrepList[[g]]$fulldata
@@ -124,7 +124,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         }  
         #Reload pars list
         if(list$USEEM) longpars <- list$startlongpars
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)        
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+        for(g in 1:ngroups){
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gtheta0[[g]], itemloc=itemloc)
+            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
+        }
         for(g in 1:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         

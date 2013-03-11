@@ -2,6 +2,8 @@ Changes in mirt 0.5.2
 
 NEW FEATURES
 
+- improve speed of estimation in multipleGroup() when latent means/variances are estimated
+
 - multipleGroup(invariance = '') can include item names to specify which items are to
   be considered invariant accross groups. Useful for anchoring and DIF testing
 

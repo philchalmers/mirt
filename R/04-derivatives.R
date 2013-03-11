@@ -19,7 +19,7 @@ setMethod(
         g <- x@par[parlength - 1]
         d <- x@par[parlength - 2]
         a <- x@par[1:nfact]        
-        P <- P.mirt(a, d, Theta, g=g, u=u, D=x@D)
+        P <- x@itemtrace[,2]
         Q <- 1 - P        
         hess <- matrix(0,nfact+3, nfact+3)						                
         grad <- rep(0, length(x@par))
@@ -352,7 +352,7 @@ setMethod(
         d <- ExtractZetas(x)
         ak <- 0:(length(d)-1)
         D <- x@D
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
+        P <- x@itemtrace
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)         
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
@@ -389,7 +389,7 @@ setMethod(
         dshift[-1] <- d[-1] + shift
         ak <- 0:(length(d)-1)
         D <- x@D
-        P <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D)
+        P <- x@itemtrace
         num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D, returnNum=TRUE)         
         tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
@@ -474,7 +474,7 @@ setMethod(
         ak <- x@par[(nfact+1):(nzetas + nfact)]
         d <- ExtractZetas(x)
         D <- x@D
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D)
+        P <- x@itemtrace
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)                 
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
@@ -529,17 +529,47 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, pars = NULL, itemloc = NULL, tabdata = NULL){
-        if(EM){        
-            grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))            
-            if(any(x@est)){
-                grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, pars=pars, tabdata=tabdata,
-                                       itemloc=itemloc)
-                hess[x@est,x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, pars=pars, tabdata=tabdata,
-                                          itemloc=itemloc)                  
-            }            
-            return(list(grad = grad, hess = hess))            
+    definition = function(x, Theta, EM = FALSE, pars = NULL, itemloc = NULL, 
+                          tabdata = NULL, prior=NULL){
+        if(EM){      
+            if(any(x@est)){                
+                J <- length(pars) - 1
+                nfact <- x@nfact
+                scores <- matrix(0, nrow(tabdata), nfact)                 
+                r <- tabdata[ ,ncol(tabdata)]
+                tabdata <- tabdata[ ,-ncol(tabdata)]
+                itemtrace <- x@itemtrace 
+                mu <- x@par[1:nfact]
+                siglong <- x@par[-(1:nfact)]
+                sig <- matrix(0,nfact,nfact)                
+                selcov <- lower.tri(sig, diag=TRUE)
+                scores2 <- matrix(0, nrow(tabdata), sum(selcov))
+                thetas2 <- numeric(sum(selcov))
+                log_itemtrace <- log(itemtrace)
+                for(i in 1:nrow(tabdata)){				
+                    L <- rowSums(log_itemtrace[ ,as.logical(tabdata[i,]), drop = FALSE])			
+                    thetas <- colSums(Theta * exp(L) * prior / sum(exp(L) * prior)) 
+                    scores[i, ] <- thetas                     
+                    ind <- 1 
+                    for(j in 1:nfact){
+                        for(k in 1:nfact){                            
+                            if(j <= k){                                
+                                thetas2[ind] <- (thetas[j] - mu[j]) * (thetas[k] - mu[k])
+                                thetas2[ind] <- thetas2[ind] + sum(((Theta[,j] - thetas[j]) * 
+                                                                        (Theta[,k] - thetas[k])  *
+                                                                exp(L) * prior / sum(exp(L) * prior)))
+                                ind <- ind + 1
+                            }
+                        }
+                    } 
+                    scores2[i, ] <- thetas2
+                }                            
+                tmp <- cbind(scores,scores2) * r
+                newpars <- apply(tmp, 2, sum) / N                
+                grad <- newpars - c(mu, siglong)
+                hess <- diag(length(grad))
+                return(list(grad = grad, hess = -hess))    
+            }
         }
         tr <- function(y) sum(diag(y))         
         nfact <- x@nfact

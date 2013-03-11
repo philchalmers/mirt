@@ -15,7 +15,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     J <- length(itemloc) - 1
     nfullpars <- 0
     estpars <- c()
-    gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
+    gfulldata <- gtheta0 <- gstructgrouppars <- gitemtrace <- vector('list', ngroups)
     for(g in 1:ngroups){
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
         gfulldata[[g]] <- PrepList[[g]]$fulldata
@@ -89,8 +89,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
     
     #EM     
     for (cycles in 1:NCYCLES){  
-        #priors
-        for(g in 1:ngroups){
+        #priors        
+        for(g in 1:ngroups){            
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)
+            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])        
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
@@ -105,17 +107,17 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         }
         #Estep
         lastLL <- LL
-        LL <- 0
-        for(g in 1:ngroups){
+        LL <- 0        
+        for(g in 1:ngroups){            
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
                                             Theta=Theta, prior=prior[[g]],
                                             specific=specific, sitems=sitems, 
-                                            itemloc=itemloc, debug=debug)
+                                            itemloc=itemloc, itemtrace=gitemtrace[[g]], debug=debug)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
                                          Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
-                                         debug=debug)                      
+                                         itemtrace=gitemtrace[[g]], debug=debug)                      
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
         }
@@ -140,6 +142,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
         for(mstep in 1:MSTEPMAXIT){                        
             #Reload pars list            
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+            for(g in 1:ngroups){
+                gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)
+                pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
+            }
             #reset longpars and gradient
             g <- rep(0, nfullpars)
             h <- matrix(0, nfullpars, nfullpars)
@@ -156,7 +162,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 i <- i + 1                        
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, 
                                pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
-                               itemloc=itemloc)
+                               itemloc=itemloc, prior=Prior[[group]])
                 ind2 <- ind1 + length(deriv$grad) - 1
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
                 g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad
@@ -230,32 +236,36 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, deriv = FALSE) 
+Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, itemtrace=NULL, deriv = FALSE) 
 {   
     if(debug == 'Estep.mirt') browser()
     nfact <- ncol(Theta)
     nquad <- nrow(Theta)    
     J <- length(itemloc) - 1
     r <- tabdata[ ,ncol(tabdata)]
-    X <- tabdata[ ,1:(ncol(tabdata) - 1), drop = FALSE]    
-    itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
-    for (i in 1:J)
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    X <- tabdata[ ,1:(ncol(tabdata) - 1), drop = FALSE]   
+    if(is.null(itemtrace)){
+        itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))    
+        for (i in 1:J)
+            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    }
     retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)    
     if(deriv) retlist$itemtrace <- itemtrace        
     return(retlist)
 } 
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc, debug) 
+Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc, itemtrace=NULL, debug) 
 {	    
     if(debug == 'Estep.bfactor') browser()
     J <- length(itemloc) - 1
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
-    itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))	
-    for (i in 1:J)
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)			
+    if(is.null(itemtrace)){
+        itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))    
+        for (i in 1:J)
+            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    }
     retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)	
     r1 <- matrix(0, nrow(Theta), ncol(X))	
     for (i in 1:J){

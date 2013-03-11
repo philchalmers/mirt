@@ -770,3 +770,19 @@ reloadPars <- function(longpars, pars, ngroups, J){
     }
     return(pars)
 }
+
+computeItemtrace <- function(pars, Theta, itemloc){
+    #compute itemtrace for 1 group
+    J <- length(itemloc) - 1
+    itemtrace <- matrix(0, ncol=itemloc[length(itemloc)]-1, nrow=nrow(Theta))     
+    for (i in 1:J)
+        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)   
+    itemtrace
+}
+
+assignItemtrace <- function(pars, itemtrace, itemloc){    
+    for(i in 1:(length(pars)-1))
+        pars[[i]]@itemtrace <- itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)]
+    pars[[length(pars)]]@itemtrace <- itemtrace
+    pars
+}
