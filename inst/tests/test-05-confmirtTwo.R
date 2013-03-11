@@ -78,5 +78,14 @@ test_that('confirmatory mods', {
     IP <- itemplot(mod1, 1)
     expect_is(IP, 'trellis')
     
+    TI <- plot(mod.quad)
+    expect_is(TI, 'trellis')
+    IP <- itemplot(mod.quad, 3, CE = TRUE)
+    expect_is(IP, 'trellis')
+    
+    TI <- plot(mod.combo)
+    expect_is(TI, 'trellis')
+    IP <- itemplot(mod.combo, 1)
+    expect_is(IP, 'trellis')    
 })
  

@@ -138,11 +138,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
                                       debug=debug)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
-        }
-        for(g in 1:ngroups){
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gtheta0[[g]], itemloc=itemloc)
-            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
-        }
+        }        
         
         #Step 2. Find average of simulated data gradients and hessian 		
         g.m <- h.m <- group.m <- list()
@@ -151,7 +147,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         ind1 <- 1
         for(group in 1:ngroups){            
             thetatemp <- gtheta0[[group]]
-            if(length(prodlist) > 0) thetatemp <- prodterms(thetatemp,prodlist)	
+            if(length(prodlist) > 0) thetatemp <- prodterms(thetatemp,prodlist)
+            gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]], 
+                                                Theta=thetatemp, itemloc=itemloc)
+            pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]], 
+                                         itemloc=itemloc)
             for (i in 1:J){	
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp)
                 ind2 <- ind1 + length(deriv$grad) - 1
