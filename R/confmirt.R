@@ -91,7 +91,7 @@
 #' @param object2 an object of class \code{ConfirmatoryClass}
 #' @param digits the number of significant digits to be rounded
 #' @param rotate if \code{model} is numeric (indicating an exploratory item FA) then this 
-#' rotation is used. Default is \code{'varimax'}
+#' rotation is used. Default is \code{'oblimin'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param suppress a numeric value indicating which factor
 #' loadings should be suppressed. Typical values are around .3 in most
@@ -152,7 +152,7 @@
 #' @usage 
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE, 
-#' draws = 3000, debug = FALSE, rotate = 'varimax', Target = NULL, D = 1.702, 
+#' draws = 3000, debug = FALSE, rotate = 'oblimin', Target = NULL, D = 1.702, 
 #' technical = list(),  ...)
 #' 
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
@@ -269,7 +269,7 @@
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, 
-                     verbose = TRUE, draws = 3000, debug = FALSE, rotate = 'varimax', Target = NULL, 
+                     verbose = TRUE, draws = 3000, debug = FALSE, rotate = 'oblimin', Target = NULL, 
                      D = 1.702, technical = list(),  ...)
 {   
     if(debug == 'Main') browser()

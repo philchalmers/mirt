@@ -107,7 +107,7 @@
 #' @param prev.cor use a previously computed correlation matrix to be used to
 #' estimate starting values for the EM estimation? Default in \code{NULL} 
 #' @param rotate type of rotation to perform after the initial orthogonal
-#' parameters have been extracted by using \code{summary}; default is \code{'varimax'}. 
+#' parameters have been extracted by using \code{summary}; default is \code{'oblimin'}. 
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
 #' input then the default from the object is ignored and the new rotation from the list 
 #' is used instead
@@ -275,7 +275,7 @@
 #' @keywords models
 #' @usage 
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars = NULL, 
-#' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'varimax', Target = NaN, 
+#' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
 #' debug = FALSE, technical = list(), ...)
 #' 
@@ -407,7 +407,7 @@
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001,
-                 pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'varimax', 
+                 pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
                  D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)
 {   

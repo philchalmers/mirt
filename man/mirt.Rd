@@ -12,7 +12,7 @@ Theory)}
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
     SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars =
     NULL, constrain = NULL, parprior = NULL, calcNull =
-    TRUE, rotate = 'varimax', Target = NaN, prev.cor =
+    TRUE, rotate = 'oblimin', Target = NaN, prev.cor =
     NULL, quadpts = NULL, grsm.block = NULL, rsm.block =
     NULL, D = 1.702, verbose = FALSE, debug = FALSE,
     technical = list(), ...)
@@ -110,7 +110,7 @@ Theory)}
 
   \item{rotate}{type of rotation to perform after the
   initial orthogonal parameters have been extracted by
-  using \code{summary}; default is \code{'varimax'}. See
+  using \code{summary}; default is \code{'oblimin'}. See
   below for list of possible rotations. If \code{rotate !=
   ''} in the \code{summary} input then the default from the
   object is ignored and the new rotation from the list is

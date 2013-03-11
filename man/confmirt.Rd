@@ -12,7 +12,7 @@
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
     verbose = TRUE, draws = 3000, debug = FALSE, rotate =
-    'varimax', Target = NULL, D = 1.702, technical =
+    'oblimin', Target = NULL, D = 1.702, technical =
     list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
@@ -100,7 +100,7 @@
 
   \item{rotate}{if \code{model} is numeric (indicating an
   exploratory item FA) then this rotation is used. Default
-  is \code{'varimax'}}
+  is \code{'oblimin'}}
 
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
