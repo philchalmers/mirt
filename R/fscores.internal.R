@@ -24,7 +24,8 @@ setMethod(
             ret <- ret[, -(ncol(ret) - nfact*2)]            
             return(ret)
         }
-        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores))
+        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, 
+                                             quadpts=quadpts))
         pars <- object@pars        
 		K <- object@K        
         J <- length(K)        
@@ -249,9 +250,10 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
     MIN
 }
 
-EAPsum <- function(x, full.scores = FALSE){    
+EAPsum <- function(x, full.scores = FALSE, quadpts = NULL){    
     if(x@nfact > 1) stop('EAP sum score method only is applicable to unidimensional models')             
-    Theta <- x@Theta
+    if(is.null(quadpts)) quadpts <- 40
+    Theta <- as.matrix(seq(-4,4,length.out = quadpts))    
     prior <- dnorm(Theta)
     prior <- prior/sum(prior)
     pars <- x@pars
