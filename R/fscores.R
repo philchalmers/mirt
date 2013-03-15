@@ -1,6 +1,7 @@
 #' Methods for Function fscores
 #' 
-#' Computes MAP, EAP, WLE, or ML factor scores with a multivariate normal prior distribution.
+#' Computes MAP, EAP, EAP for sum-scores, WLE, or ML factor scores with a multivariate normal 
+#' prior distribution.
 #' 
 #'
 #' @aliases fscores
@@ -14,7 +15,7 @@
 #' \code{object@@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation 
-#' (\code{"WLE"}), or maximum likelihood (\code{"ML"}) 
+#' (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores (\code{"EAPsum"})
 #' @param quadpts number of quadratures to use per dimension
 #' @param degrees the degrees argument to be passed to \code{\link{iteminfo}}, only necessary for 
 #' multidimensional models when \code{method = 'WLE'}

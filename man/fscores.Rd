@@ -25,7 +25,8 @@
   \item{method}{type of factor score estimation method. Can
   be expected a-posteriori (\code{"EAP"}), Bayes modal
   (\code{"MAP"}), weighted likelihood estimation
-  (\code{"WLE"}), or maximum likelihood (\code{"ML"})}
+  (\code{"WLE"}), maximum likelihood (\code{"ML"}), or
+  expected a-posteriori for sum scores (\code{"EAPsum"})}
 
   \item{quadpts}{number of quadratures to use per
   dimension}
@@ -42,8 +43,8 @@
   \item{verbose}{logical; print verbose output messages?}
 }
 \description{
-  Computes MAP, EAP, WLE, or ML factor scores with a
-  multivariate normal prior distribution.
+  Computes MAP, EAP, EAP for sum-scores, WLE, or ML factor
+  scores with a multivariate normal prior distribution.
 }
 \examples{
 \dontrun{

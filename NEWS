@@ -1,6 +1,9 @@
-Changes in mirt 0.5.2
+Changes in mirt 0.5.3
 
 NEW FEATURES
+
+- EAP for sum-scores added to fscores() with method = 'EAPsum'. Works with full.scores option 
+  as well
 
 - improve speed of estimation in multipleGroup() when latent means/variances are estimated
 
@@ -39,6 +42,8 @@ NEW FEATURES
   for checking item and person fit diagnostics and obtaining overall model fit statistics
 
 - allow for Rasch itemtype in multidimensional confirmatory models
+
+- oblimin the new default exploratory rotation (suggested by Dave Flora)
 
 - more flexible calculation of M2 statistic in fitIndicies(), with user prompt option if the internal
   variables grow too large and cause time/RAM problems
