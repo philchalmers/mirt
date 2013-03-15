@@ -267,7 +267,7 @@ EAPsum <- function(x, full.scores = FALSE){
     L0[1:K[1], ] <- itemtrace[1:K[1], ]
     nstar <- K[1] + K[2] - 3    
     Sum.Scores <- 1:nrow(L0)-1    
-    MAX.Scores <- max(Sum.Scores)        
+    MAX.Scores <- cumsum(K-1)            
     for(i in 1:(J-1)){
         T <- itemtrace[itemloc[i+1]:(itemloc[i+2] - 1), ]
         L1[1, ] <- L0[1, ] * T[1, ]        
@@ -275,7 +275,7 @@ EAPsum <- function(x, full.scores = FALSE){
         for(j in 1:nstar+1){        
             sums <- 0                            
             for(k in 1:K[i+1]-1)
-                if(Sum.Scores[j] >= k && (MAX.Scores - Sum.Scores[j]) >= abs(K[i+1] - k))
+                if(Sum.Scores[j] >= k && (MAX.Scores[i] + k) >= Sum.Scores[j])
                     sums <- sums + L0[j - k, ] * T[1 + k, ]
             L1[j, ] <- sums                   
         }        
