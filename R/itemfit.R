@@ -1,13 +1,18 @@
 #' Item fit statistics
 #' 
-#' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985) 
-#' and \eqn{\chi^2} values for unidimensional models. For Rasch, partial credit, and rating scale models 
+#' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985), 
+#' \eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional models
+#' (Kang & Chen, 2007; Orlando & Thissen, 2000). For Rasch, partial credit, and rating scale models 
 #' infit and outfit statistics are also produced.
 #' 
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
 #' \code{MultipleGroupClass}
+#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)?
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
+#' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be 
+#' collapsed accross items first if polytomous, and then accross scores if necessary
+#' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} statistic
 #' @param empirical.plot a single numeric value or character of the item name  indicating which item to plot
 #'  (via \code{itemplot}) and
@@ -29,8 +34,16 @@
 #' polychotomous item response models and standardized indices. 
 #' \emph{Journal of Mathematical and Statistical Psychology, 38}, 67-86.
 #' 
+#' Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the generalized 
+#' S-X2 item-fit index for polytomous IRT models. ACT
+#' 
+#' Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item response theory 
+#' models. \emph{Applied Psychological Measurement, 24}, 50-64.
+#' 
 #' Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit 
 #' in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
+#' 
+#' 
 #' 
 #' @examples
 #' 
@@ -51,18 +64,42 @@
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats (method='ML' agrees better with eRm package)
 #' 
+#' #similar example to Kang and Chen 2007
+#' a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
+#' d <- matrix(rep(c(2.0,0.0,-1,-1.5),10), ncol=4, byrow=TRUE)
+#' dat <- simdata(a,d,2000, itemtype = rep('graded', 10)) - 1
+#' head(dat)
+#' 
+#' mod <- mirt(dat, 1)
+#' itemfit(mod)
+#' 
+#' mod2 <- mirt(dat, 1, 'Rasch')
+#' itemfit(mod2)
+#' 
+#' #massive list of tables
+#' tables <- itemfit(mod, S_X2.tables = TRUE)
+#' 
+#' #observed and expected total score patterns for item 1 (post collapsing)
+#' tables$O[[1]] 
+#' tables$E[[1]] 
+#' 
+#' 
 #'   }
 #'
-itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, method = 'EAP'){    
+itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
+                    empirical.plot = NULL, method = 'EAP'){            
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
         for(g in 1:length(x@cmods))
-            ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size)
+            ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size, mincell = 1, 
+                                S_X2.tables = FALSE)
         names(ret) <- names(x@cmods)
         return(ret)
     }        
+    if(S_X2.tables) Zh <- X2 <- FALSE
+    ret <- data.frame(item=colnames(x@data))
     sc <- fscores(x, verbose = FALSE, full.scores = TRUE) 
     J <- ncol(x@data)
     itemloc <- x@itemloc    
@@ -79,31 +116,35 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, meth
     LL[LL < 1e-8] <- 1
     Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)              
     mu <- sigma2 <- rep(0, J)
-    for(item in 1:J){              
-        for(n in 1:N){                
-            P <- itemtrace[n ,itemloc[item]:(itemloc[item+1]-1)]
-            mu[item] <- mu[item] + sum(P * log(P))            
-            for(i in 1:length(P)){
-                for(j in 1:length(P)){
-                    if(i != j)
-                        sigma2[item] <- sigma2[item] + P[i] * P[j] * log(P[i]) * log(P[i]/P[j])
-                }
-            }                               
-        }               
-    }        
-    Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2) 
-    #if all Rasch models, infit and outfit        
-    if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
-        for(i in 1:length(x@itemtype))
-            if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
-        attr(x, 'inoutfitreturn') <- TRUE
-        pf <- personfit(x, method=method)        
-        outfit <- colSums(pf$resid2 / pf$info) / N
-        infit <- colSums(pf$resid2) / colSums(pf$info)        
-        ret <- data.frame(item=colnames(x@data), outfit=outfit, infit=infit, Zh=Zh)        
-    } else {
-        ret <- data.frame(item=colnames(x@data), Zh=Zh)    
-    }    
+    if(Zh){
+        for(item in 1:J){              
+            for(n in 1:N){                
+                P <- itemtrace[n ,itemloc[item]:(itemloc[item+1]-1)]
+                mu[item] <- mu[item] + sum(P * log(P))            
+                for(i in 1:length(P)){
+                    for(j in 1:length(P)){
+                        if(i != j)
+                            sigma2[item] <- sigma2[item] + P[i] * P[j] * log(P[i]) * log(P[i]/P[j])
+                    }
+                }                               
+            }               
+        }        
+        Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2) 
+        #if all Rasch models, infit and outfit        
+        if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+            for(i in 1:length(x@itemtype))
+                if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
+            attr(x, 'inoutfitreturn') <- TRUE
+            pf <- personfit(x, method=method)        
+            outfit <- colSums(pf$resid2 / pf$info) / N
+            infit <- colSums(pf$resid2) / colSums(pf$info)        
+            ret$outfit <- outfit
+            ret$infit <- infit
+            ret$Zh <- Zh        
+        } else {
+            ret$Zh <- Zh    
+        } 
+    }
     if((X2 || !is.null(empirical.plot)) && nfact == 1){                
         ord <- order(Theta[,1])    
         fulldata <- fulldata[ord,]
@@ -155,9 +196,130 @@ itemfit <- function(x, X2 = FALSE, group.size = 150, empirical.plot = NULL, meth
             df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)            
         }
         X2[X2 == 0] <- NA
-        if(!is.null(empirical.plot)) return(invisible(NULL))
-        ret$df <- df
+        if(!is.null(empirical.plot)) return(invisible(NULL))        
         ret$X2 <- X2
-    }                    
+        ret$df <- df
+        ret$p.X2 <- round(1 - pchisq(X2, df), 4)
+    }
+    makeObstables <- function(dat, K){            
+        ret <- vector('list', ncol(dat))
+        sumscore <- rowSums(dat)            
+        for(i in 1:length(ret)){
+            ret[[i]] <- matrix(0, sum(K-1)+1, K[i])
+            colnames(ret[[i]]) <- paste0(1:K[i]-1)
+            rownames(ret[[i]]) <- paste0(1:nrow(ret[[i]])-1)                
+            split <- by(sumscore, dat[,i], table)
+            for(j in 1:K[i]){
+                m <- match(names(split[[j]]), rownames(ret[[i]]))                    
+                ret[[i]][m,j] <- split[[j]]
+            }        
+            ret[[i]] <- ret[[i]][-c(1, nrow(ret[[i]])), ]
+        }            
+        ret
+    }    
+    collapseCells <- function(O, E, mincell = 1){              
+        for(i in 1:length(O)){             
+            On <- O[[i]]
+            En <- E[[i]]                   
+            drop <- which(rowSums(is.na(En)) > 0)                
+            En[is.na(En)] <- 0                                             
+            #collapse known upper and lower sparce cells
+            if(length(drop) > 0){
+                up <- drop[1]:drop[length(drop)/2]
+                low <- drop[length(drop)/2 + 1]:drop[length(drop)]
+                En[max(up)+1, ] <- colSums(En[c(up, max(up)+1), , drop = FALSE])
+                On[max(up)+1, ] <- colSums(On[c(up, max(up)+1), , drop = FALSE])
+                En[min(low)-1, ] <- colSums(En[c(low, min(low)-1), , drop = FALSE])
+                On[min(low)-1, ] <- colSums(On[c(low, min(low)-1), , drop = FALSE])
+                En[c(up, low), ] <- On[c(up, low), ] <- NA
+                En <- na.omit(En)
+                On <- na.omit(On)                              
+            }                                 
+            #collapse accross
+            if(ncol(En) > 2){                    
+                for(j in 1:(ncol(On)-1)){                        
+                    L <- En < mincell  
+                    sel <- L[,j]
+                    if(!any(sel)) next
+                    On[sel, j+1]  <- On[sel, j] + On[sel, j+1]
+                    En[sel, j+1]  <- En[sel, j] + En[sel, j+1]
+                    On[sel, j] <- En[sel, j] <- NA                 
+                }
+                sel <- L[,j+1]
+                sel[rowSums(is.na(En[, 1:j])) == (ncol(En)-1)] <- FALSE
+                put <- apply(En[sel, 1:j], 1, function(x) max(which(!is.na(x)))) 
+                put2 <- which(sel)
+                for(k in 1:length(put)){
+                    En[put2[k], put[k]] <- En[put2[k], put[k]] + En[put2[k], j+1]
+                    En[put2[k], j+1] <- On[put2[k], j+1] <- NA
+                }                    
+            }                
+            L <- En < mincell
+            L[is.na(L)] <- FALSE
+            while(any(L)){                      
+                drop <- c()
+                for(j in 1:(nrow(On)-1)){                        
+                    if(any(L[j,])) {
+                        On[j+1, L[j,]] <- On[j+1, L[j,]] + On[j, L[j,]]
+                        En[j+1, L[j,]] <- En[j+1, L[j,]] + En[j, L[j,]]
+                        drop <- c(drop, i)         
+                        break
+                    }
+                }
+                for(j in nrow(On):1){
+                    if(any(L[j,])) {
+                        On[j-1, L[j,]] <- On[j-1, L[j,]] + On[j, L[j,]]
+                        En[j-1, L[j,]] <- En[j-1, L[j,]] + En[j, L[j,]]
+                        drop <- c(drop, j)       
+                        break
+                    } 
+                }
+                if(nrow(On) > 4){
+                    for(j in 2:(nrow(On)-1)){
+                        if(any(L[j,])){
+                            On[j+1, L[j,]] <- On[j+1, L[j,]] + On[j, L[j,]]
+                            En[j+1, L[j,]] <- En[j+1, L[j,]] + En[j, L[j,]]
+                            drop <- c(drop, j)    
+                            break
+                        }
+                    }
+                }
+                #drop  
+                if(!is.null(drop)){
+                    En <- En[-drop, ]
+                    On <- On[-drop, ]
+                }
+                L <- En < mincell
+                L[is.na(L)] <- FALSE
+            }
+            E[[i]] <- En
+            O[[i]] <- On
+        }
+        return(list(O=O, E=E))            
+    } 
+    if(x@nfact == 1){
+        dat <- x@data
+        adj <- apply(dat, 2, min)
+        if(any(adj > 0))
+            message('Data adjusted so that the lowest category score for every item is 0')
+        dat <- t(t(dat) - adj)
+        S_X2 <- df.S_X2 <- numeric(J)        
+        O <- makeObstables(dat, x@K) 
+        Nk <- rowSums(O[[1]])            
+        E <- EAPsum(x, S_X2 = TRUE)
+        for(i in 1:J)
+            E[[i]] <- E[[i]] * Nk  
+        coll <- collapseCells(O, E, mincell=mincell)
+        if(S_X2.tables) return(list(O.org=O, E.org=E, O=coll$O, E=coll$E))        
+        O <- coll$O
+        E <- coll$E        
+        for(i in 1:J){
+            S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
+            df.S_X2[i] <- (ncol(O[[i]])-1) * nrow(O[[i]]) - sum(pars[[i]]@est) - sum(is.na(E[[i]]))
+        }
+        ret$S_X2 <- S_X2
+        ret$df.S_X2 <- df.S_X2
+        ret$p.S_X2 <- round(1 - pchisq(S_X2, df.S_X2), 4)    
+    }
     return(ret)
 }

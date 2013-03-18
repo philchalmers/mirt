@@ -30,6 +30,8 @@ test_that('dich', {
     expect_is(fm4, 'matrix')
     fm5 <- fscores(modm6, method = 'ML', full.scores = FALSE, verbose = FALSE)
     expect_is(fm5, 'matrix')
+    fm6 <- fscores(modm1, method = 'EAPsum', full.scores = FALSE, verbose = FALSE)
+    expect_is(fm6, 'data.frame')
     
     res1 <- residuals(modm1, verbose = FALSE)
     res2 <- residuals(modm2, verbose = FALSE)

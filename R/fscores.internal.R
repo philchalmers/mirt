@@ -250,7 +250,31 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
     MIN
 }
 
-EAPsum <- function(x, full.scores = FALSE, quadpts = NULL){    
+EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE){    
+    calcL1 <- function(itemtrace, K){        
+        J <- length(K)
+        L0 <- L1 <- matrix(1, sum(K-1) + 1, ncol(itemtrace))                
+        L0[1:K[1], ] <- itemtrace[1:K[1], ]
+        nstar <- K[1] + K[2] - 3    
+        Sum.Scores <- 1:nrow(L0)-1    
+        MAX.Scores <- cumsum(K-1)            
+        for(i in 1:(J-1)){
+            T <- itemtrace[itemloc[i+1]:(itemloc[i+2] - 1), ]
+            L1[1, ] <- L0[1, ] * T[1, ]        
+            #recursive rule for internal values (gets a little ugly at polytomous data edges)
+            for(j in 1:nstar+1){        
+                sums <- 0                            
+                for(k in 1:K[i+1]-1)
+                    if(Sum.Scores[j] >= k && (MAX.Scores[i] + k) >= Sum.Scores[j])
+                        sums <- sums + L0[j - k, ] * T[1 + k, ]
+                L1[j, ] <- sums                   
+            }        
+            L1[j+1, ] <- L0[j - k + 1, ] * T[nrow(T), ]
+            L0 <- L1        
+            nstar <- nstar + K[i+1] - 1
+        }        
+        list(L1=L1, Sum.Scores=Sum.Scores) 
+    }
     if(x@nfact > 1) stop('EAP sum score method only is applicable to unidimensional models')             
     if(is.null(quadpts)) quadpts <- 40
     Theta <- as.matrix(seq(-4,4,length.out = quadpts))    
@@ -259,34 +283,32 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL){
     pars <- x@pars
     K <- x@K
     J <- length(K)
-    itemloc <- x@itemloc
+    itemloc <- x@itemloc    
     itemtrace <- matrix(0, ncol=ncol(x@tabdatalong)-1, nrow=nrow(Theta))        
     for (i in 1:J)
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-    itemtrace <- t(itemtrace)
-    #initialize, nquad x nitems    
-    L0 <- L1 <- matrix(1, sum(x@K-1) + 1, nrow(Theta))                
-    L0[1:K[1], ] <- itemtrace[1:K[1], ]
-    nstar <- K[1] + K[2] - 3    
-    Sum.Scores <- 1:nrow(L0)-1    
-    MAX.Scores <- cumsum(K-1)            
-    for(i in 1:(J-1)){
-        T <- itemtrace[itemloc[i+1]:(itemloc[i+2] - 1), ]
-        L1[1, ] <- L0[1, ] * T[1, ]        
-        #recursive rule for internal values (gets a little ugly at polytomous data edges)
-        for(j in 1:nstar+1){        
-            sums <- 0                            
-            for(k in 1:K[i+1]-1)
-                if(Sum.Scores[j] >= k && (MAX.Scores[i] + k) >= Sum.Scores[j])
-                    sums <- sums + L0[j - k, ] * T[1 + k, ]
-            L1[j, ] <- sums                   
-        }        
-        L1[j+1, ] <- L0[j - k + 1, ] * T[nrow(T), ]
-        L0 <- L1        
-        nstar <- nstar + K[i+1] - 1
-    }    
+        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)    
+    itemtrace <- t(itemtrace)    
+    tmp <- calcL1(itemtrace=itemtrace, K=K)    
+    L1 <- tmp$L1
+    Sum.Scores <- tmp$Sum.Scores            
+    if(S_X2){        
+        L1total <- L1 %*% prior         
+        Elist <- vector('list', J)        
+        for(i in 1:J){
+            KK <- K[-i]
+            T <- itemtrace[c(itemloc[i]:(itemloc[i+1]-1)), ]
+            itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i+1]-1)), ]
+            tmp <- calcL1(itemtrace=itemtrace2, K=KK)    
+            E <- matrix(NA, nrow(L1total), nrow(T))            
+            for(j in 1:(nrow(T)))                
+                E[1:nrow(tmp$L1)+j-1,j] <- tmp$L1 %*% (T[j,] * prior) / 
+                    L1total[1:nrow(tmp$L1)+j-1, ]                                        
+            Elist[[i]] <- E[-c(1, nrow(E)), ]
+        }
+        return(Elist)
+    }
     thetas <- SEthetas <- numeric(nrow(L1))    
-    for(i in 1:length(thetas)){
+    for(i in 1:length(thetas)){        
         thetas[i] <- sum(Theta * L1[i, ] * prior / sum(L1[i,] * prior))
         SEthetas[i] <- sqrt(sum((Theta - thetas[i])^2 * L1[i, ] * prior / sum(L1[i,] * prior)))
     }

@@ -2,6 +2,8 @@ Changes in mirt 0.5.3
 
 NEW FEATURES
 
+- S-X2 statistic computed automatically for unidimensional models via itemfit()
+
 - EAP for sum-scores added to fscores() with method = 'EAPsum'. Works with full.scores option 
   as well
 
