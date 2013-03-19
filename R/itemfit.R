@@ -8,7 +8,8 @@
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or 
 #' \code{MultipleGroupClass}
-#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)?
+#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are only
+#' interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be 
 #' collapsed accross items first if polytomous, and then accross scores if necessary
@@ -100,23 +101,23 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     }        
     if(S_X2.tables) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@data))
-    sc <- fscores(x, verbose = FALSE, full.scores = TRUE) 
     J <- ncol(x@data)
     itemloc <- x@itemloc    
     pars <- x@pars
-    prodlist <- attr(pars, 'prodlist')    
-    nfact <- x@nfact + length(prodlist)
-    fulldata <- x@fulldata    
-    Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]        
-    N <- nrow(Theta)
-    itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)        
-    for (i in 1:J)            
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)        
-    LL <- itemtrace * fulldata        
-    LL[LL < 1e-8] <- 1
-    Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)              
-    mu <- sigma2 <- rep(0, J)
-    if(Zh){
+    if(Zh || X2){
+        sc <- fscores(x, verbose = FALSE, full.scores = TRUE) 
+        prodlist <- attr(pars, 'prodlist')    
+        nfact <- x@nfact + length(prodlist)
+        fulldata <- x@fulldata    
+        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]        
+        N <- nrow(Theta)
+        itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)        
+        for (i in 1:J)            
+            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)        
+        LL <- itemtrace * fulldata        
+        LL[LL < 1e-8] <- 1
+        Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)              
+        mu <- sigma2 <- rep(0, J)    
         for(item in 1:J){              
             for(n in 1:N){                
                 P <- itemtrace[n ,itemloc[item]:(itemloc[item+1]-1)]

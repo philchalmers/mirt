@@ -12,7 +12,8 @@
   \code{MultipleGroupClass}}
 
   \item{Zh}{logical; calculate Zh and associated statistics
-  (infit/outfit)?}
+  (infit/outfit)? Disable this is you are only interested
+  in computing the S-X2 quickly}
 
   \item{X2}{logical; calculate the X2 statistic for
   unidimensional models?}
