@@ -1,6 +1,6 @@
 Package: mirt
-Version: 0.5.3
-Date: 2013-01-16
+Version: 0.6.0
+Date: 2013-03-18
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c(
@@ -10,7 +10,7 @@ Description: Analysis of dichotomous and polytomous response data using latent
     trait models under the Item Response Theory paradigm. Exploratory models
     can be estimated via quadrature or stochastic methods, a generalized
     confirmatory bi-factor analysis is included, and confirmatory models can be
-    fit with a Metropolis-Hastings Robbins-Monro algorithm which can include
+    fit with a Metropolis-Hastings Robbins-Monro algorithm which may include
     polynomial or product constructed latent traits. Multiple group analysis
     and mixed effects designs may be performed for unidimensional or
     multidimensional item response models for detecting differential item
