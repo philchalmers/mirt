@@ -129,7 +129,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             }
         }
         if(verbose){
-            print(LL)                            
+            if(cycles > 1) print(LL)                            
             flush.console()
         }
         
