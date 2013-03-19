@@ -126,7 +126,9 @@ setMethod(
 		if (full.scores){                                       
             tabdata2 <- object@tabdatalong
             tabdata2 <- tabdata2[,-ncol(tabdata2)]
-            scoremat <- .Call("fullScores", object@fulldata, tabdata2, scores)			 
+            stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
+            sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
+            scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]                                    
 			colnames(scoremat) <- colnames(scores)	
 			return(cbind(fulldata,scoremat))
 		} else {            
