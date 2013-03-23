@@ -1,5 +1,5 @@
-PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain, freepars, 
-                     free.start, parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
+PrepData <- function(data, model, itemtype, guess, upper, 
+                     parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, D, mixedlist)
 {
     if(debug == 'PrepData') browser()  
@@ -69,8 +69,7 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
     pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
-                           itemnames=itemnames, exploratory=exploratory, constrain=constrain,
-                           startvalues=startvalues, freepars=freepars, parprior=parprior, 
+                           itemnames=itemnames, exploratory=exploratory, parprior=parprior, 
                            parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist, 
                            debug=debug)   
     prodlist <- attr(pars, 'prodlist')
@@ -79,7 +78,8 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
         attr(pars, 'parnumber') <- NULL
         return(pars)  
     }   
-    if(is.null(constrain)) constrain <- list()
+    #within group constraints
+    constrain <- list()
     onePLconstraint <- c()    
     if(itemtype[1] == '1PL'){        
         for(i in 1:J)
@@ -125,10 +125,8 @@ PrepData <- function(data, model, itemtype, guess, upper, startvalues, constrain
                 constrain[[length(constrain) + 1]] <- rsmConstraint
             }
         }            
-    } 
-    npars <- 0
-    for(i in 1:length(pars))
-        npars <- npars + sum(pars[[i]]@est)     
+    }     
+    npars <- sum(sapply(pars, function(x) sum(x@est)))
     if(is.null(prodlist)) prodlist <- list()
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,
                 K=K, fulldata=fulldata, nfactNames=nfactNames, nfact=nfact, npars=npars, 

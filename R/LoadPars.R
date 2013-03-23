@@ -1,124 +1,114 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     constrain, startvalues, freepars, parprior, parnumber, D, 
-                     estLambdas, BFACTOR = FALSE, mixedlist, debug)
+                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, debug)
     {       
     if(debug == 'LoadPars') browser() 
-    pars <- list()           
-    constr <- c()
-    if(!is.null(constrain) && is.list(constrain)) 
-        for(i in 1:length(constrain))
-            constr <- c(constr, constrain[[i]])
-    constr <- unique(constr)
+    pars <- vector('list', J)
     #startvalues
-    if(is.null(startvalues) || startvalues =='index'){        
-        startvalues <- list()
-        for(i in 1:J){            
-            if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
-                tmpval <- rep(0, nfact)
-                tmpval[lambdas[i,] != 0] <- 1/D                
-                val <- c(tmpval, zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
-            }
-            if(itemtype[i] == 'Rasch' && K[i] > 2){
-                tmpval <- rep(0, nfact)
-                tmpval[lambdas[i,] != 0] <- 1/D                
-                val <- c(tmpval, 0, zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
-            }
-            if(itemtype[i] == '1PL' && K[i] > 2){
-                tmpval <- rep(0, nfact)
-                tmpval[lambdas[i,] != 0] <- 1/D                
-                val <- c(tmpval, zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))
-            }
-            if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
-                val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
-                names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
-            }
-            if(itemtype[i] == 'graded'){
-                val <- c(lambdas[i,], zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
-            }            
-            if(itemtype[i] == 'grsm'){
-                val <- c(lambdas[i,], seq(2.5, -2.5, length.out = length(zetas[[i]])), 0) 
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''), 'c')
-            }
-            if(itemtype[i] == 'gpcm'){
-                val <- c(lambdas[i,], 0, zetas[[i]])
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
-            }
-            if(itemtype[i] == 'rsm'){                
-                tmpval <- rep(0, nfact)
-                tmpval[lambdas[i,] != 0] <- 1/D                
-                val <- c(tmpval, 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''), 'c')                
-            }
-            if(itemtype[i] == 'nominal'){
-                val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
-                                paste('d', 0:(K[i]-1), sep=''))                
-            }
-            if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-                val <- c(lambdas[i,], rep(1, nfact), 0, 1)
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
-            }
-            if(itemtype[i] == 'mcm'){
-                val <- c(lambdas[i,], 1, 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]+1), 
-                         rep(1/K[i], K[i]))
-                names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]), sep=''), 
-                                paste('d', 0:(K[i]), sep=''), paste('t', 1:(K[i]), sep=''))                
-            }            
-            startvalues[[i]] <- val
-        } 
-    }  
+    startvalues <- vector('list', J)
+    for(i in 1:J){            
+        if(any(itemtype[i] == c('Rasch', '1PL')) && K[i] == 2){
+            tmpval <- rep(0, nfact)
+            tmpval[lambdas[i,] != 0] <- 1/D                
+            val <- c(tmpval, zetas[[i]], guess[i], upper[i])
+            names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
+        }
+        if(itemtype[i] == 'Rasch' && K[i] > 2){
+            tmpval <- rep(0, nfact)
+            tmpval[lambdas[i,] != 0] <- 1/D                
+            val <- c(tmpval, 0, zetas[[i]])
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))
+        }
+        if(itemtype[i] == '1PL' && K[i] > 2){
+            tmpval <- rep(0, nfact)
+            tmpval[lambdas[i,] != 0] <- 1/D                
+            val <- c(tmpval, zetas[[i]])
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))
+        }
+        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
+            val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
+            names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
+        }
+        if(itemtype[i] == 'graded'){
+            val <- c(lambdas[i,], zetas[[i]])
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''))    
+        }            
+        if(itemtype[i] == 'grsm'){
+            val <- c(lambdas[i,], seq(2.5, -2.5, length.out = length(zetas[[i]])), 0) 
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:(K[i]-1), sep=''), 'c')
+        }
+        if(itemtype[i] == 'gpcm'){
+            val <- c(lambdas[i,], 0, zetas[[i]])
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''))                
+        }
+        if(itemtype[i] == 'rsm'){                
+            tmpval <- rep(0, nfact)
+            tmpval[lambdas[i,] != 0] <- 1/D                
+            val <- c(tmpval, 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''), 'c')                
+        }
+        if(itemtype[i] == 'nominal'){
+            val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
+                            paste('d', 0:(K[i]-1), sep=''))                
+        }
+        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+            val <- c(lambdas[i,], rep(1, nfact), 0, 1)
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 1:nfact, sep=''), 'g','u')
+        }
+        if(itemtype[i] == 'mcm'){
+            val <- c(lambdas[i,], 1, 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]+1), 
+                     rep(1/K[i], K[i]))
+            names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]), sep=''), 
+                            paste('d', 0:(K[i]), sep=''), paste('t', 1:(K[i]), sep=''))                
+        }            
+        startvalues[[i]] <- val
+    } 
     #freepars
-    if(is.null(freepars) || freepars == 'index'){
-        freepars <- list()
-        for(i in 1:J){                        
-            if(itemtype[i] == 'Rasch' && K[i] == 2)
-                freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)            
-            if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){
-                estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
-                if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
-                if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
-                freepars[[i]] <- estpars
-            }
-            if(itemtype[i] == 'Rasch' && K[i] > 2)            
-                freepars[[i]] <- c(rep(FALSE,nfact), FALSE, rep(TRUE, K[i]-1))
-            if(itemtype[i] == '1PL' && K[i] > 2)            
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))            
-            if(itemtype[i] == 'grsm')
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
-            if(itemtype[i] == 'graded')
-                freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
-            if(itemtype[i] == 'gpcm')            
-                freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-1))  
-            if(itemtype[i] == 'rsm')            
-                freepars[[i]] <- c(rep(FALSE, nfact), FALSE, rep(TRUE, K[i]))
-            if(itemtype[i] == 'nominal'){
-                estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
-                #identifiction constraints
-                estpars[c(nfact+1, nfact + K[i], nfact + K[i] + 1)] <- FALSE
-                freepars[[i]] <- estpars
-            }
-            if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-                estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
-                if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1] <- TRUE
-                freepars[[i]] <- estpars
-            }
-            if(itemtype[i] == 'mcm'){
-                estpars <- c(estLambdas[i, ], rep(TRUE, 2+K[i]*3))
-                #identifiction constraints
-                tmp <- names(startvalues[[i]])
-                tmp2 <- 1:length(tmp)
-                estpars[tmp2[tmp %in% c('ak0', 'ak1', 
-                                        paste('ak',i,sep=''), 'd0', 'd1', 't1')]] <- FALSE                
-                freepars[[i]] <- estpars
-            }
-        }         
-    }
-    for(i in 1:J) names(freepars[[i]]) <- names(startvalues[[i]])    
-    
+    freepars <- vector('list', J)
+    for(i in 1:J){                        
+        if(itemtype[i] == 'Rasch' && K[i] == 2)
+            freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)            
+        if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){
+            estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
+            if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
+            if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
+            freepars[[i]] <- estpars
+        }
+        if(itemtype[i] == 'Rasch' && K[i] > 2)            
+            freepars[[i]] <- c(rep(FALSE,nfact), FALSE, rep(TRUE, K[i]-1))
+        if(itemtype[i] == '1PL' && K[i] > 2)            
+            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))            
+        if(itemtype[i] == 'grsm')
+            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
+        if(itemtype[i] == 'graded')
+            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1))
+        if(itemtype[i] == 'gpcm')            
+            freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-1))  
+        if(itemtype[i] == 'rsm')            
+            freepars[[i]] <- c(rep(FALSE, nfact), FALSE, rep(TRUE, K[i]))
+        if(itemtype[i] == 'nominal'){
+            estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
+            #identifiction constraints
+            estpars[c(nfact+1, nfact + K[i], nfact + K[i] + 1)] <- FALSE
+            freepars[[i]] <- estpars
+        }
+        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+            estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
+            if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1] <- TRUE
+            freepars[[i]] <- estpars
+        }
+        if(itemtype[i] == 'mcm'){
+            estpars <- c(estLambdas[i, ], rep(TRUE, 2+K[i]*3))
+            #identifiction constraints
+            tmp <- names(startvalues[[i]])
+            tmp2 <- 1:length(tmp)
+            estpars[tmp2[tmp %in% c('ak0', 'ak1', 
+                                    paste('ak',i,sep=''), 'd0', 'd1', 't1')]] <- FALSE                
+            freepars[[i]] <- estpars
+        }
+        names(freepars[[i]]) <- names(startvalues[[i]])    
+    }         
+
     #augment startvalues and fixedpars for mixed effects
     nfixedeffects <- 0    
     if(!is.null(mixedlist)){ 
@@ -145,7 +135,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]] <- new('dich', par=startvalues[[i]], est=freepars[[i]],
                              nfact=nfact, 
                              dat=fulldata[ ,tmp], 
-                             constr=TRUE,                              
                              ncat=2,
                              nfixedeffects=nfixedeffects, 
                              D=D,
@@ -156,7 +145,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))       
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])            
         }
@@ -170,7 +158,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=TRUE,                                                           
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -179,7 +166,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             pars[[i]]@par[nfact+1] <- 0            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])            
         }
@@ -193,7 +179,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -201,7 +186,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
@@ -213,7 +197,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact, 
                              nfixedeffects=nfixedeffects, 
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              ncat=2,
                              D=D,
                              lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),                                           
@@ -223,7 +206,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])            
         }
@@ -237,7 +219,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=TRUE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -245,7 +226,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
@@ -259,7 +239,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -267,7 +246,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
@@ -281,7 +259,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -290,7 +267,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             pars[[i]]@par[nfact+1] <- 0            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }    
@@ -304,7 +280,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              est=freepars[[i]], 
                              dat=fulldata[ ,tmp], 
-                             constr=TRUE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -313,7 +288,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             pars[[i]]@par[nfact+1] <- 0            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }   
@@ -327,7 +301,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfixedeffects=nfixedeffects, 
                              D=D,
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -337,7 +310,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]]@par[c(nfact + 1, nfact + K[i] + 1)] <- 0
             pars[[i]]@par[nfact + K[i]] <- K[i] - 1            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         } 
@@ -351,7 +323,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfixedeffects=nfixedeffects, 
                              D=D,
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
                              ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -359,7 +330,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
@@ -373,7 +343,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfixedeffects=nfixedeffects, 
                              D=D,
                              dat=fulldata[ ,tmp], 
-                             constr=FALSE,                              
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),                             
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -381,7 +350,6 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
-            if(length(intersect(tmp2, constr)) > 0 ) pars[[i]]@constr <- TRUE            
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
         }
@@ -404,14 +372,11 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             }
         }
     } 
-    attr(pars, 'uniqueconstr') <- constr     
-    attr(pars, 'parnumber') <- attr(startvalues, 'parnumber') <- 
-        attr(freepars, 'parnumber') <- parnumber     
+    attr(pars, 'parnumber') <- parnumber     
     return(pars)
 }
 
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain, parprior, startvalues,
-                          freepars, debug){
+LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, debug){
     if(debug == 'LoadGroupPars') browser()
     nfact <- length(gmeans)
     fn <- paste('COV_', 1:nfact, sep='')
@@ -424,14 +389,6 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, constrain
     names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])     
     ret <- new('GroupPars', par=par, est=est, nfact=nfact, 
                parnum=parnum, lbound=rep(-Inf, length(par)), ubound=rep(Inf, length(par)))                      
-    if(!is.null(startvalues)){
-        if(is.list(startvalues)) ret@par <- startvalues[[length(startvalues)]]
-        else return(ret@par)        
-    }
-    if(!is.null(freepars)){
-        if(is.list(freepars)) ret@est <- freepars[[length(freepars)]]
-        else return(ret@est)        
-    }
     if(!is.null(parprior) && is.list(parprior)){
         for(j in 1:length(parprior)){            
             tmp <- parnum %in% as.numeric(parprior[[j]][1:(length(parprior[[j]])-3)])

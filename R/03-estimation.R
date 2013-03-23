@@ -45,8 +45,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]      
     PrepListFull <- PrepList[[1]] <- 
         PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess, 
-                 upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
-                 free.start=NULL, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
+                 upper=upper, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block, 
                  D=opts$D, mixedlist=mixedlist)                    
@@ -56,10 +55,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[g]]]]
         if(g != 1)
             PrepList[[g]] <- PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess, 
-                                  upper=upper, startvalues=NULL, constrain=NULL, freepars=NULL, 
-                                  parprior=parprior, verbose=opts$verbose, debug=opts$debug, free.start=NULL,
-                                  technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
-                                  grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist)        
+                                      upper=upper, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
+                                      technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
+                                      grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }     
@@ -108,7 +106,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }       
     }
     if(!is.null(pars)){
-        if(is(pars, 'matrix') || is(pars, 'data.frame')){
+        if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, MG = TRUE)
         } else if(pars == 'values'){            
             return(ReturnPars(PrepList, PrepList[[1]]$itemnames, MG = TRUE))            

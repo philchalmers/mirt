@@ -1,7 +1,6 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata, 
-                           itemloc, data, N, guess, upper, itemnames, exploratory, constrain, 
-                           startvalues, freepars, parprior, parnumber, BFACTOR = FALSE, D, mixedlist,
-                           debug)
+                           itemloc, data, N, guess, upper, itemnames, exploratory, parprior, 
+                           parnumber, BFACTOR = FALSE, D, mixedlist, debug)
 {       
     if(debug == 'model.elements') browser()
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)    
@@ -92,14 +91,14 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         colnames(Theta) <- model[ ,1]
         mixedlist$Theta <- Theta        
     }
-    ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, guess=guess, upper=upper,
-                    fulldata=fulldata, J=J, K=K, nfact=nfact+length(prodlist), constrain=constrain, 
-                    startvalues=startvalues, freepars=freepars, parprior=parprior, parnumber=parnumber,
-                    estLambdas=estlam, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist, debug=debug)      
+    ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas, 
+                    guess=guess, upper=upper, fulldata=fulldata, J=J, K=K, 
+                    nfact=nfact+length(prodlist), parprior=parprior, 
+                    parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, D=D, 
+                    mixedlist=mixedlist, debug=debug)      
     ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans, 
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
-                                            startvalues=startvalues, freepars=freepars, parprior=parprior,
-                                            constrain=constrain, debug=debug)
+                                            parprior=parprior, debug=debug)
     attr(ret, 'prodlist') <- prodlist     
     return(ret)    
 }

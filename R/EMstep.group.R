@@ -244,11 +244,8 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, itemtrace=NU
     J <- length(itemloc) - 1
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1:(ncol(tabdata) - 1), drop = FALSE]   
-    if(is.null(itemtrace)){
-        itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))    
-        for (i in 1:J)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-    }
+    if(is.null(itemtrace))
+        itemtrace <- itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)    
     retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)    
     if(deriv) retlist$itemtrace <- itemtrace        
     return(retlist)
@@ -261,11 +258,8 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
     J <- length(itemloc) - 1
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1:(ncol(tabdata) - 1)]	
-    if(is.null(itemtrace)){
-        itemtrace <- matrix(0, ncol=ncol(X), nrow=nrow(Theta))    
-        for (i in 1:J)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-    }
+    if(is.null(itemtrace))
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)    
     retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)	
     r1 <- matrix(0, nrow(Theta), ncol(X))	
     for (i in 1:J){
