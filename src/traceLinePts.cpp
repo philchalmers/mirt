@@ -1,4 +1,5 @@
 #include<Rcpp.h>
+#include"Misc.h"
 using namespace Rcpp;
 
 RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD) 
@@ -45,3 +46,41 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	END_RCPP
 }
 
+// graded
+RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP Ritemexp) 
+{
+    BEGIN_RCPP
+
+	NumericVector a(Ra);
+	NumericVector d(Rd);
+	NumericVector D(RD);
+	NumericMatrix Theta(RTheta);
+	IntegerVector itemexp(Ritemexp);
+    double nullzero = 0.0, nullone = 1.0;
+    int nquad = Theta.nrow();
+	int nfact = Theta.ncol();
+	int ncat = d.length();
+	int i,j ;
+
+	NumericMatrix Pk(nquad, ncat + 2);
+	NumericMatrix P(nquad, ncat + 1);
+
+	for(i = 0; i < nquad; i++)
+        Pk(i,0) = 1.0;
+    for(i = 0; i < ncat; i++)
+        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, &D(0)); 
+    if(itemexp(0)){
+        for(i = (Pk.ncol()-2); i >= 0; i--)
+            P(_,i) = Pk(_,i) - Pk(_,i+1);
+        for(i = 0; i < P.nrow(); i++){
+            for(j = 0; j < P.ncol(); j++){
+                if(P(i,j) < 1e-8) P(i,j) = 1e-8;
+                if((1.0 - P(i,j)) < 1e-8) P(i,j) = 1.0 - 1e-8;        
+            }
+        }
+        return(P);
+    }
+
+    return(Pk);
+	END_RCPP
+}

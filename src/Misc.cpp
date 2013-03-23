@@ -27,7 +27,7 @@ NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 }
 
 NumericVector itemTrace(NumericVector a, const double *d, 
-        NumericMatrix Theta, const double *g, const double *u)
+        NumericMatrix Theta, const double *g, const double *u, const double *D)
 {	
 	int i, j;
     int nquad = Theta.nrow();
@@ -37,73 +37,13 @@ NumericVector itemTrace(NumericVector a, const double *d,
 	for (i = 0; i <	nquad; i++){
 	    z(i) = 0.0;
 		for (j = 0; j <	nfact; j++){		
-			z(i) += 1.702 * a(j) * Theta(i,j);  		
+			z(i) += *D * a(j) * Theta(i,j);  		
 		}
-		z(i) += *d * 1.702;
+		z(i) += *d * *D;
 	}	
 	for (i = 0; i < nquad; i++) 
 		P(i) = *g + (*u - *g) * (exp(z(i))/(1 + exp(z(i))));
 	
 	return P;		
 }
-
-NumericMatrix Prob(NumericMatrix Theta, NumericVector a,
-        NumericVector zetas, const double *g, const double *u)
-{
-	int i, j;
-    int N = Theta.nrow();
-    int k = zetas.length() + 1;
-    double tmp;
-	NumericVector p1(N);
-	NumericMatrix Ps(N,k+1), Pdif(N,k), P(N,k);
-
-	for(i = 0; i < N; i++){
-		Ps(i,0) = 1.0;
-		Ps(i,k) = 0.0;
-	}
-	for(j = 0; j < (k - 1); j++){
-		tmp = zetas(j);
-		p1 = itemTrace(a, &tmp, Theta, g, u);
-		for(i = 0; i < N; i++)
-			Ps(i,j+1) = p1(i);
-	}
-	for(j = (k - 1); j >= 0; j--)
-		for(i = 0; i < N; i++)
-			Pdif(i,j) = Ps(i,j) - Ps(i,j+1);				
-	for(j = 0; j < k; j++){
-		for(i = 0; i < N; i++){
-			if(Pdif(i,j) < .00000001) Pdif(i,j) = .00000001;
-			if(k == 2) Pdif(i,j) = 1.0 - Pdif(i,j);
-			P(i,j) = Pdif(i,j);
-		}
-	}
-	return P;
-}
-
-NumericMatrix ProbComp(NumericMatrix Theta, NumericVector a, 
-        NumericVector zetas, const double *g, const double *u)
-{
-	int i, j;
-    int nfact = Theta.ncol();
-    int N = Theta.nrow();
-	NumericMatrix Pret(N,2), theta(N,1);    
-	NumericVector P(N), p1(N), tmpa(1);
-	double zerog = 0.0, tmpd, oneu = 1.0;
-	P.fill(1.0);
-
-	for(j = 0; j < nfact; j++){
-		tmpa(0) = a(j);
-		tmpd = zetas(j);
-		theta(_,0) = Theta(_,j);
-		p1 = itemTrace(tmpa, &tmpd, theta, &zerog, &oneu);
-		for(i = 0; i < N; i++)
-			P(i) *= p1(i);
-	}
-	for(i = 0; i < N; i++){
-		Pret(i,0) = *g + (*u - *g) * P(i);
-		Pret(i,1) = 1.0 - Pret(i,0);
-	}
-	return Pret;
-}
-
 

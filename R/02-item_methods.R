@@ -551,22 +551,9 @@ setMethod(
 
 ##Function passes
 P.poly <- function(a, d, Theta, itemexp = FALSE, D)
-{    
-    ncat <- length(d) + 1
-    nfact <- length(a)
-    Pk <- matrix(0,nrow(Theta),ncat+1)
-    Pk[,1] <- 1	
-    for(i in 1:(ncat-1))			
-        Pk[ ,i+1] <- P.mirt(a, d[i], Theta, g=0, u=1, D=D)		
-    if(itemexp){
-        P <- matrix(0,nrow(Theta),ncat)		
-        for(i in ncat:1)
-            P[ ,i] <- Pk[ ,i] - Pk[ ,i+1]						
-        P[P < 1e-8] <- 1e-8
-        P[(1 - P) < 1e-8] <- 1 - 1e-8
-        Pk <- P        
-    }	    
-    return(Pk)
+{   
+    traces <- .Call('gradedTraceLinePts', a, d, Theta, D, itemexp)
+    return(traces)        
 }
 
 # Trace lines for mirt models

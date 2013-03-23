@@ -219,7 +219,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
-            if(all(abs(correction) < .0001)) break            
+            if(all(abs(correction) < TOL/10)) break            
             if(is.list(debug)) print(longpars[debug[[1]]])
         }#END MSTEP        
         if(all(abs(preMstep.longpars - longpars) < TOL) || abs(lastLL - LL) < .01 ) break 
