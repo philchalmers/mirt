@@ -577,18 +577,9 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
 }
 
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1 
-P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
-    ncat <- length(d)
-    nfact <- ncol(Theta)    
-    a <- matrix(a)    
-    numerator <- matrix(0, nrow(Theta), ncat)            
-    for(i in 1:ncat)
-        numerator[ ,i] <- exp(D * ak[i] * (Theta %*% a) + D * d[i])
-    P <- numerator/rowSums(numerator)
-    P[P < 1e-8] <- 1e-8
-    P[(1 - P) < 1e-8] <- 1 - 1e-8
-    if(returnNum) return(numerator)
-    return(P)   
+P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){    
+    traces <- .Call("nominalTraceLinePts", a, ak, d, Theta, D, returnNum) 
+    return(traces)    
 }
 
 #ak[1] and d[1] are latent process

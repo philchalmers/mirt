@@ -60,7 +60,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
     int nquad = Theta.nrow();
 	int nfact = Theta.ncol();
 	int ncat = d.length();
-	int i,j ;
+	int i,j;
 
 	NumericMatrix Pk(nquad, ncat + 2);
 	NumericMatrix P(nquad, ncat + 1);
@@ -82,5 +82,48 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
     }
 
     return(Pk);
+	END_RCPP
+}
+
+
+RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD, SEXP RreturnNum) 
+{
+    BEGIN_RCPP
+
+	NumericVector a(Ra);
+	NumericVector ak(Rak);
+	NumericVector d(Rd);
+	NumericVector D(RD);
+	NumericMatrix Theta(RTheta);
+	IntegerVector returnNum(RreturnNum);
+    int nquad = Theta.nrow();
+	int nfact = Theta.ncol();
+	int ncat = d.length();
+	int i,j;
+
+	NumericMatrix Num(nquad, ncat);
+	NumericMatrix P(nquad, ncat);
+	NumericVector Den(nquad);
+	NumericVector innerprod(nquad);
+
+	for(i = 0; i < nquad; i++)
+	    for(j = 0; j < nfact; j++)
+	        innerprod(i) += Theta(i,j) * a(j);
+	for(i = 0; i < nquad; i++){
+	    for(j = 0; j < ncat; j++){
+	        Num(i,j) = exp(D(0) * ak(j) * innerprod(i) + D(0) * d(j));
+            Den(i) += Num(i,j);
+        }        
+    }
+    if(returnNum(0)) return(Num);
+	for(i = 0; i < nquad; i++){
+	    for(j = 0; j < ncat; j++){
+	        P(i,j) = Num(i,j) / Den(i);
+            if(P(i,j) < 1e-8) P(i,j) = 1e-8;
+            if((1.0 - P(i,j)) < 1e-8) P(i,j) = 1.0 - 1e-8;        
+        }
+    }
+
+    return(P);
 	END_RCPP
 }
