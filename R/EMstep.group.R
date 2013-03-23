@@ -222,7 +222,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
             if(all(abs(correction) < TOL/10)) break            
             if(is.list(debug)) print(longpars[debug[[1]]])
         }#END MSTEP        
-        if(all(abs(preMstep.longpars - longpars) < TOL) || abs(lastLL - LL) < .01 ) break 
+        if(all(abs(preMstep.longpars - longpars) < TOL) || abs(lastLL - LL) < .001) break
         for(g in 1:ngroups)
             for(i in 1:J) 
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
