@@ -248,7 +248,7 @@ for(i in 1:ncol(dat))
 (anovas <- lapply(estmodels, anova, object2=refmodel))
 
 #family-wise error control
-p <- do.call(c, lapply(anovas, function(x) x[2,9]))
+p <- do.call(rbind, lapply(anovas, function(x) x[2,9]))
 p.adjust(p, method = 'BH')
 
 #same as above, except only test if slopes vary (1 df)
