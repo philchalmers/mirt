@@ -571,8 +571,9 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
     for(i in 1:nfact)
         P <- P * P.mirt(a[i], d[i], Theta[ ,i, drop=FALSE], g=0, u=1, D=D)
     P <- g + (u - g) * P
-    P[P < .Machine$double.eps] <- .Machine$double.eps
-    P[(1 - P) < .Machine$double.eps] <- 1 - .Machine$double.eps
+    s.eps <- sqrt(.Machine$double.eps)
+    P[P < s.eps] <- s.eps
+    P[(1 - P) < s.eps] <- 1 - s.eps
     P	
 }
 
@@ -599,8 +600,9 @@ P.mcm <- function(a, ak, d, t, Theta, D){
     t[1] <- 1 - sum(t[2:length(t)])
     T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
     P <- C0 * T + (1 - C0) * numerator/denominator
-    P[P < .Machine$double.eps] <- .Machine$double.eps
-    P[(1 - P) < .Machine$double.eps] <- 1 - .Machine$double.eps
+    s.eps <- sqrt(.Machine$double.eps)
+    P[P < s.eps] <- s.eps
+    P[(1 - P) < s.eps] <- 1 - s.eps
     return(P)   
 }
 
