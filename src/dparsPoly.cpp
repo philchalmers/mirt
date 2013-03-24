@@ -11,7 +11,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
      */
 
 	int i, j, k, nzeta, nfact, N; 
-    double SQRT_DBL_MIN = sqrt(DBL_MIN);
+    const double SQRT_DBL_MIN = sqrt(DBL_MIN);
 	NumericMatrix prob(Rprob);
 	NumericMatrix Thetas(RThetas);
     NumericVector Prior(RPrior);

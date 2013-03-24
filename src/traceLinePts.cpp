@@ -2,6 +2,8 @@
 #include"Misc.h"
 using namespace Rcpp;
 
+const double SQRT_DBL_MIN = sqrt(DBL_MIN);
+
 RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD) 
 {
     BEGIN_RCPP
@@ -29,8 +31,8 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	}	
 	for (i = 0; i < nquad; i++){ 
 		P(i) = g(0) + (u(0) - g(0)) * (exp(z(i))/(1 + exp(z(i))));		
-        if(P(i) < DBL_MIN) P(i) = DBL_MIN;
-        if((1.0 - P(i)) < DBL_MIN) P(i) = 1.0 - DBL_MIN;        
+        if(P(i) < SQRT_DBL_MIN) P(i) = SQRT_DBL_MIN;
+        if((1.0 - P(i)) < SQRT_DBL_MIN) P(i) = 1.0 - SQRT_DBL_MIN;        
 	}
 		
 	return(P);
@@ -66,8 +68,8 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
             P(_,i) = Pk(_,i) - Pk(_,i+1);
         for(i = 0; i < P.nrow(); i++){
             for(j = 0; j < P.ncol(); j++){
-                if(P(i,j) < DBL_MIN) P(i,j) = DBL_MIN;
-                if((1.0 - P(i,j)) < DBL_MIN) P(i,j) = 1.0 - DBL_MIN;        
+                if(P(i,j) < SQRT_DBL_MIN) P(i,j) = SQRT_DBL_MIN;
+                if((1.0 - P(i,j)) < SQRT_DBL_MIN) P(i,j) = 1.0 - SQRT_DBL_MIN;        
             }
         }
         return(P);
@@ -111,8 +113,8 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEX
 	for(i = 0; i < nquad; i++){
 	    for(j = 0; j < ncat; j++){
 	        P(i,j) = Num(i,j) / Den(i);
-            if(P(i,j) < DBL_MIN) P(i,j) = DBL_MIN;
-            if((1.0 - P(i,j)) < DBL_MIN) P(i,j) = 1.0 - DBL_MIN;        
+            if(P(i,j) < SQRT_DBL_MIN) P(i,j) = SQRT_DBL_MIN;
+            if((1.0 - P(i,j)) < SQRT_DBL_MIN) P(i,j) = 1.0 - SQRT_DBL_MIN;        
         }
     }
 

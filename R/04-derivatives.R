@@ -426,10 +426,6 @@ setMethod(
         ak0 <- ak
         ak0[1] <- 0
         cind <- length(grad)
-#         tmp <- 0        
-#         for(i in 1:nzetas)
-#             tmp <- tmp - dat[,i]*numD/numsum
-#         grad[cind] <- sum(tmp*Prior)
         tmp <- 0
         for(i in 1:nzetas)
             tmp <- tmp + dat[,i]*numD^2 / numsum^2 - dat[,i]*numD2/numsum 
