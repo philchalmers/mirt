@@ -101,9 +101,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             estpars <- c(estLambdas[i, ], rep(TRUE, 2+K[i]*3))
             #identifiction constraints
             tmp <- names(startvalues[[i]])
-            tmp2 <- 1:length(tmp)
+            tmp2 <- 1:length(tmp)            
             estpars[tmp2[tmp %in% c('ak0', 'ak1', 
-                                    paste('ak',i,sep=''), 'd0', 'd1', 't1')]] <- FALSE                
+                                    paste('ak',K[i],sep=''), 'd0', 'd1', 't1')]] <- FALSE                
             freepars[[i]] <- estpars
         }
         names(freepars[[i]]) <- names(startvalues[[i]])    

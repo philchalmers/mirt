@@ -584,25 +584,9 @@ P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
 }
 
 #ak[1] and d[1] are latent process
-P.mcm <- function(a, ak, d, t, Theta, D){
-    ncat <- length(t)
-    nfact <- ncol(Theta)    
-    a <- matrix(a)    
-    P <- numerator <- matrix(0, nrow(Theta), ncat)      
-    numerator0 <- cbind(numerator, 0)
-    for(i in 1:ncat)
-        numerator0[ ,i+1] <- numerator[ ,i] <- exp(D * ak[i+1] * (Theta %*% a) + D * d[i+1])
-    numerator0[, 1] <- exp(D * ak[1] * (Theta %*% a) + D * d[1])
-    denominator <- rowSums(numerator)
-    denominator0 <- rowSums(numerator0)
-    C0 <- numerator0[,1] / denominator0
-    C0 <- matrix(C0, nrow(P), ncat)
+P.mcm <- function(a, ak, d, t, Theta, D){    
     t[1] <- 1 - sum(t[2:length(t)])
-    T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
-    P <- C0 * T + (1 - C0) * numerator/denominator
-    s.eps <- sqrt(.Machine$double.eps)
-    P[P < s.eps] <- s.eps
-    P[(1 - P) < s.eps] <- 1 - s.eps
-    return(P)   
+    traces <- .Call("mcmTraceLinePts", a, ak, d, t, Theta, D) 
+    return(traces)        
 }
 
