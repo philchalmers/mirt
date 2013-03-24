@@ -53,7 +53,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
     const double nullzero = 0.0, nullone = 1.0;
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
-	int ncat = d.length();
+	const int ncat = d.length();
 	int i,j;
 
 	NumericMatrix Pk(nquad, ncat + 2);
@@ -144,29 +144,7 @@ RcppExport SEXP mcmTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP Rt, SEXP RTheta
 	NumericVector Den0(nquad);
 	NumericVector innerprod(nquad);
 	NumericVector C0(nquad);
-	/*
-P.mcm <- function(a, ak, d, t, Theta, D){
-    ncat <- length(t)
-    nfact <- ncol(Theta)    
-    a <- matrix(a)    
-    P <- numerator <- matrix(0, nrow(Theta), ncat)      
-    numerator0 <- cbind(numerator, 0)
-    for(i in 1:ncat)
-        numerator0[ ,i+1] <- numerator[ ,i] <- exp(D * ak[i+1] * (Theta %*% a) + D * d[i+1])
-    numerator0[, 1] <- exp(D * ak[1] * (Theta %*% a) + D * d[1])
-    denominator <- rowSums(numerator)
-    denominator0 <- rowSums(numerator0)
-    C0 <- numerator0[,1] / denominator0
-    C0 <- matrix(C0, nrow(P), ncat)
-    t[1] <- 1 - sum(t[2:length(t)])
-    T <- matrix(t, nrow(P), ncat, byrow = TRUE)    
-    P <- C0 * T + (1 - C0) * numerator/denominator
-    s.eps <- sqrt(.Machine$double.eps)
-    P[P < s.eps] <- s.eps
-    P[(1 - P) < s.eps] <- 1 - s.eps
-    return(P)   
-}
-*/
+
 	for(i = 0; i < nquad; i++){
 	    for(j = 0; j < nfact; j++)
 	        innerprod(i) += Theta(i,j) * a(j);

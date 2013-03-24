@@ -12,8 +12,7 @@ static NumericVector makeOffterm(const NumericMatrix &dat, const NumericVector &
         const double &D, const int &cat)
 {
     NumericVector ret(dat.nrow());
-    int ncol = dat.ncol();
-    for(int CAT = 0; CAT < ncol; CAT++){
+    for(int CAT = 0; CAT < dat.ncol(); CAT++){
         if(CAT == cat) continue;
         for(int n = 0; n < ret.length(); n++)
             ret(n) += dat(n, CAT) * p(n) * aTheta(n) * D;
@@ -25,8 +24,7 @@ static NumericVector makeOffterm2(const NumericMatrix &dat, const NumericVector 
         const NumericVector &aTheta, const double &D, const int &cat)
 {
     NumericVector ret(dat.nrow());
-    int ncol = dat.ncol();
-    for(int CAT = 0; CAT < ncol; CAT++){
+    for(int CAT = 0; CAT < dat.ncol(); CAT++){
         if(CAT == cat) continue;
         for(int n = 0; n < ret.length(); n++)
             ret(n) += dat(n, CAT) * p1(n) * p2(n) * aTheta(n) * D;
@@ -42,18 +40,23 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
 {		
     BEGIN_RCPP
     IntegerVector Pnfact(Rnfact), Pncat(Rncat), Pakind(Rakind), Pdind(Rdind);
-    int nfact = Pnfact(0), ncat = Pncat(0), akind = Pakind(0), dind = Pdind(0) - 2,
-        i, j, k, n, N;
+    const int nfact = Pnfact(0);
+    const int ncat = Pncat(0); 
+    const int akind = Pakind(0); 
+    const int dind = Pdind(0) - 2;
+    int i, j, k, n;
     NumericVector a(Ra), ak(Rak), d(Rd), PD(RD), Prior(RPrior), ak2(Rak2),
                   numsum(Rnumsum), numakD(RnumakD), numak2D2(Rnumak2D2), 
                   aTheta(RaTheta), aTheta2(RaTheta2), dL(nfact + ncat*2);
     NumericVector unitNvec(aTheta.length()); 
     unitNvec.fill(1.0);
-    double D = PD(0), D2 = PD(0)*PD(0), tmp;
+    const double D = PD(0); 
+    const double D2 = PD(0)*PD(0);
+    double tmp;
     NumericMatrix Theta(RTheta), P(RP), num(Rnum), P2(RP2), P3(RP3),
                   dat_num(Rdat_num), numakDTheta_numsum(RnumakDTheta_numsum), 
                   d2L(nfact + ncat*2, nfact + ncat*2), dat(Rdat);
-    N = dat.nrow();
+    const int N = dat.nrow();
     NumericVector tmpvec(N), tmpvec2(N), offterm(N), offterm2(N);
     
     //grad
@@ -209,8 +212,132 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
 }
 
 
+RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP Rnzeta) 
+{		
+    BEGIN_RCPP
+    /* 
+        Rprob = numeric matrix of probabilities
+        RThetas = numeric matrix of abilities
+        Rdat = integer matrix of dichotomized item responses
+        nzeta = integer number of response categories
+     */
 
-/*
-  .Call('dparsNominal', a, ak, d, Theta, D, Prior, P, num, dat, nfact, ncat, akind,
-  dind, ak2, P2, P3, aTheta, dat_num, numsum, numakD, numakDTheta_numsum)
- */
+	int i, j, k; 
+    const double SQRT_DBL_MIN = sqrt(DBL_MIN);
+	NumericMatrix prob(Rprob);
+	NumericMatrix Thetas(RThetas);
+    NumericVector Prior(RPrior);
+    NumericMatrix dat2(Rdat);
+    IntegerVector Pnzeta(Rnzeta);
+    const int nzeta = Pnzeta[0];
+    const int nfact = Thetas.ncol();
+    const int N = Thetas.nrow();
+    NumericMatrix dat(dat2.nrow(), dat2.ncol());
+    NumericMatrix d2L(nfact + nzeta, nfact + nzeta);
+    NumericVector dL(nfact + nzeta);
+
+	NumericVector Pk(N), Pk_1(N), Pk_p1(N), PQ_1(N), PQ(N), PQ_p1(N), 
+			Pk_1Pk(N), Pk_Pkp1(N), dif1(N), dif1sq(N), dif2(N), 
+			dif2sq(N), tmp1(N), tmp2(N), tmp3(N), csums(nfact);			
+	NumericMatrix P(N,nzeta+2), PQfull(N,nzeta+2), mattmp(N,nfact), d2Louter;	   
+	double tmp;
+	IntegerVector factind(nfact);
+	for(j = 0; j < (nzeta + 2); j++){
+		for(i = 0; i < N; i++){
+			P(i,j) = prob(i,j);
+			PQfull(i,j) = prob(i,j) * (1.0 - prob(i,j));
+		}
+	}
+	for(j = 0; j < dat2.ncol(); j++){
+		for(i = 0; i < N; i++){
+		    dat(i,j) = dat2(i,j) * Prior(i);
+		}
+	}
+	for(j = 0; j < nfact; j++)
+		factind(j) = nzeta + j;
+	for(j = 0; j < (nzeta + 1); j++){
+		if(j < nzeta){
+			for(i = 0; i < N; i++){
+				Pk_1(i) = P(i,j);
+				Pk(i) = P(i,j + 1);
+				Pk_p1(i) = P(i,j + 2);
+				PQ_1(i) = PQfull(i,j);
+				PQ(i) = PQfull(i,j + 1);
+				PQ_p1(i) = PQfull(i,j + 2);
+				Pk_1Pk(i) = Pk_1(i) - Pk(i);
+				Pk_Pkp1(i) = Pk(i) - Pk_p1(i);
+                if(Pk_1Pk(i) < SQRT_DBL_MIN) Pk_1Pk(i) = SQRT_DBL_MIN;
+                if(Pk_Pkp1(i) < SQRT_DBL_MIN) Pk_Pkp1(i) = SQRT_DBL_MIN;
+				dif1(i) = dat(i,j) / Pk_1Pk(i);
+				dif1sq(i) = dat(i,j) / (Pk_1Pk(i) * Pk_1Pk(i));
+				dif2(i) = dat(i,j+1) / Pk_Pkp1(i);
+				dif2sq(i) = dat(i,j+1) / (Pk_Pkp1(i) * Pk_Pkp1(i));
+			}			
+			tmp = 0.0;
+			for(i = 0; i < N; i++)
+				tmp += (-1.0) * PQ(i) * (dif1(i) - dif2(i));			
+			dL(j) = tmp;			
+			tmp = 0.0;
+			for(i = 0; i < N; i++)
+				tmp += (-1.0) * PQ(i) * PQ(i) * (dif1sq(i) + dif2sq(i)) -				
+					(dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));			
+			d2L(j,j) = tmp;
+			if(j < (nzeta - 1)){
+				tmp = 0.0;
+				for(i = 0; i < N; i++)
+					tmp += dif2sq(i) * PQ_p1(i) * PQ(i);
+				d2L(j,j+1) = tmp;
+				d2L(j+1,j) = tmp;
+			}
+			for(i = 0; i < N; i++){
+				tmp1(i) = (-1.0) * dif2sq(i) * PQ(i) * (PQ(i) - PQ_p1(i));
+				tmp2(i) = dif1sq(i) * PQ(i) * (PQ_1(i) - PQ(i));
+				tmp3(i) = (dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));
+			}
+			for(k = 0; k < nfact; k++){
+				csums(k) = 0.0;
+				for(i = 0; i < N; i++){
+					mattmp(i,k) = tmp1(i) * Thetas(i,k) + tmp2(i) * Thetas(i,k) - 
+						tmp3(i) * Thetas(i,k);
+					csums(k) += mattmp(i,k);
+				}
+			}
+			for(i = 0; i < nfact; i++){
+				d2L(j,factind(i)) = csums(i);
+				d2L(factind(i),j) = csums(i);
+			}			
+		} else {					
+			for(i = 0; i < N; i++){
+				Pk_1(i) = P(i,j);
+				Pk(i) = P(i,j + 1);			
+				PQ_1(i) = PQfull(i,j);
+				PQ(i) = PQfull(i,j + 1);			
+				Pk_1Pk(i) = Pk_1(i) - Pk(i);
+                if(Pk_1Pk(i) < SQRT_DBL_MIN) Pk_1Pk(i) = SQRT_DBL_MIN; 
+				dif1(i) = dat(i,j) / Pk_1Pk(i);
+				dif1sq(i) = dat(i,j) / (Pk_1Pk(i) * Pk_1Pk(i));			
+			}	
+		}
+		for(k = 0; k < nfact; k++){
+			csums(k) = 0.0;
+			for(i = 0; i < N; i++){
+				mattmp(i,k) = dif1(i) * (PQ_1(i) - PQ(i)) * Thetas(i,k);
+				csums(k) += mattmp(i,k);
+			}
+		}
+		for(i = 0; i < nfact; i++)
+    		dL(factind(i)) += csums(i);			
+		
+		d2Louter = polyOuter(Thetas, Pk, Pk_1, PQ_1, PQ, dif1sq, dif1);		
+		for(k = 0; k < nfact; k++)
+			for(i = 0; i < nfact; i++)
+				d2L(factind(i),factind(k)) += d2Louter(i,k);				
+	}
+
+    List ret;
+    ret["grad"] = dL;
+    ret["hess"] = d2L;
+	return(ret);
+	END_RCPP
+}
+

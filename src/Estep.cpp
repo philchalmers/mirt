@@ -22,9 +22,9 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     IntegerMatrix data(RX);
     NumericMatrix itemtrace(Ritemtrace);
     NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol());    
-    int nquad = prior.length();
-    int nitems = data.ncol();
-    int npat = r.length();      
+    const int nquad = prior.length();
+    const int nitems = data.ncol();
+    const int npat = r.length();      
     double expd = 0.0;
     int i = 0, k = 0, item = 0;    
     NumericMatrix r1(nquad, nitems);    
@@ -91,12 +91,12 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     IntegerMatrix sitems(Rsitems);
-    int nfact = sitems.ncol() + 1;
-    int sfact = nfact - 1;
-    int nitems = data.ncol();
-    int npquad = prior.length();
-    int nquad = npquad * npquad;  
-    int npat = r.length();      
+    const int nfact = sitems.ncol() + 1;
+    const int sfact = nfact - 1;
+    const int nitems = data.ncol();
+    const int npquad = prior.length();
+    const int nquad = npquad * npquad;  
+    const int npat = r.length();      
     int i=0, j=0, k=0, item=0, fact=0;
     for (item = 0; item < nitems; item++)
         for (k = 0; k < nquad; k++)
@@ -185,9 +185,9 @@ RcppExport SEXP EAPgroup(SEXP Rlog_itemtrace, SEXP Rtabdata, SEXP RTheta, SEXP R
     NumericVector prior(Rprior);
     NumericVector mu(Rmu);
     int i, j, k, ind;
-    int n = prior.length(); //nquad
-    int nitems = tabdata.ncol();
-    int nfact = Theta.ncol();
+    const int n = prior.length(); //nquad
+    const int nitems = tabdata.ncol();
+    const int nfact = Theta.ncol();
 
     NumericVector L(n), thetas(nfact), thetas2(nfact*(nfact+1)/2); 
     NumericMatrix scores(tabdata.nrow(), nfact), scores2(tabdata.nrow(), nfact*(nfact + 1)/2);

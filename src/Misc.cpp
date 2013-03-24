@@ -1,5 +1,24 @@
 #include"Misc.h"
 
+RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
+{	
+    BEGIN_RCPP
+	int i, j, n;
+    NumericMatrix Thetas(RThetas);    
+    NumericVector PQ(RPQ);
+    NumericVector N(RN);
+    const int nfact = Thetas.ncol();
+	NumericMatrix ret(nfact,nfact);			
+
+	for(n = 0; n < N(0); n++)
+		for(i = 0; i < nfact; i++)
+			for(j = 0; j < nfact; j++)
+				ret(i,j) += Thetas(n,i) * Thetas(n,j) * PQ(n);
+		
+	return(ret);
+	END_RCPP
+}
+
 NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 	NumericVector Pk_1, NumericVector PQ_1, NumericVector PQ, 
 	NumericVector dif1sq, NumericVector dif1)
