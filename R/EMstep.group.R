@@ -245,7 +245,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, itemtrace=NU
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1:(ncol(tabdata) - 1), drop = FALSE]   
     if(is.null(itemtrace))
-        itemtrace <- itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)    
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)    
     retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)    
     if(deriv) retlist$itemtrace <- itemtrace        
     return(retlist)
