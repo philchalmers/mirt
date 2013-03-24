@@ -190,15 +190,15 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             }
         }			
         if(stagecycle < 3){	            
-            inv.ave.h <- try(solve(ave.h), silent = TRUE)			            
+            inv.ave.h <- try(qr.solve(ave.h), silent = TRUE)			            
             if(class(inv.ave.h) == 'try-error'){
                 tmp <- ave.h                 
                 while(1){
-                    tmp <- tmp + .01*diag(diag(tmp))
+                    tmp <- tmp + .001*diag(diag(tmp))
                     QR <- qr(tmp)
                     if(QR$rank == ncol(tmp)) break
                 }
-                inv.ave.h <- solve(tmp)
+                inv.ave.h <- qr.solve(tmp)
                 noninvcount <- noninvcount + 1
                 if(noninvcount == 3) 
                     stop('\nEstimation halted during burn in stages, solution is unstable')
@@ -233,15 +233,15 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
         
         #Step 3. Update R-M step		
         Tau <- Tau + gamma*(ave.h - Tau)        
-        inv.Tau <- try(solve(Tau), silent = TRUE)
+        inv.Tau <- try(qr.solve(Tau), silent = TRUE)
         if(class(inv.Tau) == 'try-error'){
             tmp <- Tau            
             while(1){
-                tmp <- tmp + .01*diag(diag(tmp))
+                tmp <- tmp + .001*diag(diag(tmp))
                 QR <- qr(tmp)
                 if(QR$rank == ncol(tmp)) break
             }
-            inv.Tau <- solve(tmp)           
+            inv.Tau <- qr.solve(tmp)           
             noninvcount <- noninvcount + 1
             if(noninvcount == 5) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
@@ -301,7 +301,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, debug)
             }
         }        
     }    
-    SEtmp <- diag(solve(info))        
+    SEtmp <- diag(qr.solve(info))        
     if(any(SEtmp < 0)){
         warning("Information matrix is not positive definite, negative SEs set to 0.\n")
         SEtmp <- rep(0, length(SEtmp))

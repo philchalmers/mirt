@@ -84,7 +84,7 @@ personfit <- function(x, method = 'EAP'){
     for (i in 1:J)
         itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     LL <- itemtrace * fulldata
-    LL[LL < 1e-8] <- 1
+    LL[LL < .Machine$double.eps] <- 1
     LL <- rowSums(log(LL)) 
     Zh <- rep(0, length(LL))
     for(n in 1:nrow(Theta)){    

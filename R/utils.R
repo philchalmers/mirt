@@ -31,7 +31,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
                         prior.mu, prodlist, mixedlist = NULL, debug) 
 {         
     if(debug == 'draw.thetas') browser()
-    tol <- 1e-8
+    tol <- .Machine$double.eps
     N <- nrow(fulldata)
     J <- length(pars) - 1
     nfact <- ncol(theta0)					
@@ -171,7 +171,7 @@ gamma.cor <- function(x)
 # Beta prior for grad and hess
 betaprior <- function(g,a,b)
 {	
-    if(g < 1e-8) return(list(grad=0, hess=0))
+    if(g < .Machine$double.eps) return(list(grad=0, hess=0))
 	grad <- ((a-1) * g^(a-1) * (1-g)^(b-1) - (b-1)*g^(a-1)*(1-g)^(b-1))/ 
 		(g^(a-1) * (1-g)^(b-1))
 	hess <- -((g^(a-1)*(a-1)^2*(1-g)^(b-1)/g^2 - g^(a-1)*(a-1)*(1-g)^(b-1)/g^2 

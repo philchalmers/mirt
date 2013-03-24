@@ -627,7 +627,7 @@ L <- function(par, obj, Theta){
     obj@par[obj@est] <- par
     P <- ProbTrace(obj, Theta)
     LL <- obj@dat * P
-    LL[LL < 1e-8] <- 1
+    LL[LL < .Machine$double.eps] <- 1
     LL <- sum(log(LL))
     if(any(!is.nan(obj@n.prior.mu))){
         ind <- !is.nan(obj@n.prior.mu)

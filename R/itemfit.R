@@ -115,7 +115,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         for (i in 1:J)            
             itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)        
         LL <- itemtrace * fulldata        
-        LL[LL < 1e-8] <- 1
+        LL[LL < .Machine$double.eps] <- 1
         Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)              
         mu <- sigma2 <- rep(0, J)    
         for(item in 1:J){              

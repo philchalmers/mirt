@@ -71,7 +71,7 @@ setMethod(
             return(exp(rowSums(log(tmp))))           
         }
         pars <- object@pars
-	    tol <- 1e-8	    
+	    tol <- .Machine$double.eps	    
         fulldata <- object@fulldata
         prodlist <- object@prodlist
         itemloc <- object@itemloc

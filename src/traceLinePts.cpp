@@ -6,14 +6,6 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 {
     BEGIN_RCPP
 
-    /* 
-        Ra = numeric vector. Item slopes 
-        Rd = numeric vector. Item intercepts
-        Rg = numeric scalar. Guessing parameter
-        RTheta = numeric matrix. Theta values     
-        RD = numeric vector. Scaling parameteter
-     */
-
 	NumericVector a(Ra);
 	NumericVector d(Rd);
 	NumericVector g(Rg);
@@ -37,8 +29,8 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	}	
 	for (i = 0; i < nquad; i++){ 
 		P(i) = g(0) + (u(0) - g(0)) * (exp(z(i))/(1 + exp(z(i))));		
-        if(P(i) < 1e-8) P(i) = 1e-8;
-        if((1.0 - P(i)) < 1e-8) P(i) = 1.0 - 1e-8;        
+        if(P(i) < DBL_MIN) P(i) = DBL_MIN;
+        if((1.0 - P(i)) < DBL_MIN) P(i) = 1.0 - DBL_MIN;        
 	}
 		
 	return(P);
@@ -74,8 +66,8 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
             P(_,i) = Pk(_,i) - Pk(_,i+1);
         for(i = 0; i < P.nrow(); i++){
             for(j = 0; j < P.ncol(); j++){
-                if(P(i,j) < 1e-8) P(i,j) = 1e-8;
-                if((1.0 - P(i,j)) < 1e-8) P(i,j) = 1.0 - 1e-8;        
+                if(P(i,j) < DBL_MIN) P(i,j) = DBL_MIN;
+                if((1.0 - P(i,j)) < DBL_MIN) P(i,j) = 1.0 - DBL_MIN;        
             }
         }
         return(P);
@@ -119,8 +111,8 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEX
 	for(i = 0; i < nquad; i++){
 	    for(j = 0; j < ncat; j++){
 	        P(i,j) = Num(i,j) / Den(i);
-            if(P(i,j) < 1e-8) P(i,j) = 1e-8;
-            if((1.0 - P(i,j)) < 1e-8) P(i,j) = 1.0 - 1e-8;        
+            if(P(i,j) < DBL_MIN) P(i,j) = DBL_MIN;
+            if((1.0 - P(i,j)) < DBL_MIN) P(i,j) = 1.0 - DBL_MIN;        
         }
     }
 

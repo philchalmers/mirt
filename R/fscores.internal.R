@@ -52,10 +52,8 @@ setMethod(
 		tabdata <- tabdata[ ,-ncol(tabdata), drop = FALSE]
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)			                
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov) 
-		W <- W/sum(W)                
-		itemtrace <- matrix(0, ncol=ncol(tabdata), nrow=nrow(Theta))        
-        for (i in 1:J)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)                    
+		W <- W/sum(W)                		
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
 		for (i in 1:nrow(tabdata)){				
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,]), drop = FALSE])			
 			thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
