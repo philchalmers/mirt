@@ -229,27 +229,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 listpars[[g]][[i]] <- pars[[g]][[i]]@par         
     } #END EM       
     if(cycles == NCYCLES) converge <- 0    
-    infological <- estpars & !redun_constr     
-    info <- -Hess
-    SEtmp <- diag(qr.solve(info))        
-    if(any(SEtmp < 0)){
-        warning("Information matrix is not positive definite, negative SEs set to 0.\n")
-        SEtmp <- rep(0, length(SEtmp))
-    } else SEtmp <- sqrt(SEtmp)
-    SE <- rep(NA, length(longpars))
-    SE[estindex_unique] <- SEtmp
-    if(length(constrain) > 0)
-        for(i in 1:length(constrain))
-            SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
-    ind1 <- 1
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-            pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
-            ind1 <- ind2 + 1            
-        }         
-    }        
-    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))
+    infological <- estpars & !redun_constr         
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, correction=correction,
                 estindex_unique=estindex_unique)

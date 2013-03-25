@@ -6,12 +6,13 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, SE = FALSE, SEtol = .001, invariance =
-    '', pars = NULL, method = 'EM', constrain = NULL,
-    parprior = NULL, calcNull = TRUE, draws = 3000, quadpts
-    = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod =
-    NULL, bfactor = FALSE, D = 1.702, technical = list(),
-    debug = FALSE, verbose = TRUE, ...)
+    = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol =
+    .001, invariance = '', pars = NULL, method = 'EM',
+    constrain = NULL, parprior = NULL, calcNull = TRUE,
+    draws = 3000, quadpts = NULL, grsm.block = NULL,
+    rsm.block = NULL, prev.mod = NULL, bfactor = FALSE, D =
+    1.702, technical = list(), debug = FALSE, verbose =
+    TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -72,6 +73,15 @@
 
   \item{SE}{logical; estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
+
+  \item{SE.type}{type of estimation method to use for
+  calculating the parameter information matrix. Can be
+  \code{'MHRM'} for stocastic estimation, or \code{'BL'}
+  for the Bock and Leiberman approach (EM only). Note that
+  the \code{'MHRM'} approach can be much faster if there
+  are a moderate to large number of items. Bootstrapped
+  standard errors are also possible but must be run with
+  the \code{\link{boot.mirt}} function}
 
   \item{D}{a numeric value used to adjust the logistic
   metric to be more similar to a normal cumulative density

@@ -204,8 +204,8 @@ cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.o
 }  
 
 # Ramsey rate acceleration adjustment for EM
-rateChange <- function(pars, listpars, lastpars1, lastpars2)
-{   
+rateChange <- function(longpars, listpars, lastpars1, lastpars2)
+{       
 	p <- unlist(listpars)	
 	lp1 <- unlist(lastpars1)
 	lp2 <- unlist(lastpars2)
@@ -629,7 +629,8 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE, 
                      SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
-                     technical = list(), use = 'pairwise.complete.obs', debug = FALSE)
+                     technical = list(), use = 'pairwise.complete.obs', debug = FALSE,
+                     SE.type = 'MHRM')
 {    
     opts <- list()
     opts$method = method
@@ -639,6 +640,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$rotate = rotate 
     opts$Target = Target
     opts$SE = SE 
+    opts$SE.type = SE.type
     opts$verbose = verbose 
     opts$SEtol = SEtol
     opts$nested.mod = nested.mod
@@ -712,3 +714,96 @@ assignItemtrace <- function(pars, itemtrace, itemloc){
     pars[[length(pars)]]@itemtrace <- itemtrace
     pars
 }
+
+BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, 
+                  specific=NULL, sitems=NULL){    
+    LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems){           
+        longpars[est] <- p
+        pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+        gstructgrouppars <- prior <- Prior <- vector('list', ngroups)        
+        for(g in 1:ngroups){                        
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1]])        
+            if(BFACTOR){
+                prior[[g]] <- dnorm(theta, 0, 1)
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                
+                next  
+            } 
+            Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+                                           gstructgrouppars[[g]]$gcov)
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+        }
+        LL <- 0        
+        for(g in 1:ngroups){            
+            if(BFACTOR){
+                expected <- Estep.bfactor(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata, 
+                                            Theta=Theta, prior=prior[[g]],
+                                            specific=specific, sitems=sitems, 
+                                            itemloc=itemloc, debug='')$expected
+            } else {
+                expected <- Estep.mirt(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata, 
+                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
+                                         debug='')$expected                      
+            }
+            LL <- LL + sum(PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)] * log(expected))
+        }
+        
+        LL
+    }
+    L <- ESTIMATE$L
+    longpars <- ESTIMATE$longpars
+    rlist <- ESTIMATE$rlist
+    infological=ESTIMATE$infological
+    ngroups <- length(pars)
+    J <- length(pars[[1]]) - 1
+    est <- c()
+    for(g in 1:ngroups)
+            for(j in 1:(J+1))
+                    est <- c(est, pars[[g]][[j]]@est)
+    shortpars <- longpars[est]
+    gstructgrouppars <- vector('list', ngroups)
+    for(g in 1:ngroups)
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])    
+    for(g in 1:ngroups){
+            for(i in 1:J){
+                    tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
+                    pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]           
+                }
+        }              
+    hess <- numDeriv::hessian(LL, x=shortpars, est=est, longpars=longpars, 
+                              pars=pars, ngroups=ngroups, J=J, 
+                              Theta=Theta, PrepList=PrepList,
+                              specific=specific, sitems=sitems)       
+    Hess <- matrix(0, length(longpars), length(longpars))
+    Hess[est, est] <- -hess 
+    Hess <- L %*% Hess %*% L
+    info <- Hess[infological, infological]    
+    info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=L, 
+                                                       npars=length(longpars))
+    ESTIMATE$info <- info
+    SEtmp <- diag(solve(info))        
+    if(any(SEtmp < 0)){
+            warning("Information matrix is not positive definite, negative SEs set to 0.\n")
+            SEtmp <- rep(0, length(SEtmp))
+        } else SEtmp <- sqrt(SEtmp)
+    SE <- rep(NA, length(longpars))
+    SE[ESTIMATE$estindex_unique] <- SEtmp
+    index <- 1:length(longpars) 
+    if(length(constrain) > 0)
+            for(i in 1:length(constrain))
+                    SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
+    ind1 <- 1
+    for(g in 1:ngroups){
+            for(i in 1:(J+1)){
+                    ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+                    pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
+                    ind1 <- ind2 + 1            
+                }         
+        }
+    ESTIMATE$pars <- pars
+    return(ESTIMATE)
+}
+
+
+

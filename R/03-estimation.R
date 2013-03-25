@@ -199,7 +199,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         Pl <- list(Pl)
         if(!opts$NULL.MODEL && opts$SE){            
-            tmp <- ESTIMATE                           
+            tmp <- ESTIMATE        
+            if(opts$SE.type == 'BL')
+                ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList, 
+                                  BFACTOR=opts$BFACTOR, itemloc=PrepList[[1]]$itemloc, ESTIMATE=ESTIMATE, 
+                                  constrain=constrain, specific=oldmodel, sitems=sitems)
             if(opts$SE.type == 'MHRM')            
                 ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=1, SEMCYCLES=5,

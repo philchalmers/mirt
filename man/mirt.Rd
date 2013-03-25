@@ -10,12 +10,12 @@
 Theory)}
 \usage{
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-    SE = FALSE, SEtol = .001, pars = NULL, constrain =
-    NULL, parprior = NULL, calcNull = TRUE, rotate =
-    'oblimin', Target = NaN, prev.cor = NULL, quadpts =
-    NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702,
-    verbose = FALSE, debug = FALSE, technical = list(),
-    ...)
+    SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars =
+    NULL, constrain = NULL, parprior = NULL, calcNull =
+    TRUE, rotate = 'oblimin', Target = NaN, prev.cor =
+    NULL, quadpts = NULL, grsm.block = NULL, rsm.block =
+    NULL, D = 1.702, verbose = FALSE, debug = FALSE,
+    technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -78,6 +78,15 @@ Theory)}
 
   \item{SE}{logical; estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
+
+  \item{SE.type}{type of estimation method to use for
+  calculating the parameter information matrix. Can be
+  \code{'MHRM'} for stocastic estimation, or \code{'BL'}
+  for the Bock and Leiberman approach (EM only). Note that
+  the \code{'MHRM'} approach can be much faster if there
+  are a moderate to large number of items. Bootstrapped
+  standard errors are also possible but must be run with
+  the \code{\link{boot.mirt}} function}
 
   \item{SEtol}{tollerance value used to stop the MHRM
   estimation when \code{SE = TRUE}. Lower values will take
@@ -379,6 +388,9 @@ Theory)}
 data <- expand.table(LSAT7)
 
 (mod1 <- mirt(data, 1))
+coef(mod1)
+(mod1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
+coef(mod1)
 summary(mod1)
 residuals(mod1)
 plot(mod1) #test information function
@@ -388,8 +400,8 @@ plot(mod1, type = 'trace') #trace lines
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
 
-(mod2 <- mirt(data, 2, SE = TRUE)) #standard errors/information matrix with MHRM method
-coef(mod2)
+(mod <- mirt(data, 2, SE = TRUE)) #standard errors with MHRM method
+coef(mod)
 summary(mod2, rotate = 'oblimin') #oblimin rotation
 residuals(mod2)
 plot(mod2)
