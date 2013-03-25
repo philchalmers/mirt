@@ -170,8 +170,8 @@ gamma.cor <- function(x)
 
 # Beta prior for grad and hess
 betaprior <- function(g,a,b)
-{	
-    if(g < .Machine$double.eps) return(list(grad=0, hess=0))
+{	    
+    if(g < .01) return(list(grad=0, hess=0))
 	grad <- ((a-1) * g^(a-1) * (1-g)^(b-1) - (b-1)*g^(a-1)*(1-g)^(b-1))/ 
 		(g^(a-1) * (1-g)^(b-1))
 	hess <- -((g^(a-1)*(a-1)^2*(1-g)^(b-1)/g^2 - g^(a-1)*(a-1)*(1-g)^(b-1)/g^2 
