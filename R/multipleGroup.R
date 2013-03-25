@@ -41,12 +41,7 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
-#' @param SE logical; estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation or 
-#' the Bock and Leiberman method (for EM only)
-#' @param SE.type type of estimation method to use for calculating the parameter information matrix. 
-#' Can be \code{'MHRM'} for stocastic estimation, or \code{'BL'} for the Bock and Leiberman approach (EM only). 
-#' Note that \code{'MHRM'} may be faster and more accurate than \code{'BL'} when there are 2 or more factors. 
-#' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
+#' @param SE logical; estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
 #' cumulative density curve. Default is 1.702
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
@@ -100,7 +95,7 @@
 #' \code{\link{confmirt.model}}, \code{\link{fscores}}, \code{\link{fitIndices}}
 #' @keywords models
 #' @usage 
-#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM',
+#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
 #' SEtol = .001,  invariance = '', pars = NULL, method = 'EM', constrain = NULL, 
 #' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
 #' prev.mod = NULL, bfactor = FALSE, D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
@@ -244,7 +239,7 @@
 #' anova(mod_fullconstrain, mod_scalar)
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                          SE = FALSE, SE.type = 'MHRM', SEtol = .001, invariance = '', pars = NULL,  
+                          SE = FALSE, SEtol = .001, invariance = '', pars = NULL,  
                           method = 'EM',
                           constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 3000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,
@@ -261,7 +256,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
                       technical = technical, debug = debug, verbose = verbose, calcNull=calcNull, 
-                      BFACTOR=bfactor, SE.type=SE.type, ...)
+                      BFACTOR=bfactor, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)    

@@ -626,7 +626,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 }
 
 makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN, 
-                     rotate = 'varimax', Target = NaN, SE = TRUE, SE.type = 'MHRM', verbose = TRUE, 
+                     rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE, 
                      SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
                      technical = list(), use = 'pairwise.complete.obs', debug = FALSE)
@@ -641,7 +641,6 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$SE = SE 
     opts$verbose = verbose 
     opts$SEtol = SEtol
-    opts$SE.type = SE.type
     opts$nested.mod = nested.mod
     opts$grsm.block = grsm.block
     opts$D = D 
@@ -673,75 +672,6 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)    
     if(!is.null(cl)) require(parallel)    
     return(opts)
-}
-
-BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain){
-    LL <- function(p, est, longpars, pars, ngroups, J, Theta=Theta, tabdata, PrepList){
-        longpars[est] <- p
-        pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
-        LL <- 0
-        for(g in 1:ngroups){
-            for(i in 1:(J+1)){
-                if(i < (J+1))
-                    LL <- LL + LogLik(pars2[[g]][[i]], Theta=Theta, EM = TRUE, prior = 1)
-                else if(any(pars2[[g]][[i]]@est))                    
-                    LL <- LL + LogLik(pars2[[g]][[i]], Theta=Theta, pars=pars[[g]], 
-                                      tabdata=PrepList[[g]]$tabdata, itemloc=itemloc, EM = TRUE)
-            }
-        }
-        LL       
-    }        
-    L <- ESTIMATE$L
-    longpars <- ESTIMATE$longpars
-    rlist <- ESTIMATE$rlist
-    infological=ESTIMATE$infological
-    ngroups <- length(pars)
-    J <- length(pars[[1]]) - 1
-    est <- c()
-    for(g in 1:ngroups)
-        for(j in 1:(J+1))
-            est <- c(est, pars[[g]][[j]]@est)
-    shortpars <- longpars[est]
-    gstructgrouppars <- vector('list', ngroups)
-    for(g in 1:ngroups)
-        gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])    
-    for(g in 1:ngroups){
-        for(i in 1:J){
-            tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
-            pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]           
-        }
-    }    
-    hess <- numDeriv::hessian(LL, x=shortpars, est=est, longpars=longpars, 
-                      pars=pars, ngroups=ngroups, J=J, 
-                      Theta=Theta, PrepList=PrepList)    
-    Hess <- matrix(0, length(longpars), length(longpars))
-    Hess[est, est] <- hess 
-    Hess <- L %*% Hess %*% L
-    info <- Hess[infological, infological]    
-    info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=L, 
-                           npars=length(longpars))
-    ESTIMATE$info <- info
-    SEtmp <- diag(solve(info))        
-    if(any(SEtmp < 0)){
-        warning("Information matrix is not positive definite, negative SEs set to 0.\n")
-        SEtmp <- rep(0, length(SEtmp))
-    } else SEtmp <- sqrt(SEtmp)
-    SE <- rep(NA, length(longpars))
-    SE[ESTIMATE$estindex_unique] <- SEtmp
-    index <- 1:length(longpars) 
-    if(length(constrain) > 0)
-        for(i in 1:length(constrain))
-            SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
-    ind1 <- 1
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-            pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
-            ind1 <- ind2 + 1            
-        }         
-    }
-    ESTIMATE$pars <- pars
-    return(ESTIMATE)
 }
 
 reloadPars <- function(longpars, pars, ngroups, J){

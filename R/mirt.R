@@ -90,12 +90,7 @@
 #' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
 #' group and therefore have the same number of item categories
 #' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
-#' @param SE logical; estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation or 
-#' the Bock and Leiberman method (for EM only)
-#' @param SE.type type of estimation method to use for calculating the parameter information matrix. 
-#' Can be \code{'MHRM'} for stocastic estimation, or \code{'BL'} for the Bock and Leiberman approach (EM only). 
-#' Note that \code{'MHRM'} may be faster and more accurate than \code{'BL'} when there are 2 or more factors. 
-#' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
+#' @param SE logical; estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
@@ -274,7 +269,7 @@
 #' IL: Scientific Software International.
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars = NULL, 
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
 #' debug = FALSE, technical = list(), ...)
@@ -310,9 +305,7 @@
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
 #' 
-#' (mod <- mirt(data, 2, SE = TRUE)) #standard errors with MHRM method
-#' coef(mod)
-#' (mod2 <- mirt(data, 2, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
+#' (mod2 <- mirt(data, 2, SE = TRUE)) #standard errors/information matrix with MHRM method
 #' coef(mod2)
 #' summary(mod2, rotate = 'oblimin') #oblimin rotation 
 #' residuals(mod2)
@@ -397,7 +390,7 @@
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
                  D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)
@@ -409,7 +402,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
                       rsm.block=rsm.block, technical=technical, debug=debug, verbose=verbose,
-                      calcNull=calcNull, SE.type=SE.type, ...)
+                      calcNull=calcNull, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    
