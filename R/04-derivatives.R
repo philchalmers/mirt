@@ -4,14 +4,15 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){         
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){         
         f <- 1
         dat <- x@dat[ ,2]
         Prior <- rep(1, length(dat))
-        if(EM){
-            Prior <- prior
+        if(EM){            
             dat <- x@rs[,2] 
             f <- rowSums(x@rs)
+            Prior <- rep(1, length(dat))
+            if(BFACTOR) Prior <- prior
         }
         nfact <- x@nfact
         parlength <- length(x@par)
@@ -99,14 +100,15 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))        
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
-            Prior <- prior
+            Prior <- rep(1, nrow(dat))
+            if(BFACTOR) Prior <- prior
         } 
         nfact <- x@nfact
         a <- x@par[1:nfact]
@@ -129,13 +131,14 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){         
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){         
         hess <- matrix(0, length(x@par), length(x@par))        
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
-            Prior <- prior
+            Prior <- rep(1, nrow(dat))
+            if(BFACTOR) Prior <- prior
         } 
         nfact <- x@nfact
         a <- x@par[1:nfact]
@@ -198,7 +201,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
         #local derivative from previous version with small mod
         dpars.comp <- function(lambda,zeta,g,r,f,Thetas,D,Prior)
         {    
@@ -322,7 +325,8 @@ setMethod(
         if(EM){       
             r <- x@rs[,2]
             f <- rowSums(x@rs)
-            Prior <- prior
+            Prior <- rep(1, length(r))
+            if(BFACTOR) Prior <- prior
         }
         nfact <- x@nfact
         a <- x@par[1:nfact]
@@ -339,12 +343,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){     
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){     
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
-            Prior <- prior
+            Prior <- rep(1, nrow(dat))
+            if(BFACTOR) Prior <- prior
         } 
         nfact <- x@nfact
         nzetas <- ncol(dat)
@@ -373,12 +378,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rsm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
-            Prior <- prior
+            Prior <- rep(1, nrow(dat))
+            if(BFACTOR) Prior <- prior
         } 
         nfact <- x@nfact
         nzetas <- ncol(dat)
@@ -447,7 +453,7 @@ setMethod(
         #TEMP - can't seem to get the last value of the gradient quite right for some reason....
         x2 <- x
         x2@est <- c(rep(FALSE, length(x2@est)-1), TRUE)
-        grad[x2@est] <- numDeriv::grad(EML, x@par[x2@est], obj=x2, Theta=Theta, prior=prior)        
+        grad[x2@est] <- numDeriv::grad(EML, x@par[x2@est], obj=x2, Theta=Theta, prior=Prior)        
         ####
         ret <- DerivativePriors(x=x, grad=grad, hess=hess)
         ret
@@ -457,12 +463,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){                 
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){                 
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
-            Prior <- prior
+            Prior <- rep(1, nrow(dat))
+            if(BFACTOR) Prior <- prior
         } 
         nfact <- x@nfact
         nzetas <- ncol(dat)
@@ -506,19 +513,19 @@ nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, gpcm = FALSE
 setMethod(
     f = "Deriv",
     signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
+        Prior <- rep(1, nrow(x@rs))        
+        if(BFACTOR) Prior <- prior
         if(EM){                
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=prior)     
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
             return(list(grad = grad, hess = hess))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
         return(list(grad=grad, hess=hess))
-#         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
-#         return(ret)
     }
 )
 
