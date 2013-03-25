@@ -182,8 +182,9 @@
   \code{mirt} and aggregating the results (e.g.,
   log-likelihood). However, constrains may be imposed
   across groups by invoking various \code{invariance}
-  keywords or by inputing user defined \code{freepars},
-  \code{constrain}, and \code{startvalues} lists.
+  keywords and \code{constrain = ...} arguments, and by
+  inputing user specified design matrix from
+  \code{mod2values} or from passing \code{pars = 'values'}.
 }
 \examples{
 \dontrun{

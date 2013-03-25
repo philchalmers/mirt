@@ -1,3 +1,12 @@
+NEW FEATURES
+
+- 
+
+BUG FIXES
+
+- small bias fix in hessian and gradients in mirt() implementation
+
+
 Changes in mirt 0.6.0
 
 NEW FEATURES

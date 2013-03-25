@@ -8,8 +8,9 @@
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally 
 #' independent, and therefore could initially be performed by sub setting the data and running identical
 #' models with \code{confmirt} or \code{mirt} and aggregating the results (e.g., log-likelihood). 
-#' However, constrains may be imposed across groups by invoking various \code{invariance} keywords
-#' or by inputing user defined \code{freepars}, \code{constrain}, and \code{startvalues} lists.  
+#' However, constrains may be imposed across groups by invoking various \code{invariance} keywords and 
+#' \code{constrain = ...} arguments, and by inputing user specified design matrix from 
+#' \code{mod2values} or from passing \code{pars = 'values'}.  
 #' 
 #' @aliases multipleGroup coef,MultipleGroupClass-method summary,MultipleGroupClass-method
 #' anova,MultipleGroupClass-method 

@@ -465,15 +465,6 @@ anova(mod2, mod3) #negative AIC, 2 factors probably best
 mod1g <- mirt(data, 1, guess = .1)
 coef(mod1g)
 
-#with estimated guessing and beta priors (for better stability)
-itemtype <- rep('3PL', 32)
-sv <- mirt(data, 1, itemtype, pars = 'values')
-gindex <- sv$parnum[sv$name == 'g']
-parprior <- list(c(gindex, 'beta', 10, 90))
-mod1wg <- mirt(data, 1, itemtype, guess = .1, parprior=parprior, verbose=TRUE)
-coef(mod1wg)
-anova(mod1g, mod1wg)
-
 ###########
 #graded rating scale example
 
