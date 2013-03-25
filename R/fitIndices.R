@@ -52,7 +52,7 @@ fitIndices <- function(obj, prompt = TRUE){
         newret$RMSEA.M2 <- ifelse((newret$M2Total - newret$df.M2) > 0, 
                            sqrt(newret$M2Total - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0) 
         return(newret)
-    }        
+    }      
     ret <- list()        
     tabdata <- obj@tabdatalong
     if(any(is.na(obj@tabdata)))
@@ -125,13 +125,14 @@ fitIndices <- function(obj, prompt = TRUE){
     Prior <- Prior/sum(Prior)
     delta <- NULL       
     for(pat in 1:nrow(tabdata)){
-        DX <- c()
+        DX <- c()        
         rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1), 
                             Theta=Theta, prior=Prior, itemloc=itemloc, 
-                            debug='NULL')      
+                            debug='NULL', deriv=TRUE)      
         for(i in 1:nitems){                         
             tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
             pars[[i]]@rs <- rlist$r1[, tmp]                       
+            pars[[i]]@itemtrace <- rlist$itemtrace[, tmp]
             dx <- Deriv(pars[[i]], Theta=Theta, EM = TRUE, prior=Prior)$grad
             DX <- c(DX, dx[pars[[i]]@est])
         } 

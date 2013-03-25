@@ -197,21 +197,20 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
                         ", Log-Lik = ", sprintf("%.1f",LL), sep="")					
             }
         }			
-        if(stagecycle < 3){	            
-            inv.ave.h <- try(qr.solve(ave.h), silent = TRUE)			            
-            if(class(inv.ave.h) == 'try-error'){
+        if(stagecycle < 3){	                        
+            if(qr(ave.h)$rank != ncol(ave.h)){
                 tmp <- ave.h                 
                 while(1){
                     tmp <- tmp + .001*diag(diag(tmp))
                     QR <- qr(tmp)
                     if(QR$rank == ncol(tmp)) break
                 }
-                inv.ave.h <- qr.solve(tmp)
+                ave.h <- tmp
                 noninvcount <- noninvcount + 1
                 if(noninvcount == 3) 
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
-            correction <- as.vector(inv.ave.h %*% grad)
+            correction <- solve(ave.h, grad)
             correction[correction > .5] <- 1
             correction[correction < -.5] <- -1
             #prevent guessing pars from moving more than .001 at all times
@@ -240,21 +239,20 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
         }	 
         
         #Step 3. Update R-M step		
-        Tau <- Tau + gamma*(ave.h - Tau)        	
-        inv.Tau <- try(qr.solve(Tau), silent = TRUE)
-        if(class(inv.Tau) == 'try-error'){
+        Tau <- Tau + gamma*(ave.h - Tau)        	        
+        if(qr(Tau)$rank != ncol(Tau)){
             tmp <- Tau            
             while(1){
                 tmp <- tmp + .001*diag(diag(tmp))
                 QR <- qr(tmp)
                 if(QR$rank == ncol(tmp)) break
             }
-            inv.Tau <- qr.solve(tmp)           
+            Tau <- tmp
             noninvcount <- noninvcount + 1
             if(noninvcount == 5) 
                 stop('\nEstimation halted during stage 3, solution is unstable')
         }		
-        correction <- as.vector(inv.Tau %*% grad)
+        correction <- solve(Tau, grad)
         #stepsize limit
         correction[gamma*correction > .25] <- .25/gamma
         correction[gamma*correction < -.25] <- -.25/gamma

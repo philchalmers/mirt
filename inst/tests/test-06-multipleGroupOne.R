@@ -43,6 +43,8 @@ test_that('one factor', {
     
     fit1 <- fitIndices(mod_metric)
     expect_is(fit1, 'list')
+    fit2 <- itemfit(mod_metric)
+    expect_is(fit2, 'list')
 })
 
 test_that('one factor polynomial and missing', {    

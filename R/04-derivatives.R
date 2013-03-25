@@ -4,7 +4,7 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){         
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){                 
         f <- 1
         dat <- x@dat[ ,2]
         Prior <- rep(1, length(dat))
