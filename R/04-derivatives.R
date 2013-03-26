@@ -520,8 +520,8 @@ setMethod(
         if(BFACTOR) Prior <- prior
         if(EM){                
             grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
-            return(list(grad = grad, hess = hess))            
+            #hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
+            return(list(grad = grad))            
         }        
         grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
         hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
@@ -537,28 +537,27 @@ setMethod(
         if(EM){
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))             
-            if(any(x@est)){                
-                J <- length(pars) - 1
-                nfact <- x@nfact
-                scores <- matrix(0, nrow(tabdata), nfact)                 
-                r <- tabdata[ ,ncol(tabdata)]
-                N <- sum(r)
-                tabdata <- tabdata[ ,-ncol(tabdata)]
-                itemtrace <- x@itemtrace 
-                mu <- x@par[1:nfact]
-                siglong <- x@par[-(1:nfact)]
-                sig <- matrix(0,nfact,nfact)                
-                selcov <- lower.tri(sig, diag=TRUE)
-                scores2 <- matrix(0, nrow(tabdata), sum(selcov))
-                thetas2 <- numeric(sum(selcov))
-                log_itemtrace <- log(itemtrace)                
-                ret <- .Call('EAPgroup', log_itemtrace, tabdata, Theta, prior, mu)                
-                tmp <- cbind(ret$scores, ret$scores2) * r
-                newpars <- apply(tmp, 2, sum) / N                
-                grad <- newpars - c(mu, siglong)
-                hess <- -diag(length(grad))                    
-            }
-            return(list(grad = grad, hess = hess))
+            
+            J <- length(pars) - 1
+            nfact <- x@nfact
+            scores <- matrix(0, nrow(tabdata), nfact)                 
+            r <- tabdata[ ,ncol(tabdata)]
+            N <- sum(r)
+            tabdata <- tabdata[ ,-ncol(tabdata)]
+            itemtrace <- x@itemtrace 
+            mu <- x@par[1:nfact]
+            siglong <- x@par[-(1:nfact)]
+            sig <- matrix(0,nfact,nfact)                
+            selcov <- lower.tri(sig, diag=TRUE)
+            scores2 <- matrix(0, nrow(tabdata), sum(selcov))
+            thetas2 <- numeric(sum(selcov))
+            log_itemtrace <- log(itemtrace)                
+            ret <- .Call('EAPgroup', log_itemtrace, tabdata, Theta, prior, mu)                
+            tmp <- cbind(ret$scores, ret$scores2) * r
+            newpars <- apply(tmp, 2, sum) / N                
+            return(newpars[x@est])
+            #grad <- newpars - c(mu, siglong)
+            #hess <- -diag(length(grad))                                            
         }
         tr <- function(y) sum(diag(y))         
         nfact <- x@nfact

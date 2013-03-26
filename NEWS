@@ -1,6 +1,8 @@
 NEW FEATURES
 
-- 
+- Mstep in EM moved to quasi-Newton instead of my home grown MV Newton-Raphson approach. Gives 
+  more stability during estimation when the Hessian is ill-conditioned, and will provide an easier 
+  user front-end for defining user rolled IRT models
 
 BUG FIXES
 
