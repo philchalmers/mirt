@@ -9,9 +9,6 @@
   \item{name}{a character indicating the item class name to
   be defined}
 
-  \item{makeitem}{logical; after initializing the methods,
-  create an instantiation?}
-
   \item{par}{a named vector of the starting values for the
   parameters}
 
@@ -20,7 +17,10 @@
 
   \item{P}{the probability trace function for all
   categories (first column is category 1, second category
-  two, etc). Must return a \code{matrix} object}
+  two, etc). First input contains a vector of all the item
+  parameters, while the second input must be a matrix
+  called Theta. Function also must return a \code{matrix}
+  object of category probabilites}
 
   \item{gr}{gradient function (vector of first derivatives)
   used in estimation. If not specified a numeric
@@ -78,6 +78,23 @@ mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbo
 coef(mod)
 mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 coef(mod2)
+
+#nonlinear
+name <- 'nonlin'
+par <- c(a1 = .5, a2 = .1, d = 0)
+est <- c(TRUE, TRUE, TRUE)
+P.nonlin <- function(par,Theta){
+     a1 <- par[1]
+     a2 <- par[2]
+     d <- par[3]
+     P1 <- 1 / (1 + exp(-1.702*(a1*Theta + a2*Theta^2 + d)))
+     cbind(1-P1, P1)
+}
+
+x2 <- createItem(name, par=par, est=est, P=P.nonlin)
+
+mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose = TRUE)
+coef(mod)
 }
 }
 \author{
