@@ -1,6 +1,9 @@
 NEW FEATURES
 
-- createItem() function available for defining item types that can be passed to estimation functions
+- createItem() function available for defining item types that can be passed to estimation functions.
+  This can be used to model items not available in the package (or anywhere for that matter) with the
+  EM or MHRM. Derivatives are computed numerically by default using the numDeriv package for defining
+  item types on the fly
 
 - Mstep in EM moved to quasi-Newton instead of my home grown MV Newton-Raphson approach. Gives 
   more stability during estimation when the Hessian is ill-conditioned, and will provide an easier 

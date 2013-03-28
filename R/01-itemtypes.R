@@ -57,6 +57,16 @@ setClass("partcomp", contains = 'AllItemsClass')
 
 setClass("mcm", contains = 'AllItemsClass')
 
+setClass('custom', contains = 'AllItemsClass', 
+         representation = representation(name='character',
+                                         P='function',
+                                         gr='function',
+                                         usegr='logical',
+                                         hss='function',
+                                         usehss='logical',
+                                         userdata='matrix',
+                                         useuserdata='logical'))    
+
 #--------------------------------------------------------------------------
 
 #Generics

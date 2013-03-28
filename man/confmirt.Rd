@@ -165,10 +165,12 @@
   (generalized) partial credit, nominal, multiple choice,
   graded rating scale, Rasch rating scale, and
   partially-compensatory models, potentially with
-  polynomial and product constructed latent traits. Models
-  may also contain 'explanatory' person or item level
-  predictors, though these can only be included by using
-  the \code{\link{mixedmirt}} function.
+  polynomial and product constructed latent traits. User
+  defined item classes can also be defined using the
+  \code{\link{createItem}} function. Models may also
+  contain 'explanatory' person or item level predictors,
+  though these can only be included by using the
+  \code{\link{mixedmirt}} function.
 }
 \details{
   \code{confmirt} follows a confirmatory and exploratory
@@ -358,6 +360,7 @@ itemplot(mod.combo, 2, type = 'infocontour')
   \code{\link{multipleGroup}}, \code{\link{itemplot}},
   \code{\link{fitIndices}}, \code{\link{mixedmirt}},
   \code{\link{testinfo}}, \code{\link{iteminfo}},
+  \code{\link{createItem}}
 }
 \keyword{models}
 

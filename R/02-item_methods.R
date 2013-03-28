@@ -1,6 +1,14 @@
 #----------------------------------------------------------------------------
 setMethod(
     f = "print",
+    signature = signature(x = 'custom'),
+    definition = function(x, ...){
+        cat('Custom item object named:', x@name)
+    }
+)
+
+setMethod(
+    f = "print",
     signature = signature(x = 'dich'),
     definition = function(x, ...){
         cat('Item object of class:', class(x))
@@ -68,6 +76,14 @@ setMethod(
     signature = signature(x = 'GroupPars'),
     definition = function(x, ...){
         cat('Object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'custom'),
+    definition = function(object){
+        print(object)
     }
 )
 
@@ -146,6 +162,19 @@ setMethod(
 
 #----------------------------------------------------------------------------
 #LogLik
+setMethod(
+    f = "LogLik",
+    signature = signature(x = 'custom', Theta = 'matrix'),
+    definition = function(x, Theta, EM=FALSE, prior=NULL){          
+        itemtrace <- ProbTrace(x=x, Theta=Theta)                
+        Prior <- rep(1, nrow(itemtrace))
+        if(EM) Prior <- prior
+        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        LL <- LL.Priors(x=x, LL=LL)        
+        return(LL)
+    }
+)
+
 setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
@@ -269,6 +298,16 @@ setMethod(
 )
 
 #----------------------------------------------------------------------------
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'custom'),
+    definition = function(x){             
+        a <- rep(.001, x@nfact)
+        a        
+    }
+)
+
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'dich'),
@@ -431,6 +470,15 @@ setMethod(
 #Probability Traces
 setMethod(
     f = "ProbTrace",
+    signature = signature(x = 'custom', Theta = 'matrix'),
+    definition = function(x, Theta, fixed.design = NULL){          
+        if(x@useuserdata) Theta <- cbind(Theta, x@userdata)
+        x@P(x@par, Theta=Theta, ncat=x@ncat)            
+    }
+)
+
+setMethod(
+    f = "ProbTrace",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){  
         u <- x@par[length(x@par)]
@@ -590,3 +638,34 @@ P.mcm <- function(a, ak, d, t, Theta, D){
     return(traces)        
 }
 
+#----------------------------------------------------------------------------
+## initialize for custom items
+setMethod("initialize",
+          'custom',
+          function(.Object, name, par, est, lbound, ubound, P, gr, hss, userdata) {                  
+              dummyfun <- function(...) return(NULL)
+              names(est) <- names(par)
+              usegr <- usehss <- useuserdata <- TRUE
+              .Object@name <- name
+              .Object@par <- par
+              .Object@est <- est                      
+              .Object@P <- P
+              if(is.null(gr)){
+                  .Object@gr <- dummyfun
+                  usegr <- FALSE                  
+              } else .Object@gr <- gr
+              if(is.null(hss)){
+                  .Object@hss <- dummyfun
+                  usehss <- FALSE                  
+              } else .Object@hss <- hss
+              if(is.null(userdata)){
+                  .Object@userdata <- matrix(NaN)
+                  useuserdata <- FALSE                  
+              } else .Object@userdata <- userdata
+              .Object@usegr <- usegr
+              .Object@usehss <- usehss
+              .Object@useuserdata <- useuserdata              
+              .Object@lbound <- if(!is.null(lbound)) lbound  else rep(-Inf, length(par)) 
+              .Object@ubound <- if(!is.null(ubound)) ubound  else rep(Inf, length(par))                   
+              .Object
+          })

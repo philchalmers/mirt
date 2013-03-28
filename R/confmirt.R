@@ -6,6 +6,7 @@
 #' Metropolis-Hastings Robbins-Monro algorithm. Fits univariate and multivariate Rasch, 
 #' 1-4PL, graded, (generalized) partial credit, nominal, multiple choice, graded rating scale, Rasch rating scale,
 #' and partially-compensatory models, potentially with polynomial and product constructed latent traits. 
+#' User defined item classes can also be defined using the \code{\link{createItem}} function.
 #' Models may also contain 'explanatory' 
 #' person or item level predictors, though these can only be included by using the 
 #' \code{\link{mixedmirt}} function.
@@ -129,7 +130,7 @@
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
 #' \code{\link{fscores}}, \code{\link{confmirt.model}}, \code{\link{wald}}, 
 #' \code{\link{multipleGroup}}, \code{\link{itemplot}}, \code{\link{fitIndices}}, 
-#' \code{\link{mixedmirt}}, \code{\link{testinfo}}, \code{\link{iteminfo}},
+#' \code{\link{mixedmirt}}, \code{\link{testinfo}}, \code{\link{iteminfo}}, \code{\link{createItem}}
 #' @references
 #' 
 #' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a

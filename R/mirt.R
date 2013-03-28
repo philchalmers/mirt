@@ -5,7 +5,8 @@
 #' to dichotomous and polytomous data under the item response theory paradigm. 
 #' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit, 
 #' nominal, multiple choice, graded rating scale, Rasch rating scale, 
-#' and partially compenatory models using the EM algorithm. Models may also contain 'explanatory' 
+#' and partially compenatory models using the EM algorithm. User defined item classes
+#' can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory' 
 #' person or item level predictors, though these can only be included by using the 
 #' \code{\link{mixedmirt}} function.
 #' 
@@ -83,7 +84,8 @@
 #' for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
 #' rating scale graded response model, generalized partial credit model, Rasch rating scale model, nominal model, 
-#' multiple choice model, and 2-3PL partially compensatory model, respectively 
+#' multiple choice model, and 2-3PL partially compensatory model, respectively. User defined item classes
+#' can also be defined using the \code{\link{createItem}} function
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using 
 #' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
 #' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
@@ -242,7 +244,7 @@
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}, 
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}}, 
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#' \code{\link{read.mirt}}, \code{\link{simdata}}
+#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
 #' 
 #' @references
 #' 

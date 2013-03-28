@@ -3,7 +3,7 @@
 \title{Create a user defined item with correct generic functions}
 \usage{
   createItem(name, par, est, P, gr = NULL, hss = NULL,
-    lbound = NULL, ubound = NULL)
+    lbound = NULL, ubound = NULL, userdata = NULL)
 }
 \arguments{
   \item{name}{a character indicating the item class name to
@@ -31,6 +31,15 @@
   derivatives) used in estimation. If not specified a
   numeric approximation will be used (required for the
   MH-RM algorithm only)}
+
+  \item{userdata}{an optional matrix of person level
+  covariate data that can be used in estimation. This
+  matrix with be used in the probability function by
+  passing \code{Theta = cbind(Theta, userdata)}. Note that
+  this only makes sense to use when the estimation uses the
+  MH-RM engine since the number of rows in Theta will be
+  the same as the number of rows in the covariate data
+  (similar to how \code{mixedmirt} works)}
 
   \item{lbound}{optional vector indicating the lower bounds
   of the parameters. If not specified then the bounds will
@@ -60,16 +69,14 @@
 name <- 'old2PL'
 par <- c(a = .5, b = -2)
 est <- c(TRUE, TRUE)
-P.old2PL <- function(par,Theta, ncat=2){
+P.old2PL <- function(par,Theta, ncat){
      a <- par[1]
      b <- par[2]
      P1 <- 1 / (1 + exp(-1.702*a*(Theta - b)))
      cbind(1-P1, P1)
 }
-lbound <- c(-Inf, -Inf)
-ubound <- c(Inf, Inf)
 
-x <- createItem(name, par=par, est=est, lbound=lbound, ubound=ubound, P=P.old2PL)
+x <- createItem(name, par=par, est=est, P=P.old2PL)
 
 #So, let's estimate it!
 dat <- expand.table(LSAT7)
@@ -80,7 +87,7 @@ coef(mod)
 mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 coef(mod2)
 
-#nonlinear
+###nonlinear
 name <- 'nonlin'
 par <- c(a1 = .5, a2 = .1, d = 0)
 est <- c(TRUE, TRUE, TRUE)
@@ -96,6 +103,26 @@ x2 <- createItem(name, par=par, est=est, P=P.nonlin)
 
 mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose = TRUE)
 coef(mod)
+
+### covariate included data
+name <- 'mycov'
+par <- c(a1 = .5, a2 =.5, d = 0)
+est <- c(TRUE, TRUE, TRUE)
+P.mycov <- function(par,Theta, ncat){
+     a1 <- par[1]
+     a2 <- par[2]
+     d <- par[3]
+     #notice here that the covariate data is found in Theta,
+     #    use browser() to jump in for debugging if needed
+     P1 <- 1 / (1 + exp(-1.702*(a1 * Theta[,1] + a2*Theta[,2] + d)))
+     cbind(1-P1, P1)
+}
+
+covdata <- matrix(c(rep(0, 500), rep(1,500)), nrow=nrow(dat))
+x3 <- createItem(name, par=par, est=est, P=P.mycov, userdata=covdata)
+mod <- confmirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3))
+coef(mod)
+
 }
 }
 \author{

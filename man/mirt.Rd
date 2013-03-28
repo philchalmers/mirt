@@ -61,7 +61,8 @@ Theory)}
   graded response model, generalized partial credit model,
   Rasch rating scale model, nominal model, multiple choice
   model, and 2-3PL partially compensatory model,
-  respectively}
+  respectively. User defined item classes can also be
+  defined using the \code{\link{createItem}} function}
 
   \item{grsm.block}{an optional numeric vector indicating
   where the blocking should occur when using the grsm, NA
@@ -229,10 +230,11 @@ Theory)}
   and multivariate Rasch, 1-4PL, graded, (generalized)
   partial credit, nominal, multiple choice, graded rating
   scale, Rasch rating scale, and partially compenatory
-  models using the EM algorithm. Models may also contain
-  'explanatory' person or item level predictors, though
-  these can only be included by using the
-  \code{\link{mixedmirt}} function.
+  models using the EM algorithm. User defined item classes
+  can also be defined using the \code{\link{createItem}}
+  function. Models may also contain 'explanatory' person or
+  item level predictors, though these can only be included
+  by using the \code{\link{mixedmirt}} function.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by
@@ -531,7 +533,7 @@ anova(mod2, mod1) #not sig, mod2 should be prefered
   \code{\link{probtrace}}, \code{\link{boot.mirt}},
   \code{\link{imputeMissing}}, \code{\link{itemfit}},
   \code{\link{mod2values}}, \code{\link{read.mirt}},
-  \code{\link{simdata}}
+  \code{\link{simdata}}, \code{\link{createItem}}
 }
 \keyword{models}
 

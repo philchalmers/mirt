@@ -623,6 +623,29 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'custom', Theta = 'matrix'),
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
+        if(x@useuserdata) Theta <- cbind(Theta, x@userdata)
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        Prior <- rep(1, nrow(x@rs))        
+        if(BFACTOR) Prior <- prior
+        if(EM){
+            if(x@usegr) grad <- x@gr(x, Theta, BFACTOR = FALSE, prior = NULL)
+            else grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
+            #hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
+            return(list(grad = grad))            
+        }        
+        if(x@usegr) grad <- x@gr(x, Theta, BFACTOR = FALSE, prior = NULL)
+        else grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)     
+        if(x@usehss) hess <- x@hss(x, Theta, BFACTOR = FALSE, prior = NULL)
+        else hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
+        return(list(grad=grad, hess=hess))
+    }
+)       
+
 #----------------------------------------------------------------------------
 #TEMPORARY, until i calculate the analytical derivatives sometime
 L <- function(par, obj, Theta){

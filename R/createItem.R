@@ -16,10 +16,14 @@
 #' First input contains a vector of all the item parameters, the second input must be a matrix called \code{Theta}, and 
 #' the third input must be the number of categories called \code{ncat}.
 #' Function also must return a \code{matrix} object of category probabilites
-#' @param gr gradient function (vector of first derivatives) used in estimation. 
+#' @param gr gradient function (vector of first derivatives) used in estimation.  
 #' If not specified a numeric approximation will be used
 #' @param hss hessian function (matrix of second derivatives) used in estimation. 
 #' If not specified a numeric approximation will be used (required for the MH-RM algorithm only)
+#' @param userdata an optional matrix of person level covariate data that can be used in estimation. This 
+#' matrix with be used in the probability function by passing \code{Theta = cbind(Theta, userdata)}. Note that 
+#' this only makes sense to use when the estimation uses the MH-RM engine since the number of rows in Theta
+#' will be the same as the number of rows in the covariate data (similar to how \code{mixedmirt} works) 
 #' @param lbound optional vector indicating the lower bounds of the parameters. If not specified then
 #' the bounds will be set to -Inf
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified then
@@ -34,16 +38,14 @@
 #' name <- 'old2PL'
 #' par <- c(a = .5, b = -2)
 #' est <- c(TRUE, TRUE)
-#' P.old2PL <- function(par,Theta, ncat=2){
+#' P.old2PL <- function(par,Theta, ncat){
 #'      a <- par[1]
 #'      b <- par[2] 
 #'      P1 <- 1 / (1 + exp(-1.702*a*(Theta - b)))
 #'      cbind(1-P1, P1)
 #' } 
-#' lbound <- c(-Inf, -Inf)
-#' ubound <- c(Inf, Inf)
 #' 
-#' x <- createItem(name, par=par, est=est, lbound=lbound, ubound=ubound, P=P.old2PL)
+#' x <- createItem(name, par=par, est=est, P=P.old2PL)
 #' 
 #' #So, let's estimate it!
 #' dat <- expand.table(LSAT7) 
@@ -54,7 +56,7 @@
 #' mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 #' coef(mod2)
 #' 
-#' #nonlinear
+#' ###nonlinear
 #' name <- 'nonlin'
 #' par <- c(a1 = .5, a2 = .1, d = 0)
 #' est <- c(TRUE, TRUE, TRUE)
@@ -70,80 +72,28 @@
 #' 
 #' mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose = TRUE)
 #' coef(mod)
+#' 
+#' ### covariate included data
+#' name <- 'mycov'
+#' par <- c(a1 = .5, a2 =.5, d = 0)
+#' est <- c(TRUE, TRUE, TRUE)
+#' P.mycov <- function(par,Theta, ncat){
+#'      a1 <- par[1]
+#'      a2 <- par[2]
+#'      d <- par[3]
+#'      #notice here that the covariate data is found in Theta, 
+#'      #    use browser() to jump in for debugging if needed
+#'      P1 <- 1 / (1 + exp(-1.702*(a1 * Theta[,1] + a2*Theta[,2] + d)))
+#'      cbind(1-P1, P1)
+#' } 
+#' 
+#' covdata <- matrix(c(rep(0, 500), rep(1,500)), nrow=nrow(dat))
+#' x3 <- createItem(name, par=par, est=est, P=P.mycov, userdata=covdata)
+#' mod <- confmirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3))
+#' coef(mod)
+#' 
 #' }
-createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ubound = NULL){    
-    setClass(name, contains = 'AllItemsClass', representation = representation(P='function'))    
-    setMethod("initialize",
-              name,
-              function(.Object, par, est, lbound, ubound, P) {                  
-                  names(est) <- names(par)
-                  .Object@par <- par
-                  .Object@est <- est                      
-                  .Object@P <- P                      
-                  .Object@lbound <- if(!is.null(lbound)) lbound  else rep(-Inf, length(par)) 
-                  .Object@ubound <- if(!is.null(ubound)) ubound  else rep(Inf, length(par))                   
-                  .Object
-              })
-    setMethod(
-        f = "print",
-        signature = signature(x = name),
-        definition = function(x, ...){
-            cat('Item object of class:', class(x))
-        }
-    )
-    setMethod(
-        f = "show",
-        signature = signature(object = name),
-        definition = function(object){
-            print(object)
-        }
-    )
-    setMethod(
-        f = "ExtractLambdas",
-        signature = signature(x = name),
-        definition = function(x){             
-            a <- rep(.001, x@nfact)
-            a        
-        }
-    )
-    setMethod(
-        f = "ProbTrace",
-        signature = signature(x = name, Theta = 'matrix'),
-        definition = function(x, Theta, fixed.design = NULL){              
-            x@P(x@par, Theta=Theta, ncat=x@ncat)            
-        }
-    )
-    setMethod(
-        f = "LogLik",
-        signature = signature(x = name, Theta = 'matrix'),
-        definition = function(x, Theta, EM=FALSE, prior=NULL){          
-            itemtrace <- ProbTrace(x=x, Theta=Theta)                
-            Prior <- rep(1, nrow(itemtrace))
-            if(EM) Prior <- prior
-            LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
-            LL <- LL.Priors(x=x, LL=LL)        
-            return(LL)
-        }
-    )
-    if(is.null(gr) && is.null(hss)){
-        setMethod(
-            f = "Deriv",
-            signature = signature(x = name, Theta = 'matrix'),
-            definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
-                grad <- rep(0, length(x@par))
-                hess <- matrix(0, length(x@par), length(x@par))
-                Prior <- rep(1, nrow(x@rs))        
-                if(BFACTOR) Prior <- prior
-                if(EM){                
-                    grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
-                    #hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
-                    return(list(grad = grad))            
-                }        
-                grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-                hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
-                return(list(grad=grad, hess=hess))
-            }
-        )       
-    }    
-    return(new(name, par=par, est=est, lbound=lbound, ubound=ubound, P=P))
+createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ubound = NULL, userdata = NULL){    
+    return(new('custom', name=name, par=par, est=est, lbound=lbound, 
+               ubound=ubound, P=P, gr=gr, hss=hss, userdata=userdata))
 }
