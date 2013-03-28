@@ -13,7 +13,8 @@
 #' @param par a named vector of the starting values for the parameters
 #' @param est a logical vector indicating which parameters should be freely estimated by default
 #' @param P the probability trace function for all categories (first column is category 1, second category two, etc). 
-#' First input contains a vector of all the item parameters, while the second input must be a matrix called Theta.
+#' First input contains a vector of all the item parameters, the second input must be a matrix called \code{Theta}, and 
+#' the third input must be the number of categories called \code{ncat}.
 #' Function also must return a \code{matrix} object of category probabilites
 #' @param gr gradient function (vector of first derivatives) used in estimation. 
 #' If not specified a numeric approximation will be used
@@ -33,7 +34,7 @@
 #' name <- 'old2PL'
 #' par <- c(a = .5, b = -2)
 #' est <- c(TRUE, TRUE)
-#' P.old2PL <- function(par,Theta){
+#' P.old2PL <- function(par,Theta, ncat=2){
 #'      a <- par[1]
 #'      b <- par[2] 
 #'      P1 <- 1 / (1 + exp(-1.702*a*(Theta - b)))
@@ -57,7 +58,7 @@
 #' name <- 'nonlin'
 #' par <- c(a1 = .5, a2 = .1, d = 0)
 #' est <- c(TRUE, TRUE, TRUE)
-#' P.nonlin <- function(par,Theta){
+#' P.nonlin <- function(par,Theta, ncat=2){
 #'      a1 <- par[1]
 #'      a2 <- par[2] 
 #'      d <- par[3]
@@ -109,7 +110,7 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ub
         f = "ProbTrace",
         signature = signature(x = name, Theta = 'matrix'),
         definition = function(x, Theta, fixed.design = NULL){              
-            x@P(x@par, Theta=Theta)            
+            x@P(x@par, Theta=Theta, ncat=x@ncat)            
         }
     )
     setMethod(

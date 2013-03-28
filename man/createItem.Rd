@@ -18,9 +18,10 @@
   \item{P}{the probability trace function for all
   categories (first column is category 1, second category
   two, etc). First input contains a vector of all the item
-  parameters, while the second input must be a matrix
-  called Theta. Function also must return a \code{matrix}
-  object of category probabilites}
+  parameters, the second input must be a matrix called
+  \code{Theta}, and the third input must be the number of
+  categories called \code{ncat}. Function also must return
+  a \code{matrix} object of category probabilites}
 
   \item{gr}{gradient function (vector of first derivatives)
   used in estimation. If not specified a numeric
@@ -59,7 +60,7 @@
 name <- 'old2PL'
 par <- c(a = .5, b = -2)
 est <- c(TRUE, TRUE)
-P.old2PL <- function(par,Theta){
+P.old2PL <- function(par,Theta, ncat=2){
      a <- par[1]
      b <- par[2]
      P1 <- 1 / (1 + exp(-1.702*a*(Theta - b)))
@@ -83,7 +84,7 @@ coef(mod2)
 name <- 'nonlin'
 par <- c(a1 = .5, a2 = .1, d = 0)
 est <- c(TRUE, TRUE, TRUE)
-P.nonlin <- function(par,Theta){
+P.nonlin <- function(par,Theta, ncat=2){
      a1 <- par[1]
      a2 <- par[2]
      d <- par[3]
