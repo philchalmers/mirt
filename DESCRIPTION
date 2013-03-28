@@ -83,3 +83,4 @@ Collate:
     'mod2values.R'
     'probtrace.R'
     'boot.mirt.R'
+    'createItem.R'

@@ -259,7 +259,7 @@ Lambdas <- function(pars){
     lambdas <- list()
     J <- ifelse(is(pars[[length(pars)]], 'GroupPars'), length(pars)-1, length(pars))
     for(i in 1:J)    
-        lambdas[[i]] <- ExtractLambdas(pars[[i]])    
+        lambdas[[i]] <- ExtractLambdas(pars[[i]])        
     lambdas <- do.call(rbind,lambdas)
     lambdas
 }
@@ -434,7 +434,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     return(constrain)
 }
 
-ReturnPars <- function(PrepList, itemnames, MG = FALSE){    
+ReturnPars <- function(PrepList, itemnames, MG = FALSE){        
     parnum <- par <- est <- item <- parname <- gnames <- itemtype <- 
         lbound <- ubound <- c()                                    
     if(!MG) PrepList <- list(full=PrepList)                        
@@ -443,7 +443,7 @@ ReturnPars <- function(PrepList, itemnames, MG = FALSE){
         for(i in 1:length(tmpgroup)){
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
-            parname <- c(parname, names(tmpgroup[[i]]@parnum))
+            parname <- c(parname, names(tmpgroup[[i]]@par))
             parnum <- c(parnum, tmpgroup[[i]]@parnum) 
             par <- c(par, tmpgroup[[i]]@par)
             est <- c(est, tmpgroup[[i]]@est)                    

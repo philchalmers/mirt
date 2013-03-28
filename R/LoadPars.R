@@ -1,5 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, debug)
+                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems, 
+                     debug)
     {       
     if(debug == 'LoadPars') browser() 
     pars <- vector('list', J)
@@ -61,6 +62,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]), sep=''), 
                             paste('d', 0:(K[i]), sep=''), paste('t', 1:(K[i]), sep=''))                
         }            
+        if(all(itemtype[i] != c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
+                                'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL')))
+            next            
         startvalues[[i]] <- val
     } 
     #freepars
@@ -106,6 +110,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                     paste('ak',K[i],sep=''), 'd0', 'd1', 't1')]] <- FALSE                
             freepars[[i]] <- estpars
         }
+        if(all(itemtype[i] != c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
+                             'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL')))
+            next
         names(freepars[[i]]) <- names(startvalues[[i]])    
     }         
 
@@ -146,7 +153,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))       
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])            
+            parnumber <- parnumber + length(freepars[[i]])  
+            next
         }
 
         if(itemtype[i] == 'Rasch' && K[i] > 2){ 
@@ -167,7 +175,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]]@par[nfact+1] <- 0            
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])            
+            parnumber <- parnumber + length(freepars[[i]]) 
+            next
         }
         
         if(itemtype[i] == '1PL' && K[i] > 2){
@@ -188,6 +197,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         }
         
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){ 
@@ -207,7 +217,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])            
+            parnumber <- parnumber + length(freepars[[i]])  
+            next
         }
         
         if(any(itemtype[i] == 'grsm')){
@@ -228,6 +239,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         }
         
         if(itemtype[i] == 'graded'){
@@ -248,6 +260,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         }
         
         if(itemtype[i] == 'gpcm'){            
@@ -269,6 +282,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         }    
         
         if(itemtype[i] == 'rsm'){            
@@ -290,6 +304,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         }   
         
         if(itemtype[i] == 'nominal'){
@@ -312,6 +327,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         } 
         
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
@@ -332,6 +348,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
         }
         
         if(itemtype[i] == 'mcm'){
@@ -352,6 +369,25 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+        
+        if(all(itemtype[i] != c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
+                                'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL'))){                  
+            pars[[i]] <- customItems[[itemtype[i] == names(customItems)]]            
+            pars[[i]]@nfact <- nfact 
+            pars[[i]]@ncat <- K[i] 
+            pars[[i]]@nfixedeffects <- nfixedeffects 
+            pars[[i]]@D <- D
+            pars[[i]]@dat <- fulldata[ ,tmp]
+            pars[[i]]@n.prior.mu <- rep(NaN,length(pars[[i]]@par))
+            pars[[i]]@n.prior.sd <- rep(NaN,length(pars[[i]]@par))
+            pars[[i]]@b.prior.alpha <- rep(NaN,length(pars[[i]]@par))
+            pars[[i]]@b.prior.beta <- rep(NaN,length(pars[[i]]@par))
+            tmp2 <- parnumber:(parnumber + length(pars[[i]]@est) - 1)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(pars[[i]]@est)
+            next
         }
     }   
     #priors

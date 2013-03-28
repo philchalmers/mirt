@@ -1,12 +1,15 @@
 NEW FEATURES
 
+- createItem() function available for defining item types that can be passed to estimation functions
+
 - Mstep in EM moved to quasi-Newton instead of my home grown MV Newton-Raphson approach. Gives 
   more stability during estimation when the Hessian is ill-conditioned, and will provide an easier 
-  user front-end for defining user rolled IRT models
+  front-end for defining user rolled IRT models
 
 BUG FIXES
 
-- small bias fix in hessian and gradients in mirt() implementation
+- small bias fix in hessian and gradients in mirt() implementation causing the liklihood to not always be 
+  increasing near maximum
 
 
 Changes in mirt 0.6.0

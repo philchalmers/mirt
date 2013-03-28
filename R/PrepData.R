@@ -1,6 +1,6 @@
 PrepData <- function(data, model, itemtype, guess, upper, 
                      parprior, verbose, debug, technical, parnumber = 1, BFACTOR = FALSE,
-                     grsm.block = NULL, rsm.block = NULL, D, mixedlist)
+                     grsm.block = NULL, rsm.block = NULL, D, mixedlist, customItems)
 {
     if(debug == 'PrepData') browser()  
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
@@ -71,7 +71,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior, 
                            parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist, 
-                           debug=debug)   
+                           debug=debug, customItems=customItems)   
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')

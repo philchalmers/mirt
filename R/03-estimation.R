@@ -1,8 +1,9 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
                        invariance = '', pars = NULL, constrain = NULL, 
-                       parprior = NULL, mixedlist = NULL, ...)
+                       parprior = NULL, mixedlist = NULL, customItems = NULL, ...)
 {       
-    opts <- makeopts(...)    
+    opts <- makeopts(...)
+    if(!is.null(customItems)) opts$calcNull <- FALSE
     opts$start.time <- proc.time()[3]                 
     # on exit, reset the seed to override internal
     if(opts$method == 'MHRM' || opts$method == 'MIXED')
@@ -48,7 +49,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                  upper=upper, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block, 
-                 D=opts$D, mixedlist=mixedlist)                    
+                 D=opts$D, mixedlist=mixedlist, customItems=customItems)                    
     parnumber <- 1
     for(g in 1:Data$ngroups){                    
         tmp <- 1:Data$ngroups
@@ -57,7 +58,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             PrepList[[g]] <- PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess, 
                                       upper=upper, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
-                                      grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist)        
+                                      grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist, 
+                                      customItems=customItems)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }     
@@ -183,7 +185,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose), 
-                             Theta=Theta, debug=opts$debug)                
+                             Theta=Theta, debug=opts$debug)         
         startlongpars <- ESTIMATE$longpars                     
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0        
@@ -217,7 +219,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE$cycles <- tmp$cycles
         }
     } else if(opts$method == 'MHRM'){ #MHRM estimation
-        Theta <- matrix(0, Data$N, nitems)        
+        Theta <- matrix(0, Data$N, nitems)             
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN, 
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain, 
@@ -246,7 +248,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             rlist[[g]]$expected = numeric(1)
     }   
     cmods <- list()
-    for(g in 1:Data$ngroups){
+    for(g in 1:Data$ngroups){        
         lambdas <- Lambdas(ESTIMATE$pars[[g]]) * opts$D/1.702
         if (ncol(lambdas) > 1) norm <- sqrt(1 + rowSums(lambdas^2))
         else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))  
