@@ -234,7 +234,8 @@ setMethod(
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), 
                           auto.key = TRUE, ...)
     {           
-        if (!type %in% c('info','infocontour', 'SE', 'trace')) stop(type, " is not a valid plot type.")
+        if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace')) 
+            stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
@@ -297,6 +298,18 @@ setMethod(
                 return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(0,1), 
                        xlab = expression(theta), ylab = expression(P(theta)), 
                        auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))            
+            }
+            if(type == 'infotrace'){                
+                if(!all(x@K == 2)) stop('infotrace plot only available for tests 
+                                        with dichotomous items')                
+                I <- matrix(NA, nrow(Theta), J)
+                for(i in 1:J)
+                    I[,i] <- iteminfo(extract.item(x, i), ThetaFull)
+                items <- gl(n=J, k=nrow(Theta), labels = paste('Item', 1:J))
+                plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
+                return(xyplot(I ~ Theta, plotobj, group = item, ylim = c(0,1), 
+                              xlab = expression(theta), ylab = expression(I(theta)), 
+                              auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))            
             }
         }		
     }		

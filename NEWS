@@ -1,5 +1,8 @@
 NEW FEATURES
 
+- plot() supports individual item information trace lines on the same graph (dichotomous items only) with
+  the option type = 'infotrace'
+
 - createItem() function available for defining item types that can be passed to estimation functions.
   This can be used to model items not available in the package (or anywhere for that matter) with the
   EM or MHRM. Derivatives are computed numerically by default using the numDeriv package for defining

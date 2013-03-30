@@ -147,8 +147,8 @@
 #' @param digits number of significant digits to be rounded
 #' @param type type of plot to view; can be \code{'info'} to show the test
 #' information function, \code{'infocontour'} for the test information contours, 
-#' \code{'SE'} for the test standard error function, or \code{'trace'} for all item trace lines
-#' (only available when all items are dichotomous)
+#' \code{'SE'} for the test standard error function, and \code{'trace'} and \code{'infotrace'} 
+#' for all item probability information or trace lines (only available when all items are dichotomous)
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is 
 #' used then a bubble plot is created with the summed information across the angles specified 
 #' (e.g., \code{theta_angle = seq(0, 90, by=10)})
