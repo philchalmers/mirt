@@ -17,6 +17,8 @@ BUG FIXES
 - small bias fix in hessian and gradients in mirt() implementation causing the liklihood to not always be 
   increasing near maximum
 
+- fix input to itemplot() when object is a list of model objects
+
 
 Changes in mirt 0.6.0
 

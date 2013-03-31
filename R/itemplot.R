@@ -47,8 +47,9 @@
 #'     }
 #' 
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05, 
-                     CEdraws = 1000, ...){
-    inames <- colnames(object@data)
+                     CEdraws = 1000, ...){    
+    if(is.list(object)) inames <- colnames(object[[1]]@data)
+    else inames <- colnames(object@data)
     ind <- 1:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]    
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE, 
