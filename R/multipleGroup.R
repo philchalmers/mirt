@@ -41,11 +41,8 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
 #' entered as a single value to assign a global upper bound parameter or may be entered as a 
 #' numeric vector corresponding to each item
-#' @param SE logical; estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
-#' @param SE.type type of estimation method to use for calculating the parameter information matrix. 
-#' Can be \code{'MHRM'} for stocastic estimation, or \code{'BL'} for the Bock and Leiberman approach (EM only).
-#' Note that the \code{'MHRM'} approach can be much faster if there are a moderate to large number of items.  
-#' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
+#' @param SE logical; estimate the information matrix for standard errors? 
+#' @param SE.type see \code{\link{mirt}} for more details
 #' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
 #' cumulative density curve. Default is 1.702
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values

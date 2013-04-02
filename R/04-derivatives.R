@@ -533,11 +533,19 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, pars = NULL, itemloc = NULL, 
-                          tabdata = NULL, prior=NULL){
+                          tabdata = NULL, prior=NULL, estHess=FALSE){
         if(EM){
             grad <- rep(0, length(x@par))
-            hess <- matrix(0, length(x@par), length(x@par))             
-            
+            hess <- matrix(0, length(x@par), length(x@par))            
+            if(estHess){
+                if(any(x@est)){
+                    #grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, pars=pars, tabdata=tabdata,
+                    #                              itemloc=itemloc)
+                    hess[x@est,x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, pars=pars, tabdata=tabdata,
+                                                           itemloc=itemloc)                                      
+                }            
+                return(list(grad=grad, hess=hess))
+            }
             J <- length(pars) - 1
             nfact <- x@nfact
             scores <- matrix(0, nrow(tabdata), nfact)                 
@@ -555,9 +563,7 @@ setMethod(
             ret <- .Call('EAPgroup', log_itemtrace, tabdata, Theta, prior, mu)                
             tmp <- cbind(ret$scores, ret$scores2) * r
             newpars <- apply(tmp, 2, sum) / N                
-            return(newpars[x@est])
-            #grad <- newpars - c(mu, siglong)
-            #hess <- -diag(length(grad))                                            
+            return(newpars[x@est])                                                        
         }
         tr <- function(y) sum(diag(y))         
         nfact <- x@nfact

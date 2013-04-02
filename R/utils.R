@@ -660,6 +660,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
     opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
+    opts$TOL <- ifelse(is.null(technical$TOL) && SE.type == 'SEM', .0001, technical$TOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED')
         set.seed(12345)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)    
@@ -776,31 +777,117 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
     Hess[est, est] <- -hess 
     Hess <- L %*% Hess %*% L
     info <- Hess[infological, infological]    
-    info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=L, 
-                                                       npars=length(longpars))
+    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+    return(ESTIMATE)
+}
+
+loadESTIMATEinfo <- function(info, ESTIMATE, constrain){        
+    longpars <- ESTIMATE$longpars
+    pars <- ESTIMATE$pars
+    J <- length(pars[[1]]) - 1
+    info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=ESTIMATE$L, 
+                           npars=length(longpars))
     ESTIMATE$info <- info
     SEtmp <- diag(solve(info))        
     if(any(SEtmp < 0)){
-            warning("Information matrix is not positive definite, negative SEs set to 0.\n")
-            SEtmp <- rep(0, length(SEtmp))
-        } else SEtmp <- sqrt(SEtmp)
+        warning("Information matrix is not positive definite, negative SEs set to 0.\n")
+        SEtmp <- rep(0, length(SEtmp))
+    } else SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
     SE[ESTIMATE$estindex_unique] <- SEtmp
     index <- 1:length(longpars) 
     if(length(constrain) > 0)
-            for(i in 1:length(constrain))
-                    SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
+        for(i in 1:length(constrain))
+            SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
     ind1 <- 1
-    for(g in 1:ngroups){
-            for(i in 1:(J+1)){
-                    ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-                    pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
-                    ind1 <- ind2 + 1            
-                }         
-        }
+    for(g in 1:ESTIMATE$ngroups){
+        for(i in 1:(J+1)){
+            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+            pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
+            ind1 <- ind2 + 1            
+        }         
+    }
     ESTIMATE$pars <- pars
     return(ESTIMATE)
 }
 
-
+SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE){        
+    TOL <- sqrt(list$TOL)
+    itemloc <- list$itemloc
+    J <- length(itemloc) - 1
+    L <- ESTIMATE$L
+    ngroups <- ESTIMATE$ngroups    
+    NCYCLES <- ESTIMATE$cycles
+    if(NCYCLES <= 5) stop('SEM can not be computed due to short EM history')
+    BFACTOR <- list$BFACTOR
+    gitemtrace <- gstructgrouppars <- prior <- Prior <- rlist <- vector('list', ngroups)    
+    estpars <- ESTIMATE$estpars
+    redun_constr <- ESTIMATE$redun_constr
+    EMhistory <- ESTIMATE$EMhistory
+    MLestimates <- EMhistory[nrow(EMhistory), ]
+    UBOUND <- ESTIMATE$UBOUND
+    LBOUND <- ESTIMATE$LBOUND      
+    estindex <- estpars
+    estindex[estpars] <- est  
+    rij <- 1
+    
+    for (cycles in 5:NCYCLES){                  
+        
+        longpars <- MLestimates
+        longpars[estindex] <- EMhistory[cycles, estindex]
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+        
+        for(g in 1:ngroups){            
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)
+            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])        
+            if(BFACTOR){
+                prior[[g]] <- dnorm(theta, 0, 1)
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                
+                next  
+            } 
+            Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+                                           gstructgrouppars[[g]]$gcov)
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+        }
+        #Estep           
+        for(g in 1:ngroups){            
+            if(BFACTOR){
+                rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
+                                            Theta=Theta, prior=prior[[g]],
+                                            specific=list$specific, sitems=list$sitems, 
+                                            itemloc=itemloc, itemtrace=gitemtrace[[g]])
+            } else {
+                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
+                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
+                                         itemtrace=gitemtrace[[g]])                      
+            }            
+        }        
+        for(g in 1:ngroups){
+            for(i in 1:J){
+                tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
+                pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]           
+            }
+        }                       
+        pars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, 
+                      Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc, 
+                      PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
+                      constrain=constrain, TOL=TOL)
+        ind1 <- 1
+        for(g in 1:ngroups){
+            for(i in 1:(J+1)){
+                ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+                longpars[ind1:ind2] <- pars[[g]][[i]]@par
+                ind1 <- ind2 + 1
+            }                  
+        }
+        rijlast <- rij                
+        rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / 
+            (EMhistory[cycles, estindex] - MLestimates[estindex])                
+        if(all(abs(rij - rijlast) < TOL)) break
+    } #END EM    
+    return(rij)
+}
 

@@ -92,10 +92,13 @@
 #' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
 #' group and therefore have the same number of item categories
 #' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
-#' @param SE logical; estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
+#' @param SE logical; estimate the standard errors? Calculates the information matrix from MHRM subroutine for
+#' stochastic approximation, Bock and Lieberman style infomation (use only with small number of items), or 
+#' supplimented EM (SEM) computations
+#' for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix. 
-#' Can be \code{'MHRM'} for stocastic estimation, or \code{'BL'} for the Bock and Leiberman approach (EM only).
-#' Note that the \code{'MHRM'} approach can be much faster if there are a moderate to large number of items.  
+#' Can be \code{'MHRM'} for stocastic estimation, \code{'BL'} for the Bock and Leiberman approach (EM only), or
+#' \code{'SEM'} for the suplimented EM (TOL is automatically reduced to .0001 to help the EM history).
 #' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
 #' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
@@ -398,7 +401,7 @@
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
                  D = 1.702, verbose = FALSE, technical = list(), ...)

@@ -77,15 +77,19 @@ Theory)}
   \item{rsm.block}{same as \code{grsm.block}, but for
   \code{'rsm'} blocks}
 
-  \item{SE}{logical; estimate the standard errors? Calls
-  the MHRM subroutine for a stochastic approximation}
+  \item{SE}{logical; estimate the standard errors?
+  Calculates the information matrix from MHRM subroutine
+  for stochastic approximation, Bock and Lieberman style
+  infomation (use only with small number of items), or
+  supplimented EM (SEM) computations for Bock and Lieberman
+  style information matrix}
 
   \item{SE.type}{type of estimation method to use for
   calculating the parameter information matrix. Can be
-  \code{'MHRM'} for stocastic estimation, or \code{'BL'}
-  for the Bock and Leiberman approach (EM only). Note that
-  the \code{'MHRM'} approach can be much faster if there
-  are a moderate to large number of items. Bootstrapped
+  \code{'MHRM'} for stocastic estimation, \code{'BL'} for
+  the Bock and Leiberman approach (EM only), or
+  \code{'SEM'} for the suplimented EM (TOL is automatically
+  reduced to .0001 to help the EM history). Bootstrapped
   standard errors are also possible but must be run with
   the \code{\link{boot.mirt}} function}
 
