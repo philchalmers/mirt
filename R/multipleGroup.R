@@ -246,8 +246,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 3000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,
                           bfactor = FALSE, D = 1.702, technical = list(), verbose = TRUE, ...)
-{   
-    if(debug == 'Main') browser()
+{       
     Call <- match.call()            
     invariance.check <- invariance %in% c('free_means', 'free_varcov')
     if(all(invariance.check) && length(constrain) == 0)
