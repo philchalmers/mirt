@@ -833,7 +833,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     estindex[estpars] <- est  
     rij <- 1
     
-    for (cycles in 5:NCYCLES){                  
+    for (cycles in 2:NCYCLES){                  
         
         longpars <- MLestimates
         longpars[estindex] <- EMhistory[cycles, estindex]

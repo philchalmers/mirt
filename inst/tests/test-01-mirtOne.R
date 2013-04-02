@@ -12,7 +12,7 @@ test_that('dich', {
     expect_is(modm2, 'ExploratoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch')
     expect_is(modm3, 'ConfirmatoryClass')
-    modm3 <- mirt(data, 1, itemtype = 'Rasch', SE = TRUE)
+    modm3 <- mirt(data, 1, itemtype = 'Rasch', SE = TRUE, technical=list(TOL=1e-6))
     expect_is(modm3, 'ConfirmatoryClass')
     modm4 <- mirt(data, 1, itemtype = '1PL')    
     expect_is(modm4, 'ConfirmatoryClass')
