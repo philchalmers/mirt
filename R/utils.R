@@ -659,8 +659,9 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)
-    opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)
-    opts$TOL <- ifelse(is.null(technical$TOL) && SE.type == 'SEM', .0001, technical$TOL)
+    opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)    
+    if(SE.type == 'SEM')
+        opts$TOL <- ifelse(is.null(technical$TOL), .0001, technical$TOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED')
         set.seed(12345)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)    
@@ -784,6 +785,7 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
 loadESTIMATEinfo <- function(info, ESTIMATE, constrain){        
     longpars <- ESTIMATE$longpars
     pars <- ESTIMATE$pars
+    ngroups <- length(pars)
     J <- length(pars[[1]]) - 1
     info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=ESTIMATE$L, 
                            npars=length(longpars))
@@ -800,7 +802,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
         for(i in 1:length(constrain))
             SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
     ind1 <- 1
-    for(g in 1:ESTIMATE$ngroups){
+    for(g in 1:ngroups){
         for(i in 1:(J+1)){
             ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
             pars[[g]][[i]]@SEpar <- SE[ind1:ind2]

@@ -10,12 +10,11 @@
 Theory)}
 \usage{
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-    SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars =
-    NULL, constrain = NULL, parprior = NULL, calcNull =
-    TRUE, rotate = 'oblimin', Target = NaN, prev.cor =
-    NULL, quadpts = NULL, grsm.block = NULL, rsm.block =
-    NULL, D = 1.702, verbose = FALSE, technical = list(),
-    ...)
+    SE = FALSE, SE.type = 'SEM', SEtol = .001, pars = NULL,
+    constrain = NULL, parprior = NULL, calcNull = TRUE,
+    rotate = 'oblimin', Target = NaN, prev.cor = NULL,
+    quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D
+    = 1.702, verbose = FALSE, technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
