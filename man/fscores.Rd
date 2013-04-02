@@ -4,7 +4,7 @@
 \usage{
   fscores(object, rotate = "", full.scores = FALSE,
     method = "EAP", quadpts = NULL, response.vector = NULL,
-    degrees = NULL, verbose = TRUE)
+    degrees = NULL, returnER = FALSE, verbose = TRUE)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -39,6 +39,9 @@
   calculate the factor scores and standard errors for a
   given response vector that may or may not have been in
   the original dataset}
+
+  \item{returnER}{logical; return empirical reliability
+  estimate as a numeric value?}
 
   \item{verbose}{logical; print verbose output messages?}
 }
