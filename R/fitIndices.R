@@ -127,8 +127,7 @@ fitIndices <- function(obj, prompt = TRUE){
     for(pat in 1:nrow(tabdata)){
         DX <- c()        
         rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1), 
-                            Theta=Theta, prior=Prior, itemloc=itemloc, 
-                            debug='NULL', deriv=TRUE)      
+                            Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE)      
         for(i in 1:nitems){                         
             tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
             pars[[i]]@rs <- rlist$r1[, tmp]                       

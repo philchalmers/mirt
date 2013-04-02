@@ -6,8 +6,8 @@
     1, SE = FALSE, SEtol = .001, pars = NULL, constrain =
     NULL, parprior = NULL, calcNull = TRUE, prev.cor =
     NULL, quadpts = 20, grsm.block = NULL, rsm.block =
-    NULL, D = 1.702, verbose = FALSE, debug = FALSE,
-    technical = list(), ...)
+    NULL, D = 1.702, verbose = FALSE, technical = list(),
+    ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -67,8 +67,6 @@
 
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
-
-  \item{debug}{logical; turn on debugging features?}
 
   \item{technical}{see \code{\link{mirt}} for details}
 

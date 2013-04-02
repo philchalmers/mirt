@@ -160,7 +160,6 @@
 #' expected values for the frequencies of every response pattern
 #' @param df.p logical; print the degrees of freedom and p-values?
 #' @param verbose logical; print observed log-likelihood value at each iteration?
-#' @param debug logical; turn on debugging features?
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #' \describe{ 
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
@@ -278,7 +277,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
-#' debug = FALSE, technical = list(), ...)
+#' technical = list(), ...)
 #' 
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
 #' verbose = TRUE, ...)
@@ -402,15 +401,14 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-                 D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)
-{   
-    if(debug == 'Main') browser()
+                 D = 1.702, verbose = FALSE, technical = list(), ...)
+{       
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
-                      rsm.block=rsm.block, technical=technical, debug=debug, verbose=verbose,
+                      rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call

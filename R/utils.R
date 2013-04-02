@@ -28,9 +28,8 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var, 
-                        prior.mu, prodlist, mixedlist = NULL, debug) 
-{         
-    if(debug == 'draw.thetas') browser()
+                        prior.mu, prodlist, mixedlist = NULL) 
+{       
     tol <- .Machine$double.eps
     N <- nrow(fulldata)
     J <- length(pars) - 1
@@ -629,7 +628,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE, 
                      SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
-                     technical = list(), use = 'pairwise.complete.obs', debug = FALSE,
+                     technical = list(), use = 'pairwise.complete.obs', 
                      SE.type = 'MHRM')
 {    
     opts <- list()
@@ -649,8 +648,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$cl = cl 
-    opts$BFACTOR = BFACTOR 
-    opts$debug = debug    
+    opts$BFACTOR = BFACTOR     
     opts$technical <- technical
     opts$use <- use
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
@@ -740,11 +738,10 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                 expected <- Estep.bfactor(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata, 
                                             Theta=Theta, prior=prior[[g]],
                                             specific=specific, sitems=sitems, 
-                                            itemloc=itemloc, debug='')$expected
+                                            itemloc=itemloc)$expected
             } else {
                 expected <- Estep.mirt(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata, 
-                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
-                                         debug='')$expected                      
+                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc)$expected                      
             }
             LL <- LL + sum(PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)] * log(expected))
         }

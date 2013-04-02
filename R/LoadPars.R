@@ -1,8 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems, 
-                     debug)
-    {       
-    if(debug == 'LoadPars') browser() 
+                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems)
+    {           
     pars <- vector('list', J)
     #startvalues
     startvalues <- vector('list', J)
@@ -412,8 +410,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     return(pars)
 }
 
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, debug){
-    if(debug == 'LoadGroupPars') browser()
+LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior){    
     nfact <- length(gmeans)
     fn <- paste('COV_', 1:nfact, sep='')
     FNCOV <- outer(fn, 1:nfact, FUN=paste, sep='')

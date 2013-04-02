@@ -71,7 +71,6 @@
 #' @param rsm.block see \code{\link{mirt}} for details
 #' @param parprior see \code{\link{mirt}} for details
 #' @param pars see \code{\link{mirt}} for details
-#' @param debug logical; turn on debugging features?
 #' @param object an object of class \code{confmirtClass}
 #' @param object2 an object of class \code{confmirtClass}
 #' @param digits the number of significant digits to be rounded
@@ -102,7 +101,7 @@
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM',
 #' SEtol = .001,  invariance = '', pars = NULL, method = 'EM', constrain = NULL, 
 #' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-#' prev.mod = NULL, bfactor = FALSE, D = 1.702, technical = list(), debug = FALSE, verbose = TRUE, ...)
+#' prev.mod = NULL, bfactor = FALSE, D = 1.702, technical = list(), verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -244,11 +243,9 @@
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
                           SE = FALSE, SE.type = 'MHRM', SEtol = .001, invariance = '', pars = NULL,  
-                          method = 'EM',
-                          constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 3000, 
+                          method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 3000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, prev.mod = NULL,
-                          bfactor = FALSE, D = 1.702, technical = list(), debug = FALSE, 
-                          verbose = TRUE, ...)
+                          bfactor = FALSE, D = 1.702, technical = list(), verbose = TRUE, ...)
 {   
     if(debug == 'Main') browser()
     Call <- match.call()            
@@ -259,7 +256,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       itemtype=itemtype, guess=guess, upper=upper, nested.mod=prev.mod, 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
-                      technical = technical, debug = debug, verbose = verbose, calcNull=calcNull, 
+                      technical = technical, verbose = verbose, calcNull=calcNull, 
                       BFACTOR=bfactor, SE.type = SE.type, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call

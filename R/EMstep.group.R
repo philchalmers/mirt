@@ -1,6 +1,5 @@
-EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
-{    
-    if(debug == 'EM') browser()
+EM.group <- function(pars, constrain, PrepList, list, Theta)
+{       
     verbose <- list$verbose        
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES    
@@ -123,11 +122,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
                                             Theta=Theta, prior=prior[[g]],
                                             specific=specific, sitems=sitems, 
-                                            itemloc=itemloc, itemtrace=gitemtrace[[g]], debug=debug)
+                                            itemloc=itemloc, itemtrace=gitemtrace[[g]])
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
                                          Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
-                                         itemtrace=gitemtrace[[g]], debug=debug)                      
+                                         itemtrace=gitemtrace[[g]])                      
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
         }
@@ -169,9 +168,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, debug)
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, itemtrace=NULL, deriv = FALSE) 
-{   
-    if(debug == 'Estep.mirt') browser()
+Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, itemtrace=NULL, deriv = FALSE) 
+{       
     nfact <- ncol(Theta)
     nquad <- nrow(Theta)    
     J <- length(itemloc) - 1
@@ -185,9 +183,8 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, debug, itemtrace=NU
 } 
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc, itemtrace=NULL, debug) 
+Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc, itemtrace=NULL) 
 {	    
-    if(debug == 'Estep.bfactor') browser()
     J <- length(itemloc) - 1
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1:(ncol(tabdata) - 1)]	

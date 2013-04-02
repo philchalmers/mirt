@@ -1,4 +1,4 @@
-MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
+MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
 {       
     verbose <- list$verbose        
     nfact <- list$nfact
@@ -34,7 +34,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
                                         itemloc=itemloc, cand.t.var=cand.t.var, 
                                         prior.t.var=gstructgrouppars[[g]]$gcov, 
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
-                                        mixedlist=mixedlist, debug=debug)
+                                        mixedlist=mixedlist)
             if(i > 5){		
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp 
                 else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3) 
@@ -103,8 +103,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
     
     ####Big MHRM loop    
     for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
-    {     
-        if(is.list(debug)) print(longpars[debug[[1]]])
+    {           
         if(cycles == BURNIN + 1) stagecycle <- 2			
         if(stagecycle == 3)
             gamma <- (gain[1] / (cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
@@ -133,8 +132,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist, debug)
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]], 
                                       itemloc=itemloc, cand.t.var=cand.t.var, 
                                       prior.t.var=gstructgrouppars[[g]]$gcov, mixedlist=mixedlist,
-                                      prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist, 
-                                      debug=debug)            
+                                      prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
         for(g in 1:ngroups){

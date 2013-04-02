@@ -11,8 +11,7 @@
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     draws = 3000, quadpts = NULL, grsm.block = NULL,
     rsm.block = NULL, prev.mod = NULL, bfactor = FALSE, D =
-    1.702, technical = list(), debug = FALSE, verbose =
-    TRUE, ...)
+    1.702, technical = list(), verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -134,8 +133,6 @@
   \item{parprior}{see \code{\link{mirt}} for details}
 
   \item{pars}{see \code{\link{mirt}} for details}
-
-  \item{debug}{logical; turn on debugging features?}
 
   \item{object}{an object of class \code{confmirtClass}}
 

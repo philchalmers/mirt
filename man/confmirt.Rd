@@ -11,9 +11,8 @@
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
-    verbose = TRUE, draws = 3000, debug = FALSE, rotate =
-    'oblimin', Target = NULL, D = 1.702, technical =
-    list(), ...)
+    verbose = TRUE, draws = 3000, rotate = 'oblimin',
+    Target = NULL, D = 1.702, technical = list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -86,8 +85,6 @@
   \item{parprior}{see \code{\link{mirt}} for details}
 
   \item{pars}{see \code{\link{mirt}} for details}
-
-  \item{debug}{logical; turn on debugging features?}
 
   \item{object}{an object of class
   \code{ConfirmatoryClass}}

@@ -87,7 +87,6 @@
 #' @param constrain see \code{\link{mirt}} for details
 #' @param parprior see \code{\link{mirt}} for details
 #' @param pars see \code{\link{mirt}} for details
-#' @param debug logical; turn on debugging features?
 #' @param object an object of class \code{ConfirmatoryClass}
 #' @param object2 an object of class \code{ConfirmatoryClass}
 #' @param digits the number of significant digits to be rounded
@@ -153,7 +152,7 @@
 #' @usage 
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE, 
-#' draws = 3000, debug = FALSE, rotate = 'oblimin', Target = NULL, D = 1.702, 
+#' draws = 3000, rotate = 'oblimin', Target = NULL, D = 1.702, 
 #' technical = list(),  ...)
 #' 
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
@@ -270,15 +269,14 @@
 #' 
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, 
-                     verbose = TRUE, draws = 3000, debug = FALSE, rotate = 'oblimin', Target = NULL, 
+                     verbose = TRUE, draws = 3000, rotate = 'oblimin', Target = NULL, 
                      D = 1.702, technical = list(),  ...)
-{   
-    if(debug == 'Main') browser()
+{       
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype, 
                       guess=guess, upper=upper, grsm.block=grsm.block, D=D, calcNull=calcNull,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, 
-                      rsm.block=rsm.block, draws=draws, debug=debug, technical = technical,  ...)
+                      rsm.block=rsm.block, draws=draws, technical=technical,  ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    

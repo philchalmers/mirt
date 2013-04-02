@@ -14,8 +14,8 @@ Theory)}
     NULL, constrain = NULL, parprior = NULL, calcNull =
     TRUE, rotate = 'oblimin', Target = NaN, prev.cor =
     NULL, quadpts = NULL, grsm.block = NULL, rsm.block =
-    NULL, D = 1.702, verbose = FALSE, debug = FALSE,
-    technical = list(), ...)
+    NULL, D = 1.702, verbose = FALSE, technical = list(),
+    ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -211,8 +211,6 @@ Theory)}
 
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
-
-  \item{debug}{logical; turn on debugging features?}
 
   \item{technical}{a list containing lower level technical
   parameters for estimation. May be: \describe{

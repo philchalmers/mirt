@@ -47,7 +47,6 @@
 #' estimate starting values for the EM estimation
 #' @param quadpts number of quadrature points per dimension. 
 #' @param verbose logical; print observed log-likelihood value at each iteration?
-#' @param debug logical; turn on debugging features?
 #' @param technical see \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -72,7 +71,7 @@
 #' @usage
 #' bfactor(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001, pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, prev.cor = NULL, quadpts = 20, grsm.block = NULL, 
-#' rsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, technical = list(), ...)
+#' rsm.block = NULL, D = 1.702, verbose = FALSE, technical = list(), ...)
 #' 
 #'
 #' @export bfactor
@@ -140,16 +139,15 @@
 #' 
 bfactor <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SEtol = .001,
                     pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, prev.cor = NULL, 
-                    quadpts = 20, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, debug = FALSE, 
+                    quadpts = 20, grsm.block = NULL, rsm.block = NULL, D = 1.702, verbose = FALSE, 
                     technical = list(), ...)
-{         
-    if(debug == 'Main') browser()
+{       
     Call <- match.call()		    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE = SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, D=D, rsm.block=rsm.block,
-                      technical = technical, debug = debug, verbose = verbose, 
+                      technical = technical, verbose = verbose, 
                       BFACTOR = TRUE, calcNull=calcNull, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call

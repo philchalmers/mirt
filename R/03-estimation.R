@@ -46,7 +46,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]      
     PrepListFull <- PrepList[[1]] <- 
         PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess, 
-                 upper=upper, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
+                 upper=upper, parprior=parprior, verbose=opts$verbose,  
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block, 
                  D=opts$D, mixedlist=mixedlist, customItems=customItems)                    
@@ -56,7 +56,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[g]]]]
         if(g != 1)
             PrepList[[g]] <- PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess, 
-                                      upper=upper, parprior=parprior, verbose=opts$verbose, debug=opts$debug, 
+                                      upper=upper, parprior=parprior, verbose=opts$verbose, 
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
                                       grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist, 
                                       customItems=customItems)        
@@ -185,7 +185,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose), 
-                             Theta=Theta, debug=opts$debug)         
+                             Theta=Theta)         
         startlongpars <- ESTIMATE$longpars                     
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0        
@@ -214,8 +214,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1]]$nfactNames, 
                                            itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,  
                                            nfact=nfact, constrain=constrain, verbose=FALSE,
-                                           startlongpars=startlongpars), 
-                               debug=opts$debug)                 
+                                           startlongpars=startlongpars))                 
             ESTIMATE$cycles <- tmp$cycles
         }
     } else if(opts$method == 'MHRM'){ #MHRM estimation
@@ -227,8 +226,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1]]$nfactNames, 
                                            itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR, 
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                           startlongpars=startlongpars), 
-                               debug=opts$debug)                
+                                           startlongpars=startlongpars))                
         rlist <- vector('list', Data$ngroups)        
         for(g in 1:Data$ngroups)
             rlist[[g]]$expected = numeric(1)
@@ -241,8 +239,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1]]$nfactNames, 
                                            itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR, 
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                           startlongpars=startlongpars), 
-                               debug=opts$debug)                
+                                           startlongpars=startlongpars))                
         rlist <- vector('list', Data$ngroups)        
         for(g in 1:Data$ngroups)
             rlist[[g]]$expected = numeric(1)
