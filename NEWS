@@ -1,5 +1,8 @@
 NEW FEATURES
 
+- supplimented EM ('SEM') added for calculating information matrix from EM history. By default 
+  the TOL value is dropped to help make the EM iterations longer and more stable 
+
 - added return empirical reliability (returnER) option to fscores() 
 
 - plot() supports individual item information trace lines on the same graph (dichotomous items only) with

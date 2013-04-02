@@ -3,6 +3,8 @@ context('mirtTwo')
 test_that('poly', {
     modp1 <- mirt(Science, 1)
     expect_is(modp1, 'ConfirmatoryClass')          
+    modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM')
+    expect_is(modp1, 'ConfirmatoryClass')          
     modp2 <- mirt(Science, 2)
     expect_is(modp2, 'ExploratoryClass')
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)))
