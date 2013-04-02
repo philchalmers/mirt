@@ -1,5 +1,7 @@
 NEW FEATURES
 
+- added return empirical reliability (returnER) option to fscores() 
+
 - plot() supports individual item information trace lines on the same graph (dichotomous items only) with
   the option type = 'infotrace'
 

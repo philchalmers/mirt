@@ -21,6 +21,7 @@
 #' multidimensional models when \code{method = 'WLE'}
 #' @param response.vector an optional argument used to calculate the factor scores and standard errors
 #' for a given response vector that may or may not have been in the original dataset 
+#' @param returnER logical; return empirical reliability estimate as a numeric value?
 #' @param verbose logical; print verbose output messages?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
@@ -39,10 +40,11 @@
 #'   }
 #'
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                    quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
+                    quadpts = NULL, response.vector = NULL, degrees = NULL, 
+                    returnER = FALSE, verbose = TRUE)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method, 
                             quadpts=quadpts, response.vector=response.vector, degrees=degrees,
-                            verbose=verbose)
+                            verbose=verbose, returnER=returnER)
     ret    
 }

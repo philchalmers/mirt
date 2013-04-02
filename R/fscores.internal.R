@@ -2,7 +2,8 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                          quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
+                          quadpts = NULL, response.vector = NULL, degrees = NULL, 
+	                      returnER = FALSE, verbose = TRUE)
 	{          
         if(!is.null(response.vector)){            
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
@@ -139,8 +140,9 @@ setMethod(
             }            
             T <- na.omit(T)
             E <- na.omit(E)
-            reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
+            reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))            
             names(reliability) <- colnames(scores)
+            if(returnER) return(reliability)
 			if(verbose){
                 cat("\nMethod: ", method)                
                 cat("\n\nEmpirical Reliability:\n")
@@ -157,11 +159,12 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-	                      quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
+	                      quadpts = NULL, response.vector = NULL, degrees = NULL, 
+	                      returnER = FALSE, verbose = TRUE)
 	{ 	        
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts, 
-                       response.vector=response.vector, degrees=degrees, verbose=verbose)
+                       response.vector=response.vector, degrees=degrees, returnER=returnER, verbose=verbose)
         return(ret)
 	}	
 )
@@ -171,7 +174,8 @@ setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP", 
-                          quadpts = NULL, response.vector = NULL, degrees = NULL, verbose = TRUE)
+                          quadpts = NULL, response.vector = NULL, degrees = NULL, 
+                          returnER = FALSE, verbose = TRUE)
     { 	        
         cmods <- object@cmods
         ngroups <- length(cmods)
@@ -180,7 +184,7 @@ setMethod(
         ret <- vector('list', length(cmods))
         for(g in 1:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, 
-                           quadpts=quadpts, degrees=degrees, verbose=verbose)
+                           quadpts=quadpts, degrees=degrees, returnER=returnER, verbose=verbose)
         names(ret) <- object@groupNames
         if(full.scores){
             id <- c()
