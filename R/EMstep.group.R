@@ -243,7 +243,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemlo
             longpars[constrain[[i]][-1]] <- longpars[constrain[[i]][1]] 
     i = J + 1
     for(group in 1:ngroups){
-        if(any(pars[[group]][[i]]@est) && !SEM){
+        if(any(pars[[group]][[i]]@est)){
             newpars <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE,                    
                            pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
                            itemloc=itemloc, prior=Prior[[group]])

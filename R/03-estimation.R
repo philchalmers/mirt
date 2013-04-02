@@ -185,7 +185,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SEM=opts$SE.type == 'SEM'), 
+                                         SEM=opts$SE.type == 'SEM' && opts$SE), 
                              Theta=Theta)         
         startlongpars <- ESTIMATE$longpars                     
         rlist <- ESTIMATE$rlist

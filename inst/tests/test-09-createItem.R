@@ -4,7 +4,7 @@ test_that('old2PL', {
     name <- 'old2PL'
     par <- c(a = .5, b = -2)
     est <- c(TRUE, TRUE)
-    P.old2PL <- function(par,Theta){
+    P.old2PL <- function(par,Theta,ncat){
         a <- par[1]
         b <- par[2]
         P1 <- 1 / (1 + exp(-1.702*a*(Theta - b)))
@@ -30,7 +30,7 @@ test_that('old2PL', {
     name <- 'nonlin'
     par <- c(a1 = .5, a2 = .1, d = 0)
     est <- c(TRUE, TRUE, TRUE)
-    P.nonlin <- function(par,Theta){
+    P.nonlin <- function(par,Theta,ncat){
       a1 <- par[1]
       a2 <- par[2] 
       d <- par[3]
