@@ -231,12 +231,16 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 }      
 
 Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemloc, PrepList, L,
-                  UBOUND, LBOUND, constrain, TOL){    
+                  UBOUND, LBOUND, constrain, TOL){          
     p <- longpars[est]            
     opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL/10), 
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
-                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)        
+                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)     
+    if(all(abs(p - opt$par) < 1e-8))
+        opt <- optim(p, fn=Mstep.LL, est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
+                     PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
+                     UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)  
     longpars[est] <- opt$par
     if(length(constrain) > 0)
         for(i in 1:length(constrain))

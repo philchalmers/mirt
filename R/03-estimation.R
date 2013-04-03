@@ -204,7 +204,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(!opts$NULL.MODEL && opts$SE){            
             tmp <- ESTIMATE        
             if(opts$verbose) cat('\nCalculating information matrix...\n')
-            if(opts$SE.type == 'SEM'){                
+            if(opts$SE.type == 'SEM'){                                
+                if(ESTIMATE$cycles <= 5 ) {
+                    warning('Too few EM interations to compute SEM information matrix')
+                    break
+                }
+                if(ESTIMATE$cycles <= 10) 
+                    message('Very few EM cycles performed. Consider decreasing TOL further to 
+                            increase EM iteration count')
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
