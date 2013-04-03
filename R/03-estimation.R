@@ -216,18 +216,29 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                 increase EM iteration count')
                     estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                     DM <- estmat + 0
-                    diag(estmat) <- TRUE
-                    for(i in 1:ncol(DM))
-                        DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
-                                      list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
-                                                  nfactNames=PrepList[[1]]$nfactNames, theta=theta,
-                                                  itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
-                                                  sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
-                                                  nfact=nfact, constrain=constrain, verbose=opts$verbose), 
-                                    Theta=Theta, theta=theta, ESTIMATE=ESTIMATE)
-                    
-                        info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
-                        ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                    diag(estmat) <- TRUE                    
+                    if(!is.null(list(...)$cl)){                        
+                        DM <- t(parallel::parApply(cl=list(...)$cl, estmat, MARGIN=1, FUN=SEM.SE, 
+                                pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
+                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
+                                           nfactNames=PrepList[[1]]$nfactNames, theta=theta,
+                                           itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
+                                           sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                           nfact=nfact, constrain=constrain, verbose=opts$verbose), 
+                                Theta=Theta, theta=theta, ESTIMATE=ESTIMATE))
+                    } else {
+                        for(i in 1:ncol(DM))
+                            DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
+                                              PrepList=PrepList,
+                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
+                                                      nfactNames=PrepList[[1]]$nfactNames, theta=theta,
+                                                      itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
+                                                      sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                                      nfact=nfact, constrain=constrain, verbose=opts$verbose), 
+                                        Theta=Theta, theta=theta, ESTIMATE=ESTIMATE)
+                    }
+                    info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
+                    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
                 }
             }
             if(opts$SE.type == 'BL')

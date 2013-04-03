@@ -1,7 +1,8 @@
 NEW FEATURES
 
 - supplimented EM ('SEM') added for calculating information matrix from EM history. By default 
-  the TOL value is dropped to help make the EM iterations longer and more stable 
+  the TOL value is dropped to help make the EM iterations longer and more stable. Supports
+  parallel computing
 
 - added return empirical reliability (returnER) option to fscores() 
 
