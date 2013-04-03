@@ -205,26 +205,30 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             tmp <- ESTIMATE        
             if(opts$verbose) cat('\nCalculating information matrix...\n')
             if(opts$SE.type == 'SEM'){                                
-                if(ESTIMATE$cycles <= 5 ) {
-                    warning('Too few EM interations to compute SEM information matrix')
-                    break
+                dontrun <- FALSE
+                if(ESTIMATE$cycles <= 5 ){
+                    dontrun <- TRUE
+                    warning('Too few EM interations to compute SEM information matrix')               
                 }
-                if(ESTIMATE$cycles <= 10) 
-                    message('Very few EM cycles performed. Consider decreasing TOL further to 
-                            increase EM iteration count')
-                estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
-                DM <- estmat + 0
-                diag(estmat) <- TRUE
-                for(i in 1:ncol(DM))
-                    DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
-                                  list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
-                                              nfactNames=PrepList[[1]]$nfactNames, theta=theta,
-                                              itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
-                                              sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
-                                              nfact=nfact, constrain=constrain, verbose=opts$verbose), 
-                                Theta=Theta, theta=theta, ESTIMATE=ESTIMATE)                
-                info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
-                ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                if(!dontrun){
+                    if(ESTIMATE$cycles <= 10) 
+                        message('Very few EM cycles performed. Consider decreasing TOL further to 
+                                increase EM iteration count')
+                    estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
+                    DM <- estmat + 0
+                    diag(estmat) <- TRUE
+                    for(i in 1:ncol(DM))
+                        DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
+                                      list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
+                                                  nfactNames=PrepList[[1]]$nfactNames, theta=theta,
+                                                  itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
+                                                  sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                                  nfact=nfact, constrain=constrain, verbose=opts$verbose), 
+                                    Theta=Theta, theta=theta, ESTIMATE=ESTIMATE)
+                    
+                        info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
+                        ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                }
             }
             if(opts$SE.type == 'BL')
                 ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList, 
