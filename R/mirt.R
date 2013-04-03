@@ -305,6 +305,7 @@
 #' 
 #' (mod1 <- mirt(data, 1))
 #' coef(mod1)
+#' (mod1 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
 #' (mod1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 #' coef(mod1)
 #' summary(mod1)
@@ -316,8 +317,8 @@
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
 #' 
-#' (mod <- mirt(data, 2, SE = TRUE)) #standard errors with MHRM method
-#' coef(mod)
+#' (mod2 <- mirt(data, 2)) 
+#' coef(mod2)
 #' summary(mod2, rotate = 'oblimin') #oblimin rotation 
 #' residuals(mod2)
 #' plot(mod2)

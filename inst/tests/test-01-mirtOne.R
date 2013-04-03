@@ -4,6 +4,12 @@ test_that('dich', {
     data <- expand.table(LSAT7)        
     mod1 <- mirt(data, 1)
     expect_is(mod1, 'ConfirmatoryClass')          
+    sv <- mod2values(mod1)
+    sv$est <- FALSE
+    moddummy <- mirt(data, 1, pars= sv)
+    expect_is(moddummy, 'ConfirmatoryClass')
+    sv2 <- mod2values(moddummy)
+    expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')
     expect_is(modm1, 'ConfirmatoryClass')          
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')

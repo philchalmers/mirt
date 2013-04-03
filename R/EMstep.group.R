@@ -144,7 +144,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             flush.console()
         }
                 
-        preMstep.longpars <- longpars
+        preMstep.longpars <- longpars        
+        if(all(!est)) break
         pars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J, 
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc, 
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
@@ -158,7 +159,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             }                  
         }
         EMhistory[cycles+1,] <- longpars
-        if(all(abs(preMstep.longpars - longpars) < TOL)) break # || abs(lastLL - LL) < .001) break
+        if(cycles > 3 && all(abs(preMstep.longpars - longpars) < TOL))  break 
+        if(!list$SEM && cycles > 3 && abs(lastLL - LL) < TOL*10) break
     } #END EM       
     if(cycles == NCYCLES) converge <- 0    
     infological <- estpars & !redun_constr             
