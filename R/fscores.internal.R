@@ -77,12 +77,13 @@ setMethod(
 				SEscores[i, ] <- SEest
 			}  
 		}
-		if(method == "ML"){            		            
+		if(method == "ML"){               
+            tabdata2 <- object@tabdata[,-ncol(object@tabdata)]             
 			tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]	
-            tmp2[is.na(rowSums(object@tabdata))] <- 0
+            tmp2[is.na(tabdata2)] <- 1            
 			scores[rowSums(tmp2) == J,] <- Inf
-            tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
-            tmp2[is.na(rowSums(object@tabdata))] <- 1
+            tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]            
+            tmp2[is.na(tabdata2)] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf
 			SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
 			for (i in 1:nrow(scores)){
@@ -101,13 +102,14 @@ setMethod(
 			}  			
 		}
         if(method == 'WLE'){                            
-            tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE] 
-            tmp2[is.na(rowSums(object@tabdata))] <- 0
+            tabdata2 <- object@tabdata[,-ncol(object@tabdata)]             
+            tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]	
+            tmp2[is.na(tabdata2)] <- 1            
             scores[rowSums(tmp2) == J,] <- Inf
-            tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
-            tmp2[is.na(rowSums(object@tabdata))] <- 1
-            scores[rowSums(tmp2) == J,] <- -Inf            
-            SEscores <- matrix(NA, nrow(SEscores), ncol(SEscores))
+            tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]            
+            tmp2[is.na(tabdata2)] <- 1
+            scores[rowSums(tmp2) == J,] <- -Inf
+            SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
             for (i in 1:nrow(scores)){
                 if(any(scores[i, ] %in% c(-Inf, Inf))) next
                 Theta <- scores[i, ]	  
