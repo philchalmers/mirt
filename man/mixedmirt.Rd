@@ -32,7 +32,7 @@
   \code{fixed.constrain = TRUE}}
 
   \item{random}{a formula similar to the \code{nlme} random
-  variable sepcifications for declaring the random slope
+  variable specifications for declaring the random slope
   and intercept predictors. Not currently available, but
   will be available some time in the future}
 
@@ -42,15 +42,15 @@
   design matrix for the items, where each
   \code{nrow(itemdesign) == nitems} and the number of
   columns is equal to the number of fixed effect predictors
-  (i.e., item intercepts). If the intput consists of
+  (i.e., item intercepts). If the input consists of
   variables with \code{factor} indicators then appropriate
-  constraints and identification parameteres are imposed.
+  constraints and identification parameters are imposed.
   However, design based effects using a numeric matrix of
   1's or other numerics may also be included so long as an
   appropriate \code{constrain} list is supplied}
 
   \item{fixed.constrain}{logical; constrain the fixed
-  person effects to be equal accross items? Disable this
+  person effects to be equal across items? Disable this
   when modelling item level covariates and apply the
   constraints manually}
 

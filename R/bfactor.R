@@ -36,7 +36,7 @@
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
 #' @param SE logical, estimate the standard errors? Calls the MHRM subroutine for a stochastic approximation
-#' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
+#' @param SEtol tolerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
 #' @param constrain see \code{\link{mirt}} for details
 #' @param parprior see \code{\link{mirt}} for details

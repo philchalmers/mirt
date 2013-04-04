@@ -1,6 +1,6 @@
 NEW FEATURES
 
-- supplimented EM ('SEM') added for calculating information matrix from EM history. By default 
+- supplemented EM ('SEM') added for calculating information matrix from EM history. By default 
   the TOL value is dropped to help make the EM iterations longer and more stable. Supports
   parallel computing
 
@@ -20,7 +20,7 @@ NEW FEATURES
 
 BUG FIXES
 
-- small bias fix in hessian and gradients in mirt() implementation causing the liklihood to not always be 
+- small bias fix in Hessian and gradients in mirt() implementation causing the likelihood to not always be 
   increasing near maximum
 
 - fix input to itemplot() when object is a list of model objects

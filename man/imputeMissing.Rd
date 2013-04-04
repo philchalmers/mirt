@@ -38,5 +38,5 @@ fulldata <- imputeMissing(mod, scores[,'F1', drop = FALSE])
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{data}
-\keyword{inpute}
+\keyword{impute}
 

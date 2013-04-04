@@ -29,7 +29,7 @@
   \item{CE}{logical; plot confidence envelope?}
 
   \item{CEalpha}{area remaining in the tail for confidence
-  envolope. Default gives 95\% confidence region}
+  envelope. Default gives 95\% confidence region}
 
   \item{CEdraws}{draws number of draws to use for
   confidence envelope}

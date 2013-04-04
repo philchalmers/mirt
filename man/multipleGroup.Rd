@@ -55,9 +55,9 @@
   slope parameters}} Additionally, specifying specific item
   name bundles (from \code{colnames(data)}) will constrain
   all freely estimated parameters in each item to be equal
-  accross groups. This is useful for selecting 'anchor'
+  across groups. This is useful for selecting 'anchor'
   items for vertical and horizontal scaling, and for
-  detecting differential item functioning (DIF) accross
+  detecting differential item functioning (DIF) across
   groups}
 
   \item{guess}{initial (or fixed) values for the
@@ -79,7 +79,7 @@
   metric to be more similar to a normal cumulative density
   curve. Default is 1.702}
 
-  \item{SEtol}{tollerance value used to stop the MHRM
+  \item{SEtol}{tolerance value used to stop the MHRM
   estimation when \code{SE = TRUE}. Lower values will take
   longer but may be more stable for computing the
   information matrix}

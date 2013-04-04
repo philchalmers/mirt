@@ -1,4 +1,4 @@
-#' Convert an esimated mirt model to special data.frame
+#' Convert an estimated mirt model to special data.frame
 #' 
 #' Given an estimated model from any of mirt's model fitting functions this function will convert 
 #' the model parameters into the design data frame of starting values and other parameter characteristics 

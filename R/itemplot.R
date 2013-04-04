@@ -13,7 +13,7 @@
 #' @param degrees the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
 #' for more detail
 #' @param CE logical; plot confidence envelope?
-#' @param CEalpha area remaining in the tail for confidence envolope. Default gives 95\% confidence region 
+#' @param CEalpha area remaining in the tail for confidence envelope. Default gives 95\% confidence region 
 #' @param CEdraws draws number of draws to use for confidence envelope
 #' @param ... additional arguments to be passed to lattice 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

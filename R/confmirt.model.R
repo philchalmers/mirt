@@ -21,7 +21,7 @@
 #' factors with an asterisk (e.g., F1*F2).}
 #' }
 #' 
-#' @param string a string input for writting out the model syntax.
+#' @param string a string input for writing out the model syntax.
 #' @param file a string specifying an external file that declares the input.
 #' @param ... additional arguments for \code{scan()}
 #' @return Returns a model specification object to be used in

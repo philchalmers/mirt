@@ -5,7 +5,7 @@
   confmirt.model(string = NULL, file = "", ...)
 }
 \arguments{
-  \item{string}{a string input for writting out the model
+  \item{string}{a string input for writing out the model
   syntax.}
 
   \item{file}{a string specifying an external file that

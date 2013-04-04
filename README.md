@@ -43,8 +43,10 @@ library('devtools')
 install_github('mirt', 'philchalmers', quick = TRUE)
 ```
 
-If the install fails because an appropriate `pdflatex` compiler is missing then install the development 
-version devtools (`devtools::install_github('devtools', 'hadley')`) and re-run the above install chunk.
+For those having difficulty installing the package on Windows, binary installation (.zip) files 
+for 32- or 64-bit windows may be obtained here: `https://dl.dropbox.com/u/10780530/mirt/mirt.zip`. 
+Note that this file is updated periodically and is not guarenteed to be in sync with 
+the source code. 
 
 #Extra
 

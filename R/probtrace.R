@@ -1,7 +1,7 @@
 #' Function to calculate probability trace lines
 #'
 #' Given an internal mirt object extracted from an estimated model
-#' compute the probility trace lines for all categories.
+#' compute the probability trace lines for all categories.
 #' 
 #' @aliases probtrace
 #' @param x an extracted internal mirt object containing item information

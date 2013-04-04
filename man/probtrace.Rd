@@ -12,7 +12,7 @@
 }
 \description{
   Given an internal mirt object extracted from an estimated
-  model compute the probility trace lines for all
+  model compute the probability trace lines for all
   categories.
 }
 \examples{

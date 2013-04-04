@@ -19,9 +19,9 @@
   unidimensional models?}
 
   \item{mincell}{the minimum expected cell size to be used
-  in the S-X2 computations. Tables will be collapsed
-  accross items first if polytomous, and then accross
-  scores if necessary}
+  in the S-X2 computations. Tables will be collapsed across
+  items first if polytomous, and then across scores if
+  necessary}
 
   \item{S_X2.tables}{logical; return the tables in a list
   format used to compute the S-X2 stats?}

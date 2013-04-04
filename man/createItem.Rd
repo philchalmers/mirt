@@ -21,13 +21,13 @@
   parameters, the second input must be a matrix called
   \code{Theta}, and the third input must be the number of
   categories called \code{ncat}. Function also must return
-  a \code{matrix} object of category probabilites}
+  a \code{matrix} object of category probabilities}
 
   \item{gr}{gradient function (vector of first derivatives)
   used in estimation. If not specified a numeric
   approximation will be used}
 
-  \item{hss}{hessian function (matrix of second
+  \item{hss}{Hessian function (matrix of second
   derivatives) used in estimation. If not specified a
   numeric approximation will be used (required for the
   MH-RM algorithm only)}
@@ -57,10 +57,10 @@
   properly labelled and unique in the list.
 }
 \details{
-  Addionally, the \code{summary()} function will not return
-  proper standardized loadings since the function is not
-  sure how to handle them (no slopes could be defined at
-  all!). Instead loadings of .001 are filled in as
+  Additionally, the \code{summary()} function will not
+  return proper standardized loadings since the function is
+  not sure how to handle them (no slopes could be defined
+  at all!). Instead loadings of .001 are filled in as
   placeholders.
 }
 \examples{

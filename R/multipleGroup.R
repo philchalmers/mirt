@@ -32,9 +32,9 @@
 #' \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for 
 #' nominal models this also includes the category specific slope parameters}}
 #' Additionally, specifying specific item name bundles (from \code{colnames(data)}) will 
-#' constrain all freely estimated parameters in each item to be equal accross groups. This is useful
+#' constrain all freely estimated parameters in each item to be equal across groups. This is useful
 #' for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item 
-#' functioning (DIF) accross groups
+#' functioning (DIF) across groups
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
 #' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
@@ -45,7 +45,7 @@
 #' @param SE.type see \code{\link{mirt}} for more details
 #' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
 #' cumulative density curve. Default is 1.702
-#' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
+#' @param SEtol tolerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood

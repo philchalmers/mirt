@@ -1,6 +1,6 @@
 \name{mod2values}
 \alias{mod2values}
-\title{Convert an esimated mirt model to special data.frame}
+\title{Convert an estimated mirt model to special data.frame}
 \usage{
   mod2values(x)
 }

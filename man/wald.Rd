@@ -33,8 +33,8 @@
   information matrix columns are named, especially if the
   estimated model contains constrained parameters (e.g.,
   1PL). The information matrix names are labelled according
-  to which parameter number(s) they correspeond to (to
-  check the original numbering use the option \code{pars =
+  to which parameter number(s) they correspond to (to check
+  the original numbering use the option \code{pars =
   'values'} in the original estimation function).
 }
 \examples{
@@ -50,7 +50,7 @@ cmodel <- confmirt.model()
 mod <- mirt(data, cmodel, SE = TRUE)
 coef(mod)
 
-#see how the infomation matrix relates to estimated parameters, and how it lines up with the index
+#see how the information matrix relates to estimated parameters, and how it lines up with the index
 (infonames <- wald(mod))
 index <- mirt(data, cmodel, pars = 'values')
 index

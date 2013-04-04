@@ -4,7 +4,7 @@
 #' the defined objects pass to the \code{mirt(..., customItems = list())} command, and ensure that the classes
 #' are properly labelled and unique in the list. 
 #' 
-#' Addionally, the \code{summary()} function will not return proper standardized loadings since the function
+#' Additionally, the \code{summary()} function will not return proper standardized loadings since the function
 #' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001 are filled in
 #' as placeholders.
 #' 
@@ -15,10 +15,10 @@
 #' @param P the probability trace function for all categories (first column is category 1, second category two, etc). 
 #' First input contains a vector of all the item parameters, the second input must be a matrix called \code{Theta}, and 
 #' the third input must be the number of categories called \code{ncat}.
-#' Function also must return a \code{matrix} object of category probabilites
+#' Function also must return a \code{matrix} object of category probabilities
 #' @param gr gradient function (vector of first derivatives) used in estimation.  
 #' If not specified a numeric approximation will be used
-#' @param hss hessian function (matrix of second derivatives) used in estimation. 
+#' @param hss Hessian function (matrix of second derivatives) used in estimation. 
 #' If not specified a numeric approximation will be used (required for the MH-RM algorithm only)
 #' @param userdata an optional matrix of person level covariate data that can be used in estimation. This 
 #' matrix with be used in the probability function by passing \code{Theta = cbind(Theta, userdata)}. Note that 

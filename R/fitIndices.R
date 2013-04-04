@@ -1,6 +1,6 @@
 #' Compute Extra Model Fit Indices
 #' 
-#' Compute additional model fit indecies that do not come as direct results following parameter
+#' Compute additional model fit indices that do not come as direct results following parameter
 #' convergence. Will only compute the M2 (Maydeu-Olivares & Joe, 2006) statistic by default, and 
 #' returns a list containing the requested statistics.
 #' 
@@ -8,7 +8,7 @@
 #'
 #' @aliases fitIndices
 #' @param obj an estimated model object from the mirt package
-#' @param prompt logical; prompt user for input if the internal matricies are too large?
+#' @param prompt logical; prompt user for input if the internal matrices are too large?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in 
@@ -22,7 +22,7 @@
 #' (mod1 <- mirt(dat, 1, itemtype = '1PL'))
 #' fitIndices(mod1)
 #' 
-#' #Science data, much more sparce so M2 would be more informative
+#' #Science data, much more sparse so M2 would be more informative
 #' (mod2 <- mirt(Science, 1))
 #' fitIndices(mod2)
 #' }

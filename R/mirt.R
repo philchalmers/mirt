@@ -5,7 +5,7 @@
 #' to dichotomous and polytomous data under the item response theory paradigm. 
 #' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit, 
 #' nominal, multiple choice, graded rating scale, Rasch rating scale, 
-#' and partially compenatory models using the EM algorithm. User defined item classes
+#' and partially compensatory models using the EM algorithm. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory' 
 #' person or item level predictors, though these can only be included by using the 
 #' \code{\link{mixedmirt}} function.
@@ -63,7 +63,7 @@
 #' initial intercept parameters are determined by calculating the inverse
 #' normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain
 #' \eqn{d_j = q_j / u_j}. A similar implementation is also used for obtaining 
-#' initial values for polychotomous items. Following these initial estimates the model is
+#' initial values for polytomous items. Following these initial estimates the model is
 #' iterated using the EM estimation strategy with fixed quadrature points.
 #' Implicit equation accelerations described by Ramsey (1975) are also added to
 #' facilitate parameter convergence speed, and these are adjusted every third
@@ -93,14 +93,14 @@
 #' group and therefore have the same number of item categories
 #' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
 #' @param SE logical; estimate the standard errors? Calculates the information matrix from MHRM subroutine for
-#' stochastic approximation, Bock and Lieberman style infomation (use only with small number of items), or 
-#' supplimented EM (SEM) computations
+#' stochastic approximation, Bock and Lieberman style information (use only with small number of items), or 
+#' supplemented EM (SEM) computations
 #' for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix. 
-#' Can be \code{'MHRM'} for stocastic estimation, \code{'BL'} for the Bock and Leiberman approach (EM only), or
-#' \code{'SEM'} for the suplimented EM (TOL is automatically reduced to .0001 to help the EM history).
+#' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach (EM only), or
+#' \code{'SEM'} for the supplemented EM (TOL is automatically reduced to .0001 to help the EM history).
 #' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
-#' @param SEtol tollerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
+#' @param SEtol tolerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
 #' will take longer but may be more stable for computing the information matrix
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric

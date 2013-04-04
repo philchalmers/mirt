@@ -43,7 +43,7 @@
   \item{SE}{logical, estimate the standard errors? Calls
   the MHRM subroutine for a stochastic approximation}
 
-  \item{SEtol}{tollerance value used to stop the MHRM
+  \item{SEtol}{tolerance value used to stop the MHRM
   estimation when \code{SE = TRUE}. Lower values will take
   longer but may be more stable for computing the
   information matrix}

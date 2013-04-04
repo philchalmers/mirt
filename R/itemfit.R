@@ -12,7 +12,7 @@
 #' interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be 
-#' collapsed accross items first if polytomous, and then accross scores if necessary
+#' collapsed across items first if polytomous, and then across scores if necessary
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} statistic
 #' @param empirical.plot a single numeric value or character of the item name  indicating which item to plot

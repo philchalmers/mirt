@@ -9,7 +9,7 @@
 #' @param x an estimated model x from the mirt package
 #' @param Theta a matrix containing the estimates of the latent trait scores (via \code{\link{fscores}})
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords inpute data
+#' @keywords impute data
 #' @export imputeMissing
 #' @examples 
 #' \dontrun{
