@@ -12,7 +12,8 @@
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
     verbose = TRUE, draws = 3000, rotate = 'oblimin',
-    Target = NULL, D = 1.702, technical = list(), ...)
+    Target = NULL, D = 1.702, cl = NULL, technical =
+    list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -110,6 +111,9 @@
   \item{D}{a numeric value used to adjust the logistic
   metric to be more similar to a normal cumulative density
   curve. Default is 1.702}
+
+  \item{cl}{a cluster object from the \code{parallel}
+  package (set from using \code{makeCluster(ncores)})}
 
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are}

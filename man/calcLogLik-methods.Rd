@@ -14,7 +14,7 @@
   \item{G2}{logical; estimate the G2 model fit statistic?}
 
   \item{cl}{a cluster object from the \code{parallel}
-  package}
+  package (set from using \code{makeCluster(ncores)})}
 
   \item{...}{parameters that are passed}
 }
@@ -39,9 +39,9 @@
 # no parallel
 mod1withLogLik <- calcLogLik(mod1, draws=5000)
 
-#with parallel using 4 cores
+#with parallel using detected number of cores
 library(parallel)
-cl <- makeCluster(4)
+cl <- makeCluster(detectCores())
 mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)
 
   }

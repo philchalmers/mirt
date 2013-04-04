@@ -8,15 +8,15 @@
 #' calcLogLik(object, ...)
 #'
 #' \S4method{calcLogLik}{ExploratoryClass}(object,
-#'    draws = 3000, G2 = TRUE)
+#'    draws = 3000, G2 = TRUE, cl = NULL)
 #' \S4method{calcLogLik}{ConfirmatoryClass}(object,
-#'    draws = 3000, G2 = TRUE)
+#'    draws = 3000, G2 = TRUE, cl = NULL)
 #' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
 #' calcLogLik,ConfirmatoryClass-method
 #' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
-#' @param cl a cluster object from the \code{parallel} package
+#' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
 #' @param ... parameters that are passed
 #' @section Methods: 
 #' \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")}, 
@@ -38,9 +38,9 @@
 #' # no parallel
 #' mod1withLogLik <- calcLogLik(mod1, draws=5000)
 #' 
-#' #with parallel using 4 cores
+#' #with parallel using detected number of cores
 #' library(parallel)
-#' cl <- makeCluster(4)
+#' cl <- makeCluster(detectCores())
 #' mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)
 #' 
 #'   }

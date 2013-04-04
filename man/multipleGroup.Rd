@@ -11,7 +11,8 @@
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     draws = 3000, quadpts = NULL, grsm.block = NULL,
     rsm.block = NULL, prev.mod = NULL, bfactor = FALSE, D =
-    1.702, technical = list(), verbose = TRUE, ...)
+    1.702, cl = NULL, technical = list(), verbose = TRUE,
+    ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -95,6 +96,9 @@
 
   \item{calcNull}{logical; calculate the Null model for fit
   statics (e.g., TLI)?}
+
+  \item{cl}{a cluster object from the \code{parallel}
+  package}
 
   \item{bfactor}{logical; use the dimensional reduction
   algorithm if the factor pattern is a bifactor model (has

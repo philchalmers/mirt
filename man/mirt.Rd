@@ -14,7 +14,8 @@ Theory)}
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     rotate = 'oblimin', Target = NaN, prev.cor = NULL,
     quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D
-    = 1.702, verbose = FALSE, technical = list(), ...)
+    = 1.702, cl = NULL, verbose = FALSE, technical =
+    list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -156,6 +157,9 @@ Theory)}
 
   \item{calcNull}{logical; calculate the Null model for fit
   statics (e.g., TLI)?}
+
+  \item{cl}{a cluster object from the \code{parallel}
+  package (set from using \code{makeCluster(ncores)})}
 
   \item{quadpts}{number of quadrature points per dimension}
 
