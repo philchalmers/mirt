@@ -110,6 +110,7 @@ setMethod(
             tmp2[is.na(tabdata2)] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf
             SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
+            SEscores[!is.na(SEscores)] <- NA
             for (i in 1:nrow(scores)){
                 if(any(scores[i, ] %in% c(-Inf, Inf))) next
                 Theta <- scores[i, ]	  
@@ -120,7 +121,7 @@ setMethod(
                     scores[i, ] <- NA
                     next
                 }
-                scores[i, ] <- estimate$estimate                                
+                scores[i, ] <- estimate$estimate                 
             }  
         }
 		colnames(scores) <- paste('F', 1:ncol(scores), sep='')          
