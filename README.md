@@ -18,7 +18,7 @@ Robbins-Monro algorithm which can include polynomial or product constructed
 latent traits. Additionally, multiple group analysis may be performed for
 unidimensional or multidimensional item response models for detecting
 differential item functioning.
-    
+
 ##Installing from source
 
 It's recommended to use the development version of this package since it is more likely to be up to date 
@@ -43,9 +43,17 @@ library('devtools')
 install_github('mirt', 'philchalmers', quick = TRUE)
 ```
 
+##Installing from a binary (Windows only)
+
 For those having difficulty installing the package on Windows, binary installation (.zip) files 
-for 32- or 64-bit windows may be obtained here: `https://dl.dropbox.com/u/10780530/mirt/mirt.zip`. 
-Note that this file is updated periodically and is not guarenteed to be in sync with 
+for 32- or 64-bit Windows may be installed with:
+
+```r
+download.file('http://dl.dropbox.com/u/10780530/mirt/mirt.zip', 'mirt.zip')
+install.packages('mirt.zip', repos=NULL)
+```
+
+Note that this binary file is updated periodically and is not guarenteed to be in sync with 
 the source code. 
 
 #Extra
