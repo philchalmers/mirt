@@ -82,9 +82,11 @@ setMethod(
 			tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]	
             tmp2[is.na(tabdata2)] <- 1            
 			scores[rowSums(tmp2) == J,] <- Inf
+            SEscores[rowSums(tmp2) == J,] <- NA
             tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]            
             tmp2[is.na(tabdata2)] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf
+            SEscores[rowSums(tmp2) == J,] <- NA
 			SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
 			for (i in 1:nrow(scores)){
 				if(any(scores[i, ] %in% c(-Inf, Inf))) next 
