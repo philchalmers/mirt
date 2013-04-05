@@ -154,7 +154,9 @@ setMethod(
                 print(round(reliability, 4))                
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
-			return(cbind(object@tabdata,scores,SEscores))
+            ret <- cbind(object@tabdata,scores,SEscores)            
+            ret <- ret[do.call(order, as.data.frame(ret[,1:J])), ]
+			return(ret)
 		}   
 	}  
 )
