@@ -52,7 +52,6 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
     unitNvec.fill(1.0);
     const double D = PD(0); 
     const double D2 = PD(0)*PD(0);
-    double tmp;
     NumericMatrix Theta(RTheta), P(RP), num(Rnum), P2(RP2), P3(RP3),
                   dat_num(Rdat_num), numakDTheta_numsum(RnumakDTheta_numsum), 
                   d2L(nfact + ncat*2, nfact + ncat*2), dat(Rdat);

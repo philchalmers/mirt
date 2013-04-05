@@ -52,7 +52,6 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
 	IntegerVector itemexp(Ritemexp);
     const double nullzero = 0.0, nullone = 1.0;
     const int nquad = Theta.nrow();
-	const int nfact = Theta.ncol();
 	const int ncat = d.length();
 	int i,j;
 
