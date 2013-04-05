@@ -222,7 +222,6 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
      */
 
 	int i, j, k; 
-    const double SQRT_DBL_MIN = sqrt(DBL_MIN);
 	NumericMatrix prob(Rprob);
 	NumericMatrix Thetas(RThetas);
     NumericVector Prior(RPrior);
@@ -265,8 +264,8 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 				PQ_p1(i) = PQfull(i,j + 2);
 				Pk_1Pk(i) = Pk_1(i) - Pk(i);
 				Pk_Pkp1(i) = Pk(i) - Pk_p1(i);
-                if(Pk_1Pk(i) < SQRT_DBL_MIN) Pk_1Pk(i) = SQRT_DBL_MIN;
-                if(Pk_Pkp1(i) < SQRT_DBL_MIN) Pk_Pkp1(i) = SQRT_DBL_MIN;
+                if(Pk_1Pk(i) < 1e-10) Pk_1Pk(i) = 1e-10;
+                if(Pk_Pkp1(i) < 1e-10) Pk_Pkp1(i) = 1e-10;
 				dif1(i) = dat(i,j) / Pk_1Pk(i);
 				dif1sq(i) = dat(i,j) / (Pk_1Pk(i) * Pk_1Pk(i));
 				dif2(i) = dat(i,j+1) / Pk_Pkp1(i);
@@ -312,7 +311,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 				PQ_1(i) = PQfull(i,j);
 				PQ(i) = PQfull(i,j + 1);			
 				Pk_1Pk(i) = Pk_1(i) - Pk(i);
-                if(Pk_1Pk(i) < SQRT_DBL_MIN) Pk_1Pk(i) = SQRT_DBL_MIN; 
+                if(Pk_1Pk(i) < 1e-10) Pk_1Pk(i) = 1e-10; 
 				dif1(i) = dat(i,j) / Pk_1Pk(i);
 				dif1sq(i) = dat(i,j) / (Pk_1Pk(i) * Pk_1Pk(i));			
 			}	
