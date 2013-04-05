@@ -289,8 +289,7 @@ setMethod(
         sigma <- gpars$gcov
         prior <- mvtnorm::dmvnorm(Theta, mean=mu, sigma=sigma)
         prior <- prior/sum(prior)
-        rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc, 
-                            debug='')
+        rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc)
         LL <- (-1)*sum(r*log(rlist$expected)) 
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)        
