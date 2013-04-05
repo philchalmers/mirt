@@ -281,12 +281,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         if(gamma == .25){
             gamma <- 1	
             phi <- rep(0, length(grad))            
-            info <- matrix(0, length(grad), length(grad))
-        }        
+            info <- Phi <- matrix(0, length(grad), length(grad))
+        }
         phi <- phi + gamma*(grad - phi)
-        info <- info + gamma*(as.matrix(Tau) - phi %*% t(phi) - info)		
+        Phi <- Phi + gamma*(Tau - outer(grad,grad) - Phi)        
     } ###END BIG LOOP       
     #Reload final pars list
+    info <- Phi - outer(phi,phi)
     if(cycles == NCYCLES + BURNIN + SEMCYCLES) converge <- 0
     ind1 <- 1
     for(g in 1:ngroups){
