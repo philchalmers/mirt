@@ -45,9 +45,8 @@ test_that('one factor', {
     expect_is(fit1, 'list')
     fit2 <- itemfit(mod_metric)
     expect_is(fit2, 'list')
-})
 
-test_that('one factor polynomial and missing', {    
+    #missing data
     set.seed(1234)
     Theta1 <- rnorm(1000, -1)
     Theta2 <- rnorm(1000, 1) 

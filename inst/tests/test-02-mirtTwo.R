@@ -53,6 +53,5 @@ test_that('poly', {
     iinfo <- iteminfo(x, Theta)
     expect_is(iinfo, 'matrix')    
     tinfo <- testinfo(modp1, Theta)
-    expect_is(tinfo, 'matrix')
-    
+    expect_is(tinfo, 'matrix')    
 })

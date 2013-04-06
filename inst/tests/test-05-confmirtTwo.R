@@ -49,17 +49,17 @@ test_that('confirmatory mods', {
     model.quad <- confmirt.model(modelquad, quiet = TRUE)
     model.combo <- confmirt.model(modelcombo, quiet = TRUE)    
     
-    mod1 <- confmirt(dataset,model.1, verbose = FALSE)    
+    suppressWarnings(mod1 <- confmirt(dataset,model.1, verbose = FALSE))
     expect_is(mod1, 'ConfirmatoryClass')    
     
-    mod3 <- confmirt(dataset,model.1, itemtype = c(rep('2PL',3), '3PL', rep('graded',3), '2PL'), 
-                     verbose = FALSE)
+    suppressWarnings(mod3 <- confmirt(dataset,model.1, itemtype = c(rep('2PL',3), '3PL', rep('graded',3), '2PL'), 
+                     verbose = FALSE))
     expect_is(mod3, 'ConfirmatoryClass')
 
     mod.quad <- confmirt(dataset, model.quad, verbose = FALSE)
     expect_is(mod.quad, 'ConfirmatoryClass')
     
-    mod.combo <- confmirt(dataset, model.combo, verbose = FALSE)
+    suppressWarnings(mod.combo <- confmirt(dataset, model.combo, verbose = FALSE))
     expect_is(mod.combo, 'ConfirmatoryClass')
         
     fs1 <- fscores(mod1, verbose = FALSE)

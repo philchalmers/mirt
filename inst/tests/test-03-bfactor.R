@@ -1,6 +1,5 @@
 context('bfactor')
 
-
 test_that('dich data', {
     data <- key2binary(SAT12,
                        key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -17,11 +16,7 @@ test_that('dich data', {
     expect_is(pfit1, 'data.frame')    
     ifit <- itemfit(mod1)
     expect_is(ifit, 'data.frame')
-})
 
-
-
-test_that('mix data', {
     #simulate data
     set.seed(1234)
     a <- matrix(c(

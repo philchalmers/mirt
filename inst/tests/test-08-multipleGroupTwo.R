@@ -29,14 +29,14 @@ test_that('three factor', {
     model2 <- confmirt.model(MGmodelg2, quiet = TRUE)    
     models <- list(D1=model1, D2=model2)    
     
-    mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
-                                verbose = FALSE)
+    suppressWarnings(mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
+                                verbose = FALSE))
     expect_is(mod_metric, 'MultipleGroupClass') 
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', 
                                     prev.mod = mod_metric)
     expect_is(mod_configural, 'MultipleGroupClass')
-    mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
-                                 invariance=c('slopes', 'intercepts', 'free_varcov'))    
+    suppressWarnings(mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
+                                 invariance=c('slopes', 'intercepts', 'free_varcov')))
     expect_is(mod_scalar1, 'MultipleGroupClass')
     
     fs1 <- fscores(mod_metric, verbose = FALSE)

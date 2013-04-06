@@ -14,8 +14,8 @@ test_that('dich', {
     expect_is(modm1, 'ConfirmatoryClass')          
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')
     expect_is(modm1, 'ConfirmatoryClass')          
-    modm2 <- mirt(data, 2, SE = TRUE, SE.type = 'MHRM')    
-    expect_is(modm2, 'ExploratoryClass')
+    modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'MHRM')    
+    expect_is(modm2, 'ConfirmatoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch')
     expect_is(modm3, 'ConfirmatoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch', SE = TRUE, technical=list(TOL=1e-6))
@@ -62,9 +62,7 @@ test_that('dich', {
     fitm2 <- fitIndices(modm2)
     expect_is(fitm1, 'list')
     expect_is(fitm2, 'list')
-})
 
-test_that('dichconfirm', {
     data <- expand.table(LSAT7)
     model <- confmirt.model('F1 = 1-3
         F2 = 3-5', quiet = TRUE)
@@ -76,9 +74,6 @@ test_that('dichconfirm', {
     fm1 <- fscores(modm1, verbose = FALSE)
     expect_is(fm1, 'matrix')
     fm2 <- fscores(modm2, method = 'MAP', verbose = FALSE)
-    expect_is(fm2, 'matrix')
-    
-    
-    
+    expect_is(fm2, 'matrix')    
 })
 

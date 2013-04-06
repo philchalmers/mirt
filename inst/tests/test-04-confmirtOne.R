@@ -17,7 +17,7 @@ test_that('exploratory mods', {
     expect_is(W2, 'wald')
     fitonefact <- fitIndices(onefact)
     expect_is(fitonefact, 'list')
-    twofact <- confmirt(fulldata, 2, verbose = FALSE)
+    suppressWarnings(twofact <- confmirt(fulldata, 2, verbose = FALSE))
     expect_is(twofact, 'ExploratoryClass')
     fulldata[1,1] <- fulldata[2,2] <- NA
     onefactmissing <- confmirt(fulldata, 1, verbose = FALSE)

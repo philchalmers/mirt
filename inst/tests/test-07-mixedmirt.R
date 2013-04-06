@@ -1,6 +1,5 @@
 context('mixedmirt')
 
-
 test_that('mixed dich', {
     set.seed(1234)
     N <- 750
@@ -22,16 +21,16 @@ test_that('mixed dich', {
     #model using 2PL items instead of only Rasch
     mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, verbose = FALSE, fixed.constrain = TRUE)    
     expect_is(mod1b, 'MixedClass')                      
-    dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, verbose = FALSE, fixed.constrain = TRUE)
+    suppressWarnings(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, verbose = FALSE, 
+                                      fixed.constrain = TRUE))
     expect_is(dif, 'MixedClass')          
     sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
     constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3']) # main effects
-    itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, 
-                         constrain=constrain, verbose = FALSE)
+    suppressWarnings(itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, 
+                         constrain=constrain, verbose = FALSE))
     expect_is(itemdif, 'MixedClass')          
-})
 
-test_that('item covs', {
+    #item covs
     set.seed(1234)
     N <- 750
     a <- matrix(rep(1,10))
