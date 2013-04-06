@@ -5,26 +5,22 @@ setMethod(
                           quadpts = NULL, response.vector = NULL, degrees = NULL, 
 	                      returnER = FALSE, verbose = TRUE)
 	{          
-        if(!is.null(response.vector)){            
-            if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
+        if(!is.null(response.vector)){              
+            if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)            
             v <- response.vector
             newdata <- rbind(object@data, v)
             nfact <- object@nfact 
-            newmod <- mirt(newdata, nfact, technical = list(TOL = 10))
-            newmod@pars <- object@pars
-            tabdata <- newmod@tabdata
-            index <- rep(FALSE, nrow(tabdata))
-            for(i in 1:nrow(v)){
-                vfull <-  matrix(v[i, ], nrow(tabdata), ncol(v), byrow = TRUE)
-                index[rowSums(tabdata[,1:ncol(v)] == vfull) == ncol(v)] <- TRUE                
-            }            
-            newmod@tabdata <- newmod@tabdata[index, , drop = FALSE]
-            newmod@tabdatalong <- newmod@tabdatalong[index, , drop = FALSE]
+            sv <- mod2values(object)
+            sv$est <- FALSE
+            newmod <- mirt(newdata, nfact, pars=sv)
+            ind <- which(colSums(t(newmod@tabdata[, 1:length(v)]) == as.numeric(v)) == length(v))
+            newmod@tabdata <- newmod@tabdata[ind, , drop = FALSE]
+            newmod@tabdatalong <- newmod@tabdatalong[ind, , drop = FALSE]            
             ret <- fscores(newmod, rotate=rotate, full.scores=FALSE, method=method, 
-                           quadpts=quadpts, verbose=FALSE)
-            ret <- ret[, -(ncol(ret) - nfact*2)]            
+                           quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)
+            ret <- ret[, -(ncol(ret) - nfact*2)]
             return(ret)
-        }
+        }        
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, 
                                              quadpts=quadpts))
         pars <- object@pars        
@@ -155,7 +151,7 @@ setMethod(
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
             ret <- cbind(object@tabdata,scores,SEscores)            
-            ret <- ret[do.call(order, as.data.frame(ret[,1:J])), ]
+            if(nrow(ret) > 1) ret <- ret[do.call(order, as.data.frame(ret[,1:J])), ]
 			return(ret)
 		}   
 	}  
