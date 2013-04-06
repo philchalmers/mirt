@@ -98,17 +98,11 @@ setMethod(
             G2 <- TRUE
         }
 		data <- object@data
-		pats <- apply(data,1,paste,collapse = "/")			
-		freqs <- table(pats)
-		nfreqs <- length(freqs)		
-		r <- as.vector(freqs)
-		ncolfull <- ncol(data)
-		tabdata <- unlist(strsplit(cbind(names(freqs)),"/"))
-		tabdata <- suppressWarnings(matrix(as.numeric(tabdata),nfreqs,ncolfull,TRUE))
-		tabdata <- cbind(tabdata,r)	
+        tabdata <- object@tabdata
+        r <- tabdata[,ncol(tabdata)]
 		expected <- rep(0,nrow(tabdata))
 		for (j in 1:nrow(tabdata)){          
-			TFvec <- colSums(ifelse(t(data) == tabdata[j,1:ncolfull],1,0)) == ncolfull 
+			TFvec <- colSums(ifelse(t(data) == tabdata[j,1:J],1,0)) == J 
 			TFvec[is.na(TFvec)] <- FALSE	
 			expected[j] <- mean(rwmeans[TFvec])			
 		}
