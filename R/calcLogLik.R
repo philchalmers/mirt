@@ -128,16 +128,16 @@ setMethod(
         df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata	
 		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
 		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)        
-		if(G2){						
+		if(G2){						            
 			if(any(is.na(data))){
-			    object@G2 <- object@p <- object@RMSEA <- object@TLI <- NaN
+			    object@G2 <- object@X2 <- NaN
 			} else {
-				G2 <- 2 * sum(r*log(r/(N*expected)))
-				p <- 1 - pchisq(G2,df) 
+                r <- r[!is.na(expected)]
+                expected <- expected[!is.na(expected)]
+				G2 <- 2 * sum(r*log(r/(sum(r)*expected)))				
+                X2 <- sum((r - sum(r)*expected)^2 / (sum(r)*expected))
 				object@G2 <- G2	
-				object@p <- p				
-				object@RMSEA <- ifelse((G2 - df) > 0, 
-				    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
+                object@X2 <- X2						
                 if(logLikpre == 0){
     				null.mod <- object@null.mod
     				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)

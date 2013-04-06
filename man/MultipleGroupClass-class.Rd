@@ -18,14 +18,21 @@ Objects can be created by calls of the form \code{new("MultipleGroupClass", ...)
     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }    
     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }        
-    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
-    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom for X2 }
-    \item{\code{p}:}{Object of class \code{"numeric"}, p-value for X2  }
+    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }            
+    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}    
     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation}
-    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index}
+    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
+    \item{\code{X2}:}{Object of class \code{"numeric"}, Chi squared stat }
+    \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2  }
+    \item{\code{p.X2}:}{Object of class \code{"numeric"}, p-value for X2  }
+    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
+    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation for G2}
+    \item{\code{RMSEA.X2}:}{Object of class \code{"numeric"}, root mean-square error of approximation for X2}
+    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index for G2}
+    \item{\code{TLI.X2}:}{Object of class \code{"numeric"}, Tucker-Lewis index for X2}
+    \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
+    \item{\code{CFI.X2}:}{Object of class \code{"numeric"}, CFI for X2}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }

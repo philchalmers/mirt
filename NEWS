@@ -1,5 +1,7 @@
 NEW FEATURES
 
+- CFI and X2 model statistics added, and output now includes fit stats wrt both G2 and X2
+
 - z stats added for itemfit/personfit infit and outfit statistics
 
 - supplemented EM ('SEM') added for calculating information matrix from EM history. By default 

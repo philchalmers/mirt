@@ -5,25 +5,26 @@ setMethod(
     definition = function(x){  
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"), 
             "\n\n", sep = "")
-        cat("Full-information factor analysis with ", ncol(x@F), " factor",
-            if(ncol(x@F)>1) "s", "\n", sep="")
+        cat("Full-information item factor analysis with ", x@nfact, " factors \n", sep="")
         EMquad <- ''
         if(x@method == 'EM') EMquad <- c(' with ', x@quadpts, ' quadrature')
-        if(x@converge == 1)	
+        if(x@converge == 1)    
             cat("Converged in ", x@iter, " iterations", EMquad, ". \n", sep = "")
-        else 	
-            cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")
-        cat("Log-likelihood =", x@logLik, "\n")
-        cat("AIC =", x@AIC, "\n")		
-        cat("AICc =", x@AICc, "\n")
-        cat("BIC =", x@BIC, "\n")
-        cat("SABIC =", x@SABIC, "\n")
-        if(!is.nan(x@p))            		    
-            cat("G^2 = ", round(x@G2,2), ", df = ", x@df, ", p = ", round(x@p,4),
-                "\nTLI = ", round(x@TLI,3), ", RMSEA = ", round(x@RMSEA,3), "\n", sep="")
-        else             
-            cat("G^2 = ", NA, ", df = ", 
-                x@df, ", p = ", NA, ", RMSEA = ", NA, "\n", sep="" )		
+        else     
+            cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")        
+        if(length(x@logLik) > 0){
+            cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0, 
+                                                      paste(', SE = ', round(x@SElogLik,3)),
+                                                      ''), "\n",sep='')			
+            cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
+            cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')            
+            if(!is.nan(x@p)){
+                cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), 
+                    "\nX2 (", x@df,") = ", round(x@X2,2), ", p = ", round(x@p.X2,4), sep='') 
+                cat("\nCFI (G2) = ", round(x@CFI,3), "; CFI (X2) = ", round(x@CFI.X2,3), sep='')                    
+                cat("\nTLI (G2) = ", round(x@TLI,3), "; TLI (X2) = ", round(x@TLI.X2,3), '\n', sep='') 
+            }
+        }				
     }
 )
 
