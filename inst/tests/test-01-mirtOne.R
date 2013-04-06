@@ -14,7 +14,7 @@ test_that('dich', {
     expect_is(modm1, 'ConfirmatoryClass')          
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')
     expect_is(modm1, 'ConfirmatoryClass')          
-    modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'MHRM')    
+    suppressWarnings(modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'MHRM'))
     expect_is(modm2, 'ConfirmatoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch')
     expect_is(modm3, 'ConfirmatoryClass')
