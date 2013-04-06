@@ -1,5 +1,7 @@
 NEW FEATURES
 
+- z stats added for itemfit/personfit infit and outfit statistics
+
 - supplemented EM ('SEM') added for calculating information matrix from EM history. By default 
   the TOL value is dropped to help make the EM iterations longer and more stable. Supports
   parallel computing
@@ -24,6 +26,8 @@ BUG FIXES
   increasing near maximum
 
 - fix input to itemplot() when object is a list of model objects
+
+- fixed implementation of infit and outfit Rasch statistics
 
 
 Changes in mirt 0.6.0

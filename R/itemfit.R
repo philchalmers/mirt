@@ -136,11 +136,18 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             for(i in 1:length(x@itemtype))
                 if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
             attr(x, 'inoutfitreturn') <- TRUE
-            pf <- personfit(x, method=method)        
-            outfit <- colSums(pf$resid2 / pf$info) / N
-            infit <- colSums(pf$resid2) / colSums(pf$info)        
+            pf <- personfit(x, method=method)            
+            z2 <- pf$resid^2 / pf$W
+            outfit <- colSums(z2) / N
+            q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
+            z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
+            infit <- colSums(pf$W * z2) / colSums(pf$W)
+            q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
+            z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
             ret$outfit <- outfit
+            ret$z.outfit <- z.outfit
             ret$infit <- infit
+            ret$z.infit <- z.infit
             ret$Zh <- Zh        
         } else {
             ret$Zh <- Zh    

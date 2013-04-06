@@ -104,21 +104,28 @@ personfit <- function(x, method = 'EAP'){
     if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
         for(i in 1:length(x@itemtype))
             if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
-        V <- resid2 <- info <- matrix(0, ncol=J, nrow=N)  
-        K <- x@K
+        W <- resid <- info <- C <- matrix(0, ncol=J, nrow=N)  
+        K <- x@K               
         for (i in 1:J){            
             P <- ProbTrace(x=pars[[i]], Theta=Theta)
             Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)            
             dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]               
-            item <- extract.item(x, i)
-            info[,i] <- iteminfo(item, Theta)
-            resid2[ ,i] <- rowSums((dat*Emat - Emat * P))^2 
-        }
-        if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid2=resid2, info=info))
-        outfit <- rowSums(resid2/info) / J
-        infit <- rowSums(resid2) / rowSums(info)    
-        if(full.scores) ret <- data.frame(x@data, outfit=outfit, infit=infit, Zh=Zh)
-        else ret <- data.frame(x@tabdata, outfit=outfit, infit=infit, Zh=Zh)
+            item <- extract.item(x, i)              
+            resid[, i] <- rowSums(dat*Emat) - rowSums(Emat * P)
+            W[ ,i] <- rowSums((Emat - rowSums(Emat * P))^2 * P)
+            C[ ,i] <- rowSums((Emat - rowSums(Emat * P))^4 * P)
+        }        
+        if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))        
+        outfit <- rowSums(resid^2/W) / J
+        q.outfit <- sqrt(rowSums((C / W^2) / J^2) - 1 / J)
+        z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
+        infit <- rowSums(resid^2) / rowSums(W)    
+        q.infit <- sqrt(rowSums(C - W^2) / rowSums(W)^2)
+        z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
+        if(full.scores) ret <- data.frame(x@data, outfit=outfit, z.outfit=z.outfit, 
+                                          infit=infit, z.infit=z.infit, Zh=Zh)
+        else ret <- data.frame(x@tabdata, outfit=outfit, z.outfit=z.outfit,
+                               infit=infit, z.infit=z.infit, Zh=Zh)
     } else {
         if(full.scores) ret <- data.frame(x@data, Zh=Zh)
         else ret <- data.frame(x@tabdata, Zh=Zh)        
