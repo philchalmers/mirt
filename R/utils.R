@@ -792,9 +792,10 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     ESTIMATE$info <- info
     SEtmp <- diag(solve(info))        
     if(any(SEtmp < 0)){
-        warning("Information matrix is not positive definite, negative SEs set to 0.\n")
-        SEtmp <- rep(0, length(SEtmp))
-    } else SEtmp <- sqrt(SEtmp)
+        warning("Negative SEs set to 0.\n")
+        SEtmp[SEtmp < 0 ] <- 0        
+    }
+    SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
     SE[ESTIMATE$estindex_unique] <- SEtmp
     index <- 1:length(longpars) 
