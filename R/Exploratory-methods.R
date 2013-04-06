@@ -217,7 +217,8 @@ setMethod(
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,expected,res)
-            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")	
+            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")
+            tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]            
             if(!is.null(printvalue)){
                 if(!is.numeric(printvalue)) stop('printvalue is not a number.')
                 tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
