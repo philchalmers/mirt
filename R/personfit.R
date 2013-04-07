@@ -87,20 +87,18 @@ personfit <- function(x, method = 'EAP'){
     LL[LL < .Machine$double.eps] <- 1
     LL <- rowSums(log(LL)) 
     Zh <- rep(0, length(LL))
-    for(n in 1:nrow(Theta)){    
-        mu <- sigma2 <- 0
-        for(item in 1:J){
-            P <- itemtrace[n ,itemloc[item]:(itemloc[item+1]-1)]
-            mu <- mu + sum(P * log(P))            
-            for(i in 1:length(P)){
-                for(j in 1:length(P)){
-                    if(i != j)
-                        sigma2 <- sigma2 + P[i] * P[j] * log(P[i]) * log(P[i]/P[j])
-                }
-            }            
-        }
-        Zh[n] <- (LL[n] - mu) / sqrt(sigma2)
-    }  
+    mu <- sigma2 <- numeric(N)    
+    log_itemtrace <- log(itemtrace)
+    for(item in 1:J){              
+        P <- itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
+        log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
+        mu <- mu + rowSums(P * log_P) 
+        for(i in 1:ncol(P))
+            for(j in 1:ncol(P))
+                if(i != j)
+                    sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
+    } 
+    Zh <- (LL - mu) / sqrt(sigma2)    
     if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
         for(i in 1:length(x@itemtype))
             if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break

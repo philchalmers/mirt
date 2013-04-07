@@ -117,19 +117,17 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         LL <- itemtrace * fulldata        
         LL[LL < .Machine$double.eps] <- 1
         Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)              
-        mu <- sigma2 <- rep(0, J)    
+        mu <- sigma2 <- rep(0, J)            
+        log_itemtrace <- log(itemtrace)
         for(item in 1:J){              
-            for(n in 1:N){                
-                P <- itemtrace[n ,itemloc[item]:(itemloc[item+1]-1)]
-                mu[item] <- mu[item] + sum(P * log(P))            
-                for(i in 1:length(P)){
-                    for(j in 1:length(P)){
-                        if(i != j)
-                            sigma2[item] <- sigma2[item] + P[i] * P[j] * log(P[i]) * log(P[i]/P[j])
-                    }
-                }                               
-            }               
-        }        
+            P <- itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
+            log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
+            mu[item] <- sum(P * log_P) 
+            for(i in 1:ncol(P))
+                for(j in 1:ncol(P))
+                    if(i != j)
+                        sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j]))
+        } 
         Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2) 
         #if all Rasch models, infit and outfit        
         if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
