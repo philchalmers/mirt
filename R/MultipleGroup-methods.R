@@ -22,6 +22,7 @@ setMethod(
             if(!is.nan(x@p)){                
                 cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), 
                     "\nX2 (", x@df,") = ", round(x@X2,2), ", p = ", round(x@p.X2,4), sep='')                     
+                cat("\nRMSEA (G2) = ", round(x@RMSEA,3), "; RMSEA (X2) = ", round(x@RMSEA.X2,3), sep='')
                 cat("\nCFI (G2) = ", round(x@CFI,3), "; CFI (X2) = ", round(x@CFI.X2,3), sep='')                    
                 cat("\nTLI (G2) = ", round(x@TLI,3), "; TLI (X2) = ", round(x@TLI.X2,3), '\n\n', sep='') 
                 for(g in 1:length(x@cmods))
