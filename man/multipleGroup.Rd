@@ -1,8 +1,10 @@
 \name{multipleGroup}
 \alias{anova,MultipleGroupClass-method}
 \alias{coef,MultipleGroupClass-method}
+\alias{fitted,MultipleGroupClass-method}
 \alias{multipleGroup}
 \alias{plot,MultipleGroupClass-method}
+\alias{residuals,MultipleGroupClass-method}
 \alias{summary,MultipleGroupClass-method}
 \title{Multiple Group Estimation}
 \usage{
@@ -22,6 +24,10 @@
     3, verbose = TRUE, ...)
 
   \S4method{anova}{MultipleGroupClass}(object, object2)
+
+  \S4method{residuals}{MultipleGroupClass}(object, ...)
+
+  \S4method{fitted}{MultipleGroupClass}(object, ...)
 
   \S4method{plot}{MultipleGroupClass}(x, y, type = 'info',
     npts = 50, theta_angle = 45, rot = list(xaxis = -70,
@@ -235,6 +241,7 @@ mod_fullconstrain <- multipleGroup(dat, models, group = group,
 
 summary(mod_scalar2)
 coef(mod_scalar2)
+residuals(mod_scalar2)
 plot(mod_configural)
 itemplot(mod_configural, 2)
 itemplot(mod_configural, 2, type = 'RE')

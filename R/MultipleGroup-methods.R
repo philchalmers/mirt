@@ -208,3 +208,29 @@ setMethod(
         }
     }
 )
+
+setMethod(
+    f = "residuals",
+    signature = signature(object = 'MultipleGroupClass'),
+    definition = function(object, ...)
+    {         
+        ret <- vector('list', length(object@groupNames))
+        names(ret) <- object@groupNames        
+        for(g in 1:length(ret))
+            ret[[g]] <- residuals(object@cmods[[g]], verbose = FALSE, ...)
+        ret
+    }
+)
+
+setMethod(
+    f = "fitted",
+    signature = signature(object = 'MultipleGroupClass'),
+    definition = function(object, ...)
+    {        
+        ret <- vector('list', length(object@groupNames))
+        names(ret) <- object@groupNames
+        for(g in 1:length(ret))
+            ret[[g]] <- fitted(object@cmods[[g]], ...)
+        ret        
+    }    
+)

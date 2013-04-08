@@ -1,8 +1,10 @@
+Changes in mirt 0.6.1
+
 NEW FEATURES
 
-- plot generic added for MultipleGroup objects
+- plot(), fitted(), and residuals() generic support added for MultipleGroup objects
 
-- CFI and X2 model statistics added, and output now includes fit stats wrt both G2 and X2
+- CFI and X2 model statistics added, and output now includes fit stats w.r.t. both G2 and X2
 
 - z stats added for itemfit/personfit infit and outfit statistics
 

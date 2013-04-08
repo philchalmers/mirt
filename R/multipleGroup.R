@@ -13,7 +13,8 @@
 #' \code{mod2values} or from passing \code{pars = 'values'}.  
 #' 
 #' @aliases multipleGroup coef,MultipleGroupClass-method summary,MultipleGroupClass-method
-#' anova,MultipleGroupClass-method plot,MultipleGroupClass-method 
+#' anova,MultipleGroupClass-method plot,MultipleGroupClass-method residuals,MultipleGroupClass-method 
+#' fitted,MultipleGroupClass-method 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object or named list of objects returned from \code{confmirt.model()} declaring how
@@ -116,6 +117,10 @@
 #' 
 #' \S4method{anova}{MultipleGroupClass}(object, object2)
 #' 
+#' \S4method{residuals}{MultipleGroupClass}(object, ...)
+#'
+#' \S4method{fitted}{MultipleGroupClass}(object, ...)
+#' 
 #' \S4method{plot}{MultipleGroupClass}(x, y, type = 'info', npts = 50, theta_angle = 45, 
 #' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #'
@@ -151,6 +156,7 @@
 #'                              
 #' summary(mod_scalar2)
 #' coef(mod_scalar2)
+#' residuals(mod_scalar2)
 #' plot(mod_configural)
 #' itemplot(mod_configural, 2)  
 #' itemplot(mod_configural, 2, type = 'RE') 
