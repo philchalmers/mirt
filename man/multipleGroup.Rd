@@ -2,6 +2,7 @@
 \alias{anova,MultipleGroupClass-method}
 \alias{coef,MultipleGroupClass-method}
 \alias{multipleGroup}
+\alias{plot,MultipleGroupClass-method}
 \alias{summary,MultipleGroupClass-method}
 \title{Multiple Group Estimation}
 \usage{
@@ -21,6 +22,10 @@
     3, verbose = TRUE, ...)
 
   \S4method{anova}{MultipleGroupClass}(object, object2)
+
+  \S4method{plot}{MultipleGroupClass}(x, y, type = 'info',
+    npts = 50, theta_angle = 45, rot = list(xaxis = -70,
+    yaxis = 30, zaxis = 10), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -119,6 +124,26 @@
   \item{method}{a character indicating whether to use the
   EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm}
 
+  \item{type}{type of plot to view; can be \code{'info'} to
+  show the test information function, \code{'infocontour'}
+  for the test information contours, \code{'SE'} for the
+  test standard error function, and \code{'RE'} for the
+  relative efficiency plot}
+
+  \item{theta_angle}{numeric values ranging from 0 to 90
+  used in \code{plot}}
+
+  \item{npts}{number of quadrature points to be used for
+  plotting features. Larger values make plots look
+  smoother}
+
+  \item{rot}{allows rotation of the 3D graphics}
+
+  \item{x}{an object of class \code{mirt} to be plotted or
+  printed}
+
+  \item{y}{an unused variable to be ignored}
+
   \item{itemtype}{see \code{\link{mirt}} for details}
 
   \item{constrain}{see \code{\link{mirt}} for details}
@@ -210,6 +235,7 @@ mod_fullconstrain <- multipleGroup(dat, models, group = group,
 
 summary(mod_scalar2)
 coef(mod_scalar2)
+plot(mod_configural)
 itemplot(mod_configural, 2)
 itemplot(mod_configural, 2, type = 'RE')
 
@@ -309,6 +335,39 @@ mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM', 
 anova(mod_metric, mod_configural)
 anova(mod_scalar, mod_metric)
 anova(mod_fullconstrain, mod_scalar)
+
+############
+#polytomous item example
+set.seed(12345)
+a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+d <- cbind(d, d-1, d-2)
+itemtype <- rep('graded', nrow(a))
+N <- 1000
+dataset1 <- simdata(a, d, N, itemtype)
+dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+dat <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+models <- confmirt.model('F1 = 1-15')
+models2 <- confmirt.model('
+   F1 = 1-10
+   F2 = 10-15')
+
+mod_configural <- multipleGroup(dat, models, group = group)
+plot(mod_configural)
+plot(mod_configural, type = 'SE')
+itemplot(mod_configural, 1)
+itemplot(mod_configural, 1, type = 'info')
+fs <- fscores(mod_configural)
+head(fs[["D1"]])
+fscores(mod_configural, method = 'EAPsum')
+
+mod_configural2 <- multipleGroup(dat, models2, group = group)
+plot(mod_configural2, type = 'infocontour')
+plot(mod_configural2, type = 'SE')
+plot(mod_configural2, type = 'RE')
+itemplot(mod_configural2, 10)
+
 }
 }
 \author{

@@ -1,5 +1,7 @@
 NEW FEATURES
 
+- plot generic added for MultipleGroup objects
+
 - CFI and X2 model statistics added, and output now includes fit stats wrt both G2 and X2
 
 - z stats added for itemfit/personfit infit and outfit statistics
