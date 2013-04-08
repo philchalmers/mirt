@@ -167,9 +167,8 @@ setMethod(
     signature = signature(x = 'custom', Theta = 'matrix'),
     definition = function(x, Theta, EM=FALSE, prior=NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)                
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)        
         return(LL)
     }
@@ -179,10 +178,9 @@ setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, EM=FALSE, prior=NULL){          
-        itemtrace <- ProbTrace(x=x, Theta=Theta)                
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        itemtrace <- ProbTrace(x=x, Theta=Theta)                        
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)        
         return(LL)
     }
@@ -193,9 +191,8 @@ setMethod(
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)        
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -206,9 +203,8 @@ setMethod(
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)        
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -219,9 +215,8 @@ setMethod(
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -232,9 +227,8 @@ setMethod(
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -245,9 +239,8 @@ setMethod(
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -258,9 +251,8 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -271,9 +263,8 @@ setMethod(
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, prior = NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)
-        Prior <- rep(1, nrow(itemtrace))
-        if(EM) Prior <- prior
-        LL <- (-1) * sum(x@rs * log(itemtrace) * Prior)
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
         LL <- LL.Priors(x=x, LL=LL)
         return(LL)
     }
@@ -618,7 +609,7 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
     for(i in 1:nfact)
         P <- P * P.mirt(a[i], d[i], Theta[ ,i, drop=FALSE], g=0, u=1, D=D)
     P <- g + (u - g) * P
-    s.eps <- sqrt(.Machine$double.eps)
+    s.eps <- 1e-10
     P[P < s.eps] <- s.eps
     P[(1 - P) < s.eps] <- 1 - s.eps
     P	
