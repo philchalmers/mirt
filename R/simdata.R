@@ -136,7 +136,8 @@
 #' 
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0, 
 	upper = 1, nominal = NULL, Theta = NULL, D = 1.702)
-{     
+{       
+    fn <- function(p, ns) sample(1:ns, 1, prob = p)
 	nfact <- ncol(a)
 	nitems <- nrow(a)		
 	K <- rep(0,nitems)	
@@ -165,8 +166,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(any(itemtype[i] == c('gpcm','nominal'))) 
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
-		for (j in 1:N) 
-            data[j,i] <- sample(1:ncol(P), 1, prob = P[j,])        
+        data[,i] <- apply(P, 1, fn, ns = ncol(P))		                   
         if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp'))) data[ ,i] <- data[ ,i] - 1 
 	}
 	colnames(data) <- paste("Item_", 1:nitems, sep="") 
