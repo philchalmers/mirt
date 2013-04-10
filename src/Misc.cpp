@@ -64,3 +64,31 @@ NumericVector itemTrace(NumericVector a, const double *d,
 	return P;		
 }
 
+RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
+{    
+    BEGIN_RCPP
+	NumericVector longpars(Rlongpars);
+    List pars(Rpars);
+    NumericVector ngroups(Rngroups);
+    NumericVector J(RJ);
+    int i, j, g;
+    int ind = 0, len;
+
+    for(g = 0; g < ngroups[0]; g++){
+        List glist = pars[g];
+        for(i = 0; i < J[0]; i++){
+            S4 item = glist[i];
+            NumericVector p = item.slot("par");
+            len = p.length();
+            for(j = 0; j < len; j++)
+                p(j) = longpars(ind+j);
+            ind += len;
+            item.slot("par") = p;
+            glist[i] = item;
+        }        
+        pars[g] = glist;
+    }
+	
+    return(pars);
+	END_RCPP
+}

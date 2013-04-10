@@ -677,26 +677,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
 }
 
 reloadPars <- function(longpars, pars, ngroups, J){
-    ind1 <- 1
-    for(g in 1:ngroups){                
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-            pars[[g]][[i]]@par <- longpars[ind1:ind2]
-            ind1 <- ind2 + 1
-        }
-        for(i in 1:(J+1)){                        
-            #apply sum(t) == 1 constraint for mcm
-            if(is(pars[[g]][[i]], 'mcm')){                
-                tmp <- pars[[g]][[i]]@par
-                cat <- pars[[g]][[i]]@ncat
-                tmp2 <- (length(tmp) - (cat-1)):length(tmp) 
-                Num <- exp(tmp[tmp2])
-                tmp <- Num/sum(Num)                                    
-                pars[[g]][[i]]@par[tmp2] <- tmp
-            }
-        }
-    }
-    return(pars)
+    return(.Call('reloadPars', longpars, pars, ngroups, J))
 }
 
 computeItemtrace <- function(pars, Theta, itemloc){
