@@ -76,7 +76,7 @@ RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
 
     for(g = 0; g < ngroups[0]; g++){
         List glist = pars[g];
-        for(i = 0; i < J[0]; i++){
+        for(i = 0; i < (J[0]+1); i++){
             S4 item = glist[i];
             NumericVector p = item.slot("par");
             len = p.length();
