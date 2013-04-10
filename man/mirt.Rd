@@ -14,8 +14,8 @@ Theory)}
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     rotate = 'oblimin', Target = NaN, prev.cor = NULL,
     quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D
-    = 1.702, cl = NULL, verbose = FALSE, technical =
-    list(), ...)
+    = 1.702, cl = NULL, large = FALSE, verbose = FALSE,
+    technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -207,6 +207,22 @@ Theory)}
   smoother}
 
   \item{rot}{allows rotation of the 3D graphics}
+
+  \item{large}{a logical, indicating whether the internal
+  collapsed data should be returned, or list of internally
+  computed mirt parameters containing the data. If
+  \code{TRUE} a list containing the organized data used
+  prior to estimation is returned. This list object can
+  then be passed back into \code{large} to avoid
+  reorganizing the data in every estimation (useful when
+  the dataset are very large and computing the tabularized
+  data is computationally burdensome). Therefore, the best
+  strategy for large data is to always pass the internal
+  data to the estimation function, shown below: \describe{
+  \item{Compute organized data}{e.g., \code{internaldat <-
+  mirt(Science, 1, large = TRUE)}} \item{Pass the organized
+  data to all estimation functions}{e.g., \code{mod <-
+  mirt(Science, 1, large = internaldat)}} }}
 
   \item{restype}{type of residuals to be displayed. Can be
   either \code{'LD'} for a local dependence matrix (Chen &

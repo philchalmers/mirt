@@ -1,6 +1,7 @@
 PrepData <- function(data, model, itemtype, guess, upper, 
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
-                     grsm.block = NULL, rsm.block = NULL, D, mixedlist, customItems)
+                     grsm.block = NULL, rsm.block = NULL, D, mixedlist, customItems, 
+                     fulldata = NULL)
 {    
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
@@ -51,20 +52,22 @@ PrepData <- function(data, model, itemtype, guess, upper,
     factorNames <- setdiff(model[,1],keywords)
     nfactNames <- length(factorNames)
     nfact <- sum(!grepl('\\(',factorNames))
-    index <- 1:J	
-    fulldata <- matrix(0,N,sum(K))
+    index <- 1:J
     Names <- NULL
     for(i in 1:J)
-        Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))				
-    colnames(fulldata) <- Names			
-    for(i in 1:J){
-        ind <- index[i]		
-        dummy <- matrix(0,N,K[ind])
-        for (j in 0:(K[ind]-1))  
-            dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
-        fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
-    }	
-    fulldata[is.na(fulldata)] <- 0        
+        Names <- c(Names, paste("Item.",i,"_",1:K[i],sep=""))    			
+    if(is.null(fulldata)){
+        fulldata <- matrix(0,N,sum(K))    
+        colnames(fulldata) <- Names			
+        for(i in 1:J){
+            ind <- index[i]		
+            dummy <- matrix(0,N,K[ind])
+            for (j in 0:(K[ind]-1))  
+                dummy[,j+1] <- as.integer(data[,ind] == uniques[[ind]][j+1])  		
+            fulldata[ ,itemloc[ind]:(itemloc[ind+1]-1)] <- dummy		
+        }	
+        fulldata[is.na(fulldata)] <- 0        
+    }
     pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames, 
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata, 
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  

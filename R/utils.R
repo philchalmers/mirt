@@ -598,25 +598,24 @@ nameInfoMatrix <- function(info, correction, L, npars){
 }
 
 maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem, K, itemloc,
-                        Names, itemnames){    
-    tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.numeric)
+                        Names, itemnames){        
+    tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
     tabdata2 <- do.call(rbind, tabdata2)
     tabdata2[tabdata2 == 99999] <- NA
     tabdata <- matrix(0, nrow(tabdata2), sum(K))
     for(i in 1:nitem){
         uniq <- sort(na.omit(unique(tabdata2[,i])))        
         for(j in 1:length(uniq))
-            tabdata[,itemloc[i] + j - 1] <- as.numeric(tabdata2[,i] == uniq[j])        
+            tabdata[,itemloc[i] + j - 1] <- as.integer(tabdata2[,i] == uniq[j])        
     }     
     tabdata[is.na(tabdata)] <- 0
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
-    ret1 <- ret2 <- vector('list', length(groupNames))    
-    for(g in 1:length(groupNames)){
+    ret1 <- ret2 <- vector('list', length(groupNames))        
+    for(g in 1:length(groupNames)){        
+        Freq <- numeric(length(stringtabdata))
         tmpstringdata <- stringfulldata[group == groupNames[g]]
-        Freq <- numeric(nrow(tabdata))
-        for(i in 1:length(stringtabdata))
-            Freq[i] <- sum(tmpstringdata == stringtabdata[i])
+        Freq[stringtabdata %in% tmpstringdata] <- table(match(tmpstringdata, stringtabdata))        
         ret1[[g]] <- cbind(tabdata, Freq)
         ret2[[g]] <- cbind(tabdata2, Freq)
     }    
@@ -629,7 +628,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .01, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
                      technical = list(), use = 'pairwise.complete.obs', 
-                     SE.type = 'MHRM', ...)
+                     SE.type = 'MHRM', prev.mod = NULL, large = NULL, ...)
 {    
     opts <- list()
     opts$method = method
@@ -671,6 +670,18 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     }	 
     opts$NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
     opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)    
+    if(!is.null(prev.mod)){
+        opts$fulldata <- prev.mod$fulldata
+        opts$tabdata <- prev.mod$tabdatalong
+        opts$tabdata2 <- prev.mod$tabdata
+    }
+    opts$returnPrepList <- FALSE
+    opts$PrepList <- NULL
+    if(!is.null(large)){
+        if(is.logical(large))
+            if(large) opts$returnPrepList <- TRUE
+        if(is.list(large)) opts$PrepList <- large        
+    }    
     if(!is.null(cl)) require(parallel)    
     return(opts)
 }

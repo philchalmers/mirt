@@ -43,13 +43,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     PrepList <- vector('list', Data$ngroups)        
     names(PrepList) <- Data$groupNames    
     tmp <- 1:Data$ngroups
-    selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]      
+    selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]         
     PrepListFull <- PrepList[[1]] <- 
         PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess, 
                  upper=upper, parprior=parprior, verbose=opts$verbose,  
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block, 
-                 D=opts$D, mixedlist=mixedlist, customItems=customItems)                    
+                 D=opts$D, mixedlist=mixedlist, customItems=customItems,
+                 fulldata=opts$PrepList[[1]]$fulldata)                    
     parnumber <- 1
     for(g in 1:Data$ngroups){                    
         tmp <- 1:Data$ngroups
@@ -59,11 +60,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                       upper=upper, parprior=parprior, verbose=opts$verbose, 
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
                                       grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist, 
-                                      customItems=customItems)        
+                                      customItems=customItems, fulldata=PrepList[[1]]$fulldata)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
-    }     
-    if(Data$ngroups > 0) {                
+    }
+    if(!is.null(opts$PrepList)){
+        PrepList <- opts$PrepList
+    } else {                
         tmpdata <- Data$data
         tmpdata[is.na(tmpdata)] <- 99999
         stringfulldata <- apply(tmpdata, 1, paste, sep='', collapse = '/')
@@ -82,7 +85,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }        
         rm(tmpdata, tmptabdata, stringfulldata, stringtabdata, select, parnumber, 
            PrepListFull, selectmod)
-    }                
+    } 
+    if(opts$returnPrepList) return(PrepList)
     if(opts$BFACTOR){
         #better start values                        
         Rpoly <- cormod(Data$data, PrepList[[1]]$K, guess, use=opts$use)        
@@ -374,7 +378,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN       
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull){        
-        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE))))
+        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE),
+                                     large=opts$PrepList)))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')
             null.mod <- unclass(new('ConfirmatoryClass'))            
