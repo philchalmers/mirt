@@ -628,7 +628,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .01, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
                      technical = list(), use = 'pairwise.complete.obs', 
-                     SE.type = 'MHRM', prev.mod = NULL, large = NULL, ...)
+                     SE.type = 'MHRM', large = NULL, ...)
 {    
     opts <- list()
     opts$method = method
@@ -669,14 +669,9 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
             opts$gain <- technical$gain
     }	 
     opts$NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)
-    opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)    
-    if(!is.null(prev.mod)){
-        opts$fulldata <- prev.mod$fulldata
-        opts$tabdata <- prev.mod$tabdatalong
-        opts$tabdata2 <- prev.mod$tabdata
-    }
+    opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)        
     opts$returnPrepList <- FALSE
-    opts$PrepList <- NULL
+    opts$PrepList <- NULL    
     if(!is.null(large)){
         if(is.logical(large))
             if(large) opts$returnPrepList <- TRUE
