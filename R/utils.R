@@ -626,10 +626,10 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 
 makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN, 
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE, 
-                     SEtol = .01, nested.mod = NULL, grsm.block = NULL, D = 1.702, 
+                     SEtol = .01, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
                      technical = list(), use = 'pairwise.complete.obs', 
-                     SE.type = 'MHRM')
+                     SE.type = 'MHRM', ...)
 {    
     opts <- list()
     opts$method = method
@@ -641,8 +641,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$SE = SE 
     opts$SE.type = SE.type
     opts$verbose = verbose 
-    opts$SEtol = SEtol
-    opts$nested.mod = nested.mod
+    opts$SEtol = SEtol    
     opts$grsm.block = grsm.block
     opts$D = D 
     opts$rsm.block = rsm.block

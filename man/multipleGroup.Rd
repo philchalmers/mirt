@@ -13,9 +13,8 @@
     .001, invariance = '', pars = NULL, method = 'EM',
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     draws = 3000, quadpts = NULL, grsm.block = NULL,
-    rsm.block = NULL, prev.mod = NULL, bfactor = FALSE, D =
-    1.702, cl = NULL, technical = list(), verbose = TRUE,
-    ...)
+    rsm.block = NULL, bfactor = FALSE, D = 1.702, cl =
+    NULL, technical = list(), verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -115,17 +114,6 @@
   algorithm if the factor pattern is a bifactor model (has
   exactly 1 general factor and 1 specific factor for each
   item). Only applicable when \code{method = 'EM'}}
-
-  \item{prev.mod}{an optional input object of class
-  \code{'MultipleGroupClass'} to quickly change the
-  starting values of the current estimation. If a parameter
-  in the current model is being freely estimated then it's
-  value will be set to whatever the corresponding value was
-  in this input object. This is useful when testing nested
-  models since the starting values should be much closer to
-  the new ML values. Note that this method requires that
-  all the \code{itemtype} values be identical between
-  models}
 
   \item{method}{a character indicating whether to use the
   EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm}
@@ -227,17 +215,13 @@ models <- confmirt.model('F1 = 1-15')
 mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
 
 # prev.mod can save precious iterations and help to avoid local minimums
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'),
-                            prev.mod = mod_configural) #equal slopes
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 mod_scalar2 <- multipleGroup(dat, models, group = group, #equal intercepts, free variance and means
-                             invariance=c('slopes', 'intercepts', 'free_varcov','free_means'),
-                             prev.mod = mod_configural)
+                             invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
 mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
-                             invariance=c('slopes', 'intercepts', 'free_varcov'),
-                             prev.mod = mod_configural)
+                             invariance=c('slopes', 'intercepts', 'free_varcov'))
 mod_fullconstrain <- multipleGroup(dat, models, group = group,
-                             invariance=c('slopes', 'intercepts'),
-                             prev.mod = mod_configural)
+                             invariance=c('slopes', 'intercepts'))
 
 summary(mod_scalar2)
 coef(mod_scalar2)
@@ -268,9 +252,8 @@ refmodel <- multipleGroup(dat, models, group = group,
 #loop over items (in practice, run in parallel to increase speed)
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, prev.mod=refmodel,
-                             invariance=c('free_means', 'free_varcov', itemnames[-i]),
-                             verbose = FALSE)
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE,
+                             invariance=c('free_means', 'free_varcov', itemnames[-i]))
 
 (anovas <- lapply(estmodels, anova, object2=refmodel))
 
@@ -281,9 +264,9 @@ p.adjust(p, method = 'BH')
 #same as above, except only test if slopes vary (1 df)
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, prev.mod=refmodel,
-                             invariance=c('free_means', 'free_varcov', 'intercepts', itemnames[-i]),
-                             verbose = FALSE)  #constrain all intercepts
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, #constrain all intercepts
+                             invariance=c('free_means', 'free_varcov', 'intercepts', itemnames[-i]))
+
 
 (anovas <- lapply(estmodels, anova, object2=refmodel))
 
@@ -320,12 +303,11 @@ models <- list(D1=model1, D2=model2) #note the names match the groups
 
 #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'),
-     prev.mod=mod_configural) #equal slopes
-mod_scalar <- multipleGroup(dat, models, group = group, prev.mod=mod_configural, #equal means, slopes, intercepts
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
+mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
 mod_fullconstrain <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
-                             invariance=c('slopes', 'intercepts'), prev.mod=mod_configural)
+                             invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)
 anova(mod_scalar, mod_metric)

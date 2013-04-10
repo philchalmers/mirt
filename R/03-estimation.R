@@ -97,16 +97,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             for(i in 1:Data$nitems)
                 PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1:2] <- astart[i, ] 
         rm(Rpoly, loads, u, cs, astart) 
-    }
-    if(!is.null(opts$nested.mod) && is(opts$nested.mod, 'MultipleGroupClass')){          
-        for(g in 1:Data$ngroups){
-            for(i in 1:length(PrepList[[g]]$pars)){
-                tmp <- opts$nested.mod@cmods[[g]]@pars
-                tmp2 <- PrepList[[g]]$pars[[i]]@est
-                PrepList[[g]]$pars[[i]]@par[tmp2] <- tmp[[i]]@par[tmp2]                
-            }            
-        }       
-    }
+    }    
     if(!is.null(pars)){
         if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, MG = TRUE)

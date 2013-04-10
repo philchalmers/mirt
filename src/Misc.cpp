@@ -92,3 +92,4 @@ RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
     return(pars);
 	END_RCPP
 }
+
