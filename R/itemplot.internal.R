@@ -131,13 +131,17 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
         ThetaFull <- prodterms(Theta,prodlist)
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)         
     K <- x@pars[[item]]@ncat      
-    info <- 0 
-    if(nfact == 2){
-        for(i in 1:length(degrees))
-            info <- info + iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=c(degrees[i], 
-                                                                             90 - degrees[i]))
-    } else {
-        info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
+    info <- 0         
+    if(is(x@pars[[item]], 'custom') && any(type %in% c('info', 'infocontour')))
+        stop('Unable to compute information for custom items')       
+    if(!is(x@pars[[item]], 'custom')){
+        if(nfact == 2){
+            for(i in 1:length(degrees))
+                info <- info + iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=c(degrees[i], 
+                                                                                 90 - degrees[i]))
+        } else {
+            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
+        }
     }
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P

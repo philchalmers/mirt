@@ -252,12 +252,16 @@ setMethod(
         prodlist <- attr(x@pars, 'prodlist')
         if(length(prodlist) > 0)        
             ThetaFull <- prodterms(Theta,prodlist)        
-        info <- 0            
-        for(l in 1:length(theta_angle)){
-            ta <- theta_angle[l]
-            if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
-            for(i in 1:J)
-                info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)            
+        info <- 0                  
+        if(any(sapply(x@pars, is , 'custom')) && type != 'trace') 
+            stop('Information function for custom classes not available')
+        if(all(!sapply(x@pars, is , 'custom'))){
+            for(l in 1:length(theta_angle)){
+                ta <- theta_angle[l]
+                if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
+                for(i in 1:J)
+                    info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)            
+            }
         }
         plt <- data.frame(cbind(info,Theta=Theta))         
         if(nfact == 2){						
