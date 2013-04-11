@@ -35,7 +35,10 @@ PrepData <- function(data, model, itemtype, guess, upper,
     K <- rep(0,J)
     for(i in 1:J) K[i] <- length(uniques[[i]])	
     guess[K > 2] <- 0
-    upper[K > 2] <- 1		
+    upper[K > 2] <- 1
+    if(any(K < 2))
+        stop('The following items have only one response category and cannot be estimated: ', 
+             paste(itemnames[K < 2], ''))    
     if(is.null(itemtype)) {
         itemtype <- rep('', J)
         for(i in 1:J){
