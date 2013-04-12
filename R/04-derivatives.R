@@ -377,6 +377,25 @@ setMethod(
 
 setMethod(
     f = "Deriv",
+    signature = signature(x = 'nestlogit', Theta = 'matrix'),
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){            
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        Prior <- rep(1, nrow(x@rs))        
+        if(BFACTOR) Prior <- prior
+        if(EM){                
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
+            #hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
+            return(list(grad = grad))            
+        }        
+        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
+        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
+        return(list(grad=grad, hess=hess))
+    }
+)
+
+setMethod(
+    f = "Deriv",
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL){
         dat <- x@dat 
@@ -884,12 +903,15 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta){        
-        D <- x@D
-        a <- x@par[1:x@nfact]        
-        ind <- x@nfact + 1
         stop('Derivatives for mcm items not yet written')
-        grad <- hess <- NULL
-        return(list(grad=grad, hess=hess))       
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'nestlogit', Theta = 'matrix'),
+    definition = function(x, Theta){                
+        stop('Derivatives for nested logit items not yet written')                
     }
 )
 

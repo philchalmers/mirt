@@ -92,6 +92,9 @@
 #' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same 
 #' group and therefore have the same number of item categories
 #' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
+#' @param key a numeric vector of the response scoring key. Required when using nested logit item types, and 
+#' must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
+#' so use \code{NA} in item locations that are not applicable
 #' @param SE logical; estimate the standard errors? Calculates the information matrix from MHRM subroutine for
 #' stochastic approximation, Bock and Lieberman style information (use only with small number of items), or 
 #' supplemented EM (SEM) computations
@@ -290,8 +293,8 @@
 #' @usage 
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN, 
-#' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, D = 1.702, cl = NULL, large = FALSE,
-#' verbose = FALSE, technical = list(), ...)
+#' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, 
+#' D = 1.702, cl = NULL, large = FALSE, verbose = FALSE, technical = list(), ...)
 #' 
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
 #' verbose = TRUE, ...)
@@ -416,7 +419,7 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-                 D = 1.702, cl = NULL, large = FALSE, verbose = FALSE, technical = list(), ...)
+                 key = NULL, D = 1.702, cl = NULL, large = FALSE, verbose = FALSE, technical = list(), ...)
 {       
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
@@ -424,7 +427,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
-                      calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, ...)
+                      calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, key=key, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    

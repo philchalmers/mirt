@@ -1,5 +1,5 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                       invariance = '', pars = NULL, constrain = NULL, 
+                       invariance = '', pars = NULL, constrain = NULL, key,
                        parprior = NULL, mixedlist = NULL, customItems = NULL, ...)
 {       
     opts <- makeopts(...)
@@ -15,6 +15,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             itemtype[itemtype == 'grsm'] <- 'graded'
             itemtype[itemtype == 'rsm'] <- 'gpcm'        
             itemtype[itemtype == '3PL' | itemtype == '3PLu' | itemtype == '4PL'] <- '2PL'
+            itemtype[itemtype == '3PLNRM' | itemtype == '3PLuNRM' | itemtype == '4PLNRM'] <- '2PLNRM'
+            #FIXME: add 3PLNRM here too
         }
     }    
     ##	    
@@ -50,7 +52,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block, 
                  D=opts$D, mixedlist=mixedlist, customItems=customItems,
-                 fulldata=opts$PrepList[[1]]$fulldata)                    
+                 fulldata=opts$PrepList[[1]]$fulldata, key=key)                    
     parnumber <- 1
     for(g in 1:Data$ngroups){                    
         tmp <- 1:Data$ngroups
@@ -60,7 +62,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                       upper=upper, parprior=parprior, verbose=opts$verbose, 
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
                                       grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist, 
-                                      customItems=customItems, fulldata=PrepList[[1]]$fulldata)        
+                                      customItems=customItems, fulldata=PrepList[[1]]$fulldata, key=key)        
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1
     }
@@ -134,8 +136,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact, 
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList, 
                                  mixedlist=mixedlist, method=opts$method, itemnames=PrepList[[1]]$itemnames)     
-    startlongpars <- c()
-    if(opts$NULL.MODEL){
+    startlongpars <- c()    
+    if(opts$NULL.MODEL){        
         constrain <- list()
         for(i in 1:nitems){
             pars[[1]][[i]]@par[1] <- 0
@@ -145,6 +147,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is(pars[[1]][[i]], 'mcm')) 
                 pars[[1]][[i]]@est[c((nfact+1):(nfact + K[i]+1), 
                     length(pars[[1]][[i]]@est):(length(pars[[1]][[i]]@est)-K[i]+1))] <- FALSE                           
+            if(is(pars[[1]][[i]], 'nestlogit'))
+                pars[[1]][[i]]@est[(nfact+5):(nfact + K[i] + 1)] <- FALSE             
         }       
     }
     #EM estimation
@@ -379,7 +383,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN       
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull){        
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE),
-                                     large=opts$PrepList)))
+                                     large=opts$PrepList, key=key)))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')
             null.mod <- unclass(new('ConfirmatoryClass'))            

@@ -1,7 +1,7 @@
 PrepData <- function(data, model, itemtype, guess, upper, 
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, D, mixedlist, customItems, 
-                     fulldata = NULL)
+                     fulldata = NULL, key)
 {    
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
@@ -29,6 +29,12 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(length(upper) == 1) upper <- rep(upper,J)
     if(length(upper) > J || length(upper) < J) 
         stop("The number of upper bound parameters is incorrect.")
+    if(is.null(key) && any(itemtype %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
+        stop('When using nested logit items a scoring key must be provided with key = c(...)')
+    if(is.null(key))  key <- rep(1L, J)
+    if(length(key) != J)
+        stop("The number of elements in the key input is incorrect.")
+    key <- as.integer(key)
     uniques <- list()
     for(i in 1:J)
         uniques[[i]] <- sort(unique(data[,i]))
@@ -76,7 +82,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,  
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior, 
                            parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist, 
-                           customItems=customItems)   
+                           customItems=customItems, key=key)   
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1]], 'numeric') || is(pars[[1]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')

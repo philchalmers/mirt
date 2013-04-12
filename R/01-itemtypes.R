@@ -57,6 +57,9 @@ setClass("partcomp", contains = 'AllItemsClass')
 
 setClass("mcm", contains = 'AllItemsClass')
 
+setClass("nestlogit", contains = 'AllItemsClass',
+         representation = representation(correctcat='integer'))
+
 setClass('custom', contains = 'AllItemsClass', 
          representation = representation(name='character',
                                          P='function',

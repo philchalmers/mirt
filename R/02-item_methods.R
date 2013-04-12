@@ -17,6 +17,14 @@ setMethod(
 
 setMethod(
     f = "print",
+    signature = signature(x = 'nestlogit'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
     signature = signature(x = 'graded'),
     definition = function(x, ...){
         cat('Item object of class:', class(x))
@@ -90,6 +98,14 @@ setMethod(
 setMethod(
     f = "show",
     signature = signature(object = 'dich'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'nestlogit'),
     definition = function(object){
         print(object)
     }
@@ -177,6 +193,18 @@ setMethod(
 setMethod(
     f = "LogLik",
     signature = signature(x = 'dich', Theta = 'matrix'),
+    definition = function(x, Theta, EM=FALSE, prior=NULL){          
+        itemtrace <- ProbTrace(x=x, Theta=Theta)                        
+        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+        else LL <- (-1) * sum(x@rs * log(itemtrace))
+        LL <- LL.Priors(x=x, LL=LL)        
+        return(LL)
+    }
+)
+
+setMethod(
+    f = "LogLik",
+    signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta, EM=FALSE, prior=NULL){          
         itemtrace <- ProbTrace(x=x, Theta=Theta)                        
         if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
@@ -301,10 +329,16 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'dich'),
+    definition = function(x){                  
+        x@par[1:x@nfact]        
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'nestlogit'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]         
     }
 )
 
@@ -312,9 +346,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'graded'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]         
     }
 )
 
@@ -322,9 +354,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rating'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]         
     }
 )
 
@@ -332,9 +362,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'gpcm'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]         
     }
 )
 
@@ -342,9 +370,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rsm'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]          
     }
 )
 
@@ -352,9 +378,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nominal'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]         
     }
 )
 
@@ -362,9 +386,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'partcomp'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]          
     }
 )
 
@@ -372,9 +394,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'mcm'),
     definition = function(x){          
-        par <- x@par
-        a <- par[1:x@nfact]
-        a        
+        x@par[1:x@nfact]         
     }
 )
 
@@ -463,7 +483,7 @@ setMethod(
     signature = signature(x = 'custom', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){          
         if(x@useuserdata) Theta <- cbind(Theta, x@userdata)
-        x@P(x@par, Theta=Theta, ncat=x@ncat)            
+        return(x@P(x@par, Theta=Theta, ncat=x@ncat))
     }
 )
 
@@ -484,14 +504,30 @@ setMethod(
 
 setMethod(
     f = "ProbTrace",
+    signature = signature(x = 'nestlogit', Theta = 'matrix'),
+    definition = function(x, Theta, fixed.design = NULL){          
+        a <- x@par[1:x@nfact]
+        d <- x@par[x@nfact+1]
+        g <- x@par[x@nfact+2]
+        u <- x@par[x@nfact+3]        
+        ak <- x@par[(x@nfact+4):(x@nfact+4+x@ncat-2)]
+        dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
+        if(!is.null(fixed.design))
+            Theta <- cbind(fixed.design, Theta)
+        return(P.nestlogit(a=a, d=d, Theta=Theta, g=g, u=u, 
+                         ak=ak, dk=dk, correct=x@correctcat, D=x@D))        
+    }
+)
+
+setMethod(
+    f = "ProbTrace",
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta, itemexp = TRUE, fixed.design = NULL){                  
         a <- x@par[1:x@nfact]        
         d <- x@par[(x@nfact+1):length(x@par)]
         if(!is.null(fixed.design))
-            Theta <- cbind(fixed.design, Theta)
-        P <- P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp, D=x@D)
-        return(P)
+            Theta <- cbind(fixed.design, Theta)        
+        return(P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp, D=x@D))
     }
 )
 
@@ -506,8 +542,7 @@ setMethod(
         t <- x@par[length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
-        P <- P.poly(a=a, d=(d + t), Theta=Theta, itemexp=itemexp, D=x@D)
-        return(P)
+        return(P.poly(a=a, d=(d + t), Theta=Theta, itemexp=itemexp, D=x@D))        
     }
 )
 
@@ -519,8 +554,7 @@ setMethod(
         d <- x@par[-(1:x@nfact)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
-        P <- P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D)
-        return(P)
+        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D))        
     }
 )
 
@@ -534,8 +568,7 @@ setMethod(
         d[-1] <- d[-1] + t
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)        
-        P <- P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D)
-        return(P)
+        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D))        
     }
 )
 
@@ -548,8 +581,7 @@ setMethod(
         d <- x@par[length(x@par):(length(x@par) - x@ncat + 1)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=x@D)
-        return(P)
+        return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=x@D))        
     }
 )
 
@@ -564,8 +596,7 @@ setMethod(
         u <- x@par[length(x@par)]      
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
-        P <- P.comp(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D)
-        return(cbind(1.0 - P, P))
+        return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D))        
     }
 )
 
@@ -582,23 +613,20 @@ setMethod(
         t <- x@par[ind:length(x@par)]  
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
-        P <- P.mcm(a=a, ak=ak, d=d, t=t, Theta=Theta, D=x@D)
-        return(P)
+        return(P.mcm(a=a, ak=ak, d=d, t=t, Theta=Theta, D=x@D))        
     }
 )
 
 ##Function passes
 P.poly <- function(a, d, Theta, itemexp = FALSE, D)
 {   
-    traces <- .Call('gradedTraceLinePts', a, d, Theta, D, itemexp)
-    return(traces)        
+    return(.Call('gradedTraceLinePts', a, d, Theta, D, itemexp))    
 }
 
 # Trace lines for mirt models
 P.mirt <- function(a, d, Theta, g = 0, u = 1, D)
 { 		
-    traces <- .Call("traceLinePts", a, d, g, u, Theta, D) 
-    return(traces)
+    return(.Call("traceLinePts", a, d, g, u, Theta, D))    
 }
 
 # Trace lines for partially compensetory models
@@ -617,15 +645,23 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
 
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1 
 P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){    
-    traces <- .Call("nominalTraceLinePts", a, ak, d, Theta, D, returnNum) 
-    return(traces)    
+    return(.Call("nominalTraceLinePts", a, ak, d, Theta, D, returnNum))    
 }
 
 #ak[1] and d[1] are latent process
 P.mcm <- function(a, ak, d, t, Theta, D){    
     t[1] <- 1 - sum(t[2:length(t)])
-    traces <- .Call("mcmTraceLinePts", a, ak, d, t, Theta, D) 
-    return(traces)        
+    return(.Call("mcmTraceLinePts", a, ak, d, t, Theta, D))    
+}
+
+P.nestlogit <- function(a, d, Theta, g, u, ak, dk, correct, D)
+{       
+    traces <- matrix(0, nrow(Theta), length(ak)+1L)
+    traces[ ,correct] <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=D)
+    Q <- 1 - traces[ ,correct]
+    Pn <- P.nominal(a=a, ak=ak, d=dk, Theta=Theta, D=D) 
+    traces[ ,-correct] <- Q * Pn
+    return(traces)
 }
 
 #----------------------------------------------------------------------------

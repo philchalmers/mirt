@@ -233,7 +233,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 }      
 
 Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemloc, PrepList, L,
-                  UBOUND, LBOUND, constrain, TOL){          
+                  UBOUND, LBOUND, constrain, TOL){         
     p <- longpars[est]            
     opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL/10), 
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
@@ -271,7 +271,7 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior,
     LL <- 0
     for(g in 1:ngroups)
         for(i in 1:J)
-                LL <- LL + LogLik(pars2[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])            
+            LL <- LL + LogLik(pars2[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])            
     if(is.nan(LL)) return(1e10)
     LL
 }

@@ -1,6 +1,10 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, 
-                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems)
+                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems, 
+                     key)
     {           
+    valid.items <- c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
+                    'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL',
+                    '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')
     pars <- vector('list', J)
     #startvalues
     startvalues <- vector('list', J)
@@ -26,6 +30,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
             names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u')
+        }
+        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){               
+            val <- c(lambdas[i,], 0, guess[i], upper[i],
+                     0, rep(.5, K[i] - 3), K[i]-2, rep(0, K[i]-1))  
+            names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u', 
+                            paste('ak', 0:(K[i]-2), sep=''), 
+                            paste('d', 0:(K[i]-2), sep=''))
         }
         if(itemtype[i] == 'graded'){
             val <- c(lambdas[i,], zetas[[i]])
@@ -60,9 +71,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]), sep=''), 
                             paste('d', 0:(K[i]), sep=''), paste('t', 1:(K[i]), sep=''))                
         }            
-        if(all(itemtype[i] != c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
-                                'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL')))
-            next            
+        if(all(itemtype[i] != valid.items)) next            
         startvalues[[i]] <- val
     } 
     #freepars
@@ -74,6 +83,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE) 
             if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1] <- TRUE
             if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
+            freepars[[i]] <- estpars
+        }
+        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){            
+            estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE, rep(TRUE, (K[i]-1)*2))             
+            estpars[c(nfact+4, nfact + K[i] + 3, length(estpars)-(K[i]-1) )] <- FALSE
+            if(any(itemtype[i] == c('3PLNRM', '4PLNRM'))) estpars[nfact+2] <- TRUE
+            if(any(itemtype[i] == c('3PLuNRM', '4PLNRM'))) estpars[nfact+3] <- TRUE
             freepars[[i]] <- estpars
         }
         if(itemtype[i] == 'Rasch' && K[i] > 2)            
@@ -108,9 +124,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                     paste('ak',K[i],sep=''), 'd0', 'd1', 't1')]] <- FALSE                
             freepars[[i]] <- estpars
         }
-        if(all(itemtype[i] != c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
-                             'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL')))
-            next
+        if(all(itemtype[i] != valid.items)) next
         names(freepars[[i]]) <- names(startvalues[[i]])    
     }         
 
@@ -209,6 +223,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              D=D,
                              lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),                                           
                              ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),                             
+                             n.prior.mu=rep(NaN,length(startvalues[[i]])),
+                             n.prior.sd=rep(NaN,length(startvalues[[i]])),
+                             b.prior.alpha=rep(NaN,length(startvalues[[i]])),
+                             b.prior.beta=rep(NaN,length(startvalues[[i]])))                   
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])  
+            next
+        }
+        
+        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){             
+            pars[[i]] <- new('nestlogit', 
+                             par=startvalues[[i]], 
+                             est=freepars[[i]],
+                             nfact=nfact, 
+                             nfixedeffects=nfixedeffects, 
+                             dat=fulldata[ ,tmp], 
+                             ncat=K[i],
+                             correctcat=key[i],
+                             D=D,
+                             lbound=c(rep(-Inf, nfact+1),0,.5, rep(-Inf, length(startvalues[[i]])-nfact-3)),
+                             ubound=c(rep(Inf, nfact+1),.5,1, rep(Inf, length(startvalues[[i]])-nfact-3)),
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
                              n.prior.sd=rep(NaN,length(startvalues[[i]])),
                              b.prior.alpha=rep(NaN,length(startvalues[[i]])),
@@ -370,8 +406,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
         
-        if(all(itemtype[i] != c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded', 
-                                'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL'))){                  
+        if(all(itemtype[i] != valid.items)){                  
             pars[[i]] <- customItems[[itemtype[i] == names(customItems)]]            
             pars[[i]]@nfact <- nfact 
             pars[[i]]@ncat <- K[i] 
