@@ -17,8 +17,9 @@
   categories, and filled empty locations with \code{NA}}
 
   \item{itemtype}{a character vector of length
-  \code{nrow(a)} specifying the type of items to simulate.
-  Can be \code{'dich', 'graded', 'gpcm','nominal'}, or
+  \code{nrow(a)} (or 1, if all the item types are the same)
+  specifying the type of items to simulate. Can be
+  \code{'dich', 'graded', 'gpcm','nominal'}, or
   \code{'partcomp'}, for dichotomous, graded, generalized
   partial credit, nominal, and partially compensatory
   models. Note that for the gpcm and nominal model there
@@ -110,10 +111,9 @@ d <- matrix(c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
 
 mu <- c(-.4, -.7, .1)
 sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
-itemtype <- rep('dich', nrow(a))
 
-dataset1 <- simdata(a, d, 2000, itemtype)
-dataset2 <- simdata(a, d, 2000, itemtype, mu = mu, sigma = sigma)
+dataset1 <- simdata(a, d, 2000, itemtype = 'dich')
+dataset2 <- simdata(a, d, 2000, itemtype = 'dich', mu = mu, sigma = sigma)
 
 ###An example of a mixed item, bifactor loadings pattern with correlated specific factors
 a <- matrix(c(
