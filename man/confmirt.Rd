@@ -12,8 +12,8 @@
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
     verbose = TRUE, draws = 3000, rotate = 'oblimin',
-    Target = NULL, D = 1.702, cl = NULL, technical =
-    list(), ...)
+    Target = NULL, key = NULL, D = 1.702, cl = NULL,
+    technical = list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -74,6 +74,8 @@
   either \code{'LD'} for a local dependence matrix (Chen &
   Thissen, 1997) or \code{'exp'} for the expected values
   for the frequencies of every response pattern}
+
+  \item{key}{see \code{\link{mirt}} for details}
 
   \item{itemtype}{see \code{\link{mirt}} for details}
 

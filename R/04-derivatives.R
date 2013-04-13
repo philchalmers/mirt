@@ -910,8 +910,53 @@ setMethod(
 setMethod(
     f = "DerivTheta",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
-    definition = function(x, Theta){                
-        stop('Derivatives for nested logit items not yet written')                
+    definition = function(x, Theta){                  
+        D <- x@D
+        a <- x@par[1:x@nfact]
+        d <- x@par[x@nfact+1]
+        g <- x@par[x@nfact+2]
+        u <- x@par[x@nfact+3]        
+        ak <- x@par[(x@nfact+4):(x@nfact+4+x@ncat-2)]
+        dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
+        Pn <- P.nominal(a=a, ak=ak, d=dk, Theta=Theta, D=D)
+        Num <- P.nominal(a=a, ak=ak, d=dk, Theta=Theta, D=D, returnNum = TRUE)
+        Den <- rowSums(Num)        
+        Pstar <- P.mirt(a, d, Theta, g=0, u=u, D=x@D)         
+        Q <- 1 - P.mirt(a, d, Theta, g=g, u=u, D=x@D)         
+        Num2 <- P <- matrix(0, nrow(Theta), x@ncat)
+        P[,-x@correctcat] <- Pn 
+        Num2[,-x@correctcat] <- Num
+        Num <- Num2
+        ak2 <- dk2 <- numeric(x@ncat)
+        ak2[-x@correctcat] <- ak
+        dk2[-x@correctcat] <- dk
+        ak <- ak2
+        dk <- dk2        
+        grad <- hess <- vector('list', x@ncat)    
+        for(i in 1:x@ncat)
+            grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)            
+        for(j in 1:x@nfact){            
+            for(i in 1:x@ncat){
+                if(i == x@correctcat){
+                    grad[[i]][ ,j] <- (u-g) * D * a[j] * (Pstar * (1 - Pstar))
+                    hess[[i]][ ,j] <- 2 * (u - g) * D^2 * a[j]^2 * ((1 - Pstar)^2 * Pstar) - 
+                        (u - g) * D^2 * a[j]^2 * (Pstar * (1 - Pstar))
+                } else {                    
+                    grad[[i]][ ,j] <- -(u-g) * D * a[j] * (Pstar * (1 - Pstar)) * P[,i] + 
+                        Q * (D * ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (D * ak * a[j])) / Den)
+                    hess[[i]][ ,j] <-
+                        -2 * (u - g) * D^2 * a[j]^2 * (1 - Pstar)^2 * Pstar * P[,i] +
+                        (u - g) * D^2 * a[j]^2 * (Pstar * (1 - Pstar)) * P[,i] - 
+                        2 * (u - g) * D^2 * a[j]^2 * ak[i] * (1 - Pstar) * Pstar * P[,i] +
+                        2 * D * a[j] *  (Pstar * (1 - Pstar)) * P[,i] * (Num %*% (D * ak * a[j])) / Den +
+                        D^2 * ak[i]^2 * a[j]^2 * P[ ,i] - 
+                        2 * D * ak[i] * a[j] * P[,i] * (Num %*% (D * ak * a[j])) / Den + 
+                        2 * P[,i] * ((Num %*% (D * ak * a[j])) / Den)^2 - 
+                        P[,i] * ((Num %*% (D^2 * ak^2 * a[j]^2)) / Den)
+                }
+            }    
+        }  
+        return(list(grad=grad, hess=hess))                
     }
 )
 

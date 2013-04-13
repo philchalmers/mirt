@@ -13,8 +13,9 @@
     .001, invariance = '', pars = NULL, method = 'EM',
     constrain = NULL, parprior = NULL, calcNull = TRUE,
     draws = 3000, quadpts = NULL, grsm.block = NULL,
-    rsm.block = NULL, bfactor = FALSE, D = 1.702, cl =
-    NULL, technical = list(), verbose = TRUE, ...)
+    rsm.block = NULL, bfactor = FALSE, key = NULL, D =
+    1.702, cl = NULL, technical = list(), verbose = TRUE,
+    ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -137,6 +138,8 @@
   printed}
 
   \item{y}{an unused variable to be ignored}
+
+  \item{key}{see \code{\link{mirt}} for details}
 
   \item{itemtype}{see \code{\link{mirt}} for details}
 

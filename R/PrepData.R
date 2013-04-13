@@ -34,10 +34,12 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(is.null(key))  key <- rep(1L, J)
     if(length(key) != J)
         stop("The number of elements in the key input is incorrect.")
-    key <- as.integer(key)
+    key <- as.integer(key)        
     uniques <- list()
-    for(i in 1:J)
+    for(i in 1:J){    
         uniques[[i]] <- sort(unique(data[,i]))
+        key[i] <- which(key[i] == uniques[[i]])
+    }
     K <- rep(0,J)
     for(i in 1:J) K[i] <- length(uniques[[i]])	
     guess[K > 2] <- 0

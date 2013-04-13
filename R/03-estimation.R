@@ -1,5 +1,5 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                       invariance = '', pars = NULL, constrain = NULL, key,
+                       invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixedlist = NULL, customItems = NULL, ...)
 {       
     opts <- makeopts(...)
@@ -15,8 +15,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             itemtype[itemtype == 'grsm'] <- 'graded'
             itemtype[itemtype == 'rsm'] <- 'gpcm'        
             itemtype[itemtype == '3PL' | itemtype == '3PLu' | itemtype == '4PL'] <- '2PL'
-            itemtype[itemtype == '3PLNRM' | itemtype == '3PLuNRM' | itemtype == '4PLNRM'] <- '2PLNRM'
-            #FIXME: add 3PLNRM here too
+            itemtype[itemtype == '3PLNRM' | itemtype == '3PLuNRM' | itemtype == '4PLNRM'] <- '2PLNRM'            
         }
     }    
     ##	    
@@ -394,6 +393,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             CFI.X2 <- 1 - (X2 - df) / (null.mod@X2 - null.mod@df)
         }
     }
+    if(X2/G2 > 4) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(nmissingtabdata > 0) 
         p.G2 <- p.X2 <- RMSEA.G2 <- RMSEA.X2 <- G2 <- X2 <- TLI.G2 <- 
             TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN

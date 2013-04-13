@@ -659,7 +659,7 @@ P.nestlogit <- function(a, d, Theta, g, u, ak, dk, correct, D)
     traces <- matrix(0, nrow(Theta), length(ak)+1L)
     traces[ ,correct] <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=D)
     Q <- 1 - traces[ ,correct]
-    Pn <- P.nominal(a=a, ak=ak, d=dk, Theta=Theta, D=D) 
+    Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, D=D) 
     traces[ ,-correct] <- Q * Pn
     return(traces)
 }

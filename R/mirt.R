@@ -80,11 +80,12 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu', 
-#' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL', and 'PC3PL', 
-#' for the Rasch/partial credit, 1 and 2 parameter logistic, 
+#' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', 
+#' and '4PLNRM', for the Rasch/partial credit, 1 and 2 parameter logistic, 
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model, 
 #' rating scale graded response model, generalized partial credit model, Rasch rating scale model, nominal model, 
-#' multiple choice model, and 2-3PL partially compensatory model, respectively. User defined item classes
+#' multiple choice model, and 2-3PL partially compensatory model, and 2-4 parameter nested logistic 
+#' models, respectively. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using 
 #' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
@@ -170,7 +171,8 @@
 #' is to always pass the internal data to the estimation function, shown below:
 #' \describe{ 
 #' \item{Compute organized data}{e.g., \code{internaldat <- mirt(Science, 1, large = TRUE)}}
-#' \item{Pass the organized data to all estimation functions}{e.g., \code{mod <- mirt(Science, 1, large = internaldat)}} 
+#' \item{Pass the organized data to all estimation functions}{e.g., 
+#' \code{mod <- mirt(Science, 1, large = internaldat)}} 
 #' }
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
@@ -180,7 +182,6 @@
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #' \describe{ 
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
-#' \item{MSTEPMAXIT}{number of M-step iterations; default 25}
 #' \item{TOL}{EM convergence threshold; default .001}
 #' \item{NCYCLES}{maximum number of EM cycles; default 300}
 #' }
@@ -251,6 +252,14 @@
 #' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-D * (a_1 * \theta_1 + d_1))} * 
 #' \frac{1}{1 + exp(-D * (a_2 * \theta_2 + d_2))})}
 #' }
+#' \item{1-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key. 
+#' The model is broken into two components for the probability of endorment. For sucessful endorsement
+#' the probability trace is the 1-4PL model, while for unsucessful endormenent:
+#' \deqn{P(x = 0 | \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
+#' which is simply the product of the compliment of the dichotomous trace line with the nominal 
+#' response model. In the nominal model, the slope parameters defined above are constrained to be 1's,
+#' while the last value of the \eqn{ak} is freely estimated. 
+#' }
 #' }
 #' 
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -264,6 +273,9 @@
 #' 
 #' @references
 #' 
+#' Andrich, D. (1978). A rating scale formulation for ordered response categories. 
+#' \emph{Psychometrika, 43}, 561-573.
+#' 
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of
 #' item parameters: Application of an EM algorithm. \emph{Psychometrika,
 #' 46}(4), 443-459.
@@ -271,24 +283,37 @@
 #' Bock, R. D., Gibbons, R., & Muraki, E. (1988). Full-Information Item Factor
 #' Analysis. \emph{Applied Psychological Measurement, 12}(3), 261-280.
 #' 
-#' Carroll, J. B. (1945). The effect of difficulty and chance success on
-#' correlations between items and between tests. \emph{Psychometrika, 26},
-#' 347-372.
-#'
+#' Bock, R. D. & Lieberman, M. (1970). Fitting a response model for n dichotomously 
+#' scored items. \emph{Psychometrika, 35}, 179-197.
+#' 
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6),
-#' 1-29.
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' 
+#' Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
+#' 
+#' Muraki, E. (1992). A generalized partial credit model: Application of an EM algorithm. 
+#' \emph{Applied Psychological Measurement, 16}, 159-176.
 #'
 #' Muraki, E. & Carlson, E. B. (1995). Full-information factor analysis for polytomous 
 #' item responses. \emph{Applied Psychological Measurement, 19}, 73-90.
 #' 
-#' Ramsay, J. O. (1975). Solving implicit equations in psychometric data
-#' analysis. \emph{Psychometrika, 40}(3), 337-360.
+#' Suh, Y. & Bolt, D. (2010). Nested logit models for multiple-choice item response data.
+#' \emph{Psychometrika, 75}, 454-473.
+#' 
+#' Sympson, J. B. (1977). A model for testing with multidimensional items. 
+#' Proceedings of the 1977 Computerized Adaptive Testing Conference.
+#' 
+#' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model. 
+#' \emph{Psychometrika, 47}, 175-186.
+#' 
+#' Thissen, D. & Steinberg, L. (1984). A response model for multiple-choice items. 
+#' \emph{Psychometrika, 49}, 501-519.
 #' 
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
-#' Bock, R. D. (2003). TESTFACT 4 for Windows: Test Scoring, Item Statistics,
-#' and Full-information Item Factor Analysis [Computer software]. Lincolnwood,
+#' Bock, R. D. (2003). \emph{TESTFACT 4 for Windows: Test Scoring, Item Statistics,
+#' and Full-information Item Factor Analysis} [Computer software]. Lincolnwood,
 #' IL: Scientific Software International.
+#' 
 #' @keywords models
 #' @usage 
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001, pars = NULL, 
@@ -411,9 +436,35 @@
 #' sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1) 
 #'
 #' mod1 <- mirt(data, 1)
-#' mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv, calcNull = FALSE)
+#' mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv)
 #' coef(mod2)
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
+#' 
+#' ###########
+#' # 2PL nominal response model example (Suh and Bolt, 2010)
+#' data(SAT12)
+#' SAT12[SAT12 == 8] <- NA
+#' head(SAT12)
+#' 
+#' key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
+#' mod0 <- mirt(key2binary(SAT12, key), 1, verbose = T)
+#' mod1 <- mirt(SAT12, 1, 'nominal', verbose = T, calcNull = FALSE)
+#' mod2 <- mirt(SAT12, 1, '2PLNRM', key=key, verbose = T, calcNull = FALSE)
+#' coef(mod0)$Item.2
+#' coef(mod1)$Item.2
+#' coef(mod2)$Item.2
+#' itemplot(mod0, 2)
+#' itemplot(mod1, 2)
+#' itemplot(mod2, 2)
+#' 
+# #compare added information from distractors
+# Theta <- matrix(seq(-4,4,.01))
+# info <- iteminfo(extract.item(mod1,3), Theta)
+# info2 <- iteminfo(extract.item(mod2,3), Theta)
+# plot(Theta, info2, type = 'l')
+# lines(Theta, info, col = 'red')
+#' 
+#' 
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001,

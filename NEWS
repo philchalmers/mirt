@@ -2,6 +2,8 @@ Changes in mirt 0.6.1
 
 NEW FEATURES
 
+- new '#PLNRM' models to fit Suh & Bolt (2010) nested logistic models 
+
 - 'large' option added to estimation functions. Useful when the datasets being analysed are very 
   large and organizing the data becomes a computationally burdensome task that should be avoided when
   fitting new models. Also, overall faster handling of datasets  

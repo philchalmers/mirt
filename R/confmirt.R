@@ -81,6 +81,7 @@
 #' @param restype type of residuals to be displayed. Can be either \code{'LD'}
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
+#' @param key see \code{\link{mirt}} for details
 #' @param itemtype see \code{\link{mirt}} for details
 #' @param grsm.block see \code{\link{mirt}} for details
 #' @param rsm.block see \code{\link{mirt}} for details
@@ -153,7 +154,7 @@
 #' @usage 
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE, 
-#' draws = 3000, rotate = 'oblimin', Target = NULL, D = 1.702, cl = NULL, technical = list(),  ...)
+#' draws = 3000, rotate = 'oblimin', Target = NULL, key = NULL, D = 1.702, cl = NULL, technical = list(),  ...)
 #' 
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #' 
@@ -270,13 +271,13 @@
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL, 
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, 
                      verbose = TRUE, draws = 3000, rotate = 'oblimin', Target = NULL, 
-                     D = 1.702, cl = NULL, technical = list(),  ...)
+                     key = NULL, D = 1.702, cl = NULL, technical = list(),  ...)
 {       
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype, 
                       guess=guess, upper=upper, grsm.block=grsm.block, D=D, calcNull=calcNull,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, 
-                      rsm.block=rsm.block, draws=draws, technical=technical, cl=cl, ...)
+                      rsm.block=rsm.block, draws=draws, technical=technical, cl=cl, key=key, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)    

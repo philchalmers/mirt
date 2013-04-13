@@ -67,6 +67,7 @@
 #' @param rot allows rotation of the 3D graphics
 #' @param x an object of class \code{mirt} to be plotted or printed
 #' @param y an unused variable to be ignored
+#' @param key see \code{\link{mirt}} for details
 #' @param itemtype see \code{\link{mirt}} for details
 #' @param constrain see \code{\link{mirt}} for details
 #' @param grsm.block see \code{\link{mirt}} for details
@@ -103,7 +104,7 @@
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'MHRM',
 #' SEtol = .001,  invariance = '', pars = NULL, method = 'EM', constrain = NULL, 
 #' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-#' bfactor = FALSE, D = 1.702, cl = NULL, technical = list(), verbose = TRUE, ...)
+#' bfactor = FALSE, key = NULL, D = 1.702, cl = NULL, technical = list(), verbose = TRUE, ...)
 #' 
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -283,7 +284,8 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           SE = FALSE, SE.type = 'MHRM', SEtol = .001, invariance = '', pars = NULL,  
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 3000, 
                           quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-                          bfactor = FALSE, D = 1.702, cl = NULL, technical = list(), verbose = TRUE, ...)
+                          bfactor = FALSE, key = NULL, D = 1.702, cl = NULL, 
+                          technical = list(), verbose = TRUE, ...)
 {       
     Call <- match.call()            
     invariance.check <- invariance %in% c('free_means', 'free_varcov')
@@ -294,7 +296,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, SEtol=SEtol, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull, 
-                      BFACTOR=bfactor, SE.type = SE.type, cl=cl, ...)
+                      BFACTOR=bfactor, SE.type = SE.type, cl=cl, key=key, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)    

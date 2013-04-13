@@ -33,7 +33,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){               
             val <- c(lambdas[i,], 0, guess[i], upper[i],
-                     0, rep(.5, K[i] - 3), K[i]-2, rep(0, K[i]-1))  
+                     0, rep(.5, K[i] - 2), rep(0, K[i]-1))  
             names(val) <- c(paste('a', 1:nfact, sep=''), 'd', 'g','u', 
                             paste('ak', 0:(K[i]-2), sep=''), 
                             paste('d', 0:(K[i]-2), sep=''))
@@ -85,9 +85,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
             freepars[[i]] <- estpars
         }
-        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){            
+        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){                 
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE, rep(TRUE, (K[i]-1)*2))             
-            estpars[c(nfact+4, nfact + K[i] + 3, length(estpars)-(K[i]-1) )] <- FALSE
+            estpars[c(nfact+4, length(estpars)-(K[i]-3) )] <- FALSE
             if(any(itemtype[i] == c('3PLNRM', '4PLNRM'))) estpars[nfact+2] <- TRUE
             if(any(itemtype[i] == c('3PLuNRM', '4PLNRM'))) estpars[nfact+3] <- TRUE
             freepars[[i]] <- estpars
