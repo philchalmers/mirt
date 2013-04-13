@@ -860,18 +860,10 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]           
             }
         }                       
-        pars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, 
+        longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, 
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc, 
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
-                      constrain=constrain, TOL=TOL)
-        ind1 <- 1
-        for(g in 1:ngroups){
-            for(i in 1:(J+1)){
-                ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-                longpars[ind1:ind2] <- pars[[g]][[i]]@par
-                ind1 <- ind2 + 1
-            }                  
-        }
+                      constrain=constrain, TOL=TOL)        
         rijlast <- rij                
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / 
             (EMhistory[cycles, estindex] - MLestimates[estindex])                

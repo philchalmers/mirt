@@ -146,18 +146,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                 
         preMstep.longpars <- longpars        
         if(all(!est)) break
-        pars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J, 
+        longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J, 
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc, 
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
-                      constrain=constrain, TOL=TOL)
-        ind1 <- 1
-        for(g in 1:ngroups){
-            for(i in 1:(J+1)){
-                ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
-                longpars[ind1:ind2] <- pars[[g]][[i]]@par
-                ind1 <- ind2 + 1
-            }                  
-        }
+                      constrain=constrain, TOL=TOL)                
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
         EMhistory[cycles+1,] <- longpars
         if(cycles > 3 && all(abs(preMstep.longpars - longpars) < TOL))  break 
         if(!list$SEM && cycles > 3 && abs(lastLL - LL) < TOL*10) break
@@ -256,8 +249,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemlo
             longpars[pars[[group]][[i]]@parnum[pars[[group]][[i]]@est]] <- newpars            
         }
     }
-    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
-    pars    
+    return(longpars)
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior, L, BFACTOR, 
@@ -267,11 +259,11 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior,
        for(i in 1:length(constrain))
            longpars[constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
     if(any(longpars < LBOUND | longpars > UBOUND )) return(1e10)    
-    pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
+    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
     LL <- 0
     for(g in 1:ngroups)
         for(i in 1:J)
-            LL <- LL + LogLik(pars2[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])            
+            LL <- LL + LogLik(pars[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])            
     if(is.nan(LL)) return(1e10)
     LL
 }
@@ -282,7 +274,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prio
     if(length(constrain) > 0)
         for(i in 1:length(constrain))
             longpars[constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
-    pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
+    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
     g <- rep(0, ncol(L))    
     ind1 <- 1                    
     for(group in 1:ngroups){
@@ -290,7 +282,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prio
             deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM=TRUE, BFACTOR=BFACTOR, 
                            prior=Prior[[group]])
             ind2 <- ind1 + length(deriv$grad) - 1            
-            g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad            
+            g[ind1:ind2] <- deriv$grad            
             ind1 <- ind2 + 1 
         }
         i <- i + 1                             
