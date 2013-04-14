@@ -6,7 +6,7 @@ test_that('poly', {
     vals <- mirt(Science, 1, large = TRUE, verbose=FALSE)
     modp1 <- mirt(Science, 1, large = vals, verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')              
-    suppressWarnings(modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE))
+    modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')          
     modp2 <- mirt(Science, 2, verbose=FALSE)
     expect_is(modp2, 'ExploratoryClass')

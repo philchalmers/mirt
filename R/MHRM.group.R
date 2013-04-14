@@ -274,8 +274,9 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         Phi <- Phi + gamma*(Tau - outer(grad,grad) - Phi)        
     } ###END BIG LOOP       
     info <- Phi - outer(phi,phi)
-    #Reload final pars list
-    if(cycles == NCYCLES + BURNIN + SEMCYCLES) converge <- 0
+    #Reload final pars list    
+    if(cycles == NCYCLES + BURNIN + SEMCYCLES) 
+        warning('MHRM iterations terminated after ', NCYCLES, ' iterations.') 
     if(list$USEEM) longpars <- list$startlongpars
     ind1 <- 1
     for(g in 1:ngroups){

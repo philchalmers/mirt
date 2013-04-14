@@ -203,7 +203,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Pl <- list(Pl)
         if(!opts$NULL.MODEL && opts$SE){            
             tmp <- ESTIMATE        
-            if(opts$verbose) cat('\nCalculating information matrix...\n')
+            if(opts$verbose) cat('\n\nCalculating information matrix...\n')
             if(opts$SE.type == 'SEM'){                                
                 dontrun <- FALSE
                 if(ESTIMATE$cycles <= 5 ){

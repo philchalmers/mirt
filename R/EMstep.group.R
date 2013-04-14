@@ -96,7 +96,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
        for(i in 1:length(constrain))
            est[constrain[[i]][-1]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1, length(longpars))
-    EMhistory[1,] <- longpars
+    EMhistory[1,] <- longpars    
     
     #EM     
     for (cycles in 1:NCYCLES){          
@@ -138,11 +138,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                 tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]           
             }
-        }
-        if(verbose)
-            if(cycles > 1)                             
-                cat('\r Log-Lik: ', LL)        
-                
+        }        
         preMstep.longpars <- longpars        
         if(all(!est)) break
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J, 
@@ -151,10 +147,14 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                       constrain=constrain, TOL=TOL)                
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
         EMhistory[cycles+1,] <- longpars
-        if(cycles > 3 && all(abs(preMstep.longpars - longpars) < TOL))  break 
-        if(!list$SEM && cycles > 3 && abs(lastLL - LL) < TOL*10) break
-    } #END EM       
-    if(cycles == NCYCLES) converge <- 0    
+        if(verbose)
+            if(cycles > 1)                             
+                cat('\rLog-Lik: ', LL, ', Max Change: ', 
+                    round(max(abs(preMstep.longpars - longpars)),4), sep='')        
+        if(cycles > 3 && all(abs(preMstep.longpars - longpars) < TOL))  break         
+    } #END EM            
+    if(cycles == NCYCLES) 
+        warning('EM iterations terminated after ', cycles, ' iterations.')   
     infological <- estpars & !redun_constr             
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])    
@@ -227,7 +227,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, TOL){         
     p <- longpars[est]            
-    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL/10), 
+    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL/100), 
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
                  UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)     
