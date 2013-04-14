@@ -49,7 +49,7 @@
 #' 
 #' @keywords models
 #' @usage
-#' bfactor(data, model, quadpts = 20, verbose = FALSE, ...)
+#' bfactor(data, model, quadpts = 20, verbose = TRUE, ...)
 #' 
 #'
 #' @export bfactor
@@ -115,7 +115,7 @@
 #'
 #'     }
 #' 
-bfactor <- function(data, model, quadpts = 20, verbose = FALSE, ...)
+bfactor <- function(data, model, quadpts = 20, verbose = TRUE, ...)
 {       
     Call <- match.call()		    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 

@@ -185,13 +185,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         if(verbose){
             if((cycles + 1) %% 10 == 0){
                 if(cycles < BURNIN)
-                    cat("Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
+                    cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
                         sprintf("%.1f", LL), sep="")
                 if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-                    cat("Stage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
+                    cat("\rStage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
                         sprintf("%.1f", LL), sep="")
                 if(cycles > BURNIN + SEMCYCLES)
-                    cat("Stage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
+                    cat("\rStage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
                         ", Log-Lik = ", sprintf("%.1f",LL), sep="")					
             }
         }			
@@ -226,7 +226,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
             if(verbose && (cycles + 1) %% 10 == 0){ 
-                cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))), "\n")
+                cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))))
                 flush.console()
             }			            
             if(stagecycle == 2){
@@ -270,7 +270,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
         if(verbose && (cycles + 1) %% 10 == 0){ 
             cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-                sprintf("%.4f",max(abs(gamma*correction))), "\n", sep = '')
+                sprintf("%.4f",max(abs(gamma*correction))), sep = '')
             flush.console()		
         }	
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1

@@ -319,7 +319,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001, pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN, 
 #' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, 
-#' D = 1.702, cl = NULL, large = FALSE, verbose = FALSE, technical = list(), ...)
+#' D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 #' 
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
 #' verbose = TRUE, ...)
@@ -436,7 +436,7 @@
 #' sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1) 
 #'
 #' mod1 <- mirt(data, 1)
-#' mod2 <- mirt(data, 1, itemtype = 'grsm', verbose = TRUE, pars = sv)
+#' mod2 <- mirt(data, 1, itemtype = 'grsm', pars = sv)
 #' coef(mod2)
 #' anova(mod2, mod1) #not sig, mod2 should be prefered 
 #' 
@@ -447,9 +447,9 @@
 #' head(SAT12)
 #' 
 #' key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
-#' mod0 <- mirt(key2binary(SAT12, key), 1, verbose = T)
-#' mod1 <- mirt(SAT12, 1, 'nominal', verbose = T, calcNull = FALSE)
-#' mod2 <- mirt(SAT12, 1, '2PLNRM', key=key, verbose = T, calcNull = FALSE)
+#' mod0 <- mirt(key2binary(SAT12, key), 1)
+#' mod1 <- mirt(SAT12, 1, 'nominal', calcNull = FALSE)
+#' mod2 <- mirt(SAT12, 1, '2PLNRM', key=key, calcNull = FALSE)
 #' coef(mod0)$Item.2
 #' coef(mod1)$Item.2
 #' coef(mod2)$Item.2
@@ -464,13 +464,12 @@
 # plot(Theta, info2, type = 'l')
 # lines(Theta, info, col = 'red')
 #' 
-#' 
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001,
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-                 key = NULL, D = 1.702, cl = NULL, large = FALSE, verbose = FALSE, technical = list(), ...)
+                 key = NULL, D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 {       
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 

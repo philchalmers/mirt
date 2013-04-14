@@ -2,7 +2,7 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor Analysis}
 \usage{
-  bfactor(data, model, quadpts = 20, verbose = FALSE, ...)
+  bfactor(data, model, quadpts = 20, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that

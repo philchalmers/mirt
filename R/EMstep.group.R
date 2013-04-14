@@ -139,10 +139,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]           
             }
         }
-        if(verbose){
-            if(cycles > 1) print(LL)                            
-            flush.console()
-        }
+        if(verbose)
+            if(cycles > 1)                             
+                cat('\r Log-Lik: ', LL)        
                 
         preMstep.longpars <- longpars        
         if(all(!est)) break

@@ -304,7 +304,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     rm(lambdas, norm)
     #missing stats for MHRM
     if(opts$method =='MHRM' || opts$method == 'MIXED'){        
-        if(opts$verbose) cat("\nCalculating log-likelihood...\n")
+        if(opts$verbose) cat("\n\nCalculating log-likelihood...\n")
         flush.console()      
         logLik <- G2 <- X2 <- SElogLik <- 0        
         Pl <- list()        
@@ -382,7 +382,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN       
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull){        
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE),
-                                     large=opts$PrepList, key=key)))
+                                     large=opts$PrepList, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')
             null.mod <- unclass(new('ConfirmatoryClass'))            

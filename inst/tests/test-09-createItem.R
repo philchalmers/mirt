@@ -17,9 +17,9 @@ test_that('old2PL', {
     
     #So, let's estimate it!
     dat <- expand.table(LSAT7)
-    sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars = 'values')    
+    sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars = 'values', verbose=FALSE)    
     expect_is(sv, 'data.frame')          
-    mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x))
+    mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose=FALSE)
     expect_is(mod, 'ConfirmatoryClass')          
     expect_is(coef(mod), 'list')
     mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE)
@@ -39,7 +39,7 @@ test_that('old2PL', {
     } 
      
     x2 <- createItem(name, par=par, est=est, P=P.nonlin)    
-    mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2))
+    mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose=FALSE)
     expect_is(mod, 'ConfirmatoryClass')          
     expect_is(coef(mod), 'list')    
 })
