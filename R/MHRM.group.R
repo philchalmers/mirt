@@ -175,13 +175,13 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         if(verbose){            
             if((cycles + 1) %% 10 == 0){
                 if(cycles < BURNIN)
-                    cat("\r Stage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
+                    cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
                         sprintf("%.1f", LL), sep="")
                 if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-                    cat("\r Stage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
+                    cat("\rStage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
                         sprintf("%.1f", LL), sep="")
                 if(cycles > BURNIN + SEMCYCLES)
-                    cat("\r Stage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
+                    cat("\rStage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
                         ", Log-Lik = ", sprintf("%.1f",LL), sep="")					
             }
         }			
