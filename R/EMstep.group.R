@@ -164,7 +164,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         ind1 <- 1                    
         for(group in 1:ngroups){
             for (i in 1:J){                    
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]])
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]], 
+                               estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1                                
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1 
