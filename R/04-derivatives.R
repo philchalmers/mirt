@@ -361,16 +361,9 @@ setMethod(
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)         
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
-        sel <- -c((nfact+1):(length(d)+nfact))
-        swtch1 <- length(x@par):(length(x@par)-length(d)+1) 
-        swtch2 <- (length(x@par)-length(d)+1):length(x@par)
-        grad <- tmp$grad[sel]
-        grad[swtch1] <- grad[swtch2]        
-        hess <- tmp$hess[sel, sel]        
-        for(i in 1:nfact)
-            hess[i, swtch1] <- hess[swtch1, i] <- hess[swtch2, i]
-        hess[swtch1, swtch1] <- hess[swtch2, swtch2]
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)          
+        keep <- rep(TRUE, length(tmp$grad))
+        keep[(nfact+1):(nfact+length(d))] <- FALSE        
+        ret <- DerivativePriors(x=x, grad=tmp$grad[keep], hess=tmp$hess[keep, keep])          
         return(ret)    
     }
 )
@@ -456,16 +449,10 @@ setMethod(
         num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D, returnNum=TRUE)         
         tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
-        sel <- -c((nfact+1):(length(d)+nfact))
-        swtch1 <- (nfact+1):(length(x@par)-1) 
-        swtch2 <- rev(swtch1)
-        grad <- tmp$grad[sel]
-        grad[swtch1] <- grad[swtch2]        
-        grad <- c(grad, 0)
-        hess <- tmp$hess[sel, sel]        
-        for(i in 1:nfact)
-            hess[i, swtch1] <- hess[swtch1, i] <- hess[swtch2, i]
-        hess[swtch1, swtch1] <- hess[swtch2, swtch2]
+        keep <- rep(TRUE, length(tmp$grad))
+        keep[(nfact+1):(nfact+length(d))] <- FALSE        
+        grad <- c(tmp$grad[keep], 0)
+        hess <- tmp$hess[keep, keep]
         hess <- cbind(hess, rep(0, nrow(hess)))
         hess <- rbind(hess, rep(0, ncol(hess)))
         
