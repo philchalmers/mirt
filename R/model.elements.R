@@ -47,7 +47,10 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         if(K[i] == 2){
             div <- ifelse(cs[i] > .25, cs[i], .25)		
             zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div * 1.702/D  
-        } else {			
+        } else if(itemtype[i] %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')){
+            div <- ifelse(cs[i] > .25, cs[i], .25)    	
+            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i] + key[i]-1]))/div * 1.702/D          
+        } else {
             temp <- table(data[,i])[1:(K[i]-1)]/N
             temp <- cumsum(temp)
             div <- ifelse(cs[i] > .25, cs[i], .25)		

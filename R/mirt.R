@@ -137,7 +137,8 @@
 #' logical values are defined. The user may observe how the model defines the values by using \code{pars = 
 #' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars = 
 #' mymodifiedpars}
-#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
+#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the 
+#' data contains no NA's
 #' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
 #' @param quadpts number of quadrature points per dimension
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
@@ -449,8 +450,8 @@
 #' 
 #' key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 #' mod0 <- mirt(key2binary(SAT12, key), 1)
-#' mod1 <- mirt(SAT12, 1, 'nominal', calcNull = FALSE)
-#' mod2 <- mirt(SAT12, 1, '2PLNRM', key=key, calcNull = FALSE)
+#' mod1 <- mirt(SAT12, 1, 'nominal')
+#' mod2 <- mirt(SAT12, 1, '2PLNRM', key=key)
 #' coef(mod0)$Item.2
 #' coef(mod1)$Item.2
 #' coef(mod2)$Item.2
