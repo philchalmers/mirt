@@ -628,7 +628,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .01, grsm.block = NULL, D = 1.702, 
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE, 
                      technical = list(), use = 'pairwise.complete.obs', 
-                     SE.type = 'MHRM', large = NULL, ...)
+                     SE.type = 'MHRM', large = NULL, MSTEPTOL, ...)
 {    
     opts <- list()
     opts$method = method
@@ -649,15 +649,15 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$BFACTOR = BFACTOR     
     opts$technical <- technical
     opts$use <- use
-    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
-    opts$MSTEPMAXIT <- ifelse(is.null(technical$MSTEPMAXIT), 15, technical$MSTEPMAXIT)        
+    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)           
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
     if(opts$method == 'EM')
-        opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 300, technical$NCYCLES)
+        opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500, technical$NCYCLES)
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1, technical$KDRAWS)    
-    opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)      
+    opts$TOL <- ifelse(is.null(technical$TOL), .001, technical$TOL)  
+    opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/100, technical$MSTEPMAXIT) 
     if(SE.type == 'SEM' && SE)
         opts$TOL <- ifelse(is.null(technical$TOL), .0001, technical$TOL)          
     if(opts$method == 'MHRM' || opts$method =='MIXED')
@@ -805,6 +805,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     itemloc <- list$itemloc
     J <- length(itemloc) - 1
     L <- ESTIMATE$L
+    MSTEPTOL <- list$MSTEPTOL
     ngroups <- ESTIMATE$ngroups    
     NCYCLES <- ESTIMATE$cycles
     if(NCYCLES <= 5) stop('SEM can not be computed due to short EM history')

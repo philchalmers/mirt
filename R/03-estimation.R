@@ -178,7 +178,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.')
         }
         ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
-                             list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
+                             list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                          nfactNames=PrepList[[1]]$nfactNames, theta=theta,
                                          itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
@@ -220,7 +220,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     if(!is.null(list(...)$cl)){                        
                         DM <- t(parallel::parApply(cl=list(...)$cl, estmat, MARGIN=1, FUN=SEM.SE, 
                                 pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
-                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
+                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                            nfactNames=PrepList[[1]]$nfactNames, theta=theta,
                                            itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
                                            sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
@@ -230,7 +230,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         for(i in 1:ncol(DM))
                             DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
                                               PrepList=PrepList,
-                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPMAXIT=opts$MSTEPMAXIT,
+                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                                       nfactNames=PrepList[[1]]$nfactNames, theta=theta,
                                                       itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
                                                       sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
@@ -379,7 +379,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     RMSEA.X2 <- ifelse((X2 - df) > 0, 
                        sqrt(X2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))
-    TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN       
+    TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN          
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull){        
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE),
                                      large=opts$PrepList, key=key, verbose=FALSE)))
@@ -392,11 +392,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             CFI.G2 <- 1 - (G2 - df) / (null.mod@G2 - null.mod@df)
             CFI.X2 <- 1 - (X2 - df) / (null.mod@X2 - null.mod@df)
         }
-    }
-    if(X2/G2 > 4) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
+    }    
     if(nmissingtabdata > 0) 
         p.G2 <- p.X2 <- RMSEA.G2 <- RMSEA.X2 <- G2 <- X2 <- TLI.G2 <- 
             TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN
+    if(!is.nan(G2))
+        if(X2/G2 > 4) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(is.null(parprior)) parprior <- list()
     if(Data$ngroups == 1){        
         if(opts$method == 'MIXED'){                        
@@ -527,6 +528,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tabdatalong <- PrepList[[1]]$tabdata
         tabdata <- PrepList[[1]]$tabdata2
         tabdata[,ncol(tabdata)] <- tabdatalong[,ncol(tabdatalong)] <- r
+        if(is.nan(X2))
+            for(g in 1:length(cmods))
+                cmods[[g]]@X2 <- NaN        
         mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles, 
                    cmods=cmods, 
                    model=list(oldmodel),

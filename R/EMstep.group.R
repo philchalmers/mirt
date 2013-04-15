@@ -2,9 +2,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
 {       
     verbose <- list$verbose        
     nfact <- list$nfact
-    NCYCLES <- list$NCYCLES    
-    MSTEPMAXIT <- list$MSTEPMAXIT
+    NCYCLES <- list$NCYCLES        
     TOL <- list$TOL    
+    MSTEPTOL <- list$MSTEPTOL
     BFACTOR <- list$BFACTOR
     itemloc <- list$itemloc
     ngroups <- length(pars)
@@ -144,12 +144,12 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J, 
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc, 
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
-                      constrain=constrain, TOL=TOL)                
+                      constrain=constrain, TOL=MSTEPTOL)                
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
         EMhistory[cycles+1,] <- longpars
         if(verbose)
             if(cycles > 1)                             
-                cat('\rLog-Lik: ', LL, ', Max Change: ', 
+                cat('\rIteration: ', cycles, ', Log-Lik: ', LL, ', Max-Change: ', 
                     round(max(abs(preMstep.longpars - longpars)),4), sep='')        
         if(cycles > 3 && all(abs(preMstep.longpars - longpars) < TOL))  break         
     } #END EM            
@@ -185,7 +185,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                     estindex_unique=estindex_unique, correction=correction, hess=hess,
                     estpars=estpars, redun_constr=redun_constr, ngroups=ngroups, LBOUND=LBOUND,
                     UBOUND=UBOUND, EMhistory=na.omit(EMhistory)))
-    }
+    }    
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, 
                 estindex_unique=estindex_unique, correction=correction, hess=hess)
@@ -227,12 +227,13 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, TOL){         
     p <- longpars[est]            
-    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL/100), 
+    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL), 
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
                  UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)     
     if(all(abs(p - opt$par) < 1e-8))
-        opt <- optim(p, fn=Mstep.LL, est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
+        opt <- optim(p, fn=Mstep.LL, control=list(abstol = TOL), est=est, longpars=longpars, 
+                     pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
                      PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
                      UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)  
     longpars[est] <- opt$par

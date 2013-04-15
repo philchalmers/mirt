@@ -183,7 +183,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         if(is.na(attr(gtheta0[[1]],"log.lik"))) 
             stop('Estimation halted. Model did not converge.')		
         if(verbose){
-            if((cycles + 1) %% 10 == 0){
+            if((cycles + 1) %% 5 == 0){
                 if(cycles < BURNIN)
                     cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
                         sprintf("%.1f", LL), sep="")
@@ -225,7 +225,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
-            if(verbose && (cycles + 1) %% 10 == 0){ 
+            if(verbose && (cycles + 1) %% 5 == 0){ 
                 cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))))
                 flush.console()
             }			            
@@ -268,10 +268,9 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
-        if(verbose && (cycles + 1) %% 10 == 0){ 
+        if(verbose && (cycles + 1) %% 5 == 0){ 
             cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-                sprintf("%.4f",max(abs(gamma*correction))), sep = '')
-            flush.console()		
+                sprintf("%.4f",max(abs(gamma*correction))), sep = '')            	
         }	
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1
         else conv <- 0		

@@ -247,8 +247,9 @@ Theory)}
   parameters for estimation. May be: \describe{
   \item{MAXQUAD}{maximum number of quadratures; default
   10000} \item{TOL}{EM convergence threshold; default .001}
-  \item{NCYCLES}{maximum number of EM cycles; default 300}
-  }}
+  \item{MSTEPTOL}{convergence threshold for Mstep; default
+  is \code{TOL/100}} \item{NCYCLES}{maximum number of EM
+  cycles; default 500} }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -543,7 +544,6 @@ coef(mod2)$Item.2
 itemplot(mod0, 2)
 itemplot(mod1, 2)
 itemplot(mod2, 2)
-
 
 
 }

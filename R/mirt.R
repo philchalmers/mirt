@@ -183,7 +183,8 @@
 #' \describe{ 
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
 #' \item{TOL}{EM convergence threshold; default .001}
-#' \item{NCYCLES}{maximum number of EM cycles; default 300}
+#' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/100}}
+#' \item{NCYCLES}{maximum number of EM cycles; default 500}
 #' }
 #' @param ... additional arguments to be passed
 #' @section Convergence:
