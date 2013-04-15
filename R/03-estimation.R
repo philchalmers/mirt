@@ -392,12 +392,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             CFI.G2 <- 1 - (G2 - df) / (null.mod@G2 - null.mod@df)
             CFI.X2 <- 1 - (X2 - df) / (null.mod@X2 - null.mod@df)
         }
-    }    
+    }        
     if(nmissingtabdata > 0) 
         p.G2 <- p.X2 <- RMSEA.G2 <- RMSEA.X2 <- G2 <- X2 <- TLI.G2 <- 
             TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN
-    if(!is.nan(G2))
-        if(X2/G2 > 4) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
+    if(!is.nan(G2) && !opts$NULL.MODEL)
+        if(X2/G2 > 10) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(is.null(parprior)) parprior <- list()
     if(Data$ngroups == 1){        
         if(opts$method == 'MIXED'){                        
