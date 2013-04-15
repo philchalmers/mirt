@@ -499,17 +499,17 @@ setMethod(
         P <- ProbTrace(x=x, Theta=Theta)                        
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)                 
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
-                               D=D, Prior=Prior, P=P, num=num, dat=dat)
+                               D=D, Prior=Prior, P=P, num=num, dat=dat)        
         ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)          
         return(ret)
     }
 )
 
-nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, gpcm = FALSE){        
+nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, gpcm = FALSE){     
     nfact <- length(a)
     ncat <- length(d)
     akind <- nfact 
-    dind <- nfact + ncat*2 + 1 #go backwards
+    dind <- nfact + ncat
     D2 <- D^2
     ak2 <- ak^2
     P2 <- P^2
@@ -525,7 +525,7 @@ nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, gpcm = FALSE
         numakDTheta_numsum[,i] <- (num %*% ak * D * Theta[, i])/ numsum    
     ret <- .Call('dparsNominal', a, ak, d, Theta, D, Prior, P, num, dat, nfact, ncat, 
                  akind, dind, ak2, P2, P3, aTheta, aTheta2, dat_num, numsum, numakD, 
-                 numak2D2, numakDTheta_numsum)    
+                 numak2D2, numakDTheta_numsum)      
     ret
 }
 

@@ -43,7 +43,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
     const int nfact = Pnfact(0);
     const int ncat = Pncat(0); 
     const int akind = Pakind(0); 
-    const int dind = Pdind(0) - 2;
+    const int dind = Pdind(0);
     int i, j, k, n;
     NumericVector a(Ra), ak(Rak), d(Rd), PD(RD), Prior(RPrior), ak2(Rak2),
                   numsum(Rnumsum), numakD(RnumakD), numak2D2(Rnumak2D2), 
@@ -77,7 +77,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
             tmpvec2(n) = dat_num(n,i)*(D*P(n,i) - P2(n,i)*D)*numsum(n) - offterm2(n);
         }
         dL(akind + i) = sumPrior(tmpvec, Prior);
-        dL(dind - i) = sumPrior(tmpvec2, Prior);
+        dL(dind + i) = sumPrior(tmpvec2, Prior);
     }
 
     //hess
@@ -135,8 +135,8 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                 }
                 d2L(j, akind + k) = sumPrior(tmpvec, Prior);
                 d2L(akind + k, j) = d2L(j, akind + k);
-                d2L(j, dind - k) = sumPrior(tmpvec2, Prior);
-                d2L(dind - k, j) = d2L(j, dind - k);
+                d2L(j, dind + k) = sumPrior(tmpvec2, Prior);
+                d2L(dind + k, j) = d2L(j, dind + k);
             }
         }
     }
@@ -161,7 +161,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                                         D*P2(n,j))*D + offterm2(n);
         }
         d2L(akind + j, akind + j) = sumPrior(tmpvec, Prior); 
-        d2L(dind - j, dind - j) = sumPrior(tmpvec2, Prior);
+        d2L(dind + j, dind + j) = sumPrior(tmpvec2, Prior);
         for(i = 0; i < ncat; i++){
             if(j < i){   
                 offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta2, D2, i);
@@ -174,8 +174,8 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                 }
                 d2L(akind + i, akind + j) = sumPrior(tmpvec, Prior);
                 d2L(akind + j, akind + i) = d2L(akind + i, akind + j);
-                d2L(dind - i, dind - j) = sumPrior(tmpvec2, Prior); 
-                d2L(dind - j, dind - i) = d2L(dind - i, dind - j);
+                d2L(dind + i, dind + j) = sumPrior(tmpvec2, Prior); 
+                d2L(dind + j, dind + i) = d2L(dind + i, dind + j);
             }
             if(abs(j-i) == 0){
                 tmpvec = makeOffterm(dat, P2(_,i), aTheta, D2, i);
@@ -187,16 +187,16 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                             D*aTheta(n)*P2(n,i))*numsum(n)*D + dat(n,i)*(D*P(n,i) - 
                             D*P2(n,i))*D*aTheta(n) + offterm(n);
                 }
-                d2L(dind - j, akind + i) = sumPrior(tmpvec, Prior);
-                d2L(akind + i, dind - j) = d2L(dind - j, akind + i);
+                d2L(dind + j, akind + i) = sumPrior(tmpvec, Prior);
+                d2L(akind + i, dind + j) = d2L(dind + j, akind + i);
             } else {
                 offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta, D2, i);
                 for(n = 0; n < N; n++){
                     tmpvec(n) = dat_num(n,i) * (-D2*aTheta(n)*P(n,i)*P(n,j) + 2*P2(n,i) *D2*aTheta(n)*P(n,j)) * numsum(n) + 
                         dat_num(n,i) * (D*P(n,i) - P2(n,i) * D) * D * aTheta(n) * num(n,j) + offterm(n);                
                 }
-                d2L(akind + i, dind - j) = sumPrior(tmpvec, Prior);
-                d2L(dind - j, akind + i) = d2L(akind + i, dind - j);
+                d2L(akind + i, dind + j) = sumPrior(tmpvec, Prior);
+                d2L(dind + j, akind + i) = d2L(akind + i, dind + j);
             }
         }
     }            

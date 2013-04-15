@@ -453,7 +453,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'nominal'),
     definition = function(x){          
-        d <- x@par[length(x@par):(length(x@par) - x@ncat + 1)]
+        d <- x@par[(length(x@par) - x@ncat + 1):length(x@par)]
         d        
     }
 )
@@ -578,7 +578,7 @@ setMethod(
     definition = function(x, Theta, fixed.design = NULL){         
         a <- x@par[1:x@nfact]        
         ak <- x@par[(x@nfact+1):(x@nfact + x@ncat)]
-        d <- x@par[length(x@par):(length(x@par) - x@ncat + 1)]
+        d <- x@par[(length(x@par) - x@ncat + 1):length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
         return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=x@D))        

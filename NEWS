@@ -41,6 +41,8 @@ BUG FIXES
 
 - fixed implementation of infit and outfit Rasch statistics
 
+- order of nominal category intercepts were sometimes backwards. Fixed now
+
 
 Changes in mirt 0.6.0
 
