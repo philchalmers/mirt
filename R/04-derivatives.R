@@ -20,7 +20,7 @@ setMethod(
         g <- x@par[parlength - 1]
         d <- x@par[parlength - 2]
         a <- x@par[1:nfact]        
-        P <- x@itemtrace[,2]
+        P <- P.mirt(a,d,Theta,g,u, D=x@D)  
         Q <- 1 - P        
         hess <- matrix(0,nfact+3, nfact+3)						                
         grad <- rep(0, length(x@par))
@@ -357,7 +357,7 @@ setMethod(
         d <- ExtractZetas(x)
         ak <- 0:(length(d)-1)
         D <- x@D
-        P <- x@itemtrace
+        P <- ProbTrace(x=x, Theta=Theta)
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)         
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
@@ -414,7 +414,7 @@ setMethod(
         dshift[-1] <- d[-1] + shift
         ak <- 0:(length(d)-1)
         D <- x@D
-        P <- x@itemtrace
+        P <- ProbTrace(x=x, Theta=Theta)
         num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D, returnNum=TRUE)         
         tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
@@ -496,7 +496,7 @@ setMethod(
         ak <- x@par[(nfact+1):(nzetas + nfact)]
         d <- ExtractZetas(x)
         D <- x@D
-        P <- x@itemtrace
+        P <- ProbTrace(x=x, Theta=Theta)                        
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)                 
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
@@ -570,8 +570,8 @@ setMethod(
             scores <- matrix(0, nrow(tabdata), nfact)                 
             r <- tabdata[ ,ncol(tabdata)]
             N <- sum(r)
-            tabdata <- tabdata[ ,-ncol(tabdata)]
-            itemtrace <- x@itemtrace 
+            tabdata <- tabdata[ ,-ncol(tabdata)]            
+            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)            
             mu <- x@par[1:nfact]
             siglong <- x@par[-(1:nfact)]
             sig <- matrix(0,nfact,nfact)                
