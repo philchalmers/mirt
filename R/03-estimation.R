@@ -19,8 +19,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }    
     ##	    
-    Data <- list()
-    data <- as.matrix(data)
+    Data <- list()        
+    data <- as.matrix(data)    
+    if(!all(apply(data, 2, class) %in% c('integer', 'numeric')))
+        stop('Input data must be integer or numeric values only')
     rownames(data) <- 1:nrow(data)
     Data$data <- data
     if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1, ncol(data))    
