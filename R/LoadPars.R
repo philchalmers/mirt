@@ -57,7 +57,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(val) <- c(paste('a', 1:nfact, sep=''), paste('d', 0:(K[i]-1), sep=''), 'c')                
         }
         if(itemtype[i] == 'nominal'){
-            val <- c(lambdas[i,], 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
+            val <- c(rep(.5, nfact), 0, rep(.5, K[i] - 2), K[i]-1, rep(0, K[i]))
             names(val) <- c(paste('a', 1:nfact, sep=''), paste('ak', 0:(K[i]-1), sep=''), 
                             paste('d', 0:(K[i]-1), sep=''))                
         }

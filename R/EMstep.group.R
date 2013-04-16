@@ -96,8 +96,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
        for(i in 1:length(constrain))
            est[constrain[[i]][-1]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1, length(longpars))
-    EMhistory[1,] <- longpars    
-    
+    EMhistory[1,] <- longpars 
+    bump <- 100    
     #EM     
     for (cycles in 1:NCYCLES){          
         #priors        
@@ -140,11 +140,12 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             }
         }        
         preMstep.longpars <- longpars        
-        if(all(!est)) break
+        if(all(!est)) break  
+        if(cycles == 2) bump <- 1
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J, 
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc, 
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
-                      constrain=constrain, TOL=MSTEPTOL)                
+                      constrain=constrain, TOL=MSTEPTOL, bump=bump)                
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J) 
         EMhistory[cycles+1,] <- longpars
         if(verbose)
@@ -226,17 +227,12 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 }      
 
 Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemloc, PrepList, L,
-                  UBOUND, LBOUND, constrain, TOL){         
-    p <- longpars[est]            
-    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL), 
+                  UBOUND, LBOUND, constrain, TOL, bump=1){     
+    p <- longpars[est]                
+    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL*bump, abstol=TOL*bump), 
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
-                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)     
-    if(all(abs(p - opt$par) < 1e-8))
-        opt <- optim(p, fn=Mstep.LL, control=list(abstol = TOL), est=est, longpars=longpars, 
-                     pars=pars, ngroups=ngroups, J=J, Theta=Theta, 
-                     PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
-                     UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)  
+                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)                     
     longpars[est] <- opt$par
     if(length(constrain) > 0)
         for(i in 1:length(constrain))
