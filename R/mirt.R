@@ -104,16 +104,12 @@
 #' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach (EM only), or
 #' \code{'SEM'} for the supplemented EM (TOL is automatically reduced to .0001 to help the EM history).
 #' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
-#' @param SEtol tolerance value used to stop the MHRM estimation when \code{SE = TRUE}. Lower values
-#' will take longer but may be more stable for computing the information matrix
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
-#' @param prev.cor use a previously computed correlation matrix to be used to
-#' estimate starting values for the EM estimation? Default in \code{NULL} 
 #' @param rotate type of rotation to perform after the initial orthogonal
 #' parameters have been extracted by using \code{summary}; default is \code{'oblimin'}. 
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary} 
@@ -185,6 +181,9 @@
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
 #' \item{TOL}{EM convergence threshold; default .001}
 #' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/100}}
+#' \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
+#' and \code{SE.type = 'MHRM'}. Lower values will take longer but may be more 
+#' stable for computing the information matrix. Default is .001}
 #' \item{NCYCLES}{maximum number of EM cycles; default 500}
 #' }
 #' @param ... additional arguments to be passed
@@ -318,9 +317,9 @@
 #' 
 #' @keywords models
 #' @usage 
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001, pars = NULL, 
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', pars = NULL, 
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN, 
-#' prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, 
+#' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, 
 #' D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 #' 
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3, 
@@ -468,15 +467,15 @@
 #' 
 #' }
 #' 
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', SEtol = .001,
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', 
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
-                 Target = NaN, prev.cor = NULL, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
+                 Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
                  key = NULL, D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 {       
     Call <- match.call()    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
-                      pars=pars, method = 'EM', constrain=constrain, SE=SE, SEtol=SEtol,
+                      pars=pars, method = 'EM', constrain=constrain, SE=SE, 
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, key=key, ...)

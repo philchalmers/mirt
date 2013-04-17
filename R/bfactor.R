@@ -26,6 +26,7 @@
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}.
 #' @param quadpts number of quadrature points per dimension (default 20). 
+#' @param SE logical; calculate information matrix and standard errors?
 #' @param verbose logical; print observed log-likelihood value at each iteration? 
 #' @param ... additional arguments to be passed to the main estimation function. See \code{\link{mirt}}
 #' for more details
@@ -49,7 +50,7 @@
 #' 
 #' @keywords models
 #' @usage
-#' bfactor(data, model, quadpts = 20, verbose = TRUE, ...)
+#' bfactor(data, model, quadpts = 20, SE = FALSE, verbose = TRUE, ...)
 #' 
 #'
 #' @export bfactor
@@ -115,12 +116,12 @@
 #'
 #'     }
 #' 
-bfactor <- function(data, model, quadpts = 20, verbose = TRUE, ...)
+bfactor <- function(data, model, quadpts = 20, SE = FALSE, verbose = TRUE, ...)
 {       
     Call <- match.call()		    
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), 
                       method = 'EM', quadpts=quadpts, verbose=verbose,
-                      BFACTOR = TRUE, ...)
+                      BFACTOR = TRUE, SE=SE, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

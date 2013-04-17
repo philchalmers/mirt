@@ -10,12 +10,12 @@
 Theory)}
 \usage{
   mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-    SE = FALSE, SE.type = 'SEM', SEtol = .001, pars = NULL,
-    constrain = NULL, parprior = NULL, calcNull = TRUE,
-    rotate = 'oblimin', Target = NaN, prev.cor = NULL,
-    quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-    key= NULL, D = 1.702, cl = NULL, large = FALSE, verbose
-    = TRUE, technical = list(), ...)
+    SE = FALSE, SE.type = 'SEM', pars = NULL, constrain =
+    NULL, parprior = NULL, calcNull = TRUE, rotate =
+    'oblimin', Target = NaN, quadpts = NULL, grsm.block =
+    NULL, rsm.block = NULL, key= NULL, D = 1.702, cl =
+    NULL, large = FALSE, verbose = TRUE, technical =
+    list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -101,11 +101,6 @@ Theory)}
   Bootstrapped standard errors are also possible but must
   be run with the \code{\link{boot.mirt}} function}
 
-  \item{SEtol}{tolerance value used to stop the MHRM
-  estimation when \code{SE = TRUE}. Lower values will take
-  longer but may be more stable for computing the
-  information matrix}
-
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing
   parameter or may be entered as a numeric vector
@@ -115,10 +110,6 @@ Theory)}
   Can be entered as a single value to assign a global
   guessing parameter or may be entered as a numeric vector
   corresponding to each item}
-
-  \item{prev.cor}{use a previously computed correlation
-  matrix to be used to estimate starting values for the EM
-  estimation? Default in \code{NULL}}
 
   \item{rotate}{type of rotation to perform after the
   initial orthogonal parameters have been extracted by
@@ -249,8 +240,12 @@ Theory)}
   \item{MAXQUAD}{maximum number of quadratures; default
   10000} \item{TOL}{EM convergence threshold; default .001}
   \item{MSTEPTOL}{convergence threshold for Mstep; default
-  is \code{TOL/100}} \item{NCYCLES}{maximum number of EM
-  cycles; default 500} }}
+  is \code{TOL/100}} \item{SEtol}{tolerance value used to
+  stop the MHRM estimation when \code{SE = TRUE} and
+  \code{SE.type = 'MHRM'}. Lower values will take longer
+  but may be more stable for computing the information
+  matrix. Default is .001} \item{NCYCLES}{maximum number of
+  EM cycles; default 500} }}
 
   \item{...}{additional arguments to be passed}
 }

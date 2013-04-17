@@ -9,13 +9,12 @@
 \title{Multiple Group Estimation}
 \usage{
   multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, SE = FALSE, SE.type = 'MHRM', SEtol =
-    .001, invariance = '', pars = NULL, method = 'EM',
-    constrain = NULL, parprior = NULL, calcNull = TRUE,
-    draws = 3000, quadpts = NULL, grsm.block = NULL,
-    rsm.block = NULL, bfactor = FALSE, key = NULL, D =
-    1.702, cl = NULL, technical = list(), verbose = TRUE,
-    ...)
+    = 0, upper = 1, SE = FALSE, SE.type = 'SEM', invariance
+    = '', pars = NULL, method = 'EM', constrain = NULL,
+    parprior = NULL, calcNull = TRUE, draws = 3000, quadpts
+    = NULL, grsm.block = NULL, rsm.block = NULL, bfactor =
+    FALSE, key = NULL, D = 1.702, cl = NULL, technical =
+    list(), verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -91,11 +90,6 @@
   metric to be more similar to a normal cumulative density
   curve. Default is 1.702}
 
-  \item{SEtol}{tolerance value used to stop the MHRM
-  estimation when \code{SE = TRUE}. Lower values will take
-  longer but may be more stable for computing the
-  information matrix}
-
   \item{verbose}{logical; display iteration history during
   estimation?}
 
@@ -166,20 +160,21 @@
   can be adjusted. These values are \describe{
   \item{NCYCLES}{max number of cycles; default 2000 for
   MHRM and 300 for EM} \item{MAXQUAD}{maximum number of
-  quadratures; default 10000} \item{MSTEPMAXIT}{number of
-  M-step iterations; default 15} \item{BURNIN}{number of
-  burn in cycles (stage 1); default 150}
-  \item{SEMCYCLES}{number of SEM cycles (stage 2); default
-  50} \item{KDRAWS}{number of parallel MH sets to be drawn;
-  default 1} \item{TOL}{minimum threshold tolerance for
-  convergence of MH-RM, must occur on three consecutive
-  occations; default .001} \item{set.seed}{seed number used
-  during estimation. Default is 12345} \item{gain}{a vector
-  of three values specifying the numerator, exponent, and
-  subtracted values for the RM gain value. Default is
-  \code{c(0.05,0.5,0.004)}} \item{return_newconstrain}{if
-  \code{TRUE} returns a list consisting of the constraints
-  to be used just before estimation begins} }}
+  quadratures; default 10000} \item{MSTEPTOL}{convergence
+  threshold for Mstep; default is \code{TOL/100}}
+  \item{BURNIN}{number of burn in cycles (stage 1); default
+  150} \item{SEMCYCLES}{number of SEM cycles (stage 2);
+  default 50} \item{KDRAWS}{number of parallel MH sets to
+  be drawn; default 1} \item{TOL}{minimum threshold
+  tolerance for convergence. If MH-RM, must occur on three
+  consecutive occations; default .001} \item{set.seed}{seed
+  number used during estimation. Default is 12345}
+  \item{gain}{a vector of three values specifying the
+  numerator, exponent, and subtracted values for the RM
+  gain value. Default is \code{c(0.05,0.5,0.004)}}
+  \item{return_newconstrain}{if \code{TRUE} returns a list
+  consisting of the constraints to be used just before
+  estimation begins} }}
 }
 \description{
   \code{multipleGroup} performes a full-information
