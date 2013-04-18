@@ -5,7 +5,7 @@ setMethod(
                           quadpts = NULL, response.vector = NULL, degrees = NULL, 
 	                      returnER = FALSE, verbose = TRUE)
 	{          
-        if(!is.null(response.vector)){              
+        if(!is.null(response.vector)){            
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)            
             v <- response.vector
             newdata <- rbind(object@data, v)
@@ -15,12 +15,13 @@ setMethod(
             newmod <- mirt(newdata, nfact, pars=sv)
             tmptabdata <- t(newmod@tabdata[, 1:length(v)])
             tmptabdata[is.na(tmptabdata)] <- 9999
-            v <- v[is.na(v)] <- 9999
+            v[is.na(v)] <- 9999
             ind <- which(colSums(tmptabdata == as.numeric(v)) == length(v))
             newmod@tabdata <- newmod@tabdata[ind, , drop = FALSE]
             newmod@tabdatalong <- newmod@tabdatalong[ind, , drop = FALSE]            
             ret <- fscores(newmod, rotate=rotate, full.scores=FALSE, method=method, 
-                           quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)            
+                           quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)                        
+            ret <- ret[,colnames(ret) != 'Freq']
             return(ret)
         }        
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, 
