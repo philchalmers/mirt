@@ -13,12 +13,14 @@ setMethod(
             sv <- mod2values(object)
             sv$est <- FALSE
             newmod <- mirt(newdata, nfact, pars=sv)
-            ind <- which(colSums(t(newmod@tabdata[, 1:length(v)]) == as.numeric(v)) == length(v))
+            tmptabdata <- t(newmod@tabdata[, 1:length(v)])
+            tmptabdata[is.na(tmptabdata)] <- 9999
+            v <- v[is.na(v)] <- 9999
+            ind <- which(colSums(tmptabdata == as.numeric(v)) == length(v))
             newmod@tabdata <- newmod@tabdata[ind, , drop = FALSE]
             newmod@tabdatalong <- newmod@tabdatalong[ind, , drop = FALSE]            
             ret <- fscores(newmod, rotate=rotate, full.scores=FALSE, method=method, 
-                           quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)
-            ret <- ret[, -(ncol(ret) - nfact*2)]
+                           quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)            
             return(ret)
         }        
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, 
