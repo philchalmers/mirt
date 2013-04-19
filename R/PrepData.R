@@ -38,7 +38,8 @@ PrepData <- function(data, model, itemtype, guess, upper,
     uniques <- list()
     for(i in 1:J){    
         uniques[[i]] <- sort(unique(data[,i]))
-        key[i] <- which(key[i] == uniques[[i]])
+        if(any(key[i] == uniques[[i]]))
+            key[i] <- which(key[i] == uniques[[i]])
     }
     K <- rep(0,J)
     for(i in 1:J) K[i] <- length(uniques[[i]])	

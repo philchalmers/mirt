@@ -43,6 +43,10 @@ BUG FIXES
 
 - order of nominal category intercepts were sometimes backwards. Fixed now
 
+- S_X2 collapsed cells too much and caused negative df 
+
+- response.vector input now supports NA inputs (reported by Neil Rubens)
+
 
 Changes in mirt 0.6.0
 

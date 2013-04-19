@@ -318,29 +318,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             Pl[[g]] <- cmods[[g]]@Pl            
             X2 <- X2 + cmods[[g]]@X2
         }            
-    } 
-    #constraint for grsm blocks
-    if(any(itemtype == 'grsm')){
-        for(g in 1:Data$ngroups){
-            for(u in unique(na.omit(Data$grsm.block))){
-                tmp <- Data$grsm.block == u
-                tmp2 <- rep(0, nitems)                
-                for(i in 1:nitems){
-                    if(tmp[i]){
-                        ind <- length(ESTIMATE$pars[[g]][[i]]@par)
-                        tmp2[i] <- ESTIMATE$pars[[g]][[i]]@par[ind]
-                    }
-                }
-                tmp2 <- tmp2 - mean(tmp2)
-                for(i in 1:nitems){
-                    if(tmp[i]){
-                        ind <- length(ESTIMATE$pars[[g]][[i]]@par)
-                        ESTIMATE$pars[[g]][[i]]@par[ind] <- tmp2[i]
-                    }               
-                }
-            }
-        }       
-    }
+    }     
     
     ####post estimation stats    
     df <- rr <- 0    

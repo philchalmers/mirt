@@ -448,23 +448,28 @@
 #' head(SAT12)
 #' 
 #' key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
-#' mod0 <- mirt(key2binary(SAT12, key), 1)
+#' scoredSAT12 <- key2binary(SAT12, key)
+#' mod0 <- mirt(scoredSAT12, 1)
 #' mod1 <- mirt(SAT12, 1, 'nominal')
-#' mod2 <- mirt(SAT12, 1, '2PLNRM', key=key)
-#' coef(mod0)$Item.2
-#' coef(mod1)$Item.2
-#' coef(mod2)$Item.2
-#' itemplot(mod0, 2)
-#' itemplot(mod1, 2)
-#' itemplot(mod2, 2)
 #' 
-# #compare added information from distractors
-# Theta <- matrix(seq(-4,4,.01))
-# info <- iteminfo(extract.item(mod1,3), Theta)
-# info2 <- iteminfo(extract.item(mod2,3), Theta)
-# plot(Theta, info2, type = 'l')
-# lines(Theta, info, col = 'red')
+#' #for first 5 items use 2PLNRM
+#' scoredSAT12[,1:5] <- as.matrix(SAT12[,1:5])
+#' mod2 <- mirt(scoredSAT12, 1, c(rep('2PLNRM',5),rep('2PL', 27)), key=key)
+#' coef(mod0)$Item.1
+#' coef(mod1)$Item.1
+#' coef(mod2)$Item.1
+#' itemplot(mod0, 1)
+#' itemplot(mod1, 1)
+#' itemplot(mod2, 1)
 #' 
+#' #compare added information from distractors 
+#' Theta <- matrix(seq(-4,4,.01))
+#' par(mfrow = c(2,3))
+#' for(i in 1:5){
+#'     info <- iteminfo(extract.item(mod0,i), Theta)
+#'     info2 <- iteminfo(extract.item(mod2,i), Theta)
+#'     plot(Theta, info2, type = 'l') 
+#'     lines(Theta, info, col = 'red') 
 #' }
 #' 
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', 
