@@ -5,7 +5,7 @@
 #' 
 #' @aliases iteminfo
 #' @param x an extracted internal mirt object containing item information
-#' @param Theta a matrix of latent trait values
+#' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param degrees a vector of angles in degrees that are between 0 and 90 that jointly sum to 90. 
 #' Only applicable when the input object is multidimensional
 #' @keywords information
@@ -35,6 +35,7 @@
 #' 
 #' } 
 iteminfo <- function(x, Theta, degrees = NULL){    
+    if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(is.null(degrees) && ncol(Theta) == 1) degrees <- 0
     if(is.null(degrees) && ncol(Theta) != 1)

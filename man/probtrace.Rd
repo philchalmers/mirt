@@ -8,7 +8,8 @@
   \item{x}{an extracted internal mirt object containing
   item information}
 
-  \item{Theta}{a matrix of latent trait values}
+  \item{Theta}{a vector (unidimensional) or matrix
+  (multidimensional) of latent trait values}
 }
 \description{
   Given an internal mirt object extracted from an estimated

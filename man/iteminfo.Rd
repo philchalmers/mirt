@@ -8,7 +8,8 @@
   \item{x}{an extracted internal mirt object containing
   item information}
 
-  \item{Theta}{a matrix of latent trait values}
+  \item{Theta}{a vector (unidimensional) or matrix
+  (multidimensional) of latent trait values}
 
   \item{degrees}{a vector of angles in degrees that are
   between 0 and 90 that jointly sum to 90. Only applicable

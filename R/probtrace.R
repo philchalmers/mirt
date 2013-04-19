@@ -5,7 +5,7 @@
 #' 
 #' @aliases probtrace
 #' @param x an extracted internal mirt object containing item information
-#' @param Theta a matrix of latent trait values
+#' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @keywords tracelines
 #' @export probtrace
 #' @examples 
@@ -19,7 +19,8 @@
 #' head(data.frame(traceline, Theta=Theta))
 #' 
 #' } 
-probtrace <- function(x, Theta){    
+probtrace <- function(x, Theta){ 
+    if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')        
     P <- ProbTrace(x=x, Theta=Theta)   
     cats <- 1:ncol(P)
