@@ -472,6 +472,7 @@
 #'     lines(Theta, info, col = 'red') 
 #' }
 #' 
+#' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', 
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', 
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 

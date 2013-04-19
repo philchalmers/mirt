@@ -554,6 +554,8 @@ for(i in 1:5){
     plot(Theta, info2, type = 'l')
     lines(Theta, info, col = 'red')
 }
+
+}
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
