@@ -268,11 +268,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                     if(any(L[j,])) {
                         On[j+1, L[j,]] <- On[j+1, L[j,]] + On[j, L[j,]]
                         En[j+1, L[j,]] <- En[j+1, L[j,]] + En[j, L[j,]]
-                        drop <- c(drop, i)         
+                        drop <- c(drop, j)         
                         break
                     }
                 }
-                for(j in nrow(On):1){
+                for(j in nrow(On):2){
                     if(any(L[j,])) {
                         On[j-1, L[j,]] <- On[j-1, L[j,]] + On[j, L[j,]]
                         En[j-1, L[j,]] <- En[j-1, L[j,]] + En[j, L[j,]]
