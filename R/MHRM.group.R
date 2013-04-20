@@ -173,17 +173,15 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         if(is.na(attr(gtheta0[[1]],"log.lik"))) 
             stop('Estimation halted. Model did not converge.')		
         if(verbose){            
-            if((cycles + 1) %% 5 == 0){
-                if(cycles < BURNIN)
-                    cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-                        sprintf("%.1f", LL), sep="")
-                if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-                    cat("\rStage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
-                        sprintf("%.1f", LL), sep="")
-                if(cycles > BURNIN + SEMCYCLES)
-                    cat("\rStage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
-                        ", Log-Lik = ", sprintf("%.1f",LL), sep="")					
-            }
+            if(cycles < BURNIN)
+                cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
+                    sprintf("%.1f", LL), sep="")
+            if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
+                cat("\rStage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
+                    sprintf("%.1f", LL), sep="")
+            if(cycles > BURNIN + SEMCYCLES)
+                cat("\rStage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
+                    ", Log-Lik = ", sprintf("%.1f",LL), sep="")					            
         }			
         if(stagecycle < 3){	                        
             if(qr(ave.h)$rank != ncol(ave.h)){
@@ -215,9 +213,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
-            if(verbose && (cycles + 1) %% 5 == 0){ 
-                cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))))                
-            }			            
+            if(verbose) cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))), '\r')
             if(stagecycle == 2){
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
@@ -256,10 +252,9 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
-        if(verbose && (cycles + 1) %% 5 == 0){ 
+        if(verbose) 
             cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-                sprintf("%.4f",max(abs(gamma*correction))), sep = '')            
-        }	
+                sprintf("%.4f",max(abs(gamma*correction))), sep = '')                    	
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1
         else conv <- 0		
         if(conv == 3) break        
