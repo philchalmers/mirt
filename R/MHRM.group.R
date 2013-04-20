@@ -174,14 +174,11 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             stop('Estimation halted. Model did not converge.')		
         if(verbose){            
             if(cycles < BURNIN)
-                cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-                    sprintf("%.1f", LL), sep="")
+                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f", cycles+1, LL)                
             if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-                cat("\rStage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
-                    sprintf("%.1f", LL), sep="")
+                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN+1, LL)                
             if(cycles > BURNIN + SEMCYCLES)
-                cat("\rStage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
-                    ", Log-Lik = ", sprintf("%.1f",LL), sep="")					            
+                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN-SEMCYCLES+1, LL)                                        
         }			
         if(stagecycle < 3){	                        
             if(qr(ave.h)$rank != ncol(ave.h)){
@@ -213,7 +210,8 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
-            if(verbose) cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))), '\r')
+            if(verbose) 
+                cat(printmsg, sprintf(", Max Change = %.4f\r", max(abs(gamma*correction))), sep='')
             if(stagecycle == 2){
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
@@ -252,9 +250,9 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
-        if(verbose) 
-            cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-                sprintf("%.4f",max(abs(gamma*correction))), sep = '')                    	
+        if(verbose)
+            cat(printmsg, sprintf(", gam = %.3f, Max Change = %.4f\r", 
+                                  gamma, max(abs(gamma*correction))), sep='')            
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1
         else conv <- 0		
         if(conv == 3) break        
@@ -268,6 +266,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         phi <- phi + gamma*(grad - phi)
         Phi <- Phi + gamma*(Tau - outer(grad,grad) - Phi)        
     } ###END BIG LOOP       
+    if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
     #Reload final pars list    
     if(cycles == NCYCLES + BURNIN + SEMCYCLES) 

@@ -306,7 +306,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     rm(lambdas, norm)
     #missing stats for MHRM
     if(opts$method =='MHRM' || opts$method == 'MIXED'){        
-        if(opts$verbose) cat("\n\nCalculating log-likelihood...\n")
+        if(opts$verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()      
         logLik <- G2 <- X2 <- SElogLik <- 0        
         Pl <- list()        

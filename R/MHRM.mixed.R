@@ -134,10 +134,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                                       prior.t.var=gstructgrouppars[[g]]$gcov, mixedlist=mixedlist,
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
-        }
-        for(g in 1:ngroups){
-            
-        }
+        }        
         
         #Step 2. Find average of simulated data gradients and hessian 		
         g.m <- h.m <- group.m <- list()
@@ -184,14 +181,11 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             stop('Estimation halted. Model did not converge.')		
         if(verbose){            
             if(cycles < BURNIN)
-                cat("\rStage 1: Cycle = ", cycles + 1, ", Log-Lik = ", 
-                    sprintf("%.1f", LL), sep="")
+                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f", cycles+1, LL)                
             if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-                cat("\rStage 2: Cycle = ", cycles-BURNIN+1, ", Log-Lik = ",
-                    sprintf("%.1f", LL), sep="")
+                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN+1, LL)                
             if(cycles > BURNIN + SEMCYCLES)
-                cat("\rStage 3: Cycle = ", cycles-BURNIN-SEMCYCLES+1, 
-                    ", Log-Lik = ", sprintf("%.1f",LL), sep="")					            
+                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN-SEMCYCLES+1, LL)                                        
         }			
         if(stagecycle < 3){	                        
             if(qr(ave.h)$rank != ncol(ave.h)){
@@ -223,7 +217,8 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             if(length(constrain) > 0)
                 for(i in 1:length(constrain))
                     longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]           
-            if(verbose) cat(", Max Change =", sprintf("%.4f", max(abs(gamma*correction))), '\r')
+            if(verbose) 
+                cat(printmsg, sprintf(", Max Change = %.4f\r", max(abs(gamma*correction))), sep='')
             if(stagecycle == 2){
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
@@ -263,9 +258,9 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
-        if(verbose) 
-            cat(", gam = ",sprintf("%.3f",gamma),", Max Change = ", 
-                sprintf("%.4f",max(abs(gamma*correction))), sep = '')            	        	
+        if(verbose)
+            cat(printmsg, sprintf(", gam = %.3f, Max Change = %.4f\r", 
+                                  gamma, max(abs(gamma*correction))), sep='')            	        	
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1
         else conv <- 0		
         if(conv == 3) break        
@@ -280,6 +275,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         Phi <- Phi + gamma*(Tau - outer(grad,grad) - Phi)        
     } ###END BIG LOOP       
     #Reload final pars list
+    if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
     if(cycles == NCYCLES + BURNIN + SEMCYCLES) 
         warning('MHRM iterations terminated after ', NCYCLES, ' iterations.') 
