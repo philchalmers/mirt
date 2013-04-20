@@ -211,7 +211,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if(ESTIMATE$cycles <= 5 ){
                     dontrun <- TRUE
                     warning('Too few EM interations to compute SEM information matrix')               
-                }
+                }                
+                if(ESTIMATE$cycles == opts$NCYCLES) dontrun <- TRUE                    
                 if(!dontrun){
                     if(ESTIMATE$cycles <= 10) 
                         message('Very few EM cycles performed. Consider decreasing TOL further to 
