@@ -371,28 +371,20 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){                    
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){          
         grad <- rep(0, length(x@par))
-        hess <- matrix(0, length(x@par), length(x@par))
-        Prior <- rep(1, nrow(x@rs))        
-        if(BFACTOR) Prior <- prior
-        if(EM){                
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
-            if(estHess) hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)     
-            return(list(grad=grad, hess=hess))         
-        }        
-        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)    
-        return(list(grad=grad, hess=hess))  
-
-        #FIXME - figure out analytic gradient
-        browser()
+        hess <- matrix(0, length(x@par), length(x@par))              
         dat <- x@dat 
         Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
             if(BFACTOR) Prior <- prior
+            if(estHess) 
+                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], 
+                                                        obj=x, Theta=Theta, prior=Prior)     
+        } else {
+            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)    
         } 
         nfact <- x@nfact        
         D <- x@D
@@ -402,16 +394,17 @@ setMethod(
         u <- x@par[x@nfact+3]        
         ak <- x@par[(x@nfact+4):(x@nfact+4+x@ncat-2)]
         dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]        
-        correct <- x@correctcat
-        P <- ProbTrace(x, Theta)
-        Pd <- P[,correct]
+        correct <- x@correctcat        
+        Pd <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=D)
         Qd <- 1 - Pd
-        Pstar <- P.mirt(a=rep(1, ncol(Theta)), d=d, Theta=Theta, g=0, u=1, D=D)
+        Pstar <- P.mirt(a=a, d=d, Theta=Theta, g=0, u=1, D=D)
         Qstar <- 1 - Pstar
         num <- P.nominal(a=rep(1, nfact), ak=ak, d=dk, Theta=Theta, D=D, returnNum=TRUE)  
         den <- rowSums(num)
+        Pn <- num/den
         cdat <- dat[,correct]
-        idat <- dat[,-correct]        
+        idat <- dat[,-correct]         
+        nd <- ncol(idat)
         for(i in 1:nfact)
             grad[i] <- sum( (u-g) * D * Theta[,i] * Qstar * Pstar * Prior * (
                 cdat / Pd - rowSums(idat/Qd)) )
@@ -419,9 +412,16 @@ setMethod(
                 cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+2] <- sum( Prior * ((cdat * (1-Pstar)/Pd) + rowSums(idat * (Pstar - 1)/Qd)) )
         grad[nfact+3] <- sum( Prior * (cdat * Pstar / Pd - rowSums(idat * Pstar / Qd) ))
-        
-        
-        return(list(grad=grad, hess=hess))
+        for(j in 1:nd){
+            grad[nfact+3+j] <- sum(Prior *(
+                (idat[,j] * Qd * D * rowSums(Theta) * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) - 
+                    rowSums(idat[,-j]) * D * rowSums(Theta) * Pn[,j]))
+            grad[nfact+3+nd+j] <- sum(Prior *(
+                (idat[,j] * Qd * D * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) - 
+                    rowSums(idat[,-j]) * D * Pn[,j]))
+        }
+        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        return(ret)
     }
 )
 
