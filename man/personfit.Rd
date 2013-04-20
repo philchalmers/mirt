@@ -21,7 +21,7 @@
   outfit statistics are also produced. The returned object
   is a \code{data.frame} consisting either of the tabulated
   data or full data with the statistics appended to the
-  last columns.
+  rightmost columns.
 }
 \examples{
 \dontrun{

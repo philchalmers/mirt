@@ -3,9 +3,8 @@
 #' \code{confmirt} fits a conditional (i.e., confirmatory) full-information
 #' maximum-likelihood factor analysis model to dichotomous and polytomous
 #' data under the item response theory paradigm using Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm. Fits univariate and multivariate Rasch, 
-#' 1-4PL, graded, (generalized) partial credit, nominal, multiple choice, graded rating scale, Rasch rating scale,
-#' and partially-compensatory models, potentially with polynomial and product constructed latent traits. 
+#' Metropolis-Hastings Robbins-Monro algorithm. Will fit the same models as \code{\link{mirt}}, 
+#' in addition to polynomial and product constructed latent traits. 
 #' User defined item classes can also be defined using the \code{\link{createItem}} function.
 #' Models may also contain 'explanatory' 
 #' person or item level predictors, though these can only be included by using the 
@@ -30,14 +29,13 @@
 #' \code{anova} function, where a Chi-squared difference test and AIC/BIC
 #' difference values are displayed.
 #' 
-#' @section Convergence:
+#' @section Convergence monitoring:
 #' 
-#' The MHRM algorithm often is more stable than the EM counterpart in \code{mirt} but 
-#' convergence of the algorithm should be interpreted with caution. When the number of iterations 
-#' grows very high (e.g., greater than 1500) or when \code{Max Change = .2500} values are repeatedly printed
+#' When the number of iterations grows very high (e.g., greater than 1500) or 
+#' when \code{Max Change = .2500} values are repeatedly printed
 #' to the console too often (indicating that the parameters were being constrained since they are naturally 
 #' moving in steps greater than 0.25) then the model may either be ill defined or have a 
-#' very flat likelihood surface, and genuine maximum likelihood parameter estimates may be difficult to find. 
+#' very flat likelihood surface, and genuine maximum-likelihood parameter estimates may be difficult to find. 
 #' 
 #' @section Confirmatory IRT:
 #' 
@@ -128,10 +126,12 @@
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
-#' \code{\link{fscores}}, \code{\link{confmirt.model}}, \code{\link{wald}}, 
-#' \code{\link{multipleGroup}}, \code{\link{itemplot}}, \code{\link{fitIndices}}, 
-#' \code{\link{mixedmirt}}, \code{\link{testinfo}}, \code{\link{iteminfo}}, \code{\link{createItem}}
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}, \code{\link{mirt}},
+#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, 
+#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}, 
+#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}}, 
+#' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
+#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
 #' @references
 #' 
 #' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a

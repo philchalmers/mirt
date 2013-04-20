@@ -27,5 +27,8 @@ head(data.frame(traceline, Theta=Theta))
 
 }
 }
+\seealso{
+  \code{\link{extract.item}}
+}
 \keyword{tracelines}
 

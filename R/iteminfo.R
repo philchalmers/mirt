@@ -9,6 +9,8 @@
 #' @param degrees a vector of angles in degrees that are between 0 and 90 that jointly sum to 90. 
 #' Only applicable when the input object is multidimensional
 #' @keywords information
+#' @seealso
+#' \code{\link{extract.item}}
 #' @export iteminfo
 #' @examples 
 #' 

@@ -255,12 +255,13 @@ Theory)}
   under the item response theory paradigm. Fits univariate
   and multivariate Rasch, 1-4PL, graded, (generalized)
   partial credit, nominal, multiple choice, graded rating
-  scale, Rasch rating scale, and partially compensatory
-  models using the EM algorithm. User defined item classes
-  can also be defined using the \code{\link{createItem}}
-  function. Models may also contain 'explanatory' person or
-  item level predictors, though these can only be included
-  by using the \code{\link{mixedmirt}} function.
+  scale, Rasch rating scale, nested logistic, and partially
+  compensatory models using the EM algorithm. User defined
+  item classes can also be defined using the
+  \code{\link{createItem}} function. Models may also
+  contain 'explanatory' person or item level predictors,
+  though these can only be included by using the
+  \code{\link{mixedmirt}} function.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by
@@ -275,22 +276,18 @@ Theory)}
   applied to allow comparison to mainstream programs such
   as TESTFACT (2003) and POLYFACT.
 
-  Factor scores are estimated assuming a normal prior
-  distribution and can be appended to the input data matrix
-  (\code{full.data = TRUE}) or displayed in a summary table
-  for all the unique response patterns. \code{summary} and
-  \code{coef} allow for all the rotations available from
-  the \code{GPArotation} package (e.g., \code{rotate =
-  'oblimin'}) as well as a \code{'promax'} rotation.
-
-  Using \code{plot} will plot the test information function
-  or the test standard errors for 1 and 2 dimensional
-  solutions, or all item trace lines if only 1 dimensional
-  the test is only dichotomous items. To examine individual
-  item plots use \code{\link{itemplot}}. Residuals are
-  computed using the LD statistic (Chen & Thissen, 1997) in
-  the lower diagonal of the matrix returned by
-  \code{residuals}, and Cramer's V above the diagonal.
+  \code{summary} and \code{coef} allow for all the
+  rotations available from the \code{GPArotation} package
+  (e.g., \code{rotate = 'oblimin'}) as well as a
+  \code{'promax'} rotation. Using \code{plot} will plot the
+  test information function or the test standard errors for
+  1 and 2 dimensional solutions, or all item trace lines if
+  only 1 dimensional the test is only dichotomous items. To
+  examine individual item plots use \code{\link{itemplot}}.
+  Residuals are computed using the LD statistic (Chen &
+  Thissen, 1997) in the lower diagonal of the matrix
+  returned by \code{residuals}, and Cramer's V above the
+  diagonal.
 }
 \section{Confirmatory IRT}{
   Specification of the confirmatory item factor analysis
@@ -332,12 +329,6 @@ Theory)}
   item facility (i.e., item easiness), \eqn{q_j}, to obtain
   \eqn{d_j = q_j / u_j}. A similar implementation is also
   used for obtaining initial values for polytomous items.
-  Following these initial estimates the model is iterated
-  using the EM estimation strategy with fixed quadrature
-  points. Implicit equation accelerations described by
-  Ramsey (1975) are also added to facilitate parameter
-  convergence speed, and these are adjusted every third
-  cycle.
 }
 
 \section{Convergence}{
@@ -355,7 +346,7 @@ Theory)}
 }
 
 \section{IRT Models}{
-  The parameter labels use follow the convention, here
+  The parameter labels use the follow convention, here
   using two factors and \eqn{k} as the number of
   categories. Throughout all models D is a constant
   (default 1.702):
@@ -415,11 +406,11 @@ Theory)}
   trace is the 1-4PL model, while for unsucessful
   endormenent: \deqn{P(x = 0 | \theta, \psi) = (1 -
   P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k |
-  \theta, \psi)} which is simply the product of the
-  compliment of the dichotomous trace line with the nominal
-  response model. In the nominal model, the slope
-  parameters defined above are constrained to be 1's, while
-  the last value of the \eqn{ak} is freely estimated. } }
+  \theta, \psi)} which is the product of the compliment of
+  the dichotomous trace line with the nominal response
+  model. In the nominal model, the slope parameters defined
+  above are constrained to be 1's, while the last value of
+  the \eqn{ak} is freely estimated. } }
 }
 \examples{
 \dontrun{
@@ -533,10 +524,10 @@ head(SAT12)
 key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 scoredSAT12 <- key2binary(SAT12, key)
 mod0 <- mirt(scoredSAT12, 1)
-mod1 <- mirt(SAT12, 1, 'nominal')
 
-#for first 5 items use 2PLNRM
+#for first 5 items use 2PLNRM and nominal
 scoredSAT12[,1:5] <- as.matrix(SAT12[,1:5])
+mod1 <- mirt(scoredSAT12, 1, c(rep('nominal',5),rep('2PL', 27)))
 mod2 <- mirt(scoredSAT12, 1, c(rep('2PLNRM',5),rep('2PL', 27)), key=key)
 coef(mod0)$Item.1
 coef(mod1)$Item.1
@@ -551,9 +542,15 @@ par(mfrow = c(2,3))
 for(i in 1:5){
     info <- iteminfo(extract.item(mod0,i), Theta)
     info2 <- iteminfo(extract.item(mod2,i), Theta)
-    plot(Theta, info2, type = 'l')
+    plot(Theta, info2, type = 'l', main = paste('Information for item', i), ylab = 'Information')
     lines(Theta, info, col = 'red')
 }
+
+#test information
+par(mfrow = c(1,1))
+plot(Theta, testinfo(mod2, Theta), type = 'l', main = 'Test information', ylab = 'Information')
+lines(Theta, testinfo(mod0, Theta), col = 'red')
+
 
 }
 }
@@ -584,6 +581,10 @@ for(i in 1:5){
   Lord, F. M. & Novick, M. R. (1968). Statistical theory of
   mental test scores. Addison-Wesley.
 
+  Rasch, G. (1960). Probabilistic models for some
+  intelligence and attainment tests. \emph{Danish Institute
+  for Educational Research}.
+
   Muraki, E. (1992). A generalized partial credit model:
   Application of an EM algorithm. \emph{Applied
   Psychological Measurement, 16}, 159-176.
@@ -591,6 +592,10 @@ for(i in 1:5){
   Muraki, E. & Carlson, E. B. (1995). Full-information
   factor analysis for polytomous item responses.
   \emph{Applied Psychological Measurement, 19}, 73-90.
+
+  Samejima, F. (1969). Estimation of latent ability using a
+  response pattern of graded scores. \emph{Psychometrika
+  Monographs}, 34.
 
   Suh, Y. & Bolt, D. (2010). Nested logit models for
   multiple-choice item response data. \emph{Psychometrika,
@@ -616,16 +621,17 @@ for(i in 1:5){
 }
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
-  \code{\link{confmirt.model}} \code{\link{confmirt}},
-  \code{\link{bfactor}}, \code{\link{multipleGroup}},
-  \code{\link{mixedmirt}}, \code{\link{wald}},
-  \code{\link{itemplot}}, \code{\link{fscores}},
-  \code{\link{fitIndices}}, \code{\link{extract.item}},
-  \code{\link{iteminfo}}, \code{\link{testinfo}},
-  \code{\link{probtrace}}, \code{\link{boot.mirt}},
-  \code{\link{imputeMissing}}, \code{\link{itemfit}},
-  \code{\link{mod2values}}, \code{\link{read.mirt}},
-  \code{\link{simdata}}, \code{\link{createItem}}
+  \code{\link{confmirt.model}}, \code{\link{mirt}},
+  \code{\link{confmirt}}, \code{\link{bfactor}},
+  \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+  \code{\link{wald}}, \code{\link{itemplot}},
+  \code{\link{fscores}}, \code{\link{fitIndices}},
+  \code{\link{extract.item}}, \code{\link{iteminfo}},
+  \code{\link{testinfo}}, \code{\link{probtrace}},
+  \code{\link{boot.mirt}}, \code{\link{imputeMissing}},
+  \code{\link{itemfit}}, \code{\link{mod2values}},
+  \code{\link{read.mirt}}, \code{\link{simdata}},
+  \code{\link{createItem}}
 }
 \keyword{models}
 

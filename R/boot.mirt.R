@@ -1,7 +1,7 @@
 #' Calculate bootstrapped standard errors for estimated models
 #'
-#' Given an internal mirt object estimate the bootstrapped standard errors. If possible, it will 
-#' be beneficial to run the computations using multicore architecture (e.g., using the \code{parallel} 
+#' Given an internal mirt object estimate the bootstrapped standard errors. It may 
+#' be beneficial to run the computations using multicore architecture (e.g., the \code{parallel} 
 #' package).
 #' 
 #' @aliases boot.mirt

@@ -8,7 +8,7 @@
   \item{x}{an estimated model x from the mirt package}
 
   \item{Theta}{a matrix containing the estimates of the
-  latent trait scores (via \code{\link{fscores}})}
+  latent trait scores (e.g., via \code{\link{fscores}})}
 }
 \description{
   Given an estimated model from any of mirt's model fitting
@@ -27,7 +27,7 @@ for(i in 1:20)
 (mod <- mirt(dat, 1))
 scores <- fscores(mod, method = 'MAP', full.scores = TRUE)
 
-#re-estimate imputed dataset (good to do this several times and average over)
+#re-estimate imputed dataset (good to do this multiple times and average over)
 fulldata <- imputeMissing(mod, scores[,'F1', drop = FALSE])
 (fullmod <- mirt(fulldata, 1))
 

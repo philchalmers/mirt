@@ -3,7 +3,7 @@
 #' \code{multipleGroup} performes a full-information
 #' maximum-likelihood multiple group analysis for dichotomous and polytomous
 #' data under the item response theory paradigm using either Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro algorithm or with an EM approach. 
+#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM approach. 
 #'  
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally 
 #' independent, and therefore could initially be performed by sub setting the data and running identical
@@ -95,8 +95,12 @@
 #' }
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{simdata}},
-#' \code{\link{confmirt.model}}, \code{\link{fscores}}, \code{\link{fitIndices}}
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}, \code{\link{mirt}},
+#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, 
+#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}, 
+#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}}, 
+#' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
+#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
 #' @keywords models
 #' @usage 
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',

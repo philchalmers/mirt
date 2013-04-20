@@ -1,7 +1,8 @@
 #' Methods for Function fscores
 #' 
 #' Computes MAP, EAP, EAP for sum-scores, WLE, or ML factor scores with a multivariate normal 
-#' prior distribution.
+#' prior distribution. Will return either a table with the computed scores and standard errors, or 
+#' the original data matrix with scores appended to the rightmost column. 
 #' 
 #'
 #' @aliases fscores

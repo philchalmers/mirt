@@ -43,5 +43,8 @@ lines(Theta, T1/T1, col = 'red')
 
 }
 }
+\seealso{
+  \code{\link{extract.item}}
+}
 \keyword{information}
 
