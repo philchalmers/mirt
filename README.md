@@ -1,8 +1,8 @@
-#mirt
+# mirt
 
 Multidimensional item response theory in R. 
 
-##Description
+## Description
 
 Analysis of dichotomous and polytomous response data using latent
 trait models under the Item Response Theory paradigm. Includes univariate
@@ -19,7 +19,7 @@ latent traits. Additionally, multiple group analysis may be performed for
 unidimensional or multidimensional item response models for detecting
 differential item functioning.
 
-##Installing from source
+## Installing from source
 
 It's recommended to use the development version of this package since it is more likely to be up to date 
 than the version on CRAN. To install this package from source: 
@@ -43,7 +43,7 @@ library('devtools')
 install_github('mirt', 'philchalmers', quick = TRUE)
 ```
 
-##Installing from a binary (Windows only)
+## Installing from a binary (Windows only)
 
 For those having difficulty installing the package on Windows, binary installation (.zip) files 
 for 32- or 64-bit Windows may be installed with:
@@ -56,8 +56,10 @@ install.packages('mirt.zip', repos=NULL)
 Note that this binary file is updated periodically and is not guarenteed to be in sync with 
 the source code. 
 
-#Extra
+# Bugs and Questions
 
 Bug reports are always welcome and the preferred way to address these bugs is through
 the github 'issues'. Feel free to submit issues or feature requests on the site, and I'll 
-address them ASAP. Cheers!
+address them ASAP. Also, if you have any questions about the package, or IRT in general, then
+feel free to create a 'New Topic' in the 
+[mirt-package](https://groups.google.com/forum/#!forum/mirt-package) Google group. Cheers!
