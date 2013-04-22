@@ -236,6 +236,8 @@ rotateLambdas <- function(so){
 
 d2r <-function(d) pi*d/180
 
+closeEnough <- function(x, low, up) all(x >= low & x <= up)    
+
 test_info <- function(pars, Theta, Alist, K){
     infolist <- list()    
     for(cut in 1:length(Alist)){

@@ -130,26 +130,29 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         } 
         Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2) 
         #if all Rasch models, infit and outfit        
-        if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+        if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){            
+            oneslopes <- rep(FALSE, length(x@itemtype))            
             for(i in 1:length(x@itemtype))
-                if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
-            attr(x, 'inoutfitreturn') <- TRUE
-            pf <- personfit(x, method=method)            
-            z2 <- pf$resid^2 / pf$W
-            outfit <- colSums(z2) / N
-            q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
-            z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
-            infit <- colSums(pf$W * z2) / colSums(pf$W)
-            q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
-            z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
-            ret$outfit <- outfit
-            ret$z.outfit <- z.outfit
-            ret$infit <- infit
-            ret$z.infit <- z.infit
-            ret$Zh <- Zh        
-        } else {
-            ret$Zh <- Zh    
-        } 
+                oneslopes[i] <- closeEnough((x@pars[[i]]@par[1] * x@pars[[1]]@D), 1-1e-10, 1+1e-10)
+            if(all(oneslopes)){
+                attr(x, 'inoutfitreturn') <- TRUE
+                pf <- personfit(x, method=method)            
+                z2 <- pf$resid^2 / pf$W
+                outfit <- colSums(z2) / N
+                q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
+                z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
+                infit <- colSums(pf$W * z2) / colSums(pf$W)
+                q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
+                z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
+                ret$outfit <- outfit
+                ret$z.outfit <- z.outfit
+                ret$infit <- infit
+                ret$z.infit <- z.infit
+                ret$Zh <- Zh        
+            } else {
+                ret$Zh <- Zh    
+            } 
+        }
     }
     if((X2 || !is.null(empirical.plot)) && nfact == 1){                
         ord <- order(Theta[,1])    
