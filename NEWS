@@ -1,3 +1,11 @@
+Changes in mirt 0.7.1
+
+NEW FEATURES
+
+- type = 'score' and type = 'infoSE' added to plot() generic for expected total score and joint test
+  standard error/information 
+
+
 Changes in mirt 0.7.0
 
 NEW FEATURES

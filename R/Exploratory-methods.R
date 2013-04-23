@@ -237,7 +237,7 @@ setMethod(
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), 
                           auto.key = TRUE, ...)
     {           
-        if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace')) 
+        if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace', 'infoSE', 'score')) 
             stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
@@ -262,10 +262,26 @@ setMethod(
                 for(i in 1:J)
                     info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)            
             }
+        }        
+        adj <- apply(x@data, 2, min)
+        if(any(adj > 0) && type == 'score')
+            message('Adjusted so that the lowest category score for every item is 0')                
+        tmp <- try(x@rotate, silent = TRUE)
+        if (x@nfact > 1 && !is(tmp,'try-error')){             
+            rotname <- x@rotate
+            so <- summary(x, rotate=x@rotate, Target=NULL, verbose=FALSE, digits=5, ...)             
+            a <- rotateLambdas(so) * 1.702/x@pars[[1]]@D
+            for(i in 1:J)
+                x@pars[[i]]@par[1:nfact] <- a[i, ]            
         }
-        plt <- data.frame(cbind(info,Theta=Theta))         
+        itemtrace <- computeItemtrace(x@pars, ThetaFull, x@itemloc)        
+        score <- c()
+        for(i in 1:J)
+            score <- c(score, 0:(x@K[i]-1))
+        score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
+        plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))         
         if(nfact == 2){						
-            colnames(plt) <- c("info", "Theta1", "Theta2")			
+            colnames(plt) <- c("info", "score", "Theta1", "Theta2")			
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'infocontour')												
                 return(contourplot(info ~ Theta1 * Theta2, data = plt, 
@@ -274,6 +290,10 @@ setMethod(
             if(type == 'info')
                 return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information", 
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
+            if(type == 'score')
+                return(wireframe(score ~ Theta1 + Theta2, data = plt, main = "Expected Total Score", 
+                                 zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
             if(type == 'infoangle')
                 symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue', 
@@ -284,8 +304,8 @@ setMethod(
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))            
         } else {            
-            colnames(plt) <- c("info", "Theta")
-            plt$SE <- 1 / sqrt(plt$info)
+            colnames(plt) <- c("info", "score", "Theta")
+            plt$SE <- 1 / sqrt(plt$info)            
             if(type == 'info')
                 return(xyplot(info~Theta, plt, type='l',main = 'Test Information', 
                               xlab = expression(theta), ylab=expression(I(theta))))				
@@ -294,6 +314,13 @@ setMethod(
             if(type == 'SE')                
                 return(xyplot(SE~Theta, plt, type='l',main = 'Test Standard Errors', 
                        xlab = expression(theta), ylab=expression(SE(theta))))
+            if(type == 'infoSE'){
+                obj1 <- xyplot(info~Theta, plt, type='l',main = 'Test Information and Standard Errors', 
+                               xlab = expression(theta), ylab=expression(I(theta)))
+                obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))                
+                if(!require(latticeExtra)) require(latticeExtra)
+                return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = TRUE))                
+            }
             if(type == 'trace'){                
                 if(!all(x@K == 2)) stop('trace line plot only available for tests 
                                         with dichotomous items')                
@@ -318,6 +345,10 @@ setMethod(
                               xlab = expression(theta), ylab = expression(I(theta)), 
                               auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))            
             }
+            if(type == 'score')
+                return(xyplot(score ~ Theta, plt, 
+                              xlab = expression(theta), ylab = expression(Total(theta)), 
+                              type = 'l', main = 'Expected Total Score', ...))            
         }		
     }		
 )	

@@ -191,10 +191,12 @@ Theory)}
   \item{type}{type of plot to view; can be \code{'info'} to
   show the test information function, \code{'infocontour'}
   for the test information contours, \code{'SE'} for the
-  test standard error function, and \code{'trace'} and
+  test standard error function, \code{'trace'} and
   \code{'infotrace'} for all item probability information
   or trace lines (only available when all items are
-  dichotomous)}
+  dichotomous), \code{'infoSE'} for a combined test
+  information and standard error plot, and \code{'score'}
+  for the expected total score}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}. If a vector is used then a bubble
