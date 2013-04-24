@@ -34,6 +34,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(is.null(key))  key <- rep(1L, J)
     if(length(key) != J)
         stop("The number of elements in the key input is incorrect.")
+    key[is.na(key) | is.nan(key)] <- 1
     key <- as.integer(key)        
     uniques <- list()
     for(i in 1:J){    
