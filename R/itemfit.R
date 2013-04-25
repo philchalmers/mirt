@@ -93,10 +93,12 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()   
-        for(g in 1:length(x@cmods))
+        for(g in 1:length(x@cmods)){
+            x@cmods[[g]]@itemtype <- x@itemtype
             ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size, mincell = 1, 
                                 S_X2.tables = FALSE)
-        names(ret) <- names(x@cmods)
+        }        
+        names(ret) <- x@groupNames
         return(ret)
     }        
     if(S_X2.tables) Zh <- X2 <- FALSE
