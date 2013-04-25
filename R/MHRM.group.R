@@ -149,7 +149,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]], 
                                          itemloc=itemloc)
             for (i in 1:J){	
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp, estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
                 g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad

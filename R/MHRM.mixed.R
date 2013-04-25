@@ -156,7 +156,8 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                                          itemtrace=gitemtrace[[group]], 
                                          itemloc=itemloc)
             for (i in 1:J){	
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=cbind(thetatemplist[[i]], thetatemp))
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=cbind(thetatemplist[[i]], thetatemp), 
+                               estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
                 g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad
