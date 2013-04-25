@@ -39,11 +39,10 @@ setMethod(
         for(i in 1:nfact)
             da[i] <- sum(Theta[,i]*D*Pstar*Qstar*(u-g)*(r1_P - r2_Q)*Prior)            
         grad <- c(da,dd,dc,du)
-        #handy collections
-        gloc <- nfact+2; uloc <- nfact+3
-        ugD2 <- (u-g) * D^2; ugD <- (u-g) * D; Pstar2 <- Pstar^2; Pstar3 <- Pstar^3        
-        ###
         if(estHess){
+        #handy collections
+            gloc <- nfact+2; uloc <- nfact+3
+            ugD2 <- (u-g) * D^2; ugD <- (u-g) * D; Pstar2 <- Pstar^2; Pstar3 <- Pstar^3                       
             hess[nfact+1,nfact+1] <- sum((r1_P * (ugD2 * (Pstar - 3*Pstar2 + 2*Pstar3)) -
                                               r1_P2 * (ugD * (Pstar - Pstar2))^2 +  
                                               r2_Q * (ugD2 * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
