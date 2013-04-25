@@ -58,7 +58,8 @@
 #' (\code{'MHRM'}) algorithm
 #' @param type type of plot to view; can be \code{'info'} to show the test
 #' information function, \code{'infocontour'} for the test information contours, 
-#' \code{'SE'} for the test standard error function, and \code{'RE'} for the relative efficiency plot
+#' \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
+#' and \code{'score'} for the expected total score plot
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
@@ -151,6 +152,7 @@
 #' coef(mod_scalar2)
 #' residuals(mod_scalar2)
 #' plot(mod_configural)
+#' plot(mod_configural, type = 'score')
 #' itemplot(mod_configural, 2)  
 #' itemplot(mod_configural, 2, type = 'RE') 
 #' 

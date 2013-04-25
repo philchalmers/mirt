@@ -138,7 +138,8 @@ setMethod(
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10), 
                           auto.key = TRUE, ...)
     {           
-        if (!type %in% c('info','infocontour', 'SE', 'RE')) stop(type, " is not a valid plot type.")
+        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score')) 
+            stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0)) 
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) stop('No info-angle plot is available')
@@ -167,10 +168,22 @@ setMethod(
         info <- do.call(rbind, infolist)
         Theta <- ThetaFull
         for(g in 2:ngroups) Theta <- rbind(Theta, ThetaFull)
-        groups <- gl(ngroups, nrow(ThetaFull), labels=x@groupNames)
-        plt <- data.frame(info=info, Theta, group=groups)        
+        groups <- gl(ngroups, nrow(ThetaFull), labels=x@groupNames)        
+        adj <- apply(x@data, 2, min)
+        if(any(adj > 0) && type == 'score')
+            message('Adjusted so that the lowest category score for every item is 0')
+        gscore <- c()
+        for(g in 1:ngroups){
+            itemtrace <- computeItemtrace(x@cmods[[g]]@pars, ThetaFull, x@itemloc)        
+            score <- c()
+            for(i in 1:J)
+                score <- c(score, 0:(x@K[i]-1))
+            score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
+            gscore <- c(gscore, rowSums(score * itemtrace))
+        }
+        plt <- data.frame(info=info, score=gscore, Theta, group=groups)        
         if(nfact == 2){    					
-            colnames(plt) <- c("info", "Theta1", "Theta2", "group")			
+            colnames(plt) <- c("info", "score", "Theta1", "Theta2", "group")			
             plt$SE <- 1 / sqrt(plt$info)            
             if(type == 'infocontour')    											
                 return(contourplot(info ~ Theta1 * Theta2|group, data = plt, 
@@ -190,9 +203,14 @@ setMethod(
                 return(wireframe(SE ~ Theta1 + Theta2|group, data = plt, main = "Test Standard Errors", 
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE, 
-                                 auto.key = TRUE, ...))            
+                                 auto.key = TRUE, ...))    
+            if(type == 'score')
+                return(wireframe(score ~ Theta1 + Theta2|group, data = plt, main = "Expected Total Score", 
+                                 zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]), 
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
+                                 auto.key = TRUE, ...)) 
         } else {            
-            colnames(plt) <- c("info", "Theta", "group")
+            colnames(plt) <- c("info", "score", "Theta", "group")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
                 return(xyplot(info~Theta, plt, type='l', group=group, main = 'Test Information', 
@@ -204,7 +222,10 @@ setMethod(
                 cat('No \'contour\' plots for 1-dimensional models\n')
             if(type == 'SE')                
                 return(xyplot(SE~Theta, plt, type='l', group=group, main = 'Test Standard Errors', 
-                              xlab = expression(theta), ylab=expression(SE(theta)), auto.key = TRUE, ...))            
+                              xlab = expression(theta), ylab=expression(SE(theta)), auto.key = TRUE, ...))
+            if(type == 'score')
+                return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score', 
+                              xlab = expression(theta), ylab=expression(Total(theta)), auto.key = TRUE, ...))
         }
     }
 )
