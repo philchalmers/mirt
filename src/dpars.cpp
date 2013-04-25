@@ -36,10 +36,11 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
         SEXP RPrior, SEXP RP, SEXP Rnum, SEXP Rdat, SEXP Rnfact, SEXP Rncat,
         SEXP Rakind, SEXP Rdind, SEXP Rak2, SEXP RP2, SEXP RP3,
         SEXP RaTheta, SEXP RaTheta2, SEXP Rdat_num, SEXP Rnumsum, SEXP RnumakD, 
-        SEXP Rnumak2D2, SEXP RnumakDTheta_numsum) 
+        SEXP Rnumak2D2, SEXP RnumakDTheta_numsum, SEXP RestHess) 
 {		
     BEGIN_RCPP
-    IntegerVector Pnfact(Rnfact), Pncat(Rncat), Pakind(Rakind), Pdind(Rdind);
+    IntegerVector Pnfact(Rnfact), Pncat(Rncat), Pakind(Rakind), Pdind(Rdind), 
+                  estHess(RestHess);
     const int nfact = Pnfact(0);
     const int ncat = Pncat(0); 
     const int akind = Pakind(0); 
@@ -82,126 +83,126 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
 
     //hess
     //a's
-    for(j = 0; j < nfact; j++){
-        for(k = 0; k < nfact; k++){
-            if(j <= k){
+    if(estHess(0)){
+        for(j = 0; j < nfact; j++){
+            for(k = 0; k < nfact; k++){
+                if(j <= k){
+                    tmpvec.fill(0.0);
+                    for(i = 0; i < ncat; i++){
+                        for(n = 0; n < N; n++){
+                            tmpvec(n) += dat_num(n,i)*(D2*ak2(i)*Theta(n,j)*Theta(n,k)*P(n,i) - 
+                                    D*ak(i)*Theta(n,j)*P(n,i)*numakDTheta_numsum(n,k) -     
+                                    D*ak(i)*Theta(n,k)*P(n,i)*numakDTheta_numsum(n,j) + 
+                                    2*P(n,i)*numakD(n)*Theta(n,j)*numakD(n)*Theta(n,k)/ (numsum(n)*numsum(n)) - 
+                                    P(n,i)*numak2D2(n)*Theta(n,j)*Theta(n,k)/numsum(n)) * numsum(n) - 
+                                dat_num(n,i)*(D*ak(i)*Theta(n,j)*P(n,i) - P(n,i)*numakDTheta_numsum(n,j)) *
+                                numsum(n)*D*ak(i)*Theta(n,k) + 
+                                dat_num(n,i)*(D*ak(i)*Theta(n,j)*P(n,i) - P(n,i)*numakDTheta_numsum(n,j)) *
+                                numakD(n)*Theta(n,k);
+                        }
+                    }
+                    d2L(j,k) = sumPrior(tmpvec, Prior);
+                    d2L(k, j) = d2L(j,k);
+                }
+            }
+        }
+        //a's with ak and d
+        for(j = 0; j < nfact; j++){
+            for(k = 0; k < ncat; k++){
                 tmpvec.fill(0.0);
+                tmpvec2.fill(0.0);
                 for(i = 0; i < ncat; i++){
                     for(n = 0; n < N; n++){
-                        tmpvec(n) += dat_num(n,i)*(D2*ak2(i)*Theta(n,j)*Theta(n,k)*P(n,i) - 
-                                D*ak(i)*Theta(n,j)*P(n,i)*numakDTheta_numsum(n,k) -     
-                                D*ak(i)*Theta(n,k)*P(n,i)*numakDTheta_numsum(n,j) + 
-                                2*P(n,i)*numakD(n)*Theta(n,j)*numakD(n)*Theta(n,k)/ (numsum(n)*numsum(n)) - 
-                                P(n,i)*numak2D2(n)*Theta(n,j)*Theta(n,k)/numsum(n)) * numsum(n) - 
-                            dat_num(n,i)*(D*ak(i)*Theta(n,j)*P(n,i) - P(n,i)*numakDTheta_numsum(n,j)) *
-                            numsum(n)*D*ak(i)*Theta(n,k) + 
-                            dat_num(n,i)*(D*ak(i)*Theta(n,j)*P(n,i) - P(n,i)*numakDTheta_numsum(n,j)) *
-                            numakD(n)*Theta(n,k);
+                        if(i == k){
+                            tmpvec(n) += dat_num(n,i)*(D2*ak(i)*Theta(n,j)*aTheta(n)*P(n,i) - 
+                                        D*aTheta(n)*P(n,i)*numakDTheta_numsum(n,j) + 
+                                        D*Theta(n,j)*P(n,i) - 2*D2*ak(i)*Theta(n,j)*aTheta(n)*P2(n,i) + 
+                                        2*D*aTheta(n)*P2(n,i)*numakDTheta_numsum(n,j) - 
+                                        D*Theta(n,j)*P2(n,i))*numsum(n) - 
+                                dat_num(n,i)*(D*aTheta(n)*P(n,i) - D*aTheta(n)*P2(n,i))*numsum(n)*D*ak(i)*Theta(n,j) + 
+                                dat_num(n,i)*(D*aTheta(n)*P(n,i) - D*aTheta(n)*P2(n,i))*(numakD(n)*Theta(n,j));
+                        tmpvec2(n) += dat_num(n,i)*(D2*ak(i)*Theta(n,j)*P(n,i) - 
+                                                            2*D2*ak(i)*Theta(n,j)*P2(n,i) -
+                                                            D*P(n,i)*numakDTheta_numsum(n,j) +                                                          
+                                                            2*D*P2(n,i)*numakDTheta_numsum(n,j))*numsum(n) - 
+                            dat_num(n,i)*(D*P(n,i) - D*P2(n,i))*numsum(n)*D*ak(i)*Theta(n,j) + 
+                            dat_num(n,i)*(D*P(n,i) - D*P2(n,i))*(numakD(n)*Theta(n,j));         
+                        } else {
+                            tmpvec(n) += -dat(n,i)*D2*ak(k)*aTheta(n)*Theta(n,j)*P(n,k) + 
+                                dat(n,i)*P(n,k)*D*aTheta(n)*numakDTheta_numsum(n,j) - 
+                                dat(n,i)*P(n,k)*D*Theta(n,j);
+                            tmpvec2(n) += -dat(n,i)*D2*ak(k)*Theta(n,j)*P(n,k) + 
+                                dat(n,i)*P(n,k)*D*numakDTheta_numsum(n,j);
+                        }
                     }
+                    d2L(j, akind + k) = sumPrior(tmpvec, Prior);
+                    d2L(akind + k, j) = d2L(j, akind + k);
+                    d2L(j, dind + k) = sumPrior(tmpvec2, Prior);
+                    d2L(dind + k, j) = d2L(j, dind + k);
                 }
-                d2L(j,k) = sumPrior(tmpvec, Prior);
-                d2L(k, j) = d2L(j,k);
             }
         }
-    }
-    //a's with ak and d
-    for(j = 0; j < nfact; j++){
-        for(k = 0; k < ncat; k++){
-            tmpvec.fill(0.0);
-            tmpvec2.fill(0.0);
+        //ak's and d's
+        for(j = 0; j < ncat; j++){
+            tmpvec = makeOffterm(dat, P2(_,j), aTheta2, D2, j);
+            tmpvec2 = makeOffterm(dat, P(_,j), aTheta2, D2, j);
+            for(n = 0; n < N; n++)
+                offterm(n) = tmpvec(n) - tmpvec2(n);
+            tmpvec = makeOffterm(dat, P2(_,j), unitNvec, D2, j);
+            tmpvec2 = makeOffterm(dat, P(_,j), unitNvec, D2, j);
+            for(n = 0; n < N; n++)
+                offterm2(n) = tmpvec(n) - tmpvec2(n);
+            for(n = 0; n < N; n++){
+                tmpvec(n) = dat_num(n,j)*(D2*aTheta2(n)*P(n,j) - 3*D2*aTheta2(n)*P2(n,j) + 
+                                                2*D2*aTheta2(n)*P3(n,j))*numsum(n) - dat(n,j)/num(n,j)*(D*aTheta(n)*P(n,j) - 
+                                                D*aTheta(n)*P2(n,j))*numsum(n)*D*aTheta(n) + dat(n,j)*(D*aTheta(n)*P(n,j) - 
+                                                D*aTheta(n)*P2(n,j))*D*aTheta(n) + offterm(n);
+                tmpvec2(n) = dat_num(n,j)*(D2*P(n,j) - 3*D2*P2(n,j) + 
+                                            2*D2*P3(n,j))*numsum(n) - dat(n,j)/num(n,j)*(D*P(n,j) - 
+                                            D*P2(n,j))*numsum(n)*D + dat(n,j)*(D*P(n,j) - 
+                                            D*P2(n,j))*D + offterm2(n);
+            }
+            d2L(akind + j, akind + j) = sumPrior(tmpvec, Prior); 
+            d2L(dind + j, dind + j) = sumPrior(tmpvec2, Prior);
             for(i = 0; i < ncat; i++){
-                for(n = 0; n < N; n++){
-                    if(i == k){
-                        tmpvec(n) += dat_num(n,i)*(D2*ak(i)*Theta(n,j)*aTheta(n)*P(n,i) - 
-                                    D*aTheta(n)*P(n,i)*numakDTheta_numsum(n,j) + 
-                                    D*Theta(n,j)*P(n,i) - 2*D2*ak(i)*Theta(n,j)*aTheta(n)*P2(n,i) + 
-                                    2*D*aTheta(n)*P2(n,i)*numakDTheta_numsum(n,j) - 
-                                    D*Theta(n,j)*P2(n,i))*numsum(n) - 
-                            dat_num(n,i)*(D*aTheta(n)*P(n,i) - D*aTheta(n)*P2(n,i))*numsum(n)*D*ak(i)*Theta(n,j) + 
-                            dat_num(n,i)*(D*aTheta(n)*P(n,i) - D*aTheta(n)*P2(n,i))*(numakD(n)*Theta(n,j));
-                    tmpvec2(n) += dat_num(n,i)*(D2*ak(i)*Theta(n,j)*P(n,i) - 
-                                                        2*D2*ak(i)*Theta(n,j)*P2(n,i) -
-                                                        D*P(n,i)*numakDTheta_numsum(n,j) +                                                          
-                                                        2*D*P2(n,i)*numakDTheta_numsum(n,j))*numsum(n) - 
-                        dat_num(n,i)*(D*P(n,i) - D*P2(n,i))*numsum(n)*D*ak(i)*Theta(n,j) + 
-                        dat_num(n,i)*(D*P(n,i) - D*P2(n,i))*(numakD(n)*Theta(n,j));         
-                    } else {
-                        tmpvec(n) += -dat(n,i)*D2*ak(k)*aTheta(n)*Theta(n,j)*P(n,k) + 
-                            dat(n,i)*P(n,k)*D*aTheta(n)*numakDTheta_numsum(n,j) - 
-                            dat(n,i)*P(n,k)*D*Theta(n,j);
-                        tmpvec2(n) += -dat(n,i)*D2*ak(k)*Theta(n,j)*P(n,k) + 
-                            dat(n,i)*P(n,k)*D*numakDTheta_numsum(n,j);
+                if(j < i){   
+                    offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta2, D2, i);
+                    offterm2 = makeOffterm2(dat, P(_,j), P(_,i), unitNvec, D2, i);
+                    for(n = 0; n < N; n++){
+                        tmpvec(n) = dat_num(n,i) * (-D2*aTheta2(n)*P(n,i)*P(n,j) + 2*P2(n,i) *D2*aTheta2(n)*P(n,j))*numsum(n) + 
+                                     dat_num(n,i) * (D*aTheta(n)*P(n,i) - P2(n,i) * D * aTheta(n))*D*aTheta(n)*num(n,j)+offterm(n);
+                        tmpvec2(n) = dat_num(n,i) * (-D2*P(n,i)*P(n,j) + 2*P2(n,i) *D2*P(n,j)) * numsum(n) + 
+                            dat_num(n,i) * (D*P(n,i) - P2(n,i)*D)*D * num(n,j) + offterm2(n);
                     }
+                    d2L(akind + i, akind + j) = sumPrior(tmpvec, Prior);
+                    d2L(akind + j, akind + i) = d2L(akind + i, akind + j);
+                    d2L(dind + i, dind + j) = sumPrior(tmpvec2, Prior); 
+                    d2L(dind + j, dind + i) = d2L(dind + i, dind + j);
                 }
-                d2L(j, akind + k) = sumPrior(tmpvec, Prior);
-                d2L(akind + k, j) = d2L(j, akind + k);
-                d2L(j, dind + k) = sumPrior(tmpvec2, Prior);
-                d2L(dind + k, j) = d2L(j, dind + k);
+                if(abs(j-i) == 0){
+                    tmpvec = makeOffterm(dat, P2(_,i), aTheta, D2, i);
+                    tmpvec2 = makeOffterm(dat, P(_,i), aTheta, D2, i);
+                    for(n = 0; n < N; n++){
+                        offterm(n) = tmpvec(n) - tmpvec2(n);
+                        tmpvec(n) = dat_num(n,i)*(D2*aTheta(n)*P(n,i) - 3*D2*aTheta(n)*P2(n,i) + 
+                                2*D2*aTheta(n)*P3(n,i))*numsum(n) - dat_num(n,i)*(D*aTheta(n)*P(n,i) - 
+                                D*aTheta(n)*P2(n,i))*numsum(n)*D + dat(n,i)*(D*P(n,i) - 
+                                D*P2(n,i))*D*aTheta(n) + offterm(n);
+                    }
+                    d2L(dind + j, akind + i) = sumPrior(tmpvec, Prior);
+                    d2L(akind + i, dind + j) = d2L(dind + j, akind + i);
+                } else {
+                    offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta, D2, i);
+                    for(n = 0; n < N; n++){
+                        tmpvec(n) = dat_num(n,i) * (-D2*aTheta(n)*P(n,i)*P(n,j) + 2*P2(n,i) *D2*aTheta(n)*P(n,j)) * numsum(n) + 
+                            dat_num(n,i) * (D*P(n,i) - P2(n,i) * D) * D * aTheta(n) * num(n,j) + offterm(n);                
+                    }
+                    d2L(akind + i, dind + j) = sumPrior(tmpvec, Prior);
+                    d2L(dind + j, akind + i) = d2L(akind + i, dind + j);
+                }
             }
-        }
+        }            
     }
-    //ak's and d's
-    for(j = 0; j < ncat; j++){
-        tmpvec = makeOffterm(dat, P2(_,j), aTheta2, D2, j);
-        tmpvec2 = makeOffterm(dat, P(_,j), aTheta2, D2, j);
-        for(n = 0; n < N; n++)
-            offterm(n) = tmpvec(n) - tmpvec2(n);
-        tmpvec = makeOffterm(dat, P2(_,j), unitNvec, D2, j);
-        tmpvec2 = makeOffterm(dat, P(_,j), unitNvec, D2, j);
-        for(n = 0; n < N; n++)
-            offterm2(n) = tmpvec(n) - tmpvec2(n);
-        for(n = 0; n < N; n++){
-            tmpvec(n) = dat_num(n,j)*(D2*aTheta2(n)*P(n,j) - 3*D2*aTheta2(n)*P2(n,j) + 
-                                            2*D2*aTheta2(n)*P3(n,j))*numsum(n) - dat(n,j)/num(n,j)*(D*aTheta(n)*P(n,j) - 
-                                            D*aTheta(n)*P2(n,j))*numsum(n)*D*aTheta(n) + dat(n,j)*(D*aTheta(n)*P(n,j) - 
-                                            D*aTheta(n)*P2(n,j))*D*aTheta(n) + offterm(n);
-            tmpvec2(n) = dat_num(n,j)*(D2*P(n,j) - 3*D2*P2(n,j) + 
-                                        2*D2*P3(n,j))*numsum(n) - dat(n,j)/num(n,j)*(D*P(n,j) - 
-                                        D*P2(n,j))*numsum(n)*D + dat(n,j)*(D*P(n,j) - 
-                                        D*P2(n,j))*D + offterm2(n);
-        }
-        d2L(akind + j, akind + j) = sumPrior(tmpvec, Prior); 
-        d2L(dind + j, dind + j) = sumPrior(tmpvec2, Prior);
-        for(i = 0; i < ncat; i++){
-            if(j < i){   
-                offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta2, D2, i);
-                offterm2 = makeOffterm2(dat, P(_,j), P(_,i), unitNvec, D2, i);
-                for(n = 0; n < N; n++){
-                    tmpvec(n) = dat_num(n,i) * (-D2*aTheta2(n)*P(n,i)*P(n,j) + 2*P2(n,i) *D2*aTheta2(n)*P(n,j))*numsum(n) + 
-                                 dat_num(n,i) * (D*aTheta(n)*P(n,i) - P2(n,i) * D * aTheta(n))*D*aTheta(n)*num(n,j)+offterm(n);
-                    tmpvec2(n) = dat_num(n,i) * (-D2*P(n,i)*P(n,j) + 2*P2(n,i) *D2*P(n,j)) * numsum(n) + 
-                        dat_num(n,i) * (D*P(n,i) - P2(n,i)*D)*D * num(n,j) + offterm2(n);
-                }
-                d2L(akind + i, akind + j) = sumPrior(tmpvec, Prior);
-                d2L(akind + j, akind + i) = d2L(akind + i, akind + j);
-                d2L(dind + i, dind + j) = sumPrior(tmpvec2, Prior); 
-                d2L(dind + j, dind + i) = d2L(dind + i, dind + j);
-            }
-            if(abs(j-i) == 0){
-                tmpvec = makeOffterm(dat, P2(_,i), aTheta, D2, i);
-                tmpvec2 = makeOffterm(dat, P(_,i), aTheta, D2, i);
-                for(n = 0; n < N; n++){
-                    offterm(n) = tmpvec(n) - tmpvec2(n);
-                    tmpvec(n) = dat_num(n,i)*(D2*aTheta(n)*P(n,i) - 3*D2*aTheta(n)*P2(n,i) + 
-                            2*D2*aTheta(n)*P3(n,i))*numsum(n) - dat_num(n,i)*(D*aTheta(n)*P(n,i) - 
-                            D*aTheta(n)*P2(n,i))*numsum(n)*D + dat(n,i)*(D*P(n,i) - 
-                            D*P2(n,i))*D*aTheta(n) + offterm(n);
-                }
-                d2L(dind + j, akind + i) = sumPrior(tmpvec, Prior);
-                d2L(akind + i, dind + j) = d2L(dind + j, akind + i);
-            } else {
-                offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta, D2, i);
-                for(n = 0; n < N; n++){
-                    tmpvec(n) = dat_num(n,i) * (-D2*aTheta(n)*P(n,i)*P(n,j) + 2*P2(n,i) *D2*aTheta(n)*P(n,j)) * numsum(n) + 
-                        dat_num(n,i) * (D*P(n,i) - P2(n,i) * D) * D * aTheta(n) * num(n,j) + offterm(n);                
-                }
-                d2L(akind + i, dind + j) = sumPrior(tmpvec, Prior);
-                d2L(dind + j, akind + i) = d2L(akind + i, dind + j);
-            }
-        }
-    }            
-    
- 
 
     List ret;
     ret["grad"] = dL;
@@ -211,7 +212,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
 }
 
 
-RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP Rnzeta) 
+RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP Rnzeta, SEXP RestHess) 
 {		
     BEGIN_RCPP
     /* 
@@ -227,6 +228,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
     NumericVector Prior(RPrior);
     NumericMatrix dat2(Rdat);
     IntegerVector Pnzeta(Rnzeta);
+    IntegerVector estHess(RestHess);
     const int nzeta = Pnzeta[0];
     const int nfact = Thetas.ncol();
     const int N = Thetas.nrow();
@@ -275,35 +277,37 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 			for(i = 0; i < N; i++)
 				tmp += (-1.0) * PQ(i) * (dif1(i) - dif2(i));			
 			dL(j) = tmp;			
-			tmp = 0.0;
-			for(i = 0; i < N; i++)
-				tmp += (-1.0) * PQ(i) * PQ(i) * (dif1sq(i) + dif2sq(i)) -				
-					(dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));			
-			d2L(j,j) = tmp;
-			if(j < (nzeta - 1)){
-				tmp = 0.0;
-				for(i = 0; i < N; i++)
-					tmp += dif2sq(i) * PQ_p1(i) * PQ(i);
-				d2L(j,j+1) = tmp;
-				d2L(j+1,j) = tmp;
-			}
-			for(i = 0; i < N; i++){
-				tmp1(i) = (-1.0) * dif2sq(i) * PQ(i) * (PQ(i) - PQ_p1(i));
-				tmp2(i) = dif1sq(i) * PQ(i) * (PQ_1(i) - PQ(i));
-				tmp3(i) = (dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));
-			}
-			for(k = 0; k < nfact; k++){
-				csums(k) = 0.0;
-				for(i = 0; i < N; i++){
-					mattmp(i,k) = tmp1(i) * Thetas(i,k) + tmp2(i) * Thetas(i,k) - 
-						tmp3(i) * Thetas(i,k);
-					csums(k) += mattmp(i,k);
-				}
-			}
-			for(i = 0; i < nfact; i++){
-				d2L(j,factind(i)) = csums(i);
-				d2L(factind(i),j) = csums(i);
-			}			
+			if(estHess(0)){
+			    tmp = 0.0;
+			    for(i = 0; i < N; i++)
+			    	tmp += (-1.0) * PQ(i) * PQ(i) * (dif1sq(i) + dif2sq(i)) -				
+			    		(dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));			
+			    d2L(j,j) = tmp;
+			    if(j < (nzeta - 1)){
+			    	tmp = 0.0;
+			    	for(i = 0; i < N; i++)
+			    		tmp += dif2sq(i) * PQ_p1(i) * PQ(i);
+			    	d2L(j,j+1) = tmp;
+			    	d2L(j+1,j) = tmp;
+			    }
+			    for(i = 0; i < N; i++){
+			    	tmp1(i) = (-1.0) * dif2sq(i) * PQ(i) * (PQ(i) - PQ_p1(i));
+			    	tmp2(i) = dif1sq(i) * PQ(i) * (PQ_1(i) - PQ(i));
+			    	tmp3(i) = (dif1(i) - dif2(i)) * (Pk(i) * (1.0 - Pk(i)) * (1.0 - 2.0*Pk(i)));
+			    }
+			    for(k = 0; k < nfact; k++){
+			    	csums(k) = 0.0;
+			    	for(i = 0; i < N; i++){
+			    		mattmp(i,k) = tmp1(i) * Thetas(i,k) + tmp2(i) * Thetas(i,k) - 
+			    			tmp3(i) * Thetas(i,k);
+			    		csums(k) += mattmp(i,k);
+			    	}
+			    }
+			    for(i = 0; i < nfact; i++){
+			    	d2L(j,factind(i)) = csums(i);
+			    	d2L(factind(i),j) = csums(i);
+			    }			
+            }
 		} else {					
 			for(i = 0; i < N; i++){
 				Pk_1(i) = P(i,j);
@@ -326,10 +330,12 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 		for(i = 0; i < nfact; i++)
     		dL(factind(i)) += csums(i);			
 		
-		d2Louter = polyOuter(Thetas, Pk, Pk_1, PQ_1, PQ, dif1sq, dif1);		
-		for(k = 0; k < nfact; k++)
-			for(i = 0; i < nfact; i++)
-				d2L(factind(i),factind(k)) += d2Louter(i,k);				
+		if(estHess(0)){
+		    d2Louter = polyOuter(Thetas, Pk, Pk_1, PQ_1, PQ, dif1sq, dif1);		
+		    for(k = 0; k < nfact; k++)
+			    for(i = 0; i < nfact; i++)
+				    d2L(factind(i),factind(k)) += d2Louter(i,k);				
+        }
 	}
 
     List ret;

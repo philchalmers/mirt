@@ -116,14 +116,16 @@ setMethod(
         d <- x@par[-(1:nfact)]
         nd <- length(d)    			
         P <- P.poly(a, d,Theta, D=x@D)			    	
-        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd) 
+        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd, estHess) 
         grad <- c(ret$grad[-(1:nd)], ret$grad[1:nd])
         hess <- matrix(0,nfact+nd,nfact+nd)
-        hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
-        hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
-        hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
-            ret$hess[(nd+1):ncol(hess), 1:nd]
-        hess <- hess * x@D
+        if(estHess){
+            hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
+            hess[(nfact+1):ncol(hess), (nfact+1):ncol(hess)] <- ret$hess[1:nd, 1:nd]
+            hess[1:nfact, (nfact+1):ncol(hess)] <- hess[(nfact+1):ncol(hess), 1:nfact] <- 
+                ret$hess[(nd+1):ncol(hess), 1:nd]
+            hess <- hess * x@D
+        }
         ret <- DerivativePriors(x=x, grad=grad, hess=hess)       
         return(ret)
     }
@@ -149,7 +151,7 @@ setMethod(
         shift <- x@par[shiftind]        
         nd <- length(d)    			
         P <- P.poly(a, d + shift, Theta, D=x@D)			    	
-        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd) 
+        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd, estHess) 
         grad <- c(ret$grad[-(1:nd)], ret$grad[1:nd])
         hess <- matrix(0,nfact+nd,nfact+nd)
         hess[1:nfact,1:nfact] <- ret$hess[-(1:nd),-(1:nd)]
@@ -360,7 +362,7 @@ setMethod(
         D <- x@D
         P <- ProbTrace(x=x, Theta=Theta)
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)         
-        tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
+        tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
         keep <- rep(TRUE, length(tmp$grad))
         keep[(nfact+1):(nfact+length(d))] <- FALSE        
@@ -448,7 +450,7 @@ setMethod(
         D <- x@D
         P <- ProbTrace(x=x, Theta=Theta)
         num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D, returnNum=TRUE)         
-        tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, 
+        tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
         keep <- rep(TRUE, length(tmp$grad))
         keep[(nfact+1):(nfact+length(d))] <- FALSE        
@@ -524,14 +526,15 @@ setMethod(
         D <- x@D
         P <- ProbTrace(x=x, Theta=Theta)                        
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)                 
-        tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, 
+        tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat)        
         ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)          
         return(ret)
     }
 )
 
-nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, gpcm = FALSE){     
+nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, estHess, 
+                            gpcm = FALSE){     
     nfact <- length(a)
     ncat <- length(d)
     akind <- nfact 
@@ -551,7 +554,7 @@ nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, gpcm = FALSE
         numakDTheta_numsum[,i] <- (num %*% ak * D * Theta[, i])/ numsum    
     ret <- .Call('dparsNominal', a, ak, d, Theta, D, Prior, P, num, dat, nfact, ncat, 
                  akind, dind, ak2, P2, P3, aTheta, aTheta2, dat_num, numsum, numakD, 
-                 numak2D2, numakDTheta_numsum)      
+                 numak2D2, numakDTheta_numsum, estHess)      
     ret
 }
 
