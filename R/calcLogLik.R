@@ -65,10 +65,8 @@ setMethod(
                                                 fixed.identical=object@mixedlist$fixed.identical)	            
             }
             for (i in 1:J) itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
-                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])	            	        
-            tmp <- itemtrace*fulldata	        
-            tmp[tmp < tol] <- 1    
-            return(exp(rowSums(log(tmp))))           
+                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])	            	                             
+            return(exp(rowSums(log(itemtrace)*fulldata)))           
         }
         pars <- object@pars
 	    tol <- .Machine$double.eps	    

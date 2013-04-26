@@ -32,14 +32,10 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
 {       
     tol <- .Machine$double.eps
     N <- nrow(fulldata)
-    J <- length(pars) - 1
-    nfact <- ncol(theta0)					
-    unif <- runif(N)
-    if(nfact > 1){		
-        theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, 
-                                            diag(rep(cand.t.var,ncol(theta0)))) 
-    } else
-        theta1 <- theta0 + rnorm(N,prior.mu,sqrt(cand.t.var))							
+    J <- length(pars) - 1L    					
+    unif <- runif(N)    
+    sigma <- if(ncol(theta0) == 1) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
+    theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, sigma)     
     log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
     log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)		
     if(length(prodlist) > 0){
@@ -64,14 +60,10 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
             ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design0[[i]])
         itemtrace1[ ,itemloc[i]:(itemloc[i+1] - 1)] <- 
             ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design1[[i]])        
-    }    
-    tmp0 <- itemtrace0*fulldata
-    tmp1 <- itemtrace1*fulldata
-    tmp0[tmp0 < tol] <- tmp1[tmp1 < tol] <- 1    
-    total_0 <- rowSums(log(tmp0)) + log_den0
-    total_1 <- rowSums(log(tmp1)) + log_den1    
-    diff <- total_1 - total_0
-    diff[is.nan(diff)] <- -50
+    }        
+    total_0 <- rowSums(log(itemtrace0)*fulldata) + log_den0
+    total_1 <- rowSums(log(itemtrace1)*fulldata) + log_den1            
+    diff <- total_1 - total_0    
     accept <- diff > 0
     accept[unif < exp(diff)] <- TRUE    
     theta1[!accept, ] <- theta0[!accept, ]
