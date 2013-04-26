@@ -13,16 +13,18 @@
 }
 \description{
   This function exports item parameters from the
-  \code{mirt} package to the \code{plink} package.
+  \code{mirt} package to the \code{plink} package. Model
+  must be estimated with no scaling adjustement (i.e.,
+  \code{D = 1}).
 }
 \examples{
 \dontrun{
 data(LSAT7)
 data <- expand.table(LSAT7)
-(mod1 <- mirt(data, 1))
+(mod1 <- mirt(data, 1, D = 1))
 plinkpars <- read.mirt(mod1)
 
-(mod2 <- mirt(data, 2))
+(mod2 <- mirt(data, 2, D = 1))
 plinkpars2 <- read.mirt(mod2)
 
 }

@@ -1,6 +1,7 @@
 #' Translate mirt parameters for plink package
 #' 
 #' This function exports item parameters from the \code{mirt} package to the \code{plink} package.
+#' Model must be estimated with no scaling adjustement (i.e., \code{D = 1}).
 #' 
 #' 
 #' @aliases read.mirt
@@ -14,10 +15,10 @@
 #' \dontrun{
 #' data(LSAT7)
 #' data <- expand.table(LSAT7)
-#' (mod1 <- mirt(data, 1))
+#' (mod1 <- mirt(data, 1, D = 1))
 #' plinkpars <- read.mirt(mod1)
 #'
-#' (mod2 <- mirt(data, 2))
+#' (mod2 <- mirt(data, 2, D = 1))
 #' plinkpars2 <- read.mirt(mod2)
 #' 
 #' }
@@ -41,7 +42,9 @@ read.mirt <- function (x, as.irt.pars = TRUE)
     mirt.items <- as.character(lapply(x@pars, class))    
     mirt.items <- plink.items <- mirt.items[-(nitems+1)]
     cat <- numeric(nitems)
-    D <- x@pars[[1]]@D               
+    D <- x@pars[[1]]@D    
+    if(!closeEnough(D, 1-1e-10, 1+1e-10))
+        stop('Model must be estimated with scaling parameter D = 1')
     nfact <- x@pars[[1]]@nfact
     pars <- matrix(NA, nitems, 40)
     for(i in 1:nitems){        
