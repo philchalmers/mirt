@@ -174,11 +174,11 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             stop('Estimation halted. Model did not converge.')		
         if(verbose){            
             if(cycles < BURNIN)
-                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f", cycles+1, LL)                
+                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f", cycles, LL)                
             if(cycles > BURNIN && cycles < BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN+1, LL)                
+                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN, LL)                
             if(cycles > BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN-SEMCYCLES+1, LL)                                        
+                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN-SEMCYCLES, LL)                                        
         }			
         if(stagecycle < 3){	                        
             if(qr(ave.h)$rank != ncol(ave.h)){
