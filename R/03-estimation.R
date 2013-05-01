@@ -346,8 +346,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(length(constrain) > 0)
         for(i in 1:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1     
-    nmissingtabdata <- sum(is.na(rowSums(PrepList[[1]]$tabdata2)))
-    df <- df - nestpars + nconstr + nfact*(nfact - 1)/2 - nmissingtabdata	
+    nmissingtabdata <- sum(is.na(rowSums(PrepList[[1]]$tabdata2)))    
+    df <- df - nestpars + nconstr - nmissingtabdata	
+    if(PrepList[[1]]$exploratory) df <- df + nfact*(nfact - 1)/2
     tmp <- (length(r) - df - 1)
     AIC <- (-2) * logLik + 2 * tmp
     AICc <- AIC + 2 * tmp * (tmp + 1) / (length(r) - tmp - 1)
