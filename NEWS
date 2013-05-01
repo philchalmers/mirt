@@ -5,6 +5,10 @@ NEW FEATURES
 - type = 'score' and type = 'infoSE' added to plot() generic for expected total score and joint test
   standard error/information 
 
+BUG FIXES
+
+- missing data bug fix in MH-RM when data missing in dichotomous item models
+
 
 Changes in mirt 0.7.0
 

@@ -4,8 +4,8 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){                 
-        f <- 1
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){         
+        f <- rowSums(x@dat)
         dat <- x@dat[ ,2]
         Prior <- rep(1, length(dat))
         if(EM){            
@@ -322,7 +322,7 @@ setMethod(
             return(list(grad=grad, hess=hess))    
         }
         #####
-        f <- 1
+        f <- rowSums(x@dat)
         r <- x@dat[ ,2]
         Prior <- rep(1, length(r))
         if(EM){       
