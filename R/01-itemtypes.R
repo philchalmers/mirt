@@ -7,7 +7,7 @@ setClass("GroupPars",
                         parnum='numeric',
                         nfact='numeric',
                         gradient='numeric',
-                        hessian='matrix',                        
+                        hessian='matrix',
                         itemtrace='matrix',
                         lbound='numeric',
                         ubound='numeric',
@@ -20,7 +20,7 @@ setClass("GroupPars",
 setClass("AllItemsClass",
          representation(par='numeric',
                         SEpar='numeric',
-                        est='logical', 
+                        est='logical',
                         constr='logical',
                         parnum='numeric',
                         nfact='numeric',
@@ -29,7 +29,7 @@ setClass("AllItemsClass",
                         ncat='numeric',
                         rs='matrix',
                         gradient='numeric',
-                        hessian='matrix', 
+                        hessian='matrix',
                         itemtrace='matrix',
                         lbound='numeric',
                         ubound='numeric',
@@ -60,7 +60,7 @@ setClass("mcm", contains = 'AllItemsClass')
 setClass("nestlogit", contains = 'AllItemsClass',
          representation = representation(correctcat='integer'))
 
-setClass('custom', contains = 'AllItemsClass', 
+setClass('custom', contains = 'AllItemsClass',
          representation = representation(name='character',
                                          P='function',
                                          gr='function',
@@ -68,7 +68,7 @@ setClass('custom', contains = 'AllItemsClass',
                                          hss='function',
                                          usehss='logical',
                                          userdata='matrix',
-                                         useuserdata='logical'))    
+                                         useuserdata='logical'))
 
 #--------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ setGeneric('Deriv', function(x, Theta, ...) standardGeneric("Deriv"))
 
 setGeneric('DerivTheta', function(x, Theta) standardGeneric("DerivTheta"))
 
-setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))         
+setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))
 
 setGeneric("itemplot.internal",  function(object, ...) standardGeneric("itemplot.internal"))
 

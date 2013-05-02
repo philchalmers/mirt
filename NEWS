@@ -9,7 +9,7 @@ BUG FIXES
 
 - missing data bug fix in MH-RM when data missing in dichotomous item models
 
-- global df adjusted for confirmatory models  
+- global df fix for multidimensional confirmatory models  
 
 
 Changes in mirt 0.7.0

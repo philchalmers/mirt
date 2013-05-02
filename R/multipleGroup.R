@@ -1,48 +1,48 @@
 #' Multiple Group Estimation
-#' 
+#'
 #' \code{multipleGroup} performes a full-information
 #' maximum-likelihood multiple group analysis for dichotomous and polytomous
 #' data under the item response theory paradigm using either Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM approach. 
-#'  
-#' By default the estimation in \code{multipleGroup} assumes that the models are maximally 
+#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM approach.
+#'
+#' By default the estimation in \code{multipleGroup} assumes that the models are maximally
 #' independent, and therefore could initially be performed by sub setting the data and running identical
-#' models with \code{confmirt} or \code{mirt} and aggregating the results (e.g., log-likelihood). 
-#' However, constrains may be imposed across groups by invoking various \code{invariance} keywords and 
-#' \code{constrain = ...} arguments, and by inputing user specified design matrix from 
-#' \code{mod2values} or from passing \code{pars = 'values'}.  
-#' 
+#' models with \code{confmirt} or \code{mirt} and aggregating the results (e.g., log-likelihood).
+#' However, constrains may be imposed across groups by invoking various \code{invariance} keywords and
+#' \code{constrain = ...} arguments, and by inputing user specified design matrix from
+#' \code{mod2values} or from passing \code{pars = 'values'}.
+#'
 #' @aliases multipleGroup coef,MultipleGroupClass-method summary,MultipleGroupClass-method
-#' anova,MultipleGroupClass-method plot,MultipleGroupClass-method residuals,MultipleGroupClass-method 
-#' fitted,MultipleGroupClass-method 
+#' anova,MultipleGroupClass-method plot,MultipleGroupClass-method residuals,MultipleGroupClass-method
+#' fitted,MultipleGroupClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object or named list of objects returned from \code{confmirt.model()} declaring how
-#' the factor model is to be estimated. The names of the list input must correspond to the unique values 
+#' the factor model is to be estimated. The names of the list input must correspond to the unique values
 #' in the \code{group} variable. See \code{\link{confmirt.model}} for more details
 #' @param group a character vector indicating group membership
-#' @param invariance a character vector containing the following possible options: 
-#' \describe{ 
+#' @param invariance a character vector containing the following possible options:
+#' \describe{
 #' \item{\code{'free_means'}}{for freely estimating all latent means (reference group constrained to 0)}
-#' \item{\code{'free_varcov'}}{for freely estimating the variance-covariance matrix across groups 
+#' \item{\code{'free_varcov'}}{for freely estimating the variance-covariance matrix across groups
 #' (reference group has variances equal to 1, but
 #' freely estimated covariance terms if specified in the model)}
-#' \item{\code{'covariances'}}{to constrain all the covariance parameters to be equal, note that this only 
+#' \item{\code{'covariances'}}{to constrain all the covariance parameters to be equal, note that this only
 #' makes sense if the factor variances are the same (i.e., unity)}
-#' \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups} 
-#' \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for 
+#' \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
+#' \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for
 #' nominal models this also includes the category specific slope parameters}}
-#' Additionally, specifying specific item name bundles (from \code{colnames(data)}) will 
+#' Additionally, specifying specific item name bundles (from \code{colnames(data)}) will
 #' constrain all freely estimated parameters in each item to be equal across groups. This is useful
-#' for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item 
+#' for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
 #' functioning (DIF) across groups
-#' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be 
+#' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be
 #' entered as a single value to assign a global guessing parameter or may be entered as
 #' a numeric vector for each item
-#' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be 
-#' entered as a single value to assign a global upper bound parameter or may be entered as a 
+#' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be
+#' entered as a single value to assign a global upper bound parameter or may be entered as a
 #' numeric vector corresponding to each item
-#' @param SE logical; estimate the information matrix for standard errors? 
+#' @param SE logical; estimate the information matrix for standard errors?
 #' @param SE.type see \code{\link{mirt}} for more details
 #' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
 #' cumulative density curve. Default is 1.702
@@ -52,12 +52,12 @@
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
 #' @param cl a cluster object from the \code{parallel} package
 #' @param bfactor logical; use the dimensional reduction algorithm if the factor pattern is a bifactor
-#' model (has exactly 1 general factor and 1 specific factor for each item). Only applicable when 
+#' model (has exactly 1 general factor and 1 specific factor for each item). Only applicable when
 #' \code{method = 'EM'}
-#' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM 
+#' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM
 #' (\code{'MHRM'}) algorithm
 #' @param type type of plot to view; can be \code{'info'} to show the test
-#' information function, \code{'infocontour'} for the test information contours, 
+#' information function, \code{'infocontour'} for the test information contours,
 #' \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
 #' and \code{'score'} for the expected total score plot
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}
@@ -77,8 +77,8 @@
 #' @param object2 an object of class \code{confmirtClass}
 #' @param digits the number of significant digits to be rounded
 #' @param ... additional arguments to be passed
-#' @param technical list specifying subtle parameters that can be adjusted. These 
-#' values are 
+#' @param technical list specifying subtle parameters that can be adjusted. These
+#' values are
 #' \describe{
 #' \item{NCYCLES}{max number of cycles; default 2000 for MHRM and 300 for EM}
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
@@ -87,39 +87,39 @@
 #' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
 #' \item{KDRAWS}{number of parallel MH sets to be drawn; default 1}
 #' \item{TOL}{minimum threshold tolerance for convergence. If MH-RM, must occur on three consecutive
-#' occations; default .001} 
-#'   \item{set.seed}{seed number used during estimation. Default is 12345}       
+#' occations; default .001}
+#'   \item{set.seed}{seed number used during estimation. Default is 12345}
 #'   \item{gain}{a vector of three values specifying the numerator, exponent, and subtracted
-#'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}   	
+#'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}
 #'  \item{return_newconstrain}{if \code{TRUE} returns a list consisting of the constraints to be used
-#'  just before estimation begins} 
+#'  just before estimation begins}
 #' }
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}, \code{\link{mirt}},
-#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, 
-#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}}, 
-#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}}, 
+#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
+#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
 #' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
 #' @keywords models
-#' @usage 
+#' @usage
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
-#' invariance = '', pars = NULL, method = 'EM', constrain = NULL, 
-#' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
+#' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
+#' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
 #' bfactor = FALSE, key = NULL, D = 1.702, cl = NULL, technical = list(), verbose = TRUE, ...)
-#' 
+#'
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
 #' \S4method{summary}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
-#' 
+#'
 #' \S4method{anova}{MultipleGroupClass}(object, object2)
-#' 
+#'
 #' \S4method{residuals}{MultipleGroupClass}(object, ...)
 #'
 #' \S4method{fitted}{MultipleGroupClass}(object, ...)
-#' 
-#' \S4method{plot}{MultipleGroupClass}(x, y, type = 'info', npts = 50, theta_angle = 45, 
+#'
+#' \S4method{plot}{MultipleGroupClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
 #' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #'
 #' @export multipleGroup
@@ -128,147 +128,147 @@
 #' #single factor
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
-#' d <- matrix(rnorm(15,0,.7),ncol=1)    
+#' d <- matrix(rnorm(15,0,.7),ncol=1)
 #' itemtype <- rep('dich', nrow(a))
-#' N <- 1000    
+#' N <- 1000
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
-#' group <- c(rep('D1', N), rep('D2', N))    
+#' group <- c(rep('D1', N), rep('D2', N))
 #' models <- confmirt.model('F1 = 1-15')
-#' 
+#'
 #' mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
-#' 
+#'
 #' # prev.mod can save precious iterations and help to avoid local minimums
 #' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 #' mod_scalar2 <- multipleGroup(dat, models, group = group, #equal intercepts, free variance and means
 #'                              invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
 #' mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
-#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))    
-#' mod_fullconstrain <- multipleGroup(dat, models, group = group, 
-#'                              invariance=c('slopes', 'intercepts'))  
-#'                              
+#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))
+#' mod_fullconstrain <- multipleGroup(dat, models, group = group,
+#'                              invariance=c('slopes', 'intercepts'))
+#'
 #' summary(mod_scalar2)
 #' coef(mod_scalar2)
 #' residuals(mod_scalar2)
 #' plot(mod_configural)
 #' plot(mod_configural, type = 'score')
-#' itemplot(mod_configural, 2)  
-#' itemplot(mod_configural, 2, type = 'RE') 
-#' 
+#' itemplot(mod_configural, 2)
+#' itemplot(mod_configural, 2, type = 'RE')
+#'
 #' anova(mod_metric, mod_configural) #equal slopes only
 #' anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
-#' anova(mod_scalar1, mod_scalar2) #fix mean 
+#' anova(mod_scalar1, mod_scalar2) #fix mean
 #' anova(mod_fullconstrain, mod_scalar1) #fix variance
 #'
-#' 
+#'
 #' #test whether first 6 slopes should be equal accross groups
-#' values <- multipleGroup(dat, models, group = group, pars = 'values') 
+#' values <- multipleGroup(dat, models, group = group, pars = 'values')
 #' values
-#' constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83)) 
+#' constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 #' equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain, )
 #' anova(equalslopes, mod_configural)
-#' 
+#'
 #' #############
 #' #DIF test for each item (using all other items as anchors)
 #' itemnames <- colnames(dat)
-#' refmodel <- multipleGroup(dat, models, group = group,  
+#' refmodel <- multipleGroup(dat, models, group = group,
 #'                              invariance=c('free_means', 'free_varcov', itemnames))
-#'                              
-#' #loop over items (in practice, run in parallel to increase speed)                             
+#'
+#' #loop over items (in practice, run in parallel to increase speed)
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE,
-#'                              invariance=c('free_means', 'free_varcov', itemnames[-i])) 
-#'                              
+#'                              invariance=c('free_means', 'free_varcov', itemnames[-i]))
+#'
 #' (anovas <- lapply(estmodels, anova, object2=refmodel))
-#' 
+#'
 #' #family-wise error control
 #' p <- do.call(rbind, lapply(anovas, function(x) x[2,9]))
-#' p.adjust(p, method = 'BH') 
-#' 
+#' p.adjust(p, method = 'BH')
+#'
 #' #same as above, except only test if slopes vary (1 df)
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, #constrain all intercepts
 #'                              invariance=c('free_means', 'free_varcov', 'intercepts', itemnames[-i]))
-#'                                
-#'                              
+#'
+#'
 #' (anovas <- lapply(estmodels, anova, object2=refmodel))
-#' 
+#'
 #' #############
-#' #multiple factors 
-#' 
+#' #multiple factors
+#'
 #' a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
 #' rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
 #' d <- matrix(rnorm(15,0,.7),ncol=1)
 #' mu <- c(-.4, -.7, .1)
-#' sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)   
+#' sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
 #' itemtype <- rep('dich', nrow(a))
-#' N <- 1000    
+#' N <- 1000
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
 #' dat <- rbind(dataset1, dataset2)
-#' group <- c(rep('D1', N), rep('D2', N)) 
-#'    
+#' group <- c(rep('D1', N), rep('D2', N))
+#'
 #' #group models
 #' model1 <- confmirt.model()
 #'    F1 = 1-5
 #'    F2 = 6-10
-#'    F3 = 11-15    
-#' 
-#' 
+#'    F3 = 11-15
+#'
+#'
 #' model2 <- confmirt.model()
 #'    F1 = 1-5
 #'    F2 = 6-10
 #'    F3 = 11-15
 #'    COV = F1*F2, F1*F3, F2*F3
-#' 
-#' 
+#'
+#'
 #' models <- list(D1=model1, D2=model2) #note the names match the groups
-#' 
+#'
 #' #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 #' mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
 #' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 #' mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
-#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))   
+#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))
 #' mod_fullconstrain <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
 #'                              invariance=c('slopes', 'intercepts'))
-#'                              
+#'
 #' anova(mod_metric, mod_configural)
 #' anova(mod_scalar, mod_metric)
 #' anova(mod_fullconstrain, mod_scalar)
-#' 
+#'
 #' #same as above, but with MHRM (more accurate with 3 factors, but slower)
 #' mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') #completely seperate analyses
 #' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM') #equal slopes
 #' mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
-#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))    
+#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))
 #' mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
 #'                              invariance=c('slopes', 'intercepts'))
-#' 
+#'
 #' anova(mod_metric, mod_configural)
 #' anova(mod_scalar, mod_metric)
 #' anova(mod_fullconstrain, mod_scalar)
-#' 
+#'
 #' ############
 #' #polytomous item example
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
-#' d <- matrix(rnorm(15,0,.7),ncol=1)    
+#' d <- matrix(rnorm(15,0,.7),ncol=1)
 #' d <- cbind(d, d-1, d-2)
 #' itemtype <- rep('graded', nrow(a))
-#' N <- 1000    
+#' N <- 1000
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
-#' group <- c(rep('D1', N), rep('D2', N))    
+#' group <- c(rep('D1', N), rep('D2', N))
 #' models <- confmirt.model('F1 = 1-15')
 #' models2 <- confmirt.model('
 #'    F1 = 1-10
 #'    F2 = 10-15')
-#' 
-#' mod_configural <- multipleGroup(dat, models, group = group) 
+#'
+#' mod_configural <- multipleGroup(dat, models, group = group)
 #' plot(mod_configural)
 #' plot(mod_configural, type = 'SE')
 #' itemplot(mod_configural, 1)
@@ -276,32 +276,32 @@
 #' fs <- fscores(mod_configural)
 #' head(fs[["D1"]])
 #' fscores(mod_configural, method = 'EAPsum')
-#' 
-#' mod_configural2 <- multipleGroup(dat, models2, group = group) 
+#'
+#' mod_configural2 <- multipleGroup(dat, models2, group = group)
 #' plot(mod_configural2, type = 'infocontour')
 #' plot(mod_configural2, type = 'SE')
 #' plot(mod_configural2, type = 'RE')
 #' itemplot(mod_configural2, 10)
-#' 
+#'
 #' }
-multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1, 
-                          SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,  
-                          method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE, 
-                          draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL, 
-                          bfactor = FALSE, key = NULL, D = 1.702, cl = NULL, 
+multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
+                          SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
+                          method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
+                          draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
+                          bfactor = FALSE, key = NULL, D = 1.702, cl = NULL,
                           technical = list(), verbose = TRUE, ...)
-{       
-    Call <- match.call()            
+{
+    Call <- match.call()
     invariance.check <- invariance %in% c('free_means', 'free_varcov')
     if(all(invariance.check) && length(constrain) == 0)
         stop('Model is not identified without further constrains (may require additional anchoring items).')
-    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, 
-                      itemtype=itemtype, guess=guess, upper=upper, 
+    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance,
+                      itemtype=itemtype, guess=guess, upper=upper,
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
-                      technical = technical, verbose = verbose, calcNull=calcNull, 
+                      technical = technical, verbose = verbose, calcNull=calcNull,
                       BFACTOR=bfactor, SE.type = SE.type, cl=cl, key=key, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
-    return(mod)    
+    return(mod)
 }

@@ -1,36 +1,36 @@
 setClass("AllModelClass",
-         representation(pars='list', 
+         representation(pars='list',
                         model='list',
-                        K='numeric', 
+                        K='numeric',
                         G2='numeric',
                         X2='numeric',
-                        df='numeric', 
-                        p='numeric', 
+                        df='numeric',
+                        p='numeric',
                         p.X2='numeric',
-                        AIC='numeric', 
+                        AIC='numeric',
                         AICc='numeric',
-                        F='matrix', 
-                        h2='numeric', 
-                        tabdata='matrix', 
-                        tabdatalong='matrix', 
-                        Theta='matrix',                         
-                        data='matrix',                         
-                        converge='numeric', 
-                        itemloc = 'numeric',                        
-                        BIC='numeric', 
+                        F='matrix',
+                        h2='numeric',
+                        tabdata='matrix',
+                        tabdatalong='matrix',
+                        Theta='matrix',
+                        data='matrix',
+                        converge='numeric',
+                        itemloc = 'numeric',
+                        BIC='numeric',
                         SABIC='numeric',
                         RMSEA='numeric',
                         RMSEA.X2='numeric',
-                        null.mod = 'S4', 
-                        TLI = 'numeric',                          
+                        null.mod = 'S4',
+                        TLI = 'numeric',
                         TLI.X2 = 'numeric',
-                        logLik='numeric',                                    
+                        logLik='numeric',
                         SElogLik='numeric',
                         Call='call',
                         esttype='character',
-                        iter='numeric',                        
+                        iter='numeric',
                         quadpts='numeric',
-                        nfact='numeric',                        
+                        nfact='numeric',
                         prodlist='list',
                         constrain='list',
                         parprior='list',
@@ -43,9 +43,9 @@ setClass("AllModelClass",
                         time='numeric',
                         CFI='numeric',
                         CFI.X2='numeric',
-                        'VIRTUAL'),    
+                        'VIRTUAL'),
          validity = function(object) return(TRUE)
-)                       
+)
 
 #------------------------------------------------------------------------------
 #' @exportClass ExploratoryClass
@@ -54,19 +54,19 @@ setClass(
     Class = 'ExploratoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     Target='numeric',
-                                    rotate='character'),	
+                                    rotate='character'),
     validity = function(object) return(TRUE)
-)	
+)
 
 #------------------------------------------------------------------------------
 #' @exportClass ConfirmatoryClass
 # @keywords classes
 setClass(
-    Class = 'ConfirmatoryClass', contains = 'AllModelClass',    	
+    Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     mixedlist='list'),
     validity = function(object) return(TRUE)
-)	
+)
 
 #------------------------------------------------------------------------------
 #' @exportClass MultipleGroupClass
@@ -76,7 +76,7 @@ setClass(
                                     group='factor',
                                     groupNames='factor',
                                     invariance='character',
-                                    cmods='list'),    
+                                    cmods='list'),
     validity = function(object) return(TRUE)
 )
 
@@ -85,6 +85,6 @@ setClass(
 setClass(
     Class = 'MixedClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
-        mixedlist='list'),    
+        mixedlist='list'),
     validity = function(object) return(TRUE)
 )
