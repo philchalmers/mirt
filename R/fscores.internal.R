@@ -12,7 +12,7 @@ setMethod(
             nfact <- object@nfact
             sv <- mod2values(object)
             sv$est <- FALSE
-            newmod <- mirt(newdata, nfact, pars=sv)
+            newmod <- mirt(newdata, nfact, pars=sv, calcNull=FALSE)
             tmptabdata <- t(newmod@tabdata[, 1:length(v)])
             tmptabdata[is.na(tmptabdata)] <- 9999
             v[is.na(v)] <- 9999
