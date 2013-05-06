@@ -3,7 +3,7 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.vector = NULL, degrees = NULL,
-	                      returnER = FALSE, verbose = TRUE)
+	                      returnER = FALSE, verbose = TRUE, gmean, gcov)
 	{
         if(!is.null(response.vector)){
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
@@ -23,9 +23,7 @@ setMethod(
                            quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)
             ret <- ret[,colnames(ret) != 'Freq']
             return(ret)
-        }
-        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
-                                             quadpts=quadpts))
+        }        
         pars <- object@pars
 		K <- object@K
         J <- length(K)
@@ -42,6 +40,10 @@ setMethod(
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor
         }
+        if(!is.null(gmean)) gp$gmeans <- gmean
+        if(!is.null(gcov)) gp$gcov <- gcov
+        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
+                                             quadpts=quadpts, gp=gp))
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))
 		ThetaShort <- Theta <- thetaComb(theta,nfact)
@@ -166,11 +168,12 @@ setMethod(
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
 	                      quadpts = NULL, response.vector = NULL, degrees = NULL,
-	                      returnER = FALSE, verbose = TRUE)
+	                      returnER = FALSE, verbose = TRUE, gmean, gcov)
 	{
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
-                       response.vector=response.vector, degrees=degrees, returnER=returnER, verbose=verbose)
+                       response.vector=response.vector, degrees=degrees, returnER=returnER, verbose=verbose, 
+                       mean=gmean, cov=gcov)
         return(ret)
 	}
 )
@@ -181,7 +184,7 @@ setMethod(
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.vector = NULL, degrees = NULL,
-                          returnER = FALSE, verbose = TRUE)
+                          returnER = FALSE, verbose = TRUE, gmean, gcov)
     {
         cmods <- object@cmods
         ngroups <- length(cmods)
@@ -190,7 +193,8 @@ setMethod(
         ret <- vector('list', length(cmods))
         for(g in 1:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
-                           quadpts=quadpts, degrees=degrees, returnER=returnER, verbose=verbose)
+                           quadpts=quadpts, degrees=degrees, returnER=returnER, verbose=verbose, 
+                                gmean=gmean[[g]], gcov=gcov[[g]])
         names(ret) <- object@groupNames
         if(full.scores){
             id <- c()
@@ -260,7 +264,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
     MIN
 }
 
-EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE){
+EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
     calcL1 <- function(itemtrace, K){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1) + 1, ncol(itemtrace))
@@ -288,7 +292,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE){
     if(x@nfact > 1) stop('EAP sum score method only is applicable to unidimensional models')
     if(is.null(quadpts)) quadpts <- 40
     Theta <- as.matrix(seq(-4,4,length.out = quadpts))
-    prior <- dnorm(Theta)
+    prior <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov)
     prior <- prior/sum(prior)
     pars <- x@pars
     K <- x@K

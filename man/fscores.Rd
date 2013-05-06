@@ -4,7 +4,8 @@
 \usage{
   fscores(object, rotate = "", full.scores = FALSE,
     method = "EAP", quadpts = NULL, response.vector = NULL,
-    degrees = NULL, returnER = FALSE, verbose = TRUE)
+    degrees = NULL, returnER = FALSE, mean = NULL,
+    cov = NULL, verbose = TRUE)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -30,6 +31,14 @@
 
   \item{quadpts}{number of quadratures to use per
   dimension}
+
+  \item{mean}{a vector for custom latent variable means. If
+  NULL, the default for 'group' values from the computed
+  mirt object will be used}
+
+  \item{cov}{a custom matrix of the latent variable
+  covariance matrix. If NULL, the default for 'group'
+  values from the computed mirt object will be used}
 
   \item{degrees}{the degrees argument to be passed to
   \code{\link{iteminfo}}, only necessary for
@@ -62,6 +71,10 @@ fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 
 #calculate MAP for a given response vector
 fscores(mod, method='MAP', response.vector = c(1,2,3,4))
+
+#use custom latent variable properties (diffuse prior for MAP is very close to ML)
+fscores(mod, method='MAP', cov = matrix(10))
+fscores(mod, method='ML')
   }
 }
 \author{

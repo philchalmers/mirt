@@ -317,7 +317,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         S_X2 <- df.S_X2 <- numeric(J)
         O <- makeObstables(dat, x@K)
         Nk <- rowSums(O[[1]])
-        E <- EAPsum(x, S_X2 = TRUE)
+        E <- EAPsum(x, S_X2 = TRUE, gp = list(gmeans=0, gcov=matrix(1)))
         for(i in 1:J)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)

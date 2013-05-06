@@ -5,6 +5,8 @@ NEW FEATURES
 - type = 'score' and type = 'infoSE' added to plot() generic for expected total score and joint test
   standard error/information 
 
+- custom latent mean and covariance matrix can be passed to fscores() for EAP, MAP, and EAPsum methods
+
 BUG FIXES
 
 - missing data bug fix in MH-RM when data missing in dichotomous item models
