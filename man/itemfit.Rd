@@ -4,7 +4,7 @@
 \usage{
   itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150,
     mincell = 1, S_X2.tables = FALSE,
-    empirical.plot = NULL, method = "EAP")
+    empirical.plot = NULL, method = "EAP", ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -40,6 +40,9 @@
   be expected a-posteriori (\code{"EAP"}), Bayes modal
   (\code{"MAP"}), weighted likelihood estimation
   (\code{"WLE"}), or maximum likelihood (\code{"ML"})}
+
+  \item{...}{additional arguments to be passed to
+  \code{fscores()}}
 }
 \description{
   \code{itemfit} calculates the Zh values from Drasgow,

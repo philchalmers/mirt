@@ -13,6 +13,7 @@
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 #' (\code{"WLE"}), or maximum likelihood (\code{"ML"})
+#' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit
 #' @export personfit
@@ -46,18 +47,19 @@
 #'
 #'   }
 #'
-personfit <- function(x, method = 'EAP'){
+personfit <- function(x, method = 'EAP', ...){
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()
         for(g in 1:length(x@cmods))
-            ret[[g]] <- personfit(x@cmods[[g]])
+            ret[[g]] <- personfit(x@cmods[[g]], method=method, ...)
         names(ret) <- names(x@cmods)
         return(ret)
     }
     full.scores <- TRUE
-    sc <- fscores(x, verbose = FALSE, full.scores=full.scores, method=method)
+    if(!is.null(list(...)$sc)) sc <- list(...)$sc
+    else sc <- fscores(x, verbose = FALSE, full.scores=full.scores, method=method, ...)
     J <- ncol(x@data)
     itemloc <- x@itemloc
     pars <- x@pars

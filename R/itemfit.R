@@ -22,6 +22,7 @@
 #' @param method type of factor score estimation method. Can be expected
 #' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 #' (\code{"WLE"}), or maximum likelihood (\code{"ML"})
+#' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit
@@ -88,7 +89,7 @@
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
-                    empirical.plot = NULL, method = 'EAP'){
+                    empirical.plot = NULL, method = 'EAP', ...){
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
@@ -96,7 +97,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         for(g in 1:length(x@cmods)){
             x@cmods[[g]]@itemtype <- x@itemtype
             ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size, mincell = 1,
-                                S_X2.tables = FALSE)
+                                S_X2.tables = FALSE, method=method, ...)
         }
         names(ret) <- x@groupNames
         return(ret)
@@ -106,12 +107,20 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     J <- ncol(x@data)
     itemloc <- x@itemloc
     pars <- x@pars
-    if(Zh || X2){
-        sc <- fscores(x, verbose = FALSE, full.scores = TRUE)
+    if(Zh || X2){        
+        sc <- fscores(x, verbose = FALSE, full.scores = TRUE, method=method, ...)        
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
         fulldata <- x@fulldata
         Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]
+        if(method %in% c('ML', 'WLE')){
+            for(i in 1:ncol(Theta)){
+                tmp <- Theta[,i]
+                tmp[tmp %in% c(-Inf, Inf)] <- NA
+                Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
+                Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
+            }
+        }
         N <- nrow(Theta)
         itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
         for (i in 1:J)
@@ -130,7 +139,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                     if(i != j)
                         sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j]))
         }
-        Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
+        ret$Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
         #if all Rasch models, infit and outfit
         if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
             oneslopes <- rep(FALSE, length(x@itemtype))
@@ -138,7 +147,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 oneslopes[i] <- closeEnough((x@pars[[i]]@par[1] * x@pars[[1]]@D), 1-1e-10, 1+1e-10)
             if(all(oneslopes)){
                 attr(x, 'inoutfitreturn') <- TRUE
-                pf <- personfit(x, method=method)
+                pf <- personfit(x, method=method, sc=sc)
                 z2 <- pf$resid^2 / pf$W
                 outfit <- colSums(z2) / N
                 q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
@@ -149,10 +158,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 ret$outfit <- outfit
                 ret$z.outfit <- z.outfit
                 ret$infit <- infit
-                ret$z.infit <- z.infit
-                ret$Zh <- Zh
-            } else {
-                ret$Zh <- Zh
+                ret$z.infit <- z.infit            
             }
         }
     }
