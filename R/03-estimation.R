@@ -152,6 +152,25 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 pars[[1]][[i]]@est[(nfact+5):(nfact + K[i] + 1)] <- FALSE
         }
     }
+    df <- rr <- 0
+    for(g in 1:Data$ngroups){
+        r <- PrepList[[g]]$tabdata
+        r <- r[, ncol(r)]
+        rr <- rr + r
+        df <- df + sum(r != 0) - 1
+    }    
+    nestpars <- nconstr <- 0
+    for(g in 1:Data$ngroups)
+        for(i in 1:(nitems+1))
+            nestpars <- nestpars + sum(pars[[g]][[i]]@est)
+    if(length(constrain) > 0)
+        for(i in 1:length(constrain))
+            nconstr <- nconstr + length(constrain[[i]]) - 1
+    nmissingtabdata <- sum(is.na(rowSums(PrepList[[1]]$tabdata2)))
+    df <- df - nestpars + nconstr - nmissingtabdata
+    if(PrepList[[1]]$exploratory) df <- df + nfact*(nfact - 1)/2
+    if(df < 1) stop('Too few degrees of freedom to estimate the model')
+    
     #EM estimation
     G2group <- X2group <- numeric(Data$ngroups)
     if(opts$method == 'EM'){
@@ -321,14 +340,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
 
-    ####post estimation stats
-    df <- rr <- 0
-    for(g in 1:Data$ngroups){
-        r <- PrepList[[g]]$tabdata
-        r <- r[, ncol(r)]
-        rr <- rr + r
-        df <- df + sum(r != 0) - 1
-    }
+    ####post estimation stats    
     r <- rr
     N <- sum(r)
     logN <- 0
@@ -339,16 +351,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             logr[i] <- logr[i] + log(j)
     if(sum(logr) != 0)
         logLik <- logLik + logN/sum(logr)
-    nestpars <- nconstr <- 0
-    for(g in 1:Data$ngroups)
-        for(i in 1:(nitems+1))
-            nestpars <- nestpars + sum(pars[[g]][[i]]@est)
-    if(length(constrain) > 0)
-        for(i in 1:length(constrain))
-            nconstr <- nconstr + length(constrain[[i]]) - 1
-    nmissingtabdata <- sum(is.na(rowSums(PrepList[[1]]$tabdata2)))
-    df <- df - nestpars + nconstr - nmissingtabdata
-    if(PrepList[[1]]$exploratory) df <- df + nfact*(nfact - 1)/2
     tmp <- (length(r) - df - 1)
     AIC <- (-2) * logLik + 2 * tmp
     AICc <- AIC + 2 * tmp * (tmp + 1) / (length(r) - tmp - 1)
