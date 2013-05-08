@@ -36,7 +36,7 @@ setMethod(
             so <- summary(object, rotate = rotate, verbose = FALSE)
             a <- rotateLambdas(so)
             for(i in 1:J)
-                object@pars[[i]]@par[1:nfact] <- a[i, ]
+                pars[[i]]@par[1:nfact] <- a[i, ]
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor
         }
