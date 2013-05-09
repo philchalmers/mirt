@@ -8,9 +8,11 @@ NEW FEATURES
 - custom latent mean and covariance matrix can be passed to fscores() for EAP, MAP, and EAPsum methods.
   Also applies to personfit() and itemfit() diagnostics 
 
+- scores.only option to fscores() for returning just the estimated factor scores 
+
 BUG FIXES
 
-- missing data bug fix in MH-RM when data missing in dichotomous item models
+- missing data gradient bug fix in MH-RM for dichotomous item models
 
 - global df fix for multidimensional confirmatory models  
 

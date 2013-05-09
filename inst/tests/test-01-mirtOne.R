@@ -36,6 +36,8 @@ test_that('dich', {
     expect_is(fm2, 'matrix')
     fm3 <- fscores(modm3, method = 'ML', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
+    fm3 <- fscores(modm3, method = 'ML', full.scores = TRUE, verbose = FALSE, scores.only=TRUE)
+    expect_is(fm3, 'matrix')
     fm4 <- fscores(modm6, method = 'ML', full.scores = TRUE, verbose = FALSE)
     expect_is(fm4, 'matrix')
     fm5 <- fscores(modm6, method = 'ML', full.scores = FALSE, verbose = FALSE)

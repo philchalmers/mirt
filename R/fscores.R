@@ -28,6 +28,7 @@
 #' for a given response vector that may or may not have been in the original dataset
 #' @param returnER logical; return empirical reliability estimate as a numeric value?
 #' @param verbose logical; print verbose output messages?
+#' @param scores.only logical; return only the factor scores (only applicable when \code{full.scores = TRUE})
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
 #' @export fscores
@@ -39,21 +40,25 @@
 #' tabscores <- fscores(mod)
 #' fullscores <- fscores(mod, full.scores = TRUE)
 #' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
+#' scores <- fscores(mod, full.scores = TRUE, scores.only = TRUE)
+#' head(scores)
 #'
 #' #calculate MAP for a given response vector
 #' fscores(mod, method='MAP', response.vector = c(1,2,3,4))
 #' 
 #' #use custom latent variable properties (diffuse prior for MAP is very close to ML)
-#' fscores(mod, method='MAP', cov = matrix(10))
+#' fscores(mod, method='MAP', cov = matrix(1000))
 #' fscores(mod, method='ML')
 #'   }
 #'
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.vector = NULL, degrees = NULL,
-                    returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE)
+                    returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
+                    scores.only = FALSE)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.vector=response.vector, degrees=degrees,
-                            verbose=verbose, returnER=returnER, gmean=mean, gcov=cov)
+                            verbose=verbose, returnER=returnER, gmean=mean, gcov=cov, 
+                            scores.only=scores.only)
     ret
 }

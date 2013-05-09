@@ -5,7 +5,7 @@
   fscores(object, rotate = "", full.scores = FALSE,
     method = "EAP", quadpts = NULL, response.vector = NULL,
     degrees = NULL, returnER = FALSE, mean = NULL,
-    cov = NULL, verbose = TRUE)
+    cov = NULL, verbose = TRUE, scores.only = FALSE)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -53,6 +53,9 @@
   estimate as a numeric value?}
 
   \item{verbose}{logical; print verbose output messages?}
+
+  \item{scores.only}{logical; return only the factor scores
+  (only applicable when \code{full.scores = TRUE})}
 }
 \description{
   Computes MAP, EAP, EAP for sum-scores, WLE, or ML factor
@@ -68,12 +71,14 @@ mod <- mirt(Science, 1)
 tabscores <- fscores(mod)
 fullscores <- fscores(mod, full.scores = TRUE)
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
+scores <- fscores(mod, full.scores = TRUE, scores.only = TRUE)
+head(scores)
 
 #calculate MAP for a given response vector
 fscores(mod, method='MAP', response.vector = c(1,2,3,4))
 
 #use custom latent variable properties (diffuse prior for MAP is very close to ML)
-fscores(mod, method='MAP', cov = matrix(10))
+fscores(mod, method='MAP', cov = matrix(1000))
 fscores(mod, method='ML')
   }
 }

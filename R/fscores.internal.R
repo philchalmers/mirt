@@ -3,7 +3,7 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.vector = NULL, degrees = NULL,
-	                      returnER = FALSE, verbose = TRUE, gmean, gcov)
+	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
         if(!is.null(response.vector)){
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
@@ -135,7 +135,8 @@ setMethod(
             sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
             scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
 			colnames(scoremat) <- colnames(scores)
-			return(cbind(fulldata,scoremat))
+            if(scores.only) return(scoremat)
+			else return(cbind(fulldata,scoremat))
 		} else {
             r <- object@tabdata[,ncol(object@tabdata)]
             T <- E <- matrix(NA, 1, ncol(scores))
@@ -168,12 +169,12 @@ setMethod(
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
 	                      quadpts = NULL, response.vector = NULL, degrees = NULL,
-	                      returnER = FALSE, verbose = TRUE, gmean, gcov)
+	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
                        response.vector=response.vector, degrees=degrees, returnER=returnER, verbose=verbose, 
-                       mean=gmean, cov=gcov)
+                       mean=gmean, cov=gcov, scores.only=scores.only)
         return(ret)
 	}
 )
@@ -184,7 +185,7 @@ setMethod(
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.vector = NULL, degrees = NULL,
-                          returnER = FALSE, verbose = TRUE, gmean, gcov)
+                          returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
     {
         cmods <- object@cmods
         ngroups <- length(cmods)
@@ -194,8 +195,8 @@ setMethod(
         for(g in 1:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, degrees=degrees, returnER=returnER, verbose=verbose, 
-                                gmean=gmean[[g]], gcov=gcov[[g]])
-        names(ret) <- object@groupNames
+                                mean=gmean[[g]], cov=gcov[[g]], scores.only=scores.only)
+        names(ret) <- object@groupNames        
         if(full.scores){
             id <- c()
             fulldata <- matrix(NA, 1, ncol(ret[[1]]))
@@ -203,10 +204,14 @@ setMethod(
                 id <- c(id, rownames(ret[[g]]))
                 fulldata <- rbind(fulldata, ret[[g]])
             }
-            fulldata <- fulldata[-1, ]
-            fulldata <- data.frame(id=as.numeric(id), fulldata)
-            ret <- fulldata[order(fulldata$id), ]
-            ret <- ret[ ,-1]
+            if(!scores.only){
+                fulldata <- fulldata[-1, ]
+                fulldata <- data.frame(id=as.numeric(id), fulldata)
+                ret <- fulldata[order(fulldata$id), ]
+                ret <- ret[ ,-1]
+            } else {
+                ret <- fulldata[-1, , drop = FALSE]
+            }
         }
         return(ret)
     }

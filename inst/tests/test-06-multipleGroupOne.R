@@ -33,6 +33,7 @@ test_that('one factor', {
     fs2 <- fscores(mod_metric, full.scores = TRUE)
     fs3 <- fscores(mod_missing, verbose = FALSE)
     fs4 <- fscores(mod_missing, full.scores = TRUE)
+    fs5 <- fscores(mod_metric, full.scores = TRUE, scores.only=TRUE)
     expect_is(fs1, 'list')
     expect_is(fs2, 'data.frame')
     expect_is(fs3, 'list')
