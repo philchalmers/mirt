@@ -107,9 +107,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
-                prior[[g]] <- prior[[g]]/sum(prior[[g]])
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
-                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])                
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
+                #Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
+                #Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,

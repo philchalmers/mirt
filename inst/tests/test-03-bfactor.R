@@ -62,6 +62,9 @@ test_that('dich data', {
     items[items == 'dich'] <- '2PL'
     simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE)
     expect_is(simmod, 'ConfirmatoryClass')              
+    specific[1] <- NA
+    simmod2 <- bfactor(dataset, specific, itemtype = items, verbose=FALSE)
+    expect_is(simmod2, 'ConfirmatoryClass')              
     fs <- fscores(simmod, verbose = FALSE)
     expect_is(fs, 'matrix')
     

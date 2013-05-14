@@ -24,7 +24,8 @@
 #' @param model a numeric vector specifying which factor loads on which
 #' item. For example, if for a 4 item test with two specific factors, the first
 #' specific factor loads on the first two items and the second specific factor
-#' on the last two, then the vector is \code{c(1,1,2,2)}.
+#' on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
+#' on the general factor (have no specific component) \code{NA} values may be used as placeholders
 #' @param quadpts number of quadrature points per dimension (default 20).
 #' @param SE logical; calculate information matrix and standard errors?
 #' @param verbose logical; print observed log-likelihood value at each iteration?
@@ -74,6 +75,11 @@
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)
 #' coef(mod2)
+#' 
+#' ## don't estimate specific factor for item 32
+#' specific[32] <- NA
+#' mod3 <- bfactor(data, specific)
+#' anova(mod1, mod3)
 #'
 #' #########
 #' #simulate data
@@ -123,6 +129,25 @@
 bfactor <- function(data, model, quadpts = 20, SE = FALSE, verbose = TRUE, ...)
 {
     Call <- match.call()
+    if(any(is.na(model))){
+        tmpmodel <- model
+        tmpmodel[is.na(tmpmodel)] <- min(model, na.rm = TRUE)
+        if(!is.null(list(...)$pars))
+            stop('\'pars\' argument cannot be used since model contains NA values.
+                 Remove NAs from model specification.')
+        tmp <- bfactor(data, tmpmodel, pars = 'values', ...)
+        name <- 'a2'
+        vals <- tmp$value[tmp$name == name]
+        est <- tmp$est[tmp$name == name]
+        vals[is.na(model)] <- 0
+        est[is.na(model)] <- FALSE
+        tmp$value[tmp$name == name] <- vals
+        tmp$est[tmp$name == name] <- est        
+        mod <- bfactor(data, tmpmodel, pars=tmp, quadpts=quadpts, SE=SE, verbose=verbose, ...)
+        if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
+            mod@Call <- Call
+        return(mod)
+    }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       method = 'EM', quadpts=quadpts, verbose=verbose,
                       BFACTOR = TRUE, SE=SE, ...)

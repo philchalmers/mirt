@@ -10,6 +10,9 @@ NEW FEATURES
 
 - scores.only option to fscores() for returning just the estimated factor scores 
 
+- bfactor can include NA values in the model to omit the estimation of specific factors for the 
+  corresponding item
+
 BUG FIXES
 
 - missing data gradient bug fix in MH-RM for dichotomous item models

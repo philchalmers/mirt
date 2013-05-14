@@ -15,7 +15,9 @@
   with two specific factors, the first specific factor
   loads on the first two items and the second specific
   factor on the last two, then the vector is
-  \code{c(1,1,2,2)}.}
+  \code{c(1,1,2,2)}. For items that should only load on the
+  general factor (have no specific component) \code{NA}
+  values may be used as placeholders}
 
   \item{quadpts}{number of quadrature points per dimension
   (default 20).}
@@ -67,6 +69,11 @@ summary(mod1)
 guess <- rep(.1,32)
 mod2 <- bfactor(data, specific, guess = guess)
 coef(mod2)
+
+## don't estimate specific factor for item 32
+specific[32] <- NA
+mod3 <- bfactor(data, specific)
+anova(mod1, mod3)
 
 #########
 #simulate data
