@@ -276,7 +276,7 @@ confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = 
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype,
                       guess=guess, upper=upper, grsm.block=grsm.block, D=D, calcNull=calcNull,
-                      pars=pars, constrain=constrain, parprior=parprior, verbose=verbose,
+                      pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, rotate=rotate,
                       rsm.block=rsm.block, draws=draws, technical=technical, cl=cl, key=key, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
