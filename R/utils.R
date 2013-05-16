@@ -705,9 +705,8 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
             gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1]])
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
-                prior[[g]] <- prior[[g]]/sum(prior[[g]])
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
-                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])                
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
@@ -827,9 +826,8 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
-                prior[[g]] <- prior[[g]]/sum(prior[[g]])
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
-                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])                
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,

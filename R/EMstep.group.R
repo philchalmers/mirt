@@ -108,9 +108,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
-                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
-                #Prior[[g]] <- mvtnorm::dmvnorm(Theta[,1:2])
-                #Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)                
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
@@ -167,7 +165,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         for(group in 1:ngroups){
             for (i in 1:J){
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]],
-                               estHess=TRUE)
+                               estHess=TRUE, BFACTOR=BFACTOR)
                 ind2 <- ind1 + length(deriv$grad) - 1
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1

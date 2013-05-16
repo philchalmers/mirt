@@ -28,6 +28,7 @@
 #' on the general factor (have no specific component) \code{NA} values may be used as placeholders
 #' @param quadpts number of quadrature points per dimension (default 20).
 #' @param SE logical; calculate information matrix and standard errors?
+#' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param ... additional arguments to be passed to the main estimation function. See \code{\link{mirt}}
 #' for more details
@@ -126,7 +127,7 @@
 #'
 #'     }
 #'
-bfactor <- function(data, model, quadpts = 20, SE = FALSE, verbose = TRUE, ...)
+bfactor <- function(data, model, quadpts = 20, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
 {
     Call <- match.call()
     if(any(is.na(model))){

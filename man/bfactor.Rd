@@ -25,6 +25,9 @@
   \item{SE}{logical; calculate information matrix and
   standard errors?}
 
+  \item{SE.type}{type of standard errors to calculate. See
+  \code{\link{mirt}} for details}
+
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
 
