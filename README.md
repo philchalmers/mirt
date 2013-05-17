@@ -5,19 +5,14 @@ Multidimensional item response theory in R.
 ## Description
 
 Analysis of dichotomous and polytomous response data using latent
-trait models under the Item Response Theory paradigm. Includes univariate
-and multivariate one-, two-, three-, and four-parameter logistic models,
-graded response models, rating scale graded response models, (generalized)
-partial credit models, rating scale models, nominal models, multiple choice
-models, and multivariate partially-compensatory models. Many of these models 
-can be used in an exploratory or confirmatory manner with optional user defined 
-constraints. Exploratory models can be estimated via quadrature or
-stochastic methods, a generalized confirmatory bi-factor analysis is
-included, and confirmatory models can be fit with a Metropolis-Hastings
-Robbins-Monro algorithm which can include polynomial or product constructed
-latent traits. Additionally, multiple group analysis may be performed for
-unidimensional or multidimensional item response models for detecting
-differential item functioning.
+trait models under the Item Response Theory paradigm. Exploratory models
+can be estimated via quadrature or stochastic methods, a generalized
+confirmatory bi-factor analysis is included, and confirmatory models can be
+fit with a Metropolis-Hastings Robbins-Monro algorithm which may include
+polynomial or product constructed latent traits. Multiple group analysis
+and mixed effects designs may be performed for unidimensional or
+multidimensional item response models for detecting differential item
+functioning and modelling item and person covariates.
 
 ## Installing from source
 
@@ -30,7 +25,7 @@ than the version on CRAN. To install this package from source:
    related command line tools (found within Xcode's Preference Pane under Downloads/Components); most Linux
    distributions should already have up to date compilers (or if not they can be updated easily). 
 
-2) Install the `devtools` (if necessary). In R, paste the following into the console:
+2) Install the `devtools` package (if necessary). In R, paste the following into the console:
 
 ```r
 install.packages('devtools')

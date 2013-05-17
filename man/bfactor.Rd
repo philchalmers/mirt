@@ -2,8 +2,8 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor Analysis}
 \usage{
-  bfactor(data, model, quadpts = 20, SE = FALSE, verbose =
-    TRUE, ...)
+  bfactor(data, model, quadpts = 20, SE = FALSE, SE.type =
+    'SEM', verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that

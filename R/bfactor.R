@@ -56,7 +56,7 @@
 #'
 #' @keywords models
 #' @usage
-#' bfactor(data, model, quadpts = 20, SE = FALSE, verbose = TRUE, ...)
+#' bfactor(data, model, quadpts = 20, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
 #'
 #'
 #' @export bfactor
