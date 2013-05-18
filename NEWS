@@ -17,7 +17,11 @@ BUG FIXES
 
 - missing data gradient bug fix in MH-RM for dichotomous item models
 
-- global df fix for multidimensional confirmatory models  
+- global df fix for multidimensional confirmatory models 
+
+- bfactor SEM information matrix fixed
+
+- SEM information matrix computed with more accuracy (M-step was not identical to original EM)
 
 
 Changes in mirt 0.7.0

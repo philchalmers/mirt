@@ -856,7 +856,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                      constrain=constrain, TOL=TOL)
+                      constrain=constrain, TOL=MSTEPTOL)
         rijlast <- rij
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) /
             (EMhistory[cycles, estindex] - MLestimates[estindex])
