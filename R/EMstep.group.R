@@ -76,6 +76,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     tmp2 <- abs(diag(L) - 1)
     longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
     LL <- 0
+    MstepLL <- 0
     for(g in 1:ngroups)
         r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
     LBOUND <- UBOUND <- c()
@@ -141,6 +142,25 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         preMstep.longpars <- longpars
         if(all(!est)) break
         if(cycles == 2) bump <- 1
+
+        if (!is.null(list$opts$technical$debugderiv)) {
+          dd <- list$opts$technical$debugderiv
+          longpars[est][dd$param] <- dd$value
+          pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+          MstepLL <- Mstep.LL(longpars[est], est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta,
+                              PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
+                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)
+          for(group in 1:ngroups){
+            for (i in 1:J){
+              deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]],
+                             estHess=TRUE, BFACTOR=BFACTOR)
+              pars[[group]][[i]]@gradient <- deriv$grad
+              pars[[group]][[i]]@hessian <- deriv$hess
+            }
+          }
+          break
+        }
+
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
@@ -189,7 +209,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     }
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
-                estindex_unique=estindex_unique, correction=correction, hess=hess)
+                estindex_unique=estindex_unique, correction=correction, hess=hess, MstepLL=MstepLL)
     ret
 }
 
