@@ -270,7 +270,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
     info <- Phi - outer(phi,phi)
     #Reload final pars list
     if(cycles == NCYCLES + BURNIN + SEMCYCLES)
-        warning('MHRM iterations terminated after ', NCYCLES, ' iterations.')
+        message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
     if(list$USEEM) longpars <- list$startlongpars
     ind1 <- 1
     for(g in 1:ngroups){

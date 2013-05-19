@@ -76,6 +76,7 @@
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)
 #' coef(mod2)
+#' anova(mod1, mod2)
 #' 
 #' ## don't estimate specific factor for item 32
 #' specific[32] <- NA

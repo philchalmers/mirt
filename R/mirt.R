@@ -95,7 +95,7 @@
 #' for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix.
 #' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach (EM only), or
-#' \code{'SEM'} for the supplemented EM (TOL is automatically reduced to .0001 to help the EM history).
+#' \code{'SEM'} for the supplemented EM (TOL is automatically reduced to .00001 to help the EM history).
 #' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
@@ -174,7 +174,7 @@
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #' \describe{
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
-#' \item{TOL}{EM convergence threshold; default .001}
+#' \item{TOL}{EM convergence threshold; default .0001}
 #' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/100}}
 #' \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
 #' and \code{SE.type = 'MHRM'}. Lower values will take longer but may be more
@@ -347,6 +347,7 @@
 #' (mod1 <- mirt(data, 1))
 #' coef(mod1)
 #' (mod1 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
+#' coef(mod1)
 #' (mod1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 #' coef(mod1)
 #' summary(mod1)

@@ -97,7 +97,7 @@ Theory)}
   \code{'MHRM'} for stochastic estimation, \code{'BL'} for
   the Bock and Lieberman approach (EM only), or
   \code{'SEM'} for the supplemented EM (TOL is
-  automatically reduced to .0001 to help the EM history).
+  automatically reduced to .00001 to help the EM history).
   Bootstrapped standard errors are also possible but must
   be run with the \code{\link{boot.mirt}} function}
 
@@ -240,14 +240,15 @@ Theory)}
   \item{technical}{a list containing lower level technical
   parameters for estimation. May be: \describe{
   \item{MAXQUAD}{maximum number of quadratures; default
-  10000} \item{TOL}{EM convergence threshold; default .001}
-  \item{MSTEPTOL}{convergence threshold for Mstep; default
-  is \code{TOL/100}} \item{SEtol}{tolerance value used to
-  stop the MHRM estimation when \code{SE = TRUE} and
-  \code{SE.type = 'MHRM'}. Lower values will take longer
-  but may be more stable for computing the information
-  matrix. Default is .001} \item{NCYCLES}{maximum number of
-  EM cycles; default 500} }}
+  10000} \item{TOL}{EM convergence threshold; default
+  .0001} \item{MSTEPTOL}{convergence threshold for Mstep;
+  default is \code{TOL/100}} \item{SEtol}{tolerance value
+  used to stop the MHRM estimation when \code{SE = TRUE}
+  and \code{SE.type = 'MHRM'}. Lower values will take
+  longer but may be more stable for computing the
+  information matrix. Default is .001}
+  \item{NCYCLES}{maximum number of EM cycles; default 500}
+  }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -422,6 +423,7 @@ data <- expand.table(LSAT7)
 (mod1 <- mirt(data, 1))
 coef(mod1)
 (mod1 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
+coef(mod1)
 (mod1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 coef(mod1)
 summary(mod1)

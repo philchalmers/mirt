@@ -150,11 +150,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         if(verbose)
             if(cycles > 1)
                 cat('\rIteration: ', cycles, ', Log-Lik: ', LL, ', Max-Change: ',
-                    round(max(abs(preMstep.longpars - longpars)),4), sep='')
+                    round(max(abs(preMstep.longpars - longpars)), 5), sep='')
         if(cycles > 3 && all(abs(preMstep.longpars - longpars) < TOL))  break
     } #END EM
     if(cycles == NCYCLES)
-        warning('EM iterations terminated after ', cycles, ' iterations.')
+        message('EM iterations terminated after ', cycles, ' iterations.')
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])

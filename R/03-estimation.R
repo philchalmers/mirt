@@ -365,7 +365,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull){
-        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE),
+        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
                                      large=opts$PrepList, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')

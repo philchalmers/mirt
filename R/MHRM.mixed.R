@@ -279,7 +279,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
     if(cycles == NCYCLES + BURNIN + SEMCYCLES)
-        warning('MHRM iterations terminated after ', NCYCLES, ' iterations.')
+        message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
     ind1 <- 1
     for(g in 1:ngroups){
         for(i in 1:(J+1)){

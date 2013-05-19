@@ -12,9 +12,9 @@
     = 0, upper = 1, SE = FALSE, SE.type = 'SEM', invariance
     = '', pars = NULL, method = 'EM', constrain = NULL,
     parprior = NULL, calcNull = TRUE, draws = 3000, quadpts
-    = NULL, grsm.block = NULL, rsm.block = NULL, bfactor =
-    FALSE, key = NULL, D = 1.702, cl = NULL, technical =
-    list(), verbose = TRUE, ...)
+    = NULL, grsm.block = NULL, rsm.block = NULL, key =
+    NULL, D = 1.702, cl = NULL, technical = list(), verbose
+    = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -104,11 +104,6 @@
 
   \item{cl}{a cluster object from the \code{parallel}
   package}
-
-  \item{bfactor}{logical; use the dimensional reduction
-  algorithm if the factor pattern is a bifactor model (has
-  exactly 1 general factor and 1 specific factor for each
-  item). Only applicable when \code{method = 'EM'}}
 
   \item{method}{a character indicating whether to use the
   EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm}

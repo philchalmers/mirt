@@ -1,12 +1,14 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems,
                      key)
-    {
+    {    
+    customItemNames <- unique(names(customItems))
+    if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded',
                     'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL','PC3PL',
                     '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')
     invalid.items <- is.na(match(itemtype, valid.items))
-    if (any(invalid.items)) {
+    if (any(invalid.items & !(itemtype %in% customItemNames))) {
       stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
     }
     pars <- vector('list', J)

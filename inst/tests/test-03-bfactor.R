@@ -56,7 +56,7 @@ test_that('dich data', {
     sigma <- diag(3)
     set.seed(1234)
     items <- itemtype <- c(rep('dich', 4), 'nominal', 'gpcm', rep('graded',4),rep('dich', 4))
-    dataset <- simdata(a,d,2000,itemtype, sigma=sigma, nominal=nominal)  
+    dataset <- simdata(a,d,3000,itemtype, sigma=sigma, nominal=nominal)  
      
     specific <- c(rep(1,7),rep(2,7))
     items[items == 'dich'] <- '2PL'
