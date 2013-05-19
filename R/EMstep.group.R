@@ -97,7 +97,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
            est[constrain[[i]][-1]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1, length(longpars))
     EMhistory[1,] <- longpars
-    bump <- 100
+    bump <- 1000
     #EM
     for (cycles in 1:NCYCLES){
         #priors

@@ -175,7 +175,7 @@
 #' \describe{
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
 #' \item{TOL}{EM convergence threshold; default .0001}
-#' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/100}}
+#' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/1000}}
 #' \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
 #' and \code{SE.type = 'MHRM'}. Lower values will take longer but may be more
 #' stable for computing the information matrix. Default is .001}

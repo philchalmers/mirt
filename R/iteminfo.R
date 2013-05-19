@@ -1,6 +1,6 @@
 #' Function to calculate item information
 #'
-#' Given an internal mirt object extracted from an estimated model
+#' Given an internal mirt item object extracted by using \code{\link{extract.item}}, 
 #' compute the item information.
 #'
 #' @aliases iteminfo

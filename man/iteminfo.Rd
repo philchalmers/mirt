@@ -16,8 +16,8 @@
   when the input object is multidimensional}
 }
 \description{
-  Given an internal mirt object extracted from an estimated
-  model compute the item information.
+  Given an internal mirt item object extracted by using
+  \code{\link{extract.item}}, compute the item information.
 }
 \examples{
 \dontrun{
