@@ -1,9 +1,9 @@
 setMethod(
 	f = "itemplot.internal",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+	definition = function(object, ...)
 	{
-		x <- itemplot.main(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+		x <- itemplot.main(object, ...)
 		return(invisible(x))
 	}
 )
@@ -12,9 +12,9 @@ setMethod(
 setMethod(
 	f = "itemplot.internal",
 	signature = signature(object = 'ConfirmatoryClass'),
-	definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+	definition = function(object, ...)
 	{
-	    x <- itemplot.main(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+	    x <- itemplot.main(object, ...)
 	    return(invisible(x))
 	}
 )
@@ -23,11 +23,11 @@ setMethod(
 setMethod(
     f = "itemplot.internal",
     signature = signature(object = 'list'),
-    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+    definition = function(object, ...)
     {
         newobject <- new('MultipleGroupClass', cmods=object, nfact=object[[1]]@nfact,
                          groupNames=factor(names(object)))
-        x <- itemplot.internal(newobject, item, type, degrees, CE, CEalpha, CEdraws, ...)
+        x <- itemplot.internal(newobject, ...)
         return(invisible(x))
     }
 )
@@ -120,8 +120,9 @@ setMethod(
 )
 
 
-itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
-    nfact <- x@nfact
+itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, ...){
+    if(drop.zeros) x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
+    nfact <- x@pars[[item]]@nfact
     if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')
     theta <- seq(-4,4, length.out=40)
@@ -181,18 +182,6 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, ...){
                 CEproblower[,j] <- apply(cbind(CEproblower[,j], CEprob[,j]), 1, min)
             }
         }
-    }
-    if(nfact > 1){
-        P2 <- P
-        CEu2 <- CEl2 <- CEprobupper
-        for(i in 1:K){
-            P2[,i] <- P[ ,ncol(P) + 1 - i]
-            CEu2[,i] <- CEprobupper[ ,ncol(P) + 1 - i]
-            CEl2[,i] <- CEproblower[ ,ncol(P) + 1 - i]
-        }
-        P <- P2
-        CEprobupper <- CEu2
-        CEproblower <- CEl2
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
     score <- matrix(0:(ncol(P) - 1), nrow(Theta), ncol(P), byrow = TRUE)

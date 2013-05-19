@@ -2,6 +2,9 @@ Changes in mirt 0.7.2
 
 NEW FEATURES
 
+- drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
+  that contain slopes equal to zero
+
 - EM tolerance (TOL argument) default dropped to .0001 (originally .001), and SEM default tolerance 
   dropped to 1e-5 (originally 1e-4)
 

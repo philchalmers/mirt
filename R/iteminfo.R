@@ -42,6 +42,8 @@ iteminfo <- function(x, Theta, degrees = NULL){
     if(is.null(degrees) && ncol(Theta) == 1) degrees <- 0
     if(is.null(degrees) && ncol(Theta) != 1)
         stop('Multidimensional information requires prespecified angles in degrees that sum to 90')
+    if(ncol(Theta) != x@nfact)
+        stop('Theta does not have the correct number of dimensions')
     cosangle <- cos(d2r(degrees))
     info <- ItemInfo(x=x, Theta=Theta, cosangle=cosangle)
     info

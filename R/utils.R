@@ -1,15 +1,14 @@
 # theta combinations
 thetaComb <- function(theta, nfact)
 {
-	if (nfact == 1) Theta <- matrix(theta)
-	else if (nfact == 2) Theta <- expand.grid(theta,theta)
-	else if (nfact == 3) Theta <- expand.grid(theta,theta,theta)
-	else if (nfact == 4) Theta <- expand.grid(theta,theta,theta,theta)
-	else if (nfact == 5) Theta <- expand.grid(theta,theta,theta,theta,theta)
-	else if (nfact == 6) Theta <- expand.grid(theta,theta,theta,theta,theta,theta)
-	if(nfact > 6) stop('Are you crazy?!?!? That is way too many factors for this quadrature method.
-                       Try using confmirt() instead for better numerical accuracy')
-	Theta <- as.matrix(Theta)
+	if (nfact == 1){
+        Theta <- matrix(theta)
+	} else {
+        thetalist <- vector('list', nfact)
+        for(i in 1:nfact)
+            thetalist[[i]] <- theta
+        Theta <- as.matrix(expand.grid(thetalist))
+    }	
 	return(Theta)
 }
 

@@ -3,7 +3,8 @@
 \title{Displays item surface and information plots}
 \usage{
   itemplot(object, item, type = "trace", degrees = 45,
-    CE = FALSE, CEalpha = 0.05, CEdraws = 1000, ...)
+    CE = FALSE, CEalpha = 0.05, CEdraws = 1000,
+    drop.zeros = FALSE, ...)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -33,6 +34,12 @@
 
   \item{CEdraws}{draws number of draws to use for
   confidence envelope}
+
+  \item{drop.zeros}{logical; drop slope values that are
+  numerically close to zero to reduce dimensionality?
+  Useful in objects returned from \code{\link{bfactor}} or
+  other confirmatory models that contain several zero
+  slopes}
 
   \item{...}{additional arguments to be passed to lattice}
 }
