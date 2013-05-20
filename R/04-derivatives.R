@@ -34,8 +34,8 @@ setMethod(
         r1_P <- r1/P; r1_P2 <- r1/P^2;
         r2_Q <- r2/Q; r2_Q2 <- r2/Q^2;
         dd <- sum((u-g)*D*Pstar*Qstar*(r1_P - r2_Q)*Prior)
-        dc <- sum(Qstar*(r1_P - r2_Q)*Prior)
-        du <- sum(Pstar*(r1_P - r2_Q)*Prior)
+        dc <- sum(Qstar*(r1_P - r2_Q)*Prior)   # upper bound
+        du <- sum(Pstar*(r1_P - r2_Q)*Prior)   # lower bound (guessing)
         for(i in 1:nfact)
             da[i] <- sum(Theta[,i]*D*Pstar*Qstar*(u-g)*(r1_P - r2_Q)*Prior)
         grad <- c(da,dd,dc,du)
