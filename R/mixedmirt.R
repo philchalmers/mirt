@@ -49,7 +49,7 @@
 #' covdata <- data.frame(group, pseudoIQ)
 #' #use cl for parallel computing
 #' library(parallel)
-#' cl <- makeCluster(4)
+#' cl <- makeCluster(detectCores())
 #'
 #'
 #' #specify IRT model

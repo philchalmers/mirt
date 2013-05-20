@@ -218,7 +218,7 @@
 #'
 #' #compute model, and use parallel computation of the log-likelhood
 #' library(parallel)
-#' cl <- makeCluster(4)
+#' cl <- makeCluster(detectCores())
 #' mod1 <- confmirt(dataset, model.1, cl=cl)
 #' coef(mod1)
 #' summary(mod1)

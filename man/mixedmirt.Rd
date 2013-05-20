@@ -87,7 +87,7 @@ data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
 covdata <- data.frame(group, pseudoIQ)
 #use cl for parallel computing
 library(parallel)
-cl <- makeCluster(4)
+cl <- makeCluster(detectCores())
 
 
 #specify IRT model

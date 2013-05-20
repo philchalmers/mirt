@@ -435,7 +435,10 @@ plot(mod1, type = 'trace') #trace lines
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
 
-(mod2 <- mirt(data, 2))
+mod2 <- mirt(data, 2)
+#too few iterations, try running more using current model as starting
+#   values (could also increase NCYCLES)
+mod2 <- mirt(data, 2, pars = mod2values(mod2))
 coef(mod2)
 summary(mod2, rotate = 'oblimin') #oblimin rotation
 residuals(mod2)
@@ -468,7 +471,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 coef(pmod1_equalslopes)
 anova(pmod1_equalslopes, pmod1) #significantly worse fit with all criteria
 
-pmod2 <- mirt(Science, 2)
+pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 1500))
 summary(pmod2)
 residuals(pmod2)
 plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
@@ -481,7 +484,6 @@ coef(gpcmod)
 (nomod <- mirt(Science, 1, 'nominal'))
 anova(gpcmod, nomod)
 itemplot(nomod, 3)
-
 
 ###########
 #empirical dimensionality testing that includes 'guessing'

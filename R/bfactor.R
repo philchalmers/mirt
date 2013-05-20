@@ -71,6 +71,7 @@
 #' specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
 #' mod1 <- bfactor(data, specific)
 #' summary(mod1)
+#' itemplot(mod1, 18, drop.zeros = TRUE)
 #'
 #' ###Try with fixed guessing parameters added
 #' guess <- rep(.1,32)
