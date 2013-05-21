@@ -621,7 +621,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .001, grsm.block = NULL, D = 1.702,
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
-                     SE.type = 'MHRM', large = NULL, MSTEPTOL, ...)
+                     SE.type = 'MHRM', large = NULL, ...)
 {
     opts <- list()
     opts$method = method
@@ -652,7 +652,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$TOL <- ifelse(is.null(technical$TOL), if(method == 'EM') 1e-4 else 1e-3, technical$TOL)    
     if(SE.type == 'SEM' && SE)
         opts$TOL <- ifelse(is.null(technical$TOL), 1e-5, technical$TOL)
-    opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPMAXIT)
+    opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED')
         set.seed(12345)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)

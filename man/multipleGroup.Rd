@@ -155,22 +155,22 @@
   \item{technical}{list specifying subtle parameters that
   can be adjusted. These values are \describe{
   \item{NCYCLES}{max number of cycles; default 2000 for
-  MHRM and 300 for EM} \item{MAXQUAD}{maximum number of
+  MHRM and 500 for EM} \item{MAXQUAD}{maximum number of
   quadratures; default 10000} \item{MSTEPTOL}{convergence
-  threshold for Mstep; default is \code{TOL/100}}
+  threshold for Mstep; default is \code{TOL/1000}}
   \item{BURNIN}{number of burn in cycles (stage 1); default
   150} \item{SEMCYCLES}{number of SEM cycles (stage 2);
   default 50} \item{KDRAWS}{number of parallel MH sets to
   be drawn; default 1} \item{TOL}{minimum threshold
   tolerance for convergence. If MH-RM, must occur on three
-  consecutive occations; default .001} \item{set.seed}{seed
-  number used during estimation. Default is 12345}
-  \item{gain}{a vector of three values specifying the
-  numerator, exponent, and subtracted values for the RM
-  gain value. Default is \code{c(0.05,0.5,0.004)}}
-  \item{return_newconstrain}{if \code{TRUE} returns a list
-  consisting of the constraints to be used just before
-  estimation begins} }}
+  consecutive occations; default is .001 for MH-RM and
+  .0001 for EM} \item{set.seed}{seed number used during
+  estimation. Default is 12345} \item{gain}{a vector of
+  three values specifying the numerator, exponent, and
+  subtracted values for the RM gain value. Default is
+  \code{c(0.05,0.5,0.004)}} \item{return_newconstrain}{if
+  \code{TRUE} returns a list consisting of the constraints
+  to be used just before estimation begins} }}
 }
 \description{
   \code{multipleGroup} performes a full-information
