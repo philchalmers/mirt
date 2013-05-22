@@ -436,6 +436,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             for(j in 1:length(parprior)){
                 tmp <- pars[[i]]@parnum %in% as.numeric(parprior[[j]][1:(length(parprior[[j]])-3)])
                 if(any(tmp)){
+                    pars[[i]]@any.prior <- TRUE
                     if(parprior[[j]][length(parprior[[j]]) - 2] == 'norm'){
                         pars[[i]]@n.prior.mu[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1])
                         pars[[i]]@n.prior.sd[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
@@ -443,7 +444,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                         pars[[i]]@b.prior.alpha[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1])
                         pars[[i]]@b.prior.beta[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
                     }
-                }
+                } else pars[[i]]@any.prior <- FALSE
             }
         }
     }
