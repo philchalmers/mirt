@@ -18,7 +18,6 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	
 	int i, j;
 	NumericVector z(nquad);		
-	z.fill(0);
 
 	//compute item trace vector
 	for (j = 0; j <	nquad; j++){
@@ -28,7 +27,7 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 		z(j) += d(0) * D(0);
 	}	
 	for (i = 0; i < nquad; i++){ 
-		P(i) = g(0) + (u(0) - g(0)) * (exp(z(i))/(1 + exp(z(i))));		
+		P(i) = g(0) + (u(0) - g(0)) * (1.0)/(1.0 + exp((-1.0)*z(i)));		
         if(P(i) < 1e-10) P(i) = 1e-10;
         if((1.0 - P(i)) < 1e-10) P(i) = 1.0 - 1e-10;        
 	}
