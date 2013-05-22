@@ -132,6 +132,8 @@
 bfactor <- function(data, model, quadpts = 20, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
 {
     Call <- match.call()
+    if(length(model) != ncol(data)) 
+        stop('length of model must equal the number of items')
     if(any(is.na(model))){
         tmpmodel <- model
         tmpmodel[is.na(tmpmodel)] <- min(model, na.rm = TRUE)
