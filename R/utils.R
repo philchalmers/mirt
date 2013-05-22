@@ -795,12 +795,12 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
 SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE){
     TOL <- sqrt(list$TOL)
     itemloc <- list$itemloc
-    J <- length(itemloc) - 1
+    J <- length(itemloc) - 1L
     L <- ESTIMATE$L
     MSTEPTOL <- list$MSTEPTOL
     ngroups <- ESTIMATE$ngroups
     NCYCLES <- ESTIMATE$cycles
-    if(NCYCLES <= 5) stop('SEM can not be computed due to short EM history')
+    if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history')
     BFACTOR <- list$BFACTOR
     gitemtrace <- gstructgrouppars <- prior <- Prior <- rlist <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars
@@ -813,16 +813,15 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     estindex[estpars] <- est
     rij <- 1
 
-    for (cycles in 2:NCYCLES){
+    for (cycles in 3L:NCYCLES){
 
         longpars <- MLestimates
         longpars[estindex] <- EMhistory[cycles, estindex]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
 
-        for(g in 1:ngroups){
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)
-            pars[[g]] <- assignItemtrace(pars=pars[[g]], itemtrace=gitemtrace[[g]], itemloc=itemloc)
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
+        for(g in 1L:ngroups){
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)            
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
@@ -834,7 +833,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
         #Estep
-        for(g in 1:ngroups){
+        for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
                                             Theta=Theta, prior=prior[[g]],
@@ -846,9 +845,9 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                                          itemtrace=gitemtrace[[g]])
             }
         }
-        for(g in 1:ngroups){
-            for(i in 1:J){
-                tmp <- c(itemloc[i]:(itemloc[i+1] - 1))
+        for(g in 1L:ngroups){
+            for(i in 1L:J){
+                tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
             }
         }

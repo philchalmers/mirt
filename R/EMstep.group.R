@@ -144,7 +144,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         }
         preMstep.longpars <- longpars
         if(all(!est)) break
-        if(cycles == 2L) bump <- 1
+        if(cycles == 2L) bump <- 500
+        if(cycles == 3L) bump <- 1        
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                       Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
