@@ -259,9 +259,16 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior,
     LL <- 0
     for(g in 1:ngroups)
         for(i in 1:J)
-            LL <- LL + LogLik(pars[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])
-    if(is.nan(LL)) return(1e10)
+            LL <- LL + LogLikMstep(pars[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])    
     LL
+}
+
+LogLikMstep <- function(x, Theta, EM=FALSE, prior=NULL){
+    itemtrace <- ProbTrace(x=x, Theta=Theta)
+    if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
+    else LL <- (-1) * sum(x@rs * log(itemtrace))
+    LL <- LL.Priors(x=x, LL=LL)
+    return(LL)
 }
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior, L, BFACTOR,
@@ -272,19 +279,19 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prio
             longpars[constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     g <- rep(0, ncol(L))
-    ind1 <- 1
+    ind1 <- 1L
     for(group in 1:ngroups){
         for (i in 1:J){
             deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM=TRUE, BFACTOR=BFACTOR,
                            prior=Prior[[group]])
-            ind2 <- ind1 + length(deriv$grad) - 1
+            ind2 <- ind1 + length(deriv$grad) - 1L
             g[ind1:ind2] <- deriv$grad
-            ind1 <- ind2 + 1
+            ind1 <- ind2 + 1L
         }
-        i <- i + 1
-        ind2 <- ind1 + length(pars[[group]][[i]]@par) - 1
+        i <- i + 1L
+        ind2 <- ind1 + length(pars[[group]][[i]]@par) - 1L
         g[ind1:ind2] <- 0
-        ind1 <- ind2 + 1
+        ind1 <- ind2 + 1L
     }
     grad <- g %*% L
     grad <- grad[est]
