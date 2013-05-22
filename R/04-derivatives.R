@@ -4,16 +4,17 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
-        f <- rowSums(x@dat)
-        dat <- x@dat[ ,2]
-        Prior <- rep(1, length(dat))
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){        
         if(EM){
             dat <- x@rs[,2]
             f <- rowSums(x@rs)
             Prior <- rep(1, length(dat))
             if(BFACTOR) Prior <- prior
-        }
+        } else {
+            f <- rowSums(x@dat)
+            dat <- x@dat[ ,2]
+            Prior <- rep(1, length(dat))
+        }        
         nfact <- x@nfact
         parlength <- length(x@par)
         u <- x@par[parlength]
@@ -104,12 +105,13 @@ setMethod(
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
-        dat <- x@dat
-        Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
             if(BFACTOR) Prior <- prior
+        } else {
+            dat <- x@dat
+            Prior <- rep(1, nrow(dat))
         }
         nfact <- x@nfact
         a <- x@par[1:nfact]
@@ -136,12 +138,13 @@ setMethod(
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
         hess <- matrix(0, length(x@par), length(x@par))
-        dat <- x@dat
-        Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
             if(BFACTOR) Prior <- prior
+        } else {
+            dat <- x@dat
+            Prior <- rep(1, nrow(dat))
         }
         nfact <- x@nfact
         a <- x@par[1:nfact]
@@ -322,15 +325,16 @@ setMethod(
             return(list(grad=grad, hess=hess))
         }
         #####
-        f <- rowSums(x@dat)
-        r <- x@dat[ ,2]
-        Prior <- rep(1, length(r))
         if(EM){
             r <- x@rs[,2]
             f <- rowSums(x@rs)
             Prior <- rep(1, length(r))
             if(BFACTOR) Prior <- prior
-        }
+        } else {
+            f <- rowSums(x@dat)
+            r <- x@dat[ ,2]
+            Prior <- rep(1, length(r))
+        }        
         nfact <- x@nfact
         a <- x@par[1:nfact]
         d <- x@par[(nfact+1):(nfact*2)]
@@ -347,13 +351,14 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
-        dat <- x@dat
-        Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
             if(BFACTOR) Prior <- prior
-        }
+        } else {
+            dat <- x@dat
+            Prior <- rep(1, nrow(dat))
+        }        
         nfact <- x@nfact
         nzetas <- ncol(dat)
         a <- ExtractLambdas(x)
@@ -376,9 +381,7 @@ setMethod(
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
         grad <- rep(0, length(x@par))
-        hess <- matrix(0, length(x@par), length(x@par))
-        dat <- x@dat
-        Prior <- rep(1, nrow(dat))
+        hess <- matrix(0, length(x@par), length(x@par))        
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
@@ -387,6 +390,8 @@ setMethod(
                 hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est],
                                                         obj=x, Theta=Theta, prior=Prior)
         } else {
+            dat <- x@dat
+            Prior <- rep(1, nrow(dat))
             hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
         }
         nfact <- x@nfact
@@ -432,12 +437,13 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
-        dat <- x@dat
-        Prior <- rep(1, nrow(dat))
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
             if(BFACTOR) Prior <- prior
+        } else {
+            dat <- x@dat
+            Prior <- rep(1, nrow(dat))
         }
         nfact <- x@nfact
         nzetas <- ncol(dat)
@@ -510,13 +516,14 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
-        dat <- x@dat
-        Prior <- rep(1, nrow(dat))
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){        
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
             if(BFACTOR) Prior <- prior
+        } else {
+            dat <- x@dat
+            Prior <- rep(1, nrow(dat))
         }
         nfact <- x@nfact
         nzetas <- ncol(dat)

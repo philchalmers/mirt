@@ -496,9 +496,9 @@ setMethod(
         d <- x@par[length(x@par)-2]
         a <- x@par[1:x@nfact]
         if(!is.null(fixed.design))
-            Theta <- cbind(fixed.design, Theta)
-        P <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D)
-        return(cbind(1.0 - P, P))
+            Theta <- cbind(fixed.design, Theta)        
+        P <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D, asMatrix=TRUE)        
+        return(P)
     }
 )
 
@@ -624,9 +624,9 @@ P.poly <- function(a, d, Theta, itemexp = FALSE, D)
 }
 
 # Trace lines for mirt models
-P.mirt <- function(a, d, Theta, g = 0, u = 1, D)
+P.mirt <- function(a, d, Theta, g = 0, u = 1, D, asMatrix = FALSE)
 {
-    return(.Call("traceLinePts", a, d, g, u, Theta, D))
+    return(.Call("traceLinePts", a, d, g, u, Theta, D, asMatrix))
 }
 
 # Trace lines for partially compensetory models

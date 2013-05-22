@@ -261,10 +261,13 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior,
            longpars[constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
     if(any(longpars < LBOUND | longpars > UBOUND )) return(1e10)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    LL <- 0
-    for(g in 1L:ngroups)
+    LLs <- numeric(J)
+    LL <- 0    
+    for(g in 1L:ngroups){                
         for(i in 1L:J)
-            LL <- LL + LogLikMstep(pars[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])    
+            LLs[i] <- LogLikMstep(pars[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])
+        LL <- LL + sum(LLs)
+    }
     LL
 }
 

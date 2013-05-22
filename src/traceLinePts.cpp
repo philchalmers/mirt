@@ -2,7 +2,7 @@
 #include"Misc.h"
 using namespace Rcpp;
 
-RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD) 
+RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD, SEXP RasMatrix) 
 {
     BEGIN_RCPP
 
@@ -11,10 +11,12 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	NumericVector g(Rg);
 	NumericVector u(Ru);
 	NumericVector D(RD);
+    IntegerVector asMatrix(RasMatrix);
 	NumericMatrix Theta(RTheta);
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
 	NumericVector P(nquad);
+    NumericVector Q(nquad);
 	
 	int i, j;
 	NumericVector z(nquad);		
@@ -27,12 +29,18 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 		z(j) += d(0) * D(0);
 	}	
 	for (i = 0; i < nquad; i++){ 
-		P(i) = g(0) + (u(0) - g(0)) * (1.0)/(1.0 + exp((-1.0)*z(i)));		
+		P(i) = g(0) + (u(0) - g(0)) * (1.0)/(1.0 + exp((-1.0)*z(i)));		        
         if(P(i) < 1e-10) P(i) = 1e-10;
         if((1.0 - P(i)) < 1e-10) P(i) = 1.0 - 1e-10;        
+        Q(i) = 1.0 - P(i);
 	}
-		
-	return(P);
+	
+    if(asMatrix(0)){
+        NumericMatrix ret(nquad, 2);
+        ret(_, 0) = Q;
+        ret(_, 1) = P;
+        return(ret);
+    } else return(P);
 
 	END_RCPP
 }
