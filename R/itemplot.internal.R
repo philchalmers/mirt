@@ -125,11 +125,13 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     nfact <- x@pars[[item]]@nfact
     if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')
-    theta <- seq(-4,4, length.out=40)
-    Theta <- ThetaFull <- thetaComb(theta, nfact)
-    prodlist <- attr(x@pars, 'prodlist')
-    if(length(prodlist) > 0)
+    theta <- seq(-4,4, length.out=40)    
+    prodlist <- attr(x@pars, 'prodlist')    
+    if(length(prodlist) > 0){
+        nfact <- x@nfact
+        Theta <- thetaComb(theta, x@nfact)        
         ThetaFull <- prodterms(Theta,prodlist)
+    } else Theta <- ThetaFull <- thetaComb(theta, nfact)            
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat
     info <- 0
