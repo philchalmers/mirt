@@ -122,13 +122,12 @@ setMethod(
 
 itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, ...){
     if(drop.zeros) x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
-    nfact <- x@pars[[item]]@nfact
+    nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 2) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')
     theta <- seq(-4,4, length.out=40)    
     prodlist <- attr(x@pars, 'prodlist')    
-    if(length(prodlist) > 0){
-        nfact <- x@nfact
+    if(length(prodlist) > 0){        
         Theta <- thetaComb(theta, x@nfact)        
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)            
