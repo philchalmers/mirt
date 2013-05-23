@@ -10,26 +10,26 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
     gain <- list$gain
     itemloc <- list$itemloc
     ngroups <- length(pars)
-    J <- length(itemloc) - 1
-    prodlist <- PrepList[[1]]$prodlist
-    nfullpars <- 0
+    J <- length(itemloc) - 1L
+    prodlist <- PrepList[[1L]]$prodlist
+    nfullpars <- 0L
     estpars <- c()
     gfulldata <- gtheta0 <- gstructgrouppars <- gitemtrace <- vector('list', ngroups)
-    for(g in 1:ngroups){
-        gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
+    for(g in 1L:ngroups){
+        gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
         gfulldata[[g]] <- PrepList[[g]]$fulldata
         gtheta0[[g]] <- matrix(0, nrow(gfulldata[[g]]), nfact)
-        for(i in 1:(J+1)){
+        for(i in 1L:(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
             estpars <- c(estpars, pars[[g]][[i]]@est)
         }
     }
-    index <- 1:nfullpars
+    index <- 1L:nfullpars
     #Burn in
     cand.t.var <- 1
     tmp <- .1
-    for(g in 1:ngroups){
-        for(i in 1:30){
+    for(g in 1L:ngroups){
+        for(i in 1L:30L){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var,
                                         prior.t.var=gstructgrouppars[[g]]$gcov,
@@ -37,9 +37,9 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                                         mixedlist=mixedlist)
             if(i > 5){
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3)
+                else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
                     cand.t.var <- cand.t.var + tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4)
+                else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
                     cand.t.var <- cand.t.var - tmp
                 else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
                     cand.t.var <- cand.t.var - 2*tmp
@@ -51,40 +51,40 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         }
     }
     m.thetas <- grouplist <- SEM.stores <- SEM.stores2 <- m.list <- list()
-    conv <- 0
+    conv <- 0L
     k <- 1
     gamma <- .25
     longpars <- rep(NA,nfullpars)
-    ind1 <- 1
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+    ind1 <- 1L
+    for(g in 1L:ngroups){
+        for(i in 1L:(J+1L)){
+            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
             longpars[ind1:ind2] <- pars[[g]][[i]]@par
-            ind1 <- ind2 + 1
+            ind1 <- ind2 + 1L
         }
     }
-    stagecycle <- 1
-    converge <- 1
-    noninvcount <- 0
+    stagecycle <- 1L
+    converge <- 1L
+    noninvcount <- 0L
     L <- c()
-    for(g in 1:ngroups)
-        for(i in 1:(J+1))
+    for(g in 1L:ngroups)
+        for(i in 1L:(J+1L))
             L <- c(L, pars[[g]][[i]]@est)
     estindex <- index[estpars]
     L <- diag(as.numeric(L))
     redun_constr <- rep(FALSE, length(estpars))
-    if(length(constrain) > 0){
-        for(i in 1:length(constrain)){
-            L[constrain[[i]], constrain[[i]]] <- 1
-            for(j in 2:length(constrain[[i]]))
+    if(length(constrain) > 0L){
+        for(i in 1L:length(constrain)){
+            L[constrain[[i]], constrain[[i]]] <- 1L
+            for(j in 2L:length(constrain[[i]]))
                 redun_constr[constrain[[i]][j]] <- TRUE
         }
     }
     estindex_unique <- index[estpars & !redun_constr]
-    if(any(diag(L)[!estpars] > 0)){
+    if(any(diag(L)[!estpars] > 0L)){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to
+             paste(redindex[diag(L)[!estpars] > 0L]), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
     #make sure constrained pars are equal
@@ -94,24 +94,24 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
     tmp2 <- abs(diag(L) - 1)
     longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
     LBOUND <- UBOUND <- c()
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
+    for(g in 1L:ngroups){
+        for(i in 1L:(J+1L)){
             LBOUND <- c(LBOUND, pars[[g]][[i]]@lbound)
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
     }
 
     ####Big MHRM loop
-    for(cycles in 1:(NCYCLES + BURNIN + SEMCYCLES))
+    for(cycles in 1L:(NCYCLES + BURNIN + SEMCYCLES))
     {
-        if(cycles == BURNIN + 1) stagecycle <- 2
-        if(stagecycle == 3)
-            gamma <- (gain[1] / (cycles - SEMCYCLES - BURNIN - 1))^(gain[2]) - gain[3]
-        if(cycles == (BURNIN + SEMCYCLES + 1)){
-            stagecycle <- 3
-            longpars <- SEM.stores[[1]]
-            Tau <- SEM.stores2[[1]]
-            for(i in 2:SEMCYCLES){
+        if(cycles == BURNIN + 1L) stagecycle <- 2L
+        if(stagecycle == 3L)
+            gamma <- (gain[1L] / (cycles - SEMCYCLES - BURNIN - 1L))^(gain[2L]) - gain[3L]
+        if(cycles == (BURNIN + SEMCYCLES + 1L)){
+            stagecycle <- 3L
+            longpars <- SEM.stores[[1L]]
+            Tau <- SEM.stores2[[1L]]
+            for(i in 2L:SEMCYCLES){
                 longpars <- longpars + SEM.stores[[i]]
                 Tau <- Tau + SEM.stores2[[i]]
             }
@@ -122,13 +122,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         }
         #Reload pars list
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        for(g in 1:ngroups)
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1]])
+        for(g in 1L:ngroups)
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
 
         #Step 1. Generate m_k datasets of theta
         LL <- 0
-        for(g in 1:ngroups){
-            for(i in 1:5)
+        for(g in 1L:ngroups){
+            for(i in 1L:5L)
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                       itemloc=itemloc, cand.t.var=cand.t.var,
                                       prior.t.var=gstructgrouppars[[g]]$gcov, mixedlist=mixedlist,
@@ -140,10 +140,10 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         g.m <- h.m <- group.m <- list()
         longpars <- g <- rep(0, nfullpars)
         h <- matrix(0, nfullpars, nfullpars)
-        ind1 <- 1
-        for(group in 1:ngroups){
+        ind1 <- 1L
+        for(group in 1L:ngroups){
             thetatemp <- gtheta0[[group]]
-            if(length(prodlist) > 0) thetatemp <- prodterms(thetatemp,prodlist)
+            if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
             colnames(thetatemp) <- mixedlist$factorNames
             thetatemplist <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed,
                                         Thetas=thetatemp, nitems=J,
@@ -155,30 +155,30 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             pars[[group]] <- assignItemtrace(pars=pars[[group]],
                                          itemtrace=gitemtrace[[group]],
                                          itemloc=itemloc)
-            for (i in 1:J){
+            for (i in 1L:J){
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=cbind(thetatemplist[[i]], thetatemp),
                                estHess=TRUE)
-                ind2 <- ind1 + length(deriv$grad) - 1
+                ind2 <- ind1 + length(deriv$grad) - 1L
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
                 g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
-                ind1 <- ind2 + 1
+                ind1 <- ind2 + 1L
             }
-            i <- i + 1
+            i <- i + 1L
             deriv <- Deriv(x=pars[[group]][[i]], Theta=gtheta0[[group]])
-            ind2 <- ind1 + length(deriv$grad) - 1
+            ind2 <- ind1 + length(deriv$grad) - 1L
             longpars[ind1:ind2] <- pars[[group]][[i]]@par
             g[ind1:ind2] <- pars[[group]][[i]]@gradient <- deriv$grad
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
-            ind1 <- ind2 + 1
+            ind1 <- ind2 + 1L
         }
         grad <- g %*% L
         ave.h <- (-1)*L %*% h %*% L
-        grad <- grad[1, estpars & !redun_constr]
+        grad <- grad[1L, estpars & !redun_constr]
         ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
         if(any(is.na(grad)))
             stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')
-        if(is.na(attr(gtheta0[[1]],"log.lik")))
+        if(is.na(attr(gtheta0[[1L]],"log.lik")))
             stop('Estimation halted. Model did not converge.')
         if(verbose){
             if(cycles < BURNIN)
@@ -188,7 +188,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             if(cycles > BURNIN + SEMCYCLES)
                 printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN-SEMCYCLES, LL)
         }
-        if(stagecycle < 3){
+        if(stagecycle < 3L){
             if(qr(ave.h)$rank != ncol(ave.h)){
                 tmp <- ave.h
                 while(1){
@@ -197,7 +197,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                     if(QR$rank == ncol(tmp)) break
                 }
                 ave.h <- tmp
-                noninvcount <- noninvcount + 1
+                noninvcount <- noninvcount + 1L
                 if(noninvcount == 3)
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
@@ -215,12 +215,12 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
             longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
             longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
-            if(length(constrain) > 0)
-                for(i in 1:length(constrain))
-                    longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
+            if(length(constrain) > 0L)
+                for(i in 1L:length(constrain))
+                    longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1]]
             if(verbose)
                 cat(printmsg, sprintf(", Max Change = %.4f\r", max(abs(gamma*correction))), sep='')
-            if(stagecycle == 2){
+            if(stagecycle == 2L){
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
             }
@@ -237,8 +237,8 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                 if(QR$rank == ncol(tmp)) break
             }
             Tau <- tmp
-            noninvcount <- noninvcount + 1
-            if(noninvcount == 5)
+            noninvcount <- noninvcount + 1L
+            if(noninvcount == 5L)
                 stop('\nEstimation halted during stage 3, solution is unstable')
         }
         correction <- solve(Tau, grad)
@@ -256,15 +256,15 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
         longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
         longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
-        if(length(constrain) > 0)
-            for(i in 1:length(constrain))
-                longpars[index %in% constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
+        if(length(constrain) > 0L)
+            for(i in 1L:length(constrain))
+                longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         if(verbose)
             cat(printmsg, sprintf(", gam = %.3f, Max Change = %.4f\r",
                                   gamma, max(abs(gamma*correction))), sep='')
-        if(all(abs(gamma*correction) < TOL)) conv <- conv + 1
-        else conv <- 0
-        if(conv == 3) break
+        if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
+        else conv <- 0L
+        if(conv == 3L) break
 
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
         if(gamma == .25){
@@ -280,12 +280,12 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
     info <- Phi - outer(phi,phi)
     if(cycles == NCYCLES + BURNIN + SEMCYCLES)
         message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
-    ind1 <- 1
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+    ind1 <- 1L
+    for(g in 1L:ngroups){
+        for(i in 1L:(J+1L)){
+            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
             pars[[g]][[i]]@par <- longpars[ind1:ind2]
-            ind1 <- ind2 + 1
+            ind1 <- ind2 + 1L
             #apply sum(t) == 1 constraint for mcm
             if(is(pars[[g]][[i]], 'mcm')){
                 tmp <- pars[[g]][[i]]@par
@@ -305,15 +305,15 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
     SE[estindex_unique] <- SEtmp
-    if(length(constrain) > 0)
-        for(i in 1:length(constrain))
-            SE[index %in% constrain[[i]][-1]] <- SE[constrain[[i]][1]]
-    ind1 <- 1
-    for(g in 1:ngroups){
-        for(i in 1:(J+1)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1
+    if(length(constrain) > 0L)
+        for(i in 1L:length(constrain))
+            SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
+    ind1 <- 1L
+    for(g in 1L:ngroups){
+        for(i in 1L:(J+1L)){
+            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
             pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
-            ind1 <- ind2 + 1
+            ind1 <- ind2 + 1L
         }
     }
     info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))
