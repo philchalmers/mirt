@@ -33,10 +33,10 @@ mod2values <- function(x){
     itemnames <- colnames(x@data)
     parnum <- par <- est <- item <- parname <- gnames <- itemtype <-
         lbound <- ubound <- c()
-    for(g in 1:length(PrepList)){
+    for(g in 1L:length(PrepList)){
         if(MG) tmpgroup <- PrepList[[g]]@pars
         else tmpgroup <- PrepList[[g]]
-        for(i in 1:length(tmpgroup)){
+        for(i in 1L:length(tmpgroup)){
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
             parname <- c(parname, names(tmpgroup[[i]]@parnum))

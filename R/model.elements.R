@@ -11,28 +11,28 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         tmp <- gsub("\\)","",tmp)
         tmp <- gsub(" ","",tmp)
         prodlist <- strsplit(tmp,"\\*")
-        for(j in 1:length(prodlist)){
-            for(i in 1:nfact)
+        for(j in 1L:length(prodlist)){
+            for(i in 1L:nfact)
                 prodlist[[j]][prodlist[[j]] == tmp2[[i]]] <- i
             prodlist[[j]] <- as.numeric(prodlist[[j]])
         }
     }
     #slopes specification
     estlam <- matrix(FALSE, ncol = nfactNames, nrow = J)
-    for(i in 1:nfactNames){
-        tmp <- model[model[ ,1] == factorNames[i],2]
+    for(i in 1L:nfactNames){
+        tmp <- model[model[ ,1L] == factorNames[i],2L]
         if(any(regexpr(",",tmp)))
-            tmp <- strsplit(tmp,",")[[1]]
+            tmp <- strsplit(tmp,",")[[1L]]
         popout <- c()
-        for(j in 1:length(tmp)){
-            if(regexpr("-",tmp[j]) > 1){
+        for(j in 1L:length(tmp)){
+            if(regexpr("-",tmp[j]) > 1L){
                 popout <- c(popout,j)
-                tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1]])
-                tmp2 <- as.character(tmp2[1]:tmp2[2])
+                tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1L]])
+                tmp2 <- as.character(tmp2[1L]:tmp2[2L])
                 tmp <- c(tmp,tmp2)
             }
         }
-        if(length(popout != 0))
+        if(length(popout != 0L))
             estlam[as.numeric(tmp[-popout]),i] <- TRUE
         else
             estlam[as.numeric(tmp),i] <- TRUE
@@ -42,35 +42,35 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     cs <- sqrt(abs(1-rowSums(lambdas^2)))
     lambdas <- lambdas * 1.702/D
     zetas <- list()
-    loc <- 1
-    for(i in 1:J){
-        if(K[i] == 2){
+    loc <- 1L
+    for(i in 1L:J){
+        if(K[i] == 2L){
             div <- ifelse(cs[i] > .25, cs[i], .25)
             zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div * 1.702/D
         } else if(itemtype[i] %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')){
             div <- ifelse(cs[i] > .25, cs[i], .25)
-            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i] + key[i]-1]))/div * 1.702/D
+            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i] + key[i]-1L]))/div * 1.702/D
         } else {
-            temp <- table(data[,i])[1:(K[i]-1)]/N
+            temp <- table(data[,i])[1L:(K[i]-1L)]/N
             temp <- cumsum(temp)
             div <- ifelse(cs[i] > .25, cs[i], .25)
             zetas[[i]] <- qnorm(1 - temp)/div * 1.702/D
         }
     }
     estzetas <- list()
-    for(i in 1:J)
+    for(i in 1L:J)
         estzetas[[i]] <- length(zetas[[i]])
     #COV
-    find <- 1:nfact
+    find <- 1L:nfact
     estgcov <- matrix(FALSE,nfact,nfact)
-    if(any(model[,1] == 'COV')){
-        tmp <- model[model[,1] == 'COV',2]
-        tmp <- strsplit(tmp,",")[[1]]
+    if(any(model[,1L] == 'COV')){
+        tmp <- model[model[,1L] == 'COV',2L]
+        tmp <- strsplit(tmp,",")[[1L]]
         tmp <- gsub(" ","",tmp)
-        for(i in 1:length(tmp)){
-            tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1]]
-            ind1 <- find[tmp2[1] == factorNames]
-            ind2 <- find[tmp2[2] == factorNames]
+        for(i in 1L:length(tmp)){
+            tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1L]]
+            ind1 <- find[tmp2[1L] == factorNames]
+            ind2 <- find[tmp2[2L] == factorNames]
             estgcov[ind2,ind1] <- TRUE
         }
     }
@@ -81,7 +81,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     estgmeans <- rep(FALSE, nfact)
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
-        loads <- eigen(Rpoly)$vector[,1:nfact, drop = FALSE]
+        loads <- eigen(Rpoly)$vector[,1L:nfact, drop = FALSE]
         u <- 1 - rowSums(loads^2)
         u[u < .001 ] <- .2
         cs <- sqrt(u)
@@ -90,7 +90,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     if(!is.null(mixedlist)){
         covdata <- mixedlist$covdata
         Theta <- matrix(0, N, nrow(model))
-        colnames(Theta) <- model[ ,1]
+        colnames(Theta) <- model[ ,1L]
         mixedlist$Theta <- Theta
     }
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
@@ -98,7 +98,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     nfact=nfact+length(prodlist), parprior=parprior,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, D=D,
                     mixedlist=mixedlist, customItems=customItems, key=key)
-    ret[[length(ret) + 1]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
+    ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             parprior=parprior)
     attr(ret, 'prodlist') <- prodlist

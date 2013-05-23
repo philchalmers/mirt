@@ -330,7 +330,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'dich'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -338,7 +338,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nestlogit'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -346,7 +346,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'graded'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -354,7 +354,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rating'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -362,7 +362,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'gpcm'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -370,7 +370,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rsm'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -378,7 +378,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nominal'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -386,7 +386,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'partcomp'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -394,7 +394,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'mcm'),
     definition = function(x){
-        x@par[1:x@nfact]
+        x@par[1L:x@nfact]
     }
 )
 
@@ -404,7 +404,7 @@ setMethod(
     signature = signature(x = 'dich'),
     definition = function(x){
         par <- x@par
-        d <- par[1:x@nfact]
+        d <- par[1L:x@nfact]
         d
     }
 )
@@ -414,7 +414,7 @@ setMethod(
     signature = signature(x = 'graded'),
     definition = function(x){
         par <- x@par
-        d <- par[-(1:x@nfact)]
+        d <- par[-(1L:x@nfact)]
         d
     }
 )
@@ -424,7 +424,7 @@ setMethod(
     signature = signature(x = 'rating'),
     definition = function(x){
         par <- x@par
-        d <- par[-c(1:x@nfact, length(par))]
+        d <- par[-c(1L:x@nfact, length(par))]
         d
     }
 )
@@ -434,7 +434,7 @@ setMethod(
     signature = signature(x = 'gpcm'),
     definition = function(x){
         par <- x@par
-        d <- par[-(1:x@nfact)]
+        d <- par[-(1L:x@nfact)]
         d
     }
 )
@@ -444,7 +444,7 @@ setMethod(
     signature = signature(x = 'rsm'),
     definition = function(x){
         par <- x@par
-        d <- par[-(1:x@nfact)]
+        d <- par[-(1L:x@nfact)]
         d
     }
 )
@@ -453,7 +453,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'nominal'),
     definition = function(x){
-        d <- x@par[(length(x@par) - x@ncat + 1):length(x@par)]
+        d <- x@par[(length(x@par) - x@ncat + 1L):length(x@par)]
         d
     }
 )
@@ -462,7 +462,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'partcomp'),
     definition = function(x){
-        d <- x@par[(x@nfact+1):(length(x@par)-2)]
+        d <- x@par[(x@nfact+1L):(length(x@par)-2L)]
         d
     }
 )
@@ -471,7 +471,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'mcm'),
     definition = function(x){
-        d <- x@par[(x@nfact + x@ncat +1):(x@nfact - x@ncat*2)]
+        d <- x@par[(x@nfact + x@ncat +1L):(x@nfact - x@ncat*2)]
         d
     }
 )
@@ -492,9 +492,9 @@ setMethod(
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
         u <- x@par[length(x@par)]
-        g <- x@par[length(x@par)-1]
-        d <- x@par[length(x@par)-2]
-        a <- x@par[1:x@nfact]
+        g <- x@par[length(x@par)-1L]
+        d <- x@par[length(x@par)-2L]
+        a <- x@par[1L:x@nfact]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)        
         P <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D, asMatrix=TRUE)        
@@ -506,11 +506,11 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
-        a <- x@par[1:x@nfact]
-        d <- x@par[x@nfact+1]
-        g <- x@par[x@nfact+2]
-        u <- x@par[x@nfact+3]
-        ak <- x@par[(x@nfact+4):(x@nfact+4+x@ncat-2)]
+        a <- x@par[1L:x@nfact]
+        d <- x@par[x@nfact+1L]
+        g <- x@par[x@nfact+2L]
+        u <- x@par[x@nfact+3L]
+        ak <- x@par[(x@nfact+4L):(x@nfact+4L+x@ncat-2L)]
         dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
@@ -523,8 +523,8 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'graded', Theta = 'matrix'),
     definition = function(x, Theta, itemexp = TRUE, fixed.design = NULL){
-        a <- x@par[1:x@nfact]
-        d <- x@par[(x@nfact+1):length(x@par)]
+        a <- x@par[1L:x@nfact]
+        d <- x@par[(x@nfact+1L):length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
         return(P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp, D=x@D))
@@ -537,8 +537,8 @@ setMethod(
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, itemexp = TRUE, fixed.design = NULL){
         nfact <- x@nfact
-        a <- x@par[1:nfact]
-        d <- x@par[(nfact+1):(length(x@par)-1)]
+        a <- x@par[1L:nfact]
+        d <- x@par[(nfact+1L):(length(x@par)-1L)]
         t <- x@par[length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
@@ -550,8 +550,8 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
-        a <- x@par[1:x@nfact]
-        d <- x@par[-(1:x@nfact)]
+        a <- x@par[1L:x@nfact]
+        d <- x@par[-(1L:x@nfact)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
         return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D))
@@ -562,10 +562,10 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
-        a <- x@par[1:x@nfact]
-        d <- x@par[(x@nfact+1):(length(x@par)-1)]
+        a <- x@par[1L:x@nfact]
+        d <- x@par[(x@nfact+1L):(length(x@par)-1L)]
         t <- x@par[length(x@par)]
-        d[-1] <- d[-1] + t
+        d[-1L] <- d[-1L] + t
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
         return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D))
@@ -576,9 +576,9 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
-        a <- x@par[1:x@nfact]
-        ak <- x@par[(x@nfact+1):(x@nfact + x@ncat)]
-        d <- x@par[(length(x@par) - x@ncat + 1):length(x@par)]
+        a <- x@par[1L:x@nfact]
+        ak <- x@par[(x@nfact+1L):(x@nfact + x@ncat)]
+        d <- x@par[(length(x@par) - x@ncat + 1L):length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
         return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=x@D))
@@ -590,9 +590,9 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
         nfact <- x@nfact
-        a <- x@par[1:nfact]
-        d <- x@par[(nfact+1):(length(x@par)-2)]
-        g <- x@par[length(x@par)-1]
+        a <- x@par[1L:nfact]
+        d <- x@par[(nfact+1L):(length(x@par)-2L)]
+        g <- x@par[length(x@par)-1L]
         u <- x@par[length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
@@ -604,12 +604,12 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'mcm', Theta = 'matrix'),
     definition = function(x, Theta, fixed.design = NULL){
-        a <- x@par[1:x@nfact]
-        ind <- x@nfact + 1
+        a <- x@par[1L:x@nfact]
+        ind <- x@nfact + 1L
         ak <- x@par[ind:(ind + x@ncat)]
-        ind <- ind + x@ncat + 1
+        ind <- ind + x@ncat + 1L
         d <- x@par[ind:(ind + x@ncat)]
-        ind <- ind + x@ncat + 1
+        ind <- ind + x@ncat + 1L
         t <- x@par[ind:length(x@par)]
         if(!is.null(fixed.design))
             Theta <- cbind(fixed.design, Theta)
@@ -634,7 +634,7 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
 {
     nfact <- length(a)
     P <- rep(1,nrow(Theta))
-    for(i in 1:nfact)
+    for(i in 1L:nfact)
         P <- P * P.mirt(a[i], d[i], Theta[ ,i, drop=FALSE], g=0, u=1, D=D)
     P <- g + (u - g) * P
     s.eps <- 1e-10
@@ -650,7 +650,7 @@ P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
 
 #ak[1] and d[1] are latent process
 P.mcm <- function(a, ak, d, t, Theta, D){
-    t[1] <- 1 - sum(t[2:length(t)])
+    t[1] <- 1 - sum(t[2L:length(t)])
     return(.Call("mcmTraceLinePts", a, ak, d, t, Theta, D))
 }
 

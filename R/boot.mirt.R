@@ -28,7 +28,7 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
         while(TRUE){
             dat <- orgdat[ind, ]
             g <- group[ind]
-            ind <- sample(1:nrow(orgdat), nrow(orgdat), TRUE)
+            ind <- sample(1L:nrow(orgdat), nrow(orgdat), TRUE)
             if(length(unique(g)) != ngroup) next
             if(!is.null(group)){
                 mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
@@ -42,7 +42,7 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
             if(MG){
                 longpars <- c()
                 tmp <- coef(mod)
-                for(g in 1:length(tmp))
+                for(g in 1L:length(tmp))
                     longpars <- c(longpars, do.call(c, tmp[[g]]))
             } else longpars <- do.call(c, coef(mod))
             if(length(longpars) != npars) next
@@ -51,21 +51,21 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
         return(longpars)
     }
     loadSE <- function(pars, SEs, nfact, MG, explor){
-        ind1 <- 1
+        ind1 <- 1L
         if(MG){
-            for(g in 1:length(pars)){
-                for(i in 1:length(pars[[g]]@pars)){
-                    ind2 <- ind1 + length(pars[[g]]@pars[[i]]@par) - 1
+            for(g in 1L:length(pars)){
+                for(i in 1L:length(pars[[g]]@pars)){
+                    ind2 <- ind1 + length(pars[[g]]@pars[[i]]@par) - 1L
                     pars[[g]]@pars[[i]]@SEpar <- SEs[ind1:ind2]
-                    ind1 <- ind2 + 1
+                    ind1 <- ind2 + 1L
                 }
             }
         } else {
-            for(i in 1:length(x@pars)){
-                ind2 <- ind1 + length(pars[[i]]@par) - 1
+            for(i in 1L:length(x@pars)){
+                ind2 <- ind1 + length(pars[[i]]@par) - 1L
                 pars[[i]]@SEpar <- SEs[ind1:ind2]
-                if(explor) pars[[i]]@SEpar[1:nfact] <- NA
-                ind1 <- ind2 + 1
+                if(explor) pars[[i]]@SEpar[1L:nfact] <- NA
+                ind1 <- ind2 + 1L
             }
         }
         return(pars)
@@ -79,18 +79,18 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
     explor <- is(x, 'ExploratoryClass')
     pars <- if(MG) x@cmods else x@pars
     group <- if(MG) x@group else NULL
-    model <- x@model[[1]]
+    model <- x@model[[1L]]
     parprior <- x@parprior
     constrain <- x@constrain
-    if(length(parprior) == 0) parprior <- NULL
-    if(length(constrain) == 0) constrain <- NULL
+    if(length(parprior) == 0L) parprior <- NULL
+    if(length(constrain) == 0L) constrain <- NULL
     prodlist <- x@prodlist
     ret <- x
     if(!require(boot)) require(boot)
     if(MG){
         longpars <- c()
         tmp <- coef(x)
-        for(g in 1:length(tmp))
+        for(g in 1L:length(tmp))
             longpars <- c(longpars, do.call(c, tmp[[g]]))
     } else longpars <- do.call(c, coef(x))
     npars <- length(longpars)

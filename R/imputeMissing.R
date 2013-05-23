@@ -29,14 +29,14 @@
 #'
 #' }
 imputeMissing <- function(x, Theta){
-    set.seed(proc.time()[3])
+    set.seed(proc.time()[3L])
     if(is(x, 'MixedClass'))
         stop('mixedmirt xs not yet supported')
     if(is(x, 'MultipleGroupClass')){
         cmods <- x@cmods
         group <- x@group
         data <- x@data
-        for(i in 1:length(cmods)){
+        for(i in 1L:length(cmods)){
             sel <- group == x@groupNames[i]
             Thetatmp <- Theta[sel, , drop = FALSE]
             data[sel, ] <- imputeMissing(cmods[[i]], Thetatmp)
@@ -48,15 +48,15 @@ imputeMissing <- function(x, Theta){
     J <- length(K)
     data <- x@data
     N <- nrow(data)
-    Nind <- 1:N
-    for (i in 1:J){
+    Nind <- 1L:N
+    for (i in 1L:J){
         if(!any(is.na(data[,i]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
-        for(j in 1:length(NAind)){
-            sampl <- sample(1:ncol(P), 1, prob = P[NAind[j], , drop = FALSE])
+        for(j in 1L:length(NAind)){
+            sampl <- sample(1L:ncol(P), 1, prob = P[NAind[j], , drop = FALSE])
             if(any(class(pars[[i]]) %in% c('dich', 'gpcm', 'partcomp')))
-                sampl <- sampl - 1
+                sampl <- sampl - 1L
             data[NAind[j], i] <- sampl
         }
     }

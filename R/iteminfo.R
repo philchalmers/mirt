@@ -39,8 +39,8 @@
 iteminfo <- function(x, Theta, degrees = NULL){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
-    if(is.null(degrees) && ncol(Theta) == 1) degrees <- 0
-    if(is.null(degrees) && ncol(Theta) != 1)
+    if(is.null(degrees) && ncol(Theta) == 1L) degrees <- 0
+    if(is.null(degrees) && ncol(Theta) != 1L)
         stop('Multidimensional information requires prespecified angles in degrees that sum to 90')
     if(ncol(Theta) != x@nfact)
         stop('Theta does not have the correct number of dimensions')

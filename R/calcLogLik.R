@@ -51,12 +51,12 @@ setMethod(
 	definition = function(object, draws = 3000, G2 = TRUE, cl = NULL)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J){
-            if(nfact > 1) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
+            if(nfact > 1L) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
             else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
-            if(length(prodlist) > 0)
+            if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
             itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-            if(length(object@mixedlist) > 1){
+            if(length(object@mixedlist) > 1L){
                 colnames(theta) <- object@mixedlist$factorNames
                 fixed.design.list <- designMats(covdata=object@mixedlist$covdata,
                                                 fixed=object@mixedlist$fixed,
@@ -64,7 +64,7 @@ setMethod(
                                                 itemdesign=object@mixedlist$itemdesign,
                                                 fixed.identical=object@mixedlist$fixed.identical)
             }
-            for (i in 1:J) itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <-
+            for (i in 1L:J) itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
                 ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])
             return(exp(rowSums(log(itemtrace)*fulldata)))
         }
@@ -74,8 +74,8 @@ setMethod(
         prodlist <- object@prodlist
         itemloc <- object@itemloc
         N <- nrow(fulldata)
-	    J <- length(pars)-1
-	    nfact <- length(ExtractLambdas(pars[[1]])) - length(object@prodlist) - pars[[1]]@nfixedeffects
+	    J <- length(pars)-1L
+	    nfact <- length(ExtractLambdas(pars[[1L]])) - length(object@prodlist) - pars[[1L]]@nfixedeffects
         LL <- matrix(0, N, draws)
         grp <- ExtractGroupPars(pars[[length(pars)]])
         fixed.design.list <- vector('list', J)
@@ -83,7 +83,7 @@ setMethod(
             LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist,
                            fulldata=fulldata, object=object, J=J)
         else
-            for(draw in 1:draws)
+            for(draw in 1L:draws)
                 LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist,
                                       fulldata=fulldata, object=object, J=J)
         LL[is.nan(LL)] <- 0
@@ -99,8 +99,8 @@ setMethod(
         tabdata <- object@tabdata
         r <- tabdata[,ncol(tabdata)]
 		expected <- rep(0,nrow(tabdata))
-		for (j in 1:nrow(tabdata)){
-			TFvec <- colSums(ifelse(t(data) == tabdata[j,1:J],1,0)) == J
+		for (j in 1L:nrow(tabdata)){
+			TFvec <- colSums(ifelse(t(data) == tabdata[j,1L:J],1,0)) == J
 			TFvec[is.na(TFvec)] <- FALSE
 			expected[j] <- mean(rwmeans[TFvec])
 		}
@@ -109,18 +109,18 @@ setMethod(
         object@Pl <- expected
 		logN <- 0
 		logr <- rep(0,length(r))
-		for (i in 1:N) logN <- logN + log(i)
-		for (i in 1:length(r))
-			for (j in 1:r[i])
+		for (i in 1L:N) logN <- logN + log(i)
+		for (i in 1L:length(r))
+			for (j in 1L:r[i])
 				logr[i] <- logr[i] + log(j)
 		if(sum(logr) != 0)
 			logLik <- logLik + logN/sum(logr)
-        nestpars <- nconstr <- 0
+        nestpars <- nconstr <- 0L
         for(i in 1:length(pars))
             nestpars <- nestpars + sum(pars[[i]]@est)
-        if(length(object@constrain) > 0)
+        if(length(object@constrain) > 0L)
             for(i in 1:length(object@constrain))
-                nconstr <- nconstr + length(object@constrain[[i]]) - 1
+                nconstr <- nconstr + length(object@constrain[[i]]) - 1L
         nfact <- object@nfact - length(prodlist)
         nmissingtabdata <- sum(is.na(rowSums(object@tabdata)))
         df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata

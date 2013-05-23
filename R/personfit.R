@@ -52,7 +52,7 @@ personfit <- function(x, method = 'EAP', ...){
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()
-        for(g in 1:length(x@cmods))
+        for(g in 1L:length(x@cmods))
             ret[[g]] <- personfit(x@cmods[[g]], method=method, ...)
         names(ret) <- names(x@cmods)
         return(ret)
@@ -67,14 +67,14 @@ personfit <- function(x, method = 'EAP', ...){
     nfact <- x@nfact + length(prodlist)
     if(full.scores){
         fulldata <- x@fulldata
-        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]
+        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1L), drop = FALSE]
     } else {
         fulldata <- x@tabdatalong
         fulldata <- fulldata[,-ncol(fulldata)]
-        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1) - nfact, drop = FALSE]
+        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1L) - nfact, drop = FALSE]
     }
     if(method %in% c('ML', 'WLE')){
-        for(i in 1:ncol(Theta)){
+        for(i in 1L:ncol(Theta)){
             tmp <- Theta[,i]
             tmp[tmp %in% c(-Inf, Inf)] <- NA
             Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
@@ -83,30 +83,30 @@ personfit <- function(x, method = 'EAP', ...){
     }
     N <- nrow(Theta)
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-    for (i in 1:J)
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    for (i in 1L:J)
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     LL <- itemtrace * fulldata
     LL[LL < .Machine$double.eps] <- 1
     LL <- rowSums(log(LL))
     Zh <- rep(0, length(LL))
     mu <- sigma2 <- numeric(N)
     log_itemtrace <- log(itemtrace)
-    for(item in 1:J){
-        P <- itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
-        log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
+    for(item in 1L:J){
+        P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
+        log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
         mu <- mu + rowSums(P * log_P)
-        for(i in 1:ncol(P))
-            for(j in 1:ncol(P))
+        for(i in 1L:ncol(P))
+            for(j in 1L:ncol(P))
                 if(i != j)
                     sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
     }
     Zh <- (LL - mu) / sqrt(sigma2)
     if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
         for(i in 1:length(x@itemtype))
-            if((x@pars[[i]]@par[1] * x@pars[[1]]@D) != 1) break
+            if((x@pars[[i]]@par[1L] * x@pars[[1L]]@D) != 1) break
         W <- resid <- info <- C <- matrix(0, ncol=J, nrow=N)
         K <- x@K
-        for (i in 1:J){
+        for (i in 1L:J){
             P <- ProbTrace(x=pars[[i]], Theta=Theta)
             Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
             dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]

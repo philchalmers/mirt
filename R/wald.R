@@ -65,20 +65,20 @@ wald <- function(object, L, C = 0){
     covB <- solve(object@information)
     B <- parnum <- c()
     if(is(object, 'MultipleGroupClass')){
-        for(g in 1:length(pars)){
-            for(i in 1:length(pars[[g]]@pars)){
+        for(g in 1L:length(pars)){
+            for(i in 1L:length(pars[[g]]@pars)){
                 B <- c(B, pars[[g]]@pars[[i]]@par)
                 parnum <- c(parnum, pars[[g]]@pars[[i]]@parnum)
             }
         }
     } else {
-        for(i in 1:length(pars)){
+        for(i in 1L:length(pars)){
             B <- c(B, pars[[i]]@par)
             parnum <- c(parnum, pars[[i]]@parnum)
         }
     }
     keep <- c()
-    for(i in 1:length(Names))
+    for(i in 1L:length(Names))
         keep <- c(keep, as.numeric(strsplit(Names[i], '.', fixed = TRUE)[[1]][2]))
     B <- B[keep]
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)

@@ -13,7 +13,7 @@ setMethod(
             sv <- mod2values(object)
             sv$est <- FALSE
             newmod <- mirt(newdata, nfact, pars=sv, calcNull=FALSE)
-            tmptabdata <- t(newmod@tabdata[, 1:length(v)])
+            tmptabdata <- t(newmod@tabdata[, 1L:length(v)])
             tmptabdata[is.na(tmptabdata)] <- 9999
             v[is.na(v)] <- 9999
             ind <- which(colSums(tmptabdata == as.numeric(v)) == length(v))
@@ -35,8 +35,8 @@ setMethod(
         if(rotate != 'CONFIRMATORY'){
             so <- summary(object, rotate = rotate, verbose = FALSE)
             a <- rotateLambdas(so)
-            for(i in 1:J)
-                pars[[i]]@par[1:nfact] <- a[i, ]
+            for(i in 1L:J)
+                pars[[i]]@par[1L:nfact] <- a[i, ]
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor
         }
@@ -47,7 +47,7 @@ setMethod(
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))
 		ThetaShort <- Theta <- thetaComb(theta,nfact)
-        if(length(prodlist) > 0)
+        if(length(prodlist) > 0L)
             Theta <- prodterms(Theta,prodlist)
 		fulldata <- object@data
 		tabdata <- object@tabdatalong
@@ -56,7 +56,7 @@ setMethod(
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
 		W <- W/sum(W)
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
-		for (i in 1:nrow(tabdata)){
+		for (i in 1L:nrow(tabdata)){
 			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,]), drop = FALSE])
 			thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
 			SE <- sqrt(colSums(t((t(ThetaShort) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))
@@ -64,7 +64,7 @@ setMethod(
 			SEscores[i, ] <- SE
 		}
 		if(method == "MAP"){
-			for (i in 1:nrow(scores)){
+			for (i in 1L:nrow(scores)){
 				tmp <- scores[i, ]
                 estimate <- try(nlm(MAP.mirt,tmp,pars=pars, patdata=tabdata[i, ],
                                 itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE))
@@ -80,7 +80,7 @@ setMethod(
 		}
 		if(method == "ML"){
             tabdata2 <- object@tabdata[,-ncol(object@tabdata)]
-			tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]
+			tmp2 <- tabdata[,itemloc[-1L] - 1L, drop = FALSE]
             tmp2[is.na(tabdata2)] <- 1
 			scores[rowSums(tmp2) == J,] <- Inf
             SEscores[rowSums(tmp2) == J,] <- NA
@@ -88,8 +88,8 @@ setMethod(
             tmp2[is.na(tabdata2)] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf
             SEscores[rowSums(tmp2) == J,] <- NA
-			SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
-			for (i in 1:nrow(scores)){
+			SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
+			for (i in 1L:nrow(scores)){
 				if(any(scores[i, ] %in% c(-Inf, Inf))) next
 				Theta <- scores[i, ]
 				estimate <- try(nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
@@ -106,15 +106,15 @@ setMethod(
 		}
         if(method == 'WLE'){
             tabdata2 <- object@tabdata[,-ncol(object@tabdata)]
-            tmp2 <- tabdata[,itemloc[-1] - 1, drop = FALSE]
+            tmp2 <- tabdata[,itemloc[-1L] - 1L, drop = FALSE]
             tmp2[is.na(tabdata2)] <- 1
             scores[rowSums(tmp2) == J,] <- Inf
             tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
             tmp2[is.na(tabdata2)] <- 1
             scores[rowSums(tmp2) == J,] <- -Inf
-            SEscores[is.na(scores[,1]), ] <- rep(NA, nfact)
+            SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
             SEscores[!is.na(SEscores)] <- NA
-            for (i in 1:nrow(scores)){
+            for (i in 1L:nrow(scores)){
                 if(any(scores[i, ] %in% c(-Inf, Inf))) next
                 Theta <- scores[i, ]
                 estimate <- try(nlm(gradnorm.WLE,Theta,pars=pars,patdata=tabdata[i, ],
@@ -140,7 +140,7 @@ setMethod(
 		} else {
             r <- object@tabdata[,ncol(object@tabdata)]
             T <- E <- matrix(NA, 1, ncol(scores))
-            for(i in 1:nrow(scores)){
+            for(i in 1L:nrow(scores)){
                 if(any(scores[i, ] %in% c(Inf, -Inf))) next
                 T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
                 E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
@@ -153,11 +153,11 @@ setMethod(
 			if(verbose){
                 cat("\nMethod: ", method)
                 cat("\n\nEmpirical Reliability:\n")
-                print(round(reliability, 4))
+                print(round(reliability, 4L))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
             ret <- cbind(object@tabdata,scores,SEscores)
-            if(nrow(ret) > 1) ret <- ret[do.call(order, as.data.frame(ret[,1:J])), ]
+            if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
 			return(ret)
 		}
 	}
@@ -189,10 +189,10 @@ setMethod(
     {
         cmods <- object@cmods
         ngroups <- length(cmods)
-        for(g in 1:ngroups)
+        for(g in 1L:ngroups)
             class(cmods[[g]]) <- 'ConfirmatoryClass'
         ret <- vector('list', length(cmods))
-        for(g in 1:ngroups)
+        for(g in 1L:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, degrees=degrees, returnER=returnER, verbose=verbose, 
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=scores.only)
@@ -200,17 +200,17 @@ setMethod(
         if(full.scores){
             id <- c()
             fulldata <- matrix(NA, 1, ncol(ret[[1]]))
-            for(g in 1:ngroups){
+            for(g in 1L:ngroups){
                 id <- c(id, rownames(ret[[g]]))
                 fulldata <- rbind(fulldata, ret[[g]])
             }
             if(!scores.only){
-                fulldata <- fulldata[-1, ]
+                fulldata <- fulldata[-1L, ]
                 fulldata <- data.frame(id=as.numeric(id), fulldata)
                 ret <- fulldata[order(fulldata$id), ]
-                ret <- ret[ ,-1]
+                ret <- ret[ ,-1L]
             } else {
-                ret <- fulldata[-1, , drop = FALSE]
+                ret <- fulldata[-1L, , drop = FALSE]
             }
         }
         return(ret)
@@ -222,11 +222,11 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
 {
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
-    if(length(prodlist) > 0)
+    if(length(prodlist) > 0L)
         Theta <- prodterms(Theta,prodlist)
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))
-    for (i in 1:(length(itemloc)-1))
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    for (i in 1L:(length(itemloc)-1L))
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     itemtrace[itemtrace < 1e-8] <- 1e-8
     L <- sum(log(itemtrace)[as.logical(patdata)])
     prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
@@ -237,32 +237,32 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
 gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
-    if(length(prodlist) > 0)
+    if(length(prodlist) > 0L)
         Theta <- prodterms(Theta,prodlist)
     nfact <- ncol(Theta)
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))
     dP <- d2P <- vector('list', nfact)
-    for(i in 1:nfact)
+    for(i in 1L:nfact)
         dP[[i]] <- d2P[[i]] <- itemtrace
     I <- numeric(1)
     dW <- dL <- numeric(nfact)
-    for (i in 1:(length(itemloc)-1)){
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    for (i in 1L:(length(itemloc)-1L)){
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
         deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
-        for(k in 1:nfact){
-            dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1]]))
-            for(j in 1:length(deriv[[1]])){
+        for(k in 1L:nfact){
+            dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1L]]))
+            for(j in 1L:length(deriv[[1L]])){
                 dPitem[1, j] <- deriv$grad[[j]][ ,k]
                 d2Pitem[1, j] <- deriv$hess[[j]][ ,k]
             }
-            dP[[k]][ ,itemloc[i]:(itemloc[i+1] - 1)] <- dPitem
-            d2P[[k]][ ,itemloc[i]:(itemloc[i+1] - 1)] <- d2Pitem
-            dW[k] <- dW[k] + sum(dPitem * d2Pitem / itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)])
+            dP[[k]][ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- dPitem
+            d2P[[k]][ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- d2Pitem
+            dW[k] <- dW[k] + sum(dPitem * d2Pitem / itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)])
         }
         I <- I + iteminfo(x=pars[[i]], Theta=Theta, degrees=degrees)
     }
     dW <- 1/(2*I^2) * dW
-    for(i in 1:nfact)
+    for(i in 1L:nfact)
         dL[i] <- sum(patdata * dP[[i]] / itemtrace)
     grad <- dL - dW*I
     MIN <- sum(grad^2)
@@ -272,29 +272,29 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
     calcL1 <- function(itemtrace, K){
         J <- length(K)
-        L0 <- L1 <- matrix(1, sum(K-1) + 1, ncol(itemtrace))
-        L0[1:K[1], ] <- itemtrace[1:K[1], ]
-        nstar <- K[1] + K[2] - 3
-        Sum.Scores <- 1:nrow(L0)-1
-        MAX.Scores <- cumsum(K-1)
-        for(i in 1:(J-1)){
-            T <- itemtrace[itemloc[i+1]:(itemloc[i+2] - 1), ]
-            L1[1, ] <- L0[1, ] * T[1, ]
+        L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
+        L0[1L:K[1L], ] <- itemtrace[1:K[1], ]
+        nstar <- K[1L] + K[2L] - 3L
+        Sum.Scores <- 1L:nrow(L0)-1L
+        MAX.Scores <- cumsum(K-1L)
+        for(i in 1L:(J-1L)){
+            T <- itemtrace[itemloc[i+1L]:(itemloc[i+2L] - 1L), ]
+            L1[1L, ] <- L0[1L, ] * T[1L, ]
             #recursive rule for internal values (gets a little ugly at polytomous data edges)
-            for(j in 1:nstar+1){
+            for(j in 1L:nstar+1L){
                 sums <- 0
-                for(k in 1:K[i+1]-1)
+                for(k in 1L:K[i+1L]-1L)
                     if(Sum.Scores[j] >= k && (MAX.Scores[i] + k) >= Sum.Scores[j])
-                        sums <- sums + L0[j - k, ] * T[1 + k, ]
+                        sums <- sums + L0[j - k, ] * T[1L + k, ]
                 L1[j, ] <- sums
             }
-            L1[j+1, ] <- L0[j - k + 1, ] * T[nrow(T), ]
+            L1[j+1L, ] <- L0[j - k + 1L, ] * T[nrow(T), ]
             L0 <- L1
-            nstar <- nstar + K[i+1] - 1
+            nstar <- nstar + K[i+1L] - 1L
         }
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
-    if(x@nfact > 1) stop('EAP sum score method only is applicable to unidimensional models')
+    if(x@nfact > 1L) stop('EAP sum score method only is applicable to unidimensional models')
     if(is.null(quadpts)) quadpts <- 40
     Theta <- as.matrix(seq(-4,4,length.out = quadpts))
     prior <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov)
@@ -304,8 +304,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
     J <- length(K)
     itemloc <- x@itemloc
     itemtrace <- matrix(0, ncol=ncol(x@tabdatalong)-1, nrow=nrow(Theta))
-    for (i in 1:J)
-        itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    for (i in 1L:J)
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     itemtrace <- t(itemtrace)
     tmp <- calcL1(itemtrace=itemtrace, K=K)
     L1 <- tmp$L1
@@ -313,21 +313,21 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
     if(S_X2){
         L1total <- L1 %*% prior
         Elist <- vector('list', J)
-        for(i in 1:J){
+        for(i in 1L:J){
             KK <- K[-i]
-            T <- itemtrace[c(itemloc[i]:(itemloc[i+1]-1)), ]
-            itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i+1]-1)), ]
+            T <- itemtrace[c(itemloc[i]:(itemloc[i+1L]-1L)), ]
+            itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i+1L]-1L)), ]
             tmp <- calcL1(itemtrace=itemtrace2, K=KK)
             E <- matrix(NA, nrow(L1total), nrow(T))
-            for(j in 1:(nrow(T)))
-                E[1:nrow(tmp$L1)+j-1,j] <- tmp$L1 %*% (T[j,] * prior) /
-                    L1total[1:nrow(tmp$L1)+j-1, ]
-            Elist[[i]] <- E[-c(1, nrow(E)), ]
+            for(j in 1L:(nrow(T)))
+                E[1L:nrow(tmp$L1)+j-1L,j] <- tmp$L1 %*% (T[j,] * prior) /
+                    L1total[1L:nrow(tmp$L1)+j-1L, ]
+            Elist[[i]] <- E[-c(1L, nrow(E)), ]
         }
         return(Elist)
     }
     thetas <- SEthetas <- numeric(nrow(L1))
-    for(i in 1:length(thetas)){
+    for(i in 1L:length(thetas)){
         thetas[i] <- sum(Theta * L1[i, ] * prior / sum(L1[i,] * prior))
         SEthetas[i] <- sqrt(sum((Theta - thetas[i])^2 * L1[i, ] * prior / sum(L1[i,] * prior)))
     }
@@ -337,7 +337,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
         if(any(is.na(x@data))) stop('Full scores requires a complete dataset (no N\'s)')
         dat <- x@data
         adj <- apply(dat, 2, min)
-        if(any(adj > 0)) message('Data adjusted so that every item has a lowest score of 0')
+        if(any(adj > 0L)) message('Data adjusted so that every item has a lowest score of 0')
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
         EAPscores <- ret$Theta[match(scores, ret$Sum.Scores)]

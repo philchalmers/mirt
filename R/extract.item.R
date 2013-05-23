@@ -20,7 +20,7 @@
 #' }
 extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     inames <- colnames(x@data)
-    ind <- 1:length(inames)
+    ind <- 1L:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
     if(is(x, 'MultipleGroupClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?')
@@ -30,11 +30,11 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     }
     if(drop.zeros){
         zeros <- ret@par > -1e-8 & ret@par < 1e-8
-        zeros[-c(1:ret@nfact)] <- FALSE
+        zeros[-c(1L:ret@nfact)] <- FALSE
         ret@par <- ret@par[!zeros]
         ret@est <- ret@est[!zeros]
         ret@parnum <- ret@parnum[!zeros]
-        ret@nfact <- sum(!zeros[c(1:ret@nfact)])        
+        ret@nfact <- sum(!zeros[c(1L:ret@nfact)])        
     }
     ret
 }

@@ -180,23 +180,23 @@
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, D = 1.702)
 {
-    fn <- function(p, ns) sample(1:ns, 1, prob = p)
+    fn <- function(p, ns) sample(1L:ns, 1, prob = p)
 	nfact <- ncol(a)
 	nitems <- nrow(a)
 	K <- rep(0,nitems)
-	if(length(guess) == 1) guess <- rep(guess,nitems)
+	if(length(guess) == 1L) guess <- rep(guess,nitems)
 	if(length(guess) != nitems) stop("Guessing parameter is incorrect")
-	if(length(upper) == 1) upper <- rep(upper,nitems)
+	if(length(upper) == 1L) upper <- rep(upper,nitems)
 	if(length(upper) != nitems) stop("Upper bound parameter is incorrect")
-    if(length(itemtype) == 1) itemtype <- rep(itemtype, nitems)
-    for(i in 1:length(K)){
-        K[i] <- length(na.omit(d[i, ])) + 1
-        if(itemtype[i] =='partcomp') K[i] <- 2
-        if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1
+    if(length(itemtype) == 1L) itemtype <- rep(itemtype, nitems)
+    for(i in 1L:length(K)){
+        K[i] <- length(na.omit(d[i, ])) + 1L
+        if(itemtype[i] =='partcomp') K[i] <- 2L
+        if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
     }
     oldguess <- guess
     oldupper <- upper
-    guess[K > 2] <- upper[K > 2] <- NA
+    guess[K > 2L] <- upper[K > 2L] <- NA
     guess[itemtype == 'nestlogit'] <- oldguess[itemtype == 'nestlogit']
     upper[itemtype == 'nestlogit'] <- oldupper[itemtype == 'nestlogit']
 	if(is.null(sigma)) sigma <- diag(nfact)
@@ -208,9 +208,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(is.null(nominal)) nominal <- matrix(NA, nitems, 1)
 	data <- matrix(0, N, nitems)
     a[is.na(a)] <- 0
-	for(i in 1:nitems){
+	for(i in 1L:nitems){
 	    if(itemtype[i] == 'nestlogit'){
-	        par <- na.omit(c(a[i, ],d[i,1], guess[i], upper[i], nominal[i,-1],d[i,-1]))
+	        par <- na.omit(c(a[i, ],d[i,1], guess[i], upper[i], nominal[i,-1L],d[i,-1L]))
 	        obj <- new(itemtype[i], par=par, nfact=nfact, D=D, correctcat=1L)
 	    } else {
             par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
@@ -220,9 +220,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
         data[,i] <- apply(P, 1, fn, ns = ncol(P))
-        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp'))) data[ ,i] <- data[ ,i] - 1
+        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp'))) data[ ,i] <- data[ ,i] - 1L
 	}
-	colnames(data) <- paste("Item_", 1:nitems, sep="")
+	colnames(data) <- paste("Item_", 1L:nitems, sep="")
 	return(data)
 }
 

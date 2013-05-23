@@ -94,7 +94,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
         ret <- list()
-        for(g in 1:length(x@cmods)){
+        for(g in 1L:length(x@cmods)){
             x@cmods[[g]]@itemtype <- x@itemtype
             ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size, mincell = 1,
                                 S_X2.tables = FALSE, method=method, ...)
@@ -112,9 +112,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
         fulldata <- x@fulldata
-        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1), drop = FALSE]
+        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1L), drop = FALSE]
         if(method %in% c('ML', 'WLE')){
-            for(i in 1:ncol(Theta)){
+            for(i in 1L:ncol(Theta)){
                 tmp <- Theta[,i]
                 tmp[tmp %in% c(-Inf, Inf)] <- NA
                 Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
@@ -123,19 +123,19 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         }
         N <- nrow(Theta)
         itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-        for (i in 1:J)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1] - 1)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+        for (i in 1L:J)
+            itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
         LL <- itemtrace * fulldata
         LL[LL < .Machine$double.eps] <- 1
         Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)
         mu <- sigma2 <- rep(0, J)
         log_itemtrace <- log(itemtrace)
-        for(item in 1:J){
-            P <- itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
-            log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1]-1)]
+        for(item in 1L:J){
+            P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
+            log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             mu[item] <- sum(P * log_P)
-            for(i in 1:ncol(P))
-                for(j in 1:ncol(P))
+            for(i in 1L:ncol(P))
+                for(j in 1L:ncol(P))
                     if(i != j)
                         sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j]))
         }
@@ -143,8 +143,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         #if all Rasch models, infit and outfit
         if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
             oneslopes <- rep(FALSE, length(x@itemtype))
-            for(i in 1:length(x@itemtype))
-                oneslopes[i] <- closeEnough((x@pars[[i]]@par[1] * x@pars[[1]]@D), 1-1e-10, 1+1e-10)
+            for(i in 1L:length(x@itemtype))
+                oneslopes[i] <- closeEnough((x@pars[[i]]@par[1L] * x@pars[[1L]]@D), 1-1e-10, 1+1e-10)
             if(all(oneslopes)){
                 attr(x, 'inoutfitreturn') <- TRUE
                 pf <- personfit(x, method=method, sc=sc)
@@ -162,8 +162,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             }
         }
     }
-    if((X2 || !is.null(empirical.plot)) && nfact == 1){
-        ord <- order(Theta[,1])
+    if((X2 || !is.null(empirical.plot)) && nfact == 1L){
+        ord <- order(Theta[,1L])
         fulldata <- fulldata[ord,]
         Theta <- Theta[ord, , drop = FALSE]
         den <- dnorm(Theta, 0, .5)
@@ -172,28 +172,28 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         Groups <- rep(20, length(ord))
         ngroups <- ceiling(nrow(fulldata) / group.size)
         weight <- 1/ngroups
-        for(i in 1:20)
+        for(i in 1L:20L)
             Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
         n.uniqueGroups <- length(unique(Groups))
         X2 <- df <- RMSEA <- rep(0, J)
         if(!is.null(empirical.plot)){
-            if(nfact > 1) stop('Cannot make empirical plot for multidimensional models')
+            if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models')
             theta <- seq(-4,4, length.out=40)
             ThetaFull <- thetaComb(theta, nfact)
             if(!is.numeric(empirical.plot)){
                 inames <- colnames(x@data)
-                ind <- 1:length(inames)
+                ind <- 1L:length(inames)
                 empirical.plot <- ind[inames == empirical.plot]
             }
             P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
             plot(ThetaFull, P[,1], type = 'l', ylim = c(0,1), las = 1,
                  main =paste('Item', empirical.plot), ylab = expression(P(theta)), xlab = expression(theta))
-            for(i in 2:ncol(P))
+            for(i in 2L:ncol(P))
                 lines(ThetaFull, P[,i], col = i)
         }
-        for (i in 1:J){
+        for (i in 1L:J){
             if(!is.null(empirical.plot) && i != empirical.plot) next
-            for(j in 1:n.uniqueGroups){
+            for(j in 1L:n.uniqueGroups){
                 dat <- fulldata[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
                 r <- colSums(dat)
                 N <- nrow(dat)
@@ -221,16 +221,16 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     makeObstables <- function(dat, K){
         ret <- vector('list', ncol(dat))
         sumscore <- rowSums(dat)
-        for(i in 1:length(ret)){
-            ret[[i]] <- matrix(0, sum(K-1)+1, K[i])
-            colnames(ret[[i]]) <- paste0(1:K[i]-1)
-            rownames(ret[[i]]) <- paste0(1:nrow(ret[[i]])-1)
+        for(i in 1L:length(ret)){
+            ret[[i]] <- matrix(0, sum(K-1L)+1L, K[i])
+            colnames(ret[[i]]) <- paste0(1L:K[i]-1L)
+            rownames(ret[[i]]) <- paste0(1L:nrow(ret[[i]])-1L)
             split <- by(sumscore, dat[,i], table)
-            for(j in 1:K[i]){
+            for(j in 1L:K[i]){
                 m <- match(names(split[[j]]), rownames(ret[[i]]))
                 ret[[i]][m,j] <- split[[j]]
             }
-            ret[[i]] <- ret[[i]][-c(1, nrow(ret[[i]])), ]
+            ret[[i]] <- ret[[i]][-c(1L, nrow(ret[[i]])), ]
         }
         ret
     }
@@ -241,9 +241,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             drop <- which(rowSums(is.na(En)) > 0)
             En[is.na(En)] <- 0
             #collapse known upper and lower sparce cells
-            if(length(drop) > 0){
-                up <- drop[1]:drop[length(drop)/2]
-                low <- drop[length(drop)/2 + 1]:drop[length(drop)]
+            if(length(drop) > 0L){
+                up <- drop[1L]:drop[length(drop)/2]
+                low <- drop[length(drop)/2 + 1L]:drop[length(drop)]
                 En[max(up)+1, ] <- colSums(En[c(up, max(up)+1), , drop = FALSE])
                 On[max(up)+1, ] <- colSums(On[c(up, max(up)+1), , drop = FALSE])
                 En[min(low)-1, ] <- colSums(En[c(low, min(low)-1), , drop = FALSE])
@@ -253,49 +253,49 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 On <- na.omit(On)
             }
             #collapse accross
-            if(ncol(En) > 2){
-                for(j in 1:(ncol(On)-1)){
+            if(ncol(En) > 2L){
+                for(j in 1L:(ncol(On)-1L)){
                     L <- En < mincell
                     sel <- L[,j]
                     if(!any(sel)) next
-                    On[sel, j+1]  <- On[sel, j] + On[sel, j+1]
-                    En[sel, j+1]  <- En[sel, j] + En[sel, j+1]
+                    On[sel, j+1L]  <- On[sel, j] + On[sel, j+1L]
+                    En[sel, j+1L]  <- En[sel, j] + En[sel, j+1L]
                     On[sel, j] <- En[sel, j] <- NA
                 }
-                sel <- L[,j+1]
-                sel[rowSums(is.na(En[, 1:j])) == (ncol(En)-1)] <- FALSE
-                put <- apply(En[sel, 1:j], 1, function(x) max(which(!is.na(x))))
+                sel <- L[,j+1L]
+                sel[rowSums(is.na(En[, 1L:j])) == (ncol(En)-1L)] <- FALSE
+                put <- apply(En[sel, 1L:j], 1, function(x) max(which(!is.na(x))))
                 put2 <- which(sel)
-                for(k in 1:length(put)){
-                    En[put2[k], put[k]] <- En[put2[k], put[k]] + En[put2[k], j+1]
-                    En[put2[k], j+1] <- On[put2[k], j+1] <- NA
+                for(k in 1L:length(put)){
+                    En[put2[k], put[k]] <- En[put2[k], put[k]] + En[put2[k], j+1L]
+                    En[put2[k], j+1L] <- On[put2[k], j+1L] <- NA
                 }
             }
             L <- En < mincell
             L[is.na(L)] <- FALSE
             while(any(L)){
                 drop <- c()
-                for(j in 1:(nrow(On)-1)){
+                for(j in 1L:(nrow(On)-1L)){
                     if(any(L[j,])) {
-                        On[j+1, L[j,]] <- On[j+1, L[j,]] + On[j, L[j,]]
-                        En[j+1, L[j,]] <- En[j+1, L[j,]] + En[j, L[j,]]
+                        On[j+1L, L[j,]] <- On[j+1L, L[j,]] + On[j, L[j,]]
+                        En[j+1L, L[j,]] <- En[j+1L, L[j,]] + En[j, L[j,]]
                         drop <- c(drop, j)
                         break
                     }
                 }
-                for(j in nrow(On):2){
+                for(j in nrow(On):2L){
                     if(any(L[j,])) {
-                        On[j-1, L[j,]] <- On[j-1, L[j,]] + On[j, L[j,]]
-                        En[j-1, L[j,]] <- En[j-1, L[j,]] + En[j, L[j,]]
+                        On[j-1L, L[j,]] <- On[j-1L, L[j,]] + On[j, L[j,]]
+                        En[j-1L, L[j,]] <- En[j-1L, L[j,]] + En[j, L[j,]]
                         drop <- c(drop, j)
                         break
                     }
                 }
-                if(nrow(On) > 4){
-                    for(j in 2:(nrow(On)-1)){
+                if(nrow(On) > 4L){
+                    for(j in 2L:(nrow(On)-1L)){
                         if(any(L[j,])){
-                            On[j+1, L[j,]] <- On[j+1, L[j,]] + On[j, L[j,]]
-                            En[j+1, L[j,]] <- En[j+1, L[j,]] + En[j, L[j,]]
+                            On[j+1L, L[j,]] <- On[j+1L, L[j,]] + On[j, L[j,]]
+                            En[j+1L, L[j,]] <- En[j+1L, L[j,]] + En[j, L[j,]]
                             drop <- c(drop, j)
                             break
                         }
@@ -314,7 +314,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         }
         return(list(O=O, E=E))
     }
-    if(x@nfact == 1){
+    if(x@nfact == 1L){
         dat <- x@data
         adj <- apply(dat, 2, min)
         if(any(adj > 0))
@@ -322,17 +322,17 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         dat <- t(t(dat) - adj)
         S_X2 <- df.S_X2 <- numeric(J)
         O <- makeObstables(dat, x@K)
-        Nk <- rowSums(O[[1]])
+        Nk <- rowSums(O[[1L]])
         E <- EAPsum(x, S_X2 = TRUE, gp = list(gmeans=0, gcov=matrix(1)))
-        for(i in 1:J)
+        for(i in 1L:J)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)
         if(S_X2.tables) return(list(O.org=O, E.org=E, O=coll$O, E=coll$E))
         O <- coll$O
         E <- coll$E
-        for(i in 1:J){
+        for(i in 1L:J){
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
-            df.S_X2[i] <- (ncol(O[[i]])-1) * nrow(O[[i]]) - sum(pars[[i]]@est) - sum(is.na(E[[i]]))
+            df.S_X2[i] <- (ncol(O[[i]])-1L) * nrow(O[[i]]) - sum(pars[[i]]@est) - sum(is.na(E[[i]]))
         }
         ret$S_X2 <- S_X2
         ret$df.S_X2 <- df.S_X2

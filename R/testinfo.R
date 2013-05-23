@@ -40,7 +40,7 @@ testinfo <- function(x, Theta, degrees = NULL, group = NULL){
         J <- length(x@cmods[[1]]@pars) - 1
     else J <- length(x@pars) - 1
     info <- 0
-    for(i in 1:J){
+    for(i in 1L:J){
         item <- extract.item(x, i, group=group)
         info <- info + iteminfo(item, Theta=Theta, degrees=degrees)
     }
