@@ -5,8 +5,7 @@ NEW FEATURES
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
   that contain slopes equal to zero
 
-- EM tolerance (TOL argument) default dropped to .0001 (originally .001), and SEM default tolerance 
-  dropped to 1e-5 (originally 1e-4)
+- EM tolerance (TOL argument) default dropped to .0001 (originally .001)
 
 - type = 'score' and type = 'infoSE' added to plot() generic for expected total score and joint test
   standard error/information 

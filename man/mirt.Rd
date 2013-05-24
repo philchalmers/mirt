@@ -96,10 +96,9 @@ Theory)}
   calculating the parameter information matrix. Can be
   \code{'MHRM'} for stochastic estimation, \code{'BL'} for
   the Bock and Lieberman approach (EM only), or
-  \code{'SEM'} for the supplemented EM (TOL is
-  automatically reduced to .00001 to help the EM history).
-  Bootstrapped standard errors are also possible but must
-  be run with the \code{\link{boot.mirt}} function}
+  \code{'SEM'} for the supplemented EM. Bootstrapped
+  standard errors are also possible but must be run with
+  the \code{\link{boot.mirt}} function}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing

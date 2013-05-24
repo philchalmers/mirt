@@ -95,8 +95,8 @@
 #' for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix.
 #' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach (EM only), or
-#' \code{'SEM'} for the supplemented EM (TOL is automatically reduced to .00001 to help the EM history).
-#' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
+#' \code{'SEM'} for the supplemented EM. Bootstrapped standard errors are also possible but must be
+#' run with the \code{\link{boot.mirt}} function
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
