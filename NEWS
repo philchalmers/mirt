@@ -26,7 +26,8 @@ BUG FIXES
 
 - bfactor SEM information matrix fixed
 
-- SEM information matrix computed with more accuracy (M-step was not identical to original EM)
+- SEM information matrix computed with more accuracy (M-step was not identical to original EM), 
+  and fixed when equality constrains are imposed
 
 
 Changes in mirt 0.7.0
