@@ -817,7 +817,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         longpars[estindex] <- EMhistory[cycles, estindex]
         if(length(constrain) > 0L)
             for(i in 1L:length(constrain))
-                longpars[constrain[[i]][-1L]] <- longpars[[constrain[[1L]][1L]]]
+                longpars[constrain[[i]][-1L]] <- longpars[[constrain[[i]][1L]]]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
 
         for(g in 1L:ngroups){
