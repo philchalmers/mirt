@@ -22,7 +22,7 @@ Theory)}
     TRUE, ...)
 
   \S4method{coef}{ExploratoryClass}(object, rotate = '',
-    Target = NULL, digits = 3, ...)
+    Target = NULL, digits = 3, verbose = TRUE, ...)
 
   \S4method{anova}{ExploratoryClass}(object, object2)
 

@@ -326,7 +326,8 @@
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
 #'
-#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, digits = 3,  ...)
+#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, digits = 3, 
+#' verbose = TRUE, ...)
 #'
 #' \S4method{anova}{ExploratoryClass}(object, object2)
 #'

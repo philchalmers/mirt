@@ -30,7 +30,7 @@ test_that('poly', {
     
     cof1 <- coef(modp1)
     expect_is(cof1, 'list')
-    cof2 <- coef(modp2)
+    cof2 <- coef(modp2, verbose = FALSE)
     expect_is(cof2, 'list')
     IP1 <- itemplot(modp1, 1)
     IP2 <- itemplot(modp2, 1)

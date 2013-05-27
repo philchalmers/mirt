@@ -48,15 +48,18 @@ setMethod(
             F[abs(F) < suppress] <- NA
             h2 <- as.matrix(object@h2)
             SS <- apply(F^2,2,sum)
+            Phi <- diag(ncol(F))
             colnames(h2) <- "h2"
-            names(SS) <- colnames(F)
-            loads <- round(cbind(F,h2),digits)
-            rownames(loads) <- colnames(object@data)
+            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)
+            loads <- round(cbind(F,h2),digits)            
+            rownames(loads) <- colnames(object@data)            
             if(verbose){
                 cat("\nUnrotated factor loadings: \n\n")
                 print(loads)
                 cat("\nSS loadings: ",round(SS,digits), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+                cat("\nFactor correlations: \n\n")
+                print(Phi)                
             }
             invisible(list(rotF=F,h2=h2,fcor=matrix(1)))
         } else {
@@ -84,7 +87,7 @@ setMethod(
                 cat("\nRotated factor loadings: \n\n")
                 print(loads,digits)
                 cat("\nRotated SS loadings: ",round(SS,digits), "\n")
-                cat("\nFactor correlations: \n\n")
+                cat("\nFactor correlations: \n\n")                
                 print(Phi)
             }
             if(any(h2 > 1))
@@ -97,7 +100,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, digits = 3, ...){
+    definition = function(object, rotate = '', Target = NULL, digits = 3, verbose = TRUE, ...){
         K <- object@K
         J <- length(K)
         nfact <- ncol(object@F)
@@ -106,11 +109,13 @@ setMethod(
             a[i, ] <- ExtractLambdas(object@pars[[i]])
         if (ncol(a) > 1){
             rotname <- ifelse(rotate == '', object@rotate, rotate)
+            if(verbose) cat("\nRotation: ", rotname, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
             a <- rotateLambdas(so) * 1.702/object@pars[[1]]@D
             for(i in 1:J)
-                object@pars[[i]]@par[1:nfact] <- a[i, ]
-            object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
+                object@pars[[i]]@par[1:nfact] <- a[i, ]            
+            if(rotname != 'none')
+                object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         allPars <- list()
         if(length(object@pars[[1]]@SEpar) > 0){
