@@ -14,15 +14,13 @@ test_that('mixed dich', {
     model <- confmirt.model(mixedmirt1, quiet = TRUE)  
     
     #group as a fixed effect predictor (aka, uniform dif)
-    mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', verbose = FALSE,
-                      fixed.constrain = TRUE)
+    mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', verbose = FALSE)
     expect_is(mod1, 'MixedClass')                  
     
     #model using 2PL items instead of only Rasch
-    mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, verbose = FALSE, fixed.constrain = TRUE)    
+    mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, verbose = FALSE)    
     expect_is(mod1b, 'MixedClass')                      
-    suppressWarnings(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, verbose = FALSE, 
-                                      fixed.constrain = TRUE))
+    suppressWarnings(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, verbose = FALSE))
     expect_is(dif, 'MixedClass')          
     sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
     constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3']) # main effects
@@ -41,7 +39,7 @@ test_that('mixed dich', {
     mixedmirt1 <- 'Theta = 1-10'
     model <- confmirt.model(mixedmirt1, quiet = TRUE)     
     sv <- mixedmirt(data, model = model, fixed = ~ itempred, pars = 'values', 
-                      itemtype = 'Rasch', itemdesign = itemdesign)
+                      itemtype = 'Rasch', itemdesign = itemdesign, fixed.constrain=FALSE)
     sv$value[sv$name == 'd'] <- 0
     sv$est[sv$name == 'd'] <- FALSE
     
@@ -49,7 +47,7 @@ test_that('mixed dich', {
     constrain <- list()
     constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
     constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
-    mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv, 
+    mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv, , fixed.constrain=FALSE,
                   itemtype = 'Rasch', constrain = constrain, itemdesign = itemdesign, verbose = FALSE)   
     expect_is(mod, 'MixedClass')                          
 })    

@@ -7,7 +7,7 @@
 \usage{
   mixedmirt(data, covdata = NULL, model, fixed = ~1,
     random = NULL, itemtype = NULL, itemdesign = NULL,
-    fixed.constrain = FALSE, constrain = NULL, pars = NULL,
+    fixed.constrain = TRUE, constrain = NULL, pars = NULL,
     ...)
 }
 \arguments{
@@ -26,10 +26,10 @@
 
   \item{fixed}{a standard R formula for specifying the
   fixed effect predictors from \code{covdata} and
-  \code{itemdesign}. By default constraints are not
-  imposed, so the fixed person effects are not equal
-  accross items, but this can be enabled using
-  \code{fixed.constrain = TRUE}}
+  \code{itemdesign}. By default constraints are imposed and
+  therefore the fixed person effects are constrained to be
+  equal accross items, but this can be disabled using
+  \code{fixed.constrain = FALSE}}
 
   \item{random}{a formula similar to the \code{nlme} random
   variable specifications for declaring the random slope
@@ -75,6 +75,7 @@
 }
 \examples{
 \dontrun{
+
 #make some data
 set.seed(1234)
 N <- 750
@@ -89,7 +90,6 @@ covdata <- data.frame(group, pseudoIQ)
 library(parallel)
 cl <- makeCluster(detectCores())
 
-
 #specify IRT model
 model <- confmirt.model()
      Theta = 1-10
@@ -97,9 +97,9 @@ model <- confmirt.model()
 
 #model with no person predictors
 mod0 <- mirt(data, model, itemtype = 'Rasch')
-#group as a fixed effect predictor (aka, uniform dif) and equal effect for all items with
-#   fixed.constrain = TRUE
-mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', fixed.constrain = TRUE, cl=cl)
+
+#group as a fixed effect predictor (aka, uniform dif)
+mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', cl=cl)
 anova(mod0, mod1)
 summary(mod1)
 coef(mod1)
@@ -113,22 +113,24 @@ lmod1 <- lmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
 anova(lmod0, lmod1)
 
 #model using 2PL items instead of Rasch
-mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', fixed.constrain = TRUE, cl=cl)
+mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', cl=cl)
 anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 
 #global nonuniform dif (group interaction with latent variable)
-(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = TRUE, cl=cl))
+(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, cl=cl))
 anova(mod1b, dif)
-#free the interaction terms for each item to detect dif (less power for each item though)
-sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
-constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3']) # main effects
+
+#free the interaction terms accross items to detect dif (less power and more difficult to obtain information matrix)
+(sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values'))
+(constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3'])) # main effects
+#note the fixed.constrain argument is disabled so that internal constraints are not created automatically
 itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = FALSE,
      constrain=constrain, cl=cl)
 anova(dif, itemdif)
 
 #continuous predictor and interaction model with group
-mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, fixed.constrain = TRUE, cl=cl)
-mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ, fixed.constrain = TRUE, cl=cl)
+mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, cl=cl)
+mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ, cl=cl)
 summary(mod2)
 anova(mod1b, mod2)
 anova(mod2, mod3)
@@ -138,9 +140,7 @@ anova(mod2, mod3)
 data(SAT12)
 data <- key2binary(SAT12,
                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-model <- confmirt.model()
-Theta = 1-32
-
+model <- confmirt.model('Theta = 1-32')
 
 itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 
@@ -150,7 +150,7 @@ wald(LLTM)
 L <- matrix(c(-1, 1), 1)
 wald(LLTM, L) #first half different from second
 
-#compare to standard items with estimated slopes (2PL)?
+#compare to items with estimated slopes (2PL)
 twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = '2PL', itemdesign = itemdesign, cl=cl)
 coef(twoPL)
 wald(twoPL)
@@ -159,7 +159,7 @@ L[1, 1] <- 1
 L[1, 18] <- -1
 wald(twoPL, L) #n.s.
 anova(twoPL, LLTM)
-#twoPL model better than LLTM, and don't draw the (spurious?) conclusion that the first
+#twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #    half of the test is any easier/harder than the last
 
 ### Similar example, but with simulated data instead and using numeric item desing matrix
@@ -184,8 +184,9 @@ sv$est[sv$name == 'd'] <- FALSE
 constrain <- list()
 constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
 constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
+print(constrain)
 mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv,
-                 itemtype = 'Rasch', constrain = constrain, itemdesign = itemdesign, cl=cl)
+                 constrain = constrain, itemdesign = itemdesign, cl=cl)
 coef(mod)
 rasch <- mirt(data, 1, itemtype = 'Rasch', D=1)
 anova(mod, rasch) #n.s., LLTM model a much better choice compared to Rasch

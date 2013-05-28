@@ -1,6 +1,8 @@
-Changes in mirt 0.7.2
+Changes in mirt 0.7.3
 
 NEW FEATURES
+
+- fixed.constrain default in mixedmirt set to TRUE, but overwritten when item designs are defined
 
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
   that contain slopes equal to zero
