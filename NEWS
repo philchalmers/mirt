@@ -2,7 +2,7 @@ Changes in mirt 0.7.3
 
 NEW FEATURES
 
-- fixed.constrain default in mixedmirt set to TRUE, but overwritten when item designs are defined
+- fixed.constrain default in mixedmirt set to TRUE, and item designs better integrated
 
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
   that contain slopes equal to zero
@@ -25,8 +25,6 @@ BUG FIXES
 - missing data gradient bug fix in MH-RM for dichotomous item models
 
 - global df fix for multidimensional confirmatory models 
-
-- bfactor SEM information matrix fixed
 
 - SEM information matrix computed with more accuracy (M-step was not identical to original EM), 
   and fixed when equality constrains are imposed

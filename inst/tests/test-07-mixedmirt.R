@@ -25,7 +25,7 @@ test_that('mixed dich', {
     sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
     constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3']) # main effects
     suppressWarnings(itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, 
-                         constrain=constrain, verbose = FALSE))
+                         constrain=constrain, verbose = FALSE, fixed.constrain=FALSE))
     expect_is(itemdif, 'MixedClass')          
 
     #item covs

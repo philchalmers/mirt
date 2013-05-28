@@ -398,15 +398,6 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }
     }
-    #accross item constraints for mixedmirt
-    if(method == 'MIXED' && mixedlist$fixed.constrain){
-        for(i in 1L:pars[[1L]][[1L]]@nfixedeffects){
-            tmp <- c()
-            for(j in 1L:J)
-                tmp <- c(tmp, pars[[1L]][[j]]@parnum[i])
-            constrain[[length(constrain) + 1L]] <- tmp
-        }
-    }
     #remove redundent constraints
     redun <- rep(FALSE, length(constrain))
     if(length(constrain) > 0){

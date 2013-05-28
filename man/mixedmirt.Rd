@@ -49,10 +49,10 @@
   1's or other numerics may also be included so long as an
   appropriate \code{constrain} list is supplied}
 
-  \item{fixed.constrain}{logical; constrain the fixed
-  person effects to be equal across items? Disable this
-  when modelling item level covariates and apply the
-  constraints manually}
+  \item{fixed.constrain}{logical; allow the function to
+  create the equality constraints internally based on the
+  suggested design? Disable this when you want to create
+  custom designs and apply your constraints manually}
 
   \item{constrain}{a list indicating parameter equality
   constrains. See \code{\link{mirt}} for more detail}
@@ -91,9 +91,7 @@ library(parallel)
 cl <- makeCluster(detectCores())
 
 #specify IRT model
-model <- confmirt.model()
-     Theta = 1-10
-
+model <- confmirt.model('Theta = 1-10')
 
 #model with no person predictors
 mod0 <- mirt(data, model, itemtype = 'Rasch')
@@ -116,17 +114,9 @@ anova(lmod0, lmod1)
 mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', cl=cl)
 anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 
-#global nonuniform dif (group interaction with latent variable)
+#systematic nonuniform dif (group interaction with latent variable)
 (dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, cl=cl))
 anova(mod1b, dif)
-
-#free the interaction terms accross items to detect dif (less power and more difficult to obtain information matrix)
-(sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values'))
-(constrain <- list(sv$parnum[sv$name == 'groupG2'], sv$parnum[sv$name == 'groupG3'])) # main effects
-#note the fixed.constrain argument is disabled so that internal constraints are not created automatically
-itemdif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, fixed.constrain = FALSE,
-     constrain=constrain, cl=cl)
-anova(dif, itemdif)
 
 #continuous predictor and interaction model with group
 mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, cl=cl)
@@ -135,7 +125,7 @@ summary(mod2)
 anova(mod1b, mod2)
 anova(mod2, mod3)
 
-###########
+###################################################3
 ##LLTM, and 2PL version of LLTM
 data(SAT12)
 data <- key2binary(SAT12,
@@ -162,7 +152,7 @@ anova(twoPL, LLTM)
 #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #    half of the test is any easier/harder than the last
 
-### Similar example, but with simulated data instead and using numeric item desing matrix
+### Similar example, but with simulated data instead and using numeric item design matrix
 
 set.seed(1234)
 N <- 750
@@ -171,9 +161,7 @@ d <- matrix(c(rep(-1,5), rep(1,5)))
 Theta <- matrix(rnorm(N))
 data <- simdata(a, d, N, itemtype = rep('dich',10), Theta=Theta, D=1)
 itemdesign <- data.frame(itempred=rep(1, ncol(data)))
-model <- confmirt.model()
-   Theta = 1-10
-
+model <- confmirt.model('Theta = 1-10')
 
 sv <- mixedmirt(data, model = model, fixed = ~ itempred, pars = 'values',
                  itemtype = 'Rasch', itemdesign = itemdesign, cl=cl)
