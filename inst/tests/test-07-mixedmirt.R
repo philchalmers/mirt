@@ -19,7 +19,8 @@ test_that('mixed dich', {
     
     #model using 2PL items instead of only Rasch
     mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, verbose = FALSE)    
-    expect_is(mod1b, 'MixedClass')                      
+    expect_is(mod1b, 'MixedClass')
+    expect_equal(mod1@df - mod1b@df, 10)
     suppressWarnings(dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, verbose = FALSE))
     expect_is(dif, 'MixedClass')          
     sv <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, pars = 'values')
@@ -50,4 +51,30 @@ test_that('mixed dich', {
     mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv, , fixed.constrain=FALSE,
                   itemtype = 'Rasch', constrain = constrain, itemdesign = itemdesign, verbose = FALSE)   
     expect_is(mod, 'MixedClass')                          
-})    
+})   
+
+test_that('item and group predictors', {    
+    data <- key2binary(SAT12,
+                       key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+    model <- confmirt.model('Theta = 1-32')
+    
+    itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
+    fs <- scale(rowSums(data))
+    covdata <- data.frame(gender=ifelse(fs > 1, 'M', 'F'))
+    
+    sv <- mixedmirt(data, covdata, model = model, fixed = ~ itemorder + gender, itemtype = 'Rasch', 
+                    itemdesign = itemdesign, pars = 'values')
+    expect_is(sv, 'data.frame')       
+    LLTM <- mixedmirt(data, covdata, model = model, fixed = ~ itemorder + gender, itemtype = 'Rasch', 
+                      itemdesign = itemdesign, verbose = FALSE)
+    expect_is(LLTM, 'MixedClass')
+    
+    sv2 <- mixedmirt(data, covdata, model = model, fixed = ~ itemorder * gender, itemtype = 'Rasch', 
+                     itemdesign = itemdesign, pars='values')
+    expect_is(sv2, 'data.frame')       
+    LLTM2 <- suppressWarnings(mixedmirt(data, covdata, model = model, fixed = ~ itemorder * gender, itemtype = 'Rasch', 
+                       itemdesign = itemdesign, verbose = FALSE))
+    expect_is(LLTM2, 'MixedClass')
+    expect_equal(LLTM@df - LLTM2@df, 1)    
+    
+}) 

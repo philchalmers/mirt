@@ -38,16 +38,15 @@
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}}}
 
-  \item{itemdesign}{a data.frame object used to create a
-  design matrix for the items, where each
+  \item{itemdesign}{a \code{data.frame} object used to
+  create a design matrix for the items, where each
   \code{nrow(itemdesign) == nitems} and the number of
   columns is equal to the number of fixed effect predictors
   (i.e., item intercepts). If the input consists of
   variables with \code{factor} indicators then appropriate
   constraints and identification parameters are imposed.
   However, design based effects using a numeric matrix of
-  1's or other numerics may also be included so long as an
-  appropriate \code{constrain} list is supplied}
+  1's or other numerics may also be included}
 
   \item{fixed.constrain}{logical; allow the function to
   create the equality constraints internally based on the

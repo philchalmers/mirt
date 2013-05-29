@@ -2,7 +2,8 @@ Changes in mirt 0.7.3
 
 NEW FEATURES
 
-- fixed.constrain default in mixedmirt set to TRUE, and item designs better integrated
+- fixed.constrain default in mixedmirt set to TRUE, and item designs better integrated and can
+  include crossing itemdesigns with person level covariates
 
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
   that contain slopes equal to zero

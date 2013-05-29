@@ -19,12 +19,11 @@
 #' @param random a formula similar to the \code{nlme} random variable specifications for declaring
 #' the random slope and intercept predictors. Not currently available, but will be available some time in the future
 #' @param itemtype same as itemtype in \code{\link{mirt}}
-#' @param itemdesign a data.frame object used to create a design matrix for the items, where each
+#' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where each
 #' \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed effect
 #' predictors (i.e., item intercepts). If the input consists of variables with \code{factor} indicators then
 #' appropriate constraints and identification parameters are imposed. However, design based effects using
-#' a numeric matrix of 1's or other numerics may also be included so long as an appropriate \code{constrain} list
-#' is supplied
+#' a numeric matrix of 1's or other numerics may also be included
 #' @param fixed.constrain logical; allow the function to create the equality constraints internally based 
 #' on the suggested design? Disable this when you want to create custom designs and apply your constraints manually
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for more detail
@@ -163,37 +162,67 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         sv <- mixedmirt(data=data, covdata=covdata, model=model, fixed=fixed, random=random,
                         itemtype=itemtype, pars = 'values', itemdesign=itemdesigntmp, fixed.constrain=FALSE)
         if(is.null(constrain)) constrain <- list()        
-        if(fixed.constrain){     
+        if(fixed.constrain){                 
             
             #itemdesign constraints
             if(!is.null(itemdesign)){
                 name <- colnames(itemdesign)
                 for(i in 1L:ncol(itemdesign)){
                     uni <- unique(itemdesign[,i])
+                    uni2 <- sv$name[grepl(name[i], as.character(sv$name))]
+                    uni2 <- unique(uni2[!uni2 %in% name[i]])
                     pn <- sv$parnum[sv$name == name[i]]
-                    for(j in 1L:length(uni))                        
+                    for(j in 1L:length(uni))
                         constrain[[length(constrain) + 1L]] <- pn[itemdesign[,i] == uni[j]]
+                    if(length(uni2) > 0L){
+                        for(k in 1L:length(uni2)){
+                            pn <- sv$parnum[sv$name == uni2[k]]                        
+                            for(j in 1L:length(uni))
+                                constrain[[length(constrain) + 1L]] <- pn[itemdesign[,i] == uni[j]]
+                        }
+                    }                        
                 }
                 #dichtomous constraints
                 sv$est[sv$name == 'd'] <- FALSE
                 sv$value[sv$name == 'd'] <- 0
             }
             
-            #covdata constraints            
+            #covdata constraints                 
             name <- sv$name[1L:(which(sv$name == 'a1')[1]-1L)]
             name <- name[!(name %in% colnames(itemdesigntmp))]
+            cnames <- colnames(itemdesigntmp)
+            for(i in 1:ncol(itemdesigntmp)){                
+                got <- name[grepl(cnames[i], name)]            
+                name <- name[!grepl(cnames[i], name)]
+                spl <- strsplit(as.character(got), ':')
+                if(length(spl) > 0L){
+                    for(j in 1L:length(spl)){
+                        sv$est[sv$name == name[name %in% spl[[j]]]] <- FALSE
+                        sv$value[sv$name == name[name %in% spl[[j]]]] <- 0
+                        name <- name[!name %in% spl[[j]]] 
+                    }
+                }                    
+            }                
             if(length(name) > 0L){
                 for(i in 1L:length(name))
                     constrain[[length(constrain) + 1L]] <- sv$parnum[sv$name == name[i]]
             }
             pars <- sv
-            itemdesign <- itemdesigntmp
+            itemdesign <- itemdesigntmp            
         }
     }    
     if(is.null(covdata))
         covdata <- data.frame(InTeRnAlUsElESsNaMe = matrix(1, nrow(data)))    
     if(is.null(itemdesign))
-        itemdesign <- data.frame(InTeRnAlUsElESsNaMe2 = matrix(1, ncol(data)))
+        itemdesign <- data.frame(InTeRnAlUsElESsNaMe2 = matrix(1, ncol(data)))    
+    if(is(pars, 'character')){
+        if(pars == 'values'){
+            itemdesign2 <- itemdesign
+            for(i in 1L:ncol(itemdesign))
+                itemdesign2[,1] <- 1
+            itemdesign <- itemdesign2
+        }
+    }
     for(i in 1:ncol(covdata))
         if(is(covdata[,i], 'numeric') || is(covdata[,i], 'integer'))
             covdata[,i] <- matrix(scale(covdata[,i], scale = FALSE))
@@ -217,7 +246,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                       FDL=fixed.design.list, itemdesign=itemdesign, fixed.constrain=fixed.constrain,
                       fixed.identical=fixed.identical)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                      D=1, mixedlist=mixedlist, method='MIXED', constrain=constrain, pars=pars, ...)
+                      D=1, mixedlist=mixedlist, method='MIXED', constrain=constrain, pars=pars, 
+                      removeRedun=FALSE, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)

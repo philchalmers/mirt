@@ -318,7 +318,7 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
-                            mixedlist, method, itemnames)
+                            mixedlist, method, itemnames, removeRedun = TRUE)
 {
     #within group item constraints only
     for(g in 1L:ngroups)
@@ -398,22 +398,24 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }
     }
-    #remove redundent constraints
-    redun <- rep(FALSE, length(constrain))
-    if(length(constrain) > 0){
-        for(i in 1L:length(redun)){
-            for(j in 1L:length(redun)){
-                if(j < i){
-                    if(all(constrain[[i]] %in% constrain[[j]] ||
-                            all(constrain[[j]] %in% constrain[[i]]))){
-                        if(length(constrain[[i]]) < length(constrain[[j]])) redun[i] <- TRUE
-                        else redun[j] <- TRUE
+    #remove redundent constraints    
+    if(removeRedun){
+        redun <- rep(FALSE, length(constrain))
+        if(length(constrain) > 0L){
+            for(i in 1L:length(redun)){
+                for(j in 1L:length(redun)){
+                    if(j < i){
+                        if(all(constrain[[i]] %in% constrain[[j]] ||
+                                all(constrain[[j]] %in% constrain[[i]]))){
+                            if(length(constrain[[i]]) < length(constrain[[j]])) redun[i] <- TRUE
+                            else redun[j] <- TRUE
+                        }
                     }
                 }
             }
         }
+        constrain[redun] <- NULL
     }
-    constrain[redun] <- NULL
     return(constrain)
 }
 
@@ -533,7 +535,7 @@ ItemInfo <- function(x, Theta, cosangle){
 }
 
 designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random = NULL,
-                       fixed.identical = FALSE){
+                       fixed.identical = FALSE){    
     fixed.design.list <- vector('list', nitems)
     for(item in 1L:nitems){
         if(item > 1L && fixed.identical){
@@ -612,7 +614,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .001, grsm.block = NULL, D = 1.702,
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
-                     SE.type = 'MHRM', large = NULL, ...)
+                     SE.type = 'MHRM', large = NULL, removeRedun = TRUE, ...)
 {
     opts <- list()
     opts$method = method
@@ -630,6 +632,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$cl = cl
+    opts$removeRedun = removeRedun
     opts$BFACTOR = BFACTOR
     opts$technical <- technical
     opts$use <- use

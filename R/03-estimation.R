@@ -136,7 +136,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
-                                 mixedlist=mixedlist, method=opts$method, itemnames=PrepList[[1]]$itemnames)
+                                 mixedlist=mixedlist, method=opts$method, itemnames=PrepList[[1]]$itemnames,
+                                 removeRedun=opts$removeRedun)
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()
@@ -412,7 +413,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        tabdatalong=PrepList[[1L]]$tabdata,
                        mixedlist=mixedlist,
                        factorNames=PrepList[[1L]]$factorNames,
-                       constrain=PrepList[[1L]]$constrain,
+                       constrain=constrain,
                        parprior=parprior,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
@@ -462,7 +463,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        null.mod=null.mod,
                        Target=opts$Target,
                        factorNames=PrepList[[1L]]$factorNames,
-                       constrain=PrepList[[1L]]$constrain,
+                       constrain=constrain,
                        parprior=parprior,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
@@ -502,7 +503,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        tabdatalong=PrepList[[1L]]$tabdata,
                        null.mod=null.mod,
                        factorNames=PrepList[[1L]]$factorNames,
-                       constrain=PrepList[[1L]]$constrain,
+                       constrain=constrain,
                        parprior=parprior,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
