@@ -35,7 +35,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
                                         prior.t.var=gstructgrouppars[[g]]$gcov,
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist,
                                         mixedlist=mixedlist)
-            if(i > 5){
+            if(i > 5L){
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
                 else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
                     cand.t.var <- cand.t.var + tmp
@@ -52,7 +52,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
     }
     m.thetas <- grouplist <- SEM.stores <- SEM.stores2 <- m.list <- list()
     conv <- 0L
-    k <- 1
+    k <- 1L
     gamma <- .25
     longpars <- rep(NA,nfullpars)
     ind1 <- 1L
@@ -191,14 +191,14 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         if(stagecycle < 3L){
             if(qr(ave.h)$rank != ncol(ave.h)){
                 tmp <- ave.h
-                while(1){
+                while(1L){
                     tmp <- tmp + .001*diag(diag(tmp))
                     QR <- qr(tmp)
                     if(QR$rank == ncol(tmp)) break
                 }
                 ave.h <- tmp
                 noninvcount <- noninvcount + 1L
-                if(noninvcount == 3)
+                if(noninvcount == 3L)
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
             correction <- solve(ave.h, grad)
@@ -217,7 +217,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
             if(length(constrain) > 0L)
                 for(i in 1L:length(constrain))
-                    longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1]]
+                    longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
             if(verbose)
                 cat(printmsg, sprintf(", Max Change = %.4f\r", max(abs(gamma*correction))), sep='')
             if(stagecycle == 2L){

@@ -183,7 +183,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         if(stagecycle < 3L){
             if(qr(ave.h)$rank != ncol(ave.h)){
                 tmp <- ave.h
-                while(1){
+                while(1L){
                     tmp <- tmp + .001*diag(diag(tmp))
                     QR <- qr(tmp)
                     if(QR$rank == ncol(tmp)) break
@@ -223,7 +223,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         Tau <- Tau + gamma*(ave.h - Tau)
         if(qr(Tau)$rank != ncol(Tau)){
             tmp <- Tau
-            while(1){
+            while(1L){
                 tmp <- tmp + .001*diag(diag(tmp))
                 QR <- qr(tmp)
                 if(QR$rank == ncol(tmp)) break
@@ -248,7 +248,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
         longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
         if(length(constrain) > 0L)
-            for(i in 1:length(constrain))
+            for(i in 1L:length(constrain))
                 longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         if(verbose)
             cat(printmsg, sprintf(", gam = %.3f, Max Change = %.4f\r",
@@ -297,7 +297,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
     SE[estindex_unique] <- SEtmp
-    if(length(constrain) > 0)
+    if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
     ind1 <- 1L

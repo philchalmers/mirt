@@ -54,7 +54,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     estindex <- index[estpars]
     L <- diag(as.numeric(L))
     redun_constr <- rep(FALSE, length(estpars))
-    if(length(constrain) > 0){
+    if(length(constrain) > 0L){
         for(i in 1L:length(constrain)){
             L[constrain[[i]], constrain[[i]]] <- 1L
             for(j in 2L:length(constrain[[i]]))
@@ -92,7 +92,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
            else est <- c(est, rep(FALSE, length(pars[[g]][[j]]@est)))
        }
     }
-    if(length(constrain) > 0)
+    if(length(constrain) > 0L)
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
@@ -238,7 +238,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemlo
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
                  UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)
     longpars[est] <- opt$par
-    if(length(constrain) > 0)
+    if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     i = J + 1L
@@ -282,7 +282,7 @@ LogLikMstep <- function(x, Theta, EM=FALSE, prior=NULL){
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior, L, BFACTOR,
                        constrain, LBOUND, UBOUND, itemloc){
     longpars[est] <- p
-    if(length(constrain) > 0)
+    if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
