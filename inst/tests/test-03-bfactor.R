@@ -5,7 +5,8 @@ test_that('dich data', {
                        key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
     specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
     mod1 <- bfactor(data, specific, verbose=FALSE)    
-    expect_is(mod1, 'ConfirmatoryClass')                  
+    expect_is(mod1, 'ConfirmatoryClass')
+    expect_equal(mod1@df, 501)
     fs <- fscores(mod1, verbose = FALSE)
     expect_is(fs, 'matrix')        
     cof <- coef(mod1, verbose = FALSE)
@@ -60,11 +61,13 @@ test_that('dich data', {
      
     specific <- c(rep(1,7),rep(2,7))
     items[items == 'dich'] <- '2PL'
-    simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE)
+    simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE)    
     expect_is(simmod, 'ConfirmatoryClass')              
+    expect_equal(simmod@df, 1502)
     specific[1] <- NA
-    simmod2 <- bfactor(dataset, specific, itemtype = items, verbose=FALSE)
+    simmod2 <- bfactor(dataset, specific, itemtype = items, verbose=FALSE)    
     expect_is(simmod2, 'ConfirmatoryClass')              
+    expect_equal(simmod2@df, 1503)
     fs <- fscores(simmod, verbose = FALSE)
     expect_is(fs, 'matrix')
     

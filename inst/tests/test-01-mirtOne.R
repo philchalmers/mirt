@@ -4,6 +4,7 @@ test_that('dich', {
     data <- expand.table(LSAT7)        
     mod1 <- mirt(data, 1, verbose=FALSE)
     expect_is(mod1, 'ConfirmatoryClass')          
+    expect_equal(mod1@df, 21)
     sv <- mod2values(mod1)
     sv$est <- FALSE
     moddummy <- mirt(data, 1, pars= sv, verbose=FALSE)
@@ -18,6 +19,7 @@ test_that('dich', {
     expect_is(modm2, 'ConfirmatoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
+    expect_equal(modm3@df, 26)
     modm3 <- mirt(data, 1, itemtype = 'Rasch', SE = TRUE, technical=list(TOL=1e-6), verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     modm4 <- mirt(data, 1, itemtype = '1PL', verbose=FALSE)    
@@ -28,6 +30,7 @@ test_that('dich', {
     expect_is(modm5, 'ConfirmatoryClass')
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
+    expect_equal(modm6@df, 21)
     expect_is(modm6, 'ConfirmatoryClass')
     
     fm1 <- fscores(modm1, verbose = FALSE)
@@ -69,7 +72,9 @@ test_that('dich', {
     model <- confmirt.model('F1 = 1-3
         F2 = 3-5', quiet = TRUE)
     modm1 <- mirt(data, model, verbose=FALSE)
+    expect_equal(modm1@df, 20)
     modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE)
+    expect_equal(modm2@df, 19)
     modm3 <- mirt(data, model, SE = TRUE, verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     

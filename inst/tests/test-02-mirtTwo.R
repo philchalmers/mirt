@@ -2,7 +2,8 @@ context('mirtTwo')
 
 test_that('poly', {
     modp1 <- mirt(Science, 1, verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')          
+    expect_is(modp1, 'ConfirmatoryClass')     
+    expect_equal(modp1@df, 73)
     vals <- mirt(Science, 1, large = TRUE, verbose=FALSE)
     modp1 <- mirt(Science, 1, large = vals, verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')              
@@ -10,6 +11,7 @@ test_that('poly', {
     expect_is(modp1, 'ConfirmatoryClass')          
     suppressMessages(modp2 <- mirt(Science, 2, verbose=FALSE))
     expect_is(modp2, 'ExploratoryClass')
+    expect_equal(modp2@df, 70)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'ConfirmatoryClass')
     modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
@@ -48,7 +50,9 @@ test_that('poly', {
     grsm <- mirt(data, 1, itemtype = 'grsm', pars = sv, calcNull= FALSE, verbose=FALSE)
     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE, verbose=FALSE)
     expect_is(grsm, 'ConfirmatoryClass')    
-    expect_is(rsm, 'ConfirmatoryClass')    
+    expect_is(rsm, 'ConfirmatoryClass') 
+    expect_equal(rsm@df, 1971)
+    expect_equal(grsm@df, 1961)
     
     #item and test info
     Theta <- matrix(seq(-4,4,.01))
