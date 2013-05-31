@@ -79,10 +79,11 @@ setMethod(
         LL <- matrix(0, N, draws)
         grp <- ExtractGroupPars(pars[[length(pars)]])
         fixed.design.list <- vector('list', J)
-        if(!is.null(cl))
-            LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist,
-                           fulldata=fulldata, object=object, J=J)
-        else
+        ##FIXME parallel processing off for some reason...
+#         if(!is.null(cl))
+#             LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist,
+#                            fulldata=fulldata, object=object, J=J)
+#         else
             for(draw in 1L:draws)
                 LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist,
                                       fulldata=fulldata, object=object, J=J)
