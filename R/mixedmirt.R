@@ -14,18 +14,14 @@
 #' the factor model is to be estimated. See \code{\link{confmirt.model}} for
 #' more details
 #' @param fixed a standard R formula for specifying the fixed effect predictors from \code{covdata} and
-#' \code{itemdesign}. By default constraints are imposed and therefore the fixed person effects are
-#' constrained to be equal accross items, but this can be disabled using \code{fixed.constrain = FALSE}
+#' \code{itemdesign}. To estimate the intercepts for each item the keyword \code{items} is reserved and 
+#' automatically added to the \code{itemdesign} input
 #' @param random a formula similar to the \code{nlme} random variable specifications for declaring
 #' the random slope and intercept predictors. Not currently available, but will be available some time in the future
 #' @param itemtype same as itemtype in \code{\link{mirt}}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where each
 #' \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed effect
-#' predictors (i.e., item intercepts). If the input consists of variables with \code{factor} indicators then
-#' appropriate constraints and identification parameters are imposed. However, design based effects using
-#' a numeric matrix of 1's or other numerics may also be included
-#' @param fixed.constrain logical; allow the function to create the equality constraints internally based 
-#' on the suggested design? Disable this when you want to create custom designs and apply your constraints manually
+#' predictors (i.e., item intercepts)
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
 #' @param ... additinonal arguments to be passed to the MH-RM estimation engine. See \code{\link{confmirt}}
@@ -55,10 +51,10 @@
 #' model <- confmirt.model('Theta = 1-10')
 #'
 #' #model with no person predictors
-#' mod0 <- mirt(data, model, itemtype = 'Rasch')
+#' mod0 <- mirt(data, model, itemtype = 'Rasch', D = 1)
 #'
 #' #group as a fixed effect predictor (aka, uniform dif) 
-#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = 'Rasch', cl=cl)
+#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, cl=cl)
 #' anova(mod0, mod1)
 #' summary(mod1)
 #' coef(mod1)
@@ -72,16 +68,12 @@
 #' anova(lmod0, lmod1)
 #'
 #' #model using 2PL items instead of Rasch
-#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ group, itemtype = '2PL', cl=cl)
+#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, itemtype = '2PL', cl=cl)
 #' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 #'
-#' #systematic nonuniform dif (group interaction with latent variable)
-#' (dif <- mixedmirt(data, covdata, model, fixed = ~ group * Theta, cl=cl))
-#' anova(mod1b, dif)
-#' 
-#' #continuous predictor and interaction model with group
-#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ group + pseudoIQ, cl=cl)
-#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ group * pseudoIQ, cl=cl)
+#' #continuous predictor and interaction model with group in Rasch model
+#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group + pseudoIQ, cl=cl)
+#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group * pseudoIQ, cl=cl)
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)
@@ -97,156 +89,55 @@
 # #to test this item structure hypothesis (other intercept designs are also possible by including more columns).
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
-#' LLTM <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = 'Rasch', itemdesign = itemdesign, cl=cl)
+#' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign, cl=cl)
 #' coef(LLTM)
 #' wald(LLTM)
 #' L <- matrix(c(-1, 1), 1)
 #' wald(LLTM, L) #first half different from second
 #'
 #' #compare to items with estimated slopes (2PL)
-#' twoPL <- mixedmirt(data, model = model, fixed = ~ itemorder, itemtype = '2PL', itemdesign = itemdesign, cl=cl)
+#' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL', itemdesign = itemdesign, cl=cl)
 #' coef(twoPL)
 #' wald(twoPL)
 #' L <- matrix(0, 1, 34)
 #' L[1, 1] <- 1
-#' L[1, 18] <- -1
+#' L[1, 2] <- -1
 #' wald(twoPL, L) #n.s.
 #' anova(twoPL, LLTM)
 #' #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #' #    half of the test is any easier/harder than the last
 #'
-#' ### Similar example, but with simulated data instead and using numeric item design matrix
-#'
-#' set.seed(1234)
-#' N <- 750
-#' a <- matrix(rep(1,10))
-#' d <- matrix(c(rep(-1,5), rep(1,5)))
-#' Theta <- matrix(rnorm(N))
-#' data <- simdata(a, d, N, itemtype = rep('dich',10), Theta=Theta, D=1)
-#' itemdesign <- data.frame(itempred=rep(1, ncol(data)))
-#' model <- confmirt.model('Theta = 1-10')
-#'
-#' sv <- mixedmirt(data, model = model, fixed = ~ itempred, pars = 'values',
-#'                  itemtype = 'Rasch', itemdesign = itemdesign, cl=cl)
-#' sv$value[sv$name == 'd'] <- 0
-#' sv$est[sv$name == 'd'] <- FALSE
-#'
-#' #make design such that the first 5 items are systematically more difficult than the last 5
-#' constrain <- list()
-#' constrain[[1]] <- sv$parnum[sv$name == 'itempred'][1:5]
-#' constrain[[2]] <- sv$parnum[sv$name == 'itempred'][-c(1:5)]
-#' print(constrain)
-#' mod <- mixedmirt(data, model = model, fixed = ~ itempred, pars = sv,
-#'                  constrain = constrain, itemdesign = itemdesign, cl=cl)
-#' coef(mod)
-#' rasch <- mirt(data, 1, itemtype = 'Rasch', D=1)
-#' anova(mod, rasch) #n.s., LLTM model a much better choice compared to Rasch
-#'
 #' }
-mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = NULL,
-                      itemdesign = NULL, fixed.constrain = TRUE, constrain = NULL, pars = NULL, ...)
+mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
+                      itemdesign = NULL, constrain = NULL, pars = NULL, ...)
 {
     Call <- match.call()    
-    if(is.null(pars)){        
-        itemdesigntmp <- data.frame(InTeRnAlUsElESsNaMe2=matrix(1, ncol(data), 1))
-        if(!is.null(itemdesign)){
-            classes <- c()
-            for(i in 1:ncol(itemdesign))
-                classes <- c(classes, class(itemdesign[,i]))
-            if(!all(classes %in% c('numeric', 'integer'))){
-                names <- colnames(itemdesign)
-                itemdesigntmp <- data.frame(matrix(1, ncol(data), ncol(itemdesign)))
-                colnames(itemdesigntmp) <- names
-            }            
-        }
-        sv <- mixedmirt(data=data, covdata=covdata, model=model, fixed=fixed, random=random,
-                        itemtype=itemtype, pars = 'values', itemdesign=itemdesigntmp, fixed.constrain=FALSE)
-        if(is.null(constrain)) constrain <- list()        
-        if(fixed.constrain){                 
-            
-            #itemdesign constraints
-            if(!is.null(itemdesign)){
-                name <- colnames(itemdesign)
-                for(i in 1L:ncol(itemdesign)){
-                    uni <- unique(itemdesign[,i])
-                    uni2 <- sv$name[grepl(name[i], as.character(sv$name))]
-                    uni2 <- unique(uni2[!uni2 %in% name[i]])
-                    pn <- sv$parnum[sv$name == name[i]]
-                    for(j in 1L:length(uni))
-                        constrain[[length(constrain) + 1L]] <- pn[itemdesign[,i] == uni[j]]
-                    if(length(uni2) > 0L){
-                        for(k in 1L:length(uni2)){
-                            pn <- sv$parnum[sv$name == uni2[k]]                        
-                            for(j in 1L:length(uni))
-                                constrain[[length(constrain) + 1L]] <- pn[itemdesign[,i] == uni[j]]
-                        }
-                    }                        
-                }
-                #dichtomous constraints
-                sv$est[sv$name == 'd'] <- FALSE
-                sv$value[sv$name == 'd'] <- 0
-            }
-            
-            #covdata constraints                 
-            name <- sv$name[1L:(which(sv$name == 'a1')[1]-1L)]
-            name <- name[!(name %in% colnames(itemdesigntmp))]
-            cnames <- colnames(itemdesigntmp)
-            for(i in 1:ncol(itemdesigntmp)){                
-                got <- name[grepl(cnames[i], name)]            
-                name <- name[!grepl(cnames[i], name)]
-                spl <- strsplit(as.character(got), ':')
-                if(length(spl) > 0L){
-                    for(j in 1L:length(spl)){
-                        sv$est[sv$name == name[name %in% spl[[j]]]] <- FALSE
-                        sv$value[sv$name == name[name %in% spl[[j]]]] <- 0
-                        name <- name[!name %in% spl[[j]]] 
-                    }
-                }                    
-            }                
-            if(length(name) > 0L){
-                for(i in 1L:length(name))
-                    constrain[[length(constrain) + 1L]] <- sv$parnum[sv$name == name[i]]
-            }
-            pars <- sv
-            itemdesign <- itemdesigntmp            
+    fixed.constrain <- TRUE
+    if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))
+    if(is.null(itemdesign)){
+        itemdesign <- data.frame(items = factor(1L:ncol(data)))
+    } else itemdesign$items <- factor(1L:ncol(data))
+    longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID', 
+                        varying=list(1L:ncol(data) + 1L), direction='long')
+    colnames(longdata) <- c('ID', colnames(covdata), 'items', 'response')
+    for(i in 1L:ncol(itemdesign))
+        longdata[, colnames(itemdesign)[i]] <- rep(itemdesign[ ,i], each=nrow(data))
+    mf <- model.frame(fixed, longdata)
+    mm <- model.matrix(fixed, mf)    
+    mixed.design <- list(fixed=mm, random=NaN)
+    if(fixed.constrain){
+        if(is.null(constrain)) constrain <- list()
+        sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
+                         D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
+        mmnames <- colnames(mm)
+        N <- nrow(data)
+        for(i in 1L:ncol(mm)){
+            mmparnum <- sv$parnum[sv$name == mmnames[i]]            
+            constrain[[length(constrain) + 1L]] <- mmparnum
         }
     }    
-    if(is.null(covdata))
-        covdata <- data.frame(InTeRnAlUsElESsNaMe = matrix(1, nrow(data)))    
-    if(is.null(itemdesign))
-        itemdesign <- data.frame(InTeRnAlUsElESsNaMe2 = matrix(1, ncol(data)))    
-    if(is(pars, 'character')){
-        if(pars == 'values'){
-            itemdesign2 <- itemdesign
-            for(i in 1L:ncol(itemdesign))
-                itemdesign2[,1] <- 1
-            itemdesign <- itemdesign2
-        }
-    }
-    for(i in 1:ncol(covdata))
-        if(is(covdata[,i], 'numeric') || is(covdata[,i], 'integer'))
-            covdata[,i] <- matrix(scale(covdata[,i], scale = FALSE))
-    ### TEMPORARY
-    if(!is.null(random))
-        stop('random effect covariates not yet supported')
-    random <- ~ 1
-    ###
-    if(fixed == ~ 1 && random == ~ 1)
-        stop('No fixed or random effects have been specified.')
-    model.noCOV <- model$x[model$x[,1] != 'COV', , drop = FALSE]
-    Theta <- matrix(0, nrow(data), nrow(model.noCOV))
-    colnames(Theta) <- model.noCOV[,1]
-    if(any(colnames(Theta) %in% colnames(covdata)) || any(colnames(Theta) %in% colnames(itemdesign)))
-        stop('Predictor variable names must be different from latent variable names.')
-    fixed.identical <- FALSE
-    if(all(itemdesign == 1)) fixed.identical <- TRUE    
-    fixed.design.list <- designMats(covdata=covdata, fixed=fixed, Thetas=Theta, nitems=ncol(data),
-                                   itemdesign=itemdesign, fixed.identical=fixed.identical)
-    mixedlist <- list(fixed=fixed, random=random, covdata=covdata, factorNames=model.noCOV[,1],
-                      FDL=fixed.design.list, itemdesign=itemdesign, fixed.constrain=fixed.constrain,
-                      fixed.identical=fixed.identical)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                      D=1, mixedlist=mixedlist, method='MIXED', constrain=constrain, pars=pars, 
+                      D=1, mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, 
                       removeRedun=FALSE, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call

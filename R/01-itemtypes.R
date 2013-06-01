@@ -25,6 +25,7 @@ setClass("AllItemsClass",
                         parnum='numeric',
                         nfact='numeric',
                         nfixedeffects='numeric', #number of fixed effect predictors
+                        fixed.design='matrix',
                         dat='matrix',
                         ncat='numeric',
                         rs='matrix',

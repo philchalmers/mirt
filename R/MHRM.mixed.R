@@ -1,4 +1,4 @@
-MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
+MHRM.mixed <- function(pars, constrain, PrepList, list)
 {
     verbose <- list$verbose
     nfact <- list$nfact
@@ -33,8 +33,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var,
                                         prior.t.var=gstructgrouppars[[g]]$gcov,
-                                        prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist,
-                                        mixedlist=mixedlist)
+                                        prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             if(i > 5L){
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
                 else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
@@ -100,7 +99,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
     }
-
+    
     ####Big MHRM loop
     for(cycles in 1L:(NCYCLES + BURNIN + SEMCYCLES))
     {
@@ -125,13 +124,13 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
 
-        #Step 1. Generate m_k datasets of theta
+        #Step 1. Generate m_k datasets of theta        
         LL <- 0
         for(g in 1L:ngroups){
             for(i in 1L:5L)
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                       itemloc=itemloc, cand.t.var=cand.t.var,
-                                      prior.t.var=gstructgrouppars[[g]]$gcov, mixedlist=mixedlist,
+                                      prior.t.var=gstructgrouppars[[g]]$gcov, 
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
@@ -143,20 +142,16 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         ind1 <- 1L
         for(group in 1L:ngroups){
             thetatemp <- gtheta0[[group]]
-            if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
-            colnames(thetatemp) <- mixedlist$factorNames
-            thetatemplist <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed,
-                                        Thetas=thetatemp, nitems=J,
-                                        itemdesign=mixedlist$itemdesign,
-                                        fixed.identical=mixedlist$fixed.identical)
+            if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)            
             gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]],
-                                                Theta=cbind(thetatemplist[[i]], thetatemp),
+                                                Theta=thetatemp,
                                                 itemloc=itemloc)
             pars[[group]] <- assignItemtrace(pars=pars[[group]],
                                          itemtrace=gitemtrace[[group]],
-                                         itemloc=itemloc)
+                                         itemloc=itemloc)            
             for (i in 1L:J){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=cbind(thetatemplist[[i]], thetatemp),
+                deriv <- Deriv(x=pars[[group]][[i]], 
+                               Theta=cbind(pars[[group]][[i]]@fixed.design, thetatemp),
                                estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
@@ -275,6 +270,7 @@ MHRM.mixed <- function(pars, constrain, PrepList, list, mixedlist)
         phi <- phi + gamma*(grad - phi)
         Phi <- Phi + gamma*(Tau - outer(grad,grad) - Phi)
     } ###END BIG LOOP
+    
     #Reload final pars list
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)

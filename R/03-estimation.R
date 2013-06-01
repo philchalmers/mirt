@@ -1,6 +1,6 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
-                       parprior = NULL, mixedlist = NULL, customItems = NULL, ...)
+                       parprior = NULL, mixed.design = NULL, customItems = NULL, ...)
 {
     opts <- makeopts(...)
     if(!is.null(customItems)) opts$calcNull <- FALSE
@@ -46,14 +46,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     PrepList <- vector('list', Data$ngroups)
     names(PrepList) <- Data$groupNames
     tmp <- 1L:Data$ngroups
-    selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]
+    selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]    
     PrepListFull <- PrepList[[1L]] <-
         PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess,
                  upper=upper, parprior=parprior, verbose=opts$verbose,
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
-                 D=opts$D, mixedlist=mixedlist, customItems=customItems,
-                 fulldata=opts$PrepList[[1]]$fulldata, key=key)
+                 D=opts$D, mixed.design=mixed.design, customItems=customItems,
+                 fulldata=opts$PrepList[[1]]$fulldata, key=key)    
     parnumber <- 1L
     for(g in 1L:Data$ngroups){
         tmp <- 1L:Data$ngroups
@@ -62,7 +62,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             PrepList[[g]] <- PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess,
                                       upper=upper, parprior=parprior, verbose=opts$verbose,
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
-                                      grsm.block=opts$grsm.block, D=opts$D, mixedlist=mixedlist,
+                                      grsm.block=opts$grsm.block, D=opts$D, mixed.design=mixed.design,
                                       customItems=customItems, fulldata=PrepList[[1]]$fulldata, key=key)
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1L
@@ -136,7 +136,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
-                                 mixedlist=mixedlist, method=opts$method, itemnames=PrepList[[1]]$itemnames,
+                                 method=opts$method, itemnames=PrepList[[1]]$itemnames,
                                  removeRedun=opts$removeRedun)
     startlongpars <- c()
     if(opts$NULL.MODEL){
@@ -294,7 +294,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             rlist[[g]]$expected = numeric(1)
     } else if(opts$method == 'MIXED'){
         ESTIMATE <- MHRM.mixed(pars=pars, constrain=constrain,
-                                    PrepList=PrepList, mixedlist=mixedlist,
+                                    PrepList=PrepList, 
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                            KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=FALSE,
@@ -320,8 +320,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           tabdata=PrepList[[g]]$tabdata2, data=Data$data[group == Data$groupNames[[g]], ],
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2,
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact,
-                          constrain=constrain, G2=G2group[g], X2=X2group[g], Pl = rlist[[g]]$expected,
-                          mixedlist=if(opts$method == 'MIXED') mixedlist else list(),
+                          constrain=constrain, G2=G2group[g], X2=X2group[g], Pl = rlist[[g]]$expected,                          
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)
     }
     rm(lambdas, norm)
@@ -385,11 +384,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(X2/G2 > 10) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(is.null(parprior)) parprior <- list()
     if(Data$ngroups == 1L){
-        if(opts$method == 'MIXED'){
-            mixedlist$betas <- cmods[[1L]]@pars[[1L]]@par[1L:ncol(mixedlist$FDL[[1L]])]
-            mixedlist$SEbetas <- cmods[[1L]]@pars[[1L]]@SEpar[1L:ncol(mixedlist$FDL[[1L]])]
-            names(mixedlist$SEbetas) <- names(mixedlist$betas) <-
-                colnames(mixedlist$FDL[[1L]])
+        if(opts$method == 'MIXED'){            
             mod <- new('MixedClass',
                        iter=ESTIMATE$cycles,
                        pars=cmods[[1L]]@pars,
@@ -409,9 +404,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        data=Data$data,
                        converge=ESTIMATE$converge,
                        nfact=nfact,
-                       K=PrepList[[1L]]$K,
-                       tabdatalong=PrepList[[1L]]$tabdata,
-                       mixedlist=mixedlist,
+                       K=PrepList[[1L]]$K,                       
+                       tabdatalong=PrepList[[1L]]$tabdata,                       
                        factorNames=PrepList[[1L]]$factorNames,
                        constrain=constrain,
                        parprior=parprior,

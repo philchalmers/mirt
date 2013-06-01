@@ -1,6 +1,6 @@
 PrepData <- function(data, model, itemtype, guess, upper,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
-                     grsm.block = NULL, rsm.block = NULL, D, mixedlist, customItems,
+                     grsm.block = NULL, rsm.block = NULL, D, mixed.design, customItems,
                      fulldata = NULL, key)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
@@ -85,7 +85,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
-                           parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixedlist=mixedlist,
+                           parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixed.design=mixed.design,
                            customItems=customItems, key=key)
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){

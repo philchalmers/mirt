@@ -84,7 +84,6 @@ setClass(
 #' @exportClass MixedClass
 setClass(
     Class = 'MixedClass', contains = 'AllModelClass',
-    representation = representation(Pl='numeric',
-        mixedlist='list'),
+    representation = representation(Pl='numeric'),
     validity = function(object) return(TRUE)
 )

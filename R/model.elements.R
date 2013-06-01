@@ -1,6 +1,6 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
-                           parnumber, BFACTOR = FALSE, D, mixedlist, customItems, key)
+                           parnumber, BFACTOR = FALSE, D, mixed.design, customItems, key)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -86,18 +86,12 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         u[u < .001 ] <- .2
         cs <- sqrt(u)
         lambdas <- loads/cs * (1.702/D)
-    }
-    if(!is.null(mixedlist)){
-        covdata <- mixedlist$covdata
-        Theta <- matrix(0, N, nrow(model))
-        colnames(Theta) <- model[ ,1L]
-        mixedlist$Theta <- Theta
-    }
+    }    
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
                     nfact=nfact+length(prodlist), parprior=parprior,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, D=D,
-                    mixedlist=mixedlist, customItems=customItems, key=key)
+                    mixed.design=mixed.design, customItems=customItems, key=key)
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             parprior=parprior)

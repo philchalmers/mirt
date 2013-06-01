@@ -1,7 +1,7 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
-                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixedlist, customItems,
+                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
                      key)
-    {    
+{    
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'graded',
@@ -136,20 +136,29 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
 
     #augment startvalues and fixedpars for mixed effects
     nfixedeffects <- 0
-    if(!is.null(mixedlist)){
-        fixed.design.list <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed,
-                                        Thetas=mixedlist$Theta, nitems=J,
-                                        itemdesign=mixedlist$itemdesign,
-                                        fixed.identical=mixedlist$fixed.identical)
-        betas <- rep(0, ncol(fixed.design.list[[1L]]))
+    fixed.design.list <- vector('list', J)
+    for(i in 1L:J) fixed.design.list[[i]] <- matrix(0)
+    if(!is.null(mixed.design)){         
+        fixed.design <- mixed.design$fixed
+        betas <- rep(0, ncol(fixed.design))
         estbetas <- rep(TRUE, length(betas))
-        names(estbetas) <- names(betas) <- colnames(fixed.design.list[[1L]])
+        names(estbetas) <- names(betas) <- colnames(fixed.design)
         nfixedeffects <- length(betas)
         nfact <- nfact + nfixedeffects
         for(i in 1L:J){
             freepars[[i]] <- c(estbetas, freepars[[i]])
             startvalues[[i]] <- c(betas, startvalues[[i]])
         }
+        valid.ints <- c('d', paste0('d', 1L:50L))        
+        freepars <- lapply(freepars, function(x, valid){            
+            x[names(x) %in% valid] <- FALSE
+            return(x)}, valid=valid.ints)
+        startvalues <- lapply(startvalues, function(x, valid){            
+            x[names(x) %in% valid] <- 0
+            return(x)}, valid=valid.ints)        
+        N <- nrow(mixed.design$fixed) / J
+        for(i in 1L:J)
+            fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), ]
     }
 
     #load items
@@ -163,6 +172,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=2,
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
                              ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -182,6 +192,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -204,6 +215,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -227,6 +239,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              dat=fulldata[ ,tmp],
                              ncat=2,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
                              ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -249,6 +262,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              correctcat=key[i],
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              lbound=c(rep(-Inf, nfact+1),0,.5, rep(-Inf, length(startvalues[[i]])-nfact-3)),
                              ubound=c(rep(Inf, nfact+1),.5,1, rep(Inf, length(startvalues[[i]])-nfact-3)),
                              n.prior.mu=rep(NaN,length(startvalues[[i]])),
@@ -268,6 +282,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -289,6 +304,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -310,6 +326,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -332,6 +349,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -355,6 +373,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
@@ -378,6 +397,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=2,
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
                              ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),
@@ -399,6 +419,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              D=D,
+                             fixed.design=fixed.design.list[[i]],
                              dat=fulldata[ ,tmp],
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
@@ -425,6 +446,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]]@b.prior.beta <- rep(NaN,length(pars[[i]]@par))
             tmp2 <- parnumber:(parnumber + length(pars[[i]]@est) - 1L)
             pars[[i]]@parnum <- tmp2
+            pars[[i]]@fixed.design <- fixed.design.list[[i]]
             parnumber <- parnumber + length(pars[[i]]@est)
             next
         }

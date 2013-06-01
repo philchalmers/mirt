@@ -55,17 +55,9 @@ setMethod(
             else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
-            itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-            if(length(object@mixedlist) > 1L){
-                colnames(theta) <- object@mixedlist$factorNames
-                fixed.design.list <- designMats(covdata=object@mixedlist$covdata,
-                                                fixed=object@mixedlist$fixed,
-                                                Thetas=theta, nitems=J,
-                                                itemdesign=object@mixedlist$itemdesign,
-                                                fixed.identical=object@mixedlist$fixed.identical)
-            }
+            itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)            
             for (i in 1L:J) itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-                ProbTrace(x=pars[[i]], Theta=theta, fixed.design=fixed.design.list[[i]])
+                ProbTrace(x=pars[[i]], Theta=theta)
             return(exp(rowSums(log(itemtrace)*fulldata)))
         }
         pars <- object@pars

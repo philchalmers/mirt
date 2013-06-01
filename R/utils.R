@@ -27,7 +27,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
-                        prior.mu, prodlist, mixedlist = NULL)
+                        prior.mu, prodlist)
 {
     tol <- .Machine$double.eps
     N <- nrow(fulldata)
@@ -42,23 +42,11 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         theta1 <- prodterms(theta1,prodlist)
     }
     itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))
-    fixed.design0 <- fixed.design1 <- NULL
-    if(!is.null(mixedlist)){
-        colnames(theta0) <- colnames(theta1) <- mixedlist$factorNames
-        fixed.design0 <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed,
-                                    Thetas=theta0, nitems=J,
-                                    itemdesign=mixedlist$itemdesign,
-                                    fixed.identical=mixedlist$fixed.identical)
-        fixed.design1 <- designMats(covdata=mixedlist$covdata, fixed=mixedlist$fixed,
-                                    Thetas=theta1, nitems=J,
-                                    itemdesign=mixedlist$itemdesign,
-                                    fixed.identical=mixedlist$fixed.identical)
-    }
     for (i in 1L:J){
         itemtrace0[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            ProbTrace(x=pars[[i]], Theta=theta0, fixed.design=fixed.design0[[i]])
+            ProbTrace(x=pars[[i]], Theta=theta0)
         itemtrace1[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            ProbTrace(x=pars[[i]], Theta=theta1, fixed.design=fixed.design1[[i]])
+            ProbTrace(x=pars[[i]], Theta=theta1)
     }
     total_0 <- rowSums(log(itemtrace0)*fulldata) + log_den0
     total_1 <- rowSums(log(itemtrace1)*fulldata) + log_den1
@@ -318,7 +306,7 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
-                            mixedlist, method, itemnames, removeRedun = TRUE)
+                            method, itemnames, removeRedun = TRUE)
 {
     #within group item constraints only
     for(g in 1L:ngroups)
@@ -534,31 +522,38 @@ ItemInfo <- function(x, Theta, cosangle){
     return(info)
 }
 
-designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random = NULL,
-                       fixed.identical = FALSE){    
-    fixed.design.list <- vector('list', nitems)
-    for(item in 1L:nitems){
-        if(item > 1L && fixed.identical){
-            fixed.design.list[[item]] <- fixed.design.list[[1L]]
-            next
-        }
-        if(colnames(itemdesign)[1L] != 'InTeRnAlUsElESsNaMe2'){
-            dat <- data.frame(matrix(itemdesign[item, ], nrow(covdata), ncol(itemdesign), byrow=TRUE),
-                                   covdata, Thetas)
-            colnames(dat) <- c(colnames(itemdesign), colnames(covdata), colnames(Thetas))
-        } else dat <- data.frame(covdata, Thetas)
-        if(fixed == ~ 1) {
-            fixed.design <- NULL
-        } else fixed.design <- model.matrix(fixed, dat)[ ,-1L, drop = FALSE]
-        cn <- colnames(Thetas)
-        CN <- colnames(fixed.design)
-        drop <- rep(FALSE, length(CN))
-        for(i in 1L:ncol(Thetas))
-            drop <- drop | CN == cn[i]
-        fixed.design.list[[item]] <- fixed.design[ , !drop, drop = FALSE]
-    }
-    return(fixed.design.list)
-}
+# designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random = NULL,
+#                        fixed.identical = FALSE){    
+#     fixed.design.list <- vector('list', nitems)
+#     for(item in 1L:nitems){
+#         if(item > 1L && fixed.identical){
+#             fixed.design.list[[item]] <- fixed.design.list[[1L]]
+#             next
+#         }
+#         if(colnames(itemdesign)[1L] != 'InTeRnAlUsElESsNaMe2'){
+#             dat <- data.frame(matrix(itemdesign[item, ], nrow(covdata), ncol(itemdesign), byrow=TRUE),
+#                                    covdata, Thetas)
+#             colnames(dat) <- c(colnames(itemdesign), colnames(covdata), colnames(Thetas))
+#         } else dat <- data.frame(covdata, Thetas)
+#         if(fixed == ~ 1) {
+#             fixed.design <- NULL
+#         } else{            
+#             mf <- model.frame(fixed, dat)            
+#             if(colnames(itemdesign)[1L] != 'InTeRnAlUsElESsNaMe2'){
+#                 #if only item predictors, omit intercept
+#                 if(all(colnames(mf) %in% colnames(itemdesign)))
+#                     fixed.design <- model.matrix(fixed, dat)[, -1L, drop=FALSE]
+#             } else fixed.design <- model.matrix(fixed, dat)
+#         }
+#         cn <- colnames(Thetas)
+#         CN <- colnames(fixed.design)
+#         drop <- rep(FALSE, length(CN))
+#         for(i in 1L:ncol(Thetas))
+#             drop <- drop | CN == cn[i]
+#         fixed.design.list[[item]] <- fixed.design[ , !drop, drop = FALSE]
+#     }
+#     return(fixed.design.list)
+# }
 
 nameInfoMatrix <- function(info, correction, L, npars){
     #give info meaningful names for wald test
