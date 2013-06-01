@@ -169,7 +169,14 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
             tmp$est[tmp$name %in% paste0('d', 1L:50L)] <- TRUE
             tmp$est[tmp$name == 'd'] <- TRUE
             sv[i == sv$item, ] <- tmp
-        }
+        }        
+        #FIXME: fix slope to be at 1? Questionable
+        if(!colnames(data)[1L] %in% itemindex){
+            tmp <- sv[sv$item == colnames(data)[1L], ]
+            tmp$est[tmp$name %in% paste0('a', 1L:50L)] <- FALSE
+            tmp$value[tmp$name %in% paste0('a', 1L:50L)] <- 1
+            sv[sv$item == colnames(data)[1L], ] <- tmp            
+        }        
         attr(sv, 'values') <- pars
         pars <- sv
     }

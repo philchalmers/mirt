@@ -58,5 +58,5 @@ test_that('polytomous', {
     supppressWarnings(mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'),
                                        fixed = ~ 0 + group + items, itemtype = 'gpcm'))
     expect_is(mod2, 'MixedClass')
-    expect_equal(mod2@df - mod@df, 4)    
+    expect_equal(mod2@df - mod@df, 3)    
 }) 
