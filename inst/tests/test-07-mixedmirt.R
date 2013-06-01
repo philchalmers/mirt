@@ -18,7 +18,7 @@ test_that('mixed dich', {
     expect_is(mod1, 'MixedClass')                  
     
     #model using 2PL items instead of only Rasch
-    mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, verbose = FALSE)    
+    mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, itemtype = '2PL', verbose = FALSE)    
     expect_is(mod1b, 'MixedClass')
     expect_equal(mod1@df - mod1b@df, 10)        
 })   
@@ -35,8 +35,8 @@ test_that('item and group predictors', {
     sv <- mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder + gender,
                     itemdesign = itemdesign, pars = 'values')
     expect_is(sv, 'data.frame')       
-    LLTM <- mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder + gender,
-                      itemdesign = itemdesign, verbose = FALSE)
+    suppressWarnings(LLTM <- mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder + gender,
+                      itemdesign = itemdesign, verbose = FALSE))
     expect_is(LLTM, 'MixedClass')
     
     sv2 <- suppressWarnings(mixedmirt(data, covdata, model = model, fixed = ~ itemorder * gender,

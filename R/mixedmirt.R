@@ -54,7 +54,7 @@
 #' mod0 <- mirt(data, model, itemtype = 'Rasch', D = 1)
 #'
 #' #group as a fixed effect predictor (aka, uniform dif) 
-#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, cl=cl)
+#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, cl=cl)
 #' anova(mod0, mod1)
 #' summary(mod1)
 #' coef(mod1)
@@ -68,7 +68,7 @@
 #' anova(lmod0, lmod1)
 #'
 #' #model using 2PL items instead of Rasch
-#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, itemtype = '2PL', cl=cl)
+#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL', cl=cl)
 #' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 #'
 #' #continuous predictor and interaction model with group in Rasch model
@@ -78,7 +78,7 @@
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)
 #'
-#' ###################################################3
+#' ###################################################
 #' ##LLTM, and 2PL version of LLTM
 #' data(SAT12)
 #' data <- key2binary(SAT12,
