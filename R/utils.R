@@ -306,7 +306,7 @@ calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parpri
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
-                            method, itemnames, removeRedun = TRUE)
+                            method, itemnames)
 {
     #within group item constraints only
     for(g in 1L:ngroups)
@@ -387,7 +387,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         }
     }
     #remove redundent constraints    
-    if(removeRedun){
+    if(TRUE){
         redun <- rep(FALSE, length(constrain))
         if(length(constrain) > 0L){
             for(i in 1L:length(redun)){
@@ -609,7 +609,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .001, grsm.block = NULL, D = 1.702,
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
-                     SE.type = 'MHRM', large = NULL, removeRedun = TRUE, ...)
+                     SE.type = 'MHRM', large = NULL, ...)
 {
     opts <- list()
     opts$method = method
@@ -626,8 +626,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$D = D
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
-    opts$cl = cl
-    opts$removeRedun = removeRedun
+    opts$cl = cl    
     opts$BFACTOR = BFACTOR
     opts$technical <- technical
     opts$use <- use

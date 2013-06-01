@@ -1,7 +1,8 @@
 #' Mixed effects modeling for MIRT models
 #'
 #' \code{mixedmirt} fits MIRT models using FIML estimation to dichotomous and polytomous
-#' IRT models conditional on fixed and random effect of person and item level covariates. The method uses the MH-RM
+#' IRT models conditional on fixed and random effect of person and item level covariates. 
+#' The method uses the MH-RM
 #' algorithm exclusively. The D scaling parameter is automatically fixed to 1 so that all
 #' coefficients can be interpreted on the exponential metric.
 #'
@@ -13,19 +14,22 @@
 #' @param model an object returned from \code{confmirt.model()} declaring how
 #' the factor model is to be estimated. See \code{\link{confmirt.model}} for
 #' more details
-#' @param fixed a standard R formula for specifying the fixed effect predictors from \code{covdata} and
-#' \code{itemdesign}. To estimate the intercepts for each item the keyword \code{items} is reserved and 
-#' automatically added to the \code{itemdesign} input
+#' @param fixed a standard R formula for specifying the fixed effect predictors from \code{covdata} 
+#' and \code{itemdesign}. To estimate the intercepts for each item the keyword \code{items} is 
+#' reserved and automatically added to the \code{itemdesign} input
 #' @param random a formula similar to the \code{nlme} random variable specifications for declaring
-#' the random slope and intercept predictors. Not currently available, but will be available some time in the future
-#' @param itemtype same as itemtype in \code{\link{mirt}}
-#' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where each
-#' \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed effect
-#' predictors (i.e., item intercepts)
-#' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for more detail
+#' the random slope and intercept predictors. Not currently available, but will be available some 
+#' time in the future 
+#' @param itemtype same as itemtype in \code{\link{mirt}}, expect limited only to the following 
+#' item types: \code{c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'gpcm', 'rsm')}
+#' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
+#' each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed 
+#' effect predictors (i.e., item intercepts)
+#' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for 
+#' more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
-#' @param ... additinonal arguments to be passed to the MH-RM estimation engine. See \code{\link{confmirt}}
-#' for more detail
+#' @param ... additinonal arguments to be passed to the MH-RM estimation engine. See 
+#' \code{\link{confmirt}} for more detail
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @export mixedmirt
@@ -86,9 +90,10 @@
 #' model <- confmirt.model('Theta = 1-32')
 #'
 # #Suppose that the first 16 items were suspected to be easier than the last 16 items, and we wish
-# #to test this item structure hypothesis (other intercept designs are also possible by including more columns).
+# #to test this item structure hypothesis (more intercept designs are possible by including more columns).
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
+#' #notice that the 'fixed = ~ ... + items' argument is ommited
 #' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign, cl=cl)
 #' coef(LLTM)
 #' wald(LLTM)
@@ -96,7 +101,8 @@
 #' wald(LLTM, L) #first half different from second
 #'
 #' #compare to items with estimated slopes (2PL)
-#' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL', itemdesign = itemdesign, cl=cl)
+#' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL', 
+#'                    itemdesign = itemdesign, cl=cl)
 #' coef(twoPL)
 #' wald(twoPL)
 #' L <- matrix(0, 1, 34)
@@ -106,39 +112,69 @@
 #' anova(twoPL, LLTM)
 #' #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #' #    half of the test is any easier/harder than the last
-#'
+#' 
+#' ### Polytomous example
+#' #make an arbitrary group difference
+#' covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
+#' 
+#' mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items)
+#' coef(mod)
+#' 
+#' #gpcm to estimate slopes 
+#' mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items),
+#'                  itemtype = 'gpcm')
+#' coef(mod2)
+#' anova(mod, mod2)
+#' 
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       itemdesign = NULL, constrain = NULL, pars = NULL, ...)
 {
-    Call <- match.call()    
-    fixed.constrain <- TRUE
+    Call <- match.call()       
+    if(length(itemtype) == 1) itemtype <- rep(itemtype, ncol(data))
+    if(!all(itemtype %in% c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'gpcm', 'rsm')))
+        stop('itemtype contains unsupported classes of items')
+    if(!is.null(random)) stop('random effects not yet supported')    
     if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))
     if(is.null(itemdesign)){
         itemdesign <- data.frame(items = factor(1L:ncol(data)))
     } else itemdesign$items <- factor(1L:ncol(data))
+    if(!is.null(random)) stop('random effects not yet supported')
+    if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
+        stop('Predictor variable inputs must be data.frame objects')
     longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID', 
                         varying=list(1L:ncol(data) + 1L), direction='long')
     colnames(longdata) <- c('ID', colnames(covdata), 'items', 'response')
     for(i in 1L:ncol(itemdesign))
         longdata[, colnames(itemdesign)[i]] <- rep(itemdesign[ ,i], each=nrow(data))
     mf <- model.frame(fixed, longdata)
-    mm <- model.matrix(fixed, mf)    
+    mm <- model.matrix(fixed, mf)   
+    itemindex <- colnames(mm) %in% paste0('items', 1L:ncol(data))
+    mmitems <- mm[ , itemindex]
+    mm <- mm[ ,!itemindex, drop = FALSE]
     mixed.design <- list(fixed=mm, random=NaN)
-    if(fixed.constrain){
-        if(is.null(constrain)) constrain <- list()
-        sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                         D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
-        mmnames <- colnames(mm)
-        N <- nrow(data)
-        for(i in 1L:ncol(mm)){
-            mmparnum <- sv$parnum[sv$name == mmnames[i]]            
-            constrain[[length(constrain) + 1L]] <- mmparnum
+    if(is.null(constrain)) constrain <- list()    
+    sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
+                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
+    mmnames <- colnames(mm)
+    N <- nrow(data)
+    for(i in 1L:ncol(mm)){
+        mmparnum <- sv$parnum[sv$name == mmnames[i]]            
+        constrain[[length(constrain) + 1L]] <- mmparnum
+    }        
+    if(ncol(mmitems) > 0L){                
+        itemindex <- colnames(data)[which(paste0('items', 1L:ncol(data)) %in% colnames(mmitems))]        
+        for(i in itemindex){
+            tmp <- sv[i == sv$item, ] 
+            tmp$est[tmp$name %in% paste0('d', 1L:50L)] <- TRUE
+            tmp$est[tmp$name == 'd'] <- TRUE
+            sv[i == sv$item, ] <- tmp
         }
-    }    
+        attr(sv, 'values') <- pars
+        pars <- sv
+    }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                      D=1, mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, 
-                      removeRedun=FALSE, ...)
+                      D=1, mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)

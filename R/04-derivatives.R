@@ -364,8 +364,8 @@ setMethod(
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
         ak <- 0:(length(d)-1L)
-        D <- x@D
-        P <- ProbTrace(x=x, Theta=Theta)
+        D <- x@D        
+        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE)
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
@@ -454,7 +454,7 @@ setMethod(
         dshift[-1L] <- d[-1L] + shift
         ak <- 0:(length(d)-1L)
         D <- x@D
-        P <- ProbTrace(x=x, Theta=Theta)
+        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE)
         num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, D=D, returnNum=TRUE)
         tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
@@ -531,7 +531,7 @@ setMethod(
         ak <- x@par[(nfact+1L):(nzetas + nfact)]
         d <- ExtractZetas(x)
         D <- x@D
-        P <- ProbTrace(x=x, Theta=Theta)
+        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE)
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
@@ -715,7 +715,7 @@ setMethod(
 #TEMPORARY, until i calculate the analytical derivatives sometime
 L <- function(par, obj, Theta){
     obj@par[obj@est] <- par
-    P <- ProbTrace(obj, Theta)
+    P <- ProbTrace(obj, Theta, useDesign = FALSE)
     LL <- obj@dat * P
     LL[LL < .Machine$double.eps] <- 1
     LL <- sum(log(LL))

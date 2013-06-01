@@ -48,3 +48,15 @@ test_that('item and group predictors', {
     expect_equal(LLTM@df - LLTM2@df, 1)    
     
 }) 
+
+test_that('polytomous', {
+    covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
+    supppressWarnings(mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'),
+                                       fixed = ~ 0 + group + items))
+    expect_is(mod, 'MixedClass')
+    
+    supppressWarnings(mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'),
+                                       fixed = ~ 0 + group + items, itemtype = 'gpcm'))
+    expect_is(mod2, 'MixedClass')
+    expect_equal(mod2@df - mod@df, 4)    
+}) 

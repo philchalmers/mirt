@@ -481,7 +481,7 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'custom', Theta = 'matrix'),
-    definition = function(x, Theta){
+    definition = function(x, Theta, useDesign = TRUE){
         if(x@useuserdata) Theta <- cbind(Theta, x@userdata)
         return(x@P(x@par, Theta=Theta, ncat=x@ncat))
     }
@@ -490,12 +490,12 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta){
+    definition = function(x, Theta, useDesign = TRUE){
         u <- x@par[length(x@par)]
         g <- x@par[length(x@par)-1L]
         d <- x@par[length(x@par)-2L]
         a <- x@par[1L:x@nfact]        
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         P <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D, asMatrix=TRUE)        
         return(P)
@@ -505,14 +505,14 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
-    definition = function(x, Theta, fixed.design = NULL){
+    definition = function(x, Theta, useDesign = TRUE){
         a <- x@par[1L:x@nfact]
         d <- x@par[x@nfact+1L]
         g <- x@par[x@nfact+2L]
         u <- x@par[x@nfact+3L]
         ak <- x@par[(x@nfact+4L):(x@nfact+4L+x@ncat-2L)]
         dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.nestlogit(a=a, d=d, Theta=Theta, g=g, u=u,
                          ak=ak, dk=dk, correct=x@correctcat, D=x@D))
@@ -522,10 +522,10 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, itemexp = TRUE, fixed.design = NULL){
+    definition = function(x, Theta, itemexp = TRUE, useDesign = TRUE){
         a <- x@par[1L:x@nfact]
         d <- x@par[(x@nfact+1L):length(x@par)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.poly(a=a, d=d, Theta=Theta, itemexp=itemexp, D=x@D))
     }
@@ -535,12 +535,12 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, itemexp = TRUE, fixed.design = NULL){
+    definition = function(x, Theta, itemexp = TRUE, useDesign = TRUE){
         nfact <- x@nfact
         a <- x@par[1L:nfact]
         d <- x@par[(nfact+1L):(length(x@par)-1L)]
         t <- x@par[length(x@par)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.poly(a=a, d=(d + t), Theta=Theta, itemexp=itemexp, D=x@D))
     }
@@ -549,10 +549,10 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
-    definition = function(x, Theta, fixed.design = NULL){
+    definition = function(x, Theta, useDesign = TRUE){
         a <- x@par[1L:x@nfact]
         d <- x@par[-(1L:x@nfact)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D))
     }
@@ -561,12 +561,12 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rsm', Theta = 'matrix'),
-    definition = function(x, Theta, fixed.design = NULL){
+    definition = function(x, Theta, useDesign = TRUE){
         a <- x@par[1L:x@nfact]
         d <- x@par[(x@nfact+1L):(length(x@par)-1L)]
         t <- x@par[length(x@par)]
         d[-1L] <- d[-1L] + t
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D))
     }
@@ -575,11 +575,11 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta, fixed.design = NULL){
+    definition = function(x, Theta, useDesign = TRUE){
         a <- x@par[1L:x@nfact]
         ak <- x@par[(x@nfact+1L):(x@nfact + x@ncat)]
         d <- x@par[(length(x@par) - x@ncat + 1L):length(x@par)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=x@D))
     }
@@ -588,13 +588,13 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
-    definition = function(x, Theta, fixed.design = NULL){
+    definition = function(x, Theta, useDesign = TRUE){
         nfact <- x@nfact
         a <- x@par[1L:nfact]
         d <- x@par[(nfact+1L):(length(x@par)-2L)]
         g <- x@par[length(x@par)-1L]
         u <- x@par[length(x@par)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D))
     }
@@ -603,7 +603,7 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, fixed.design = NULL){
+    definition = function(x, Theta, useDesign = TRUE){
         a <- x@par[1L:x@nfact]
         ind <- x@nfact + 1L
         ak <- x@par[ind:(ind + x@ncat)]
@@ -611,7 +611,7 @@ setMethod(
         d <- x@par[ind:(ind + x@ncat)]
         ind <- ind + x@ncat + 1L
         t <- x@par[ind:length(x@par)]
-        if(nrow(x@fixed.design) > 1L)
+        if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.mcm(a=a, ak=ak, d=d, t=t, Theta=Theta, D=x@D))
     }

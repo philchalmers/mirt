@@ -34,7 +34,10 @@
   and intercept predictors. Not currently available, but
   will be available some time in the future}
 
-  \item{itemtype}{same as itemtype in \code{\link{mirt}}}
+  \item{itemtype}{same as itemtype in \code{\link{mirt}},
+  expect limited only to the following item types:
+  \code{c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'gpcm',
+  'rsm')}}
 
   \item{itemdesign}{a \code{data.frame} object used to
   create a design matrix for the items, where each
@@ -118,6 +121,7 @@ model <- confmirt.model('Theta = 1-32')
 
 itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 
+#notice that the 'fixed = ~ ... + items' argument is ommited
 LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign, cl=cl)
 coef(LLTM)
 wald(LLTM)
@@ -125,7 +129,8 @@ L <- matrix(c(-1, 1), 1)
 wald(LLTM, L) #first half different from second
 
 #compare to items with estimated slopes (2PL)
-twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL', itemdesign = itemdesign, cl=cl)
+twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
+                   itemdesign = itemdesign, cl=cl)
 coef(twoPL)
 wald(twoPL)
 L <- matrix(0, 1, 34)
@@ -135,6 +140,19 @@ wald(twoPL, L) #n.s.
 anova(twoPL, LLTM)
 #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #    half of the test is any easier/harder than the last
+
+### Polytomous example
+#make an arbitrary group difference
+covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
+
+mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items)
+coef(mod)
+
+#gpcm to estimate slopes
+mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items),
+                 itemtype = 'gpcm')
+coef(mod2)
+anova(mod, mod2)
 
 }
 }

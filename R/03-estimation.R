@@ -105,12 +105,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1L:2L] <- astart[i, ]
         rm(Rpoly, loads, u, cs, astart)
     }
-    if(!is.null(pars)){
+    if(!is.null(pars)){        
         if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, MG = TRUE)
-        } else if(pars == 'values'){
+        }          
+        if(!is.null(attr(pars, 'values'))){
             return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, MG = TRUE))
-        }
+        } else if(is.character(pars)){
+            if(pars == 'values') 
+                return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, MG = TRUE))
+        } 
     }
     pars <- vector('list', Data$ngroups)
     for(g in 1L:Data$ngroups)
@@ -136,8 +140,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
-                                 method=opts$method, itemnames=PrepList[[1]]$itemnames,
-                                 removeRedun=opts$removeRedun)
+                                 method=opts$method, itemnames=PrepList[[1]]$itemnames)
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()

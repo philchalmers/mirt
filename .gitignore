@@ -4,3 +4,5 @@ src/*.so
 mirt.Rproj
 .Rprofile
 src/*.dll
+src-i386/
+src-x64/
