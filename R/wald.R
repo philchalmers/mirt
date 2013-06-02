@@ -10,7 +10,7 @@
 #'
 #' @aliases wald
 #' @param L a coefficient matrix with dimensions nconstrasts x npars, or a vector if only one
-#' set of contrasts is being tested. Ommiting this value will return the column names of the
+#' set of contrasts is being tested. Omitting this value will return the column names of the
 #' information matrix used to identify the (potentially constrained) parameters
 #' @param object estimated object from \code{mirt}, \code{bfactor}, \code{confmirt},
 #' \code{multipleGroup}, or \code{mixedmirt}

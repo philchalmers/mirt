@@ -216,7 +216,7 @@
 #'   COV = F1*F2
 #'
 #'
-#' #compute model, and use parallel computation of the log-likelhood
+#' #compute model, and use parallel computation of the log-likelihood
 #' library(parallel)
 #' cl <- makeCluster(detectCores())
 #' mod1 <- confmirt(dataset, model.1, cl=cl)
@@ -259,7 +259,7 @@
 #' (mod.combo <- confmirt(data, model.combo))
 #' anova(mod.quad, mod.combo)
 #'
-#' #nonlinear item and test plots
+#' #non-linear item and test plots
 #' plot(mod.quad)
 #' plot(mod.combo, type = 'SE')
 #' itemplot(mod.quad, 1, type = 'score')

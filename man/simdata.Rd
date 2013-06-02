@@ -24,13 +24,13 @@
   generalized partial credit, nominal, nested logit, and
   partially compensatory models. Note that for the gpcm,
   nominal, and nested logit models there should be as many
-  parameters as desired categories, however to
-  parameterized them for meaningful interpretation the
-  first category intercept should equal 0 for these models
-  (second column for \code{'nestlogit'}, since first column
-  is for the correct item traceline). For nested logit
-  models the 'correct' category is always the lowest
-  category (i.e., == 1)}
+  parameters as desired categories, however to parametrized
+  them for meaningful interpretation the first category
+  intercept should equal 0 for these models (second column
+  for \code{'nestlogit'}, since first column is for the
+  correct item traceline). For nested logit models the
+  'correct' category is always the lowest category (i.e.,
+  == 1)}
 
   \item{nominal}{a matrix of specific item category slopes
   for nominal models. Should be the dimensions as the

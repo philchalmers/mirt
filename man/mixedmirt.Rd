@@ -24,10 +24,11 @@
   more details}
 
   \item{fixed}{a standard R formula for specifying the
-  fixed effect predictors from \code{covdata} and
-  \code{itemdesign}. To estimate the intercepts for each
-  item the keyword \code{items} is reserved and
-  automatically added to the \code{itemdesign} input}
+  fixed effect (aka 'explanatory') predictors from
+  \code{covdata} and \code{itemdesign}. To estimate the
+  intercepts for each item the keyword \code{items} is
+  reserved and automatically added to the \code{itemdesign}
+  input}
 
   \item{random}{a formula similar to the \code{nlme} random
   variable specifications for declaring the random slope
@@ -51,15 +52,18 @@
   \item{pars}{used for parameter starting values. See
   \code{\link{mirt}} for more detail}
 
-  \item{...}{additinonal arguments to be passed to the
-  MH-RM estimation engine. See \code{\link{confmirt}} for
-  more detail}
+  \item{...}{additional arguments to be passed to the MH-RM
+  estimation engine. See \code{\link{confmirt}} for more
+  detail}
 }
 \description{
   \code{mixedmirt} fits MIRT models using FIML estimation
   to dichotomous and polytomous IRT models conditional on
   fixed and random effect of person and item level
-  covariates. The method uses the MH-RM algorithm
+  covariates. This can also be understood as 'expalanatory
+  IRT' if only fixed effects are modeled, or
+  multilevel/mixed IRT if random and fixed effects are
+  included. The method uses the MH-RM algorithm
   exclusively. The D scaling parameter is automatically
   fixed to 1 so that all coefficients can be interpreted on
   the exponential metric.
@@ -141,6 +145,7 @@ anova(twoPL, LLTM)
 #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #    half of the test is any easier/harder than the last
 
+###################################################
 ### Polytomous example
 #make an arbitrary group difference
 covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
@@ -149,7 +154,7 @@ mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 
 coef(mod)
 
 #gpcm to estimate slopes
-mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items),
+mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items,
                  itemtype = 'gpcm')
 coef(mod2)
 anova(mod, mod2)

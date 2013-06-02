@@ -96,9 +96,12 @@ Theory)}
   calculating the parameter information matrix. Can be
   \code{'MHRM'} for stochastic estimation, \code{'BL'} for
   the Bock and Lieberman approach (EM only), or
-  \code{'SEM'} for the supplemented EM. Bootstrapped
-  standard errors are also possible but must be run with
-  the \code{\link{boot.mirt}} function}
+  \code{'SEM'} for the supplemented EM. Note that for the
+  \code{'SEM'} option increasing the number of EM cycles
+  (\code{NCYCLES}, see below) will help to improve the
+  accuracy. Bootstrapped standard errors are also possible
+  but must be run with the \code{\link{boot.mirt}}
+  function}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing
@@ -378,21 +381,36 @@ Theory)}
   \eqn{ak_k = (k - 1)}. \deqn{P(x = k | \theta, \psi) =
   \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
   d_k)} {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 *
-  \theta_2) + d_k)}} } \item{rsm}{ A more constrained
-  version of the generalized partial credit model where the
-  spacing is equal accross item blocks and only adjusted by
-  a single 'difficulty' parameter (c), and the
-  discrimination parameter is constrained to be a constant.
-  Note that this is analogous to the relationship between
-  the graded model and the grsm (with an additional
-  constraint regarding the discrimination parameters; the
-  discrimination constraint can, however, be relaxed by
-  adjusting the starting values manually). } \item{mcm}{For
-  identification \eqn{ak_0 = d_0 = 0} and \eqn{\sum_0^k t_k
-  = 1}. \deqn{P(x = k | \theta, \psi) = C_0 (\theta) * t_k
-  + (1 - C_0 (\theta)) * \frac{exp(-D * ak_k * (a_1 *
-  \theta_1 + a_2 * \theta_2) + d_k)} {\sum_i^k exp(-D *
-  ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
+  \theta_2) + d_k)}}
+
+  In the nominal model this parametrizations helps to
+  identify the empirical ordering of the categories by
+  inspecting the \eqn{ak} values. Larger values indicate
+  that the item category is more positively related to the
+  latent trait(s) being measured. For instance, if an item
+  was truly ordinal (such as a Likert scale), and had 4
+  response categories, we would expect to see \eqn{ak_0 <
+  ak_1 < ak_2 < ak_3} following estimation. If on the other
+  hand \eqn{ak_0 > ak_1} then it would appear that the
+  second category is less related to to the trait than the
+  first, and therefore the second category should be
+  understood as the 'lowest score'.
+
+  } \item{rsm}{ A more constrained version of the
+  generalized partial credit model where the spacing is
+  equal accross item blocks and only adjusted by a single
+  'difficulty' parameter (c), and the discrimination
+  parameter is constrained to be a constant. Note that this
+  is analogous to the relationship between the graded model
+  and the grsm (with an additional constraint regarding the
+  discrimination parameters; the discrimination constraint
+  can, however, be relaxed by adjusting the starting values
+  manually). } \item{mcm}{For identification \eqn{ak_0 =
+  d_0 = 0} and \eqn{\sum_0^k t_k = 1}. \deqn{P(x = k |
+  \theta, \psi) = C_0 (\theta) * t_k + (1 - C_0 (\theta)) *
+  \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
+  d_k)} {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 *
+  \theta_2) + d_k)}}
 
   where \eqn{C_0 (\theta) = \frac{exp(-D * ak_0 * (a_1 *
   \theta_1 + a_2 * \theta_2) + d_0)} {\sum_i^k exp(-D *
@@ -404,12 +422,12 @@ Theory)}
   + d_2))})} } \item{1-4PLNRM}{Nested logistic curves for
   modeling distractor items. Requires a scoring key. The
   model is broken into two components for the probability
-  of endorment. For sucessful endorsement the probability
-  trace is the 1-4PL model, while for unsucessful
-  endormenent: \deqn{P(x = 0 | \theta, \psi) = (1 -
-  P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k |
-  \theta, \psi)} which is the product of the compliment of
-  the dichotomous trace line with the nominal response
+  of endorsement. For successful endorsement the
+  probability trace is the 1-4PL model, while for
+  unsuccessful endorsement: \deqn{P(x = 0 | \theta, \psi) =
+  (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k
+  | \theta, \psi)} which is the product of the compliment
+  of the dichotomous trace line with the nominal response
   model. In the nominal model, the slope parameters defined
   above are constrained to be 1's, while the last value of
   the \eqn{ak} is freely estimated. } }
@@ -421,11 +439,8 @@ data <- expand.table(LSAT7)
 
 (mod1 <- mirt(data, 1))
 coef(mod1)
-(mod1 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
-coef(mod1)
-(mod1 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
-coef(mod1)
-summary(mod1)
+coef(mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
+coef(mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 residuals(mod1)
 plot(mod1) #test information function
 plot(mod1, type = 'trace') #trace lines
@@ -434,9 +449,11 @@ plot(mod1, type = 'trace') #trace lines
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
 
+#two factors (exploratory)
 mod2 <- mirt(data, 2)
-#too few iterations, try running more using current model as starting
-#   values (could also increase NCYCLES)
+
+#too few iterations, try running more using current model as new starting
+#   values (could also increase NCYCLES and rerun)
 mod2 <- mirt(data, 2, pars = mod2values(mod2))
 coef(mod2)
 summary(mod2, rotate = 'oblimin') #oblimin rotation
@@ -445,6 +462,7 @@ plot(mod2)
 
 anova(mod1, mod2) #compare the two models
 scores <- fscores(mod2) #save factor score table
+scoresfull <- fscores(mod2, full.scores = TRUE, score.only = TRUE) #factor scores for original data
 
 #confirmatory
 cmodel <- confmirt.model()
@@ -462,17 +480,17 @@ pmod1 <- mirt(Science, 1)
 plot(pmod1)
 summary(pmod1)
 
-#Constrain all slopes to be equal
+#Constrain all slopes to be equal with the constrain = list() input
 #first obtain parameter index
 values <- mirt(Science,1, pars = 'values')
 values #note that slopes are numbered 1,5,9,13, or index with values$parnum[values$name == 'a1']
 (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
+
 coef(pmod1_equalslopes)
 anova(pmod1_equalslopes, pmod1) #significantly worse fit with all criteria
 
 pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 1500))
 summary(pmod2)
-residuals(pmod2)
 plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
 itemplot(pmod2, 1)
 anova(pmod1, pmod2)
@@ -480,7 +498,9 @@ anova(pmod1, pmod2)
 #unidimensional fit with a generalized partial credit and nominal model
 (gpcmod <- mirt(Science, 1, 'gpcm'))
 coef(gpcmod)
+
 (nomod <- mirt(Science, 1, 'nominal'))
+coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 anova(gpcmod, nomod)
 itemplot(nomod, 3)
 
@@ -518,7 +538,7 @@ sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1)
 mod1 <- mirt(data, 1)
 mod2 <- mirt(data, 1, itemtype = 'grsm', pars = sv)
 coef(mod2)
-anova(mod2, mod1) #not sig, mod2 should be prefered
+anova(mod2, mod1) #not sig, mod2 should be preferred
 
 ###########
 # 2PL nominal response model example (Suh and Bolt, 2010)
@@ -526,6 +546,7 @@ data(SAT12)
 SAT12[SAT12 == 8] <- NA
 head(SAT12)
 
+#correct answer key
 key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 scoredSAT12 <- key2binary(SAT12, key)
 mod0 <- mirt(scoredSAT12, 1)

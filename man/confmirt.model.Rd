@@ -34,9 +34,9 @@
 
   There is an optional keyword for specifying the
   correlation between relationships between factors called
-  \code{COV}, and nonlinear factor products can be included
-  by enclosing the product combination on the left hand
-  side of the declaration (e.g., \code{(F1*F1)} would
+  \code{COV}, and non-linear factor products can be
+  included by enclosing the product combination on the left
+  hand side of the declaration (e.g., \code{(F1*F1)} would
   create a quadratic factor for \code{F1}).
 
   \describe{ \item{COV}{Specify the relationship between

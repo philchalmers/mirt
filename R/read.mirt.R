@@ -1,7 +1,7 @@
 #' Translate mirt parameters for plink package
 #'
 #' This function exports item parameters from the \code{mirt} package to the \code{plink} package.
-#' Model must be estimated with no scaling adjustement (i.e., \code{D = 1}).
+#' Model must be estimated with no scaling adjustment (i.e., \code{D = 1}).
 #'
 #'
 #' @aliases read.mirt

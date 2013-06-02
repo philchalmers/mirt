@@ -2,11 +2,10 @@
 #'
 #' \code{bfactor} fits a confirmatory maximum likelihood bi-factor model to
 #' dichotomous and polytomous data under the item response theory paradigm.
-#' Fits univariate and multivariate 1-4PL, graded, (generalized) partial credit,
-#' nominal, multiple choice, and partially compensatory models using
-#' a dimensional reduction EM algorithm so that regardless
-#' of the number of specific factors estimated the model only uses a two-dimensional quadrature grid
-#' for integration. See \code{\link{confmirt}} for appropriate methods to be used
+#' Fits the IRT models using a dimensional reduction EM algorithm so that regardless
+#' of the number of specific factors estimated the model only uses a two-dimensional 
+#' quadrature grid for integration (hence the maximum number of factors in estimation is only 2). 
+#' See \code{\link{confmirt}} for appropriate methods to be used
 #' on the objects returned from the estimation.
 #'
 #'
@@ -25,7 +24,7 @@
 #' item. For example, if for a 4 item test with two specific factors, the first
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
-#' on the general factor (have no specific component) \code{NA} values may be used as placeholders
+#' on the general factor (have no specific component) \code{NA} values may be used as place-holders
 #' @param quadpts number of quadrature points per dimension (default 20).
 #' @param SE logical; calculate information matrix and standard errors?
 #' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
@@ -71,7 +70,7 @@
 #' specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
 #' mod1 <- bfactor(data, specific)
 #' summary(mod1)
-#' itemplot(mod1, 18, drop.zeros = TRUE)
+#' itemplot(mod1, 18, drop.zeros = TRUE) #drop the zero slopes to allow plotting
 #'
 #' ###Try with fixed guessing parameters added
 #' guess <- rep(.1,32)

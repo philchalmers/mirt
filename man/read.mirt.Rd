@@ -14,7 +14,7 @@
 \description{
   This function exports item parameters from the
   \code{mirt} package to the \code{plink} package. Model
-  must be estimated with no scaling adjustement (i.e.,
+  must be estimated with no scaling adjustment (i.e.,
   \code{D = 1}).
 }
 \examples{

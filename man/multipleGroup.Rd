@@ -63,13 +63,14 @@
   \item{\code{'intercepts'}}{to constrain all the
   intercepts to be equal across all groups, note for
   nominal models this also includes the category specific
-  slope parameters}} Additionally, specifying specific item
-  name bundles (from \code{colnames(data)}) will constrain
-  all freely estimated parameters in each item to be equal
-  across groups. This is useful for selecting 'anchor'
-  items for vertical and horizontal scaling, and for
-  detecting differential item functioning (DIF) across
-  groups}
+  slope parameters}}
+
+  Additionally, specifying specific item name bundles (from
+  \code{colnames(data)}) will constrain all freely
+  estimated parameters in each item to be equal across
+  groups. This is useful for selecting 'anchor' items for
+  vertical and horizontal scaling, and for detecting
+  differential item functioning (DIF) across groups}
 
   \item{guess}{initial (or fixed) values for the
   pseudo-guessing parameter. Can be entered as a single
@@ -173,24 +174,26 @@
   to be used just before estimation begins} }}
 }
 \description{
-  \code{multipleGroup} performes a full-information
+  \code{multipleGroup} performs a full-information
   maximum-likelihood multiple group analysis for
   dichotomous and polytomous data under the item response
   theory paradigm using either Cai's (2010)
   Metropolis-Hastings Robbins-Monro (MHRM) algorithm or
-  with an EM approach.
+  with an EM algorithm approach.
 }
 \details{
   By default the estimation in \code{multipleGroup} assumes
   that the models are maximally independent, and therefore
-  could initially be performed by sub setting the data and
+  could initially be performed by sub-setting the data and
   running identical models with \code{confmirt} or
   \code{mirt} and aggregating the results (e.g.,
   log-likelihood). However, constrains may be imposed
   across groups by invoking various \code{invariance}
-  keywords and \code{constrain = ...} arguments, and by
-  inputing user specified design matrix from
-  \code{mod2values} or from passing \code{pars = 'values'}.
+  keywords and \code{constrain = ...} arguments, by
+  inputting user specified design matrix from
+  \code{mod2values} or from passing \code{pars = 'values'},
+  or by supplying a \code{constrain} list for user defined
+  equality constraints between parameters.
 }
 \examples{
 \dontrun{
@@ -206,7 +209,7 @@ dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 models <- confmirt.model('F1 = 1-15')
 
-mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
+mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
 
 # prev.mod can save precious iterations and help to avoid local minimums
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
@@ -231,7 +234,7 @@ anova(mod_scalar1, mod_scalar2) #fix mean
 anova(mod_fullconstrain, mod_scalar1) #fix variance
 
 
-#test whether first 6 slopes should be equal accross groups
+#test whether first 6 slopes should be equal across groups
 values <- multipleGroup(dat, models, group = group, pars = 'values')
 values
 constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
@@ -297,7 +300,7 @@ model2 <- confmirt.model()
 models <- list(D1=model1, D2=model2) #note the names match the groups
 
 #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
-mod_configural <- multipleGroup(dat, models, group = group) #completely seperate analyses
+mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
@@ -309,7 +312,7 @@ anova(mod_scalar, mod_metric)
 anova(mod_fullconstrain, mod_scalar)
 
 #same as above, but with MHRM (more accurate with 3 factors, but slower)
-mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') #completely seperate analyses
+mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') #completely separate analyses
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM') #equal slopes
 mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts', 'free_varcov'))

@@ -6,7 +6,7 @@
 #'
 #' Additionally, the \code{summary()} function will not return proper standardized loadings since the function
 #' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001 are filled in
-#' as placeholders.
+#' as place-holders.
 #'
 #' @aliases createItem
 #' @param name a character indicating the item class name to be defined
@@ -56,7 +56,7 @@
 #' mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 #' coef(mod2)
 #'
-#' ###nonlinear
+#' ###non-linear
 #' name <- 'nonlin'
 #' par <- c(a1 = .5, a2 = .1, d = 0)
 #' est <- c(TRUE, TRUE, TRUE)

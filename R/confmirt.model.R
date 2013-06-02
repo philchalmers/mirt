@@ -11,7 +11,7 @@
 #' 'enter' or 'return' key), or instead read in a string version of the model syntax.
 #'
 #' There is an optional keyword for specifying the correlation between relationships between factors
-#' called \code{COV}, and nonlinear factor products can be included by enclosing the product combination
+#' called \code{COV}, and non-linear factor products can be included by enclosing the product combination
 #' on the left hand side of the declaration (e.g., \code{(F1*F1)} would create a quadratic factor for
 #' \code{F1}).
 #'
