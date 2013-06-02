@@ -43,8 +43,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         }
     }
     stagecycle <- 1L
-    converge <- 1L
-    LLwarn <- FALSE
+    converge <- 1L    
     inverse_fail_count <- 1L
     ##
     L <- c()
@@ -134,8 +133,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                                          itemtrace=gitemtrace[[g]])
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
-        }
-        if(LL < lastLL && cycles > 1L) LLwarn <- TRUE
+        }        
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
@@ -167,7 +165,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     if(list$SEM){
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
-        for(group in 1:ngroups){
+        for(group in 1L:ngroups){
             for (i in 1L:J){
                 deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]],
                                estHess=TRUE, BFACTOR=BFACTOR)
@@ -256,9 +254,9 @@ Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemlo
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior, L, BFACTOR,
                      constrain, LBOUND, UBOUND, itemloc){
     longpars[est] <- p
-    if(length(constrain) > 0)
-       for(i in 1:length(constrain))
-           longpars[constrain[[i]][-1]] <- longpars[constrain[[i]][1]]
+    if(length(constrain) > 0L)
+       for(i in 1L:length(constrain))
+           longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     if(any(longpars < LBOUND | longpars > UBOUND )) return(1e10)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(J)

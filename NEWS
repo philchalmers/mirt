@@ -3,10 +3,8 @@ Changes in mirt 0.7.4
 NEW FEATURES
 
 - mixedmirt() more supportive of user defined input formulas, and now includes an internal 'items'
-  argument to create the item design matrix used to estimate the intercepts 
-
-- fixed.constrain default in mixedmirt set to TRUE, and item designs better integrated and can
-  include crossing itemdesigns with person level covariates
+  argument to create the item design matrix used to estimate the intercepts. More closely mirrors 
+  the outputed results from lme4 for Rasch models as well
 
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
   that contain slopes equal to zero
