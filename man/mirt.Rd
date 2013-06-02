@@ -462,7 +462,7 @@ plot(mod2)
 
 anova(mod1, mod2) #compare the two models
 scores <- fscores(mod2) #save factor score table
-scoresfull <- fscores(mod2, full.scores = TRUE, score.only = TRUE) #factor scores for original data
+scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores for original data
 
 #confirmatory
 cmodel <- confmirt.model()
@@ -487,7 +487,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
 
 coef(pmod1_equalslopes)
-anova(pmod1_equalslopes, pmod1) #significantly worse fit with all criteria
+anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
 
 pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 1500))
 summary(pmod2)
