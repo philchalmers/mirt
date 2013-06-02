@@ -284,20 +284,12 @@ dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 
 #group models
-model1 <- confmirt.model()
+model <- confmirt.model()
    F1 = 1-5
    F2 = 6-10
    F3 = 11-15
 
-
-model2 <- confmirt.model()
-   F1 = 1-5
-   F2 = 6-10
-   F3 = 11-15
-   COV = F1*F2, F1*F3, F2*F3
-
-
-models <- list(D1=model1, D2=model2) #note the names match the groups
+models <- list(D1=model, D2=model) #note the names match the groups
 
 #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses

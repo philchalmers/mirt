@@ -798,6 +798,8 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     estindex <- estpars
     estindex[estpars] <- est
     rij <- 1
+    gTheta <- vector('list', ngroups)
+    for(g in 1L:ngroups) gTheta[[g]] <- Theta
 
     for (cycles in 3L:NCYCLES){
 
@@ -809,15 +811,16 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
 
         for(g in 1L:ngroups){
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)            
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+            gTheta[[g]] <- Theta %*% chol(gstructgrouppars[[g]]$gcov) + gstructgrouppars[[g]]$gmeans
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc)
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
                 Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
@@ -825,12 +828,12 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                            Theta=Theta, prior=prior[[g]],
+                                            Theta=gTheta[[g]], prior=prior[[g]],
                                             specific=list$specific, sitems=list$sitems,
                                             itemloc=itemloc, itemtrace=gitemtrace[[g]])
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
+                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc,
                                          itemtrace=gitemtrace[[g]])
             }
         }
@@ -841,7 +844,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             }
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
-                      Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
+                      gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
                       constrain=constrain, TOL=MSTEPTOL)
         rijlast <- rij

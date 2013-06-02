@@ -26,7 +26,7 @@ test_that('three factor', {
     
     #group models
     model1 <- confmirt.model(MGmodelg1, quiet = TRUE)    
-    model2 <- confmirt.model(MGmodelg2, quiet = TRUE)    
+    model2 <- confmirt.model(MGmodelg1, quiet = TRUE)    
     models <- list(D1=model1, D2=model2)    
     
     suppressWarnings(mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',

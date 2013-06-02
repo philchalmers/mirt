@@ -101,20 +101,25 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         for(i in 1L:J)
             pars[[g]][[i]]@any.prior <- any(!is.nan(pars[[g]][[i]]@n.prior.mu)) || 
                 any(!is.nan(pars[[g]][[i]]@b.prior.alpha)) 
+    gTheta <- vector('list', ngroups)
+    for(g in 1L:ngroups) gTheta[[g]] <- Theta
+    warn <- FALSE
     
     #EM
     for (cycles in 1L:NCYCLES){
         #priors
-        for(g in 1L:ngroups){
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, itemloc=itemloc)            
+        for(g in 1L:ngroups){            
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+            gTheta[[g]] <- Theta %*% chol(gstructgrouppars[[g]]$gcov) + gstructgrouppars[[g]]$gmeans
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc)            
+            
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
                 Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)                
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
@@ -124,16 +129,17 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                            Theta=Theta, prior=prior[[g]],
+                                            Theta=gTheta[[g]], prior=prior[[g]],
                                             specific=specific, sitems=sitems,
                                             itemloc=itemloc, itemtrace=gitemtrace[[g]])
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
+                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc,
                                          itemtrace=gitemtrace[[g]])
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
-        }        
+        }                
+        if(cycles > 3L && lastLL > LL) warn <- TRUE
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
@@ -145,7 +151,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         if(cycles == 2L) bump <- 500
         if(cycles == 3L) bump <- 1        
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
-                      Theta=Theta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
+                      gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
                       constrain=constrain, TOL=MSTEPTOL, bump=bump)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -158,6 +164,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     } #END EM
     if(cycles == NCYCLES)
         message('EM iterations terminated after ', cycles, ' iterations.')
+    if(warn)
+        warning('EM likelihood was not strictly increasing. Model is probably not identified or is unstable')
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
@@ -167,14 +175,14 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         ind1 <- 1L
         for(group in 1L:ngroups){
             for (i in 1L:J){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE, prior=Prior[[group]],
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[g]], EM = TRUE, prior=Prior[[group]],
                                estHess=TRUE, BFACTOR=BFACTOR)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1L
             }
             i <- i + 1L
-            deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE,
+            deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[g]], EM = TRUE,
                            pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
                            itemloc=itemloc, estHess=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
@@ -228,11 +236,11 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
     return(list(r1=r1, expected=retlist$expected))
 }
 
-Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemloc, PrepList, L,
+Mstep <- function(pars, est, longpars, ngroups, J, gTheta, Prior, BFACTOR, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, TOL, bump=1){
     p <- longpars[est]
     opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL*bump, abstol=TOL*bump),
-                 est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta,
+                 est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
                  UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)
     longpars[est] <- opt$par
@@ -242,7 +250,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemlo
     i = J + 1L
     for(group in 1L:ngroups){
         if(any(pars[[group]][[i]]@est)){
-            newpars <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM = TRUE,
+            newpars <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], EM = TRUE,
                            pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
                            itemloc=itemloc, prior=Prior[[group]])
             longpars[pars[[group]][[i]]@parnum[pars[[group]][[i]]@est]] <- newpars
@@ -251,7 +259,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, Theta, Prior, BFACTOR, itemlo
     return(longpars)
 }
 
-Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior, L, BFACTOR,
+Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Prior, L, BFACTOR,
                      constrain, LBOUND, UBOUND, itemloc){
     longpars[est] <- p
     if(length(constrain) > 0L)
@@ -263,7 +271,7 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior,
     LL <- 0    
     for(g in 1L:ngroups){                
         for(i in 1L:J)
-            LLs[i] <- LogLikMstep(pars[[g]][[i]], Theta=Theta, EM=BFACTOR, prior=Prior[[g]])
+            LLs[i] <- LogLikMstep(pars[[g]][[i]], Theta=gTheta[[g]], EM=BFACTOR, prior=Prior[[g]])
         LL <- LL + sum(LLs)
     }
     LL
@@ -277,7 +285,7 @@ LogLikMstep <- function(x, Theta, EM=FALSE, prior=NULL){
     return(LL)
 }
 
-Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prior, L, BFACTOR,
+Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Prior, L, BFACTOR,
                        constrain, LBOUND, UBOUND, itemloc){
     longpars[est] <- p
     if(length(constrain) > 0L)
@@ -288,7 +296,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, Prio
     ind1 <- 1L
     for(group in 1L:ngroups){
         for (i in 1L:J){
-            deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, EM=TRUE, BFACTOR=BFACTOR,
+            deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], EM=TRUE, BFACTOR=BFACTOR,
                            prior=Prior[[group]])
             ind2 <- ind1 + length(deriv$grad) - 1L
             g[ind1:ind2] <- deriv$grad
