@@ -76,7 +76,6 @@ Collate:
     'fscores.internal.R'
     'itemplot.internal.R'
     'mixedmirt.R'
-    'MHRM.mixed.R'
     'Mixed-methods.R'
     'fitIndices.R'
     'testinfo.R'

@@ -1,5 +1,6 @@
 MHRM.group <- function(pars, constrain, PrepList, list)
-{
+{       
+    FD <- nrow(pars[[1L]][[1L]]@fixed.design) > 1L
     verbose <- list$verbose
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES
@@ -149,7 +150,10 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]],
                                          itemloc=itemloc)
             for (i in 1L:J){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp, estHess=TRUE)
+                if(FD) deriv <- Deriv(x=pars[[group]][[i]], 
+                                      Theta=cbind(pars[[group]][[i]]@fixed.design, thetatemp),
+                                      estHess=TRUE)
+                else deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp, estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
                 g[ind1:ind2] <-  deriv$grad

@@ -296,7 +296,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1)
     } else if(opts$method == 'MIXED'){
-        ESTIMATE <- MHRM.mixed(pars=pars, constrain=constrain,
+        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain,
                                     PrepList=PrepList, 
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
