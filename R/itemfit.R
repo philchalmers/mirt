@@ -235,7 +235,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         ret
     }
     collapseCells <- function(O, E, mincell = 1){
-        for(i in 1:length(O)){
+        for(i in 1L:length(O)){
             On <- O[[i]]
             En <- E[[i]]
             drop <- which(rowSums(is.na(En)) > 0)
@@ -331,9 +331,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         O <- coll$O
         E <- coll$E
         for(i in 1L:J){
+            if (is.null(dim(O[[i]]))) next
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
             df.S_X2[i] <- (ncol(O[[i]])-1L) * nrow(O[[i]]) - sum(pars[[i]]@est) - sum(is.na(E[[i]]))
         }
+        S_X2[df.S_X2 <= 0] <- NaN        
         ret$S_X2 <- S_X2
         ret$df.S_X2 <- df.S_X2
         ret$p.S_X2 <- round(1 - pchisq(S_X2, df.S_X2), 4)
