@@ -24,6 +24,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!all(apply(data, 2, class) %in% c('integer', 'numeric')))
         stop('Input data must be integer or numeric values only')
     rownames(data) <- 1L:nrow(data)
+    if(is.null(colnames(data)))
+        colnames(data) <- paste0('Item.', 1L:ncol(data))
     Data$data <- data
     if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
     if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
