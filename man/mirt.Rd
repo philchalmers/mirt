@@ -474,6 +474,15 @@ cmod <- mirt(data, cmodel)
 coef(cmod)
 anova(cmod, mod2)
 
+#partially compensetory item 3?
+cmodel2 <- confmirt.model('
+   F1 = 1,3,4,5
+   F2 = 2,3')
+
+partcomp <- mirt(data, cmodel2, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'))
+coef(partcomp)
+itemplot(partcomp, 3)
+
 ###########
 #data from the 'ltm' package in numeric format
 pmod1 <- mirt(Science, 1)

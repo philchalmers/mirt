@@ -96,11 +96,15 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
            est[constrain[[i]][-1L]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
-    bump <- 1000    
-    for(g in 1L:ngroups)
-        for(i in 1L:J)
+    bump <- 1000
+    any.prior <- FALSE
+    for(g in 1L:ngroups){
+        for(i in 1L:J){
             pars[[g]][[i]]@any.prior <- any(!is.nan(pars[[g]][[i]]@n.prior.mu)) || 
                 any(!is.nan(pars[[g]][[i]]@b.prior.alpha)) 
+            if(pars[[g]][[i]]@any.prior) any.prior <- TRUE
+        }
+    }
     gTheta <- vector('list', ngroups)
     for(g in 1L:ngroups) gTheta[[g]] <- Theta
     warn <- FALSE
@@ -163,8 +167,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         if(cycles > 3L && all(abs(preMstep.longpars - longpars) < TOL))  break
     } #END EM
     if(cycles == NCYCLES)
-        message('EM iterations terminated after ', cycles, ' iterations.')
-    if(warn)
+        message('EM iterations terminated after ', cycles, ' iterations.')    
+    if(warn && !any.prior)
         warning('EM likelihood was not strictly increasing. Model is probably not identified or is unstable')
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))

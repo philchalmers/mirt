@@ -130,13 +130,13 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     if(length(prodlist) > 0){        
         Theta <- thetaComb(theta, x@nfact)        
         ThetaFull <- prodterms(Theta,prodlist)
-    } else Theta <- ThetaFull <- thetaComb(theta, nfact)            
+    } else Theta <- ThetaFull <- thetaComb(theta, nfact)    
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat
     info <- 0
     if(is(x@pars[[item]], 'custom') && any(type %in% c('info', 'infocontour')))
         stop('Unable to compute information for custom items')
-    if(!is(x@pars[[item]], 'custom')){
+    if(!class(x@pars[[item]]) %in% c('custom', 'partcomp')){
         if(nfact == 2){
             for(i in 1:length(degrees))
                 info <- info + iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=c(degrees[i],
@@ -144,7 +144,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         } else {
             info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
         }
-    }
+    } else message('Information functions could not be computed')    
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE){

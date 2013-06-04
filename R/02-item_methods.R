@@ -640,7 +640,7 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
     s.eps <- 1e-10
     P[P < s.eps] <- s.eps
     P[(1 - P) < s.eps] <- 1 - s.eps
-    P
+    return(cbind(1-P, P))
 }
 
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1

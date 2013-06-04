@@ -7,7 +7,7 @@ test_that('poly', {
     vals <- mirt(Science, 1, large = TRUE, verbose=FALSE)
     modp1 <- mirt(Science, 1, large = vals, verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')              
-    modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
+    modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE, technical = list(TOL=1e-6))
     expect_is(modp1, 'ConfirmatoryClass')          
     suppressMessages(modp2 <- mirt(Science, 2, verbose=FALSE))
     expect_is(modp2, 'ExploratoryClass')
@@ -16,7 +16,8 @@ test_that('poly', {
     expect_is(modp3, 'ConfirmatoryClass')
     modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
     expect_is(modp4, 'ConfirmatoryClass')
-    modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, verbose=FALSE)
+    modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, verbose=FALSE,
+                  technical = list(TOL=1e-6))
     expect_is(modp5, 'ConfirmatoryClass')
     
     fm1 <- fscores(modp1, verbose = FALSE)
