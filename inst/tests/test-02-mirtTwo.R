@@ -52,8 +52,8 @@ test_that('poly', {
     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE, verbose=FALSE)
     expect_is(grsm, 'ConfirmatoryClass')    
     expect_is(rsm, 'ConfirmatoryClass') 
-    expect_equal(rsm@df, 1971)
-    expect_equal(grsm@df, 1961)
+    expect_equal(rsm@df, 1970)
+    expect_equal(grsm@df, 1960)
     
     #item and test info
     Theta <- matrix(seq(-4,4,.01))

@@ -356,24 +356,30 @@ Theory)}
   categories. Throughout all models D is a constant
   (default 1.702):
 
-  \describe{ \item{Rasch}{ Only one intercept estimated.
-  \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-D*(\theta +
-  d))}} } \item{1-4PL}{ Depending on the model \eqn{u} may
-  be equal to 1 and \eqn{g} may be equal to 0. \deqn{P(x =
-  1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-D * (a_1 *
-  \theta_1 + a_2 * \theta_2 + d))}} For the 1PL model the
-  number of factors must equal 1, and all the \eqn{a_1}
-  values are constrained to be equal accross all items. }
-  \item{graded}{ The graded model consists of sequential
-  2PL models, and here \eqn{k} is the predicted category.
-  \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi)
-  - P(x \ge k + 1 | \theta, \phi)} } \item{grsm}{ A more
-  constrained version of the graded model where graded
-  spacing is equal accross item blocks and only adjusted by
-  a single 'difficulty' parameter (c). Again, \deqn{P(x = k
-  | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k +
-  1 | \theta, \phi)} but now \deqn{P = \frac{1}{1 + exp(-D
-  * (a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}} }
+  \describe{ \item{Rasch}{ Only one intercept estimated,
+  and the latent variance of \eqn{\theta} is freely
+  estimated. If the data have more than two categories then
+  a partial credit model is used instead (see 'gpcm'
+  below). \deqn{P(x = 1|\theta, d) = \frac{1}{1 +
+  exp(-D*(\theta + d))}} } \item{1-4PL}{ Depending on the
+  model \eqn{u} may be equal to 1 and \eqn{g} may be equal
+  to 0. \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1
+  + exp(-D * (a_1 * \theta_1 + a_2 * \theta_2 + d))}} For
+  the 1PL model the number of factors must equal 1, and if
+  so all the \eqn{a_1} values are constrained to be equal
+  accross all items and the latent variance of \eqn{\theta}
+  is freely estimated. } \item{graded}{ The graded model
+  consists of sequential 2PL models, and here \eqn{k} is
+  the predicted category. \deqn{P(x = k | \theta, \psi) =
+  P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
+  \phi)} } \item{grsm}{ A more constrained version of the
+  graded model where graded spacing is equal accross item
+  blocks and only adjusted by a single 'difficulty'
+  parameter (c) while the latent variance of \eqn{\theta}
+  is freely estimated. Again, \deqn{P(x = k | \theta, \psi)
+  = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
+  \phi)} but now \deqn{P = \frac{1}{1 + exp(-D * (a_1 *
+  \theta_1 + a_2 * \theta_2 + d_k + c))}} }
   \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are
   treated as fixed and orderd values from 0:(k-1) (in the
   nominal model \eqn{d_0} is also set to 0). Additionally,
@@ -382,6 +388,12 @@ Theory)}
   \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
   d_k)} {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 *
   \theta_2) + d_k)}}
+
+  For partial credit model (when \code{itemtype = 'Rasch'};
+  unidimenional only) the above model is further
+  constrained so that \eqn{ak_k = (0,1,\ldots, k-1)},
+  \eqn{a_1 = 1}, and the latent variance of \eqn{\theta_1}
+  is freely estimated.
 
   In the nominal model this parametrizations helps to
   identify the empirical ordering of the categories by
@@ -396,16 +408,16 @@ Theory)}
   first, and therefore the second category should be
   understood as the 'lowest score'.
 
-  } \item{rsm}{ A more constrained version of the
-  generalized partial credit model where the spacing is
-  equal accross item blocks and only adjusted by a single
-  'difficulty' parameter (c), and the discrimination
-  parameter is constrained to be a constant. Note that this
-  is analogous to the relationship between the graded model
-  and the grsm (with an additional constraint regarding the
+  } \item{rsm}{ A more constrained version of the partial
+  credit model where the spacing is equal accross item
+  blocks and only adjusted by a single 'difficulty'
+  parameter (c). Note that this is analogous to the
+  relationship between the graded model and the grsm (with
+  an additional constraint regarding the fixed
   discrimination parameters; the discrimination constraint
   can, however, be relaxed by adjusting the starting values
-  manually). } \item{mcm}{For identification \eqn{ak_0 =
+  specifications manually and applying additional equality
+  constraints). } \item{mcm}{For identification \eqn{ak_0 =
   d_0 = 0} and \eqn{\sum_0^k t_k = 1}. \deqn{P(x = k |
   \theta, \psi) = C_0 (\theta) * t_k + (1 - C_0 (\theta)) *
   \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +

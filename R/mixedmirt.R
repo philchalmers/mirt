@@ -6,6 +6,19 @@
 #' multilevel/mixed IRT if random and fixed effects are included. The method uses the MH-RM
 #' algorithm exclusively. The D scaling parameter is automatically fixed to 1 so that all
 #' coefficients can be interpreted on the exponential metric.
+#' 
+#' For dichotomous response models (polytomous extensions with \code{'gpcm'} items is also available), 
+#' \code{mixedmirt} follows the general form
+#' 
+#'  \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-1 * [\mathbf{\theta a} + 
+#'  \mathbf{X \beta} + \mathbf{Z \gamma}])}} 
+#'  
+#'  where X is a design matrix with associated \eqn{\beta} fixed effect coefficients, and Z is a 
+#'  design matrix with associated \eqn{\gamma} random effects. For simplicity and easier 
+#'  interpretation, the unique item intercept values typically found in \eqn{\mathbf{X \beta}} 
+#'  are extracted and reassigned within mirt's 'intercept' parameters (e.g., \code{'d'}). 
+#'  To observe how the design matrices are structured prior to reassignment and estimation pass 
+#'  the argument \code{return.design = TRUE}.
 #'
 #' @aliases mixedmirt coef,MixedClass-method summary,MixedClass-method anova,MixedClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
@@ -29,6 +42,7 @@
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for 
 #' more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
+#' @param return.design logical; return the design matrices? 
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See 
 #' \code{\link{confmirt}} for more detail
 #'
@@ -82,7 +96,17 @@
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)
-#'
+#' 
+#' #view fixed design matrix for mod2 and mod2 without unique item level intercepts
+#' design <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group + pseudoIQ, return.design = TRUE)
+#' design2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ, return.design = TRUE)
+#' 
+#' #notice that in result above, the intercepts 'items1 to items 10' were reassigned to 'd'
+#' head(design$X) 
+#' tail(design$X) 
+#' head(design2$X2) #no intercepts design here to be reassigned
+#' tail(design2$X2)  
+#' 
 #' ###################################################
 #' ##LLTM, and 2PL version of LLTM
 #' data(SAT12)
@@ -130,7 +154,7 @@
 #' 
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
-                      itemdesign = NULL, constrain = NULL, pars = NULL, ...)
+                      itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE, ...)
 {
     Call <- match.call()       
     if(length(itemtype) == 1) itemtype <- rep(itemtype, ncol(data))
@@ -151,10 +175,11 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         longdata[, colnames(itemdesign)[i]] <- rep(itemdesign[ ,i], each=nrow(data))
     mf <- model.frame(fixed, longdata)
     mm <- model.matrix(fixed, mf)   
+    if(return.design) return(list(X=mm, Z=NaN))
     itemindex <- colnames(mm) %in% paste0('items', 1L:ncol(data))
     mmitems <- mm[ , itemindex]
     mm <- mm[ ,!itemindex, drop = FALSE]
-    mixed.design <- list(fixed=mm, random=NaN)
+    mixed.design <- list(fixed=mm, random=NaN)    
     if(is.null(constrain)) constrain <- list()    
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                      D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
@@ -163,7 +188,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     for(i in 1L:ncol(mm)){
         mmparnum <- sv$parnum[sv$name == mmnames[i]]            
         constrain[[length(constrain) + 1L]] <- mmparnum
-    }        
+    }            
     if(ncol(mmitems) > 0L){                
         itemindex <- colnames(data)[which(paste0('items', 1L:ncol(data)) %in% colnames(mmitems))]        
         for(i in itemindex){
@@ -171,13 +196,6 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
             tmp$est[tmp$name %in% paste0('d', 1L:50L)] <- TRUE
             tmp$est[tmp$name == 'd'] <- TRUE
             sv[i == sv$item, ] <- tmp
-        }        
-        #FIXME: fix slope to be at 1? Questionable
-        if(!colnames(data)[1L] %in% itemindex){
-            tmp <- sv[sv$item == colnames(data)[1L], ]
-            tmp$est[tmp$name %in% paste0('a', 1L:50L)] <- FALSE
-            tmp$value[tmp$name %in% paste0('a', 1L:50L)] <- 1
-            sv[sv$item == colnames(data)[1L], ] <- tmp            
         }        
         attr(sv, 'values') <- pars
         pars <- sv

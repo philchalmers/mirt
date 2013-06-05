@@ -14,13 +14,14 @@ test_that('mixed dich', {
     model <- confmirt.model(mixedmirt1, quiet = TRUE)  
     
     #group as a fixed effect predictor (aka, uniform dif)
-    mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, verbose = FALSE)
+    mod1 <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, verbose = FALSE))
     expect_is(mod1, 'MixedClass')                  
     
     #model using 2PL items instead of only Rasch
-    mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, itemtype = '2PL', verbose = FALSE)    
+    mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
+                                        itemtype = '2PL', verbose = FALSE))
     expect_is(mod1b, 'MixedClass')
-    expect_equal(mod1@df - mod1b@df, 10)        
+    expect_equal(mod1@df - mod1b@df, 9)        
 })   
 
 test_that('item and group predictors', {    
@@ -46,6 +47,7 @@ test_that('item and group predictors', {
                        itemdesign = itemdesign, verbose = FALSE))
     expect_is(LLTM2, 'MixedClass')
     expect_equal(LLTM@df - LLTM2@df, 1)    
+    
     
 }) 
 

@@ -7,7 +7,8 @@
 \usage{
   mixedmirt(data, covdata = NULL, model, fixed = ~1,
     random = NULL, itemtype = "Rasch", itemdesign = NULL,
-    constrain = NULL, pars = NULL, ...)
+    constrain = NULL, pars = NULL, return.design = FALSE,
+    ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -52,6 +53,9 @@
   \item{pars}{used for parameter starting values. See
   \code{\link{mirt}} for more detail}
 
+  \item{return.design}{logical; return the design
+  matrices?}
+
   \item{...}{additional arguments to be passed to the MH-RM
   estimation engine. See \code{\link{confmirt}} for more
   detail}
@@ -67,6 +71,25 @@
   exclusively. The D scaling parameter is automatically
   fixed to 1 so that all coefficients can be interpreted on
   the exponential metric.
+}
+\details{
+  For dichotomous response models (polytomous extensions
+  with \code{'gpcm'} items is also available),
+  \code{mixedmirt} follows the general form
+
+  \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 +
+  exp(-1 * [\mathbf{\theta a} + \mathbf{X \beta} +
+  \mathbf{Z \gamma}])}}
+
+  where X is a design matrix with associated \eqn{\beta}
+  fixed effect coefficients, and Z is a design matrix with
+  associated \eqn{\gamma} random effects. For simplicity
+  and easier interpretation, the unique item intercept
+  values typically found in \eqn{\mathbf{X \beta}} are
+  extracted and reassigned within mirt's 'intercept'
+  parameters (e.g., \code{'d'}).  To observe how the design
+  matrices are structured prior to reassignment and
+  estimation pass the argument \code{return.design = TRUE}.
 }
 \examples{
 \dontrun{
@@ -115,6 +138,16 @@ mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group * pseudoIQ, 
 summary(mod2)
 anova(mod1b, mod2)
 anova(mod2, mod3)
+
+#view fixed design matrix for mod2 and mod2 without unique item level intercepts
+design <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group + pseudoIQ, return.design = TRUE)
+design2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ, return.design = TRUE)
+
+#notice that in result above, the intercepts 'items1 to items 10' were reassigned to 'd'
+head(design$X)
+tail(design$X)
+head(design2$X2) #no intercepts design here to be reassigned
+tail(design2$X2)
 
 ###################################################
 ##LLTM, and 2PL version of LLTM

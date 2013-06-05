@@ -2,6 +2,9 @@ Changes in mirt 0.7.4
 
 NEW FEATURES
 
+- When itemtype all equal 'Rasch', '1PL', 'rsm', or 'grsm' in unidimensional models the latent 
+  variance parameter is automatically freed and is estimated
+
 - mixedmirt() more supportive of user defined input formulas, and now includes an internal 'items'
   argument to create the item design matrix used to estimate the intercepts. More closely mirrors 
   the outputed results from lme4 for Rasch models as well
