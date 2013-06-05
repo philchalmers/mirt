@@ -90,22 +90,22 @@
 #' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL', cl=cl)
 #' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 #'
-#' #continuous predictor and interaction model with group in Rasch model
-#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group + pseudoIQ, cl=cl)
-#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group * pseudoIQ, cl=cl)
+#' #continuous predictor and interaction model with group 
+#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ, cl=cl)
+#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group * pseudoIQ, cl=cl)
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)
 #' 
-#' #view fixed design matrix for mod2 and mod2 without unique item level intercepts
-#' design <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group + pseudoIQ, return.design = TRUE)
-#' design2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ, return.design = TRUE)
+#' #view fixed design matrix with and without unique item level intercepts
+#' withint <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, return.design = TRUE)
+#' withoutint <- mixedmirt(data, covdata, model, fixed = ~ 0 + group, return.design = TRUE)
 #' 
 #' #notice that in result above, the intercepts 'items1 to items 10' were reassigned to 'd'
-#' head(design$X) 
-#' tail(design$X) 
-#' head(design2$X2) #no intercepts design here to be reassigned
-#' tail(design2$X2)  
+#' head(withint$X) 
+#' tail(withint$X) 
+#' head(withoutint$X) #no intercepts design here to be reassigned into item intercepts
+#' tail(withoutint$X)  
 #' 
 #' ###################################################
 #' ##LLTM, and 2PL version of LLTM
@@ -120,26 +120,30 @@
 #'
 #' #notice that the 'fixed = ~ ... + items' argument is ommited
 #' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign, cl=cl)
+#' summary(LLTM)
 #' coef(LLTM)
 #' wald(LLTM)
-#' L <- matrix(c(-1, 1), 1)
+#' L <- c(-1, 1, 0)
 #' wald(LLTM, L) #first half different from second
 #'
 #' #compare to items with estimated slopes (2PL)
 #' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL', 
 #'                    itemdesign = itemdesign, cl=cl)
+#' anova(twoPL, LLTM) #much better fit
+#' summary(twoPL)
 #' coef(twoPL)
+#' 
 #' wald(twoPL)
 #' L <- matrix(0, 1, 34)
 #' L[1, 1] <- 1
 #' L[1, 2] <- -1
-#' wald(twoPL, L) #n.s.
-#' anova(twoPL, LLTM)
+#' wald(twoPL, L) #n.s. 
 #' #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #' #    half of the test is any easier/harder than the last
 #' 
 #' ###################################################
 #' ### Polytomous example
+#' 
 #' #make an arbitrary group difference
 #' covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
 #' 
@@ -149,7 +153,7 @@
 #' #gpcm to estimate slopes 
 #' mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items,
 #'                  itemtype = 'gpcm')
-#' coef(mod2)
+#' summary(mod2)
 #' anova(mod, mod2)
 #' 
 #' }

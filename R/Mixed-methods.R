@@ -33,38 +33,32 @@ setMethod(
     }
 )
 
-# setMethod(
-#     f = "summary",
-#     signature = 'MixedClass',
-#     definition = function(object, digits = 3, ...)
-#     {
-#         cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
-#             "\n\n", sep = "")
-#         cat('Fixed effects:\n')
-#         if(object@mixedlist$fixed.constrain){
-#             fixed <- data.frame(Estimate=object@mixedlist$betas, 'Std.Error'=object@mixedlist$SEbetas,
-#                                 row.names=names(object@mixedlist$SEbetas))
-#         } else {
-#             nfixed <- length(object@mixedlist$betas)
-#             nms <- names(object@mixedlist$betas)
-#             itemnames <- colnames(data)
-#             J <- ncol(object@data)
-#             betas <- SEbetas <- names <- c()
-#             for(i in 1:J){
-#                 tmp1 <- object@pars[[i]]@par[1:nfixed]
-#                 tmp2 <- object@pars[[i]]@SEpar[1:nfixed]
-#                 names <- c(names, paste(itemnames[i], '.', nms, sep = ''))
-#                 betas <- c(betas, tmp1)
-#                 SEbetas <- c(SEbetas, tmp2)
-#             }
-#             fixed <- data.frame(Estimate=betas, 'Std.Error'=SEbetas,
-#                                 row.names=names)
-#         }
-#         fixed$'t.value' <- fixed$Estimate / fixed$'Std.Error'
-#         print(round(fixed, digits))
-#         cat('\n')
-#     }
-# )
+setMethod(
+    f = "summary",
+    signature = 'MixedClass',
+    definition = function(object, digits = 3, ...)
+    {
+        cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
+            "\n\n", sep = "")        
+        nbetas <- ncol(object@pars[[1L]]@fixed.design)
+        out <- out2 <- data.frame()
+        if(nbetas > 0L){
+            out <- data.frame(Estimate=object@pars[[1L]]@par[1L:nbetas], 
+                                    'Std.Error'=object@pars[[1L]]@SEpar[1L:nbetas],
+                                    row.names=names(object@pars[[1L]]@est[1L:nbetas]))
+            out$'t.value' <- out$Estimate / out$'Std.Error'
+        }        
+        if(all(dim(out) != 0L)){
+            cat('Fixed effects:\n')        
+            print(round(out, digits))
+        }
+        if(all(dim(out2) != 0L)){
+            cat('\nRandom effect parameters:\n')        
+            print(round(out2, digits))
+        }
+        cat('\n')
+    }
+)
 
 setMethod(
     f = "coef",
