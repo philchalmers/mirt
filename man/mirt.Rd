@@ -556,6 +556,9 @@ data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
 sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values')
 sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1)
 
+#also possible to edit start values with a GUI approach with
+#   sv <- edit(sv)
+
 mod1 <- mirt(data, 1)
 mod2 <- mirt(data, 1, itemtype = 'grsm', pars = sv)
 coef(mod2)
