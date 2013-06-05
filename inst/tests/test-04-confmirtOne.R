@@ -3,7 +3,7 @@ context('confmirtOne')
 test_that('exploratory mods', {
     data(LSAT7)
     fulldata <- expand.table(LSAT7)
-    onefact <- confmirt(fulldata, 1, verbose = FALSE)
+    onefact <- confmirt(fulldata, 1, verbose = FALSE, draws = 10)
     expect_is(onefact, 'ConfirmatoryClass')
     names <- wald(onefact)
     L <- matrix(0, 1, length(names))
@@ -17,10 +17,10 @@ test_that('exploratory mods', {
     expect_is(W2, 'wald')
     fitonefact <- fitIndices(onefact)
     expect_is(fitonefact, 'list')
-    suppressWarnings(twofact <- confmirt(fulldata, 2, verbose = FALSE))
+    suppressWarnings(twofact <- confmirt(fulldata, 2, verbose = FALSE, draws = 10))
     expect_is(twofact, 'ExploratoryClass')
     fulldata[1,1] <- fulldata[2,2] <- NA
-    onefactmissing <- confmirt(fulldata, 1, verbose = FALSE)
+    onefactmissing <- confmirt(fulldata, 1, verbose = FALSE, draws = 10)
     expect_is(onefactmissing, 'ConfirmatoryClass')
         
     fs1 <- fscores(onefact, verbose = FALSE)

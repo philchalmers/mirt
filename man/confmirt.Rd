@@ -11,7 +11,7 @@
   confmirt(data, model, itemtype = NULL, guess = 0, upper =
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
-    verbose = TRUE, draws = 3000, rotate = 'oblimin',
+    verbose = TRUE, draws = 5000, rotate = 'oblimin',
     Target = NULL, key = NULL, D = 1.702, cl = NULL,
     technical = list(), ...)
 

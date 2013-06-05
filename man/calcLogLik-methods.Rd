@@ -40,6 +40,7 @@
 mod1withLogLik <- calcLogLik(mod1, draws=5000)
 
 #with parallel using detected number of cores
+#note: can also be directly passed as an argument to confmirt, multipleGroup, or mixemirt
 library(parallel)
 cl <- makeCluster(detectCores())
 mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)

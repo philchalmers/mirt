@@ -105,7 +105,7 @@
 #' @usage
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
 #' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
-#' parprior = NULL, calcNull = TRUE, draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
+#' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
 #' key = NULL, D = 1.702, cl = NULL, technical = list(), verbose = TRUE, ...)
 #'
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
@@ -278,7 +278,7 @@
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
-                          draws = 3000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
+                          draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
                           key = NULL, D = 1.702, cl = NULL,
                           technical = list(), verbose = TRUE, ...)
 {

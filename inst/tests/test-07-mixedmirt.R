@@ -14,12 +14,13 @@ test_that('mixed dich', {
     model <- confmirt.model(mixedmirt1, quiet = TRUE)  
     
     #group as a fixed effect predictor (aka, uniform dif)
-    mod1 <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, verbose = FALSE))
+    mod1 <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
+                                       verbose = FALSE, draws = 10))
     expect_is(mod1, 'MixedClass')                  
     
     #model using 2PL items instead of only Rasch
     mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
-                                        itemtype = '2PL', verbose = FALSE))
+                                        itemtype = '2PL', verbose = FALSE, draws = 10))
     expect_is(mod1b, 'MixedClass')
     expect_equal(mod1@df - mod1b@df, 9)        
 })   
@@ -37,14 +38,14 @@ test_that('item and group predictors', {
                     itemdesign = itemdesign, pars = 'values')
     expect_is(sv, 'data.frame')       
     suppressWarnings(LLTM <- mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder + gender,
-                      itemdesign = itemdesign, verbose = FALSE))
+                      itemdesign = itemdesign, verbose = FALSE, draws = 10))
     expect_is(LLTM, 'MixedClass')
     
     sv2 <- suppressWarnings(mixedmirt(data, covdata, model = model, fixed = ~ itemorder * gender,
                      itemdesign = itemdesign, pars='values'))
     expect_is(sv2, 'data.frame')       
     LLTM2 <- suppressWarnings(mixedmirt(data, covdata, model = model, fixed = ~ itemorder * gender,
-                       itemdesign = itemdesign, verbose = FALSE))
+                       itemdesign = itemdesign, verbose = FALSE, draws = 10))
     expect_is(LLTM2, 'MixedClass')
     expect_equal(LLTM@df - LLTM2@df, 1)    
     
@@ -55,10 +56,10 @@ test_that('polytomous', {
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
     model <- confmirt.model('F1 = 1-4', quiet = TRUE)
     suppressWarnings(mod <- mixedmirt(Science, covdat, model=model,
-                                       fixed = ~ 0 + group + items, verbose = FALSE))
+                                       fixed = ~ 0 + group + items, verbose = FALSE, draws = 10))
     expect_is(mod, 'MixedClass')
     
-    suppressWarnings(mod2 <- mixedmirt(Science, covdat, model=model,
+    suppressWarnings(mod2 <- mixedmirt(Science, covdat, model=model, draws = 10,
                                        fixed = ~ 0 + group + items, itemtype = 'gpcm', verbose = FALSE))
     expect_is(mod2, 'MixedClass')
     expect_equal(mod@df - mod2@df, 3)    

@@ -14,15 +14,14 @@ test_that('old2PL', {
     ubound <- c(Inf, Inf)
     
     x <- createItem(name, par=par, est=est, lbound=lbound, ubound=ubound, P=P.old2PL)
-    
-    #So, let's estimate it!
+        
     dat <- expand.table(LSAT7)
     sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars = 'values', verbose=FALSE)    
     expect_is(sv, 'data.frame')          
     mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose=FALSE)
     expect_is(mod, 'ConfirmatoryClass')          
     expect_is(coef(mod), 'list')
-    mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE)
+    mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE, draws = 10)
     expect_is(mod2, 'ConfirmatoryClass')          
     expect_is(coef(mod2), 'list')    
     

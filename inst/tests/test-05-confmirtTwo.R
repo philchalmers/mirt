@@ -49,15 +49,15 @@ test_that('confirmatory mods', {
     model.quad <- confmirt.model(modelquad, quiet = TRUE)
     model.combo <- confmirt.model(modelcombo, quiet = TRUE)    
     
-    suppressWarnings(mod1 <- confmirt(dataset,model.1, verbose = FALSE))
+    suppressWarnings(mod1 <- confmirt(dataset,model.1, verbose = FALSE, draws = 10))
     expect_is(mod1, 'ConfirmatoryClass')
     expect_equal(mod1@df, 308)
     
-    mod.quad <- confmirt(dataset, model.quad, verbose = FALSE)
+    mod.quad <- confmirt(dataset, model.quad, verbose = FALSE, draws = 10)
     expect_is(mod.quad, 'ConfirmatoryClass')
     expect_equal(mod.quad@df, 306)
     
-    suppressWarnings(mod.combo <- confmirt(dataset, model.combo, verbose = FALSE))
+    suppressWarnings(mod.combo <- confmirt(dataset, model.combo, verbose = FALSE, draws = 10))
     expect_is(mod.combo, 'ConfirmatoryClass')
     expect_equal(mod.combo@df, 308)
         

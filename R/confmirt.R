@@ -154,7 +154,7 @@
 #' @usage
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE,
-#' draws = 3000, rotate = 'oblimin', Target = NULL, key = NULL, D = 1.702, cl = NULL, technical = list(),  ...)
+#' draws = 5000, rotate = 'oblimin', Target = NULL, key = NULL, D = 1.702, cl = NULL, technical = list(),  ...)
 #'
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #'
@@ -270,7 +270,7 @@
 #'
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL,
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
-                     verbose = TRUE, draws = 3000, rotate = 'oblimin', Target = NULL,
+                     verbose = TRUE, draws = 5000, rotate = 'oblimin', Target = NULL,
                      key = NULL, D = 1.702, cl = NULL, technical = list(),  ...)
 {
     Call <- match.call()

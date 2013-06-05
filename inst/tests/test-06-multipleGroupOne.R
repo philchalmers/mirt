@@ -25,7 +25,7 @@ test_that('one factor', {
     expect_is(mod_scalar2, 'MultipleGroupClass')
     expect_equal(mod_scalar2@df, 1194)
     mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
-                                 invariance=c('slopes', 'intercepts', 'free_varcov'))    
+                                 invariance=c('slopes', 'intercepts', 'free_varcov'), draws = 10)    
     expect_is(mod_scalar1, 'MultipleGroupClass')    
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',

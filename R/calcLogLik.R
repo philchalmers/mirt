@@ -8,9 +8,9 @@
 #' calcLogLik(object, ...)
 #'
 #' \S4method{calcLogLik}{ExploratoryClass}(object,
-#'    draws = 3000, G2 = TRUE, cl = NULL)
+#'    draws = 5000, G2 = TRUE, cl = NULL)
 #' \S4method{calcLogLik}{ConfirmatoryClass}(object,
-#'    draws = 3000, G2 = TRUE, cl = NULL)
+#'    draws = 5000, G2 = TRUE, cl = NULL)
 #' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
 #' calcLogLik,ConfirmatoryClass-method
 #' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
@@ -39,6 +39,7 @@
 #' mod1withLogLik <- calcLogLik(mod1, draws=5000)
 #'
 #' #with parallel using detected number of cores
+#' #note: can also be directly passed as an argument to confmirt, multipleGroup, or mixemirt
 #' library(parallel)
 #' cl <- makeCluster(detectCores())
 #' mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)
@@ -48,7 +49,7 @@
 setMethod(
 	f = "calcLogLik",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, draws = 3000, G2 = TRUE, cl = NULL)
+	definition = function(object, draws = 5000, G2 = TRUE, cl = NULL)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J){
             if(nfact > 1L) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
@@ -69,13 +70,11 @@ setMethod(
 	    J <- length(pars)-1L
 	    nfact <- length(ExtractLambdas(pars[[1L]])) - length(object@prodlist) - pars[[1L]]@nfixedeffects
         LL <- matrix(0, N, draws)
-        grp <- ExtractGroupPars(pars[[length(pars)]])
-        fixed.design.list <- vector('list', J)
-        ##FIXME parallel processing off for some reason...
-#         if(!is.null(cl))
-#             LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist,
-#                            fulldata=fulldata, object=object, J=J)
-#         else
+        grp <- ExtractGroupPars(pars[[length(pars)]])          
+        if(!is.null(cl))
+            LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist,
+                           fulldata=fulldata, object=object, J=J)
+        else
             for(draw in 1L:draws)
                 LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist,
                                       fulldata=fulldata, object=object, J=J)
