@@ -763,7 +763,7 @@ setMethod(
         d <- x@par[parlength - 2L]
         a <- x@par[1L:nfact]
         D <- x@D
-        Pstar <- P.mirt(a, d, Theta, g=0, u=u, D=x@D)
+        Pstar <- P.mirt(a, d, Theta, g=0, u=1, D=x@D)
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
         for(i in 1L:nfact){
