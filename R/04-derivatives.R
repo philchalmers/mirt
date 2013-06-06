@@ -961,7 +961,7 @@ setMethod(
         Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, D=D)
         Num <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, D=D, returnNum = TRUE)
         Den <- rowSums(Num)
-        Pstar <- P.mirt(a, d, Theta, g=0, u=u, D=x@D)
+        Pstar <- P.mirt(a, d, Theta, g=0, u=1, D=x@D)
         Q <- 1 - P.mirt(a, d, Theta, g=g, u=u, D=x@D)
         Num2 <- P <- matrix(0, nrow(Theta), x@ncat)
         P[,-x@correctcat] <- Pn
