@@ -177,12 +177,13 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     colnames(longdata) <- c('ID', colnames(covdata), 'items', 'response')
     for(i in 1L:ncol(itemdesign))
         longdata[, colnames(itemdesign)[i]] <- rep(itemdesign[ ,i], each=nrow(data))
-    mf <- model.frame(fixed, longdata)
+    mf <- model.frame(fixed, longdata, na.action = NULL)
     mm <- model.matrix(fixed, mf)   
     if(return.design) return(list(X=mm, Z=NaN))
     itemindex <- colnames(mm) %in% paste0('items', 1L:ncol(data))
     mmitems <- mm[ , itemindex]
     mm <- mm[ ,!itemindex, drop = FALSE]
+    mm[is.na(mm)] <- 0    
     mixed.design <- list(fixed=mm, random=NaN)    
     if(is.null(constrain)) constrain <- list()    
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
