@@ -171,19 +171,23 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     } else itemdesign$items <- factor(1L:ncol(data))
     if(!is.null(random)) stop('random effects not yet supported')
     if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
-        stop('Predictor variable inputs must be data.frame objects')
+        stop('Predictor variable inputs must be data.frame objects')    
+    dropcases <- which(rowSums(is.na(covdata)) != 0)
+    if(length(dropcases) > 0L){
+        data <- data[-dropcases, ]
+        covdata <- covdata[-dropcases, ]
+    }
     longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID', 
                         varying=list(1L:ncol(data) + 1L), direction='long')
     colnames(longdata) <- c('ID', colnames(covdata), 'items', 'response')
     for(i in 1L:ncol(itemdesign))
         longdata[, colnames(itemdesign)[i]] <- rep(itemdesign[ ,i], each=nrow(data))
-    mf <- model.frame(fixed, longdata, na.action = NULL)
+    mf <- model.frame(fixed, longdata)
     mm <- model.matrix(fixed, mf)   
     if(return.design) return(list(X=mm, Z=NaN))
     itemindex <- colnames(mm) %in% paste0('items', 1L:ncol(data))
     mmitems <- mm[ , itemindex]
-    mm <- mm[ ,!itemindex, drop = FALSE]
-    mm[is.na(mm)] <- 0    
+    mm <- mm[ ,!itemindex, drop = FALSE]       
     mixed.design <- list(fixed=mm, random=NaN)    
     if(is.null(constrain)) constrain <- list()    
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
