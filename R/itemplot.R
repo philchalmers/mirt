@@ -1,6 +1,7 @@
 #' Displays item surface and information plots
 #'
-#' \code{itemplot} displays various item based IRT plots.
+#' \code{itemplot} displays various item based IRT plots, with special options for plotting items 
+#' that contain several 0 slope parameters.
 #'
 #'
 #' @aliases itemplot

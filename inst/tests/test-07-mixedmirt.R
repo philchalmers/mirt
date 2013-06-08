@@ -18,7 +18,8 @@ test_that('mixed dich', {
                                        verbose = FALSE, draws = 10))
     expect_is(mod1, 'MixedClass')                  
     
-    #model using 2PL items instead of only Rasch
+    #model using 2PL items instead of only Rasch, and with missing data
+    data[1,1] <- covdata[1,2] <- NA
     mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
                                         itemtype = '2PL', verbose = FALSE, draws = 10))
     expect_is(mod1b, 'MixedClass')

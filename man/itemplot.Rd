@@ -44,7 +44,9 @@
   \item{...}{additional arguments to be passed to lattice}
 }
 \description{
-  \code{itemplot} displays various item based IRT plots.
+  \code{itemplot} displays various item based IRT plots,
+  with special options for plotting items that contain
+  several 0 slope parameters.
 }
 \examples{
 \dontrun{

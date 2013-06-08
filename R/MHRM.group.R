@@ -293,7 +293,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             }
         }
     }
-    SEtmp <- diag(qr.solve(info))
+    SEtmp <- abs(diag(qr.solve(info)))
     if(any(SEtmp < 0)){
         warning("Negative SEs set to NaN.\n")
         SEtmp[SEtmp < 0 ] <- NaN

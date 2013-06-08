@@ -58,11 +58,15 @@
   (only applicable when \code{full.scores = TRUE})}
 }
 \description{
-  Computes MAP, EAP, EAP for sum-scores, WLE, or ML factor
-  scores with a multivariate normal prior distribution.
-  Will return either a table with the computed scores and
-  standard errors, or the original data matrix with scores
-  appended to the rightmost column.
+  Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for
+  sum-scores (Thissen et al., 1995), or WLE (Warm, 1989)
+  factor scores with a multivariate normal prior
+  distribution. Will return either a table with the
+  computed scores and standard errors, the original data
+  matrix with scores appended to the rightmost column, or
+  the scores only. By default the latent means are set to
+  be 0 for each factor, and the covariance matrix is set to
+  the identity matrix, though these can be overwritten.
 }
 \examples{
 \dontrun{
@@ -84,6 +88,19 @@ fscores(mod, method='ML')
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
+\references{
+  Embretson, S. E. & Reise, S. P. (2000). Item Response
+  Theory for Psychologists. Erlbaum.
+
+  Thissen, D., Pommerich, M., Billeaud, K., & Williams, V.
+  S. L. (1995). Item Response Theory for Scores on Tests
+  Including Polytomous Items with Ordered Responses.
+  \emph{Applied Psychological Measurement, 19}, 39-49
+
+  Warm, T. A. (1989). Weighted likelihood estimation of
+  ability in item response theory. \emph{Psychometrika,
+  54}, 427-450.
 }
 \keyword{factor.scores}
 
