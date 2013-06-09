@@ -29,6 +29,8 @@ NEW FEATURES
 
 BUG FIXES
 
+- limiting values in z.outfit and z.infit statistics for small sample sizes (fix suggested by Mike Linacre)
+
 - missing data gradient bug fix in MH-RM for dichotomous item models
 
 - global df fix for multidimensional confirmatory models 

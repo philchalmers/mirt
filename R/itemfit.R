@@ -151,9 +151,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 z2 <- pf$resid^2 / pf$W
                 outfit <- colSums(z2) / N
                 q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
+                q.outfit[q.outfit > 1.4142] <- 1.4142
                 z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
                 infit <- colSums(pf$W * z2) / colSums(pf$W)
                 q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
+                q.infit[q.infit > 1.4142] <- 1.4142
                 z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
                 ret$outfit <- outfit
                 ret$z.outfit <- z.outfit
