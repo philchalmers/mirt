@@ -58,8 +58,11 @@ NumericVector itemTrace(NumericVector a, const double *d,
 		}
 		z(i) += *d * *D;
 	}	
-	for (i = 0; i < nquad; i++) 
+	for (i = 0; i < nquad; i++){ 
 		P(i) = *g + (*u - *g) * (exp(z(i))/(1 + exp(z(i))));
+        if(P(i) < 1e-10) P(i) = 1e-10;
+        if((1.0 - P(i)) < 1e-10) P(i) = 1.0 - 1e-10;
+    }
 	
 	return P;		
 }
