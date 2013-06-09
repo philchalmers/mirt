@@ -350,7 +350,7 @@ RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RThe
 {		
     BEGIN_RCPP
     
-    int i, j, k;     
+    int i, j;     
     NumericVector a(Ra);
     NumericVector d(Rd);
     NumericVector Pg(Rg);
@@ -361,8 +361,7 @@ RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RThe
     NumericVector r1(Rr1);
     NumericVector r2(Rr2);    
     IntegerVector estHess(RestHess);        
-    const int nfact = Theta.ncol();
-    const int N = Theta.nrow();    
+    const int nfact = Theta.ncol();    
     NumericVector P, Pstar, Q, Qstar;
     const double g = Pg(0);
     const double u = Pu(0);
