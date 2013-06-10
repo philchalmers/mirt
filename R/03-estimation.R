@@ -56,7 +56,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                  D=opts$D, mixed.design=mixed.design, customItems=customItems,
-                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, cat.highlow=cat.highlow)        
+                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, cat.highlow=cat.highlow)
+    if(any(PrepListFull$itemtype == 'nominal') && is.null(cat.highlow) && !opts$NULL.MODEL)
+        message('\'cat.highlow\' matrix not specified, highest and lowest categories are used by default')    
     parnumber <- 1L
     for(g in 1L:Data$ngroups){
         tmp <- 1L:Data$ngroups

@@ -4,7 +4,7 @@
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous and polytomous data under the item response theory paradigm.
 #' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit,
-#' nominal, multiple choice, graded rating scale, Rasch rating scale, nested logistic,
+#' nominal, graded rating scale, Rasch rating scale, nested logistic,
 #' and partially compensatory models using the EM algorithm. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory'
 #' person or item level predictors, though these can only be included by using the
@@ -77,7 +77,7 @@
 #' and '4PLNRM', for the Rasch/partial credit, 1 and 2 parameter logistic,
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model,
 #' rating scale graded response model, generalized partial credit model, Rasch rating scale model, nominal model,
-#' multiple choice model, and 2-3PL partially compensatory model, and 2-4 parameter nested logistic
+#' 2-3PL partially compensatory model, and 2-4 parameter nested logistic
 #' models, respectively. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using
@@ -426,6 +426,9 @@
 #' (gpcmod <- mirt(Science, 1, 'gpcm'))
 #' coef(gpcmod)
 #' 
+#' #for the nominal model the lowest and highest categories are assumed to be the theoretically lowest
+#' #  and highest categories that related to the latetent trait(s), however a custom cat.highlow matrix 
+#' #  can be passed to declare which item category should be treated as the 'highest' and 'lowest' instead 
 #' (nomod <- mirt(Science, 1, 'nominal'))
 #' coef(nomod) #ordering of ak values suggest that the items are indeed ordinal 
 #' anova(gpcmod, nomod)

@@ -14,7 +14,7 @@ test_that('poly', {
     expect_equal(modp2@df, 70)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'ConfirmatoryClass')
-    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
+    modp4 <- suppressMessages(mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE))
     expect_is(modp4, 'ConfirmatoryClass')
     modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, verbose=FALSE,
                   technical = list(TOL=1e-6))
