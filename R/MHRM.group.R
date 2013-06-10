@@ -84,7 +84,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
     if(any(diag(L)[!estpars] > 0L)){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(redindex[diag(L)[!estpars] > 0L]), ' but should only be applied to
+             paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
     #make sure constrained pars are equal

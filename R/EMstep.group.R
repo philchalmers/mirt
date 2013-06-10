@@ -64,7 +64,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     if(any(diag(L)[!estpars] > 0)){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(redindex[diag(L)[!estpars] > 0]), ' but should only be applied to
+             paste(paste0(redindex[diag(L)[!estpars] > 0]), ''), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
     Prior <- prior <- gstructgrouppars <- rlist <- r <- list()
