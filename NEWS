@@ -2,6 +2,9 @@ Changes in mirt 0.7.4
 
 NEW FEATURES
 
+- cat.highlow option added to specify which categories are the highest and lowest in nominal models.
+  Often provide better numerical stability when utilized
+
 - increase number of draws in the Monte Carlo calculation of the log-likelihood from 3000 to 5000
 
 - when itemtype all equal 'Rasch', '1PL', 'rsm', or 'grsm' in unidimensional models the latent 

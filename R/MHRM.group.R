@@ -281,16 +281,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
         for(i in 1L:(J+1L)){
             ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
             pars[[g]][[i]]@par <- longpars[ind1:ind2]
-            ind1 <- ind2 + 1L
-            #apply sum(t) == 1 constraint for mcm
-            if(is(pars[[g]][[i]], 'mcm')){
-                tmp <- pars[[g]][[i]]@par
-                cat <- pars[[g]][[i]]@ncat
-                tmp2 <- (length(tmp) - (cat-1L)):length(tmp)
-                Num <- exp(tmp[tmp2])
-                tmp <- Num/sum(Num)
-                pars[[g]][[i]]@par[tmp2] <- tmp
-            }
+            ind1 <- ind2 + 1L            
         }
     }
     SEtmp <- abs(diag(qr.solve(info)))

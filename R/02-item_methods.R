@@ -73,14 +73,6 @@ setMethod(
 
 setMethod(
     f = "print",
-    signature = signature(x = 'mcm'),
-    definition = function(x, ...){
-        cat('Item object of class:', class(x))
-    }
-)
-
-setMethod(
-    f = "print",
     signature = signature(x = 'GroupPars'),
     definition = function(x, ...){
         cat('Object of class:', class(x))
@@ -154,14 +146,6 @@ setMethod(
 setMethod(
     f = "show",
     signature = signature(object = 'partcomp'),
-    definition = function(object){
-        print(object)
-    }
-)
-
-setMethod(
-    f = "show",
-    signature = signature(object = 'mcm'),
     definition = function(object){
         print(object)
     }
@@ -288,18 +272,6 @@ setMethod(
 
 setMethod(
     f = "LogLik",
-    signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, prior = NULL){
-        itemtrace <- ProbTrace(x=x, Theta=Theta)
-        if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
-        else LL <- (-1) * sum(x@rs * log(itemtrace))
-        LL <- LL.Priors(x=x, LL=LL)
-        return(LL)
-    }
-)
-
-setMethod(
-    f = "LogLik",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, pars, tabdata, itemloc, EM = TRUE){
         r <- tabdata[, ncol(tabdata)]
@@ -390,14 +362,6 @@ setMethod(
     }
 )
 
-setMethod(
-    f = "ExtractLambdas",
-    signature = signature(x = 'mcm'),
-    definition = function(x){
-        x@par[1L:x@nfact]
-    }
-)
-
 #----------------------------------------------------------------------------
 setMethod(
     f = "ExtractZetas",
@@ -463,15 +427,6 @@ setMethod(
     signature = signature(x = 'partcomp'),
     definition = function(x){
         d <- x@par[(x@nfact+1L):(length(x@par)-2L)]
-        d
-    }
-)
-
-setMethod(
-    f = "ExtractZetas",
-    signature = signature(x = 'mcm'),
-    definition = function(x){
-        d <- x@par[(x@nfact + x@ncat +1L):(x@nfact - x@ncat*2)]
         d
     }
 )
@@ -600,23 +555,6 @@ setMethod(
     }
 )
 
-setMethod(
-    f = "ProbTrace",
-    signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, useDesign = TRUE){
-        a <- x@par[1L:x@nfact]
-        ind <- x@nfact + 1L
-        ak <- x@par[ind:(ind + x@ncat)]
-        ind <- ind + x@ncat + 1L
-        d <- x@par[ind:(ind + x@ncat)]
-        ind <- ind + x@ncat + 1L
-        t <- x@par[ind:length(x@par)]
-        if(nrow(x@fixed.design) > 1L && useDesign)
-            Theta <- cbind(x@fixed.design, Theta)
-        return(P.mcm(a=a, ak=ak, d=d, t=t, Theta=Theta, D=x@D))
-    }
-)
-
 ##Function passes
 P.poly <- function(a, d, Theta, itemexp = FALSE, D)
 {
@@ -646,12 +584,6 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1
 P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE){
     return(.Call("nominalTraceLinePts", a, ak, d, Theta, D, returnNum))
-}
-
-#ak[1] and d[1] are latent process
-P.mcm <- function(a, ak, d, t, Theta, D){
-    t[1] <- 1 - sum(t[2L:length(t)])
-    return(.Call("mcmTraceLinePts", a, ak, d, t, Theta, D))
 }
 
 P.nestlogit <- function(a, d, Theta, g, u, ak, dk, correct, D)

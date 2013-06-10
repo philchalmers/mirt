@@ -107,18 +107,6 @@ read.mirt <- function (x, as.irt.pars = TRUE)
             pars[i, 1:length(newab)] <- newab
         }
 
-        if(mirt.items[i] == 'mcm'){
-            acd <- listpars[[i]][1, ]
-            a <- acd[1:nfact]
-            acd <- acd[-(1:nfact)]
-            cat[i] <- x@pars[[i]]@ncat
-            newacd <- c()
-            for(j in 1:nfact)
-                newacd <- c(newacd, a[j] * acd[1:(cat[i]+1)])
-            newacd <- c(newacd, acd[(length(acd) - 2*cat[i]):length(acd)])
-            pars[i, 1:length(newacd)] <- newacd
-        }
-
         if(mirt.items[i] == 'partcomp'){
             stop('Partially compensatory models not supported in plink')
         }

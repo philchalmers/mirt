@@ -1,6 +1,7 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
-                       parprior = NULL, mixed.design = NULL, customItems = NULL, ...)
+                       parprior = NULL, mixed.design = NULL, customItems = NULL, 
+                       cat.highlow = NULL, ...)
 {
     opts <- makeopts(...)
     if(!is.null(customItems)) opts$calcNull <- FALSE
@@ -48,14 +49,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     PrepList <- vector('list', Data$ngroups)
     names(PrepList) <- Data$groupNames
     tmp <- 1L:Data$ngroups
-    selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1]]]]    
+    selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1L]]]]    
     PrepListFull <- PrepList[[1L]] <-
         PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess,
                  upper=upper, parprior=parprior, verbose=opts$verbose,
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                  D=opts$D, mixed.design=mixed.design, customItems=customItems,
-                 fulldata=opts$PrepList[[1]]$fulldata, key=key)    
+                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, cat.highlow=cat.highlow)        
     parnumber <- 1L
     for(g in 1L:Data$ngroups){
         tmp <- 1L:Data$ngroups
@@ -65,7 +66,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                       upper=upper, parprior=parprior, verbose=opts$verbose,
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
                                       grsm.block=opts$grsm.block, D=opts$D, mixed.design=mixed.design,
-                                      customItems=customItems, fulldata=PrepList[[1]]$fulldata, key=key)
+                                      customItems=customItems, fulldata=PrepList[[1L]]$fulldata, key=key,
+                                      cat.highlow=cat.highlow)
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1L
     }
@@ -150,10 +152,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             pars[[1L]][[i]]@par[1L] <- 0
             pars[[1L]][[i]]@est[1L] <- FALSE
             if(is(pars[[1L]][[i]], 'nominal'))
-                pars[[1L]][[i]]@est[(nfact+1L):(nfact + K[i])] <- FALSE
-            if(is(pars[[1L]][[i]], 'mcm'))
-                pars[[1L]][[i]]@est[c((nfact+1L):(nfact + K[i]+1L),
-                    length(pars[[1L]][[i]]@est):(length(pars[[1L]][[i]]@est)-K[i]+1L))] <- FALSE
+                pars[[1L]][[i]]@est[(nfact+1L):(nfact + K[i])] <- FALSE            
             if(is(pars[[1L]][[i]], 'nestlogit'))
                 pars[[1L]][[i]]@est[(nfact+5L):(nfact + K[i] + 1L)] <- FALSE
         }

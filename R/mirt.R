@@ -73,7 +73,7 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
 #' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
-#' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'mcm', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
+#' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
 #' and '4PLNRM', for the Rasch/partial credit, 1 and 2 parameter logistic,
 #' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model,
 #' rating scale graded response model, generalized partial credit model, Rasch rating scale model, nominal model,
@@ -170,6 +170,11 @@
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
 #' @param df.p logical; print the degrees of freedom and p-values?
+#' @param cat.highlow optional matrix indicating the highest (row 1) and lowest (row 2) categories
+#' to be used for the nominal response model. Using this input may result in better numerical stability.
+#' The matrix input should be a 2 by nitems numeric matrix, where each number represents the \emph{reduced}
+#' category representation (mirt omits categories that are missing, so if the unique values for an item
+#' are c(1,2,5,6) they are treated as being the same as c(1,2,3,4))
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #' \describe{
@@ -252,14 +257,6 @@
 #' however, be relaxed by adjusting the starting values specifications manually and applying 
 #' additional equality constraints).
 #' }
-#' \item{mcm}{For identification \eqn{ak_0 = d_0 = 0} and \eqn{\sum_0^k t_k = 1}.
-#' \deqn{P(x = k | \theta, \psi) = C_0 (\theta) * t_k  + (1 - C_0 (\theta)) *
-#' \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
-#' {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
-#'
-#' where \eqn{C_0 (\theta) = \frac{exp(-D * ak_0 * (a_1 * \theta_1 + a_2 * \theta_2) + d_0)}
-#' {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
-#' }
 #' \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
 #' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-D * (a_1 * \theta_1 + d_1))} *
 #' \frac{1}{1 + exp(-D * (a_2 * \theta_2 + d_2))})}
@@ -324,9 +321,6 @@
 #' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 #' \emph{Psychometrika, 47}, 175-186.
 #'
-#' Thissen, D. & Steinberg, L. (1984). A response model for multiple-choice items.
-#' \emph{Psychometrika, 49}, 501-519.
-#'
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
 #' Bock, R. D. (2003). \emph{TESTFACT 4 for Windows: Test Scoring, Item Statistics,
 #' and Full-information Item Factor Analysis} [Computer software]. Lincolnwood,
@@ -336,7 +330,7 @@
 #' @usage
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN,
-#' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL,
+#' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, cat.highlow = NULL,
 #' D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
@@ -518,7 +512,8 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                 key = NULL, D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
+                 key = NULL, cat.highlow = NULL, D = 1.702, cl = NULL, 
+                 large = FALSE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
@@ -526,7 +521,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
-                      calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, key=key, ...)
+                      calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, key=key, 
+                      cat.highlow=cat.highlow, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)

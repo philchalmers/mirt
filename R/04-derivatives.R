@@ -499,25 +499,6 @@ nominalParDeriv <- function(a, ak, d, Theta, D, Prior, P, num, dat, estHess,
 
 setMethod(
     f = "Deriv",
-    signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
-        grad <- rep(0, length(x@par))
-        hess <- matrix(0, length(x@par), length(x@par))
-        Prior <- rep(1, nrow(x@rs))
-        if(BFACTOR) Prior <- prior
-        if(EM){
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
-            if(estHess) hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
-            return(list(grad = grad, hess=hess))
-        }
-        grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
-        hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
-        return(list(grad=grad, hess=hess))
-    }
-)
-
-setMethod(
-    f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, pars = NULL, itemloc = NULL,
                           tabdata = NULL, prior=NULL, estHess=FALSE){
@@ -868,14 +849,6 @@ setMethod(
             }
         }
         return(list(grad=grad, hess=hess))
-    }
-)
-
-setMethod(
-    f = "DerivTheta",
-    signature = signature(x = 'mcm', Theta = 'matrix'),
-    definition = function(x, Theta){
-        stop('Derivatives for mcm items not yet written')
     }
 )
 

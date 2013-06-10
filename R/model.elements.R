@@ -1,6 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
-                           parnumber, BFACTOR = FALSE, D, mixed.design, customItems, key)
+                           parnumber, BFACTOR = FALSE, D, mixed.design, customItems, key,
+                           cat.highlow)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -91,7 +92,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
                     nfact=nfact+length(prodlist), parprior=parprior,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, D=D,
-                    mixed.design=mixed.design, customItems=customItems, key=key)
+                    mixed.design=mixed.design, customItems=customItems, key=key,
+                    cat.highlow=cat.highlow)     
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             parprior=parprior)

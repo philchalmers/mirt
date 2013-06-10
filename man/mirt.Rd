@@ -13,9 +13,9 @@ Theory)}
     SE = FALSE, SE.type = 'SEM', pars = NULL, constrain =
     NULL, parprior = NULL, calcNull = TRUE, rotate =
     'oblimin', Target = NaN, quadpts = NULL, grsm.block =
-    NULL, rsm.block = NULL, key= NULL, D = 1.702, cl =
-    NULL, large = FALSE, verbose = TRUE, technical =
-    list(), ...)
+    NULL, rsm.block = NULL, key= NULL, cat.highlow = NULL,
+    D = 1.702, cl = NULL, large = FALSE, verbose = TRUE,
+    technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -54,7 +54,7 @@ Theory)}
   items follow a graded or 2PL structure, however they may
   be changed to the following: 'Rasch', '1PL', '2PL',
   '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'rsm',
-  'nominal', 'mcm', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
+  'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
   '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 1
   and 2 parameter logistic, 3 parameter logistic (lower
   asymptote and upper), 4 parameter logistic, graded
@@ -235,6 +235,16 @@ Theory)}
 
   \item{df.p}{logical; print the degrees of freedom and
   p-values?}
+
+  \item{cat.highlow}{optional matrix indicating the highest
+  (row 1) and lowest (row 2) categories to be used for the
+  nominal response model. Using this input may result in
+  better numerical stability. The matrix input should be a
+  2 by nitems numeric matrix, where each number represents
+  the \emph{reduced} category representation (mirt omits
+  categories that are missing, so if the unique values for
+  an item are c(1,2,5,6) they are treated as being the same
+  as c(1,2,3,4))}
 
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
@@ -417,32 +427,22 @@ Theory)}
   discrimination parameters; the discrimination constraint
   can, however, be relaxed by adjusting the starting values
   specifications manually and applying additional equality
-  constraints). } \item{mcm}{For identification \eqn{ak_0 =
-  d_0 = 0} and \eqn{\sum_0^k t_k = 1}. \deqn{P(x = k |
-  \theta, \psi) = C_0 (\theta) * t_k + (1 - C_0 (\theta)) *
-  \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
-  d_k)} {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 *
-  \theta_2) + d_k)}}
-
-  where \eqn{C_0 (\theta) = \frac{exp(-D * ak_0 * (a_1 *
-  \theta_1 + a_2 * \theta_2) + d_0)} {\sum_i^k exp(-D *
-  ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}} }
-  \item{partcomp}{Partially compensatory models consist of
-  the products of 2PL probability curves. \deqn{P(x = 1 |
-  \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-D * (a_1 *
-  \theta_1 + d_1))} * \frac{1}{1 + exp(-D * (a_2 * \theta_2
-  + d_2))})} } \item{1-4PLNRM}{Nested logistic curves for
-  modeling distractor items. Requires a scoring key. The
-  model is broken into two components for the probability
-  of endorsement. For successful endorsement the
-  probability trace is the 1-4PL model, while for
-  unsuccessful endorsement: \deqn{P(x = 0 | \theta, \psi) =
-  (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k
-  | \theta, \psi)} which is the product of the compliment
-  of the dichotomous trace line with the nominal response
-  model. In the nominal model, the slope parameters defined
-  above are constrained to be 1's, while the last value of
-  the \eqn{ak} is freely estimated. } }
+  constraints). } \item{partcomp}{Partially compensatory
+  models consist of the products of 2PL probability curves.
+  \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 +
+  exp(-D * (a_1 * \theta_1 + d_1))} * \frac{1}{1 + exp(-D *
+  (a_2 * \theta_2 + d_2))})} } \item{1-4PLNRM}{Nested
+  logistic curves for modeling distractor items. Requires a
+  scoring key. The model is broken into two components for
+  the probability of endorsement. For successful
+  endorsement the probability trace is the 1-4PL model,
+  while for unsuccessful endorsement: \deqn{P(x = 0 |
+  \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) *
+  P_{nominal}(x = k | \theta, \psi)} which is the product
+  of the compliment of the dichotomous trace line with the
+  nominal response model. In the nominal model, the slope
+  parameters defined above are constrained to be 1's, while
+  the last value of the \eqn{ak} is freely estimated. } }
 }
 \examples{
 \dontrun{
@@ -658,9 +658,6 @@ lines(Theta, testinfo(mod0, Theta), col = 'red')
   Thissen, D. (1982). Marginal maximum likelihood
   estimation for the one-parameter logistic model.
   \emph{Psychometrika, 47}, 175-186.
-
-  Thissen, D. & Steinberg, L. (1984). A response model for
-  multiple-choice items. \emph{Psychometrika, 49}, 501-519.
 
   Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S.
   G., Muraki, E., & Bock, R. D. (2003). \emph{TESTFACT 4

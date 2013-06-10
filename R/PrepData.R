@@ -1,10 +1,10 @@
 PrepData <- function(data, model, itemtype, guess, upper,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, D, mixed.design, customItems,
-                     fulldata = NULL, key)
+                     fulldata = NULL, key, cat.highlow)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
-    if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
+    if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))    
     itemnames <- colnames(data)
     keywords <- c('COV')
     data <- as.matrix(data)
@@ -12,6 +12,12 @@ PrepData <- function(data, model, itemtype, guess, upper,
     J <- ncol(data)
     N <- nrow(data)
     exploratory <- FALSE
+    if(!is.null(cat.highlow)){
+        if(!is.matrix(cat.highlow)) stop('cat.highlow must be a matrix')
+        if(all(dim(cat.highlow) != c(2,J))) stop('cat.highlow does not have the correct dimensions')
+        if(any(cat.highlow[1L, ] == cat.highlow[2L, ])) 
+            stop('cat.highlow low and high categories must differ')
+    }    
     if(is(model, 'numeric') && length(model) == 1L){
         if(model != 1L) exploratory <- TRUE
         tmp <- tempfile('tempfile')
@@ -86,7 +92,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
                            parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixed.design=mixed.design,
-                           customItems=customItems, key=key)
+                           customItems=customItems, key=key, cat.highlow=cat.highlow)
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')
@@ -140,7 +146,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                 constrain[[length(constrain) + 1L]] <- rsmConstraint
             }
         }
-    }        
+    }                
     if(all(itemtype %in% c('Rasch', '1PL', 'rsm', 'grsm')))
         pars[[length(pars)]]@est[2L] <- TRUE
     npars <- sum(sapply(pars, function(x) sum(x@est)))

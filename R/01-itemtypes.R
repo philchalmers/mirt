@@ -57,8 +57,6 @@ setClass("nominal", contains = 'AllItemsClass')
 
 setClass("partcomp", contains = 'AllItemsClass')
 
-setClass("mcm", contains = 'AllItemsClass')
-
 setClass("nestlogit", contains = 'AllItemsClass',
          representation = representation(correctcat='integer'))
 
