@@ -266,6 +266,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                       nfact=nfact, constrain=constrain, verbose=opts$verbose),
                                         Theta=Theta, theta=theta, ESTIMATE=ESTIMATE)
                     }
+                    ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars, 
+                                                ngroups=Data$ngroups, J=Data$nitems)
                     info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
                     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
                 }
