@@ -63,11 +63,11 @@ test_that('dich data', {
     items[items == 'dich'] <- '2PL'
     simmod <- suppressMessages(bfactor(dataset, specific, itemtype = items, verbose=FALSE))
     expect_is(simmod, 'ConfirmatoryClass')              
-    expect_equal(simmod@df, 1502)
+    expect_equal(simmod@df, 2442)
     specific[1] <- NA
     simmod2 <- suppressMessages(bfactor(dataset, specific, itemtype = items, verbose=FALSE))
     expect_is(simmod2, 'ConfirmatoryClass')              
-    expect_equal(simmod2@df, 1503)
+    expect_equal(simmod2@df, 2443)
     fs <- fscores(simmod, verbose = FALSE)
     expect_is(fs, 'matrix')
     

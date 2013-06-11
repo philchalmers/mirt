@@ -15,15 +15,15 @@ test_that('one factor', {
     
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
-    expect_equal(mod_configural@df, 1166)
+    expect_equal(mod_configural@df, 1621)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE, 
                                 method = 'EM')
     expect_is(mod_metric, 'MultipleGroupClass')
-    expect_equal(mod_metric@df, 1181)
+    expect_equal(mod_metric@df, 1636)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
     expect_is(mod_scalar2, 'MultipleGroupClass')
-    expect_equal(mod_scalar2@df, 1194)
+    expect_equal(mod_scalar2@df, 1649)
     mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'), draws = 10)    
     expect_is(mod_scalar1, 'MultipleGroupClass')    
@@ -31,7 +31,7 @@ test_that('one factor', {
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))    
     expect_is(mod_missing, 'MultipleGroupClass')
-    expect_equal(mod_missing@df, 1195)
+    expect_equal(mod_missing@df, 1649)
     
     fs1 <- fscores(mod_metric, verbose = FALSE)
     fs2 <- fscores(mod_metric, full.scores = TRUE)

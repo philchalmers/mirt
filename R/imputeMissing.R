@@ -28,8 +28,7 @@
 #'
 #'
 #' }
-imputeMissing <- function(x, Theta){
-    set.seed(proc.time()[3L])
+imputeMissing <- function(x, Theta){    
     if(is(x, 'MixedClass'))
         stop('mixedmirt xs not yet supported')
     if(is(x, 'MultipleGroupClass')){
@@ -55,7 +54,7 @@ imputeMissing <- function(x, Theta){
         NAind <- Nind[is.na(data[,i])]
         for(j in 1L:length(NAind)){
             sampl <- sample(1L:ncol(P), 1, prob = P[NAind[j], , drop = FALSE])
-            if(any(class(pars[[i]]) %in% c('dich', 'gpcm', 'partcomp')))
+            if(any(class(pars[[i]]) %in% c('dich', 'gpcm', 'partcomp', 'rsm')))
                 sampl <- sampl - 1L
             data[NAind[j], i] <- sampl
         }

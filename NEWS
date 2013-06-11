@@ -2,6 +2,9 @@ Changes in mirt 0.7.4
 
 NEW FEATURES
 
+- for consistency with other current IRT software (rather than TESTFACT and POLYFACT), the scaling 
+  constant has been set to D = 1
+
 - cat.highlow option added to specify which categories are the highest and lowest in nominal models.
   Often provide better numerical stability when utilized
 

@@ -12,8 +12,8 @@
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
     verbose = TRUE, draws = 5000, rotate = 'oblimin',
-    Target = NULL, key = NULL, D = 1.702, cl = NULL,
-    technical = list(), ...)
+    Target = NULL, key = NULL, D = 1, cl = NULL, technical
+    = list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -112,7 +112,7 @@
 
   \item{D}{a numeric value used to adjust the logistic
   metric to be more similar to a normal cumulative density
-  curve. Default is 1.702}
+  curve. Default is 1}
 
   \item{cl}{a cluster object from the \code{parallel}
   package (set from using \code{makeCluster(ncores)})}
@@ -176,18 +176,14 @@
   \code{confmirt} follows a confirmatory and exploratory
   item factor analysis strategy that uses a stochastic
   version of maximum likelihood estimation described by Cai
-  (2010a, 2010b). The general equation used for
-  multidimensional item response theory in this function is
-  in the logistic form with a scaling correction of 1.702.
-  This correction is applied to allow comparison to
-  mainstream programs such as TESTFACT (2003) and POLYFACT.
-  Missing data are treated as 'missing at random' so that
-  each response vector is included in the estimation (i.e.,
-  full-information). Residuals are computed using the LD
-  statistic (Chen & Thissen, 1997) in the lower diagonal of
-  the matrix returned by \code{residuals}, and Cramer's V
-  above the diagonal. For computing the log-likelihood more
-  accurately see \code{\link{calcLogLik}}.
+  (2010a, 2010b). Missing data are treated as 'missing at
+  random' so that each response vector is included in the
+  estimation (i.e., full-information). Residuals are
+  computed using the LD statistic (Chen & Thissen, 1997) in
+  the lower diagonal of the matrix returned by
+  \code{residuals}, and Cramer's V above the diagonal. For
+  computing the log-likelihood more accurately see
+  \code{\link{calcLogLik}}.
 
   \code{coef} displays the item parameters with their
   associated standard errors, while use of \code{summary}

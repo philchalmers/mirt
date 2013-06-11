@@ -606,7 +606,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 
 makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN,
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE,
-                     SEtol = .001, grsm.block = NULL, D = 1.702,
+                     SEtol = .001, grsm.block = NULL, D = 1,
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'MHRM', large = NULL, ...)

@@ -33,7 +33,7 @@
 #' the dichotomous items, or a vector with as many values as to be simulated
 #' items
 #' @param upper same as \code{guess}, but for upper bound parameters
-#' @param D logistic scaling parameter, default 1.702
+#' @param D logistic scaling parameter, default is 1
 #' @param sigma a covariance matrix of the underlying distribution. Default is
 #' the identity matrix
 #' @param mu a mean vector of the underlying distribution. Default is a vector
@@ -82,12 +82,12 @@
 #'  .1341,1.4882, .0050,
 #'  .0524, .4754, .0012,
 #'  .2139, .4612, .0063,
-#'  .1761,1.1200, .0870),30,3,byrow=TRUE)
+#'  .1761,1.1200, .0870),30,3,byrow=TRUE)*1.702
 #'
 #' d <- matrix(c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
 #'   .6431,.0122,.0912,.8082,-.1867,.4533,-1.8398,.4139,
 #'   -.3004,-.1824,.5125,1.1342,.0230,.6172,-.1955,-.3668,
-#'   -1.7590,-.2434,.4925,-.3410,.2896,.006,.0329),ncol=1)
+#'   -1.7590,-.2434,.4925,-.3410,.2896,.006,.0329),ncol=1)*1.702
 #'
 #' mu <- c(-.4, -.7, .1)
 #' sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
@@ -178,7 +178,7 @@
 #'    }
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-	upper = 1, nominal = NULL, Theta = NULL, D = 1.702)
+	upper = 1, nominal = NULL, Theta = NULL, D = 1)
 {
     fn <- function(p, ns) sample(1L:ns, 1, prob = p)
 	nfact <- ncol(a)

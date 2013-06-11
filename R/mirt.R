@@ -15,10 +15,7 @@
 #' Gibbons and Muraki (1988), and Muraki and Carlson (1995).
 #' Nested models may be compared via the approximate
 #' chi-squared difference test or by a reduction in AIC/BIC values (comparison
-#' via \code{\link{anova}}). The general equation used for
-#' multidimensional item response theory is a logistic form with a scaling
-#' correction of 1.702. This correction is applied to allow comparison to
-#' mainstream programs such as TESTFACT (2003) and POLYFACT.
+#' via \code{\link{anova}}). 
 #'
 #' \code{summary} and \code{coef} allow
 #' for all the rotations available from the \code{GPArotation} package (e.g., \code{rotate = 'oblimin'})
@@ -109,7 +106,8 @@
 #' input then the default from the object is ignored and the new rotation from the list
 #' is used instead
 #' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
-#' cumulative density curve. Default is 1.702
+#' cumulative density curve. Default is 1. Note that the value 1.702 is the constant 
+#' found in TESTFACT and POLYFACT
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
@@ -201,7 +199,7 @@
 #' @section IRT Models:
 #'
 #' The parameter labels use the follow convention, here using two factors and \eqn{k} as the number
-#' of categories. Throughout all models D is a constant (default 1.702):
+#' of categories. Throughout all models D is a constant:
 #'
 #' \describe{
 #' \item{Rasch}{
@@ -331,7 +329,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN,
 #' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, cat.highlow = NULL,
-#' D = 1.702, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
+#' D = 1, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
@@ -392,15 +390,6 @@
 #' coef(cmod)
 #' anova(cmod, mod2)
 #' 
-#' #partially compensetory item 3?
-#' cmodel2 <- confmirt.model('
-#'    F1 = 1,3,4,5
-#'    F2 = 2,3')
-#'    
-#' partcomp <- mirt(data, cmodel2, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'))
-#' coef(partcomp)
-#' itemplot(partcomp, 3)
-#'
 #' ###########
 #' #data from the 'ltm' package in numeric format
 #' pmod1 <- mirt(Science, 1)
@@ -416,9 +405,9 @@
 #' coef(pmod1_equalslopes)
 #' anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
 #'
-#' pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 1500))
+#' pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 2000))
 #' summary(pmod2)
-#' plot(pmod2, theta_angle = seq(0,90, by = 5)) #sum across angles of theta 1
+#' plot(pmod2)
 #' itemplot(pmod2, 1)
 #' anova(pmod1, pmod2)
 #'
@@ -456,14 +445,14 @@
 #'
 #' #make some data
 #' set.seed(1234)
-#' a <- matrix(rep(1/1.702, 10))
+#' a <- matrix(rep(1, 10))
 #' d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
 #' c <- seq(-1, 1, length.out=10)
 #' data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
 #'
 #' #use much better start values to save iterations
 #' sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values')
-#' sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1)
+#' sv[,'value'] <- c(as.vector(t(cbind(a,d,c))),0,1)
 #' 
 #' #also possible to edit start values with a GUI approach with
 #' #   sv <- edit(sv)
@@ -515,7 +504,7 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                 key = NULL, cat.highlow = NULL, D = 1.702, cl = NULL, 
+                 key = NULL, cat.highlow = NULL, D = 1, cl = NULL, 
                  large = FALSE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()

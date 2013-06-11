@@ -67,9 +67,7 @@
   IRT' if only fixed effects are modeled, or
   multilevel/mixed IRT if random and fixed effects are
   included. The method uses the MH-RM algorithm
-  exclusively. The D scaling parameter is automatically
-  fixed to 1 so that all coefficients can be interpreted on
-  the exponential metric.
+  exclusively.
 }
 \details{
   For dichotomous response models (polytomous extensions
@@ -111,7 +109,7 @@ cl <- makeCluster(detectCores())
 model <- confmirt.model('Theta = 1-10')
 
 #model with no person predictors
-mod0 <- mirt(data, model, itemtype = 'Rasch', D = 1)
+mod0 <- mirt(data, model, itemtype = 'Rasch')
 
 #group as a fixed effect predictor (aka, uniform dif)
 mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, cl=cl)

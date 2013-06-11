@@ -271,10 +271,21 @@ setMethod(
         a <- x@par[1L:nfact]
         d <- x@par[(nfact+1L):(nfact*2)]
         g <- x@par[length(x@par)-1L]
-
-        tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),g=x@par[nfact*2 + 1L],r=r, f=f,
-                                   Thetas=Theta, D=x@D, Prior=Prior*x@D)
-        ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)
+        
+        #FIXME derivs broken, fix overall implementation
+        grad <- numeric(length(x@par))
+        hess <- matrix(0, length(grad), length(grad))        
+        if(EM){
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
+            if(estHess)
+                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                             Theta=Theta, prior=Prior)                        
+        } else {            
+            grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)        
+            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
+        }
+        
+        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
         return(ret)
     }
 )

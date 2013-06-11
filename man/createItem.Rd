@@ -72,7 +72,7 @@ est <- c(TRUE, TRUE)
 P.old2PL <- function(par,Theta, ncat){
      a <- par[1]
      b <- par[2]
-     P1 <- 1 / (1 + exp(-1.702*a*(Theta - b)))
+     P1 <- 1 / (1 + exp(-1*a*(Theta - b)))
      cbind(1-P1, P1)
 }
 
@@ -95,7 +95,7 @@ P.nonlin <- function(par,Theta, ncat=2){
      a1 <- par[1]
      a2 <- par[2]
      d <- par[3]
-     P1 <- 1 / (1 + exp(-1.702*(a1*Theta + a2*Theta^2 + d)))
+     P1 <- 1 / (1 + exp(-1*(a1*Theta + a2*Theta^2 + d)))
      cbind(1-P1, P1)
 }
 
@@ -114,7 +114,7 @@ P.mycov <- function(par,Theta, ncat){
      d <- par[3]
      #notice here that the covariate data is found in Theta,
      #    use browser() to jump in for debugging if needed
-     P1 <- 1 / (1 + exp(-1.702*(a1 * Theta[,1] + a2*Theta[,2] + d)))
+     P1 <- 1 / (1 + exp(-1*(a1 * Theta[,1] + a2*Theta[,2] + d)))
      cbind(1-P1, P1)
 }
 

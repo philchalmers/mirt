@@ -42,18 +42,18 @@ test_that('poly', {
     
     ##rating scale test
     set.seed(1234)
-    a <- matrix(rep(1/1.702, 10))
+    a <- matrix(rep(1, 10))
     d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
     c <- seq(-1, 1, length.out=10)
     data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
     sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values', verbose=FALSE)
-    sv[,5] <- c(as.vector(t(cbind(a,d,c))),0,1)    
+    sv[,'value'] <- c(as.vector(t(cbind(a,d,c))),0,1)    
     grsm <- mirt(data, 1, itemtype = 'grsm', pars = sv, calcNull= FALSE, verbose=FALSE)
     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE, verbose=FALSE)
     expect_is(grsm, 'ConfirmatoryClass')    
     expect_is(rsm, 'ConfirmatoryClass') 
-    expect_equal(rsm@df, 1970)
-    expect_equal(grsm@df, 1960)
+    expect_equal(rsm@df, 1945)
+    expect_equal(grsm@df, 1935)
     
     #item and test info
     Theta <- matrix(seq(-4,4,.01))
