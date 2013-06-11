@@ -551,7 +551,7 @@ setMethod(
         u <- x@par[length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D))
+        return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D, asMatrix=TRUE))
     }
 )
 
@@ -568,7 +568,7 @@ P.mirt <- function(a, d, Theta, g = 0, u = 1, D, asMatrix = FALSE)
 }
 
 # Trace lines for partially compensetory models
-P.comp <- function(a, d, Theta, g, u = 1, D)
+P.comp <- function(a, d, Theta, g, u = 1, D, asMatrix = FALSE)
 {
     nfact <- length(a)
     P <- rep(1,nrow(Theta))
@@ -578,7 +578,8 @@ P.comp <- function(a, d, Theta, g, u = 1, D)
     s.eps <- 1e-10
     P[P < s.eps] <- s.eps
     P[(1 - P) < s.eps] <- 1 - s.eps
-    return(cbind(1-P, P))
+    if(asMatrix) return(cbind(1-P, P))
+    else return(P)
 }
 
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1

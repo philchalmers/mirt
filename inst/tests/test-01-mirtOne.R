@@ -73,7 +73,7 @@ test_that('dich', {
         F2 = 3-5', quiet = TRUE)
     modm1 <- mirt(data, model, verbose=FALSE)
     expect_equal(modm1@df, 20)
-    modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE)
+    modm2 <- suppressMessages(mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE))
     expect_equal(modm2@df, 19)
     modm3 <- mirt(data, model, SE = TRUE, verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')

@@ -141,7 +141,7 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
         #local derivative from previous version with small mod
-        dpars.comp <- function(lambda,zeta,g,r,f,Thetas,D,Prior)
+        dpars.comp <- function(lambda,zeta,g,r,f,Thetas,D,Prior,estHess)
         {
             nfact <- length(lambda)
             pars <- c(zeta,lambda,g)
@@ -239,20 +239,23 @@ setMethod(
             }
             #old pars in the form d, a, g
             g <- pgrad(pars, r, Thetas, D=D, Prior=Prior)
-            h <- phess(pars, r, Thetas, D=D, Prior=Prior*D)
+            if(estHess) h <- phess(pars, r, Thetas, D=D, Prior=Prior*D)
+            else h <- matrix(0, length(g), length(g))
 
             #translate into current version
             grad <- c(g[(nfact+1L):(nfact*2)], g[1L:nfact], g[length(g)], 0)
             hess <- matrix(0, ncol(h) + 1L, ncol(h) + 1L)
-            hess[1L:nfact, 1L:nfact] <- h[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] #a block
-            hess[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] <- h[1L:nfact, 1L:nfact] #d block
-            hess[nfact*2 + 1L, nfact*2 + 1L] <- h[nfact*2 + 1L, nfact*2 + 1L] #g
-            hess[nfact*2 + 1L, 1L:nfact] <- hess[1:nfact, nfact*2 + 1L] <-
-                h[nfact*2 + 1L, (nfact+1L):(nfact*2)] #ga
-            hess[nfact*2 + 1L, (nfact+1L):(nfact*2)] <- hess[(nfact+1L):(nfact*2), nfact*2 + 1L] <-
-                h[nfact*2 + 1L, 1L:nfact] #gd
-            hess[(nfact+1L):(nfact*2), 1L:nfact] <- t(h[(nfact+1L):(nfact*2), 1L:nfact])
-            hess[1L:nfact, (nfact+1L):(nfact*2)] <- t(h[1L:nfact, (nfact+1L):(nfact*2)]) #ads
+            if(estHess){                
+                hess[1L:nfact, 1L:nfact] <- h[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] #a block
+                hess[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] <- h[1L:nfact, 1L:nfact] #d block
+                hess[nfact*2 + 1L, nfact*2 + 1L] <- h[nfact*2 + 1L, nfact*2 + 1L] #g
+                hess[nfact*2 + 1L, 1L:nfact] <- hess[1:nfact, nfact*2 + 1L] <-
+                    h[nfact*2 + 1L, (nfact+1L):(nfact*2)] #ga
+                hess[nfact*2 + 1L, (nfact+1L):(nfact*2)] <- hess[(nfact+1L):(nfact*2), nfact*2 + 1L] <-
+                    h[nfact*2 + 1L, 1L:nfact] #gd
+                hess[(nfact+1L):(nfact*2), 1L:nfact] <- t(h[(nfact+1L):(nfact*2), 1L:nfact])
+                hess[1L:nfact, (nfact+1L):(nfact*2)] <- t(h[1L:nfact, (nfact+1L):(nfact*2)]) #ads
+            }
 
             return(list(grad=grad, hess=hess))
         }
@@ -269,23 +272,11 @@ setMethod(
         }        
         nfact <- x@nfact
         a <- x@par[1L:nfact]
-        d <- x@par[(nfact+1L):(nfact*2)]
-        g <- x@par[length(x@par)-1L]
-        
-        #FIXME derivs broken, fix overall implementation
-        grad <- numeric(length(x@par))
-        hess <- matrix(0, length(grad), length(grad))        
-        if(EM){
-            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, prior=Prior)
-            if(estHess)
-                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                             Theta=Theta, prior=Prior)                        
-        } else {            
-            grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)        
-            hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)            
-        }
-        
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        d <- x@par[(nfact+1L):(nfact*2L)]
+        g <- x@par[length(x@par)-1L]                
+        tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),g=x@par[nfact*2L + 1L],r=r, f=f,
+                          Thetas=Theta, D=x@D, Prior=Prior*x@D, estHess=estHess)
+        ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)       
         return(ret)
     }
 )
