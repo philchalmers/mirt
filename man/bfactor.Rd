@@ -2,8 +2,8 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor Analysis}
 \usage{
-  bfactor(data, model, quadpts = 20, SE = FALSE, SE.type =
-    'SEM', verbose = TRUE, ...)
+  bfactor(data, model, SE = FALSE, SE.type = 'SEM', verbose
+    = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -18,9 +18,6 @@
   \code{c(1,1,2,2)}. For items that should only load on the
   general factor (have no specific component) \code{NA}
   values may be used as place-holders}
-
-  \item{quadpts}{number of quadrature points per dimension
-  (default 20).}
 
   \item{SE}{logical; calculate information matrix and
   standard errors?}

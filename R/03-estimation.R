@@ -183,7 +183,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method == 'EM'){
         if(opts$method == 'EM' && nLambdas > nfact)
             stop('Polynominals and product terms not supported for EM method')
-        if (is.null(opts$quadpts)) opts$quadpts <- ceiling(40/(nfact^1.5))
+        if(is.null(opts$quadpts))
+            opts$quadpts <- switch(as.character(nfact), '1'=40, '2'=20, '3'=10, '4'=7, '5'=5, 3)
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                         length.out = opts$quadpts))
         temp <- matrix(0,nrow=nitems,ncol=(nfact-1L))

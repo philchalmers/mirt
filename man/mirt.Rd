@@ -163,7 +163,10 @@ Theory)}
   \item{cl}{a cluster object from the \code{parallel}
   package (set from using \code{makeCluster(ncores)})}
 
-  \item{quadpts}{number of quadrature points per dimension}
+  \item{quadpts}{number of quadrature points per dimension.
+  By default the number of quadrature uses the following
+  scheme: \code{switch(as.character(nfact), '1'=40, '2'=20,
+  '3'=10, '4'=7, '5'=5, 3)}}
 
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns
@@ -523,8 +526,8 @@ data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 mod1 <- mirt(data, 1)
-mod2 <- mirt(data, 2, quadpts = 15)
-mod3 <- mirt(data, 3, quadpts = 10)
+mod2 <- mirt(data, 2)
+mod3 <- mirt(data, 3, technical = list(TOL = 1e-3)) #difficulty converging to 1e-4 with reduced quadpts
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 
