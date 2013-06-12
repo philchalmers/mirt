@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, cat.highlow)
+                     key, nominal.highlow)
 {    
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -64,12 +64,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
         if(itemtype[i] == 'nominal'){            
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
-            if(is.null(cat.highlow)){
+            if(is.null(nominal.highlow)){
                 val[nfact + 1L] <- 0
                 val[nfact + K[i]] <- K[[i]] - 1
             } else {
-                val[nfact + cat.highlow[2L, i]] <- 0
-                val[nfact + cat.highlow[1L, i]] <- K[i] - 1
+                val[nfact + nominal.highlow[2L, i]] <- 0
+                val[nfact + nominal.highlow[1L, i]] <- K[i] - 1
             }
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))
@@ -113,12 +113,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             freepars[[i]] <- c(rep(FALSE, nfact), FALSE, rep(TRUE, K[i]))
         if(itemtype[i] == 'nominal'){            
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))                        
-            if(is.null(cat.highlow)){
+            if(is.null(nominal.highlow)){
                 estpars[nfact + 1L] <- FALSE
                 estpars[nfact + K[i]] <- FALSE
             } else {
-                estpars[nfact + cat.highlow[2L, i]] <- FALSE
-                estpars[nfact + cat.highlow[1L, i]] <- FALSE
+                estpars[nfact + nominal.highlow[2L, i]] <- FALSE
+                estpars[nfact + nominal.highlow[1L, i]] <- FALSE
             }                        
             estpars[c(nfact + K[i] + 1L)] <- FALSE
             freepars[[i]] <- estpars
