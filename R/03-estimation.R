@@ -174,7 +174,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
     nmissingtabdata <- sum(is.na(rowSums(PrepList[[1L]]$tabdata2)))
-    df <- df - nestpars + nconstr - nmissingtabdata
+    df <- df - nestpars + nconstr
     if(PrepList[[1L]]$exploratory) df <- df + nfact*(nfact - 1)/2
     if(df < 1L) stop('Too few degrees of freedom to estimate the model')
     

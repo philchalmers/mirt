@@ -31,7 +31,7 @@ test_that('one factor', {
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))    
     expect_is(mod_missing, 'MultipleGroupClass')
-    expect_equal(mod_missing@df, 1649)
+    expect_equal(mod_missing@df, 1651)
     
     fs1 <- fscores(mod_metric, verbose = FALSE)
     fs2 <- fscores(mod_metric, full.scores = TRUE)

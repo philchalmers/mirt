@@ -30,7 +30,7 @@ test_that('dich', {
     expect_is(modm5, 'ConfirmatoryClass')
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
-    expect_equal(modm6@df, 21)
+    expect_equal(modm6@df, 23)
     expect_is(modm6, 'ConfirmatoryClass')
     
     fm1 <- fscores(modm1, verbose = FALSE)

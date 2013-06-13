@@ -23,7 +23,7 @@ test_that('mixed dich', {
     mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
                                         itemtype = '2PL', verbose = FALSE, draws = 10))
     expect_is(mod1b, 'MixedClass')
-    expect_equal(mod1@df - mod1b@df, 9)        
+    expect_equal(mod1b@df, 293)        
 })   
 
 test_that('item and group predictors', {    
