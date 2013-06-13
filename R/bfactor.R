@@ -25,7 +25,6 @@
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
 #' on the general factor (have no specific component) \code{NA} values may be used as place-holders
-#' @param quadpts number of quadrature points per dimension (default 20).
 #' @param SE logical; calculate information matrix and standard errors?
 #' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
 #' @param verbose logical; print observed log-likelihood value at each iteration?
@@ -55,7 +54,7 @@
 #'
 #' @keywords models
 #' @usage
-#' bfactor(data, model, quadpts = 20, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
+#' bfactor(data, model, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
 #'
 #'
 #' @export bfactor
@@ -128,7 +127,7 @@
 #'
 #'     }
 #'
-bfactor <- function(data, model, quadpts = 20, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
+bfactor <- function(data, model, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
 {
     Call <- match.call()
     if(length(model) != ncol(data)) 
@@ -147,13 +146,13 @@ bfactor <- function(data, model, quadpts = 20, SE = FALSE, SE.type = 'SEM', verb
         est[is.na(model)] <- FALSE
         tmp$value[tmp$name == name] <- vals
         tmp$est[tmp$name == name] <- est        
-        mod <- bfactor(data, tmpmodel, pars=tmp, quadpts=quadpts, SE=SE, verbose=verbose, ...)
+        mod <- bfactor(data, tmpmodel, pars=tmp, SE=SE, verbose=verbose, ...)
         if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
             mod@Call <- Call
         return(mod)
     }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
-                      method = 'EM', quadpts=quadpts, verbose=verbose,
+                      method = 'EM', verbose=verbose,
                       BFACTOR = TRUE, SE=SE, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call

@@ -13,8 +13,8 @@ Theory)}
     SE = FALSE, SE.type = 'SEM', pars = NULL, constrain =
     NULL, parprior = NULL, calcNull = TRUE, rotate =
     'oblimin', Target = NaN, quadpts = NULL, grsm.block =
-    NULL, rsm.block = NULL, key= NULL, cat.highlow = NULL,
-    D = 1, cl = NULL, large = FALSE, verbose = TRUE,
+    NULL, rsm.block = NULL, key= NULL, nominal.highlow =
+    NULL, D = 1, cl = NULL, large = FALSE, verbose = TRUE,
     technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
@@ -163,7 +163,10 @@ Theory)}
   \item{cl}{a cluster object from the \code{parallel}
   package (set from using \code{makeCluster(ncores)})}
 
-  \item{quadpts}{number of quadrature points per dimension}
+  \item{quadpts}{number of quadrature points per dimension.
+  By default the number of quadrature uses the following
+  scheme: \code{switch(as.character(nfact), '1'=40, '2'=20,
+  '3'=10, '4'=7, '5'=5, 3)}}
 
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns
@@ -236,15 +239,16 @@ Theory)}
   \item{df.p}{logical; print the degrees of freedom and
   p-values?}
 
-  \item{cat.highlow}{optional matrix indicating the highest
-  (row 1) and lowest (row 2) categories to be used for the
-  nominal response model. Using this input may result in
-  better numerical stability. The matrix input should be a
-  2 by nitems numeric matrix, where each number represents
-  the \emph{reduced} category representation (mirt omits
-  categories that are missing, so if the unique values for
-  an item are c(1,2,5,6) they are treated as being the same
-  as c(1,2,3,4))}
+  \item{nominal.highlow}{optional matrix indicating the
+  highest (row 1) and lowest (row 2) categories to be used
+  for the nominal response model. Using this input may
+  result in better numerical stability. The matrix input
+  should be a 2 by nitems numeric matrix, where each number
+  represents the \emph{reduced} category representation
+  (mirt omits categories that are missing, so if the unique
+  values for an item are c(1,2,5,6) they are treated as
+  being the same as c(1,2,3,4). Viewing the starting values
+  will help to identify the categories)}
 
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
@@ -485,6 +489,7 @@ anova(cmod, mod2)
 pmod1 <- mirt(Science, 1)
 plot(pmod1)
 summary(pmod1)
+fitIndices(pmod1) #M2 limited information statistic
 
 #Constrain all slopes to be equal with the constrain = list() input
 #first obtain parameter index
@@ -506,7 +511,7 @@ anova(pmod1, pmod2)
 coef(gpcmod)
 
 #for the nominal model the lowest and highest categories are assumed to be the theoretically lowest
-#  and highest categories that related to the latetent trait(s), however a custom cat.highlow matrix
+#  and highest categories that related to the latetent trait(s), however a custom nominal.highlow matrix
 #  can be passed to declare which item category should be treated as the 'highest' and 'lowest' instead
 (nomod <- mirt(Science, 1, 'nominal'))
 coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
@@ -521,8 +526,8 @@ data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 mod1 <- mirt(data, 1)
-mod2 <- mirt(data, 2, quadpts = 15)
-mod3 <- mirt(data, 3, quadpts = 10)
+mod2 <- mirt(data, 2)
+mod3 <- mirt(data, 3, technical = list(TOL = 1e-3)) #difficulty converging to 1e-4 with reduced quadpts
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 

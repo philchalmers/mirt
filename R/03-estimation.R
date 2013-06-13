@@ -1,7 +1,7 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL, 
-                       cat.highlow = NULL, ...)
+                       nominal.highlow = NULL, ...)
 {
     opts <- makeopts(...)
     if(!is.null(customItems)) opts$calcNull <- FALSE
@@ -56,9 +56,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                  technical=opts$technical, parnumber=1, BFACTOR=opts$BFACTOR,
                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                  D=opts$D, mixed.design=mixed.design, customItems=customItems,
-                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, cat.highlow=cat.highlow)
-    if(any(PrepListFull$itemtype == 'nominal') && is.null(cat.highlow) && !opts$NULL.MODEL)
-        message('\'cat.highlow\' matrix not specified, highest and lowest categories are used by default')    
+                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow)
+    if(any(PrepListFull$itemtype == 'nominal') && is.null(nominal.highlow) && !opts$NULL.MODEL)
+        message('\'nominal.highlow\' matrix not specified, highest and lowest categories are used by default')    
     parnumber <- 1L
     for(g in 1L:Data$ngroups){
         tmp <- 1L:Data$ngroups
@@ -69,7 +69,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                       technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
                                       grsm.block=opts$grsm.block, D=opts$D, mixed.design=mixed.design,
                                       customItems=customItems, fulldata=PrepList[[1L]]$fulldata, key=key,
-                                      cat.highlow=cat.highlow)
+                                      nominal.highlow=nominal.highlow)
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1L
     }
@@ -183,7 +183,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method == 'EM'){
         if(opts$method == 'EM' && nLambdas > nfact)
             stop('Polynominals and product terms not supported for EM method')
-        if (is.null(opts$quadpts)) opts$quadpts <- ceiling(40/(nfact^1.5))
+        if(is.null(opts$quadpts))
+            opts$quadpts <- switch(as.character(nfact), '1'=40, '2'=20, '3'=10, '4'=7, '5'=5, 3)
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                         length.out = opts$quadpts))
         temp <- matrix(0,nrow=nitems,ncol=(nfact-1L))

@@ -1,7 +1,7 @@
 PrepData <- function(data, model, itemtype, guess, upper,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, D, mixed.design, customItems,
-                     fulldata = NULL, key, cat.highlow)
+                     fulldata = NULL, key, nominal.highlow)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))    
@@ -12,11 +12,11 @@ PrepData <- function(data, model, itemtype, guess, upper,
     J <- ncol(data)
     N <- nrow(data)
     exploratory <- FALSE
-    if(!is.null(cat.highlow)){
-        if(!is.matrix(cat.highlow)) stop('cat.highlow must be a matrix')
-        if(all(dim(cat.highlow) != c(2,J))) stop('cat.highlow does not have the correct dimensions')
-        if(any(cat.highlow[1L, ] == cat.highlow[2L, ])) 
-            stop('cat.highlow low and high categories must differ')
+    if(!is.null(nominal.highlow)){
+        if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix')
+        if(all(dim(nominal.highlow) != c(2,J))) stop('nominal.highlow does not have the correct dimensions')
+        if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ])) 
+            stop('nominal.highlow low and high categories must differ')
     }    
     if(is(model, 'numeric') && length(model) == 1L){
         if(model != 1L) exploratory <- TRUE
@@ -92,7 +92,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
                            parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixed.design=mixed.design,
-                           customItems=customItems, key=key, cat.highlow=cat.highlow)
+                           customItems=customItems, key=key, nominal.highlow=nominal.highlow)
     prodlist <- attr(pars, 'prodlist')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')

@@ -434,7 +434,7 @@ RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RThe
                 sum((r1_P * (D * Theta(_,i) * (-Pstar + Pstar2)) -
                          r1_P2 * (ugD * Theta(_,i) * (Pstar - Pstar2)) * Qstar +
                          r2_Q * (D * Theta(_,i) * (Pstar - Pstar2)) -
-                         r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2) ) * (-1 + Pstar)) * Prior);
+                         r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2) ) * (Pstar - 1.0)) * Prior);
             hess(gloc, i) = hess(i, gloc);
             hess(i, uloc) =  
                 sum((r1_P * (D * Theta(_,i) * (Pstar - Pstar2)) -
