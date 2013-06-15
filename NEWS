@@ -2,7 +2,7 @@ Changes in mirt 0.7.5
 
 NEW FEATURES
 
-- EAPsum support if fscores() for mixed item types
+- EAPsum support in fscores() for mixed item types
 
 - for consistency with other current IRT software (rather than TESTFACT and POLYFACT), the scaling 
   constant has been set to D = 1
