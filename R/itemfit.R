@@ -266,7 +266,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 }
                 sel <- L[,j+1L]
                 sel[rowSums(is.na(En[, 1L:j])) == (ncol(En)-1L)] <- FALSE
-                put <- apply(En[sel, 1L:j], 1, function(x) max(which(!is.na(x))))
+                put <- apply(En[sel, 1L:j, drop=FALSE], 1, function(x) max(which(!is.na(x))))
                 put2 <- which(sel)
                 for(k in 1L:length(put)){
                     En[put2[k], put[k]] <- En[put2[k], put[k]] + En[put2[k], j+1L]

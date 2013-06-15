@@ -270,7 +270,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
 }
 
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
-    calcL1 <- function(itemtrace, K){
+    calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
         L0[1L:K[1L], ] <- itemtrace[1:K[1], ]
@@ -306,7 +306,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
     for (i in 1L:J)
         itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     itemtrace <- t(itemtrace)
-    tmp <- calcL1(itemtrace=itemtrace, K=K)
+    tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1
     Sum.Scores <- tmp$Sum.Scores
     if(S_X2){
@@ -316,7 +316,11 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
             KK <- K[-i]
             T <- itemtrace[c(itemloc[i]:(itemloc[i+1L]-1L)), ]
             itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i+1L]-1L)), ]
-            tmp <- calcL1(itemtrace=itemtrace2, K=KK)
+            if(i != J){
+                itemloc2 <- itemloc[-i]
+                itemloc2[i:J] <- itemloc2[i:J] - nrow(T)                
+            } else itemloc2 <- itemloc[-(J+1)]
+            tmp <- calcL1(itemtrace=itemtrace2, K=KK, itemloc=itemloc2)
             E <- matrix(NA, nrow(L1total), nrow(T))
             for(j in 1L:(nrow(T)))
                 E[1L:nrow(tmp$L1)+j-1L,j] <- tmp$L1 %*% (T[j,] * prior) /
