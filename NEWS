@@ -2,6 +2,8 @@ Changes in mirt 0.7.5
 
 NEW FEATURES
 
+- EAPsum support if fscores() for mixed item types
+
 - for consistency with other current IRT software (rather than TESTFACT and POLYFACT), the scaling 
   constant has been set to D = 1
 
@@ -15,7 +17,8 @@ NEW FEATURES
 
 - mixedmirt() more supportive of user defined input formulas, and now includes an internal 'items'
   argument to create the item design matrix used to estimate the intercepts. More closely mirrors 
-  the outputed results from lme4 for Rasch models as well
+  the outputed results from lme4 for Rasch models as well (special thanks to Kevin Joldersma for
+  testing and debugging)
 
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
   that contain slopes equal to zero

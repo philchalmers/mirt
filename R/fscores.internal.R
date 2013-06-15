@@ -276,11 +276,10 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
         L0[1L:K[1L], ] <- itemtrace[1:K[1], ]
         nstar <- K[1L] + K[2L] - 3L
         Sum.Scores <- 1L:nrow(L0)-1L
-        MAX.Scores <- cumsum(K-1L)
+        MAX.Scores <- cumsum(K-1L)        
         for(i in 1L:(J-1L)){
             T <- itemtrace[itemloc[i+1L]:(itemloc[i+2L] - 1L), ]
             L1[1L, ] <- L0[1L, ] * T[1L, ]
-            #recursive rule for internal values (gets a little ugly at polytomous data edges)
             for(j in 1L:nstar+1L){
                 sums <- 0
                 for(k in 1L:K[i+1L]-1L)
@@ -290,7 +289,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
             }
             L1[j+1L, ] <- L0[j - k + 1L, ] * T[nrow(T), ]
             L0 <- L1
-            nstar <- nstar + K[i+1L] - 1L
+            if(i != J) nstar <- nstar + K[i+2L] - 1L
         }
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
