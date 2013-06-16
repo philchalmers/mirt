@@ -10,9 +10,7 @@
 #' @aliases personfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
 #' \code{MultipleGroupClass}
-#' @param method type of factor score estimation method. Can be expected
-#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-#' (\code{"WLE"}), or maximum likelihood (\code{"ML"})
+#' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit

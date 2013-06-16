@@ -388,8 +388,8 @@ Theory)}
   nominal model \eqn{d_0} is also set to 0). Additionally,
   for identification in the nominal model \eqn{ak_0 = 1},
   \eqn{ak_k = (k - 1)}. \deqn{P(x = k | \theta, \psi) =
-  \frac{exp(-ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
-  d_k)} {\sum_i^k exp(-ak_k * (a_1 * \theta_1 + a_2 *
+  \frac{exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
+  d_k)} {\sum_i^k exp(ak_k * (a_1 * \theta_1 + a_2 *
   \theta_2) + d_k)}}
 
   For partial credit model (when \code{itemtype = 'Rasch'};

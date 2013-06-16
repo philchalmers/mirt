@@ -19,9 +19,7 @@
 #'  (via \code{itemplot}) and
 #' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}.
 #' The default is \code{NULL}, therefore no plots are drawn
-#' @param method type of factor score estimation method. Can be expected
-#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-#' (\code{"WLE"}), or maximum likelihood (\code{"ML"})
+#' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit

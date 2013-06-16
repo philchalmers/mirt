@@ -38,7 +38,8 @@
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}},
   expect limited only to the following item types:
-  \code{c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'gpcm')}}
+  \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL',
+  'gpcm')}}
 
   \item{itemdesign}{a \code{data.frame} object used to
   create a design matrix for the items, where each

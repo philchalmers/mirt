@@ -34,7 +34,7 @@
 #' the random slope and intercept predictors. Not currently available, but will be available some 
 #' time in the future 
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect limited only to the following 
-#' item types: \code{c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'gpcm')}
+#' item types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'gpcm')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
 #' each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed 
 #' effect predictors (i.e., item intercepts)
@@ -160,8 +160,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE, ...)
 {
     Call <- match.call()       
-    if(length(itemtype) == 1) itemtype <- rep(itemtype, ncol(data))
-    if(!all(itemtype %in% c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'gpcm')))
+    if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
+    if(!all(itemtype %in% c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'gpcm')))
         stop('itemtype contains unsupported classes of items')
     if(!is.null(random)) stop('random effects not yet supported')    
     if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))

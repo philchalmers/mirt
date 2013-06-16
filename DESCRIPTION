@@ -48,7 +48,6 @@ Collate:
     'mirt-package.R'
     'confmirt.R'
     'mirt.R'
-    'polymirt.R'
     'simdata.R'
     '00-classes.R'
     'utils.R'

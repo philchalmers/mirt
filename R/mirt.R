@@ -229,8 +229,8 @@
 #' \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are treated as fixed and orderd values
 #' from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
 #' in the nominal model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}.
-#' \deqn{P(x = k | \theta, \psi) = \frac{exp(-ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
-#' {\sum_i^k exp(-ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
+#' \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
+#' {\sum_i^k exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
 #' 
 #' For partial credit model (when \code{itemtype = 'Rasch'}; unidimenional only) the above model 
 #' is further constrained so that \eqn{ak_k = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
