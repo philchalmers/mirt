@@ -612,6 +612,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SE.type = 'MHRM', large = NULL, ...)
 {
     opts <- list()
+    D <- 1
     opts$method = method
     opts$draws = draws
     opts$calcLL = calcLL

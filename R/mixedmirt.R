@@ -209,7 +209,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         pars <- sv
     }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                      D=1, mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
+                      mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)

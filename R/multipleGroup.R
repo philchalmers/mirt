@@ -46,8 +46,6 @@
 #' numeric vector corresponding to each item
 #' @param SE logical; estimate the information matrix for standard errors?
 #' @param SE.type see \code{\link{mirt}} for more details
-#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
-#' cumulative density curve. Default is 1
 #' @param verbose logical; display iteration history during estimation?
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
@@ -106,7 +104,7 @@
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
 #' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
 #' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-#' key = NULL, D = 1, cl = NULL, technical = list(), verbose = TRUE, ...)
+#' key = NULL, cl = NULL, technical = list(), verbose = TRUE, ...)
 #'
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -279,8 +277,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
                           draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                          key = NULL, D = 1, cl = NULL,
-                          technical = list(), verbose = TRUE, ...)
+                          key = NULL, cl = NULL, technical = list(), verbose = TRUE, ...)
 {
     Call <- match.call()
     invariance.check <- invariance %in% c('free_means', 'free_varcov')
@@ -289,7 +286,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance,
                       itemtype=itemtype, guess=guess, upper=upper,
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
-                      parprior=parprior, quadpts=quadpts, method=method, D=D, rsm.block=rsm.block,
+                      parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,
                       SE.type = SE.type, cl=cl, key=key, ...)
     if(is(mod, 'MultipleGroupClass'))

@@ -14,7 +14,7 @@ Theory)}
     NULL, parprior = NULL, calcNull = TRUE, rotate =
     'oblimin', Target = NaN, quadpts = NULL, grsm.block =
     NULL, rsm.block = NULL, key= NULL, nominal.highlow =
-    NULL, D = 1, cl = NULL, large = FALSE, verbose = TRUE,
+    NULL, cl = NULL, large = FALSE, verbose = TRUE,
     technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
@@ -119,11 +119,6 @@ Theory)}
   ''} in the \code{summary} input then the default from the
   object is ignored and the new rotation from the list is
   used instead}
-
-  \item{D}{a numeric value used to adjust the logistic
-  metric to be more similar to a normal cumulative density
-  curve. Default is 1. Note that the value 1.702 is the
-  constant found in TESTFACT and POLYFACT}
 
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
@@ -362,19 +357,19 @@ Theory)}
 \section{IRT Models}{
   The parameter labels use the follow convention, here
   using two factors and \eqn{k} as the number of
-  categories. Throughout all models D is a constant:
+  categories.
 
   \describe{ \item{Rasch}{ Only one intercept estimated,
   and the latent variance of \eqn{\theta} is freely
   estimated. If the data have more than two categories then
   a partial credit model is used instead (see 'gpcm'
   below). \deqn{P(x = 1|\theta, d) = \frac{1}{1 +
-  exp(-D*(\theta + d))}} } \item{1-4PL}{ Depending on the
+  exp(-(\theta + d))}} } \item{1-4PL}{ Depending on the
   model \eqn{u} may be equal to 1 and \eqn{g} may be equal
   to 0. \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1
-  + exp(-D * (a_1 * \theta_1 + a_2 * \theta_2 + d))}} For
-  the 1PL model the number of factors must equal 1, and if
-  so all the \eqn{a_1} values are constrained to be equal
+  + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}} For the
+  1PL model the number of factors must equal 1, and if so
+  all the \eqn{a_1} values are constrained to be equal
   accross all items and the latent variance of \eqn{\theta}
   is freely estimated. } \item{graded}{ The graded model
   consists of sequential 2PL models, and here \eqn{k} is
@@ -386,15 +381,15 @@ Theory)}
   parameter (c) while the latent variance of \eqn{\theta}
   is freely estimated. Again, \deqn{P(x = k | \theta, \psi)
   = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
-  \phi)} but now \deqn{P = \frac{1}{1 + exp(-D * (a_1 *
+  \phi)} but now \deqn{P = \frac{1}{1 + exp(-(a_1 *
   \theta_1 + a_2 * \theta_2 + d_k + c))}} }
   \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are
   treated as fixed and orderd values from 0:(k-1) (in the
   nominal model \eqn{d_0} is also set to 0). Additionally,
   for identification in the nominal model \eqn{ak_0 = 1},
   \eqn{ak_k = (k - 1)}. \deqn{P(x = k | \theta, \psi) =
-  \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
-  d_k)} {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 *
+  \frac{exp(-ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
+  d_k)} {\sum_i^k exp(-ak_k * (a_1 * \theta_1 + a_2 *
   \theta_2) + d_k)}}
 
   For partial credit model (when \code{itemtype = 'Rasch'};
@@ -428,19 +423,19 @@ Theory)}
   constraints). } \item{partcomp}{Partially compensatory
   models consist of the products of 2PL probability curves.
   \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 +
-  exp(-D * (a_1 * \theta_1 + d_1))} * \frac{1}{1 + exp(-D *
-  (a_2 * \theta_2 + d_2))})} } \item{1-4PLNRM}{Nested
-  logistic curves for modeling distractor items. Requires a
-  scoring key. The model is broken into two components for
-  the probability of endorsement. For successful
-  endorsement the probability trace is the 1-4PL model,
-  while for unsuccessful endorsement: \deqn{P(x = 0 |
-  \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) *
-  P_{nominal}(x = k | \theta, \psi)} which is the product
-  of the compliment of the dichotomous trace line with the
-  nominal response model. In the nominal model, the slope
-  parameters defined above are constrained to be 1's, while
-  the last value of the \eqn{ak} is freely estimated. } }
+  exp(-(a_1 * \theta_1 + d_1))} * \frac{1}{1 + exp(-(a_2 *
+  \theta_2 + d_2))})} } \item{1-4PLNRM}{Nested logistic
+  curves for modeling distractor items. Requires a scoring
+  key. The model is broken into two components for the
+  probability of endorsement. For successful endorsement
+  the probability trace is the 1-4PL model, while for
+  unsuccessful endorsement: \deqn{P(x = 0 | \theta, \psi) =
+  (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k
+  | \theta, \psi)} which is the product of the compliment
+  of the dichotomous trace line with the nominal response
+  model. In the nominal model, the slope parameters defined
+  above are constrained to be 1's, while the last value of
+  the \eqn{ak} is freely estimated. } }
 }
 \examples{
 \dontrun{

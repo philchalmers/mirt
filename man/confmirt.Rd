@@ -12,8 +12,8 @@
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
     verbose = TRUE, draws = 5000, rotate = 'oblimin',
-    Target = NULL, key = NULL, D = 1, cl = NULL, technical
-    = list(), ...)
+    Target = NULL, key = NULL, cl = NULL, technical =
+    list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -109,10 +109,6 @@
   loadings should be suppressed. Typical values are around
   .3 in most statistical software. Default is 0 for no
   suppression}
-
-  \item{D}{a numeric value used to adjust the logistic
-  metric to be more similar to a normal cumulative density
-  curve. Default is 1}
 
   \item{cl}{a cluster object from the \code{parallel}
   package (set from using \code{makeCluster(ncores)})}

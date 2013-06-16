@@ -92,8 +92,6 @@
 #' @param suppress a numeric value indicating which factor
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
-#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
-#' cumulative density curve. Default is 1
 #' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
 #' @param technical list specifying subtle parameters that can be adjusted. These
 #' values are
@@ -151,7 +149,7 @@
 #' @usage
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE,
-#' draws = 5000, rotate = 'oblimin', Target = NULL, key = NULL, D = 1, cl = NULL, technical = list(),  ...)
+#' draws = 5000, rotate = 'oblimin', Target = NULL, key = NULL, cl = NULL, technical = list(),  ...)
 #'
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #'
@@ -268,11 +266,11 @@
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL,
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
                      verbose = TRUE, draws = 5000, rotate = 'oblimin', Target = NULL,
-                     key = NULL, D = 1, cl = NULL, technical = list(),  ...)
+                     key = NULL, cl = NULL, technical = list(),  ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype,
-                      guess=guess, upper=upper, grsm.block=grsm.block, D=D, calcNull=calcNull,
+                      guess=guess, upper=upper, grsm.block=grsm.block, calcNull=calcNull,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, rotate=rotate,
                       rsm.block=rsm.block, draws=draws, technical=technical, cl=cl, key=key, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))

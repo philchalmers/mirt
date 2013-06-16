@@ -105,9 +105,6 @@
 #' See below for list of possible rotations. If \code{rotate != ''} in the \code{summary}
 #' input then the default from the object is ignored and the new rotation from the list
 #' is used instead
-#' @param D a numeric value used to adjust the logistic metric to be more similar to a normal
-#' cumulative density curve. Default is 1. Note that the value 1.702 is the constant 
-#' found in TESTFACT and POLYFACT
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
@@ -201,18 +198,17 @@
 #' @section IRT Models:
 #'
 #' The parameter labels use the follow convention, here using two factors and \eqn{k} as the number
-#' of categories. Throughout all models D is a constant:
+#' of categories. 
 #'
 #' \describe{
 #' \item{Rasch}{
 #' Only one intercept estimated, and the latent variance of \eqn{\theta} is freely estimated. If
 #' the data have more than two categories then a partial credit model is used instead (see 'gpcm' below).
-#' \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-D*(\theta + d))}}
+#' \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
 #' }
 #' \item{1-4PL}{
 #' Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
-#' \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-D *
-#' (a_1 * \theta_1 + a_2 * \theta_2 + d))}}
+#' \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
 #' For the 1PL model the number of factors must equal 1, and if so all the \eqn{a_1} values 
 #' are constrained to be equal accross all items and the latent variance of \eqn{\theta} is 
 #' freely estimated.
@@ -228,13 +224,13 @@
 #' of \eqn{\theta} is freely estimated. Again,
 #' \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
 #' but now
-#' \deqn{P = \frac{1}{1 + exp(-D * (a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
+#' \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
 #' }
 #' \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are treated as fixed and orderd values
 #' from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
 #' in the nominal model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}.
-#' \deqn{P(x = k | \theta, \psi) = \frac{exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
-#' {\sum_i^k exp(-D * ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
+#' \deqn{P(x = k | \theta, \psi) = \frac{exp(-ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
+#' {\sum_i^k exp(-ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
 #' 
 #' For partial credit model (when \code{itemtype = 'Rasch'}; unidimenional only) the above model 
 #' is further constrained so that \eqn{ak_k = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
@@ -258,8 +254,8 @@
 #' additional equality constraints).
 #' }
 #' \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
-#' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-D * (a_1 * \theta_1 + d_1))} *
-#' \frac{1}{1 + exp(-D * (a_2 * \theta_2 + d_2))})}
+#' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
+#' \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
 #' }
 #' \item{1-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
 #' The model is broken into two components for the probability of endorsement. For successful endorsement
@@ -331,7 +327,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN,
 #' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, nominal.highlow = NULL,
-#' D = 1, cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
+#' cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
@@ -507,14 +503,14 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                 key = NULL, nominal.highlow = NULL, D = 1, cl = NULL, 
+                 key = NULL, nominal.highlow = NULL, cl = NULL, 
                  large = FALSE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE,
-                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, D=D,
+                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, key=key, 
                       nominal.highlow=nominal.highlow, ...)

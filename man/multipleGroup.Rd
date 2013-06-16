@@ -13,8 +13,8 @@
     = '', pars = NULL, method = 'EM', constrain = NULL,
     parprior = NULL, calcNull = TRUE, draws = 5000, quadpts
     = NULL, grsm.block = NULL, rsm.block = NULL, key =
-    NULL, D = 1, cl = NULL, technical = list(), verbose =
-    TRUE, ...)
+    NULL, cl = NULL, technical = list(), verbose = TRUE,
+    ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -86,10 +86,6 @@
   standard errors?}
 
   \item{SE.type}{see \code{\link{mirt}} for more details}
-
-  \item{D}{a numeric value used to adjust the logistic
-  metric to be more similar to a normal cumulative density
-  curve. Default is 1}
 
   \item{verbose}{logical; display iteration history during
   estimation?}
