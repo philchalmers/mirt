@@ -857,3 +857,34 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     return(rij)
 }
 
+make.randomdesign <- function(random, longdata, covnames, itemdesign, N){    
+    itemcovnames <- colnames(itemdesign)
+    J <- nrow(itemdesign)    
+    ret <- vector('list', length(random))
+    for(i in 1L:length(random)){
+        f <- gsub(" ", "", as.character(random[[i]])[2L])
+        splt <- strsplit(f, '\\|')[[1L]]
+        gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
+        gdesign <- NULL
+        sframe <- as.matrix(model.frame(as.formula(paste0('~',splt[1L])), longdata))
+        if(colnames(gframe) %in% covnames){
+            between <- TRUE
+        } else if(colnames(gframe) %in% itemcovnames){
+            between <- FALSE
+        } else stop('grouping variable not in itemdesign or covdata')
+        if(between){
+            gdesign <- model.matrix(as.formula(paste0('~0+',splt[2L])), gframe)[1:N, , drop=FALSE]
+            gframe <- gframe[1:N, , drop=FALSE]            
+            sframe <- sframe[1:N, , drop=FALSE]
+        } else {
+            gframe <- itemdesign[, which(colnames(gframe) == itemcovnames), drop=FALSE]
+            sframe <- itemdesign[, which(colnames(sframe) == itemcovnames), drop=FALSE]
+        }
+        ret[[i]] <- list(gframe=gframe, gdesign=gdesign, sframe=sframe, between=between, 
+                         matpar = diag(ncol(gframe) + ncol(sframe)))        
+        ret[[i]]$est <- lower.tri(ret[[i]]$matpar, diag=TRUE)
+        if(strsplit(f, '+')[[1L]][[1L]] == '0') 
+            ret[[i]]$est[lower.tri(ret[[i]]$est)] <- FALSE
+    }    
+    ret
+}

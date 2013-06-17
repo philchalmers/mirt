@@ -163,12 +163,14 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(!all(itemtype %in% c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'gpcm')))
         stop('itemtype contains unsupported classes of items')
-    if(!is.null(random)) stop('random effects not yet supported')    
+    if(is(random, 'formula')) {
+        random <- list(random)
+    } else if(is.null(random)) random <- list()
+    if(!is.list(random)) stop('Incorrect input for random argument')
     if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))
     if(is.null(itemdesign)){
         itemdesign <- data.frame(items = factor(1L:ncol(data)))
-    } else itemdesign$items <- factor(1L:ncol(data))
-    if(!is.null(random)) stop('random effects not yet supported')
+    } else itemdesign$items <- factor(1L:ncol(data))    
     if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
         stop('Predictor variable inputs must be data.frame objects')    
     dropcases <- which(rowSums(is.na(covdata)) != 0)
@@ -185,9 +187,13 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     mm <- model.matrix(fixed, mf)   
     if(return.design) return(list(X=mm, Z=NaN))
     itemindex <- colnames(mm) %in% paste0('items', 1L:ncol(data))
-    mmitems <- mm[ , itemindex]
-    mm <- mm[ ,!itemindex, drop = FALSE]       
-    mixed.design <- list(fixed=mm, random=NaN)    
+    mmitems <- mm[, itemindex]
+    mm <- mm[ ,!itemindex, drop = FALSE]
+    if(length(random) > 0L){
+        mr <- make.randomdesign(random=random, longdata=longdata, covnames=colnames(covdata), 
+                                itemdesign=itemdesign, N=nrow(covdata))
+    } else mr <- list()       
+    mixed.design <- list(fixed=mm, random=mr)    
     if(is.null(constrain)) constrain <- list()    
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                      D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
@@ -207,7 +213,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         }        
         attr(sv, 'values') <- pars
         pars <- sv
-    }
+    } else pars <- sv
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
     if(is(mod, 'MixedClass'))

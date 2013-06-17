@@ -156,7 +156,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             return(x)}, valid=valid.ints)        
         N <- nrow(mixed.design$fixed) / J
         for(i in 1L:J)
-            fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), ]
+            fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), , drop = FALSE]
     }
 
     #load items
