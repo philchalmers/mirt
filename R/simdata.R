@@ -194,6 +194,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(itemtype[i] =='partcomp') K[i] <- 2L
         if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
     }
+    K <- as.integer(K)
     oldguess <- guess
     oldupper <- upper
     guess[K > 2L] <- upper[K > 2L] <- NA

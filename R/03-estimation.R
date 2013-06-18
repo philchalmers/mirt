@@ -74,6 +74,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
         parnumber <- tmp@parnum[length(tmp@parnum)] + 1L
     }
+    if(length(mixed.design$random) > 0L){
+        for(i in 1L:length(mixed.design$random)){
+            mixed.design$random[[i]]@parnum <- parnumber:(parnumber - 1L +  
+                                                              length(mixed.design$random[[i]]@par))
+            parnumber <- max(mixed.design$random[[i]]@parnum) + 1L            
+        }
+    }
     if(!is.null(opts$PrepList)){
         PrepList <- opts$PrepList
     } else {
@@ -114,13 +121,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     if(!is.null(pars)){        
         if(is(pars, 'data.frame')){
-            PrepList <- UpdatePrepList(PrepList, pars, MG = TRUE)
+            PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random, MG = TRUE)            
+            mixed.design$random <- attr(PrepList, 'random')
+            attr(PrepList, 'random') <- NULL
         }          
         if(!is.null(attr(pars, 'values'))){
-            return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, MG = TRUE))
+            return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, 
+                              random=mixed.design$random, MG = TRUE))
         } else if(is.character(pars)){
             if(pars == 'values') 
-                return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, MG = TRUE))
+                return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, 
+                                  random=mixed.design$random, MG = TRUE))
         } 
     }
     pars <- vector('list', Data$ngroups)
@@ -304,7 +315,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             rlist[[g]]$expected = numeric(1)
     } else if(opts$method == 'MIXED'){
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain,
-                                    PrepList=PrepList, 
+                                    PrepList=PrepList, random=mixed.design$random,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                            KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=FALSE,

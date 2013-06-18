@@ -628,3 +628,33 @@ setMethod("initialize",
               .Object@ubound <- if(!is.null(ubound)) ubound  else rep(Inf, length(par))
               .Object
           })
+
+
+#----------------------------------------------------------------------------
+## Random variable methods
+
+setMethod(
+    f = "DrawValues",
+    signature = signature(x = 'RandomPars', Theta = 'matrix', offterm = 'numeric'),
+    definition = function(x, Theta, offterm){
+        browser()
+        
+        
+    }
+)
+
+setMethod(
+    f = "RandomDeriv",
+    signature = signature(x = 'RandomPars'),
+    definition = function(x){
+        browser()
+        
+    }
+)
+
+RandomOffTerm <- function(random){    
+    offtermmat <- matrix(0, length(random[[1L]]@mtch), length(random))
+    for(i in 1L:length(random))
+        offtermmat[,i] <- random[[i]]@drawvals[random[[i]]@mtch, ]
+    return(rowSums(offtermmat))
+}

@@ -407,7 +407,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     return(constrain)
 }
 
-ReturnPars <- function(PrepList, itemnames, MG = FALSE){
+ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- itemtype <-
         lbound <- ubound <- c()
     if(!MG) PrepList <- list(full=PrepList)
@@ -425,14 +425,28 @@ ReturnPars <- function(PrepList, itemnames, MG = FALSE){
         }
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))
     }
-    gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
-    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par,
+    gnames <- rep(names(PrepList), each = length(est)/length(PrepList))     
+    if(length(random) > 0L){        
+        for(i in 1L:length(random)){            
+            parname <- c(parname, names(random[[i]]@par))
+            parnum <- c(parnum, random[[i]]@parnum)
+            par <- c(par, random[[i]]@par)
+            est <- c(est, random[[i]]@est)
+            lbound <- c(lbound, random[[i]]@lbound)
+            ubound <- c(ubound, random[[i]]@ubound)            
+        }
+        gnames <- rep('all', length(par))
+        item <- c(item, rep('RANDOM',length(gnames)-length(item))) 
+    }
+    ret <- data.frame(group=gnames, item=item, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est)
     ret
 }
 
-UpdatePrepList <- function(PrepList, pars, MG = FALSE){
-    if(!MG) PrepList <- list(PrepList)
+UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
+    if(!MG) PrepList <- list(PrepList)    
+    len <- length(PrepList[[length(PrepList)]]$pars)
+    maxparnum <- max(PrepList[[length(PrepList)]]$pars[[len]]@parnum)
     ind <- 1L
     for(g in 1L:length(PrepList)){
         for(i in 1L:length(PrepList[[g]]$pars)){
@@ -444,6 +458,18 @@ UpdatePrepList <- function(PrepList, pars, MG = FALSE){
                 ind <- ind + 1L
             }
         }
+    }
+    if(length(random) > 0L){
+        for(i in 1L:length(random)){
+            for(j in 1L:length(random[[i]]@par)){
+                random[[i]]@par[j] <- pars[ind,'value']
+                random[[i]]@est[j] <- as.logical(pars[ind,'est'])
+                random[[i]]@lbound[j] <- pars[ind,'lbound']
+                random[[i]]@ubound[j] <- pars[ind,'ubound']
+                ind <- ind + 1L
+            }
+        }
+        attr(PrepList, 'random') <- random
     }
     if(!MG) PrepList <- PrepList[[1L]]
     return(PrepList)
@@ -522,40 +548,7 @@ ItemInfo <- function(x, Theta, cosangle){
     return(info)
 }
 
-# designMats <- function(covdata, fixed, Thetas, nitems, itemdesign = NULL, random = NULL,
-#                        fixed.identical = FALSE){    
-#     fixed.design.list <- vector('list', nitems)
-#     for(item in 1L:nitems){
-#         if(item > 1L && fixed.identical){
-#             fixed.design.list[[item]] <- fixed.design.list[[1L]]
-#             next
-#         }
-#         if(colnames(itemdesign)[1L] != 'InTeRnAlUsElESsNaMe2'){
-#             dat <- data.frame(matrix(itemdesign[item, ], nrow(covdata), ncol(itemdesign), byrow=TRUE),
-#                                    covdata, Thetas)
-#             colnames(dat) <- c(colnames(itemdesign), colnames(covdata), colnames(Thetas))
-#         } else dat <- data.frame(covdata, Thetas)
-#         if(fixed == ~ 1) {
-#             fixed.design <- NULL
-#         } else{            
-#             mf <- model.frame(fixed, dat)            
-#             if(colnames(itemdesign)[1L] != 'InTeRnAlUsElESsNaMe2'){
-#                 #if only item predictors, omit intercept
-#                 if(all(colnames(mf) %in% colnames(itemdesign)))
-#                     fixed.design <- model.matrix(fixed, dat)[, -1L, drop=FALSE]
-#             } else fixed.design <- model.matrix(fixed, dat)
-#         }
-#         cn <- colnames(Thetas)
-#         CN <- colnames(fixed.design)
-#         drop <- rep(FALSE, length(CN))
-#         for(i in 1L:ncol(Thetas))
-#             drop <- drop | CN == cn[i]
-#         fixed.design.list[[item]] <- fixed.design[ , !drop, drop = FALSE]
-#     }
-#     return(fixed.design.list)
-# }
-
-nameInfoMatrix <- function(info, correction, L, npars){
+nameInfoMatrix <- function(info, correction, L, npars, random){
     #give info meaningful names for wald test
     parnames <- names(correction)
     tmp <- outer(1L:npars, rep(1L, npars))
@@ -865,8 +858,8 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         f <- gsub(" ", "", as.character(random[[i]])[2L])
         splt <- strsplit(f, '\\|')[[1L]]
         gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
-        gdesign <- NULL
-        sframe <- as.matrix(model.frame(as.formula(paste0('~',splt[1L])), longdata))
+        gdesign <- data.frame()
+        sframe <- model.frame(as.formula(paste0('~',splt[1L])), longdata)
         if(colnames(gframe) %in% covnames){
             between <- TRUE
         } else if(colnames(gframe) %in% itemcovnames){
@@ -879,12 +872,37 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         } else {
             gframe <- itemdesign[, which(colnames(gframe) == itemcovnames), drop=FALSE]
             sframe <- itemdesign[, which(colnames(sframe) == itemcovnames), drop=FALSE]
-        }
-        ret[[i]] <- list(gframe=gframe, gdesign=gdesign, sframe=sframe, between=between, 
-                         matpar = diag(ncol(gframe) + ncol(sframe)))        
-        ret[[i]]$est <- lower.tri(ret[[i]]$matpar, diag=TRUE)
+        }        
+        matpar <- diag(ncol(gframe) + ncol(sframe))
+        estmat <- lower.tri(matpar, diag=TRUE)
+        ndim <- ncol(matpar)
         if(strsplit(f, '+')[[1L]][[1L]] == '0') 
-            ret[[i]]$est[lower.tri(ret[[i]]$est)] <- FALSE
+            estmat[lower.tri(estmat)] <- FALSE        
+        fn <- paste0('COV_', c(colnames(gframe), colnames(sframe)))
+        FNCOV <- outer(fn, c(colnames(gframe), colnames(sframe)), FUN=paste, sep='.')
+        par <- matpar[lower.tri(matpar, diag=TRUE)]
+        est <- estmat[lower.tri(estmat, diag=TRUE)]
+        names(par) <- names(est) <- FNCOV[lower.tri(FNCOV, diag=TRUE)]     
+        drawvals <- matrix(0, length(unique(gframe)[[1L]]), ndim, 
+                           dimnames=list(unique(gframe)[[1L]], NULL))        
+        mtch <- match(gframe[[1L]], rownames(drawvals))                       
+        ret[[i]] <- new('RandomPars', 
+                        par=par,
+                        est=est,
+                        ndim=ndim,
+                        lbound=rep(-Inf, length(par)),
+                        ubound=rep(Inf, length(par)),
+                        gframe=gframe,
+                        gdesign=gdesign,
+                        sframe=sframe,
+                        between=between,
+                        cand.t.var=1,
+                        n.prior.mu=rep(NaN,length(par)),
+                        n.prior.sd=rep(NaN,length(par)),
+                        b.prior.alpha=rep(NaN,length(par)),
+                        b.prior.beta=rep(NaN,length(par)),
+                        drawvals=drawvals,
+                        mtch=mtch)        
     }    
     ret
 }

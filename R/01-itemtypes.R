@@ -5,12 +5,33 @@ setClass("GroupPars",
                         SEpar='numeric',
                         est='logical',
                         parnum='numeric',
-                        nfact='numeric',
+                        nfact='integer',
                         gradient='numeric',
                         hessian='matrix',
                         itemtrace='matrix',
                         lbound='numeric',
                         ubound='numeric',
+                        n.prior.mu='numeric',
+                        n.prior.sd='numeric',
+                        b.prior.alpha='numeric',
+                        b.prior.beta='numeric')
+)
+
+setClass("RandomPars",
+         representation(par='numeric',
+                        SEpar='numeric',
+                        est='logical',
+                        between='logical',
+                        parnum='numeric',
+                        ndim='integer',  
+                        gframe='data.frame',
+                        gdesign='matrix',
+                        sframe='data.frame',
+                        lbound='numeric',
+                        ubound='numeric',
+                        cand.t.var='numeric',
+                        drawvals='matrix',
+                        mtch='numeric',
                         n.prior.mu='numeric',
                         n.prior.sd='numeric',
                         b.prior.alpha='numeric',
@@ -23,11 +44,11 @@ setClass("AllItemsClass",
                         est='logical',
                         constr='logical',
                         parnum='numeric',
-                        nfact='numeric',
+                        nfact='integer',
                         nfixedeffects='numeric', #number of fixed effect predictors
                         fixed.design='matrix',
                         dat='matrix',
-                        ncat='numeric',
+                        ncat='integer',
                         rs='matrix',
                         gradient='numeric',
                         hessian='matrix',
@@ -93,3 +114,7 @@ setGeneric("itemplot.internal",  function(object, ...) standardGeneric("itemplot
 setGeneric("fscores.internal", function(object, ...) standardGeneric("fscores.internal"))
 
 setGeneric("summary", function(object, ...) standardGeneric("summary"))
+
+setGeneric('DrawValues', function(x, Theta, offterm, ...) standardGeneric("DrawValues"))
+
+setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))
