@@ -24,9 +24,8 @@ setClass("RandomPars",
                         between='logical',
                         parnum='numeric',
                         ndim='integer',  
-                        gframe='data.frame',
+                        gframe='data.frame',                        
                         gdesign='matrix',
-                        sframe='data.frame',
                         lbound='numeric',
                         ubound='numeric',
                         cand.t.var='numeric',
@@ -115,6 +114,6 @@ setGeneric("fscores.internal", function(object, ...) standardGeneric("fscores.in
 
 setGeneric("summary", function(object, ...) standardGeneric("summary"))
 
-setGeneric('DrawValues', function(x, Theta, offterm, ...) standardGeneric("DrawValues"))
+setGeneric('DrawValues', function(x, Theta, ...) standardGeneric("DrawValues"))
 
 setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))

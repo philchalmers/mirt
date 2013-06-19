@@ -27,7 +27,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
-                        prior.mu, prodlist)
+                        prior.mu, prodlist, OffTerm)
 {
     tol <- .Machine$double.eps
     N <- nrow(fulldata)
@@ -44,9 +44,9 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))
     for (i in 1L:J){
         itemtrace0[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            ProbTrace(x=pars[[i]], Theta=theta0)
+            ProbTrace(x=pars[[i]], Theta=theta0, ot=OffTerm[,i])
         itemtrace1[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            ProbTrace(x=pars[[i]], Theta=theta1)
+            ProbTrace(x=pars[[i]], Theta=theta1, ot=OffTerm[,i])
     }
     total_0 <- rowSums(log(itemtrace0)*fulldata) + log_den0
     total_1 <- rowSums(log(itemtrace1)*fulldata) + log_den1
@@ -659,12 +659,18 @@ reloadPars <- function(longpars, pars, ngroups, J){
     return(.Call('reloadPars', longpars, pars, ngroups, J))
 }
 
-computeItemtrace <- function(pars, Theta, itemloc){
+computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0, 1, 1)){
     #compute itemtrace for 1 group
     J <- length(itemloc) - 1L
     itemtrace <- matrix(0, ncol=itemloc[length(itemloc)]-1L, nrow=nrow(Theta))
-    for (i in 1L:J)
-        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    if(nrow(offterm) == 1L){
+        for (i in 1L:J)
+            itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    } else {
+        for (i in 1L:J)
+            itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta,
+                                                                      offterm=offterm[,i])        
+    }
     itemtrace
 }
 
@@ -857,16 +863,14 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
     for(i in 1L:length(random)){
         f <- gsub(" ", "", as.character(random[[i]])[2L])
         splt <- strsplit(f, '\\|')[[1L]]
-        gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
-        gdesign <- data.frame()
+        gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)        
         sframe <- model.frame(as.formula(paste0('~',splt[1L])), longdata)
         if(colnames(gframe) %in% covnames){
             between <- TRUE
         } else if(colnames(gframe) %in% itemcovnames){
             between <- FALSE
         } else stop('grouping variable not in itemdesign or covdata')
-        if(between){
-            gdesign <- model.matrix(as.formula(paste0('~0+',splt[2L])), gframe)[1:N, , drop=FALSE]
+        if(between){            
             gframe <- gframe[1:N, , drop=FALSE]            
             sframe <- sframe[1:N, , drop=FALSE]
         } else {
@@ -885,7 +889,10 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         names(par) <- names(est) <- FNCOV[lower.tri(FNCOV, diag=TRUE)]     
         drawvals <- matrix(0, length(unique(gframe)[[1L]]), ndim, 
                            dimnames=list(unique(gframe)[[1L]], NULL))        
-        mtch <- match(gframe[[1L]], rownames(drawvals))                       
+        mtch <- match(gframe[[1L]], rownames(drawvals))
+        gdesign <- if(ncol(sframe) == 0L){
+            matrix(1, nrow(gframe), 1L)
+        } else cbind(rep(1, nrow(gframe)), as.matrix(sframe))
         ret[[i]] <- new('RandomPars', 
                         par=par,
                         est=est,
@@ -893,8 +900,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         lbound=rep(-Inf, length(par)),
                         ubound=rep(Inf, length(par)),
                         gframe=gframe,
-                        gdesign=gdesign,
-                        sframe=sframe,
+                        gdesign=gdesign,                        
                         between=between,
                         cand.t.var=1,
                         n.prior.mu=rep(NaN,length(par)),
@@ -905,4 +911,30 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         mtch=mtch)        
     }    
     ret
+}
+
+OffTerm <- function(random, J, N){
+    ret <- matrix(0, N, J)
+    for(i in 1L:length(random)){
+        if(random[[i]]@between){
+            tmp <- rowSums(random[[i]]@gdesign*random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE])
+            for(j in 1L:J) ret[,j] <- ret[,j] + tmp
+        } else {
+            tmp <- matrix(colSums(random[[i]]@gdesign *
+                          random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE]), nrow(ret), J,
+                          byrow=TRUE)
+            ret <- ret + tmp
+        }
+    }
+    ret
+}
+
+reloadRandom <- function(random, longpars, parstart){    
+    ind1 <- parstart
+    for(i in 1L:length(random)){
+        ind2 <- ind1 + length(random[[i]]@par) - 1L
+        random[[i]]@par <- longpars[ind1:ind2]
+        ind1 <- ind2 + 1L
+    }
+    random
 }

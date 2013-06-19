@@ -36,11 +36,12 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
     #Burn in
     cand.t.var <- 1
     tmp <- .1
+    OffTerm <- matrix(0, 1, J)
     for(g in 1L:ngroups){
         for(i in 1L:30L){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var,
-                                        prior.t.var=gstructgrouppars[[g]]$gcov,
+                                        prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             if(i > 5L){
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
@@ -56,17 +57,20 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                 }
             }
         }
-    }
-    if(RAND){            
+    }    
+    if(RAND){
+        OffTerm <- OffTerm(random, J=J, N=N)
         for(j in 1L:length(random)){
-            offterm <- RandomOffTerm(random)                
             tmp <- .1
-            for(i in 1L:30L){
-                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], offterm=offterm)                    
+            for(i in 1L:30L){                
+                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
+                                                   pars=pars[[1L]], fulldata=gfulldata[[1L]], 
+                                                   offterm0=OffTerm)
+                OffTerm <- OffTerm(random, J=J, N=N)
                 if(i > 5L){
-                    if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4) 
+                    if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
                         random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
-                    if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2) 
+                    if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
                         random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
                     if (random[[j]]@cand.t.var < 0){
                         random[[j]]@cand.t.var <- tmp
@@ -104,8 +108,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         for(i in 1L:(J+1L))
             L <- c(L, pars[[g]][[i]]@est)
     if(RAND)
-        for(i in 1L:length(rand))
-            L <- c(L, rand[[i]]@est)
+        for(i in 1L:length(random))
+            L <- c(L, random[[i]]@est)
     estindex <- index[estpars]
     L <- diag(as.numeric(L))
     redun_constr <- rep(FALSE, length(estpars))
@@ -141,7 +145,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             LBOUND <- c(LBOUND, random[[i]]@lbound)
             UBOUND <- c(UBOUND, random[[i]]@ubound)            
         }
-    }
+    }    
 
     ####Big MHRM loop
     for(cycles in 1L:(NCYCLES + BURNIN + SEMCYCLES))
@@ -167,6 +171,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+        if(RAND) random <- reloadRandom(random=random, longpars=longpars, 
+                                        parstart=max(pars[[1L]][[J+1L]]@parnum) + 1L)
 
         #Step 1. Generate m_k datasets of theta
         LL <- 0
@@ -174,15 +180,18 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             for(i in 1L:5L)
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                       itemloc=itemloc, cand.t.var=cand.t.var,
-                                      prior.t.var=gstructgrouppars[[g]]$gcov,
+                                      prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
         if(RAND){
-            for(j in 1L:length(random)){
-                offterm <- RandomOffTerm(random)                                
-                for(i in 1L:5L)
-                    random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], offterm=offterm) 
+            for(j in 1:length(random)){
+                for(i in 1L:5L){                
+                    random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
+                                                       pars=pars[[1L]], fulldata=gfulldata[[1L]], 
+                                                       offterm0=OffTerm)
+                    OffTerm <- OffTerm(random, J=J, N=N)
+                }
             }
         }
 
@@ -194,7 +203,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         for(group in 1L:ngroups){
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
-            gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]],
+            gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]], offterm=OffTerm,
                                                 Theta=thetatemp, itemloc=itemloc)
             pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]],
                                          itemloc=itemloc)
@@ -216,6 +225,17 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             g[ind1:ind2] <- deriv$grad
             h[ind1:ind2, ind1:ind2] <- deriv$hess
             ind1 <- ind2 + 1L
+        }
+        if(RAND){
+            browser()
+            for(i in 1L:length(random)){
+                deriv <- Deriv(x=random[[i]])
+                ind2 <- ind1 + length(deriv$grad) - 1L
+                longpars[ind1:ind2] <- pars[[group]][[i]]@par
+                g[ind1:ind2] <- deriv$grad
+                h[ind1:ind2, ind1:ind2] <- deriv$hess
+                ind1 <- ind2 + 1L
+            }            
         }
         grad <- g %*% L
         ave.h <- (-1)*L %*% h %*% L

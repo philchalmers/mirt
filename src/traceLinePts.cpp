@@ -2,7 +2,8 @@
 #include"Misc.h"
 using namespace Rcpp;
 
-RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD, SEXP RasMatrix) 
+RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD, 
+    SEXP RasMatrix, SEXP Rot) 
 {
     BEGIN_RCPP
 
@@ -11,10 +12,12 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	NumericVector g(Rg);
 	NumericVector u(Ru);
 	NumericVector D(RD);
+    NumericVector ot(Rot);
     IntegerVector asMatrix(RasMatrix);
 	NumericMatrix Theta(RTheta);
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
+    const int USEOT = ot.length() > 1;
 	NumericVector P(nquad);
     NumericVector Q(nquad);
 	
@@ -28,6 +31,10 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 		}
 		z(j) += d(0) * D(0);
 	}	
+    if(USEOT){
+        for (j = 0; j < nquad; j++)
+            z(j) += ot(j);
+    }
 	for (i = 0; i < nquad; i++){ 
 		P(i) = g(0) + (u(0) - g(0)) * (1.0)/(1.0 + exp((-1.0)*z(i)));		        
         if(P(i) < 1e-10) P(i) = 1e-10;
@@ -84,7 +91,8 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
 }
 
 
-RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD, SEXP RreturnNum) 
+RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD, 
+    SEXP RreturnNum, SEXP Rot) 
 {
     BEGIN_RCPP
 
@@ -92,11 +100,13 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEX
 	NumericVector ak(Rak);
 	NumericVector d(Rd);
 	NumericVector D(RD);
+    NumericVector ot(Rot);
 	NumericMatrix Theta(RTheta);
 	IntegerVector returnNum(RreturnNum);
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
 	const int ncat = d.length();
+    const int USEOT = ot.length() > 1;
 	int i,j;
 
 	NumericMatrix Num(nquad, ncat);
@@ -107,11 +117,20 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEX
 	for(i = 0; i < nquad; i++)
 	    for(j = 0; j < nfact; j++)
 	        innerprod(i) += Theta(i,j) * a(j);
-	for(i = 0; i < nquad; i++){
-	    for(j = 0; j < ncat; j++){
-	        Num(i,j) = exp(D(0) * ak(j) * innerprod(i) + D(0) * d(j));
-            Den(i) += Num(i,j);
-        }        
+    if(USEOT){
+        for(i = 0; i < nquad; i++){
+            for(j = 0; j < ncat; j++){
+    	        Num(i,j) = exp(D(0) * ak(j) * innerprod(i) + D(0) * d(j) + ot(i));
+                Den(i) += Num(i,j);
+            }        
+        }
+    } else {
+    	for(i = 0; i < nquad; i++){
+    	    for(j = 0; j < ncat; j++){
+    	        Num(i,j) = exp(D(0) * ak(j) * innerprod(i) + D(0) * d(j));
+                Den(i) += Num(i,j);
+            }        
+        }
     }
     if(returnNum(0)) return(Num);
 	for(i = 0; i < nquad; i++){
