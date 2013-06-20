@@ -111,7 +111,6 @@
 #' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
 #' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
 #' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
-#' \item{KDRAWS}{number of parallel MH sets to be drawn; default 1}
 #' \item{TOL}{minimum threshold tolerance for convergence of MH-RM, must occur on three consecutive
 #' occations; default .001}
 #'   \item{set.seed}{seed number used during estimation. Default is 12345}
