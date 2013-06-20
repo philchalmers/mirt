@@ -210,7 +210,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             for (i in 1L:J){
                 if(FD) deriv <- Deriv(x=pars[[group]][[i]], 
                                       Theta=cbind(pars[[group]][[i]]@fixed.design, thetatemp),
-                                      estHess=TRUE)
+                                      estHess=TRUE, offterm=OffTerm)
                 else deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp, estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
@@ -227,16 +227,16 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             ind1 <- ind2 + 1L
         }
         if(RAND){
-            browser()
             for(i in 1L:length(random)){
-                deriv <- Deriv(x=random[[i]])
+                deriv <- RandomDeriv(x=random[[i]])
                 ind2 <- ind1 + length(deriv$grad) - 1L
-                longpars[ind1:ind2] <- pars[[group]][[i]]@par
+                longpars[ind1:ind2] <- random[[i]]@par
                 g[ind1:ind2] <- deriv$grad
                 h[ind1:ind2, ind1:ind2] <- deriv$hess
                 ind1 <- ind2 + 1L
-            }            
+            }
         }
+        if(cycles == 100) browser()
         grad <- g %*% L
         ave.h <- (-1)*L %*% h %*% L
         grad <- grad[1L, estpars & !redun_constr]
@@ -339,6 +339,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         phi <- phi + gamma*(grad - phi)
         Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
     } ###END BIG LOOP
+    browser()
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
     #Reload final pars list

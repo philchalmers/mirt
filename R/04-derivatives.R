@@ -4,7 +4,8 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){        
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){        
         if(EM){
             dat <- x@rs[,2L]
             f <- rowSums(x@rs)
@@ -23,7 +24,7 @@ setMethod(
         a <- x@par[1L:nfact]
         r1 <- dat
         r2 <- f - dat        
-        gh <- .Call('dparsDich', a, d, g, u, x@D, Theta, Prior, r1, r2, estHess, TRUE)
+        gh <- .Call('dparsDich', a, d, g, u, x@D, Theta, Prior, r1, r2, estHess, TRUE, offterm)
         grad <- gh$grad
         hess <- gh$hess
         ret <- DerivativePriors(x=x, grad=grad, hess=hess)
@@ -34,7 +35,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){
@@ -68,7 +70,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){
             dat <- x@rs
@@ -139,7 +142,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         #local derivative from previous version with small mod
         dpars.comp <- function(lambda,zeta,g,r,f,Thetas,D,Prior,estHess)
         {
@@ -284,7 +288,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
@@ -299,8 +304,8 @@ setMethod(
         d <- ExtractZetas(x)
         ak <- 0:(length(d)-1L)
         D <- x@D        
-        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE)
-        num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE)
+        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
+        num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE, ot=offterm)
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
         keep <- rep(TRUE, length(tmp$grad))
@@ -313,7 +318,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))        
         if(EM){
@@ -370,7 +376,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rsm', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))
@@ -450,7 +457,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){        
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){        
         if(EM){
             dat <- x@rs
             Prior <- rep(1, nrow(dat))

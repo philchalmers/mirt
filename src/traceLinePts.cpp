@@ -60,6 +60,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
 	NumericVector a(Ra);
 	NumericVector d(Rd);
 	NumericVector D(RD);
+    NumericVector ot(1);
 	NumericMatrix Theta(RTheta);
 	IntegerVector itemexp(Ritemexp);
     const double nullzero = 0.0, nullone = 1.0;
@@ -73,7 +74,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP 
 	for(i = 0; i < nquad; i++)
         Pk(i,0) = 1.0;
     for(i = 0; i < ncat; i++)
-        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, &D(0)); 
+        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, &D(0), ot); 
     if(itemexp(0)){
         for(i = (Pk.ncol()-2); i >= 0; i--)
             P(_,i) = Pk(_,i) - Pk(_,i+1);

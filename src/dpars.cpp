@@ -346,7 +346,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 }
 
 RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RTheta,
-    SEXP RPrior, SEXP Rr1, SEXP Rr2, SEXP RestHess, SEXP asMatrix) 
+    SEXP RPrior, SEXP Rr1, SEXP Rr2, SEXP RestHess, SEXP asMatrix, SEXP Rot) 
 {		
     BEGIN_RCPP
     
@@ -360,6 +360,7 @@ RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RThe
     NumericVector Prior(RPrior);
     NumericVector r1(Rr1);
     NumericVector r2(Rr2);    
+    NumericVector ot(Rot);
     IntegerVector estHess(RestHess);        
     const int nfact = Theta.ncol();    
     NumericVector P, Pstar, Q, Qstar;
@@ -372,8 +373,8 @@ RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RThe
     NumericVector grad (nfact + 3);
     NumericVector r1_P, r1_P2, r2_Q2, r2_Q;    
     
-    P = itemTrace(a, &d(0), Theta, &g, &u, &D);
-    Pstar = itemTrace(a, &d(0), Theta, &g0, &u1, &D);
+    P = itemTrace(a, &d(0), Theta, &g, &u, &D, ot);
+    Pstar = itemTrace(a, &d(0), Theta, &g0, &u1, &D, ot);
     Q = 1.0 - P;
     Qstar = 1.0 - Pstar;        
     r1_P = r1/P;

@@ -669,7 +669,7 @@ computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0, 1, 1)){
     } else {
         for (i in 1L:J)
             itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta,
-                                                                      offterm=offterm[,i])        
+                                                                      ot=offterm[,i])        
     }
     itemtrace
 }
@@ -920,7 +920,7 @@ OffTerm <- function(random, J, N){
             tmp <- rowSums(random[[i]]@gdesign*random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE])
             for(j in 1L:J) ret[,j] <- ret[,j] + tmp
         } else {
-            tmp <- matrix(colSums(random[[i]]@gdesign *
+            tmp <- matrix(rowSums(random[[i]]@gdesign *
                           random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE]), nrow(ret), J,
                           byrow=TRUE)
             ret <- ret + tmp
