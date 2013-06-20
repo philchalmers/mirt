@@ -268,7 +268,7 @@ MHRM.group <- function(pars, constrain, PrepList, list)
             info <- Phi <- matrix(0, length(grad), length(grad))
         }
         phi <- phi + gamma*(grad - phi)
-        Phi <- Phi + gamma*(Tau - outer(grad,grad) - Phi)
+        Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
     } ###END BIG LOOP
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
