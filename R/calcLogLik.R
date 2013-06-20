@@ -61,6 +61,7 @@ setMethod(
                 ProbTrace(x=pars[[i]], Theta=theta)
             return(exp(rowSums(log(itemtrace)*fulldata)))
         }
+        if(!is.null(object@random)) browser()
         pars <- object@pars
 	    tol <- .Machine$double.eps
         fulldata <- object@fulldata

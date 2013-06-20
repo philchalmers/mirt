@@ -45,7 +45,8 @@ Objects can be created by calls of the form \code{new("MixedClass", ...)}.
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}    
-    %\item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters } 
+    %\item{\code{vcov}:}{Object of class \code{"matrix"}, covariance matrix for estimated parameters }
+    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}  
     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}        
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }

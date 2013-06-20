@@ -27,12 +27,14 @@
 #' @param model an object returned from \code{confmirt.model()} declaring how
 #' the factor model is to be estimated. See \code{\link{confmirt.model}} for
 #' more details
-#' @param fixed a standard R formula for specifying the fixed effect (aka 'explanatory') 
+#' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory') 
 #' predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for 
 #' each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign} input
-#' @param random a formula similar to the \code{nlme} random variable specifications for declaring
-#' the random slope and intercept predictors. Not currently available, but will be available some 
-#' time in the future 
+#' @param random a right sided formula or list of formulas containing crossed random effects 
+#' of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are 
+#' random numeric predictors within each group. If no intercept value is specified then by default the 
+#' correlations between the \code{v}'s and \code{G} are estimated, but can be supressed by including 
+#' the \code{~ 0 + ...} constant  
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect limited only to the following 
 #' item types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'gpcm')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
@@ -199,10 +201,12 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                      D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')    
     mmnames <- colnames(mm)
     N <- nrow(data)
-    for(i in 1L:ncol(mm)){
-        mmparnum <- sv$parnum[sv$name == mmnames[i]]            
-        constrain[[length(constrain) + 1L]] <- mmparnum
-    }            
+    if(ncol(mm) > 0L){
+        for(i in 1L:ncol(mm)){
+            mmparnum <- sv$parnum[sv$name == mmnames[i]]            
+            constrain[[length(constrain) + 1L]] <- mmparnum
+        }            
+    }
     if(ncol(mmitems) > 0L){                
         itemindex <- colnames(data)[which(paste0('items', 1L:ncol(data)) %in% colnames(mmitems))]        
         for(i in itemindex){

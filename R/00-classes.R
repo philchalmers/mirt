@@ -64,7 +64,7 @@ setClass(
 setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
-                                    mixedlist='list'),
+                                    random='list'),
     validity = function(object) return(TRUE)
 )
 
@@ -84,6 +84,7 @@ setClass(
 #' @exportClass MixedClass
 setClass(
     Class = 'MixedClass', contains = 'AllModelClass',
-    representation = representation(Pl='numeric'),
+    representation = representation(Pl='numeric',
+                                    random='list'),
     validity = function(object) return(TRUE)
 )

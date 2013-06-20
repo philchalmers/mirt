@@ -312,15 +312,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars))
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
-            rlist[[g]]$expected = numeric(1)
+            rlist[[g]]$expected = numeric(1L)
     } else if(opts$method == 'MIXED'){
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain,
                                     PrepList=PrepList, random=mixed.design$random,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                            KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=FALSE,
-                                           nfactNames=PrepList[[1]]$nfactNames,
-                                           itemloc=PrepList[[1]]$itemloc, BFACTOR=opts$BFACTOR,
+                                           nfactNames=PrepList[[1L]]$nfactNames,
+                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                            startlongpars=startlongpars))
         rlist <- vector('list', Data$ngroups)
@@ -331,7 +331,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     for(g in 1L:Data$ngroups){
         lambdas <- Lambdas(ESTIMATE$pars[[g]]) * opts$D/1.702
         if (ncol(lambdas) > 1) norm <- sqrt(1 + rowSums(lambdas^2))
-        else norm <- as.matrix(sqrt(1 + lambdas[ ,1]^2))
+        else norm <- as.matrix(sqrt(1 + lambdas[ ,1L]^2))
         alp <- as.matrix(lambdas/norm)
         F <- alp
         if(opts$method != 'MIXED')
@@ -342,7 +342,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2,
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact,
                           constrain=constrain, G2=G2group[g], X2=X2group[g], Pl = rlist[[g]]$expected,                          
-                          fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames)
+                          fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames, 
+                          random=ESTIMATE$random)
     }
     rm(lambdas, norm)
     #missing stats for MHRM
@@ -432,6 +433,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior=parprior,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
+                       random=ESTIMATE$random,
                        information=ESTIMATE$info)
         } else if(PrepList[[1L]]$exploratory){
             FF <- alp %*% t(alp)

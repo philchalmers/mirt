@@ -33,6 +33,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         }
     }
     index <- 1L:nfullpars
+    N <- nrow(gtheta0[[1L]])
     #Burn in
     cand.t.var <- 1
     tmp <- .1
@@ -182,6 +183,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                                       itemloc=itemloc, cand.t.var=cand.t.var,
                                       prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
+            if(attr(gtheta0[[g]],"Proportion Accepted") > .5) 
+                cand.t.var <- cand.t.var + .1            
+            else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
+                cand.t.var <- cand.t.var - .1
+            if(cand.t.var < .05) cand.t.var <- .05
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
         if(RAND){
@@ -191,7 +197,12 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                                                        pars=pars[[1L]], fulldata=gfulldata[[1L]], 
                                                        offterm0=OffTerm)
                     OffTerm <- OffTerm(random, J=J, N=N)
-                }
+                }                
+                if(attr(random[[j]]@drawvals,"Proportion Accepted") > .5)
+                    random[[j]]@cand.t.var <- random[[j]]@cand.t.var + .1
+                if(attr(random[[j]]@drawvals,"Proportion Accepted") < .1)
+                    random[[j]]@cand.t.var <- random[[j]]@cand.t.var - .1                
+                if(random[[j]]@cand.t.var < .05) random[[j]]@cand.t.var <- .05
             }
         }
 
@@ -210,7 +221,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             for (i in 1L:J){
                 if(FD) deriv <- Deriv(x=pars[[group]][[i]], 
                                       Theta=cbind(pars[[group]][[i]]@fixed.design, thetatemp),
-                                      estHess=TRUE, offterm=OffTerm)
+                                      estHess=TRUE, offterm=OffTerm[,i])
                 else deriv <- Deriv(x=pars[[group]][[i]], Theta=thetatemp, estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 longpars[ind1:ind2] <- pars[[group]][[i]]@par
@@ -236,7 +247,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                 ind1 <- ind2 + 1L
             }
         }
-        if(cycles == 100) browser()
         grad <- g %*% L
         ave.h <- (-1)*L %*% h %*% L
         grad <- grad[1L, estpars & !redun_constr]
@@ -339,7 +349,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         phi <- phi + gamma*(grad - phi)
         Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
     } ###END BIG LOOP
-    browser()
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
     #Reload final pars list
@@ -373,9 +382,9 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             ind1 <- ind2 + 1L
         }
     }
-    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars), 
-                           random=random)
+    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))    
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=as.matrix(info),
-                longpars=longpars, converge=converge, SElogLik=0, random=random)
+                longpars=longpars, converge=converge, SElogLik=0, 
+                random=ifelse(length(random) > 0L, random, NULL))
     ret
 }

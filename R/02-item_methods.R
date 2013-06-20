@@ -718,8 +718,9 @@ setMethod(
         g2 <- tmp[selcov]
         grad <- c(g1, g2)
         sel <- 1L:npars
-        cMeans <- N*(colMeans(Theta) - u)
-        Zdif <- (Z - N * sig)
+        cMeans <- N*(colMeans(Theta) - u)        
+        #Zdif <- (Z - N * sig)        
+        Zdif <- (Z - sig)        
         hess <- .Call("dgroup",
                       as.numeric(invSig),
                       as.numeric(cMeans),

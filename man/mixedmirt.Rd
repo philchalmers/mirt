@@ -24,17 +24,21 @@
   to be estimated. See \code{\link{confmirt.model}} for
   more details}
 
-  \item{fixed}{a standard R formula for specifying the
+  \item{fixed}{a right sided R formula for specifying the
   fixed effect (aka 'explanatory') predictors from
   \code{covdata} and \code{itemdesign}. To estimate the
   intercepts for each item the keyword \code{items} is
   reserved and automatically added to the \code{itemdesign}
   input}
 
-  \item{random}{a formula similar to the \code{nlme} random
-  variable specifications for declaring the random slope
-  and intercept predictors. Not currently available, but
-  will be available some time in the future}
+  \item{random}{a right sided formula or list of formulas
+  containing crossed random effects of the form \code{v1 +
+  ... v_n | G}, where \code{G} is the grouping variable and
+  \code{v_n} are random numeric predictors within each
+  group. If no intercept value is specified then by default
+  the correlations between the \code{v}'s and \code{G} are
+  estimated, but can be supressed by including the \code{~
+  0 + ...} constant}
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}},
   expect limited only to the following item types:

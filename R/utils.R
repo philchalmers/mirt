@@ -548,7 +548,7 @@ ItemInfo <- function(x, Theta, cosangle){
     return(info)
 }
 
-nameInfoMatrix <- function(info, correction, L, npars, random){
+nameInfoMatrix <- function(info, correction, L, npars){
     #give info meaningful names for wald test
     parnames <- names(correction)
     tmp <- outer(1L:npars, rep(1L, npars))
