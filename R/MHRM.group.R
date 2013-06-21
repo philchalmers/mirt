@@ -80,7 +80,34 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                     }
                 }
             }
+            #better start values
+            tmp <- cov(random[[j]]@drawvals)
+            random[[j]]@par[random[[j]]@est] <- tmp[lower.tri(tmp, TRUE)][random[[j]]@est]
         }
+        tmp <- .1
+        for(i in 1L:10L){
+            gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
+                                        itemloc=itemloc, cand.t.var=cand.t.var,
+                                        prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
+                                        prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
+            if(i > 5L){
+                if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
+                else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
+                    cand.t.var <- cand.t.var + tmp
+                else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
+                    cand.t.var <- cand.t.var - tmp
+                else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
+                    cand.t.var <- cand.t.var - 2*tmp
+                if (cand.t.var < 0){
+                    cand.t.var <- tmp
+                    tmp <- tmp / 2
+                }
+            }
+        }
+        tmp <- cov(gtheta0[[1L]])
+        tmp2 <- c(rep(0, ncol(tmp)), tmp[lower.tri(tmp, TRUE)])
+        pars[[1L]][[length(pars[[1L]])]]@par[pars[[1L]][[length(pars[[1L]])]]@est] <- 
+            tmp2[pars[[1L]][[length(pars[[1L]])]]@est]
     }
     m.thetas <- grouplist <- SEM.stores <- SEM.stores2 <- m.list <- list()
     conv <- 0L
