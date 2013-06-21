@@ -32,9 +32,14 @@ test_that('three factor', {
     suppressWarnings(mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
                                 verbose = FALSE, draws = 10))
     expect_is(mod_metric, 'MultipleGroupClass') 
-    mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', 
-                                    prev.mod = mod_metric)
+    mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
+    cfs <- as.numeric(do.call(c, coef(mod_configural)[[1]]))
+    cfs <- cfs[cfs != 0 & cfs != 1]    
+    expect_equal(cfs, c(1.297,  0.655,  1.242, -0.570,  0.931, -0.200,  0.821,  0.797,  1.075,  0.217,  0.483,  
+                        0.610,  1.181,  0.995,  0.948, -0.446,  1.080, -1.180,  0.870, -1.145,  0.890,  1.312, 
+                        1.500, -0.300,  1.057,  0.441,  1.065,  0.457,  0.886, -0.187),
+                 tollerance = 1e-3)
     suppressWarnings(mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov', draws = 10)))
     expect_is(mod_scalar1, 'MultipleGroupClass')
@@ -43,7 +48,8 @@ test_that('three factor', {
     fs2 <- fscores(mod_scalar1, full.scores = TRUE)    
     expect_is(fs1, 'list')
     expect_is(fs2, 'data.frame')    
-    
+    expect_true(mirt:::closeEnough(fs2[1:6, 'F1'] - c(0.8035599,  0.8035599,  0.2855899, 
+                                                      -0.1416255, -0.2674919,  0.8035599), -1e-4, 1e-4))     
 })
 
 
