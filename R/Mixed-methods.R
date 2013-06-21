@@ -41,7 +41,7 @@ setMethod(
         cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")        
         nbetas <- ncol(object@pars[[1L]]@fixed.design)
-        out <- out2 <- data.frame()
+        out <- data.frame()
         if(nbetas > 0L){
             out <- data.frame(Estimate=object@pars[[1L]]@par[1L:nbetas], 
                                     'Std.Error'=object@pars[[1L]]@SEpar[1L:nbetas],
@@ -49,14 +49,33 @@ setMethod(
             out$'t.value' <- out$Estimate / out$'Std.Error'
         }        
         if(all(dim(out) != 0L)){
-            cat('Fixed effects:\n')        
+            cat('--------------\nFIXED EFFECTS:\n')        
             print(round(out, digits))
+        }        
+        cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')        
+        par <- object@pars[[length(object@pars)]]@par[-c(1L:object@nfact)]
+        sigma <- matrix(0, object@nfact)
+        sigma[lower.tri(sigma, TRUE)] <- par
+        if(object@nfact > 1L) sigma <- sigma + t(sigma) - diag(diag(sigma))
+        colnames(sigma) <- rownames(sigma) <- 
+            names(object@pars[[length(object@pars)]]@est[-c(1L:object@nfact)])
+        rand <- list(sigma)
+        listnames <- 'Theta'
+        if(length(object@random) > 0L){
+            for(i in 1L:length(object@random)){
+                par <- object@random[[i]]@par                
+                sigma <- matrix(0, object@random[[i]]@ndim, object@random[[i]]@ndim)
+                sigma[lower.tri(sigma, TRUE)] <- par                
+                if(ncol(sigma) > 1L) sigma <- sigma + t(sigma) - diag(diag(sigma))
+                colnames(sigma) <- rownames(sigma) <- 
+                    paste0('COV_', colnames(object@random[[i]]@gdesign))
+                rand[[length(rand) + 1L]] <- sigma
+                listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+            }
         }
-        if(all(dim(out2) != 0L)){
-            cat('\nRandom effect parameters:\n')        
-            print(round(out2, digits))
-        }
+        names(rand) <- listnames
         cat('\n')
+        print(rand, digits)
     }
 )
 
@@ -82,7 +101,18 @@ setMethod(
                 names(allPars[[i]]) <- names(object@pars[[i]]@est)
             }
         }
-        names(allPars) <- c(colnames(object@data), 'GroupPars')
+        listnames <- c(colnames(object@data), 'GroupPars')
+        if(length(object@random) > 0L){            
+            for(i in 1L:length(object@random)){
+                allPars[[length(allPars) + 1L]] <- 
+                    round(matrix(c(object@random[[i]]@par, object@random[[i]]@SEpar),
+                                 2, byrow = TRUE), digits)
+                rownames(allPars[[length(allPars)]]) <- c('pars', 'SE')
+                colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
+                listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+            }            
+        }
+        names(allPars) <- listnames        
         return(allPars)
     }
 )

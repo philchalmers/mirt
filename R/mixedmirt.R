@@ -168,6 +168,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is(random, 'formula')) {
         random <- list(random)
     } else if(is.null(random)) random <- list()
+    RETVALUES <- ifelse(is.character(pars), TRUE, FALSE) 
     if(!is.list(random)) stop('Incorrect input for random argument')
     if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))
     if(is.null(itemdesign)){
@@ -218,6 +219,10 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         attr(sv, 'values') <- pars
         pars <- sv
     } else pars <- sv
+    if(RETVALUES){
+        attr(pars, 'values') <- NULL
+        return(pars)
+    }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
     if(is(mod, 'MixedClass'))

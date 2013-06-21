@@ -200,11 +200,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                     estindex_unique=estindex_unique, correction=correction, hess=hess,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
-                    LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory)))
+                    LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list()))
     }
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
-                estindex_unique=estindex_unique, correction=correction, hess=hess)
+                estindex_unique=estindex_unique, correction=correction, hess=hess, random=list())
     ret
 }
 

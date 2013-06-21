@@ -1,6 +1,7 @@
 MHRM.group <- function(pars, constrain, PrepList, list, random = list())
 {       
-    FD <- nrow(pars[[1L]][[1L]]@fixed.design) > 1L
+    FD <- nrow(pars[[1L]][[1L]]@fixed.design) > 1L    
+    if(is.null(random)) random <- list()
     RAND <- length(random) > 0L
     verbose <- list$verbose
     nfact <- list$nfact
@@ -382,9 +383,16 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             ind1 <- ind2 + 1L
         }
     }
-    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))    
+    if(RAND){
+        for(i in 1L:length(random)){
+            ind2 <- ind1 + length(random[[i]]@par) - 1L
+            random[[i]]@SEpar <- SE[ind1:ind2]
+            ind1 <- ind2 + 1L
+        }
+    }
+    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=as.matrix(info),
                 longpars=longpars, converge=converge, SElogLik=0, 
-                random=ifelse(length(random) > 0L, random, NULL))
+                random=random)
     ret
 }

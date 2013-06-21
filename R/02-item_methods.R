@@ -556,7 +556,7 @@ setMethod(
 )
 
 ##Function passes
-P.poly <- function(a, d, Theta, itemexp = FALSE, D)
+P.poly <- function(a, d, Theta, itemexp = FALSE, D, ot = 0)
 {
     return(.Call('gradedTraceLinePts', a, d, Theta, D, itemexp))
 }
