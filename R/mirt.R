@@ -180,7 +180,7 @@
 #' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/1000}}
 #' \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
 #' and \code{SE.type = 'MHRM'}. Lower values will take longer but may be more
-#' stable for computing the information matrix. Default is .001}
+#' stable for computing the information matrix. Default is .0001}
 #' \item{NCYCLES}{maximum number of EM cycles; default 500}
 #' }
 #' @param ... additional arguments to be passed
