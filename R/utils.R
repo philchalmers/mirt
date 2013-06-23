@@ -599,7 +599,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 
 makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN,
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE,
-                     SEtol = .001, grsm.block = NULL, D = 1,
+                     SEtol = .0001, grsm.block = NULL, D = 1,
                      rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'MHRM', large = NULL, ...)
@@ -634,7 +634,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
     opts$TOL <- ifelse(is.null(technical$TOL), if(method == 'EM') 1e-4 else 1e-3, technical$TOL)        
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
-    if(opts$method == 'MHRM' || opts$method =='MIXED')
+    if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
         set.seed(12345)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
     opts$gain <- c(0.05,0.5,0.004)

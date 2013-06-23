@@ -370,17 +370,18 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
 
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
         if(gamma == .25){
-            gamma <- 1
-            phi <- rep(0, length(grad))
-            info <- Phi <- matrix(0, length(grad), length(grad))
+            gamma <- 0
+            phi <- grad
+            Phi <- Tau
         }
         phi <- phi + gamma*(grad - phi)
         Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
     } ###END BIG LOOP
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
+    diag(info) <- abs(diag(info)) #diag of latent variances neg sometimes, why?
     #Reload final pars list
-    if(cycles == NCYCLES + BURNIN + SEMCYCLES)
+    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM)
         message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
     if(list$USEEM) longpars <- list$startlongpars
     ind1 <- 1L
