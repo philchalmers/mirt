@@ -434,6 +434,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
                        random=ESTIMATE$random,
+                       cand.t.var=ESTIMATE$cand.t.var,
                        information=ESTIMATE$info)
         } else if(PrepList[[1L]]$exploratory){
             FF <- alp %*% t(alp)

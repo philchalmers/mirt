@@ -92,6 +92,9 @@
   parameters (e.g., \code{'d'}).  To observe how the design
   matrices are structured prior to reassignment and
   estimation pass the argument \code{return.design = TRUE}.
+
+  To simulate maximum a posteriori estimates for the random
+  effects use the \code{\link{randef}} function.
 }
 \examples{
 \dontrun{
@@ -202,5 +205,8 @@ anova(mod, mod2)
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
+\seealso{
+  \code{\link{randef}}, \code{\link{calcLogLik}}
 }
 

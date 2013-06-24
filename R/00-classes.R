@@ -85,6 +85,7 @@ setClass(
 setClass(
     Class = 'MixedClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
-                                    random='list'),
+                                    random='list',
+                                    cand.t.var='numeric'),
     validity = function(object) return(TRUE)
 )

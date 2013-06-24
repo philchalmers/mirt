@@ -1,5 +1,5 @@
 Package: mirt
-Version: 0.7.5
+Version: 0.7.6
 Date: 2013-04-20
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -84,3 +84,4 @@ Collate:
     'boot.mirt.R'
     'createItem.R'
     'zzz.R'
+    'randef.R'

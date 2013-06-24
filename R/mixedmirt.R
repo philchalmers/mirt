@@ -18,6 +18,9 @@
 #'  are extracted and reassigned within mirt's 'intercept' parameters (e.g., \code{'d'}). 
 #'  To observe how the design matrices are structured prior to reassignment and estimation pass 
 #'  the argument \code{return.design = TRUE}.
+#'  
+#'  To simulate maximum a posteriori estimates for the random effects use the \code{\link{randef}}
+#'  function.
 #'
 #' @aliases mixedmirt coef,MixedClass-method summary,MixedClass-method anova,MixedClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
@@ -48,6 +51,7 @@
 #' \code{\link{confmirt}} for more detail
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @seealso \code{\link{randef}}, \code{\link{calcLogLik}}
 #' @export mixedmirt
 #' @examples
 #'

@@ -1,6 +1,9 @@
-Changes in mirt 0.7.5
+Changes in mirt 0.7.6
 
 NEW FEATURES
+
+- support for random effect predictors now available in mixedmirt(), along with a randef() function
+  for computing MAP predictions for the random parameters
 
 - EAPsum support in fscores() for mixed item types
 

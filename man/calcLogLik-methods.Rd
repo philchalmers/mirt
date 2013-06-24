@@ -3,6 +3,7 @@
 \alias{calcLogLik}
 \alias{calcLogLik,ConfirmatoryClass-method}
 \alias{calcLogLik,ExploratoryClass-method}
+\alias{calcLogLik,MixedClass-method}
 \alias{calcLogLik-method}
 \title{Monte Carlo Log-Likelihood Calculation}
 \arguments{
@@ -19,9 +20,9 @@
   \item{...}{parameters that are passed}
 }
 \value{
-  Returns an object with the log-likelihood, standard
-  errors, information matrix, and (possibly) the G^2 and
-  other model fit statistic if there is no missing data.
+  Returns an object with the log-likelihood and Monte Carlo
+  standard errors, and (possibly) the G^2 and other model
+  fit statistic if there is no missing data.
 }
 \description{
   Calculates a new object that contain the Monte Carlo
@@ -31,7 +32,8 @@
 \section{Methods}{
   \describe{ \item{calcLogLik}{\code{signature(object =
   "ConfirmatoryClass")}, \code{signature(object =
-  "ExploratoryClass")} } }
+  "ExploratoryClass")}, \code{signature(object =
+  "MixedClass")} } }
 }
 \examples{
 \dontrun{
