@@ -165,6 +165,9 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(!all(itemtype %in% c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'gpcm')))
         stop('itemtype contains unsupported classes of items')
+    if(!is.null(random)){
+        message('\'random effects\' modeling is in active development. Please report any issues')
+    }
     if(is(random, 'formula')) {
         random <- list(random)
     } else if(is.null(random)) random <- list()

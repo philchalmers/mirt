@@ -51,27 +51,21 @@ setMethod(
 	signature = signature(object = 'ExploratoryClass'),
 	definition = function(object, draws = 5000, G2 = TRUE, cl = NULL)
 	{
-        LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random){
+        LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot){
             if(nfact > 1L) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
             else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
             if(length(prodlist) > 0L)
-                theta <- prodterms(theta,prodlist)
-            OffTerm <- matrix(0, 1, J)
-            if(length(random) > 0L){
+                theta <- prodterms(theta,prodlist)            
+            if(length(random) > 0L){                                
                 for(i in 1L:length(random)){
-                    ndim <- random[[i]]@ndim
-                    sigma <- matrix(0, ndim, ndim)
-                    sigma[lower.tri(sigma, diag=TRUE)] <- random[[i]]@par
-                    if(ndim != 1L) 
-                        sigma <- sigma + t(sigma) - diag(diag(sigma))                        
-                    random[[i]]@drawvals <- mvtnorm::rmvnorm(nrow(random[[i]]@drawvals), 
-                                                             rep(0, ndim), sigma)                    
+                    random[[i]]@drawvals <- DrawValues(x=random[[i]], Theta=theta, pars=pars, 
+                                                fulldata=fulldata, itemloc=itemloc, offterm0=ot)
                 }
-                OffTerm <- OffTerm(random, J=J, N=N)                
+                ot <- OffTerm(random, J=J, N=N)                
             }
             itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)            
             for (i in 1L:J) itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-                ProbTrace(x=pars[[i]], Theta=theta, ot=OffTerm[,i])
+                ProbTrace(x=pars[[i]], Theta=theta, ot=ot[,i])
             return(exp(rowSums(log(itemtrace)*fulldata)))
         }   
         pars <- object@pars
@@ -83,13 +77,17 @@ setMethod(
 	    J <- length(pars)-1L
 	    nfact <- length(ExtractLambdas(pars[[1L]])) - length(object@prodlist) - pars[[1L]]@nfixedeffects
         LL <- matrix(0, N, draws)
-        grp <- ExtractGroupPars(pars[[length(pars)]])          
+        grp <- ExtractGroupPars(pars[[length(pars)]])
+        if(length(object@random) == 0L){
+            ot <- matrix(0, 1, J)
+        } else ot <- OffTerm(object@random, J=J, N=N)
         if(!is.null(cl)){
-            LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, prodlist=prodlist,
-                           fulldata=fulldata, object=object, J=J, random=object@random)
+            LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, 
+                                     prodlist=prodlist, fulldata=fulldata, object=object, J=J, 
+                                     random=object@random, ot=ot)
         } else for(draw in 1L:draws)
             LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist,
-                                  fulldata=fulldata, object=object, J=J, random=object@random)
+                                  fulldata=fulldata, object=object, J=J, random=object@random, ot=ot)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)
         logLik <- sum(log(rwmeans))
