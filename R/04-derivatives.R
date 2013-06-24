@@ -643,7 +643,8 @@ setMethod(
                       as.integer(npars))
         sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]
         hess <- hess[sel,sel]
-        hess <- hess[(nfact+1L):length(grad), (nfact+1L):length(grad), drop=FALSE]
+        hess <- hess[(nfact+1L):length(grad), (nfact+1L):length(grad), drop=FALSE]        
+        diag(hess) <- -abs(diag(hess))
         grad <- grad[(nfact+1L):length(grad)]        
         #prior parameter constraints
         if(any(!is.nan(x@n.prior.mu))){
