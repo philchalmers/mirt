@@ -46,7 +46,7 @@ setMethod(
             out <- data.frame(Estimate=object@pars[[1L]]@par[1L:nbetas], 
                                     'Std.Error'=object@pars[[1L]]@SEpar[1L:nbetas],
                                     row.names=names(object@pars[[1L]]@est[1L:nbetas]))
-            out$'t.value' <- out$Estimate / out$'Std.Error'
+            out$'z.value' <- out$Estimate / out$'Std.Error'
         }        
         if(all(dim(out) != 0L)){
             cat('--------------\nFIXED EFFECTS:\n')        

@@ -42,11 +42,13 @@
 #' item types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', 'gpcm')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
 #' each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed 
-#' effect predictors (i.e., item intercepts)
+#' effect predictors (i.e., item intercepts). By default an \code{items} variable is reserved for 
+#' modeling the item intercept parameters
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for 
 #' more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
-#' @param return.design logical; return the design matrices? 
+#' @param return.design logical; return the design matrices before they have (potentially) 
+#' been reassigned? 
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See 
 #' \code{\link{confmirt}} for more detail
 #'
@@ -146,7 +148,7 @@
 #' #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #' #    half of the test is any easier/harder than the last
 #' 
-#' ##LLTM with item error term
+#' ##LLTM with item error term 
 #' LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,
 #'     itemdesign = itemdesign, cl=cl)
 #' summary(LLTMwithError) 

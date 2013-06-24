@@ -49,7 +49,9 @@
   create a design matrix for the items, where each
   \code{nrow(itemdesign) == nitems} and the number of
   columns is equal to the number of fixed effect predictors
-  (i.e., item intercepts)}
+  (i.e., item intercepts). By default an \code{items}
+  variable is reserved for modeling the item intercept
+  parameters}
 
   \item{constrain}{a list indicating parameter equality
   constrains. See \code{\link{mirt}} for more detail}
@@ -57,8 +59,8 @@
   \item{pars}{used for parameter starting values. See
   \code{\link{mirt}} for more detail}
 
-  \item{return.design}{logical; return the design
-  matrices?}
+  \item{return.design}{logical; return the design matrices
+  before they have (potentially) been reassigned?}
 
   \item{...}{additional arguments to be passed to the MH-RM
   estimation engine. See \code{\link{confmirt}} for more
