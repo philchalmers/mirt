@@ -891,12 +891,15 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                            dimnames=list(unique(gframe)[[1L]], NULL))        
         mtch <- match(gframe[[1L]], rownames(drawvals))
         gdesign <- matrix(1, nrow(gframe), 1L, dimnames = list(NULL, colnames(gframe))) 
-        if(ncol(sframe) != 0L) gdesign <- cbind(gdesign, as.matrix(sframe))        
+        if(ncol(sframe) != 0L) gdesign <- cbind(gdesign, as.matrix(sframe))
+        tmp <- matrix(-Inf, ndim, ndim)
+        diag(tmp) <- 1e-6
+        lbound <- tmp[lower.tri(tmp, diag=TRUE)]
         ret[[i]] <- new('RandomPars', 
                         par=par,
                         est=est,
                         ndim=ndim,
-                        lbound=rep(-Inf, length(par)),
+                        lbound=lbound,
                         ubound=rep(Inf, length(par)),
                         gframe=gframe,
                         gdesign=gdesign,                        
