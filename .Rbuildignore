@@ -5,5 +5,3 @@ COPYING
 ^\.Rproj\.user$
 mirt.Rproj
 ^.*\.Rproj$
-inst\doc\mirt-presentation-2012.pdf
-inst\doc\mirt-presentation-2012.Rnw
