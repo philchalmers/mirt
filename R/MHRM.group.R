@@ -74,9 +74,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                         random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
                     if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
                         random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
+                    if(attr(random[[j]]@drawvals,"Proportion Accepted") < .05)
+                        random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 5*tmp
                     if (random[[j]]@cand.t.var < 0){
                         random[[j]]@cand.t.var <- tmp
-                        tmp <- tmp / 2
+                        tmp <- tmp / 10
                     }
                 }
             }

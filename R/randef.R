@@ -5,17 +5,17 @@
 #'
 #' @aliases randef
 #' @param x an estimated model object from the \code{\link{mixedmirt}} function
-#' @param ndraws total number of draws to perform. Default is 500
-#' @param thin amount of thinning to apply. Default is to use every 5th draw
+#' @param ndraws total number of draws to perform. Default is 1000
+#' @param thin amount of thinning to apply. Default is to use every 10th draw
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords random effects
 #' @export randef
 #' @examples
 #' \dontrun{
-#' effects <- randef(mod1, ndraws = 2000, thin = 10)
+#' effects <- randef(mod1, ndraws = 2000, thin = 20)
 #' 
 #' }
-randef <- function(x, ndraws = 500, thin = 5){    
+randef <- function(x, ndraws = 1000, thin = 10){
     if(!is(x, 'MixedClass'))
         stop('Only applicable to MixedClass objects')
     div <- ndraws / thin
@@ -65,14 +65,16 @@ randef <- function(x, ndraws = 500, thin = 5){
     }
     Theta <- Theta / (ndraws/thin)
     attr(Theta, 'Proportion Accepted') <- attr(Theta, 'log.lik') <- NULL
+    colnames(Theta) <- x@factorNames
     ret <- list(Theta)
     retnames <- 'Theta'
     if(length(random) > 0L){
         for(j in 1L:length(random)){
             Random[[j]] <- Random[[j]] / (ndraws/thin)
             attr(Random[[j]], 'Proportion Accepted') <- NULL
+            colnames(Random[[j]]) <- colnames(x@random[[j]]@gdesign)
             ret[[length(ret) + 1L]] <- Random[[j]]
-            retnames <- c(retnames, colnames(x@random[[j]]@gdesign))            
+            retnames <- c(retnames, colnames(x@random[[j]]@gdesign)[1L])            
         }
     }
     names(ret) <- retnames

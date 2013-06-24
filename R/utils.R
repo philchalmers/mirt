@@ -883,7 +883,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         if(strsplit(f, '+')[[1L]][[1L]] == '0') 
             estmat[lower.tri(estmat)] <- FALSE        
         fn <- paste0('COV_', c(colnames(gframe), colnames(sframe)))
-        FNCOV <- outer(fn, c(colnames(gframe), colnames(sframe)), FUN=paste, sep='.')
+        FNCOV <- outer(fn, c(colnames(gframe), colnames(sframe)), FUN=paste, sep='_')
         par <- matpar[lower.tri(matpar, diag=TRUE)]
         est <- estmat[lower.tri(estmat, diag=TRUE)]
         names(par) <- names(est) <- FNCOV[lower.tri(FNCOV, diag=TRUE)]     
@@ -904,7 +904,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         gframe=gframe,
                         gdesign=gdesign,                        
                         between=between,
-                        cand.t.var=1,
+                        cand.t.var=.5,
                         n.prior.mu=rep(NaN,length(par)),
                         n.prior.sd=rep(NaN,length(par)),
                         b.prior.alpha=rep(NaN,length(par)),

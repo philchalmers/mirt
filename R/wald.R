@@ -72,6 +72,14 @@ wald <- function(object, L, C = 0){
             parnum <- c(parnum, pars[[i]]@parnum)
         }
     }
+    if(is(object, 'MixedClass')){
+        for(i in 1L:length(object@random)){
+            B <- c(B, object@random[[i]]@par)
+            tmp <- object@random[[i]]@parnum
+            names(tmp) <- names(object@random[[i]]@est)
+            parnum <- c(parnum, tmp)
+        }
+    }
     keep <- c()
     for(i in 1L:length(Names))
         keep <- c(keep, as.numeric(strsplit(Names[i], '.', fixed = TRUE)[[1]][2]))

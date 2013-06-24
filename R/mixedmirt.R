@@ -146,6 +146,13 @@
 #' #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
 #' #    half of the test is any easier/harder than the last
 #' 
+#' ##LLTM with item error term
+#' LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,
+#'     itemdesign = itemdesign, cl=cl)
+#' summary(LLTMwithError) 
+#' #large item level variance after itemorder is regressed; not a great predictor of item difficulty
+#' coef(LLTMwithError) 
+#' 
 #' ###################################################
 #' ### Polytomous example
 #' 
@@ -160,6 +167,26 @@
 #'                  itemtype = 'gpcm')
 #' summary(mod2)
 #' anova(mod, mod2)
+#' 
+#' ###################################################
+#' ### random effects
+#' #make the number of groups much larger
+#' covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
+#' 
+#' #random groups
+#' rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group, cl=cl)
+#' summary(rmod1)
+#' coef(rmod1)
+#' 
+#' #random groups and random items 
+#' rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items), cl=cl)
+#' summary(rmod2)
+#' eff <- randef(rmod2) #estimate random effects
+#' 
+#' #random slopes with fixed intercepts (suppressed correlation)
+#' rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 0 + pseudoIQ|group, cl=cl)
+#' summary(rmod3)
+#' (eff <- randef(rmod3)) 
 #' 
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
