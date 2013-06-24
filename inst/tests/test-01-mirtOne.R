@@ -47,9 +47,9 @@ test_that('dich', {
     modm4 <- mirt(data, 1, itemtype = '1PL', verbose=FALSE)    
     expect_is(modm4, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm4)))
-    expect_equal(cfs, c(1.014, 1.868, 0.000, 1.000, 1.014, 0.791, 0.000, 1.000, 1.014, 1.461,
-                        0.000, 1.000, 1.014, 0.522, 0.000, 1.000, 1.014, 1.993, 0.000, 1.000, 
-                        0.000, 0.995), tollerance = 1e-3)
+    expect_equal(cfs, c(1.011, 1.869, 0.000, 1.000, 1.011, 0.791, 0.000, 1.000, 1.011, 1.461,
+                        0.000, 1.000, 1.011, 0.522, 0.000, 1.000, 1.011, 1.993, 0.000, 1.000,
+                        0.000, 1.000), tollerance = 1e-3)
     svalues <- mirt(data, 1, pars = 'values', verbose=FALSE)
     svalues[22, 5] <- 2
     modm5 <- mirt(data, 1, pars = svalues, verbose=FALSE)    

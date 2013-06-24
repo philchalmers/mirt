@@ -102,7 +102,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(itemtype[i] == 'Rasch' && K[i] > 2L)
             freepars[[i]] <- c(rep(FALSE,nfact), FALSE, rep(TRUE, K[i]-1L))
         if(itemtype[i] == '1PL' && K[i] > 2L)
-            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
+            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
         if(itemtype[i] == 'grsm')
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
         if(itemtype[i] == 'graded')

@@ -147,7 +147,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
             }
         }
     }                
-    if(all(itemtype %in% c('Rasch', '1PL', 'rsm', 'grsm')))
+    if(all(itemtype %in% c('Rasch', 'rsm', 'grsm')))
         pars[[length(pars)]]@est[2L] <- TRUE
     npars <- sum(sapply(pars, function(x) sum(x@est)))
     if(is.null(prodlist)) prodlist <- list()
