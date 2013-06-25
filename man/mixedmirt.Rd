@@ -41,9 +41,9 @@
   0 + ...} constant}
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}},
-  expect limited only to the following item types:
-  \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL',
-  'gpcm')}}
+  expect currently limited only to the following item
+  types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu',
+  '4PL')}}
 
   \item{itemdesign}{a \code{data.frame} object used to
   create a design matrix for the items, where each
@@ -77,9 +77,8 @@
   exclusively.
 }
 \details{
-  For dichotomous response models (polytomous extensions
-  with \code{'gpcm'} items is also available),
-  \code{mixedmirt} follows the general form
+  For dichotomous response models, \code{mixedmirt} follows
+  the general form
 
   \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 +
   exp(-1 * [\mathbf{\theta a} + \mathbf{X \beta} +
@@ -194,21 +193,6 @@ LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random 
 summary(LLTMwithError)
 #large item level variance after itemorder is regressed; not a great predictor of item difficulty
 coef(LLTMwithError)
-
-###################################################
-### Polytomous example
-
-#make an arbitrary group difference
-covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
-
-mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items)
-coef(mod)
-
-#gpcm to estimate slopes
-mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items,
-                 itemtype = 'gpcm')
-summary(mod2)
-anova(mod, mod2)
 
 ###################################################
 ### random effects

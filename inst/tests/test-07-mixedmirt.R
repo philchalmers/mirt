@@ -53,15 +53,15 @@ test_that('item and group predictors', {
     
 }) 
 
-test_that('polytomous', {
-    covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
-    model <- confmirt.model('F1 = 1-4', quiet = TRUE)
-    suppressWarnings(mod <- mixedmirt(Science, covdat, model=model,
-                                       fixed = ~ 0 + group + items, verbose = FALSE, draws = 10))
-    expect_is(mod, 'MixedClass')
-    
-    suppressWarnings(mod2 <- mixedmirt(Science, covdat, model=model, draws = 10,
-                                       fixed = ~ 0 + group + items, itemtype = 'gpcm', verbose = FALSE))
-    expect_is(mod2, 'MixedClass')
-    expect_equal(mod@df - mod2@df, 3)    
-}) 
+# test_that('polytomous', {
+#     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
+#     model <- confmirt.model('F1 = 1-4', quiet = TRUE)
+#     suppressWarnings(mod <- mixedmirt(Science, covdat, model=model,
+#                                        fixed = ~ 0 + group + items, verbose = FALSE, draws = 10))
+#     expect_is(mod, 'MixedClass')
+#     
+#     suppressWarnings(mod2 <- mixedmirt(Science, covdat, model=model, draws = 10,
+#                                        fixed = ~ 0 + group + items, itemtype = 'gpcm', verbose = FALSE))
+#     expect_is(mod2, 'MixedClass')
+#     expect_equal(mod@df - mod2@df, 3)    
+# }) 
