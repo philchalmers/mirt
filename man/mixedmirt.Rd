@@ -38,7 +38,7 @@
   group. If no intercept value is specified then by default
   the correlations between the \code{v}'s and \code{G} are
   estimated, but can be supressed by including the \code{~
-  0 + ...} constant}
+  -1 + ...} constant.}
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}},
   expect currently limited only to the following item

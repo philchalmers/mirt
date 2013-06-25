@@ -880,7 +880,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         matpar <- diag(ncol(gframe) + ncol(sframe))
         estmat <- lower.tri(matpar, diag=TRUE)
         ndim <- ncol(matpar)
-        if(strsplit(f, '+')[[1L]][[1L]] == '0') 
+        if(strsplit(f, '+')[[1L]][[1L]] == '-') 
             estmat[lower.tri(estmat)] <- FALSE        
         fn <- paste0('COV_', c(colnames(gframe), colnames(sframe)))
         FNCOV <- outer(fn, c(colnames(gframe), colnames(sframe)), FUN=paste, sep='_')
@@ -891,7 +891,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                            dimnames=list(unique(gframe)[[1L]], NULL))        
         mtch <- match(gframe[[1L]], rownames(drawvals))
         gdesign <- matrix(1, nrow(gframe), 1L, dimnames = list(NULL, colnames(gframe))) 
-        if(ncol(sframe) != 0L) gdesign <- cbind(gdesign, as.matrix(sframe))
+        if(ncol(sframe) != 0L) gdesign <- model.matrix(as.formula(paste0('~',splt[1L])), sframe)
         tmp <- matrix(-Inf, ndim, ndim)
         diag(tmp) <- 1e-4
         lbound <- tmp[lower.tri(tmp, diag=TRUE)]

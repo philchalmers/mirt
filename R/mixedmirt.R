@@ -36,7 +36,7 @@
 #' of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are 
 #' random numeric predictors within each group. If no intercept value is specified then by default the 
 #' correlations between the \code{v}'s and \code{G} are estimated, but can be supressed by including 
-#' the \code{~ 0 + ...} constant  
+#' the \code{~ -1 + ...} constant. 
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect currently limited only to the following 
 #' item types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
