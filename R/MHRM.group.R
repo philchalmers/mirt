@@ -6,6 +6,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES
     BURNIN <- list$BURNIN
+    if(RAND) BURNIN <- BURNIN + 50L
     SEMCYCLES <- list$SEMCYCLES
     KDRAWS <- list$KDRAWS
     TOL <- list$TOL
@@ -59,57 +60,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
             }
         }
     }    
-    if(RAND){
-        OffTerm <- OffTerm(random, J=J, N=N)
-        for(j in 1L:length(random)){
-            tmp <- .1
-            for(i in 1L:30L){                
-                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
-                                                   pars=pars[[1L]], fulldata=gfulldata[[1L]], 
-                                                   offterm0=OffTerm)
-                OffTerm <- OffTerm(random, J=J, N=N)
-                if(i > 5L){
-                    if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
-                        random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
-                    if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
-                        random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
-                    if(attr(random[[j]]@drawvals,"Proportion Accepted") < .05)
-                        random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 5*tmp
-                    if (random[[j]]@cand.t.var < 0){
-                        random[[j]]@cand.t.var <- tmp
-                        tmp <- tmp / 10
-                    }
-                }
-            }
-            #better start values
-            tmp <- cov(random[[j]]@drawvals)
-            random[[j]]@par[random[[j]]@est] <- tmp[lower.tri(tmp, TRUE)][random[[j]]@est]
-        }
-        tmp <- .1
-        for(i in 1L:10L){
-            gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
-                                        itemloc=itemloc, cand.t.var=cand.t.var,
-                                        prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
-                                        prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
-            if(i > 5L){
-                if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
-                    cand.t.var <- cand.t.var + tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
-                    cand.t.var <- cand.t.var - tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
-                    cand.t.var <- cand.t.var - 2*tmp
-                if (cand.t.var < 0){
-                    cand.t.var <- tmp
-                    tmp <- tmp / 2
-                }
-            }
-        }
-        tmp <- cov(gtheta0[[1L]])
-        tmp2 <- c(rep(0, ncol(tmp)), tmp[lower.tri(tmp, TRUE)])
-        pars[[1L]][[length(pars[[1L]])]]@par[pars[[1L]][[length(pars[[1L]])]]@est] <- 
-            tmp2[pars[[1L]][[length(pars[[1L]])]]@est]
-    }
+    if(RAND) OffTerm <- OffTerm(random, J=J, N=N)    
     m.thetas <- grouplist <- SEM.stores <- SEM.stores2 <- m.list <- list()
     conv <- 0L
     k <- 1L
@@ -201,8 +152,62 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-        if(RAND) random <- reloadRandom(random=random, longpars=longpars, 
+        if(RAND && cycles > 100) random <- reloadRandom(random=random, longpars=longpars, 
                                         parstart=max(pars[[1L]][[J+1L]]@parnum) + 1L)
+        
+        if(RAND && cycles == 100){
+            OffTerm <- OffTerm(random, J=J, N=N)
+            for(j in 1L:length(random)){
+                tmp <- .1
+                for(i in 1L:30L){                
+                    random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
+                                                       pars=pars[[1L]], fulldata=gfulldata[[1L]], 
+                                                       offterm0=OffTerm)
+                    OffTerm <- OffTerm(random, J=J, N=N)
+                    if(i > 5L){
+                        if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
+                            random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
+                        if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
+                            random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
+                        if(attr(random[[j]]@drawvals,"Proportion Accepted") < .05)
+                            random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 5*tmp
+                        if (random[[j]]@cand.t.var < 0){
+                            random[[j]]@cand.t.var <- tmp
+                            tmp <- tmp / 10
+                        }
+                    }
+                }
+                #better start values
+                tmp <- nrow(random[[j]]@drawvals)
+                tmp <- cov(random[[j]]@drawvals) * (tmp / (tmp-1L))
+                random[[j]]@par[random[[j]]@est] <- tmp[lower.tri(tmp, TRUE)][random[[j]]@est]
+            }
+            tmp <- .1
+            for(i in 1L:10L){
+                gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
+                                             itemloc=itemloc, cand.t.var=cand.t.var,
+                                             prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
+                                             prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
+                if(i > 5L){
+                    if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
+                    else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
+                        cand.t.var <- cand.t.var + tmp
+                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
+                        cand.t.var <- cand.t.var - tmp
+                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
+                        cand.t.var <- cand.t.var - 2*tmp
+                    if (cand.t.var < 0){
+                        cand.t.var <- tmp
+                        tmp <- tmp / 2
+                    }
+                }
+            }
+            tmp <- nrow(gtheta0[[1L]])
+            tmp <- cov(gtheta0[[1L]]) * (tmp / (tmp-1L))
+            tmp2 <- c(rep(0, ncol(tmp)), tmp[lower.tri(tmp, TRUE)])
+            pars[[1L]][[length(pars[[1L]])]]@par[pars[[1L]][[length(pars[[1L]])]]@est] <- 
+                tmp2[pars[[1L]][[length(pars[[1L]])]]@est]            
+        }
 
         #Step 1. Generate m_k datasets of theta
         LL <- 0
@@ -214,7 +219,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list())
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
-        if(RAND){
+        if(RAND && cycles > 100){
             for(j in 1:length(random)){
                 for(i in 1L:5L){                
                     random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
