@@ -22,6 +22,8 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- x@par[parlength - 2L]
         a <- x@par[1L:nfact]
+        if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
+            Theta <- cbind(x@fixed.design, Theta)
         r1 <- dat
         r2 <- f - dat        
         gh <- .Call('dparsDich', a, d, g, u, x@D, Theta, Prior, r1, r2, estHess, TRUE, offterm)
