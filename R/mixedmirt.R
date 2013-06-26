@@ -194,6 +194,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE, ...)
 {
     Call <- match.call()       
+    svinput <- pars
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(!all(itemtype %in% c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL')))
         stop('itemtype contains unsupported classes of items')
@@ -258,6 +259,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         attr(pars, 'values') <- NULL
         return(pars)
     }
+    if(is.data.frame(svinput)) pars <- svinput
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
     if(is(mod, 'MixedClass'))

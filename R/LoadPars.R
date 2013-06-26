@@ -450,7 +450,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     return(pars)
 }
 
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior){
+LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, Rasch = FALSE){
     nfact <- length(gmeans)
     fn <- paste('COV_', 1L:nfact, sep='')
     FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
@@ -458,6 +458,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior)
     tri <- lower.tri(gcov, diag=TRUE)
     par <- c(gmeans, gcov[tri])
     parnum <- parnumber:(parnumber + length(par) - 1L)
+    if(Rasch) diag(estgcov) <- TRUE
     est <- c(estgmeans,estgcov[tri])
     names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])
     tmp <- matrix(-Inf, nfact, nfact)

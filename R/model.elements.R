@@ -96,7 +96,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     nominal.highlow=nominal.highlow)     
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
-                                            parprior=parprior)
+                                            parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')))
     attr(ret, 'prodlist') <- prodlist
     return(ret)
 }

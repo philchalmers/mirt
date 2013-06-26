@@ -52,13 +52,17 @@ setMethod(
             cat('--------------\nFIXED EFFECTS:\n')        
             print(round(out, digits))
         }        
-        cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')        
+        cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')
+        cat('Correlations on upper diagonal\n')
         par <- object@pars[[length(object@pars)]]@par[-c(1L:object@nfact)]
-        sigma <- matrix(0, object@nfact)
+        sigma <- matrix(0, object@nfact, object@nfact)
         sigma[lower.tri(sigma, TRUE)] <- par
-        if(object@nfact > 1L) sigma <- sigma + t(sigma) - diag(diag(sigma))
-        colnames(sigma) <- rownames(sigma) <- 
-            names(object@pars[[length(object@pars)]]@est[-c(1L:object@nfact)])
+        if(object@nfact > 1L){           
+            sigma <- sigma + t(sigma) - diag(diag(sigma))
+            csigma <- cov2cor(sigma)
+            sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
+        }
+        colnames(sigma) <- rownames(sigma) <- object@factorNames
         rand <- list(sigma)
         listnames <- 'Theta'
         if(length(object@random) > 0L){
@@ -66,7 +70,11 @@ setMethod(
                 par <- object@random[[i]]@par                
                 sigma <- matrix(0, object@random[[i]]@ndim, object@random[[i]]@ndim)
                 sigma[lower.tri(sigma, TRUE)] <- par                
-                if(ncol(sigma) > 1L) sigma <- sigma + t(sigma) - diag(diag(sigma))
+                if(ncol(sigma) > 1L){
+                    sigma <- sigma + t(sigma) - diag(diag(sigma))
+                    csigma <- cov2cor(sigma)
+                    sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
+                }
                 colnames(sigma) <- rownames(sigma) <- 
                     paste0('COV_', colnames(object@random[[i]]@gdesign))
                 rand[[length(rand) + 1L]] <- sigma
@@ -76,6 +84,7 @@ setMethod(
         names(rand) <- listnames
         cat('\n')
         print(rand, digits)
+        return(invisible(list(random=rand, fixed=out)))
     }
 )
 

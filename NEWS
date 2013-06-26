@@ -15,8 +15,8 @@ NEW FEATURES
 
 - increase number of draws in the Monte Carlo calculation of the log-likelihood from 3000 to 5000
 
-- when itemtype all equal 'Rasch', 'rsm', or 'grsm' in unidimensional models the latent 
-  variance parameter is automatically freed and is estimated
+- when itemtype all equal 'Rasch', or 'rsm' models the latent variance parameter(s) are automatically 
+  freed and estimated
 
 - mixedmirt() more supportive of user defined input formulas, and now includes an internal 'items'
   argument to create the item design matrix used to estimate the intercepts. More closely mirrors 
