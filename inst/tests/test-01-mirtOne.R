@@ -8,7 +8,7 @@ test_that('dich', {
     cfs <- as.numeric(do.call(c, coef(mod1)))
     expect_equal(cfs, c(0.988, 1.856, 0.000, 1.000, 1.081, 0.808, 0.000, 1.000, 1.706, 1.804, 0.000,
                         1.000, 0.765, 0.486, 0.000, 1.000, 0.736, 1.855, 0.000, 1.000, 0.000, 1.000),
-                 tollerance = 1e-3)
+                 tollerance = 1e-2)
     sv <- mod2values(mod1)
     sv$est <- FALSE
     moddummy <- mirt(data, 1, pars= sv, verbose=FALSE)
@@ -21,7 +21,7 @@ test_that('dich', {
                         0.808, 0.087, 0.000, NA, 1.000, NA, 1.706, 0.297, 1.804, 0.199, 
                         0.000, NA, 1.000, NA, 0.765, 0.136, 0.486, 0.077, 0.000, NA, 
                         1.000, NA, 0.736, 0.149, 1.855, 0.112, 0.000, NA, 1.000, NA, 0.000, 
-                        NA, 1.000, NA), tollerance = 1e-3)    
+                        NA, 1.000, NA), tollerance = 1e-2)    
     expect_is(modm1, 'ConfirmatoryClass')          
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'BL', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2)))
@@ -29,7 +29,7 @@ test_that('dich', {
                         0.091, 0.000, NA, 1.000, NA, 1.706, 0.320, 1.804, 0.204, 0.000,
                         NA, 1.000, NA, 0.765, 0.134, 0.486, 0.075, 0.000, NA, 1.000, NA, 0.736,
                         0.151, 1.855, 0.114, 0.000, NA, 1.000, NA, 0.000, NA, 1.000, NA), 
-                 tollerance = 1e-3)
+                 tollerance = 1e-2)
     expect_is(modm2, 'ConfirmatoryClass')          
     suppressWarnings(modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'MHRM', verbose=FALSE))
     expect_is(modm2, 'ConfirmatoryClass')
@@ -43,13 +43,13 @@ test_that('dich', {
                         0.000, NA, 1.000, NA, 1.000, NA, 1.461, 0.094, 0.000, NA, 1.000, NA, 1.000,
                         NA, 0.522, 0.076, 0.000, NA, 1.000, NA, 1.000, NA, 1.993, 0.100, 0.000,
                         NA, 1.000, NA, 0.000, NA, 1.023, 0.344), 
-                 tollerance = 1e-3)
+                 tollerance = 1e-2)
     modm4 <- mirt(data, 1, itemtype = '1PL', verbose=FALSE)    
     expect_is(modm4, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm4)))
     expect_equal(cfs, c(1.011, 1.869, 0.000, 1.000, 1.011, 0.791, 0.000, 1.000, 1.011, 1.461,
                         0.000, 1.000, 1.011, 0.522, 0.000, 1.000, 1.011, 1.993, 0.000, 1.000,
-                        0.000, 1.000), tollerance = 1e-3)
+                        0.000, 1.000), tollerance = 1e-2)
     svalues <- mirt(data, 1, pars = 'values', verbose=FALSE)
     svalues[22, 5] <- 2
     modm5 <- mirt(data, 1, pars = svalues, verbose=FALSE)    
@@ -61,7 +61,7 @@ test_that('dich', {
     cfs <- as.numeric(do.call(c, coef(modm6)))
     expect_equal(cfs, c(0.969, 1.851, 0.000, 1.000, 1.074, 0.808, 0.000, 1.000, 1.717, 1.811,
                         0.000, 1.000, 0.763, 0.486, 0.000, 1.000, 0.731, 1.852, 0.000, 1.000,
-                        0.000, 1.000), tollerance = 1e-3)
+                        0.000, 1.000), tollerance = 1e-2)
     
     fm1 <- fscores(modm1, verbose = FALSE)
     expect_is(fm1, 'matrix')      
@@ -93,7 +93,7 @@ test_that('dich', {
     expect_equal(as.numeric(res1), c(NA, -0.452, -0.853,  2.574,  2.392,  0.021,     NA,  1.062,
                                      -0.267, -1.383,  0.029,  0.033,     NA, -0.153, -0.003,  0.051,
                                      0.016,  0.012, NA,  0.000,  0.049,  0.037,  0.002,  0.000, NA), 
-                 tollerance = 1e-3)
+                 tollerance = 1e-2)
     res2 <- residuals(modm2, verbose = FALSE)
     expect_is(res1, 'matrix')
     expect_is(res2, 'matrix')

@@ -39,7 +39,7 @@ test_that('three factor', {
     expect_equal(cfs, c(1.297,  0.655,  1.242, -0.570,  0.931, -0.200,  0.821,  0.797,  1.075,  0.217,  0.483,  
                         0.610,  1.181,  0.995,  0.948, -0.446,  1.080, -1.180,  0.870, -1.145,  0.890,  1.312, 
                         1.500, -0.300,  1.057,  0.441,  1.065,  0.457,  0.886, -0.187),
-                 tollerance = 1e-3)
+                 tollerance = 1e-2)
     suppressWarnings(mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov', draws = 10)))
     expect_is(mod_scalar1, 'MultipleGroupClass')
