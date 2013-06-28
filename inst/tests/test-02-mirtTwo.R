@@ -34,9 +34,9 @@ test_that('poly', {
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp3, verbose = FALSE)))
-    expect_equal(cfs, c(1.090,  4.248,  2.550, -1.507,  1.090,  2.817,  0.853, -2.198,  2.269,  
+    expect_true(mirt:::closeEnough(cfs - c(1.090,  4.248,  2.550, -1.507,  1.090,  2.817,  0.853, -2.198,  2.269,  
                         5.176,  2.173, -1.978,  1.121,  3.357,  0.987, -1.714,  0.000,  1.000),
-                 tollerance = 1e-2)    
+                 -1e-2, 1e-2))    
     modp4 <- suppressMessages(mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE))
     expect_is(modp4, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp4, verbose = FALSE)))
