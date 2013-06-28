@@ -53,14 +53,14 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 }
 
 // graded
-RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP Ritemexp) 
+RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP Ritemexp, SEXP Rot) 
 {
     BEGIN_RCPP
 
 	NumericVector a(Ra);
 	NumericVector d(Rd);
 	NumericVector D(RD);
-    NumericVector ot(1);
+    NumericVector ot(Rot);
 	NumericMatrix Theta(RTheta);
 	IntegerVector itemexp(Ritemexp);
     const double nullzero = 0.0, nullone = 1.0;
