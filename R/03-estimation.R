@@ -182,6 +182,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     for(g in 1L:Data$ngroups)
         for(i in 1L:(nitems+1L))
             nestpars <- nestpars + sum(pars[[g]][[i]]@est)
+    if(!is.null(mixed.design$random)){
+        for(i in 1L:length(mixed.design$random))
+            nestpars <- nestpars + sum(mixed.design$random[[i]]@est)        
+    }
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1L

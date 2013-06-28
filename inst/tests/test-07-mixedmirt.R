@@ -23,7 +23,13 @@ test_that('mixed dich', {
     mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
                                         itemtype = '2PL', verbose = FALSE, draws = 10))
     expect_is(mod1b, 'MixedClass')
-    expect_equal(mod1b@df, 293)        
+    expect_equal(mod1b@df, 293) 
+    
+    covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
+    rmod1 <- suppressMessages(mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group, 
+                                        draws = 10, verbose = FALSE))
+    expect_is(rmod1, 'MixedClass')
+    expect_equal(rmod1@df, 303) 
 })   
 
 test_that('item and group predictors', {    
@@ -68,5 +74,15 @@ test_that('polytomous', {
     suppressWarnings(mod3 <- mixedmirt(Science, covdat, model=model, draws = 10,
                                        fixed = ~ 0 + group, itemtype = 'graded', verbose = FALSE))    
     expect_is(mod3, 'MixedClass')   
-    expect_equal(mod3@df, 72)    
+    expect_equal(mod3@df, 72)  
+    
+    covdat$group <- factor(rep(paste0('G',1:20), length.out = nrow(Science)))
+    rmod1 <- suppressMessages(mixedmirt(Science, covdat, model=model, draws=10, random = ~ 1|group,
+                       itemtype = 'graded', verbose = FALSE))
+    expect_is(rmod1, 'MixedClass')
+    expect_equal(rmod1@df, 72) 
+    re <- randef(rmod1, ndraws=100)
+    expect_is(re, 'list')
+    expect_equal(length(re), 2)
+    
 }) 
