@@ -147,7 +147,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             freepars[[i]] <- c(estbetas, freepars[[i]])
             startvalues[[i]] <- c(betas, startvalues[[i]])
         }
-        valid.ints <- c('d')
+        valid.ints <- ifelse(any(K > 2), '', 'd')
         freepars <- lapply(freepars, function(x, valid){
             x[names(x) %in% valid] <- FALSE
             return(x)}, valid=valid.ints)
