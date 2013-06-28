@@ -1,10 +1,9 @@
 Package: mirt
-Version: 0.7.6
+Version: 0.7.7
 Date: 2013-04-20
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c(
-    person("Joshua", "Pritikin", role = "ctb"),
     person("Phil", "Chalmers",
     email = "rphilip.chalmers@gmail.com", role = c("aut", "cre")))
 Description: Analysis of dichotomous and polytomous response data using latent

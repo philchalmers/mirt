@@ -31,14 +31,18 @@
 #' more details
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory') 
 #' predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for 
-#' each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign} input
+#' each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign} input.
+#' If any polytomous items are being model the \code{items} are argument is not valid since all
+#' intercept parameters are freely estimated and identified with the parameterizations found in 
+#' \code{\link{mirt}}, and the first column in the fixed design matrix (commonly the intercept or a reference
+#' group) is ommited
 #' @param random a right sided formula or list of formulas containing crossed random effects 
 #' of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are 
 #' random numeric predictors within each group. If no intercept value is specified then by default the 
 #' correlations between the \code{v}'s and \code{G} are estimated, but can be supressed by including 
-#' the \code{~ -1 + ...} constant. 
-#' @param itemtype same as itemtype in \code{\link{mirt}}, expect currently limited only to the following 
-#' item types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL')}
+#' the \code{~ -1 + ...} constant 
+#' @param itemtype same as itemtype in \code{\link{mirt}}, expect does not support the following 
+#' item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
 #' each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed 
 #' effect predictors (i.e., item intercepts). By default an \code{items} variable is reserved for 
@@ -154,21 +158,6 @@
 #' #large item level variance after itemorder is regressed; not a great predictor of item difficulty
 #' coef(LLTMwithError) 
 #' 
-# ###################################################
-# ### Polytomous example
-# 
-# #make an arbitrary group difference
-# covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
-# 
-# mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items)
-# coef(mod)
-# 
-# #gpcm to estimate slopes 
-# mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group + items,
-#                  itemtype = 'gpcm')
-# summary(mod2)
-# anova(mod, mod2)
-# 
 #' ###################################################
 #' ### random effects
 #' #make the number of groups much larger
@@ -189,14 +178,35 @@
 #' summary(rmod3)
 #' (eff <- randef(rmod3)) 
 #' 
+#' ###################################################
+#' ### Polytomous example
+#' 
+#' #make an arbitrary group difference
+#' covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
+#' 
+#' #partial credit model
+#' mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group)
+#' coef(mod)
+#' 
+#' #gpcm to estimate slopes 
+#' mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group,
+#'                  itemtype = 'gpcm')
+#' summary(mod2)
+#' anova(mod, mod2)
+#'
+#' #graded model
+#' mod3 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group,
+#'                  itemtype = 'graded')
+#' coef(mod3)
+#' 
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE, ...)
 {
     Call <- match.call()       
     svinput <- pars
-    if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
-    if(!all(itemtype %in% c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL')))
+    if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))    
+    if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
         stop('itemtype contains unsupported classes of items')
     if(!is.null(random)){
         message('\'random effects\' modeling is in active development. Please report any issues')
@@ -224,6 +234,13 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         longdata[, colnames(itemdesign)[i]] <- rep(itemdesign[ ,i], each=nrow(data))
     mf <- model.frame(fixed, longdata)
     mm <- model.matrix(fixed, mf)   
+    K <- sapply(as.data.frame(data), function(x) length(na.omit(unique(x))))
+    if(any(K > 2)){
+        if(any(colnames(mm) %in% paste0('items', 1:ncol(data))))
+            stop('fixed formulas do no support the \'items\' internal variable for 
+                 polytomous items. Please remove')
+        mm <- mm[ , -1L, drop = FALSE]
+    }
     if(return.design) return(list(X=mm, Z=NaN))
     itemindex <- colnames(mm) %in% paste0('items', 1L:ncol(data))
     mmitems <- mm[, itemindex]
@@ -235,7 +252,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     mixed.design <- list(fixed=mm, random=mr)    
     if(is.null(constrain)) constrain <- list()      
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')    
+                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
     mmnames <- colnames(mm)
     N <- nrow(data)
     if(ncol(mm) > 0L){

@@ -29,7 +29,12 @@
   \code{covdata} and \code{itemdesign}. To estimate the
   intercepts for each item the keyword \code{items} is
   reserved and automatically added to the \code{itemdesign}
-  input}
+  input. If any polytomous items are being model the
+  \code{items} are argument is not valid since all
+  intercept parameters are freely estimated and identified
+  with the parameterizations found in \code{\link{mirt}},
+  and the first column in the fixed design matrix (commonly
+  the intercept or a reference group) is ommited}
 
   \item{random}{a right sided formula or list of formulas
   containing crossed random effects of the form \code{v1 +
@@ -38,12 +43,12 @@
   group. If no intercept value is specified then by default
   the correlations between the \code{v}'s and \code{G} are
   estimated, but can be supressed by including the \code{~
-  -1 + ...} constant.}
+  -1 + ...} constant}
 
   \item{itemtype}{same as itemtype in \code{\link{mirt}},
-  expect currently limited only to the following item
-  types: \code{c('Rasch', '1PL', '2PL', '3PL', '3PLu',
-  '4PL')}}
+  expect does not support the following item types:
+  \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
+  '4PLNRM')}}
 
   \item{itemdesign}{a \code{data.frame} object used to
   create a design matrix for the items, where each
@@ -213,6 +218,27 @@ eff <- randef(rmod2) #estimate random effects
 rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 0 + pseudoIQ|group, cl=cl)
 summary(rmod3)
 (eff <- randef(rmod3))
+
+###################################################
+### Polytomous example
+
+#make an arbitrary group difference
+covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
+
+#partial credit model
+mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group)
+coef(mod)
+
+#gpcm to estimate slopes
+mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group,
+                 itemtype = 'gpcm')
+summary(mod2)
+anova(mod, mod2)
+
+#graded model
+mod3 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group,
+                 itemtype = 'graded')
+coef(mod3)
 
 }
 }

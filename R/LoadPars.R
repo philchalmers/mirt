@@ -147,8 +147,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             freepars[[i]] <- c(estbetas, freepars[[i]])
             startvalues[[i]] <- c(betas, startvalues[[i]])
         }
-        valid.ints <- c('d', paste0('d', 1L:50L))        
-        freepars <- lapply(freepars, function(x, valid){            
+        valid.ints <- c('d')
+        freepars <- lapply(freepars, function(x, valid){
             x[names(x) %in% valid] <- FALSE
             return(x)}, valid=valid.ints)
         startvalues <- lapply(startvalues, function(x, valid){            
