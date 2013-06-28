@@ -684,7 +684,8 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'custom', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE){
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+                          offterm = numeric(1L)){
         if(x@useuserdata) Theta <- cbind(Theta, x@userdata)
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
@@ -698,7 +699,7 @@ setMethod(
                 else hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
                                                              Theta=Theta, prior=Prior)
             }
-            return(list(grad = grad))
+            return(list(grad = grad, hess=hess))
         }
         if(x@usegr) grad <- x@gr(x, Theta, BFACTOR = FALSE, prior = NULL)
         else grad[x@est] <- numDeriv::grad(L, x@par[x@est], obj=x, Theta=Theta)
