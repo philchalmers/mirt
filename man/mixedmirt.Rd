@@ -108,7 +108,7 @@
 #make some data
 set.seed(1234)
 N <- 750
-a <- matrix(rlnorm(10,.2,.5),10,1)
+a <- matrix(rlnorm(10,.3,1),10,1)
 d <- matrix(rnorm(10), 10)
 Theta <- matrix(sort(rnorm(N)))
 pseudoIQ <- Theta * 5 + 100  + rnorm(N, 0 , 5)

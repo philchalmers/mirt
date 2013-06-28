@@ -462,7 +462,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
     est <- c(estgmeans,estgcov[tri])
     names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])
     tmp <- matrix(-Inf, nfact, nfact)
-    diag(tmp) <- 1e-6
+    diag(tmp) <- 1e-4
     lbound <- c(rep(-Inf, nfact), tmp[tri])
     ret <- new('GroupPars', par=par, est=est, nfact=nfact,
                parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)))
