@@ -492,8 +492,8 @@ setMethod(
         D <- x@D
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=ot)
-        num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE, ot=ot)
+        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
+        num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE, ot=offterm)
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                D=D, Prior=Prior, P=P, num=num, dat=dat)
         ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)
