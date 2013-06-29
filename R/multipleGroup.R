@@ -79,7 +79,6 @@
 #' \describe{
 #' \item{NCYCLES}{max number of cycles; default 2000 for MHRM and 500 for EM}
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
-#' \item{MSTEPTOL}{convergence threshold for Mstep; default is \code{TOL/1000}}
 #' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
 #' \item{SEMCYCLES}{number of SEM cycles (stage 2); default 50}
 #' \item{TOL}{minimum threshold tolerance for convergence. If MH-RM, must occur on three consecutive

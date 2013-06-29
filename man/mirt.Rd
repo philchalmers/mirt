@@ -114,11 +114,15 @@ Theory)}
 
   \item{rotate}{type of rotation to perform after the
   initial orthogonal parameters have been extracted by
-  using \code{summary}; default is \code{'oblimin'}. See
-  below for list of possible rotations. If \code{rotate !=
-  ''} in the \code{summary} input then the default from the
-  object is ignored and the new rotation from the list is
-  used instead}
+  using \code{summary}; default is \code{'oblimin'}. If
+  \code{rotate != ''} in the \code{summary} input then the
+  default from the object is ignored and the new rotation
+  from the list is used instead. Rotations currently
+  supported are: promax, oblimin, varimax, quartimin,
+  targetT, targetQ, pstT, pstQ, oblimax, entropy,
+  quartimax, simplimax, bentlerT, bentlerQ, tandemI,
+  tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ,
+  mccammon, bifactorT, bifactorQ}
 
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
@@ -252,14 +256,12 @@ Theory)}
   parameters for estimation. May be: \describe{
   \item{MAXQUAD}{maximum number of quadratures; default
   10000} \item{TOL}{EM convergence threshold; default
-  .0001} \item{MSTEPTOL}{convergence threshold for Mstep;
-  default is \code{TOL/1000}} \item{SEtol}{tolerance value
-  used to stop the MHRM estimation when \code{SE = TRUE}
-  and \code{SE.type = 'MHRM'}. Lower values will take
-  longer but may be more stable for computing the
-  information matrix. Default is .0001}
-  \item{NCYCLES}{maximum number of EM cycles; default 500}
-  }}
+  .0001} \item{SEtol}{tolerance value used to stop the MHRM
+  estimation when \code{SE = TRUE} and \code{SE.type =
+  'MHRM'}. Lower values will take longer but may be more
+  stable for computing the information matrix. Default is
+  .0001} \item{NCYCLES}{maximum number of EM cycles;
+  default 500} }}
 
   \item{...}{additional arguments to be passed}
 }
