@@ -96,7 +96,6 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
            est[constrain[[i]][-1L]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
-    bump <- 1000
     any.prior <- FALSE
     for(g in 1L:ngroups){
         for(i in 1L:J){
@@ -151,13 +150,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             }
         }
         preMstep.longpars <- longpars
-        if(all(!est)) break
-        if(cycles == 2L) bump <- 500
-        if(cycles == 3L) bump <- 1        
+        if(all(!est)) break        
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                       gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                      constrain=constrain, TOL=MSTEPTOL, bump=bump)
+                      constrain=constrain, TOL=MSTEPTOL)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         EMhistory[cycles+1L,] <- longpars
         if(verbose)
@@ -241,12 +238,12 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, Prior, BFACTOR, itemloc, PrepList, L,
-                  UBOUND, LBOUND, constrain, TOL, bump=1){
+                  UBOUND, LBOUND, constrain, TOL){
     p <- longpars[est]
-    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=list(reltol = TOL*bump, abstol=TOL*bump),
+    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS', 
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
-                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc)
+                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est])
     longpars[est] <- opt$par
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
@@ -269,7 +266,6 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Prior
     if(length(constrain) > 0L)
        for(i in 1L:length(constrain))
            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
-    if(any(longpars < LBOUND | longpars > UBOUND )) return(1e10)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(J)
     LL <- 0    
