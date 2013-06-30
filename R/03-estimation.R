@@ -409,6 +409,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!is.nan(G2) && !opts$NULL.MODEL)
         if(X2/G2 > 10) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(is.null(parprior)) parprior <- list()
+    if(!is.null(customItems)) PrepList[[1L]]$exploratory <- FALSE
     if(Data$ngroups == 1L){
         if(opts$method == 'MIXED'){            
             mod <- new('MixedClass',
