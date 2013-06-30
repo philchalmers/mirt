@@ -99,6 +99,14 @@
   matrices are structured prior to reassignment and
   estimation pass the argument \code{return.design = TRUE}.
 
+  Polytomous IRT models follow a similar format except the
+  item intercepts are automatically estimated internally,
+  rendering the \code{items} argument in the fixed formula
+  redundent and therefore must be ommited from the
+  specification. If there are a mixture of dichotomous and
+  polytomous items the intercepts for the dichotomous
+  models are also estimated for consistency.
+
   To simulate maximum a posteriori estimates for the random
   effects use the \code{\link{randef}} function.
 }
@@ -215,7 +223,7 @@ summary(rmod2)
 eff <- randef(rmod2) #estimate random effects
 
 #random slopes with fixed intercepts (suppressed correlation)
-rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 0 + pseudoIQ|group, cl=cl)
+rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group, cl=cl)
 summary(rmod3)
 (eff <- randef(rmod3))
 
@@ -226,17 +234,17 @@ summary(rmod3)
 covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
 
 #partial credit model
-mod <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group)
+mod <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group)
 coef(mod)
 
 #gpcm to estimate slopes
-mod2 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group,
+mod2 <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group,
                  itemtype = 'gpcm')
 summary(mod2)
 anova(mod, mod2)
 
 #graded model
-mod3 <- mixedmirt(Science, covdat, model=confmirt.model('F1 = 1-4'), fixed = ~ 0 + group,
+mod3 <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group,
                  itemtype = 'graded')
 coef(mod3)
 
