@@ -1,4 +1,4 @@
-Changes in mirt 0.7.6
+Changes in mirt 0.8.0
 
 NEW FEATURES
 
@@ -7,20 +7,21 @@ NEW FEATURES
 
 - EAPsum support in fscores() for mixed item types
 
-- for consistency with other current IRT software (rather than TESTFACT and POLYFACT), the scaling 
-  constant has been set to D = 1
+- for consistency with current IRT software (rather than TESTFACT and POLYFACT), the scaling 
+  constant has been set to D = 1 and fixed at this value
 
 - nominal.highlow option added to specify which categories are the highest and lowest in nominal models.
-  Often provide better numerical stability when utilized
+  Often provide better numerical stability when utilized. Default is still to use the highest and lowest 
+  categories
 
 - increase number of draws in the Monte Carlo calculation of the log-likelihood from 3000 to 5000
 
-- when itemtype all equal 'Rasch', or 'rsm' models the latent variance parameter(s) are automatically 
+- when itemtype all equal 'Rasch' or 'rsm' models the latent variance parameter(s) are automatically 
   freed and estimated
 
-- mixedmirt() more supportive of user defined input formulas, and now includes an internal 'items'
+- mixedmirt() more supportive of user defined R formulas, and now includes an internal 'items'
   argument to create the item design matrix used to estimate the intercepts. More closely mirrors 
-  the outputed results from lme4 for Rasch models as well (special thanks to Kevin Joldersma for
+  the results from lme4 for Rasch models as well (special thanks to Kevin Joldersma for
   testing and debugging)
 
 - drop.zeros option added to extract.item and itemplot to reduce dimensionality of factor structures
