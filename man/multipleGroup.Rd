@@ -231,7 +231,7 @@ anova(mod_fullconstrain, mod_scalar1) #fix variance
 values <- multipleGroup(dat, models, group = group, pars = 'values')
 values
 constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
-equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain, )
+equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain)
 anova(equalslopes, mod_configural)
 
 #############

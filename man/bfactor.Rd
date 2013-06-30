@@ -71,10 +71,17 @@ mod2 <- bfactor(data, specific, guess = guess)
 coef(mod2)
 anova(mod1, mod2)
 
-## don't estimate specific factor for item 32
+## don't estimate specific factor for item 32, and use estimated mod1 as starting values
+sv <- mod2values(mod1)
+sv$value[220] <- 0
+sv$est[220] <- FALSE
+mod3 <- bfactor(data, specific, pars = sv) #with excellent starting values
+
+#without using starting values (required if SE.type = 'SEM')
 specific[32] <- NA
 mod3 <- bfactor(data, specific)
 anova(mod1, mod3)
+
 
 #########
 #simulate data

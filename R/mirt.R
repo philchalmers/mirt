@@ -405,7 +405,7 @@
 #' coef(pmod1_equalslopes)
 #' anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
 #'
-#' pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 2000))
+#' pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 1000))
 #' summary(pmod2)
 #' plot(pmod2)
 #' itemplot(pmod2, 1)
@@ -432,7 +432,7 @@
 #'
 #' mod1 <- mirt(data, 1)
 #' mod2 <- mirt(data, 2)
-#' mod3 <- mirt(data, 3, technical = list(TOL = 1e-3)) #difficulty converging to 1e-4 with reduced quadpts
+#' mod3 <- mirt(data, 3) #difficulty converging with reduced quadpts
 #' anova(mod1,mod2)
 #' anova(mod2, mod3) #negative AIC, 2 factors probably best
 #'
