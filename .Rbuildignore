@@ -5,3 +5,4 @@ COPYING
 ^\.Rproj\.user$
 mirt.Rproj
 ^.*\.Rproj$
+.travis.yml

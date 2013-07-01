@@ -27,6 +27,7 @@ Imports:
     Rcpp,
     numDeriv
 Suggests:
+    testthat,
     plink,
     psych,
     boot,
