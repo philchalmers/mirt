@@ -206,7 +206,8 @@ mod_configural <- multipleGroup(dat, models, group = group) #completely separate
 
 # prev.mod can save precious iterations and help to avoid local minimums
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
-mod_scalar2 <- multipleGroup(dat, models, group = group, #equal intercepts, free variance and means
+#equal intercepts, free variance and means
+mod_scalar2 <- multipleGroup(dat, models, group = group,
                              invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
 mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
@@ -253,10 +254,12 @@ p <- do.call(rbind, lapply(anovas, function(x) x[2,9]))
 p.adjust(p, method = 'BH')
 
 #same as above, except only test if slopes vary (1 df)
+#constrain all intercepts
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, #constrain all intercepts
-                             invariance=c('free_means', 'free_varcov', 'intercepts', itemnames[-i]))
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE,
+                             invariance=c('free_means', 'free_varcov', 'intercepts',
+                             itemnames[-i]))
 
 
 (anovas <- lapply(estmodels, anova, object2=refmodel))
@@ -297,11 +300,15 @@ anova(mod_scalar, mod_metric)
 anova(mod_fullconstrain, mod_scalar)
 
 #same as above, but with MHRM (more accurate with 3 factors, but slower)
-mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') #completely separate analyses
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM') #equal slopes
-mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
+#completely separate analyses
+mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM')
+#equal slopes
+mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM')
+#equal means, slopes, intercepts
+mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM',
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
-mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM', #equal means, slopes, intercepts
+#equal means, slopes, intercepts
+mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM',
                              invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)

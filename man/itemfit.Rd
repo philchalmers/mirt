@@ -67,7 +67,8 @@ fit <- itemfit(x)
 fit
 
 itemfit(x, empirical.plot = 1) #empirical item plot
-itemfit(raschfit, method = 'ML') #infit and outfit stats (method='ML' agrees better with eRm package)
+#method='ML' agrees better with eRm package
+itemfit(raschfit, method = 'ML') #infit and outfit stats
 
 #similar example to Kang and Chen 2007
 a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))

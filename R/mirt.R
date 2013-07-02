@@ -415,9 +415,10 @@
 #' (gpcmod <- mirt(Science, 1, 'gpcm'))
 #' coef(gpcmod)
 #' 
-#' #for the nominal model the lowest and highest categories are assumed to be the theoretically lowest
-#' #  and highest categories that related to the latetent trait(s), however a custom nominal.highlow matrix 
-#' #  can be passed to declare which item category should be treated as the 'highest' and 'lowest' instead 
+#' #for the nominal model the lowest and highest categories are assumed to be the 
+#' #  theoretically lowest and highest categories that related to the latetent trait(s), however
+#' #  a custom nominal.highlow matrix can be passed to declare which item category should be
+#' #  treated as the 'highest' and 'lowest' instead 
 #' (nomod <- mirt(Science, 1, 'nominal'))
 #' coef(nomod) #ordering of ak values suggest that the items are indeed ordinal 
 #' anova(gpcmod, nomod)

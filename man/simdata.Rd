@@ -144,7 +144,8 @@ d <- matrix(c(
 2.0,0.0,NA),ncol=3,byrow=TRUE)
 
 nominal <- matrix(NA, nrow(d), ncol(d))
-nominal[4, ] <- c(0,1.2,2) #the first 0 and last (ncat - 1) = 2 values are the recommended constraints
+#the first 0 and last (ncat - 1) = 2 values are the recommended constraints
+nominal[4, ] <- c(0,1.2,2)
 
 sigma <- diag(3)
 sigma[2,3] <- sigma[3,2] <- .25
