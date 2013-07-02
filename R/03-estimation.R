@@ -191,6 +191,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             nconstr <- nconstr + length(constrain[[i]]) - 1L
     nmissingtabdata <- sum(is.na(rowSums(PrepList[[1L]]$tabdata2)))
     df <- df - nestpars + nconstr
+    if(!is.null(customItems)){
+        for(g in 1L:Data$ngroups)
+            PrepList[[g]]$exploratory <- FALSE
+    }   
     if(PrepList[[1L]]$exploratory) df <- df + nfact*(nfact - 1)/2
     if(df < 1L) stop('Too few degrees of freedom to estimate the model')
     
@@ -409,7 +413,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!is.nan(G2) && !opts$NULL.MODEL)
         if(X2/G2 > 10) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(is.null(parprior)) parprior <- list()
-    if(!is.null(customItems)) PrepList[[1L]]$exploratory <- FALSE
     if(Data$ngroups == 1L){
         if(opts$method == 'MIXED'){            
             mod <- new('MixedClass',
