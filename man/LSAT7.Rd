@@ -7,6 +7,12 @@
   dichotomously scored items obtained from the Law School
   Admissions Test, section 7.
 }
+\examples{
+\dontrun{
+dat <- expand.table(LSAT7)
+head(dat)
+}
+}
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }

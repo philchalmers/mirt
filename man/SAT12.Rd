@@ -11,6 +11,20 @@
   5, 3, 4, 4, 1, 4, 3, 3, 4, 1, 3, 5, 1, 3, 1, 5, 4, 5],
   respectively.
 }
+\examples{
+\dontrun{
+#score the data (missing scored as 0)
+head(SAT12)
+data <- key2binary(SAT12,
+    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+
+#score the data, missing treated as NA
+SAT12missing <- SAT12
+SAT12missing[SAT12missing == '8'] <- NA
+data <- key2binary(SAT12missing,
+    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+}
+}
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }

@@ -7,6 +7,12 @@
   items obtained from the Law School Admissions Test,
   section 6.
 }
+\examples{
+\dontrun{
+dat <- expand.table(LSAT6)
+head(dat)
+}
+}
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }

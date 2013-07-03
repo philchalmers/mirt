@@ -32,7 +32,7 @@ NULL
 
 #' Description of Science data
 #'
-#' A 4 item data set borrowed from \code{\link[ltm]{ltm}} package, first example
+#' A 4-item data set borrowed from \code{\link[ltm]{ltm}} package, first example
 #' of the \code{\link[ltm]{grm}} function. See more complete documentation therein.
 #'
 #'
@@ -60,6 +60,20 @@ NULL
 #' [Computer software]. Lincolnwood, IL: Scientific Software International.
 #'
 #' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' #score the data (missing scored as 0)
+#' head(SAT12)
+#' data <- key2binary(SAT12,
+#'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' 
+#' #score the data, missing treated as NA
+#' SAT12missing <- SAT12
+#' SAT12missing[SAT12missing == '8'] <- NA
+#' data <- key2binary(SAT12missing,
+#'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' }
 NULL
 
 #' Description of LSAT7 data
@@ -76,6 +90,12 @@ NULL
 #' dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 #'
 #' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' dat <- expand.table(LSAT7)
+#' head(dat)
+#' }
 NULL
 
 #' Description of LSAT6 data
@@ -92,6 +112,12 @@ NULL
 #' \emph{Psychometrika, 47}, 175-186.
 #'
 #' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' dat <- expand.table(LSAT6)
+#' head(dat)
+#' }
 NULL
 
 #' Description of deAyala data
@@ -106,4 +132,39 @@ NULL
 #' de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
 #'
 #' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' dat <- expand.table(deAyala)
+#' head(dat)
+#' }
 NULL
+
+#' Description of Bock 1997 data
+#'
+#' A 3-item tabulated data set extracted from Table 3 in Chapter Two.
+#'
+#'
+#' @name Bock1997
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @keywords data
+#' @references
+#' Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K. 
+#' \emph{Handbook of modern item response theory}. New York: Springer.
+#' @examples
+#'
+#' \dontrun{
+#' dat <- expand.table(Bock1997)
+#' head(dat)
+#' mod <- mirt(dat, 1, 'nominal')
+#' 
+#' #reproduce table 3
+#' fs <- round(fscores(mod, verbose = FALSE)[,c('F1','SE_F1')],2)
+#' fttd <- round(fitted(mod),1)
+#' table <- data.frame(fttd, fs)
+#' table
+#'  
+#'  } 
+NULL
+
