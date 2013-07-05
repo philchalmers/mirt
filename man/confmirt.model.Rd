@@ -2,14 +2,21 @@
 \alias{confmirt.model}
 \title{Specify model loadings}
 \usage{
-  confmirt.model(string = NULL, file = "", ...)
+  confmirt.model(input = NULL, file = "", COV = NULL, ...)
 }
 \arguments{
-  \item{string}{a string input for writing out the model
-  syntax.}
+  \item{input}{input for writing out the model syntax. Can
+  either be a string declaration of class character or the
+  so-called Q-matrix or class \code{matrix} that specifies
+  the model either with integer or logical values. If the
+  Q-matrix method is chosen covariances terms can be
+  sepcified with the \code{COV} input}
 
-  \item{file}{a string specifying an external file that
+  \item{file}{a input specifying an external file that
   declares the input.}
+
+  \item{COV}{a symmetric, logical matrix used to declare
+  which covariance terms are estimated}
 
   \item{...}{additional arguments for \code{scan()}}
 }
@@ -29,7 +36,7 @@
   by enclosing the left hand term within brackets. To
   finish the declaration of a model simply enter a blank
   line with only a carriage return (i.e., the 'enter' or
-  'return' key), or instead read in a string version of the
+  'return' key), or instead read in a input version of the
   model syntax.
 
   There is an optional keyword for specifying the
@@ -60,6 +67,12 @@ s <- 'F1 = 1,2,3,4-10
       (F1*F2) = 1,2,3,4-10
       COV = F1*F2'
 model <- confmirt.model(s)
+
+
+#Q-matrix specification
+Q <- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1', 'Factor2')))
+COV <- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
+model <- confmirt.model(Q, COV=COV)
 
     }
 }

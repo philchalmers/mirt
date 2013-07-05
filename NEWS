@@ -2,6 +2,9 @@ Changes in mirt 0.8.1
 
 NEW FEATURES
 
+- confmirt.model() supports the so-called Q-matrix input format, along with a matrix input for the
+  covariance terms
+
 - updated documentation for data sets by adding relavent examples, and added Bock1997 data set
   for replicating table 3 in van der Linden, W. J. & Hambleton, R. K.'s (1997)
   Handbook of modern item response theory
