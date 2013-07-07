@@ -113,9 +113,6 @@
   \item{cl}{a cluster object from the \code{parallel}
   package (set from using \code{makeCluster(ncores)})}
 
-  \item{technical}{list specifying subtle parameters that
-  can be adjusted. These values are}
-
   \item{df.p}{logical; print the degrees of freedom and
   p-values?}
 
@@ -139,7 +136,10 @@
   plotting features. Larger values make plots look
   smoother}
 
-  \item{rot}{allows rotation of the 3D graphics \describe{
+  \item{rot}{allows rotation of the 3D graphics}
+
+  \item{technical}{a list containing lower level technical
+  parameters for estimation. May be: \describe{
   \item{NCYCLES}{max number of MH-RM cycles; default 2000}
   \item{BURNIN}{number of burn in cycles (stage 1); default
   150} \item{SEMCYCLES}{number of SEM cycles (stage 2);

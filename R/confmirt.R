@@ -93,8 +93,6 @@
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
 #' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
-#' @param technical list specifying subtle parameters that can be adjusted. These
-#' values are
 #' @param df.p logical; print the degrees of freedom and p-values?
 #' @param x an object of class \code{mirt} to be plotted or printed
 #' @param y an unused variable to be ignored
@@ -107,6 +105,7 @@
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
 #' @param rot allows rotation of the 3D graphics
+#' @param technical a list containing lower level technical parameters for estimation. May be:
 #' \describe{
 #' \item{NCYCLES}{max number of MH-RM cycles; default 2000}
 #' \item{BURNIN}{number of burn in cycles (stage 1); default 150}
