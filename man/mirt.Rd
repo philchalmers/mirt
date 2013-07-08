@@ -416,12 +416,12 @@ Theory)}
 
   NOTE: The nominal model can become numerical unstable if
   poor choices for the high and low values are chosen,
-  results in \code{ak} values greater than \code{abs(10)}
-  or more. It is recommended choose high and low anchors
-  that result in parameters falling between 0 and the
-  number of categories either by theoretical means or by
-  re-estimating the model with more reasonable values after
-  convergence.
+  resulting in \code{ak} values greater than \code{abs(10)}
+  or more. It is recommended to choose high and low anchors
+  that cause the estimated parameters to fall between 0 and
+  the number of categories - 1 either by theoretical means
+  or by re-estimating the model with better values
+  following convergence.
 
   } \item{rsm}{ A more constrained version of the partial
   credit model where the spacing is equal accross item
