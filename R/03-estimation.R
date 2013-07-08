@@ -204,11 +204,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(opts$method == 'EM' && nLambdas > nfact)
             stop('Polynominals and product terms not supported for EM method')
         if(is.null(opts$quadpts))
-            opts$quadpts <- switch(as.character(nfact), '1'=40, '2'=20, '3'=10, '4'=7, '5'=5, 3)
+            opts$quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+        if(opts$quadpts %% 2 == 0) stop('Must use an odd number for quadpts')
+        if(opts$quadpts < 3) stop('Must use more than 2 quadpts')
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                         length.out = opts$quadpts))
         temp <- matrix(0,nrow=nitems,ncol=(nfact-1L))
-        sitems <- matrix(0, nrow=sum(PrepList[[1L]]$K), ncol=(nfact-1))
+        sitems <- matrix(0, nrow=sum(PrepList[[1L]]$K), ncol=(nfact-1L))
         if(opts$BFACTOR){
             for(i in 1:nitems) temp[i, oldmodel[i]] <- 1
             ind <- 1L

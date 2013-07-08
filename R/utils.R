@@ -622,7 +622,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$calcNull = calcNull
     opts$cl = cl    
     opts$BFACTOR = BFACTOR
-    if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 20
+    if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21
     opts$technical <- technical
     opts$use <- use
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)

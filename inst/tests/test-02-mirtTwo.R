@@ -26,8 +26,8 @@ test_that('poly', {
     expect_is(modp2, 'ExploratoryClass')
     expect_equal(modp2@df, 70)
     cfs <- as.numeric(do.call(c, coef(modp2, verbose = FALSE)))
-    expect_equal(cfs, c(1.312, -0.054, 5.196, 2.862, -1.603, -0.13, -2.261, 3.857, 1.203, -3.031, 
-                        0.895, -1.216, 4.599, 1.928, -1.714, 1.759, 0.074, 3.983, 1.194, -2.044, 0, 0, 1, -0.496, 1),
+    expect_equal(cfs, c(1.313, -0.052, 5.2, 2.863, -1.603, -0.129, -2.269, 3.867, 1.206, -3.038, 
+                        0.897, -1.211, 4.597, 1.927, -1.712, 1.758, 0.074, 3.984, 1.194, -2.044, 0, 0, 1, -0.494, 1),
                  tollerance = 1e-2)    
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'ConfirmatoryClass')
@@ -57,10 +57,9 @@ test_that('poly', {
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(as.numeric(fm2[1:6,c('F1','F2')]) - 
-                                       c(-2.55857240687212, -1.85518356049085, -0.636538731084228, 
-                                         -1.13786672863707, -2.40687090526642, -0.71805027363952,
-                                         2.35682419272599, 0.788078380941124, -0.135156932908012, 
-                                         -0.361237323344986, 2.29829004369756, 1.52476387296102), -1e-4, 1e-4))
+                                       c(-2.5582887, -1.8554674, -0.6362017, -1.1384554, -2.4065656,
+                                         -0.7180512,  2.3547802,  0.7824582, -0.1423948, -0.3684551,
+                                         2.2966297, 1.5275234), -1e-4, 1e-4))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
     fm4 <- fscores(modp4, verbose = FALSE)

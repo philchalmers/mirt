@@ -162,10 +162,11 @@ Theory)}
   \item{cl}{a cluster object from the \code{parallel}
   package (set from using \code{makeCluster(ncores)})}
 
-  \item{quadpts}{number of quadrature points per dimension.
-  By default the number of quadrature uses the following
-  scheme: \code{switch(as.character(nfact), '1'=40, '2'=20,
-  '3'=10, '4'=7, '5'=5, 3)}}
+  \item{quadpts}{number of quadrature points per dimension
+  (must be an odd number). By default the number of
+  quadrature uses the following scheme:
+  \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11,
+  '4'=7, '5'=5, 3)}}
 
   \item{printvalue}{a numeric value to be specified when
   using the \code{res='exp'} option. Only prints patterns
@@ -412,6 +413,15 @@ Theory)}
   second category is less related to to the trait than the
   first, and therefore the second category should be
   understood as the 'lowest score'.
+
+  NOTE: The nominal model can become numerical unstable if
+  poor choices for the high and low values are chosen,
+  results in \code{ak} values greater than \code{abs(10)}
+  or more. It is recommended choose high and low anchors
+  that result in parameters falling between 0 and the
+  number of categories either by theoretical means or by
+  re-estimating the model with more reasonable values after
+  convergence.
 
   } \item{rsm}{ A more constrained version of the partial
   credit model where the spacing is equal accross item
