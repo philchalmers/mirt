@@ -9,6 +9,10 @@ NEW FEATURES
   for replicating table 3 in van der Linden, W. J. & Hambleton, R. K.'s (1997)
   Handbook of modern item response theory
 
+BUG FIXES
+
+- WLE estimation fixed and now estimates extreme response patterns
+
 Changes in mirt 0.8.0
 
 NEW FEATURES

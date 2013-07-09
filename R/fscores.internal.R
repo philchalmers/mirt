@@ -104,16 +104,8 @@ setMethod(
 				SEscores[i, ] <- SEest
 			}
 		}
-        if(method == 'WLE'){
-            tabdata2 <- object@tabdata[,-ncol(object@tabdata)]
-            tmp2 <- tabdata[,itemloc[-1L] - 1L, drop = FALSE]
-            tmp2[is.na(tabdata2)] <- 1
-            scores[rowSums(tmp2) == J,] <- Inf
-            tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
-            tmp2[is.na(tabdata2)] <- 1
-            scores[rowSums(tmp2) == J,] <- -Inf
-            SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
-            SEscores[!is.na(SEscores)] <- NA
+        if(method == 'WLE'){            
+            SEscores[!is.na(SEscores)] <- NA            
             for (i in 1L:nrow(scores)){
                 if(any(scores[i, ] %in% c(-Inf, Inf))) next
                 Theta <- scores[i, ]
@@ -264,7 +256,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
     dW <- 1/(2*I^2) * dW
     for(i in 1L:nfact)
         dL[i] <- sum(patdata * dP[[i]] / itemtrace)
-    grad <- dL - dW*I
+    grad <- dL + dW*I
     MIN <- sum(grad^2)
     MIN
 }
