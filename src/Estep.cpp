@@ -24,46 +24,30 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol());    
     const int nquad = prior.length();
     const int nitems = data.ncol();
-    const int npat = r.length();      
-    double expd = 0.0;
-    int i = 0, k = 0, item = 0;    
+    const int npat = r.length();          
     NumericMatrix r1(nquad, nitems);    
-    NumericVector expected(npat), posterior(nquad);
+    NumericVector expected(npat);
     List ret;
-    for (item = 0; item < nitems; item++)
-        for (k = 0; k < nquad; k++)
-            log_itemtrace(k,item) = log(itemtrace(k,item));
-    for (k = 0; k < nquad; k++)
-        log_prior(k) = log(prior(k));
+    for (int item = 0; item < nitems; item++)        
+        log_itemtrace(_,item) = log(itemtrace(_,item));
+    log_prior = log(prior);
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; pat++){		
-  	    for (k = 0; k < nquad; k++)
-		    posterior(k) = 0.0;
-			
-		for (item = 0; item < nitems; item++){
+  	    NumericVector posterior(nquad);
+		for (int item = 0; item < nitems; item++)
+            posterior += data(pat,item) * log_itemtrace(_,item);
+        posterior = exp(log_prior + posterior);
+	    double expd = sum(posterior);
+	    expected(pat) = expd;
+	    posterior = r(pat) * posterior / expd;	
+        for (int item = 0; item < nitems; item++){              
             if (data(pat,item))
-                for (k = 0; k < nquad; k++)
-			        posterior(k) += log_itemtrace(k,item);
-		}    
-        for (i = 0; i < nquad; i++)
-            posterior(i) = exp(log_prior(i) + posterior(i));
-	    expd = 0.0;
-	    for (i = 0; i < nquad; i++)
-	        expd += posterior(i);	
-	    expected(pat) = expd;		
-		
-	    for (i = 0; i < nquad; i++)
-	        posterior(i) = r(pat) * posterior(i) / expd;	
-        for (item = 0; item < nitems; item++){              
-            if (data(pat,item))
-	            for (k = 0; k < nquad; k++)
-	                r1(k,item) += posterior(k);
-		    			
+	            for (int k = 0; k < nquad; k++)
+	                r1(k,item) += posterior(k);		    			
 	    }
 	} //end main  		
- 
-    //return R list of length 3 with list("r1","r0","expected") 
+     
     ret["r1"] = r1;
     ret["expected"] = expected;
     return(ret);
@@ -98,11 +82,9 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     const int nquad = npquad * npquad;  
     const int npat = r.length();      
     int i=0, j=0, k=0, item=0, fact=0;
-    for (item = 0; item < nitems; item++)
-        for (k = 0; k < nquad; k++)
-            log_itemtrace(k,item) = log(itemtrace(k,item));
-    for (k = 0; k < npquad; k++)
-        log_prior(k) = log(prior(k));
+    for (int item = 0; item < nitems; item++)        
+        log_itemtrace(_,item) = log(itemtrace(_,item));
+    log_prior = log(prior);
         
 	//declare dependent arrays 
 	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
@@ -113,12 +95,11 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 	for (int pat = 0; pat < npat; pat++){		
 		for (fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
-				likelihoods(k,fact) = 0;				
+    			likelihoods(k,fact) = 0.0;
 			for (item = 0; item < nitems; item++){
-				if (data(pat,item))	
-					if(sitems(item,fact))
-					    for (k = 0; k < nquad; k++)
-					  	    likelihoods(k,fact) += log_itemtrace(k,item);					
+				if (data(pat,item) && sitems(item,fact))										    
+				    for (k = 0; k < nquad; k++)
+    				    likelihoods(k,fact) += log_itemtrace(k,item);					
 			}
 		}         					
 		for (fact = 0; fact < sfact; fact++){
@@ -130,12 +111,10 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 			  	    k++;
 			    }
 			}
-			for (j = 0; j < npquad; j++)				
-			    for (i = 0; i < npquad; i++)
-			  	    L(i,j) = exp(L(i,j) + log_prior(j));
-			for (j = 0; j < npquad; j++)				
-		        for (i = 0; i < npquad; i++)
-			        tempsum(j) += L(j,i);
+			for (i = 0; i < npquad; i++)
+			    L(i,_) = exp(L(i,_) + log_prior);
+			for (i = 0; i < npquad; i++)
+			        tempsum += L(_,i);
 			for (i = 0; i < npquad; i++)
 			    Plk(i,fact) = tempsum(i);    			
 		}		
@@ -164,8 +143,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 			
 		}	
 	}	//end main 
-	
-    //return R list of length 3 with list("r1","r0","expected") 
+	    
     List ret;
     ret["r1"] = r1;
     ret["expected"] = expected;
