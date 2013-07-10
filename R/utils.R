@@ -166,6 +166,7 @@ cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.o
 	fulldata <- as.matrix(fulldata)
 	nitems <- ncol(fulldata)
 	cormat <- cor(fulldata, use=use)
+    cormat[is.na(cormat)] <- 0
 	cormat <- abs(cormat)^(1/1.15) * sign(cormat)
 	if(smooth){
 		eig <- eigen(cormat)

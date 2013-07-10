@@ -13,6 +13,9 @@ BUG FIXES
 
 - WLE estimation fixed and now estimates extreme response patterns
 
+- exploratory starting values no longer crash in datasets with a huge number of NA's, which caused 
+  standard devations to be zero
+
 Changes in mirt 0.8.0
 
 NEW FEATURES
