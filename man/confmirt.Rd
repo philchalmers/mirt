@@ -12,8 +12,7 @@
     1, pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
     verbose = TRUE, draws = 5000, rotate = 'oblimin',
-    Target = NULL, key = NULL, cl = NULL, technical =
-    list(), ...)
+    Target = NULL, key = NULL, technical = list(), ...)
 
   \S4method{summary}{ConfirmatoryClass}(object, suppress =
     0, digits = 3, verbose = TRUE, ...)
@@ -109,9 +108,6 @@
   loadings should be suppressed. Typical values are around
   .3 in most statistical software. Default is 0 for no
   suppression}
-
-  \item{cl}{a cluster object from the \code{parallel}
-  package (set from using \code{makeCluster(ncores)})}
 
   \item{df.p}{logical; print the degrees of freedom and
   p-values?}
@@ -268,8 +264,8 @@ model.1 <- confmirt.model()
 
 #compute model, and use parallel computation of the log-likelihood
 library(parallel)
-cl <- makeCluster(detectCores())
-mod1 <- confmirt(dataset, model.1, cl=cl)
+mirtCluster(detectCores())
+mod1 <- confmirt(dataset, model.1)
 coef(mod1)
 summary(mod1)
 residuals(mod1)
@@ -354,7 +350,7 @@ itemplot(mod.combo, 2, type = 'infocontour')
   \code{\link{boot.mirt}}, \code{\link{imputeMissing}},
   \code{\link{itemfit}}, \code{\link{mod2values}},
   \code{\link{read.mirt}}, \code{\link{simdata}},
-  \code{\link{createItem}}
+  \code{\link{createItem}}, \code{\link{mirtCluster}}
 }
 \keyword{models}
 

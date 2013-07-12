@@ -1,24 +1,25 @@
 #' Monte Carlo Log-Likelihood Calculation
 #'
 #' Calculates a new object that contain the Monte Carlo estimated observed
-#' log-likelihood values for mirt objects estimated with the MH-RM algorithm
+#' log-likelihood values for mirt objects estimated with the MH-RM algorithm. 
+#' Can be estimated in parallel automatically by defining a parallel object with
+#' \code{\link{mirtCluster}}.
 #'
 #' @name calcLogLik
 #' @usage
 #' calcLogLik(object, ...)
 #'
 #' \S4method{calcLogLik}{ExploratoryClass}(object,
-#'    draws = 5000, G2 = TRUE, cl = NULL)
+#'    draws = 5000, G2 = TRUE)
 #' \S4method{calcLogLik}{ConfirmatoryClass}(object,
-#'    draws = 5000, G2 = TRUE, cl = NULL)
+#'    draws = 5000, G2 = TRUE)
 #' \S4method{calcLogLik}{MixedClass}(object,
-#'    draws = 5000, cl = NULL)
+#'    draws = 5000)
 #' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
 #' calcLogLik,ConfirmatoryClass-method calcLogLik,MixedClass-method
 #' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
-#' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
 #' @param ... parameters that are passed
 #' @section Methods:
 #' \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")},
@@ -41,17 +42,16 @@
 #' mod1withLogLik <- calcLogLik(mod1, draws=5000)
 #'
 #' #with parallel using detected number of cores
-#' #note: can also be directly passed as an argument to confmirt, multipleGroup, or mixemirt
 #' library(parallel)
-#' cl <- makeCluster(detectCores())
-#' mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)
+#' mirtCluster(detectCores())
+#' mod1withLogLik <- calcLogLik(mod1, draws=5000)
 #'
 #'   }
 #'
 setMethod(
 	f = "calcLogLik",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, draws = 5000, G2 = TRUE, cl = NULL)
+	definition = function(object, draws = 5000, G2 = TRUE)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot){
             if(nfact > 1L) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
@@ -83,9 +83,9 @@ setMethod(
         if(length(object@random) == 0L){
             ot <- matrix(0, 1, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
-        if(!is.null(cl)){
-            LL <- parallel::parApply(cl=cl, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, N=N, grp=grp, 
-                                     prodlist=prodlist, fulldata=fulldata, object=object, J=J, 
+        if(!is.null(globalenv()$MIRTCLUSTER)){
+            LL <- parallel::parApply(cl=globalenv()$MIRTCLUSTER, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, 
+                                     N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J, 
                                      random=object@random, ot=ot)
         } else for(draw in 1L:draws)
             LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist,
@@ -160,10 +160,10 @@ setMethod(
 setMethod(
     f = "calcLogLik",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, draws = 2000, G2 = TRUE, cl = NULL)
+    definition = function(object, draws = 2000, G2 = TRUE)
     {
         class(object) <- 'ExploratoryClass'
-        ret <- calcLogLik(object, draws=draws, G2=G2, cl=cl)
+        ret <- calcLogLik(object, draws=draws, G2=G2)
         class(ret) <- 'ConfirmatoryClass'
         return(ret)
     }
@@ -172,10 +172,10 @@ setMethod(
 setMethod(
     f = "calcLogLik",
     signature = signature(object = 'MixedClass'),
-    definition = function(object, draws = 5000, cl = NULL)
+    definition = function(object, draws = 5000)
     {
         class(object) <- 'ExploratoryClass'
-        ret <- calcLogLik(object, draws=draws, G2=FALSE, cl=cl)
+        ret <- calcLogLik(object, draws=draws, G2=FALSE)
         class(ret) <- 'MixedClass'
         return(ret)
         

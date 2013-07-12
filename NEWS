@@ -1,6 +1,9 @@
-Changes in mirt 0.8.1
+Changes in mirt 0.8.2
 
 NEW FEATURES
+
+- mirtCluster() function added to make utilizing parallel cores more convienient. Globally removed
+  the cl argument for multicore objects
 
 - confmirt.model() supports the so-called Q-matrix input format, along with a matrix input for the
   covariance terms

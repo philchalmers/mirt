@@ -269,7 +269,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                     DM <- estmat + 0
                     diag(estmat) <- TRUE
-                    if(!is.null(list(...)$cl)){
+                    if(!is.null(globalenv()$MIRTCLUSTER)){
                         DM <- t(parallel::parApply(cl=list(...)$cl, estmat, MARGIN=1, FUN=SEM.SE,
                                 pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
                                 list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
@@ -363,7 +363,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         logLik <- G2 <- X2 <- SElogLik <- 0
         Pl <- list()
         for(g in 1L:Data$ngroups){
-            cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return', cl=opts$cl)
+            cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return')
             logLik <- logLik + cmods[[g]]@logLik
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
             G2 <- G2 + cmods[[g]]@G2

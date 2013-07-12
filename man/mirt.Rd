@@ -679,7 +679,7 @@ lines(Theta, testinfo(mod0, Theta), col = 'red')
   \code{\link{boot.mirt}}, \code{\link{imputeMissing}},
   \code{\link{itemfit}}, \code{\link{mod2values}},
   \code{\link{read.mirt}}, \code{\link{simdata}},
-  \code{\link{createItem}}
+  \code{\link{createItem}}, \code{\link{mirtCluster}}
 }
 \keyword{models}
 

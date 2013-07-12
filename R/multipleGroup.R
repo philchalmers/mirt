@@ -50,7 +50,6 @@
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
-#' @param cl a cluster object from the \code{parallel} package
 #' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM
 #' (\code{'MHRM'}) algorithm
 #' @param type type of plot to view; can be \code{'info'} to show the test
@@ -96,13 +95,13 @@
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
+#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #' @keywords models
 #' @usage
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
 #' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
 #' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-#' key = NULL, cl = NULL, technical = list(), verbose = TRUE, ...)
+#' key = NULL, technical = list(), verbose = TRUE, ...)
 #'
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -282,7 +281,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
                           draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                          key = NULL, cl = NULL, technical = list(), verbose = TRUE, ...)
+                          key = NULL, technical = list(), verbose = TRUE, ...)
 {
     Call <- match.call()
     invariance.check <- invariance %in% c('free_means', 'free_varcov')
@@ -293,7 +292,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,
-                      SE.type = SE.type, cl=cl, key=key, ...)
+                      SE.type = SE.type, key=key, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

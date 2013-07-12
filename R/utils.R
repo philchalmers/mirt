@@ -601,7 +601,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN,
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE,
                      SEtol = .0001, grsm.block = NULL, D = 1,
-                     rsm.block = NULL, calcNull = TRUE, cl = NULL, BFACTOR = FALSE,
+                     rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'MHRM', large = NULL, ...)
 {
@@ -620,8 +620,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$grsm.block = grsm.block
     opts$D = D
     opts$rsm.block = rsm.block
-    opts$calcNull = calcNull
-    opts$cl = cl    
+    opts$calcNull = calcNull  
     opts$BFACTOR = BFACTOR
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21
     opts$technical <- technical
@@ -651,8 +650,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
         if(is.logical(large))
             if(large) opts$returnPrepList <- TRUE
         if(is.list(large)) opts$PrepList <- large
-    }
-    if(!is.null(cl)) require(parallel)
+    }    
     return(opts)
 }
 

@@ -13,8 +13,7 @@
     = '', pars = NULL, method = 'EM', constrain = NULL,
     parprior = NULL, calcNull = TRUE, draws = 5000, quadpts
     = NULL, grsm.block = NULL, rsm.block = NULL, key =
-    NULL, cl = NULL, technical = list(), verbose = TRUE,
-    ...)
+    NULL, technical = list(), verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -98,9 +97,6 @@
 
   \item{calcNull}{logical; calculate the Null model for fit
   statics (e.g., TLI)?}
-
-  \item{cl}{a cluster object from the \code{parallel}
-  package}
 
   \item{method}{a character indicating whether to use the
   EM (\code{'EM'}) or the MH-RM (\code{'MHRM'}) algorithm}
@@ -364,7 +360,7 @@ itemplot(mod_configural2, 10)
   \code{\link{boot.mirt}}, \code{\link{imputeMissing}},
   \code{\link{itemfit}}, \code{\link{mod2values}},
   \code{\link{read.mirt}}, \code{\link{simdata}},
-  \code{\link{createItem}}
+  \code{\link{createItem}}, \code{\link{mirtCluster}}
 }
 \keyword{models}
 

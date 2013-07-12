@@ -14,9 +14,6 @@
 
   \item{G2}{logical; estimate the G2 model fit statistic?}
 
-  \item{cl}{a cluster object from the \code{parallel}
-  package (set from using \code{makeCluster(ncores)})}
-
   \item{...}{parameters that are passed}
 }
 \value{
@@ -27,7 +24,9 @@
 \description{
   Calculates a new object that contain the Monte Carlo
   estimated observed log-likelihood values for mirt objects
-  estimated with the MH-RM algorithm
+  estimated with the MH-RM algorithm. Can be estimated in
+  parallel automatically by defining a parallel object with
+  \code{\link{mirtCluster}}.
 }
 \section{Methods}{
   \describe{ \item{calcLogLik}{\code{signature(object =
@@ -42,10 +41,9 @@
 mod1withLogLik <- calcLogLik(mod1, draws=5000)
 
 #with parallel using detected number of cores
-#note: can also be directly passed as an argument to confmirt, multipleGroup, or mixemirt
 library(parallel)
-cl <- makeCluster(detectCores())
-mod1withLogLik <- calcLogLik(mod1, draws=5000, cl=cl)
+mirtCluster(detectCores())
+mod1withLogLik <- calcLogLik(mod1, draws=5000)
 
   }
 }

@@ -92,7 +92,6 @@
 #' @param suppress a numeric value indicating which factor
 #' loadings should be suppressed. Typical values are around .3 in most
 #' statistical software. Default is 0 for no suppression
-#' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
 #' @param df.p logical; print the degrees of freedom and p-values?
 #' @param x an object of class \code{mirt} to be plotted or printed
 #' @param y an unused variable to be ignored
@@ -124,7 +123,7 @@
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
+#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #' @references
 #'
 #' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a
@@ -147,7 +146,7 @@
 #' @usage
 #' confmirt(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL, verbose = TRUE,
-#' draws = 5000, rotate = 'oblimin', Target = NULL, key = NULL, cl = NULL, technical = list(),  ...)
+#' draws = 5000, rotate = 'oblimin', Target = NULL, key = NULL, technical = list(),  ...)
 #'
 #' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #'
@@ -211,8 +210,8 @@
 #'
 #' #compute model, and use parallel computation of the log-likelihood
 #' library(parallel)
-#' cl <- makeCluster(detectCores())
-#' mod1 <- confmirt(dataset, model.1, cl=cl)
+#' mirtCluster(detectCores())
+#' mod1 <- confmirt(dataset, model.1)
 #' coef(mod1)
 #' summary(mod1)
 #' residuals(mod1)
@@ -264,13 +263,13 @@
 confmirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, pars = NULL,
                      constrain = NULL, parprior = NULL, calcNull = TRUE, grsm.block = NULL, rsm.block = NULL,
                      verbose = TRUE, draws = 5000, rotate = 'oblimin', Target = NULL,
-                     key = NULL, cl = NULL, technical = list(),  ...)
+                     key = NULL, technical = list(),  ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group = rep('all', nrow(data)), itemtype=itemtype,
                       guess=guess, upper=upper, grsm.block=grsm.block, calcNull=calcNull,
                       pars=pars, constrain=constrain, parprior=parprior, verbose=verbose, rotate=rotate,
-                      rsm.block=rsm.block, draws=draws, technical=technical, cl=cl, key=key, ...)
+                      rsm.block=rsm.block, draws=draws, technical=technical, key=key, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)

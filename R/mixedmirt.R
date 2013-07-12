@@ -61,7 +61,7 @@
 #' \code{\link{confmirt}} for more detail
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{randef}}, \code{\link{calcLogLik}}
+#' @seealso \code{\link{randef}}, \code{\link{calcLogLik}}, \code{\link{mirtCluster}}
 #' @export mixedmirt
 #' @examples
 #'
@@ -77,9 +77,9 @@
 #' group <- factor(rep(c('G1','G2','G3'), each = N/3))
 #' data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
 #' covdata <- data.frame(group, pseudoIQ)
-#' #use cl for parallel computing
+#' #use parallel computing
 #' library(parallel)
-#' cl <- makeCluster(detectCores())
+#' mirtCluster(detectCores())
 #'
 #' #specify IRT model
 #' model <- confmirt.model('Theta = 1-10')
@@ -88,7 +88,7 @@
 #' mod0 <- mirt(data, model, itemtype = 'Rasch')
 #'
 #' #group as a fixed effect predictor (aka, uniform dif) 
-#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, cl=cl)
+#' mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items)
 #' anova(mod0, mod1)
 #' summary(mod1)
 #' coef(mod1)
@@ -102,12 +102,12 @@
 #' anova(lmod0, lmod1)
 #'
 #' #model using 2PL items instead of Rasch
-#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL', cl=cl)
+#' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL')
 #' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 #'
 #' #continuous predictor and interaction model with group 
-#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ, cl=cl)
-#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group * pseudoIQ, cl=cl)
+#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ)
+#' mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group * pseudoIQ)
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #' anova(mod2, mod3)
@@ -134,7 +134,7 @@
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
 #' #notice that the 'fixed = ~ ... + items' argument is ommited
-#' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign, cl=cl)
+#' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign)
 #' summary(LLTM)
 #' coef(LLTM)
 #' wald(LLTM)
@@ -143,7 +143,7 @@
 #'
 #' #compare to items with estimated slopes (2PL)
 #' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL', 
-#'                    itemdesign = itemdesign, cl=cl)
+#'                    itemdesign = itemdesign)
 #' anova(twoPL, LLTM) #much better fit
 #' summary(twoPL)
 #' coef(twoPL)
@@ -158,7 +158,7 @@
 #' 
 #' ##LLTM with item error term 
 #' LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,
-#'     itemdesign = itemdesign, cl=cl)
+#'     itemdesign = itemdesign)
 #' summary(LLTMwithError) 
 #' #large item level variance after itemorder is regressed; not a great predictor of item difficulty
 #' coef(LLTMwithError) 
@@ -169,17 +169,17 @@
 #' covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
 #' 
 #' #random groups
-#' rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group, cl=cl)
+#' rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)
 #' summary(rmod1)
 #' coef(rmod1)
 #' 
 #' #random groups and random items 
-#' rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items), cl=cl)
+#' rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
 #' summary(rmod2)
 #' eff <- randef(rmod2) #estimate random effects
 #' 
 #' #random slopes with fixed intercepts (suppressed correlation)
-#' rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group, cl=cl)
+#' rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
 #' summary(rmod3)
 #' (eff <- randef(rmod3)) 
 #' 
