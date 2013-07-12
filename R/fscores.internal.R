@@ -52,6 +52,11 @@ setMethod(
 		fulldata <- object@data
 		tabdata <- object@tabdatalong
 		tabdata <- tabdata[ ,-ncol(tabdata), drop = FALSE]
+        USETABDATA <- TRUE
+        if(full.scores && nrow(tabdata) > nrow(fulldata)/5){
+            USETABDATA <- FALSE
+            tabdata <- object@fulldata
+        }
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
 		W <- W/sum(W)
@@ -121,12 +126,16 @@ setMethod(
         }
 		colnames(scores) <- paste('F', 1:ncol(scores), sep='')
 		if (full.scores){
-            tabdata2 <- object@tabdatalong
-            tabdata2 <- tabdata2[,-ncol(tabdata2)]
-            stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
-            sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
-            scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
-			colnames(scoremat) <- colnames(scores)
+            if(USETABDATA){
+                tabdata2 <- object@tabdatalong
+                tabdata2 <- tabdata2[,-ncol(tabdata2)]
+                stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
+                sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
+                scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
+    			colnames(scoremat) <- colnames(scores)
+            } else {
+                scoremat <- scores
+            }
             if(scores.only) return(scoremat)
 			else return(cbind(fulldata,scoremat))
 		} else {
