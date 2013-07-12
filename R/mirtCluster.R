@@ -13,8 +13,13 @@
 #' @examples
 #'
 #' \dontrun{
+#' 
 #' #make 4 cores available for parallel computing
 #' mirtCluster(4)
+#' 
+#' #use all available cores
+#' library(parallel)
+#' mirtCluster(detectCores())
 #' 
 #' }
 mirtCluster <- function(ncores){

@@ -67,6 +67,9 @@
   the scores only. By default the latent means are set to
   be 0 for each factor, and the covariance matrix is set to
   the identity matrix, though these can be overwritten.
+  Iterative estimation methods can be estimated in parallel
+  to decrease estimation times if a
+  \code{\link{mirtCluster}} object is available.
 }
 \examples{
 \dontrun{
@@ -84,6 +87,12 @@ fscores(mod, method='MAP', response.vector = c(1,2,3,4))
 #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000))
 fscores(mod, method='ML')
+
+#WLE estimation, run in parallel using available cores
+library(parallel)
+mirtCluster(detectCores())
+fscores(mod, method='WLE')
+
   }
 }
 \author{

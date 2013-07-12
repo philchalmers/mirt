@@ -5,6 +5,36 @@ setMethod(
                           quadpts = NULL, response.vector = NULL, degrees = NULL,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
+	    #local functions for apply
+	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
+	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE))
+	        if(is(estimate, 'try-error')) 
+	            return(rep(NA, ncol(scores)*2))	        
+	        SEest <- try(sqrt(diag(solve(estimate$hessian))))
+	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+	        return(c(estimate$estimate, SEest))
+	    }
+	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
+	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
+                return(c(scores[ID, ], rep(NA, ncol(scores))))	        
+	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=TRUE))
+	        if(is(estimate, 'try-error')) 
+	            return(rep(NA, ncol(scores)*2))
+	        SEest <- try(sqrt(diag(solve(estimate$hessian))))
+	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+	        return(c(estimate$estimate, SEest))
+	    }
+	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, degrees){            
+	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees,
+	                            hessian = TRUE))
+	        if(is(estimate, 'try-error')) 
+	            return(rep(NA, ncol(scores)*2))
+	        return(c(estimate$estimate, rep(NA, ncol(scores))))
+	    }
+        
         if(!is.null(response.vector)){
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
             v <- response.vector
@@ -69,19 +99,16 @@ setMethod(
 			SEscores[i, ] <- SE
 		}
 		if(method == "MAP"){
-			for (i in 1L:nrow(scores)){
-				tmp <- scores[i, ]
-                estimate <- try(nlm(MAP.mirt,tmp,pars=pars, patdata=tabdata[i, ],
-                                itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE))
-                if(is(estimate, 'try-error')) {
-                    scores[i, ] <- SEscores[i, ] <- NA
-                    next
-                }
-				scores[i, ] <- estimate$estimate
-				SEest <- try(sqrt(diag(solve(estimate$hessian))))
-				if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
-				SEscores[i, ] <- SEest
-			}
+            if(!is.null(globalenv()$MIRTCLUSTER)){
+                tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, MAP, 
+                                     scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
+                                     gp=gp, prodlist=prodlist))
+            } else {
+                tmp <- t(apply(matrix(1:nrow(scores)), 1, MAP, scores=scores, pars=pars, 
+                             tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
+            }            
+            scores <- tmp[ ,1:nfact, drop = FALSE]
+            SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]			
 		}
 		if(method == "ML"){
             tabdata2 <- object@tabdata[,-ncol(object@tabdata)]
@@ -94,35 +121,29 @@ setMethod(
             scores[rowSums(tmp2) == J,] <- -Inf
             SEscores[rowSums(tmp2) == J,] <- NA
 			SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
-			for (i in 1L:nrow(scores)){
-				if(any(scores[i, ] %in% c(-Inf, Inf))) next
-				Theta <- scores[i, ]
-				estimate <- try(nlm(MAP.mirt,Theta,pars=pars,patdata=tabdata[i, ],
-				    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian = TRUE))
-				if(is(estimate, 'try-error')) {
-				    scores[i, ] <- SEscores[i, ] <- NA
-				    next
-				}
-				scores[i, ] <- estimate$estimate
-                SEest <- try(sqrt(diag(solve(estimate$hessian))))
-                if(is(SEest, 'try-error')) SEest <- rep(NA, nfact)
-				SEscores[i, ] <- SEest
-			}
+            if(!is.null(globalenv()$MIRTCLUSTER)){
+                tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, ML, 
+                                            scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
+                                            gp=gp, prodlist=prodlist))
+            } else {
+                tmp <- t(apply(matrix(1:nrow(scores)), 1, ML, scores=scores, pars=pars, 
+                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
+            }            
+            scores <- tmp[ ,1:nfact, drop = FALSE]
+            SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]			
 		}
-        if(method == 'WLE'){            
-            SEscores[!is.na(SEscores)] <- NA            
-            for (i in 1L:nrow(scores)){
-                if(any(scores[i, ] %in% c(-Inf, Inf))) next
-                Theta <- scores[i, ]
-                estimate <- try(nlm(gradnorm.WLE,Theta,pars=pars,patdata=tabdata[i, ],
-                                itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees,
-                                hessian = TRUE))
-                if(is(estimate, 'try-error')) {
-                    scores[i, ] <- NA
-                    next
-                }
-                scores[i, ] <- estimate$estimate
-            }
+        if(method == 'WLE'){                        
+            if(!is.null(globalenv()$MIRTCLUSTER)){
+                tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, WLE, 
+                                            scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
+                                            gp=gp, prodlist=prodlist, degrees=degrees))
+            } else {
+                tmp <- t(apply(matrix(1:nrow(scores)), 1, WLE, scores=scores, pars=pars, 
+                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
+                               degrees=degrees))
+            }            
+            scores <- tmp[ ,1:nfact, drop = FALSE]   
+            SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
         }
 		colnames(scores) <- paste('F', 1:ncol(scores), sep='')
 		if (full.scores){

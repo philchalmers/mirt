@@ -2,13 +2,16 @@ Changes in mirt 0.8.2
 
 NEW FEATURES
 
-- mirtCluster() function added to make utilizing parallel cores more convienient. Globally removed
-  the cl argument for multicore objects
+- iterative computations in fscores() can now be run in parallel automatically following a 
+  mirtCluster() definition
+
+- mirtCluster() function added to make utilizing parallel cores more convenient. Globally removed
+  the cl argument for multi-core objects
 
 - confmirt.model() supports the so-called Q-matrix input format, along with a matrix input for the
   covariance terms
 
-- updated documentation for data sets by adding relavent examples, and added Bock1997 data set
+- updated documentation for data sets by adding relevant examples, and added Bock1997 data set
   for replicating table 3 in van der Linden, W. J. & Hambleton, R. K.'s (1997)
   Handbook of modern item response theory
 
@@ -17,7 +20,7 @@ BUG FIXES
 - WLE estimation fixed and now estimates extreme response patterns
 
 - exploratory starting values no longer crash in datasets with a huge number of NA's, which caused 
-  standard devations to be zero
+  standard deviations to be zero
 
 Changes in mirt 0.8.0
 

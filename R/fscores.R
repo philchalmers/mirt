@@ -5,7 +5,8 @@
 #' prior distribution. Will return either a table with the computed scores and standard errors, 
 #' the original data matrix with scores appended to the rightmost column, or the scores only. By
 #' default the latent means are set to be 0 for each factor, and the covariance matrix is set to the 
-#' identity matrix, though these can be overwritten.
+#' identity matrix, though these can be overwritten. Iterative estimation methods can be estimated 
+#' in parallel to decrease estimation times if a \code{\link{mirtCluster}} object is available.
 #'
 #'
 #' @aliases fscores
@@ -63,8 +64,13 @@
 #' #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 #' fscores(mod, method='MAP', cov = matrix(1000))
 #' fscores(mod, method='ML')
+#' 
+#' #WLE estimation, run in parallel using available cores
+#' library(parallel)
+#' mirtCluster(detectCores())
+#' fscores(mod, method='WLE')
+#' 
 #'   }
-#'
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.vector = NULL, degrees = NULL,
                     returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
