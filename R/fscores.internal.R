@@ -34,6 +34,12 @@ setMethod(
 	            return(rep(NA, ncol(scores)*2))
 	        return(c(estimate$estimate, rep(NA, ncol(scores))))
 	    }
+	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W){
+	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
+	        thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
+	        SE <- sqrt(colSums(t((t(ThetaShort) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))
+	        return(c(thetas, SE))
+	    }
         
         if(!is.null(response.vector)){
             if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
@@ -91,13 +97,17 @@ setMethod(
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
 		W <- W/sum(W)
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
-		for (i in 1L:nrow(tabdata)){
-			L <- rowSums(log(itemtrace)[ ,as.logical(tabdata[i,]), drop = FALSE])
-			thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
-			SE <- sqrt(colSums(t((t(ThetaShort) - thetas))^2 * exp(L) * W / sum(exp(L) * W)))
-			scores[i, ] <- thetas
-			SEscores[i, ] <- SE
-		}
+	    log_itemtrace <- log(itemtrace)
+	    if(!is.null(globalenv()$MIRTCLUSTER)){
+	        tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, EAP, 
+	                                    log_itemtrace=log_itemtrace, tabdata=tabdata,
+                                        ThetaShort=ThetaShort, W=W))
+	    } else {
+	        tmp <- t(apply(matrix(1:nrow(scores)), 1, EAP, log_itemtrace=log_itemtrace, tabdata=tabdata,
+	                       ThetaShort=ThetaShort, W=W))
+	    }   
+	    scores <- tmp[ ,1:nfact, drop = FALSE]
+	    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		if(method == "MAP"){
             if(!is.null(globalenv()$MIRTCLUSTER)){
                 tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, MAP, 
