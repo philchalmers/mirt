@@ -848,8 +848,11 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
                       constrain=constrain, TOL=MSTEPTOL)
         rijlast <- rij
-        rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) /
-            (EMhistory[cycles, estindex] - MLestimates[estindex])
+        denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
+        sign <- sign(denom)
+        if(sign == 0) sign <- 1
+        if(abs(denom) < 1e-10) denom <- 1e-10 * sign
+        rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
         if(all(abs(rij - rijlast) < TOL)) break
     } #END EM
     return(rij)
