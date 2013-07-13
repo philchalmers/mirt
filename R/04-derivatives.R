@@ -55,7 +55,7 @@ setMethod(
         nd <- length(d)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.poly(a, d,Theta, D=x@D, ot=offterm)
+        P <- P.poly(c(a, d),Theta, D=x@D, ot=offterm)
         ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd, estHess)
         grad <- c(ret$grad[-(1L:nd)], ret$grad[1L:nd])
         hess <- matrix(0,nfact+nd,nfact+nd)
@@ -94,7 +94,7 @@ setMethod(
         nd <- length(d)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.poly(a, d + shift, Theta, D=x@D, ot=offterm)
+        P <- P.poly(c(a, d + shift), Theta, D=x@D, ot=offterm)
         ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd, estHess)
         grad <- c(ret$grad[-(1L:nd)], ret$grad[1L:nd])
         hess <- matrix(0,nfact+nd,nfact+nd)
@@ -108,7 +108,7 @@ setMethod(
         D2 <- D^2
         Pfull <- P
         PQfull <- Pfull * (1-Pfull)
-        P <- P.poly(a, d + shift, Theta, D=x@D, itemexp=TRUE, ot=offterm)
+        P <- P.poly(c(a, d + shift), Theta, D=x@D, itemexp=TRUE, ot=offterm)
         rs <- dat
         for(i in 1:ncol(rs))
             dc <- dc + rs[,i]/P[,i] * D * (PQfull[,i] - PQfull[,i+1L])
@@ -168,7 +168,7 @@ setMethod(
                 dd <- da <- rep(0,nfact)
                 dc <- sum(Qstar*const1)
                 for(i in 1L:nfact){
-                    Pk <- P.mirt(a[i],d[i],matrix(thetas[,i]),0,1,D=D)
+                    Pk <- P.mirt(c(a[i],d[i],0,1),matrix(thetas[,i]),D=D)
                     Qk <- 1 - Pk
                     dd[i] <- sum((1-c)*Pstar*Qk*const1*Prior)
                     da[i] <- sum((1-c)*Pstar*Qk*thetas[,i]*const1*Prior)
@@ -197,9 +197,9 @@ setMethod(
                             d2 <- strsplit(Names[c(i,j)],"_")[[2L]]
                             k <- as.numeric(d1[2L])
                             m <- as.numeric(d2[2L])
-                            Pk <- P.mirt(a[k],d[k],matrix(thetas[,k]),0,1,D=D)
+                            Pk <- P.mirt(c(a[k],d[k],0,1),matrix(thetas[,k]),D=D)
                             Qk <- 1 - Pk
-                            Pm <- P.mirt(a[m],d[m],matrix(thetas[,m]),0,1,D=D)
+                            Pm <- P.mirt(c(a[m],d[m],0,1),matrix(thetas[,m]),D=D)
                             Qm <- 1 - Pm
                             if(i == j && d1[1L] == 'd'){
                                 hess[i,i] <- sum((1-c)*Pstar*Qk*(const1*((1-c)*Qk - Pk) -
@@ -353,9 +353,9 @@ setMethod(
         correct <- x@correctcat
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        Pd <- P.mirt(a=a, d=d, Theta=Theta, g=g, u=u, D=D)
+        Pd <- P.mirt(c(a, d, g, u), Theta=Theta, D=D)
         Qd <- 1 - Pd
-        Pstar <- P.mirt(a=a, d=d, Theta=Theta, g=0, u=1, D=D)
+        Pstar <- P.mirt(c(a, d, 0, 1), Theta=Theta, D=D)
         Qstar <- 1 - Pstar
         num <- P.nominal(a=rep(1, nfact), ak=ak, d=dk, Theta=Theta, D=D, returnNum=TRUE)
         den <- rowSums(num)
@@ -778,7 +778,7 @@ setMethod(
         d <- x@par[parlength - 2L]
         a <- x@par[1L:nfact]
         D <- x@D
-        Pstar <- P.mirt(a, d, Theta, g=0, u=1, D=x@D)
+        Pstar <- P.mirt(c(a, d, 0, 1), Theta, D=x@D)
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
         for(i in 1L:nfact){
@@ -855,7 +855,7 @@ setMethod(
         a <- ExtractLambdas(x)
         D <- x@D
         P <- P.comp(a, d, Theta, g, 1, D=D)
-        Pdich <- P.mirt(a, d, Theta, 0, 1, D=D)
+        Pdich <- P.mirt(c(a, d, 0, 1), Theta, D=D)
         Pstar <- P - g
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
@@ -968,8 +968,8 @@ setMethod(
         Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, D=D)
         Num <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, D=D, returnNum = TRUE)
         Den <- rowSums(Num)
-        Pstar <- P.mirt(a, d, Theta, g=0, u=1, D=x@D)
-        Q <- 1 - P.mirt(a, d, Theta, g=g, u=u, D=x@D)
+        Pstar <- P.mirt(c(a, d, 0, 1), Theta, D=x@D)
+        Q <- 1 - P.mirt(c(a, d, g, u), Theta, D=x@D)
         Num2 <- P <- matrix(0, nrow(Theta), x@ncat)
         P[,-x@correctcat] <- Pn
         Num2[,-x@correctcat] <- Num

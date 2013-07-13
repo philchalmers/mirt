@@ -1,9 +1,10 @@
-#' Define a cluster object to be used in mirt functions
+#' Define a parallel cluster object to be used in internal functions
 #'
 #' This function defines a object that is placed in the users workspace 
 #' (i.e., the\code{.GlobalEnv}). Relavent internal functions such as \code{calcLogLik},
 #' \code{fscores}, etc, will utilize this object automatically to capitilze on parallel
-#' processing architecture. The object defined is a call from \code{parallel::makeCluster()}.
+#' processing architecture. The object defined is a call from \code{parallel::makeCluster()} and 
+#' defines an object called \code{MIRTCLUSTER}.
 #' @aliases mirtCluster
 #' @param ncores number of cores to be used in the returned object which is 
 #' passed to \code{parallel::makeCluster()}

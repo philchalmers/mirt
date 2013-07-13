@@ -2,19 +2,22 @@
 #include"Misc.h"
 using namespace Rcpp;
 
-RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SEXP RD, 
-    SEXP RasMatrix, SEXP Rot) 
+RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot) 
 {
     BEGIN_RCPP
 
-	NumericVector a(Ra);
-	NumericVector d(Rd);
-	NumericVector g(Rg);
-	NumericVector u(Ru);
-	NumericVector D(RD);
+	NumericVector par(Rpar);
     NumericVector ot(Rot);
     IntegerVector asMatrix(RasMatrix);
-	NumericMatrix Theta(RTheta);
+    NumericMatrix Theta(RTheta);
+    
+    const int len = par.length();
+    NumericVector a(Theta.ncol());
+    const double u = par(len-1);
+    const double g = par(len-2);
+	const double d = par(len-3);
+    for(int i = 0; i < Theta.ncol(); i++)
+        a(i) = par(i);    
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
     const int USEOT = ot.length() > 1;
@@ -27,16 +30,16 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 	//compute item trace vector
 	for (j = 0; j <	nquad; j++){
 		for (i = 0; i <	nfact; i++){		
-			z(j) += D(0) * a(i) * Theta(j,i); 
+			z(j) += a(i) * Theta(j,i); 
 		}
-		z(j) += d(0) * D(0);
+		z(j) += d;
 	}	
     if(USEOT){
         for (j = 0; j < nquad; j++)
             z(j) += ot(j);
     }
 	for (i = 0; i < nquad; i++){ 
-		P(i) = g(0) + (u(0) - g(0)) * (1.0)/(1.0 + exp((-1.0)*z(i)));		        
+		P(i) = g + (u - g) * (1.0)/(1.0 + exp((-1.0)*z(i)));		        
         if(P(i) < 1e-10) P(i) = 1e-10;
         if((1.0 - P(i)) < 1e-10) P(i) = 1.0 - 1e-10;        
         Q(i) = 1.0 - P(i);
@@ -53,28 +56,31 @@ RcppExport SEXP traceLinePts(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RTheta, SE
 }
 
 // graded
-RcppExport SEXP gradedTraceLinePts(SEXP Ra, SEXP Rd, SEXP RTheta, SEXP RD, SEXP Ritemexp, SEXP Rot) 
+RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP Rot) 
 {
     BEGIN_RCPP
 
-	NumericVector a(Ra);
-	NumericVector d(Rd);
-	NumericVector D(RD);
+    int i,j;
+    NumericVector par(Rpar);	
     NumericVector ot(Rot);
 	NumericMatrix Theta(RTheta);
 	IntegerVector itemexp(Ritemexp);
+    NumericVector a(Theta.ncol());
+    for(i = 0; i < Theta.ncol(); i++)
+        a(i) = par(i);
+    const int ncat = par.length() - Theta.ncol();
+    NumericVector d(ncat);        
+    for(i = Theta.ncol(); i < par.length(); i++)
+        d(i - Theta.ncol()) = par(i);
     const double nullzero = 0.0, nullone = 1.0;
     const int nquad = Theta.nrow();
-	const int ncat = d.length();
-	int i,j;
-
 	NumericMatrix Pk(nquad, ncat + 2);
 	NumericMatrix P(nquad, ncat + 1);
 
 	for(i = 0; i < nquad; i++)
         Pk(i,0) = 1.0;
     for(i = 0; i < ncat; i++)
-        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, &D(0), ot); 
+        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, &nullone, ot); 
     if(itemexp(0)){
         for(i = (Pk.ncol()-2); i >= 0; i--)
             P(_,i) = Pk(_,i) - Pk(_,i+1);

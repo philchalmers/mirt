@@ -1,6 +1,6 @@
 \name{mirtCluster}
 \alias{mirtCluster}
-\title{Define a cluster object to be used in mirt functions}
+\title{Define a parallel cluster object to be used in internal functions}
 \usage{
   mirtCluster(ncores)
 }
@@ -15,7 +15,8 @@
   \code{fscores}, etc, will utilize this object
   automatically to capitilze on parallel processing
   architecture. The object defined is a call from
-  \code{parallel::makeCluster()}.
+  \code{parallel::makeCluster()} and defines an object
+  called \code{MIRTCLUSTER}.
 }
 \examples{
 \dontrun{
