@@ -36,7 +36,7 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
                                      calcNull=FALSE, verbose = FALSE))
             } else {
                 mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
-                            parprior=parprior, calcNull=FALSE))
+                            parprior=parprior, calcNull=FALSE, verbose=FALSE))
             }
             if(is(mod, 'try-error')) next
             if(MG){
