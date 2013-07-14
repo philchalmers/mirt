@@ -8,7 +8,8 @@
 #' User defined item classes can also be defined using the \code{\link{createItem}} function.
 #' Models may also contain 'explanatory'
 #' person or item level predictors, though these can only be included by using the
-#' \code{\link{mixedmirt}} function.
+#' \code{\link{mixedmirt}} function. Additionally, computation of the log-likelihood can be sped up by
+#' using parallel estimation via \code{\link{mirtCluster}}.
 #'
 #' \code{confmirt} follows a confirmatory and exploratory item factor analysis strategy that
 #' uses a stochastic version of maximum likelihood estimation described by Cai

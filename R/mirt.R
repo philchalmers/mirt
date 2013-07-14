@@ -49,7 +49,7 @@
 #' If the model is confirmatory then the returned class will be 'ExploratoryClass'.
 #'
 #' Estimation often begins by computing a matrix of quasi-tetrachoric correlations,
-#' potentially with Carroll's (1945) adjustment for chance responds. A MINRES
+#' potentially with an adjustment for chance responds. A 
 #' factor analysis with \code{nfact} is then extracted and item parameters are
 #' estimated by \eqn{a_{ij} = f_{ij}/u_j}, where \eqn{f_{ij}} is the factor
 #' loading for the \emph{j}th item on the \emph{i}th factor, and \eqn{u_j} is
@@ -92,7 +92,8 @@
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix.
 #' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach 
 #' (EM only), or \code{'SEM'} for the supplemented EM. Note that for the \code{'SEM'} option increasing 
-#' the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy. 
+#' the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be 
+#' run in parallel if a \code{\link{mirtCluster}} object has been defined. 
 #' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
@@ -125,7 +126,6 @@
 #' mymodifiedpars}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the
 #' data contains no NA's
-#' @param cl a cluster object from the \code{parallel} package (set from using \code{makeCluster(ncores)})
 #' @param quadpts number of quadrature points per dimension (must be an odd number). 
 #' By default the number of quadrature uses the following scheme: 
 #' \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
@@ -300,6 +300,9 @@
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' 
+#' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item 
+#' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
 #'
 #' Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
 #'
@@ -334,7 +337,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', pars = NULL,
 #' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN,
 #' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, nominal.highlow = NULL,
-#' cl = NULL, large = FALSE, verbose = TRUE, technical = list(), ...)
+#' large = FALSE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
@@ -511,7 +514,7 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
                  pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                 key = NULL, nominal.highlow = NULL, cl = NULL, 
+                 key = NULL, nominal.highlow = NULL, 
                  large = FALSE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()
@@ -520,7 +523,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       pars=pars, method = 'EM', constrain=constrain, SE=SE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
-                      calcNull=calcNull, SE.type=SE.type, cl=cl, large=large, key=key, 
+                      calcNull=calcNull, SE.type=SE.type, large=large, key=key, 
                       nominal.highlow=nominal.highlow, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call

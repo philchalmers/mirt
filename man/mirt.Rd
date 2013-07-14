@@ -14,8 +14,8 @@ Theory)}
     NULL, parprior = NULL, calcNull = TRUE, rotate =
     'oblimin', Target = NaN, quadpts = NULL, grsm.block =
     NULL, rsm.block = NULL, key= NULL, nominal.highlow =
-    NULL, cl = NULL, large = FALSE, verbose = TRUE,
-    technical = list(), ...)
+    NULL, large = FALSE, verbose = TRUE, technical =
+    list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -98,9 +98,10 @@ Theory)}
   \code{'SEM'} for the supplemented EM. Note that for the
   \code{'SEM'} option increasing the number of EM cycles
   (\code{NCYCLES}, see below) will help to improve the
-  accuracy. Bootstrapped standard errors are also possible
-  but must be run with the \code{\link{boot.mirt}}
-  function}
+  accuracy, and will be run in parallel if a
+  \code{\link{mirtCluster}} object has been defined.
+  Bootstrapped standard errors are also possible but must
+  be run with the \code{\link{boot.mirt}} function}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing
@@ -158,9 +159,6 @@ Theory)}
   \item{calcNull}{logical; calculate the Null model for fit
   statics (e.g., TLI)? Only applicable if the data contains
   no NA's}
-
-  \item{cl}{a cluster object from the \code{parallel}
-  package (set from using \code{makeCluster(ncores)})}
 
   \item{quadpts}{number of quadrature points per dimension
   (must be an odd number). By default the number of
@@ -329,18 +327,18 @@ Theory)}
   the returned class will be 'ExploratoryClass'.
 
   Estimation often begins by computing a matrix of
-  quasi-tetrachoric correlations, potentially with
-  Carroll's (1945) adjustment for chance responds. A MINRES
-  factor analysis with \code{nfact} is then extracted and
-  item parameters are estimated by \eqn{a_{ij} =
-  f_{ij}/u_j}, where \eqn{f_{ij}} is the factor loading for
-  the \emph{j}th item on the \emph{i}th factor, and
-  \eqn{u_j} is the square root of the factor uniqueness,
-  \eqn{\sqrt{1 - h_j^2}}. The initial intercept parameters
-  are determined by calculating the inverse normal of the
-  item facility (i.e., item easiness), \eqn{q_j}, to obtain
-  \eqn{d_j = q_j / u_j}. A similar implementation is also
-  used for obtaining initial values for polytomous items.
+  quasi-tetrachoric correlations, potentially with an
+  adjustment for chance responds. A factor analysis with
+  \code{nfact} is then extracted and item parameters are
+  estimated by \eqn{a_{ij} = f_{ij}/u_j}, where
+  \eqn{f_{ij}} is the factor loading for the \emph{j}th
+  item on the \emph{i}th factor, and \eqn{u_j} is the
+  square root of the factor uniqueness, \eqn{\sqrt{1 -
+  h_j^2}}. The initial intercept parameters are determined
+  by calculating the inverse normal of the item facility
+  (i.e., item easiness), \eqn{q_j}, to obtain \eqn{d_j =
+  q_j / u_j}. A similar implementation is also used for
+  obtaining initial values for polytomous items.
 }
 
 \section{Convergence}{
@@ -628,6 +626,11 @@ lines(Theta, testinfo(mod0, Theta), col = 'red')
   Chalmers, R., P. (2012). mirt: A Multidimensional Item
   Response Theory Package for the R Environment.
   \emph{Journal of Statistical Software, 48}(6), 1-29.
+
+  Chen, W. H. & Thissen, D. (1997). Local dependence
+  indices for item pairs using item response theory.
+  \emph{Journal of Educational and Behavioral Statistics,
+  22}, 265-289.
 
   Lord, F. M. & Novick, M. R. (1968). Statistical theory of
   mental test scores. Addison-Wesley.

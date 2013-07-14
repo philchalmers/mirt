@@ -161,7 +161,9 @@
   \code{\link{createItem}} function. Models may also
   contain 'explanatory' person or item level predictors,
   though these can only be included by using the
-  \code{\link{mixedmirt}} function.
+  \code{\link{mixedmirt}} function. Additionally,
+  computation of the log-likelihood can be sped up by using
+  parallel estimation via \code{\link{mirtCluster}}.
 }
 \details{
   \code{confmirt} follows a confirmatory and exploratory

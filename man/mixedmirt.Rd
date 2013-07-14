@@ -79,7 +79,9 @@
   IRT' if only fixed effects are modeled, or
   multilevel/mixed IRT if random and fixed effects are
   included. The method uses the MH-RM algorithm
-  exclusively.
+  exclusively. Additionally, computation of the
+  log-likelihood can be sped up by using parallel
+  estimation via \code{\link{mirtCluster}}.
 }
 \details{
   For dichotomous response models, \code{mixedmirt} follows
