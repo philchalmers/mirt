@@ -146,20 +146,6 @@ gamma.cor <- function(x)
 	gamma
 }
 
-# Beta prior for grad and hess
-betaprior <- function(g,a,b)
-{
-    if(g < .01) return(list(grad=0, hess=0))
-	grad <- ((a-1) * g^(a-1) * (1-g)^(b-1) - (b-1)*g^(a-1)*(1-g)^(b-1))/
-		(g^(a-1) * (1-g)^(b-1))
-	hess <- -((g^(a-1)*(a-1)^2*(1-g)^(b-1)/g^2 - g^(a-1)*(a-1)*(1-g)^(b-1)/g^2
-		- 2*g^(a-1)*(a-1)*(1-g)^(b-1)*(b-1)/(g*(1-g)) + g^(a-1)*(1-g)^(b-1)*(b-1)^2/(1-g)^2
-		- g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g)^2)/(g^(a-1)*(1-g)^(b-1))
-		- ((g^(a-1)*(a-1)*(1-g)^(b-1)/g-g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g))*(a-1)/(g^(a-1)*(1-g)^(b-1)*g))
-		+ ((g^(a-1)*(a-1)*(1-g)^(b-1)/g-g^(a-1)*(1-g)^(b-1)*(b-1)/(1-g))*(b-1)/(g^(a-1)*(1-g)^(b-1)*(1-g))))
-	return(list(grad=grad, hess=hess))
-}
-
 # Approximation to polychoric matrix for initial values
 cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.obs')
 {
@@ -495,16 +481,15 @@ DerivativePriors <- function(x, grad, hess){
     if(any(!is.nan(x@b.prior.alpha))){
         ind <- !is.na(x@b.prior.alpha)
         val <- x@par[ind]
+        val <- ifelse(val < 1e-10, 1e-10, val)
+        val <- ifelse(val > 1-1e-10, 1-1e-10, val)
         a <- x@b.prior.alpha[ind]
-        b <- x@b.prior.beta[ind]
-        bphess <- bpgrad <- rep(0, length(val))
-        for(i in 1L:length(val)){
-            tmp <- betaprior(val[i], a[i], b[i])
-            bpgrad[i] <- tmp$grad
-            bphess[i] <- tmp$hess
-        }
-        if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + bpgrad
-        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess
+        b <- x@b.prior.beta[ind]        
+        g <- (a - 1)/val - (b-1)/(1-val)
+        h <- -(a - 1)/(val^2) - (b-1) / (1-val)^2        
+        grad[ind] <- grad[ind] + g    
+        if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
+        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
     return(list(grad=grad, hess=hess))
 }
