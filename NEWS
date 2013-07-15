@@ -1,6 +1,8 @@
-Changes in mirt 0.8.2
+Changes in mirt 0.8.3
 
 NEW FEATURES
+
+- lognormal priors may now be passed to parprior
 
 - iterative computations in fscores() can now be run in parallel automatically following a 
   mirtCluster() definition
@@ -21,6 +23,8 @@ BUG FIXES
 
 - exploratory starting values no longer crash in datasets with a huge number of NA's, which caused 
   standard deviations to be zero
+
+- math fix for beta priors
 
 Changes in mirt 0.8.0
 

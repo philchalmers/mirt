@@ -469,11 +469,21 @@ DerivativePriors <- function(x, grad, hess){
         val <- x@par[ind]
         mu <- x@n.prior.mu[ind]
         s <- x@n.prior.sd[ind]
-        h <- g <- rep(0, length(val))
-        for(i in 1L:length(val)){
-            g[i] <- -(val[i] - mu[i])/(s[i]^2)
-            h[i] <- -1/(s[i]^2)
-        }
+        g <- -(val - mu)/(s^2)
+        h <- -1/(s^2)
+        grad[ind] <- grad[ind] + g
+        if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
+        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+    }
+    if(any(!is.nan(x@ln.prior.mu))){
+        ind <- !is.na(x@ln.prior.mu)
+        val <- x@par[ind]
+        val <- ifelse(val > 0, val, 1e-10)
+        lval <- log(val)
+        mu <- x@ln.prior.mu[ind]
+        s <- x@ln.prior.sd[ind]
+        g <- -(lval - mu)/(val * s^2) - 1/val 
+        h <- 1/(val^2) - 1/(val^2 * s^2) - (lval - mu)/(val^2 * s^2)
         grad[ind] <- grad[ind] + g
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
@@ -503,6 +513,17 @@ LL.Priors <- function(x, LL){
         s <- x@n.prior.sd[ind]
         for(i in 1L:length(val)){
             tmp <- dnorm(val[i], u[i], s[i], log=TRUE)            
+            LL <- LL - ifelse(tmp == -Inf, log(1e-100), tmp)
+        }
+    }
+    if(any(!is.nan(x@ln.prior.mu))){
+        ind <- !is.nan(x@ln.prior.mu)
+        val <- x@par[ind]
+        val <- ifelse(val > 0, val, 1e-100)
+        u <- x@ln.prior.mu[ind]
+        s <- x@ln.prior.sd[ind]
+        for(i in 1L:length(val)){
+            tmp <- dlnorm(val[i], u[i], s[i], log=TRUE)
             LL <- LL - ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }

@@ -13,6 +13,8 @@ setClass("GroupPars",
                         ubound='numeric',
                         n.prior.mu='numeric',
                         n.prior.sd='numeric',
+                        ln.prior.mu='numeric',
+                        ln.prior.sd='numeric',
                         b.prior.alpha='numeric',
                         b.prior.beta='numeric')
 )
@@ -33,6 +35,8 @@ setClass("RandomPars",
                         mtch='numeric',
                         n.prior.mu='numeric',
                         n.prior.sd='numeric',
+                        ln.prior.mu='numeric',
+                        ln.prior.sd='numeric',
                         b.prior.alpha='numeric',
                         b.prior.beta='numeric')
 )
@@ -57,6 +61,8 @@ setClass("AllItemsClass",
                         any.prior='logical',
                         n.prior.mu='numeric',
                         n.prior.sd='numeric',
+                        ln.prior.mu='numeric',
+                        ln.prior.sd='numeric',
                         b.prior.alpha='numeric',
                         b.prior.beta='numeric',
                         D='numeric', #scaling correction
