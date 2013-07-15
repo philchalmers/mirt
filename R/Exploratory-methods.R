@@ -334,7 +334,7 @@ setMethod(
                     P[,i] <- probtrace(extract.item(x, i), ThetaFull)[,2]
                 items <- gl(n=J, k=nrow(Theta), labels = paste('Item', 1:J))
                 plotobj <- data.frame(P = as.numeric(P), Theta=Theta, item=items)
-                return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(0,1),
+                return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(-0.1,1.1),,
                        xlab = expression(theta), ylab = expression(P(theta)),
                        auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
             }

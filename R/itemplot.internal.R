@@ -78,7 +78,7 @@ setMethod(
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))
             if(type == 'trace')
                 return(lattice::xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l',
-                            auto.key = TRUE, main = paste("Item", item, "Trace"),
+                            auto.key = TRUE, main = paste("Item", item, "Trace"), ylim = c(-0.1,1.1),
                             ylab = expression(P(theta)), xlab = expression(theta), ...))
             if(type == 'RE')
                 return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l',
@@ -105,7 +105,7 @@ setMethod(
                                           main = paste("Item", item, "Trace"),
                                           zlab=expression(P(theta)),
                                           xlab=expression(theta[1]),
-                                          ylab=expression(theta[2]),
+                                          ylab=expression(theta[2]), zlim = c(-0.1,1.1),
                                           scales = list(arrows = FALSE),
                                           auto.key = TRUE, ...))
             if(type == 'RE')
@@ -265,14 +265,14 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         if(type == 'trace'){
             if(CE)
                 return(lattice::wireframe(P + upper + lower ~ Theta1 + Theta2 | time, data = plt2,
-                                          main = paste("Item", item, "Trace"),
+                                          main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
                                           zlab=expression(P(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), col = c('black', 'red', 'red'),
                                           scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
 
             else
                 return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time,
-                             main = paste("Item", item, "Trace"),
+                             main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
         }
