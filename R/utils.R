@@ -516,8 +516,10 @@ LL.Priors <- function(x, LL){
         val <- x@par[ind]
         u <- x@n.prior.mu[ind]
         s <- x@n.prior.sd[ind]
-        for(i in 1L:length(val))
-            LL <- LL - log(dnorm(val[i], u[i], s[i]))
+        for(i in 1L:length(val)){
+            tmp <- log(dnorm(val[i], u[i], s[i]))            
+            LL <- LL - ifelse(tmp == -Inf, log(1e-30), tmp)
+        }
     }
     if(any(!is.nan(x@b.prior.alpha))){
         ind <- !is.nan(x@b.prior.alpha)
@@ -525,8 +527,8 @@ LL.Priors <- function(x, LL){
         a <- x@b.prior.alpha[ind]
         b <- x@b.prior.beta[ind]
         for(i in 1L:length(val)){
-            tmp <- dbeta(val[i], a[i], b[i])
-            LL <- LL - log(ifelse(tmp == 0, 1, tmp))
+            tmp <- log(dbeta(val[i], a[i], b[i]))
+            LL <- LL - ifelse(tmp == -Inf, log(1e-30), tmp)
         }
     }
     return(LL)
