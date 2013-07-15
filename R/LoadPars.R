@@ -504,8 +504,8 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
                     ret@n.prior.mu[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1L])
                     ret@n.prior.sd[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
                 } else if(parprior[[j]][length(parprior[[j]]) - 2L] == 'lnorm'){
-                    pars[[i]]@ln.prior.mu[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1L])
-                    pars[[i]]@ln.prior.sd[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
+                    pars@ln.prior.mu[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1L])
+                    pars@ln.prior.sd[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
                 } else if(parprior[[j]][length(parprior[[j]]) - 2L] == 'beta'){
                     ret@b.prior.alpha[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])-1L])
                     ret@b.prior.beta[tmp] <- as.numeric(parprior[[j]][length(parprior[[j]])])
