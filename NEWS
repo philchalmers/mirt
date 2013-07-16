@@ -2,6 +2,8 @@ Changes in mirt 0.8.3
 
 NEW FEATURES
 
+- support for polynomial and interaction terms in EM estimation
+
 - lognormal priors may now be passed to parprior
 
 - iterative computations in fscores() can now be run in parallel automatically following a 

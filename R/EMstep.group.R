@@ -14,6 +14,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
     J <- length(itemloc) - 1L
     nfullpars <- 0
     estpars <- c()
+    prodlist <- PrepList[[1L]]$prodlist
     gfulldata <- gtheta0 <- gstructgrouppars <- gitemtrace <- vector('list', ngroups)
     for(g in 1L:ngroups){
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
@@ -114,8 +115,6 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         for(g in 1L:ngroups){            
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
             gTheta[[g]] <- Theta %*% chol(gstructgrouppars[[g]]$gcov) + gstructgrouppars[[g]]$gmeans
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc)            
-            
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
@@ -124,7 +123,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
             }
             Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])          
+            if(length(prodlist) > 0L)
+                gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc)            
         }
         #Estep
         lastLL <- LL

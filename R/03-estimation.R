@@ -201,8 +201,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     #EM estimation
     G2group <- X2group <- numeric(Data$ngroups)
     if(opts$method == 'EM'){
-        if(opts$method == 'EM' && nLambdas > nfact)
-            stop('Polynominals and product terms not supported for EM method')
         if(is.null(opts$quadpts))
             opts$quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
         if(opts$quadpts %% 2 == 0) stop('Must use an odd number for quadpts')
