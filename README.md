@@ -1,7 +1,5 @@
 # mirt
 
-[![Build Status](https://travis-ci.org/philchalmers/mirt.png)](https://travis-ci.org/philchalmers/mirt)
-
 Multidimensional item response theory in R. 
 
 ## Description
