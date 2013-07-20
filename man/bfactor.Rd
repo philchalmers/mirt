@@ -149,7 +149,7 @@ coef(simmod)
 }
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
-  \code{\link{confmirt.model}}, \code{\link{mirt}},
+  \code{\link{mirt.model}}, \code{\link{mirt}},
   \code{\link{confmirt}}, \code{\link{bfactor}},
   \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
   \code{\link{wald}}, \code{\link{itemplot}},

@@ -173,7 +173,7 @@ itemtype <- rep('dich',6)
 
 nonlindata <- simdata(a,d,2000,itemtype,Theta=Theta)
 
-#model <- confmirt.model('
+#model <- mirt.model('
 #F1 = 1-6
 #(F1 * F1) = 1-3')
 #mod <- confmirt(nonlindata, model)

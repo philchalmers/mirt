@@ -32,8 +32,8 @@
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param covdata a \code{data.frame} that consists of the \code{nrow(data)} by \code{K}
 #' 'person level' fixed and random predictors
-#' @param model an object returned from \code{confmirt.model()} declaring how
-#' the factor model is to be estimated. See \code{\link{confmirt.model}} for
+#' @param model an object returned from \code{mirt.model()} declaring how
+#' the factor model is to be estimated. See \code{\link{mirt.model}} for
 #' more details
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory') 
 #' predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for 
@@ -83,7 +83,7 @@
 #' mirtCluster(detectCores())
 #'
 #' #specify IRT model
-#' model <- confmirt.model('Theta = 1-10')
+#' model <- mirt.model('Theta = 1-10')
 #'
 #' #model with no person predictors
 #' mod0 <- mirt(data, model, itemtype = 'Rasch')
@@ -128,7 +128,7 @@
 #' data(SAT12)
 #' data <- key2binary(SAT12,
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-#' model <- confmirt.model('Theta = 1-32')
+#' model <- mirt.model('Theta = 1-32')
 #'
 # #Suppose that the first 16 items were suspected to be easier than the last 16 items, and we wish
 # #to test this item structure hypothesis (more intercept designs are possible by including more columns).

@@ -11,7 +11,7 @@ test_that('one factor', {
     dat <- rbind(dataset1, dataset2)
     group <- c(rep('D1', N), rep('D2', N))    
     MGmodel1 <- 'F1 = 1-15'    
-    models <- confmirt.model(MGmodel1, quiet = TRUE)
+    models <- mirt.model(MGmodel1, quiet = TRUE)
     
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')

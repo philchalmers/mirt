@@ -2,6 +2,9 @@ Changes in mirt 0.8.3
 
 NEW FEATURES
 
+- MH-RM algorithm now accessible by passing mirt(..., method = 'MHRM'), and confmirt() function 
+  removed completely. confmirt.model() also renamed to mirt.model()
+
 - support for polynomial and interaction terms in EM estimation
 
 - lognormal priors may now be passed to parprior

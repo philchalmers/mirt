@@ -55,7 +55,6 @@ Collate:
     '02-item_methods.R'
     'calcLogLik.R'
     'LoadPars.R'
-    'confmirt.model.R'
     'model.elements.R'
     'PrepData.R'
     'Confirmatory-methods.R'
@@ -86,3 +85,4 @@ Collate:
     'zzz.R'
     'randef.R'
     'mirtCluster.R'
+    'mirt.model.R'

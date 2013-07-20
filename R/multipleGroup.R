@@ -18,9 +18,9 @@
 #' fitted,MultipleGroupClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
-#' @param model an object or named list of objects returned from \code{confmirt.model()} declaring how
+#' @param model an object or named list of objects returned from \code{mirt.model()} declaring how
 #' the factor model is to be estimated. The names of the list input must correspond to the unique values
-#' in the \code{group} variable. See \code{\link{confmirt.model}} for more details
+#' in the \code{group} variable. See \code{\link{mirt.model}} for more details
 #' @param group a character vector indicating group membership
 #' @param invariance a character vector containing the following possible options:
 #' \describe{
@@ -90,7 +90,7 @@
 #' }
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}, \code{\link{mirt}},
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
@@ -129,7 +129,7 @@
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
-#' models <- confmirt.model('F1 = 1-15')
+#' models <- mirt.model('F1 = 1-15')
 #'
 #' mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
 #'
@@ -209,7 +209,7 @@
 #' group <- c(rep('D1', N), rep('D2', N))
 #'
 #' #group models
-#' model <- confmirt.model()
+#' model <- mirt.model()
 #'    F1 = 1-5
 #'    F2 = 6-10
 #'    F3 = 11-15
@@ -256,8 +256,8 @@
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
-#' models <- confmirt.model('F1 = 1-15')
-#' models2 <- confmirt.model('
+#' models <- mirt.model('F1 = 1-15')
+#' models2 <- mirt.model('
 #'    F1 = 1-10
 #'    F2 = 10-15')
 #'

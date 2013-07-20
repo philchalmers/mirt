@@ -42,11 +42,11 @@ Theory)}
   consists of numerically ordered data, with missing data
   coded as \code{NA}}
 
-  \item{model}{an object returned from
-  \code{confmirt.model()} declaring how the factor model is
-  to be estimated, or a single numeric value indicating the
-  number of exploratory factors to estimate. See
-  \code{\link{confmirt.model}} for more details}
+  \item{model}{an object returned from \code{mirt.model()}
+  declaring how the factor model is to be estimated, or a
+  single numeric value indicating the number of exploratory
+  factors to estimate. See \code{\link{mirt.model}} for
+  more details}
 
   \item{itemtype}{type of items to be modeled, declared as
   a vector for each item or a single value which will be
@@ -482,7 +482,7 @@ scores <- fscores(mod2) #save factor score table
 scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores for original data
 
 #confirmatory
-cmodel <- confmirt.model()
+cmodel <- mirt.model()
    F1 = 1,4,5
    F2 = 2,3
 
@@ -674,7 +674,7 @@ lines(Theta, testinfo(mod0, Theta), col = 'red')
 }
 \seealso{
   \code{\link{expand.table}}, \code{\link{key2binary}},
-  \code{\link{confmirt.model}}, \code{\link{mirt}},
+  \code{\link{mirt.model}}, \code{\link{mirt}},
   \code{\link{confmirt}}, \code{\link{bfactor}},
   \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
   \code{\link{wald}}, \code{\link{itemplot}},

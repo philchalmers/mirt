@@ -58,9 +58,9 @@
 #' plot,ConfirmatoryClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
-#' @param model an object returned from \code{confmirt.model()} declaring how
+#' @param model an object returned from \code{mirt.model()} declaring how
 #' the factor model is to be estimated, or a single numeric value indicating the number
-#' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
+#' of exploratory factors to estimate. See \code{\link{mirt.model}} for
 #' more details
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be
 #' entered as a single value to assign a global guessing parameter or may be entered as
@@ -119,7 +119,7 @@
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}, \code{\link{mirt}},
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
@@ -203,7 +203,7 @@
 #' #analyses
 #' #CIFA for 2 factor crossed structure
 #'
-#' model.1 <- confmirt.model()
+#' model.1 <- mirt.model()
 #'   F1 = 1-4
 #'   F2 = 4-8
 #'   COV = F1*F2
@@ -219,7 +219,7 @@
 #'
 #' #####
 #' #bifactor
-#' model.3 <- confmirt.model()
+#' model.3 <- mirt.model()
 #'   G = 1-8
 #'   F1 = 1-4
 #'   F2 = 5-8
@@ -237,12 +237,12 @@
 #' data <- key2binary(SAT12,
 #'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
-#' model.quad <- confmirt.model()
+#' model.quad <- mirt.model()
 #'        F1 = 1-32
 #'   (F1*F1) = 1-32
 #'
 #'
-#' model.combo <- confmirt.model()
+#' model.combo <- mirt.model()
 #'        F1 = 1-16
 #'        F2 = 17-32
 #'   (F1*F2) = 1-8

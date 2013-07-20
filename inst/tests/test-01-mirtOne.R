@@ -121,7 +121,7 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
     
     data <- expand.table(LSAT7)
-    model <- confmirt.model('F1 = 1-3
+    model <- mirt.model('F1 = 1-3
         F2 = 3-5', quiet = TRUE)
     modm1 <- mirt(data, model, verbose=FALSE)
     expect_equal(modm1@df, 20)

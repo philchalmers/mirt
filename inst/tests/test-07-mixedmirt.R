@@ -11,7 +11,7 @@ test_that('mixed dich', {
     data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
     covdata <- data.frame(group, pseudoIQ)
     mixedmirt1 <- 'Theta = 1-10'
-    model <- confmirt.model(mixedmirt1, quiet = TRUE)  
+    model <- mirt.model(mixedmirt1, quiet = TRUE)  
     
     #group as a fixed effect predictor (aka, uniform dif)
     mod1 <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
@@ -69,7 +69,7 @@ test_that('mixed dich', {
 test_that('item and group predictors', {    
     data <- key2binary(SAT12,
                        key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-    model <- confmirt.model('Theta = 1-32', quiet = TRUE)
+    model <- mirt.model('Theta = 1-32', quiet = TRUE)
     
     itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
     fs <- scale(rowSums(data))
@@ -103,7 +103,7 @@ test_that('item and group predictors', {
 
 test_that('polytomous', {
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
-    model <- confmirt.model('F1 = 1-4', quiet = TRUE)
+    model <- mirt.model('F1 = 1-4', quiet = TRUE)
     suppressWarnings(mod <- mixedmirt(Science, covdat, model=model,
                                        fixed = ~ 0 + group, verbose = FALSE, draws = 10))
     expect_is(mod, 'MixedClass')

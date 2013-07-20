@@ -45,9 +45,9 @@ test_that('confirmatory mods', {
     (F1*F2) = 1,5
     '    
         
-    model.1 <- confmirt.model(model1, quiet = TRUE)    
-    model.quad <- confmirt.model(modelquad, quiet = TRUE)
-    model.combo <- confmirt.model(modelcombo, quiet = TRUE)    
+    model.1 <- mirt.model(model1, quiet = TRUE)    
+    model.quad <- mirt.model(modelquad, quiet = TRUE)
+    model.combo <- mirt.model(modelcombo, quiet = TRUE)    
     
     suppressWarnings(mod1 <- confmirt(dataset,model.1, verbose = FALSE, draws = 10))
     expect_is(mod1, 'ConfirmatoryClass')

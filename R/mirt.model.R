@@ -1,6 +1,6 @@
 #' Specify model loadings
 #'
-#' The \code{confmirt.model} function scans/reads user input to specify the
+#' The \code{mirt.model} function scans/reads user input to specify the
 #' confirmatory model.
 #'
 #' Factors are first named and then specify which numerical items they affect
@@ -31,12 +31,12 @@
 #' @return Returns a model specification object to be used in
 #' \code{\link{confmirt}}.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @export confmirt.model
+#' @export mirt.model
 #' @examples
 #'
 #' \dontrun{
 #'
-#' model <- confmirt.model()
+#' model <- mirt.model()
 #'   F1 = 1,2,3,4-10
 #'   F2 = 10-20
 #'   (F1*F2) = 1,2,3,4-10
@@ -48,16 +48,16 @@
 #'       F2 = 10-20
 #'       (F1*F2) = 1,2,3,4-10
 #'       COV = F1*F2'
-#' model <- confmirt.model(s)
+#' model <- mirt.model(s)
 #' 
 #' 
 #' #Q-matrix specification
 #' Q <- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1', 'Factor2')))
 #' COV <- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
-#' model <- confmirt.model(Q, COV=COV) 
+#' model <- mirt.model(Q, COV=COV) 
 #' 
 #'     }
-confmirt.model <- function(input = NULL, file = "", COV = NULL, ...)
+mirt.model <- function(input = NULL, file = "", COV = NULL, ...)
 {
     if(is.matrix(input)){
         fnames <- colnames(input)
@@ -97,7 +97,7 @@ confmirt.model <- function(input = NULL, file = "", COV = NULL, ...)
 	mod <- cbind(mod$type, mod$pars)
 	colnames(mod) <- c("Type","Parameters")
 	mod <- list(x = mod)
-	class(mod) <- 'confmirt.model'
+	class(mod) <- 'mirt.model'
 	mod
 }
 

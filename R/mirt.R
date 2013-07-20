@@ -63,9 +63,9 @@
 #' fitted,ExploratoryClass-method plot,ExploratoryClass-method residuals,ExploratoryClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
-#' @param model an object returned from \code{confmirt.model()} declaring how
+#' @param model an object returned from \code{mirt.model()} declaring how
 #' the factor model is to be estimated, or a single numeric value indicating the number
-#' of exploratory factors to estimate. See \code{\link{confmirt.model}} for
+#' of exploratory factors to estimate. See \code{\link{mirt.model}} for
 #' more details
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
@@ -278,7 +278,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{confmirt.model}}, \code{\link{mirt}},
+#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
@@ -391,7 +391,7 @@
 #' scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores for original data
 #'
 #' #confirmatory
-#' cmodel <- confmirt.model()
+#' cmodel <- mirt.model()
 #'    F1 = 1,4,5
 #'    F2 = 2,3
 #'
