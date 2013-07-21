@@ -32,7 +32,7 @@
 #' @rdname calcLogLik-methods
 #' @export calcLogLik
 #' @seealso
-#' \code{\link{confmirt}}, \code{\link{multipleGroup}}
+#' \code{\link{mirt}}, \code{\link{multipleGroup}}
 #' @keywords calcLogLik
 #' @examples
 #'

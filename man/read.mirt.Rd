@@ -5,8 +5,8 @@
   read.mirt(x, as.irt.pars = TRUE)
 }
 \arguments{
-  \item{x}{an object returned from \code{mirt, bfactor,
-  confmirt}, or \code{multipleGroup}}
+  \item{x}{an object returned from \code{mirt, bfactor}, or
+  \code{multipleGroup}}
 
   \item{as.irt.pars}{if \code{TRUE}, the parameters will be
   output as an \code{irt.pars} object}

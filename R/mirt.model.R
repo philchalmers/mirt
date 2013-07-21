@@ -29,7 +29,7 @@
 #' @param COV a symmetric, logical matrix used to declare which covariance terms are estimated
 #' @param ... additional arguments for \code{scan()}
 #' @return Returns a model specification object to be used in
-#' \code{\link{confmirt}}.
+#' \code{\link{mirt}}, \code{\link{multipleGroup}}, or \code{\link{mixedmirt}}.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @export mirt.model
 #' @examples

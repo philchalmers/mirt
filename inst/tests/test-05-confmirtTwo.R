@@ -49,7 +49,7 @@ test_that('confirmatory mods', {
     model.quad <- mirt.model(modelquad, quiet = TRUE)
     model.combo <- mirt.model(modelcombo, quiet = TRUE)    
     
-    suppressWarnings(mod1 <- confmirt(dataset,model.1, verbose = FALSE, draws = 10))
+    suppressWarnings(mod1 <- mirt(dataset,model.1, verbose = FALSE, draws = 10, method = 'MHRM'))
     expect_is(mod1, 'ConfirmatoryClass')
     expect_equal(mod1@df, 588)
     cfs <- as.numeric(do.call(c, coef(mod1, digits=4)))
@@ -62,7 +62,7 @@ test_that('confirmatory mods', {
                         1.0352, 0.0582, 0, NA, 1, NA, 0, NA, 0, NA, 1, NA, 0.3926, 0.036, 1, NA),
                  tollerance = 1e-2)
     
-    mod.quad <- confmirt(dataset, model.quad, verbose = FALSE, draws = 10)
+    mod.quad <- mirt(dataset, model.quad, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod.quad, 'ConfirmatoryClass')
     expect_equal(mod.quad@df, 586)
     cfs <- as.numeric(do.call(c, coef(mod.quad, digits=4)))
@@ -75,7 +75,7 @@ test_that('confirmatory mods', {
                         -0.0213, 0.048, 0.9999, 0.1004, 0, NA, 1.0138, 0.0635, 0, NA, 1, NA, 0, NA, 1, NA),
                  tollerance = 1e-2)
     
-    suppressWarnings(mod.combo <- confmirt(dataset, model.combo, verbose = FALSE, draws = 10))
+    suppressWarnings(mod.combo <- mirt(dataset, model.combo, verbose = FALSE, draws = 10, method = 'MHRM'))
     expect_is(mod.combo, 'ConfirmatoryClass')
     expect_equal(mod.combo@df, 588)
     cfs <- as.numeric(do.call(c, coef(mod.combo, digits=4)))

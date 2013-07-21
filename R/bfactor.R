@@ -5,7 +5,7 @@
 #' Fits the IRT models using a dimensional reduction EM algorithm so that regardless
 #' of the number of specific factors estimated the model only uses a two-dimensional 
 #' quadrature grid for integration (hence the maximum number of factors in estimation is only 2). 
-#' See \code{\link{confmirt}} for appropriate methods to be used
+#' See \code{\link{mirt}} for appropriate methods to be used
 #' on the objects returned from the estimation.
 #'
 #'
@@ -33,7 +33,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},

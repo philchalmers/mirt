@@ -158,7 +158,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
-                                 method=opts$method, itemnames=PrepList[[1]]$itemnames)
+                                 method=opts$method, itemnames=PrepList[[1L]]$itemnames)
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()
@@ -210,7 +210,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         temp <- matrix(0,nrow=nitems,ncol=(nfact-1L))
         sitems <- matrix(0, nrow=sum(PrepList[[1L]]$K), ncol=(nfact-1L))
         if(opts$BFACTOR){
-            for(i in 1:nitems) temp[i, oldmodel[i]] <- 1
+            for(i in 1L:nitems) temp[i, oldmodel[i]] <- 1
             ind <- 1L
             for(i in 1L:nitems){
                 for(j in 1L:PrepList[[1L]]$K[i]){
@@ -413,6 +413,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!is.nan(G2) && !opts$NULL.MODEL)
         if(X2/G2 > 10) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
     if(is.null(parprior)) parprior <- list()
+    if(is.null(opts$quadpts)) opts$quadpts <- NaN
     if(Data$ngroups == 1L){
         if(opts$method == 'MIXED'){            
             mod <- new('MixedClass',
@@ -420,7 +421,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        pars=cmods[[1L]]@pars,
                        model=list(oldmodel),
                        df=df,
-                       itemloc=PrepList[[1]]$itemloc,
+                       itemloc=PrepList[[1L]]$itemloc,
                        method=opts$method,
                        AIC=AIC,
                        AICc=AICc,

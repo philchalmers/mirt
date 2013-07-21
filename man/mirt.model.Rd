@@ -22,7 +22,8 @@
 }
 \value{
   Returns a model specification object to be used in
-  \code{\link{confmirt}}.
+  \code{\link{mirt}}, \code{\link{multipleGroup}}, or
+  \code{\link{mixedmirt}}.
 }
 \description{
   The \code{mirt.model} function scans/reads user input to

@@ -12,7 +12,7 @@ thetaComb <- function(theta, nfact)
 	return(Theta)
 }
 
-# Product terms in confmirt
+# Product terms 
 prodterms <- function(theta0, prodlist)
 {
     products <- matrix(1, ncol = length(prodlist), nrow = nrow(theta0))
@@ -281,8 +281,8 @@ bfactor2mod <- function(model, J){
 calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parprior, verbose){
     if(is(model, 'numeric') && length(model) > 1L)
         model <- bfactor2mod(model, data)
-    pars <- confmirt(data, model, itemtype=itemtype, pars=fitvalues, constrain=constrain,
-                     parprior=parprior,
+    pars <- mirt(data, model, itemtype=itemtype, pars=fitvalues, constrain=constrain,
+                     parprior=parprior, method = 'MHRM',
                      technical = list(BURNIN = 1L, SEMCYCLES = 5L, TOL = .01,
                                     EMSE = TRUE), verbose = verbose)
     for(i in 1L:length(pars$pars))

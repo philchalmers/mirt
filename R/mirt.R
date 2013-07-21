@@ -5,7 +5,8 @@
 #' to dichotomous and polytomous data under the item response theory paradigm.
 #' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit,
 #' nominal, graded rating scale, Rasch rating scale, nested logistic,
-#' and partially compensatory models using the EM algorithm. User defined item classes
+#' and partially compensatory models using the traditional EM algorithm or Cai's (2010)
+#' Metropolis-Hastings Robbins-Monro (MH-RM) algorithm. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory'
 #' person or item level predictors, though these can only be included by using the
 #' \code{\link{mixedmirt}} function.
@@ -27,6 +28,14 @@
 #' computed using the LD statistic (Chen & Thissen, 1997) in the lower
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
 #' the diagonal.
+#' 
+#' @section Convergence for MH-RM:
+#'
+#' For the MH-RM algorithm, when the number of iterations grows very high (e.g., greater than 1500) or
+#' when \code{Max Change = .2500} values are repeatedly printed
+#' to the console too often (indicating that the parameters were being constrained since they are naturally
+#' moving in steps greater than 0.25) then the model may either be ill defined or have a
+#' very flat likelihood surface, and genuine maximum-likelihood parameter estimates may be difficult to find.
 #'
 #' @section Confirmatory IRT:
 #'
@@ -41,8 +50,8 @@
 #'
 #' @section Exploratory IRT:
 #'
-#' Specifying a number as the second input to confmirt an exploratory IRT model is estimated and
-#' can be viewed as a stochastic analogue of \code{mirt}, with much of the same behaviour and
+#' When specifying a single number as the second input to mirt an exploratory IRT model is estimated and
+#' can be viewed as a stochastic analogue of the EM algorithm, with much of the same behaviour and
 #' specifications. Rotation and target matrix options will be used in this subroutine and will be
 #' passed to the returned object for use in generic functions such as \code{summary()} and
 #' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification.
@@ -61,6 +70,8 @@
 #'
 #' @aliases mirt summary,ExploratoryClass-method coef,ExploratoryClass-method anova,ExploratoryClass-method
 #' fitted,ExploratoryClass-method plot,ExploratoryClass-method residuals,ExploratoryClass-method
+#' summary,ConfirmatoryClass-method coef,ConfirmatoryClass-method anova,ConfirmatoryClass-method
+#' fitted,ConfirmatoryClass-method plot,ConfirmatoryClass-method residuals,ConfirmatoryClass-method
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object returned from \code{mirt.model()} declaring how
@@ -77,6 +88,9 @@
 #' 2-3PL partially compensatory model, and 2-4 parameter nested logistic
 #' models, respectively. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function
+#' @param method a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
+#' for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to 
+#' use the MH-RM algorithm
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using
 #' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
 #' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
@@ -177,18 +191,25 @@
 #' category representation (mirt omits categories that are missing, so if the unique values for an item
 #' are c(1,2,5,6) they are treated as being the same as c(1,2,3,4). Viewing the starting values will help
 #' to identify the categories)
+#' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
+#' is 5000
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #' \describe{
 #' \item{MAXQUAD}{maximum number of quadratures; default 10000}
-#' \item{TOL}{EM convergence threshold; default .0001}
+#' \item{TOL}{EM or MH-RM convergence threshold; defaults are .0001 and .001}
 #' \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
-#' and \code{SE.type = 'MHRM'}. Lower values will take longer but may be more
+#' and \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower values will take longer but may be more
 #' stable for computing the information matrix. Default is .0001}
-#' \item{NCYCLES}{maximum number of EM cycles; default 500}
+#' \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
+#' \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
+#' \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
+#' \item{set.seed}{seed number used during estimation. Default is 12345}
+#' \item{gain}{a vector of three values specifying the numerator, exponent, and subtracted
+#'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}
 #' }
 #' @param ... additional arguments to be passed
-#' @section Convergence:
+#' @section Convergence for quadrature methods:
 #'
 #' Unrestricted full-information factor analysis is known to have problems with
 #' convergence, and some items may need to be constrained or removed entirely
@@ -279,7 +300,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
@@ -299,6 +320,14 @@
 #'
 #' Bock, R. D. & Lieberman, M. (1970). Fitting a response model for n dichotomously
 #' scored items. \emph{Psychometrika, 35}, 179-197.
+#' 
+#' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a
+#' Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75},
+#' 33-57.
+#'
+#' Cai, L. (2010b). Metropolis-Hastings Robbins-Monro algorithm for confirmatory
+#' item factor analysis. \emph{Journal of Educational and Behavioral
+#' Statistics, 35}, 307-335.
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
@@ -336,26 +365,41 @@
 #'
 #' @keywords models
 #' @usage
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', pars = NULL,
-#' constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin', Target = NaN,
+#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', method = 'EM',
+#' pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000, rotate = 'oblimin', Target = NaN,
 #' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, nominal.highlow = NULL,
 #' large = FALSE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
+#' 
+#' \S4method{summary}{ConfirmatoryClass}(object, suppress = 0, digits = 3, verbose = TRUE, ...)
 #'
 #' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, digits = 3, 
 #' verbose = TRUE, ...)
+#' 
+#' \S4method{coef}{ConfirmatoryClass}(object, digits = 3, ...)
 #'
 #' \S4method{anova}{ExploratoryClass}(object, object2)
-#'
-#' \S4method{fitted}{ExploratoryClass}(object, digits = 3, ...)
+#' 
+#' \S4method{anova}{ConfirmatoryClass}(object, object2)
 #'
 #' \S4method{plot}{ExploratoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
+#' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
+#' 
+#' \S4method{plot}{ConfirmatoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
 #' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #'
 #' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL,
 #' verbose = TRUE, ...)
+#' 
+#' \S4method{residuals}{ConfirmatoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL,
+#' verbose = TRUE, ...)
+#'
+#' \S4method{fitted}{ExploratoryClass}(object, digits = 3, ...)
+#' 
+#' \S4method{fitted}{ConfirmatoryClass}(object, digits = 3, ...)
+#'
 #' @export mirt
 #' @examples
 #'
@@ -511,10 +555,103 @@
 #' plot(Theta, testinfo(mod2, Theta), type = 'l', main = 'Test information', ylab = 'Information')
 #' lines(Theta, testinfo(mod0, Theta), col = 'red')
 #'
+#' #####
+#' # using the MH-RM algorithm
+#' data(LSAT7)
+#' fulldata <- expand.table(LSAT7)
+#' (mod1 <- mirt(fulldata, 1, method = 'MHRM'))
+#'
+#' #Confirmatory models
+#'
+#' #simulate data
+#' a <- matrix(c(
+#' 1.5,NA,
+#' 0.5,NA,
+#' 1.0,NA,
+#' 1.0,0.5,
+#'  NA,1.5,
+#'  NA,0.5,
+#'  NA,1.0,
+#'  NA,1.0),ncol=2,byrow=TRUE)
+#'
+#' d <- matrix(c(
+#' -1.0,NA,NA,
+#' -1.5,NA,NA,
+#'  1.5,NA,NA,
+#'  0.0,NA,NA,
+#' 3.0,2.0,-0.5,
+#' 2.5,1.0,-1,
+#' 2.0,0.0,NA,
+#' 1.0,NA,NA),ncol=3,byrow=TRUE)
+#'
+#' sigma <- diag(2)
+#' sigma[1,2] <- sigma[2,1] <- .4
+#' items <- c(rep('dich',4), rep('graded',3), 'dich')
+#' dataset <- simdata(a,d,2000,items,sigma)
+#'
+#' #analyses
+#' #CIFA for 2 factor crossed structure
+#'
+#' model.1 <- mirt.model()
+#'   F1 = 1-4
+#'   F2 = 4-8
+#'   COV = F1*F2
+#'
+#'
+#' #compute model, and use parallel computation of the log-likelihood
+#' library(parallel)
+#' mirtCluster(detectCores())
+#' mod1 <- mirt(dataset, model.1, method = 'MHRM')
+#' coef(mod1)
+#' summary(mod1)
+#' residuals(mod1)
+#'
+#' #####
+#' #bifactor
+#' model.3 <- mirt.model()
+#'   G = 1-8
+#'   F1 = 1-4
+#'   F2 = 5-8
+#'
+#'
+#' mod3 <- mirt(dataset,model.3, method = 'MHRM')
+#' coef(mod3)
+#' summary(mod3)
+#' residuals(mod3)
+#' anova(mod1,mod3)
+#'
+#' #####
+#' #polynomial/combinations
+#' data(SAT12)
+#' data <- key2binary(SAT12,
+#'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#'
+#' model.quad <- mirt.model()
+#'        F1 = 1-32
+#'   (F1*F1) = 1-32
+#'
+#'
+#' model.combo <- mirt.model()
+#'        F1 = 1-16
+#'        F2 = 17-32
+#'   (F1*F2) = 1-8
+#'
+#'
+#' (mod.quad <- mirt(data, model.quad))
+#' (mod.combo <- mirt(data, model.combo))
+#' anova(mod.quad, mod.combo)
+#'
+#' #non-linear item and test plots
+#' plot(mod.quad)
+#' plot(mod.combo, type = 'SE')
+#' itemplot(mod.quad, 1, type = 'score')
+#' itemplot(mod.combo, 2, type = 'score')
+#' itemplot(mod.combo, 2, type = 'infocontour')
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
-                 pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, rotate = 'oblimin',
+                 method = 'EM', pars = NULL, constrain = NULL, parprior = NULL, 
+                 calcNull = TRUE, draws = 5000, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
                  key = NULL, nominal.highlow = NULL, 
                  large = FALSE, verbose = TRUE, technical = list(), ...)
@@ -522,7 +659,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
-                      pars=pars, method = 'EM', constrain=constrain, SE=SE,
+                      pars=pars, method=method, constrain=constrain, SE=SE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key, 

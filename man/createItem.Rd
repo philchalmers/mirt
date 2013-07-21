@@ -84,7 +84,7 @@ sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars =
 tail(sv) #looks good
 mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 coef(mod)
-mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
+mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE, method = 'MHRM')
 coef(mod2)
 
 ###non-linear
@@ -120,7 +120,7 @@ P.mycov <- function(par,Theta, ncat){
 
 covdata <- matrix(c(rep(0, 500), rep(1,500)), nrow=nrow(dat))
 x3 <- createItem(name, par=par, est=est, P=P.mycov, userdata=covdata)
-mod <- confmirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3))
+mod <- mirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3))
 coef(mod)
 
 ###nominal response model (Bock 1972 version)

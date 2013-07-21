@@ -59,7 +59,7 @@
 #' @param return.design logical; return the design matrices before they have (potentially) 
 #' been reassigned? 
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See 
-#' \code{\link{confmirt}} for more detail
+#' \code{\link{mirt}} for more detail
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{randef}}, \code{\link{calcLogLik}}, \code{\link{mirtCluster}}

@@ -3,7 +3,7 @@ context('confmirtOne')
 test_that('exploratory mods', {
     data(LSAT7)
     fulldata <- expand.table(LSAT7)
-    onefact <- confmirt(fulldata, 1, verbose = FALSE, draws = 10)
+    onefact <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(onefact, 'ConfirmatoryClass')    
     cfs <- as.numeric(do.call(c, coef(onefact, digits=4)))
     expect_equal(cfs, c(0.9892, 0.2385, 1.8562, 0.1541, 0, NA, 1, NA, 1.0764, 0.3407, 0.8074,
@@ -25,7 +25,7 @@ test_that('exploratory mods', {
     expect_true(mirt:::closeEnough(W2$W - 1.728, -1e-2, 1e-2))
     fitonefact <- fitIndices(onefact)
     expect_is(fitonefact, 'list')
-    suppressWarnings(twofact <- confmirt(fulldata, 2, verbose = FALSE, draws = 10))
+    suppressWarnings(twofact <- mirt(fulldata, 2, verbose = FALSE, draws = 10, method = 'MHRM'))
     cfs <- as.numeric(do.call(c, coef(twofact, digits=4, verbose = FALSE)))
     expect_equal(cfs, c(0.4859, 0.1904, -0.7853, 0.1658, 1.9218, 0.1433, 0, NA, 1, NA, 1.4393, 
                         0.1143, 0.1872, 0.0945, 0.8808, 0.0921, 0, NA, 1, NA, 1.6235, 0.1142, 
@@ -35,7 +35,7 @@ test_that('exploratory mods', {
                  tollerance = 1e-2)
     expect_is(twofact, 'ExploratoryClass')
     fulldata[1,1] <- fulldata[2,2] <- NA
-    onefactmissing <- confmirt(fulldata, 1, verbose = FALSE, draws = 10)    
+    onefactmissing <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM')    
     expect_is(onefactmissing, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(onefactmissing, digits=4, verbose = FALSE)))
     expect_equal(cfs, c(0.9741, 0.2064, 1.8525, 0.1455, 0, NA, 1, NA, 1.0568, 0.183, 0.8032, 

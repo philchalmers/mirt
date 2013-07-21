@@ -21,7 +21,7 @@ test_that('old2PL', {
     mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose=FALSE)
     expect_is(mod, 'ConfirmatoryClass')          
     expect_is(coef(mod), 'list')
-    mod2 <- confmirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE, draws = 10)
+    mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod2, 'ConfirmatoryClass')          
     expect_is(coef(mod2), 'list')    
     

@@ -95,7 +95,7 @@
 #' dataset1 <- simdata(a, d, 2000, itemtype = 'dich')
 #' dataset2 <- simdata(a, d, 2000, itemtype = 'dich', mu = mu, sigma = sigma)
 #'
-#' #mod <- confmirt(dataset1, 3)
+#' #mod <- mirt(dataset1, 3, method = 'MHRM')
 #' #coef(mod)
 #'
 #' ###An example of a mixed item, bifactor loadings pattern with correlated specific factors
@@ -149,7 +149,7 @@
 #' #model <- mirt.model('
 #' #F1 = 1-6
 #' #(F1 * F1) = 1-3')
-#' #mod <- confmirt(nonlindata, model)
+#' #mod <- mirt(nonlindata, model)
 #' #coef(mod)
 #'
 #' ####2PLNRM model for item 4 (with 4 categories), 2PL otherwise

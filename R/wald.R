@@ -12,7 +12,7 @@
 #' @param L a coefficient matrix with dimensions nconstrasts x npars, or a vector if only one
 #' set of contrasts is being tested. Omitting this value will return the column names of the
 #' information matrix used to identify the (potentially constrained) parameters
-#' @param object estimated object from \code{mirt}, \code{bfactor}, \code{confmirt},
+#' @param object estimated object from \code{mirt}, \code{bfactor},
 #' \code{multipleGroup}, or \code{mixedmirt}
 #' @param C a constant vector/matrix to be compared along side L
 #' @keywords wald

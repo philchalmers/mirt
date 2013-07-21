@@ -7,7 +7,7 @@
 #'
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally
 #' independent, and therefore could initially be performed by sub-setting the data and running identical
-#' models with \code{confmirt} or \code{mirt} and aggregating the results (e.g., log-likelihood).
+#' models with \code{mirt} and aggregating the results (e.g., log-likelihood).
 #' However, constrains may be imposed across groups by invoking various \code{invariance} keywords and
 #' \code{constrain = ...} arguments, by inputting user specified design matrix from
 #' \code{mod2values} or from passing \code{pars = 'values'}, or by supplying a \code{constrain} list
@@ -91,7 +91,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#' \code{\link{confmirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},

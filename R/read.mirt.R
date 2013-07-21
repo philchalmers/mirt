@@ -5,7 +5,7 @@
 #'
 #'
 #' @aliases read.mirt
-#' @param x an object returned from \code{mirt, bfactor, confmirt}, or \code{multipleGroup}
+#' @param x an object returned from \code{mirt, bfactor}, or \code{multipleGroup}
 #' @param as.irt.pars if \code{TRUE}, the parameters will be output as an \code{irt.pars} object
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords plink

@@ -6,7 +6,7 @@
 
 \title{Class "ConfirmatoryClass"}
 \description{
-Defines the object returned from \code{\link{confmirt}}, \code{\link{bfactor}}, and \code{\link{mirt}}
+Defines the object returned from \code{\link{bfactor}} and \code{\link{mirt}}
 when the estimated model is confirmatory.
 }
 \section{Objects from the Class}{

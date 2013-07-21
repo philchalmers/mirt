@@ -67,7 +67,7 @@
   before they have (potentially) been reassigned?}
 
   \item{...}{additional arguments to be passed to the MH-RM
-  estimation engine. See \code{\link{confmirt}} for more
+  estimation engine. See \code{\link{mirt}} for more
   detail}
 }
 \description{

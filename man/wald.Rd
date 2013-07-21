@@ -15,7 +15,7 @@
   (potentially constrained) parameters}
 
   \item{object}{estimated object from \code{mirt},
-  \code{bfactor}, \code{confmirt}, \code{multipleGroup}, or
+  \code{bfactor}, \code{multipleGroup}, or
   \code{mixedmirt}}
 
   \item{C}{a constant vector/matrix to be compared along
