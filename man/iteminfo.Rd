@@ -2,7 +2,7 @@
 \alias{iteminfo}
 \title{Function to calculate item information}
 \usage{
-  iteminfo(x, Theta, degrees = NULL)
+  iteminfo(x, Theta, degrees = NULL, total.info = TRUE)
 }
 \arguments{
   \item{x}{an extracted internal mirt object containing
@@ -14,6 +14,10 @@
   \item{degrees}{a vector of angles in degrees that are
   between 0 and 90 that jointly sum to 90. Only applicable
   when the input object is multidimensional}
+
+  \item{total.info}{logical; return the total information
+  curve for the item? If \code{FALSE}, information curves
+  for each category are returned as a matrix}
 }
 \description{
   Given an internal mirt item object extracted by using
@@ -28,6 +32,13 @@ info.2 <- iteminfo(extr.2, Theta)
 
 #do something with the info?
 plot(Theta, info.2, type = 'l', main = 'Item information')
+
+#category information curves
+cat.info <- iteminfo(extr.2, Theta, total.info = FALSE)
+plot(Theta, cat.info[,1], type = 'l', ylim = c(0, max(cat.info)),
+     ylab = 'info', main = 'Category information')
+for(i in 2:ncol(cat.info))
+   lines(Theta, cat.info[,i], col = i)
 
 ## Customized test information plot
 T1 <- T2 <- 0

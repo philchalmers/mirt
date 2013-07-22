@@ -540,10 +540,10 @@ LL.Priors <- function(x, LL){
     return(LL)
 }
 
-ItemInfo <- function(x, Theta, cosangle){
+ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
     P <- ProbTrace(x, Theta)
     dx <- DerivTheta(x, Theta)
-    info <- 0
+    info <- matrix(0, nrow(Theta), ncol(P))
     cosanglefull <- matrix(cosangle, nrow(P), length(cosangle), byrow = TRUE)
     if(ncol(cosanglefull) < ncol(dx$grad[[1L]]))
         cosanglefull <- cbind(cosanglefull, matrix(1, nrow(cosanglefull),
@@ -553,7 +553,8 @@ ItemInfo <- function(x, Theta, cosangle){
         dx$hess[[i]] <- matrix(rowSums(dx$hess[[i]] * cosanglefull))
     }
     for(i in 1L:x@ncat)
-        info <- info + ( (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]])
+        info[,i] <- (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]]
+    if(total.info) info <- rowSums(info)
     return(info)
 }
 

@@ -8,6 +8,8 @@
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param degrees a vector of angles in degrees that are between 0 and 90 that jointly sum to 90.
 #' Only applicable when the input object is multidimensional
+#' @param total.info logical; return the total information curve for the item? If \code{FALSE}, 
+#' information curves for each category are returned as a matrix
 #' @keywords information
 #' @seealso
 #' \code{\link{extract.item}}
@@ -22,6 +24,13 @@
 #'
 #' #do something with the info?
 #' plot(Theta, info.2, type = 'l', main = 'Item information')
+#' 
+#' #category information curves
+#' cat.info <- iteminfo(extr.2, Theta, total.info = FALSE)
+#' plot(Theta, cat.info[,1], type = 'l', ylim = c(0, max(cat.info)), 
+#'      ylab = 'info', main = 'Category information')
+#' for(i in 2:ncol(cat.info))
+#'    lines(Theta, cat.info[,i], col = i)
 #'
 #' ## Customized test information plot
 #' T1 <- T2 <- 0
@@ -36,7 +45,7 @@
 #' lines(Theta, T1/T1, col = 'red')
 #'
 #' }
-iteminfo <- function(x, Theta, degrees = NULL){
+iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(is.null(degrees) && ncol(Theta) == 1L) degrees <- 0
@@ -45,6 +54,6 @@ iteminfo <- function(x, Theta, degrees = NULL){
     if(ncol(Theta) != x@nfact)
         stop('Theta does not have the correct number of dimensions')
     cosangle <- cos(d2r(degrees))
-    info <- ItemInfo(x=x, Theta=Theta, cosangle=cosangle)
+    info <- ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
     info
 }
