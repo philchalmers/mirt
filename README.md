@@ -38,19 +38,6 @@ library('devtools')
 install_github('mirt', 'philchalmers')
 ```
 
-## Installing from a binary (Windows only)
-
-For those having difficulty installing the package on Windows, binary installation (.zip) files 
-for 32- or 64-bit Windows may be installed with:
-
-```r
-download.file('http://dl.dropbox.com/u/10780530/mirt/mirt.zip', 'mirt.zip')
-install.packages('mirt.zip', repos=NULL)
-```
-
-Note that this binary file is updated periodically and is not guaranteed to be in sync with 
-the source code. 
-
 # Presentations and Workshops
 
 Below are some presentation/workshop files for `mirt` that I have written and presented, and 
