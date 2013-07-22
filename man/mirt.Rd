@@ -27,24 +27,12 @@ Theory)}
     Target = NULL, suppress = 0, digits = 3, verbose =
     TRUE, ...)
 
-  \S4method{summary}{ConfirmatoryClass}(object, suppress =
-    0, digits = 3, verbose = TRUE, ...)
-
   \S4method{coef}{ExploratoryClass}(object, rotate = '',
     Target = NULL, digits = 3, verbose = TRUE, ...)
 
-  \S4method{coef}{ConfirmatoryClass}(object, digits = 3,
-    ...)
-
   \S4method{anova}{ExploratoryClass}(object, object2)
 
-  \S4method{anova}{ConfirmatoryClass}(object, object2)
-
   \S4method{plot}{ExploratoryClass}(x, y, type = 'info',
-    npts = 50, theta_angle = 45, rot = list(xaxis = -70,
-    yaxis = 30, zaxis = 10), ...)
-
-  \S4method{plot}{ConfirmatoryClass}(x, y, type = 'info',
     npts = 50, theta_angle = 45, rot = list(xaxis = -70,
     yaxis = 30, zaxis = 10), ...)
 
@@ -52,14 +40,7 @@ Theory)}
     'LD', digits = 3, df.p = FALSE, printvalue = NULL,
     verbose = TRUE, ...)
 
-  \S4method{residuals}{ConfirmatoryClass}(object, restype =
-    'LD', digits = 3, df.p = FALSE, printvalue = NULL,
-    verbose = TRUE, ...)
-
   \S4method{fitted}{ExploratoryClass}(object, digits = 3,
-    ...)
-
-  \S4method{fitted}{ConfirmatoryClass}(object, digits = 3,
     ...)
 }
 \arguments{
@@ -346,18 +327,6 @@ Theory)}
   returned by \code{residuals}, and Cramer's V above the
   diagonal.
 }
-\section{Convergence for MH-RM}{
-  For the MH-RM algorithm, when the number of iterations
-  grows very high (e.g., greater than 1500) or when
-  \code{Max Change = .2500} values are repeatedly printed
-  to the console too often (indicating that the parameters
-  were being constrained since they are naturally moving in
-  steps greater than 0.25) then the model may either be ill
-  defined or have a very flat likelihood surface, and
-  genuine maximum-likelihood parameter estimates may be
-  difficult to find.
-}
-
 \section{Confirmatory IRT}{
   Specification of the confirmatory item factor analysis
   model follows many of the rules in the SEM framework for
@@ -413,6 +382,18 @@ Theory)}
   when including upper bound parameters as well. Also,
   increasing the number of quadrature points per dimension
   may help to stabilize the estimation process.
+}
+
+\section{Convergence for MH-RM method}{
+  For the MH-RM algorithm, when the number of iterations
+  grows very high (e.g., greater than 1500) or when
+  \code{Max Change = .2500} values are repeatedly printed
+  to the console too often (indicating that the parameters
+  were being constrained since they are naturally moving in
+  steps greater than 0.25) then the model may either be ill
+  defined or have a very flat likelihood surface, and
+  genuine maximum-likelihood parameter estimates may be
+  difficult to find.
 }
 
 \section{IRT Models}{
@@ -660,7 +641,7 @@ par(mfrow = c(1,1))
 plot(Theta, testinfo(mod2, Theta), type = 'l', main = 'Test information', ylab = 'Information')
 lines(Theta, testinfo(mod0, Theta), col = 'red')
 
-#####
+###########
 # using the MH-RM algorithm
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
