@@ -54,8 +54,7 @@ setMethod(
 	definition = function(object, draws = 5000, G2 = TRUE)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot){
-            if(nfact > 1L) theta <-  mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
-            else theta <- as.matrix(rnorm(N,grp$gmeans, grp$gcov))
+            theta <- mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)            
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)            
             if(length(random) > 0L){                                
