@@ -199,6 +199,10 @@
 #' \item{set.seed}{seed number used during estimation. Default is 12345}
 #' \item{gain}{a vector of three values specifying the numerator, exponent, and subtracted
 #'      values for the RM gain value. Default is \code{c(0.05,0.5,0.004)}}
+#' \item{customK}{a numeric value to be used to explicitly declare the number of response categories
+#'       for each item. This should only be used when constructing mirt model for reasons other 
+#'       than parameter estimation (such as to obtain factor scores). The format is the same as the 
+#'       mod@@K slot in all converged models}
 #' }
 #' @param ... additional arguments to be passed
 #' @section Convergence for quadrature methods:

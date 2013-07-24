@@ -660,6 +660,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
             if(large) opts$returnPrepList <- TRUE
         if(is.list(large)) opts$PrepList <- large
     }    
+    if(!is.null(technical$customK)) opts$calcNull <- FALSE
     return(opts)
 }
 
