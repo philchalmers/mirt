@@ -133,7 +133,6 @@
 #'
 #' mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
 #'
-#' # prev.mod can save precious iterations and help to avoid local minimums
 #' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 #' #equal intercepts, free variance and means
 #' mod_scalar2 <- multipleGroup(dat, models, group = group, 

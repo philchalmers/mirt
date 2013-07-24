@@ -554,7 +554,7 @@ ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
     }
     for(i in 1L:x@ncat)
         info[,i] <- (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]]
-    if(total.info) info <- rowSums(info)
+    if(total.info) info <- matrix(rowSums(info))
     return(info)
 }
 

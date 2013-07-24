@@ -106,15 +106,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         }
     }
     gTheta <- vector('list', ngroups)
-    for(g in 1L:ngroups) gTheta[[g]] <- Theta
-    warn <- FALSE
+    for(g in 1L:ngroups) gTheta[[g]] <- Theta    
     
     #EM
     for (cycles in 1L:NCYCLES){
         #priors
         for(g in 1L:ngroups){            
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-            gTheta[[g]] <- Theta %*% chol(gstructgrouppars[[g]]$gcov) + gstructgrouppars[[g]]$gmeans
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])            
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
@@ -143,8 +141,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
                                          itemtrace=gitemtrace[[g]])
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
-        }                
-        if(cycles > 3L && lastLL > LL) warn <- TRUE
+        }
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
@@ -166,9 +163,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         if(cycles > 3L && all(abs(preMstep.longpars - longpars) < TOL))  break
     } #END EM
     if(cycles == NCYCLES)
-        message('EM iterations terminated after ', cycles, ' iterations.')    
-    if(warn && !any.prior)
-        warning('EM likelihood was not strictly increasing. Model is probably not identified or is unstable')
+        message('EM iterations terminated after ', cycles, ' iterations.')        
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])

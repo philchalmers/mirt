@@ -117,6 +117,8 @@ test_that('poly', {
     x <- extract.item(modp1, 1)
     iinfo <- iteminfo(x, Theta)
     expect_is(iinfo, 'matrix')    
+    iinfo <- iteminfo(x, Theta, total.info=FALSE)
+    expect_is(iinfo, 'matrix')
     tinfo <- testinfo(modp1, Theta)
     expect_is(tinfo, 'matrix')    
 })
