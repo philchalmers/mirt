@@ -89,7 +89,7 @@
 #'
 #' covdata <- matrix(c(rep(0, 500), rep(1,500)), nrow=nrow(dat))
 #' x3 <- createItem(name, par=par, est=est, P=P.mycov, userdata=covdata)
-#' mod <- mirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3))
+#' mod <- mirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3), method = 'MHRM')
 #' coef(mod)
 #' 
 #' ###nominal response model (Bock 1972 version)

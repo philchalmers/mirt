@@ -153,7 +153,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta)
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                       gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                      constrain=constrain, TOL=MSTEPTOL)
+                      constrain=constrain, cycle=cycles)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         EMhistory[cycles+1L,] <- longpars
         if(verbose)
@@ -235,9 +235,10 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, Prior, BFACTOR, itemloc, PrepList, L,
-                  UBOUND, LBOUND, constrain, TOL){
+                  UBOUND, LBOUND, constrain, cycle){
     p <- longpars[est]
-    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS', 
+    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', 
+                 control=list(maxit=ifelse(cycle > 10L, 10L, 5L)),
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                  PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
                  UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est])
