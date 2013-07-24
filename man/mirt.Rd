@@ -290,8 +290,10 @@ Theory)}
   to be used to explicitly declare the number of response
   categories for each item. This should only be used when
   constructing mirt model for reasons other than parameter
-  estimation (such as to obtain factor scores). The format
-  is the same as the mod@K slot in all converged models} }}
+  estimation (such as to obtain factor scores), and
+  requires that the input data all have 0 as the lowest
+  category. The format is the same as the mod@K slot in all
+  converged models} }}
 
   \item{...}{additional arguments to be passed}
 }

@@ -589,6 +589,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     tabdata <- matrix(0, nrow(tabdata2), sum(K))
     for(i in 1L:nitem){
         uniq <- sort(na.omit(unique(tabdata2[,i])))
+        if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)        
         for(j in 1L:length(uniq))
             tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
     }
