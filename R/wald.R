@@ -73,11 +73,13 @@ wald <- function(object, L, C = 0){
         }
     }
     if(is(object, 'MixedClass')){
-        for(i in 1L:length(object@random)){
-            B <- c(B, object@random[[i]]@par)
-            tmp <- object@random[[i]]@parnum
-            names(tmp) <- names(object@random[[i]]@est)
-            parnum <- c(parnum, tmp)
+        if(length(object@random)){
+            for(i in 1L:length(object@random)){
+                B <- c(B, object@random[[i]]@par)
+                tmp <- object@random[[i]]@parnum
+                names(tmp) <- names(object@random[[i]]@est)
+                parnum <- c(parnum, tmp)
+            }
         }
     }
     keep <- c()
