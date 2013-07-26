@@ -212,26 +212,28 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
 }
 
 
-RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP Rnzeta, SEXP RestHess) 
+RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rprior, SEXP Rdat, 
+    SEXP Rnzeta, SEXP RestHess, SEXP RBFACTOR) 
 {		
-    BEGIN_RCPP
-    /* 
-        Rprob = numeric matrix of probabilities
-        RThetas = numeric matrix of abilities
-        Rdat = integer matrix of dichotomized item responses
-        nzeta = integer number of response categories
-     */
+    BEGIN_RCPP    
 
 	int i, j, k; 
 	NumericMatrix prob(Rprob);
 	NumericMatrix Thetas(RThetas);
-    NumericVector Prior(RPrior);
+    NumericVector prior(Rprior);    
     NumericMatrix dat2(Rdat);
     IntegerVector Pnzeta(Rnzeta);
-    IntegerVector estHess(RestHess);
-    const int nzeta = Pnzeta[0];
+    IntegerVector estHess(RestHess);    
+    IntegerVector BFACTOR(RBFACTOR);
+    const int nzeta = Pnzeta(0);
     const int nfact = Thetas.ncol();
     const int N = Thetas.nrow();
+    NumericVector Prior(N);
+    if(BFACTOR(0)){
+    	Prior = prior;
+	} else {		
+		Prior.fill(1.0);
+	}
     NumericMatrix dat(dat2.nrow(), dat2.ncol());
     NumericMatrix d2L(nfact + nzeta, nfact + nzeta);
     NumericVector dL(nfact + nzeta);
@@ -337,10 +339,37 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 				    d2L(factind(i),factind(k)) += d2Louter(i,k);				
         }
 	}
+    
+    //reorder 
+    NumericVector grad(dL.length());
+    NumericMatrix hess(d2L.ncol(), d2L.ncol());
+    
+    for(i = 0; i < nfact; i++)
+        grad(i) = dL(i+nzeta);
+    for(i = 0; i < nzeta; i++)
+        grad(i+nfact) = dL(i);    
+    if(estHess(0)){
+        for(i = 0; i < nfact; i++){
+            for(j = 0; j < nfact; j++){
+                hess(i,j) = d2L(i+nzeta, j+nzeta);
+            }
+        }
+        for(i = 0; i < nzeta; i++){
+            for(j = 0; j < nzeta; j++){
+                hess(i+nfact,j+nfact) = d2L(i, j);
+            }
+        }
+        for(i = 0; i < nfact; i++){
+            for(j = 0; j < nzeta; j++){
+                hess(j+nfact, i) = d2L(nzeta+i,j);
+                hess(i, j+nfact) = d2L(nzeta+i,j);
+            }
+        }        
+    }
 
     List ret;
-    ret["grad"] = dL;
-    ret["hess"] = d2L;
+    ret["grad"] = grad;
+    ret["hess"] = hess;      
 	return(ret);
 	END_RCPP
 }

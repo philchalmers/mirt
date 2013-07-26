@@ -4,7 +4,7 @@
 setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = 1L, estHess = FALSE,
                           offterm = numeric(1L)){                
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)        
@@ -17,36 +17,13 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
-                          offterm = numeric(1L)){
-        grad <- rep(0, length(x@par))
-        hess <- matrix(0, length(x@par), length(x@par))
-        if(EM){
-            dat <- x@rs
-            Prior <- rep(1, nrow(dat))
-            if(BFACTOR) Prior <- prior
-        } else {
-            dat <- x@dat
-            Prior <- rep(1, nrow(dat))
-        }
-        nfact <- x@nfact
-        a <- x@par[1L:nfact]
-        d <- x@par[-(1L:nfact)]
-        nd <- length(d)
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = 1L, estHess = FALSE,
+                          offterm = numeric(1L)){   
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.poly(c(a, d),Theta, D=x@D, ot=offterm)
-        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd, estHess)
-        grad <- c(ret$grad[-(1L:nd)], ret$grad[1L:nd])
-        hess <- matrix(0,nfact+nd,nfact+nd)
-        if(estHess){
-            hess[1L:nfact,1L:nfact] <- ret$hess[-(1L:nd),-(1L:nd)]
-            hess[(nfact+1L):ncol(hess), (nfact+1L):ncol(hess)] <- ret$hess[1L:nd, 1L:nd]
-            hess[1L:nfact, (nfact+1L):ncol(hess)] <- hess[(nfact+1L):ncol(hess), 1L:nfact] <-
-                ret$hess[(nd+1L):ncol(hess), 1L:nd]
-            hess <- hess * x@D
-        }
-        ret <- list(grad=grad, hess=hess)
+        P <- P.poly(x@par, Theta, D=1, ot=offterm)
+        ret <- .Call("dparsPoly", P, Theta, prior, if(EM) x@rs else x@dat, 
+            length(x@par) - ncol(Theta), estHess, BFACTOR)        
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
@@ -75,15 +52,13 @@ setMethod(
         nd <- length(d)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.poly(c(a, d + shift), Theta, D=x@D, ot=offterm)
-        ret <- .Call("dparsPoly", P, Theta, Prior * x@D, dat, nd, estHess)
-        grad <- c(ret$grad[-(1L:nd)], ret$grad[1L:nd])
-        hess <- matrix(0,nfact+nd,nfact+nd)
-        hess[1L:nfact,1L:nfact] <- ret$hess[-(1L:nd),-(1L:nd)]
-        hess[(nfact+1L):ncol(hess), (nfact+1L):ncol(hess)] <- ret$hess[1L:nd, 1L:nd]
-        hess[1L:nfact, (nfact+1L):ncol(hess)] <- hess[(nfact+1L):ncol(hess), 1L:nfact] <-
-            ret$hess[(nd+1L):ncol(hess), 1L:nd]
-        hess <- hess * x@D
+        P <- P.poly(c(a, d + shift), Theta, D=1, ot=offterm)
+        ret <- .Call("dparsPoly", P, Theta, prior, if(EM) x@rs else x@dat, 
+                     length(d), estHess, BFACTOR)
+        grad <- ret$grad
+        hess <- ret$hess
+        hess <- cbind(hess, rep(0, nrow(hess)))
+        hess <- rbind(hess, rep(0, ncol(hess)))
         dc <- numeric(1)
         D <- x@D
         D2 <- D^2
@@ -94,32 +69,32 @@ setMethod(
         for(i in 1:ncol(rs))
             dc <- dc + rs[,i]/P[,i] * D * (PQfull[,i] - PQfull[,i+1L])
         dc <- sum(dc * Prior)
-        grad <- c(grad, dc)
-        hess <- cbind(hess, rep(0, nrow(hess)))
-        hess <- rbind(hess, rep(0, ncol(hess)))
-        cind <- ncol(hess)
-        ddc <- ddd <- numeric(length(Prior))
-        dda <- matrix(0, length(Prior), nfact)
-        for(i in 1L:ncol(rs))
-            ddc <- ddc + rs[,i]/P[,i] * D2 * (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
-                Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L])^2
-        hess[cind, cind] <- sum(ddc * Prior)
-        for(i in 1L:nzetas)
-            hess[cind, nfact + i] <- hess[nfact + i, cind] <-
-                sum((rs[,i]/P[,i] * D2 * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
-                rs[,i+1L]/P[,i+1L] * D2 * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
-                rs[,i+1L]/P[,i+1L]^2 * D2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L]))*Prior)
-        for(j in 1L:nfact){
-            tmp <- 0
+        grad <- c(grad, dc) 
+        if(estHess){
+            cind <- ncol(hess)
+            ddc <- ddd <- numeric(length(Prior))
+            dda <- matrix(0, length(Prior), nfact)
             for(i in 1L:ncol(rs))
-                    tmp <- tmp + (rs[,i]/P[,i] * D2 * Theta[,j] *
-                                      (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
-                                           Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                             rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L]) * Theta[,j] *
-                                  (PQfull[,i] - PQfull[,i+1L]))
-            hess[cind, j] <- hess[j, cind] <- sum(tmp * Prior)
+                ddc <- ddc + rs[,i]/P[,i] * D2 * (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
+                    Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                    rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L])^2
+            hess[cind, cind] <- sum(ddc * Prior)
+            for(i in 1L:nzetas)
+                hess[cind, nfact + i] <- hess[nfact + i, cind] <-
+                    sum((rs[,i]/P[,i] * D2 * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                    rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
+                    rs[,i+1L]/P[,i+1L] * D2 * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
+                    rs[,i+1L]/P[,i+1L]^2 * D2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L]))*Prior)
+            for(j in 1L:nfact){
+                tmp <- 0
+                for(i in 1L:ncol(rs))
+                        tmp <- tmp + (rs[,i]/P[,i] * D2 * Theta[,j] *
+                                          (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
+                                               Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                                 rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L]) * Theta[,j] *
+                                      (PQfull[,i] - PQfull[,i+1L]))
+                hess[cind, j] <- hess[j, cind] <- sum(tmp * Prior)
+            }
         }
         ret <- list(grad=grad, hess=hess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
