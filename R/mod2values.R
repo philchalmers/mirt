@@ -48,6 +48,20 @@ mod2values <- function(x){
         }
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))
     }
+    if(is(x, 'MixedClass')){
+        tmpgroup <- x@random
+        if(length(tmpgroup)){
+            for(i in 1L:length(tmpgroup)){            
+                parname <- c(parname, names(tmpgroup[[i]]@est))
+                parnum <- c(parnum, tmpgroup[[i]]@parnum)
+                par <- c(par, tmpgroup[[i]]@par)
+                est <- c(est, tmpgroup[[i]]@est)
+                lbound <- c(lbound, tmpgroup[[i]]@lbound)
+                ubound <- c(ubound, tmpgroup[[i]]@ubound)
+                item <- c(item, names(tmpgroup[[i]]@est))
+            }
+        }
+    }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
     ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est)
