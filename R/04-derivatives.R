@@ -26,10 +26,8 @@ setMethod(
             Theta <- cbind(x@fixed.design, Theta)
         r1 <- dat
         r2 <- f - dat        
-        gh <- .Call('dparsDich', a, d, g, u, x@D, Theta, Prior, r1, r2, estHess, TRUE, offterm)
-        grad <- gh$grad
-        hess <- gh$hess
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        ret <- .Call('dparsDich', a, d, g, u, x@D, Theta, Prior, r1, r2, estHess, TRUE, offterm)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -66,7 +64,8 @@ setMethod(
                 ret$hess[(nd+1L):ncol(hess), 1L:nd]
             hess <- hess * x@D
         }
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -140,7 +139,8 @@ setMethod(
                                   (PQfull[,i] - PQfull[,i+1L]))
             hess[cind, j] <- hess[j, cind] <- sum(tmp * Prior)
         }
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -286,7 +286,8 @@ setMethod(
         g <- x@par[length(x@par)-1L]                
         tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),g=x@par[nfact*2L + 1L],r=r, f=f,
                           Thetas=Theta, D=x@D, Prior=Prior*x@D, estHess=estHess)
-        ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)       
+        ret <- list(grad=tmp$grad, hess=tmp$hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -318,7 +319,8 @@ setMethod(
                                D=D, Prior=Prior, P=P, num=num, dat=dat, gpcm=TRUE)
         keep <- rep(TRUE, length(tmp$grad))
         keep[(nfact+1L):(nfact+length(d))] <- FALSE
-        ret <- DerivativePriors(x=x, grad=tmp$grad[keep], hess=tmp$hess[keep, keep])
+        ret <- list(grad=tmp$grad[keep], hess=tmp$hess[keep, keep])
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -378,7 +380,8 @@ setMethod(
                 (idat[,j] * Qd * D * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) -
                     rowSums(idat[,-j]) * D * Pn[,j]))
         }
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -466,7 +469,8 @@ setMethod(
             grad[x2@est] <- numDeriv::grad(L, x@par[x2@est], obj=x2, Theta=Theta, ot=offterm)
         }
         ####
-        ret <- DerivativePriors(x=x, grad=grad, hess=hess)
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         ret
     }
 )
@@ -494,9 +498,9 @@ setMethod(
             Theta <- cbind(x@fixed.design, Theta)
         P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
         num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=D, returnNum=TRUE, ot=offterm)
-        tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
-                               D=D, Prior=Prior, P=P, num=num, dat=dat)
-        ret <- DerivativePriors(x=x, grad=tmp$grad, hess=tmp$hess)
+        ret <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
+                               D=D, Prior=Prior, P=P, num=num, dat=dat)        
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
@@ -535,10 +539,9 @@ setMethod(
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
             if(estHess){
-                if(any(x@est)){
-                    #grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta, pars=pars, tabdata=tabdata,
-                    #                              itemloc=itemloc)
-                    hess[x@est,x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, pars=pars, tabdata=tabdata,
+                if(any(x@est)){                    
+                    hess[x@est,x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, 
+                                                           pars=pars, tabdata=tabdata,
                                                            itemloc=itemloc)
                 }
                 return(list(grad=grad, hess=hess))
@@ -727,7 +730,6 @@ setMethod(
 )
 
 #----------------------------------------------------------------------------
-#TEMPORARY, until i calculate the analytical derivatives sometime
 L <- function(par, obj, Theta, ot=numeric(1)){
     obj@par[obj@est] <- par
     P <- ProbTrace(obj, Theta, useDesign = FALSE, ot=ot)
@@ -866,7 +868,7 @@ setMethod(
                                                              (1 - Pdich) * Pstar)
             hess[[1L]][ ,j] <- 1 - hess[[2L]][ ,j]
         }
-        stop('DerivTheta for class \'', class(x), '\' not yet written.')
+        stop('DerivTheta for class \'', class(x), '\' not yet written.') #TODO
     }
 )
 

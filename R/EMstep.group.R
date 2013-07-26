@@ -96,15 +96,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- FALSE
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
-    EMhistory[1L,] <- longpars
-    any.prior <- FALSE
-    for(g in 1L:ngroups){
-        for(i in 1L:J){
-            pars[[g]][[i]]@any.prior <- any(!is.nan(pars[[g]][[i]]@n.prior.mu)) || 
-                any(!is.nan(pars[[g]][[i]]@b.prior.alpha)) 
-            if(pars[[g]][[i]]@any.prior) any.prior <- TRUE
-        }
-    }
+    EMhistory[1L,] <- longpars    
     gTheta <- vector('list', ngroups)
     for(g in 1L:ngroups) gTheta[[g]] <- Theta 
     
