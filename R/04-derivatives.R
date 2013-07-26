@@ -32,7 +32,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'rating', Theta = 'matrix'),
-    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
+    definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = 1L, estHess = FALSE,
                           offterm = numeric(1L)){
         hess <- matrix(0, length(x@par), length(x@par))
         if(EM){
