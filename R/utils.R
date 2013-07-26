@@ -27,7 +27,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
-                        prior.mu, prodlist, OffTerm)
+                        prior.mu, prodlist, OffTerm, PROBTRACE)
 {
     tol <- .Machine$double.eps
     N <- nrow(fulldata)
@@ -44,9 +44,9 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))
     for (i in 1L:J){
         itemtrace0[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            ProbTrace(x=pars[[i]], Theta=theta0, ot=OffTerm[,i])
+            PROBTRACE[[i]](x=pars[[i]], Theta=theta0, ot=OffTerm[,i])
         itemtrace1[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            ProbTrace(x=pars[[i]], Theta=theta1, ot=OffTerm[,i])
+            PROBTRACE[[i]](x=pars[[i]], Theta=theta1, ot=OffTerm[,i])
     }
     total_0 <- rowSums(log(itemtrace0)*fulldata) + log_den0
     total_1 <- rowSums(log(itemtrace1)*fulldata) + log_den1
@@ -669,17 +669,28 @@ reloadPars <- function(longpars, pars, ngroups, J){
     return(.Call('reloadPars', longpars, pars, ngroups, J))
 }
 
-computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0, 1, 1)){
+computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0, 1, 1), PROBTRACE=NULL){
     #compute itemtrace for 1 group
     J <- length(itemloc) - 1L
     itemtrace <- matrix(0, ncol=itemloc[length(itemloc)]-1L, nrow=nrow(Theta))
-    if(nrow(offterm) == 1L){
-        for (i in 1L:J)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+    if(!is.null(PROBTRACE)){
+        if(nrow(offterm) == 1L){
+            for (i in 1L:J)
+                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta)
+        } else {
+            for (i in 1L:J)
+                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta,
+                                                                          ot=offterm[,i])        
+        }
     } else {
-        for (i in 1L:J)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta,
-                                                                      ot=offterm[,i])        
+        if(nrow(offterm) == 1L){
+            for (i in 1L:J)
+                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+        } else {
+            for (i in 1L:J)
+                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta,
+                                                                          ot=offterm[,i])        
+        }
     }
     itemtrace
 }
@@ -789,7 +800,8 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     return(ESTIMATE)
 }
 
-SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE){
+SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, 
+                   PROBTRACE, DERIV){
     TOL <- sqrt(list$TOL)
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -822,9 +834,9 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
 
         for(g in 1L:ngroups){
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-            gTheta[[g]] <- Theta %*% chol(gstructgrouppars[[g]]$gcov) + gstructgrouppars[[g]]$gmeans
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc)
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])            
+            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc,
+                                                PROBTRACE=PROBTRACE[[g]])
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
@@ -857,7 +869,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                       gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                      constrain=constrain, cycle=cycles)
+                      constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         sign <- sign(denom)

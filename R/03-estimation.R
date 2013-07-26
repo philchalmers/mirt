@@ -197,9 +197,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }   
     if(PrepList[[1L]]$exploratory) df <- df + nfact*(nfact - 1)/2
     if(df < 1L) stop('Too few degrees of freedom to estimate the model')
-    
-    #EM estimation
     G2group <- X2group <- numeric(Data$ngroups)
+    #avoid some S4 overhead by caching functions....as if this works
+    PROBTRACE <- DERIV <- vector('list', Data$ngroups)
+    for(g in 1L:Data$ngroups){
+        PROBTRACE[[g]] <- DERIV[[g]] <- vector('list', Data$nitems)
+        for(i in 1L:Data$nitems){
+            PROBTRACE[[g]][[i]] <- selectMethod(ProbTrace, c(class(pars[[g]][[i]]), 'matrix'))
+            DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
+        }
+    }    
+    
+    #EM estimation    
     if(opts$method == 'EM'){
         if(is.null(opts$quadpts))
             opts$quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
@@ -233,7 +242,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                          SEM=opts$SE.type == 'SEM' && opts$SE),
-                             Theta=Theta)
+                             Theta=Theta, PROBTRACE=PROBTRACE, DERIV=DERIV)
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- X2 <- SElogLik <- 0
@@ -275,7 +284,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose),
-                                Theta=Theta, theta=theta, ESTIMATE=ESTIMATE))
+                                                   Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
+                                                   PROBTRACE=PROBTRACE, DERIV=DERIV))
                     } else {
                         for(i in 1L:ncol(DM))
                             DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
@@ -285,7 +295,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                       itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                       sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                                       nfact=nfact, constrain=constrain, verbose=opts$verbose),
-                                        Theta=Theta, theta=theta, ESTIMATE=ESTIMATE)
+                                              Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
+                                              PROBTRACE=PROBTRACE, DERIV=DERIV)
                     }
                     ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars, 
                                                 ngroups=Data$ngroups, J=Data$nitems)
@@ -305,7 +316,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1L]]$nfactNames,
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=FALSE,
-                                           startlongpars=startlongpars))
+                                           startlongpars=startlongpars),
+                                       PROBTRACE=PROBTRACE, DERIV=DERIV)
             ESTIMATE$cycles <- tmp$cycles
         }
     } else if(opts$method == 'MHRM'){ #MHRM estimation
@@ -317,7 +329,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1L]]$nfactNames,
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                           startlongpars=startlongpars))
+                                           startlongpars=startlongpars),
+                               PROBTRACE=PROBTRACE, DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
@@ -330,7 +343,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1L]]$nfactNames,
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                           startlongpars=startlongpars))
+                                           startlongpars=startlongpars),
+                               PROBTRACE=PROBTRACE, DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1)

@@ -53,7 +53,8 @@ setMethod(
 	signature = signature(object = 'ExploratoryClass'),
 	definition = function(object, draws = 5000, G2 = TRUE)
 	{
-        LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot){
+        LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
+                            PROBTRACE){
             theta <- mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)            
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)            
@@ -66,9 +67,9 @@ setMethod(
             }
             itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)            
             for (i in 1L:J) itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-                ProbTrace(x=pars[[i]], Theta=theta, ot=ot[,i])
+                PROBTRACE[[i]](x=pars[[i]], Theta=theta, ot=ot[,i])
             return(exp(rowSums(log(itemtrace)*fulldata)))
-        }   
+        }           
         pars <- object@pars
 	    tol <- .Machine$double.eps
         fulldata <- object@fulldata
@@ -82,12 +83,15 @@ setMethod(
         if(length(object@random) == 0L){
             ot <- matrix(0, 1, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
+        PROBTRACE <- vector('list', J)
+        for(i in 1L:J)
+            PROBTRACE[[i]] <- selectMethod(ProbTrace, c(class(pars[[i]]), 'matrix'))        
         if(!is.null(globalenv()$MIRTCLUSTER)){
             LL <- parallel::parApply(cl=globalenv()$MIRTCLUSTER, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, 
                                      N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J, 
-                                     random=object@random, ot=ot)
+                                     random=object@random, ot=ot, PROBTRACE=PROBTRACE)
         } else for(draw in 1L:draws)
-            LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist,
+            LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist, PROBTRACE=PROBTRACE,
                                   fulldata=fulldata, object=object, J=J, random=object@random, ot=ot)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)

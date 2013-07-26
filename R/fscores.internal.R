@@ -6,8 +6,8 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
 	    #local functions for apply
-	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
-	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
+	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, PROBTRACE){
+	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ], PROBTRACE=PROBTRACE,
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE))
 	        if(is(estimate, 'try-error')) 
 	            return(rep(NA, ncol(scores)*2))	        
@@ -15,10 +15,10 @@ setMethod(
 	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
+	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, PROBTRACE){
 	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
                 return(c(scores[ID, ], rep(NA, ncol(scores))))	        
-	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ], PROBTRACE=PROBTRACE,
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=TRUE))
 	        if(is(estimate, 'try-error')) 
 	            return(rep(NA, ncol(scores)*2))
@@ -26,8 +26,8 @@ setMethod(
 	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, degrees){            
-	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, degrees, PROBTRACE){            
+	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ], PROBTRACE=PROBTRACE,
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees,
 	                            hessian = TRUE))
 	        if(is(estimate, 'try-error')) 
@@ -96,7 +96,10 @@ setMethod(
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
 		W <- W/sum(W)
-        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
+	    PROBTRACE <- vector('list', J)
+	    for(i in 1L:J)
+	        PROBTRACE[[i]] <- selectMethod(ProbTrace, c(class(pars[[i]]), 'matrix'))
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, PROBTRACE=PROBTRACE)
 	    log_itemtrace <- log(itemtrace)
 	    if(!is.null(globalenv()$MIRTCLUSTER)){
 	        tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, EAP, 
@@ -112,10 +115,10 @@ setMethod(
             if(!is.null(globalenv()$MIRTCLUSTER)){
                 tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, MAP, 
                                      scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
-                                     gp=gp, prodlist=prodlist))
+                                     gp=gp, prodlist=prodlist, PROBTRACE=PROBTRACE))
             } else {
                 tmp <- t(apply(matrix(1:nrow(scores)), 1, MAP, scores=scores, pars=pars, 
-                             tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
+                             tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, PROBTRACE=PROBTRACE))
             }            
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]			
@@ -134,23 +137,24 @@ setMethod(
             if(!is.null(globalenv()$MIRTCLUSTER)){
                 tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, ML, 
                                             scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
-                                            gp=gp, prodlist=prodlist))
+                                            gp=gp, prodlist=prodlist, PROBTRACE=PROBTRACE))
             } else {
                 tmp <- t(apply(matrix(1:nrow(scores)), 1, ML, scores=scores, pars=pars, 
-                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
+                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, PROBTRACE=PROBTRACE))
             }            
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]			
 		}
-        if(method == 'WLE'){                        
+        if(method == 'WLE'){              
+            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, PROBTRACE=PROBTRACE)
             if(!is.null(globalenv()$MIRTCLUSTER)){
                 tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, WLE, 
                                             scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
-                                            gp=gp, prodlist=prodlist, degrees=degrees))
+                                            gp=gp, prodlist=prodlist, degrees=degrees, PROBTRACE=PROBTRACE))
             } else {
                 tmp <- t(apply(matrix(1:nrow(scores)), 1, WLE, scores=scores, pars=pars, 
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
-                               degrees=degrees))
+                               degrees=degrees, PROBTRACE=PROBTRACE))
             }            
             scores <- tmp[ ,1:nfact, drop = FALSE]   
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
@@ -250,7 +254,7 @@ setMethod(
 )
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
+MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE, PROBTRACE)
 {
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
@@ -258,7 +262,7 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
         Theta <- prodterms(Theta,prodlist)
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))
     for (i in 1L:(length(itemloc)-1L))
-        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta)
     itemtrace[itemtrace < 1e-8] <- 1e-8
     L <- sum(log(itemtrace)[as.logical(patdata)])
     prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
@@ -266,7 +270,7 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
     L
 }
 
-gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
+gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees, PROBTRACE){
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
     if(length(prodlist) > 0L)
@@ -279,7 +283,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
     I <- numeric(1)
     dW <- dL <- numeric(nfact)
     for (i in 1L:(length(itemloc)-1L)){
-        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta)
         deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
         for(k in 1L:nfact){
             dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1L]]))
