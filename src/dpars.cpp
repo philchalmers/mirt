@@ -345,36 +345,55 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP RPrior, SEXP Rdat, SEXP
 	END_RCPP
 }
 
-RcppExport SEXP dparsDich(SEXP Ra, SEXP Rd, SEXP Rg, SEXP Ru, SEXP RD, SEXP RTheta,
-    SEXP RPrior, SEXP Rr1, SEXP Rr2, SEXP RestHess, SEXP asMatrix, SEXP Rot) 
+RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess, 
+    SEXP REM, SEXP RBFACTOR, SEXP Rot) 
 {		
     BEGIN_RCPP
     
-    int i, j;     
-    NumericVector a(Ra);
-    NumericVector d(Rd);
-    NumericVector Pg(Rg);
-    NumericVector Pu(Ru);
-    NumericVector PD(RD);
+    int i, j;   
+    NumericVector P, Pstar, Q, Qstar, r1, r2;	
+	
+	S4 x(Rx);
 	NumericMatrix Theta(RTheta);
-    NumericVector Prior(RPrior);
-    NumericVector r1(Rr1);
-    NumericVector r2(Rr2);    
-    NumericVector ot(Rot);
-    IntegerVector estHess(RestHess);        
-    const int nfact = Theta.ncol();    
-    NumericVector P, Pstar, Q, Qstar;
-    const double g = Pg(0);
-    const double u = Pu(0);
-    const double D = PD(0);
+    NumericVector prior(Rprior);    
+	IntegerVector estHess(RestHess);                
+	IntegerVector EM(REM);
+	IntegerVector BFACTOR(RBFACTOR);
+	NumericVector ot(Rot);
+	
+	NumericVector par = x.slot("par");	
+	NumericVector Prior(Theta.nrow());
+	const int nfact = Theta.ncol();    
+	NumericVector a(nfact);
+	for(i = 0; i < nfact; i++)
+		a(i) = par(i);
+	const double d = par(nfact);
+    const double g = par(nfact+1);
+    const double u = par(nfact+2);
+    const double D = 1.0;
     const double g0 = 0.0;
-    const double u1 = 1.0;    
+    const double u1 = 1.0;     	 
+	if(EM(0)){
+		NumericMatrix dat = x.slot("rs");
+		r1 = dat(_,1);
+		r2 = dat(_,0);
+	} else {
+		NumericMatrix dat = x.slot("dat");
+		r1 = dat(_,1);
+		r2 = dat(_,0);	
+	}
+	if(BFACTOR(0)){
+		Prior = prior;
+	} else {		
+		Prior.fill(1.0);
+	}
+	
     NumericMatrix hess (nfact + 3, nfact + 3);
     NumericVector grad (nfact + 3);
     NumericVector r1_P, r1_P2, r2_Q2, r2_Q;    
     
-    P = itemTrace(a, &d(0), Theta, &g, &u, &D, ot);
-    Pstar = itemTrace(a, &d(0), Theta, &g0, &u1, &D, ot);
+    P = itemTrace(a, &d, Theta, &g, &u, &D, ot);
+    Pstar = itemTrace(a, &d, Theta, &g0, &u1, &D, ot);
     Q = 1.0 - P;
     Qstar = 1.0 - Pstar;        
     r1_P = r1/P;

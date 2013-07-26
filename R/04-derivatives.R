@@ -5,28 +5,10 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, BFACTOR = FALSE, prior = NULL, estHess = FALSE,
-                          offterm = numeric(1L)){        
-        if(EM){
-            dat <- x@rs[,2L]
-            f <- rowSums(x@rs)
-            Prior <- rep(1, length(dat))
-            if(BFACTOR) Prior <- prior
-        } else {
-            f <- rowSums(x@dat)
-            dat <- x@dat[ ,2L]
-            Prior <- rep(1, length(dat))
-        }        
-        nfact <- x@nfact
-        parlength <- length(x@par)
-        u <- x@par[parlength]
-        g <- x@par[parlength - 1L]
-        d <- x@par[parlength - 2L]
-        a <- x@par[1L:nfact]
+                          offterm = numeric(1L)){                
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
-            Theta <- cbind(x@fixed.design, Theta)
-        r1 <- dat
-        r2 <- f - dat        
-        ret <- .Call('dparsDich', a, d, g, u, x@D, Theta, Prior, r1, r2, estHess, TRUE, offterm)
+            Theta <- cbind(x@fixed.design, Theta)        
+        ret <- .Call('dparsDich', x, Theta, prior, estHess, EM, BFACTOR, offterm)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
