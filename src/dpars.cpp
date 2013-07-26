@@ -406,7 +406,7 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
     for(i = 0; i < nfact; i++)
         grad(i) = sum(Theta(_, i) * D * Pstar * Qstar * (u-g) * (r1_P - r2_Q) * Prior);
         
-    if(estHess){
+    if(estHess(0)){
         int gloc = nfact+1; 
         int uloc = nfact+2;
         double ugD2 = (u-g) * D*D;
