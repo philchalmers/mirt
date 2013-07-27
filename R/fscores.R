@@ -28,8 +28,8 @@
 #' from the computed mirt object will be used
 #' @param degrees the degrees argument to be passed to \code{\link{iteminfo}}, only necessary for
 #' multidimensional models when \code{method = 'WLE'}
-#' @param response.vector an optional argument used to calculate the factor scores and standard errors
-#' for a given response vector that may or may not have been in the original dataset
+#' @param response.pattern an optional argument used to calculate the factor scores and standard errors
+#' for a given response vector or matrix
 #' @param returnER logical; return empirical reliability estimate as a numeric value?
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when \code{full.scores = TRUE})
@@ -59,7 +59,9 @@
 #' head(scores)
 #'
 #' #calculate MAP for a given response vector
-#' fscores(mod, method='MAP', response.vector = c(1,2,3,4))
+#' fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
+#' #or matrix 
+#' fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 #' 
 #' #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 #' fscores(mod, method='MAP', cov = matrix(1000))
@@ -72,12 +74,12 @@
 #' 
 #'   }
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                    quadpts = NULL, response.vector = NULL, degrees = NULL,
+                    quadpts = NULL, response.pattern = NULL, degrees = NULL,
                     returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = FALSE)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
-                            quadpts=quadpts, response.vector=response.vector, degrees=degrees,
+                            quadpts=quadpts, response.pattern=response.pattern, degrees=degrees,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov, 
                             scores.only=scores.only)
     ret

@@ -2,6 +2,9 @@ Changes in mirt 0.8.3
 
 NEW FEATURES
 
+- renamed response.vector to response.pattern in fscores(), and now supports matrix input for 
+  computing factor scores on larger data sets (suggested by Felix Hansen)
+
 - total.info logical added to iteminfo() to return either total item information or information 
   from each category
 

@@ -2,7 +2,7 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                          quadpts = NULL, response.vector = NULL, degrees = NULL,
+                          quadpts = NULL, response.pattern = NULL, degrees = NULL,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
 	    #local functions for apply
@@ -41,23 +41,31 @@ setMethod(
 	        return(c(thetas, SE))
 	    }
         
-        if(!is.null(response.vector)){
-            if(!is.matrix(response.vector)) response.vector <- matrix(response.vector, nrow = 1)
-            v <- response.vector
-            newdata <- rbind(object@data, v)
+        if(!is.null(response.pattern)){
+            drop <- FALSE
+            if(!is.matrix(response.pattern)){
+                response.pattern <- rbind(response.pattern, response.pattern)
+                drop <- TRUE
+            }
             nfact <- object@nfact
             sv <- mod2values(object)
             sv$est <- FALSE
-            newmod <- mirt(newdata, nfact, pars=sv, calcNull=FALSE)
-            tmptabdata <- t(newmod@tabdata[, 1L:length(v)])
-            tmptabdata[is.na(tmptabdata)] <- 9999
-            v[is.na(v)] <- 9999
-            ind <- which(colSums(tmptabdata == as.numeric(v)) == length(v))
-            newmod@tabdata <- newmod@tabdata[ind, , drop = FALSE]
-            newmod@tabdatalong <- newmod@tabdatalong[ind, , drop = FALSE]
-            ret <- fscores(newmod, rotate=rotate, full.scores=FALSE, method=method,
-                           quadpts=quadpts, verbose=FALSE, degrees=degrees, response.vector=NULL)
-            ret <- ret[,colnames(ret) != 'Freq']
+            mins <- apply(object@data, 2, min, na.rm=TRUE)
+            response.pattern <- response.pattern - matrix(mins, nrow(response.pattern), 
+                                                          ncol(response.pattern))
+            newmod <- mirt(response.pattern, nfact, pars=sv, calcNull=FALSE, 
+                           technical=list(customK=object@K, override.df=TRUE))
+            ret <- fscores(newmod, rotate=rotate, full.scores=full.scores, scores.only=scores.only,
+                           method=method, quadpts=quadpts, verbose=FALSE, degrees=degrees, 
+                           response.pattern=NULL)
+            if(!scores.only || !full.scores) 
+                ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] + 
+                    matrix(mins, nrow(ret), ncol(response.pattern))
+            if(drop){
+                if(full.scores){
+                    ret <- ret[-1L, , drop=FALSE]
+                } else ret[1L, ncol(response.pattern)+1L] <- 1L 
+            }
             return(ret)
         }        
         pars <- object@pars
@@ -204,12 +212,12 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-	                      quadpts = NULL, response.vector = NULL, degrees = NULL,
+	                      quadpts = NULL, response.pattern = NULL, degrees = NULL,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
-                       response.vector=response.vector, degrees=degrees, returnER=returnER, verbose=verbose, 
+                       response.pattern=response.pattern, degrees=degrees, returnER=returnER, verbose=verbose, 
                        mean=gmean, cov=gcov, scores.only=scores.only)
         return(ret)
 	}
@@ -220,7 +228,7 @@ setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                          quadpts = NULL, response.vector = NULL, degrees = NULL,
+                          quadpts = NULL, response.pattern = NULL, degrees = NULL,
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
     {
         cmods <- object@cmods
