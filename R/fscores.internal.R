@@ -52,7 +52,7 @@ setMethod(
             sv$est <- FALSE
             mins <- apply(object@data, 2, min, na.rm=TRUE)
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern), 
-                                                          ncol(response.pattern))
+                                                          ncol(response.pattern), byrow=TRUE)
             newmod <- mirt(response.pattern, nfact, pars=sv, calcNull=FALSE, 
                            technical=list(customK=object@K, override.df=TRUE))
             ret <- fscores(newmod, rotate=rotate, full.scores=full.scores, scores.only=scores.only,
@@ -60,7 +60,7 @@ setMethod(
                            response.pattern=NULL)
             if(!scores.only || !full.scores) 
                 ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] + 
-                    matrix(mins, nrow(ret), ncol(response.pattern))
+                    matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
             if(drop){
                 if(full.scores){
                     ret <- ret[-1L, , drop=FALSE]
