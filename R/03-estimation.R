@@ -409,7 +409,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        sqrt(X2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN
-    if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull){
+    if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
                                      large=opts$PrepList, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
