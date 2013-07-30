@@ -520,10 +520,6 @@ coef(mod1.3PL)
 
 #two factors (exploratory)
 mod2 <- mirt(data, 2)
-
-#too few iterations, try running more using current model as new starting
-#   values (could also increase NCYCLES and rerun)
-mod2 <- mirt(data, 2, pars = mod2values(mod2))
 coef(mod2)
 summary(mod2, rotate = 'oblimin') #oblimin rotation
 residuals(mod2)
@@ -559,7 +555,9 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 coef(pmod1_equalslopes)
 anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
 
-pmod2 <- mirt(Science, 2, technical = list(NCYCLES = 1000))
+pmod2 <- mirt(Science, 2)
+#too few iterations, re-estimate with the current models as starting values and more iterations
+pmod2 <- mirt(Science, 2, pars = mod2values(pmod2), technical = list(NCYCLES = 1000))
 summary(pmod2)
 plot(pmod2)
 itemplot(pmod2, 1)
@@ -587,7 +585,8 @@ data <- key2binary(SAT12,
 
 mod1 <- mirt(data, 1)
 mod2 <- mirt(data, 2)
-mod3 <- mirt(data, 3) #difficulty converging with reduced quadpts
+#difficulty converging with reduced quadpts, reduce TOL
+mod3 <- mirt(data, 3, technical = list(TOL = .001))
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 

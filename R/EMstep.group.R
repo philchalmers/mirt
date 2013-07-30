@@ -98,7 +98,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars    
     gTheta <- vector('list', ngroups)
-    for(g in 1L:ngroups) gTheta[[g]] <- Theta 
+    for(g in 1L:ngroups){
+        gTheta[[g]] <- Theta 
+        if(length(prodlist) > 0L)
+            gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+    }
     preMstep.longpars2 <- preMstep.longpars <- longpars
     accel <- 0
     
@@ -115,9 +119,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
             }
             Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])          
-            if(length(prodlist) > 0L)
-                gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                      
             gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc,
                                                 PROBTRACE=PROBTRACE[[g]])            
         }
