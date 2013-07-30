@@ -613,7 +613,7 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
                      SEtol = .0001, grsm.block = NULL, D = 1,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
-                     SE.type = 'MHRM', large = NULL, ...)
+                     SE.type = 'MHRM', large = NULL, accelerate = TRUE, ...)
 {
     opts <- list()
     D <- 1
@@ -632,6 +632,8 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull  
     opts$BFACTOR = BFACTOR
+    opts$accelerate = accelerate
+    if(SE.type == 'SEM' && SE) opts$accelerate <- FALSE
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21
     opts$technical <- technical
     opts$use <- use

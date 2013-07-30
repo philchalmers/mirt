@@ -1,6 +1,9 @@
-Changes in mirt 0.8.3
+Changes in mirt 0.8.4
 
 NEW FEATURES
+
+- add a general Ramsey (1975) acceleration to EM estimation by default. Can be disable with 
+  accelerate = FALSE (and is done so automatically when estimating SEM standard errors)
 
 - renamed response.vector to response.pattern in fscores(), and now supports matrix input for 
   computing factor scores on larger data sets (suggested by Felix Hansen)

@@ -13,7 +13,8 @@
     = '', pars = NULL, method = 'EM', constrain = NULL,
     parprior = NULL, calcNull = TRUE, draws = 5000, quadpts
     = NULL, grsm.block = NULL, rsm.block = NULL, key =
-    NULL, technical = list(), verbose = TRUE, ...)
+    NULL, technical = list(), accelerate = TRUE, verbose =
+    TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, digits = 3,
     verbose = TRUE, ...)
@@ -79,6 +80,9 @@
   for 4-PL model. Can be entered as a single value to
   assign a global upper bound parameter or may be entered
   as a numeric vector corresponding to each item}
+
+  \item{accelerate}{see \code{\link{mirt}} for more
+  details}
 
   \item{SE}{logical; estimate the information matrix for
   standard errors?}

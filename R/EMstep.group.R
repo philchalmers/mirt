@@ -99,6 +99,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
     EMhistory[1L,] <- longpars    
     gTheta <- vector('list', ngroups)
     for(g in 1L:ngroups) gTheta[[g]] <- Theta 
+    preMstep.longpars2 <- preMstep.longpars <- longpars
+    accel <- 0
     
     #EM
     for (cycles in 1L:NCYCLES){
@@ -141,12 +143,21 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
             }
         }
+        preMstep.longpars2 <- preMstep.longpars
         preMstep.longpars <- longpars
         if(all(!est)) break        
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                       gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                      constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)
+                      constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)                   
+        if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){            
+            dX2 <- preMstep.longpars - preMstep.longpars2
+            dX <- longpars - preMstep.longpars
+            d2X2 <- dX - dX2
+            accel <- 1 - sqrt((dX2 %*% dX2) / (d2X2 %*% d2X2))
+            if(accel < -4) accel <- -4
+            longpars <- (1 - accel) * longpars + accel * preMstep.longpars
+        }        
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         EMhistory[cycles+1L,] <- longpars
         if(verbose)

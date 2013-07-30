@@ -44,6 +44,7 @@
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be
 #' entered as a single value to assign a global upper bound parameter or may be entered as a
 #' numeric vector corresponding to each item
+#' @param accelerate see \code{\link{mirt}} for more details
 #' @param SE logical; estimate the information matrix for standard errors?
 #' @param SE.type see \code{\link{mirt}} for more details
 #' @param verbose logical; display iteration history during estimation?
@@ -101,7 +102,7 @@
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
 #' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
 #' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-#' key = NULL, technical = list(), verbose = TRUE, ...)
+#' key = NULL, technical = list(), accelerate = TRUE, verbose = TRUE, ...)
 #'
 #' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'
@@ -280,7 +281,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
                           draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                          key = NULL, technical = list(), verbose = TRUE, ...)
+                          key = NULL, technical = list(), accelerate = TRUE, verbose = TRUE, ...)
 {
     Call <- match.call()
     invariance.check <- invariance %in% c('free_means', 'free_varcov')
@@ -291,7 +292,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,
-                      SE.type = SE.type, key=key, ...)
+                      SE.type = SE.type, key=key, accellerate=accelerate, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

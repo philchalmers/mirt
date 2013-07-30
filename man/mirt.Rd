@@ -21,7 +21,8 @@ Theory)}
     TRUE, draws = 5000, rotate = 'oblimin', Target = NaN,
     quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
     key= NULL, nominal.highlow = NULL, large = FALSE,
-    verbose = TRUE, technical = list(), ...)
+    accelerate = TRUE, verbose = TRUE, technical = list(),
+    ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
@@ -107,8 +108,9 @@ Theory)}
   calculating the parameter information matrix. Can be
   \code{'MHRM'} for stochastic estimation, \code{'BL'} for
   the Bock and Lieberman approach (EM only), or
-  \code{'SEM'} for the supplemented EM. Note that for the
-  \code{'SEM'} option increasing the number of EM cycles
+  \code{'SEM'} for the supplemented EM (disables the
+  \code{accelerate} option). Note that for the \code{'SEM'}
+  option increasing the number of EM cycles
   (\code{NCYCLES}, see below) will help to improve the
   accuracy, and will be run in parallel if a
   \code{\link{mirtCluster}} object has been defined.
@@ -124,6 +126,10 @@ Theory)}
   Can be entered as a single value to assign a global
   guessing parameter or may be entered as a numeric vector
   corresponding to each item}
+
+  \item{accelerate}{logical; use a general acceleration
+  algorithm described by Ramsey (1975)? Default is
+  \code{TRUE}}
 
   \item{rotate}{type of rotation to perform after the
   initial orthogonal parameters have been extracted by
@@ -783,6 +789,10 @@ itemplot(mod.combo, 2, type = 'infocontour')
 
   Lord, F. M. & Novick, M. R. (1968). Statistical theory of
   mental test scores. Addison-Wesley.
+
+  Ramsay, J. O. (1975). Solving implicit equations in
+  psychometric data analysis. \emph{Psychometrika, 40},
+  337-360.
 
   Rasch, G. (1960). Probabilistic models for some
   intelligence and attainment tests. \emph{Danish Institute

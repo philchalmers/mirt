@@ -38,9 +38,9 @@ test_that('three factor', {
                  tollerance = 1e-2)
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
-    cfs <- as.numeric(do.call(c, coef(mod_configural)[[1]]))
+    cfs <- as.numeric(do.call(c, coef(mod_configural, digits=4)[[1]]))
     cfs <- cfs[cfs != 0 & cfs != 1]    
-    expect_equal(cfs, c(1.293, 0.655, 1.239, -0.57, 0.928, -0.2, 0.818, 0.797, 1.071, 0.217, 0.481, 0.61, 1.178, 0.995, 0.945, -0.446, 1.076, -1.18, 0.866, -1.145, 0.885, 1.312, 1.496, -0.3, 1.053, 0.441, 1.061, 0.457, 0.883, -0.187),
+    expect_equal(cfs, c(1.2934, 0.655, 1.2387, -0.57, 0.9277, -0.1996, 0.8177, 0.7967, 1.0713, 0.2166, 0.4807, 0.6099, 1.1777, 0.9947, 0.9453, -0.4464, 1.0762, -1.1801, 0.8664, -1.1451, 0.8855, 1.3121, 1.4962, -0.3002, 1.0534, 0.4406, 1.0615, 0.4569, 0.8832, -0.1871),
                  tollerance = 1e-2)
     suppressWarnings(mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov', draws = 10)))

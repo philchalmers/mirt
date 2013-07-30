@@ -449,6 +449,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             pars[[i]]@nfixedeffects <- nfixedeffects
             pars[[i]]@D <- D
             pars[[i]]@dat <- fulldata[ ,tmp]
+            pars[[i]]@any.prior <- FALSE
             pars[[i]]@n.prior.mu <- rep(NaN,length(pars[[i]]@par))
             pars[[i]]@n.prior.sd <- rep(NaN,length(pars[[i]]@par))
             pars[[i]]@ln.prior.mu <- rep(NaN,length(pars[[i]]@par))

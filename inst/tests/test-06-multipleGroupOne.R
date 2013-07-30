@@ -15,11 +15,10 @@ test_that('one factor', {
     
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
-    cfs <- as.numeric(do.call(c, coef(mod_configural)[[1L]]))
+    cfs <- as.numeric(do.call(c, coef(mod_configural, digits=4)[[1L]]))
     cfs <- cfs[cfs != 0 & cfs != 1]    
-    expect_equal(cfs, c(1.069, 0.554, 1.278, -0.692, 0.883, -0.137, 1.111, 0.829, 1.248, 0.326, 
-                        0.476, 0.48, 1.162, 1.085, 0.859, -0.385, 0.89, -1.048, 0.809, -1.091, 
-                        0.901, 1.164, 1.583, -0.135, 1.41, 0.654, 1.04, 0.407, 0.88, -0.081), tollerance = 1e-2)
+    expect_equal(cfs, c(1.0693, 0.5539, 1.278, -0.6919, 0.8833, -0.1376, 1.1112, 0.8293, 1.2481, 0.3263, 0.476, 0.4796, 1.1617, 1.0846, 0.8586, -0.3854, 0.89, -1.0482, 0.8085, -1.0909, 0.9013, 1.164, 1.5832, -0.1352, 1.4098, 0.654, 1.0401, 0.4071, 0.8804, -0.0813),
+                 tollerance = 1e-2)
     expect_equal(mod_configural@df, 1621)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE, 
                                 method = 'EM')
@@ -27,11 +26,9 @@ test_that('one factor', {
     expect_equal(mod_metric@df, 1636)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
-    cfs <- as.numeric(do.call(c, coef(mod_scalar2)[[1L]]))
+    cfs <- as.numeric(do.call(c, coef(mod_scalar2, digits=4)[[1L]]))
     cfs <- cfs[cfs != 0 & cfs != 1]    
-    expect_equal(cfs, c(1.142, 0.562, 1.326, -0.651, 0.994, -0.201, 1.049, 0.886, 1.145, 0.338, 
-                        0.431, 0.496, 1.226, 1.158, 0.916, -0.42, 0.816, -1.017, 0.801, -1.089, 
-                        0.949, 1.235, 1.589, -0.19, 1.199, 0.538, 1.129, 0.433, 0.893, -0.117),
+    expect_equal(cfs, c(1.1424, 0.562, 1.3256, -0.6511, 0.9936, -0.2011, 1.0489, 0.8864, 1.1449, 0.338, 0.4314, 0.4964, 1.2258, 1.1577, 0.916, -0.4199, 0.8163, -1.0167, 0.801, -1.089, 0.9487, 1.2346, 1.5886, -0.1897, 1.1991, 0.5384, 1.1292, 0.4326, 0.8934, -0.1172),
                  tollerance = 1e-2)
     expect_is(mod_scalar2, 'MultipleGroupClass')
     expect_equal(mod_scalar2@df, 1649)
@@ -58,7 +55,7 @@ test_that('one factor', {
     
     fit1 <- fitIndices(mod_metric)
     expect_is(fit1, 'list')
-    expect_true(mirt:::closeEnough(fit1$M2 - c(85.65091, 120.78077 ), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fit1$M2 - c(85.60139, 120.80287), -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(fit1$df - 350, -1e-4, 1e-4))    
     fit2 <- itemfit(mod_metric)
     expect_is(fit2, 'list')

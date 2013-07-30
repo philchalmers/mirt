@@ -97,7 +97,8 @@
 #' supplemented EM (SEM) computations for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix.
 #' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach 
-#' (EM only), or \code{'SEM'} for the supplemented EM. Note that for the \code{'SEM'} option increasing 
+#' (EM only), or \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option). 
+#' Note that for the \code{'SEM'} option increasing 
 #' the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be 
 #' run in parallel if a \code{\link{mirtCluster}} object has been defined. 
 #' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
@@ -107,6 +108,8 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #' value to assign a global guessing parameter or may be entered as a numeric
 #' vector corresponding to each item
+#' @param accelerate logical; use a general acceleration algorithm described by Ramsey (1975)? Default
+#' is \code{TRUE}
 #' @param rotate type of rotation to perform after the initial orthogonal
 #' parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
 #' If \code{rotate != ''} in the \code{summary}
@@ -343,6 +346,9 @@
 #'
 #' Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
 #'
+#' Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis.
+#' \emph{Psychometrika, 40}, 337-360.
+#'
 #' Rasch, G. (1960). Probabilistic models for some intelligence and attainment tests.
 #' \emph{Danish Institute for Educational Research}.
 #'
@@ -374,7 +380,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', method = 'EM',
 #' pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000, rotate = 'oblimin', Target = NaN,
 #' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, nominal.highlow = NULL,
-#' large = FALSE, verbose = TRUE, technical = list(), ...)
+#' large = FALSE, accelerate = TRUE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
@@ -645,8 +651,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  method = 'EM', pars = NULL, constrain = NULL, parprior = NULL, 
                  calcNull = TRUE, draws = 5000, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                 key = NULL, nominal.highlow = NULL, 
-                 large = FALSE, verbose = TRUE, technical = list(), ...)
+                 key = NULL, nominal.highlow = NULL, large = FALSE, 
+                 accelerate = TRUE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
@@ -655,7 +661,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key, 
-                      nominal.highlow=nominal.highlow, ...)
+                      nominal.highlow=nominal.highlow, accellerate=accelerate, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)
