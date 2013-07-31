@@ -7,14 +7,6 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 {
     BEGIN_RCPP
 
-    /*
-        Ritemtrace = numeric matrix. Probability traces
-        Rprior = numeric vector. Normalized prior
-        RX = integer matrix.
-        Rnfact = integer. Number of factors
-        Rr = integer vector.  Counts of same response vector
-    */
-    
     NumericVector prior(Rprior);
     NumericVector log_prior(prior.length());
     IntegerVector nfact(Rnfact);
@@ -60,14 +52,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP Rsitems) 
 {
     BEGIN_RCPP
-    /*
-        Ritemtrace = numeric matrix. Probability traces
-        Rprior = numeric vector. Normalized prior
-        RX = integer matrix. Response vector with 9's as missing
-        Rnfact = integer. Number of factors
-        Rr = integer vector. Counts of same response vector
-        Rsitems = integer matrix. Specific factor indicator
-    */
+
     NumericMatrix itemtrace(Ritemtrace);
     NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol()); 
     NumericVector prior(Rprior);
@@ -86,7 +71,6 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
         log_itemtrace(_,item) = log(itemtrace(_,item));
     log_prior = log(prior);
         
-	//declare dependent arrays 
 	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
 	NumericMatrix likelihoods(nquad,sfact), L(npquad,npquad), r1(nquad,nitems*sfact),
 		Plk(npquad,sfact), Elk(npquad,sfact), posterior(nquad,sfact);	

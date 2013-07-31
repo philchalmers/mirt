@@ -117,7 +117,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
                 Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)                
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]],gstructgrouppars[[g]]$gmeans,
+            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                      
             gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc,
@@ -129,7 +129,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
         for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                            Theta=gTheta[[g]], prior=prior[[g]],
+                                            Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
                                             specific=specific, sitems=sitems,
                                             itemloc=itemloc, itemtrace=gitemtrace[[g]])
             } else {
@@ -149,7 +149,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
         preMstep.longpars <- longpars
         if(all(!est)) break        
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
-                      gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
+                      gTheta=gTheta, itemloc=itemloc, Prior=Prior,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
                       constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)                   
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){            
@@ -179,8 +179,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
         ind1 <- 1L
         for(group in 1L:ngroups){
             for (i in 1L:J){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[g]], EM = TRUE, prior=Prior[[group]],
-                               estHess=TRUE, BFACTOR=BFACTOR)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[g]], EM = TRUE, 
+                               estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1L
@@ -224,7 +224,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, itemtrace=NULL, der
 }
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc, itemtrace=NULL)
+Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, specific, sitems, itemloc, itemtrace=NULL)
 {
     J <- length(itemloc) - 1L
     r <- tabdata[ ,ncol(tabdata)]
@@ -237,16 +237,17 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, specific, sitems, itemloc
         r1[ ,itemloc[i]:(itemloc[i+1L]-1L)] <-
             retlist$r1[ ,itemloc[i]:(itemloc[i+1L]-1L) + (specific[i] - 1L)*ncol(X) ]
     }
+    r1 <- r1 * Prior
     return(list(r1=r1, expected=retlist$expected))
 }
 
-Mstep <- function(pars, est, longpars, ngroups, J, gTheta, Prior, BFACTOR, itemloc, PrepList, L,
-                  UBOUND, LBOUND, constrain, cycle, PROBTRACE, DERIV){
+Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
+                  UBOUND, LBOUND, constrain, cycle, PROBTRACE, DERIV, Prior){
     p <- longpars[est]
     opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', 
                  control=list(maxit=ifelse(cycle > 10L, 10L, 5L)), PROBTRACE=PROBTRACE, DERIV=DERIV,
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                 PrepList=PrepList, Prior=Prior, L=L, BFACTOR=BFACTOR, constrain=constrain,
+                 PrepList=PrepList, L=L, constrain=constrain,
                  UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est])
     longpars[est] <- opt$par
     if(length(constrain) > 0L)
@@ -264,7 +265,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, Prior, BFACTOR, iteml
     return(longpars)
 }
 
-Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Prior, L, BFACTOR,
+Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,
                      constrain, LBOUND, UBOUND, itemloc, PROBTRACE, DERIV){
     longpars[est] <- p
     if(length(constrain) > 0L)
@@ -275,22 +276,21 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Prior
     LL <- 0        
     for(g in 1L:ngroups){                
         for(i in 1L:J)
-            LLs[i] <- LogLikMstep(pars[[g]][[i]], Theta=gTheta[[g]], EM=BFACTOR, prior=Prior[[g]],
+            LLs[i] <- LogLikMstep(pars[[g]][[i]], Theta=gTheta[[g]],
                                   PROBTRACE=PROBTRACE[[g]][[i]])
         LL <- LL + sum(LLs)
     }
     LL
 }
 
-LogLikMstep <- function(x, Theta, EM=FALSE, prior=NULL, PROBTRACE){
+LogLikMstep <- function(x, Theta, PROBTRACE){
     itemtrace <- PROBTRACE(x=x, Theta=Theta)
-    if(EM) LL <- (-1) * sum(x@rs * log(itemtrace) * prior)
-    else LL <- (-1) * sum(x@rs * log(itemtrace))
+    LL <- (-1) * sum(x@rs * log(itemtrace))
     if(x@any.prior) LL <- LL.Priors(x=x, LL=LL)
     return(LL)
 }
 
-Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Prior, L, BFACTOR,
+Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,
                        constrain, LBOUND, UBOUND, itemloc, PROBTRACE, DERIV){
     longpars[est] <- p
     if(length(constrain) > 0L)
@@ -301,8 +301,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, Pri
     ind1 <- 1L
     for(group in 1L:ngroups){
         for (i in 1L:J){
-            deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]], EM=TRUE, BFACTOR=BFACTOR,
-                           prior=Prior[[group]])
+            deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]], EM=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
             g[ind1:ind2] <- deriv$grad
             ind1 <- ind2 + 1L

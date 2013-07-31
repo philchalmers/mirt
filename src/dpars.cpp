@@ -1,13 +1,5 @@
 #include"Misc.h"
 
-static double sumPrior(const NumericVector &a, const NumericVector &b)
-{
-    double ret = 0.0;
-    for(int i = 0; i < a.length(); i++)
-        ret += a(i) * b(i);
-    return(ret);
-}
-
 static NumericVector makeOffterm(const NumericMatrix &dat, const NumericVector &p, const NumericVector &aTheta, 
         const double &D, const int &cat)
 {
@@ -33,7 +25,7 @@ static NumericVector makeOffterm2(const NumericMatrix &dat, const NumericVector 
 }
 
 RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
-        SEXP RPrior, SEXP RP, SEXP Rnum, SEXP Rdat, SEXP Rnfact, SEXP Rncat,
+        SEXP RP, SEXP Rnum, SEXP Rdat, SEXP Rnfact, SEXP Rncat,
         SEXP Rakind, SEXP Rdind, SEXP Rak2, SEXP RP2, SEXP RP3,
         SEXP RaTheta, SEXP RaTheta2, SEXP Rdat_num, SEXP Rnumsum, SEXP RnumakD, 
         SEXP Rnumak2D2, SEXP RnumakDTheta_numsum, SEXP RestHess) 
@@ -46,7 +38,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
     const int akind = Pakind(0); 
     const int dind = Pdind(0);
     int i, j, k, n;
-    NumericVector a(Ra), ak(Rak), d(Rd), PD(RD), Prior(RPrior), ak2(Rak2),
+    NumericVector a(Ra), ak(Rak), d(Rd), PD(RD), ak2(Rak2),
                   numsum(Rnumsum), numakD(RnumakD), numak2D2(Rnumak2D2), 
                   aTheta(RaTheta), aTheta2(RaTheta2), dL(nfact + ncat*2);
     NumericVector unitNvec(aTheta.length()); 
@@ -68,7 +60,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                         P(n,i)*numakDTheta_numsum(n,j))*numsum(n);
             }
         }
-        dL(j) = sumPrior(tmpvec, Prior);               
+        dL(j) = sum(tmpvec);               
     }
     for(i = 0; i < ncat; i++){ 
         offterm = makeOffterm(dat, P(_,i), aTheta, D, i);
@@ -77,8 +69,8 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
             tmpvec(n) = dat_num(n,i)*(D*aTheta(n)*P(n,i) - P2(n,i)*D*aTheta(n))*numsum(n) - offterm(n);
             tmpvec2(n) = dat_num(n,i)*(D*P(n,i) - P2(n,i)*D)*numsum(n) - offterm2(n);
         }
-        dL(akind + i) = sumPrior(tmpvec, Prior);
-        dL(dind + i) = sumPrior(tmpvec2, Prior);
+        dL(akind + i) = sum(tmpvec);
+        dL(dind + i) = sum(tmpvec2);
     }
 
     //hess
@@ -101,7 +93,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                                 numakD(n)*Theta(n,k);
                         }
                     }
-                    d2L(j,k) = sumPrior(tmpvec, Prior);
+                    d2L(j,k) = sum(tmpvec);
                     d2L(k, j) = d2L(j,k);
                 }
             }
@@ -135,9 +127,9 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                                 dat(n,i)*P(n,k)*D*numakDTheta_numsum(n,j);
                         }
                     }
-                    d2L(j, akind + k) = sumPrior(tmpvec, Prior);
+                    d2L(j, akind + k) = sum(tmpvec);
                     d2L(akind + k, j) = d2L(j, akind + k);
-                    d2L(j, dind + k) = sumPrior(tmpvec2, Prior);
+                    d2L(j, dind + k) = sum(tmpvec2);
                     d2L(dind + k, j) = d2L(j, dind + k);
                 }
             }
@@ -162,8 +154,8 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                                             D*P2(n,j))*numsum(n)*D + dat(n,j)*(D*P(n,j) - 
                                             D*P2(n,j))*D + offterm2(n);
             }
-            d2L(akind + j, akind + j) = sumPrior(tmpvec, Prior); 
-            d2L(dind + j, dind + j) = sumPrior(tmpvec2, Prior);
+            d2L(akind + j, akind + j) = sum(tmpvec); 
+            d2L(dind + j, dind + j) = sum(tmpvec2);
             for(i = 0; i < ncat; i++){
                 if(j < i){   
                     offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta2, D2, i);
@@ -174,9 +166,9 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                         tmpvec2(n) = dat_num(n,i) * (-D2*P(n,i)*P(n,j) + 2*P2(n,i) *D2*P(n,j)) * numsum(n) + 
                             dat_num(n,i) * (D*P(n,i) - P2(n,i)*D)*D * num(n,j) + offterm2(n);
                     }
-                    d2L(akind + i, akind + j) = sumPrior(tmpvec, Prior);
+                    d2L(akind + i, akind + j) = sum(tmpvec);
                     d2L(akind + j, akind + i) = d2L(akind + i, akind + j);
-                    d2L(dind + i, dind + j) = sumPrior(tmpvec2, Prior); 
+                    d2L(dind + i, dind + j) = sum(tmpvec2); 
                     d2L(dind + j, dind + i) = d2L(dind + i, dind + j);
                 }
                 if(abs(j-i) == 0){
@@ -189,7 +181,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                                 D*aTheta(n)*P2(n,i))*numsum(n)*D + dat(n,i)*(D*P(n,i) - 
                                 D*P2(n,i))*D*aTheta(n) + offterm(n);
                     }
-                    d2L(dind + j, akind + i) = sumPrior(tmpvec, Prior);
+                    d2L(dind + j, akind + i) = sum(tmpvec);
                     d2L(akind + i, dind + j) = d2L(dind + j, akind + i);
                 } else {
                     offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta, D2, i);
@@ -197,7 +189,7 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
                         tmpvec(n) = dat_num(n,i) * (-D2*aTheta(n)*P(n,i)*P(n,j) + 2*P2(n,i) *D2*aTheta(n)*P(n,j)) * numsum(n) + 
                             dat_num(n,i) * (D*P(n,i) - P2(n,i) * D) * D * aTheta(n) * num(n,j) + offterm(n);                
                     }
-                    d2L(akind + i, dind + j) = sumPrior(tmpvec, Prior);
+                    d2L(akind + i, dind + j) = sum(tmpvec);
                     d2L(dind + j, akind + i) = d2L(akind + i, dind + j);
                 }
             }
@@ -212,29 +204,19 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD,
 }
 
 
-RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rprior, SEXP Rdat, 
-    SEXP Rnzeta, SEXP RestHess, SEXP RBFACTOR) 
+RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta, SEXP RestHess) 
 {		
     BEGIN_RCPP    
 
 	int i, j, k; 
 	NumericMatrix prob(Rprob);
-	NumericMatrix Thetas(RThetas);
-    NumericVector prior(Rprior);    
-    NumericMatrix dat2(Rdat);
+	NumericMatrix Thetas(RThetas);    
+    NumericMatrix dat(Rdat);
     IntegerVector Pnzeta(Rnzeta);
-    IntegerVector estHess(RestHess);    
-    IntegerVector BFACTOR(RBFACTOR);
+    IntegerVector estHess(RestHess);        
     const int nzeta = Pnzeta(0);
     const int nfact = Thetas.ncol();
     const int N = Thetas.nrow();
-    NumericVector Prior(N);
-    if(BFACTOR(0)){
-    	Prior = prior;
-	} else {		
-		Prior.fill(1.0);
-	}
-    NumericMatrix dat(dat2.nrow(), dat2.ncol());
     NumericMatrix d2L(nfact + nzeta, nfact + nzeta);
     NumericVector dL(nfact + nzeta);
 
@@ -249,12 +231,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rprior, SEXP Rdat,
 			P(i,j) = prob(i,j);
 			PQfull(i,j) = prob(i,j) * (1.0 - prob(i,j));
 		}
-	}
-	for(j = 0; j < dat2.ncol(); j++){
-		for(i = 0; i < N; i++){
-		    dat(i,j) = dat2(i,j) * Prior(i);
-		}
-	}
+	}	
 	for(j = 0; j < nfact; j++)
 		factind(j) = nzeta + j;
 	for(j = 0; j < (nzeta + 1); j++){
@@ -374,8 +351,7 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rprior, SEXP Rdat,
 	END_RCPP
 }
 
-RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess, 
-    SEXP REM, SEXP RBFACTOR, SEXP Rot) 
+RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Rot) 
 {		
     BEGIN_RCPP
     
@@ -383,15 +359,12 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
     NumericVector P, Pstar, Q, Qstar, r1, r2;	
 	
 	S4 x(Rx);
-	NumericMatrix Theta(RTheta);
-    NumericVector prior(Rprior);    
+	NumericMatrix Theta(RTheta);        
 	IntegerVector estHess(RestHess);                
-	IntegerVector EM(REM);
-	IntegerVector BFACTOR(RBFACTOR);
+	IntegerVector EM(REM);	
 	NumericVector ot(Rot);
 	
-	NumericVector par = x.slot("par");	
-	NumericVector Prior(Theta.nrow());
+	NumericVector par = x.slot("par");		
 	const int nfact = Theta.ncol();    
 	NumericVector a(nfact);
 	for(i = 0; i < nfact; i++)
@@ -410,12 +383,7 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
 		NumericMatrix dat = x.slot("dat");
 		r1 = dat(_,1);
 		r2 = dat(_,0);	
-	}
-	if(BFACTOR(0)){
-		Prior = prior;
-	} else {		
-		Prior.fill(1.0);
-	}
+	}	
 	
     NumericMatrix hess (nfact + 3, nfact + 3);
     NumericVector grad (nfact + 3);
@@ -429,11 +397,11 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
     r1_P2 = r1/(P*P);
     r2_Q = r2/Q; 
     r2_Q2 = r2/(Q*Q);
-    grad(nfact) = sum((u-g)*D*Pstar*Qstar*(r1_P - r2_Q)*Prior);    
-    grad(nfact + 1) = sum(Qstar*(r1_P - r2_Q)*Prior);
-    grad(nfact + 2) = sum(Pstar*(r1_P - r2_Q)*Prior);
+    grad(nfact) = sum((u-g)*D*Pstar*Qstar*(r1_P - r2_Q));    
+    grad(nfact + 1) = sum(Qstar*(r1_P - r2_Q));
+    grad(nfact + 2) = sum(Pstar*(r1_P - r2_Q));
     for(i = 0; i < nfact; i++)
-        grad(i) = sum(Theta(_, i) * D * Pstar * Qstar * (u-g) * (r1_P - r2_Q) * Prior);
+        grad(i) = sum(Theta(_, i) * D * Pstar * Qstar * (u-g) * (r1_P - r2_Q));
         
     if(estHess(0)){
         int gloc = nfact+1; 
@@ -445,20 +413,20 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
         hess(nfact,nfact) = sum((r1_P * (ugD2 * (Pstar - 3*Pstar2 + 2*Pstar3)) -
                                           r1_P2 * (ugD * (Pstar - Pstar2))*(ugD * (Pstar - Pstar2)) +
                                           r2_Q * (ugD2 * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
-                                          r2_Q2 * (ugD * (-Pstar + Pstar2))*(ugD * (-Pstar + Pstar2))) * Prior);
-        hess(gloc,gloc) = -1.0 * sum(Qstar*Qstar *(r1_P2 + r2_Q2)*Prior);
-        hess(uloc,uloc) = -1.0 * sum(Pstar2 *(r1_P2 + r2_Q2)*Prior);
+                                          r2_Q2 * (ugD * (-Pstar + Pstar2))*(ugD * (-Pstar + Pstar2))));
+        hess(gloc,gloc) = -1.0 * sum(Qstar*Qstar *(r1_P2 + r2_Q2));
+        hess(uloc,uloc) = -1.0 * sum(Pstar2 *(r1_P2 + r2_Q2));
         hess(nfact, gloc) = sum((r1_P * (D * (-Pstar + Pstar2)) -
                      r1_P2 * (ugD * (Pstar - Pstar2)) * Qstar +
                      r2_Q * (D * (Pstar - Pstar2)) -
-                     r2_Q2 * (ugD * (-Pstar + Pstar2)) * -Qstar) * Prior);
+                     r2_Q2 * (ugD * (-Pstar + Pstar2)) * -Qstar));
         hess(gloc, nfact) = hess(nfact, gloc);
         hess(nfact, uloc) = sum((r1_P * (D * (Pstar - Pstar2)) -
                      r1_P2 * (ugD * (Pstar - Pstar2)) * Pstar +
                      r2_Q * (D * (-Pstar + Pstar2)) +
-                     r2_Q2 * (ugD * (-Pstar + Pstar2)) * Pstar) * Prior);
+                     r2_Q2 * (ugD * (-Pstar + Pstar2)) * Pstar));
         hess(uloc, nfact) = hess(nfact, uloc);
-        hess(gloc, uloc) = sum((-1.0 * r1_P2 * Pstar * Qstar + r2_Q2 * Pstar * (-1.0 + Pstar )) * Prior);
+        hess(gloc, uloc) = sum((-1.0 * r1_P2 * Pstar * Qstar + r2_Q2 * Pstar * (-1.0 + Pstar )));
         hess(uloc, gloc) = hess(gloc, uloc);
         for(i = 0; i < nfact; i++)
             for(j = 0; j < nfact; j++)
@@ -469,7 +437,7 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
                                            r2_Q * (ugD2 * Theta(_,i) * Theta(_,j) *
                                                (-Pstar + 3*Pstar2 - 2*Pstar3)) -
                                            r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2)) *
-                                              (ugD * Theta(_,j) * (-Pstar + Pstar2))) * Prior);                    
+                                              (ugD * Theta(_,j) * (-Pstar + Pstar2))));                    
         for(i = 0; i < nfact; i++){
             hess(i, nfact) = 
                 sum((r1_P * (ugD2 * Theta(_,i) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
@@ -477,19 +445,19 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP Rprior, SEXP RestHess,
                             (ugD * (Pstar - Pstar2)) +
                          r2_Q * (ugD2 * Theta(_,i) * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
                          r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2)) *
-                         (ugD * (-Pstar + Pstar2))) * Prior);
+                         (ugD * (-Pstar + Pstar2))));
             hess(nfact, i) = hess(i, nfact);
             hess(i, gloc) = 
                 sum((r1_P * (D * Theta(_,i) * (-Pstar + Pstar2)) -
                          r1_P2 * (ugD * Theta(_,i) * (Pstar - Pstar2)) * Qstar +
                          r2_Q * (D * Theta(_,i) * (Pstar - Pstar2)) -
-                         r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2) ) * (Pstar - 1.0)) * Prior);
+                         r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2) ) * (Pstar - 1.0)));
             hess(gloc, i) = hess(i, gloc);
             hess(i, uloc) =  
                 sum((r1_P * (D * Theta(_,i) * (Pstar - Pstar2)) -
                          r1_P2 * (ugD * Theta(_,i) * (Pstar - Pstar2)) * Pstar +
                          r2_Q * (D * Theta(_,i) * (-Pstar + Pstar2)) +
-                         r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2) ) * Pstar) * Prior);
+                         r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2) ) * Pstar));
             hess(uloc, i) = hess(i, uloc);
         }
     }    

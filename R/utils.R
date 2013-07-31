@@ -823,8 +823,14 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     estindex <- estpars
     estindex[estpars] <- est
     rij <- 1
+    prodlist <- PrepList[[1L]]$prodlist
+    nfact <- ncol(Theta)
     gTheta <- vector('list', ngroups)
-    for(g in 1L:ngroups) gTheta[[g]] <- Theta
+    for(g in 1L:ngroups){
+        gTheta[[g]] <- Theta 
+        if(length(prodlist) > 0L)
+            gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+    }
 
     for (cycles in 3L:NCYCLES){
 
@@ -845,7 +851,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                 Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]],gstructgrouppars[[g]]$gmeans,
+            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
@@ -853,7 +859,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                            Theta=gTheta[[g]], prior=prior[[g]],
+                                            Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
                                             specific=list$specific, sitems=list$sitems,
                                             itemloc=itemloc, itemtrace=gitemtrace[[g]])
             } else {
@@ -869,7 +875,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             }
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
-                      gTheta=gTheta, Prior=Prior, BFACTOR=BFACTOR, itemloc=itemloc,
+                      gTheta=gTheta, itemloc=itemloc, Prior=Prior,
                       PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
                       constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)
         rijlast <- rij
