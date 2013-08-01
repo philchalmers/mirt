@@ -448,7 +448,7 @@ setMethod(
     definition = function(x, Theta, useDesign = TRUE, ot=0){     
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.mirt(x@par, Theta=Theta, D=x@D, asMatrix=TRUE, ot=ot)        
+        P <- P.mirt(x@par, Theta=Theta, asMatrix=TRUE, ot=ot)        
         return(P)
     }
 )
@@ -462,7 +462,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.nestlogit(x@par[1L:(x@nfact+3L)], Theta=Theta, 
-                         ak=ak, dk=dk, correct=x@correctcat, D=x@D))
+                         ak=ak, dk=dk, correct=x@correctcat))
     }
 )
 
@@ -472,7 +472,7 @@ setMethod(
     definition = function(x, Theta, itemexp = TRUE, useDesign = TRUE, ot=0){        
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.poly(x@par, Theta=Theta, itemexp=itemexp, D=x@D, ot=ot))
+        return(P.poly(x@par, Theta=Theta, itemexp=itemexp, ot=ot))
     }
 )
 
@@ -487,7 +487,7 @@ setMethod(
         t <- x@par[length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.poly(c(a=a, d=(d + t)), Theta=Theta, itemexp=itemexp, D=x@D, ot=ot))
+        return(P.poly(c(a=a, d=(d + t)), Theta=Theta, itemexp=itemexp, ot=ot))
     }
 )
 
@@ -499,7 +499,7 @@ setMethod(
         d <- x@par[-(1L:x@nfact)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D, ot=ot))
+        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, ot=ot))
     }
 )
 
@@ -513,7 +513,7 @@ setMethod(
         d[-1L] <- d[-1L] + t
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, D=x@D, ot=ot))
+        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, ot=ot))
     }
 )
 
@@ -526,7 +526,7 @@ setMethod(
         d <- x@par[(length(x@par) - x@ncat + 1L):length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, D=x@D, ot=ot))
+        return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, ot=ot))
     }
 )
 
@@ -541,29 +541,29 @@ setMethod(
         u <- x@par[length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, D=x@D, asMatrix=TRUE))
+        return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, asMatrix=TRUE))
     }
 )
 
 ##Function passes
-P.poly <- function(par, Theta, itemexp = FALSE, D, ot = 0)
+P.poly <- function(par, Theta, itemexp = FALSE, ot = 0)
 {
     return(.Call('gradedTraceLinePts', par, Theta, itemexp, ot))
 }
 
 # Trace lines for mirt models
-P.mirt <- function(par, Theta, D, asMatrix = FALSE, ot = 0)
+P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
 {
     return(.Call("traceLinePts", par, Theta, asMatrix, ot))
 }
 
 # Trace lines for partially compensetory models
-P.comp <- function(a, d, Theta, g, u = 1, D, asMatrix = FALSE)
+P.comp <- function(a, d, Theta, g, u = 1, asMatrix = FALSE)
 {
     nfact <- length(a)
     P <- rep(1,nrow(Theta))
     for(i in 1L:nfact)
-        P <- P * P.mirt(c(a[i], d[i], g=0, u=1), Theta[ ,i, drop=FALSE], D=D)
+        P <- P * P.mirt(c(a[i], d[i], g=0, u=1), Theta[ ,i, drop=FALSE])
     P <- g + (u - g) * P
     s.eps <- 1e-10
     P[P < s.eps] <- s.eps
@@ -573,16 +573,16 @@ P.comp <- function(a, d, Theta, g, u = 1, D, asMatrix = FALSE)
 }
 
 #d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1
-P.nominal <- function(a, ak, d, Theta, D, returnNum = FALSE, ot = 0){
-    return(.Call("nominalTraceLinePts", a, ak, d, Theta, D, returnNum, ot))
+P.nominal <- function(a, ak, d, Theta, returnNum = FALSE, ot = 0){
+    return(.Call("nominalTraceLinePts", a, ak, d, Theta, returnNum, ot))
 }
 
-P.nestlogit <- function(par, Theta, ak, dk, correct, D)
+P.nestlogit <- function(par, Theta, ak, dk, correct)
 {
     traces <- matrix(0, nrow(Theta), length(ak)+1L)
-    traces[ ,correct] <- P.mirt(par, Theta=Theta, D=D)
+    traces[ ,correct] <- P.mirt(par, Theta=Theta)
     Q <- 1 - traces[ ,correct]
-    Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, D=D)
+    Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta)
     traces[ ,-correct] <- Q * Pn
     return(traces)
 }

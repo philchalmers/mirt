@@ -64,8 +64,7 @@ setClass("AllItemsClass",
                         ln.prior.mu='numeric',
                         ln.prior.sd='numeric',
                         b.prior.alpha='numeric',
-                        b.prior.beta='numeric',
-                        D='numeric', #scaling correction
+                        b.prior.beta='numeric',                        
                         'VIRTUAL')
 )
 

@@ -111,7 +111,7 @@ setMethod(
             rotname <- ifelse(rotate == '', object@rotate, rotate)
             if(verbose) cat("\nRotation: ", rotname, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
-            a <- rotateLambdas(so) * 1.702/object@pars[[1]]@D
+            a <- rotateLambdas(so) * 1.702
             for(i in 1:J)
                 object@pars[[i]]@par[1:nfact] <- a[i, ]            
             if(rotname != 'none')
@@ -275,7 +275,7 @@ setMethod(
         if (x@nfact > 1 && !is(tmp,'try-error')){
             rotname <- x@rotate
             so <- summary(x, rotate=x@rotate, Target=NULL, verbose=FALSE, digits=5, ...)
-            a <- rotateLambdas(so) * 1.702/x@pars[[1]]@D
+            a <- rotateLambdas(so) * 1.702
             for(i in 1:J)
                 x@pars[[i]]@par[1:nfact] <- a[i, ]
         }

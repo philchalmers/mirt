@@ -80,7 +80,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 	for(i = 0; i < nquad; i++)
         Pk(i,0) = 1.0;
     for(i = 0; i < ncat; i++)
-        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, &nullone, ot); 
+        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, ot); 
     if(itemexp(0)){
         for(i = (Pk.ncol()-2); i >= 0; i--)
             P(_,i) = Pk(_,i) - Pk(_,i+1);
@@ -98,15 +98,14 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 }
 
 
-RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEXP RD, 
+RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, 
     SEXP RreturnNum, SEXP Rot) 
 {
     BEGIN_RCPP
 
 	NumericVector a(Ra);
 	NumericVector ak(Rak);
-	NumericVector d(Rd);
-	NumericVector D(RD);
+	NumericVector d(Rd);	
     NumericVector ot(Rot);
 	NumericMatrix Theta(RTheta);
 	IntegerVector returnNum(RreturnNum);
@@ -127,14 +126,14 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, SEX
     if(USEOT){
         for(i = 0; i < nquad; i++){
             for(j = 0; j < ncat; j++){
-    	        Num(i,j) = exp(D(0) * ak(j) * innerprod(i) + D(0) * d(j) + ot(i));
+    	        Num(i,j) = exp(ak(j) * innerprod(i) + d(j) + ot(i));
                 Den(i) += Num(i,j);
             }        
         }
     } else {
     	for(i = 0; i < nquad; i++){
     	    for(j = 0; j < ncat; j++){
-    	        Num(i,j) = exp(D(0) * ak(j) * innerprod(i) + D(0) * d(j));
+    	        Num(i,j) = exp(ak(j) * innerprod(i) + d(j));
                 Den(i) += Num(i,j);
             }        
         }

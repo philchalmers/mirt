@@ -45,7 +45,7 @@ NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 }
 
 NumericVector itemTrace(NumericVector a, const double *d, 
-        NumericMatrix Theta, const double *g, const double *u, const double *D, NumericVector ot)
+        NumericMatrix Theta, const double *g, const double *u, NumericVector ot)
 {	
 	int i, j;
     const int nquad = Theta.nrow();
@@ -55,9 +55,9 @@ NumericVector itemTrace(NumericVector a, const double *d,
 	for (i = 0; i <	nquad; i++){
 	    z(i) = 0.0;
 		for (j = 0; j <	Theta.ncol(); j++){		
-			z(i) += *D * a(j) * Theta(i,j);  		
+			z(i) += a(j) * Theta(i,j);  		
 		}
-		z(i) += *d * *D;
+		z(i) += *d;
 	}	
     if(USEOT){
         for (i = 0; i < nquad; i++)
