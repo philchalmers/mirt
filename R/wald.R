@@ -49,6 +49,9 @@
 #' anova(mod2, mod)
 #' }
 wald <- function(object, L, C = 0){
+    if(all(dim(object@information) == c(1,1)))
+        if(object@information[1,1] == 0L)
+            stop('No information matrix has been calculated for the model')
     Names <- colnames(object@information)
     if(missing(L)){
         names(Names) <- 1:length(Names)
