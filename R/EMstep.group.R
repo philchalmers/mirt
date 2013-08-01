@@ -244,11 +244,14 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, specific, sitems, 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, cycle, PROBTRACE, DERIV, Prior){
     p <- longpars[est]
-    opt <- optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', 
+    opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', 
                  control=list(maxit=ifelse(cycle > 10L, 10L, 5L)), PROBTRACE=PROBTRACE, DERIV=DERIV,
                  est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                  PrepList=PrepList, L=L, constrain=constrain,
-                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est])
+                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est]),
+            silent=TRUE)
+    if(is(opt, 'try-error'))
+        stop(opt)
     longpars[est] <- opt$par
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
@@ -280,7 +283,18 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,
                                   PROBTRACE=PROBTRACE[[g]][[i]])
         LL <- LL + sum(LLs)
     }
-    LL
+    if(is.nan(LL)){
+        for(g in 1L:ngroups){                
+            for(i in 1L:J){
+                if(is.nan(LogLikMstep(pars[[g]][[i]], Theta=gTheta[[g]],
+                                      PROBTRACE=PROBTRACE[[g]][[i]])))
+                    stop('M-step optimizer did not converge. 
+                         Item ', i, ' in group ', g, ' had the following extreme parameters:\n', 
+                         paste0(paste0('  ', names(pars[[g]][[i]]@est), ' = '), 
+                                round(pars[[g]][[i]]@par), 4))
+            }
+        }        
+    } else return(LL)    
 }
 
 LogLikMstep <- function(x, Theta, PROBTRACE){
