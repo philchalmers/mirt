@@ -86,7 +86,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     for(i in 1L:J){
         if(itemtype[i] == 'Rasch' && K[i] == 2L)
             freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)
-        if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){
+        if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){            
+            if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
             if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1L] <- TRUE
             if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
@@ -124,6 +125,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             freepars[[i]] <- estpars
         }
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+            if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
             estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
             if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1L] <- TRUE
             freepars[[i]] <- estpars
