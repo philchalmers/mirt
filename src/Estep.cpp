@@ -8,28 +8,25 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     BEGIN_RCPP
 
     NumericVector prior(Rprior);
-    NumericVector log_prior(prior.length());
     IntegerVector nfact(Rnfact);
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     NumericMatrix itemtrace(Ritemtrace);
-    NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol());    
     const int nquad = prior.length();
     const int nitems = data.ncol();
     const int npat = r.length();          
     NumericMatrix r1(nquad, nitems);    
     NumericVector expected(npat);
     List ret;
-    for (int item = 0; item < nitems; item++)        
-        log_itemtrace(_,item) = log(itemtrace(_,item));
-    log_prior = log(prior);
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; pat++){		
   	    NumericVector posterior(nquad);
+        posterior.fill(1.0);  
 		for (int item = 0; item < nitems; item++)
-            posterior += data(pat,item) * log_itemtrace(_,item);
-        posterior = exp(log_prior + posterior);
+            if(data(pat,item))
+                posterior = posterior*itemtrace(_,item);
+        posterior = posterior*prior;
 	    double expd = sum(posterior);
 	    expected(pat) = expd;
 	    posterior = r(pat) * posterior / expd;	
@@ -56,7 +53,6 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     NumericMatrix itemtrace(Ritemtrace);
     NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol()); 
     NumericVector prior(Rprior);
-    NumericVector log_prior(prior.length());
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     IntegerMatrix sitems(Rsitems);
@@ -67,9 +63,6 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
     const int nquad = npquad * npquad;  
     const int npat = r.length();      
     int i=0, j=0, k=0, item=0, fact=0;
-    for (int item = 0; item < nitems; item++)        
-        log_itemtrace(_,item) = log(itemtrace(_,item));
-    log_prior = log(prior);
         
 	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
 	NumericMatrix likelihoods(nquad,sfact), L(npquad,npquad), r1(nquad,nitems*sfact),
@@ -79,32 +72,29 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 	for (int pat = 0; pat < npat; pat++){		
 		for (fact = 0; fact < sfact; fact++){ 	
 			for (k = 0; k < nquad; k++)
-    			likelihoods(k,fact) = 0.0;
+    			likelihoods(k,fact) = 1.0;
 			for (item = 0; item < nitems; item++){
 				if (data(pat,item) && sitems(item,fact))										    
 				    for (k = 0; k < nquad; k++)
-    				    likelihoods(k,fact) += log_itemtrace(k,item);					
+    				    likelihoods(k,fact) = likelihoods(k,fact)*itemtrace(k,item);					
 			}
 		}         					
 		for (fact = 0; fact < sfact; fact++){
 			k = 0;
-			for (j = 0; j < npquad; j++){
-				tempsum(j) = 0.0;
+			for (j = 0; j < npquad; j++){				
 			    for (i = 0; i < npquad; i++){
 			  	    L(i,j) = likelihoods(k,fact);
 			  	    k++;
 			    }
 			}
 			for (i = 0; i < npquad; i++)
-			    L(i,_) = exp(L(i,_) + log_prior);
+			    L(i,_) = L(i,_)*prior;
+            tempsum.fill(0.0);
 			for (i = 0; i < npquad; i++)
-			        tempsum += L(_,i);
+			    tempsum += L(_,i);
 			for (i = 0; i < npquad; i++)
 			    Plk(i,fact) = tempsum(i);    			
 		}		
-        for (fact = 0; fact < sfact; fact++)
-            for (k = 0; k < nquad; k++)
-    	        likelihoods(k,fact) = exp(likelihoods(k,fact));
 		expected(pat) = 0.0;
 		for (i = 0; i < npquad; i++){
 		    Pls(i) = 1.0; 		  		
@@ -137,11 +127,11 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 }
 
 //EAP estimates used in multipleGroup
-RcppExport SEXP EAPgroup(SEXP Rlog_itemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu) 
+RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu) 
 {
     BEGIN_RCPP
 
-    NumericMatrix log_itemtrace(Rlog_itemtrace); 
+    NumericMatrix itemtrace(Ritemtrace); 
     NumericMatrix tabdata(Rtabdata); 
     NumericMatrix Theta(RTheta); 
     NumericVector prior(Rprior);
@@ -153,15 +143,15 @@ RcppExport SEXP EAPgroup(SEXP Rlog_itemtrace, SEXP Rtabdata, SEXP RTheta, SEXP R
 
     NumericVector L(n), thetas(nfact), thetas2(nfact*(nfact+1)/2); 
     NumericMatrix scores(tabdata.nrow(), nfact), scores2(tabdata.nrow(), nfact*(nfact + 1)/2);
-    double LL, denom;
+    double denom;
 
     for(int pat = 0; pat < tabdata.nrow(); pat++){
         
-        for(j = 0; j < n; j++){
-            LL = 0.0;
+        L.fill(1.0);
+        for(j = 0; j < n; j++){            
             for(i = 0; i < nitems; i++)
-               LL += tabdata(pat, i) * log_itemtrace(j, i); 
-            L(j) = exp(LL);
+                if(tabdata(pat, i))
+                    L(j) = L(j) * itemtrace(j, i);             
         }
         
         thetas.fill(0.0);

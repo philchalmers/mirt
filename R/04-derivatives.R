@@ -481,8 +481,7 @@ setMethod(
             selcov <- lower.tri(sig, diag=TRUE)
             scores2 <- matrix(0, nrow(tabdata), sum(selcov))
             thetas2 <- numeric(sum(selcov))
-            log_itemtrace <- log(itemtrace)
-            ret <- .Call('EAPgroup', log_itemtrace, tabdata, Theta, prior, mu)
+            ret <- .Call('EAPgroup', itemtrace, tabdata, Theta, prior, mu)
             tmp <- cbind(ret$scores, ret$scores2) * r
             newpars <- apply(tmp, 2, sum) / N
             return(newpars[x@est])
