@@ -79,8 +79,7 @@
 #' data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
 #' covdata <- data.frame(group, pseudoIQ)
 #' #use parallel computing
-#' library(parallel)
-#' mirtCluster(detectCores())
+#' mirtCluster()
 #'
 #' #specify IRT model
 #' model <- mirt.model('Theta = 1-10')

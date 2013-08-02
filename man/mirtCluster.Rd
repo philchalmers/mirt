@@ -2,11 +2,16 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-  mirtCluster(ncores)
+  mirtCluster(ncores, remove = FALSE)
 }
 \arguments{
   \item{ncores}{number of cores to be used in the returned
-  object which is passed to \code{parallel::makeCluster()}}
+  object which is passed to \code{parallel::makeCluster()}.
+  If no input is given the maximum number of available
+  cores will be used}
+
+  \item{remove}{logical; remove previously defined
+  \code{mirtCluster()}?}
 }
 \description{
   This function defines a object that is placed in the
@@ -24,9 +29,11 @@
 #make 4 cores available for parallel computing
 mirtCluster(4)
 
+#' #stop and remove cores
+mirtCluster(remove = TRUE)
+
 #use all available cores
-library(parallel)
-mirtCluster(detectCores())
+mirtCluster()
 
 }
 }

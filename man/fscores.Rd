@@ -91,8 +91,7 @@ fscores(mod, method='MAP', cov = matrix(1000))
 fscores(mod, method='ML')
 
 #WLE estimation, run in parallel using available cores
-library(parallel)
-mirtCluster(detectCores())
+mirtCluster()
 fscores(mod, method='WLE')
 
   }

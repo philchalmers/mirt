@@ -596,8 +596,7 @@
 #'
 #'
 #' #compute model, and use parallel computation of the log-likelihood
-#' library(parallel)
-#' mirtCluster(detectCores())
+#' mirtCluster()
 #' mod1 <- mirt(dataset, model.1, method = 'MHRM')
 #' coef(mod1)
 #' summary(mod1)
