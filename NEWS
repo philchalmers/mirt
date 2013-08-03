@@ -1,6 +1,9 @@
-Changes in mirt 0.8.4
+Changes in mirt 0.8.5
 
 NEW FEATURES
+
+- bfactor() can include an additional model argument for modeling two-tier structures introduced
+  by Cai (2010), and now supports a 'group' input for multiple group analyses
 
 - add a general Ramsey (1975) acceleration to EM estimation by default. Can be disable with 
   accelerate = FALSE (and is done so automatically when estimating SEM standard errors)

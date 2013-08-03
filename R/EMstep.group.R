@@ -15,7 +15,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
     nfullpars <- 0
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
-    gfulldata <- gtheta0 <- gstructgrouppars <- gitemtrace <- vector('list', ngroups)
+    gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
     for(g in 1L:ngroups){
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
         gfulldata[[g]] <- PrepList[[g]]$fulldata
@@ -68,7 +68,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
              paste(paste0(redindex[diag(L)[!estpars] > 0]), ''), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
-    Prior <- prior <- gstructgrouppars <- rlist <- r <- list()
+    Prior <- prior <- Priorbetween <- gstructgrouppars <- rlist <- r <- list()
     #make sure constrained pars are equal
     tmp <- rowSums(L)
     tmp[tmp == 0] <- 1L
@@ -102,6 +102,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
         gTheta[[g]] <- Theta 
         if(length(prodlist) > 0L)
             gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+        if(BFACTOR){
+            Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
+            prior[[g]] <- dnorm(theta, 0, 1)
+            prior[[g]] <- prior[[g]]/sum(prior[[g]])  
+        }
     }
     preMstep.longpars2 <- preMstep.longpars <- longpars
     accel <- 0
@@ -112,16 +117,17 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
         for(g in 1L:ngroups){            
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])            
             if(BFACTOR){
-                prior[[g]] <- dnorm(theta, 0, 1)
-                prior[[g]] <- prior[[g]]/sum(prior[[g]])                
-                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)                
+                sel <- 1L:(nfact-ncol(sitems))
+                Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
+                                        gstructgrouppars[[g]]$gmeans[sel],
+                                        gstructgrouppars[[g]]$gcov[sel,sel,drop=FALSE])                
+                Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]]) 
+                Prior[[g]] <- apply(expand.grid(Priorbetween[[g]], prior[[g]]), 1, prod)                
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                      
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc,
-                                                PROBTRACE=PROBTRACE[[g]])            
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                                              
         }
         #Estep
         lastLL <- LL
@@ -130,12 +136,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, PROBTRACE, DERIV)
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
                                             Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
-                                            specific=specific, sitems=sitems,
-                                            itemloc=itemloc, itemtrace=gitemtrace[[g]])
+                                            Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
+                                            itemloc=itemloc)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc,
-                                         itemtrace=gitemtrace[[g]])
+                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc)
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
         }
@@ -224,20 +229,21 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, itemtrace=NULL, der
 }
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, specific, sitems, itemloc, itemtrace=NULL)
+Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, specific, 
+                          sitems, itemloc, itemtrace=NULL)
 {
     J <- length(itemloc) - 1L
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1L:(ncol(tabdata) - 1L)]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, X, r, sitems)
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems)
     r1 <- matrix(0, nrow(Theta), ncol(X))
     for (i in 1L:J){
         r1[ ,itemloc[i]:(itemloc[i+1L]-1L)] <-
             retlist$r1[ ,itemloc[i]:(itemloc[i+1L]-1L) + (specific[i] - 1L)*ncol(X) ]
     }
-    r1 <- r1 * Prior
+    r1 <- r1 * Prior 
     return(list(r1=r1, expected=retlist$expected))
 }
 

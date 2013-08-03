@@ -46,33 +46,34 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 
 
 //Estep for bfactor
-RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP Rsitems) 
+RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, SEXP RX, 
+    SEXP Rr, SEXP Rsitems) 
 {
     BEGIN_RCPP
 
-    NumericMatrix itemtrace(Ritemtrace);
-    NumericMatrix log_itemtrace(itemtrace.nrow(), itemtrace.ncol()); 
+    List ret;
+    NumericMatrix itemtrace(Ritemtrace);    
     NumericVector prior(Rprior);
+    NumericVector Priorbetween(RPriorbetween);
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
-    IntegerMatrix sitems(Rsitems);
-    const int nfact = sitems.ncol() + 1;
-    const int sfact = nfact - 1;
+    IntegerMatrix sitems(Rsitems);    
+    const int sfact = sitems.ncol();
     const int nitems = data.ncol();
     const int npquad = prior.length();
-    const int nquad = npquad * npquad;  
+    const int nbquad = Priorbetween.length();
+    const int nquad = nbquad * npquad;  
     const int npat = r.length();      
     int i=0, j=0, k=0, item=0, fact=0;
         
-	NumericVector tempsum(npquad), expected(npat), Pls(npquad);
-	NumericMatrix likelihoods(nquad,sfact), L(npquad,npquad), r1(nquad,nitems*sfact),
-		Plk(npquad,sfact), Elk(npquad,sfact), posterior(nquad,sfact);	
+	NumericVector tempsum(nbquad), expected(npat), Pls(nbquad);
+	NumericMatrix likelihoods(nquad,sfact), L(nbquad,npquad), r1(nquad,nitems*sfact),
+		Plk(nbquad,sfact), Elk(nbquad,sfact), posterior(nquad,sfact);	
 				
 	// Begin main function body here				
-	for (int pat = 0; pat < npat; pat++){		
+	for (int pat = 0; pat < npat; pat++){
+        likelihoods.fill(1.0);
 		for (fact = 0; fact < sfact; fact++){ 	
-			for (k = 0; k < nquad; k++)
-    			likelihoods(k,fact) = 1.0;
 			for (item = 0; item < nitems; item++){
 				if (data(pat,item) && sitems(item,fact))										    
 				    for (k = 0; k < nquad; k++)
@@ -82,33 +83,31 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 		for (fact = 0; fact < sfact; fact++){
 			k = 0;
 			for (j = 0; j < npquad; j++){				
-			    for (i = 0; i < npquad; i++){
+			    for (i = 0; i < nbquad; i++){
 			  	    L(i,j) = likelihoods(k,fact);
 			  	    k++;
 			    }
 			}
-			for (i = 0; i < npquad; i++)
+			for (i = 0; i < nbquad; i++)
 			    L(i,_) = L(i,_)*prior;
             tempsum.fill(0.0);
 			for (i = 0; i < npquad; i++)
 			    tempsum += L(_,i);
-			for (i = 0; i < npquad; i++)
+			for (i = 0; i < nbquad; i++)
 			    Plk(i,fact) = tempsum(i);    			
-		}		
-		expected(pat) = 0.0;
-		for (i = 0; i < npquad; i++){
-		    Pls(i) = 1.0; 		  		
+		}
+        Pls.fill(1.0);
+		for (i = 0; i < nbquad; i++){		     		  		
 			for(fact = 0; fact < sfact; fact++)
 			    Pls(i) = Pls(i) * Plk(i,fact);			
-			expected(pat) += Pls(i) * prior(i);  
+			expected(pat) += Pls(i) * Priorbetween(i);  
 		}				
 		for (fact = 0; fact < sfact; fact++)
-		    for (i = 0; i < npquad; i++)
+		    for (i = 0; i < nbquad; i++)
 		  	    Elk(i,fact) = Pls(i) / Plk(i,fact);		  	
 		for (fact = 0; fact < sfact; fact++)
 		    for (i = 0; i < nquad; i++)  			  	
-		        posterior(i,fact) = likelihoods(i,fact) * r(pat) * Elk(i % npquad,fact) / expected(pat);
-		// ordered specific factor packets, each the size of itemtrace
+		        posterior(i,fact) = likelihoods(i,fact) * r(pat) * Elk(i % nbquad,fact) / expected(pat);		
 		for (fact = 0; fact < sfact; fact++){			
 			for (item = 0; item < nitems; item++)
 				if (data(pat,item))
@@ -118,7 +117,6 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEX
 		}	
 	}	//end main 
 	    
-    List ret;
     ret["r1"] = r1;
     ret["expected"] = expected;
     return(ret);

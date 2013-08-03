@@ -1,20 +1,23 @@
 #' Full-Information Item Bi-factor Analysis
 #'
-#' \code{bfactor} fits a confirmatory maximum likelihood bi-factor model to
+#' \code{bfactor} fits a confirmatory maximum likelihood two-tier/bifactor model to
 #' dichotomous and polytomous data under the item response theory paradigm.
-#' Fits the IRT models using a dimensional reduction EM algorithm so that regardless
-#' of the number of specific factors estimated the model only uses a two-dimensional 
-#' quadrature grid for integration (hence the maximum number of factors in estimation is only 2). 
-#' See \code{\link{mirt}} for appropriate methods to be used
+#' The IRT models are fit using a dimensional reduction EM algorithm so that regardless
+#' of the number of specific factors estimated the model only uses the number of 
+#' factors in the second-tier structure plus 1. For the bifactor model the maximum 
+#' number of dimensions is only 2 since the second-tier only consists of a  
+#' ubiqutous unidimensional factor. See \code{\link{mirt}} for appropriate methods to be used
 #' on the objects returned from the estimation.
 #'
 #'
 #' \code{bfactor} follows the item factor analysis strategy explicated by
-#' Gibbons and Hedeker (1992) and Gibbons et al. (2007).
+#' Gibbons and Hedeker (1992), Gibbons et al. (2007), and Cai (2010).
 #' Nested models may be compared via an approximate
 #' chi-squared difference test or by a reduction in AIC or BIC (accessible via
 #' \code{\link{anova}}). See \code{\link{mirt}} for more details regarding the
-#' IRT estimation approach used in this package.
+#' IRT estimation approach used in this package. The default is to use 21 quadrature 
+#' for each dimensions, but this can be over-written by passing a \code{quadpts = #}
+#' argument.
 #'
 #'
 #' @aliases bfactor
@@ -24,7 +27,12 @@
 #' item. For example, if for a 4 item test with two specific factors, the first
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
-#' on the general factor (have no specific component) \code{NA} values may be used as place-holders
+#' on the second-tier factors (have no specific component) \code{NA} values may 
+#' be used as place-holders
+#' @param model2 a two-tier model specification object defined by \code{mirt.model()}. By default
+#' the model will fit a unidimensional model in the second-tier, and therefore be equivalent to 
+#' the bifactor model
+#' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param SE logical; calculate information matrix and standard errors?
 #' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
 #' @param verbose logical; print observed log-likelihood value at each iteration?
@@ -39,6 +47,9 @@
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
 #' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}
 #' @references
+#' 
+#' Cai, L. (2010). A two-tier full-information item factor analysis model with applications.
+#' \code{Psychometrika, 75}, 581-612.
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6),
@@ -54,7 +65,7 @@
 #'
 #' @keywords models
 #' @usage
-#' bfactor(data, model, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
+#' bfactor(data, model, model2 = 1, SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
 #'
 #'
 #' @export bfactor
@@ -131,34 +142,68 @@
 #' specific <- c(rep(1,7),rep(2,7))
 #' simmod <- bfactor(dataset, specific)
 #' coef(simmod)
+#' 
+#' #########
+#' # Two-teir model
+#' 
+#' #simulate data
+#' a <- matrix(c(
+#' 0,1,0.5,NA,NA,
+#' 0,1,0.5,NA,NA,
+#' 0,1,0.5,NA,NA,
+#' 0,1,0.5,NA,NA,
+#' 0,1,0.5,NA,NA,
+#' 0,1,NA,0.5,NA,
+#' 0,1,NA,0.5,NA,
+#' 0,1,NA,0.5,NA,
+#' 1,0,NA,0.5,NA,
+#' 1,0,NA,0.5,NA,
+#' 1,0,NA,0.5,NA,
+#' 1,0,NA,NA,0.5,
+#' 1,0,NA,NA,0.5,
+#' 1,0,NA,NA,0.5,
+#' 1,0,NA,NA,0.5,
+#' 1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
+#'
+#' d <- matrix(rnorm(16))
+#' items <- rep('dich', 16)
+#'
+#' sigma <- diag(5)
+#' sigma[1,2] <- sigma[2,1] <- .4
+#' set.seed(1234)
+#' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+#'
+#' specific <- c(rep(1,5),rep(2,6),rep(3,5))
+#' model <- mirt.model('
+#'     G1 = 1-8
+#'     G2 = 9-16
+#'     COV = G1*G2')
+#'     
+#' simmod <- bfactor(dataset, specific, model, quadpts = 15)
+#' coef(simmod)
+#' summary(simmod)
 #'
 #'     }
 #'
-bfactor <- function(data, model, SE = FALSE, SE.type = 'SEM', verbose = TRUE, ...)
+bfactor <- function(data, model, model2 = 1, SE = FALSE, SE.type = 'SEM', group = NULL, 
+                    verbose = TRUE, ...)
 {
     Call <- match.call()
-    if(length(model) != ncol(data)) 
-        stop('length of model must equal the number of items')
-    if(any(is.na(model))){
-        tmpmodel <- model
-        tmpmodel[is.na(tmpmodel)] <- min(model, na.rm = TRUE)
-        if(!is.null(list(...)$pars))
-            stop('\'pars\' argument cannot be used since model contains NA values.
-                 Remove NAs from model specification.')
-        tmp <- bfactor(data, tmpmodel, pars = 'values', ...)
-        name <- 'a2'
-        vals <- tmp$value[tmp$name == name]
-        est <- tmp$est[tmp$name == name]
-        vals[is.na(model)] <- 0
-        est[is.na(model)] <- FALSE
-        tmp$value[tmp$name == name] <- vals
-        tmp$est[tmp$name == name] <- est        
-        mod <- bfactor(data, tmpmodel, pars=tmp, SE=SE, verbose=verbose, ...)
-        if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
-            mod@Call <- Call
-        return(mod)
-    }
-    mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
+    if(is.numeric(model))
+        if(length(model) != ncol(data)) 
+            stop('length of model must equal the number of items')
+    nspec <- length(na.omit(unique(model)))
+    specific <- model
+    if(is.numeric(model2) && model2 > 1) 
+        stop('model2 requirest a mirt.model definition for more than 1 factor')
+    if(is.numeric(model2) && model2 == 1)
+        model2 <- mirt.model(paste0('G = 1-', ncol(data)), quiet=TRUE)
+    model <- bfactor2mod(model, ncol(data))
+    model$x <- rbind(model2$x, model$x)
+    attr(model, 'nspec') <- nspec
+    attr(model, 'specific') <- specific
+    if(is.null(group)) group <- rep('all', nrow(data))
+    mod <- ESTIMATION(data=data, model=model, group=group,
                       method = 'EM', verbose=verbose,
                       BFACTOR = TRUE, SE=SE, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))

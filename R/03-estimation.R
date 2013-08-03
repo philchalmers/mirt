@@ -35,9 +35,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Data$ngroups <- length(Data$groupNames)
     Data$nitems <- ncol(Data$data)
     Data$N <- nrow(Data$data)
-    oldmodel <- model
-    if(is(model, 'numeric') && length(model) > 1L)
-        model <- bfactor2mod(model, ncol(data))
+    oldmodel <- model    
     if(length(model) == 1L){
         newmodel <- list()
         for(g in 1L:Data$ngroups)
@@ -106,18 +104,20 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$returnPrepList) return(PrepList)
     if(opts$BFACTOR){
         #better start values
-        Rpoly <- cormod(Data$data, PrepList[[1L]]$K, guess, use=opts$use)
-        loads <- abs(eigen(Rpoly)$vector[,1L, drop = FALSE])
-        u <- 1 - rowSums(loads^2)
-        u[u < .001 ] <- .2
-        cs <- sqrt(u)
-        astart <- loads/cs
-        astart <- cbind(astart,astart/2)* (1.702 / opts$D) #reweight due to D
-        nfact <- PrepList[[1L]]$pars[[1]]@nfact
-        for(g in 1L:Data$ngroups)
-            for(i in 1L:Data$nitems)
-                PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1L:2L] <- astart[i, ]
-        rm(Rpoly, loads, u, cs, astart)
+        if((PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec')) == 1L){
+            Rpoly <- cormod(Data$data, PrepList[[1L]]$K, guess, use=opts$use)
+            loads <- abs(eigen(Rpoly)$vector[,1L, drop = FALSE])
+            u <- 1 - rowSums(loads^2)
+            u[u < .001 ] <- .2
+            cs <- sqrt(u)
+            astart <- loads/cs
+            astart <- cbind(astart,astart/2) * 1.702
+            nfact <- PrepList[[1L]]$pars[[1]]@nfact
+            for(g in 1L:Data$ngroups)
+                for(i in 1L:Data$nitems)
+                    PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1L:2L] <- astart[i, ]
+            rm(Rpoly, loads, u, cs, astart)
+        }
     }
     if(!is.null(pars)){        
         if(is(pars, 'data.frame')){
@@ -217,10 +217,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(opts$quadpts < 3) stop('Must use more than 2 quadpts')
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                         length.out = opts$quadpts))
-        temp <- matrix(0,nrow=nitems,ncol=(nfact-1L))
-        sitems <- matrix(0, nrow=sum(PrepList[[1L]]$K), ncol=(nfact-1L))
+        nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
+        temp <- matrix(0,nrow=nitems,ncol=nspec)
+        sitems <- matrix(0, nrow=sum(PrepList[[1L]]$K), ncol=nspec)
+        specific <- NULL
         if(opts$BFACTOR){
-            for(i in 1L:nitems) temp[i, oldmodel[i]] <- 1
+            specific <- attr(oldmodel, 'specific')
+            specific[is.na(specific)] <- 1
+            for(i in 1L:nitems) temp[i, specific[i]] <- 1
             ind <- 1L
             for(i in 1L:nitems){
                 for(j in 1L:PrepList[[1L]]$K[i]){
@@ -229,8 +233,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 }
             }
             theta <- seq(-4, 4, length.out = opts$quadpts)
-            Theta <- thetaComb(theta, 2)
-            Theta <- cbind(Theta[,1L], matrix(Theta[,2L], nrow=nrow(Theta), ncol=ncol(sitems)))
+            tmp <- PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec') + 1
+            Theta <- thetaComb(theta, tmp)
+            Theta <- cbind(Theta[,1L:(tmp-1L),drop=FALSE], 
+                           matrix(Theta[,tmp], nrow=nrow(Theta), ncol=ncol(sitems)))
         } else {
             if(opts$quadpts^nfact <= opts$MAXQUAD){
                 Theta <- thetaComb(theta, nfact)
@@ -240,7 +246,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                              list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                          nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                         sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                         sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                          SEM=opts$SE.type == 'SEM' && opts$SE, accelerate=opts$accelerate),
                              Theta=Theta, PROBTRACE=PROBTRACE, DERIV=DERIV)

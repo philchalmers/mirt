@@ -168,29 +168,6 @@ cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.o
 	cormat
 }
 
-# Ramsey rate acceleration adjustment for EM
-rateChange <- function(longpars, listpars, lastpars1, lastpars2)
-{
-	p <- unlist(listpars)
-	lp1 <- unlist(lastpars1)
-	lp2 <- unlist(lastpars2)
-	rate <- rep(0, length(p))
-	d1 <- lp1 - p
-	d2 <- lp2 - p
-	rate <- ifelse(abs(d1) > 0.001 & (d1*d2 > 0.0) & (d1/d2 < 1.0),
-		(1 - (1 - rate) * (d1/d2)),
-		0)
-	rate[p > 4] <- 0
-	rate[p < -4] <- 0
-	p <- lp1*rate*(-2) + (1 - rate*(-2))*p
-    ind <- 1
-    for(i in 1L:length(pars)){
-        pars[[i]]@par <- p[ind:(ind + length(pars[[i]]@par) - 1L)]
-        ind <- ind + length(pars[[i]]@par)
-    }
-	pars
-}
-
 # Rotate lambda coefficients
 rotateLambdas <- function(so){
     F <- so$rotF
@@ -263,9 +240,9 @@ bfactor2mod <- function(model, J){
     tmp <- tempfile('tempfile')
     unique <- sort(unique(model))
     index <- 1L:J
-    tmp2 <- sprintf(c('G =', paste('1-', J, sep='')))
+    tmp2 <- c()
     for(i in 1L:length(unique)){
-        ind <- index[model == unique[i]]
+        ind <- na.omit(index[model == unique[i]])
         comma <- rep(',', 2*length(ind))
         TF <- rep(c(TRUE,FALSE), length(ind))
         comma[TF] <- ind
