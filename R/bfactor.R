@@ -30,7 +30,9 @@
 #' specific factor loads on the first two items and the second specific factor
 #' on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
 #' on the second-tier factors (have no specific component) \code{NA} values may 
-#' be used as place-holders
+#' be used as place-holders. These numbers will be translated into a format suitable for
+#' \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S' added to the 
+#' respective factor number
 #' @param model2 a two-tier model specification object defined by \code{mirt.model()}. By default
 #' the model will fit a unidimensional model in the second-tier, and therefore be equivalent to 
 #' the bifactor model
@@ -67,7 +69,8 @@
 #'
 #' @keywords models
 #' @usage
-#' bfactor(data, model, model2 = 1, SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
+#' bfactor(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)), quiet = TRUE), 
+#' SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
 #'
 #'
 #' @export bfactor
@@ -187,19 +190,20 @@
 #'
 #'     }
 #'
-bfactor <- function(data, model, model2 = 1, SE = FALSE, SE.type = 'SEM', group = NULL, 
+bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)), quiet = TRUE), 
+                    SE = FALSE, SE.type = 'SEM', group = NULL, 
                     verbose = TRUE, ...)
 {
     Call <- match.call()
+    if(!is.numeric(model))
+        stop('model must be a numeric vector')
     if(is.numeric(model))
         if(length(model) != ncol(data)) 
             stop('length of model must equal the number of items')
     nspec <- length(na.omit(unique(model)))
     specific <- model
-    if(is.numeric(model2) && model2 > 1) 
-        stop('model2 requirest a mirt.model definition for more than 1 factor')
-    if(is.numeric(model2) && model2 == 1)
-        model2 <- mirt.model(paste0('G = 1-', ncol(data)), quiet=TRUE)
+    if(!is(model2, 'mirt.model')) 
+        stop('model2 must be an appropriate second-tier model defined with mirt.model()')
     model <- bfactor2mod(model, ncol(data))
     model$x <- rbind(model2$x, model$x)
     attr(model, 'nspec') <- nspec

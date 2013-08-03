@@ -247,7 +247,7 @@ bfactor2mod <- function(model, J){
         TF <- rep(c(TRUE,FALSE), length(ind))
         comma[TF] <- ind
         comma[length(comma)] <- ""
-        tmp2 <- c(tmp2, c(paste('\nF', i, ' =', sep=''), comma))
+        tmp2 <- c(tmp2, c(paste('\nS', i, ' =', sep=''), comma))
     }
     cat(tmp2, file=tmp)
     model <- mirt.model(file=tmp, quiet = TRUE)

@@ -2,7 +2,8 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
-  bfactor(data, model, model2 = 1, SE = FALSE, SE.type =
+  bfactor(data, model, model2 = mirt.model(paste0('G = 1-',
+    ncol(data)), quiet = TRUE), SE = FALSE, SE.type =
     'SEM', group = NULL, verbose = TRUE, ...)
 }
 \arguments{
@@ -17,7 +18,11 @@
   factor on the last two, then the vector is
   \code{c(1,1,2,2)}. For items that should only load on the
   second-tier factors (have no specific component)
-  \code{NA} values may be used as place-holders}
+  \code{NA} values may be used as place-holders. These
+  numbers will be translated into a format suitable for
+  \code{mirt.model()}, combined with the definition in
+  \code{model2}, with the letter 'S' added to the
+  respective factor number}
 
   \item{model2}{a two-tier model specification object
   defined by \code{mirt.model()}. By default the model will
