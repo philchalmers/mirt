@@ -1,6 +1,6 @@
 \name{bfactor}
 \alias{bfactor}
-\title{Full-Information Item Bi-factor Analysis}
+\title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
   bfactor(data, model, model2 = 1, SE = FALSE, SE.type =
     'SEM', group = NULL, verbose = TRUE, ...)
@@ -49,7 +49,7 @@
   estimated the model only uses the number of factors in
   the second-tier structure plus 1. For the bifactor model
   the maximum number of dimensions is only 2 since the
-  second-tier only consists of a ubiqutous unidimensional
+  second-tier only consists of a ubiquitous unidimensional
   factor. See \code{\link{mirt}} for appropriate methods to
   be used on the objects returned from the estimation.
 }
@@ -64,6 +64,11 @@
   this package. The default is to use 21 quadrature for
   each dimensions, but this can be over-written by passing
   a \code{quadpts = #} argument.
+
+  Note: for multiple group two-tier analyses only the
+  second-tier means and variances should be freed since the
+  specific factors are not treated independently due to the
+  dimension reduction technique.
 }
 \examples{
 \dontrun{
