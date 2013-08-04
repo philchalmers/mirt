@@ -178,7 +178,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rr <- rr + r
         df <- df + sum(r != 0) - 1L
     }
-    if(!is.null(opts$technical$override.df)) df <- 999L
+    if(!is.null(opts$technical$override.df)) df <- 1e10
     nestpars <- nconstr <- 0L
     for(g in 1L:Data$ngroups)
         for(i in 1L:(nitems+1L))
