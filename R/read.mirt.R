@@ -1,40 +1,40 @@
 #' Translate mirt parameters for plink package
 #'
-#' This function exports item parameters from the \code{mirt} package to the \code{plink} package.
-#' Model must be estimated with no scaling adjustment (i.e., \code{D = 1}).
+#' This function exports item parameters from the \code{mirt} package to the 
+#' \code{plink} package.
 #'
 #'
 #' @aliases read.mirt
 #' @param x an object returned from \code{mirt, bfactor}, or \code{multipleGroup}
 #' @param as.irt.pars if \code{TRUE}, the parameters will be output as an \code{irt.pars} object
+#' @param ... additional arguments to be passed to \code{coef()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords plink
 #' @export read.mirt
 #' @examples
 #'
 #' \dontrun{
-#' data(LSAT7)
 #' data <- expand.table(LSAT7)
-#' (mod1 <- mirt(data, 1, D = 1))
+#' (mod1 <- mirt(data, 1))
 #' plinkpars <- read.mirt(mod1)
 #'
-#' (mod2 <- mirt(data, 2, D = 1))
-#' plinkpars2 <- read.mirt(mod2)
+#' (mod2 <- mirt(data, 2))
+#' plinkpars2 <- read.mirt(mod2, rotate = 'none')
 #'
 #' }
-read.mirt <- function (x, as.irt.pars = TRUE)
+read.mirt <- function (x, as.irt.pars = TRUE, ...)
 {
     if(!require(plink)) stop('You must load the plink package.')
     cls <- class(x)
     if(class(x) == 'MultipleGroupClass'){
         pars <- vector(length(x@cmods))
         for(i in 1:length(pars))
-            pars[[i]] <- read.mirt(x@cmods, as.irt.pars=as.irt.pars)
+            pars[[i]] <- read.mirt(x@cmods, as.irt.pars=as.irt.pars, ...)
         return(pars)
     }
     if(length(x@prodlist))
         stop('Polynomial factor models not supported in plink')
-    listpars <- coef(x)
+    listpars <- coef(x, ...)
     nitems <- length(listpars) - 1
     if(!is(listpars[[1]], 'matrix'))
         for(i in 1:nitems)
