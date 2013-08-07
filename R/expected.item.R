@@ -18,8 +18,8 @@
 #' mod <- mirt(Science, 1)
 #' extr.2 <- extract.item(mod, 2)
 #' Theta <- fscores(mod, full.scores=TRUE, scores.only=TRUE)
-#' expected <- expected.item(extr.2, Theta)
-#'
+#' expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
+#' 
 #' head(data.frame(expected, Theta=Theta))
 #'
 #' }
