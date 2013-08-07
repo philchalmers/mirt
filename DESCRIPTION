@@ -84,3 +84,4 @@ Collate:
     'randef.R'
     'mirtCluster.R'
     'mirt.model.R'
+    'expected.item.R'

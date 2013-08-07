@@ -102,7 +102,7 @@ personfit <- function(x, method = 'EAP', ...){
     if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
         oneslopes <- rep(FALSE, length(x@itemtype))
         for(i in 1L:length(x@itemtype))
-            oneslopes[i] <- closeEnough((x@pars[[i]]@par[1L] * x@pars[[1L]]@D), 1-1e-10, 1+1e-10)
+            oneslopes[i] <- closeEnough(x@pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
         if(all(oneslopes)){
             W <- resid <- info <- C <- matrix(0, ncol=J, nrow=N)
             K <- x@K
