@@ -95,8 +95,8 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL,
-                          verbose = TRUE, ...)
+    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE, 
+                          printvalue = NULL, verbose = TRUE, ...)
     {
         K <- object@K
         data <- object@data
@@ -146,22 +146,38 @@ setMethod(
             res <- round(res,digits)
             return(res)
         }
-        if(restype == 'exp'){
+        if(restype == 'exp'){            
             r <- object@tabdata[ ,ncol(object@tabdata)]
             res <- round((r - object@Pl * nrow(object@data)) /
                 sqrt(object@Pl * nrow(object@data)),digits)
-            expected <- round(N * object@Pl/sum(object@Pl),digits)
+            expected <- round(N * object@Pl,digits)
             tabdata <- object@tabdata
+            rownames(tabdata) <- NULL
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,expected,res)
-            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")
-            tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]
-            if(!is.null(printvalue)){
-                if(!is.numeric(printvalue)) stop('printvalue is not a number.')
-                tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
+            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")            
+            if(full.scores){
+                tabdata[, 'exp'] <- object@Pl / r * N
+                tabdata2 <- object@tabdatalong
+                tabdata2 <- tabdata2[,-ncol(tabdata2)]
+                stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
+                sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
+                scoremat <- tabdata[match(sfulldata, stabdata2), 'exp', drop = FALSE]                
+                res <- (1-scoremat) / sqrt(scoremat)
+                colnames(res) <- 'res'
+                ret <- cbind(object@data, scoremat, res)
+                ret[is.na(rowSums(ret)), c('exp', 'res')] <- NA
+                rownames(ret) <- NULL
+                return(ret)
+            } else {
+                tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]
+                if(!is.null(printvalue)){
+                    if(!is.numeric(printvalue)) stop('printvalue is not a number.')
+                    tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
+                }                
+                return(tabdata)
             }
-            return(tabdata)
         }
     }
 )

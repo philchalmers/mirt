@@ -180,6 +180,7 @@
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
 #' @param df.p logical; print the degrees of freedom and p-values?
+#' @param full.scores logical; compute relavent statistics for each subject in the original data?
 #' @param nominal.highlow optional matrix indicating the highest (row 1) and lowest (row 2) categories
 #' to be used for the nominal response model. Using this input may result in better numerical stability.
 #' The matrix input should be a 2 by nitems numeric matrix, where each number represents the \emph{reduced}
@@ -393,8 +394,8 @@
 #' \S4method{plot}{ExploratoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
 #' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #'
-#' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, printvalue = NULL,
-#' verbose = TRUE, ...)
+#' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, 
+#'   full.scores = FALSE, printvalue = NULL, verbose = TRUE, ...)
 #'
 #' \S4method{fitted}{ExploratoryClass}(object, digits = 3, ...)
 #'

@@ -2,6 +2,8 @@ Changes in mirt 0.8.5
 
 NEW FEATURES
 
+- full.scores option for residuals() to computer residuals for each row in the original data
+
 - bfactor() can include an additional model argument for modeling two-tier structures introduced
   by Cai (2010), and now supports a 'group' input for multiple group analyses
 

@@ -38,8 +38,8 @@ Theory)}
     yaxis = 30, zaxis = 10), ...)
 
   \S4method{residuals}{ExploratoryClass}(object, restype =
-    'LD', digits = 3, df.p = FALSE, printvalue = NULL,
-    verbose = TRUE, ...)
+    'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
+    printvalue = NULL, verbose = TRUE, ...)
 
   \S4method{fitted}{ExploratoryClass}(object, digits = 3,
     ...)
@@ -256,6 +256,9 @@ Theory)}
 
   \item{df.p}{logical; print the degrees of freedom and
   p-values?}
+
+  \item{full.scores}{logical; compute relavent statistics
+  for each subject in the original data?}
 
   \item{nominal.highlow}{optional matrix indicating the
   highest (row 1) and lowest (row 2) categories to be used
