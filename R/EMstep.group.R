@@ -251,10 +251,11 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, cycle, PROBTRACE, DERIV, Prior){
     p <- longpars[est]
     opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', 
-                 control=list(maxit=ifelse(cycle > 10L, 10L, 5L)), PROBTRACE=PROBTRACE, DERIV=DERIV,
-                 est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                 PrepList=PrepList, L=L, constrain=constrain,
-                 UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est]),
+                     control=list(maxit=ifelse(cycle > 10L, 10L, 5L), fnscale = -1L),  
+                     PROBTRACE=PROBTRACE, DERIV=DERIV,
+                     est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                     PrepList=PrepList, L=L, constrain=constrain,
+                     UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est]),
             silent=TRUE)
     if(is(opt, 'try-error'))
         stop(opt)
@@ -304,8 +305,8 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,
 }
 
 LogLikMstep <- function(x, Theta, PROBTRACE){
-    itemtrace <- PROBTRACE(x=x, Theta=Theta)
-    LL <- (-1) * sum(x@rs * log(itemtrace))
+    log_itemtrace <- log(PROBTRACE(x=x, Theta=Theta))
+    LL <- sum(x@rs * log_itemtrace)
     if(x@any.prior) LL <- LL.Priors(x=x, LL=LL)
     return(LL)
 }
@@ -332,6 +333,5 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,
         ind1 <- ind2 + 1L
     }
     grad <- g %*% L
-    grad <- grad[est]
-    -grad
+    return(grad[est])
 }

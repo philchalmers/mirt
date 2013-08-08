@@ -490,7 +490,7 @@ LL.Priors <- function(x, LL){
         s <- x@n.prior.sd[ind]
         for(i in 1L:length(val)){
             tmp <- dnorm(val[i], u[i], s[i], log=TRUE)            
-            LL <- LL - ifelse(tmp == -Inf, log(1e-100), tmp)
+            LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
     if(any(!is.nan(x@ln.prior.mu))){
@@ -501,7 +501,7 @@ LL.Priors <- function(x, LL){
         s <- x@ln.prior.sd[ind]
         for(i in 1L:length(val)){
             tmp <- dlnorm(val[i], u[i], s[i], log=TRUE)
-            LL <- LL - ifelse(tmp == -Inf, log(1e-100), tmp)
+            LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
     if(any(!is.nan(x@b.prior.alpha))){
@@ -511,7 +511,7 @@ LL.Priors <- function(x, LL){
         b <- x@b.prior.beta[ind]
         for(i in 1L:length(val)){
             tmp <- dbeta(val[i], a[i], b[i], log=TRUE)
-            LL <- LL - ifelse(tmp == -Inf, log(1e-100), tmp)
+            LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
     return(LL)
