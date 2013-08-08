@@ -461,8 +461,8 @@ setMethod(
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
             if(estHess){
-                if(any(x@est)){                    
-                    hess[x@est,x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta, 
+                if(any(x@est)){
+                    hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta, 
                                                            pars=pars, tabdata=tabdata,
                                                            itemloc=itemloc)
                 }
@@ -675,12 +675,27 @@ L <- function(par, obj, Theta, ot=numeric(1)){
     return(LL)
 }
 
-EML <- function(par, obj, Theta, ...){
+EML <- function(par, obj, Theta){
     obj@par[obj@est] <- par
     itemtrace <- ProbTrace(x=obj, Theta=Theta)
     LL <- sum(obj@rs * log(itemtrace))
     LL <- LL.Priors(x=obj, LL=LL)
     return(LL)        
+}
+
+EML2 <- function(x, Theta, pars, tabdata, itemloc){
+    obj <- pars[[length(pars)]]
+    obj@par[obj@est] <- x
+    r <- tabdata[, ncol(tabdata)]
+    gpars <- ExtractGroupPars(obj)
+    mu <- gpars$gmeans
+    sigma <- gpars$gcov
+    prior <- mvtnorm::dmvnorm(Theta, mean=mu, sigma=sigma)
+    prior <- prior/sum(prior)
+    rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc)
+    LL <- sum(r*log(rlist$expected))
+    LL <- LL.Priors(x=obj, LL=LL)
+    return(LL)
 }
 
 
