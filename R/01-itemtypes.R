@@ -101,8 +101,6 @@ setClass('custom', contains = 'AllItemsClass',
 
 setGeneric('ProbTrace', function(x, Theta, ...) standardGeneric("ProbTrace"))
 
-setGeneric('LogLik', function(x, Theta, ...) standardGeneric("LogLik"))
-
 setGeneric('ExtractLambdas', function(x) standardGeneric("ExtractLambdas"))
 
 setGeneric('ExtractZetas', function(x) standardGeneric("ExtractZetas"))

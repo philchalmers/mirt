@@ -677,8 +677,10 @@ L <- function(par, obj, Theta, ot=numeric(1)){
 
 EML <- function(par, obj, Theta, ...){
     obj@par[obj@est] <- par
-    L <- (-1)*LogLik(x=obj, Theta=Theta, EM=TRUE, ...)
-    return(L)
+    itemtrace <- ProbTrace(x=obj, Theta=Theta)
+    LL <- sum(obj@rs * log(itemtrace))
+    LL <- LL.Priors(x=obj, LL=LL)
+    return(LL)        
 }
 
 
