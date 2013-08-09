@@ -425,9 +425,9 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
         hess(uloc, nfact) = hess(nfact, uloc);
         hess(gloc, uloc) = sum((-1.0 * r1_P2 * Pstar * Qstar + r2_Q2 * Pstar * (-1.0 + Pstar )));
         hess(uloc, gloc) = hess(gloc, uloc);
-        for(i = 0; i < nfact; i++)
-            for(j = 0; j < nfact; j++)
-                if(i <= j)
+        for(i = 0; i < nfact; i++){
+            for(j = 0; j < nfact; j++){
+                if(i <= j){
                     hess(i, j) = sum((r1_P * (ugD2 * Theta(_,i) * Theta(_,j) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
                                            r1_P2 * (ugD * Theta(_,i) * (Pstar - Pstar2)) *
                                               (ugD * Theta(_,j) * (Pstar - Pstar2)) +
@@ -435,6 +435,10 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
                                                (-Pstar + 3*Pstar2 - 2*Pstar3)) -
                                            r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2)) *
                                               (ugD * Theta(_,j) * (-Pstar + Pstar2))));                    
+                    hess(j, i) = hess(i, j);
+                }
+            }
+        }
         for(i = 0; i < nfact; i++){
             hess(i, nfact) = 
                 sum((r1_P * (ugD2 * Theta(_,i) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
