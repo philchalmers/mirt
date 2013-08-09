@@ -31,9 +31,8 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
 	    expected(pat) = expd;
 	    posterior = r(pat) * posterior / expd;	
         for (int item = 0; item < nitems; item++){              
-            if (data(pat,item))
-	            for (int k = 0; k < nquad; k++)
-	                r1(k,item) += posterior(k);		    			
+            if (data(pat,item))	            
+	            r1(_,item) = r1(_,item) + posterior;		    			
 	    }
 	} //end main  		
      
@@ -108,13 +107,10 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 		for (fact = 0; fact < sfact; fact++)
 		    for (i = 0; i < nquad; i++)  			  	
 		        posterior(i,fact) = likelihoods(i,fact) * r(pat) * Elk(i % nbquad,fact) / expected(pat);		
-		for (fact = 0; fact < sfact; fact++){			
-			for (item = 0; item < nitems; item++)
-				if (data(pat,item))
-					for (k = 0; k < nquad; k++)
-						r1(k,item + nitems*fact) += posterior(k,fact);
-			
-		}	
+        for (item = 0; item < nitems; item++)
+    		if (data(pat,item))
+		        for (fact = 0; fact < sfact; fact++)											
+					r1(_,item + nitems*fact) = r1(_,item + nitems*fact) + posterior(_,fact);
 	}	//end main 
 	    
     ret["r1"] = r1;
