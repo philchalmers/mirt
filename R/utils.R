@@ -29,7 +29,6 @@ prodterms <- function(theta0, prodlist)
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
                         prior.mu, prodlist, OffTerm, PROBTRACE)
 {
-    tol <- .Machine$double.eps
     N <- nrow(fulldata)
     J <- length(pars) - 1L
     unif <- runif(N)
@@ -253,20 +252,6 @@ bfactor2mod <- function(model, J){
     model <- mirt.model(file=tmp, quiet = TRUE)
     unlink(tmp)
     return(model)
-}
-
-calcEMSE <- function(object, data, model, itemtype, fitvalues, constrain, parprior, verbose){
-    if(is(model, 'numeric') && length(model) > 1L)
-        model <- bfactor2mod(model, data)
-    pars <- mirt(data, model, itemtype=itemtype, pars=fitvalues, constrain=constrain,
-                     parprior=parprior, method = 'MHRM',
-                     technical = list(BURNIN = 1L, SEMCYCLES = 5L, TOL = .01,
-                                    EMSE = TRUE), verbose = verbose)
-    for(i in 1L:length(pars$pars))
-        object@pars[[i]]@SEpar <- pars$pars[[i]]@SEpar
-    object@information <- pars$info
-    object@longpars <- pars$longpars
-    return(object)
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
