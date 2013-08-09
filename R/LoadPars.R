@@ -75,7 +75,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                             paste('d', 0L:(K[i]-1L), sep=''))
         }
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            val <- c(lambdas[i,], rep(1, nfact), 0, 1)
+            val <- c(lambdas[i,], rep(1, nfact), guess[i], 1)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
         }        
         if(all(itemtype[i] != valid.items)) next
