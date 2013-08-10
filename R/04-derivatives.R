@@ -484,6 +484,14 @@ setMethod(
             ret <- .Call('EAPgroup', itemtrace, tabdata, Theta, prior, mu)
             tmp <- cbind(ret$scores, ret$scores2) * r
             newpars <- apply(tmp, 2, sum) / N
+            if(nfact > 1L){
+                x@par[x@est] <- newpars[x@est]
+                cov <- ExtractGroupPars(x)$gcov
+                tmp <- diag(cov)
+                tmp <- outer(tmp, tmp)
+                cov[cov > tmp] <- tmp[cov > tmp] * .9999999
+                newpars[(nfact+1L):length(newpars)] <- cov[lower.tri(cov, TRUE)]
+            }
             return(newpars[x@est])
         }
         tr <- function(y) sum(diag(y))
@@ -516,36 +524,7 @@ setMethod(
                    as.integer(nfact),
                    as.integer(npars))
         sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]
-        hess <- hess[sel,sel]
-        #prior parameter constraints
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.na(x@n.prior.mu)
-            val <- x@par[ind]
-            mu <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            h <- g <- rep(0, length(val))
-            for(i in 1L:length(val)){
-                g[i] <- -(val[i] - mu[i])/(s[i]^2)
-                h[i] <- -1/(s[i]^2)
-            }
-            grad[ind] <- grad[ind] + g
-            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.na(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            bphess <- bpgrad <- rep(0, length(val))
-            for(i in 1L:length(val)){
-                tmp <- betaprior(val[i], a[i], b[i])
-                bpgrad[i] <- tmp$grad
-                bphess[i] <- tmp$hess
-            }
-            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + bpgrad
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess
-        }
+        hess <- hess[sel,sel]        
         return(list(hess=hess,grad=grad))
     }
 )
@@ -588,36 +567,7 @@ setMethod(
         hess <- hess[sel,sel]
         hess <- hess[(nfact+1L):length(grad), (nfact+1L):length(grad), drop=FALSE]        
         diag(hess) <- -abs(diag(hess))
-        grad <- grad[(nfact+1L):length(grad)]        
-        #prior parameter constraints
-        if(any(!is.nan(x@n.prior.mu))){
-            ind <- !is.na(x@n.prior.mu)
-            val <- x@par[ind]
-            mu <- x@n.prior.mu[ind]
-            s <- x@n.prior.sd[ind]
-            h <- g <- rep(0, length(val))
-            for(i in 1L:length(val)){
-                g[i] <- -(val[i] - mu[i])/(s[i]^2)
-                h[i] <- -1/(s[i]^2)
-            }
-            grad[ind] <- grad[ind] + g
-            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
-        }
-        if(any(!is.nan(x@b.prior.alpha))){
-            ind <- !is.na(x@b.prior.alpha)
-            val <- x@par[ind]
-            a <- x@b.prior.alpha[ind]
-            b <- x@b.prior.beta[ind]
-            bphess <- bpgrad <- rep(0, length(val))
-            for(i in 1L:length(val)){
-                tmp <- betaprior(val[i], a[i], b[i])
-                bpgrad[i] <- tmp$grad
-                bphess[i] <- tmp$hess
-            }
-            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + bpgrad
-            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + bphess
-        }        
+        grad <- grad[(nfact+1L):length(grad)]
         return(list(hess=hess,grad=grad))
     }
 )
