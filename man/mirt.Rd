@@ -302,7 +302,10 @@ Theory)}
   estimation (such as to obtain factor scores), and
   requires that the input data all have 0 as the lowest
   category. The format is the same as the mod@K slot in all
-  converged models} }}
+  converged models} \item{override.df}{logical; set the
+  total degrees of freedom to 1e10? Not recommended for
+  serious use, but can be used to estimate models that have
+  negative degrees of freedom} }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -520,6 +523,10 @@ plot(mod1, type = 'trace') #trace lines
 #estimated 3PL model for item 5 only
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
+#usually a good idea to include a beta prior for lower asymtote parameters
+(mod1.3PL.beta <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
+    parprior = list(c(19, 'beta', 5, 20))))
+coef(mod1.3PL.beta)
 
 #two factors (exploratory)
 mod2 <- mirt(data, 2)
@@ -533,9 +540,9 @@ scores <- fscores(mod2) #save factor score table
 scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores for original data
 
 #confirmatory
-cmodel <- mirt.model()
+cmodel <- mirt.model('
    F1 = 1,4,5
-   F2 = 2,3
+   F2 = 2,3')
 
 
 cmod <- mirt(data, cmodel)

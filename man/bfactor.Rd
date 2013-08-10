@@ -149,7 +149,7 @@ simmod <- bfactor(dataset, specific)
 coef(simmod)
 
 #########
-# Two-teir model
+# Two-tier model
 
 #simulate data
 a <- matrix(c(
@@ -195,7 +195,7 @@ summary(simmod)
 }
 \references{
   Cai, L. (2010). A two-tier full-information item factor
-  analysis model with applications. \code{Psychometrika,
+  analysis model with applications. \emph{Psychometrika,
   75}, 581-612.
 
   Chalmers, R., P. (2012). mirt: A Multidimensional Item

@@ -53,7 +53,7 @@
 #' @references
 #' 
 #' Cai, L. (2010). A two-tier full-information item factor analysis model with applications.
-#' \code{Psychometrika, 75}, 581-612.
+#' \emph{Psychometrika, 75}, 581-612.
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6),
@@ -149,7 +149,7 @@
 #' coef(simmod)
 #' 
 #' #########
-#' # Two-teir model
+#' # Two-tier model
 #' 
 #' #simulate data
 #' a <- matrix(c(
@@ -191,8 +191,7 @@
 #'     }
 #'
 bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)), quiet = TRUE), 
-                    SE = FALSE, SE.type = 'SEM', group = NULL, 
-                    verbose = TRUE, ...)
+                    SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
 {
     Call <- match.call()
     if(!is.numeric(model))
