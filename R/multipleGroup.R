@@ -292,7 +292,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,
-                      SE.type = SE.type, key=key, accelerate=accelerate, ...)
+                      SE.type = SE.type, key=key, accelerate=accelerate, draws=draws, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

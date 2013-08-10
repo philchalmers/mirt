@@ -660,7 +660,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key, 
-                      nominal.highlow=nominal.highlow, accellerate=accelerate, ...)
+                      nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)
