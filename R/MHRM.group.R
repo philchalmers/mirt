@@ -186,7 +186,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
             }
             cand.t.var <- .5
             tmp <- .1
-            for(i in 1L:10L){
+            for(i in 1L:30L){
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
                                              itemloc=itemloc, cand.t.var=cand.t.var,
                                              prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
