@@ -173,6 +173,26 @@ head(withoutint$X) #no intercepts design here to be reassigned into item interce
 tail(withoutint$X)
 
 ###################################################
+### random effects
+#make the number of groups much larger
+covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
+
+#random groups
+rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)
+summary(rmod1)
+coef(rmod1)
+
+#random groups and random items
+rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
+summary(rmod2)
+eff <- randef(rmod2) #estimate random effects
+
+#random slopes with fixed intercepts (suppressed correlation)
+rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
+summary(rmod3)
+(eff <- randef(rmod3))
+
+###################################################
 ##LLTM, and 2PL version of LLTM
 data(SAT12)
 data <- key2binary(SAT12,
@@ -210,26 +230,6 @@ LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random 
 summary(LLTMwithError)
 #large item level variance after itemorder is regressed; not a great predictor of item difficulty
 coef(LLTMwithError)
-
-###################################################
-### random effects
-#make the number of groups much larger
-covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
-
-#random groups
-rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)
-summary(rmod1)
-coef(rmod1)
-
-#random groups and random items
-rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
-summary(rmod2)
-eff <- randef(rmod2) #estimate random effects
-
-#random slopes with fixed intercepts (suppressed correlation)
-rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
-summary(rmod3)
-(eff <- randef(rmod3))
 
 ###################################################
 ### Polytomous example

@@ -47,8 +47,9 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         itemtrace1[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
             PROBTRACE[[i]](x=pars[[i]], Theta=theta1, ot=OffTerm[,i])
     }
-    total_0 <- rowSums(log(itemtrace0)*fulldata) + log_den0
-    total_1 <- rowSums(log(itemtrace1)*fulldata) + log_den1
+    totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0, log_den1)    
+    total_0 <- totals[[1L]] 
+    total_1 <- totals[[2L]] 
     diff <- total_1 - total_0
     accept <- diff > 0
     accept[unif < exp(diff)] <- TRUE

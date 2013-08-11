@@ -498,8 +498,7 @@ setMethod("initialize",
 setMethod(
     f = "DrawValues",
     signature = signature(x = 'RandomPars', Theta = 'matrix'),
-    definition = function(x, Theta, pars, fulldata, itemloc, offterm0){
-        tol <- .Machine$double.eps
+    definition = function(x, Theta, pars, fulldata, itemloc, offterm0){        
         J <- length(pars) - 1L
         theta0 <- x@drawvals
         N <- nrow(theta0)
@@ -530,13 +529,17 @@ setMethod(
                 ProbTrace(x=pars[[i]], Theta=Theta, ot=offterm1[,i])
         }
         if(x@between){
-            total_0 <- rowSums(log(itemtrace0)*fulldata)
-            total_1 <- rowSums(log(itemtrace1)*fulldata)
+            totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, 
+                            rep(0, nrow(fulldata)), rep(0, nrow(fulldata)))    
+            total_0 <- totals[[1L]] 
+            total_1 <- totals[[2L]]            
             total_0 <- tapply(total_0, x@mtch, sum) + log_den0
             total_1 <- tapply(total_1, x@mtch, sum) + log_den1
         } else {
-            tmp0 <- colSums(log(itemtrace0)*fulldata)
-            tmp1 <- colSums(log(itemtrace1)*fulldata)
+            totals <- .Call('denRowSums', t(fulldata), t(itemtrace0), t(itemtrace1), 
+                            rep(0, ncol(fulldata)), rep(0, ncol(fulldata)))
+            tmp0 <- totals[[1L]]
+            tmp1 <- totals[[2L]]
             LL0 <- LL1 <- numeric(J)
             for(i in 1L:J){
                 LL0[i] <- sum(tmp0[itemloc[i]:(itemloc[i+1L] - 1L)])
