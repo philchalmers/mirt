@@ -8,7 +8,7 @@
   mixedmirt(data, covdata = NULL, model, fixed = ~1,
     random = NULL, itemtype = "Rasch", itemdesign = NULL,
     constrain = NULL, pars = NULL, return.design = FALSE,
-    ...)
+    draws = 5000, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -65,6 +65,10 @@
 
   \item{return.design}{logical; return the design matrices
   before they have (potentially) been reassigned?}
+
+  \item{draws}{the number of Monte Carlo draws to estimate
+  the log-likelihood for the MH-RM algorithm. Default is
+  5000}
 
   \item{...}{additional arguments to be passed to the MH-RM
   estimation engine. See \code{\link{mirt}} for more

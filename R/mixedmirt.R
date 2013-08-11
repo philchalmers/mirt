@@ -58,6 +58,8 @@
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
 #' @param return.design logical; return the design matrices before they have (potentially) 
 #' been reassigned? 
+#' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
+#' is 5000
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See 
 #' \code{\link{mirt}} for more detail
 #'
@@ -206,7 +208,8 @@
 #' 
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
-                      itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE, ...)
+                      itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE, 
+                      draws = 5000, ...)
 {
     Call <- match.call()       
     svinput <- pars
@@ -280,7 +283,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     }
     if(is.data.frame(svinput)) pars <- svinput
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
-                      mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars, ...)
+                      mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
+                      draws=draws, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)
