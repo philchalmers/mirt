@@ -157,6 +157,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
                                         parstart=max(pars[[1L]][[J+1L]]@parnum) + 1L)
         
         if(RAND && cycles == 100){
+            for(g in 1L:ngroups) gtheta0[[g]] <- matrix(0, nrow(gfulldata[[g]]), nfact)
             OffTerm <- OffTerm(random, J=J, N=N)
             for(j in 1L:length(random)){
                 tmp <- .1
@@ -183,6 +184,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
                 tmp <- cov(random[[j]]@drawvals) * (tmp / (tmp-1L))
                 random[[j]]@par[random[[j]]@est] <- tmp[lower.tri(tmp, TRUE)][random[[j]]@est]
             }
+            cand.t.var <- .5
             tmp <- .1
             for(i in 1L:10L){
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
