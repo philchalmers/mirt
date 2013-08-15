@@ -1,6 +1,9 @@
-Changes in mirt 0.8.5
+Changes in mirt 0.8.6
 
 NEW FEATURES
+
+- prior distributions returned in the pars = 'values' data.frame along with the input parameters, 
+  and can be edited and returned as well
 
 - full.scores option for residuals() to compute residuals for each row in the original data
 

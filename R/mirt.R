@@ -125,14 +125,14 @@
 #' use \code{constrain = list(c(1,5), c(2,6,10))}
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
-#' Can define either normal (normally for intercepts), lognormal (for mutivariate slopes or interecpts),
+#' Can define either normal (normally for intercepts), log-normal (for mutivariate slopes or interecpts),
 #' or beta (for guessing and upper bounds) prior
 #' probabilities. To specify a prior the form is c('priortype', ...), where normal priors
 #' are \code{parprior = list(c(parnumbers, 'norm', mean, sd))}, 
-#' \code{parprior = list(c(parnumbers, 'lnorm', mean, sd))} for lognormal, and
+#' \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
 #' \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta
-#' @param pars a data.frame with the structure of how the starting values, parameter numbers, and estimation
-#' logical values are defined. The user may observe how the model defines the values by using \code{pars =
+#' @param pars a data.frame with the structure of how the starting values, parameter numbers, estimation
+#' logical values, etc, are defined. The user may observe how the model defines the values by using \code{pars =
 #' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars =
 #' mymodifiedpars}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the
