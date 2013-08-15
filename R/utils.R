@@ -359,7 +359,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
 
 ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- itemtype <-
-        lbound <- ubound <- c()
+        lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
     for(g in 1L:length(PrepList)){
         tmpgroup <- PrepList[[g]]$pars
@@ -372,6 +372,9 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             est <- c(est, tmpgroup[[i]]@est)
             lbound <- c(lbound, tmpgroup[[i]]@lbound)
             ubound <- c(ubound, tmpgroup[[i]]@ubound)
+            prior.type <- c(prior.type, tmpgroup[[i]]@prior.type)
+            prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
+            prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
         }
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))
     }
@@ -384,12 +387,16 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             est <- c(est, random[[i]]@est)
             lbound <- c(lbound, random[[i]]@lbound)
             ubound <- c(ubound, random[[i]]@ubound)            
+            prior.type <- c(prior.type, random[[i]]@prior.type)
+            prior_1 <- c(prior_1, random[[i]]@prior_1)
+            prior_2 <- c(prior_2, random[[i]]@prior_2)
         }
         gnames <- rep('all', length(par))
         item <- c(item, rep('RANDOM',length(gnames)-length(item))) 
     }
     ret <- data.frame(group=gnames, item=item, name=parname, parnum=parnum, value=par,
-                      lbound=lbound, ubound=ubound, est=est)
+                      lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
+                      prior_1=prior_1, prior_2=prior_2)
     ret
 }
 
@@ -405,8 +412,13 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
                 PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,'est'])
                 PrepList[[g]]$pars[[i]]@lbound[j] <- pars[ind,'lbound']
                 PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']
+                PrepList[[g]]$pars[[i]]@prior.type[j] <- pars[ind,'prior.type']
+                PrepList[[g]]$pars[[i]]@prior_1[j] <- pars[ind,'prior_1']
+                PrepList[[g]]$pars[[i]]@prior_2[j] <- pars[ind,'prior_2']
                 ind <- ind + 1L
             }
+            PrepList[[g]]$pars[[i]]@any.prior <- any(c('norm','lnorm','beta') %in% 
+                                                         PrepList[[g]]$pars[[i]]@prior.type)
         }
     }
     if(length(random) > 0L){
@@ -901,6 +913,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         gdesign=gdesign,                        
                         between=between,
                         cand.t.var=.5,
+                        any.prior=FALSE,
                         prior.type=rep('none', length(par)),
                         prior_1=rep(NaN,length(par)),
                         prior_2=rep(NaN,length(par)),

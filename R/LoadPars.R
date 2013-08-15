@@ -454,7 +454,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
     diag(tmp) <- 1e-4
     lbound <- c(rep(-Inf, nfact), tmp[tri])
     Nans <- rep(NaN,length(par))
-    ret <- new('GroupPars', par=par, est=est, nfact=nfact,
+    ret <- new('GroupPars', par=par, est=est, nfact=nfact, any.prior=FALSE,
                parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)),
                prior.type=rep('none', length(par)), prior_1=Nans, prior_2=Nans)
     return(ret)
