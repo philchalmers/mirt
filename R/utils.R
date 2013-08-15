@@ -427,37 +427,37 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
 
 #new gradient and hessian with priors
 DerivativePriors <- function(x, grad, hess){
-    if(any(!is.nan(x@n.prior.mu))){
-        ind <- !is.na(x@n.prior.mu)
+    if(any(x@prior.type %in% 'norm')){
+        ind <- x@prior.type %in% 'norm'
         val <- x@par[ind]
-        mu <- x@n.prior.mu[ind]
-        s <- x@n.prior.sd[ind]
+        mu <- x@prior_1[ind]
+        s <- x@prior_2[ind]
         g <- -(val - mu)/(s^2)
         h <- -1/(s^2)
         grad[ind] <- grad[ind] + g
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
-    if(any(!is.nan(x@ln.prior.mu))){
-        ind <- !is.na(x@ln.prior.mu)
+    if(any(x@prior.type %in% 'lnorm')){
+        ind <- x@prior.type %in% 'lnorm'
         val <- x@par[ind]
         val <- ifelse(val > 0, val, 1e-10)
         lval <- log(val)
-        mu <- x@ln.prior.mu[ind]
-        s <- x@ln.prior.sd[ind]
+        mu <- x@prior_1[ind]
+        s <- x@prior_2[ind]
         g <- -(lval - mu)/(val * s^2) - 1/val 
         h <- 1/(val^2) - 1/(val^2 * s^2) - (lval - mu)/(val^2 * s^2)
         grad[ind] <- grad[ind] + g
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
-    if(any(!is.nan(x@b.prior.alpha))){
-        ind <- !is.na(x@b.prior.alpha)
+    if(any(x@prior.type %in% 'beta')){
+        ind <- x@prior.type %in% 'beta'
         val <- x@par[ind]
         val <- ifelse(val < 1e-10, 1e-10, val)
         val <- ifelse(val > 1-1e-10, 1-1e-10, val)
-        a <- x@b.prior.alpha[ind]
-        b <- x@b.prior.beta[ind]        
+        a <- x@prior_1[ind]
+        b <- x@prior_2[ind]        
         g <- (a - 1)/val - (b-1)/(1-val)
         h <- -(a - 1)/(val^2) - (b-1) / (1-val)^2        
         grad[ind] <- grad[ind] + g    
@@ -469,32 +469,32 @@ DerivativePriors <- function(x, grad, hess){
 
 #new likelihood with priors
 LL.Priors <- function(x, LL){
-    if(any(!is.nan(x@n.prior.mu))){
-        ind <- !is.nan(x@n.prior.mu)
+    if(any(x@prior.type %in% 'norm')){
+        ind <- x@prior.type %in% 'norm'
         val <- x@par[ind]
-        u <- x@n.prior.mu[ind]
-        s <- x@n.prior.sd[ind]
+        u <- x@prior_1[ind]
+        s <- x@prior_2[ind]
         for(i in 1L:length(val)){
             tmp <- dnorm(val[i], u[i], s[i], log=TRUE)            
             LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
-    if(any(!is.nan(x@ln.prior.mu))){
-        ind <- !is.nan(x@ln.prior.mu)
+    if(any(x@prior.type %in% 'lnorm')){
+        ind <- x@prior.type %in% 'lnorm'
         val <- x@par[ind]
         val <- ifelse(val > 0, val, 1e-100)
-        u <- x@ln.prior.mu[ind]
-        s <- x@ln.prior.sd[ind]
+        u <- x@prior_1[ind]
+        s <- x@prior_2[ind]
         for(i in 1L:length(val)){
             tmp <- dlnorm(val[i], u[i], s[i], log=TRUE)
             LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
-    if(any(!is.nan(x@b.prior.alpha))){
-        ind <- !is.nan(x@b.prior.alpha)
+    if(any(x@prior.type %in% 'beta')){
+        ind <- x@prior.type %in% 'beta'
         val <- x@par[ind]
-        a <- x@b.prior.alpha[ind]
-        b <- x@b.prior.beta[ind]
+        a <- x@prior_1[ind]
+        b <- x@prior_2[ind]
         for(i in 1L:length(val)){
             tmp <- dbeta(val[i], a[i], b[i], log=TRUE)
             LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
@@ -901,10 +901,9 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         gdesign=gdesign,                        
                         between=between,
                         cand.t.var=.5,
-                        n.prior.mu=rep(NaN,length(par)),
-                        n.prior.sd=rep(NaN,length(par)),
-                        b.prior.alpha=rep(NaN,length(par)),
-                        b.prior.beta=rep(NaN,length(par)),
+                        prior.type=rep('none', length(par)),
+                        prior_1=rep(NaN,length(par)),
+                        prior_2=rep(NaN,length(par)),
                         drawvals=drawvals,
                         mtch=mtch)        
     }    

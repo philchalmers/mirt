@@ -11,12 +11,9 @@ setClass("GroupPars",
                         itemtrace='matrix',
                         lbound='numeric',
                         ubound='numeric',
-                        n.prior.mu='numeric',
-                        n.prior.sd='numeric',
-                        ln.prior.mu='numeric',
-                        ln.prior.sd='numeric',
-                        b.prior.alpha='numeric',
-                        b.prior.beta='numeric')
+                        prior.type='character',
+                        prior_1='numeric',
+                        prior_2='numeric')
 )
 
 setClass("RandomPars",
@@ -33,12 +30,9 @@ setClass("RandomPars",
                         cand.t.var='numeric',
                         drawvals='matrix',
                         mtch='numeric',
-                        n.prior.mu='numeric',
-                        n.prior.sd='numeric',
-                        ln.prior.mu='numeric',
-                        ln.prior.sd='numeric',
-                        b.prior.alpha='numeric',
-                        b.prior.beta='numeric')
+                        prior.type='character',
+                        prior_1='numeric',
+                        prior_2='numeric')
 )
 
 setClass("AllItemsClass",
@@ -59,12 +53,9 @@ setClass("AllItemsClass",
                         lbound='numeric',
                         ubound='numeric',
                         any.prior='logical',
-                        n.prior.mu='numeric',
-                        n.prior.sd='numeric',
-                        ln.prior.mu='numeric',
-                        ln.prior.sd='numeric',
-                        b.prior.alpha='numeric',
-                        b.prior.beta='numeric',                        
+                        prior.type='character',
+                        prior_1='numeric',                        
+                        prior_2='numeric',
                         'VIRTUAL')
 )
 
