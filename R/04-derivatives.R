@@ -604,24 +604,8 @@ L <- function(par, obj, Theta, ot=numeric(1)){
     LL <- obj@dat * P
     LL[LL < .Machine$double.eps] <- 1
     LL <- sum(log(LL))
-    if(any(!is.nan(obj@n.prior.mu))){
-        ind <- !is.nan(obj@n.prior.mu)
-        val <- obj@par[ind]
-        u <- obj@n.prior.mu[ind]
-        s <- obj@n.prior.sd[ind]
-        for(i in 1L:length(val))
-            LL <- LL + log(dnorm(val[i], u[i], s[i]))
-    }
-    if(any(!is.nan(obj@b.prior.alpha))){
-        ind <- !is.nan(obj@b.prior.alpha)
-        val <- obj@par[ind]
-        a <- obj@b.prior.alpha[ind]
-        b <- obj@b.prior.beta[ind]
-        for(i in 1L:length(val)){
-            tmp <- dbeta(val[i], a[i], b[i])
-            LL <- LL + log(ifelse(tmp == 0, 1, tmp))
-        }
-    }
+    if(obj@any.prior)
+        LL <- LL.Priors(x=obj, LL=LL)
     return(LL)
 }
 
