@@ -25,29 +25,21 @@
 boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group) {
         ngroup <- length(unique(group))
-        while(TRUE){
-            dat <- orgdat[ind, ]
-            g <- group[ind]
-            ind <- sample(1L:nrow(orgdat), nrow(orgdat), TRUE)
-            if(length(unique(g)) != ngroup) next
-            if(!is.null(group)){
-                mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
-                                     constrain=constrain, parprior=parprior, method='EM',
-                                     calcNull=FALSE, verbose = FALSE))
-            } else {
-                mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
-                            parprior=parprior, calcNull=FALSE, verbose=FALSE))
-            }
-            if(is(mod, 'try-error')) next
-            if(MG){
-                longpars <- c()
-                tmp <- coef(mod)
-                for(g in 1L:length(tmp))
-                    longpars <- c(longpars, do.call(c, tmp[[g]]))
-            } else longpars <- do.call(c, coef(mod))
-            if(length(longpars) != npars) next
-            break
+        dat <- orgdat[ind, ]
+        g <- group[ind]
+        if(length(unique(g)) != ngroup) next
+        if(!is.null(group)){
+            mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
+                                 constrain=constrain, parprior=parprior, method='EM',
+                                 calcNull=FALSE, verbose = FALSE))
+        } else {
+            mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
+                        parprior=parprior, calcNull=FALSE, verbose=FALSE))
         }
+        if(is(mod, 'try-error')) return(rep(NaN, npars))
+        structure <- mod2values(mod)
+        longpars <- structure$value
+        if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
         return(longpars)
     }
     loadSE <- function(pars, SEs, nfact, MG, explor){
@@ -87,12 +79,8 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
     prodlist <- x@prodlist
     ret <- x
     if(!require(boot)) require(boot)
-    if(MG){
-        longpars <- c()
-        tmp <- coef(x)
-        for(g in 1L:length(tmp))
-            longpars <- c(longpars, do.call(c, tmp[[g]]))
-    } else longpars <- do.call(c, coef(x))
+    structure <- mod2values(x)
+    longpars <- structure$value
     npars <- length(longpars)
     boots <- boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
                   parprior=parprior, model=model, itemtype=itemtype, group=group, ...)
