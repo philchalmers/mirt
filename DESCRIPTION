@@ -80,7 +80,6 @@ Collate:
     'probtrace.R'
     'boot.mirt.R'
     'createItem.R'
-    'zzz.R'
     'randef.R'
     'mirtCluster.R'
     'mirt.model.R'
