@@ -85,3 +85,4 @@ Collate:
     'mirtCluster.R'
     'mirt.model.R'
     'expected.item.R'
+    'PLCI.mirt.R'

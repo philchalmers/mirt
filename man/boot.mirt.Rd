@@ -30,10 +30,15 @@
 mod <- mirt(Science, 1)
 booted <- boot.mirt(mod)
 booted
-modwithboot <- boot.mirt(mod, return.boot = FALSE)
+
+#run in parallel using snow backend
+modwithboot <- boot.mirt(mod, return.boot = FALSE, parallel = 'snow', ncpus = 4L)
 coef(modwithboot)
 
 }
+}
+\seealso{
+  \code{\link{PLCI.mirt}}
 }
 \keyword{bootstrapped}
 \keyword{errors}

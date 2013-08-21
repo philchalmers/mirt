@@ -29,7 +29,7 @@
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
 #' the diagonal.
 #' 
-#' @section Confirmatory IRT:
+#' @section Confirmatory and Exploratory IRT:
 #'
 #' Specification of the confirmatory item factor analysis model follows many of
 #' the rules in the SEM framework for confirmatory factor analysis. The
@@ -40,8 +40,6 @@
 #' models may also contain 'explanatory' person or item level predictors, though including predictors
 #' is limited only to the \code{\link{mixedmirt}} function.
 #'
-#' @section Exploratory IRT:
-#'
 #' When specifying a single number as the second input to mirt an exploratory IRT model is estimated and
 #' can be viewed as a stochastic analogue of the EM algorithm, with much of the same behaviour and
 #' specifications. Rotation and target matrix options will be used in this subroutine and will be
@@ -49,8 +47,7 @@
 #' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification.
 #' If the model is confirmatory then the returned class will be 'ExploratoryClass'.
 #'
-#' Estimation often begins by computing a matrix of quasi-tetrachoric correlations,
-#' potentially with an adjustment for chance responds. A 
+#' Estimation often begins by computing a matrix of quasi-tetrachoric correlations. A 
 #' factor analysis with \code{nfact} is then extracted and item parameters are
 #' estimated by \eqn{a_{ij} = f_{ij}/u_j}, where \eqn{f_{ij}} is the factor
 #' loading for the \emph{j}th item on the \emph{i}th factor, and \eqn{u_j} is
@@ -59,6 +56,101 @@
 #' normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain
 #' \eqn{d_j = q_j / u_j}. A similar implementation is also used for obtaining
 #' initial values for polytomous items.
+#' @section Convergence for quadrature methods:
+#'
+#' Unrestricted full-information factor analysis is known to have problems with
+#' convergence, and some items may need to be constrained or removed entirely
+#' to allow for an acceptable solution. As a general rule dichotomous items with
+#' means greater than .95, or items that are only .05 greater than the
+#' guessing parameter, should be considered for removal from the analysis or
+#' treated with prior distributions. The same type of reasoning is applicable when including
+#' upper bound parameters as well. Also, increasing the number of quadrature
+#' points per dimension may help to stabilize the estimation process.
+#' 
+#' @section Convergence for MH-RM method:
+#'
+#' For the MH-RM algorithm, when the number of iterations grows very high (e.g., greater than 1500) or
+#' when \code{Max Change = .2500} values are repeatedly printed
+#' to the console too often (indicating that the parameters were being constrained since they are naturally
+#' moving in steps greater than 0.25) then the model may either be ill defined or have a
+#' very flat likelihood surface, and genuine maximum-likelihood parameter estimates may be difficult to find.
+#'
+#' @section IRT Models:
+#'
+#' The parameter labels use the follow convention, here using two factors and \eqn{k} as the number
+#' of categories. 
+#'
+#' \describe{
+#' \item{Rasch}{
+#' Only one intercept estimated, and the latent variance of \eqn{\theta} is freely estimated. If
+#' the data have more than two categories then a partial credit model is used instead (see 'gpcm' below).
+#' \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
+#' }
+#' \item{1-4PL}{
+#' Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
+#' \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
+#' For the 1PL model the number of factors must equal 1, and if so all the \eqn{a_1} values 
+#' are constrained to be equal accross all items and the latent variance of \eqn{\theta} is 
+#' freely estimated.
+#' }
+#' \item{graded}{
+#' The graded model consists of sequential 2PL models, and here \eqn{k} is
+#' the predicted category.
+#' \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
+#' }
+#' \item{grsm}{
+#' A more constrained version of the graded model where graded spacing is equal accross item blocks
+#' and only adjusted by a single 'difficulty' parameter (c) while the latent variance 
+#' of \eqn{\theta} is freely estimated. Again,
+#' \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
+#' but now
+#' \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
+#' }
+#' \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are treated as fixed and orderd values
+#' from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
+#' in the nominal model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}.
+#' \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
+#' {\sum_i^k exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
+#' 
+#' For partial credit model (when \code{itemtype = 'Rasch'}; unidimenional only) the above model 
+#' is further constrained so that \eqn{ak_k = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
+#' variance of \eqn{\theta_1} is freely estimated. 
+#' 
+#' In the nominal model this parametrizations helps to identify the empirical ordering of the 
+#' categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is 
+#' more positively related to the latent trait(s) being measured. For instance, if an item was 
+#' truly ordinal (such as a Likert scale), and had 4 response categories, we would expect 
+#' to see \eqn{ak_0 < ak_1 < ak_2 < ak_3} following estimation. If on the other hand \eqn{ak_0 > ak_1}
+#' then it would appear that the second category is less related to to the trait than the first, and 
+#' therefore the second category should be understood as the 'lowest score'.
+#' 
+#' NOTE: The nominal model can become numerical unstable if poor choices for the high and low values 
+#' are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. It is recommended to choose
+#' high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1 
+#' either by theoretical means or by re-estimating the model with better values following convergence.
+#' 
+#' }
+#' \item{rsm}{
+#' A more constrained version of the partial credit model where the spacing is equal
+#' accross item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this is 
+#' analogous to the relationship between the graded model and the grsm (with an additional 
+#' constraint regarding the fixed discrimination parameters; the discrimination constraint can, 
+#' however, be relaxed by adjusting the starting values specifications manually and applying 
+#' additional equality constraints).
+#' }
+#' \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
+#' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
+#' \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
+#' }
+#' \item{1-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
+#' The model is broken into two components for the probability of endorsement. For successful endorsement
+#' the probability trace is the 1-4PL model, while for unsuccessful endorsement:
+#' \deqn{P(x = 0 | \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
+#' which is the product of the compliment of the dichotomous trace line with the nominal
+#' response model. In the nominal model, the slope parameters defined above are constrained to be 1's,
+#' while the last value of the \eqn{ak} is freely estimated.
+#' }
+#' }
 #'
 #' @aliases mirt summary,ExploratoryClass-method coef,ExploratoryClass-method anova,ExploratoryClass-method
 #' fitted,ExploratoryClass-method plot,ExploratoryClass-method residuals,ExploratoryClass-method
@@ -212,110 +304,13 @@
 #'      but can be used to estimate models that have negative degrees of freedom}
 #' }
 #' @param ... additional arguments to be passed
-#' @section Convergence for quadrature methods:
-#'
-#' Unrestricted full-information factor analysis is known to have problems with
-#' convergence, and some items may need to be constrained or removed entirely
-#' to allow for an acceptable solution. As a general rule dichotomous items with
-#' means greater than .95, or items that are only .05 greater than the
-#' guessing parameter, should be considered for removal from the analysis or
-#' treated with prior distributions. The same type of reasoning is applicable when including
-#' upper bound parameters as well. Also, increasing the number of quadrature
-#' points per dimension may help to stabilize the estimation process.
-#' 
-#' @section Convergence for MH-RM method:
-#'
-#' For the MH-RM algorithm, when the number of iterations grows very high (e.g., greater than 1500) or
-#' when \code{Max Change = .2500} values are repeatedly printed
-#' to the console too often (indicating that the parameters were being constrained since they are naturally
-#' moving in steps greater than 0.25) then the model may either be ill defined or have a
-#' very flat likelihood surface, and genuine maximum-likelihood parameter estimates may be difficult to find.
-#'
-#'
-#' @section IRT Models:
-#'
-#' The parameter labels use the follow convention, here using two factors and \eqn{k} as the number
-#' of categories. 
-#'
-#' \describe{
-#' \item{Rasch}{
-#' Only one intercept estimated, and the latent variance of \eqn{\theta} is freely estimated. If
-#' the data have more than two categories then a partial credit model is used instead (see 'gpcm' below).
-#' \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
-#' }
-#' \item{1-4PL}{
-#' Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
-#' \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
-#' For the 1PL model the number of factors must equal 1, and if so all the \eqn{a_1} values 
-#' are constrained to be equal accross all items and the latent variance of \eqn{\theta} is 
-#' freely estimated.
-#' }
-#' \item{graded}{
-#' The graded model consists of sequential 2PL models, and here \eqn{k} is
-#' the predicted category.
-#' \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
-#' }
-#' \item{grsm}{
-#' A more constrained version of the graded model where graded spacing is equal accross item blocks
-#' and only adjusted by a single 'difficulty' parameter (c) while the latent variance 
-#' of \eqn{\theta} is freely estimated. Again,
-#' \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
-#' but now
-#' \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
-#' }
-#' \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are treated as fixed and orderd values
-#' from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
-#' in the nominal model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}.
-#' \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
-#' {\sum_i^k exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
-#' 
-#' For partial credit model (when \code{itemtype = 'Rasch'}; unidimenional only) the above model 
-#' is further constrained so that \eqn{ak_k = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
-#' variance of \eqn{\theta_1} is freely estimated. 
-#' 
-#' In the nominal model this parametrizations helps to identify the empirical ordering of the 
-#' categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is 
-#' more positively related to the latent trait(s) being measured. For instance, if an item was 
-#' truly ordinal (such as a Likert scale), and had 4 response categories, we would expect 
-#' to see \eqn{ak_0 < ak_1 < ak_2 < ak_3} following estimation. If on the other hand \eqn{ak_0 > ak_1}
-#' then it would appear that the second category is less related to to the trait than the first, and 
-#' therefore the second category should be understood as the 'lowest score'.
-#' 
-#' NOTE: The nominal model can become numerical unstable if poor choices for the high and low values 
-#' are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. It is recommended to choose
-#' high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1 
-#' either by theoretical means or by re-estimating the model with better values following convergence.
-#' 
-#' }
-#' \item{rsm}{
-#' A more constrained version of the partial credit model where the spacing is equal
-#' accross item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this is 
-#' analogous to the relationship between the graded model and the grsm (with an additional 
-#' constraint regarding the fixed discrimination parameters; the discrimination constraint can, 
-#' however, be relaxed by adjusting the starting values specifications manually and applying 
-#' additional equality constraints).
-#' }
-#' \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
-#' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
-#' \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
-#' }
-#' \item{1-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
-#' The model is broken into two components for the probability of endorsement. For successful endorsement
-#' the probability trace is the 1-4PL model, while for unsuccessful endorsement:
-#' \deqn{P(x = 0 | \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
-#' which is the product of the compliment of the dichotomous trace line with the nominal
-#' response model. In the nominal model, the slope parameters defined above are constrained to be 1's,
-#' while the last value of the \eqn{ak} is freely estimated.
-#' }
-#' }
-#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-#' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
+#' \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, 
 #' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #'
 #' @references

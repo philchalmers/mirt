@@ -2,6 +2,9 @@ Changes in mirt 0.8.6
 
 NEW FEATURES
 
+- PLCI.mirt() function added for computing profiled likelihood standard errors. Currenly only applicable
+  to unidimensional dichotomous models
+
 - prior distributions returned in the pars = 'values' data.frame along with the input parameters, 
   and can be edited and returned as well
 
@@ -10,7 +13,7 @@ NEW FEATURES
 - bfactor() can include an additional model argument for modeling two-tier structures introduced
   by Cai (2010), and now supports a 'group' input for multiple group analyses
 
-- add a general Ramsey (1975) acceleration to EM estimation by default. Can be disable with 
+- added a general Ramsey (1975) acceleration to EM estimation by default. Can be disable with 
   accelerate = FALSE (and is done so automatically when estimating SEM standard errors)
 
 - renamed response.vector to response.pattern in fscores(), and now supports matrix input for 
@@ -18,6 +21,9 @@ NEW FEATURES
 
 - total.info logical added to iteminfo() to return either total item information or information 
   from each category
+
+- mirt.model() supports the so-called Q-matrix input format, along with a matrix input for the
+  covariance terms
 
 - MH-RM algorithm now accessible by passing mirt(..., method = 'MHRM'), and confmirt() function 
   removed completely. confmirt.model() also renamed to mirt.model()
@@ -31,9 +37,6 @@ NEW FEATURES
 
 - mirtCluster() function added to make utilizing parallel cores more convenient. Globally removed
   the cl argument for multi-core objects
-
-- confmirt.model() supports the so-called Q-matrix input format, along with a matrix input for the
-  covariance terms
 
 - updated documentation for data sets by adding relevant examples, and added Bock1997 data set
   for replicating table 3 in van der Linden, W. J. & Hambleton, R. K.'s (1997)

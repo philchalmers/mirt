@@ -346,7 +346,7 @@ Theory)}
   returned by \code{residuals}, and Cramer's V above the
   diagonal.
 }
-\section{Confirmatory IRT}{
+\section{Confirmatory and Exploratory IRT}{
   Specification of the confirmatory item factor analysis
   model follows many of the rules in the SEM framework for
   confirmatory factor analysis. The variances of the latent
@@ -359,9 +359,7 @@ Theory)}
   'explanatory' person or item level predictors, though
   including predictors is limited only to the
   \code{\link{mixedmirt}} function.
-}
 
-\section{Exploratory IRT}{
   When specifying a single number as the second input to
   mirt an exploratory IRT model is estimated and can be
   viewed as a stochastic analogue of the EM algorithm, with
@@ -375,8 +373,7 @@ Theory)}
   'ExploratoryClass'.
 
   Estimation often begins by computing a matrix of
-  quasi-tetrachoric correlations, potentially with an
-  adjustment for chance responds. A factor analysis with
+  quasi-tetrachoric correlations. A factor analysis with
   \code{nfact} is then extracted and item parameters are
   estimated by \eqn{a_{ij} = f_{ij}/u_j}, where
   \eqn{f_{ij}} is the factor loading for the \emph{j}th
@@ -841,15 +838,15 @@ itemplot(mod.combo, 2, type = 'infocontour')
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{mirt.model}}, \code{\link{mirt}},
   \code{\link{bfactor}}, \code{\link{multipleGroup}},
-  \code{\link{mixedmirt}}, \code{\link{wald}},
-  \code{\link{itemplot}}, \code{\link{fscores}},
-  \code{\link{fitIndices}}, \code{\link{extract.item}},
-  \code{\link{iteminfo}}, \code{\link{testinfo}},
-  \code{\link{probtrace}}, \code{\link{boot.mirt}},
+  \code{\link{mixedmirt}}, \code{\link{mod2values}},
+  \code{\link{wald}}, \code{\link{itemplot}},
+  \code{\link{fscores}}, \code{\link{fitIndices}},
+  \code{\link{extract.item}}, \code{\link{iteminfo}},
+  \code{\link{testinfo}}, \code{\link{probtrace}},
+  \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}},
   \code{\link{imputeMissing}}, \code{\link{itemfit}},
-  \code{\link{mod2values}}, \code{\link{read.mirt}},
-  \code{\link{simdata}}, \code{\link{createItem}},
-  \code{\link{mirtCluster}}
+  \code{\link{read.mirt}}, \code{\link{simdata}},
+  \code{\link{createItem}}, \code{\link{mirtCluster}}
 }
 \keyword{models}
 
