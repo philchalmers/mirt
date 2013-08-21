@@ -22,11 +22,11 @@
 
   Users interested in the most recent version of this
   package can visit
-  \code{\link{https://github.com/philchalmers/mirt}} and
-  follow the instructions for installing the package from
-  source. Questions regarding the package can be sent to
-  the mirt-package Google Group, located at
-  \code{\link{https://groups.google.com/forum/#!forum/mirt-package}}.
+  \url{https://github.com/philchalmers/mirt} and follow the
+  instructions for installing the package from source.
+  Questions regarding the package can be sent to the
+  mirt-package Google Group, located at
+  \url{https://groups.google.com/forum/#!forum/mirt-package}.
 }
 \author{
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
