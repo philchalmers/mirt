@@ -8,7 +8,7 @@
 #' @param mod a converged mirt model
 #' @param alpha two-tailed alpha critical level
 #' @keywords profiled likelihood
-#' 
+#' @export PLCI.mirt
 #' @seealso
 #' \code{\link{boot.mirt}}
 #' 
