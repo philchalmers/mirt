@@ -298,7 +298,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         if(type == 'SE'){
             return(lattice::wireframe(SE ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Standard Errors"),
                                       zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                      zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
+                                      scales = list(arrows = FALSE),
                                       colorkey = TRUE, drape = TRUE, ...))
         }
     }
