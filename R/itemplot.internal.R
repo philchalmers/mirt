@@ -202,6 +202,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                         times = paste("P", 1:ncol(P), sep=''))
         colnames(plt) <- c("info", "Theta")
         plt$score <- score
+        plt$SE <- 1/sqrt(plt$info)
         plt$CEinfoupper <- CEinfoupper
         plt$CEinfolower <- CEinfolower
         plt2$upper <- as.numeric(CEprobupper)
@@ -234,14 +235,26 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                             auto.key = TRUE, main = paste('Expected score for item', item),
                             ylab = expression(E(theta)), xlab = expression(theta), ...))
         }
+        if(type == 'SE'){
+            return(lattice::xyplot(SE ~ Theta, plt, type = 'l',
+                                   auto.key = TRUE, main = paste('Standard error plot for item', item),
+                                   ylab = expression(SE(theta)), xlab = expression(theta), ...))
+        }
+        if(type == 'infoSE'){
+            obj1 <- xyplot(info~Theta, plt, type='l',
+                           main = paste('Item information and standard errors for item', item),
+                           xlab = expression(theta), ylab=expression(I(theta)))
+            obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
+            if(!require(latticeExtra)) require(latticeExtra)
+            return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = TRUE))
+        }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')
     } else {
-        plt <- data.frame(info = info, Theta1 = Theta[,1], Theta2 = Theta[,2])
+        plt <- data.frame(info = info, SE = 1/sqrt(info), Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])
         colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta1", "Theta2")
         plt2 <- reshape(plt2, direction='long', varying = paste("P", 1:ncol(P), sep=''), v.names = 'P',
                 times = paste("P", 1:ncol(P), sep=''))
-        colnames(plt) <- c("info", "Theta1", "Theta2")
         plt$score <- score
         plt$CEinfoupper <- CEinfoupper
         plt$CEinfolower <- CEinfolower
@@ -277,8 +290,14 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                              scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
         }
         if(type == 'score'){
-            return(lattice::wireframe(score ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Expected Score"),
+            return(lattice::wireframe(score ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Expected Scores"),
                                       zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                      zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
+                                      colorkey = TRUE, drape = TRUE, ...))
+        }
+        if(type == 'SE'){
+            return(lattice::wireframe(SE ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Standard Errors"),
+                                      zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
                                       colorkey = TRUE, drape = TRUE, ...))
         }

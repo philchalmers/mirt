@@ -17,11 +17,12 @@
   indicating which item to plot}
 
   \item{type}{plot type to use, information
-  (\code{'info'}), item trace lines (\code{'trace'}),
-  relative efficiency lines (\code{'RE'}), expected score
-  \code{'score'}, or information contours
-  \code{('infocontour')} (not for \code{MultipleGroupClass}
-  objects)}
+  (\code{'info'}), standard errors (\code{'SE'}),
+  information and standard errors (\code{'infoSE'}), item
+  trace lines (\code{'trace'}), relative efficiency lines
+  (\code{'RE'}), expected score \code{'score'}, or
+  information contours \code{('infocontour')} (not for
+  \code{MultipleGroupClass} objects)}
 
   \item{degrees}{the degrees argument to be used if there
   are exactly two factors. See \code{\link{iteminfo}} for

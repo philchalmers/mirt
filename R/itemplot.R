@@ -8,7 +8,8 @@
 #' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
 #' \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types (e.g., 1PL vs 2PL)
 #' @param item a single numeric value, or the item name, indicating which item to plot
-#' @param type plot type to use, information (\code{'info'}), item trace lines (\code{'trace'}), relative
+#' @param type plot type to use, information (\code{'info'}), standard errors (\code{'SE'}), information and
+#' standard errors (\code{'infoSE'}), item trace lines (\code{'trace'}), relative
 #' efficiency lines (\code{'RE'}), expected score \code{'score'}, or information contours \code{('infocontour')}
 #' (not for \code{MultipleGroupClass} objects)
 #' @param degrees the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
