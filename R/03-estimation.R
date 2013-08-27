@@ -279,6 +279,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     warning('Too few EM interations to compute SEM information matrix')
                 }
                 if(ESTIMATE$cycles == opts$NCYCLES) dontrun <- TRUE
+                lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
+                if(any(lengthsplit > 1L)){
+                    warning('Group covariance parameters are not well estimated by S-EM algorithm. 
+                            Better to use SE.type = \'MHRM\', SE.type = \'BL\', or resort to the 
+                            boot.mirt() and PLCI.mirt() functions')
+                }
                 if(!dontrun){
                     if(ESTIMATE$cycles <= 10L)
                         message('Very few EM cycles performed. Consider decreasing TOL further to
