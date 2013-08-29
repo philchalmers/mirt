@@ -82,11 +82,11 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
     if(length(constrain) == 0L) constrain <- NULL
     prodlist <- x@prodlist
     ret <- x
-    if(!require(boot)) require(boot)
+    if(!require(boot)) require('boot')
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- length(longpars)
-    boots <- boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
+    boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
                   parprior=parprior, model=model, itemtype=itemtype, group=group, ...)
     if(return.boot){
         if(explor) message('Note: bootstrapped standard errors for slope parameters for exploratory
