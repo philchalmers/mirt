@@ -6,6 +6,8 @@
 #' @aliases PLCI.mirt
 #' @param mod a converged mirt model
 #' @param alpha two-tailed alpha critical level
+#' @param parnum a numeric vector indicating which parameters to estimate. Use \code{\link{mod2values}}
+#' to determine parameter numbers. If \code{NULL}, all possible parameters are used
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
 #' @seealso
@@ -25,8 +27,14 @@
 #' result2 <- PLCI.mirt(mod2)
 #' result2
 #' 
+#' #only estimate CI's slopes
+#' sv <- mod2values(mod2)
+#' parnum <- sv$parnum[sv$name == 'a1']
+#' result3 <- PLCI.mirt(mod2, parnum=parnum)
+#' result3
+#' 
 #' }
-PLCI.mirt <- function(mod, alpha = .05){
+PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     
     compute.LL <- function(dat, model, sv, large, parprior){        
         tmpmod <- suppressMessages(mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
@@ -89,12 +97,22 @@ PLCI.mirt <- function(mod, alpha = .05){
     large <- mirt(mod@data, mod@model[[1L]], large = TRUE)
     #set lbounds to 0 to avoid sign flipping in slopes
     sv$lbound[sv$name == 'a1'] <- 0
-    pars <- sv$value    
-    pars <- LL.upper.crit <- LL.lower.crit <- pars[sv$est]    
-    parnums <- sv$parnum[sv$est]
-    parnames <- sv$name[sv$est]
-    lbound <- sv$lbound[sv$est]
-    ubound <- sv$ubound[sv$est]
+    if(!is.null(parnum)){
+        tmp <- sv$parnum %in% parnum
+        pars <- sv$value[tmp]    
+        LL.upper.crit <- LL.lower.crit <- pars
+        parnums <- sv$parnum[tmp]
+        parnames <- sv$name[tmp]
+        lbound <- sv$lbound[tmp]
+        ubound <- sv$ubound[tmp]
+    } else {
+        pars <- sv$value    
+        pars <- LL.upper.crit <- LL.lower.crit <- pars[sv$est]    
+        parnums <- sv$parnum[sv$est]
+        parnames <- sv$name[sv$est]
+        lbound <- sv$lbound[sv$est]
+        ubound <- sv$ubound[sv$est]        
+    }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
     if(!is.null(globalenv()$MIRTCLUSTER)){
@@ -107,6 +125,6 @@ PLCI.mirt <- function(mod, alpha = .05){
                            ubound=ubound, dat=dat, model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior))           
     }
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100)) 
-    ret <- data.frame(Item=sv$item[sv$est], parnam=sv$name[sv$est], value=pars, result, row.names=NULL)
+    ret <- data.frame(Item=sv$item[parnums], parnam=sv$name[parnums], value=pars, result, row.names=NULL)
     ret
 }
