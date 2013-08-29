@@ -12,8 +12,8 @@
 \description{
   Computes profiled-likelihood based confidence intervals.
   Supports the inclusion of prior parameter distributions
-  as well as equality constraints. Currently only supports
-  unidimensional dichotomous response models.
+  as well as equality constraints. Only supports
+  unidimensional models.
 }
 \examples{
 \dontrun{
@@ -23,6 +23,10 @@ mod <- mirt(dat, 1)
 
 result <- PLCI.mirt(mod)
 result
+
+mod2 <- mirt(Science, 1)
+result2 <- PLCI.mirt(mod2)
+result2
 
 }
 }

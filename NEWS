@@ -3,7 +3,7 @@ Changes in mirt 0.8.6
 NEW FEATURES
 
 - PLCI.mirt() function added for computing profiled likelihood standard errors. Currenly only applicable
-  to unidimensional dichotomous models
+  to unidimensional models
 
 - prior distributions returned in the pars = 'values' data.frame along with the input parameters, 
   and can be edited and returned as well
