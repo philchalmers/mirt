@@ -27,7 +27,7 @@ test_that('dich', {
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     expect_equal(modm3@df, 25)
-    modm3 <- mirt(data, 1, itemtype = 'Rasch', SE = TRUE, technical=list(TOL=1e-6), verbose=FALSE)
+    modm3 <- suppressWarnings(mirt(data, 1, itemtype = 'Rasch', SE = TRUE, technical=list(TOL=1e-6), verbose=FALSE))
     expect_is(modm3, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm3)))
     expect_equal(cfs, c(1, NA, 1.868, 0.096, 0, NA, 1, NA, 1, NA, 0.791, 0.08, 0, NA, 1, NA, 1, NA, 
