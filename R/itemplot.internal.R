@@ -246,7 +246,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                            xlab = expression(theta), ylab=expression(I(theta)))
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
             if(!require(latticeExtra)) require(latticeExtra)
-            return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = TRUE))
+            return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
         }
         if(type == 'infocontour') stop('Cannot draw contours for 1 factor models')
     } else {

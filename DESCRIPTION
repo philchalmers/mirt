@@ -1,6 +1,6 @@
 Package: mirt
-Version: 0.8.6
-Date: 2013-07-02
+Version: 0.9.0
+Date: 2013-08-30
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Joshua", "Pritikin", role=c('ctb')), person("Phil",
@@ -28,8 +28,8 @@ Imports:
 Suggests:
     testthat,
     plink,
-    psych,
     boot,
+    latticeExtra,
     parallel
 ByteCompile: yes
 LazyLoad: yes

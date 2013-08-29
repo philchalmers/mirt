@@ -340,7 +340,7 @@ setMethod(
                                xlab = expression(theta), ylab=expression(I(theta)))
                 obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
                 if(!require(latticeExtra)) require(latticeExtra)
-                return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = TRUE))
+                return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
             }
             if(type == 'trace'){
                 if(!all(x@K == 2)) stop('trace line plot only available for tests
