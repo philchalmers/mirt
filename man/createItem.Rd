@@ -84,7 +84,8 @@ sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars =
 tail(sv) #looks good
 mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 coef(mod)
-mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE, method = 'MHRM')
+mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x),
+   verbose = TRUE, method = 'MHRM')
 coef(mod2)
 
 ###non-linear
