@@ -50,8 +50,6 @@ PrepData <- function(data, model, itemtype, guess, upper,
     }
     K <- rep(0,J)
     for(i in 1L:J) K[i] <- length(uniques[[i]])
-    guess[K > 2L] <- 0
-    upper[K > 2L] <- 1
     if(!is.null(technical$customK)){
         K <- technical$customK
         for(i in 1L:J) 
