@@ -17,8 +17,12 @@
 \description{
   Computes profiled-likelihood based confidence intervals.
   Supports the inclusion of prior parameter distributions
-  as well as equality constraints. Only supports
-  unidimensional models.
+  as well as equality constraints. For multidimensional
+  models, the CI's for the slopes are not estimated due to
+  the possibility of signs flipping during estimation. In
+  unidimenisonal models, the slope parameters are assumed
+  to be greater than zero, and a lower bound is imposed to
+  ensure that sign flipping does not occur.
 }
 \examples{
 \dontrun{

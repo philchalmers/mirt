@@ -1,7 +1,10 @@
 #' Compute profiled-likelihood confidence intervals
 #' 
 #' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior parameter 
-#' distributions as well as equality constraints. Only supports unidimensional models. 
+#' distributions as well as equality constraints. For multidimensional models, the CI's for the slopes 
+#' are not estimated due to the possibility of signs flipping during estimation. In unidimenisonal models, the 
+#' slope parameters are assumed to be greater than zero, and a lower bound is imposed to ensure that sign
+#' flipping does not occur.
 #' 
 #' @aliases PLCI.mirt
 #' @param mod a converged mirt model
@@ -76,7 +79,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     }
     
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, sv, get.LL, parprior){
-        lower <- ifelse(lbound[parnum] == -Inf, -5, lbound[parnum])
+        lower <- ifelse(lbound[parnum] == -Inf, -10, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 10, ubound[parnum])
         opt.lower <- optimize(f.min, lower = lower, upper = pars[parnum], dat=dat, model=model, large=large,
                               which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior, parnames=parnames,
@@ -87,8 +90,6 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }
     
-    if(mod@nfact != 1L)
-        stop('Likelihood confidence intervals only available for unidimensional models.')
     dat <- mod@data
     model <- mod@model[[1L]]    
     parprior <- mod@parprior 
@@ -112,6 +113,15 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         parnames <- sv$name[sv$est]
         lbound <- sv$lbound[sv$est]
         ubound <- sv$ubound[sv$est]        
+    }    
+    if(mod@nfact > 1L && is.null(parnum)){
+        #don't estimate slopes of multidimensional
+        tmp <- !(sv$name %in% paste0('a', 1:20)) & sv$est
+        pars <- sv$value[tmp]
+        parnames <- sv$name[tmp]
+        parnums <- sv$parnum[tmp]
+        lbound <- sv$lbound[tmp]
+        ubound <- sv$ubound[tmp]
     }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
