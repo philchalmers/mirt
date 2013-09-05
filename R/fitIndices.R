@@ -102,8 +102,8 @@ fitIndices <- function(obj, prompt = TRUE){
             amount of time and require large amounts of RAM. The largest matrix has', nrow(T), 'columns.
             Do you wish to continue anyways?')
         input <- readline("(yes/no): ")
-        if(input == 'no' || input == 'n') stop('Execution halted.')
-        if(input != 'yes' || input != 'y') stop('Illegal user input')
+        if(input == 'no') stop('Execution halted.')
+        if(input != 'yes') stop('Illegal user input')
     }
     Eta <- T %*% Gamma %*% t(T)
     T.p <- T %*% p
@@ -138,13 +138,10 @@ fitIndices <- function(obj, prompt = TRUE){
         if(is.null(delta)) delta <- matrix(NA, nrow(tabdata), length(DX), byrow = TRUE)
         delta[pat, ] <- DX
     }
-    deltarank <- qr(delta)$rank
-    while(deltarank < ncol(delta)){
-        diag(delta) <- diag(delta) + .001 * diag(delta)
-        deltarank <- qr(delta)$rank
-    }
     delta2 <- T %*% delta
-    C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(t(delta2) %*% inv.Eta %*% delta2) %*%
+    delta2.invEta.delta2 <- t(delta2) %*% inv.Eta %*% delta2
+    delta2.invEta.delta2 <- smooth.cov(delta2.invEta.delta2) #smooth
+    C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(delta2.invEta.delta2) %*%
         t(delta2) %*% inv.Eta
     M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)
     ret$M2 <- M2

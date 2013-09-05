@@ -948,3 +948,18 @@ reloadRandom <- function(random, longpars, parstart){
     }
     random
 }
+
+smooth.cov <- function(x){
+    eigens <- eigen(x)
+    if(min(eigens$values) < .Machine$double.eps){
+        eigens$values[eigens$values < .Machine$double.eps] <- 100 * 
+            .Machine$double.eps
+        nvar <- dim(x)[1]
+        tot <- sum(eigens$values)
+        eigens$values <- eigens$values * nvar/tot
+        cnames <- colnames(x)
+        rnames <- rownames(x)
+        x <- eigens$vectors %*% diag(eigens$values) %*% t(eigens$vectors)
+    }
+    x
+}
