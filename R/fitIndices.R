@@ -65,7 +65,7 @@ fitIndices <- function(obj, prompt = TRUE){
     N <- sum(r)
     p <- r/N
     p_theta <- obj@Pl[NOROWNA]
-    p_theta <- p_theta/sum(p_theta)
+    p_theta <- p_theta
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
     T <- matrix(NA, sum(K) + sum(K*(sum(K))), nrow(tabdata))

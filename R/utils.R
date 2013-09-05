@@ -957,8 +957,6 @@ smooth.cov <- function(x){
         nvar <- dim(x)[1]
         tot <- sum(eigens$values)
         eigens$values <- eigens$values * nvar/tot
-        cnames <- colnames(x)
-        rnames <- rownames(x)
         x <- eigens$vectors %*% diag(eigens$values) %*% t(eigens$vectors)
     }
     x
