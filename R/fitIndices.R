@@ -108,12 +108,7 @@ fitIndices <- function(obj, prompt = TRUE){
     Eta <- T %*% Gamma %*% t(T)
     T.p <- T %*% p
     T.p_theta <- T %*% p_theta
-    Etarank <- qr(Eta)$rank
-    while(Etarank < ncol(Eta)){
-        diag(Eta) <- diag(Eta) + .001 * diag(Eta)
-        Etarank <- qr(Eta)$rank
-    }
-    inv.Eta <- solve(Eta)
+    inv.Eta <- MASS::ginv(Eta)
     pars <- obj@pars
     quadpts <- ceiling(40/(obj@nfact^1.5))
     theta <- seq(-4, 4, length.out = quadpts)
@@ -140,7 +135,6 @@ fitIndices <- function(obj, prompt = TRUE){
     }
     delta2 <- T %*% delta
     delta2.invEta.delta2 <- t(delta2) %*% inv.Eta %*% delta2
-    delta2.invEta.delta2 <- smooth.cov(delta2.invEta.delta2) #smooth
     C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(delta2.invEta.delta2) %*%
         t(delta2) %*% inv.Eta
     M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)

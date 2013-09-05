@@ -55,7 +55,7 @@ test_that('one factor', {
     
     fit1 <- fitIndices(mod_metric)
     expect_is(fit1, 'list')
-    expect_true(mirt:::closeEnough(fit1$M2 - c(85.60139, 120.80287), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fit1$M2 - c(1126.808, 2163.069), -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(fit1$df - 350, -1e-4, 1e-4))    
     fit2 <- itemfit(mod_metric)
     expect_is(fit2, 'list')
