@@ -68,23 +68,30 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ConfirmatoryClass',
-    definition = function(object, digits = 3, ...)
+    definition = function(object, digits = 3, IRTpars = FALSE, ...)
     {
         K <- object@K
         J <- length(K)
         nLambdas <- ncol(object@F)
         allPars <- list()
-        if(length(object@pars[[1]]@SEpar) > 0){
-            for(i in 1:(J+1)){
-                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar),
-                                         2, byrow = TRUE), digits)
-                rownames(allPars[[i]]) <- c('pars', 'SE')
-                colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
-            }
+        if(IRTpars){
+            if(object@nfact > 1L) 
+                stop('traditional parameterization is only available for unidimensional models')
+            for(i in 1:(J+1))
+                allPars[[i]] <- round(mirt2traditional(object@pars[[i]]), digits)
         } else {
-            for(i in 1:(J+1)){
-                allPars[[i]] <- round(object@pars[[i]]@par, digits)
-                names(allPars[[i]]) <- names(object@pars[[i]]@est)
+            if(length(object@pars[[1]]@SEpar) > 0){
+                for(i in 1:(J+1)){
+                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar),
+                                             2, byrow = TRUE), digits)
+                    rownames(allPars[[i]]) <- c('pars', 'SE')
+                    colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                }
+            } else {
+                for(i in 1:(J+1)){
+                    allPars[[i]] <- round(object@pars[[i]]@par, digits)
+                    names(allPars[[i]]) <- names(object@pars[[i]]@est)
+                }
             }
         }
         names(allPars) <- c(colnames(object@data), 'GroupPars')
@@ -238,3 +245,31 @@ setMethod(
     }
 )
 
+mirt2traditional <- function(x){
+    cls <- class(x)
+    par <- x@par
+    if(cls != 'GroupPars')
+        ncat <- x@ncat
+    if(cls == 'dich'){
+        par[2] <- -par[2]/par[1]
+        names(par) <- c('a', 'b', 'g', 'u')
+    } else if(cls == 'graded'){
+        for(i in 2:ncat)
+            par[i] <- -par[i]/par[1]
+        names(par) <- c('a', paste0('b', 1:(length(par)-1)))
+    } else if(cls == 'gpcm'){
+        ds <- par[-1]/par[1]        
+        newd <- numeric(length(ds)-1)
+        for(i in 1:length(newd))
+            newd[i] <- -(ds[i+1] - ds[i])
+        par <- c(par[1], newd)
+        names(par) <- c('a', paste0('b', 1:length(newd)))
+#     } else if(cls == 'rating'){
+#     } else if(cls == 'rsm'){
+#     } else if(cls == 'nominal'){
+#     } else if(cls == 'nestlogit'){
+    } else {
+        names(par) <- names(x@est)
+    }    
+    par
+}

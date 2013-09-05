@@ -210,6 +210,8 @@
 #' targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ, 
 #' tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ
 #' @param Target a dummy variable matrix indicting a target rotation pattern
+#' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
+#' Only applicable to unidimensional models
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
@@ -384,7 +386,7 @@
 #' verbose = TRUE, ...)
 #'
 #' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, digits = 3, 
-#' verbose = TRUE, ...)
+#' verbose = TRUE, IRTpars = FALSE, ...)
 #'
 #' \S4method{anova}{ExploratoryClass}(object, object2)
 #'

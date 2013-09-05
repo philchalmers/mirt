@@ -29,7 +29,8 @@ Theory)}
     TRUE, ...)
 
   \S4method{coef}{ExploratoryClass}(object, rotate = '',
-    Target = NULL, digits = 3, verbose = TRUE, ...)
+    Target = NULL, digits = 3, verbose = TRUE, IRTpars =
+    FALSE, ...)
 
   \S4method{anova}{ExploratoryClass}(object, object2)
 
@@ -145,6 +146,10 @@ Theory)}
 
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
+
+  \item{IRTpars}{logical; convert slope intercept
+  parameters into traditional IRT parameters? Only
+  applicable to unidimensional models}
 
   \item{constrain}{a list of user declared equality
   constraints. To see how to define the parameters
