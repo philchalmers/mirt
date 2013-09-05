@@ -264,10 +264,28 @@ mirt2traditional <- function(x){
             newd[i] <- -(ds[i+1] - ds[i])
         par <- c(par[1], newd)
         names(par) <- c('a', paste0('b', 1:length(newd)))
+        #TODO add rating models
 #     } else if(cls == 'rating'){
 #     } else if(cls == 'rsm'){
-#     } else if(cls == 'nominal'){
-#     } else if(cls == 'nestlogit'){
+    } else if(cls == 'nominal'){
+        as <- par[2:(ncat+1)] * par[1] 
+        as <- as - mean(as)
+        ds <- par[(ncat+2):length(par)]
+        ds <- ds - mean(ds)
+        par <- c(as, ds)
+        names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
+    } else if(cls == 'nestlogit'){
+        par1 <- par[1:4]
+        par1[2] <- -par1[2]/par1[1]
+        names(par1) <- c('a', 'b', 'g', 'u')
+        par2 <- par[5:length(par)]        
+        as <- par2[1:(ncat-1)]
+        as <- as - mean(as)
+        ds <- par2[-c(1:(ncat-1))]
+        ds <- ds - mean(ds)
+        names(as) <- paste0('a', 1:(ncat-1))
+        names(ds) <- paste0('c', 1:(ncat-1))        
+        par <- c(par1, as, ds)
     } else {
         names(par) <- names(x@est)
     }    
