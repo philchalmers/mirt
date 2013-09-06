@@ -20,6 +20,7 @@ Depends:
     lattice,
     methods
 Imports:
+    MASS,
     GPArotation,
     mvtnorm,
     Rcpp,
