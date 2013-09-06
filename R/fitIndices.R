@@ -108,7 +108,7 @@ fitIndices <- function(obj, prompt = TRUE){
     Eta <- T %*% Gamma %*% t(T)
     T.p <- T %*% p
     T.p_theta <- T %*% p_theta
-    inv.Eta <- MASS::ginv(Eta)
+    inv.Eta <- ginv(Eta)
     pars <- obj@pars
     quadpts <- ceiling(40/(obj@nfact^1.5))
     theta <- seq(-4, 4, length.out = quadpts)

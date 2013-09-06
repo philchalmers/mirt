@@ -24,6 +24,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @importFrom stats anova fitted residuals
+#' @importFrom MASS ginv
 #' @import lattice GPArotation mvtnorm Rcpp stats4 methods
 #' @exportMethod anova
 #' @exportMethod fitted

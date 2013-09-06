@@ -96,7 +96,7 @@
 #' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#' \code{\link{read.mirt}}, \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
+#' \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #' @keywords models
 #' @usage
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
