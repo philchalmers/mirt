@@ -81,12 +81,17 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, sv, get.LL, parprior){
         lower <- ifelse(lbound[parnum] == -Inf, -10, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 10, ubound[parnum])
-        opt.lower <- optimize(f.min, lower = lower, upper = pars[parnum], dat=dat, model=model, large=large,
-                              which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior, parnames=parnames,
-                              tol = .01)        
-        opt.upper <- optimize(f.min, lower = pars[parnum], upper = upper, dat=dat, model=model, large=large,
-                              which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior, parnames=parnames,
-                              tol = .01)
+        mid <- pars[parnum]
+        if(mid > lower){
+            opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, large=large,
+                                  which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior, 
+                                  parnames=parnames, tol = .01)
+        } else opt.lower <- list(minimum = lower)
+        if(mid < upper){
+            opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model, large=large,
+                                  which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior, 
+                                  parnames=parnames, tol = .01)
+        } else opt.upper <- list(minimum = upper)
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }
     
