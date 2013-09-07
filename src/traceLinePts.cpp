@@ -40,8 +40,8 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
     }
 	for (i = 0; i < nquad; i++){ 
 		P(i) = g + (u - g) * (1.0)/(1.0 + exp((-1.0)*z(i)));		        
-        if(P(i) < 1e-10) P(i) = 1e-10;
-        if((1.0 - P(i)) < 1e-10) P(i) = 1.0 - 1e-10;        
+        if(P(i) < 1e-20) P(i) = 1e-20;
+        if((1.0 - P(i)) < 1e-20) P(i) = 1.0 - 1e-20;        
         Q(i) = 1.0 - P(i);
 	}
 	
@@ -86,8 +86,8 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
             P(_,i) = Pk(_,i) - Pk(_,i+1);
         for(i = 0; i < P.nrow(); i++){
             for(j = 0; j < P.ncol(); j++){
-                if(P(i,j) < 1e-10) P(i,j) = 1e-10;
-                if((1.0 - P(i,j)) < 1e-10) P(i,j) = 1.0 - 1e-10;        
+                if(P(i,j) < 1e-20) P(i,j) = 1e-20;
+                if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
             }
         }
         return(P);
@@ -142,8 +142,8 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	for(i = 0; i < nquad; i++){
 	    for(j = 0; j < ncat; j++){
 	        P(i,j) = Num(i,j) / Den(i);
-            if(P(i,j) < 1e-10) P(i,j) = 1e-10;
-            if((1.0 - P(i,j)) < 1e-10) P(i,j) = 1.0 - 1e-10;        
+            if(P(i,j) < 1e-20) P(i,j) = 1e-20;
+            if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
         }
     }
 

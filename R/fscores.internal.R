@@ -271,7 +271,6 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE, PROB
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))
     for (i in 1L:(length(itemloc)-1L))
         itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta)
-    itemtrace[itemtrace < 1e-8] <- 1e-8
     L <- sum(log(itemtrace)[as.logical(patdata)])
     prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))

@@ -437,7 +437,7 @@ P.comp <- function(a, d, Theta, g, u = 1, asMatrix = FALSE)
     for(i in 1L:nfact)
         P <- P * P.mirt(c(a[i], d[i], g=0, u=1), Theta[ ,i, drop=FALSE])
     P <- g + (u - g) * P
-    s.eps <- 1e-10
+    s.eps <- 1e-20
     P[P < s.eps] <- s.eps
     P[(1 - P) < s.eps] <- 1 - s.eps
     if(asMatrix) return(cbind(1-P, P))
