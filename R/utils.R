@@ -358,7 +358,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
 }
 
 ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
-    parnum <- par <- est <- item <- parname <- gnames <- itemtype <-
+    parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
     for(g in 1L:length(PrepList)){
@@ -366,6 +366,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
         for(i in 1L:length(tmpgroup)){
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
+            class <- c(class, rep(class(tmpgroup[[i]]), length(tmpgroup[[i]]@parnum)))
             parname <- c(parname, names(tmpgroup[[i]]@par))
             parnum <- c(parnum, tmpgroup[[i]]@parnum)
             par <- c(par, tmpgroup[[i]]@par)
@@ -378,8 +379,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
         }
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))
     }
-    gnames <- rep(names(PrepList), each = length(est)/length(PrepList))     
-    if(length(random) > 0L){        
+    if(length(random) > 0L){
         for(i in 1L:length(random)){            
             parname <- c(parname, names(random[[i]]@par))
             parnum <- c(parnum, random[[i]]@parnum)
@@ -390,17 +390,26 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             prior.type <- c(prior.type, random[[i]]@prior.type)
             prior_1 <- c(prior_1, random[[i]]@prior_1)
             prior_2 <- c(prior_2, random[[i]]@prior_2)
+            class <- c(class, rep('RandomPars', length(random[[i]]@parnum)))
+            item <- c(item, rep('RANDOM', length(random[[i]]@parnum))) 
         }
-        gnames <- rep('all', length(par))
-        item <- c(item, rep('RANDOM',length(gnames)-length(item))) 
     }
-    ret <- data.frame(group=gnames, item=item, name=parname, parnum=parnum, value=par,
+    gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
+    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
                       prior_1=prior_1, prior_2=prior_2)
     ret
 }
 
 UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
+    currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random, MG = TRUE)
+    if(!all(as.matrix(currentDesign[,c('group', 'item', 'class', 'name', 'parnum')]) == 
+                as.matrix(pars[,c('group', 'item', 'class', 'name', 'parnum')])))
+        stop('Critical internal parameter labels do not match those returned from pars = \'values\'')
+    if(!all(sapply(currentDesign, class) == sapply(pars, class)))
+        stop('pars input does not contain the appropriate classes, which should match pars = \'values\'')
+    if(!all(unique(pars$prior.type) %in% c('none', 'norm', 'beta', 'lnorm'))) 
+        stop('prior.type input in pars contains invalid prior types')
     if(!MG) PrepList <- list(PrepList)    
     len <- length(PrepList[[length(PrepList)]]$pars)
     maxparnum <- max(PrepList[[length(PrepList)]]$pars[[len]]@parnum)
@@ -412,7 +421,7 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
                 PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,'est'])
                 PrepList[[g]]$pars[[i]]@lbound[j] <- pars[ind,'lbound']
                 PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']
-                PrepList[[g]]$pars[[i]]@prior.type[j] <- pars[ind,'prior.type']
+                PrepList[[g]]$pars[[i]]@prior.type[j] <- as.character(pars[ind,'prior.type'])
                 PrepList[[g]]$pars[[i]]@prior_1[j] <- pars[ind,'prior_1']
                 PrepList[[g]]$pars[[i]]@prior_2[j] <- pars[ind,'prior_2']
                 ind <- ind + 1L

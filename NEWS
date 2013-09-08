@@ -1,5 +1,8 @@
 Changes in mirt 0.9.x
 
+- data.frame returned from mod2values() and pars = 'values' now contains a column indicating 
+  the internal item class
+
 - use ginv() from MASS package to improve accuracy in fitIndices() calculation of M2
 
 

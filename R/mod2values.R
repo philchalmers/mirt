@@ -27,11 +27,11 @@ mod2values <- function(x){
         MG <- TRUE
     } else {
         PrepList <- list(pars=x@pars)
-        names(PrepList) <- 'full'
+        names(PrepList) <- 'all'
         MG <- FALSE
     }
     itemnames <- colnames(x@data)
-    parnum <- par <- est <- item <- parname <- gnames <- itemtype <-
+    parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     for(g in 1L:length(PrepList)){
         if(MG) tmpgroup <- PrepList[[g]]@pars
@@ -39,6 +39,7 @@ mod2values <- function(x){
         for(i in 1L:length(tmpgroup)){
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
+            class <- c(class, rep(class(tmpgroup[[i]]), length(tmpgroup[[i]]@parnum)))
             parname <- c(parname, names(tmpgroup[[i]]@parnum))
             parnum <- c(parnum, tmpgroup[[i]]@parnum)
             par <- c(par, tmpgroup[[i]]@par)
@@ -65,11 +66,12 @@ mod2values <- function(x){
                 prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
                 prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
                 item <- c(item, names(tmpgroup[[i]]@est))
+                class <- c(class, rep('RandomPars', length(tmpgroup[[i]]@parnum)))
             }
         }
     }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
-    ret <- data.frame(group=gnames, item = item, name=parname, parnum=parnum, value=par,
+    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est, prior.type=prior.type, 
                       prior_1=prior_1, prior_2=prior_2)
     ret

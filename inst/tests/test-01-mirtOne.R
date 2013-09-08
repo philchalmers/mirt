@@ -40,7 +40,7 @@ test_that('dich', {
     expect_equal(cfs, c(1.011, 1.868, 0, 1, 1.011, 0.791, 0, 1, 1.011, 1.461, 0, 1, 1.011, 0.521, 0, 
                         1, 1.011, 1.993, 0, 1, 0, 1), tollerance = 1e-2)
     svalues <- mirt(data, 1, pars = 'values', verbose=FALSE)
-    svalues[22, 5] <- 2
+    svalues[22, 'value'] <- 2
     modm5 <- mirt(data, 1, pars = svalues, verbose=FALSE)    
     expect_is(modm5, 'ConfirmatoryClass')
     data[1,1] <- data[2,2] <- NA
