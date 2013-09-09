@@ -48,29 +48,23 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames){        
         sv$est[which] <- FALSE
         sv$value[which] <- value
-        if(any(parnames[which] %in% paste0('d', 1L:10L))){            
-            intnum <- as.numeric(strsplit(as.character(parnames[which]), 'd')[[1L]][2L])
-            #test if graded model            
-            if(sv$name[which-intnum] != 'd0'){    
-                about <- parnums[which]
-                if(intnum != 1L) about <- sort(which:(which-intnum+1L))
-                len <- do.call(c, lapply(strsplit(as.character(parnames[(which+1L):(which+10L)]), 'd'), length))
-                if(which(len == 1L)[1L] > 1L)
-                    about <- c(about, max(about) + 1L:(which(len == 1L)[1L]-1L))
-                vals <- rep(value, length(about))
-                if(intnum == 1L){                    
-                    vals[2L:length(vals)] <- vals[2L:length(vals)] - seq(0.1, 0.5, length.out = length(vals)-1L)
-                } else if(intnum == length(about)){
-                    vals[1L:(length(vals)-1L)] <- vals[1L:(length(vals)-1L)] + 
-                        seq(0.5, 0.1, length.out = length(1L:(length(vals)-1L)))
+        if(sv$class[which] == 'graded'){
+            if(!(sv$name[which] %in% paste0('a', 1L:30L))){
+                itemname <- sv$item[which]
+                itemnum <- sv$parnum[which]
+                itemsv <- sv[sv$item == itemname & !(sv$name %in% paste0('a', 1L:30L)), ]
+                if(min(itemsv$parnum) == itemnum){
+                    ds <- c(value, seq(from = value-.1, to=value-1, length.out=nrow(itemsv)-1L))
+                } else if(max(itemsv$parnum) == itemnum){
+                    ds <- c(seq(from = value+1, to=value+.1, length.out=nrow(itemsv)-1L), value)
                 } else {
-                    vals[1L:(intnum-1L)] <- vals[1L:(intnum-1L)] + seq(0.5, 0.1, length.out = intnum-1L)
-                    vals[(intnum+1L):length(vals)] <- vals[(intnum+1L):length(vals)] -
-                        seq(0.1, 0.5, length.out = length((intnum+1L):length(vals)))                                        
+                    ds <- c(seq(from = value+1, to=value+.1, length.out=itemnum-itemsv$parnum[1L]),
+                            value, seq(from = value-.1, to=value-1, 
+                                       length.out=itemsv$parnum[nrow(itemsv)]-itemnum))
                 }
-                sv$value[about] <- vals
+                sv$value[itemsv$parnum] <- ds
             }
-        }            
+        }
         got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior), silent=TRUE)
         if(is(got.LL, 'try-error')) return(1e8)
         ret <- (got.LL - get.LL)^2
