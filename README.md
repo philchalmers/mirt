@@ -43,11 +43,14 @@ install_github('mirt', 'philchalmers')
 Below are some presentation/workshop files for `mirt` that I have written and presented, and 
 may be helpful in understanding the package. 
 
-- 2013 workshop in Klagenfurt, Austria (coming soon)
+- [2013 workshop](https://dl.dropboxusercontent.com/u/10780530/mirt-pres-2013/mirt.pdf) in 
+  Klagenfurt, Austria, along with the 
+  [Examples presented](https://dl.dropboxusercontent.com/u/10780530/mirt-pres-2013/Examples.zip) and 
+  [Exercises provided](https://dl.dropboxusercontent.com/u/10780530/mirt-pres-2013/Exercises.zip)
 - a Shiny application is available here to show how modifying item parameters in `mirt` will affect
   tracelines, information curves, etc. To run the application you must have `shiny` installed, and use
   the following syntax in R to launch the application in a web browser: `shiny::runGist('6337165')`
-- [2012 presentation](https://dl.dropboxusercontent.com/u/10780530/mirt/mirt-presentation-2012.pdf) at 
+- [2012 presentation](https://dl.dropboxusercontent.com/u/10780530/mirt-pres-2012/mirt-presentation-2012.pdf) at 
   York University, Toronto
 
 # Bugs and Questions
