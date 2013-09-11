@@ -106,11 +106,11 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(as.numeric(ifit$df.S_X2) - c(2,2,2,2,2), -1e-4, 1e-4))
     
     fitm1 <- fitIndices(modm1)
-    expect_is(fitm1, 'list')
+    expect_is(fitm1, 'data.frame')
     expect_true(mirt:::closeEnough(fitm1$M2 - 11.45125, -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(fitm1$df.M2 - 5, -1e-4, 1e-4))
     fitm2 <- fitIndices(modm3)
-    expect_is(fitm2, 'list')
+    expect_is(fitm2, 'data.frame')
     expect_true(mirt:::closeEnough(fitm2$M2 - 22.57281, -1e-4, 1e-4))
     expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
     

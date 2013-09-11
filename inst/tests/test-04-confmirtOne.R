@@ -24,7 +24,7 @@ test_that('exploratory mods', {
     expect_true(mirt:::closeEnough(W1$W - 96.686, -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(W2$W - 1.728, -1e-2, 1e-2))
     fitonefact <- fitIndices(onefact)
-    expect_is(fitonefact, 'list')
+    expect_is(fitonefact, 'data.frame')
     suppressWarnings(twofact <- mirt(fulldata, 2, verbose = FALSE, draws = 10, method = 'MHRM'))
     cfs <- as.numeric(do.call(c, coef(twofact, digits=4, verbose = FALSE)))
     expect_equal(cfs, c(0.6568, 0.1776, -0.5837, 0.3796, 1.8894, 0.1327, 0, NA, 1, NA, 1.3991, 0.2262, 0.1994, 0.1986, 0.8715, 0.102, 0, NA, 1, NA, 1.5885, 0.4203, -0.1413, 0.3225, 1.7782, 0.2088, 0, NA, 1, NA, 0.5764, 0.1252, -0.2592, 0.2763, 0.4802, 0.076, 0, NA, 1, NA, -0.0103, 0.2857, -1.6973, 0.1068, 2.4348, 0.2172, 0, NA, 1, NA, 0, NA, 0, NA, 1, NA, -0.4373, NA, 1, NA),
