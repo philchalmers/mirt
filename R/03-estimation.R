@@ -435,6 +435,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             TLI.X2 <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
             CFI.G2 <- 1 - (G2 - df) / (null.mod@G2 - null.mod@df)
             CFI.X2 <- 1 - (X2 - df) / (null.mod@X2 - null.mod@df)
+            CFI.G2 <- ifelse(CFI.G2 > 1, 1, CFI.G2)
+            CFI.G2 <- ifelse(CFI.G2 < 0, 0, CFI.G2)
+            CFI.X2 <- ifelse(CFI.X2 > 1, 1, CFI.X2)
+            CFI.X2 <- ifelse(CFI.X2 < 0, 0, CFI.X2)
         }
     }
     if(nmissingtabdata > 0L)

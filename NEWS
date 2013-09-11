@@ -1,11 +1,12 @@
 Changes in mirt 0.9.x
 
+- fitIndicies() will return CFI.M2 and TLI.M2 if the argument calcNull = TRUE is passed. CFI stats also 
+  normed to fall between 0 and 1
+
 - data.frame returned from mod2values() and pars = 'values' now contains a column indicating 
   the internal item class
 
 - use ginv() from MASS package to improve accuracy in fitIndices() calculation of M2
-
-
 
 Changes in mirt 0.9.0
 
