@@ -58,19 +58,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(any(PrepListFull$itemtype == 'nominal') && is.null(nominal.highlow) && !opts$NULL.MODEL
        && opts$verbose)
         message('\'nominal.highlow\' matrix not specified, highest and lowest categories are used by default')    
-    parnumber <- 1L
+    parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
     for(g in 1L:Data$ngroups){
-        tmp <- 1L:Data$ngroups
-        selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[g]]]]
-        if(g != 1L)
-            PrepList[[g]] <- PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess,
-                                      upper=upper, parprior=parprior, verbose=opts$verbose,
-                                      technical=opts$technical, parnumber=parnumber, BFACTOR=opts$BFACTOR,
-                                      grsm.block=opts$grsm.block, D=opts$D, mixed.design=mixed.design,
-                                      customItems=customItems, fulldata=PrepList[[1L]]$fulldata, key=key,
-                                      nominal.highlow=nominal.highlow)
-        tmp <- PrepList[[g]]$pars[[length(PrepList[[g]]$pars)]]
-        parnumber <- tmp@parnum[length(tmp@parnum)] + 1L
+        if(g != 1L){
+            PrepList[[g]] <- PrepList[[1L]]
+            for(i in 1L:length(PrepList[[g]]$pars)){
+                PrepList[[g]]$pars[[i]]@parnum <- parnumber:(parnumber + length(PrepList[[g]]$pars[[i]]@parnum) - 1L)
+                parnumber <- max(PrepList[[g]]$pars[[i]]@parnum) + 1L
+            }
+        }
     }
     if(length(mixed.design$random) > 0L){
         for(i in 1L:length(mixed.design$random)){
