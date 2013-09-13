@@ -89,7 +89,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups){
             select <- Data$group == Data$groupNames[g]
             for(i in 1L:Data$nitems)
-                PrepList[[g]]$pars[[i]]@dat <- PrepList[[g]]$pars[[i]]@dat[select, , drop = FALSE]
+                PrepList[[g]]$pars[[i]]@dat <- 
+                    PrepListFull$fulldata[select, PrepListFull$itemloc[i]:(PrepListFull$itemloc[i+1]-1L), drop = FALSE]
             PrepList[[g]]$fulldata <- PrepListFull$fulldata[select, ]
             PrepList[[g]]$tabdata <- tmptabdata$tabdata[[g]]
             PrepList[[g]]$tabdata2 <- tmptabdata$tabdata2[[g]]
