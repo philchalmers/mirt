@@ -1,5 +1,7 @@
 #include"Misc.h"
 
+const double ABS_MAX_Z = 30;
+
 RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
 {	
     BEGIN_RCPP
@@ -51,22 +53,20 @@ NumericVector itemTrace(NumericVector a, const double *d,
     const int nquad = Theta.nrow();
     const int USEOT = ot.length() > 1;
 	NumericVector P(nquad), z(nquad);
+    z.fill(*d);
 
 	for (i = 0; i <	nquad; i++){
-	    z(i) = 0.0;
-		for (j = 0; j <	Theta.ncol(); j++){		
-			z(i) += a(j) * Theta(i,j);  		
-		}
-		z(i) += *d;
+		for (j = 0; j <	Theta.ncol(); j++)
+			z(i) += a(j) * Theta(i,j);  
 	}	
     if(USEOT){
         for (i = 0; i < nquad; i++)
             z(i) += ot(i);
     }
-	for (i = 0; i < nquad; i++){ 
-		P(i) = *g + (*u - *g) * (exp(z(i))/(1 + exp(z(i))));
-        if(P(i) < 1e-20) P(i) = 1e-20;
-        if((1.0 - P(i)) < 1e-20) P(i) = 1.0 - 1e-20;
+	for (i = 0; i < nquad; i++){
+        if(z(i) > ABS_MAX_Z) z(i) = ABS_MAX_Z;
+        else if(z(i) < -ABS_MAX_Z) z(i) = -ABS_MAX_Z;
+		P(i) = *g + (*u - *g) / (1.0 + exp(-z(i)));
     }
 	
 	return P;		

@@ -2,6 +2,8 @@
 #include"Misc.h"
 using namespace Rcpp;
 
+const double ABS_MAX_Z = 30;
+
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot) 
 {
     BEGIN_RCPP
@@ -25,29 +27,27 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
     NumericVector Q(nquad);
 	
 	int i, j;
-	NumericVector z(nquad);		
+	NumericVector z(nquad);	
+    z.fill(d);
 
 	//compute item trace vector
 	for (j = 0; j <	nquad; j++){
-		for (i = 0; i <	nfact; i++){		
+		for (i = 0; i <	nfact; i++)		
 			z(j) += a(i) * Theta(j,i); 
-		}
-		z(j) += d;
 	}	
     if(USEOT){
         for (j = 0; j < nquad; j++)
             z(j) += ot(j);
     }
 	for (i = 0; i < nquad; i++){ 
-		P(i) = g + (u - g) * (1.0)/(1.0 + exp((-1.0)*z(i)));		        
-        if(P(i) < 1e-20) P(i) = 1e-20;
-        if((1.0 - P(i)) < 1e-20) P(i) = 1.0 - 1e-20;        
-        Q(i) = 1.0 - P(i);
+        if(z(i) > ABS_MAX_Z) z(i) = ABS_MAX_Z;
+        else if(z(i) < -ABS_MAX_Z) z(i) = -ABS_MAX_Z;
+		P(i) = g + (u - g) /(1.0 + exp(-z(i)));
 	}
 	
     if(asMatrix(0)){
         NumericMatrix ret(nquad, 2);
-        ret(_, 0) = Q;
+        ret(_, 0) = 1.0 - P;
         ret(_, 1) = P;
         return(ret);
     } else return(P);
@@ -87,7 +87,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
         for(i = 0; i < P.nrow(); i++){
             for(j = 0; j < P.ncol(); j++){
                 if(P(i,j) < 1e-20) P(i,j) = 1e-20;
-                if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
+                else if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
             }
         }
         return(P);
@@ -114,6 +114,7 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	const int ncat = d.length();
     const int USEOT = ot.length() > 1;
 	int i,j;
+    double z;
 
 	NumericMatrix Num(nquad, ncat);
 	NumericMatrix P(nquad, ncat);
@@ -126,25 +127,28 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
     if(USEOT){
         for(i = 0; i < nquad; i++){
             for(j = 0; j < ncat; j++){
-    	        Num(i,j) = exp(ak(j) * innerprod(i) + d(j) + ot(i));
+                z = ak(j) * innerprod(i) + d(j) + ot(i);
+                if(z > ABS_MAX_Z) z = ABS_MAX_Z;
+                else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
+    	        Num(i,j) = exp(z);
                 Den(i) += Num(i,j);
             }        
         }
     } else {
     	for(i = 0; i < nquad; i++){
     	    for(j = 0; j < ncat; j++){
-    	        Num(i,j) = exp(ak(j) * innerprod(i) + d(j));
+                z = ak(j) * innerprod(i) + d(j);
+                if(z > ABS_MAX_Z) z = ABS_MAX_Z;
+                else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
+    	        Num(i,j) = exp(z);
                 Den(i) += Num(i,j);
             }        
         }
     }
     if(returnNum(0)) return(Num);
 	for(i = 0; i < nquad; i++){
-	    for(j = 0; j < ncat; j++){
+	    for(j = 0; j < ncat; j++)
 	        P(i,j) = Num(i,j) / Den(i);
-            if(P(i,j) < 1e-20) P(i,j) = 1e-20;
-            if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
-        }
     }
 
     return(P);
