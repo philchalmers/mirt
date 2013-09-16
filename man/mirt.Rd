@@ -147,6 +147,10 @@ Theory)}
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
 
+  \item{which.items}{a numeric vector indicating which
+  items to be used when plotting. Default is to use all
+  available items}
+
   \item{IRTpars}{logical; convert slope intercept
   parameters into traditional IRT parameters? Only
   applicable to unidimensional models}
