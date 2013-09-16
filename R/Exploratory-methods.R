@@ -254,7 +254,8 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'ExploratoryClass', y = 'missing'),
-    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
+    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
+                          which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           auto.key = TRUE, ...)
     {
@@ -346,21 +347,23 @@ setMethod(
                 if(!all(x@K == 2)) stop('trace line plot only available for tests
                                         with dichotomous items')
                 P <- matrix(NA, nrow(Theta), J)
-                for(i in 1:J)
+                for(i in which.items)
                     P[,i] <- probtrace(extract.item(x, i), ThetaFull)[,2]
-                items <- gl(n=J, k=nrow(Theta), labels = paste('Item', 1:J))
+                P <- t(na.omit(t(P)))
+                items <- gl(n=length(unique(which.items)), k=nrow(Theta), 
+                            labels = paste('Item', which.items))
                 plotobj <- data.frame(P = as.numeric(P), Theta=Theta, item=items)
                 return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(-0.1,1.1),,
                        xlab = expression(theta), ylab = expression(P(theta)),
                        auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
             }
-            if(type == 'infotrace'){
-                if(!all(x@K == 2)) stop('infotrace plot only available for tests
-                                        with dichotomous items')
+            if(type == 'infotrace'){                
                 I <- matrix(NA, nrow(Theta), J)
-                for(i in 1:J)
+                for(i in which.items)
                     I[,i] <- iteminfo(extract.item(x, i), ThetaFull)
-                items <- gl(n=J, k=nrow(Theta), labels = paste('Item', 1:J))
+                I <- t(na.omit(t(I)))
+                items <- gl(n=length(unique(which.items)), k=nrow(Theta), 
+                            labels = paste('Item', which.items))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
                 return(xyplot(I ~ Theta, plotobj, group = item, ylim = c(0,1),
                               xlab = expression(theta), ylab = expression(I(theta)),

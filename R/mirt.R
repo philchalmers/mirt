@@ -210,6 +210,8 @@
 #' targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ, 
 #' tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ
 #' @param Target a dummy variable matrix indicting a target rotation pattern
+#' @param which.items a numeric vector indicating which items to be used when plotting. Default is
+#' to use all available items
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
 #' Only applicable to unidimensional models
 #' @param constrain a list of user declared equality constraints. To see how to define the

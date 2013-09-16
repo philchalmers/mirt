@@ -1,5 +1,8 @@
 Changes in mirt 0.9.x
 
+- plot() contains a which.items argument to specify which items to plot in aggregate type, such as 
+  'infotrace' and 'trace'
+
 - fitIndicies() will return CFI.M2 and TLI.M2 if the argument calcNull = TRUE is passed. CFI stats also 
   normed to fall between 0 and 1
 
@@ -7,6 +10,10 @@ Changes in mirt 0.9.x
   the internal item class
 
 - use ginv() from MASS package to improve accuracy in fitIndices() calculation of M2
+
+BUG FIXES
+
+- fix error thrown in PLCI.mirt when parameter value is equal to the bound
 
 Changes in mirt 0.9.0
 
