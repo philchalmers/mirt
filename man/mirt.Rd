@@ -35,8 +35,9 @@ Theory)}
   \S4method{anova}{ExploratoryClass}(object, object2)
 
   \S4method{plot}{ExploratoryClass}(x, y, type = 'info',
-    npts = 50, theta_angle = 45, rot = list(xaxis = -70,
-    yaxis = 30, zaxis = 10), ...)
+    npts = 50, theta_angle = 45, which.items =
+    1:ncol(x@data), rot = list(xaxis = -70, yaxis = 30,
+    zaxis = 10), ...)
 
   \S4method{residuals}{ExploratoryClass}(object, restype =
     'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
