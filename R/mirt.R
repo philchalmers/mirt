@@ -3,7 +3,7 @@
 #'
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to dichotomous and polytomous data under the item response theory paradigm.
-#' Fits univariate and multivariate Rasch, 1-4PL, graded, (generalized) partial credit,
+#' Fits univariate and multivariate Rasch, 2-4PL, graded, (generalized) partial credit,
 #' nominal, graded rating scale, Rasch rating scale, nested logistic,
 #' and partially compensatory models using the traditional EM algorithm or Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro (MH-RM) algorithm. User defined item classes
@@ -86,12 +86,9 @@
 #' the data have more than two categories then a partial credit model is used instead (see 'gpcm' below).
 #' \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
 #' }
-#' \item{1-4PL}{
+#' \item{2-4PL}{
 #' Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
 #' \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
-#' For the 1PL model the number of factors must equal 1, and if so all the \eqn{a_1} values 
-#' are constrained to be equal accross all items and the latent variance of \eqn{\theta} is 
-#' freely estimated.
 #' }
 #' \item{graded}{
 #' The graded model consists of sequential 2PL models, and here \eqn{k} is
@@ -142,7 +139,7 @@
 #' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
 #' \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
 #' }
-#' \item{1-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
+#' \item{2-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
 #' The model is broken into two components for the probability of endorsement. For successful endorsement
 #' the probability trace is the 1-4PL model, while for unsuccessful endorsement:
 #' \deqn{P(x = 0 | \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
@@ -164,12 +161,12 @@
 #' more details
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
-#' however they may be changed to the following: 'Rasch', '1PL', '2PL', '3PL', '3PLu',
+#' however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
 #' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
-#' and '4PLNRM', for the Rasch/partial credit, 1 and 2 parameter logistic,
-#' 3 parameter logistic (lower asymptote and upper), 4 parameter logistic, graded response model,
-#' rating scale graded response model, generalized partial credit model, Rasch rating scale model, nominal model,
-#' 2-3PL partially compensatory model, and 2-4 parameter nested logistic
+#' and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
+#' 3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response model,
+#' rating scale graded response model, generalized partial credit model, Rasch rating scale model, 
+#' nominal model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
 #' models, respectively. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function
 #' @param method a character object specifying the estimation algorithm to be used. The default is \code{'EM'},

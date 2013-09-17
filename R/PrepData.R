@@ -104,12 +104,6 @@ PrepData <- function(data, model, itemtype, guess, upper,
     }
     #within group constraints
     constrain <- list()
-    onePLconstraint <- c()
-    if(itemtype[1L] == '1PL'){
-        for(i in 1L:J)
-            onePLconstraint <- c(onePLconstraint, pars[[i]]@parnum[1L + pars[[1L]]@nfixedeffects])
-        constrain[[length(constrain) + 1L]] <- onePLconstraint
-    }
     if(any(itemtype == 'grsm')){
         unique.grsmgroups <- unique(na.omit(grsm.block))
         for(group in unique.grsmgroups){

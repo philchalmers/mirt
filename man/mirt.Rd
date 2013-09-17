@@ -61,17 +61,17 @@ Theory)}
   a vector for each item or a single value which will be
   repeated globally. The NULL default assumes that the
   items follow a graded or 2PL structure, however they may
-  be changed to the following: 'Rasch', '1PL', '2PL',
-  '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'rsm',
+  be changed to the following: 'Rasch', '2PL', '3PL',
+  '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'rsm',
   'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
-  '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 1
-  and 2 parameter logistic, 3 parameter logistic (lower
-  asymptote and upper), 4 parameter logistic, graded
-  response model, rating scale graded response model,
-  generalized partial credit model, Rasch rating scale
-  model, nominal model, 2-3PL partially compensatory model,
-  and 2-4 parameter nested logistic models, respectively.
-  User defined item classes can also be defined using the
+  '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 2
+  parameter logistic, 3 parameter logistic (lower or upper
+  asymptote upper), 4 parameter logistic, graded response
+  model, rating scale graded response model, generalized
+  partial credit model, Rasch rating scale model, nominal
+  model, 2-3PL partially compensatory model, and 2-4
+  parameter nested logistic models, respectively. User
+  defined item classes can also be defined using the
   \code{\link{createItem}} function}
 
   \item{method}{a character object specifying the
@@ -323,7 +323,7 @@ Theory)}
   \code{mirt} fits an unconditional maximum likelihood
   factor analysis model to dichotomous and polytomous data
   under the item response theory paradigm. Fits univariate
-  and multivariate Rasch, 1-4PL, graded, (generalized)
+  and multivariate Rasch, 2-4PL, graded, (generalized)
   partial credit, nominal, graded rating scale, Rasch
   rating scale, nested logistic, and partially compensatory
   models using the traditional EM algorithm or Cai's (2010)
@@ -432,33 +432,29 @@ Theory)}
   estimated. If the data have more than two categories then
   a partial credit model is used instead (see 'gpcm'
   below). \deqn{P(x = 1|\theta, d) = \frac{1}{1 +
-  exp(-(\theta + d))}} } \item{1-4PL}{ Depending on the
+  exp(-(\theta + d))}} } \item{2-4PL}{ Depending on the
   model \eqn{u} may be equal to 1 and \eqn{g} may be equal
   to 0. \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1
-  + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}} For the
-  1PL model the number of factors must equal 1, and if so
-  all the \eqn{a_1} values are constrained to be equal
-  accross all items and the latent variance of \eqn{\theta}
-  is freely estimated. } \item{graded}{ The graded model
-  consists of sequential 2PL models, and here \eqn{k} is
-  the predicted category. \deqn{P(x = k | \theta, \psi) =
-  P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
-  \phi)} } \item{grsm}{ A more constrained version of the
-  graded model where graded spacing is equal accross item
-  blocks and only adjusted by a single 'difficulty'
-  parameter (c) while the latent variance of \eqn{\theta}
-  is freely estimated. Again, \deqn{P(x = k | \theta, \psi)
-  = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta,
-  \phi)} but now \deqn{P = \frac{1}{1 + exp(-(a_1 *
-  \theta_1 + a_2 * \theta_2 + d_k + c))}} }
-  \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are
-  treated as fixed and orderd values from 0:(k-1) (in the
-  nominal model \eqn{d_0} is also set to 0). Additionally,
-  for identification in the nominal model \eqn{ak_0 = 1},
-  \eqn{ak_k = (k - 1)}. \deqn{P(x = k | \theta, \psi) =
-  \frac{exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) +
-  d_k)} {\sum_i^k exp(ak_k * (a_1 * \theta_1 + a_2 *
-  \theta_2) + d_k)}}
+  + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}} }
+  \item{graded}{ The graded model consists of sequential
+  2PL models, and here \eqn{k} is the predicted category.
+  \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi)
+  - P(x \ge k + 1 | \theta, \phi)} } \item{grsm}{ A more
+  constrained version of the graded model where graded
+  spacing is equal accross item blocks and only adjusted by
+  a single 'difficulty' parameter (c) while the latent
+  variance of \eqn{\theta} is freely estimated. Again,
+  \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi)
+  - P(x \ge k + 1 | \theta, \phi)} but now \deqn{P =
+  \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k
+  + c))}} } \item{gpcm/nominal}{For the gpcm the \eqn{d_k}
+  values are treated as fixed and orderd values from
+  0:(k-1) (in the nominal model \eqn{d_0} is also set to
+  0). Additionally, for identification in the nominal model
+  \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}. \deqn{P(x = k |
+  \theta, \psi) = \frac{exp(ak_k * (a_1 * \theta_1 + a_2 *
+  \theta_2) + d_k)} {\sum_i^k exp(ak_k * (a_1 * \theta_1 +
+  a_2 * \theta_2) + d_k)}}
 
   For partial credit model (when \code{itemtype = 'Rasch'};
   unidimenional only) the above model is further
@@ -501,7 +497,7 @@ Theory)}
   models consist of the products of 2PL probability curves.
   \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 +
   exp(-(a_1 * \theta_1 + d_1))} * \frac{1}{1 + exp(-(a_2 *
-  \theta_2 + d_2))})} } \item{1-4PLNRM}{Nested logistic
+  \theta_2 + d_2))})} } \item{2-4PLNRM}{Nested logistic
   curves for modeling distractor items. Requires a scoring
   key. The model is broken into two components for the
   probability of endorsement. For successful endorsement

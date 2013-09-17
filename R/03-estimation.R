@@ -137,9 +137,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nitems <- Data$nitems
     K <- PrepList[[1L]]$K
     Data$nfact <- nfact <- PrepList[[1]]$pars[[nitems+1L]]@nfact
-    if(nfact != 1L && any(c('1PL') %in% itemtype ))
-        stop('1PL itemtype for multidimenional models is ambiguous. Please specify the
-             appropriate constraints manually using the 2PL model and the constrain argument.')
     if(nfact != 1L && any(c('Rasch') %in% itemtype ) && PrepList[[1L]]$exploratory)
        stop('Rasch itemtypes are for confimatory models only.')
     nLambdas <- PrepList[[1L]]$pars[[1L]]@nfact
