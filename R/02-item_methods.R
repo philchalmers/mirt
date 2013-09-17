@@ -406,14 +406,9 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        nfact <- x@nfact
-        a <- x@par[1L:nfact]
-        d <- x@par[(nfact+1L):(length(x@par)-2L)]
-        g <- x@par[length(x@par)-1L]
-        u <- x@par[length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.comp(a=a, d=d, Theta=Theta, g=g, u=u, asMatrix=TRUE))
+        return(P.comp(x@par, Theta=Theta, asMatrix=TRUE))
     }
 )
 
@@ -430,9 +425,13 @@ P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
 }
 
 # Trace lines for partially compensetory models
-P.comp <- function(a, d, Theta, g, u = 1, asMatrix = FALSE)
+P.comp <- function(par, Theta, asMatrix = FALSE)
 {
-    nfact <- length(a)
+    nfact <- (length(par)-2L)/2L
+    a <- par[1L:nfact]
+    d <- par[(nfact+1L):(length(par)-2L)]
+    g <- par[length(par)-1L]
+    u <- par[length(par)]
     P <- rep(1,nrow(Theta))
     for(i in 1L:nfact)
         P <- P * P.mirt(c(a[i], d[i], g=0, u=1), Theta[ ,i, drop=FALSE])

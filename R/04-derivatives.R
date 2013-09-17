@@ -108,8 +108,8 @@ setMethod(
                 d <- pars[1L:nfact]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(a,d,thetas,c)
-                Pstar <- P.comp(a,d,thetas,0,1)
+                P <- P.comp(c(a,d,c,1), thetas)
+                Pstar <- P.comp(c(a,d,0,1),thetas)
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 const1 <- (r/P - (f-r)/Q)
@@ -128,8 +128,8 @@ setMethod(
                 d <- pars[1L:nfact]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(a,d,thetas,c, 1)
-                Pstar <- P.comp(a,d,thetas,0,1)
+                P <- P.comp(c(a,d,c,1), thetas)
+                Pstar <- P.comp(c(a,d,0,1),thetas)
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 const1 <- (r/P - (f-r)/Q)
@@ -721,7 +721,7 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)        
-        P <- P.comp(a, d, Theta, g, 1)
+        P <- P.comp(c(a, d, g, 1), Theta)
         Pdich <- P.mirt(c(a, d, 0, 1), Theta)
         Pstar <- P - g
         grad <- hess <- vector('list', 2L)
