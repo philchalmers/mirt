@@ -325,18 +325,33 @@ setMethod(
     }
 )
 
+P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
+{
+    return(.Call("traceLinePts", par, Theta, asMatrix, ot))
+}
+
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
-    definition = function(x, Theta, useDesign = TRUE, ot=0){        
-        ak <- x@par[(x@nfact+4L):(x@nfact+4L+x@ncat-2L)]
-        dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nestlogit(x@par[1L:(x@nfact+3L)], Theta=Theta, 
-                         ak=ak, dk=dk, correct=x@correctcat))
+        return(P.nestlogit(x@par, Theta=Theta, correct=x@correctcat, ncat=x@ncat))
     }
 )
+
+P.nestlogit <- function(par, Theta, correct, ncat)
+{
+    nfact <- ncol(Theta)
+    ak <- par[(nfact+4L):(nfact+4L+ncat-2L)]
+    dk <- par[(length(par)-length(ak)+1):length(par)]
+    traces <- matrix(0, nrow(Theta), length(ak)+1L)
+    traces[ ,correct] <- P.mirt(par[1L:(nfact + 3L)], Theta=Theta)
+    Q <- 1 - traces[ ,correct]
+    Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta)
+    traces[ ,-correct] <- Q * Pn
+    return(traces)
+}
 
 setMethod(
     f = "ProbTrace",
@@ -348,46 +363,67 @@ setMethod(
     }
 )
 
+P.poly <- function(par, Theta, itemexp = FALSE, ot = 0)
+{
+    return(.Call('gradedTraceLinePts', par, Theta, itemexp, ot))
+}
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, itemexp = TRUE, useDesign = TRUE, ot=0){
-        nfact <- x@nfact
-        a <- x@par[1L:nfact]
-        d <- x@par[(nfact+1L):(length(x@par)-1L)]
-        t <- x@par[length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.poly(c(a=a, d=(d + t)), Theta=Theta, itemexp=itemexp, ot=ot))
+        return(P.rating(x@par, Theta=Theta, itemexp=itemexp, ot=ot))
     }
 )
+
+P.rating <- function(par, Theta, itemexp = FALSE, ot = 0)
+{
+    nfact <- ncol(Theta)
+    a <- par[1L:nfact]
+    d <- par[(nfact+1L):(length(par)-1L)]
+    t <- par[length(par)]
+    return(.Call('gradedTraceLinePts', c(a=a, d=(d + t)), Theta, itemexp, ot))
+}
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        a <- x@par[1L:x@nfact]
-        d <- x@par[-(1L:x@nfact)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, ot=ot))
+        return(P.gpcm(x@par, Theta=Theta, ot=ot))
     }
 )
+
+P.gpcm <- function(par, Theta, ot = 0)
+{
+    nfact <- ncol(Theta)
+    a <- par[1L:nfact]
+    d <- par[-(1L:nfact)]    
+    return(P.nominal(a=a, ak=0:(length(d)-1L), d=d, Theta=Theta, ot=ot))
+}
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        a <- x@par[1L:x@nfact]
-        d <- x@par[(x@nfact+1L):(length(x@par)-1L)]
-        t <- x@par[length(x@par)]
-        d[-1L] <- d[-1L] + t
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nominal(a=a, ak=0:(length(d)-1), d=d, Theta=Theta, ot=ot))
+        return(P.rsm(x@par, Theta=Theta, ot=ot))
     }
 )
+
+P.rsm <- function(par, Theta, ot = 0)
+{
+    nfact <- ncol(Theta)
+    a <- par[1L:nfact]
+    d <- par[(nfact+1L):(length(par)-1L)]
+    t <- par[length(par)]
+    d[-1L] <- d[-1L] + t
+    return(P.nominal(a=a, ak=0:(length(d)-1L), d=d, Theta=Theta, ot=ot))
+}
 
 setMethod(
     f = "ProbTrace",
@@ -402,6 +438,11 @@ setMethod(
     }
 )
 
+#d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1
+P.nominal <- function(a, ak, d, Theta, returnNum = FALSE, ot = 0){
+    return(.Call("nominalTraceLinePts", a, ak, d, Theta, returnNum, ot))
+}
+
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
@@ -412,19 +453,6 @@ setMethod(
     }
 )
 
-##Function passes
-P.poly <- function(par, Theta, itemexp = FALSE, ot = 0)
-{
-    return(.Call('gradedTraceLinePts', par, Theta, itemexp, ot))
-}
-
-# Trace lines for mirt models
-P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
-{
-    return(.Call("traceLinePts", par, Theta, asMatrix, ot))
-}
-
-# Trace lines for partially compensetory models
 P.comp <- function(par, Theta, asMatrix = FALSE)
 {
     nfact <- (length(par)-2L)/2L
@@ -441,21 +469,6 @@ P.comp <- function(par, Theta, asMatrix = FALSE)
     P[(1 - P) < s.eps] <- 1 - s.eps
     if(asMatrix) return(cbind(1-P, P))
     else return(P)
-}
-
-#d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1
-P.nominal <- function(a, ak, d, Theta, returnNum = FALSE, ot = 0){
-    return(.Call("nominalTraceLinePts", a, ak, d, Theta, returnNum, ot))
-}
-
-P.nestlogit <- function(par, Theta, ak, dk, correct)
-{
-    traces <- matrix(0, nrow(Theta), length(ak)+1L)
-    traces[ ,correct] <- P.mirt(par, Theta=Theta)
-    Q <- 1 - traces[ ,correct]
-    Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta)
-    traces[ ,-correct] <- Q * Pn
-    return(traces)
 }
 
 #----------------------------------------------------------------------------
