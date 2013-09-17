@@ -365,7 +365,7 @@ setMethod(
 
 P.poly <- function(par, Theta, itemexp = FALSE, ot = 0)
 {
-    return(.Call('gradedTraceLinePts', par, Theta, itemexp, ot))
+    return(.Call('gradedTraceLinePts', par, Theta, itemexp, ot, FALSE))
 }
 
 setMethod(
@@ -380,11 +380,7 @@ setMethod(
 
 P.rating <- function(par, Theta, itemexp = FALSE, ot = 0)
 {
-    nfact <- ncol(Theta)
-    a <- par[1L:nfact]
-    d <- par[(nfact+1L):(length(par)-1L)]
-    t <- par[length(par)]
-    return(.Call('gradedTraceLinePts', c(a=a, d=(d + t)), Theta, itemexp, ot))
+    return(.Call('gradedTraceLinePts', par, Theta, itemexp, ot, TRUE))
 }
 
 setMethod(
@@ -399,10 +395,7 @@ setMethod(
 
 P.gpcm <- function(par, Theta, ot = 0)
 {
-    nfact <- ncol(Theta)
-    a <- par[1L:nfact]
-    d <- par[-(1L:nfact)]    
-    return(P.nominal(a=a, ak=0:(length(d)-1L), d=d, Theta=Theta, ot=ot))
+    return(.Call("gpcmTraceLinePts", par, Theta, ot, FALSE))
 }
 
 setMethod(
@@ -417,12 +410,7 @@ setMethod(
 
 P.rsm <- function(par, Theta, ot = 0)
 {
-    nfact <- ncol(Theta)
-    a <- par[1L:nfact]
-    d <- par[(nfact+1L):(length(par)-1L)]
-    t <- par[length(par)]
-    d[-1L] <- d[-1L] + t
-    return(P.nominal(a=a, ak=0:(length(d)-1L), d=d, Theta=Theta, ot=ot))
+    return(.Call("gpcmTraceLinePts", par, Theta, ot, TRUE))
 }
 
 setMethod(
@@ -453,22 +441,9 @@ setMethod(
     }
 )
 
-P.comp <- function(par, Theta, asMatrix = FALSE)
+P.comp <- function(par, Theta, asMatrix = FALSE, ot = 0)
 {
-    nfact <- (length(par)-2L)/2L
-    a <- par[1L:nfact]
-    d <- par[(nfact+1L):(length(par)-2L)]
-    g <- par[length(par)-1L]
-    u <- par[length(par)]
-    P <- rep(1,nrow(Theta))
-    for(i in 1L:nfact)
-        P <- P * P.mirt(c(a[i], d[i], g=0, u=1), Theta[ ,i, drop=FALSE])
-    P <- g + (u - g) * P
-    s.eps <- 1e-20
-    P[P < s.eps] <- s.eps
-    P[(1 - P) < s.eps] <- 1 - s.eps
-    if(asMatrix) return(cbind(1-P, P))
-    else return(P)
+    return(.Call('partcompTraceLinePts', par, Theta, asMatrix, ot))
 }
 
 #----------------------------------------------------------------------------
