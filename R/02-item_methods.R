@@ -342,15 +342,7 @@ setMethod(
 
 P.nestlogit <- function(par, Theta, correct, ncat)
 {
-    nfact <- ncol(Theta)
-    ak <- par[(nfact+4L):(nfact+4L+ncat-2L)]
-    dk <- par[(length(par)-length(ak)+1):length(par)]
-    traces <- matrix(0, nrow(Theta), length(ak)+1L)
-    traces[ ,correct] <- P.mirt(par[1L:(nfact + 3L)], Theta=Theta)
-    Q <- 1 - traces[ ,correct]
-    Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta)
-    traces[ ,-correct] <- Q * Pn
-    return(traces)
+    return(.Call("nestlogitTraceLinePts", par, Theta, correct, ncat))
 }
 
 setMethod(

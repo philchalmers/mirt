@@ -105,7 +105,6 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 	END_RCPP
 }
 
-
 RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, 
     SEXP RreturnNum, SEXP Rot) 
 {
@@ -190,6 +189,42 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
     
     return(P);
     END_RCPP   
+}
+
+RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEXP Rncat) 
+{
+    BEGIN_RCPP
+    
+    NumericVector par(Rpar);    
+    NumericMatrix Theta(RTheta);
+    IntegerVector correct(Rcorrect);
+    IntegerVector ncat(Rncat);
+    const int nfact = Theta.ncol();
+    NumericVector dpar(nfact+3), a(nfact), d(ncat(0)-1), ak(ncat(0)-1);
+    a.fill(1.0);
+    for(int i = 0; i < nfact+3; i++)
+        dpar(i) = par(i);
+    for(int i = 0; i < ncat(0)-1; i++){
+        ak(i) = par(i+nfact+3);
+        d(i) = par(i+nfact+2+ncat(0));
+    }
+    NumericVector P, isfalse(1);
+    NumericMatrix Pnom, traces(Theta.nrow(), ncat(0));
+    P = traceLinePts(dpar, Theta, isfalse, isfalse); 
+    Pnom = nominalTraceLinePts(a, ak, d, Theta, isfalse, isfalse); 
+    int k = 0;
+    for(int i = 0; i < traces.ncol(); i++){
+        if((i+1) == correct(0)){
+            traces(_,i) = P;
+            k--;
+        } else {
+            traces(_,i) = (1.0 - P) * Pnom(_,k);
+        }
+        k++;
+    }
+    
+    return(traces);
+    END_RCPP
 }
 
 RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot) 
