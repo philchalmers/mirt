@@ -201,7 +201,7 @@ setMethod(
                         if(s == 0) s <- 1
                         res[j,i] <- sum(((tab - Etab)^2)/Etab) /
                             ((K[i] - 1) * (K[j] - 1)) * sign(s)
-                        res[i,j] <- sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
+                        res[i,j] <- sign(res[j,i]) * sqrt(abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
                     }
                 }
