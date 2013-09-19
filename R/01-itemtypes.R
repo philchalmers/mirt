@@ -42,7 +42,7 @@ setClass("AllItemsClass",
                         SEpar='numeric',
                         est='logical',
                         constr='logical',
-                        itemclass='character',
+                        itemclass='integer',
                         parnum='numeric',
                         nfact='integer',
                         nfixedeffects='numeric', #number of fixed effect predictors

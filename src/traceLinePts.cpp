@@ -261,3 +261,85 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     } else return(P);
     END_RCPP   
 }
+
+RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Roffterm) 
+{
+    BEGIN_RCPP
+    
+    List pars(Rpars);
+    NumericMatrix Theta(RTheta), offterm(Roffterm);
+    IntegerVector itemloc(Ritemloc), istrue(1), isfalse(1);
+    istrue.fill(1);
+    const int J = itemloc.length() - 1;
+    const int nfact = Theta.ncol();
+    NumericMatrix itemtrace(Theta.nrow(), itemloc(J)-1);
+    int where = 0;
+    
+    for(int which = 0; which < J; which++){
+        S4 item = pars[which];
+        IntegerVector ncat = item.slot("ncat");
+        NumericVector par = item.slot("par");
+        NumericVector ot = offterm(_, which);
+        NumericVector a(nfact), ak(ncat(0)), d(ncat(0));
+        NumericMatrix P;
+        IntegerVector itemclass = item.slot("itemclass");
+        IntegerVector correct;
+        
+        /* 
+            1 = dich
+            2 = graded
+            3 = gpcm
+            4 = nominal
+            5 = grsm
+            6 = rsm
+            7 = partcomp
+            8 = nestlogit
+            9 = custom
+        */
+        
+        switch(itemclass(0)){
+            case 1 :
+                P = traceLinePts(par, Theta, istrue, ot); 
+                break;            
+            case 2 :
+                P = gradedTraceLinePts(par, Theta, istrue, ot, isfalse); 
+                break;                
+            case 3 :
+                P = gpcmTraceLinePts(par, Theta, ot, isfalse);
+                break;            
+            case 4 :
+                for(int i = 0; i < nfact; i++) a(i) = par(i);
+                for(int i = 0; i < ncat(0); i++){
+                    ak(i) = par(i+nfact);
+                    d(i) = par(i+nfact+ncat(0)); 
+                }
+                P = nominalTraceLinePts(a, ak, d, Theta, isfalse, ot);
+                break;
+            case 5 :
+                P = gradedTraceLinePts(par, Theta, istrue, ot, istrue); 
+                break;
+            case 6 :
+                P = gpcmTraceLinePts(par, Theta, ot, istrue);
+                break;
+            case 7 :
+                P = partcompTraceLinePts(par, Theta, istrue, ot);            
+                break;
+            case 8 :
+                correct = item.slot("correctcat");
+                nestlogitTraceLinePts(par, Theta, correct, ncat);
+                break;
+            case 9 :
+                
+                break;
+            default : 
+                Rprintf("How in the heck did you get here from a switch statement?\n");
+                break;
+        }
+        for(int i = 0; i < P.ncol(); i++)
+            itemtrace(_, where + i) = P(_, i);
+        where += P.ncol();
+    }
+    
+    return(itemtrace);
+    END_RCPP   
+}
