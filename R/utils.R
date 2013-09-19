@@ -655,11 +655,12 @@ reloadPars <- function(longpars, pars, ngroups, J){
     return(.Call('reloadPars', longpars, pars, ngroups, J))
 }
 
-computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0, 1, 1), PROBTRACE=NULL){
+computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(pars)-1L), PROBTRACE=list()){
+    return(computeItemTrace2(pars, Theta, itemloc, offterm))
     #compute itemtrace for 1 group
     J <- length(itemloc) - 1L
     itemtrace <- matrix(0, ncol=itemloc[length(itemloc)]-1L, nrow=nrow(Theta))
-    if(!is.null(PROBTRACE)){
+    if(length(PROBTRACE)){
         if(nrow(offterm) == 1L){
             for (i in 1L:J)
                 itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta)
@@ -679,6 +680,18 @@ computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0, 1, 1), PR
         }
     }
     itemtrace
+}
+
+computeItemTrace2 <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L)){
+    if(any(sapply(pars, class) %in% 'custom')){ #TODO for now....
+        itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+        for(i in 1L:(length(pars)-1L))
+            if(class(pars[[i]]) == 'custom')
+                itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+        return(itemtrace)
+    } else {
+        return(.Call('computeItemTrace', pars, Theta, itemloc, offterm))
+    }
 }
 
 assignItemtrace <- function(pars, itemtrace, itemloc){

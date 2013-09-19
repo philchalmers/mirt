@@ -294,7 +294,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
             6 = rsm
             7 = partcomp
             8 = nestlogit
-            9 = custom
+            9 = custom....have to do in R for now
         */
         
         switch(itemclass(0)){
@@ -329,7 +329,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                 nestlogitTraceLinePts(par, Theta, correct, ncat);
                 break;
             case 9 :
-                
+                continue;
                 break;
             default : 
                 Rprintf("How in the heck did you get here from a switch statement?\n");
