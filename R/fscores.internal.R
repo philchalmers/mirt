@@ -107,7 +107,7 @@ setMethod(
 	    PROBTRACE <- vector('list', J)
 	    for(i in 1L:J)
 	        PROBTRACE[[i]] <- selectMethod(ProbTrace, c(class(pars[[i]]), 'matrix'))
-        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, PROBTRACE=PROBTRACE)
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
 	    log_itemtrace <- log(itemtrace)
 	    if(!is.null(globalenv()$MIRTCLUSTER)){
 	        tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, EAP, 

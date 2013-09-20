@@ -655,40 +655,18 @@ reloadPars <- function(longpars, pars, ngroups, J){
     return(.Call('reloadPars', longpars, pars, ngroups, J))
 }
 
-computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(pars)-1L), PROBTRACE=list()){
-    return(computeItemTrace2(pars, Theta, itemloc, offterm))
-    #compute itemtrace for 1 group
-    J <- length(itemloc) - 1L
-    itemtrace <- matrix(0, ncol=itemloc[length(itemloc)]-1L, nrow=nrow(Theta))
-    if(length(PROBTRACE)){
-        if(nrow(offterm) == 1L){
-            for (i in 1L:J)
-                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta)
+computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L), 
+                             NO.CUSTOM=FALSE){
+    if(!NO.CUSTOM){
+        if(any(sapply(pars, class) %in% 'custom')){ #sanity check, not important for custom anyway
+            itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+            for(i in 1L:(length(pars)-1L))
+                if(class(pars[[i]]) == 'custom')
+                    itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+            return(itemtrace)
         } else {
-            for (i in 1L:J)
-                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- PROBTRACE[[i]](x=pars[[i]], Theta=Theta,
-                                                                          ot=offterm[,i])        
+            return(.Call('computeItemTrace', pars, Theta, itemloc, offterm))
         }
-    } else {
-        if(nrow(offterm) == 1L){
-            for (i in 1L:J)
-                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-        } else {
-            for (i in 1L:J)
-                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta,
-                                                                          ot=offterm[,i])        
-        }
-    }
-    itemtrace
-}
-
-computeItemTrace2 <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L)){
-    if(any(sapply(pars, class) %in% 'custom')){ #TODO for now....
-        itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
-        for(i in 1L:(length(pars)-1L))
-            if(class(pars[[i]]) == 'custom')
-                itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
-        return(itemtrace)
     } else {
         return(.Call('computeItemTrace', pars, Theta, itemloc, offterm))
     }
@@ -703,7 +681,8 @@ assignItemtrace <- function(pars, itemtrace, itemloc){
 
 BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain,
                   specific=NULL, sitems=NULL){
-    LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems){
+    LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
+                   NO.CUSTOM){
         longpars[est] <- p
         pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         gstructgrouppars <- prior <- Prior <- vector('list', ngroups)
@@ -725,16 +704,17 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                 expected <- Estep.bfactor(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata,
                                             Theta=Theta, prior=prior[[g]],
                                             specific=specific, sitems=sitems,
-                                            itemloc=itemloc)$expected
+                                            itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)$expected
             } else {
                 expected <- Estep.mirt(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata,
-                                         Theta=Theta, prior=Prior[[g]], itemloc=itemloc)$expected
+                                       Theta=Theta, prior=Prior[[g]], itemloc=itemloc, 
+                                       NO.CUSTOM=NO.CUSTOM)$expected
             }
             LL <- LL + sum(PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)] * log(expected))
         }
-
         LL
     }
+    
     L <- ESTIMATE$L
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
@@ -743,22 +723,23 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
     J <- length(pars[[1L]]) - 1L
     est <- c()
     for(g in 1L:ngroups)
-            for(j in 1L:(J+1L))
-                    est <- c(est, pars[[g]][[j]]@est)
+        for(j in 1L:(J+1L))
+            est <- c(est, pars[[g]][[j]]@est)
     shortpars <- longpars[est]
     gstructgrouppars <- vector('list', ngroups)
     for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
     for(g in 1L:ngroups){
-            for(i in 1L:J){
-                    tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-                    pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
-                }
+        for(i in 1L:J){
+            tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
+            pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
         }
+    }
+    NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
     hess <- numDeriv::hessian(LL, x=shortpars, est=est, longpars=longpars,
                               pars=pars, ngroups=ngroups, J=J,
                               Theta=Theta, PrepList=PrepList,
-                              specific=specific, sitems=sitems)
+                              specific=specific, sitems=sitems, NO.CUSTOM=NO.CUSTOM)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- L %*% Hess %*% L
@@ -823,12 +804,15 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     prodlist <- PrepList[[1L]]$prodlist
     nfact <- ncol(Theta)
     gTheta <- vector('list', ngroups)
+    ANY.PRIOR <- rep(FALSE, ngroups)
+    NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
     for(g in 1L:ngroups){
         gTheta[[g]] <- Theta 
         if(length(prodlist) > 0L)
             gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+        ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
     }
-
+    
     for (cycles in 3L:NCYCLES){
 
         longpars <- MLestimates
@@ -839,9 +823,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
 
         for(g in 1L:ngroups){
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])            
-            gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=gTheta[[g]], itemloc=itemloc,
-                                                PROBTRACE=PROBTRACE[[g]])
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
@@ -858,11 +840,11 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
                                             Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
                                             specific=list$specific, sitems=list$sitems,
-                                            itemloc=itemloc, itemtrace=gitemtrace[[g]])
+                                            itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
                                          Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc,
-                                         itemtrace=gitemtrace[[g]])
+                                         NO.CUSTOM=NO.CUSTOM)
             }
         }
         for(g in 1L:ngroups){
@@ -871,10 +853,10 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
             }
         }
-        longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
-                      gTheta=gTheta, itemloc=itemloc, Prior=Prior,
-                      PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                      constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)
+        longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, rlist=rlist,
+                          gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR, 
+                          NO.CUSTOM=NO.CUSTOM, PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
+                          constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         sign <- sign(denom)
