@@ -19,6 +19,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             itemtype[itemtype == '3PLNRM' | itemtype == '3PLuNRM' | itemtype == '4PLNRM'] <- '2PLNRM'
         }
     }
+    if(length(group) != nrow(data))
+        stop('length of group not equal to number of rows in data.')
+    if(any(is.na(group))){
+        stop('Unknown group memberships cannot be estimated. Please remove the NA values in group
+                and the associated rows in the data input.')
+    }
+    
     ##
     Data <- list()
     data <- as.matrix(data)
