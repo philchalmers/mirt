@@ -27,7 +27,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
-                        prior.mu, prodlist, OffTerm, PROBTRACE)
+                        prior.mu, prodlist, OffTerm, NO.CUSTOM=FALSE)
 {
     N <- nrow(fulldata)
     J <- length(pars) - 1L
@@ -40,13 +40,10 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         theta0 <- prodterms(theta0,prodlist)
         theta1 <- prodterms(theta1,prodlist)
     }
-    itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(theta0))
-    for (i in 1L:J){
-        itemtrace0[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            PROBTRACE[[i]](x=pars[[i]], Theta=theta0, ot=OffTerm[,i])
-        itemtrace1[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-            PROBTRACE[[i]](x=pars[[i]], Theta=theta1, ot=OffTerm[,i])
-    }
+    itemtrace0 <- computeItemtrace(pars=pars, Theta=theta0, itemloc=itemloc, 
+                                   offterm=OffTerm, NO.CUSTOM=NO.CUSTOM)
+    itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc, 
+                                   offterm=OffTerm, NO.CUSTOM=NO.CUSTOM)    
     totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0, log_den1)    
     total_0 <- totals[[1L]] 
     total_1 <- totals[[2L]] 
@@ -780,8 +777,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     return(ESTIMATE)
 }
 
-SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, 
-                   PROBTRACE, DERIV){
+SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV){
     TOL <- sqrt(list$TOL)
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -856,7 +852,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, rlist=rlist,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR, 
                           NO.CUSTOM=NO.CUSTOM, PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                          constrain=constrain, cycle=cycles, PROBTRACE=PROBTRACE, DERIV=DERIV)
+                          constrain=constrain, cycle=cycles, DERIV=DERIV)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         sign <- sign(denom)

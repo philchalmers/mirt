@@ -1,4 +1,4 @@
-MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRACE, DERIV)
+MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
 {     
     if(is.null(random)) random <- list()
     RAND <- length(random) > 0L
@@ -44,8 +44,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
-                                        prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist,
-                                        PROBTRACE=PROBTRACE[[g]])
+                                        prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             if(i > 5L){
                 if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
                 else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
@@ -122,6 +121,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
     }
+    NO.CUSTOM <- !any(sapply(pars[[1L]], class) %in% 'custom')
     if(RAND){
         for(i in 1L:length(random)){
             LBOUND <- c(LBOUND, random[[i]]@lbound)
@@ -190,8 +190,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
                                              itemloc=itemloc, cand.t.var=cand.t.var,
                                              prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
-                                             prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist,
-                                             PROBTRACE=PROBTRACE[[1L]])
+                                             prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
                 if(i > 5L){
                     if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
                     else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
@@ -220,8 +219,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
                                       itemloc=itemloc, cand.t.var=cand.t.var,
                                       prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
-                                      prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist,
-                                            PROBTRACE=PROBTRACE[[g]])            
+                                      prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
         if(RAND && cycles > 100){
@@ -244,8 +242,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), PROBTRA
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
             gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]], offterm=OffTerm,
-                                                Theta=thetatemp, itemloc=itemloc,
-                                                    PROBTRACE=PROBTRACE[[group]])
+                                                Theta=thetatemp, itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
             pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]],
                                          itemloc=itemloc)
             for (i in 1L:J){

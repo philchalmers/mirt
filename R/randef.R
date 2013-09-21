@@ -33,15 +33,12 @@ randef <- function(x, ndraws = 1000, thin = 10){
     if(length(random) > 0L){
         OffTerm <- OffTerm(random, J=J, N=N)
     } else OffTerm <- matrix(0, 1, ncol(x@data))
-    gstructgrouppars <- ExtractGroupPars(x@pars[[J+1L]])
-    PROBTRACE <- vector('list', J)
-    for(i in 1L:J)
-        PROBTRACE[[i]] <- selectMethod(ProbTrace, c(class(x@pars[[i]]), 'matrix'))
+    gstructgrouppars <- ExtractGroupPars(x@pars[[J+1L]])    
     for(i in 1L:20L){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@fulldata,
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
-                                prior.mu=gstructgrouppars$gmeans, prodlist=list(), PROBTRACE=PROBTRACE)
+                                prior.mu=gstructgrouppars$gmeans, prodlist=list())
         if(length(random) > 0L){
             for(j in 1L:length(random))
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
@@ -54,7 +51,7 @@ randef <- function(x, ndraws = 1000, thin = 10){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@fulldata,
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
-                                prior.mu=gstructgrouppars$gmeans, prodlist=list(), PROBTRACE=PROBTRACE)
+                                prior.mu=gstructgrouppars$gmeans, prodlist=list())
         if(i %% thin == 0) Theta <- Theta + tmpTheta
         if(length(random) > 0L){
             for(j in 1L:length(random)){
