@@ -10,6 +10,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     SEMCYCLES <- list$SEMCYCLES
     KDRAWS <- list$KDRAWS
     TOL <- list$TOL
+    NO.CUSTOM <- !any(sapply(pars[[1L]], class) %in% 'custom')
     gain <- list$gain
     itemloc <- list$itemloc
     ngroups <- length(pars)
@@ -42,7 +43,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     for(g in 1L:ngroups){
         for(i in 1L:30L){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
-                                        itemloc=itemloc, cand.t.var=cand.t.var,
+                                        itemloc=itemloc, cand.t.var=cand.t.var, NO.CUSTOM=NO.CUSTOM,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             if(i > 5L){
@@ -59,7 +60,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                 }
             }
         }
-    }    
+    }
     if(RAND) OffTerm <- OffTerm(random, J=J, N=N)    
     m.thetas <- grouplist <- SEM.stores <- SEM.stores2 <- m.list <- list()
     conv <- 0L
@@ -121,7 +122,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
     }
-    NO.CUSTOM <- !any(sapply(pars[[1L]], class) %in% 'custom')
     if(RAND){
         for(i in 1L:length(random)){
             LBOUND <- c(LBOUND, random[[i]]@lbound)
@@ -188,7 +188,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             tmp <- .1
             for(i in 1L:30L){
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
-                                             itemloc=itemloc, cand.t.var=cand.t.var,
+                                             itemloc=itemloc, cand.t.var=cand.t.var, NO.CUSTOM=NO.CUSTOM,
                                              prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
                                              prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
                 if(i > 5L){
@@ -217,7 +217,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         for(g in 1L:ngroups){
             for(i in 1L:5L)
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
-                                      itemloc=itemloc, cand.t.var=cand.t.var,
+                                      itemloc=itemloc, cand.t.var=cand.t.var, NO.CUSTOM=NO.CUSTOM,
                                       prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")

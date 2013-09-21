@@ -274,6 +274,10 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     const int nfact = Theta.ncol();
     NumericMatrix itemtrace(Theta.nrow(), itemloc(J)-1);
     int where = 0;
+    S4 item = pars[0];
+    NumericMatrix FD = item.slot("fixed.design");
+    int USEFIXED = 0;
+    if(FD.nrow() > 2) USEFIXED = 1;
     
     for(int which = 0; which < J; which++){
         S4 item = pars[which];
@@ -297,43 +301,90 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
             9 = custom....have to do in R for now
         */
         
-        switch(itemclass(0)){
-            case 1 :
-                P = traceLinePts(par, Theta, istrue, ot); 
-                break;            
-            case 2 :
-                P = gradedTraceLinePts(par, Theta, istrue, ot, isfalse); 
-                break;                
-            case 3 :
-                P = gpcmTraceLinePts(par, Theta, ot, isfalse);
-                break;            
-            case 4 :
-                for(int i = 0; i < nfact; i++) a(i) = par(i);
-                for(int i = 0; i < ncat(0); i++){
-                    ak(i) = par(i+nfact);
-                    d(i) = par(i+nfact+ncat(0)); 
-                }
-                P = nominalTraceLinePts(a, ak, d, Theta, isfalse, ot);
-                break;
-            case 5 :
-                P = gradedTraceLinePts(par, Theta, istrue, ot, istrue); 
-                break;
-            case 6 :
-                P = gpcmTraceLinePts(par, Theta, ot, istrue);
-                break;
-            case 7 :
-                P = partcompTraceLinePts(par, Theta, istrue, ot);            
-                break;
-            case 8 :
-                correct = item.slot("correctcat");
-                nestlogitTraceLinePts(par, Theta, correct, ncat);
-                break;
-            case 9 :
-                continue;
-                break;
-            default : 
-                Rprintf("How in the heck did you get here from a switch statement?\n");
-                break;
+        if(USEFIXED){
+            NumericMatrix itemFD = item.slot("fixed.design");
+            NumericMatrix NewTheta(Theta.nrow(), nfact + itemFD.ncol());
+            for(int i = 0; i < FD.ncol(); i++)
+                NewTheta(_,i) = itemFD(_,i);
+            for(int i = 0; i < nfact; i++)
+                NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
+            switch(itemclass(0)){
+                case 1 :
+                    P = traceLinePts(par, NewTheta, istrue, ot); 
+                    break;            
+                case 2 :
+                    P = gradedTraceLinePts(par, NewTheta, istrue, ot, isfalse); 
+                    break;                
+                case 3 :
+                    P = gpcmTraceLinePts(par, NewTheta, ot, isfalse);
+                    break;            
+                case 4 :
+                    for(int i = 0; i < nfact; i++) a(i) = par(i);
+                    for(int i = 0; i < ncat(0); i++){
+                        ak(i) = par(i+nfact);
+                        d(i) = par(i+nfact+ncat(0)); 
+                    }
+                    P = nominalTraceLinePts(a, ak, d, NewTheta, isfalse, ot);
+                    break;
+                case 5 :
+                    P = gradedTraceLinePts(par, NewTheta, istrue, ot, istrue); 
+                    break;
+                case 6 :
+                    P = gpcmTraceLinePts(par, NewTheta, ot, istrue);
+                    break;
+                case 7 :
+                    P = partcompTraceLinePts(par, NewTheta, istrue, ot);            
+                    break;
+                case 8 :
+                    correct = item.slot("correctcat");
+                    nestlogitTraceLinePts(par, NewTheta, correct, ncat);
+                    break;
+                case 9 :
+                    continue;
+                    break;
+                default : 
+                    Rprintf("How in the heck did you get here from a switch statement?\n");
+                    break;
+            }            
+        } else {    
+            switch(itemclass(0)){
+                case 1 :
+                    P = traceLinePts(par, Theta, istrue, ot); 
+                    break;            
+                case 2 :
+                    P = gradedTraceLinePts(par, Theta, istrue, ot, isfalse); 
+                    break;                
+                case 3 :
+                    P = gpcmTraceLinePts(par, Theta, ot, isfalse);
+                    break;            
+                case 4 :
+                    for(int i = 0; i < nfact; i++) a(i) = par(i);
+                    for(int i = 0; i < ncat(0); i++){
+                        ak(i) = par(i+nfact);
+                        d(i) = par(i+nfact+ncat(0)); 
+                    }
+                    P = nominalTraceLinePts(a, ak, d, Theta, isfalse, ot);
+                    break;
+                case 5 :
+                    P = gradedTraceLinePts(par, Theta, istrue, ot, istrue); 
+                    break;
+                case 6 :
+                    P = gpcmTraceLinePts(par, Theta, ot, istrue);
+                    break;
+                case 7 :
+                    P = partcompTraceLinePts(par, Theta, istrue, ot);            
+                    break;
+                case 8 :
+                    correct = item.slot("correctcat");
+                    nestlogitTraceLinePts(par, Theta, correct, ncat);
+                    break;
+                case 9 :
+                    continue;
+                    break;
+                default : 
+                    Rprintf("How in the heck did you get here from a switch statement?\n");
+                    break;
+            }
         }
         for(int i = 0; i < P.ncol(); i++)
             itemtrace(_, where + i) = P(_, i);

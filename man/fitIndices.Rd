@@ -26,7 +26,7 @@
 \dontrun{
 #LSAT6 example
 dat <- expand.table(LSAT6)
-(mod1 <- mirt(dat, 1, itemtype = '1PL'))
+(mod1 <- mirt(dat, 1, itemtype = '2PL', constrain = list(c(1,5,9,13,17))))
 fitIndices(mod1)
 
 #Science data, much more sparse so M2 would be more informative
