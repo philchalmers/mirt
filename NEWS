@@ -1,5 +1,8 @@
 Changes in mirt 0.9.x
 
+- plot(..., type = 'trace') now supports polytomous and dichotomous tracelines, and type = 'infotrace'
+  has a better y-axis range
+
 - removed the '1PL' itemtype since the name was too ambiguous. Still possible to obtain however by
   applying slope constraints to the 2PL/graded response models
 

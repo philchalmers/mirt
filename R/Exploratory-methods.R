@@ -344,15 +344,21 @@ setMethod(
                 return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
             }
             if(type == 'trace'){
-                if(!all(x@K == 2)) stop('trace line plot only available for tests
-                                        with dichotomous items')
-                P <- matrix(NA, nrow(Theta), J)
-                for(i in which.items)
-                    P[,i] <- probtrace(extract.item(x, i), ThetaFull)[,2]
-                P <- t(na.omit(t(P)))
-                items <- gl(n=length(unique(which.items)), k=nrow(Theta), 
-                            labels = paste('Item', which.items))
-                plotobj <- data.frame(P = as.numeric(P), Theta=Theta, item=items)
+                P <- vector('list', length(which.items))
+                names(P) <- colnames(x@data)[which.items]
+                for(i in which.items){
+                    tmp <- probtrace(extract.item(x, i), ThetaFull)
+                    if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
+                    tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta), 
+                                                           labels=paste0('cat', 1L:ncol(tmp))))
+                    P[[i]] <- tmp2
+                }
+                nrs <- sapply(P, nrow)                
+                Pstack <- do.call(rbind, P)
+                names <- c()
+                for(i in 1L:length(nrs))
+                    names <- c(names, rep(names(P)[i], nrs[i]))
+                plotobj <- data.frame(Pstack, item=names, Theta=Theta)
                 return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(-0.1,1.1),,
                        xlab = expression(theta), ylab = expression(P(theta)),
                        auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
@@ -365,7 +371,7 @@ setMethod(
                 items <- gl(n=length(unique(which.items)), k=nrow(Theta), 
                             labels = paste('Item', which.items))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
-                return(xyplot(I ~ Theta, plotobj, group = item, ylim = c(0,1),
+                return(xyplot(I ~ Theta, plotobj, group = item, 
                               xlab = expression(theta), ylab = expression(I(theta)),
                               auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
             }
