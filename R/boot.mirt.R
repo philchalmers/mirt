@@ -27,7 +27,7 @@
 #'
 #' }
 boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
-    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group) {
+    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group, ...) {
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
         g <- group[ind]
@@ -35,10 +35,10 @@ boot.mirt <- function(x, R = 100, return.boot = TRUE, ...){
         if(!is.null(group)){
             mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
                                  constrain=constrain, parprior=parprior, method='EM',
-                                 calcNull=FALSE, verbose = FALSE))
+                                 calcNull=FALSE, verbose = FALSE, ...))
         } else {
             mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
-                        parprior=parprior, calcNull=FALSE, verbose=FALSE))
+                        parprior=parprior, calcNull=FALSE, verbose=FALSE, ...))
         }
         if(is(mod, 'try-error')) return(rep(NA, npars))
         structure <- mod2values(mod)
