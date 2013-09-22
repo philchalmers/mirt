@@ -490,6 +490,7 @@ setMethod(
                 ev <- eigen(cov)
                 if(any(ev$values <= 0)){
                     eval <- ev$values 
+                    eval[eval < 0] <- 100*.Machine$double.eps
                     eval <- eval / sum(eval) * sum(ev$values)
                     cov <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
                     newpars[(nfact+1L):length(newpars)] <- cov[lower.tri(cov, TRUE)]    
