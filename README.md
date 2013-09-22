@@ -38,6 +38,9 @@ library('devtools')
 install_github('mirt', 'philchalmers')
 ```
 
+Nightly builds are also available on [Rforge](https://r-forge.r-project.org/R/?group_id=1000), 
+though these are not guarenteed to be be completely up to date with the Github source code.
+
 # Presentations, Workshops, and Other Things
 
 Below are some presentation/workshop files for `mirt` that I have written and presented, and 
