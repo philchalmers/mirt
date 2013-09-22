@@ -5,16 +5,15 @@ const double ABS_MAX_Z = 30;
 RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
 {	
     BEGIN_RCPP
-	int i, j, n;
     NumericMatrix Thetas(RThetas);    
     NumericVector PQ(RPQ);
     NumericVector N(RN);
     const int nfact = Thetas.ncol();
 	NumericMatrix ret(nfact,nfact);			
 
-	for(n = 0; n < N(0); n++)
-		for(i = 0; i < nfact; i++)
-			for(j = 0; j < nfact; j++)
+	for(int n = 0; n < N(0); ++n)
+		for(int i = 0; i < nfact; ++i)
+			for(int j = 0; j < nfact; ++j)
 				ret(i,j) += Thetas(n,i) * Thetas(n,j) * PQ(n);
 		
 	return(ret);
@@ -25,20 +24,19 @@ NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 	NumericVector Pk_1, NumericVector PQ_1, NumericVector PQ, 
 	NumericVector dif1sq, NumericVector dif1)
 {
-	int i, j, n;
 	const int nfact = Thetas.ncol();
 	NumericMatrix d2Louter(nfact,nfact), outer(nfact,nfact);
 	NumericVector temp(nfact);
 	d2Louter.fill(0.0);
 	
-	for(n = 0; n < Thetas.nrow(); n++){
-		for(i = 0; i < nfact; i++)
-			for(j = 0; j < nfact; j++)
+	for(int n = 0; n < Thetas.nrow(); ++n){
+		for(int i = 0; i < nfact; ++i)
+			for(int j = 0; j < nfact; ++j)
 				outer(i,j) = Thetas(n,i) * Thetas(n,j);
-		for(i = 0; i < nfact; i++)
+		for(int i = 0; i < nfact; ++i)
 			temp(i) =  (PQ_1(n) * Thetas(n,i) - PQ(n) * Thetas(n,i));
-		for(i = 0; i < nfact; i++)
-			for(j = 0; j < nfact; j++)				
+		for(int i = 0; i < nfact; ++i)
+			for(int j = 0; j < nfact; ++j)				
 				d2Louter(i,j) += (-1) * dif1sq(n) * temp(i) * temp(j) +  
 				    (dif1(n) * (Pk_1(n) * (1.0 - Pk_1(n)) * (1.0 - 2.0 * Pk_1(n)) * 
 				    outer(i,j) - Pk(n) * (1.0 - Pk(n)) * (1.0 - 2.0 * Pk(n)) * outer(i,j)));
@@ -49,21 +47,20 @@ NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 NumericVector itemTrace(NumericVector a, const double *d, 
         NumericMatrix Theta, const double *g, const double *u, NumericVector ot)
 {	
-	int i, j;
     const int nquad = Theta.nrow();
     const int USEOT = ot.length() > 1;
 	NumericVector P(nquad), z(nquad);
     z.fill(*d);
 
-	for (i = 0; i <	nquad; i++){
-		for (j = 0; j <	Theta.ncol(); j++)
+	for (int i = 0; i <	nquad; ++i){
+		for (int j = 0; j <	Theta.ncol(); ++j)
 			z(i) += a(j) * Theta(i,j);  
 	}	
     if(USEOT){
-        for (i = 0; i < nquad; i++)
+        for (int i = 0; i < nquad; ++i)
             z(i) += ot(i);
     }
-	for (i = 0; i < nquad; i++){
+	for (int i = 0; i < nquad; ++i){
         if(z(i) > ABS_MAX_Z) z(i) = ABS_MAX_Z;
         else if(z(i) < -ABS_MAX_Z) z(i) = -ABS_MAX_Z;
 		P(i) = *g + (*u - *g) / (1.0 + exp(-z(i)));
@@ -79,16 +76,15 @@ RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
     List pars(Rpars);
     NumericVector ngroups(Rngroups);
     NumericVector J(RJ);
-    int i, j, g;
-    int ind = 0, len;
+    int ind = 0;
 
-    for(g = 0; g < ngroups[0]; g++){
+    for(int g = 0; g < ngroups[0]; ++g){
         List glist = pars[g];
-        for(i = 0; i < (J[0]+1); i++){
+        for(int i = 0; i < (J[0]+1); ++i){
             S4 item = glist[i];
             NumericVector p = item.slot("par");
-            len = p.length();
-            for(j = 0; j < len; j++)
+            int len = p.length();
+            for(int j = 0; j < len; ++j)
                 p(j) = longpars(ind+j);
             ind += len;
             item.slot("par") = p;
@@ -115,10 +111,10 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
     NumericVector Sum0(fulldata.nrow()), Sum1(fulldata.nrow());;
     
     
-    for(int i = 0; i < fulldata.nrow(); i++){
+    for(int i = 0; i < fulldata.nrow(); ++i){
         double rs0 = 0.0;
         double rs1 = 0.0;
-        for(int j = 0; j < fulldata.ncol(); j++){
+        for(int j = 0; j < fulldata.ncol(); ++j){
             if(fulldata(i,j)){
                 rs0 += log(itemtrace0(i,j));
                 rs1 += log(itemtrace1(i,j));

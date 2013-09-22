@@ -18,7 +18,7 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
     const double u = par(len-1);
     const double g = par(len-2);
 	const double d = par(len-3);
-    for(int i = 0; i < Theta.ncol(); i++)
+    for(int i = 0; i < Theta.ncol(); ++i)
         a(i) = par(i);    
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
@@ -26,20 +26,19 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 	NumericVector P(nquad);
     NumericVector Q(nquad);
 	
-	int i, j;
 	NumericVector z(nquad);	
     z.fill(d);
 
 	//compute item trace vector
-	for (j = 0; j <	nquad; j++){
-		for (i = 0; i <	nfact; i++)		
+	for (int j = 0; j <	nquad; ++j){
+		for (int i = 0; i <	nfact; ++i)		
 			z(j) += a(i) * Theta(j,i); 
 	}	
     if(USEOT){
-        for (j = 0; j < nquad; j++)
+        for (int j = 0; j < nquad; ++j)
             z(j) += ot(j);
     }
-	for (i = 0; i < nquad; i++){ 
+	for (int i = 0; i < nquad; ++i){ 
         if(z(i) > ABS_MAX_Z) z(i) = ABS_MAX_Z;
         else if(z(i) < -ABS_MAX_Z) z(i) = -ABS_MAX_Z;
 		P(i) = g + (u - g) /(1.0 + exp(-z(i)));
@@ -60,24 +59,23 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 {
     BEGIN_RCPP
 
-    int i,j;
     NumericVector par(Rpar);	
     NumericVector ot(Rot);
 	NumericMatrix Theta(RTheta);
 	IntegerVector itemexp(Ritemexp);
     IntegerVector israting(Risrating);
     NumericVector a(Theta.ncol());
-    for(i = 0; i < Theta.ncol(); i++)
+    for(int i = 0; i < Theta.ncol(); ++i)
         a(i) = par(i);
     int ncat = par.length() - Theta.ncol();
     if(israting(0)) ncat -= 1;
     NumericVector d(ncat);        
     if(israting(0)){
         const double t = par(par.length()-1);
-        for(i = Theta.ncol(); i < par.length() - 1; i++)
+        for(int i = Theta.ncol(); i < par.length() - 1; ++i)
             d(i - Theta.ncol()) = par(i) + t;
     } else {        
-        for(i = Theta.ncol(); i < par.length(); i++)
+        for(int i = Theta.ncol(); i < par.length(); ++i)
             d(i - Theta.ncol()) = par(i);
     }
     const double nullzero = 0.0, nullone = 1.0;
@@ -85,15 +83,15 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 	NumericMatrix Pk(nquad, ncat + 2);
 	NumericMatrix P(nquad, ncat + 1);
 
-	for(i = 0; i < nquad; i++)
+	for(int i = 0; i < nquad; ++i)
         Pk(i,0) = 1.0;
-    for(i = 0; i < ncat; i++)
+    for(int i = 0; i < ncat; ++i)
         Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, ot); 
     if(itemexp(0)){
-        for(i = (Pk.ncol()-2); i >= 0; i--)
+        for(int i = (Pk.ncol()-2); i >= 0; --i)
             P(_,i) = Pk(_,i) - Pk(_,i+1);
-        for(i = 0; i < P.nrow(); i++){
-            for(j = 0; j < P.ncol(); j++){
+        for(int i = 0; i < P.nrow(); ++i){
+            for(int j = 0; j < P.ncol(); ++j){
                 if(P(i,j) < 1e-20) P(i,j) = 1e-20;
                 else if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
             }
@@ -120,7 +118,6 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	const int nfact = Theta.ncol();
 	const int ncat = d.length();
     const int USEOT = ot.length() > 1;
-	int i,j;
     double z;
 
 	NumericMatrix Num(nquad, ncat);
@@ -128,12 +125,12 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	NumericVector Den(nquad);
 	NumericVector innerprod(nquad);
 
-	for(i = 0; i < nquad; i++)
-	    for(j = 0; j < nfact; j++)
+	for(int i = 0; i < nquad; ++i)
+	    for(int j = 0; j < nfact; ++j)
 	        innerprod(i) += Theta(i,j) * a(j);
     if(USEOT){
-        for(i = 0; i < nquad; i++){
-            for(j = 0; j < ncat; j++){
+        for(int i = 0; i < nquad; ++i){
+            for(int j = 0; j < ncat; ++j){
                 z = ak(j) * innerprod(i) + d(j) + ot(i);
                 if(z > ABS_MAX_Z) z = ABS_MAX_Z;
                 else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
@@ -142,8 +139,8 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
             }        
         }
     } else {
-    	for(i = 0; i < nquad; i++){
-    	    for(j = 0; j < ncat; j++){
+    	for(int i = 0; i < nquad; ++i){
+    	    for(int j = 0; j < ncat; ++j){
                 z = ak(j) * innerprod(i) + d(j);
                 if(z > ABS_MAX_Z) z = ABS_MAX_Z;
                 else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
@@ -153,8 +150,8 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
         }
     }
     if(returnNum(0)) return(Num);
-	for(i = 0; i < nquad; i++){
-	    for(j = 0; j < ncat; j++)
+	for(int i = 0; i < nquad; ++i){
+	    for(int j = 0; j < ncat; ++j)
 	        P(i,j) = Num(i,j) / Den(i);
     }
 
@@ -174,16 +171,16 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
     int ncat = par.length() - nfact;
     if(israting(0)) ncat -= 1;
     NumericVector a(nfact), d(ncat), ak(ncat);
-    for(int i = 0; i < nfact; i++) a(i) = par(i);
+    for(int i = 0; i < nfact; ++i) a(i) = par(i);
     if(israting(0)){
         const double t = par(par.length()-1);
-        for(int i = nfact+1; i < par.length() - 1; i++)
+        for(int i = nfact+1; i < par.length() - 1; ++i)
             d(i-nfact) = par(i) + t;
     } else {
-        for(int i = nfact; i < par.length(); i++)
+        for(int i = nfact; i < par.length(); ++i)
             d(i-nfact) = par(i);
     }
-    for(int i = 0; i < ak.length(); i++) ak(i) = i;
+    for(int i = 0; i < ak.length(); ++i) ak(i) = i;
     IntegerVector returnNum(1);
     NumericMatrix P = nominalTraceLinePts(a, ak, d, Theta, returnNum, ot);
     
@@ -202,9 +199,9 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
     const int nfact = Theta.ncol();
     NumericVector dpar(nfact+3), a(nfact), d(ncat(0)-1), ak(ncat(0)-1);
     a.fill(1.0);
-    for(int i = 0; i < nfact+3; i++)
+    for(int i = 0; i < nfact+3; ++i)
         dpar(i) = par(i);
-    for(int i = 0; i < ncat(0)-1; i++){
+    for(int i = 0; i < ncat(0)-1; ++i){
         ak(i) = par(i+nfact+3);
         d(i) = par(i+nfact+2+ncat(0));
     }
@@ -213,14 +210,14 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
     P = traceLinePts(dpar, Theta, isfalse, isfalse); 
     Pnom = nominalTraceLinePts(a, ak, d, Theta, isfalse, isfalse); 
     int k = 0;
-    for(int i = 0; i < traces.ncol(); i++){
+    for(int i = 0; i < traces.ncol(); ++i){
         if((i+1) == correct(0)){
             traces(_,i) = P;
-            k--;
+            --k;
         } else {
             traces(_,i) = (1.0 - P) * Pnom(_,k);
         }
-        k++;
+        ++k;
     }
     
     return(traces);
@@ -237,7 +234,7 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     NumericVector a(nfact), d(nfact);
-    for(int j = 0; j < nfact; j++){
+    for(int j = 0; j < nfact; ++j){
         a(j) = par(j);
         d(j) = par(j+nfact);
     }
@@ -245,10 +242,10 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     NumericVector P(Theta.nrow());
     P.fill(1.0);
     
-    for(int j = 0; j < nfact; j++)
-        for(int i = 0; i < Theta.nrow(); i++)
+    for(int j = 0; j < nfact; ++j)
+        for(int i = 0; i < Theta.nrow(); ++i)
             P(i) = P(i) * (1.0 / (1.0 + exp(-(a(j) * Theta(i,j) + d(j)))));
-    for(int i = 0; i < Theta.nrow(); i++){    
+    for(int i = 0; i < Theta.nrow(); ++i){    
         P(i) = g + (1.0 - g) * P(i);
         if(P(i) < 1e-20) P(i) = 1e-20;
         else if (P(i) > 1.0 - 1e-20) P(i) = 1.0 - 1e-20;
@@ -279,7 +276,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     int USEFIXED = 0;
     if(FD.nrow() > 2) USEFIXED = 1;
     
-    for(int which = 0; which < J; which++){
+    for(int which = 0; which < J; ++which){
         S4 item = pars[which];
         IntegerVector ncat = item.slot("ncat");
         NumericVector par = item.slot("par");
@@ -304,9 +301,9 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
         if(USEFIXED){
             NumericMatrix itemFD = item.slot("fixed.design");
             NumericMatrix NewTheta(Theta.nrow(), nfact + itemFD.ncol());
-            for(int i = 0; i < FD.ncol(); i++)
+            for(int i = 0; i < FD.ncol(); ++i)
                 NewTheta(_,i) = itemFD(_,i);
-            for(int i = 0; i < nfact; i++)
+            for(int i = 0; i < nfact; ++i)
                 NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
             switch(itemclass(0)){
                 case 1 :
@@ -319,8 +316,8 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                     P = gpcmTraceLinePts(par, NewTheta, ot, isfalse);
                     break;            
                 case 4 :
-                    for(int i = 0; i < nfact; i++) a(i) = par(i);
-                    for(int i = 0; i < ncat(0); i++){
+                    for(int i = 0; i < nfact; ++i) a(i) = par(i);
+                    for(int i = 0; i < ncat(0); ++i){
                         ak(i) = par(i+nfact);
                         d(i) = par(i+nfact+ncat(0)); 
                     }
@@ -358,8 +355,8 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                     P = gpcmTraceLinePts(par, Theta, ot, isfalse);
                     break;            
                 case 4 :
-                    for(int i = 0; i < nfact; i++) a(i) = par(i);
-                    for(int i = 0; i < ncat(0); i++){
+                    for(int i = 0; i < nfact; ++i) a(i) = par(i);
+                    for(int i = 0; i < ncat(0); ++i){
                         ak(i) = par(i+nfact);
                         d(i) = par(i+nfact+ncat(0)); 
                     }
@@ -386,7 +383,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                     break;
             }
         }
-        for(int i = 0; i < P.ncol(); i++)
+        for(int i = 0; i < P.ncol(); ++i)
             itemtrace(_, where + i) = P(_, i);
         where += P.ncol();
     }
