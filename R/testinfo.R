@@ -15,7 +15,8 @@
 #'
 #' \dontrun{
 #' dat <- expand.table(deAyala)
-#' mod <- mirt(dat, 1, '1PL')
+#' (mirt(dat, 1, '2PL', pars = 'values'))
+#' mod <- mirt(dat, 1, '2PL', constrain = list(c(1,5,9,13,17)))
 #'
 #' Theta <- matrix(seq(-4,4,.01))
 #' tinfo <- testinfo(mod, Theta)
@@ -23,7 +24,7 @@
 #'
 #' #compare information loss between two tests
 #' dat.smaller <- dat[,-c(1,2)]
-#' mod2 <- mirt(dat.smaller, 1, '1PL')
+#' mod2 <- mirt(dat.smaller, 1, '2PL', constrain = list(c(1,5,9)))
 #' tinfo2 <- testinfo(mod2, Theta)
 #'
 #' #removed item informations

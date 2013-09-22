@@ -30,14 +30,18 @@
 mirtCluster <- function(ncores, remove = FALSE){
     if(!require(parallel)) require(parallel)    
     if(remove){
-        if(is.null(globalenv()$MIRTCLUSTER))
-            stop('No MIRTCLUSTER object in workspace')
+        if(is.null(globalenv()$MIRTCLUSTER)){
+            message('No MIRTCLUSTER object in workspace')
+            return(invisible())
+        }
         stopCluster(.GlobalEnv$MIRTCLUSTER)        
         .GlobalEnv$MIRTCLUSTER <- NULL
         return(invisible())
     }
-    if(!is.null(globalenv()$MIRTCLUSTER))
-        stop('MIRTCLUSTER object already defined')    
+    if(!is.null(globalenv()$MIRTCLUSTER)){
+        message('MIRTCLUSTER object already defined')    
+        return(invisible())
+    }
     if(missing(ncores))
         ncores <- detectCores()
     if(!is.numeric(ncores)) 

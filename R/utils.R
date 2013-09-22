@@ -899,7 +899,8 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                            dimnames=list(unique(gframe)[[1L]], NULL))        
         mtch <- match(gframe[[1L]], rownames(drawvals))
         gdesign <- matrix(1, nrow(gframe), 1L, dimnames = list(NULL, colnames(gframe))) 
-        if(ncol(sframe) != 0L) gdesign <- model.matrix(as.formula(paste0('~',splt[1L])), sframe)
+        if(ncol(sframe) != 0L) 
+            gdesign <- cbind(model.matrix(as.formula(paste0('~',splt[1L])), sframe), gdesign)
         tmp <- matrix(-Inf, ndim, ndim)
         diag(tmp) <- 1e-4
         lbound <- tmp[lower.tri(tmp, diag=TRUE)]

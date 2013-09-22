@@ -209,10 +209,10 @@
 #' group <- c(rep('D1', N), rep('D2', N))
 #'
 #' #group models
-#' model <- mirt.model()
+#' model <- mirt.model('
 #'    F1 = 1-5
 #'    F2 = 6-10
-#'    F3 = 11-15
+#'    F3 = 11-15')
 #'
 #' models <- list(D1=model, D2=model) #note the names match the groups
 #'

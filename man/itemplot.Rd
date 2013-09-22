@@ -55,7 +55,7 @@
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
 mod1 <- mirt(fulldata,1,SE=TRUE)
-mod2 <- mirt(fulldata,1, itemtype = '1PL')
+mod2 <- mirt(fulldata,1, itemtype = 'Rasch')
 mod3 <- mirt(fulldata,2)
 
 itemplot(mod1, 2)

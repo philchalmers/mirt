@@ -337,7 +337,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                     break;
                 case 8 :
                     correct = item.slot("correctcat");
-                    nestlogitTraceLinePts(par, NewTheta, correct, ncat);
+                    P = nestlogitTraceLinePts(par, NewTheta, correct, ncat);
                     break;
                 case 9 :
                     continue;
@@ -376,7 +376,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                     break;
                 case 8 :
                     correct = item.slot("correctcat");
-                    nestlogitTraceLinePts(par, Theta, correct, ncat);
+                    P = nestlogitTraceLinePts(par, Theta, correct, ncat);
                     break;
                 case 9 :
                     continue;

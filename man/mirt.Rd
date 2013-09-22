@@ -570,7 +570,7 @@ anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteri
 
 pmod2 <- mirt(Science, 2)
 #too few iterations, re-estimate with the current models as starting values and more iterations
-pmod2 <- mirt(Science, 2, pars = mod2values(pmod2), technical = list(NCYCLES = 1000))
+pmod2 <- mirt(Science, 2, pars = mod2values(pmod2), technical = list(NCYCLES = 2000))
 summary(pmod2)
 plot(pmod2)
 itemplot(pmod2, 1)
@@ -703,10 +703,10 @@ dataset <- simdata(a,d,2000,items,sigma)
 #analyses
 #CIFA for 2 factor crossed structure
 
-model.1 <- mirt.model()
+model.1 <- mirt.model('
   F1 = 1-4
   F2 = 4-8
-  COV = F1*F2
+  COV = F1*F2')
 
 
 #compute model, and use parallel computation of the log-likelihood
@@ -718,10 +718,10 @@ residuals(mod1)
 
 #####
 #bifactor
-model.3 <- mirt.model()
+model.3 <- mirt.model('
   G = 1-8
   F1 = 1-4
-  F2 = 5-8
+  F2 = 5-8')
 
 
 mod3 <- mirt(dataset,model.3, method = 'MHRM')
@@ -736,15 +736,15 @@ data(SAT12)
 data <- key2binary(SAT12,
                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
-model.quad <- mirt.model()
+model.quad <- mirt.model('
        F1 = 1-32
-  (F1*F1) = 1-32
+  (F1*F1) = 1-32')
 
 
-model.combo <- mirt.model()
+model.combo <- mirt.model('
        F1 = 1-16
        F2 = 17-32
-  (F1*F2) = 1-8
+  (F1*F2) = 1-8')
 
 
 (mod.quad <- mirt(data, model.quad))

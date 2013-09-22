@@ -487,10 +487,13 @@ setMethod(
             if(nfact > 1L){
                 x@par[x@est] <- newpars[x@est]
                 cov <- ExtractGroupPars(x)$gcov
-                tmp <- diag(cov)
-                tmp <- outer(tmp, tmp)
-                cov[cov > tmp] <- tmp[cov > tmp] * .9999999
-                newpars[(nfact+1L):length(newpars)] <- cov[lower.tri(cov, TRUE)]
+                ev <- eigen(cov)
+                if(any(ev$values <= 0)){
+                    eval <- ev$values 
+                    eval <- eval / sum(eval) * sum(ev$values)
+                    cov <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
+                    newpars[(nfact+1L):length(newpars)] <- cov[lower.tri(cov, TRUE)]    
+                }
             }
             return(newpars[x@est])
         }

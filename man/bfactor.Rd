@@ -93,19 +93,21 @@ mod2 <- bfactor(data, specific, guess = guess)
 coef(mod2)
 anova(mod1, mod2)
 
-## don't estimate specific factor for item 32, and use estimated mod1 as starting values
-sv <- mod2values(mod1)
-sv$value[220] <- 0
-sv$est[220] <- FALSE
-mod3 <- bfactor(data, specific, pars = sv) #with excellent starting values
-
-#without using starting values (required if SE.type = 'SEM')
+## don't estimate specific factor for item 32
 specific[32] <- NA
 mod3 <- bfactor(data, specific)
 anova(mod1, mod3)
 
+# same, but decalred manually (not run)
+#sv <- mod2values(mod1)
+#sv$value[220] <- 0 #parameter 220 is the 32 items specific slope
+#sv$est[220] <- FALSE
+#mod3 <- bfactor(data, specific, pars = sv) #with excellent starting values
+
 
 #########
+# mixed itemtype example
+
 #simulate data
 a <- matrix(c(
 1,0.5,NA,
@@ -184,7 +186,7 @@ model <- mirt.model('
     G2 = 9-16
     COV = G1*G2')
 
-simmod <- bfactor(dataset, specific, model, quadpts = 15)
+simmod <- bfactor(dataset, specific, model, quadpts = 9, technical = list(TOL = 1e-3))
 coef(simmod)
 summary(simmod)
 
