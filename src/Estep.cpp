@@ -2,45 +2,44 @@
 using namespace Rcpp;
 
 //Estep for mirt
-RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX,  
-	SEXP Rnfact, SEXP Rr) 
+RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr) 
 {
     BEGIN_RCPP
 
-    NumericVector prior(Rprior);
-    IntegerVector nfact(Rnfact);
+    NumericVector prior(Rprior);    
     IntegerVector r(Rr);
     IntegerMatrix data(RX);
     NumericMatrix itemtrace(Ritemtrace);
     const int nquad = prior.length();
     const int nitems = data.ncol();
     const int npat = r.length();          
-    NumericMatrix r1(nquad, nitems);    
-    NumericVector expected(npat);
-    NumericVector posterior(nquad); 
+    NumericMatrix r1(nquad, nitems);
+    std::vector<double> expected(npat, 0.0);
     List ret;
 	
     // Begin main function body 				
-	for (int pat = 0; pat < npat; ++pat){		  	           
+	for (int pat = 0; pat < npat; ++pat){
+        std::vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
-            posterior(q) = prior(q);  
-		for (int item = 0; item < nitems; ++item)
+            posterior[q] = posterior[q] * prior(q);
+        for (int item = 0; item < nitems; ++item)
             if(data(pat,item))
                 for(int q = 0; q < nquad; ++q)
-                    posterior(q) = posterior(q) * itemtrace(q,item);
-	    double expd = sum(posterior);
-	    expected(pat) = expd;
+                    posterior[q] = posterior[q] * itemtrace(q,item);
+        double expd = 0; 
+        for(int i = 0; i < nquad; ++i)
+            expd += posterior[i];
+        expected[pat] = expd;
         for(int q = 0; q < nquad; ++q)
-	        posterior(q) = r(pat) * posterior(q) / expd;	
-        for (int item = 0; item < nitems; ++item){              
+	        posterior[q] = r(pat) * posterior[q] / expd;	
+        for (int item = 0; item < nitems; ++item)              
             if (data(pat,item))	            
                 for(int q = 0; q < nquad; ++q)
-	                r1(q,item) = r1(q,item) + posterior(q);		    			
-	    }
-	} //end main  		
+	                r1(q,item) = r1(q,item) + posterior[q];	
+	} //end main
      
     ret["r1"] = r1;
-    ret["expected"] = expected;
+    ret["expected"] = wrap(expected);
     return(ret);
     
     END_RCPP

@@ -220,14 +220,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
 Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, NO.CUSTOM=FALSE, 
                        itemtrace=NULL, deriv = FALSE)
 {
-    nfact <- ncol(Theta)
     nquad <- nrow(Theta)
     J <- length(itemloc) - 1L
     r <- tabdata[ ,ncol(tabdata)]
     X <- tabdata[ ,1L:(ncol(tabdata) - 1L), drop = FALSE]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
-    retlist <- .Call("Estep", itemtrace, prior, X, nfact, r)
+    retlist <- .Call("Estep", itemtrace, prior, X, r)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
