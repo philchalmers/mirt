@@ -9,7 +9,9 @@
   chemistry, biology, and physics. The scoring key for
   these data is [1, 4, 5, 2, 3, 1, 2, 1, 3, 1, 2, 4, 2, 1,
   5, 3, 4, 4, 1, 4, 3, 3, 4, 1, 3, 5, 1, 3, 1, 5, 4, 5],
-  respectively.
+  respectively. However, careful analysis using the nominal
+  response model suggests that the scoring key for item 32
+  may be incorrect, and should be changed from 5 to 3.
 }
 \examples{
 \dontrun{
@@ -23,6 +25,10 @@ SAT12missing <- SAT12
 SAT12missing[SAT12missing == '8'] <- NA
 data <- key2binary(SAT12missing,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+
+#potentially better scoring for item 32
+data <- key2binary(SAT12,
+    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
 }
 }
 \author{
