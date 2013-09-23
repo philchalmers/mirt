@@ -91,13 +91,13 @@ static double inner(double *a, const double *b, const double *c,
 		tmp[i] = 0.0;
 		for(int j = 0; j < *dim; ++j){
 			B[j][i] = b[k];
-			k++;
+			++k;
 		}
 	}		
 	for(int i = 0; i < *dim; ++i){
 		for(int j = 0; j < *dim; ++j){
 			tmp[i] += a[j] * B[j][i];
-			k++;
+			++k;
 		}
 	}
 	for(int i = 0; i < *dim; ++i)
@@ -113,7 +113,7 @@ static void symMat(double *dsig, const int *nfact)
 	for(int i = 0; i < *nfact; ++i){
 		for(int j = 0; j < *nfact; ++j){
 			tmp[i][j] = dsig[k];
-			k++;
+			++k;
 		}
 	}
 	for(int i = 0; i < *nfact; ++i)
@@ -124,7 +124,7 @@ static void symMat(double *dsig, const int *nfact)
 	for(int i = 0; i < *nfact; ++i){
 		for(int j = 0; j < *nfact; ++j){
 			dsig[k] = tmp[i][j];
-			k++;
+			++k;
 		}
 	}	
 }
@@ -203,7 +203,7 @@ SEXP dgroup(SEXP RinvSig, SEXP RcMeans,	SEXP RZdif, SEXP RN, SEXP Rnfact,
 	for(int j = 0; j < npars; ++j){
 		for(int i = 0; i < npars; ++i){
 			Preturn[k] = h[i][j];
-			k++;
+			++k;
 		}
 	}
 	
