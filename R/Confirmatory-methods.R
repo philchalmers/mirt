@@ -137,9 +137,8 @@ setMethod(
                                 Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)
                         s <- gamma.cor(tab) - gamma.cor(Etab)
                         if(s == 0) s <- 1
-                        res[j,i] <- sum(((tab - Etab)^2)/Etab) /
-                            ((K[i] - 1) * (K[j] - 1)) * sign(s)
-                        res[i,j] <- sign(res[j,i]) * sqrt( abs(res[j,i]) / (N - min(c(K[i],K[j]) - 1)))
+                        res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+                        res[i,j] <- sign(res[j,i]) * sqrt( abs(res[j,i]) / (N*min(c(K[i],K[j]) - 1L)))
                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
                     }
                 }
