@@ -36,7 +36,7 @@ setMethod(
 setMethod(
     f = "itemplot.internal",
     signature = signature(object = 'MultipleGroupClass'),
-    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, ...)
+    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, rot, ...)
     {
         Pinfo <- list()
         gnames <- object@groupNames
@@ -46,7 +46,7 @@ setMethod(
             object@cmods[[g]]@information <- object@information
             Pinfo[[g]] <- itemplot.main(object@cmods[[g]], item=item, type='RETURN',
                                         degrees=degrees, CE=FALSE, CEalpha=CEalpha,
-                                        CEdraws=CEdraws, ...)
+                                        CEdraws=CEdraws, rot=rot, ...)
             Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
         }
         if(type == 'RE'){
@@ -97,7 +97,7 @@ setMethod(
                 return(lattice::wireframe(info ~ Theta1 + Theta2, data = dat, group=group,
                                           main=paste("Item", item, "Information"),
                                           zlab=expression(I(theta)), xlab=expression(theta[1]),
-                                          ylab=expression(theta[2]),
+                                          ylab=expression(theta[2]), screen=rot,
                                           scales = list(arrows = FALSE),
                                           auto.key = TRUE, ...))
             if(type == 'trace')
@@ -106,21 +106,21 @@ setMethod(
                                           zlab=expression(P(theta)),
                                           xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), zlim = c(-0.1,1.1),
-                                          scales = list(arrows = FALSE),
+                                          scales = list(arrows = FALSE), screen=rot,
                                           auto.key = TRUE, ...))
             if(type == 'RE')
                 return(lattice::wireframe(info ~ Theta1 + Theta2, data = dat, group=group,
                                           main=paste("Relative efficiency for item", item),
                                           zlab=expression(RE(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]),
-                                          scales = list(arrows = FALSE),
+                                          scales = list(arrows = FALSE), screen=rot,
                                           auto.key = TRUE, ...))
         }
     }
 )
 
 
-itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, ...){
+itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot, ...){
     if(drop.zeros) x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 2) stop('Can not plot high dimensional models')
@@ -269,37 +269,37 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                 return(lattice::wireframe(info + CEinfolower + CEinfoupper ~ Theta1 + Theta2, data = plt,
                                    main = paste("Item", item, "Information"), col = c('black', 'red', 'red'),
                                    zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                   scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
+                                   scales=list(arrows = FALSE), colorkey=TRUE, drape=TRUE, screen=rot, ...))
             else
                 return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt,
                              main = paste("Item", item, "Information"),
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                             scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
+                             scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
         if(type == 'trace'){
             if(CE)
                 return(lattice::wireframe(P + upper + lower ~ Theta1 + Theta2 | time, data = plt2,
                                           main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
                                           zlab=expression(P(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), col = c('black', 'red', 'red'),
-                                          scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
+                                          scales=list(arrows = FALSE), colorkey=TRUE, drape=TRUE, screen=rot, ...))
 
             else
                 return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time,
                              main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                             scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, ...))
+                             scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
         }
         if(type == 'score'){
             return(lattice::wireframe(score ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Expected Scores"),
                                       zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
-                                      colorkey = TRUE, drape = TRUE, ...))
+                                      colorkey = TRUE, drape = TRUE, screen=rot, ...))
         }
         if(type == 'SE'){
             return(lattice::wireframe(SE ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Standard Errors"),
                                       zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       scales = list(arrows = FALSE),
-                                      colorkey = TRUE, drape = TRUE, ...))
+                                      colorkey = TRUE, drape = TRUE, screen=rot, ...))
         }
     }
 }
