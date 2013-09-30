@@ -12,7 +12,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     sitems <- list$sitems
     theta <- list$theta
     J <- length(itemloc) - 1L
-    nfullpars <- 0
+    nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
     gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
@@ -62,10 +62,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         }
     }
     estindex_unique <- index[estpars & !redun_constr]
-    if(any(diag(L)[!estpars] > 0)){
+    if(any(diag(L)[!estpars] > 0L)){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(paste0(redindex[diag(L)[!estpars] > 0]), ''), ' but should only be applied to
+             paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
     Prior <- prior <- Priorbetween <- gstructgrouppars <- rlist <- r <- list()

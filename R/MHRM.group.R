@@ -153,10 +153,10 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-        if(RAND && cycles > 100) random <- reloadRandom(random=random, longpars=longpars, 
+        if(RAND && cycles > 100L) random <- reloadRandom(random=random, longpars=longpars, 
                                         parstart=max(pars[[1L]][[J+1L]]@parnum) + 1L)
         
-        if(RAND && cycles == 100){
+        if(RAND && cycles == 100L){
             for(g in 1L:ngroups) gtheta0[[g]] <- matrix(0, nrow(gfulldata[[g]]), nfact)
             OffTerm <- OffTerm(random, J=J, N=N)
             for(j in 1L:length(random)){
@@ -222,7 +222,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)            
             LL <- LL + attr(gtheta0[[g]], "log.lik")
         }
-        if(RAND && cycles > 100){
+        if(RAND && cycles > 100L){
             for(j in 1:length(random)){
                 for(i in 1L:5L){                
                     random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,

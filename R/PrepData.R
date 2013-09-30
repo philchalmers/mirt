@@ -6,7 +6,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))    
     itemnames <- colnames(data)
-    keywords <- c('COV')
+    keywords <- c('COV', 'CONSTRAIN', 'PRIOR')
     data <- as.matrix(data)
     colnames(data) <- itemnames
     J <- ncol(data)
@@ -48,7 +48,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
         if(any(key[i] == uniques[[i]]))
             key[i] <- which(key[i] == uniques[[i]])
     }
-    K <- rep(0,J)
+    K <- rep(0L,J)
     for(i in 1L:J) K[i] <- length(uniques[[i]])
     if(!is.null(technical$customK)){
         K <- technical$customK
@@ -69,7 +69,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(length(itemtype) != J) stop('itemtype specification is not the correct length')
     guess[guess == 0 & itemtype %in% c('3PL', '4PL', 'PC3PL')] <- .15
     upper[upper == 1 & itemtype %in% c('4PL', '3PLu')] <- .85
-    itemloc <- cumsum(c(1,K))
+    itemloc <- cumsum(c(1L,K))
     model <- matrix(model$x,ncol=2)
     factorNames <- setdiff(model[,1L],keywords)
     nfactNames <- length(factorNames)
@@ -79,16 +79,16 @@ PrepData <- function(data, model, itemtype, guess, upper,
     for(i in 1L:J)
         Names <- c(Names, paste("Item.",i,"_",1L:K[i],sep=""))
     if(is.null(fulldata)){
-        fulldata <- matrix(0,N,sum(K))
+        fulldata <- matrix(0L,N,sum(K))
         colnames(fulldata) <- Names
         for(i in 1L:J){
             ind <- index[i]
-            dummy <- matrix(0,N,K[ind])
+            dummy <- matrix(0L,N,K[ind])
             for (j in 0L:(K[ind]-1L))
                 dummy[,j+1L] <- as.integer(data[,ind] == uniques[[ind]][j+1L])
             fulldata[ ,itemloc[ind]:(itemloc[ind+1L]-1L)] <- dummy
         }
-        fulldata[is.na(fulldata)] <- 0
+        fulldata[is.na(fulldata)] <- 0L
     }
     pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames,
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata,

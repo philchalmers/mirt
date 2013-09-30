@@ -566,22 +566,22 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
                         Names, itemnames){
     tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
     tabdata2 <- do.call(rbind, tabdata2)
-    tabdata2[tabdata2 == 99999] <- NA
-    tabdata <- matrix(0, nrow(tabdata2), sum(K))
+    tabdata2[tabdata2 == 99999L] <- NA
+    tabdata <- matrix(0L, nrow(tabdata2), sum(K))
     for(i in 1L:nitem){
         uniq <- sort(na.omit(unique(tabdata2[,i])))
         if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)        
         for(j in 1L:length(uniq))
             tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
     }
-    tabdata[is.na(tabdata)] <- 0
+    tabdata[is.na(tabdata)] <- 0L
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
     ret1 <- ret2 <- vector('list', length(groupNames))
     for(g in 1L:length(groupNames)){
-        Freq <- numeric(length(stringtabdata))
+        Freq <- integer(length(stringtabdata))
         tmpstringdata <- stringfulldata[group == groupNames[g]]
-        Freq[stringtabdata %in% tmpstringdata] <- table(match(tmpstringdata, stringtabdata))
+        Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(match(tmpstringdata, stringtabdata)))
         ret1[[g]] <- cbind(tabdata, Freq)
         ret2[[g]] <- cbind(tabdata2, Freq)
     }
@@ -589,7 +589,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     ret
 }
 
-makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN,
+makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NaN,
                      rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE,
                      SEtol = .0001, grsm.block = NULL, D = 1,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
@@ -615,20 +615,20 @@ makeopts <- function(method = 'MHRM', draws = 2000, calcLL = TRUE, quadpts = NaN
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
     if(SE.type == 'SEM' && SE) opts$accelerate <- FALSE
-    if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21
+    if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
     opts$technical <- technical
     opts$use <- use
-    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000, technical$MAXQUAD)
-    opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000, technical$NCYCLES)
+    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000L, technical$MAXQUAD)
+    opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
     if(opts$method == 'EM')
-        opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500, technical$NCYCLES)
-    opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150, technical$BURNIN)
+        opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
+    opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
     opts$TOL <- ifelse(is.null(technical$TOL), if(method == 'EM') 1e-4 else 1e-3, technical$TOL)        
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
-        set.seed(12345)
+        set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
     opts$gain <- c(0.05,0.5,0.004)
     if(!is.null(technical$gain)){
@@ -688,7 +688,7 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
-                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
@@ -762,7 +762,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     SE <- rep(NA, length(longpars))
     SE[ESTIMATE$estindex_unique] <- SEtmp
     index <- 1L:length(longpars)
-    if(length(constrain) > 0)
+    if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
     ind1 <- 1L
@@ -823,7 +823,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             if(BFACTOR){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])                
-                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1, prod)
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
                 next
             }
             Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
@@ -879,8 +879,8 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
             between <- FALSE
         } else stop('grouping variable not in itemdesign or covdata')
         if(between){            
-            gframe <- gframe[1:N, , drop=FALSE]            
-            sframe <- sframe[1:N, , drop=FALSE]
+            gframe <- gframe[1L:N, , drop=FALSE]            
+            sframe <- sframe[1L:N, , drop=FALSE]
         } else {
             gframe <- itemdesign[, which(colnames(gframe) == itemcovnames), drop=FALSE]
             sframe <- itemdesign[, which(colnames(sframe) == itemcovnames), drop=FALSE]
@@ -955,7 +955,7 @@ smooth.cov <- function(x){
     if(min(eigens$values) < .Machine$double.eps){
         eigens$values[eigens$values < .Machine$double.eps] <- 100 * 
             .Machine$double.eps
-        nvar <- dim(x)[1]
+        nvar <- dim(x)[1L]
         tot <- sum(eigens$values)
         eigens$values <- eigens$values * nvar/tot
         x <- eigens$vectors %*% diag(eigens$values) %*% t(eigens$vectors)
