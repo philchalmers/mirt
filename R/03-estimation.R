@@ -41,6 +41,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
     Data$group <- factor(group)
     Data$groupNames <- unique(Data$group)
+    if(any(grepl('-', Data$groupNames)))
+        stop('Group names cannot contain a dash (-) character')
     Data$ngroups <- length(Data$groupNames)
     Data$nitems <- ncol(Data$data)
     Data$N <- nrow(Data$data)
@@ -161,7 +163,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
-                                 method=opts$method, itemnames=PrepList[[1L]]$itemnames)
+                                 method=opts$method, itemnames=PrepList[[1L]]$itemnames, model=model,
+                                 groupNames=Data$groupNames)
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()

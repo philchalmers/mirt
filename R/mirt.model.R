@@ -8,7 +8,7 @@
 #' - to indicate a range of items. Products between factors may be specified
 #' by enclosing the left hand term within brackets. To finish the declaration of
 #' a model simply enter a blank line with only a carriage return (i.e., the
-#' 'enter' or 'return' key), or instead read in a input version of the model syntax.
+#' 'enter' or 'return' key), or instead read in an input version of the model syntax.
 #'
 #' There is an optional keyword for specifying the correlation between relationships between factors
 #' called \code{COV}, and non-linear factor products can be included by enclosing the product combination
@@ -19,6 +19,13 @@
 #' \item{COV}{Specify the relationship between the latent factors.
 #' Estimating a correlation between factors is declared by joining the two
 #' factors with an asterisk (e.g., F1*F2).}
+#' \item{CONSTRAIN}{A bracketed, comma seperate list specifying equality constrains between items. 
+#' The input format is 
+#' \code{CONSTRAIN = (items, ..., parameterName, Group), (items, ..., parameterName, Group)}. 
+#' For single group analyses, the \code{Group} specification is not required. For example, in a single group 
+#' 10-item dichotmous tests, using the default 2PL model, the first and last 5 item slopes 
+#' can be constrained to be equal by using \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some cobmination
+#' such as \code{CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)}} 
 #' }
 #'
 #' @param input input for writing out the model syntax. Can either be a string declaration of 
@@ -55,6 +62,12 @@
 #' Q <- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1', 'Factor2')))
 #' COV <- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
 #' model <- mirt.model(Q, COV=COV) 
+#' 
+#' ## constrain various items slopes and all intercepts in single group model to be equal
+#' s <- 'F = 1-10
+#'       CONSTRAIN = (1-3, 5, 6, a1), (1-10, d)'
+#' model <- mirt.model(s)
+#'    
 #' 
 #'     }
 mirt.model <- function(input = NULL, file = "", COV = NULL, ...)

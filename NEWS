@@ -1,5 +1,8 @@
 Changes in mirt 0.9.x
 
+- new CONSTRAIN arugment in mirt.model() syntax for specifying equality constraints specifically
+  for parameters accross items 
+
 - plot(..., type = 'trace') now supports polytomous and dichotomous tracelines, and type = 'infotrace'
   has a better y-axis range
 

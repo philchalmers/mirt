@@ -253,8 +253,48 @@ bfactor2mod <- function(model, J){
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
-                            method, itemnames)
+                            method, itemnames, model, groupNames)
 {
+    if(!is.numeric(model[[1L]])){
+        if(any(model[[1L]]$x[,1L] == 'CONSTRAIN')){        
+            names(pars) <- groupNames
+            input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'CONSTRAIN', 2L]
+            input <- gsub(' ', replacement='', x=input)        
+            elements <- strsplit(input, '\\),\\(')[[1L]]
+            elements <- gsub('\\(', replacement='', x=elements)        
+            elements <- gsub('\\)', replacement='', x=elements)        
+            esplit <- strsplit(elements, ',')
+            if(ngroups == 1L)
+                esplit <- lapply(esplit, function(x) if(x[length(x)] != 'all') c(x, 'all') else x)
+            esplit <- lapply(esplit, function(x){                
+                            newx <- c()
+                            for(i in 1L:(length(x)-2L)){
+                                if(grepl('-', x[i])){
+                                    tmp <- as.numeric(strsplit(x, '-')[[1L]])
+                                    newx <- c(newx, tmp[1L]:tmp[2L])
+                                } else newx <- c(newx, x[i])                  
+                            }
+                            x <- c(newx, x[length(x)-1L], x[length(x)])
+                            x
+                        })            
+            for(i in 1L:length(esplit)){
+                constr <- c()
+                if(!(esplit[[i]][length(esplit[[i]])] %in% groupNames))
+                    stop('Invalid group name passed to CONSTRAIN = ... syntax.')
+                p <- pars[[esplit[[i]][length(esplit[[i]])]]]
+                sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-2L)])
+                for(j in 1L:length(sel)){
+                    pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@parnum) == 
+                                                   esplit[[i]][length(esplit[[i]])-1L]]
+                    if(!length(pick)) 
+                        stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j])
+                    constr <- c(constr, pick) 
+                }
+                constrain[[length(constrain) + 1L]] <- constr
+            }
+        }
+    }
+
     #within group item constraints only
     for(g in 1L:ngroups)
         if(length(PrepList[[g]]$constrain) > 0L)
