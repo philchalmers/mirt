@@ -302,8 +302,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                     stop('\nEstimation halted during burn in stages, solution is unstable')
             }
             correction <- solve(ave.h, grad)
-            correction[correction > .5] <- 1
-            correction[correction < -.5] <- -1
+            correction[correction > 1] <- 1
+            correction[correction < -1] <- -1
             #prevent guessing/upper pars from moving more than .01 at all times
             names(correction) <- names(estpars[estpars & !redun_constr])
             tmp <- correction[names(correction) == 'g']
