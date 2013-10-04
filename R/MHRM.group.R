@@ -378,8 +378,10 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     info <- Phi - outer(phi,phi)
     diag(info) <- abs(diag(info)) #diag of latent variances neg sometimes, why?
     #Reload final pars list
-    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM)
+    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM){
         message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
+        converge <- 0L
+    }
     if(list$USEEM) longpars <- list$startlongpars
     ind1 <- 1L
     for(g in 1L:ngroups){

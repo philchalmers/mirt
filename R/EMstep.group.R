@@ -176,8 +176,10 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                             cycles, LL, max(abs(preMstep.longpars - longpars))))
         if(cycles > 3L && all(abs(preMstep.longpars - longpars) < TOL))  break
     } #END EM
-    if(cycles == NCYCLES)
+    if(cycles == NCYCLES){
         message('EM iterations terminated after ', cycles, ' iterations.')        
+        converge <- 0L
+    }
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
