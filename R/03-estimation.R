@@ -200,13 +200,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
     nmissingtabdata <- sum(is.na(rowSums(PrepList[[1L]]$tabdata2)))
-    df <- df - nestpars + nconstr
+    dfsubtr <- nestpars - nconstr
+    if(PrepList[[1L]]$exploratory) dfsubtr <- dfsubtr - nfact*(nfact - 1L)/2L
+    if(df <= dfsubtr) 
+        stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ', 
+             dfsubtr, ' parameters were freely estimated.')
+    df <- df - dfsubtr
     if(!is.null(customItems)){
         for(g in 1L:Data$ngroups)
             PrepList[[g]]$exploratory <- FALSE
-    }   
-    if(PrepList[[1L]]$exploratory) df <- df + nfact*(nfact - 1L)/2L
-    if(df < 1L) stop('Too few degrees of freedom to estimate the model')
+    }
     G2group <- X2group <- numeric(Data$ngroups)
     #avoid some S4 overhead by caching functions....as if this works
     DERIV <- vector('list', Data$ngroups)
