@@ -84,13 +84,14 @@ setMethod(
                 for(i in 1:(J+1)){
                     allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar),
                                              2, byrow = TRUE), digits)
-                    rownames(allPars[[i]]) <- c('pars', 'SE')
+                    rownames(allPars[[i]]) <- c('par', 'SE')
                     colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
                 }
             } else {
                 for(i in 1:(J+1)){
-                    allPars[[i]] <- round(object@pars[[i]]@par, digits)
-                    names(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
+                    colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    rownames(allPars[[i]]) <- 'par'
                 }
             }
         }
@@ -288,5 +289,6 @@ mirt2traditional <- function(x){
     } else {
         names(par) <- names(x@est)
     }    
-    par
+    ret <- matrix(par, 1L, dimnames=list('par', names(par)))
+    ret
 }

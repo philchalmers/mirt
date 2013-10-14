@@ -101,13 +101,14 @@ setMethod(
             for(i in 1:(J+1)){
                 allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar),
                                              2, byrow = TRUE), digits)
-                rownames(allPars[[i]]) <- c('pars', 'SE')
+                rownames(allPars[[i]]) <- c('par', 'SE')
                 colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
             }
         } else {
             for(i in 1:(J+1)){
-                allPars[[i]] <- round(object@pars[[i]]@par, digits)
-                names(allPars[[i]]) <- names(object@pars[[i]]@est)
+                allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
+                colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                rownames(allPars[[i]]) <- 'par'
             }
         }
         listnames <- c(colnames(object@data), 'GroupPars')
@@ -116,7 +117,7 @@ setMethod(
                 allPars[[length(allPars) + 1L]] <- 
                     round(matrix(c(object@random[[i]]@par, object@random[[i]]@SEpar),
                                  2, byrow = TRUE), digits)
-                rownames(allPars[[length(allPars)]]) <- c('pars', 'SE')
+                rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
                 colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
                 listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
             }            

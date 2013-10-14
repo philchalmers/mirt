@@ -58,13 +58,15 @@ setMethod(
                     allPars[[g]][[i]] <- round(matrix(c(object@cmods[[g]]@pars[[i]]@par,
                                                    object@cmods[[g]]@pars[[i]]@SEpar),
                                              2, byrow = TRUE), digits)
-                    rownames(allPars[[g]][[i]]) <- c('pars', 'SE')
+                    rownames(allPars[[g]][[i]]) <- c('par', 'SE')
                     colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
                 }
             } else {
                 for(i in 1:(J+1)){
-                    allPars[[g]][[i]] <- round(object@cmods[[g]]@pars[[i]]@par, digits)
-                    names(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
+                    allPars[[g]][[i]] <- matrix(round(object@cmods[[g]]@pars[[i]]@par, digits), 1L)
+                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
+                    rownames(allPars[[g]][[i]]) <- 'par'
+                    
                 }
             }
             names(allPars[[g]]) <- c(itemnames, 'GroupPars')
