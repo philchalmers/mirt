@@ -44,8 +44,12 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'MultipleGroupClass',
-    definition = function(object, digits = 3, verbose = TRUE, ...)
+    definition = function(object, CI = .95, digits = 3, verbose = TRUE, ...)
     {
+        if(CI >= 1 || CI <= 0)
+            stop('CI must be between 0 and 1')
+        z <- abs(qnorm((1 - CI)/2))
+        SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         ngroups <- length(object@cmods)
         allPars <- vector('list', ngroups)
         names(allPars) <- object@groupNames
@@ -55,10 +59,12 @@ setMethod(
             allPars[[g]] <- list()
             if(length(object@cmods[[1]]@pars[[1]]@SEpar) > 0){
                 for(i in 1:(J+1)){
-                    allPars[[g]][[i]] <- round(matrix(c(object@cmods[[g]]@pars[[i]]@par,
-                                                   object@cmods[[g]]@pars[[i]]@SEpar),
-                                             2, byrow = TRUE), digits)
-                    rownames(allPars[[g]][[i]]) <- c('par', 'SE')
+                    allPars[[g]][[i]] <- round(
+                        matrix(c(object@cmods[[g]]@pars[[i]]@par,
+                                 object@cmods[[g]]@pars[[i]]@par - z*object@cmods[[g]]@pars[[i]]@SEpar,
+                                 object@cmods[[g]]@pars[[i]]@par + z*object@cmods[[g]]@pars[[i]]@SEpar),
+                               3, byrow = TRUE), digits)
+                    rownames(allPars[[g]][[i]]) <- c('par', SEnames)
                     colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
                 }
             } else {

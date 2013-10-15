@@ -16,8 +16,8 @@
     NULL, technical = list(), accelerate = TRUE, verbose =
     TRUE, ...)
 
-  \S4method{coef}{MultipleGroupClass}(object, digits = 3,
-    verbose = TRUE, ...)
+  \S4method{coef}{MultipleGroupClass}(object, CI = .95,
+    digits = 3, verbose = TRUE, ...)
 
   \S4method{summary}{MultipleGroupClass}(object, digits =
     3, verbose = TRUE, ...)
@@ -128,6 +128,8 @@
   \item{key}{see \code{\link{mirt}} for details}
 
   \item{itemtype}{see \code{\link{mirt}} for details}
+
+  \item{CI}{see \code{\link{mirt}} for details}
 
   \item{constrain}{see \code{\link{mirt}} for details}
 

@@ -2,15 +2,15 @@ PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename `pwd`)
 
-all: check clean
+all: install clean
 
 build:
 	cd ..;\
 	R CMD build $(PKGSRC)
 
-install: build
+install: 
 	cd ..;\
-	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
+	R CMD INSTALL $(PKGNAME)
 
 check: build
 	cd ..;\
@@ -21,6 +21,7 @@ test:
 
 clean:
 	cd ..;\
+	rm $(PKGNAME)_$(PKGVERS).tar.gz \
 	$(RM) -r $(PKGNAME).Rcheck/
 	
 

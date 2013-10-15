@@ -28,9 +28,9 @@ Theory)}
     Target = NULL, suppress = 0, digits = 3, verbose =
     TRUE, ...)
 
-  \S4method{coef}{ExploratoryClass}(object, rotate = '',
-    Target = NULL, digits = 3, verbose = TRUE, IRTpars =
-    FALSE, ...)
+  \S4method{coef}{ExploratoryClass}(object, CI = .95,
+    rotate = '', Target = NULL, digits = 3, verbose = TRUE,
+    IRTpars = FALSE, ...)
 
   \S4method{anova}{ExploratoryClass}(object, object2)
 
@@ -151,6 +151,10 @@ Theory)}
   \item{which.items}{a numeric vector indicating which
   items to be used when plotting. Default is to use all
   available items}
+
+  \item{CI}{the amount of converged used to compute
+  confidence intervals in \code{coef()}; default is .95 for
+  95 percent confidence intervals}
 
   \item{IRTpars}{logical; convert slope intercept
   parameters into traditional IRT parameters? Only

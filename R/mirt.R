@@ -209,6 +209,8 @@
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param which.items a numeric vector indicating which items to be used when plotting. Default is
 #' to use all available items
+#' @param CI the amount of converged used to compute confidence intervals in \code{coef()}; default is 
+#' .95 for 95 percent confidence intervals
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
 #' Only applicable to unidimensional models
 #' @param constrain a list of user declared equality constraints. To see how to define the
@@ -384,7 +386,7 @@
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)
 #'
-#' \S4method{coef}{ExploratoryClass}(object, rotate = '', Target = NULL, digits = 3, 
+#' \S4method{coef}{ExploratoryClass}(object, CI = .95, rotate = '', Target = NULL, digits = 3, 
 #' verbose = TRUE, IRTpars = FALSE, ...)
 #'
 #' \S4method{anova}{ExploratoryClass}(object, object2)

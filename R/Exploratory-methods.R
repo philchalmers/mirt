@@ -100,7 +100,12 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, digits = 3, verbose = TRUE, ...){
+    definition = function(object, CI = .95, rotate = '', Target = NULL, digits = 3, 
+                          verbose = TRUE, ...){
+        if(CI >= 1 || CI <= 0)
+            stop('CI must be between 0 and 1')
+        z <- abs(qnorm((1 - CI)/2))
+        SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         K <- object@K
         J <- length(K)
         nfact <- ncol(object@F)
@@ -120,9 +125,11 @@ setMethod(
         allPars <- list()
         if(length(object@pars[[1]]@SEpar) > 0){
             for(i in 1:(J+1)){
-                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, object@pars[[i]]@SEpar),
-                                             2, byrow = TRUE), digits)
-                rownames(allPars[[i]]) <- c('par', 'SE')
+                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, 
+                                               object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
+                                               object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
+                                             3, byrow = TRUE), digits)
+                rownames(allPars[[i]]) <- c('par', SEnames)
                 colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
             }
         } else {

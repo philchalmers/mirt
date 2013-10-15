@@ -65,6 +65,7 @@
 #' @param y an unused variable to be ignored
 #' @param key see \code{\link{mirt}} for details
 #' @param itemtype see \code{\link{mirt}} for details
+#' @param CI see \code{\link{mirt}} for details
 #' @param constrain see \code{\link{mirt}} for details
 #' @param grsm.block see \code{\link{mirt}} for details
 #' @param rsm.block see \code{\link{mirt}} for details
@@ -104,7 +105,7 @@
 #' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
 #' key = NULL, technical = list(), accelerate = TRUE, verbose = TRUE, ...)
 #'
-#' \S4method{coef}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
+#' \S4method{coef}{MultipleGroupClass}(object, CI = .95, digits = 3, verbose = TRUE, ...)
 #'
 #' \S4method{summary}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
 #'

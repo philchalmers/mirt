@@ -33,8 +33,7 @@ test_that('three factor', {
                                 verbose = FALSE, draws = 10))
     expect_is(mod_metric, 'MultipleGroupClass') 
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.3003, 0.1238, 0, NA, 0, NA, 0.6606, 0.0731, 0, NA, 1, NA, 
-                        1.2537, 0.0371, 0, NA, 0, NA, -0.5673, 0.0748),
+    expect_equal(cfs, c(1.3003, 1.0575, 1.543, 0, NA, NA, 0, NA, NA, 0.6606, 0.5173, 0.8038, 0, NA, NA, 1, NA, NA, 1.2537, 1.181),
                  tollerance = 1e-2)
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
@@ -46,8 +45,7 @@ test_that('three factor', {
                                  invariance=c('slopes', 'intercepts', 'free_varcov', draws = 10)))
     expect_is(mod_scalar1, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_scalar1, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.214, 0.0852, 0, NA, 0, NA, 0.3883, 0.0513, 0, NA, 1, NA, 1.1956, 0.0775, 
-                        0, NA, 0, NA, -0.8127, 0.0521),
+    expect_equal(cfs, c(1.214, 1.0471, 1.381, 0, NA, NA, 0, NA, NA, 0.3883, 0.2877, 0.4889, 0, NA, NA, 1, NA, NA, 1.1956, 1.0437),
                  tollerance = 1e-2)
     
     fs1 <- fscores(mod_metric, verbose = FALSE)
