@@ -44,7 +44,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'MultipleGroupClass',
-    definition = function(object, CI = .95, digits = 3, verbose = TRUE, ...)
+    definition = function(object, CI = .95, digits = 3, rawug = FALSE, verbose = TRUE, ...)
     {
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
@@ -76,6 +76,14 @@ setMethod(
                 }
             }
             names(allPars[[g]]) <- c(itemnames, 'GroupPars')
+        }
+        if(!rawug){
+            for(g in 1:ngroups){
+                allPars[[g]] <- lapply(allPars[[g]], function(x, digits){
+                    x[ , colnames(x) %in% c('g', 'u')] <- round(antilogit(x[ , colnames(x) %in% c('g', 'u')]), digits)
+                    x
+                }, digits=digits)
+            }
         }
         return(allPars)
     }

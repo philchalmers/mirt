@@ -123,6 +123,8 @@
 #'
 #' }
 createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ubound = NULL, userdata = NULL){
+    if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
+        stop('Parameter names cannot be \'g\' or \'u\', please change.')
     return(new('custom', name=name, par=par, est=est, lbound=lbound,
                ubound=ubound, P=P, gr=gr, hss=hss, userdata=userdata))
 }

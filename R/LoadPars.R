@@ -12,6 +12,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
       stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
     }
     pars <- vector('list', J)
+    guess <- logit(guess)
+    upper <- logit(upper)
     #startvalues
     startvalues <- vector('list', J)
     for(i in 1L:J){
@@ -69,7 +71,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                             paste('d', 0L:(K[i]-1L), sep=''))
         }
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            val <- c(lambdas[i,], rep(1, nfact), guess[i], 1)
+            val <- c(lambdas[i,], rep(1, nfact), guess[i], 999)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
         }        
         if(all(itemtype[i] != valid.items)) next
@@ -168,8 +170,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              itemclass=1L,
                              prior.type=rep('none', length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
-                             lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
-                             ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
@@ -211,8 +213,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              any.prior=FALSE,
                              prior.type=rep('none', length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
-                             lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
-                             ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
@@ -233,8 +235,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              any.prior=FALSE,
                              prior.type=rep('none', length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
-                             lbound=c(rep(-Inf, nfact+1),0,.5, rep(-Inf, length(startvalues[[i]])-nfact-3)),
-                             ubound=c(rep(Inf, nfact+1),.5,1, rep(Inf, length(startvalues[[i]])-nfact-3)),
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
@@ -361,8 +363,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              any.prior=FALSE,
                              prior.type=rep('none', length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
-                             lbound=c(rep(-Inf, length(startvalues[[i]]) - 2),0,.5),
-                             ubound=c(rep(Inf, length(startvalues[[i]]) - 2),.5,1),
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)

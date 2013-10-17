@@ -29,8 +29,8 @@ Theory)}
     TRUE, ...)
 
   \S4method{coef}{ExploratoryClass}(object, CI = .95,
-    rotate = '', Target = NULL, digits = 3, verbose = TRUE,
-    IRTpars = FALSE, ...)
+    rotate = '', Target = NULL, digits = 3, rawug = FALSE,
+    verbose = TRUE, IRTpars = FALSE, ...)
 
   \S4method{anova}{ExploratoryClass}(object, object2)
 
@@ -189,6 +189,11 @@ Theory)}
   model defines the values by using \code{pars = 'values'},
   and this object can in turn be modified and input back
   into the estimation with \code{pars = mymodifiedpars}}
+
+  \item{rawug}{logical; return the untranformed internal g
+  and u parameters? If \code{FALSE}, g and u's are
+  converted with the original format along with delta
+  standard errors}
 
   \item{calcNull}{logical; calculate the Null model for fit
   statics (e.g., TLI)? Only applicable if the data contains
@@ -398,6 +403,14 @@ Theory)}
   (i.e., item easiness), \eqn{q_j}, to obtain \eqn{d_j =
   q_j / u_j}. A similar implementation is also used for
   obtaining initial values for polytomous items.
+
+  Note that internally, the \eqn{g} and \eqn{u} parameters
+  are converted using a logit transformation
+  \eqn{log(x/(1-x))}, and can be reversed by using \eqn{1 /
+  (1 + exp(-x))} following convergence. This also applies
+  when computing confidence intervals for these parameters,
+  and is done so automatically if \code{coef(mod, rawug =
+  FALSE)}.
 }
 
 \section{Convergence for quadrature methods}{
@@ -530,10 +543,12 @@ plot(mod1, type = 'trace') #trace lines
 #estimated 3PL model for item 5 only
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
-#usually a good idea to include a beta prior for lower asymtote parameters
-(mod1.3PL.beta <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
-    parprior = list(c(19, 'beta', 5, 20))))
-coef(mod1.3PL.beta)
+#internally g and u pars are stored as logits, so usually a good idea to include normal prior
+#  to help stabilize the paramteres. For a value around .182 use a mean
+#  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
+(mod1.3PL.norm <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
+    parprior = list(c(19, 'norm', -1.5, 3))))
+coef(mod1.3PL.norm)
 
 #two factors (exploratory)
 mod2 <- mirt(data, 2)

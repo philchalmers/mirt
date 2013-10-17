@@ -130,3 +130,10 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
 	END_RCPP
 }
 
+double antilogit(const double *x){
+    double ret;
+    if(*x > 998.0) ret = 1.0;
+    else if(*x < -998.0) ret = 0.0;
+    else ret = 1.0 / (1.0 + exp(-1.0 * (*x)));
+    return(ret);
+}

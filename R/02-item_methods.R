@@ -327,7 +327,7 @@ setMethod(
 
 P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
 {
-    return(.Call("traceLinePts", par, Theta, asMatrix, ot))
+    return(.Call("traceLinePts", par, Theta, asMatrix, ot, FALSE))
 }
 
 setMethod(
@@ -342,7 +342,7 @@ setMethod(
 
 P.nestlogit <- function(par, Theta, correct, ncat)
 {
-    return(.Call("nestlogitTraceLinePts", par, Theta, correct, ncat))
+    return(.Call("nestlogitTraceLinePts", par, Theta, correct, ncat, FALSE))
 }
 
 setMethod(
@@ -435,7 +435,7 @@ setMethod(
 
 P.comp <- function(par, Theta, asMatrix = FALSE, ot = 0)
 {
-    return(.Call('partcompTraceLinePts', par, Theta, asMatrix, ot))
+    return(.Call('partcompTraceLinePts', par, Theta, asMatrix, ot, FALSE))
 }
 
 #----------------------------------------------------------------------------

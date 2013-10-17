@@ -157,9 +157,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 2L:Data$ngroups)
             pars[[g]][[nitems + 1L]]@est[1L:nfact] <- TRUE
     }
-    if('free_varcov' %in% invariance){ #Free factor vars and covs (vars 1 for ref)
+    dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact)
+    if(any(c('free_cov', 'free_varcov') %in% invariance)){ #Free factor covs (vars 1 for ref)
+        dummymat <- matrix(TRUE, pars[[1L]][[nitems + 1L]]@nfact)
+        diag(dummymat) <- FALSE        
+    }
+    if(any(c('free_var', 'free_varcov') %in% invariance)) #Free factor vars (vars 1 for ref)
+        diag(dummymat) <- TRUE
+    if(any(c('free_var', 'free_varcov', 'free_cov') %in% invariance)){
+        tmp <- dummymat[lower.tri(dummymat, TRUE)]
         for(g in 2L:Data$ngroups)
-            pars[[g]][[nitems + 1L]]@est[(nfact+1L):length(pars[[g]][[nitems + 1L]]@est)] <- TRUE
+            pars[[g]][[nitems + 1L]]@est <- tmp
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
@@ -551,7 +559,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        RMSEA=RMSEA.G2,
                        RMSEA.X2=RMSEA.X2,
                        df=df,
-                       itemloc=PrepList[[1]]$itemloc,
+                       itemloc=PrepList[[1L]]$itemloc,
                        AIC=AIC,
                        AICc=AICc,
                        BIC=BIC,

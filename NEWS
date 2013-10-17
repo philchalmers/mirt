@@ -1,5 +1,7 @@
 Changes in mirt 0.9.x
 
+- seperate 'free_var' and 'free_cov' invariance options abailable in multipleGroup
+
 - new CONSTRAIN arugment in mirt.model() syntax for specifying equality constraints specifically
   for parameters accross items 
 

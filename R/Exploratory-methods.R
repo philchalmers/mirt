@@ -101,7 +101,7 @@ setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
     definition = function(object, CI = .95, rotate = '', Target = NULL, digits = 3, 
-                          verbose = TRUE, ...){
+                          rawug = FALSE, verbose = TRUE, ...){
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
         z <- abs(qnorm((1 - CI)/2))
@@ -138,6 +138,12 @@ setMethod(
                 colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
                 rownames(allPars[[i]]) <- 'par'
             }
+        }
+        if(!rawug){
+            allPars <- lapply(allPars, function(x, digits){
+                x[ , colnames(x) %in% c('g', 'u')] <- round(antilogit(x[ , colnames(x) %in% c('g', 'u')]), digits)
+                x
+            },  digits=digits)
         }
         names(allPars) <- c(colnames(object@data), 'GroupPars')
         return(allPars)

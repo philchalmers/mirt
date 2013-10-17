@@ -15,8 +15,10 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
     
     const int len = par.length();
     NumericVector a(Theta.ncol());
-    const double u = par(len-1);
-    const double g = par(len-2);
+    const double utmp = par(len-1);
+    const double gtmp = par(len-2);
+    const double g = antilogit(&gtmp);
+    const double u = antilogit(&utmp);
 	const double d = par(len-3);
     for(int i = 0; i < Theta.ncol(); ++i)
         a(i) = par(i);    
@@ -238,7 +240,8 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
         a(j) = par(j);
         d(j) = par(j+nfact);
     }
-    double g = par(nfact*2);
+    const double gtmp = par(nfact*2);
+    const double g = antilogit(&gtmp);
     NumericVector P(Theta.nrow());
     P.fill(1.0);
     

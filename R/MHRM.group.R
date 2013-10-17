@@ -82,6 +82,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             }
         }
     }
+    names(longpars) <- names(estpars)
     stagecycle <- 1L
     converge <- 1L
     noninvcount <- 0L
@@ -304,14 +305,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             correction <- solve(ave.h, grad)
             correction[correction > 1] <- 1
             correction[correction < -1] <- -1
-            #prevent guessing/upper pars from moving more than .01 at all times
-            names(correction) <- names(estpars[estpars & !redun_constr])
-            tmp <- correction[names(correction) == 'g']
-            tmp[abs(tmp) > .01] <- sign(tmp[abs(tmp) > .01]) * .01
-            correction[names(correction) == 'g'] <- tmp
-            tmp <- correction[names(correction) == 'u']
-            tmp[abs(tmp) > .01] <- sign(tmp[abs(tmp) > .01]) * .01
-            correction[names(correction) == 'u'] <- tmp
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
             longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
             longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
@@ -344,14 +337,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         correction <- solve(Tau, grad)
         correction[gamma*correction > .25] <- .25/gamma
         correction[gamma*correction < -.25] <- -.25/gamma
-        #prevent guessing/upper pars from moving more than .01 at all times
-        names(correction) <- names(estpars[estpars & !redun_constr])
-        tmp <- correction[names(correction) == 'g']
-        tmp[abs(tmp) > .01] <- sign(tmp[abs(tmp) > .01]) * .01
-        correction[names(correction) == 'g'] <- tmp
-        tmp <- correction[names(correction) == 'u']
-        tmp[abs(tmp) > .01] <- sign(tmp[abs(tmp) > .01]) * .01
-        correction[names(correction) == 'u'] <- tmp
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
         longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
         longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]

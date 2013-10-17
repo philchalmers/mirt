@@ -91,7 +91,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'MixedClass',
-    definition = function(object, CI = .95, digits = 3, ...)
+    definition = function(object, CI = .95, digits = 3, rawug = FALSE, ...)
     {
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
@@ -116,6 +116,12 @@ setMethod(
                 colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
                 rownames(allPars[[i]]) <- 'par'
             }
+        }
+        if(!rawug){
+            allPars <- lapply(allPars, function(x, digits){
+                x[ , colnames(x) %in% c('g', 'u')] <- round(antilogit(x[ , colnames(x) %in% c('g', 'u')]), digits)
+                x
+            },  digits=digits)
         }
         listnames <- c(colnames(object@data), 'GroupPars')
         if(length(object@random) > 0L){            

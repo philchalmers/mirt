@@ -37,11 +37,10 @@
   consists of numerically ordered data, with missing data
   coded as \code{NA}}
 
-  \item{model}{an object or named list of objects returned
-  from \code{mirt.model()} declaring how the factor model
-  is to be estimated. The names of the list input must
-  correspond to the unique values in the \code{group}
-  variable. See \code{\link{mirt.model}} for more details}
+  \item{model}{a signel model object returned from
+  \code{mirt.model()} declaring how the factor model is to
+  be estimated. See \code{\link{mirt.model}} for more
+  details}
 
   \item{group}{a character vector indicating group
   membership}
@@ -50,19 +49,17 @@
   following possible options: \describe{
   \item{\code{'free_means'}}{for freely estimating all
   latent means (reference group constrained to 0)}
-  \item{\code{'free_varcov'}}{for freely estimating the
-  variance-covariance matrix across groups (reference group
-  has variances equal to 1, but freely estimated covariance
-  terms if specified in the model)}
-  \item{\code{'covariances'}}{to constrain all the
-  covariance parameters to be equal, note that this only
-  makes sense if the factor variances are the same (i.e.,
-  unity)} \item{\code{'slopes'}}{to constrain all the
-  slopes to be equal across all groups}
-  \item{\code{'intercepts'}}{to constrain all the
-  intercepts to be equal across all groups, note for
-  nominal models this also includes the category specific
-  slope parameters}}
+  \item{\code{'free_var'}}{for freely estimating all latent
+  variances (reference group constrained to 1's)}
+  \item{\code{'free_cov'}}{for freely estimating all latent
+  covariances (reference group constrained to an Identity
+  matrix)} \item{\code{'free_varcov'}}{calls both
+  \code{'free_var'} and \code{'free_cov'}}
+  \item{\code{'slopes'}}{to constrain all the slopes to be
+  equal across all groups} \item{\code{'intercepts'}}{to
+  constrain all the intercepts to be equal across all
+  groups, note for nominal models this also includes the
+  category specific slope parameters}}
 
   Additionally, specifying specific item name bundles (from
   \code{colnames(data)}) will constrain all freely
@@ -207,9 +204,9 @@ mod_configural <- multipleGroup(dat, models, group = group) #completely separate
 mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 #equal intercepts, free variance and means
 mod_scalar2 <- multipleGroup(dat, models, group = group,
-                             invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
+                             invariance=c('slopes', 'intercepts', 'free_var','free_means'))
 mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
-                             invariance=c('slopes', 'intercepts', 'free_varcov'))
+                             invariance=c('slopes', 'intercepts', 'free_var'))
 mod_fullconstrain <- multipleGroup(dat, models, group = group,
                              invariance=c('slopes', 'intercepts'))
 
@@ -284,14 +281,12 @@ model <- mirt.model('
    F2 = 6-10
    F3 = 11-15')
 
-models <- list(D1=model, D2=model) #note the names match the groups
-
 #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
-mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
-mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
-mod_scalar <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
+mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses
+mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes')) #equal slopes
+mod_scalar <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts', 'free_varcov'))
-mod_fullconstrain <- multipleGroup(dat, models, group = group, #equal means, slopes, intercepts
+mod_fullconstrain <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)

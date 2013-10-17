@@ -27,7 +27,7 @@ test_that('three factor', {
     #group models
     model1 <- mirt.model(MGmodelg1, quiet = TRUE)    
     model2 <- mirt.model(MGmodelg1, quiet = TRUE)    
-    models <- list(D1=model1, D2=model2)    
+    models <- model1
     
     suppressWarnings(mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
                                 verbose = FALSE, draws = 10))

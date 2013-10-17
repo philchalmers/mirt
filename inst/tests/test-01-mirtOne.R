@@ -41,7 +41,13 @@ test_that('dich', {
     svalues <- mirt(data, 1, pars = 'values', verbose=FALSE)
     svalues[22, 'value'] <- 2
     modm5 <- mirt(data, 1, pars = svalues, verbose=FALSE)    
-    expect_is(modm5, 'ConfirmatoryClass')
+    expect_is(modm5, 'ConfirmatoryClass')    
+    modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1), 
+                                                                 c(4,8,12,16,20,'norm', 1.7, 1)))
+    expect_equal(modm7@df, 11)
+    expect_is(modm7, 'ConfirmatoryClass')
+    cfs <- as.numeric(do.call(c, coef(modm7)))
+    expect_equal(cfs, c(8.897, 12.374, 0.135, 0.893, 14.864, 3.707, 0.337, 0.872, 11.16, 6.279, 0.369, 0.933, 3.734, 3.99, 0.127, 0.703, 1.668, 3.25, 0.155, 0.91, 0, 1), tollerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 23)

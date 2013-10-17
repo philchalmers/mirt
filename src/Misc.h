@@ -10,6 +10,10 @@ NumericMatrix polyOuter(NumericMatrix, NumericVector,
 
 NumericVector itemTrace(NumericVector, const double *, 
         NumericMatrix, const double *, const double *, NumericVector);
+        
+double logit(const double *);
+
+double antilogit(const double *);
 
 #endif 
 

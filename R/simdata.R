@@ -195,6 +195,10 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
     }
     K <- as.integer(K)
+    if(any(guess > 1 | guess < 0)) stop('guess input must be between 0 and 1')
+    if(any(upper > 1 | upper < 0)) stop('upper input must be between 0 and 1')
+    guess <- logit(guess)
+    upper <- logit(upper)
     oldguess <- guess
     oldupper <- upper
     guess[K > 2L] <- upper[K > 2L] <- NA

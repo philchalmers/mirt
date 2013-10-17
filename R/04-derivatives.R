@@ -6,7 +6,7 @@ setMethod(
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){                
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
-            Theta <- cbind(x@fixed.design, Theta)        
+            Theta <- cbind(x@fixed.design, Theta)
         ret <- .Call('dparsDich', x, Theta, estHess, EM, offterm)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
@@ -53,12 +53,12 @@ setMethod(
         hess <- ret$hess
         hess <- cbind(hess, rep(0, nrow(hess)))
         hess <- rbind(hess, rep(0, ncol(hess)))
-        dc <- numeric(1)        
+        dc <- numeric(1L)        
         Pfull <- P
         PQfull <- Pfull * (1-Pfull)
         P <- P.poly(c(a, d + shift), Theta, itemexp=TRUE, ot=offterm)
         rs <- dat
-        for(i in 1:ncol(rs))
+        for(i in 1L:ncol(rs))
             dc <- dc + rs[,i]/P[,i] * (PQfull[,i] - PQfull[,i+1L])
         dc <- sum(dc)
         grad <- c(grad, dc) 
@@ -99,6 +99,7 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){
         #local derivative from previous version with small mod
+        #u and g in logit form
         dpars.comp <- function(lambda,zeta,g,r,f,Thetas,D,estHess)
         {
             nfact <- length(lambda)
@@ -108,15 +109,17 @@ setMethod(
                 d <- pars[1L:nfact]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,1), thetas)
-                Pstar <- P.comp(c(a,d,0,1),thetas)
+                P <- P.comp(c(a,d,c,999), thetas)
+                Pstar <- P.comp(c(a,d,-999,999),thetas)
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
+                c <- antilogit(c)
+                g_1g <- c * (1 - c)
                 const1 <- (r/P - (f-r)/Q)
                 dd <- da <- rep(0,nfact)
-                dc <- sum(Qstar*const1)
+                dc <- sum(r/P * (g_1g * (1 - Pstar)) + (f-r)/Q * (g_1g * (Pstar - 1)))
                 for(i in 1L:nfact){
-                    Pk <- P.mirt(c(a[i],d[i],0,1),matrix(thetas[,i]))
+                    Pk <- P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))
                     Qk <- 1 - Pk
                     dd[i] <- sum((1-c)*Pstar*Qk*const1)
                     da[i] <- sum((1-c)*Pstar*Qk*thetas[,i]*const1)
@@ -128,10 +131,12 @@ setMethod(
                 d <- pars[1L:nfact]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,1), thetas)
-                Pstar <- P.comp(c(a,d,0,1),thetas)
+                P <- P.comp(c(a,d,c,999), thetas)
+                Pstar <- P.comp(c(a,d,-999,999),thetas)
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
+                g <- c <- antilogit(c)
+                g_1g <- c * (1 - c)
                 const1 <- (r/P - (f-r)/Q)
                 const2 <- (r/P^2 + (f-r)/Q^2)
                 hess <- matrix(0,nfact*2+1,nfact*2+1)
@@ -145,22 +150,29 @@ setMethod(
                             d2 <- strsplit(Names[c(i,j)],"_")[[2L]]
                             k <- as.numeric(d1[2L])
                             m <- as.numeric(d2[2L])
-                            Pk <- P.mirt(c(a[k],d[k],0,1),matrix(thetas[,k]))
+                            Pk <- P.mirt(c(a[k],d[k],-999,999),matrix(thetas[,k]))
                             Qk <- 1 - Pk
-                            Pm <- P.mirt(c(a[m],d[m],0,1),matrix(thetas[,m]))
+                            Pm <- P.mirt(c(a[m],d[m],-999,999),matrix(thetas[,m]))
                             Qm <- 1 - Pm
                             if(i == j && d1[1L] == 'd'){
-                                hess[i,i] <- sum((1-c)*Pstar*Qk*(const1*((1-c)*Qk - Pk) -
-                                                                     Pstar*Qk*(1-c)*const2))
+                                hess[i,i] <- sum(r/P * ((1-g)*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) - 
+                                                     r/P^2 * ((1-g) * (Pstar - Pstar*Pk))^2 +
+                                                     (f-r)/Q * ((1-g)*(-Pstar + 3*Pstar*Pk - 2*Pstar*Pk^2)) - 
+                                                     (f-r)/Q^2 * ((1-g)*(-Pstar + Pstar*Pk))^2)
                                 next
                             }
                             if(i == j && d1[1L] == 'a'){
-                                hess[i,i] <- sum((1-c)*thetas[,k]^2*Pstar*Qk*(const1*((1-c)*Qk - Pk)
-                                                                              - Pstar*Qk*(1-c)*const2))
+                                hess[i,i] <- sum(r/P * ((1-g)*thetas[,k]^2*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) - 
+                                        r/P^2 * ((1-g)*thetas[,k] * (Pstar - Pstar*Pk))^2 +
+                                        (f-r)/Q * ((1-g)*thetas[,k]^2*(-Pstar + 3*Pstar*Pk - 2*Pstar*Pk^2)) - 
+                                        (f-r)/Q^2 * ((1-g)*thetas[,k] * (-Pstar + Pstar*Pk))^2)
                                 next
                             }
                             if(i == j && d1[1L] == 'c'){
-                                hess[i,i] <- -sum(Qstar^2 * const2)
+                                hess[i,i] <- sum(r/P * (g_1g * (2.0*(1-g) - 1.0 - 2.0*(1-g)*Pstar + Pstar)) - 
+                                        r/P^2 * (g_1g * (1.0 - Pstar)) * (g_1g * (1.0 - Pstar)) +
+                                        (f-r)/Q * (g_1g * (-2.0*(1-g) + 1.0 + 2.0*(1-g)*Pstar - Pstar)) - 
+                                        (f-r)/Q^2 * (g_1g * (-1.0 + Pstar)) * (g_1g * (-1.0 + Pstar)))
                                 next
                             }
                             if(d1[1L] == 'a' && d2[1L] == 'a'){
@@ -173,21 +185,32 @@ setMethod(
                                 next
                             }
                             if(d1[1L] == 'a' && d2[1L] == 'c'){
-                                hess[i,j] <- hess[j,i] <- -sum(thetas[,k]*Pstar*Qk*(const1 + Qstar*(1-c)*const2))
+                                hess[i,j] <- hess[j,i] <- sum(r/P*(g_1g*thetas[,k]*(-Pstar + Pstar*Pk)) - 
+                                                                  r/P^2*((1-g)*thetas[,k]*(Pstar - Pstar*Pk)*(g_1g*(1 - Pstar))) + 
+                                                                 (f-r)/Q * (g_1g*thetas[,k]*(Pstar - Pstar*Pk))-
+                                                                  (f-r)/Q^2 * ((1-g)*thetas[,k]*(-Pstar + Pstar*Pk)*(g_1g*(-1 + Pstar))))
                                 next
                             }
                             if(d1[1L] == 'd' && d2[1L] == 'c'){
-                                hess[i,j] <- hess[j,i] <- -sum(Pstar*Qk*(const1 + Qstar*(1-c)*const2))
+                                hess[i,j] <- hess[j,i] <- sum(r/P*(g_1g*(-Pstar + Pstar*Pk)) - 
+                                                                  r/P^2*((1-g)*(Pstar - Pstar*Pk)*(g_1g*(1 - Pstar))) + 
+                                                                  (f-r)/Q * (g_1g*(Pstar - Pstar*Pk))-
+                                                                  (f-r)/Q^2 * ((1-g)*(-Pstar + Pstar*Pk)*(g_1g*(-1 + Pstar))))
                                 next
                             }
                             if(d1[1L] == 'd' && d2[1L] == 'a' && d1[2] == d2[2]){
-                                hess[i,j] <- hess[j,i] <- sum((1-c)*thetas[,k]*Pstar*Qk*(const1*((1-c)*Qk - Pk) -
-                                                                                             Pstar*Qk*(1-c)*const2))
+                                hess[i,j] <- hess[j,i] <- sum(
+                                        r/P * ((1-g)*thetas[,k]*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) - 
+                                        r/P^2 * ((1-g)*thetas[,k] * (Pstar - Pstar*Pk) * (1-g)*(Pstar - Pstar*Pk)) +
+                                        (f-r)/Q * ((1-g)*thetas[,k]*(-Pstar + 3*Pstar*Pk - 2*Pstar*Pk^2)) - 
+                                        (f-r)/Q^2 * ((1-g)*thetas[,k] * (-Pstar + Pstar*Pk) * (1-g)*(-Pstar + Pstar*Pk)))
                                 next
                             }
                             if(d1[1L] == 'd' && d2[1L] == 'a' && d1[2] != d2[2]){
-                                hess[i,j] <- hess[j,i] <- sum((1-c)*Qk*thetas[,m]*Pstar*Qm*(const1 -
-                                                                                                Pstar*(1-c)*const2))
+                                hess[i,j] <- hess[j,i] <- sum(r/P * ((1-g)*thetas[,m]*(Pstar - Pstar*Pk - Pstar*Pm + Pstar^2)) - 
+                                            r/P^2 * ((1-g)*thetas[,m] * (Pstar - Pstar*Pm) * (1-g)*(Pstar - Pstar*Pk))  + 
+                                            (f-r)/Q * ((1-g)*thetas[,m]*(-Pstar + Pstar*Pk + Pstar*Pm - Pstar^2)) - 
+                                            (f-r)/Q^2 * ((1-g)*thetas[,m] * (-Pstar + Pstar*Pm) * (1-g)*(-Pstar + Pstar*Pk)))
                                 next
                             }
                         }
@@ -228,7 +251,7 @@ setMethod(
         nfact <- x@nfact
         a <- x@par[1L:nfact]
         d <- x@par[(nfact+1L):(nfact*2L)]
-        g <- x@par[length(x@par)-1L]                
+        g <- x@par[length(x@par)-1L]
         tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),g=x@par[nfact*2L + 1L],r=r, f=f,
                           Thetas=Theta, estHess=estHess)
         ret <- list(grad=tmp$grad, hess=tmp$hess)
@@ -269,13 +292,13 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){
+        #u and g in logit
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))        
         if(EM){
             dat <- x@rs            
             if(estHess)
-                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est],
-                                                        obj=x, Theta=Theta, prior=Prior)
+                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)
         } else {
             dat <- x@dat            
             hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
@@ -291,8 +314,10 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         Pd <- P.mirt(c(a, d, g, u), Theta=Theta)
+        g <- antilogit(g)
+        u <- antilogit(u)
         Qd <- 1 - Pd
-        Pstar <- P.mirt(c(a, d, 0, 1), Theta=Theta)
+        Pstar <- P.mirt(c(a, d, -999, 999), Theta=Theta)
         Qstar <- 1 - Pstar
         num <- P.nominal(a=rep(1, nfact), ak=ak, d=dk, Theta=Theta, returnNum=TRUE)
         den <- rowSums(num)
@@ -300,13 +325,15 @@ setMethod(
         cdat <- dat[,correct]
         idat <- dat[,-correct]
         nd <- ncol(idat)
+        g_1g <- g * (1 - g)
+        u_1u <- u * (1 - u)
         for(i in 1L:nfact)
             grad[i] <- sum( (u-g) * Theta[,i] * Qstar * Pstar * (
                 cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+1L] <- sum( (u-g) * Qstar * Pstar * (
                 cdat / Pd - rowSums(idat/Qd)) )
-        grad[nfact+2L] <- sum( ((cdat * (1-Pstar)/Pd) + rowSums(idat * (Pstar - 1)/Qd)) )
-        grad[nfact+3L] <- sum( (cdat * Pstar / Pd - rowSums(idat * Pstar / Qd) ))
+        grad[nfact+2L] <- sum( ((cdat * g_1g * (1-Pstar)/Pd) + rowSums(idat * g_1g * (Pstar - 1)/Qd)) )
+        grad[nfact+3L] <- sum( (cdat * u_1u * Pstar / Pd - rowSums(idat * u_1u * Pstar / Qd) ))
         for(j in 1L:nd){
             grad[nfact+3L+j] <- sum((
                 (idat[,j] * Qd * rowSums(Theta) * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) -
@@ -636,6 +663,9 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc){
     return(LL)
 }
 
+difexp <- function(x) x * (1 - x)
+    
+dif2exp <- function(x) 2 * (x * (1 - x)^2)
 
 #----------------------------------------------------------------------------
 # Derivatives wrt Theta, returns list with number of categories, and
@@ -648,11 +678,11 @@ setMethod(
         N <- nrow(Theta)
         nfact <- ncol(Theta)
         parlength <- length(x@par)
-        u <- x@par[parlength]
-        g <- x@par[parlength - 1L]
+        u <- antilogit(x@par[parlength])
+        g <- antilogit(x@par[parlength - 1L])
         d <- x@par[parlength - 2L]
-        a <- x@par[1L:nfact]        
-        Pstar <- P.mirt(c(a, d, 0, 1), Theta)
+        a <- x@par[1L:nfact]
+        Pstar <- P.mirt(c(a, d, -999, 999), Theta)
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
         for(i in 1L:nfact){
@@ -725,8 +755,10 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)        
-        P <- P.comp(c(a, d, g, 1), Theta)
-        Pdich <- P.mirt(c(a, d, 0, 1), Theta)
+        P <- P.comp(c(a, d, g, 999), Theta)
+        g <- antilogit(g)
+        u <- antilogit(u)
+        Pdich <- P.mirt(c(a, d, -999, 999), Theta)
         Pstar <- P - g
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
@@ -835,8 +867,10 @@ setMethod(
         Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta)
         Num <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
-        Pstar <- P.mirt(c(a, d, 0, 1), Theta)
+        Pstar <- P.mirt(c(a, d, -999, 999), Theta)
         Q <- 1 - P.mirt(c(a, d, g, u), Theta)
+        g <- antilogit(g)
+        u <- antilogit(u)
         Num2 <- P <- matrix(0, nrow(Theta), x@ncat)
         P[,-x@correctcat] <- Pn
         Num2[,-x@correctcat] <- Num

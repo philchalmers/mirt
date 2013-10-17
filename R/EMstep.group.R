@@ -95,6 +95,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     if(length(constrain) > 0L)
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- FALSE
+    names(longpars) <- names(est)
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars    
     gTheta <- vector('list', ngroups)
@@ -264,7 +265,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             silent=TRUE)
     if(is(opt, 'try-error'))
         stop(opt)
-    longpars[est] <- opt$par
+    longpars[est] <- opt$par    
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]

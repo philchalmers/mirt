@@ -68,7 +68,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ConfirmatoryClass',
-    definition = function(object, CI = .95, digits = 3, IRTpars = FALSE, ...)
+    definition = function(object, CI = .95, digits = 3, IRTpars = FALSE, rawug = FALSE, ...)
     {
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
@@ -100,6 +100,12 @@ setMethod(
                     rownames(allPars[[i]]) <- 'par'
                 }
             }
+        }
+        if(!rawug){
+            allPars <- lapply(allPars, function(x, digits){
+                x[ , colnames(x) %in% c('g', 'u')] <- round(antilogit(x[ , colnames(x) %in% c('g', 'u')]), digits)
+                x
+            },  digits=digits)
         }
         names(allPars) <- c(colnames(object@data), 'GroupPars')
         return(allPars)
