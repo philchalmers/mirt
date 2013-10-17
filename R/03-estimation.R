@@ -157,17 +157,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 2L:Data$ngroups)
             pars[[g]][[nitems + 1L]]@est[1L:nfact] <- TRUE
     }
-    dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact)
+    dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
     if(any(c('free_cov', 'free_varcov') %in% invariance)){ #Free factor covs (vars 1 for ref)
-        dummymat <- matrix(TRUE, pars[[1L]][[nitems + 1L]]@nfact)
+        dummymat <- matrix(TRUE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
         diag(dummymat) <- FALSE        
     }
     if(any(c('free_var', 'free_varcov') %in% invariance)) #Free factor vars (vars 1 for ref)
         diag(dummymat) <- TRUE
     if(any(c('free_var', 'free_varcov', 'free_cov') %in% invariance)){
         tmp <- dummymat[lower.tri(dummymat, TRUE)]
-        for(g in 2L:Data$ngroups)
-            pars[[g]][[nitems + 1L]]@est <- tmp
+        for(g in 2L:Data$ngroups){
+            pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
+            names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
+        }
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,

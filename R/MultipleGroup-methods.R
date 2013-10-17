@@ -65,12 +65,12 @@ setMethod(
                                  object@cmods[[g]]@pars[[i]]@par + z*object@cmods[[g]]@pars[[i]]@SEpar),
                                3, byrow = TRUE), digits)
                     rownames(allPars[[g]][[i]]) <- c('par', SEnames)
-                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
+                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[1L]]@pars[[i]]@parnum)
                 }
             } else {
                 for(i in 1:(J+1)){
                     allPars[[g]][[i]] <- matrix(round(object@cmods[[g]]@pars[[i]]@par, digits), 1L)
-                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[g]]@pars[[i]]@parnum)
+                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[1L]]@pars[[i]]@parnum)
                     rownames(allPars[[g]][[i]]) <- 'par'
                     
                 }
