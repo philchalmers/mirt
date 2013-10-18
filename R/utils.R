@@ -684,9 +684,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
         set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-    opts$gain <- c(0.05,0.5,0.004)
+    opts$gain <- c(0.15,0.65)
     if(!is.null(technical$gain)){
-        if(length(technical$gain) == 3 && is.numeric(technical$gain))
+        if(length(technical$gain) == 2L && is.numeric(technical$gain))
             opts$gain <- technical$gain
     }
     opts$NULL.MODEL <- ifelse(is.null(technical$NULL.MODEL), FALSE, TRUE)

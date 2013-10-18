@@ -135,7 +135,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     {
         if(cycles == BURNIN + 1L) stagecycle <- 2L
         if(stagecycle == 3L)
-            gamma <- (gain[1L] / (cycles - SEMCYCLES - BURNIN - 1L))^(gain[2L]) - gain[3L]
+            gamma <- (gain[1L] / (cycles - SEMCYCLES - BURNIN - 1L))^(gain[2L])
         if(cycles == (BURNIN + SEMCYCLES + 1L)){
             stagecycle <- 3L
             longpars <- SEM.stores[[1L]]

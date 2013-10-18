@@ -311,11 +311,11 @@ Theory)}
   in cycles (stage 1) in MH-RM; default 150}
   \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM;
   default 50} \item{set.seed}{seed number used during
-  estimation. Default is 12345} \item{gain}{a vector of
-  three values specifying the numerator, exponent, and
-  subtracted values for the RM gain value. Default is
-  \code{c(0.05,0.5,0.004)}} \item{customK}{a numeric value
-  to be used to explicitly declare the number of response
+  estimation. Default is 12345} \item{gain}{a vector of two
+  values specifying the numerator and exponent values for
+  the RM gain function \eqn{(val1 / cycle)^val2}. Default
+  is \code{c(0.15,0.65)}} \item{customK}{a numeric value to
+  be used to explicitly declare the number of response
   categories for each item. This should only be used when
   constructing mirt model for reasons other than parameter
   estimation (such as to obtain factor scores), and

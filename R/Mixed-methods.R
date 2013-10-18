@@ -127,9 +127,11 @@ setMethod(
         if(length(object@random) > 0L){            
             for(i in 1L:length(object@random)){
                 allPars[[length(allPars) + 1L]] <- 
-                    round(matrix(c(object@random[[i]]@par, object@random[[i]]@SEpar),
-                                 2, byrow = TRUE), digits)
-                rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
+                    round(matrix(c(object@random[[i]]@par, 
+                                   object@random[[i]]@par - z*object@random[[i]]@SEpar,
+                                   object@random[[i]]@par + z*object@random[[i]]@SEpar),
+                                 3, byrow = TRUE), digits)
+                rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
                 colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
                 listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
             }            
