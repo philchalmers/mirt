@@ -172,9 +172,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         EMhistory[cycles+1L,] <- longpars
         if(verbose)
-            if(cycles > 1L)
-                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
-                            cycles, LL, max(abs(preMstep.longpars - longpars))))
+            cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
+                        cycles, LL, max(abs(preMstep.longpars - longpars))))
         if(cycles > 3L && all(abs(preMstep.longpars - longpars) < TOL))  break
     } #END EM
     if(cycles == NCYCLES){
