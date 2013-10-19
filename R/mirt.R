@@ -484,8 +484,6 @@
 #' anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
 #'
 #' pmod2 <- mirt(Science, 2)
-#' #too few iterations, re-estimate with the current models as starting values and more iterations
-#' pmod2 <- mirt(Science, 2, pars = mod2values(pmod2), technical = list(NCYCLES = 2000))
 #' summary(pmod2)
 #' plot(pmod2)
 #' itemplot(pmod2, 1)
