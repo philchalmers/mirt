@@ -34,6 +34,7 @@
 #' is chosen covariances terms can be sepcified with the \code{COV} input
 #' @param file a input specifying an external file that declares the input.
 #' @param COV a symmetric, logical matrix used to declare which covariance terms are estimated
+#' @param quiet logical argument passed to \code{scan()} to suppress console read message
 #' @param ... additional arguments for \code{scan()}
 #' @return Returns a model specification object to be used in
 #' \code{\link{mirt}}, \code{\link{multipleGroup}}, or \code{\link{mixedmirt}}.
@@ -70,7 +71,7 @@
 #'    
 #' 
 #'     }
-mirt.model <- function(input = NULL, file = "", COV = NULL, ...)
+mirt.model <- function(input = NULL, file = "", COV = NULL, quiet = TRUE, ...)
 {
     if(is.matrix(input)){
         fnames <- colnames(input)
@@ -106,7 +107,7 @@ mirt.model <- function(input = NULL, file = "", COV = NULL, ...)
         write.table(minput, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
     }
     mod <- scan(file = file, what = list(type = "", pars = ""),
-		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, ...)
+		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, quiet=quiet, ...)
 	mod <- cbind(mod$type, mod$pars)
 	colnames(mod) <- c("Type","Parameters")
 	mod <- list(x = mod)

@@ -4,15 +4,13 @@ Multidimensional item response theory in R.
 
 ## Description
 
-Analysis of dichotomous and polytomous response data using latent
-trait models under the Item Response Theory paradigm. Exploratory models
-can be estimated via quadrature or stochastic methods, a generalized
-confirmatory bi-factor analysis is included, and confirmatory models can be
-fit with a Metropolis-Hastings Robbins-Monro algorithm which may include
-polynomial or product constructed latent traits. Multiple group analysis
-and mixed effects designs may be performed for unidimensional or
-multidimensional item response models for detecting differential item
-functioning and modelling item and person covariates.
+Analysis of dichotomous and polytomous response data using unidimensional and 
+multidimensional latent trait models under the Item Response Theory paradigm. 
+Exploratory and confirmatory models can be estimated with quadrature (EM) or 
+stochastic (MHRM) methods. Confirmatory bi-factor and two-tier analyses are available 
+for modeling item testlets. Multiple group analysis and mixed effects designs also 
+are available for detecting differential item functioning and modelling item and 
+person covariates.
 
 ## Installing from source
 

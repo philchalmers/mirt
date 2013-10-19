@@ -2,7 +2,8 @@
 \alias{mirt.model}
 \title{Specify model loadings}
 \usage{
-  mirt.model(input = NULL, file = "", COV = NULL, ...)
+  mirt.model(input = NULL, file = "", COV = NULL,
+    quiet = TRUE, ...)
 }
 \arguments{
   \item{input}{input for writing out the model syntax. Can
@@ -17,6 +18,9 @@
 
   \item{COV}{a symmetric, logical matrix used to declare
   which covariance terms are estimated}
+
+  \item{quiet}{logical argument passed to \code{scan()} to
+  suppress console read message}
 
   \item{...}{additional arguments for \code{scan()}}
 }

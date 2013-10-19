@@ -174,10 +174,10 @@ Theory)}
   probabilities. To see how to define the parameters
   correctly use \code{pars = 'values'} initially to see how
   the parameters are labeled. Can define either normal
-  (normally for intercepts), log-normal (for mutivariate
-  slopes or interecpts), or beta (for guessing and upper
-  bounds) prior probabilities. To specify a prior the form
-  is c('priortype', ...), where normal priors are
+  (e.g., intercepts, lower/guessing and upper bounds),
+  log-normal (e.g., for univariate slopes), or beta prior
+  probabilities. To specify a prior the form is
+  c('priortype', ...), where normal priors are
   \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
   \code{parprior = list(c(parnumbers, 'lnorm', log_mean,
   log_sd))} for log-normal, and \code{parprior =
@@ -341,7 +341,13 @@ Theory)}
   \code{\link{createItem}} function. Models may also
   contain 'explanatory' person or item level predictors,
   though these can only be included by using the
-  \code{\link{mixedmirt}} function.
+  \code{\link{mixedmirt}} function. Tests that form a
+  two-tier or bi-factor structure should be estimated with
+  the \code{\link{bfactor}} function, which uses a
+  dimension reduction EM algorithm for modeling item
+  parcels. Multiple group analyses (useful for DIF testing)
+  are also available using the \code{\link{multipleGroup}}
+  function.
 }
 \details{
   \code{mirt} follows the item factor analysis strategy by
@@ -405,9 +411,9 @@ Theory)}
   obtaining initial values for polytomous items.
 
   Note that internally, the \eqn{g} and \eqn{u} parameters
-  are converted using a logit transformation
-  \eqn{log(x/(1-x))}, and can be reversed by using \eqn{1 /
-  (1 + exp(-x))} following convergence. This also applies
+  are transformed using a logit transformation
+  (\eqn{log(x/(1-x))}), and can be reversed by using \eqn{1
+  / (1 + exp(-x))} following convergence. This also applies
   when computing confidence intervals for these parameters,
   and is done so automatically if \code{coef(mod, rawug =
   FALSE)}.
@@ -421,10 +427,14 @@ Theory)}
   with means greater than .95, or items that are only .05
   greater than the guessing parameter, should be considered
   for removal from the analysis or treated with prior
-  distributions. The same type of reasoning is applicable
-  when including upper bound parameters as well. Also,
-  increasing the number of quadrature points per dimension
-  may help to stabilize the estimation process.
+  parameter distributions. The same type of reasoning is
+  applicable when including upper bound parameters as well.
+  Also, increasing the number of quadrature points per
+  dimension may help to stabilize the estimation process in
+  higher dimensions. Finally, solutions that are not well
+  defined also will have difficulty converging, and can
+  indicate that the model has been misspecified (e.g.,
+  extracting too many dimensions).
 }
 
 \section{Convergence for MH-RM method}{
@@ -578,11 +588,19 @@ plot(pmod1)
 summary(pmod1)
 fitIndices(pmod1) #M2 limited information statistic
 
-#Constrain all slopes to be equal with the constrain = list() input
+#Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
 #first obtain parameter index
 values <- mirt(Science,1, pars = 'values')
 values #note that slopes are numbered 1,5,9,13, or index with values$parnum[values$name == 'a1']
 (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
+coef(pmod1_equalslopes)
+
+# using mirt.model syntax, constrain all item slopes to be equal
+model <- mirt.model('
+   F = 1-4
+   CONSTRAIN = (1-4, a1)')
+(pmod1_equalslopes <- mirt(Science, model))
+coef(pmod1_equalslopes)
 
 coef(pmod1_equalslopes)
 anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
