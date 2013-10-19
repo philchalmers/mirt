@@ -6,7 +6,7 @@ test_that('dich', {
     expect_is(mod1, 'ConfirmatoryClass')          
     expect_equal(mod1@df, 21)
     cfs <- as.numeric(do.call(c, coef(mod1, digits = 4)))
-    expect_equal(cfs, c(0.9878, 1.856, 0, 1, 1.0809, 0.808, 0, 1, 1.7066, 1.8047, 0, 1, 0.7651, 0.486, 0, 1, 0.7357, 1.8545, 0, 1, 0, 1),
+    expect_equal(cfs, c(0.988, 1.8561, 0, 1, 1.081, 0.808, 0, 1, 1.706, 1.8043, 0, 1, 0.7651, 0.486, 0, 1, 0.7358, 1.8545, 0, 1, 0, 1),
                  tollerance = 1e-2)
     sv <- mod2values(mod1)
     sv$est <- FALSE
@@ -21,7 +21,7 @@ test_that('dich', {
     expect_is(modm1, 'ConfirmatoryClass')          
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'BL', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2, digits=4)))
-    expect_equal(cfs, c(0.9878, 0.6404, 1.3351, 1.856, 1.5983, 2.1136, 0, NA, NA, 1, NA, NA, 1.0809, 0.7501, 1.4117, 0.808, 0.6291, 0.9868, 0, NA, NA, 1, NA, NA, 1.7066, 1.078, 2.3352, 1.8047, 1.4037, 2.2058, 0, NA, NA, 1, NA, NA, 0.7651, 0.5022, 1.0281, 0.486, 0.3392, 0.6329, 0, NA, NA, 1, NA, NA, 0.7357, 0.4395, 1.032, 1.8545, 1.6302, 2.0787, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA), 
+    expect_equal(cfs, c(0.988, 0.6406, 1.3354, 1.8561, 1.5984, 2.1138, 0, NA, NA, 1, NA, NA, 1.081, 0.7501, 1.4119, 0.808, 0.6291, 0.9869, 0, NA, NA, 1, NA, NA, 1.706, 1.0779, 2.334, 1.8043, 1.4036, 2.205, 0, NA, NA, 1, NA, NA, 0.7651, 0.5022, 1.028, 0.486, 0.3392, 0.6328, 0, NA, NA, 1, NA, NA, 0.7358, 0.4395, 1.032, 1.8545, 1.6302, 2.0787, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA), 
                  tollerance = 1e-2)
     expect_is(modm2, 'ConfirmatoryClass')              
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE)
@@ -47,15 +47,13 @@ test_that('dich', {
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(8.897, 12.374, 0.135, 0.893, 14.864, 3.707, 0.337, 0.872, 11.16, 6.279, 0.369, 0.933, 3.734, 3.99, 0.127, 0.703, 1.668, 3.25, 0.155, 0.91, 0, 1), tollerance = 1e-2)
+    expect_equal(cfs, c(8.75, 12.18, 0.135, 0.893, 14.777, 3.67, 0.337, 0.872, 11.004, 6.189, 0.369, 0.933, 3.748, 4.004, 0.127, 0.703, 1.667, 3.253, 0.153, 0.91, 0, 1), tollerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 23)
     expect_is(modm6, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm6)))
-    expect_equal(cfs, c(0.969, 1.851, 0.000, 1.000, 1.074, 0.808, 0.000, 1.000, 1.717, 1.811,
-                        0.000, 1.000, 0.763, 0.486, 0.000, 1.000, 0.731, 1.852, 0.000, 1.000,
-                        0.000, 1.000), tollerance = 1e-2)
+    expect_equal(cfs, c(0.969, 1.851, 0, 1, 1.074, 0.808, 0, 1, 1.717, 1.811, 0, 1, 0.763, 0.486, 0, 1, 0.731, 1.852, 0, 1, 0, 1), tollerance = 1e-2)
     
     fm1 <- fscores(modm1, verbose = FALSE)
     expect_is(fm1, 'matrix')      
