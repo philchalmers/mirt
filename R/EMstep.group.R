@@ -165,8 +165,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
             dX2 <- preMstep.longpars - preMstep.longpars2
             dX <- longpars - preMstep.longpars
             d2X2 <- dX - dX2
-            accel <- 1 - sqrt((dX2 %*% dX2) / (d2X2 %*% d2X2))
-            if(accel < -4) accel <- -4
+            accel <- 1 - sqrt((dX %*% dX) / (d2X2 %*% d2X2))
+            if(accel < -5) accel <- -5
             longpars <- (1 - accel) * longpars + accel * preMstep.longpars
         }        
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
