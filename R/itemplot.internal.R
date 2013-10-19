@@ -136,7 +136,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     info <- 0
     if(is(x@pars[[item]], 'custom') && any(type %in% c('info', 'infocontour')))
         stop('Unable to compute information for custom items')
-    if(!class(x@pars[[item]]) %in% c('custom', 'partcomp')){
+    if(!class(x@pars[[item]]) %in% c('custom')){
         if(nfact == 2){
             for(i in 1:length(degrees))
                 info <- info + iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=c(degrees[i],

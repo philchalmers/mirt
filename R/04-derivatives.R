@@ -756,20 +756,19 @@ setMethod(
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)        
         P <- P.comp(c(a, d, g, 999), Theta)
+        Pstar <- P.comp(c(a, d, -999, 999), Theta) 
         g <- antilogit(g)
         u <- antilogit(u)
-        Pdich <- P.mirt(c(a, d, -999, 999), Theta)
-        Pstar <- P - g
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
         for(j in 1L:nfact){
-            grad[[2L]][ ,j] <- (u - g) * a[j] * Pstar * (1 - Pdich)
-            grad[[1L]][ ,j] <- 1 - grad[[2L]][ ,j]
-            hess[[2L]][ ,j] <- (u - g) * a[j]^2 * ( 2 * (1 - Pdich)^2 * Pstar -
-                                                             (1 - Pdich) * Pstar)
-            hess[[1L]][ ,j] <- 1 - hess[[2L]][ ,j]
+            Pn <- P.mirt(c(a[j], d[j], -999, 999), Theta)
+            grad[[2L]][ ,j] <- (u-g)*Pstar*a[j]*(1 - Pn)
+            grad[[1L]][ ,j] <- -1*grad[[2L]][ ,j]
+            hess[[2L]][ ,j] <- (u-g)*a[j]^2*Pstar*(1 - 3*Pn + 2*Pn^2)
+            hess[[1L]][ ,j] <- -1*hess[[2L]][ ,j]
         }
-        stop('DerivTheta for class \'', class(x), '\' not yet written.') #TODO
+        return(list(grad=grad, hess=hess))
     }
 )
 
