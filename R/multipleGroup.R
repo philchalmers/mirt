@@ -226,6 +226,9 @@
 #' anova(mod_fullconstrain, mod_scalar)
 #'
 #' #same as above, but with MHRM (more accurate with 3 factors, but slower)
+#' #define mirt cluster to compute log-likelihoods faster
+#' mirtCluster()
+#' 
 #' #completely separate analyses
 #' mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') 
 #' #equal slopes

@@ -69,7 +69,7 @@
 #'
 #' @keywords models
 #' @usage
-#' bfactor(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)), quiet = TRUE), 
+#' bfactor(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))), 
 #' SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
 #'
 #'
@@ -192,7 +192,7 @@
 #'
 #'     }
 #'
-bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)), quiet = TRUE), 
+bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))), 
                     SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
 {
     Call <- match.call()
