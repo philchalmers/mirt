@@ -120,41 +120,45 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	const int nfact = Theta.ncol();
 	const int ncat = d.length();
     const int USEOT = ot.length() > 1;
-    double z;
 
 	NumericMatrix Num(nquad, ncat);
 	NumericMatrix P(nquad, ncat);
-	NumericVector Den(nquad);
-	NumericVector innerprod(nquad);
+    NumericMatrix Zmat(nquad, ncat);
+	std::vector<double> Den(nquad, 0.0);
+	std::vector<double> innerprod(nquad, 0.0);
 
 	for(int i = 0; i < nquad; ++i)
 	    for(int j = 0; j < nfact; ++j)
-	        innerprod(i) += Theta(i,j) * a(j);
+	        innerprod[i] += Theta(i,j) * a(j);
     if(USEOT){
         for(int i = 0; i < nquad; ++i){
+            for(int j = 0; j < ncat; ++j)
+                Zmat(i, j) = ak(j) * innerprod[i] + d(j) + ot(i);
+            double maxz = max(Zmat(i, _));
             for(int j = 0; j < ncat; ++j){
-                z = ak(j) * innerprod(i) + d(j) + ot(i);
-                if(z > ABS_MAX_Z) z = ABS_MAX_Z;
-                else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
-    	        Num(i,j) = exp(z);
-                Den(i) += Num(i,j);
+                Zmat(i, j) = Zmat(i, j) - maxz;
+                if(Zmat(i,j) < -ABS_MAX_Z) Zmat(i,j) = -ABS_MAX_Z;
+                Num(i,j) = exp(Zmat(i,j));
+                Den[i] += Num(i,j);
             }        
         }
     } else {
     	for(int i = 0; i < nquad; ++i){
-    	    for(int j = 0; j < ncat; ++j){
-                z = ak(j) * innerprod(i) + d(j);
-                if(z > ABS_MAX_Z) z = ABS_MAX_Z;
-                else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
-    	        Num(i,j) = exp(z);
-                Den(i) += Num(i,j);
-            }        
+    	    for(int j = 0; j < ncat; ++j)
+                Zmat(i, j) = ak(j) * innerprod[i] + d(j);
+            double maxz = max(Zmat(i, _));
+            for(int j = 0; j < ncat; ++j){
+                Zmat(i, j) = Zmat(i, j) - maxz;
+                if(Zmat(i,j) < -ABS_MAX_Z) Zmat(i,j) = -ABS_MAX_Z;
+                Num(i,j) = exp(Zmat(i,j));
+                Den[i] += Num(i,j);
+            }
         }
     }
     if(returnNum(0)) return(Num);
 	for(int i = 0; i < nquad; ++i){
 	    for(int j = 0; j < ncat; ++j)
-	        P(i,j) = Num(i,j) / Den(i);
+	        P(i,j) = Num(i,j) / Den[i];
     }
 
     return(P);
