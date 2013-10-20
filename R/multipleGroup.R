@@ -162,6 +162,13 @@
 #' constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 #' equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain)
 #' anova(equalslopes, mod_configural)
+#' 
+#' #same as above, but using mirt.model syntax
+#' newmodel <- mirt.model('
+#'     F = 1-15
+#'     CONSTRAINB = (1-6, a1)')
+#' equalslopes <- multipleGroup(dat, newmodel, group = group)
+#' coef(equalslopes)
 #'
 #' #############
 #' #DIF test for each item (using all other items as anchors)
@@ -287,8 +294,15 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     if(length(model) > 1L) 
         stop('multipleGroup only supports single group inputs')
     invariance.check <- invariance %in% c('free_means', 'free_var', 'free_varcov')
-    if(all(invariance.check) && length(constrain) == 0)
-        stop('Model is not identified without further constrains (may require additional anchoring items).')
+    if(all(invariance.check) && length(constrain) == 0){
+        warn <- TRUE
+        if(is(model, 'mirt.model')){
+            if(any(model$x[,1L] == 'CONSTRAINB'))
+                warn <- FALSE
+        }
+        if(warn)
+            stop('Model is not identified without further constrains (may require additional anchoring items).')
+    }
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance,
                       itemtype=itemtype, guess=guess, upper=upper,
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
