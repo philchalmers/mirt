@@ -465,6 +465,81 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     return(constrain)
 }
 
+UpdatePrior <- function(PrepList, model, groupNames){
+    if(!is.numeric(model[[1L]])){
+        if(!length(model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L])) return(PrepList)
+        groupNames <- as.character(groupNames)
+        ngroups <- length(groupNames)
+        pars <- vector('list', length(PrepList))
+        for(g in 1L:length(PrepList))
+            pars[[g]] <- PrepList[[g]]$pars
+        names(pars) <- groupNames
+        input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L]
+        input <- gsub(' ', replacement='', x=input)        
+        elements <- strsplit(input, '\\),\\(')[[1L]]
+        elements <- gsub('\\(', replacement='', x=elements)        
+        elements <- gsub('\\)', replacement='', x=elements)        
+        esplit <- strsplit(elements, ',')
+        esplit <- lapply(esplit, function(x, groupNames)
+            if(!(x[length(x)] %in% c(groupNames, 'all'))) c(x, 'all') else x,
+                         groupNames=as.character(groupNames))
+        esplit <- lapply(esplit, function(x){                
+            newx <- c()
+            for(i in 1L:(length(x)-5L)){
+                if(grepl('-', x[i])){
+                    tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                    newx <- c(newx, tmp[1L]:tmp[2L])
+                } else newx <- c(newx, x[i])                  
+            }
+            x <- c(newx, x[(length(x)-4L):length(x)])
+            x
+        })    
+        for(i in 1L:length(esplit)){
+            if(!(esplit[[i]][length(esplit[[i]])] %in% c(groupNames, 'all')))
+                stop('Invalid group name passed to PRIOR = ... syntax.')
+            if(esplit[[i]][length(esplit[[i]])] == 'all'){
+                for(g in 1L:ngroups){
+                    sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-5L)])
+                    name <- esplit[[i]][length(esplit[[i]])-4L]
+                    type <- esplit[[i]][length(esplit[[i]])-3L]
+                    if(!(type %in% c('norm', 'beta', 'lnorm')))
+                        stop('Prior type specified in PRIOR = ... not available')
+                    val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
+                    val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
+                    for(j in 1L:length(sel)){
+                        which <- names(pars[[g]][[j]]@est) == name
+                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
+                        pars[[g]][[j]]@any.prior <- TRUE
+                        pars[[g]][[j]]@prior.type[which] <- type
+                        pars[[g]][[j]]@prior_1[which] <- val1
+                        pars[[g]][[j]]@prior_2[which] <- val2
+                    }
+                }
+            } else {
+                sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-5L)])
+                gname <- esplit[[i]][length(esplit[[i]])]
+                name <- esplit[[i]][length(esplit[[i]])-4L]
+                type <- esplit[[i]][length(esplit[[i]])-3L]
+                if(!(type %in% c('norm', 'beta', 'lnorm')))
+                    stop('Prior type specified in PRIOR = ... not available')
+                val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
+                val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
+                for(j in 1L:length(sel)){
+                    which <- names(pars[[gname]][[j]]@est) == name
+                    if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
+                    pars[[gname]][[j]]@any.prior <- TRUE
+                    pars[[gname]][[j]]@prior.type[which] <- type
+                    pars[[gname]][[j]]@prior_1[which] <- val1
+                    pars[[gname]][[j]]@prior_2[which] <- val2
+                }
+            }
+        }
+        for(g in 1L:length(PrepList))
+            PrepList[[g]]$pars <- pars[[g]]
+    }
+    return(PrepList)
+}
+
 ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()

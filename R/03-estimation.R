@@ -127,6 +127,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             rm(Rpoly, loads, u, cs, astart)
         }
     }
+    PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames) 
     if(!is.null(pars)){        
         if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random, MG = TRUE)            
