@@ -28,22 +28,21 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 	NumericVector P(nquad);
     NumericVector Q(nquad);
 	
-	NumericVector z(nquad);	
-    z.fill(d);
+	std::vector<double> z(nquad, d);
 
 	//compute item trace vector
 	for (int j = 0; j <	nquad; ++j){
 		for (int i = 0; i <	nfact; ++i)		
-			z(j) += a(i) * Theta(j,i); 
+			z[j] += a(i) * Theta(j,i); 
 	}	
     if(USEOT){
         for (int j = 0; j < nquad; ++j)
-            z(j) += ot(j);
+            z[j] += ot(j);
     }
 	for (int i = 0; i < nquad; ++i){ 
-        if(z(i) > ABS_MAX_Z) z(i) = ABS_MAX_Z;
-        else if(z(i) < -ABS_MAX_Z) z(i) = -ABS_MAX_Z;
-		P(i) = g + (u - g) /(1.0 + exp(-z(i)));
+        if(z[i] > ABS_MAX_Z) z[i] = ABS_MAX_Z;
+        else if(z[i] < -ABS_MAX_Z) z[i] = -ABS_MAX_Z;
+		P(i) = g + (u - g) /(1.0 + exp(-z[i]));
 	}
 	
     if(asMatrix(0)){
@@ -71,14 +70,14 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
         a(i) = par(i);
     int ncat = par.length() - Theta.ncol();
     if(israting(0)) ncat -= 1;
-    NumericVector d(ncat);        
+    std::vector<double> d(ncat,0.0);        
     if(israting(0)){
         const double t = par(par.length()-1);
         for(int i = Theta.ncol(); i < par.length() - 1; ++i)
-            d(i - Theta.ncol()) = par(i) + t;
+            d[i - Theta.ncol()] = par(i) + t;
     } else {        
         for(int i = Theta.ncol(); i < par.length(); ++i)
-            d(i - Theta.ncol()) = par(i);
+            d[i - Theta.ncol()] = par(i);
     }
     const double nullzero = 0.0, nullone = 1.0;
     const int nquad = Theta.nrow();
@@ -88,7 +87,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 	for(int i = 0; i < nquad; ++i)
         Pk(i,0) = 1.0;
     for(int i = 0; i < ncat; ++i)
-        Pk(_,i+1) = itemTrace(a, &d(i), Theta, &nullzero, &nullone, ot); 
+        Pk(_,i+1) = itemTrace(a, &d[i], Theta, &nullzero, &nullone, ot); 
     if(itemexp(0)){
         for(int i = (Pk.ncol()-2); i >= 0; --i)
             P(_,i) = Pk(_,i) - Pk(_,i+1);
@@ -123,7 +122,7 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 
 	NumericMatrix Num(nquad, ncat);
 	NumericMatrix P(nquad, ncat);
-    NumericMatrix Zmat(nquad, ncat);
+    NumericVector z(ncat);
 	std::vector<double> Den(nquad, 0.0);
 	std::vector<double> innerprod(nquad, 0.0);
 
@@ -133,24 +132,24 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
     if(USEOT){
         for(int i = 0; i < nquad; ++i){
             for(int j = 0; j < ncat; ++j)
-                Zmat(i, j) = ak(j) * innerprod[i] + d(j) + ot(i);
-            double maxz = max(Zmat(i, _));
+                z(j) = ak(j) * innerprod[i] + d(j) + ot(j);
+            double maxz = max(z);
             for(int j = 0; j < ncat; ++j){
-                Zmat(i, j) = Zmat(i, j) - maxz;
-                if(Zmat(i,j) < -ABS_MAX_Z) Zmat(i,j) = -ABS_MAX_Z;
-                Num(i,j) = exp(Zmat(i,j));
+                z(j) = z(j) - maxz;
+                if(z(j) < -ABS_MAX_Z) z(j) = -ABS_MAX_Z;
+                Num(i,j) = exp(z(j));
                 Den[i] += Num(i,j);
-            }        
+            }       
         }
     } else {
     	for(int i = 0; i < nquad; ++i){
     	    for(int j = 0; j < ncat; ++j)
-                Zmat(i, j) = ak(j) * innerprod[i] + d(j);
-            double maxz = max(Zmat(i, _));
+                z(j) = ak(j) * innerprod[i] + d(j);
+            double maxz = max(z);
             for(int j = 0; j < ncat; ++j){
-                Zmat(i, j) = Zmat(i, j) - maxz;
-                if(Zmat(i,j) < -ABS_MAX_Z) Zmat(i,j) = -ABS_MAX_Z;
-                Num(i,j) = exp(Zmat(i,j));
+                z(j) = z(j) - maxz;
+                if(z(j) < -ABS_MAX_Z) z(j) = -ABS_MAX_Z;
+                Num(i,j) = exp(z(j));
                 Den[i] += Num(i,j);
             }
         }
