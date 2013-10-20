@@ -3,7 +3,8 @@ Changes in mirt 0.9.x
 - seperate 'free_var' and 'free_cov' invariance options abailable in multipleGroup
 
 - new CONSTRAIN and CONSTRAINB arugments in mirt.model() syntax for specifying equality 
-  constraints explicitly for parameters accross items and groups
+  constraints explicitly for parameters accross items and groups. Also the PRIOR = ... 
+  specification was brought back and uses a similar format as the new CONSTRAIN options
 
 - plot(..., type = 'trace') now supports polytomous and dichotomous tracelines, and type = 'infotrace'
   has a better y-axis range

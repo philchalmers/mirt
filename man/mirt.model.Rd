@@ -62,7 +62,7 @@
   is ommited then the constraints are applied within all
   groups. For example, in a single group 10-item dichotmous
   tests, using the default 2PL model, the first and last 5
-  item slopes can be constrained to be equal by using
+  item slopes (a1) can be constrained to be equal by using
   \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some
   cobmination such as \code{CONSTRAIN = (1-3,4,5,a1),
   (6,7,8-10,a1)}} \item{CONSTRAINB}{A bracketed, comma
@@ -70,10 +70,20 @@
   groups. The input format is \code{CONSTRAINB = (items,
   ..., parameterName), (items, ..., parameterName)}. For
   example, in a two group 10-item dichotmous tests, using
-  the default 2PL model, the first 5 item slopes can be
-  constrained to be equal accross both groups by using
+  the default 2PL model, the first 5 item slopes (a1) can
+  be constrained to be equal accross both groups by using
   \code{CONSTRAINB = (1-5, a1)}, or some cobmination such
-  as \code{CONSTRAINB = (1-3,4,5,a1)}} }
+  as \code{CONSTRAINB = (1-3,4,5,a1)}} \item{PRIOR}{A
+  bracketed, comma seperate list specifying prior parameter
+  distributions. The input format is \code{PRIOR = (items,
+  ..., parameterName, priorType, val1, val2,
+  OptionalGroup), (items, ..., parameterName, priorType,
+  val1, val2, OptionalGroup)}. If \code{OptionalGroup} is
+  ommited then the priors are defined for all groups. For
+  example, in a single group 10-item dichotmous tests,
+  using the default 2PL model, defining a normal prior of
+  N(0,2) for the first 5 item intercepts (d) can be defined
+  by \code{PRIOR = (1-5, d, norm, 0, 2)}} }
 }
 \examples{
 \dontrun{
@@ -98,9 +108,11 @@ Q <- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1
 COV <- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
 model <- mirt.model(Q, COV=COV)
 
-## constrain various items slopes and all intercepts in single group model to be equal
+## constrain various items slopes and all intercepts in single group model to be equal,
+#   and use a lognormal prior for all the slopes
 s <- 'F = 1-10
-      CONSTRAIN = (1-3, 5, 6, a1), (1-10, d)'
+      CONSTRAIN = (1-3, 5, 6, a1), (1-10, d)
+      PRIOR = (1-10, a1, lnorm, .2, .2)'
 model <- mirt.model(s)
 
 
