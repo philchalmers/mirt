@@ -21,13 +21,18 @@
 #' factors with an asterisk (e.g., F1*F2).}
 #' \item{CONSTRAIN}{A bracketed, comma seperate list specifying equality constrains between items. 
 #' The input format is 
-#' \code{CONSTRAIN = (items, ..., parameterName, Group), (items, ..., parameterName, Group)}. 
-#' For single group analyses, the \code{Group} specification is not required. For example, in a single group 
-#' 10-item dichotmous tests, using the default 2PL model, the first and last 5 item slopes 
+#' \code{CONSTRAIN = (items, ..., parameterName, OptionalGroup), (items, ..., parameterName, OptionalGroup)}. 
+#' If \code{OptionalGroup} is ommited then the constraints are applied within all groups. 
+#' For example, in a single group 10-item dichotmous tests, using the default 2PL model, the first and last 5 item slopes 
 #' can be constrained to be equal by using \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some cobmination
 #' such as \code{CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)}} 
+#' \item{CONSTRAINB}{A bracketed, comma seperate list specifying equality constrains between groups. 
+#' The input format is 
+#' \code{CONSTRAINB = (items, ..., parameterName), (items, ..., parameterName)}. 
+#' For example, in a two group 10-item dichotmous tests, using the default 2PL model, the first 5 item slopes 
+#' can be constrained to be equal accross both groups by using \code{CONSTRAINB = (1-5, a1)}, or some cobmination
+#' such as \code{CONSTRAINB = (1-3,4,5,a1)}} 
 #' }
-#'
 #' @param input input for writing out the model syntax. Can either be a string declaration of 
 #' class character or the so-called Q-matrix or class \code{matrix} that specifies the model 
 #' either with integer or logical values. If the Q-matrix method 
@@ -69,6 +74,13 @@
 #'       CONSTRAIN = (1-3, 5, 6, a1), (1-10, d)'
 #' model <- mirt.model(s)
 #'    
+#'    
+#' ## constrain various items slopes and intercepts accross groups for use in multipleGroup(),
+#' #  and constrain first two slopes within 'group1' to be equal
+#' s <- 'F = 1-10
+#'       CONSTRAIN = (1-2, a1)
+#'       CONSTRAINB = (1-3, 5, 6, a1), (1-10, d)'
+#' model <- mirt.model(s)
 #' 
 #'     }
 mirt.model <- function(input = NULL, file = "", COV = NULL, quiet = TRUE, ...)

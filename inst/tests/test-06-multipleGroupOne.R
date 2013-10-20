@@ -32,9 +32,12 @@ test_that('one factor', {
                  tollerance = 1e-2)
     expect_is(mod_scalar2, 'MultipleGroupClass')
     expect_equal(mod_scalar2@df, 1649)
-    mod_scalar1 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'MHRM',
-                                 invariance=c('slopes', 'intercepts', 'free_varcov'), draws = 10)    
-    expect_is(mod_scalar1, 'MultipleGroupClass')    
+    newmodel <- mirt.model('F = 1-15
+                            CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
+    mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')   
+    expect_is(mod_scalar1, 'MultipleGroupClass')  
+    
+    
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))    

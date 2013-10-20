@@ -231,6 +231,13 @@ constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain)
 anova(equalslopes, mod_configural)
 
+#same as above, but using mirt.model syntax
+newmodel <- mirt.model('
+    F = 1-15
+    CONSTRAINB = (1-6, a1)')
+equalslopes <- multipleGroup(dat, newmodel, group = group)
+coef(equalslopes)
+
 #############
 #DIF test for each item (using all other items as anchors)
 itemnames <- colnames(dat)
