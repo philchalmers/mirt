@@ -229,7 +229,8 @@
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
 #' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
-#' use \code{constrain = list(c(1,5), c(2,6,10))}
+#' use \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the 
+#' \code{\link{mirt.model}} syntax
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
 #' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #' Can define either normal (e.g., intercepts, lower/guessing and upper bounds), 
@@ -237,7 +238,8 @@
 #' To specify a prior the form is c('priortype', ...), where normal priors
 #' are \code{parprior = list(c(parnumbers, 'norm', mean, sd))}, 
 #' \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
-#' \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta
+#' \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta. Priors can also be specified 
+#' using \code{\link{mirt.model}} syntax
 #' @param pars a data.frame with the structure of how the starting values, parameter numbers, estimation
 #' logical values, etc, are defined. The user may observe how the model defines the values by using \code{pars =
 #' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars =
@@ -437,7 +439,13 @@
 #' (mod1.3PL.norm <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
 #'     parprior = list(c(19, 'norm', -1.5, 3))))
 #' coef(mod1.3PL.norm)
-#'
+#' 
+#' #could also define priors using mirt.model() syntax
+#' model <- mirt.model('F = 1-5
+#'                      PRIOR = (5, g, norm, -1.5, 3)')
+#' mod1.3PL.norm2 <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
+#' coef(mod1.3PL.norm2)
+#' 
 #' #two factors (exploratory)
 #' mod2 <- mirt(data, 2) 
 #' coef(mod2)
