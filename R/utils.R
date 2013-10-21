@@ -509,10 +509,10 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     for(j in 1L:length(sel)){
                         which <- names(pars[[g]][[j]]@est) == name
                         if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
-                        pars[[g]][[j]]@any.prior <- TRUE
-                        pars[[g]][[j]]@prior.type[which] <- type
-                        pars[[g]][[j]]@prior_1[which] <- val1
-                        pars[[g]][[j]]@prior_2[which] <- val2
+                        pars[[g]][[sel[j]]]@any.prior <- TRUE
+                        pars[[g]][[sel[j]]]@prior.type[which] <- type
+                        pars[[g]][[sel[j]]]@prior_1[which] <- val1
+                        pars[[g]][[sel[j]]]@prior_2[which] <- val2
                     }
                 }
             } else {
@@ -527,10 +527,10 @@ UpdatePrior <- function(PrepList, model, groupNames){
                 for(j in 1L:length(sel)){
                     which <- names(pars[[gname]][[j]]@est) == name
                     if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
-                    pars[[gname]][[j]]@any.prior <- TRUE
-                    pars[[gname]][[j]]@prior.type[which] <- type
-                    pars[[gname]][[j]]@prior_1[which] <- val1
-                    pars[[gname]][[j]]@prior_2[which] <- val2
+                    pars[[gname]][[sel[j]]]@any.prior <- TRUE
+                    pars[[gname]][[sel[j]]]@prior.type[which] <- type
+                    pars[[gname]][[sel[j]]]@prior_1[which] <- val1
+                    pars[[gname]][[sel[j]]]@prior_2[which] <- val2
                 }
             }
         }
