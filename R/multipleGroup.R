@@ -84,7 +84,7 @@
 #' occations; default is .001 for MH-RM and .0001 for EM}
 #'   \item{set.seed}{seed number used during estimation. Default is 12345}
 #'   \item{gain}{a vector of two values specifying the numerator and exponent
-#'      values for the RM gain function \eqn{(val1 / cycle)^val2}. Default is \code{c(0.15,0.65)}
+#'      values for the RM gain function \eqn{(val1 / cycle)^val2}. Default is \code{c(0.15,0.65)}}
 #'  \item{return_newconstrain}{if \code{TRUE} returns a list consisting of the constraints to be used
 #'  just before estimation begins}
 #' }

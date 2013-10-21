@@ -284,6 +284,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                              groupNames=as.character(groupNames))
             esplit <- lapply(esplit, function(x){                
                             newx <- c()
+                            if(length(x) < 3L)
+                                stop('PRIOR = ... has not been supplied enough arguments')
                             for(i in 1L:(length(x)-2L)){
                                 if(grepl('-', x[i])){
                                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -292,7 +294,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                             }
                             x <- c(newx, x[length(x)-1L], x[length(x)])
                             x
-                        })            
+                        })
             for(i in 1L:length(esplit)){
                 if(!(esplit[[i]][length(esplit[[i]])] %in% c(groupNames, 'all')))
                     stop('Invalid group name passed to CONSTRAIN = ... syntax.')
@@ -339,6 +341,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                              groupNames=as.character(groupNames))
             esplit <- lapply(esplit, function(x){                
                 newx <- c()
+                if(length(x) < 3L)
+                    stop('PRIOR = ... has not been supplied enough arguments')
                 for(i in 1L:(length(x)-2L)){
                     if(grepl('-', x[i])){
                         tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -485,6 +489,8 @@ UpdatePrior <- function(PrepList, model, groupNames){
                          groupNames=as.character(groupNames))
         esplit <- lapply(esplit, function(x){                
             newx <- c()
+            if(length(x) < 5L)
+                stop('PRIOR = ... has not been supplied enough arguments')
             for(i in 1L:(length(x)-5L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
