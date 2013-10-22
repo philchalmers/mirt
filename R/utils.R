@@ -328,6 +328,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }
         if(any(model[[1L]]$x[,1L] == 'CONSTRAINB')){
+            if(length(unique(groupNames)) == 1L)
+                stop('CONSTRAINB model argument not valid for single group models')
             groupNames <- as.character(groupNames)
             names(pars) <- groupNames
             input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'CONSTRAINB', 2L]
