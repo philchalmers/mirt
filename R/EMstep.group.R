@@ -321,9 +321,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
             g[ind1:ind2] <- deriv$grad
             ind1 <- ind2 + 1L
         }
-        i <- i + 1L
-        ind2 <- ind1 + length(pars[[group]][[i]]@par) - 1L
-        g[ind1:ind2] <- 0
+        ind2 <- ind1 + length(pars[[group]][[i + 1L]]@par) - 1L
         ind1 <- ind2 + 1L
     }
     grad <- g %*% L
