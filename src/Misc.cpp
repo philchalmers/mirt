@@ -49,24 +49,23 @@ NumericVector itemTrace(NumericVector a, const double *d,
 {	
     const int nquad = Theta.nrow();
     const int USEOT = ot.length() > 1;
-	NumericVector P(nquad), z(nquad);
-    z.fill(*d);
+	std::vector<double> P(nquad), z(nquad, *d);
 
 	for (int i = 0; i <	nquad; ++i){
 		for (int j = 0; j <	Theta.ncol(); ++j)
-			z(i) += a(j) * Theta(i,j);  
+			z[i] += a(j) * Theta(i,j);  
 	}	
     if(USEOT){
         for (int i = 0; i < nquad; ++i)
-            z(i) += ot(i);
+            z[i] += ot(i);
     }
 	for (int i = 0; i < nquad; ++i){
-        if(z(i) > ABS_MAX_Z) z(i) = ABS_MAX_Z;
-        else if(z(i) < -ABS_MAX_Z) z(i) = -ABS_MAX_Z;
-		P(i) = *g + (*u - *g) / (1.0 + exp(-z(i)));
+        if(z[i] > ABS_MAX_Z) z[i] = ABS_MAX_Z;
+        else if(z[i] < -ABS_MAX_Z) z[i] = -ABS_MAX_Z;
+		P[i] = *g + (*u - *g) / (1.0 + exp(-z[i]));
     }
 	
-	return P;		
+	return wrap(P);		
 }
 
 RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
