@@ -28,11 +28,14 @@ setMethod(
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, degrees){            
 	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees,
-	                            hessian = TRUE))
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees))
 	        if(is(estimate, 'try-error')) 
 	            return(rep(NA, ncol(scores)*2))
-	        return(c(estimate$estimate, rep(NA, ncol(scores))))
+            TI <- 0
+            for(i in 1L:(length(itemloc)-1L)) 
+                TI <- TI + iteminfo(pars[[i]], Theta=estimate$estimate, degrees=degrees)
+	        SEest <- 1 / sqrt(TI)
+	        return(c(estimate$estimate, SEest))
 	    }
 	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W){
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
