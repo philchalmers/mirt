@@ -400,18 +400,18 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
     r1_P2 = r1/(P*P);
     r2_Q = r2/Q; 
     r2_Q2 = r2/(Q*Q);
+    NumericVector r1_Pr2_Q = r1_P - r2_Q;
     const double difexpg = difexp(&g);
     const double difexpu = difexp(&u);
-    grad(nfact) = sum((u-g)*Pstar*Qstar*(r1_P - r2_Q));    
-    grad(nfact + 1) = sum(difexpg*Qstar*(r1_P - r2_Q));
-    grad(nfact + 2) = sum(difexpu*Pstar*(r1_P - r2_Q));
+    grad(nfact) = sum((u-g)*Pstar*Qstar*r1_Pr2_Q);    
+    grad(nfact + 1) = sum(difexpg*Qstar*r1_Pr2_Q);
+    grad(nfact + 2) = sum(difexpu*Pstar*r1_Pr2_Q);
     for(int i = 0; i < nfact; ++i)
-        grad(i) = sum(Theta(_, i) * Pstar * Qstar * (u-g) * (r1_P - r2_Q));
+        grad(i) = sum(Theta(_, i)*Pstar*Qstar*(u-g)*r1_Pr2_Q);
         
     if(estHess(0)){
         int gloc = nfact+1; 
         int uloc = nfact+2;
-        const double ugD2 = (u-g);
         const double ugD = (u-g); 
         const double gm1 = (1.0 - g);
         const double um1 = (1.0 - u);
@@ -419,9 +419,9 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
         const double g_1g = g * gm1;
         NumericVector Pstar2 = Pstar*Pstar; 
         NumericVector Pstar3 = Pstar*Pstar*Pstar;
-        hess(nfact,nfact) = sum((r1_P * (ugD2 * (Pstar - 3*Pstar2 + 2*Pstar3)) -
+        hess(nfact,nfact) = sum((r1_P * (ugD * (Pstar - 3*Pstar2 + 2*Pstar3)) -
                                           r1_P2 * (ugD * (Pstar - Pstar2))*(ugD * (Pstar - Pstar2)) +
-                                          r2_Q * (ugD2 * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
+                                          r2_Q * (ugD * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
                                           r2_Q2 * (ugD * (-Pstar + Pstar2))*(ugD * (-Pstar + Pstar2))));
         hess(gloc,gloc) = sum(r1_P * (g_1g * (2.0*gm1 - 1.0 - 2.0*gm1*Pstar + Pstar)) - 
                               r1_P2 * (g_1g * (1.0 - Pstar)) * (g_1g * (1.0 - Pstar)) +
@@ -445,10 +445,10 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
         for(int i = 0; i < nfact; ++i){
             for(int j = 0; j < nfact; ++j){
                 if(i <= j){
-                    hess(i, j) = sum((r1_P * (ugD2 * Theta(_,i) * Theta(_,j) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
+                    hess(i, j) = sum((r1_P * (ugD * Theta(_,i) * Theta(_,j) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
                                            r1_P2 * (ugD * Theta(_,i) * (Pstar - Pstar2)) *
                                               (ugD * Theta(_,j) * (Pstar - Pstar2)) +
-                                           r2_Q * (ugD2 * Theta(_,i) * Theta(_,j) *
+                                           r2_Q * (ugD * Theta(_,i) * Theta(_,j) *
                                                (-Pstar + 3*Pstar2 - 2*Pstar3)) -
                                            r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2)) *
                                               (ugD * Theta(_,j) * (-Pstar + Pstar2))));                    
@@ -458,10 +458,10 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
         }
         for(int i = 0; i < nfact; ++i){
             hess(i, nfact) = 
-                sum((r1_P * (ugD2 * Theta(_,i) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
+                sum((r1_P * (ugD * Theta(_,i) * (Pstar - 3*Pstar2 + 2*Pstar3)) -
                          r1_P2 * (ugD * Theta(_,i) * (Pstar - Pstar2)) *
                             (ugD * (Pstar - Pstar2)) +
-                         r2_Q * (ugD2 * Theta(_,i) * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
+                         r2_Q * (ugD * Theta(_,i) * (-Pstar + 3*Pstar2 - 2*Pstar3)) -
                          r2_Q2 * (ugD * Theta(_,i) * (-Pstar + Pstar2)) *
                          (ugD * (-Pstar + Pstar2))));
             hess(nfact, i) = hess(i, nfact);
