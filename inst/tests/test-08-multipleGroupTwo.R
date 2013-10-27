@@ -33,7 +33,7 @@ test_that('three factor', {
                                 verbose = FALSE, draws = 10))
     expect_is(mod_metric, 'MultipleGroupClass') 
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.2779, 1.0459, 1.5099, 0, NA, NA, 0, NA, NA, 0.656, 0.5077, 0.8043, 0, NA, NA, 1, NA, NA, 1.2559, 0.8966),
+    expect_equal(cfs, c(1.3033, 0.8185, 1.788, 0, NA, NA, 0, NA, NA, 0.6597, 0.4677, 0.8516, 0, NA, NA, 1, NA, NA, 1.2852, 0.7614),
                  tollerance = 1e-2)
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
@@ -45,14 +45,14 @@ test_that('three factor', {
                                  invariance=c('slopes', 'intercepts', 'free_varcov', draws = 10)))
     expect_is(mod_scalar1, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_scalar1, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.1972, 1.1471, 1.2474, 0, NA, NA, 0, NA, NA, 0.382, 0.2719, 0.4921, 0, NA, NA, 1, NA, NA, 1.1809, 1.0541),
+    expect_equal(cfs, c(1.1907, 0.6966, 1.6848, 0, NA, NA, 0, NA, NA, 0.3851, 0.0887, 0.6815, 0, NA, NA, 1, NA, NA, 1.1926, 0.6811),
                  tollerance = 1e-2)
     
     fs1 <- fscores(mod_metric, verbose = FALSE)
     fs2 <- fscores(mod_scalar1, full.scores = TRUE)    
     expect_is(fs1, 'list')
     expect_is(fs2, 'data.frame')    
-    expect_true(mirt:::closeEnough(fs2[1:6, 'F1'] - c(0.8024094,  0.8024094,  0.2821522, -0.1413805, -0.2605665,  0.8024094), -1e-4, 1e-4))     
+    expect_true(mirt:::closeEnough(fs2[1:6, 'F1'] - c(0.8076989,  0.8076989,  0.2915864, -0.1365438, -0.2653481,  0.8076989), -1e-4, 1e-4))     
 })
 
 
