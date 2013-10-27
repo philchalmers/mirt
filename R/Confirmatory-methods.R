@@ -240,7 +240,7 @@ setMethod(
     definition = function(object, digits = 3, ...){
         tabdata <- object@tabdata
         N <- nrow(object@data)
-        expected <- round(N * object@Pl/sum(object@Pl),digits)
+        expected <- round(N * object@Pl,digits)
         return(cbind(tabdata,expected))
     }
 )

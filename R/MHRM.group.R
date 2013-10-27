@@ -98,7 +98,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     redun_constr <- rep(FALSE, length(estpars))
     if(length(constrain) > 0L){
         for(i in 1L:length(constrain)){
-            L[constrain[[i]], constrain[[i]]] <- 1L
+            L[constrain[[i]], constrain[[i]]] <- 1L/length(constrain[[i]])
             for(j in 2L:length(constrain[[i]]))
                 redun_constr[constrain[[i]][j]] <- TRUE
         }
