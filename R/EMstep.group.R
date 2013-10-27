@@ -56,7 +56,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     redun_constr <- rep(FALSE, length(estpars))
     if(length(constrain) > 0L){
         for(i in 1L:length(constrain)){
-            L[constrain[[i]], constrain[[i]]] <- 1L
+            L[constrain[[i]], constrain[[i]]] <- 1L/length(constrain[[i]])
             for(j in 2L:length(constrain[[i]]))
                 redun_constr[constrain[[i]][j]] <- TRUE
         }
@@ -262,6 +262,13 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                      PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
                      UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est]),
             silent=TRUE)
+#     #uncomment for testing with nlm
+#     opt <- try(optim(f=Mstep.LL, p,
+#                      DERIV=DERIV, rlist=rlist, NO.CUSTOM=NO.CUSTOM,
+#                      est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+#                      PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+#                      UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+#                silent=TRUE)
     if(is(opt, 'try-error'))
         stop(opt)
     longpars[est] <- opt$par    
@@ -291,6 +298,7 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, NO
     for(g in 1L:ngroups)
         LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]], 
                               itemloc=itemloc, NO.CUSTOM=NO.CUSTOM, any.prior=ANY.PRIOR[g])        
+#     return(-sum(LLs))
     return(sum(LLs))
 }
 
