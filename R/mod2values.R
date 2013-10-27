@@ -71,6 +71,7 @@ mod2values <- function(x){
         }
     }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
+    par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est, prior.type=prior.type, 
                       prior_1=prior_1, prior_2=prior_2)

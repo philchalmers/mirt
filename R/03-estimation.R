@@ -3,7 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, mixed.design = NULL, customItems = NULL, 
                        nominal.highlow = NULL, ...)
 {
-    if(missing(data)) stop('data argument is required')
+    if(missing(data) || is.null(nrow(data))) stop('data argument is required')
     if(missing(model)) stop('model argument (numeric or from mirt.model) is required')
     if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data)) 
         stop('group input provided is not valid')
