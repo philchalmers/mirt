@@ -12,7 +12,7 @@ dat <- expand.table(Bock1997)
 head(dat)
 mod <- mirt(dat, 1, 'nominal')
 
-#reproduce table 3
+#reproduce table 3 in Bock (1997)
 fs <- round(fscores(mod, verbose = FALSE)[,c('F1','SE_F1')],2)
 fttd <- round(fitted(mod),1)
 table <- data.frame(fttd, fs)

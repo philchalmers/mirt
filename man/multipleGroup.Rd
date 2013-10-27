@@ -247,7 +247,7 @@ refmodel <- multipleGroup(dat, models, group = group,
 #loop over items (in practice, run in parallel to increase speed)
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE,
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
                              invariance=c('free_means', 'free_varcov', itemnames[-i]))
 
 (anovas <- lapply(estmodels, anova, object2=refmodel))
@@ -260,7 +260,7 @@ p.adjust(p, method = 'BH')
 #constrain all intercepts
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE,
+    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
                              invariance=c('free_means', 'free_varcov', 'intercepts',
                              itemnames[-i]))
 

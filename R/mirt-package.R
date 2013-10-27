@@ -101,6 +101,8 @@ NULL
 #' \dontrun{
 #' dat <- expand.table(LSAT7)
 #' head(dat)
+#' (mod <- mirt(dat, 1))
+#' coef(mod)
 #' }
 NULL
 
@@ -123,6 +125,12 @@ NULL
 #' \dontrun{
 #' dat <- expand.table(LSAT6)
 #' head(dat)
+#' model <- mirt.model('F = 1-5
+#'                      CONSTRAIN = (1-5, a1)')
+#' (mod <- mirt(dat, model))
+#' coef(mod)
+#' 
+#' 
 #' }
 NULL
 
@@ -165,7 +173,7 @@ NULL
 #' head(dat)
 #' mod <- mirt(dat, 1, 'nominal')
 #' 
-#' #reproduce table 3
+#' #reproduce table 3 in Bock (1997)
 #' fs <- round(fscores(mod, verbose = FALSE)[,c('F1','SE_F1')],2)
 #' fttd <- round(fitted(mod),1)
 #' table <- data.frame(fttd, fs)

@@ -11,6 +11,8 @@
 \dontrun{
 dat <- expand.table(LSAT7)
 head(dat)
+(mod <- mirt(dat, 1))
+coef(mod)
 }
 }
 \author{
