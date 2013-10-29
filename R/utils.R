@@ -611,6 +611,12 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
         for(i in 1L:length(PrepList[[g]]$pars)){
             for(j in 1L:length(PrepList[[g]]$pars[[i]]@par)){
                 PrepList[[g]]$pars[[i]]@par[j] <- pars[ind,'value']
+                if(is(PrepList[[g]]$pars[[i]], 'graded')){
+                    tmp <- ExtractZetas(PrepList[[g]]$pars[[i]])
+                    if(!all(tmp == sort(tmp, decreasing=TRUE)) || length(unique(tmp)) != length(tmp)) 
+                        stop('Graded model intercepts for item ', i, ' in group ', g, 
+                             ' do not descend from highest to lowest. Please fix')
+                }
                 PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,'est'])
                 PrepList[[g]]$pars[[i]]@lbound[j] <- pars[ind,'lbound']
                 PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']
