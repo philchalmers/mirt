@@ -330,19 +330,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             if(noninvcount == 3L)
                 stop('\nEstimation halted during burn in stages, solution is unstable')
         }
-        if(qr(Tau)$rank != ncol(Tau)){
-            browser()
-            tmp <- Tau
-            while(1L){
-                tmp <- tmp + .001*diag(diag(tmp))
-                QR <- qr(tmp)
-                if(QR$rank == ncol(tmp)) break
-            }
-            Tau <- tmp
-            noninvcount <- noninvcount + 1L
-            if(noninvcount == 5L)
-                stop('\nEstimation halted during stage 3, solution is unstable')
-        }
         correction <- solve(Tau, grad)
         correction[gamma*correction > .25] <- .25/gamma
         correction[gamma*correction < -.25] <- -.25/gamma
