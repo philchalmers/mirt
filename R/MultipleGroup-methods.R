@@ -20,14 +20,11 @@ setMethod(
             cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
             cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
             if(!is.nan(x@p)){
-                cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4),
-                    "\nX2 (", x@df,") = ", round(x@X2,2), ", p = ", round(x@p.X2,4), sep='')
-                cat("\nRMSEA (G2) = ", round(x@RMSEA,3), "; RMSEA (X2) = ", round(x@RMSEA.X2,3), sep='')
-                cat("\nCFI (G2) = ", round(x@CFI,3), "; CFI (X2) = ", round(x@CFI.X2,3), sep='')
-                cat("\nTLI (G2) = ", round(x@TLI,3), "; TLI (X2) = ", round(x@TLI.X2,3), '\n\n', sep='')
+                cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), sep='')
+                cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3), 
+                    ", TLI = ", round(x@TLI,3), '\n\n', sep='')
                 for(g in 1:length(x@cmods))
-                    cat(as.character(x@groupNames[g]), " group: G2 = ", round(x@cmods[[g]]@G2,2),
-                        ", X2 = ", round(x@cmods[[g]]@X2,2), '\n', sep='')
+                    cat(as.character(x@groupNames[g]), " group: G2 = ", round(x@cmods[[g]]@G2,2), '\n', sep='')
             }
         }
     }
