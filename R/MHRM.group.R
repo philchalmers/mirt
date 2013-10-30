@@ -291,13 +291,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         }
         if(stagecycle < 3L){
             if(qr(ave.h)$rank != ncol(ave.h)){
-                tmp <- ave.h
-                while(1L){
-                    tmp <- tmp + .001*diag(diag(tmp))
-                    QR <- qr(tmp)
-                    if(QR$rank == ncol(tmp)) break
-                }
-                ave.h <- tmp
+                ev <- eigen(ave.h)
+                eval <- ev$values 
+                eval[eval < 0] <- 100*.Machine$double.eps
+                eval <- eval / sum(eval) * sum(ev$values)
+                ave.h <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
                 noninvcount <- noninvcount + 1L
                 if(noninvcount == 3L)
                     stop('\nEstimation halted during burn in stages, solution is unstable')
@@ -323,6 +321,17 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         #Step 3. Update R-M step
         Tau <- Tau + gamma*(ave.h - Tau)
         if(qr(Tau)$rank != ncol(Tau)){
+            ev <- eigen(Tau)
+            eval <- ev$values 
+            eval[eval < 0] <- 100*.Machine$double.eps
+            eval <- eval / sum(eval) * sum(ev$values)
+            Tau <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
+            noninvcount <- noninvcount + 1L
+            if(noninvcount == 3L)
+                stop('\nEstimation halted during burn in stages, solution is unstable')
+        }
+        if(qr(Tau)$rank != ncol(Tau)){
+            browser()
             tmp <- Tau
             while(1L){
                 tmp <- tmp + .001*diag(diag(tmp))
