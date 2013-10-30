@@ -147,20 +147,18 @@ coef(mod1)
 wide <- data.frame(id=1:nrow(data),data,covdata)
 long <- reshape2::melt(wide, id.vars = c('id', 'group', 'pseudoIQ'))
 library(lme4)
-lmod0 <- lmer(value ~ 0 + variable + (1|id), long, family = binomial)
-lmod1 <- lmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
+lmod0 <- glmer(value ~ 0 + variable + (1|id), long, family = binomial)
+lmod1 <- glmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
 anova(lmod0, lmod1)
 
 #model using 2PL items instead of Rasch
 mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL')
 anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 
-#continuous predictor and interaction model with group
+#continuous predictor with group
 mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ)
-mod3 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group * pseudoIQ)
 summary(mod2)
 anova(mod1b, mod2)
-anova(mod2, mod3)
 
 #view fixed design matrix with and without unique item level intercepts
 withint <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, return.design = TRUE)
