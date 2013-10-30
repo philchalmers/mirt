@@ -324,13 +324,9 @@ Theory)}
   estimation (such as to obtain factor scores), and
   requires that the input data all have 0 as the lowest
   category. The format is the same as the mod@K slot in all
-  converged models} \item{override.df}{logical; set the
-  total degrees of freedom to 1e10? Not recommended for
-  serious use, but can be used to estimate models that have
-  negative degrees of freedom}
-  \item{GenRandomPars}{logical; generate random starting
-  values prior to optimatization instead of using the fixed
-  internal starting values?} }}
+  converged models} \item{GenRandomPars}{logical; generate
+  random starting values prior to optimatization instead of
+  using the fixed internal starting values?} }}
 
   \item{...}{additional arguments to be passed}
 }

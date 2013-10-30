@@ -26,7 +26,7 @@ test_that('mixed dich', {
     mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, 
                                         itemtype = '2PL', verbose = FALSE, draws = 10))
     expect_is(mod1b, 'MixedClass')
-    expect_equal(mod1b@df, 293) 
+    expect_equal(mod1b@df, 1001) 
     cfs <- as.numeric(do.call(c, coef(mod1b, digits=4)))
     expect_equal(cfs, c(1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.1835, -0.219, 0.5859, -1.7122, -1.9059, -1.5185, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.4809, 0.0784, 0.8834, -2.1619, -2.3814, -1.9425, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.2635, -0.0149, 0.542, -1.7236, -1.918, -1.5293, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, -1.3626, -1.4658, -1.2595, -1.0484, -1.2751, -0.8218, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.1472, -0.3634, 0.6578, -0.3258, -0.5123, -0.1393, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.1272, -0.2891, 0.5434, -1.2574, -1.4412, -1.0737, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.2008, -0.2746, 0.6762, -1.6994, -1.892, -1.5068, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.4034, -0.1509, 0.9578, -2.1656, -2.3807, -1.9505, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.2395, 0.0038, 0.4752, -2.0484, -2.2496, -1.8472, 0, NA, NA, 1, NA, NA, 1.1395, -0.2813, 2.5603, 2.2828, 0.7932, 3.7724, 0.0079, -0.5987, 0.6145, 1.5855, 1.3083, 1.8626, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tollerance = 1e-2)
@@ -35,7 +35,7 @@ test_that('mixed dich', {
     rmod1 <- suppressMessages(mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group, 
                                         draws = 10, verbose = FALSE))
     expect_is(rmod1, 'MixedClass')
-    expect_equal(rmod1@df, 303) 
+    expect_equal(rmod1@df, 1011) 
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
     expect_equal(cfs, c(1, NA, NA, -0.5481, -0.6967, -0.3995, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.9631, -1.1034, -0.8227, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.555, -0.7035, -0.4064, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.0991, -0.0383, 0.2364, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.833, 0.7715, 0.8945, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.0962, -0.2405, 0.0481, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.5344, -0.6831, -0.3857, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.9782, -1.118, -0.8384, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.881, -1.0239, -0.7382, 0, NA, NA, 1, NA, NA, 1, NA, NA, 2.8197, 2.5741, 3.0654, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0.3823, 0.3408, 0.4237, 0.5595, 0.3291, 0.7898),
                  tollerance = 1e-2)
@@ -93,7 +93,7 @@ test_that('polytomous', {
     suppressWarnings(mod3 <- mixedmirt(Science, covdat, model=model, draws = 10,
                                        fixed = ~ 0 + group, itemtype = 'graded', verbose = FALSE))    
     expect_is(mod3, 'MixedClass')   
-    expect_equal(mod3@df, 72) 
+    expect_equal(mod3@df, 238) 
     cfs <- as.numeric(do.call(c, coef(mod3, digits=4)))
     expect_equal(cfs, c(-0.1998, -1.3379, 0.9384, 1.0029, 0.8477, 1.1581, 4.9119, 3.9579, 5.8658, 2.7, 2.2547, 3.1453, -1.3591, -1.4661, -1.2521, -0.1998, -1.3379, 0.9384, 1.2226, 0.8916, 1.5535, 3.0038, 2.5953, 3.4124, 0.9871, 0.7722, 1.202, -2.1713, -2.5307, -1.8119, -0.1998, -1.3379, 0.9384, 2.512, 1.3263, 3.6977, 5.5921, 3.5636, 7.6206, 2.4257, 1.2906, 3.5608, -1.9932, -2.4935, -1.4928, -0.1998, -1.3379, 0.9384, 1.0722, 0.82, 1.3245, 3.4151, 2.8688, 3.9615, 1.0718, 0.801, 1.3426, -1.5858, -1.7324, -1.4393, 0, NA, NA, 1, NA, NA),
                  tollerance = 1e-2)
@@ -102,7 +102,7 @@ test_that('polytomous', {
     rmod1 <- suppressMessages(mixedmirt(Science, covdat, model=model, draws=10, random = ~ 1|group,
                        itemtype = 'graded', verbose = FALSE))
     expect_is(rmod1, 'MixedClass')
-    expect_equal(rmod1@df, 72) 
+    expect_equal(rmod1@df, 238) 
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
     expect_equal(cfs, c(0.9922, 0.6441, 1.3404, 4.8202, 3.8699, 5.7705, 2.6102, 2.1813, 3.0391, -1.4416, -1.7574, -1.1258, 1.2373, 0.8466, 1.6281, 2.9358, 2.4093, 3.4623, 0.9069, 0.5963, 1.2176, -2.2689, -2.6851, -1.8526, 2.5693, 1.3378, 3.8009, 5.6333, 3.7526, 7.514, 2.3994, 1.5434, 3.2553, -2.1079, -2.9177, -1.298, 1.0455, 0.6989, 1.392, 3.3123, 2.7619, 3.8627, 0.9819, 0.6997, 1.264, -1.6596, -2.0044, -1.3149, 0, NA, NA, 1, NA, NA, 1e-04, -3e-04, 5e-04),
                  tollerance = 1e-2)

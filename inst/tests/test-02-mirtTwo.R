@@ -3,7 +3,7 @@ context('mirtTwo')
 test_that('poly', {
     modp1 <- mirt(Science, 1, verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')     
-    expect_equal(modp1@df, 73)
+    expect_equal(modp1@df, 239)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tollerance = 1e-2)
@@ -20,7 +20,7 @@ test_that('poly', {
                  tollerance = 1e-2)        
     suppressMessages(modp2 <- mirt(Science, 2, verbose=FALSE))
     expect_is(modp2, 'ExploratoryClass')
-    expect_equal(modp2@df, 70)
+    expect_equal(modp2@df, 236)
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
     expect_equal(abs(cfs), abs(c(1.3248, -0.0373, 5.2047, 2.8665, -1.605, -0.1116, -2.4002, 4.02, 1.2556, -3.1606, 0.9372, -1.1447, 4.5539, 1.9064, -1.6944, 1.7547, 0.0843, 3.9762, 1.1913, -2.0395, 0, 0, 1, -0.4825, 1)),
                  tollerance = 1e-2)    
@@ -98,8 +98,8 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(rsm, verbose = FALSE, digits=4)))
     expect_equal(cfs, c(1, 0, -2.036, -1.2215, -2.0469, -0.9381, 0, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 0.2187, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 0.3959, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 0.7919, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 0.9371, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 1.1571, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 1.3424, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 1.4021, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 1.757, 1, 0, -2.036, -1.2215, -2.0469, -0.9381, 2.0113, 0, 0.1103),
                  tollerance = 1e-2)        
-    expect_equal(rsm@df, 1945)
-    expect_equal(grsm@df, 1936)
+    expect_equal(rsm@df, 9765610)
+    expect_equal(grsm@df, 9765601)
     
     #item and test info
     Theta <- matrix(seq(-4,4,.01))
