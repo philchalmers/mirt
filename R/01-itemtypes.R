@@ -114,3 +114,5 @@ setGeneric("summary", function(object, ...) standardGeneric("summary"))
 setGeneric('DrawValues', function(x, Theta, ...) standardGeneric("DrawValues"))
 
 setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))
+
+setGeneric('GenRandomPars', function(x) standardGeneric("GenRandomPars"))
