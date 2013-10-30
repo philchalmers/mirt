@@ -9,7 +9,7 @@
   item information}
 
   \item{Theta}{a vector (unidimensional) or matrix
-  (multidimensional) of latent trait values}
+  (unidimensional/multidimensional) of latent trait values}
 }
 \description{
   Given an internal mirt object extracted from an estimated

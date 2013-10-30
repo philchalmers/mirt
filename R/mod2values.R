@@ -15,6 +15,7 @@
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1)
 #' values <- mod2values(mod)
+#' values
 #'
 #' #use the converted values as starting values in a new model
 #' mod2 <- mirt(dat, 1, pars = values)

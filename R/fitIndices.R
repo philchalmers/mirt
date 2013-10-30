@@ -23,7 +23,7 @@
 #' (mod1 <- mirt(dat, 1, itemtype = '2PL', constrain = list(c(1,5,9,13,17))))
 #' fitIndices(mod1)
 #'
-#' #Science data, much more sparse so M2 would be more informative
+#' #Science data with computing the null model M2 stat
 #' (mod2 <- mirt(Science, 1))
 #' fitIndices(mod2, calcNull = TRUE)
 #' }

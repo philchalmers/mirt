@@ -102,6 +102,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         pars <- sv$value[tmp]    
         LL.upper.crit <- LL.lower.crit <- pars
         parnums <- sv$parnum[tmp]
+        itemtypes <- sv$class[tmp]
         parnames <- sv$name[tmp]
         lbound <- sv$lbound[tmp]
         ubound <- sv$ubound[tmp]
@@ -109,6 +110,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         pars <- sv$value    
         pars <- LL.upper.crit <- LL.lower.crit <- pars[sv$est]    
         parnums <- sv$parnum[sv$est]
+        itemtypes <- sv$class[sv$est]
         parnames <- sv$name[sv$est]
         lbound <- sv$lbound[sv$est]
         ubound <- sv$ubound[sv$est]        
@@ -118,6 +120,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         tmp <- !(sv$name %in% paste0('a', 1:20)) & sv$est
         pars <- sv$value[tmp]
         parnames <- sv$name[tmp]
+        itemtypes <- sv$class[tmp]
         parnums <- sv$parnum[tmp]
         lbound <- sv$lbound[tmp]
         ubound <- sv$ubound[tmp]
@@ -134,6 +137,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
                            ubound=ubound, dat=dat, model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior))           
     }
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100)) 
-    ret <- data.frame(Item=sv$item[parnums], parnam=sv$name[parnums], value=pars, result, row.names=NULL)
+    ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums], value=pars, 
+                      result, row.names=NULL)
     ret
 }
