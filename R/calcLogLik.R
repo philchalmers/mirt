@@ -127,19 +127,14 @@ setMethod(
                 nconstr <- nconstr + length(object@constrain[[i]]) - 1L
         nfact <- object@nfact - length(prodlist)
         nmissingtabdata <- sum(is.na(rowSums(object@tabdata)))
-        df <- length(r) - nestpars + nconstr + nfact*(nfact - 1)/2 - 1 - nmissingtabdata
-		AIC <- (-2) * logLik + 2 * (length(r) - df - 1)
-		BIC <- (-2) * logLik + (length(r) - df - 1)*log(N)
 		if(G2){
 			if(any(is.na(data))){
-			    object@G2 <- object@X2 <- NaN
+			    object@G2 <- NaN
 			} else {
                 r <- r[!is.na(expected)]
                 expected <- expected[!is.na(expected)]
 				G2 <- 2 * sum(r*log(r/(sum(r)*expected)))
-                X2 <- sum((r - sum(r)*expected)^2 / (sum(r)*expected))
 				object@G2 <- G2
-                object@X2 <- X2
                 if(logLikpre == 0){
     				null.mod <- object@null.mod
     				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
@@ -150,9 +145,6 @@ setMethod(
         if(logLikpre < 0)
             object@logLik <- logLikpre
 		object@SElogLik <- SElogLik
-		object@AIC <- AIC
-		object@BIC <- BIC
-		object@df <- as.integer(df)
 		return(object)
 	}
 )

@@ -204,17 +204,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 pars[[1L]][[i]]@est[(nfact+5L):(nfact + K[i] + 1L)] <- FALSE
         }
     }
-    df <- rr <- 0L
+    rr <- 0L
     for(g in 1L:Data$ngroups){
         r <- PrepList[[g]]$tabdata
         r <- r[, ncol(r)]
         rr <- rr + r
-        df <- df + sum(r != 0) - 1L
     }
-    if(!is.null(opts$technical$override.df)){
-        df <- 1e10
-        opts$calcNull <- FALSE        
-    }
+    df <- prod(PrepList[[1L]]$K) - 1L
+    if(df > 1e10) df <- 1e10
     nestpars <- nconstr <- 0L
     for(g in 1L:Data$ngroups)
         for(i in 1L:(nitems+1L))
@@ -237,7 +234,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             PrepList[[g]]$exploratory <- FALSE
     }
-    G2group <- X2group <- numeric(Data$ngroups)
+    G2group <- numeric(Data$ngroups)
     #avoid some S4 overhead by caching functions....as if this works
     DERIV <- vector('list', Data$ngroups)
     for(g in 1L:Data$ngroups){
@@ -289,7 +286,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                              Theta=Theta, DERIV=DERIV)
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
-        logLik <- G2 <- X2 <- SElogLik <- 0
+        logLik <- G2 <- SElogLik <- 0
         for(g in 1L:Data$ngroups){
             Pl <- rlist[[g]]$expected
             rg <- PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)]
@@ -298,8 +295,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             Ng <- sum(rg)
             G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pl)))
             G2 <- G2 + G2group[g]
-            X2group[g] <- sum((rg - Ng*Pl)^2 / (Ng*Pl))
-            X2 <- X2 + X2group[g]
             logLik <- logLik + sum(rg*log(Pl))
         }
         Pl <- list(Pl)
@@ -413,7 +408,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           tabdata=PrepList[[g]]$tabdata2, data=Data$data[group == Data$groupNames[[g]], ],
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[g]]$prodlist,
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact,
-                          constrain=constrain, G2=G2group[g], X2=X2group[g], Pl = rlist[[g]]$expected,                          
+                          constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,                          
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames, 
                           random=ESTIMATE$random)
     }
@@ -422,7 +417,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method =='MHRM' || opts$method == 'MIXED'){
         if(opts$verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()
-        logLik <- G2 <- X2 <- SElogLik <- 0
+        logLik <- G2 <- SElogLik <- 0
         Pl <- list()
         for(g in 1L:Data$ngroups){
             cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return')
@@ -430,7 +425,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
             G2 <- G2 + cmods[[g]]@G2
             Pl[[g]] <- cmods[[g]]@Pl
-            X2 <- X2 + cmods[[g]]@X2
         }
     }
 
@@ -445,41 +439,34 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             logr[i] <- logr[i] + log(j)
     if(sum(logr) != 0)
         logLik <- logLik + logN/sum(logr)
-    tmp <- (length(r) - df - 1L)
+    tmp <- dfsubtr
     AIC <- (-2) * logLik + 2 * tmp
-    AICc <- AIC + 2 * tmp * (tmp + 1) / (length(r) - tmp - 1L)
+    AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
     BIC <- (-2) * logLik + tmp*log(N)
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     p.G2 <- 1 - pchisq(G2,df)
-    p.X2 <- 1 - pchisq(X2,df)
     RMSEA.G2 <- ifelse((G2 - df) > 0,
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)
-    RMSEA.X2 <- ifelse((X2 - df) > 0,
-                       sqrt(X2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))
-    TLI.G2 <- TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN
+    TLI.G2 <- CFI.G2 <- NaN
+    if(length(r) * 5L < prod(PrepList[[1L]]$K)){
+        G2 <- NaN; p.G2 <- NaN
+    }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
                                      large=opts$PrepList, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')
             null.mod <- unclass(new('ConfirmatoryClass'))
-        } else {
+        } else if(!is.nan(G2)) {
             TLI.G2 <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
-            TLI.X2 <- (null.mod@X2 / null.mod@df - X2/df) / (null.mod@X2 / null.mod@df - 1)
             CFI.G2 <- 1 - (G2 - df) / (null.mod@G2 - null.mod@df)
-            CFI.X2 <- 1 - (X2 - df) / (null.mod@X2 - null.mod@df)
             CFI.G2 <- ifelse(CFI.G2 > 1, 1, CFI.G2)
             CFI.G2 <- ifelse(CFI.G2 < 0, 0, CFI.G2)
-            CFI.X2 <- ifelse(CFI.X2 > 1, 1, CFI.X2)
-            CFI.X2 <- ifelse(CFI.X2 < 0, 0, CFI.X2)
         }
     }
     if(nmissingtabdata > 0L)
-        p.G2 <- p.X2 <- RMSEA.G2 <- RMSEA.X2 <- G2 <- X2 <- TLI.G2 <-
-            TLI.X2 <- CFI.G2 <- CFI.X2 <- NaN
-    if(!is.nan(G2) && !opts$NULL.MODEL)
-        if(X2/G2 > 10) TLI.X2 <- CFI.X2 <- X2 <- p.X2 <- RMSEA.X2 <- NaN
+        p.G2 <- RMSEA.G2 <- G2 <- TLI.G2 <- CFI.G2 <-  NaN
     if(is.null(parprior)) parprior <- list()
     if(is.null(opts$quadpts)) opts$quadpts <- NaN
     if(Data$ngroups == 1L){
@@ -508,6 +495,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepList[[1L]]$factorNames,
                        constrain=constrain,
                        parprior=parprior,
+                       nest=dfsubtr,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
                        random=ESTIMATE$random,
@@ -526,15 +514,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        pars=cmods[[1L]]@pars,
                        model=list(oldmodel),
                        G2=G2,
-                       X2=X2,
                        p=p.G2,
-                       p.X2=p.X2,
                        TLI=TLI.G2,
-                       TLI.X2=TLI.X2,
                        CFI=CFI.G2,
-                       CFI.X2=CFI.X2,
                        RMSEA=RMSEA.G2,
-                       RMSEA.X2=RMSEA.X2,
                        df=df,
                        itemloc=PrepList[[1L]]$itemloc,
                        method=opts$method,
@@ -560,6 +543,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepList[[1L]]$factorNames,
                        constrain=constrain,
                        parprior=parprior,
+                       nest=dfsubtr,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
                        information=ESTIMATE$info)
@@ -568,15 +552,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        pars=cmods[[1L]]@pars,
                        model=list(oldmodel),
                        G2=G2,
-                       X2=X2,
                        p=p.G2,
-                       p.X2=p.X2,
                        TLI=TLI.G2,
-                       TLI.X2=TLI.X2,
                        CFI=CFI.G2,
-                       CFI.X2=CFI.X2,
                        RMSEA=RMSEA.G2,
-                       RMSEA.X2=RMSEA.X2,
                        df=df,
                        itemloc=PrepList[[1L]]$itemloc,
                        AIC=AIC,
@@ -600,6 +579,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepList[[1L]]$factorNames,
                        constrain=constrain,
                        parprior=parprior,
+                       nest=dfsubtr,
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
                        information=ESTIMATE$info)
@@ -608,9 +588,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tabdatalong <- PrepList[[1L]]$tabdata
         tabdata <- PrepList[[1L]]$tabdata2
         tabdata[,ncol(tabdata)] <- tabdatalong[,ncol(tabdatalong)] <- r
-        if(is.nan(X2))
-            for(g in 1L:length(cmods))
-                cmods[[g]]@X2 <- NaN
         mod <- new('MultipleGroupClass', iter=ESTIMATE$cycles,
                    cmods=cmods,
                    model=list(oldmodel),
@@ -636,17 +613,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    SABIC=SABIC,
                    nfact=nfact,
                    G2=G2,
-                   X2=X2,
                    p=p.G2,
-                   p.X2=p.X2,
                    TLI=TLI.G2,
-                   TLI.X2=TLI.X2,
                    CFI=CFI.G2,
-                   CFI.X2=CFI.X2,
                    RMSEA=RMSEA.G2,
-                   RMSEA.X2=RMSEA.X2,
                    Theta=Theta,
                    Pl=Pl,
+                   nest=dfsubtr,
                    itemtype=PrepList[[1L]]$itemtype,
                    information=ESTIMATE$info)
     }

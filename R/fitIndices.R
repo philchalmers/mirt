@@ -48,7 +48,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         newret$Total.M2 <- sum(newret$M2)
         Tsum <- 0
         for(g in 1L:ngroups) Tsum <- Tsum + ret[[g]]$nrowT
-        newret$df.M2 <- obj@df - (nrow(obj@tabdata) - Tsum) + 1L
+        newret$df.M2 <- Tsum - obj@nest
         newret$p.M2 <- 1 - pchisq(newret$Total.M2, newret$df.M2)
         newret$RMSEA.M2 <- ifelse((newret$Total.M2 - newret$df.M2) > 0,
                            sqrt(newret$Total.M2 - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0)
@@ -155,7 +155,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)
     ret$M2 <- M2
     if(is.null(attr(obj, 'MG'))){
-        ret$df.M2 <- obj@df - (nrow(tabdata) -  nrow(T)) + 1
+        ret$df.M2 <- nrow(T) - obj@nest
         ret$p.M2 <- 1 - pchisq(M2, ret$df.M2)
         ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
                         sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (sum(r)-1)), 0)
