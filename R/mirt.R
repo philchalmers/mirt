@@ -321,6 +321,8 @@
 #'       mod@@K slot in all converged models}
 #' \item{override.df}{logical; set the total degrees of freedom to 1e10? Not recommended for serious use, 
 #'      but can be used to estimate models that have negative degrees of freedom}
+#' \item{GenRandomPars}{logical; generate random starting values prior to optimatization instead of 
+#'      using the fixed internal starting values?}
 #' }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

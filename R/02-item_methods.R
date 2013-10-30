@@ -304,6 +304,130 @@ setMethod(
 )
 
 #----------------------------------------------------------------------------
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'custom'),
+    definition = function(x){
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'dich'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 rnorm(1L),
+                 rnorm(1L, -2, .5),
+                 rnorm(1L, 2, .5))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'nestlogit'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 rnorm(1L),
+                 rnorm(1L, -2, .5),
+                 rnorm(1L, 2, .5), 0, 
+                 abs(rnorm(x@ncat-2L, (x@ncat-2L) / 2, sd = 1)), x@ncat,
+                 rnorm(x@ncat-2L))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'graded'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'rating'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE),
+                 rnorm(1L))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'gpcm'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), 0,
+                 sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'rsm'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5), 0, 
+                 sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE),
+                 rnorm(1L))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'nominal'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), 0, 
+                 abs(rnorm(x@ncat-1L, (x@ncat-1L) / 2, sd = 1)), 0,
+                 rnorm(x@ncat-1L))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'partcomp'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 rlnorm(x@nfact, meanlog=.2, sdlog=.5),
+                 rnorm(1L, -2, .5),
+                 rnorm(1L, 2, .5))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'GroupPars'),
+    definition = function(x){
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'RandomPars'),
+    definition = function(x){
+        x
+    }
+)
+
+#----------------------------------------------------------------------------
 #Probability Traces
 setMethod(
     f = "ProbTrace",

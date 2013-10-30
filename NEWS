@@ -1,5 +1,9 @@
 Changes in mirt 0.9.x
 
+- GenRandomPars logical argument now supported in the technical = list() input. This will generate
+  random starting values for freely estimated parameters, and can be helpful to determine if obtained
+  solutions are local minimums
+
 - seperate 'free_var' and 'free_cov' invariance options abailable in multipleGroup
 
 - new CONSTRAIN and CONSTRAINB arugments in mirt.model() syntax for specifying equality 

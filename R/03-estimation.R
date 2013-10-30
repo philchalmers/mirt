@@ -136,7 +136,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             rm(Rpoly, loads, u, cs, astart)
         }
     }
-    PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames) 
+    PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames)
+    if(!is.null(opts$technical$GenRandomPars)){
+        if(opts$technical$GenRandomPars){
+            for(g in 1L:Data$ngroups)
+                for(i in 1L:length(PrepList[[g]]$pars))
+                    PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
+        }
+    }
     if(!is.null(pars)){        
         if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random, MG = TRUE)            
