@@ -111,11 +111,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                  estimated parameters. Please fix!')
     }
     #make sure constrained pars are equal
-    tmp <- rowSums(L)
-    tmp[tmp == 0] <- 1
-    tmp <- matrix(1/tmp, length(longpars), length(longpars), byrow = TRUE)
-    tmp2 <- abs(diag(L) - 1)
-    longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
+    tmp <- L
+    tmp2 <- diag(tmp)
+    tmp2[tmp2 == 0L] <- 1L
+    diag(tmp) <- tmp2
+    longpars <- as.numeric(tmp %*% longpars)
     LBOUND <- UBOUND <- c()
     for(g in 1L:ngroups){
         for(i in 1L:(J+1L)){
