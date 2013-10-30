@@ -70,11 +70,11 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     }
     Prior <- prior <- Priorbetween <- gstructgrouppars <- rlist <- r <- list()
     #make sure constrained pars are equal
-    tmp <- rowSums(L)
-    tmp[tmp == 0] <- 1L
-    tmp <- matrix(1/tmp, length(longpars), length(longpars), byrow = TRUE)
-    tmp2 <- abs(diag(L) - 1L)
-    longpars <- diag((tmp * L) * longpars) + tmp2 * longpars
+    tmp <- L
+    tmp2 <- diag(tmp)
+    tmp2[tmp2 == 0L] <- 1L
+    diag(tmp) <- tmp2
+    longpars <- as.numeric(tmp %*% longpars)
     LL <- 0
     for(g in 1L:ngroups)
         r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
