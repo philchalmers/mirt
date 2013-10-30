@@ -19,11 +19,11 @@ test_that('one factor', {
     cfs <- cfs[cfs != 0 & cfs != 1]    
     expect_equal(cfs, c(1.0693, 0.5541, 1.278, -0.6918, 0.8833, -0.1375, 1.1112, 0.8295, 1.2481, 0.3265, 0.476, 0.4796, 1.1617, 1.0847, 0.8586, -0.3852, 0.89, -1.048, 0.8085, -1.0908, 0.9013, 1.1642, 1.5832, -0.135, 1.4098, 0.6542, 1.0401, 0.4073, 0.8804, -0.0812),
                  tollerance = 1e-2)
-    expect_equal(mod_configural@df, 1621)
+    expect_equal(mod_configural@df, 32707)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE, 
                                 method = 'EM')
     expect_is(mod_metric, 'MultipleGroupClass')
-    expect_equal(mod_metric@df, 1636)
+    expect_equal(mod_metric@df, 32722)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
     cfs <- as.numeric(do.call(c, coef(mod_scalar2, digits=4)[[1L]]))
@@ -31,7 +31,7 @@ test_that('one factor', {
     expect_equal(cfs, c(1.1424, 0.5623, 1.3257, -0.6508, 0.9936, -0.2008, 1.0489, 0.8867, 1.1449, 0.3383, 0.4314, 0.4965, 1.2256, 1.158, 0.916, -0.4197, 0.8163, -1.0164, 0.8011, -1.0888, 0.9486, 1.2348, 1.5887, -0.1893, 1.1991, 0.5387, 1.1291, 0.4329, 0.8934, -0.117),
                  tollerance = 1e-2)
     expect_is(mod_scalar2, 'MultipleGroupClass')
-    expect_equal(mod_scalar2@df, 1649)
+    expect_equal(mod_scalar2@df, 32735)
     newmodel <- mirt.model('F = 1-15
                             CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')   
@@ -42,7 +42,7 @@ test_that('one factor', {
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_varcov'))    
     expect_is(mod_missing, 'MultipleGroupClass')
-    expect_equal(mod_missing@df, 1651)
+    expect_equal(mod_missing@df, 32736)
     
     fs1 <- fscores(mod_metric, verbose = FALSE)
     expect_true(mirt:::closeEnough(fs1[[1]][1:6, 'F1'] - c(-2.084760, -1.683841, -1.412181,
@@ -59,7 +59,7 @@ test_that('one factor', {
     fit1 <- fitIndices(mod_metric)
     expect_is(fit1, 'data.frame')
     expect_true(mirt:::closeEnough(fit1[1:2] - c(1126.54, 2162.74), -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(fit1$df.M2 - 350, -1e-4, 1e-4))    
+    expect_true(mirt:::closeEnough(fit1$df.M2 - 195, -1e-4, 1e-4))    
     fit2 <- itemfit(mod_metric)
     expect_is(fit2, 'list')
 
