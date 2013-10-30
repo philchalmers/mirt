@@ -115,14 +115,14 @@
 #' but now
 #' \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
 #' }
-#' \item{gpcm/nominal}{For the gpcm the \eqn{d_k} values are treated as fixed and orderd values
+#' \item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and orderd values
 #' from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
-#' in the nominal model \eqn{ak_0 = 1}, \eqn{ak_k = (k - 1)}.
-#' \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}
-#' {\sum_i^k exp(ak_k * (a_1 * \theta_1 + a_2 * \theta_2) + d_k)}}
+#' in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(k-1)} = (k - 1)}.
+#' \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}
+#' {\sum_1^k exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
 #' 
 #' For partial credit model (when \code{itemtype = 'Rasch'}; unidimenional only) the above model 
-#' is further constrained so that \eqn{ak_k = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
+#' is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
 #' variance of \eqn{\theta_1} is freely estimated. 
 #' 
 #' In the nominal model this parametrizations helps to identify the empirical ordering of the 
