@@ -50,7 +50,8 @@
   given response vector or matrix}
 
   \item{returnER}{logical; return empirical reliability
-  estimate as a numeric value?}
+  (also known as marginal reliability) estimates as a
+  numeric values?}
 
   \item{verbose}{logical; print verbose output messages?}
 

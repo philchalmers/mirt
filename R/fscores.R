@@ -30,7 +30,8 @@
 #' multidimensional models when \code{method = 'WLE'}
 #' @param response.pattern an optional argument used to calculate the factor scores and standard errors
 #' for a given response vector or matrix
-#' @param returnER logical; return empirical reliability estimate as a numeric value?
+#' @param returnER logical; return empirical reliability (also known as marginal reliability) 
+#' estimates as a numeric values?
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when \code{full.scores = TRUE})
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
