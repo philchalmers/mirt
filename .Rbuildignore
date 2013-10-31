@@ -7,3 +7,4 @@ mirt.Rproj
 ^.*\.Rproj$
 ^Makefile$
 .travis.yml
+NEWS.md

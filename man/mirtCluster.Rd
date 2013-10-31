@@ -15,10 +15,10 @@
 }
 \description{
   This function defines a object that is placed in the
-  users workspace (i.e., the\code{.GlobalEnv}). Relavent
+  users workspace (i.e., the\code{.GlobalEnv}). Relevant
   internal functions such as \code{calcLogLik},
   \code{fscores}, etc, will utilize this object
-  automatically to capitilze on parallel processing
+  automatically to capitalize on parallel processing
   architecture. The object defined is a call from
   \code{parallel::makeCluster()} and defines an object
   called \code{MIRTCLUSTER}.
