@@ -318,7 +318,7 @@
 #'       for each item. This should only be used when constructing mirt model for reasons other 
 #'       than parameter estimation (such as to obtain factor scores), and requires that the input data
 #'       all have 0 as the lowest category. The format is the same as the 
-#'       mod@@K slot in all converged models}
+#'       \code{mod@@K} slot in all converged models}
 #' \item{GenRandomPars}{logical; generate random starting values prior to optimatization instead of 
 #'      using the fixed internal starting values?}
 #' }

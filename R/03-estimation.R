@@ -449,7 +449,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     sqrt(G2 - df) / sqrt(df * (N-1)), 0)
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI.G2 <- CFI.G2 <- NaN
-    if(length(r) * 5L < prod(PrepList[[1L]]$K)){
+    if(length(r) * 3L < prod(PrepList[[1L]]$K)){
         G2 <- NaN; p.G2 <- NaN
     }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
