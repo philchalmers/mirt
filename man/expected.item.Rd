@@ -12,7 +12,7 @@
   (multidimensional) of latent trait values}
 
   \item{min}{a constant value added to the expected values
-  indicating the lowest theoretical category. Defaul is 0}
+  indicating the lowest theoretical category. Default is 0}
 }
 \description{
   Given an internal mirt object extracted from an estimated

@@ -17,7 +17,7 @@
 \description{
   Given an internal mirt object estimate the bootstrapped
   standard errors. It may be beneficial to run the
-  computations using multicore architecture (e.g., the
+  computations using multi-core architecture (e.g., the
   \code{parallel} package).
 }
 \examples{
@@ -29,7 +29,7 @@ booted <- boot.mirt(mod)
 plot(booted)
 booted
 
-#run in parallel using snow backend using all available cores
+#run in parallel using snow back-end using all available cores
 mod <- mirt(Science, 1)
 booted <- boot.mirt(mod, parallel = 'snow', ncpus = parallel::detectCores())
 booted

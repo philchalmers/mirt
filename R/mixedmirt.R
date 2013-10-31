@@ -2,7 +2,7 @@
 #'
 #' \code{mixedmirt} fits MIRT models using FIML estimation to dichotomous and polytomous
 #' IRT models conditional on fixed and random effect of person and item level covariates. 
-#' This can also be understood as 'expalanatory IRT' if only fixed effects are modeled, or 
+#' This can also be understood as 'explanatory IRT' if only fixed effects are modeled, or 
 #' multilevel/mixed IRT if random and fixed effects are included. The method uses the MH-RM
 #' algorithm exclusively. Additionally, computation of the log-likelihood can be sped up by
 #' using parallel estimation via \code{\link{mirtCluster}}.
@@ -20,8 +20,8 @@
 #'  the argument \code{return.design = TRUE}.
 #'  
 #'  Polytomous IRT models follow a similar format except the item intercepts are automatically estimated
-#'  internally, rendering the \code{items} argument in the fixed formula redundent and therefore 
-#'  must be ommited from the specification. If there are a mixture of dichotomous and polytomous 
+#'  internally, rendering the \code{items} argument in the fixed formula redundant and therefore 
+#'  must be omitted from the specification. If there are a mixture of dichotomous and polytomous 
 #'  items the intercepts for the dichotomous models are also estimated for consistency.
 #'  
 #'  To simulate maximum a posteriori estimates for the random effects use the \code{\link{randef}}
@@ -41,11 +41,11 @@
 #' If any polytomous items are being model the \code{items} are argument is not valid since all
 #' intercept parameters are freely estimated and identified with the parameterizations found in 
 #' \code{\link{mirt}}, and the first column in the fixed design matrix (commonly the intercept or a reference
-#' group) is ommited
+#' group) is omitted
 #' @param random a right sided formula or list of formulas containing crossed random effects 
 #' of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are 
 #' random numeric predictors within each group. If no intercept value is specified then by default the 
-#' correlations between the \code{v}'s and \code{G} are estimated, but can be supressed by including 
+#' correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by including 
 #' the \code{~ -1 + ...} constant 
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect does not support the following 
 #' item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}

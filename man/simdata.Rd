@@ -31,7 +31,7 @@
   'correct' category is always the lowest category (i.e.,
   == 1). It may be helpful to use \code{\link{mod2values}}
   on data-sets that have already been estimated to
-  undestand the itemtypes more intimately}
+  understand the itemtypes more intimately}
 
   \item{nominal}{a matrix of specific item category slopes
   for nominal models. Should be the dimensions as the

@@ -7,7 +7,7 @@
 #' @param x an extracted internal mirt object containing item information
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param min a constant value added to the expected values indicating the lowest theoretical 
-#' category. Defaul is 0
+#' category. Default is 0
 #' @keywords expected value
 #' @export expected.item
 #' @seealso

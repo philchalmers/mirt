@@ -22,7 +22,7 @@
 #' equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
 #' correct item traceline). For nested logit models the 'correct' category is always the lowest category
 #' (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that have already been 
-#' estimated to undestand the itemtypes more intimately
+#' estimated to understand the itemtypes more intimately
 #' @param nominal a matrix of specific item category slopes for nominal models.
 #' Should be the dimensions as the intercept specification with one less column, with \code{NA}
 #' in locations where not applicable. Note that during estimation the first slope will be constrained
