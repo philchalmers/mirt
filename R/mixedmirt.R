@@ -77,6 +77,7 @@
 #' d <- matrix(rnorm(10), 10)
 #' Theta <- matrix(sort(rnorm(N)))
 #' pseudoIQ <- Theta * 5 + 100  + rnorm(N, 0 , 5)
+#' pseudoIQ <- (pseudoIQ - mean(pseudoIQ))/10  #rescale variable for numerical stability
 #' group <- factor(rep(c('G1','G2','G3'), each = N/3))
 #' data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
 #' covdata <- data.frame(group, pseudoIQ)
@@ -229,6 +230,12 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(length(dropcases) > 0L){
         data <- data[-dropcases, ]
         covdata <- covdata[-dropcases, ]
+    }
+    pick <- sapply(covdata, is.numeric)
+    if(any(pick)){
+        if(any(covdata[,pick] > 10 || covdata[,pick] < -10))
+            warning('continuous variables in covdata should be rescaled to fall between -10 and 10 for 
+                    better numerical stability')
     }
     longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID', 
                         varying=list(1L:ncol(data) + 1L), direction='long')

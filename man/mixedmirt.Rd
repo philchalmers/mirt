@@ -125,6 +125,7 @@ a <- matrix(rlnorm(10,.3,1),10,1)
 d <- matrix(rnorm(10), 10)
 Theta <- matrix(sort(rnorm(N)))
 pseudoIQ <- Theta * 5 + 100  + rnorm(N, 0 , 5)
+pseudoIQ <- (pseudoIQ - mean(pseudoIQ))/10  #rescale variable for numerical stability
 group <- factor(rep(c('G1','G2','G3'), each = N/3))
 data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
 covdata <- data.frame(group, pseudoIQ)
