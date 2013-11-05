@@ -57,8 +57,8 @@ setMethod(
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern), 
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@data)
-            newmod <- mirt(response.pattern, nfact, pars=sv, calcNull=FALSE, 
-                           technical=list(customK=object@K, override.df=TRUE))
+            newmod <- mirt(response.pattern, nfact, itemtype = object@itemtype, pars=sv, calcNull=FALSE, 
+                           technical=list(customK=object@K))
             ret <- fscores(newmod, rotate=rotate, full.scores=full.scores, scores.only=scores.only,
                            method=method, quadpts=quadpts, verbose=FALSE, degrees=degrees, 
                            response.pattern=NULL)

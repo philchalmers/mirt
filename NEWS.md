@@ -1,3 +1,9 @@
+# Changes in mirt 1.x
+
+## BUG FIXES
+
+- pass proper item type when using custom pattern calles in fscores()
+
 # Changes in mirt 1.0
 
 ## NEW FEATURES 
