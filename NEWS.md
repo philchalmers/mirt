@@ -4,6 +4,8 @@
 
 - pass proper item type when using custom pattern calles in fscores()
 
+- return proper object in personfit when gpcm models used
+
 # Changes in mirt 1.0
 
 ## NEW FEATURES 

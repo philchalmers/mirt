@@ -129,6 +129,9 @@ personfit <- function(x, method = 'EAP', ...){
                                               infit=infit, z.infit=z.infit, Zh=Zh)
             else ret <- data.frame(x@tabdata, outfit=outfit, z.outfit=z.outfit,
                                    infit=infit, z.infit=z.infit, Zh=Zh)
+        } else {
+            if(full.scores) ret <- data.frame(x@data, Zh=Zh)
+            else ret <- data.frame(x@tabdata, Zh=Zh)
         }
     } else {
         if(full.scores) ret <- data.frame(x@data, Zh=Zh)
