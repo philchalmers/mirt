@@ -210,7 +210,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         r <- r[, ncol(r)]
         rr <- rr + r
     }
-    df <- prod(PrepList[[1L]]$K) - 1L
+    df <- prod(PrepList[[1L]]$K) - 1
     if(df > 1e10) df <- 1e10
     nestpars <- nconstr <- 0L
     for(g in 1L:Data$ngroups)
@@ -603,7 +603,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    group=Data$group,
                    groupNames=Data$groupNames,
                    invariance=invariance,
-                   df=as.integer(df),
+                   df=df,
                    logLik=logLik,
                    method=opts$method,
                    SElogLik=SElogLik,

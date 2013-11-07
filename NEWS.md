@@ -2,7 +2,9 @@
 
 ## BUG FIXES
 
-- pass proper item type when using custom pattern calles in fscores()
+- remove `as.integer()` in MultipleGroup df slot
+
+- pass proper item type when using custom pattern calles in `fscores()`
 
 - return proper object in personfit when gpcm models used
 
