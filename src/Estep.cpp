@@ -1,6 +1,20 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+static NumericMatrix vector2NumericMatrix(std::vector<double> vec, const int *nrow, 
+    const int *ncol)
+{
+    NumericMatrix ret(*nrow, *ncol);
+    long int k = 0;
+    for(int j = 0; j < *ncol; j++){
+        for(int i = 0; i < *nrow; ++i){        
+            ret(i,j) = vec[k];
+            ++k;
+        }
+    }
+    return(ret);    
+} 
+
 //Estep for mirt
 RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr) 
 {
@@ -12,9 +26,9 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr)
     NumericMatrix itemtrace(Ritemtrace);
     const int nquad = prior.length();
     const int nitems = data.ncol();
-    const int npat = r.length();          
-    NumericMatrix r1(nquad, nitems);
+    const int npat = r.length();
     std::vector<double> expected(npat, 0.0);
+    std::vector<double> r1vec(nquad*nitems, 0.0);
     List ret;
 	
     // Begin main function body 				
@@ -35,9 +49,10 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr)
         for (int item = 0; item < nitems; ++item)              
             if (data(pat,item))	            
                 for(int q = 0; q < nquad; ++q)
-	                r1(q,item) = r1(q,item) + posterior[q];	
+                    r1vec[q + item*nquad] += posterior[q];
 	} //end main
-     
+    
+    NumericMatrix r1 = vector2NumericMatrix(r1vec, &nquad, &nitems);
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     return(ret);
@@ -67,11 +82,11 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     const int npat = r.length();
     
     std::vector<double> expected(npat);
-	NumericMatrix L(nbquad,npquad), r1(nquad,nitems*sfact),
-		Elk(nbquad,sfact), posterior(nquad,sfact);	
+    std::vector<double> r1vec(nquad*nitems*sfact, 0.0);
 				
 	// Begin main function body here				
-	for (int pat = 0; pat < npat; ++pat){
+	for (int pat = 0; pat < npat; ++pat){        
+        NumericMatrix L(nbquad,npquad), Elk(nbquad,sfact), posterior(nquad,sfact);	
         std::vector<double> likelihoods(nquad*sfact, 1.0);
 		for (int fact = 0; fact < sfact; ++fact){ 	
 			for (int item = 0; item < nitems; ++item){
@@ -115,9 +130,11 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     		if (data(pat,item))
 		        for (int fact = 0; fact < sfact; ++fact)
                     for(int q = 0; q < nquad; ++q)
-					    r1(q,item + nitems*fact) = r1(q,item + nitems*fact) + posterior(q,fact);
+                        r1vec[q + fact*nquad*nitems + nquad*item] += posterior(q,fact);
 	}	//end main 
-	    
+	
+    int nsitems = sfact * nitems;
+    NumericMatrix r1 = vector2NumericMatrix(r1vec, &nquad, &nsitems);    
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     return(ret);
