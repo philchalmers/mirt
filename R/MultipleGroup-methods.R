@@ -131,8 +131,7 @@ setMethod(
         cat('Model 2: ')
         print(object2@Call)
         cat('\n')
-        ret <- cbind(Df = c(object@df, object2@df),
-                          AIC = c(object@AIC, object2@AIC),
+        ret <- cbind(AIC = c(object@AIC, object2@AIC),
                           AICc = c(object@AICc, object2@AICc),
                           BIC = c(object@BIC, object2@BIC),
                           SABIC = c(object@SABIC, object2@SABIC),
