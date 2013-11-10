@@ -1,7 +1,7 @@
 #' Translate mirt parameters for plink package
 #'
 #' This function exports item parameters from the \code{mirt} package to the 
-#' \code{plink} package. Multidimensional extensions are currently not supported.
+#' \code{plink} package. 
 #'
 #'
 #' @aliases read.mirt
@@ -15,7 +15,7 @@
 #'
 #' \dontrun{
 #' 
-#' #unidimensional
+#' ## unidimensional
 #' 
 #' data <- expand.table(LSAT7)
 #' (mod1 <- mirt(data, 1))
@@ -41,6 +41,38 @@
 #' plot(plinkpars)
 #' itemplot(mod4, 1)
 #' 
+#' ## multidimensional
+#' 
+#' data <- expand.table(LSAT7)
+#' (mod1 <- mirt(data, 2))
+#' plinkpars <- read.mirt(mod1)
+#' plot(plinkpars)
+#' itemplot(mod1, 1)
+#' 
+#' cmod <- mirt.model('
+#'    F1 = 1,4,5
+#'    F2 = 2-4')
+#' model <- mirt(data, cmod)
+#' plot(read.mirt(model))
+#' itemplot(model, 1)
+#'
+#' #graded
+#' mod2 <- mirt(Science, 2)
+#' plinkpars <- read.mirt(mod2)
+#' plot(plinkpars)
+#' itemplot(mod2, 1)
+#'
+#' #gpcm
+#' mod3 <- mirt(Science, 2, itemtype = 'gpcm')
+#' plinkpars <- read.mirt(mod3)
+#' plot(plinkpars)
+#' itemplot(mod3, 1)
+#' 
+#' #nominal
+#' mod4 <- mirt(Science, 2, itemtype = 'nominal')
+#' plinkpars <- read.mirt(mod4)
+#' plot(plinkpars)
+#' itemplot(mod4, 1)
 #' }
 read.mirt <- function (x, as.irt.pars = TRUE, ...)
 {
@@ -58,7 +90,8 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
     if(length(x@prodlist))
         stop('Polynomial factor models not supported in plink')
     #converts unidimensional parameters to classic IRT (if possible)
-    listpars <- coef(x, IRTpars=TRUE, rotate='none', verbose=FALSE, ...) 
+    nfact <- x@pars[[1]]@nfact
+    listpars <- coef(x, IRTpars=ifelse(nfact == 1, TRUE, FALSE), rotate='none', verbose=FALSE, ...) 
     nitems <- length(listpars) - 1
     if(!is(listpars[[1]], 'matrix'))
         for(i in 1:nitems)
@@ -66,9 +99,6 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
     mirt.items <- as.character(lapply(x@pars, class))
     mirt.items <- plink.items <- mirt.items[-(nitems+1)]
     cat <- numeric(nitems)
-    nfact <- x@pars[[1]]@nfact
-    if(nfact > 1L)
-        stop('multidimensional models not currently supported')
     pars <- matrix(NA, nitems, 40)
     theta <- -4:4
     Theta <- thetaComb(theta, nfact)

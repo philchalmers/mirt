@@ -1,5 +1,7 @@
 # Changes in mirt 1.x
 
+- reimplement `read.mirt()` with better consistency checking between the `plink` package
+
 ## BUG FIXES
 
 - remove `as.integer()` in MultipleGroup df slot

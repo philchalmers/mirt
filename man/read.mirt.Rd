@@ -17,12 +17,11 @@
 \description{
   This function exports item parameters from the
   \code{mirt} package to the \code{plink} package.
-  Multidimensional extensions are currently not supported.
 }
 \examples{
 \dontrun{
 
-#unidimensional
+## unidimensional
 
 data <- expand.table(LSAT7)
 (mod1 <- mirt(data, 1))
@@ -48,6 +47,38 @@ plinkpars <- read.mirt(mod4)
 plot(plinkpars)
 itemplot(mod4, 1)
 
+## multidimensional
+
+data <- expand.table(LSAT7)
+(mod1 <- mirt(data, 2))
+plinkpars <- read.mirt(mod1)
+plot(plinkpars)
+itemplot(mod1, 1)
+
+cmod <- mirt.model('
+   F1 = 1,4,5
+   F2 = 2-4')
+model <- mirt(data, cmod)
+plot(read.mirt(model))
+itemplot(model, 1)
+
+#graded
+mod2 <- mirt(Science, 2)
+plinkpars <- read.mirt(mod2)
+plot(plinkpars)
+itemplot(mod2, 1)
+
+#gpcm
+mod3 <- mirt(Science, 2, itemtype = 'gpcm')
+plinkpars <- read.mirt(mod3)
+plot(plinkpars)
+itemplot(mod3, 1)
+
+#nominal
+mod4 <- mirt(Science, 2, itemtype = 'nominal')
+plinkpars <- read.mirt(mod4)
+plot(plinkpars)
+itemplot(mod4, 1)
 }
 }
 \author{
