@@ -83,3 +83,4 @@ Collate:
     'mirt.model.R'
     'expected.item.R'
     'PLCI.mirt.R'
+    'read.mirt.R'
