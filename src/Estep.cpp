@@ -1,19 +1,11 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-static NumericMatrix vector2NumericMatrix(std::vector<double> vec, const int *nrow, 
-    const int *ncol)
-{
-    NumericMatrix ret(*nrow, *ncol);
-    long int k = 0;
-    for(int j = 0; j < *ncol; j++){
-        for(int i = 0; i < *nrow; ++i){        
-            ret(i,j) = vec[k];
-            ++k;
-        }
-    }
-    return(ret);    
-} 
+SEXP vec2mat(std::vector<double> x, const int *nrow, const int *ncol) {
+  NumericVector output = wrap(x);
+  output.attr("dim") = Dimension(*nrow, *ncol);
+  return(output);
+}
 
 //Estep for mirt
 RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr) 
@@ -52,7 +44,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr)
                     r1vec[q + item*nquad] += posterior[q];
 	} //end main
     
-    NumericMatrix r1 = vector2NumericMatrix(r1vec, &nquad, &nitems);
+    NumericMatrix r1 = vec2mat(r1vec, &nquad, &nitems);
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     return(ret);
@@ -134,7 +126,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 	}	//end main 
 	
     int nsitems = sfact * nitems;
-    NumericMatrix r1 = vector2NumericMatrix(r1vec, &nquad, &nsitems);    
+    NumericMatrix r1 = vec2mat(r1vec, &nquad, &nsitems);    
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     return(ret);
