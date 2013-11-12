@@ -1,8 +1,4 @@
-#include<Rcpp.h>
 #include"Misc.h"
-using namespace Rcpp;
-
-const double ABS_MAX_Z = 30;
 
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot) 
 {

@@ -1,11 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
-
-static SEXP vec2mat(std::vector<double> x, const int *nrow, const int *ncol) {
-  NumericVector output = wrap(x);
-  output.attr("dim") = Dimension(*nrow, *ncol);
-  return(output);
-}
+#include"Misc.h"
 
 //Estep for mirt
 RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr) 

@@ -1,7 +1,5 @@
 #include"Misc.h"
 
-const double ABS_MAX_Z = 30;
-
 RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
 {	
     BEGIN_RCPP
@@ -135,4 +133,10 @@ double antilogit(const double *x){
     else if(*x < -998.0) ret = 0.0;
     else ret = 1.0 / (1.0 + exp(-1.0 * (*x)));
     return(ret);
+}
+
+SEXP vec2mat(std::vector<double> x, const int *nrow, const int *ncol) {
+  NumericVector output = wrap(x);
+  output.attr("dim") = Dimension(*nrow, *ncol);
+  return(output);
 }

@@ -15,5 +15,9 @@ double logit(const double *);
 
 double antilogit(const double *);
 
+SEXP vec2mat(std::vector<double>, const int *, const int *);
+
+const double ABS_MAX_Z = 30;
+
 #endif 
 
