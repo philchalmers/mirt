@@ -321,16 +321,11 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     g <- rep(0, ncol(L))
-    ind1 <- 1L
     for(group in 1L:ngroups){
         for (i in 1L:J){
             deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]], EM=TRUE)
-            ind2 <- ind1 + length(deriv$grad) - 1L
-            g[ind1:ind2] <- deriv$grad
-            ind1 <- ind2 + 1L
+            g[pars[[group]][[i]]@parnum] <- deriv$grad
         }
-        ind2 <- ind1 + length(pars[[group]][[i + 1L]]@par) - 1L
-        ind1 <- ind2 + 1L
     }
     grad <- g %*% L
     return(grad[est])

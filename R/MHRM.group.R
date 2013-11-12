@@ -238,7 +238,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         g.m <- h.m <- group.m <- list()
         longpars <- g <- rep(0, nfullpars)
         h <- matrix(0, nfullpars, nfullpars)
-        ind1 <- 1L
         for(group in 1L:ngroups){
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
@@ -249,28 +248,22 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             for (i in 1L:J){
                 deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=thetatemp, 
                                estHess=TRUE, offterm=OffTerm[,i])
-                ind2 <- ind1 + length(deriv$grad) - 1L
-                longpars[ind1:ind2] <- pars[[group]][[i]]@par
-                g[ind1:ind2] <-  deriv$grad
-                h[ind1:ind2, ind1:ind2] <- deriv$hess
-                ind1 <- ind2 + 1L
+                g[pars[[group]][[i]]@parnum] <- deriv$grad
+                h[pars[[group]][[i]]@parnum,pars[[group]][[i]]@parnum] <- deriv$hess
+                longpars[pars[[group]][[i]]@parnum] <- pars[[group]][[i]]@par
             }
             i <- i + 1L
             deriv <- Deriv(x=pars[[group]][[i]], Theta=gtheta0[[group]])
-            ind2 <- ind1 + length(deriv$grad) - 1L
-            longpars[ind1:ind2] <- pars[[group]][[i]]@par
-            g[ind1:ind2] <- deriv$grad
-            h[ind1:ind2, ind1:ind2] <- deriv$hess
-            ind1 <- ind2 + 1L
+            longpars[pars[[group]][[i]]@parnum] <- pars[[group]][[i]]@par
+            g[pars[[group]][[i]]@parnum] <- deriv$grad
+            h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
         }
         if(RAND){
             for(i in 1L:length(random)){
                 deriv <- RandomDeriv(x=random[[i]])
-                ind2 <- ind1 + length(deriv$grad) - 1L
-                longpars[ind1:ind2] <- random[[i]]@par
-                g[ind1:ind2] <- deriv$grad
-                h[ind1:ind2, ind1:ind2] <- deriv$hess
-                ind1 <- ind2 + 1L
+                longpars[random[[i]]@parnum] <- random[[i]]@par
+                g[random[[i]]@parnum] <- deriv$grad
+                h[random[[i]]@parnum, random[[i]]@parnum] <- deriv$hess
             }
         }
         grad <- g %*% L

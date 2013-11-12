@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-SEXP vec2mat(std::vector<double> x, const int *nrow, const int *ncol) {
+static SEXP vec2mat(std::vector<double> x, const int *nrow, const int *ncol) {
   NumericVector output = wrap(x);
   output.attr("dim") = Dimension(*nrow, *ncol);
   return(output);
