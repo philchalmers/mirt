@@ -834,7 +834,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
         if(opts$method != 'EM') 
             stop('empirical histogram method only applicable when method = \'EM\' ')
         if(opts$TOL == 1e-4) opts$TOL <- 3e-5
-        if(is.null(opts$quadpts)) opts$quadpts <- 99L
+        if(is.null(opts$quadpts)) opts$quadpts <- 199L
         if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
     }
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)

@@ -395,9 +395,12 @@ setMethod(
                                     length.out = x@quadpts))
                 Prior <- x@Prior * nrow(x@data)
                 cuts <- cut(Theta, floor(npts/2))
-                vals <- lapply(split(Prior, cuts), mean)
-                Theta <- lapply(split(Theta, cuts), mean)
-                plt <- data.frame(Theta = do.call(c, Theta), Prior = do.call(c, vals))
+                Prior <- do.call(c, lapply(split(Prior, cuts), mean))
+                Theta <- do.call(c, lapply(split(Theta, cuts), mean))
+                keep1 <- min(which(Prior > 1e-10))
+                keep2 <- max(which(Prior > 1e-10))
+                plt <- data.frame(Theta = Theta, Prior = Prior)
+                plt <- plt[keep1:keep2, , drop=FALSE]
                 return(xyplot(Prior ~ Theta, plt,
                               xlab = expression(theta), ylab = 'Expected Frequency',
                               type = 'b', main = 'Empirical Histogram', ...))
