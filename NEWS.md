@@ -1,5 +1,8 @@
 # Changes in mirt 1.x
 
+- empirical histogram estimation now available in `mirt()` for single group, unidimensional models.
+  Additional plot `type = 'empiricalhist'` also added
+
 - reimplement `read.mirt()` with better consistency checking between the `plink` package
 
 ## BUG FIXES

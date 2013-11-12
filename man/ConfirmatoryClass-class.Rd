@@ -36,6 +36,8 @@ Objects can be created by calls of the form \code{new("ConfirmatoryClass", ...)}
     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }    
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
+    \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
+        \code{empiricalhist = TRUE}}
     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }          
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }

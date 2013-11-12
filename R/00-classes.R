@@ -60,7 +60,8 @@ setClass(
 setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
-                                    random='list'),
+                                    random='list',
+                                    Prior='numeric'),
     validity = function(object) return(TRUE)
 )
 

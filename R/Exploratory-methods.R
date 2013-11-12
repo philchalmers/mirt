@@ -269,7 +269,7 @@ setMethod(
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           auto.key = TRUE, ...)
     {
-        if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace', 'infoSE', 'score'))
+        if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace', 'infoSE', 'score', 'empiricalhist'))
             stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0))
             stop('Improper angle specifed. Must be between 0 and 90.')
@@ -389,6 +389,14 @@ setMethod(
                 return(xyplot(score ~ Theta, plt,
                               xlab = expression(theta), ylab = expression(Total(theta)),
                               type = 'l', main = 'Expected Total Score', ...))
+            if(type == 'empiricalhist'){
+                if(all(is.nan(x@Prior))) stop('Empirical histogram was not estimated for this object')
+                plt <- data.frame(Theta=as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts), 
+                                                      length.out = x@quadpts)), Prior=x@Prior * nrow(x@data))
+                return(xyplot(Prior ~ Theta, plt,
+                              xlab = expression(theta), ylab = 'Expected Frequency',
+                              type = 'b', main = 'Empirical Histogram', ...))
+            }
         }
     }
 )

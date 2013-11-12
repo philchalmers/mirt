@@ -796,7 +796,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
                      SEtol = .0001, grsm.block = NULL, D = 1,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
-                     SE.type = 'MHRM', large = NULL, accelerate = TRUE, ...)
+                     SE.type = 'MHRM', large = NULL, accelerate = TRUE, empiricalhist = FALSE, 
+                     ...)
 {
     opts <- list()
     D <- 1
@@ -827,7 +828,15 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
-    opts$TOL <- ifelse(is.null(technical$TOL), if(method == 'EM') 1e-4 else 1e-3, technical$TOL)        
+    opts$TOL <- ifelse(is.null(technical$TOL), if(method == 'EM') 1e-4 else 1e-3, technical$TOL)
+    opts$empiricalhist <- empiricalhist
+    if(empiricalhist){
+        if(opts$method != 'EM') 
+            stop('empirical histogram method only applicable when method = \'EM\' ')
+        if(opts$TOL == 1e-4) opts$TOL <- 1e-5
+        if(is.null(opts$quadpts)) opts$quadpts <- 299L
+        if(opts$NCYCLES == 500L) opts$NCYCLES <- 5000L
+    }
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
         set.seed(12345L)

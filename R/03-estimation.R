@@ -278,7 +278,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                              list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
-                                         nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
+                                         nfactNames=PrepList[[1L]]$nfactNames, theta=theta, EH=opts$empiricalhist,
                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
@@ -570,6 +570,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        Theta=Theta,
                        method=opts$method,
                        Pl=Pl[[1L]],
+                       Prior=if(opts$empiricalhist) ESTIMATE$Prior[[1L]] else NaN,
                        data=Data$data,
                        converge=ESTIMATE$converge,
                        nfact=nfact,

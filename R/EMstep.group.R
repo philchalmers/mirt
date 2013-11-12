@@ -2,6 +2,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
 {
     verbose <- list$verbose
     nfact <- list$nfact
+    if(list$EH && nfact != 1L)
+        stop('empirical histogram only available for unidimensional models')
     NCYCLES <- list$NCYCLES
     TOL <- list$TOL
     MSTEPTOL <- list$MSTEPTOL
@@ -133,6 +135,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                                              
         }
+        if(list$EH && cycles > 1L)
+            Prior[[1]] <- rowSums(rlist[[1]][[1]]) / sum(rlist[[1]][[1]])
         #Estep
         lastLL <- LL
         LL <- 0
@@ -214,7 +218,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     }
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
-                estindex_unique=estindex_unique, correction=correction, hess=hess, random=list())
+                estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
+                Prior=Prior)
     ret
 }
 

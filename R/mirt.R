@@ -269,7 +269,8 @@
 #' \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
 #' for all item probability information or trace lines (only available when all items are dichotomous),
 #' \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} for
-#' the expected total score
+#' the expected total score. If \code{empiricalhist = TRUE} was used then the type \code{'empiricalhist'}
+#' also will be available to generate the empirical histogram plot
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is
 #' used then a bubble plot is created with the summed information across the angles specified
 #' (e.g., \code{theta_angle = seq(0, 90, by=10)})
@@ -291,6 +292,10 @@
 #' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #' expected values for the frequencies of every response pattern
 #' @param df.p logical; print the degrees of freedom and p-values?
+#' @param empiricalhist logical; estimate prior distribtuion using an empirical histogram approach.
+#' Only applicable for unidimensional models estimated with the EM algorithm. 
+#' The number of cycles, TOL, and quadpts are adjusted 
+#' accomodate for less precision during estimation (TOL = 1e-5, NCYCLES = 5000, quadpts = 299)
 #' @param full.scores logical; compute relavent statistics for each subject in the original data?
 #' @param nominal.highlow optional matrix indicating the highest (row 1) and lowest (row 2) categories
 #' to be used for the nominal response model. Using this input may result in better numerical stability.
@@ -685,7 +690,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  calcNull = TRUE, draws = 5000, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
                  key = NULL, nominal.highlow = NULL, large = FALSE, 
-                 accelerate = TRUE, verbose = TRUE, technical = list(), ...)
+                 accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
@@ -694,7 +699,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key, 
-                      nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws, ...)
+                      nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws,
+                      empiricalhist=empiricalhist, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)

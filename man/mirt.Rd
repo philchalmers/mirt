@@ -241,7 +241,10 @@ Theory)}
   or trace lines (only available when all items are
   dichotomous), \code{'infoSE'} for a combined test
   information and standard error plot, and \code{'score'}
-  for the expected total score}
+  for the expected total score. If \code{empiricalhist =
+  TRUE} was used then the type \code{'empiricalhist'} also
+  will be available to generate the empirical histogram
+  plot}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}. If a vector is used then a bubble
@@ -278,6 +281,13 @@ Theory)}
 
   \item{df.p}{logical; print the degrees of freedom and
   p-values?}
+
+  \item{empiricalhist}{logical; estimate prior distribtuion
+  using an empirical histogram approach. Only applicable
+  for unidimensional models estimated with the EM
+  algorithm. The number of cycles, TOL, and quadpts are
+  adjusted accomodate for less precision during estimation
+  (TOL = 1e-5, NCYCLES = 5000, quadpts = 299)}
 
   \item{full.scores}{logical; compute relavent statistics
   for each subject in the original data?}
