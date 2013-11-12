@@ -391,8 +391,13 @@ setMethod(
                               type = 'l', main = 'Expected Total Score', ...))
             if(type == 'empiricalhist'){
                 if(all(is.nan(x@Prior))) stop('Empirical histogram was not estimated for this object')
-                plt <- data.frame(Theta=as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts), 
-                                                      length.out = x@quadpts)), Prior=x@Prior * nrow(x@data))
+                Theta <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts), 
+                                    length.out = x@quadpts))
+                Prior <- x@Prior * nrow(x@data)
+                cuts <- cut(Theta, floor(npts/2))
+                vals <- lapply(split(Prior, cuts), mean)
+                Theta <- lapply(split(Theta, cuts), mean)
+                plt <- data.frame(Theta = do.call(c, Theta), Prior = do.call(c, vals))
                 return(xyplot(Prior ~ Theta, plt,
                               xlab = expression(theta), ylab = 'Expected Frequency',
                               type = 'b', main = 'Empirical Histogram', ...))

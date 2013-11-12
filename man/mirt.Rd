@@ -287,7 +287,7 @@ Theory)}
   for unidimensional models estimated with the EM
   algorithm. The number of cycles, TOL, and quadpts are
   adjusted accomodate for less precision during estimation
-  (TOL = 1e-5, NCYCLES = 5000, quadpts = 299)}
+  (TOL = 3e-5, NCYCLES = 2000, quadpts = 99)}
 
   \item{full.scores}{logical; compute relavent statistics
   for each subject in the original data?}

@@ -295,7 +295,7 @@
 #' @param empiricalhist logical; estimate prior distribtuion using an empirical histogram approach.
 #' Only applicable for unidimensional models estimated with the EM algorithm. 
 #' The number of cycles, TOL, and quadpts are adjusted 
-#' accomodate for less precision during estimation (TOL = 1e-5, NCYCLES = 5000, quadpts = 299)
+#' accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 99)
 #' @param full.scores logical; compute relavent statistics for each subject in the original data?
 #' @param nominal.highlow optional matrix indicating the highest (row 1) and lowest (row 2) categories
 #' to be used for the nominal response model. Using this input may result in better numerical stability.
