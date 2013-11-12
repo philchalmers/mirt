@@ -451,6 +451,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     TLI.G2 <- CFI.G2 <- NaN
     if(length(r) * 3L < prod(PrepList[[1L]]$K)){
         G2 <- NaN; p.G2 <- NaN
+        opts$calcNull <- FALSE
     }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
