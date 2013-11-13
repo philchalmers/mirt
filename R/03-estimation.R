@@ -282,7 +282,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SEM=opts$SE.type == 'SEM' && opts$SE, accelerate=opts$accelerate),
+                                         SEM=opts$SE.type == 'SEM' && opts$SE, accelerate=opts$accelerate,
+                                         customPriorFun=opts$customPriorFun),
                              Theta=Theta, DERIV=DERIV)
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist

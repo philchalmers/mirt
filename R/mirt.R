@@ -326,6 +326,9 @@
 #'       \code{mod@@K} slot in all converged models}
 #' \item{GenRandomPars}{logical; generate random starting values prior to optimatization instead of 
 #'      using the fixed internal starting values?}
+#' \item{customPriorFun}{a custom function used to determine the normalized density for integration 
+#'      in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
+#'      with the same length as number of rows in \code{Theta}} 
 #' }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

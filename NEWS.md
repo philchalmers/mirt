@@ -1,5 +1,8 @@
 # Changes in mirt 1.x
 
+- `customPriorFun` input to technical list now available for utilizing user defined prior distribution
+  functions in the EM algorithm
+
 - empirical histogram estimation now available in `mirt()` for single group, unidimensional models.
   Additional plot `type = 'empiricalhist'` also added
 

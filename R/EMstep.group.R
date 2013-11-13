@@ -135,8 +135,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                                              
         }
-        if(list$EH && cycles > 1L)
+        if(list$EH && cycles > 1L){
             Prior[[1]] <- rowSums(rlist[[1]][[1]]) / sum(rlist[[1]][[1]])
+        }
+        if(!is.null(list$customPriorFun)){
+            for(g in 1L:ngroups)
+                Prior[[g]] <- list$customPriorFun(gTheta[[g]])
+        }
         #Estep
         lastLL <- LL
         LL <- 0

@@ -814,7 +814,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$grsm.block = grsm.block
     opts$D = D
     opts$rsm.block = rsm.block
-    opts$calcNull = calcNull  
+    opts$calcNull = calcNull
+    opts$customPriorFun = technical$customPriorFun
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
     if(SE.type == 'SEM' && SE) opts$accelerate <- FALSE
