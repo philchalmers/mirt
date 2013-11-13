@@ -829,9 +829,9 @@ datNormal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaNormal)
 datBimodal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaBimodal)
 datSkew <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaSkew)
 
-bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
-plot(bimodal, type = 'empiricalhist')
-histogram(ThetaBimodal, breaks=30)
+normal <- mirt(datNormal, 1, empiricalhist = TRUE)
+plot(normal, type = 'empiricalhist')
+histogram(ThetaNormal, breaks=30)
 
 bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
 plot(bimodal, type = 'empiricalhist')
