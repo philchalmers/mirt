@@ -684,6 +684,31 @@
 #' itemplot(mod.combo, 2, type = 'score')
 #' itemplot(mod.combo, 2, type = 'infocontour')
 #'
+#' ## empical histogram examples (normal, skew and bimodality)
+#' #make some data 
+#' set.seed(1234)
+#' a <- matrix(rlnorm(50, .2, .2))
+#' d <- matrix(rnorm(50))
+#' ThetaNormal <- matrix(rnorm(2000))
+#' ThetaBimodal <- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
+#' ThetaSkew <- scale(matrix(rchisq(2000, 5))) #positive skew
+#' datNormal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaNormal)
+#' datBimodal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaBimodal)
+#' datSkew <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaSkew)
+#' 
+#' bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
+#' plot(bimodal, type = 'empiricalhist')
+#' histogram(ThetaBimodal, breaks=30)
+#' 
+#' bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
+#' plot(bimodal, type = 'empiricalhist')
+#' histogram(ThetaBimodal, breaks=30)
+#' 
+#' skew <- mirt(datSkew, 1, empiricalhist = TRUE)
+#' plot(skew, type = 'empiricalhist')
+#' histogram(ThetaSkew, breaks=30)
+#' 
+#' 
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
                  method = 'EM', pars = NULL, constrain = NULL, parprior = NULL, 
