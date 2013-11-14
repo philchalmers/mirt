@@ -405,7 +405,7 @@
 #' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', method = 'EM',
 #' pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000, rotate = 'oblimin', Target = NaN,
 #' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, nominal.highlow = NULL,
-#' large = FALSE, accelerate = TRUE, verbose = TRUE, technical = list(), ...)
+#' large = FALSE, accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, technical = list(), ...)
 #'
 #' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
 #' verbose = TRUE, ...)

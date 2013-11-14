@@ -21,8 +21,8 @@ Theory)}
     TRUE, draws = 5000, rotate = 'oblimin', Target = NaN,
     quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
     key= NULL, nominal.highlow = NULL, large = FALSE,
-    accelerate = TRUE, verbose = TRUE, technical = list(),
-    ...)
+    accelerate = TRUE, empiricalhist = FALSE, verbose =
+    TRUE, technical = list(), ...)
 
   \S4method{summary}{ExploratoryClass}(object, rotate = '',
     Target = NULL, suppress = 0, digits = 3, verbose =
