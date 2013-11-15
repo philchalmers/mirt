@@ -298,74 +298,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             G2 <- G2 + G2group[g]
             logLik <- logLik + sum(rg*log(Pl))
         }
-        Pl <- list(Pl)
-        if(!opts$NULL.MODEL && opts$SE){
-            tmp <- ESTIMATE
-            if(opts$verbose) cat('\n\nCalculating information matrix...\n')
-            if(opts$SE.type == 'SEM'){
-                dontrun <- FALSE
-                if(ESTIMATE$cycles <= 5L){
-                    dontrun <- TRUE
-                    warning('Too few EM interations to compute SEM information matrix')
-                }
-                if(ESTIMATE$cycles == opts$NCYCLES) dontrun <- TRUE
-                lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-                if(any(lengthsplit > 1L)){
-                    warning('Group covariance parameters are not well estimated by S-EM algorithm. 
-                            Better to use SE.type = \'MHRM\', SE.type = \'BL\', or resort to the 
-                            boot.mirt() and PLCI.mirt() functions')
-                }
-                if(!dontrun){
-                    if(ESTIMATE$cycles <= 10L)
-                        message('Very few EM cycles performed. Consider decreasing TOL further to
-                                increase EM iteration count')
-                    estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
-                    DM <- estmat + 0
-                    diag(estmat) <- TRUE
-                    if(!is.null(globalenv()$MIRTCLUSTER)){
-                        DM <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SEM.SE,
-                                pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
-                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
-                                           nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
-                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                           sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
-                                           nfact=nfact, constrain=constrain, verbose=opts$verbose),
-                                                   Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
-                                                   DERIV=DERIV))
-                    } else {
-                        for(i in 1L:ncol(DM))
-                            DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
-                                              PrepList=PrepList,
-                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
-                                                      nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
-                                                      itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                                      sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
-                                                      nfact=nfact, constrain=constrain, verbose=opts$verbose),
-                                              Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
-                                              DERIV=DERIV)
-                    }
-                    ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars, 
-                                                ngroups=Data$ngroups, J=Data$nitems)
-                    info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
-                    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
-                }
-            }
-            if(opts$SE.type == 'BL')
-                ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
-                                  BFACTOR=opts$BFACTOR, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
-                                  constrain=constrain, specific=oldmodel, sitems=sitems)
-            if(opts$SE.type == 'MHRM')
-                ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
-                               list = list(NCYCLES=opts$NCYCLES, BURNIN=1L, SEMCYCLES=5L,
-                                           KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=opts$USEEM,
-                                           gain=opts$gain,
-                                           nfactNames=PrepList[[1L]]$nfactNames,
-                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                           nfact=nfact, constrain=constrain, verbose=FALSE,
-                                           startlongpars=startlongpars),
-                                       DERIV=DERIV)
-            ESTIMATE$cycles <- tmp$cycles
-        }
+        Pl <- list(Pl)        
     } else if(opts$method == 'MHRM'){ #MHRM estimation
         Theta <- matrix(0, Data$N, nitems)
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
@@ -394,6 +327,74 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
+    }
+    if(!opts$NULL.MODEL && opts$SE){
+        tmp <- ESTIMATE
+        if(opts$verbose) cat('\n\nCalculating information matrix...\n')
+        if(opts$SE.type == 'SEM' && opts$method == 'EM'){
+            dontrun <- FALSE
+            if(ESTIMATE$cycles <= 5L){
+                dontrun <- TRUE
+                warning('Too few EM interations to compute SEM information matrix. Information matrix 
+                        not calculated')
+            }
+            if(ESTIMATE$cycles == opts$NCYCLES) dontrun <- TRUE
+            lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
+            if(any(lengthsplit > 1L)){
+                warning('Group covariance parameters are not well estimated by the S-EM algorithm. 
+                        It is better to use SE.type = \'MHRM\', SE.type = \'BL\', or resort to the 
+                        boot.mirt() and PLCI.mirt() functions')
+            }
+            if(!dontrun){
+                if(ESTIMATE$cycles <= 10L)
+                    message('Very few EM cycles performed. Consider decreasing TOL further to
+                            increase EM iteration count')
+                estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
+                DM <- estmat + 0
+                diag(estmat) <- TRUE
+                if(!is.null(globalenv()$MIRTCLUSTER)){
+                    DM <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SEM.SE,
+                                               pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
+                                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
+                                                           nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
+                                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
+                                                           sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                                           nfact=nfact, constrain=constrain, verbose=opts$verbose),
+                                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
+                                               DERIV=DERIV))
+                } else {
+                    for(i in 1L:ncol(DM))
+                        DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
+                                          PrepList=PrepList,
+                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
+                                                      nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
+                                                      itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
+                                                      sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                                      nfact=nfact, constrain=constrain, verbose=opts$verbose),
+                                          Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
+                                          DERIV=DERIV)
+                }
+                ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars, 
+                                            ngroups=Data$ngroups, J=Data$nitems)
+                info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
+                ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+            }
+        } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
+            ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
+                              BFACTOR=opts$BFACTOR, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
+                              constrain=constrain, specific=oldmodel, sitems=sitems)
+        } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
+            ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+                                   list = list(NCYCLES=opts$NCYCLES, BURNIN=1L, SEMCYCLES=5L,
+                                               KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=opts$USEEM,
+                                               gain=opts$gain,
+                                               nfactNames=PrepList[[1L]]$nfactNames,
+                                               itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
+                                               nfact=nfact, constrain=constrain, verbose=FALSE,
+                                               startlongpars=startlongpars),
+                                   DERIV=DERIV)
+        }
+        ESTIMATE$cycles <- tmp$cycles
     }
     cmods <- list()
     for(g in 1L:Data$ngroups){
