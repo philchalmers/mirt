@@ -338,7 +338,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 warning('Too few EM interations to compute SEM information matrix. Information matrix 
                         not calculated')
             }
-            if(ESTIMATE$cycles == opts$NCYCLES) dontrun <- TRUE
             lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
             if(any(lengthsplit > 1L)){
                 warning('Group covariance parameters are not well estimated by the S-EM algorithm. 
@@ -359,7 +358,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                            nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                            sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
-                                                           nfact=nfact, constrain=constrain, verbose=opts$verbose),
+                                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
+                                                           EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
                                                Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
                                                DERIV=DERIV))
                 } else {
@@ -370,7 +370,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                       nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                       itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                       sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
-                                                      nfact=nfact, constrain=constrain, verbose=opts$verbose),
+                                                      nfact=nfact, constrain=constrain, verbose=opts$verbose,
+                                                      EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
                                           Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, 
                                           DERIV=DERIV)
                 }
@@ -380,10 +381,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
             }
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
-            ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
+            ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList, 
                               BFACTOR=opts$BFACTOR, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
-                              constrain=constrain, specific=oldmodel, sitems=sitems)
+                              constrain=constrain, specific=oldmodel, sitems=sitems, EH=opts$empiricalhist,
+                              EHPrior=ESTIMATE$Prior)
         } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
+            if(opts$empiricalhist) 
+                stop('MHRM standard error not available when using empirical histograms')
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                                    list = list(NCYCLES=opts$NCYCLES, BURNIN=1L, SEMCYCLES=5L,
                                                KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=opts$USEEM,
@@ -395,6 +399,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                    DERIV=DERIV)
         }
         ESTIMATE$cycles <- tmp$cycles
+        ESTIMATE$Prior <- tmp$Prior
     }
     cmods <- list()
     for(g in 1L:Data$ngroups){

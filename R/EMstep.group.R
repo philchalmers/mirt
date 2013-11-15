@@ -217,7 +217,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         #return internal functions for SEM.SE
         return(list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
-                    estindex_unique=estindex_unique, correction=correction, hess=hess,
+                    estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list()))
     }

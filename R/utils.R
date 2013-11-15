@@ -889,23 +889,27 @@ assignItemtrace <- function(pars, itemtrace, itemloc){
 }
 
 BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain,
-                  specific=NULL, sitems=NULL){
+                  specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL){
     LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-                   NO.CUSTOM){
+                   NO.CUSTOM, EH, EHPrior){
         longpars[est] <- p
         pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         gstructgrouppars <- prior <- Prior <- vector('list', ngroups)
-        for(g in 1L:ngroups){
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1L]])
-            if(BFACTOR){
-                prior[[g]] <- dnorm(theta, 0, 1)
-                prior[[g]] <- prior[[g]]/sum(prior[[g]])                
-                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
-                next
+        if(EH){
+            Prior[[1L]] <- EHPrior[[1L]]
+        } else {
+            for(g in 1L:ngroups){
+                gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1L]])
+                if(BFACTOR){
+                    prior[[g]] <- dnorm(theta, 0, 1)
+                    prior[[g]] <- prior[[g]]/sum(prior[[g]])                
+                    Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
+                    next
+                }
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+                                               gstructgrouppars[[g]]$gcov)
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
-                                           gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
         LL <- 0
         for(g in 1L:ngroups){
@@ -948,7 +952,8 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
     hess <- numDeriv::hessian(LL, x=shortpars, est=est, longpars=longpars,
                               pars=pars, ngroups=ngroups, J=J,
                               Theta=Theta, PrepList=PrepList,
-                              specific=specific, sitems=sitems, NO.CUSTOM=NO.CUSTOM)
+                              specific=specific, sitems=sitems, NO.CUSTOM=NO.CUSTOM, 
+                              EH=EH, EHPrior=EHPrior)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- L %*% Hess %*% L
@@ -1029,18 +1034,21 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[[constrain[[i]][1L]]]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-
-        for(g in 1L:ngroups){
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-            if(BFACTOR){
-                prior[[g]] <- dnorm(theta, 0, 1)
-                prior[[g]] <- prior[[g]]/sum(prior[[g]])                
-                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
-                next
+        if(list$EH){
+            Prior[[1L]] <- list$EHPrior[[1L]]
+        } else {
+            for(g in 1L:ngroups){
+                gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+                if(BFACTOR){
+                    prior[[g]] <- dnorm(theta, 0, 1)
+                    prior[[g]] <- prior[[g]]/sum(prior[[g]])                
+                    Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
+                    next
+                }
+                Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
+                                               gstructgrouppars[[g]]$gcov)
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
-                                           gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
         #Estep
         for(g in 1L:ngroups){
