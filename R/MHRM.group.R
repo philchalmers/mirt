@@ -129,6 +129,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             UBOUND <- c(UBOUND, random[[i]]@ubound)            
         }
     }
+    Draws.time <- Mstep.time <- 0
 
     ####Big MHRM loop
     for(cycles in 1L:(NCYCLES + BURNIN + SEMCYCLES))
@@ -157,6 +158,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         if(RAND && cycles > 100L) random <- reloadRandom(random=random, longpars=longpars, 
                                         parstart=max(pars[[1L]][[J+1L]]@parnum) + 1L)
         
+        start <- proc.time()[3L]
         if(RAND && cycles == 100L){
             for(g in 1L:ngroups) gtheta0[[g]] <- matrix(0, nrow(gfulldata[[g]]), nfact)
             OffTerm <- OffTerm(random, J=J, N=N)
@@ -233,8 +235,10 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                 }                                
             }
         }
+        Draws.time <- Draws.time + proc.time()[3L] - start
 
         #Step 2. Find average of simulated data gradients and hessian
+        start <- proc.time()[3L]
         g.m <- h.m <- group.m <- list()
         longpars <- g <- rep(0, nfullpars)
         h <- matrix(0, nfullpars, nfullpars)
@@ -308,6 +312,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
             }
+            Mstep.time <- Mstep.time + proc.time()[3L] - start
             next
         }
 
@@ -347,6 +352,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         }
         phi <- phi + gamma*(grad - phi)
         Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
+        Mstep.time <- Mstep.time + proc.time()[3L] - start
     } ###END BIG LOOP
     if(verbose) cat('\r\n')
     info <- Phi - outer(phi,phi)
@@ -395,6 +401,6 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=as.matrix(info),
                 longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var,
-                random=random)
+                random=random, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)))
     ret
 }

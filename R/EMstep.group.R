@@ -116,10 +116,12 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     }    
     preMstep.longpars2 <- preMstep.longpars <- longpars
     accel <- 0
+    Estep.time <- Mstep.time <- 0
     
     #EM
     for (cycles in 1L:NCYCLES){
         #priors
+        start <- proc.time()[3L]
         for(g in 1L:ngroups){            
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])            
             if(BFACTOR){
@@ -163,6 +165,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                 pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
             }
         }
+        Estep.time <- Estep.time + proc.time()[3L] - start
+        start <- proc.time()[3L]
         preMstep.longpars2 <- preMstep.longpars
         preMstep.longpars <- longpars
         if(all(!est)) break
@@ -184,6 +188,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
             cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                         cycles, LL, max(abs(preMstep.longpars - longpars))))
         if(cycles > 3L && all(abs(preMstep.longpars - longpars) < TOL))  break
+        Mstep.time <- Mstep.time + proc.time()[3L] - start
     } #END EM
     if(cycles == NCYCLES){
         message('EM iterations terminated after ', cycles, ' iterations.')        
@@ -219,12 +224,13 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
-                    LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list()))
+                    LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
+                    time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time))))
     }
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                 estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
-                Prior=Prior)
+                Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)))
     ret
 }
 

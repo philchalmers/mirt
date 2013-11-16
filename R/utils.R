@@ -1182,3 +1182,37 @@ smooth.cov <- function(x){
     }
     x
 }
+
+SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
+    pars <- ESTIMATE$pars
+    itemloc <- PrepList[[1L]]$itemloc
+    ngroups <- length(pars)
+    nitems <- length(pars[[1L]]) - 1L
+    L <- ESTIMATE$L
+    DX <- numeric(ncol(L))
+    Prior <- ESTIMATE$Prior
+    Igrad <- Ihess <- matrix(0, length(DX), length(DX))
+    tabdata <- PrepList[[1L]]$tabdata
+    for(pat in 1L:nrow(tabdata)){
+        for(g in 1L:ngroups){
+            gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
+            rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata,
+                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
+            for(i in 1L:nitems){
+                tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
+                pars[[g]][[i]]@rs <- rlist$r1[, tmp]
+                pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
+                tmp <- Deriv(pars[[g]][[i]], Theta=Theta, EM = TRUE, estHess=FALSE)
+                dx <- tmp$grad
+                DX[pars[[g]][[i]]@parnum] <- dx
+            }
+        }
+        out <- L %*% outer(DX, DX) %*% L
+        Igrad <- Igrad + out
+    }
+    Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique] 
+    colnames(Igrad) <- rownames(Igrad) <- names(ESTIMATE$correction)
+    info <- Igrad * nrow(tabdata) / N
+    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+    return(ESTIMATE)
+}

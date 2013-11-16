@@ -1,5 +1,10 @@
 # Changes in mirt 1.x
 
+- removed multinomial constant in log-likelihood since it has no influence on nested model comparisons
+
+- `SE.type = 'crossprod'` added for computing the parameter information matrix based on the 
+  variance of the Fisher scoring vector
+
 - `customPriorFun` input to technical list now available for utilizing user defined prior distribution
   functions in the EM algorithm
 

@@ -3,6 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, mixed.design = NULL, customItems = NULL, 
                        nominal.highlow = NULL, ...)
 {
+    start.time=proc.time()[3L]
     if(missing(data) || is.null(nrow(data))) stop('data argument is required')
     if(missing(model)) stop('model argument (numeric or from mirt.model) is required')
     if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data)) 
@@ -14,7 +15,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     opts <- makeopts(...)
     if(!is.null(customItems)) opts$calcNull <- FALSE
-    opts$start.time <- proc.time()[3L]
+    opts$times <- list(start.time=start.time)
     # on exit, reset the seed to override internal
     if(opts$method == 'MHRM' || opts$method == 'MIXED')
         on.exit(set.seed((as.numeric(Sys.time()) - floor(as.numeric(Sys.time()))) * 1e8))
@@ -36,6 +37,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     
     ##
+    opts$times$start.time.Data <- proc.time()[3L]
     Data <- list()
     data <- as.matrix(data)
     if(!all(apply(data, 2L, class) %in% c('integer', 'numeric')))
@@ -242,8 +244,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:Data$nitems)            
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }    
+    opts$times$end.time.Data <- proc.time()[3L]
     
     #EM estimation    
+    opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM'){
         if(is.null(opts$quadpts))
             opts$quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
@@ -282,7 +286,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SEM=opts$SE.type == 'SEM' && opts$SE, accelerate=opts$accelerate,
+                                         SEM=opts$SE.type == 'SEM' && opts$SE, 
+                                         accelerate=opts$accelerate,
                                          customPriorFun=opts$customPriorFun),
                              Theta=Theta, DERIV=DERIV)
         startlongpars <- ESTIMATE$longpars
@@ -328,6 +333,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
     }
+    opts$times$end.time.Estimate <- proc.time()[3L]
+    opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
         if(opts$verbose) cat('\n\nCalculating information matrix...\n')
@@ -397,10 +404,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                nfact=nfact, constrain=constrain, verbose=FALSE,
                                                startlongpars=startlongpars),
                                    DERIV=DERIV)
+        } else if(opts$SE.type == 'crossprod' && opts$method == 'EM'){
+            ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, 
+                                  constrain=constrain, N=nrow(data))
+            
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior
     }
+    opts$times$end.time.SE <- proc.time()[3L]
+    opts$times$start.time.post <- proc.time()[3L]
     cmods <- list()
     for(g in 1L:Data$ngroups){
         lambdas <- Lambdas(ESTIMATE$pars[[g]]) * opts$D/1.702
@@ -438,14 +451,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     ####post estimation stats    
     r <- rr
     N <- sum(r)
-    logN <- 0
-    logr <- rep(0,length(r))
-    for (i in 1L:N) logN <- logN + log(i)
-    for (i in 1L:length(r))
-        for (j in 1L:r[i])
-            logr[i] <- logr[i] + log(j)
-    if(sum(logr) != 0)
-        logLik <- logLik + logN/sum(logr)
     tmp <- dfsubtr
     AIC <- (-2) * logLik + 2 * tmp
     AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
@@ -477,6 +482,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         p.G2 <- RMSEA.G2 <- G2 <- TLI.G2 <- CFI.G2 <-  NaN
     if(is.null(parprior)) parprior <- list()
     if(is.null(opts$quadpts)) opts$quadpts <- NaN
+    opts$times$end.time.post <- proc.time()[3L]
     if(Data$ngroups == 1L){
         if(opts$method == 'MIXED'){            
             mod <- new('MixedClass',
@@ -632,6 +638,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    itemtype=PrepList[[1L]]$itemtype,
                    information=ESTIMATE$info)
     }
-    mod@time <- proc.time()[3L] - opts$start.time
+    time <- opts$time
+    mod@time <- c(TOTAL = as.numeric(proc.time()[3L] - time$start.time),
+                  DATA = as.numeric(time$end.time.Data - time$start.time.Data),
+                  ESTIMATE = as.numeric(time$end.time.Estimate - time$start.time.Estimate),
+                  ESTIMATE$time,
+                  SE = as.numeric(time$end.time.SE - time$start.time.SE),
+                  POST = as.numeric(time$end.time.post - time$start.time.post))
     return(mod)
 }
