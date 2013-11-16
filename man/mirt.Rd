@@ -109,12 +109,13 @@ Theory)}
   \item{SE.type}{type of estimation method to use for
   calculating the parameter information matrix. Can be
   \code{'MHRM'} for stochastic estimation, \code{'BL'} for
-  the Bock and Lieberman approach (EM only), or
-  \code{'SEM'} for the supplemented EM (disables the
-  \code{accelerate} option). Note that for the \code{'SEM'}
-  option increasing the number of EM cycles
-  (\code{NCYCLES}, see below) will help to improve the
-  accuracy, and will be run in parallel if a
+  the Bock and Lieberman approach (EM only), \code{'SEM'}
+  for the supplemented EM (disables the \code{accelerate}
+  option), and \code{'crossprod'} for simple standard error
+  computations based on the Fisher scoring variance. Note
+  that for the \code{'SEM'} option increasing the number of
+  EM cycles (\code{NCYCLES}, see below) will help to
+  improve the accuracy, and will be run in parallel if a
   \code{\link{mirtCluster}} object has been defined.
   Bootstrapped standard errors are also possible but must
   be run with the \code{\link{boot.mirt}} function}

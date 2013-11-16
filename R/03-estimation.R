@@ -346,8 +346,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         not calculated')
             }
             lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-            if(any(lengthsplit > 1L)){
-                warning('Group covariance parameters are not well estimated by the S-EM algorithm. 
+            lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
+            if(any(lengthsplit > 2L)){
+                warning('Group covariance and mean parameters are not well estimated by the S-EM algorithm. 
                         It is better to use SE.type = \'MHRM\', SE.type = \'BL\', or resort to the 
                         boot.mirt() and PLCI.mirt() functions')
             }

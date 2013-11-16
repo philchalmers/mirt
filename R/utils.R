@@ -1213,6 +1213,16 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique] 
     colnames(Igrad) <- rownames(Igrad) <- names(ESTIMATE$correction)
     info <- Igrad * nrow(tabdata) / N
+    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
+    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
+    info[lengthsplit > 2L, lengthsplit > 2L] <- 1
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+    if(any(lengthsplit > 2L)){
+        for(g in 1L:ngroups){
+            tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar
+            tmp[!is.na(tmp)] <- NaN
+            ESTIMATE$pars[[g]][[nitems+1L]]@SEpar <- tmp
+        }
+    }
     return(ESTIMATE)
 }
