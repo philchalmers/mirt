@@ -5,10 +5,10 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr)
 {
     BEGIN_RCPP
 
-    NumericVector prior(Rprior);    
-    IntegerVector r(Rr);
-    IntegerMatrix data(RX);
-    NumericMatrix itemtrace(Ritemtrace);
+    const NumericVector prior(Rprior);    
+    const IntegerVector r(Rr);
+    const IntegerMatrix data(RX);
+    const NumericMatrix itemtrace(Ritemtrace);
     const int nquad = prior.length();
     const int nitems = data.ncol();
     const int npat = r.length();
@@ -53,12 +53,12 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     BEGIN_RCPP
 
     List ret;
-    NumericMatrix itemtrace(Ritemtrace);    
-    NumericVector prior(Rprior);
-    NumericVector Priorbetween(RPriorbetween);
-    IntegerVector r(Rr);
-    IntegerMatrix data(RX);
-    IntegerMatrix sitems(Rsitems);    
+    const NumericMatrix itemtrace(Ritemtrace);    
+    const NumericVector prior(Rprior);
+    const NumericVector Priorbetween(RPriorbetween);
+    const IntegerVector r(Rr);
+    const IntegerMatrix data(RX);
+    const IntegerMatrix sitems(Rsitems);    
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
     const int npquad = prior.length();
@@ -132,11 +132,11 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
 {
     BEGIN_RCPP
 
-    NumericMatrix itemtrace(Ritemtrace); 
-    NumericMatrix tabdata(Rtabdata); 
-    NumericMatrix Theta(RTheta); 
-    NumericVector prior(Rprior);
-    NumericVector mu(Rmu);
+    const NumericMatrix itemtrace(Ritemtrace); 
+    const NumericMatrix tabdata(Rtabdata); 
+    const NumericMatrix Theta(RTheta); 
+    const NumericVector prior(Rprior);
+    const NumericVector mu(Rmu);
     const int n = prior.length(); //nquad
     const int nitems = tabdata.ncol();
     const int nfact = Theta.ncol();

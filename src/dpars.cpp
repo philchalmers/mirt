@@ -37,20 +37,23 @@ RcppExport SEXP dparsNominal(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
         SEXP Rnumak2D2, SEXP RnumakDTheta_numsum, SEXP RestHess) 
 {		
     BEGIN_RCPP
-    IntegerVector Pnfact(Rnfact), Pncat(Rncat), Pakind(Rakind), Pdind(Rdind), 
-                  estHess(RestHess);
+    const IntegerVector Pnfact(Rnfact);
+    const IntegerVector Pncat(Rncat); 
+    const IntegerVector Pakind(Rakind);
+    const IntegerVector Pdind(Rdind);
+    const IntegerVector estHess(RestHess);
     const int nfact = Pnfact(0);
     const int ncat = Pncat(0); 
     const int akind = Pakind(0); 
     const int dind = Pdind(0);
-    NumericVector a(Ra), ak(Rak), d(Rd), ak2(Rak2),
+    const NumericVector a(Ra), ak(Rak), d(Rd), ak2(Rak2),
                   numsum(Rnumsum), numakD(RnumakD), numak2D2(Rnumak2D2), 
-                  aTheta(RaTheta), aTheta2(RaTheta2), dL(nfact + ncat*2);
-    NumericVector unitNvec(aTheta.length()); 
-    unitNvec.fill(1.0);    
-    NumericMatrix Theta(RTheta), P(RP), num(Rnum), P2(RP2), P3(RP3),
-                  dat_num(Rdat_num), numakDTheta_numsum(RnumakDTheta_numsum), 
-                  d2L(nfact + ncat*2, nfact + ncat*2), dat(Rdat);
+                  aTheta(RaTheta), aTheta2(RaTheta2);
+    NumericVector dL(nfact + ncat*2);
+    const NumericVector unitNvec(aTheta.length(), 1.0);
+    const NumericMatrix Theta(RTheta), P(RP), num(Rnum), P2(RP2), P3(RP3),
+                  dat_num(Rdat_num), numakDTheta_numsum(RnumakDTheta_numsum), dat(Rdat);
+    NumericMatrix d2L(nfact + ncat*2, nfact + ncat*2);
     const int N = dat.nrow();
     NumericVector tmpvec(N), tmpvec2(N), offterm(N), offterm2(N);
     
@@ -211,11 +214,11 @@ RcppExport SEXP dparsPoly(SEXP Rprob, SEXP RThetas, SEXP Rdat, SEXP Rnzeta, SEXP
 {		
     BEGIN_RCPP    
 
-	NumericMatrix prob(Rprob);
-	NumericMatrix Thetas(RThetas);    
-    NumericMatrix dat(Rdat);
-    IntegerVector Pnzeta(Rnzeta);
-    IntegerVector estHess(RestHess);        
+	const NumericMatrix prob(Rprob);
+	const NumericMatrix Thetas(RThetas);    
+    const NumericMatrix dat(Rdat);
+    const IntegerVector Pnzeta(Rnzeta);
+    const IntegerVector estHess(RestHess);        
     const int nzeta = Pnzeta(0);
     const int nfact = Thetas.ncol();
     const int N = Thetas.nrow();
@@ -357,16 +360,13 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
 {		
     BEGIN_RCPP
     
-    //u and g input as logits   
-    NumericVector P, Pstar, Q, Qstar, r1, r2;	
+	const S4 x(Rx);
+	const NumericMatrix Theta(RTheta);        
+	const IntegerVector estHess(RestHess);                
+	const IntegerVector EM(REM);	
+	const NumericVector ot(Rot);
 	
-	S4 x(Rx);
-	NumericMatrix Theta(RTheta);        
-	IntegerVector estHess(RestHess);                
-	IntegerVector EM(REM);	
-	NumericVector ot(Rot);
-	
-	NumericVector par = x.slot("par");		
+	const NumericVector par = x.slot("par");		
 	const int nfact = Theta.ncol();    
 	NumericVector a(nfact);
 	for(int i = 0; i < nfact; ++i)
@@ -378,6 +378,7 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
     const double u = antilogit(&expu);
     const double g0 = 0.0;
     const double u1 = 1.0;     	 
+    NumericVector r1, r2;    
 	if(EM(0)){
 		NumericMatrix dat = x.slot("rs");
 		r1 = dat(_,1);
@@ -390,17 +391,16 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP REM, SEXP Ro
 	
     NumericMatrix hess (nfact + 3, nfact + 3);
     NumericVector grad (nfact + 3);
-    NumericVector r1_P, r1_P2, r2_Q2, r2_Q;    
     
-    P = itemTrace(a, &d, Theta, &g, &u, ot);
-    Pstar = itemTrace(a, &d, Theta, &g0, &u1, ot);
-    Q = 1.0 - P;
-    Qstar = 1.0 - Pstar;        
-    r1_P = r1/P;
-    r1_P2 = r1/(P*P);
-    r2_Q = r2/Q; 
-    r2_Q2 = r2/(Q*Q);
-    NumericVector r1_Pr2_Q = r1_P - r2_Q;
+    const NumericVector P = itemTrace(a, &d, Theta, &g, &u, ot);
+    const NumericVector Pstar = itemTrace(a, &d, Theta, &g0, &u1, ot);
+    const NumericVector Q = 1.0 - P;
+    const NumericVector Qstar = 1.0 - Pstar;        
+    const NumericVector r1_P = r1/P;
+    const NumericVector r1_P2 = r1/(P*P);
+    const NumericVector r2_Q = r2/Q; 
+    const NumericVector r2_Q2 = r2/(Q*Q);
+    const NumericVector r1_Pr2_Q = r1_P - r2_Q;
     const double difexpg = difexp(&g);
     const double difexpu = difexp(&u);
     grad(nfact) = sum((u-g)*Pstar*Qstar*r1_Pr2_Q);    

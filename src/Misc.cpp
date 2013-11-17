@@ -1,26 +1,8 @@
 #include"Misc.h"
 
-RcppExport SEXP dichOuter(SEXP RThetas, SEXP RPQ, SEXP RN)
-{	
-    BEGIN_RCPP
-    NumericMatrix Thetas(RThetas);    
-    NumericVector PQ(RPQ);
-    NumericVector N(RN);
-    const int nfact = Thetas.ncol();
-	NumericMatrix ret(nfact,nfact);			
-
-	for(int n = 0; n < N(0); ++n)
-		for(int i = 0; i < nfact; ++i)
-			for(int j = 0; j < nfact; ++j)
-				ret(i,j) += Thetas(n,i) * Thetas(n,j) * PQ(n);
-		
-	return(ret);
-	END_RCPP
-}
-
-NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
-	NumericVector Pk_1, NumericVector PQ_1, NumericVector PQ, 
-	NumericVector dif1sq, NumericVector dif1)
+NumericMatrix polyOuter(const NumericMatrix &Thetas, const NumericVector &Pk,
+	const NumericVector &Pk_1, const NumericVector &PQ_1, const NumericVector &PQ, 
+	const NumericVector &dif1sq, const NumericVector &dif1)
 {
 	const int nfact = Thetas.ncol();
 	NumericMatrix d2Louter(nfact,nfact), outer(nfact,nfact);
@@ -42,8 +24,8 @@ NumericMatrix polyOuter(NumericMatrix Thetas, NumericVector Pk,
 	return d2Louter;		
 }
 
-NumericVector itemTrace(NumericVector a, const double *d, 
-        NumericMatrix Theta, const double *g, const double *u, NumericVector ot)
+NumericVector itemTrace(const NumericVector &a, const double *d, 
+        const NumericMatrix &Theta, const double *g, const double *u, const NumericVector &ot)
 {	
     const int nquad = Theta.nrow();
     const int USEOT = ot.length() > 1;
@@ -135,7 +117,7 @@ double antilogit(const double *x){
     return(ret);
 }
 
-SEXP vec2mat(std::vector<double> x, const int *nrow, const int *ncol) {
+SEXP vec2mat(std::vector<double> &x, const int *nrow, const int *ncol) {
   NumericVector output = wrap(x);
   output.attr("dim") = Dimension(*nrow, *ncol);
   return(output);

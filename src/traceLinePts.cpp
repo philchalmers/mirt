@@ -4,10 +4,10 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 {
     BEGIN_RCPP
 
-	NumericVector par(Rpar);
-    NumericVector ot(Rot);
-    IntegerVector asMatrix(RasMatrix);
-    NumericMatrix Theta(RTheta);
+	const NumericVector par(Rpar);
+    const NumericVector ot(Rot);
+    const IntegerVector asMatrix(RasMatrix);
+    const NumericMatrix Theta(RTheta);
     
     const int len = par.length();
     NumericVector a(Theta.ncol());
@@ -56,11 +56,11 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 {
     BEGIN_RCPP
 
-    NumericVector par(Rpar);	
-    NumericVector ot(Rot);
-	NumericMatrix Theta(RTheta);
-	IntegerVector itemexp(Ritemexp);
-    IntegerVector israting(Risrating);
+    const NumericVector par(Rpar);	
+    const NumericVector ot(Rot);
+	const NumericMatrix Theta(RTheta);
+	const IntegerVector itemexp(Ritemexp);
+    const IntegerVector israting(Risrating);
     NumericVector a(Theta.ncol());
     for(int i = 0; i < Theta.ncol(); ++i)
         a(i) = par(i);
@@ -105,12 +105,12 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 {
     BEGIN_RCPP
 
-	NumericVector a(Ra);
-	NumericVector ak(Rak);
-	NumericVector d(Rd);	
-    NumericVector ot(Rot);
-	NumericMatrix Theta(RTheta);
-	IntegerVector returnNum(RreturnNum);
+	const NumericVector a(Ra);
+	const NumericVector ak(Rak);
+	const NumericVector d(Rd);	
+    const NumericVector ot(Rot);
+	const NumericMatrix Theta(RTheta);
+	const IntegerVector returnNum(RreturnNum);
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
 	const int ncat = d.length();
@@ -164,10 +164,10 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
 {
     BEGIN_RCPP
     
-    NumericVector par(Rpar);
-    NumericVector ot(Rot);
-    IntegerVector israting(Risrating);
-    NumericMatrix Theta(RTheta);
+    const NumericVector par(Rpar);
+    const NumericVector ot(Rot);
+    const IntegerVector israting(Risrating);
+    const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     int ncat = par.length() - nfact;
     if(israting(0)) ncat -= 1;
@@ -193,10 +193,10 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
 {
     BEGIN_RCPP
     
-    NumericVector par(Rpar);    
-    NumericMatrix Theta(RTheta);
-    IntegerVector correct(Rcorrect);
-    IntegerVector ncat(Rncat);
+    const NumericVector par(Rpar);    
+    const NumericMatrix Theta(RTheta);
+    const IntegerVector correct(Rcorrect);
+    const IntegerVector ncat(Rncat);
     const int nfact = Theta.ncol();
     NumericVector dpar(nfact+3), a(nfact), d(ncat(0)-1), ak(ncat(0)-1);
     a.fill(1.0);
@@ -206,7 +206,8 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
         ak(i) = par(i+nfact+3);
         d(i) = par(i+nfact+2+ncat(0));
     }
-    NumericVector P, isfalse(1);
+    NumericVector P;
+    const IntegerVector isfalse(1);
     NumericMatrix Pnom, traces(Theta.nrow(), ncat(0));
     P = traceLinePts(dpar, Theta, isfalse, isfalse); 
     Pnom = nominalTraceLinePts(a, ak, d, Theta, isfalse, isfalse); 
@@ -229,10 +230,10 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
 {
     BEGIN_RCPP
     
-    NumericVector par(Rpar);
-    NumericVector ot(Rot);
-    IntegerVector asMatrix(RasMatrix);
-    NumericMatrix Theta(RTheta);
+    const NumericVector par(Rpar);
+    const NumericVector ot(Rot);
+    const IntegerVector asMatrix(RasMatrix);
+    const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     NumericVector a(nfact), d(nfact);
     for(int j = 0; j < nfact; ++j){
@@ -265,10 +266,12 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
 {
     BEGIN_RCPP
     
-    List pars(Rpars);
-    NumericMatrix Theta(RTheta), offterm(Roffterm);
-    IntegerVector itemloc(Ritemloc), istrue(1), isfalse(1);
-    istrue.fill(1);
+    const List pars(Rpars);
+    const NumericMatrix Theta(RTheta);
+    const NumericMatrix offterm(Roffterm);
+    const IntegerVector itemloc(Ritemloc);
+    const IntegerVector istrue(1, 1);
+    const IntegerVector isfalse(1);
     const int J = itemloc.length() - 1;
     const int nfact = Theta.ncol();
     NumericMatrix itemtrace(Theta.nrow(), itemloc(J)-1);
