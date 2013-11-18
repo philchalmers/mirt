@@ -7,7 +7,7 @@ setMethod(
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){                
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        ret <- .Call('dparsDich', x, Theta, estHess, EM, offterm)
+        ret <- .Call('dparsDich', x@par, Theta, estHess, if(EM) x@rs else x@dat, offterm)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }

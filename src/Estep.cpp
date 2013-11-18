@@ -12,13 +12,13 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr)
     const int nquad = prior.length();
     const int nitems = data.ncol();
     const int npat = r.length();
-    std::vector<double> expected(npat, 0.0);
-    std::vector<double> r1vec(nquad*nitems, 0.0);
+    vector<double> expected(npat, 0.0);
+    vector<double> r1vec(nquad*nitems, 0.0);
     List ret;
 	
     // Begin main function body 				
 	for (int pat = 0; pat < npat; ++pat){
-        std::vector<double> posterior(nquad,1.0);
+        vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
             posterior[q] = posterior[q] * prior(q);
         for (int item = 0; item < nitems; ++item)
@@ -66,13 +66,13 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     const int nquad = nbquad * npquad;  
     const int npat = r.length();
     
-    std::vector<double> expected(npat);
-    std::vector<double> r1vec(nquad*nitems*sfact, 0.0);
+    vector<double> expected(npat);
+    vector<double> r1vec(nquad*nitems*sfact, 0.0);
 				
 	// Begin main function body here				
 	for (int pat = 0; pat < npat; ++pat){        
         NumericMatrix L(nbquad,npquad), Elk(nbquad,sfact), posterior(nquad,sfact);	
-        std::vector<double> likelihoods(nquad*sfact, 1.0);
+        vector<double> likelihoods(nquad*sfact, 1.0);
 		for (int fact = 0; fact < sfact; ++fact){ 	
 			for (int item = 0; item < nitems; ++item){
 				if (data(pat,item) && sitems(item,fact))										    
@@ -80,7 +80,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     				    likelihoods[k + nquad*fact] = likelihoods[k + nquad*fact] * itemtrace(k,item);					
 			}
 		}           
-        std::vector<double> Plk(nbquad*sfact);
+        vector<double> Plk(nbquad*sfact);
 		for (int fact = 0; fact < sfact; ++fact){
             int k = 0;
 			for (int j = 0; j < npquad; ++j){				
@@ -92,14 +92,14 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 			for (int i = 0; i < nbquad; ++i)
                 for (int q = 0; q < npquad; ++q)
 			        L(i,q) = L(i,q) * prior(q);
-            std::vector<double> tempsum(nbquad, 0.0);
+            vector<double> tempsum(nbquad, 0.0);
 			for (int i = 0; i < npquad; ++i)
                 for (int q = 0; q < nbquad; ++q)
 			        tempsum[q] += L(q,i);
 			for (int i = 0; i < nbquad; ++i)
 			    Plk[i + fact*nbquad] = tempsum[i];    			
 		}
-        std::vector<double> Pls(nbquad, 1.0);
+        vector<double> Pls(nbquad, 1.0);
 		for (int i = 0; i < nbquad; ++i){		     		  		
 			for(int fact = 0; fact < sfact; ++fact)
 			    Pls[i] = Pls[i] * Plk[i + fact*nbquad];			
@@ -140,21 +140,19 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
     const int n = prior.length(); //nquad
     const int nitems = tabdata.ncol();
     const int nfact = Theta.ncol();
-            
     NumericMatrix scores(tabdata.nrow(), nfact), scores2(tabdata.nrow(), nfact*(nfact + 1)/2);
-    double denom;
 
     for(int pat = 0; pat < tabdata.nrow(); ++pat){
         
-        std::vector<double> L(n, 1.0);
+        vector<double> L(n, 1.0);
         for(int j = 0; j < n; ++j){            
             for(int i = 0; i < nitems; ++i)
                 if(tabdata(pat, i))
                     L[j] = L[j] * itemtrace(j, i);             
         }
         
-        std::vector<double> thetas(nfact, 0.0);
-        denom = 0.0;
+        vector<double> thetas(nfact, 0.0);
+        double denom = 0.0;
         for(int j = 0; j < n; ++j)
             denom += (L[j]*prior(j));
         
@@ -165,7 +163,7 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
         }
 
         int ind = 0;
-        std::vector<double> thetas2(nfact*(nfact+1)/2, 0.0);
+        vector<double> thetas2(nfact*(nfact+1)/2, 0.0);
         for(int i = 0; i < nfact; ++i){
             for(int k = 0; k < nfact; ++k){
                 if(i <= k){

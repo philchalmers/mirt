@@ -6,47 +6,40 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 
 	const NumericVector par(Rpar);
     const NumericVector ot(Rot);
-    const IntegerVector asMatrix(RasMatrix);
     const NumericMatrix Theta(RTheta);
+    const int asMatrix = as<int>(RasMatrix);
     
     const int len = par.length();
-    NumericVector a(Theta.ncol());
+    const int nquad = Theta.nrow();
+	const int nfact = Theta.ncol();
+    vector<double> a(nfact);
     const double utmp = par(len-1);
     const double gtmp = par(len-2);
     const double g = antilogit(&gtmp);
     const double u = antilogit(&utmp);
 	const double d = par(len-3);
-    for(int i = 0; i < Theta.ncol(); ++i)
-        a(i) = par(i);    
-    const int nquad = Theta.nrow();
-	const int nfact = Theta.ncol();
+    for(int i = 0; i < nfact; ++i) a[i] = par(i);
     const int USEOT = ot.length() > 1;
-	NumericVector P(nquad);
-    NumericVector Q(nquad);
-	
-	std::vector<double> z(nquad, d);
-
-	//compute item trace vector
-	for (int j = 0; j <	nquad; ++j){
-		for (int i = 0; i <	nfact; ++i)		
-			z[j] += a(i) * Theta(j,i); 
-	}	
-    if(USEOT){
-        for (int j = 0; j < nquad; ++j)
-            z[j] += ot(j);
-    }
-	for (int i = 0; i < nquad; ++i){ 
-        if(z[i] > ABS_MAX_Z) z[i] = ABS_MAX_Z;
-        else if(z[i] < -ABS_MAX_Z) z[i] = -ABS_MAX_Z;
-		P(i) = g + (u - g) /(1.0 + exp(-z[i]));
+    vector<double> P(nquad);
+    
+	for (int i = 0; i <	nquad; ++i){
+        double z = d;        
+		for (int j = 0; j <	nfact; ++j)		
+			z += par(j) * Theta(i,j); 
+        if(USEOT) z += ot(i);
+        if(z > ABS_MAX_Z) z = ABS_MAX_Z;
+        else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
+        P[i] = g + (u - g) /(1.0 + exp(-z));    
 	}
 	
-    if(asMatrix(0)){
+    if(asMatrix){
         NumericMatrix ret(nquad, 2);
-        ret(_, 0) = 1.0 - P;
-        ret(_, 1) = P;
+        for(int j = 0; j < nquad; ++j){
+            ret(j, 0) = 1.0 - P[j];
+            ret(j, 1) = P[j];
+        }
         return(ret);
-    } else return(P);
+    } else return(wrap(P));
 
 	END_RCPP
 }
@@ -59,15 +52,14 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
     const NumericVector par(Rpar);	
     const NumericVector ot(Rot);
 	const NumericMatrix Theta(RTheta);
-	const IntegerVector itemexp(Ritemexp);
-    const IntegerVector israting(Risrating);
-    NumericVector a(Theta.ncol());
-    for(int i = 0; i < Theta.ncol(); ++i)
-        a(i) = par(i);
+	const int itemexp = as<int>(Ritemexp);
+    const int israting = as<int>(Risrating);
+    vector<double> a(Theta.ncol());
+    for(int i = 0; i < Theta.ncol(); ++i) a[i] = par(i);
     int ncat = par.length() - Theta.ncol();
-    if(israting(0)) ncat -= 1;
-    std::vector<double> d(ncat,0.0);        
-    if(israting(0)){
+    if(israting) ncat -= 1;
+    vector<double> d(ncat,0.0);        
+    if(israting){
         const double t = par(par.length()-1);
         for(int i = Theta.ncol(); i < par.length() - 1; ++i)
             d[i - Theta.ncol()] = par(i) + t;
@@ -82,9 +74,13 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 
 	for(int i = 0; i < nquad; ++i)
         Pk(i,0) = 1.0;
-    for(int i = 0; i < ncat; ++i)
-        Pk(_,i+1) = itemTrace(a, &d[i], Theta, &nullzero, &nullone, ot); 
-    if(itemexp(0)){
+    for(int i = 0; i < ncat; ++i){        
+        vector<double> tmp1(nquad), tmp2(nquad);
+        itemTrace(tmp1, tmp2, a, &d[i], Theta, &nullzero, &nullone, ot);
+        for(int j = 0; j < nquad; ++j)
+            Pk(j,i+1) = tmp2[j];
+    }
+    if(itemexp){
         for(int i = (Pk.ncol()-2); i >= 0; --i)
             P(_,i) = Pk(_,i) - Pk(_,i+1);
         for(int i = 0; i < P.nrow(); ++i){
@@ -110,7 +106,7 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	const NumericVector d(Rd);	
     const NumericVector ot(Rot);
 	const NumericMatrix Theta(RTheta);
-	const IntegerVector returnNum(RreturnNum);
+	const int returnNum = as<int>(RreturnNum);
     const int nquad = Theta.nrow();
 	const int nfact = Theta.ncol();
 	const int ncat = d.length();
@@ -118,9 +114,9 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 
 	NumericMatrix Num(nquad, ncat);
 	NumericMatrix P(nquad, ncat);
-    NumericVector z(ncat);
-	std::vector<double> Den(nquad, 0.0);
-	std::vector<double> innerprod(nquad, 0.0);
+    vector<double> z(ncat);
+	vector<double> Den(nquad, 0.0);
+	vector<double> innerprod(nquad, 0.0);
 
 	for(int i = 0; i < nquad; ++i)
 	    for(int j = 0; j < nfact; ++j)
@@ -128,29 +124,29 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
     if(USEOT){
         for(int i = 0; i < nquad; ++i){
             for(int j = 0; j < ncat; ++j)
-                z(j) = ak(j) * innerprod[i] + d(j) + ot(j);
-            double maxz = max(z);
+                z[j] = ak(j) * innerprod[i] + d(j) + ot(j);
+            double maxz = *std::max_element(z.begin(), z.end());
             for(int j = 0; j < ncat; ++j){
-                z(j) = z(j) - maxz;
-                if(z(j) < -ABS_MAX_Z) z(j) = -ABS_MAX_Z;
-                Num(i,j) = exp(z(j));
+                z[j] = z[j] - maxz;
+                if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+                Num(i,j) = exp(z[j]);
                 Den[i] += Num(i,j);
             }       
         }
     } else {
     	for(int i = 0; i < nquad; ++i){
     	    for(int j = 0; j < ncat; ++j)
-                z(j) = ak(j) * innerprod[i] + d(j);
-            double maxz = max(z);
+                z[j] = ak(j) * innerprod[i] + d(j);
+            double maxz = *std::max_element(z.begin(), z.end());
             for(int j = 0; j < ncat; ++j){
-                z(j) = z(j) - maxz;
-                if(z(j) < -ABS_MAX_Z) z(j) = -ABS_MAX_Z;
-                Num(i,j) = exp(z(j));
+                z[j] = z[j] - maxz;
+                if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+                Num(i,j) = exp(z[j]);
                 Den[i] += Num(i,j);
             }
         }
     }
-    if(returnNum(0)) return(Num);
+    if(returnNum) return(Num);
 	for(int i = 0; i < nquad; ++i){
 	    for(int j = 0; j < ncat; ++j)
 	        P(i,j) = Num(i,j) / Den[i];
@@ -166,14 +162,14 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
     
     const NumericVector par(Rpar);
     const NumericVector ot(Rot);
-    const IntegerVector israting(Risrating);
+    const int israting = as<int>(Risrating);
     const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     int ncat = par.length() - nfact;
-    if(israting(0)) ncat -= 1;
+    if(israting) ncat -= 1;
     NumericVector a(nfact), d(ncat), ak(ncat);
     for(int i = 0; i < nfact; ++i) a(i) = par(i);
-    if(israting(0)){
+    if(israting){
         const double t = par(par.length()-1);
         for(int i = nfact+1; i < par.length() - 1; ++i)
             d(i-nfact) = par(i) + t;
@@ -195,25 +191,23 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
     
     const NumericVector par(Rpar);    
     const NumericMatrix Theta(RTheta);
-    const IntegerVector correct(Rcorrect);
-    const IntegerVector ncat(Rncat);
+    const int correct = as<int>(Rcorrect);
+    const int ncat = as<int>(Rncat);
     const int nfact = Theta.ncol();
-    NumericVector dpar(nfact+3), a(nfact), d(ncat(0)-1), ak(ncat(0)-1);
-    a.fill(1.0);
+    NumericVector dpar(nfact+3), a(nfact, 1.0), d(ncat-1), ak(ncat-1);
     for(int i = 0; i < nfact+3; ++i)
         dpar(i) = par(i);
-    for(int i = 0; i < ncat(0)-1; ++i){
+    for(int i = 0; i < ncat-1; ++i){
         ak(i) = par(i+nfact+3);
-        d(i) = par(i+nfact+2+ncat(0));
+        d(i) = par(i+nfact+2+ncat);
     }
-    NumericVector P;
     const IntegerVector isfalse(1);
-    NumericMatrix Pnom, traces(Theta.nrow(), ncat(0));
-    P = traceLinePts(dpar, Theta, isfalse, isfalse); 
+    NumericMatrix Pnom, traces(Theta.nrow(), ncat);
+    NumericVector P = traceLinePts(dpar, Theta, isfalse, isfalse); 
     Pnom = nominalTraceLinePts(a, ak, d, Theta, isfalse, isfalse); 
     int k = 0;
     for(int i = 0; i < traces.ncol(); ++i){
-        if((i+1) == correct(0)){
+        if((i+1) == correct){
             traces(_,i) = P;
             --k;
         } else {
@@ -232,8 +226,8 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     
     const NumericVector par(Rpar);
     const NumericVector ot(Rot);
-    const IntegerVector asMatrix(RasMatrix);
     const NumericMatrix Theta(RTheta);
+    const int asMatrix = as<int>(RasMatrix);
     const int nfact = Theta.ncol();
     NumericVector a(nfact), d(nfact);
     for(int j = 0; j < nfact; ++j){
@@ -242,23 +236,25 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     }
     const double gtmp = par(nfact*2);
     const double g = antilogit(&gtmp);
-    NumericVector P(Theta.nrow());
-    P.fill(1.0);
+    vector<double> P(Theta.nrow(), 1.0);
     
     for(int j = 0; j < nfact; ++j)
         for(int i = 0; i < Theta.nrow(); ++i)
-            P(i) = P(i) * (1.0 / (1.0 + exp(-(a(j) * Theta(i,j) + d(j)))));
+            P[i] = P[i] * (1.0 / (1.0 + exp(-(a(j) * Theta(i,j) + d(j)))));
     for(int i = 0; i < Theta.nrow(); ++i){    
-        P(i) = g + (1.0 - g) * P(i);
-        if(P(i) < 1e-20) P(i) = 1e-20;
-        else if (P(i) > 1.0 - 1e-20) P(i) = 1.0 - 1e-20;
+        P[i] = g + (1.0 - g) * P[i];
+        if(P[i] < 1e-20) P[i] = 1e-20;
+        else if (P[i] > 1.0 - 1e-20) P[i] = 1.0 - 1e-20;
     }
-    if(asMatrix(0)){
+    if(asMatrix){
         NumericMatrix ret(Theta.nrow(), 2);
-        ret(_, 0) = 1.0 - P;
-        ret(_, 1) = P;
+        for(int j = 0; j < Theta.nrow(); ++j){
+            ret(j, 0) = 1.0 - P[j];
+            ret(j, 1) = P[j];
+        }
         return(ret);
-    } else return(P);
+    } else return(wrap(P));
+    
     END_RCPP   
 }
 
