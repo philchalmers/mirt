@@ -111,8 +111,8 @@ double antilogit(const double *x){
     return(ret);
 }
 
-SEXP vec2mat(vector<double> &x, const int *nrow, const int *ncol) {
+SEXP vec2mat(vector<double> &x, const int &nrow, const int &ncol) {
   NumericVector output = wrap(x);
-  output.attr("dim") = Dimension(*nrow, *ncol);
+  output.attr("dim") = Dimension(nrow, ncol);
   return(output);
 }

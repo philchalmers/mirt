@@ -37,7 +37,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr)
                     r1vec[q + item*nquad] += posterior[q];
 	} //end main
     
-    NumericMatrix r1 = vec2mat(r1vec, &nquad, &nitems);
+    NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     return(ret);
@@ -119,7 +119,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 	}	//end main 
 	
     int nsitems = sfact * nitems;
-    NumericMatrix r1 = vec2mat(r1vec, &nquad, &nsitems);    
+    NumericMatrix r1 = vec2mat(r1vec, nquad, nsitems);    
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     return(ret);
