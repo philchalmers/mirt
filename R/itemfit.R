@@ -194,7 +194,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         }
         for (i in 1L:J){
             if(!is.null(empirical.plot) && i != empirical.plot) next
-            for(j in 1L:n.uniqueGroups){
+            for(j in unique(Groups)){
                 dat <- fulldata[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
                 r <- colSums(dat)
                 N <- nrow(dat)
