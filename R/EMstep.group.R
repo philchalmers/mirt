@@ -187,7 +187,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         if(verbose)
             cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                         cycles, LL, max(abs(preMstep.longpars - longpars))))
-        if(cycles > 3L && all(abs(preMstep.longpars - longpars) < TOL))  break
+        if(all(abs(preMstep.longpars - longpars) < TOL))  break
         Mstep.time <- Mstep.time + proc.time()[3L] - start
     } #END EM
     if(cycles == NCYCLES){
