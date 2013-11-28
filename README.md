@@ -29,12 +29,13 @@ than the version on CRAN. To install this package from source:
 install.packages('devtools')
 ```
 
-3) Load the `devtools` package and install from the Github source code. 
+3) Load the `devtools` package (requires version 1.4+) and install from the Github source code. 
  
 ```r
 library('devtools')
-install_github('mirt', 'philchalmers')
+install_github('philchalmers/mirt')
 ```
+
 # Presentations, Workshops, and Other Things
 
 Below are some presentation/workshop files for `mirt` that I have written and presented, and 
