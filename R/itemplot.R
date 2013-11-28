@@ -21,7 +21,7 @@
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce dimensionality?
 #' Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several 
 #' zero slopes
-#' @param ... additional arguments to be passed to lattice
+#' @param ... additional arguments to be passed to lattice and coef()
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords plot
 #' @export itemplot

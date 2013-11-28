@@ -131,6 +131,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         Theta <- thetaComb(theta, x@nfact)        
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)    
+    if(is(x, 'ExploratoryClass')){
+        cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
+        x@pars[[item]]@par <- as.numeric(cfs[[item]])
+    }
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat
     info <- 0

@@ -46,7 +46,8 @@
   other confirmatory models that contain several zero
   slopes}
 
-  \item{...}{additional arguments to be passed to lattice}
+  \item{...}{additional arguments to be passed to lattice
+  and coef()}
 }
 \description{
   \code{itemplot} displays various item based IRT plots,
