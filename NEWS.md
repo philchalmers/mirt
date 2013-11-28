@@ -1,5 +1,8 @@
 # Changes in mirt 1.x
 
+- `fscores(..., method = 'EAPsum')` returns observed and expected values, along with general fit 
+  statistics that are printed to the console and returned as a 'fit' attribute
+
 - removed multinomial constant in log-likelihood since it has no influence on nested model comparisons
 
 - `SE.type = 'crossprod'` added for computing the parameter information matrix based on the 

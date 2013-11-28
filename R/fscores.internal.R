@@ -385,6 +385,25 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp){
         scores <- rowSums(dat)
         EAPscores <- ret$Theta[match(scores, ret$Sum.Scores)]
         ret <- data.frame(Sum.Scores=scores, Theta=EAPscores)
+    } else {
+        dat <- x@data
+        E <- L1 %*% prior * nrow(dat)
+        adj <- apply(dat, 2, min)
+        dat <- t(t(dat) - adj)
+        Otmp <- matrix(table(sort(rowSums(dat))))
+        got <- as.numeric(names(table(sort(rowSums(dat)))))
+        if(min(got) == 0) got <- got + 1
+        O <- matrix(0, nrow(E), 1)
+        O[got, 1] <- Otmp
+        ret$observed <- O
+        ret$expected <- E
+        df <- length(ret$observed) - 1
+        X2 <- sum((ret$observed - ret$expected)^2 / ret$expected)
+        G2 <- 2 * sum(ret$observed * log(ret$observed/(ret$expected)))
+        attr(ret, 'fit') <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE),
+                                       G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE))
+        print(attr(ret, 'fit'))
+        cat('\n')
     }
     ret
 }
