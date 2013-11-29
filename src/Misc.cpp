@@ -24,17 +24,17 @@ NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,
 }
 
 void itemTrace(vector<double> &P, vector<double> &Pstar, const vector<double> &a, const double *d, 
-        const NumericMatrix &Theta, const double *g, const double *u, const NumericVector &ot)
+        const NumericMatrix &Theta, const double *g, const double *u, const vector<double> &ot)
 {	
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
-    const int USEOT = ot.length() > 1;
+    const int USEOT = ot.size() > 1;
 
 	for (int i = 0; i <	nquad; ++i){
         double z = *d;        
     	for (int j = 0; j <	nfact; ++j)		
 			z += a[j] * Theta(i,j); 
-        if(USEOT) z += ot(i);
+        if(USEOT) z += ot[i];
         if(z > ABS_MAX_Z) z = ABS_MAX_Z;
         else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
         Pstar[i] = 1.0 / (1.0 + exp(-z));

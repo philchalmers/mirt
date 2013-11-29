@@ -10,7 +10,7 @@ NumericMatrix polyOuter(const NumericMatrix &, const vector<double> &,
 	const vector<double> &, const vector<double> &);
 
 void itemTrace(vector<double> &, vector<double> &, const vector<double> &, const double *, 
-        const NumericMatrix &, const double *, const double *, const NumericVector &);
+        const NumericMatrix &, const double *, const double *, const vector<double> &);
         
 double logit(const double *);
 
