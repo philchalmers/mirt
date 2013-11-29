@@ -111,6 +111,15 @@ double antilogit(const double *x){
     return(ret);
 }
 
+double vecsum(const vector<double> &x)
+{
+    double sum = 0.0;
+    const int size = x.size();
+    for(int i = 0; i < size; ++i)
+        sum += x[i];
+    return(sum);
+}
+
 SEXP vec2mat(vector<double> &x, const int &nrow, const int &ncol) {
   NumericVector output = wrap(x);
   output.attr("dim") = Dimension(nrow, ncol);
