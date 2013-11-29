@@ -172,7 +172,7 @@
 #' (anovas <- lapply(estmodels, anova, object2=refmodel))
 #'
 #' #family-wise error control
-#' p <- do.call(rbind, lapply(anovas, function(x) x[2,9]))
+#' p <- do.call(rbind, lapply(anovas, function(x) x[2, 'p']))
 #' p.adjust(p, method = 'BH')
 #'
 #' #same as above, except only test if slopes vary (1 df)
