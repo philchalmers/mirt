@@ -78,8 +78,8 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
     const IntegerMatrix fulldata(Rfulldata);
     const NumericMatrix itemtrace0(Ritemtrace0);    
     const NumericMatrix itemtrace1(Ritemtrace1);    
-    const NumericVector log_den0(Rlog_den0);
-    const NumericVector log_den1(Rlog_den1);
+    const vector<double> log_den0 = as< vector<double> >(Rlog_den0);
+    const vector<double> log_den1 = as< vector<double> >(Rlog_den1);
     List ret;
     vector<double> Sum0(fulldata.nrow()), Sum1(fulldata.nrow());
     
@@ -93,8 +93,8 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
                 rs1 += log(itemtrace1(i,j));
             }
         }
-        Sum0[i] = rs0 + log_den0(i);
-        Sum1[i] = rs1 + log_den1(i);
+        Sum0[i] = rs0 + log_den0[i];
+        Sum1[i] = rs1 + log_den1[i];
     }
 	
     ret["total_0"] = wrap(Sum0);
