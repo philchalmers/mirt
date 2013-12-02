@@ -13,8 +13,8 @@
     = '', pars = NULL, method = 'EM', constrain = NULL,
     parprior = NULL, calcNull = TRUE, draws = 5000, quadpts
     = NULL, grsm.block = NULL, rsm.block = NULL, key =
-    NULL, technical = list(), accelerate = TRUE, verbose =
-    TRUE, ...)
+    NULL, technical = list(), accelerate = TRUE,
+    empiricalhist = FALSE, verbose = TRUE, ...)
 
   \S4method{coef}{MultipleGroupClass}(object, CI = .95,
     digits = 3, verbose = TRUE, ...)
@@ -107,6 +107,10 @@
   test standard error function, \code{'RE'} for the
   relative efficiency plot, and \code{'score'} for the
   expected total score plot}
+
+  \item{empiricalhist}{logical; estimate prior distribtuion
+  using an empirical histogram approach. see \code{mirt}
+  for details}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}}
@@ -318,9 +322,6 @@ dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 models <- mirt.model('F1 = 1-15')
-models2 <- mirt.model('
-   F1 = 1-10
-   F2 = 10-15')
 
 mod_configural <- multipleGroup(dat, models, group = group)
 plot(mod_configural)
@@ -336,6 +337,25 @@ plot(mod_configural2, type = 'infocontour')
 plot(mod_configural2, type = 'SE')
 plot(mod_configural2, type = 'RE')
 itemplot(mod_configural2, 10)
+
+############
+## empical histogram example (normal and bimodal groups)
+set.seed(1234)
+a <- matrix(rlnorm(50, .2, .2))
+d <- matrix(rnorm(50))
+ThetaNormal <- matrix(rnorm(2000))
+ThetaBimodal <- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
+Theta <- rbind(ThetaNormal, ThetaBimodal)
+dat <- simdata(a, d, 4000, itemtype = 'dich', Theta=Theta)
+group <- rep(c('G1', 'G2'), each=2000)
+
+EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
+coef(EH)
+plot(EH, type = 'empiricalhist', npts = 60)
+
+#dif test for item 1
+EH1 <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat)[-1])
+anova(EH, EH1)
 
 }
 }

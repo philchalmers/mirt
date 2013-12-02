@@ -73,7 +73,8 @@ setClass(
                                     group='factor',
                                     groupNames='factor',
                                     invariance='character',
-                                    cmods='list'),
+                                    cmods='list',
+                                    Prior='list'),
     validity = function(object) return(TRUE)
 )
 

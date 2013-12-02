@@ -138,9 +138,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])                                              
         }
         if(list$EH && cycles > 1L){
-            Prior[[1]] <- rowSums(rlist[[1]][[1]]) / sum(rlist[[1]][[1]])
-        }
-        if(!is.null(list$customPriorFun)){
+            for(g in 1L:ngroups)
+                Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
+        } else if(!is.null(list$customPriorFun)){
             for(g in 1L:ngroups)
                 Prior[[g]] <- list$customPriorFun(gTheta[[g]])
         }

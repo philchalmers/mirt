@@ -55,6 +55,8 @@
 #' information function, \code{'infocontour'} for the test information contours,
 #' \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
 #' and \code{'score'} for the expected total score plot
+#' @param empiricalhist logical; estimate prior distribtuion using an empirical histogram approach.
+#' see \code{mirt} for details
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}
 #' @param npts number of quadrature points to be used for plotting features.
 #' Larger values make plots look smoother
@@ -88,7 +90,7 @@
 #' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
 #' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
 #' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-#' key = NULL, technical = list(), accelerate = TRUE, verbose = TRUE, ...)
+#' key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, ...)
 #'
 #' \S4method{coef}{MultipleGroupClass}(object, CI = .95, digits = 3, verbose = TRUE, ...)
 #'
@@ -251,9 +253,6 @@
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
 #' models <- mirt.model('F1 = 1-15')
-#' models2 <- mirt.model('
-#'    F1 = 1-10
-#'    F2 = 10-15')
 #'
 #' mod_configural <- multipleGroup(dat, models, group = group)
 #' plot(mod_configural)
@@ -269,19 +268,41 @@
 #' plot(mod_configural2, type = 'SE')
 #' plot(mod_configural2, type = 'RE')
 #' itemplot(mod_configural2, 10)
+#' 
+#' ############
+#' ## empical histogram example (normal and bimodal groups)
+#' set.seed(1234)
+#' a <- matrix(rlnorm(50, .2, .2))
+#' d <- matrix(rnorm(50))
+#' ThetaNormal <- matrix(rnorm(2000))
+#' ThetaBimodal <- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
+#' Theta <- rbind(ThetaNormal, ThetaBimodal)
+#' dat <- simdata(a, d, 4000, itemtype = 'dich', Theta=Theta)
+#' group <- rep(c('G1', 'G2'), each=2000)
+#' 
+#' EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
+#' coef(EH)
+#' plot(EH, type = 'empiricalhist', npts = 60)
+#' 
+#' #dif test for item 1
+#' EH1 <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat)[-1])
+#' anova(EH, EH1)
 #'
 #' }
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
                           draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                          key = NULL, technical = list(), accelerate = TRUE, verbose = TRUE, ...)
+                          key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE, 
+                          verbose = TRUE, ...)
 {
     Call <- match.call()
     if(length(model) > 1L) 
         stop('multipleGroup only supports single group inputs')
     invariance.check <- invariance %in% c('free_means', 'free_var', 'free_varcov')
-    if(all(invariance.check) && length(constrain) == 0){
+    if(empiricalhist && any(invariance.check))
+        stop('freeing group parameters not meaningful when estimating empirical histograms')
+    if(sum(invariance.check == 2L) && length(constrain) == 0){
         warn <- TRUE
         if(is(model, 'mirt.model')){
             if(any(model$x[,1L] == 'CONSTRAINB'))
@@ -291,7 +312,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
             stop('Model is not identified without further constrains (may require additional anchoring items).')
     }
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance,
-                      itemtype=itemtype, guess=guess, upper=upper,
+                      itemtype=itemtype, guess=guess, upper=upper, empiricalhist=empiricalhist,
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,

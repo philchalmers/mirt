@@ -11,8 +11,8 @@
 - `customPriorFun` input to technical list now available for utilizing user defined prior distribution
   functions in the EM algorithm
 
-- empirical histogram estimation now available in `mirt()` for single group, unidimensional models.
-  Additional plot `type = 'empiricalhist'` also added
+- empirical histogram estimation now available in `mirt()` and `multipleGroup()` for unidimensional 
+  models. Additional plot `type = 'empiricalhist'` also added to the `plot()` generic
 
 - reimplement `read.mirt()` with better consistency checking between the `plink` package
 

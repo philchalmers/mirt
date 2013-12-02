@@ -150,7 +150,7 @@ setMethod(
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           auto.key = TRUE, ...)
     {
-        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score'))
+        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist'))
             stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0))
             stop('Improper angle specifed. Must be between 0 and 90.')
@@ -238,6 +238,28 @@ setMethod(
             if(type == 'score')
                 return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = TRUE, ...))
+            if(type == 'empiricalhist'){
+                if(!length(x@Prior)) stop('Empirical histogram was not estimated for this object')                
+                Prior <- Theta <- pltfull <- vector('list', ngroups)                
+                for(g in 1L:ngroups){
+                    Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts), 
+                                           length.out = x@quadpts))
+                    Prior[[g]] <- x@Prior[[g]] * nrow(x@data)
+                    cuts <- cut(Theta[[g]], floor(npts/2))
+                    Prior[[g]] <- do.call(c, lapply(split(Prior[[g]], cuts), mean))
+                    Theta[[g]] <- do.call(c, lapply(split(Theta[[g]], cuts), mean))
+                    keep1 <- min(which(Prior[[g]] > 1e-10))
+                    keep2 <- max(which(Prior[[g]] > 1e-10))
+                    plt <- data.frame(Theta=Theta[[g]], Prior=Prior[[g]], group=x@groupNames[g])
+                    plt <- plt[keep1:keep2, , drop=FALSE]
+                    pltfull[[g]] <- plt
+                }
+                plt <- do.call(rbind, pltfull)
+                return(xyplot(Prior ~ Theta, plt, group=group, auto.key = TRUE,
+                              xlab = expression(theta), ylab = 'Expected Frequency',
+                              type = 'b', main = 'Empirical Histogram', ...))
+                
+            }
         }
     }
 )

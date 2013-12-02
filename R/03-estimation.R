@@ -616,6 +616,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    tabdatalong=tabdatalong,
                    constrain=constrain,
                    parprior=parprior,
+                   Prior=if(opts$empiricalhist) ESTIMATE$Prior else list(),
+                   quadpts=opts$quadpts,
                    group=Data$group,
                    groupNames=Data$groupNames,
                    invariance=invariance,
