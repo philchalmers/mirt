@@ -1,5 +1,7 @@
 # Changes in mirt 1.x
 
+- `type = 'trace'` and `type = 'infotrace'` support added to `plot` generic for multiple group objects
+
 - `fscores(..., method = 'EAPsum')` returns observed and expected values, along with general fit 
   statistics that are printed to the console and returned as a 'fit' attribute
 

@@ -29,8 +29,9 @@
   \S4method{fitted}{MultipleGroupClass}(object, ...)
 
   \S4method{plot}{MultipleGroupClass}(x, y, type = 'info',
-    npts = 50, theta_angle = 45, rot = list(xaxis = -70,
-    yaxis = 30, zaxis = 10), ...)
+    npts = 50, theta_angle = 45, which.items =
+    1:ncol(x@data), rot = list(xaxis = -70, yaxis = 30,
+    zaxis = 10), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -149,6 +150,10 @@
   \item{digits}{the number of significant digits to be
   rounded}
 
+  \item{which.items}{a numeric vector indicating which
+  items to be used when plotting. Default is to use all
+  available items}
+
   \item{...}{additional arguments to be passed}
 
   \item{technical}{list specifying subtle parameters that
@@ -205,6 +210,7 @@ coef(mod_scalar2)
 residuals(mod_scalar2)
 plot(mod_configural)
 plot(mod_configural, type = 'score')
+plot(mod_configural, type = 'trace', auto.key = FALSE)
 itemplot(mod_configural, 2)
 itemplot(mod_configural, 2, type = 'RE')
 

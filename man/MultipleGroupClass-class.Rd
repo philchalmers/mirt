@@ -30,6 +30,8 @@ Objects can be created by calls of the form \code{new("MultipleGroupClass", ...)
     \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
+    \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
+        \code{empiricalhist = TRUE}}
     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }

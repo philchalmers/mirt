@@ -33,8 +33,8 @@ NULL
 
 #' Description of Science data
 #'
-#' A 4-item data set borrowed from \code{\link[ltm]{ltm}} package, first example
-#' of the \code{\link[ltm]{grm}} function. See more complete documentation therein.
+#' A 4-item data set borrowed from \code{ltm} package in R, first example
+#' of the \code{grm()} function. See more complete documentation therein.
 #'
 #'
 #' @name Science

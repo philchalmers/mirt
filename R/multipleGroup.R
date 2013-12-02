@@ -74,6 +74,8 @@
 #' @param object an object of class \code{confmirtClass}
 #' @param object2 an object of class \code{confmirtClass}
 #' @param digits the number of significant digits to be rounded
+#' @param which.items a numeric vector indicating which items to be used when plotting. Default is
+#' to use all available items
 #' @param ... additional arguments to be passed
 #' @param technical list specifying subtle parameters that can be adjusted. See 
 #' \code{\link{mirt}} for details
@@ -103,7 +105,7 @@
 #' \S4method{fitted}{MultipleGroupClass}(object, ...)
 #'
 #' \S4method{plot}{MultipleGroupClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
-#' rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
+#'    which.items = 1:ncol(x@@data), rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
 #'
 #' @export multipleGroup
 #' @examples
@@ -136,6 +138,7 @@
 #' residuals(mod_scalar2)
 #' plot(mod_configural)
 #' plot(mod_configural, type = 'score')
+#' plot(mod_configural, type = 'trace', auto.key = FALSE)
 #' itemplot(mod_configural, 2)
 #' itemplot(mod_configural, 2, type = 'RE')
 #'

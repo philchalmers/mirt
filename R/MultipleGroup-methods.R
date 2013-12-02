@@ -146,11 +146,12 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
+    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
+                          which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           auto.key = TRUE, ...)
     {
-        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist'))
+        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
             stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0))
             stop('Improper angle specifed. Must be between 0 and 90.')
@@ -257,8 +258,49 @@ setMethod(
                 plt <- do.call(rbind, pltfull)
                 return(xyplot(Prior ~ Theta, plt, group=group, auto.key = TRUE,
                               xlab = expression(theta), ylab = 'Expected Frequency',
-                              type = 'b', main = 'Empirical Histogram', ...))
-                
+                              type = 'b', main = 'Empirical Histogram', ...))                
+            }
+            if(type == 'trace'){
+                plt <- vector('list', ngroups)
+                P <- vector('list', length(which.items))
+                for(g in 1L:ngroups){                    
+                    names(P) <- colnames(x@data)[which.items]
+                    for(i in which.items){
+                        tmp <- probtrace(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
+                        if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
+                        tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta), 
+                                                                     labels=paste0('cat', 1L:ncol(tmp))))
+                        P[[i]] <- tmp2
+                    }
+                    nrs <- sapply(P, nrow)                
+                    Pstack <- do.call(rbind, P)
+                    names <- c()
+                    for(i in 1L:length(nrs))
+                        names <- c(names, rep(names(P)[i], nrs[i]))
+                    plotobj <- data.frame(Pstack, item=names, Theta=Theta, group=x@groupNames[g])
+                    plt[[g]] <- plotobj
+                }
+                plt <- do.call(rbind, plt)
+                return(xyplot(P ~ Theta|group, plt, group = item, ylim = c(-0.1,1.1),,
+                              xlab = expression(theta), ylab = expression(P(theta)),
+                              auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+            }
+            if(type == 'infotrace'){
+                plt <- vector('list', ngroups)
+                for(g in 1L:ngroups){
+                    I <- matrix(NA, nrow(Theta), J)
+                    for(i in which.items)
+                        I[,i] <- iteminfo(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
+                    I <- t(na.omit(t(I)))
+                    items <- gl(n=length(unique(which.items)), k=nrow(Theta), 
+                                labels = paste('Item', which.items))
+                    plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items, group=x@groupNames[g])
+                    plt[[g]] <- plotobj
+                }
+                plt <- do.call(rbind, plt)
+                return(xyplot(I ~ Theta | group, plt, group = item, 
+                              xlab = expression(theta), ylab = expression(I(theta)),
+                              auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
             }
         }
     }
