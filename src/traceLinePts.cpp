@@ -230,10 +230,10 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     const NumericMatrix Theta(RTheta);
     const int asMatrix = as<int>(RasMatrix);
     const int nfact = Theta.ncol();
-    NumericVector a(nfact), d(nfact);
+    vector<double> a(nfact), d(nfact);
     for(int j = 0; j < nfact; ++j){
-        a(j) = par[j];
-        d(j) = par[j+nfact];
+        a[j] = par[j];
+        d[j] = par[j+nfact];
     }
     const double gtmp = par[nfact*2];
     const double g = antilogit(&gtmp);
@@ -241,7 +241,7 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     
     for(int j = 0; j < nfact; ++j)
         for(int i = 0; i < Theta.nrow(); ++i)
-            P[i] = P[i] * (1.0 / (1.0 + exp(-(a(j) * Theta(i,j) + d(j)))));
+            P[i] = P[i] * (1.0 / (1.0 + exp(-(a[j] * Theta(i,j) + d[j]))));
     for(int i = 0; i < Theta.nrow(); ++i){    
         P[i] = g + (1.0 - g) * P[i];
         if(P[i] < 1e-20) P[i] = 1e-20;
