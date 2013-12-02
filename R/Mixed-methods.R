@@ -163,8 +163,8 @@ setMethod(
         cat('\n')
         ret <- data.frame(AIC = c(object@AIC, object2@AIC),
                           AICc = c(object@AICc, object2@AICc),
-                          BIC = c(object@BIC, object2@BIC),
                           SABIC = c(object@SABIC, object2@SABIC),
+                          BIC = c(object@BIC, object2@BIC),
                           logLik = c(object@logLik, object2@logLik),
                           X2 = c('', X2),
                           df = c('', abs(df)),
