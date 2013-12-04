@@ -1,37 +1,15 @@
 \name{multipleGroup}
-\alias{anova,MultipleGroupClass-method}
-\alias{coef,MultipleGroupClass-method}
-\alias{fitted,MultipleGroupClass-method}
 \alias{multipleGroup}
-\alias{plot,MultipleGroupClass-method}
-\alias{residuals,MultipleGroupClass-method}
-\alias{summary,MultipleGroupClass-method}
 \title{Multiple Group Estimation}
 \usage{
-  multipleGroup(data, model, group, itemtype = NULL, guess
-    = 0, upper = 1, SE = FALSE, SE.type = 'SEM', invariance
-    = '', pars = NULL, method = 'EM', constrain = NULL,
-    parprior = NULL, calcNull = TRUE, draws = 5000, quadpts
-    = NULL, grsm.block = NULL, rsm.block = NULL, key =
-    NULL, technical = list(), accelerate = TRUE,
-    empiricalhist = FALSE, verbose = TRUE, ...)
-
-  \S4method{coef}{MultipleGroupClass}(object, CI = .95,
-    digits = 3, verbose = TRUE, ...)
-
-  \S4method{summary}{MultipleGroupClass}(object, digits =
-    3, verbose = TRUE, ...)
-
-  \S4method{anova}{MultipleGroupClass}(object, object2)
-
-  \S4method{residuals}{MultipleGroupClass}(object, ...)
-
-  \S4method{fitted}{MultipleGroupClass}(object, ...)
-
-  \S4method{plot}{MultipleGroupClass}(x, y, type = 'info',
-    npts = 50, theta_angle = 45, which.items =
-    1:ncol(x@data), rot = list(xaxis = -70, yaxis = 30,
-    zaxis = 10), ...)
+  multipleGroup(data, model, group, itemtype = NULL,
+    guess = 0, upper = 1, SE = FALSE, SE.type = "SEM",
+    invariance = "", pars = NULL, method = "EM",
+    constrain = NULL, parprior = NULL, calcNull = TRUE,
+    draws = 5000, quadpts = NULL, grsm.block = NULL,
+    rsm.block = NULL, key = NULL, technical = list(),
+    accelerate = TRUE, empiricalhist = FALSE,
+    verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -60,7 +38,7 @@
   equal across all groups} \item{\code{'intercepts'}}{to
   constrain all the intercepts to be equal across all
   groups, note for nominal models this also includes the
-  category specific slope parameters}}
+  category specific slope parameters} }
 
   Additionally, specifying specific item name bundles (from
   \code{colnames(data)}) will constrain all freely
@@ -110,28 +88,12 @@
   expected total score plot}
 
   \item{empiricalhist}{logical; estimate prior distribtuion
-  using an empirical histogram approach. see \code{mirt}
+  using an empirical histogram approach.  see \code{mirt}
   for details}
-
-  \item{theta_angle}{numeric values ranging from 0 to 90
-  used in \code{plot}}
-
-  \item{npts}{number of quadrature points to be used for
-  plotting features. Larger values make plots look
-  smoother}
-
-  \item{rot}{allows rotation of the 3D graphics}
-
-  \item{x}{an object of class \code{mirt} to be plotted or
-  printed}
-
-  \item{y}{an unused variable to be ignored}
 
   \item{key}{see \code{\link{mirt}} for details}
 
   \item{itemtype}{see \code{\link{mirt}} for details}
-
-  \item{CI}{see \code{\link{mirt}} for details}
 
   \item{constrain}{see \code{\link{mirt}} for details}
 
@@ -142,17 +104,6 @@
   \item{parprior}{see \code{\link{mirt}} for details}
 
   \item{pars}{see \code{\link{mirt}} for details}
-
-  \item{object}{an object of class \code{confmirtClass}}
-
-  \item{object2}{an object of class \code{confmirtClass}}
-
-  \item{digits}{the number of significant digits to be
-  rounded}
-
-  \item{which.items}{a numeric vector indicating which
-  items to be used when plotting. Default is to use all
-  available items}
 
   \item{...}{additional arguments to be passed}
 

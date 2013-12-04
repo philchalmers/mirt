@@ -161,185 +161,143 @@
 #' }
 #' }
 #'
-#' @aliases mirt summary,ExploratoryClass-method coef,ExploratoryClass-method anova,ExploratoryClass-method
-#' fitted,ExploratoryClass-method plot,ExploratoryClass-method residuals,ExploratoryClass-method
-#' summary,ConfirmatoryClass-method coef,ConfirmatoryClass-method anova,ConfirmatoryClass-method
-#' fitted,ConfirmatoryClass-method plot,ConfirmatoryClass-method residuals,ConfirmatoryClass-method
+#' @aliases mirt 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#' numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object returned from \code{mirt.model()} declaring how
-#' the factor model is to be estimated, or a single numeric value indicating the number
-#' of exploratory factors to estimate. See \code{\link{mirt.model}} for
-#' more details
+#'   the factor model is to be estimated, or a single numeric value indicating the number
+#'   of exploratory factors to estimate. See \code{\link{mirt.model}} for
+#'   more details
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
-#' which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
-#' however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
-#' '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
-#' and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
-#' 3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response model,
-#' rating scale graded response model, generalized partial credit model, Rasch rating scale model, 
-#' nominal model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
-#' models, respectively. User defined item classes
-#' can also be defined using the \code{\link{createItem}} function
+#'   which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
+#'   however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
+#'   '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
+#'   and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
+#'   3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response model,
+#'   rating scale graded response model, generalized partial credit model, Rasch rating scale model, 
+#'   nominal model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
+#'   models, respectively. User defined item classes
+#'   can also be defined using the \code{\link{createItem}} function
 #' @param method a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
-#' for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to 
-#' use the MH-RM algorithm
+#'   for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to 
+#'   use the MH-RM algorithm
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using
-#' the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
-#' in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
-#' \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same
-#' group and therefore have the same number of item categories
+#'   the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
+#'   in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
+#'   \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same
+#'   group and therefore have the same number of item categories
 #' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
 #' @param key a numeric vector of the response scoring key. Required when using nested logit item types, and
-#' must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
-#' so use \code{NA} in item locations that are not applicable
+#'   must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
+#'   so use \code{NA} in item locations that are not applicable
 #' @param SE logical; estimate the standard errors? Calculates the information matrix from MHRM subroutine for
-#' stochastic approximation, Bock and Lieberman style information (use only with small number of items), or
-#' supplemented EM (SEM) computations for Bock and Lieberman style information matrix
+#'   stochastic approximation, Bock and Lieberman style information (use only with small number of items), or
+#'   supplemented EM (SEM) computations for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix.
-#' Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach 
-#' (EM only), \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option), and \code{'crossprod'} 
-#' for simple standard error computations based on the Fisher scoring variance. 
-#' Note that for the \code{'SEM'} option increasing 
-#' the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be 
-#' run in parallel if a \code{\link{mirtCluster}} object has been defined. 
-#' Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
+#'   Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach 
+#'   (EM only), \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option), and \code{'crossprod'} 
+#'   for simple standard error computations based on the Fisher scoring variance. 
+#'   Note that for the \code{'SEM'} option increasing 
+#'   the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be 
+#'   run in parallel if a \code{\link{mirtCluster}} object has been defined. 
+#'   Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
-#' value to assign a global guessing parameter or may be entered as a numeric
-#' vector corresponding to each item
+#'   value to assign a global guessing parameter or may be entered as a numeric
+#'   vector corresponding to each item
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
-#' value to assign a global guessing parameter or may be entered as a numeric
-#' vector corresponding to each item
+#'   value to assign a global guessing parameter or may be entered as a numeric
+#'   vector corresponding to each item
 #' @param accelerate logical; use a general acceleration algorithm described by Ramsey (1975)? Default
-#' is \code{TRUE}
+#'   is \code{TRUE}
 #' @param rotate type of rotation to perform after the initial orthogonal
-#' parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
-#' If \code{rotate != ''} in the \code{summary}
-#' input then the default from the object is ignored and the new rotation from the list
-#' is used instead. Rotations currently supported are: promax, oblimin, varimax, quartimin,
-#' targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ, 
-#' tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ
+#'   parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
+#'   If \code{rotate != ''} in the \code{summary}
+#'   input then the default from the object is ignored and the new rotation from the list
+#'   is used instead. Rotations currently supported are: promax, oblimin, varimax, quartimin,
+#'   targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ, 
+#'   tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ
 #' @param Target a dummy variable matrix indicting a target rotation pattern
-#' @param which.items a numeric vector indicating which items to be used when plotting. Default is
-#' to use all available items
-#' @param CI the amount of converged used to compute confidence intervals in \code{coef()}; default is 
-#' .95 for 95 percent confidence intervals
-#' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
-#' Only applicable to unidimensional models
 #' @param constrain a list of user declared equality constraints. To see how to define the
-#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
-#' To constrain parameters to be equal create a list with separate concatenated vectors signifying which
-#' parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
-#' use \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the 
-#' \code{\link{mirt.model}} syntax
+#'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
+#'   To constrain parameters to be equal create a list with separate concatenated vectors signifying which
+#'   parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
+#'   use \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the 
+#'   \code{\link{mirt.model}} syntax
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
-#' parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
-#' Can define either normal (e.g., intercepts, lower/guessing and upper bounds), 
-#' log-normal (e.g., for univariate slopes), or beta prior probabilities. 
-#' To specify a prior the form is c('priortype', ...), where normal priors
-#' are \code{parprior = list(c(parnumbers, 'norm', mean, sd))}, 
-#' \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
-#' \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta. Priors can also be specified 
-#' using \code{\link{mirt.model}} syntax
+#'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
+#'   Can define either normal (e.g., intercepts, lower/guessing and upper bounds), 
+#'   log-normal (e.g., for univariate slopes), or beta prior probabilities. 
+#'   To specify a prior the form is c('priortype', ...), where normal priors
+#'   are \code{parprior = list(c(parnumbers, 'norm', mean, sd))}, 
+#'   \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
+#'   \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta. Priors can also be specified 
+#'   using \code{\link{mirt.model}} syntax
 #' @param pars a data.frame with the structure of how the starting values, parameter numbers, estimation
-#' logical values, etc, are defined. The user may observe how the model defines the values by using \code{pars =
-#' 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars =
-#' mymodifiedpars}
-#' @param rawug logical; return the untranformed internal g and u parameters? If \code{FALSE}, g and u's
-#' are converted with the original format along with delta standard errors
+#'   logical values, etc, are defined. The user may observe how the model defines the values by using \code{pars =
+#'   'values'}, and this object can in turn be modified and input back into the estimation with \code{pars =
+#'   mymodifiedpars}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the
-#' data contains no NA's
+#'   data contains no NA's
 #' @param quadpts number of quadrature points per dimension (must be an odd number). 
-#' By default the number of quadrature uses the following scheme: 
-#' \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
-#' @param printvalue a numeric value to be specified when using the \code{res='exp'}
-#' option. Only prints patterns that have standardized residuals greater than
-#' \code{abs(printvalue)}. The default (NULL) prints all response patterns
-#' @param x an object of class \code{mirt} to be plotted or printed
-#' @param y an unused variable to be ignored
-#' @param object a model estimated from \code{mirt} of class \code{ExploratoryClass} or
-#' \code{ConfirmatoryClass}
-#' @param object2 a second model estimated from any of the mirt package estimation methods
-#' \code{ExploratoryClass} with more estimated parameters than \code{object}
-#' @param suppress a numeric value indicating which (possibly rotated) factor
-#' loadings should be suppressed. Typical values are around .3 in most
-#' statistical software. Default is 0 for no suppression
-#' @param digits number of significant digits to be rounded
-#' @param type type of plot to view; can be \code{'info'} to show the test
-#' information function, \code{'infocontour'} for the test information contours,
-#' \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
-#' for all item probability information or trace lines (only available when all items are dichotomous),
-#' \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} for
-#' the expected total score. If \code{empiricalhist = TRUE} was used then the type \code{'empiricalhist'}
-#' also will be available to generate the empirical histogram plot
-#' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. If a vector is
-#' used then a bubble plot is created with the summed information across the angles specified
-#' (e.g., \code{theta_angle = seq(0, 90, by=10)})
-#' @param npts number of quadrature points to be used for plotting features.
-#' Larger values make plots look smoother
-#' @param rot allows rotation of the 3D graphics
+#'   By default the number of quadrature uses the following scheme: 
+#'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
 #' @param large a logical, indicating whether the internal collapsed data should be returned,
-#' or list of internally computed mirt parameters containing the data. If \code{TRUE} a list containing
-#' the organized data used prior to estimation is returned. This list object can then be passed back into
-#' \code{large} to avoid reorganizing the data in every estimation (useful when the dataset are very large
-#' and computing the tabularized data is computationally burdensome). Therefore, the best strategy for large data
-#' is to always pass the internal data to the estimation function, shown below:
-#' \describe{
-#' \item{Compute organized data}{e.g., \code{internaldat <- mirt(Science, 1, large = TRUE)}}
-#' \item{Pass the organized data to all estimation functions}{e.g.,
-#' \code{mod <- mirt(Science, 1, large = internaldat)}}
+#'   or list of internally computed mirt parameters containing the data. If \code{TRUE} a list containing
+#'   the organized data used prior to estimation is returned. This list object can then be passed back into
+#'   \code{large} to avoid reorganizing the data in every estimation (useful when the dataset are very large
+#'   and computing the tabularized data is computationally burdensome). Therefore, the best strategy for large data
+#'   is to always pass the internal data to the estimation function, shown below:
+#'   \describe{
+#'   \item{Compute organized data}{e.g., \code{internaldat <- mirt(Science, 1, large = TRUE)}}
+#'   \item{Pass the organized data to all estimation functions}{e.g.,
+#'   \code{mod <- mirt(Science, 1, large = internaldat)}}
 #' }
-#' @param restype type of residuals to be displayed. Can be either \code{'LD'}
-#' for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
-#' expected values for the frequencies of every response pattern
-#' @param df.p logical; print the degrees of freedom and p-values?
 #' @param empiricalhist logical; estimate prior distribtuion using an empirical histogram approach.
-#' Only applicable for unidimensional models estimated with the EM algorithm. 
-#' The number of cycles, TOL, and quadpts are adjusted 
-#' accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
-#' @param full.scores logical; compute relavent statistics for each subject in the original data?
+#'   Only applicable for unidimensional models estimated with the EM algorithm. 
+#'   The number of cycles, TOL, and quadpts are adjusted 
+#'   accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
 #' @param nominal.highlow optional matrix indicating the highest (row 1) and lowest (row 2) categories
-#' to be used for the nominal response model. Using this input may result in better numerical stability.
-#' The matrix input should be a 2 by nitems numeric matrix, where each number represents the \emph{reduced}
-#' category representation (mirt omits categories that are missing, so if the unique values for an item
-#' are c(1,2,5,6) they are treated as being the same as c(1,2,3,4). Viewing the starting values will help
-#' to identify the categories)
+#'   to be used for the nominal response model. Using this input may result in better numerical stability.
+#'   The matrix input should be a 2 by nitems numeric matrix, where each number represents the \emph{reduced}
+#'   category representation (mirt omits categories that are missing, so if the unique values for an item
+#'   are c(1,2,5,6) they are treated as being the same as c(1,2,3,4). Viewing the starting values will help
+#'   to identify the categories)
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
-#' is 5000
+#'   is 5000
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param technical a list containing lower level technical parameters for estimation. May be:
-#' \describe{
-#' \item{MAXQUAD}{maximum number of quadratures; default 10000}
-#' \item{TOL}{EM or MH-RM convergence threshold; defaults are .0001 and .001}
-#' \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
-#' and \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower values will take longer but may be more
-#' stable for computing the information matrix. Default is .0001}
-#' \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
-#' \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
-#' \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
-#' \item{set.seed}{seed number used during estimation. Default is 12345}
-#' \item{gain}{a vector of two values specifying the numerator and exponent
-#'      values for the RM gain function \eqn{(val1 / cycle)^val2}. Default is \code{c(0.15,0.65)}}
-#' \item{customK}{a numeric value to be used to explicitly declare the number of response categories
-#'       for each item. This should only be used when constructing mirt model for reasons other 
-#'       than parameter estimation (such as to obtain factor scores), and requires that the input data
-#'       all have 0 as the lowest category. The format is the same as the 
-#'       \code{mod@@K} slot in all converged models}
-#' \item{GenRandomPars}{logical; generate random starting values prior to optimatization instead of 
-#'      using the fixed internal starting values?}
-#' \item{customPriorFun}{a custom function used to determine the normalized density for integration 
-#'      in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
-#'      with the same length as number of rows in \code{Theta}} 
-#' }
+#'   \describe{
+#'     \item{MAXQUAD}{maximum number of quadratures; default 10000}
+#'     \item{TOL}{EM or MH-RM convergence threshold; defaults are .0001 and .001}
+#'     \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
+#'     and \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower values will take longer but may be more
+#'     stable for computing the information matrix. Default is .0001}
+#'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
+#'     \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
+#'     \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
+#'     \item{set.seed}{seed number used during estimation. Default is 12345}
+#'     \item{gain}{a vector of two values specifying the numerator and exponent
+#'          values for the RM gain function \eqn{(val1 / cycle)^val2}. Default is \code{c(0.15,0.65)}}
+#'     \item{customK}{a numeric value to be used to explicitly declare the number of response categories
+#'           for each item. This should only be used when constructing mirt model for reasons other 
+#'           than parameter estimation (such as to obtain factor scores), and requires that the input data
+#'           all have 0 as the lowest category. The format is the same as the 
+#'           \code{mod@@K} slot in all converged models}
+#'     \item{GenRandomPars}{logical; generate random starting values prior to optimatization instead of 
+#'          using the fixed internal starting values?}
+#'     \item{customPriorFun}{a custom function used to determine the normalized density for integration 
+#'          in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
+#'          with the same length as number of rows in \code{Theta}} 
+#'   }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
-#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
-#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-#' \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, 
-#' \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
+#'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
+#'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
+#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
+#'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
+#'   \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, 
+#'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #'
 #' @references
 #'
@@ -402,28 +360,6 @@
 #' IL: Scientific Software International.
 #'
 #' @keywords models
-#' @usage
-#' mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM', method = 'EM',
-#' pars = NULL, constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000, rotate = 'oblimin', Target = NaN,
-#' quadpts = NULL, grsm.block = NULL, rsm.block = NULL, key=  NULL, nominal.highlow = NULL,
-#' large = FALSE, accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, technical = list(), ...)
-#'
-#' \S4method{summary}{ExploratoryClass}(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
-#' verbose = TRUE, ...)
-#'
-#' \S4method{coef}{ExploratoryClass}(object, CI = .95, rotate = '', Target = NULL, digits = 3, 
-#' rawug = FALSE, verbose = TRUE, IRTpars = FALSE, ...)
-#'
-#' \S4method{anova}{ExploratoryClass}(object, object2)
-#'
-#' \S4method{plot}{ExploratoryClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
-#' which.items = 1:ncol(x@@data), rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
-#'
-#' \S4method{residuals}{ExploratoryClass}(object, restype = 'LD', digits = 3, df.p = FALSE, 
-#'   full.scores = FALSE, printvalue = NULL, verbose = TRUE, ...)
-#'
-#' \S4method{fitted}{ExploratoryClass}(object, digits = 3, ...)
-#'
 #' @export mirt
 #' @examples
 #'

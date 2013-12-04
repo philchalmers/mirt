@@ -13,35 +13,34 @@
 #' \code{mod2values} or from passing \code{pars = 'values'}, or by supplying a \code{constrain} list
 #' for user defined equality constraints between parameters.
 #'
-#' @aliases multipleGroup coef,MultipleGroupClass-method summary,MultipleGroupClass-method
-#' anova,MultipleGroupClass-method plot,MultipleGroupClass-method residuals,MultipleGroupClass-method
-#' fitted,MultipleGroupClass-method
+#' @aliases multipleGroup 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#' numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model a single model object returned from \code{mirt.model()} declaring how
-#' the factor model is to be estimated. See \code{\link{mirt.model}} for more details
+#'   the factor model is to be estimated. See \code{\link{mirt.model}} for more details
 #' @param group a character vector indicating group membership
 #' @param invariance a character vector containing the following possible options:
-#' \describe{
-#' \item{\code{'free_means'}}{for freely estimating all latent means (reference group constrained to 0)}
-#' \item{\code{'free_var'}}{for freely estimating all latent variances (reference group constrained to 1's)}
-#' \item{\code{'free_cov'}}{for freely estimating all latent covariances (reference group constrained to an 
-#' Identity matrix)}
-#' \item{\code{'free_varcov'}}{calls both \code{'free_var'} and \code{'free_cov'}}
-#' \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
-#' \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for
-#' nominal models this also includes the category specific slope parameters}}
-#' 
-#' Additionally, specifying specific item name bundles (from \code{colnames(data)}) will
-#' constrain all freely estimated parameters in each item to be equal across groups. This is useful
-#' for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
-#' functioning (DIF) across groups
+#'   \describe{
+#'     \item{\code{'free_means'}}{for freely estimating all latent means (reference group constrained to 0)}
+#'     \item{\code{'free_var'}}{for freely estimating all latent variances (reference group constrained to 1's)}
+#'     \item{\code{'free_cov'}}{for freely estimating all latent covariances (reference group constrained to an 
+#'     Identity matrix)}
+#'     \item{\code{'free_varcov'}}{calls both \code{'free_var'} and \code{'free_cov'}}
+#'     \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
+#'     \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for
+#'     nominal models this also includes the category specific slope parameters}
+#'    }
+#'   
+#'   Additionally, specifying specific item name bundles (from \code{colnames(data)}) will
+#'   constrain all freely estimated parameters in each item to be equal across groups. This is useful
+#'   for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
+#'   functioning (DIF) across groups
 #' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be
-#' entered as a single value to assign a global guessing parameter or may be entered as
-#' a numeric vector for each item
+#'   entered as a single value to assign a global guessing parameter or may be entered as
+#'   a numeric vector for each item
 #' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be
-#' entered as a single value to assign a global upper bound parameter or may be entered as a
-#' numeric vector corresponding to each item
+#'   entered as a single value to assign a global upper bound parameter or may be entered as a
+#'   numeric vector corresponding to each item
 #' @param accelerate see \code{\link{mirt}} for more details
 #' @param SE logical; estimate the information matrix for standard errors?
 #' @param SE.type see \code{\link{mirt}} for more details
@@ -50,35 +49,23 @@
 #' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
 #' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM
-#' (\code{'MHRM'}) algorithm
+#'   (\code{'MHRM'}) algorithm
 #' @param type type of plot to view; can be \code{'info'} to show the test
-#' information function, \code{'infocontour'} for the test information contours,
-#' \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
-#' and \code{'score'} for the expected total score plot
+#'   information function, \code{'infocontour'} for the test information contours,
+#'   \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
+#'   and \code{'score'} for the expected total score plot
 #' @param empiricalhist logical; estimate prior distribtuion using an empirical histogram approach.
-#' see \code{mirt} for details
-#' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}
-#' @param npts number of quadrature points to be used for plotting features.
-#' Larger values make plots look smoother
-#' @param rot allows rotation of the 3D graphics
-#' @param x an object of class \code{mirt} to be plotted or printed
-#' @param y an unused variable to be ignored
+#'   see \code{mirt} for details
 #' @param key see \code{\link{mirt}} for details
 #' @param itemtype see \code{\link{mirt}} for details
-#' @param CI see \code{\link{mirt}} for details
 #' @param constrain see \code{\link{mirt}} for details
 #' @param grsm.block see \code{\link{mirt}} for details
 #' @param rsm.block see \code{\link{mirt}} for details
 #' @param parprior see \code{\link{mirt}} for details
 #' @param pars see \code{\link{mirt}} for details
-#' @param object an object of class \code{confmirtClass}
-#' @param object2 an object of class \code{confmirtClass}
-#' @param digits the number of significant digits to be rounded
-#' @param which.items a numeric vector indicating which items to be used when plotting. Default is
-#' to use all available items
 #' @param ... additional arguments to be passed
 #' @param technical list specifying subtle parameters that can be adjusted. See 
-#' \code{\link{mirt}} for details
+#'   \code{\link{mirt}} for details
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso
 #' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
@@ -88,25 +75,6 @@
 #' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
 #' \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #' @keywords models
-#' @usage
-#' multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
-#' invariance = '', pars = NULL, method = 'EM', constrain = NULL,
-#' parprior = NULL, calcNull = TRUE, draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-#' key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, ...)
-#'
-#' \S4method{coef}{MultipleGroupClass}(object, CI = .95, digits = 3, verbose = TRUE, ...)
-#'
-#' \S4method{summary}{MultipleGroupClass}(object, digits = 3, verbose = TRUE, ...)
-#'
-#' \S4method{anova}{MultipleGroupClass}(object, object2)
-#'
-#' \S4method{residuals}{MultipleGroupClass}(object, ...)
-#'
-#' \S4method{fitted}{MultipleGroupClass}(object, ...)
-#'
-#' \S4method{plot}{MultipleGroupClass}(x, y, type = 'info', npts = 50, theta_angle = 45,
-#'    which.items = 1:ncol(x@@data), rot = list(xaxis = -70, yaxis = 30, zaxis = 10), ...)
-#'
 #' @export multipleGroup
 #' @examples
 #' \dontrun{

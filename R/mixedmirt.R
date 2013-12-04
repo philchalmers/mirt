@@ -27,7 +27,7 @@
 #'  To simulate maximum a posteriori estimates for the random effects use the \code{\link{randef}}
 #'  function.
 #'
-#' @aliases mixedmirt coef,MixedClass-method summary,MixedClass-method anova,MixedClass-method
+#' @aliases mixedmirt 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #' numerically ordered data, with missing data coded as \code{NA}
 #' @param covdata a \code{data.frame} that consists of the \code{nrow(data)} by \code{K}
