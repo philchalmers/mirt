@@ -51,7 +51,8 @@ mod1withLogLik <- calcLogLik(mod1, draws=5000)
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-  \code{\link{mirt}}, \code{\link{multipleGroup}}
+  \code{\link{mirt}}, \code{\link{multipleGroup}},
+  \code{\link{mixedmirt}}
 }
 \keyword{calcLogLik}
 

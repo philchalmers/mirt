@@ -216,6 +216,10 @@ summary(simmod)
   31}, 4-19
 }
 \seealso{
+  \code{\link{anova-method}}, \code{\link{coef-method}},
+  \code{\link{summary-method}},
+  \code{\link{residuals-method}},
+  \code{\link{plot-method}}, \code{\link{fitted-method}},
   \code{\link{expand.table}}, \code{\link{key2binary}},
   \code{\link{mirt.model}}, \code{\link{mirt}},
   \code{\link{bfactor}}, \code{\link{multipleGroup}},

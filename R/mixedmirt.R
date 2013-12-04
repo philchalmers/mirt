@@ -29,42 +29,43 @@
 #'
 #' @aliases mixedmirt 
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#' numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, with missing data coded as \code{NA}
 #' @param covdata a \code{data.frame} that consists of the \code{nrow(data)} by \code{K}
-#' 'person level' fixed and random predictors
+#'   'person level' fixed and random predictors
 #' @param model an object returned from \code{mirt.model()} declaring how
-#' the factor model is to be estimated. See \code{\link{mirt.model}} for
-#' more details
+#'   the factor model is to be estimated. See \code{\link{mirt.model}} for
+#'   more details
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory') 
-#' predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for 
-#' each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign} input.
-#' If any polytomous items are being model the \code{items} are argument is not valid since all
-#' intercept parameters are freely estimated and identified with the parameterizations found in 
-#' \code{\link{mirt}}, and the first column in the fixed design matrix (commonly the intercept or a reference
-#' group) is omitted
+#'   predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for 
+#'   each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign} input.
+#'   If any polytomous items are being model the \code{items} are argument is not valid since all
+#'   intercept parameters are freely estimated and identified with the parameterizations found in 
+#'   \code{\link{mirt}}, and the first column in the fixed design matrix (commonly the intercept or a reference
+#'   group) is omitted
 #' @param random a right sided formula or list of formulas containing crossed random effects 
-#' of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are 
-#' random numeric predictors within each group. If no intercept value is specified then by default the 
-#' correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by including 
-#' the \code{~ -1 + ...} constant 
+#'   of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are 
+#'   random numeric predictors within each group. If no intercept value is specified then by default the 
+#'   correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by including 
+#'   the \code{~ -1 + ...} constant 
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect does not support the following 
-#' item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}
+#'   item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where 
-#' each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed 
-#' effect predictors (i.e., item intercepts). By default an \code{items} variable is reserved for 
-#' modeling the item intercept parameters
+#'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed 
+#'   effect predictors (i.e., item intercepts). By default an \code{items} variable is reserved for 
+#'   modeling the item intercept parameters
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for 
-#' more detail
+#'   more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
 #' @param return.design logical; return the design matrices before they have (potentially) 
-#' been reassigned? 
+#'   been reassigned? 
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
-#' is 5000
+#'   is 5000
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See 
-#' \code{\link{mirt}} for more detail
+#'   \code{\link{mirt}} for more detail
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{randef}}, \code{\link{calcLogLik}}, \code{\link{mirtCluster}}
+#' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}}
+#'   \code{\link{randef}}, \code{\link{calcLogLik}}, \code{\link{mirtCluster}}, \code{\link{mirt}}
 #' @export mixedmirt
 #' @examples
 #'

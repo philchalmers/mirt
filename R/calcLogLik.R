@@ -29,10 +29,10 @@
 #' and (possibly) the G^2 and other model fit statistic if there is no missing data.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @docType methods
-#' @rdname calcLogLik-methods
+#' @rdname calcLogLik-method
 #' @export calcLogLik
 #' @seealso
-#' \code{\link{mirt}}, \code{\link{multipleGroup}}
+#' \code{\link{mirt}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}
 #' @keywords calcLogLik
 #' @examples
 #'

@@ -1,10 +1,10 @@
 \docType{methods}
-\name{show}
-\alias{show}
+\name{show-method}
 \alias{show,ConfirmatoryClass-method}
 \alias{show,ExploratoryClass-method}
 \alias{show,MixedClass-method}
 \alias{show,MultipleGroupClass-method}
+\alias{show-method}
 \title{Show model object}
 \arguments{
   \item{x}{an object of class \code{ExploratoryClass},
@@ -12,6 +12,9 @@
   \code{MixedClass}}
 }
 \description{
+  \code{show(object)}
+}
+\details{
   Print model object summaries to the console.
 }
 \examples{
@@ -19,8 +22,5 @@
 x <- mirt(Science, 1)
 show(x)
 }
-}
-\seealso{
-  \code{\link{print}}
 }
 

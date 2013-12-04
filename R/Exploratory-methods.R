@@ -1,16 +1,17 @@
 #' Print the model objects
 #'
+#' \code{print(x)}
+#'
 #' Print model object summaries to the console.
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
-#' @name print
-#' @aliases print print,ExploratoryClass-method print,ConfirmatoryClass-method 
+#' @name print-method
+#' @aliases print,ExploratoryClass-method print,ConfirmatoryClass-method 
 #'   print,MultipleGroupClass-method print,MixedClass-method 
 #' @docType methods
-#' @rdname print-methods
-#' @seealso \code{\link{show}}
+#' @rdname print-method
 #' @examples
 #' 
 #' \dontrun{
@@ -47,17 +48,18 @@ setMethod(
 
 #' Show model object
 #'
+#' \code{show(object)}
+#'
 #' Print model object summaries to the console.
 #' 
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
-#' @name show
-#' @aliases show show,ExploratoryClass-method show,ConfirmatoryClass-method 
+#' @name show-method
+#' @aliases show,ExploratoryClass-method show,ConfirmatoryClass-method 
 #'   show,MultipleGroupClass-method show,MixedClass-method 
 #' @docType methods
-#' @rdname show-methods
-#' @seealso \code{\link{print}}
+#' @rdname show-method
 #' @examples
 #' 
 #' \dontrun{
@@ -74,26 +76,28 @@ setMethod(
 
 #' Summary of model object
 #' 
+#' \code{summary(object, rotate = '', Target = NULL, suppress = 0, digits = 3, verbose = TRUE, ...)}
+#' 
 #' Tranforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
-#' the fixed and random coeffiicents are printed.
+#' the fixed and random coeffiicents are printed. 
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
-#' @param rotate default code{rotate = ''}. See \code{\link{mirt}} for details
-#' @param Target default \code{Target = NULL}. A dummy variable matrix indicting a target rotation pattern
-#' @param suppress default \code{suppress = 0}. A numeric value indicating which (possibly rotated) factor
+#' @param rotate see \code{\link{mirt}} for details
+#' @param Target a dummy variable matrix indicting a target rotation pattern
+#' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
-#' @param digits default \code{digits = 3}. Number of significant digits to be rounded
-#' @param verbose default \code{verbose = TRUE}. Logical; allow information to be printed to the console?
+#' @param digits number of significant digits to be rounded
+#' @param verbose logical; allow information to be printed to the console?
 #' @param ... additional arguments to be passed
 #'
-#' @name summary
-#' @aliases summary summary,ExploratoryClass-method summary,ConfirmatoryClass-method 
+#' @name summary-method
+#' @aliases summary,ExploratoryClass-method summary,ConfirmatoryClass-method 
 #'   summary,MultipleGroupClass-method summary,MixedClass-method 
 #' @docType methods
-#' @rdname summary-methods
-#' @seealso \code{\link{coef}}
+#' @rdname summary-method
+#' @seealso \code{\link{coef-method}}
 #' @examples
 #' 
 #' \dontrun{
@@ -163,29 +167,32 @@ setMethod(
 
 #' Extract raw coefs from model object
 #'
+#' \code{coef(object, CI = .95, rotate = '', Target = NULL, digits = 3, 
+#'    rawug = FALSE, verbose = TRUE, ...)}
+#'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
-#' @param CI default \code{CI = .95}. The amount of converged used to compute confidence intervals; default is 
+#' @param CI the amount of converged used to compute confidence intervals; default is 
 #'   95 percent confidence intervals
-#' @param IRTpars default \code{IRTpars = FALSE}. Logical; convert slope intercept parameters into traditional IRT parameters?
+#' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
 #'   Only applicable to unidimensional models
-#' @param rotate default \code{rotate = ''}. See \code{\link{mirt}} for details
-#' @param Target default \code{Target = NULL}. A dummy variable matrix indicting a target rotation pattern
-#' @param suppress default \code{suppress = 0}. A numeric value indicating which (possibly rotated) factor
+#' @param rotate see \code{\link{mirt}} for details
+#' @param Target a dummy variable matrix indicting a target rotation pattern
+#' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
-#' @param digits default \code{digits = 3}. Number of significant digits to be rounded
-#' @param verbose default \code{verbose = TRUE}. Logical; allow information to be printed to the console?
-#' @param rawug default \code{rawug = FALSE}. Logical; return the untranformed internal g and u parameters?
+#' @param digits number of significant digits to be rounded
+#' @param verbose logical; allow information to be printed to the console?
+#' @param rawug logical; return the untranformed internal g and u parameters?
 #'   If \code{FALSE}, g and u's are converted with the original format along with delta standard errors
 #' @param ... additional arguments to be passed
 #'
-#' @name coef
-#' @aliases coef coef,ExploratoryClass-method coef,ConfirmatoryClass-method 
+#' @name coef-method
+#' @aliases coef,ExploratoryClass-method coef,ConfirmatoryClass-method 
 #'   coef,MultipleGroupClass-method coef,MixedClass-method 
 #' @docType methods
-#' @rdname coef-methods
-#' @seealso \code{\link{coef}}
+#' @rdname coef-method
+#' @seealso \code{\link{summary-method}}
 #' @examples
 #' 
 #' \dontrun{
@@ -248,16 +255,17 @@ setMethod(
 
 #' Compare nested models
 #'
+#' \code{anova(object, object2)}
+#'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param object2 a second model estimated from any of the mirt package estimation methods
 #'
-#' @name anova
-#' @aliases anova anova,ExploratoryClass-method anova,ConfirmatoryClass-method 
+#' @name anova-method
+#' @aliases anova,ExploratoryClass-method anova,ConfirmatoryClass-method 
 #'   anova,MultipleGroupClass-method anova,MixedClass-method 
 #' @docType methods
-#' @rdname anova-methods
-#' @seealso \code{\link{anova}}
+#' @rdname anova-method
 #' @examples
 #' 
 #' \dontrun{
@@ -295,27 +303,29 @@ setMethod(
 
 #' Compute model residuals
 #'
+#' \code{residuals(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE, 
+#'                          printvalue = NULL, verbose = TRUE, ...)}
+#'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
-#' @param restype default \code{restype = 'LD'}. Type of residuals to be displayed. 
+#' @param restype type of residuals to be displayed. 
 #'   Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #'   expected values for the frequencies of every response pattern
-#' @param digits default \code{digits = 3}. Number of significant digits to be rounded
-#' @param df.p default \code{df.p = FALSE}. logical; print the degrees of freedom and p-values?
-#' @param full.scores default \code{full.scores = FALSE}. logical; compute relavent statistics 
+#' @param digits number of significant digits to be rounded
+#' @param df.p logical; print the degrees of freedom and p-values?
+#' @param full.scores logical; compute relavent statistics 
 #'  for each subject in the original data?
-#' @param printvalue default \code{printvalue = NULL}. A numeric value to be specified when using the \code{res='exp'}
+#' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #'   option. Only prints patterns that have standardized residuals greater than
 #'   \code{abs(printvalue)}. The default (NULL) prints all response patterns
-#' @param verbose default \code{verbose = TRUE}. Logical; allow information to be printed to the console?
+#' @param verbose logical; allow information to be printed to the console?
 #' @param ... additional arguments to be passed
 #'
-#' @name residuals
-#' @aliases residuals residuals,ExploratoryClass-method residuals,ConfirmatoryClass-method 
+#' @name residuals-method
+#' @aliases residuals,ExploratoryClass-method residuals,ConfirmatoryClass-method 
 #'   residuals,MultipleGroupClass-method 
 #' @docType methods
-#' @rdname residuals-methods
-#' @seealso \code{\link{residuals}}
+#' @rdname residuals-method
 #' @examples
 #' 
 #' \dontrun{
@@ -410,33 +420,36 @@ setMethod(
 
 #' Plot various test implied functions from models
 #'
+#' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45, 
+#'                          which.items = 1:ncol(x@@data),
+#'                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+#'                          auto.key = TRUE, ...)}
+#' 
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
-#' @param type default \code{type = 'info'}. Type of plot to view; can be \code{'info'} to show the test
+#' @param type type of plot to view; can be \code{'info'} to show the test
 #'   information function, \code{'infocontour'} for the test information contours,
 #'   \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
 #'   for all item probability information or trace lines (only available when all items are dichotomous),
 #'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} for
 #'   the expected total score. If \code{empiricalhist = TRUE} was used then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
-#' @param theta_angle default \code{theta_angle = 45}. Numeric values ranging from 0 to 90 used in \code{plot}. 
+#' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}. 
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
 #'   (e.g., \code{theta_angle = seq(0, 90, by=10)})
-#' @param npts default \code{npts = 50}. Number of quadrature points to be used for plotting features.
+#' @param npts number of quadrature points to be used for plotting features.
 #'   Larger values make plots look smoother
-#' @param rot default \code{rot = list(xaxis = -70, yaxis = 30, zaxis = 10)}. Allows rotation of the 3D graphics
-#' @param which.items default \code{which.items = 1:ncol(x@@data)}. 
-#'   A numeric vector indicating which items to be used when plotting. Default is
+#' @param rot allows rotation of the 3D graphics
+#' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
-#' @param auto.key default \code{auto.key = TRUE}. Logical parameter passed to the \code{lattice} package
+#' @param auto.key logical parameter passed to the \code{lattice} package
 #' @param ... additional arguments to be passed
 #'
-#' @name plot
-#' @aliases plot plot,ExploratoryClass-method plot,ConfirmatoryClass-method 
+#' @name plot-method
+#' @aliases plot,ExploratoryClass-method plot,ConfirmatoryClass-method 
 #'   plot,MultipleGroupClass-method 
 #' @docType methods
-#' @rdname plot-methods
-#' @seealso \code{\link{plot}}
+#' @rdname plot-method
 #' @examples
 #' 
 #' \dontrun{
@@ -594,17 +607,18 @@ setMethod(
 
 #' Compute fitted values
 #'
+#' \code{fitted(object, digits = 3, ...)}
+#'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
 #'   \code{MultipleGroupClass}
-#' @param digits default \code{digits = 3}. Number of significant digits to be rounded
+#' @param digits number of significant digits to be rounded
 #' @param ... additional arguments to be passed
 #'
-#' @name fitted
-#' @aliases fitted fitted,ExploratoryClass-method fitted,ConfirmatoryClass-method 
+#' @name fitted-method
+#' @aliases fitted,ExploratoryClass-method fitted,ConfirmatoryClass-method 
 #'   fitted,MultipleGroupClass-method
 #' @docType methods
-#' @rdname fitted-methods
-#' @seealso \code{\link{fitted}}
+#' @rdname fitted-method
 #' @examples
 #' 
 #' \dontrun{

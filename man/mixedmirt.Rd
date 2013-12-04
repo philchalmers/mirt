@@ -25,7 +25,7 @@
   \code{covdata} and \code{itemdesign}. To estimate the
   intercepts for each item the keyword \code{items} is
   reserved and automatically added to the \code{itemdesign}
-  input. If any polytomous items are being model the
+  input.  If any polytomous items are being model the
   \code{items} are argument is not valid since all
   intercept parameters are freely estimated and identified
   with the parameterizations found in \code{\link{mirt}},
@@ -254,7 +254,9 @@ coef(mod3)
   Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-  \code{\link{randef}}, \code{\link{calcLogLik}},
-  \code{\link{mirtCluster}}
+  \code{\link{anova-method}}, \code{\link{coef-method}},
+  \code{\link{summary-method}} \code{\link{randef}},
+  \code{\link{calcLogLik}}, \code{\link{mirtCluster}},
+  \code{\link{mirt}}
 }
 

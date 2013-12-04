@@ -24,32 +24,33 @@
 #'
 #' @aliases bfactor
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#' numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model a numeric vector specifying which factor loads on which
-#' item. For example, if for a 4 item test with two specific factors, the first
-#' specific factor loads on the first two items and the second specific factor
-#' on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
-#' on the second-tier factors (have no specific component) \code{NA} values may 
-#' be used as place-holders. These numbers will be translated into a format suitable for
-#' \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S' added to the 
-#' respective factor number
+#'   item. For example, if for a 4 item test with two specific factors, the first
+#'   specific factor loads on the first two items and the second specific factor
+#'   on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load 
+#'   on the second-tier factors (have no specific component) \code{NA} values may 
+#'   be used as place-holders. These numbers will be translated into a format suitable for
+#'   \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S' added to the 
+#'   respective factor number
 #' @param model2 a two-tier model specification object defined by \code{mirt.model()}. By default
-#' the model will fit a unidimensional model in the second-tier, and therefore be equivalent to 
-#' the bifactor model
+#'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to 
+#'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param SE logical; calculate information matrix and standard errors?
 #' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param ... additional arguments to be passed to the main estimation function. See \code{\link{mirt}}
-#' for more details
+#'   for more details
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso
-#' \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#' \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-#' \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
-#' \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-#' \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#' \code{\link{simdata}}, \code{\link{createItem}}
+#' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
+#'   \code{\link{residuals-method}}, \code{\link{plot-method}}, \code{\link{fitted-method}},
+#'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
+#'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
+#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
+#'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
+#'   \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
+#'   \code{\link{simdata}}, \code{\link{createItem}}
 #' @references
 #' 
 #' Cai, L. (2010). A two-tier full-information item factor analysis model with applications.
