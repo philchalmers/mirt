@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.0.5
+Version: 1.0.6
 Date: 2013-11-01
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -29,6 +29,7 @@ Suggests:
     plink,
     boot,
     latticeExtra,
+    shiny,
     parallel
 ByteCompile: yes
 LazyLoad: yes

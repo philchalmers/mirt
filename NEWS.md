@@ -1,5 +1,8 @@
 # Changes in mirt 1.x
 
+- added a `shiny = TRUE` option to `itemplot()` to download and run the interactive shiny applet. 
+  Useful for instructive purposes, as well as understanding how the internal parameters of mirt behave
+
 - `type = 'trace'` and `type = 'infotrace'` support added to `plot` generic for multiple group objects
 
 - `fscores(..., method = 'EAPsum')` returns observed and expected values, along with general fit 
