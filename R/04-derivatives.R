@@ -7,7 +7,7 @@ setMethod(
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){                
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        ret <- .Call('dparsDich', x@par, Theta, estHess, if(EM) x@rs else x@dat, offterm)
+        ret <- .Call('dparsDich', x@par, Theta, estHess, x@dat, offterm)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
@@ -20,7 +20,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         P <- P.poly(x@par, Theta, ot=offterm)
-        ret <- .Call("dparsPoly", P, Theta, if(EM) x@rs else x@dat, 
+        ret <- .Call("dparsPoly", P, Theta, x@dat, 
             length(x@par) - ncol(Theta), estHess)        
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
@@ -32,11 +32,7 @@ setMethod(
     signature = signature(x = 'rating', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE,  estHess = FALSE, offterm = numeric(1L)){
         hess <- matrix(0, length(x@par), length(x@par))
-        if(EM){
-            dat <- x@rs                      
-        } else {
-            dat <- x@dat            
-        }
+        dat <- x@dat            
         nfact <- x@nfact
         a <- x@par[1L:nfact]
         d <- ExtractZetas(x)
@@ -47,7 +43,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         P <- P.poly(c(a, d + shift), Theta, ot=offterm)
-        ret <- .Call("dparsPoly", P, Theta, if(EM) x@rs else x@dat, 
+        ret <- .Call("dparsPoly", P, Theta, x@dat, 
                      length(d), estHess)
         grad <- ret$grad
         hess <- ret$hess
@@ -241,13 +237,8 @@ setMethod(
             return(list(grad=grad, hess=hess))
         }
         #####
-        if(EM){
-            r <- x@rs[,2L]
-            f <- rowSums(x@rs)            
-        } else {
-            f <- rowSums(x@dat)
-            r <- x@dat[ ,2L]            
-        }        
+        f <- rowSums(x@dat)
+        r <- x@dat[ ,2L]
         nfact <- x@nfact
         a <- x@par[1L:nfact]
         d <- x@par[(nfact+1L):(nfact*2L)]
@@ -264,11 +255,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){
-        if(EM){
-            dat <- x@rs            
-        } else {
-            dat <- x@dat            
-        }     
+        dat <- x@dat            
         nfact <- x@nfact
         nzetas <- ncol(dat)
         a <- ExtractLambdas(x)
@@ -295,12 +282,11 @@ setMethod(
         #u and g in logit
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))        
+        dat <- x@dat
         if(EM){
-            dat <- x@rs            
             if(estHess)
                 hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)
-        } else {
-            dat <- x@dat            
+        } else {        
             hess[x@est, x@est] <- numDeriv::hessian(L, x@par[x@est], obj=x, Theta=Theta)
         }
         nfact <- x@nfact        
@@ -352,11 +338,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){
-        if(EM){
-            dat <- x@rs            
-        } else {
-            dat <- x@dat
-        }
+        dat <- x@dat
         nfact <- x@nfact
         nzetas <- ncol(dat)
         a <- ExtractLambdas(x)
@@ -435,11 +417,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, EM = FALSE, estHess = FALSE, offterm = numeric(1L)){        
-        if(EM){
-            dat <- x@rs            
-        } else {
-            dat <- x@dat            
-        }
+        dat <- x@dat            
         nfact <- x@nfact
         nzetas <- ncol(dat)
         a <- ExtractLambdas(x)
@@ -643,7 +621,7 @@ L <- function(par, obj, Theta, ot=numeric(1)){
 EML <- function(par, obj, Theta){
     obj@par[obj@est] <- par
     itemtrace <- ProbTrace(x=obj, Theta=Theta)
-    LL <- sum(obj@rs * log(itemtrace))
+    LL <- sum(obj@dat * log(itemtrace))
     LL <- LL.Priors(x=obj, LL=LL)
     return(LL)        
 }

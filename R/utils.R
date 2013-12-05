@@ -945,7 +945,7 @@ BL.SE <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
     for(g in 1L:ngroups){
         for(i in 1L:J){
             tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-            pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
+            pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
         }
     }
     NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
@@ -1066,7 +1066,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-                pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
+                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
             }
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, rlist=rlist,
@@ -1200,7 +1200,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
                                 Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
             for(i in 1L:nitems){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-                pars[[g]][[i]]@rs <- rlist$r1[, tmp]
+                pars[[g]][[i]]@dat <- rlist$r1[, tmp]
                 pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
                 tmp <- Deriv(pars[[g]][[i]], Theta=Theta, EM = TRUE, estHess=FALSE)
                 dx <- tmp$grad

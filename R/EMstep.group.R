@@ -162,7 +162,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-                pars[[g]][[i]]@rs <- rlist[[g]]$r1[, tmp]
+                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
             }
         }
         Estep.time <- Estep.time + proc.time()[3L] - start

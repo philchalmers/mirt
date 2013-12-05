@@ -140,7 +140,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
                             Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE)
         for(i in 1L:nitems){
             tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-            pars[[i]]@rs <- rlist$r1[, tmp]
+            pars[[i]]@dat <- rlist$r1[, tmp]
             pars[[i]]@itemtrace <- rlist$itemtrace[, tmp]
             dx <- Deriv(pars[[i]], Theta=Theta, EM = TRUE, estHess=FALSE)$grad
             DX <- c(DX, dx[pars[[i]]@est])
