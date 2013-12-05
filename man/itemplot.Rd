@@ -47,12 +47,10 @@
   other confirmatory models that contain several zero
   slopes}
 
-  \item{shiny}{logical; run externally define 'Gist' on
-  Github for interactively displaying various item plots.
-  This primarily is an instructive tool for demonstrating
-  how item response curves behave when adjusting their
-  parameters. Requires an internet connection to download
-  the source code}
+  \item{shiny}{logical; run interactive display for item
+  plots using the \code{shiny} interface.  This primarily
+  is an instructive tool for demonstrating how item
+  response curves behave when adjusting their parameters}
 
   \item{...}{additional arguments to be passed to
   \code{lattice} and \code{coef()}}

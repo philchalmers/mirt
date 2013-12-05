@@ -21,9 +21,9 @@
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce dimensionality?
 #'   Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several 
 #'   zero slopes
-#' @param shiny logical; run externally define 'Gist' on Github for interactively displaying various 
-#'   item plots. This primarily is an instructive tool for demonstrating how item response curves 
-#'   behave when adjusting their parameters. Requires an internet connection to download the source code
+#' @param shiny logical; run interactive display for item plots using the \code{shiny} interface. 
+#'   This primarily is an instructive tool for demonstrating how item response curves 
+#'   behave when adjusting their parameters
 #' @param ... additional arguments to be passed to \code{lattice} and \code{coef()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords plot
@@ -62,7 +62,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                      shiny = FALSE, ...){
     if(shiny){
         require(shiny)
-        runGist('6337165')
+        runApp(shinyItemplot())
     }
     if(is.list(object)) inames <- colnames(object[[1]]@data)
     else inames <- colnames(object@data)

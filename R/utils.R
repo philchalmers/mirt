@@ -1229,3 +1229,256 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
 
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
+
+shinyItemplot <- function(){
+    require(latticeExtra)
+    
+    ret <- list(
+        
+        ui = pageWithSidebar(
+            
+                    # Application title
+                    headerPanel("Item plots in mirt"),    
+                    
+                    sidebarPanel(
+                        
+                        h5('Select an internal mirt item class, the type of plot to display, the number of factors, 
+                           and use the checkbox to include sliders for adjusting multiple item parameters. 
+                           Note that if the slider label you choose does not appear in the output box then the 
+                           associated slider will have no effect on the graphic. 
+                           See ?mirt::mirt and ?mirt::simdata for more details.'),        
+                        
+                        selectInput(inputId = "itemclass",
+                                    label = "Class of mirt item:",
+                                    choices = c('dich', 'graded', 'nominal', 'gpcm', 'partcomp'),
+                                    selected = 'dich'),
+                        
+                        h6('Note: for nestlogit the first category is assumed to be the correct response option.'),
+                        
+                        selectInput(inputId = "plottype",
+                                    label = "Type of plot to display:",
+                                    choices = c('trace', 'info', 'score', 'infocontour', 'SE', 'infoSE'),
+                                    selected = 'trace'),
+                        
+                        checkboxInput(inputId = "nfact",
+                                      label = "Multidimensional?",
+                                      value = FALSE),        
+                        
+                        #         conditionalPanel(condition = "input.nfact == true",
+                        #                          h5('Rotate axis:'),                     
+                        #         
+                        #                          sliderInput(inputId = "zaxis",
+                        #                                      label = "z-axis:",
+                        #                                      min = -180, max = 180, value = 10, step = 5)
+                        #         ),
+                        
+                        h5('Check the boxes below to make sliders appear for editing parameters.'),
+                        
+                        checkboxInput(inputId = "a1",
+                                      label = "a1",
+                                      value = TRUE),        
+                        conditionalPanel(condition = "input.a1 == true",
+                                         sliderInput(inputId = "a1par",
+                                                     label = "a1 value:",
+                                                     min = -3, max = 3, value = 1, step = 0.2)
+                        ),
+                        
+                        checkboxInput(inputId = "a2",
+                                      label = "a2",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.a2 == true",
+                                         sliderInput(inputId = "a2par",
+                                                     label = "a2 value:",
+                                                     min = -3, max = 3, value = 1, step = 0.2)
+                        ),
+                        
+                        checkboxInput(inputId = "d",
+                                      label = "d",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.d == true",
+                                         sliderInput(inputId = "dpar",
+                                                     label = "d value:",
+                                                     min = -5, max = 5, value = 0, step = 0.25)
+                        ),
+                        
+                        checkboxInput(inputId = "g",
+                                      label = "g",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.g == true",
+                                         sliderInput(inputId = "gpar",
+                                                     label = "g value:",
+                                                     min = 0, max = 1, value = 0, step = 0.05)
+                        ),
+                        
+                        checkboxInput(inputId = "u",
+                                      label = "u",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.u == true",
+                                         sliderInput(inputId = "upar",
+                                                     label = "u value:",
+                                                     min = 0, max = 1, value = 1, step = 0.05)
+                        ),
+                        
+                        checkboxInput(inputId = "d0",
+                                      label = "d0",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.d0 == true",
+                                         sliderInput(inputId = "d0par",
+                                                     label = "d0 value:",
+                                                     min = -5, max = 5, value = 0, step = 0.25)
+                        ),
+                        
+                        checkboxInput(inputId = "d1",
+                                      label = "d1",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.d1 == true",
+                                         sliderInput(inputId = "d1par",
+                                                     label = "d1 value:",
+                                                     min = -5, max = 5, value = 1, step = 0.25)
+                        ),
+                        
+                        checkboxInput(inputId = "d2",
+                                      label = "d2",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.d2 == true",
+                                         sliderInput(inputId = "d2par",
+                                                     label = "d2 value:",
+                                                     min = -5, max = 5, value = 0, step = 0.25)
+                        ),
+                        
+                        checkboxInput(inputId = "d3",
+                                      label = "d3",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.d3 == true",
+                                         sliderInput(inputId = "d3par",
+                                                     label = "d3 value:",
+                                                     min = -5, max = 5, value = -1, step = 0.25)
+                        ),
+                        
+                        checkboxInput(inputId = "ak0",
+                                      label = "ak0",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.ak0 == true",
+                                         sliderInput(inputId = "ak0par",
+                                                     label = "ak0 value:",
+                                                     min = -3, max = 3, value = 0, step = 0.2)
+                        ),
+                        
+                        checkboxInput(inputId = "ak1",
+                                      label = "ak1",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.ak1 == true",
+                                         sliderInput(inputId = "ak1par",
+                                                     label = "ak0 value:",
+                                                     min = -3, max = 3, value = 1, step = 0.2)
+                        ),
+                        
+                        checkboxInput(inputId = "ak2",
+                                      label = "ak2",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.ak2 == true",
+                                         sliderInput(inputId = "ak2par",
+                                                     label = "ak2 value:",
+                                                     min = -3, max = 3, value = 2, step = 0.2)
+                        ),
+                        
+                        checkboxInput(inputId = "ak3",
+                                      label = "ak3",
+                                      value = FALSE),        
+                        conditionalPanel(condition = "input.ak3 == true",
+                                         sliderInput(inputId = "ak3par",
+                                                     label = "ak3 value:",
+                                                     min = -3, max = 3, value = 3, step = 0.2)
+                        )
+                        
+                        ),
+                    
+                    mainPanel(        
+                        verbatimTextOutput("coefs"),
+                        plotOutput(outputId = "main_plot", height = "700px", width = "700px")
+                    )
+                    
+                ), 
+        
+        server = function(input, output) {  
+            
+                    genmod <- function(input){
+                        set.seed(1234)
+                        itemclass <- c(input$itemclass, input$itemclass)
+                        itemtype <- switch(input$itemclass, 
+                                           dich='2PL',
+                                           graded='graded',
+                                           nominal='nominal',
+                                           nestlogit='2PLNRM',
+                                           partcomp='PC2PL')
+                        nominal <- NULL
+                        model <- 1        
+                        if(input$nfact) model <- 2        
+                        if(model == 2 && input$plottype == 'infoSE')
+                            stop('infoSE only available for single dimensional models')
+                        a <- matrix(1,2)
+                        d <- matrix(0,2)   
+                        if(input$itemclass == 'graded'){
+                            d <- matrix(c(1,0,-1), 2, 3, byrow=TRUE)
+                        } else if(input$itemclass == 'gpcm'){
+                            d <- matrix(c(0,1,0,-1), 2, 4, byrow=TRUE)            
+                        } else if(input$itemclass == 'nominal'){
+                            nominal <- matrix(c(0,1,2,3), 2, 4, byrow=TRUE)            
+                            d <- matrix(c(0,1,0,-1), 2, 4, byrow=TRUE)            
+                        } else if(input$itemclass == 'nestlogit'){
+                            nominal <- matrix(c(0,1,2), 2, 3, byrow=TRUE)            
+                            d <- matrix(c(0,0,1,-1), 2, 4, byrow=TRUE)
+                        } else if(input$itemclass == 'partcomp'){
+                            if(model != 2) stop('partcomp models require more than 1 dimension')
+                            if(input$plottype == 'info' || input$plottype == 'infocontour')
+                                stop('information based plots not currently supported for partcomp items')
+                            a <- matrix(c(1,1), 2, 2, byrow=TRUE)
+                            d <- matrix(c(1,1,1,NA), 2, 2, byrow=TRUE)
+                            itemtype[2] <- '2PL'
+                            itemclass[2] <- 'dich'
+                            model <- mirt.model('F1 = 1,2
+                                                F2 = 1', quiet=TRUE)
+                        }
+                        dat <- simdata(a=a, d=d, N=1000, 
+                                       itemtype=itemclass, nominal=nominal)
+                        sv <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars = 'values', key=c(1, NA)))
+                        sv$est <- FALSE
+                        mod <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA)))
+                        par <- mod@pars[[1]]@par
+                        if(input$a1) par[names(par) == 'a1'] <- input$a1par
+                        if(input$a2) par[names(par) == 'a2'] <- input$a2par
+                        if(input$d) par[names(par) == 'd'] <- input$dpar
+                        if(input$g) par[names(par) == 'g'] <- mirt:::logit(input$gpar)
+                        if(input$u) par[names(par) == 'u'] <- mirt:::logit(input$upar)
+                        if(input$d0) par[names(par) == 'd0'] <- input$d0par
+                        if(input$d1) par[names(par) == 'd1'] <- input$d1par
+                        if(input$d2) par[names(par) == 'd2'] <- input$d2par
+                        if(input$d3) par[names(par) == 'd3'] <- input$d3par
+                        if(input$ak0) par[names(par) == 'ak0'] <- input$ak0par
+                        if(input$ak1) par[names(par) == 'ak1'] <- input$ak1par
+                        if(input$ak2) par[names(par) == 'ak2'] <- input$ak2par
+                        if(input$ak3) par[names(par) == 'ak3'] <- input$ak3par
+                        mod@pars[[1]]@par <- par
+                        mod       
+                        }
+                    
+                    output$main_plot <- renderPlot({ 
+                        mod <- genmod(input)
+                        print(itemplot(mod, 1, type=input$plottype, rotate = 'none'))
+                    })
+                    
+                    output$coefs <- renderPrint({
+                        mod <- genmod(input)
+                        cat('Item parameters: \n\n')
+                        print(coef(mod, rotate = 'none')[[1L]])
+                        if(mod@nfact == 1L && !is(mod@pars[[1L]], 'nestlogit')){
+                            cat('\n\nItem parameters (traditional IRT metric): \n\n')
+                            print(coef(mod, IRTpars = TRUE)[[1L]])
+                        }
+                    })    
+                    
+                }  
+    )
+    
+    return(ret)
+}
