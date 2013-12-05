@@ -110,8 +110,8 @@ setMethod(
 		W <- W/sum(W)
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
 	    log_itemtrace <- log(itemtrace)
-	    if(!is.null(globalenv()$MIRTCLUSTER)){
-	        tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, EAP, 
+	    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+	        tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, EAP, 
 	                                    log_itemtrace=log_itemtrace, tabdata=tabdata,
                                         ThetaShort=ThetaShort, W=W))
 	    } else {
@@ -121,8 +121,8 @@ setMethod(
 	    scores <- tmp[ ,1:nfact, drop = FALSE]
 	    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		if(method == "MAP"){
-            if(!is.null(globalenv()$MIRTCLUSTER)){
-                tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, MAP, 
+            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+                tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, MAP, 
                                      scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
                                      gp=gp, prodlist=prodlist))
             } else {
@@ -143,8 +143,8 @@ setMethod(
             scores[rowSums(tmp2) == J,] <- -Inf
             SEscores[rowSums(tmp2) == J,] <- NA
 			SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
-            if(!is.null(globalenv()$MIRTCLUSTER)){
-                tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, ML, 
+            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+                tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, ML, 
                                             scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
                                             gp=gp, prodlist=prodlist))
             } else {
@@ -156,8 +156,8 @@ setMethod(
 		}
         if(method == 'WLE'){              
             itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
-            if(!is.null(globalenv()$MIRTCLUSTER)){
-                tmp <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, matrix(1:nrow(scores)), 1, WLE, 
+            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+                tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, WLE, 
                                             scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc, 
                                             gp=gp, prodlist=prodlist, degrees=degrees))
             } else {

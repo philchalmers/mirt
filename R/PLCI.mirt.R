@@ -127,8 +127,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
-    if(!is.null(globalenv()$MIRTCLUSTER)){
-        result <- t(parallel::parSapply(cl=globalenv()$MIRTCLUSTER, 1L:length(parnums), LLpar, 
+    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+        result <- t(parallel::parSapply(cl=mirtClusterEnv$MIRTCLUSTER, 1L:length(parnums), LLpar, 
                                         parnums=parnums, parnames=parnames, lbound=lbound, ubound=ubound, 
                                         dat=dat, model=model,
                                         large=large, sv=sv, get.LL=get.LL, parprior=parprior))

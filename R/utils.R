@@ -558,7 +558,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
             class <- c(class, rep(class(tmpgroup[[i]]), length(tmpgroup[[i]]@parnum)))
-            parname <- c(parname, names(tmpgroup[[i]]@par))
+            parname <- c(parname, names(tmpgroup[[i]]@est))
             parnum <- c(parnum, tmpgroup[[i]]@parnum)
             par <- c(par, tmpgroup[[i]]@par)
             est <- c(est, tmpgroup[[i]]@est)
@@ -572,7 +572,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
     }
     if(length(random) > 0L){
         for(i in 1L:length(random)){            
-            parname <- c(parname, names(random[[i]]@par))
+            parname <- c(parname, names(random[[i]]@est))
             parnum <- c(parnum, random[[i]]@parnum)
             par <- c(par, random[[i]]@par)
             est <- c(est, random[[i]]@est)
@@ -1226,3 +1226,6 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
     }
     return(ESTIMATE)
 }
+
+mirtClusterEnv <- new.env()
+mirtClusterEnv$ncores <- 1L

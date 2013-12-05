@@ -359,8 +359,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
-                if(!is.null(globalenv()$MIRTCLUSTER)){
-                    DM <- t(parallel::parApply(cl=globalenv()$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SEM.SE,
+                if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+                    DM <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SEM.SE,
                                                pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
                                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                                            nfactNames=PrepList[[1L]]$nfactNames, theta=theta,

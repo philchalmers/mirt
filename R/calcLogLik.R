@@ -83,8 +83,8 @@ setMethod(
             ot <- matrix(0, 1, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
         NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
-        if(!is.null(globalenv()$MIRTCLUSTER)){
-            LL <- parallel::parApply(cl=globalenv()$MIRTCLUSTER, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, 
+        if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+            LL <- parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, LL, MARGIN=1, FUN=LLdraws, nfact=nfact, 
                                      N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J, 
                                      random=object@random, ot=ot, NO.CUSTOM=NO.CUSTOM)
         } else for(draw in 1L:draws)
