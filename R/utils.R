@@ -1250,7 +1250,7 @@ shinyItemplot <- function(){
                         
                         selectInput(inputId = "itemclass",
                                     label = "Class of mirt item:",
-                                    choices = c('dich', 'graded', 'nominal', 'gpcm', 'partcomp'),
+                                    choices = c('dich', 'graded', 'nominal', 'gpcm', 'partcomp', 'nestlogit'),
                                     selected = 'dich'),
                         
                         h6('Note: for nestlogit the first category is assumed to be the correct response option.'),
@@ -1410,7 +1410,8 @@ shinyItemplot <- function(){
                                            graded='graded',
                                            nominal='nominal',
                                            nestlogit='2PLNRM',
-                                           partcomp='PC2PL')
+                                           partcomp='PC2PL',
+                                           nestlogit='2PLNRM')
                         nominal <- NULL
                         model <- 1        
                         if(input$nfact) model <- 2        
@@ -1439,7 +1440,7 @@ shinyItemplot <- function(){
                             model <- mirt.model('F1 = 1,2
                                                 F2 = 1', quiet=TRUE)
                         }
-                        dat <- simdata(a=a, d=d, N=1000, 
+                        dat <- simdata(a=a, d=d, N=100, 
                                        itemtype=itemclass, nominal=nominal)
                         sv <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars = 'values', key=c(1, NA)))
                         sv$est <- FALSE
