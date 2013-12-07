@@ -4,7 +4,7 @@
 \usage{
   DIF(MGmodel, which.par, scheme = "add",
     items2test = 1:ncol(MGmodel@data), seq_stat = "SABIC",
-    Wald = FALSE, verbose = TRUE, ...)
+    Wald = FALSE, p.adjust = "none", verbose = TRUE, ...)
 }
 \arguments{
   \item{MGmodel}{an object returned from
@@ -25,11 +25,12 @@
   would work for testing the remaining items (important to
   remember when using sequential schemes)}
 
-  \item{scheme}{type of DIF analysis to perform. These may
-  be \describe{ \item{'add'}{parameters in \code{which.par}
-  will be constrained each item one at a time. This is
-  beneficial when examining DIF from a model with
-  parameters freely estimated across groups, and when
+  \item{scheme}{type of DIF analysis to perform, either by
+  adding or dropping constraints across groups.  These can
+  be: \describe{ \item{'add'}{parameters in
+  \code{which.par} will be constrained each item one at a
+  time. This is beneficial when examining DIF from a model
+  with parameters freely estimated across groups, and when
   inspecting differences via the Wald test}
   \item{'drop'}{parameters in \code{which.par} will be
   freely estimated for items that are not specified in
@@ -60,7 +61,13 @@
   input that ranges between 0 and 1, the 'p' value will be
   tested (e.g., \code{seq_stat = .05} will test for the
   difference of p < .05 in the add scheme, or p > .05 in
-  the drop scheme)}
+  the drop scheme), along with the specified
+  \code{p.adjust} input}
+
+  \item{p.adjust}{string to be passed to the
+  \code{\link{p.adjust}} function to adjust p-values.
+  Adjustments are located in the \code{adj_pvals} element
+  in the returned list}
 
   \item{verbose}{logical print extra information to the
   console?}
@@ -109,8 +116,8 @@ resulta1
 resulta1d <- DIF(model, c('a1', 'd'))
 resulta1d
 
-#same as above, but using Wald tests
-resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE)
+#same as above, but using Wald tests with Benjamini & Hochberg adjustment
+resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
 resulta1dWald
 
 #### using items 4 to 15 as anchors
