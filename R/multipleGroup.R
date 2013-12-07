@@ -3,7 +3,9 @@
 #' \code{multipleGroup} performs a full-information
 #' maximum-likelihood multiple group analysis for dichotomous and polytomous
 #' data under the item response theory paradigm using either Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach.
+#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This function
+#' may be used for detecting differential item functioning (DIF), thought the \code{\link{DIF}} function 
+#' may provide a more convenient approach.
 #'
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally
 #' independent, and therefore could initially be performed by sub-setting the data and running identical
@@ -74,7 +76,7 @@
 #'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #'   \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
+#'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}, \code{\link{DIF}}
 #' @keywords models
 #' @export multipleGroup
 #' @examples
@@ -137,7 +139,7 @@
 #' refmodel <- multipleGroup(dat, models, group = group,
 #'                              invariance=c('free_means', 'free_varcov', itemnames))
 #'
-#' #loop over items (in practice, run in parallel to increase speed)
+#' #loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,

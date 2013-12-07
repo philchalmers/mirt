@@ -12,30 +12,30 @@
   model}
 
   \item{which.par}{a character vector containing the
-  parameter names which should be will be inspected for
-  DIF.}
+  parameter names which will be inspected for DIF}
 
   \item{Wald}{logical; perform Wald tests for DIF instead
-  of likelihood ratio test?  Only applicable when there are
-  anchor items}
+  of likelihood ratio test?}
 
   \item{items2test}{a numeric vector, or character vector
-  containing the item names, indicating which items should
-  be tested for DIF. In models where anchor items are
-  known, omit them from this vector. For example, if items
-  1 and 2 are anchors in a 10 item test, then \code{items =
-  3:10} would work for testing the remaining items
-  (important when using sequential schemes)}
+  containing the item names, indicating which items will be
+  tested for DIF. In models where anchor items are known,
+  omit them from this vector. For example, if items 1 and 2
+  are anchors in a 10 item test, then \code{items = 3:10}
+  would work for testing the remaining items (important to
+  remember when using sequential schemes)}
 
   \item{scheme}{type of DIF analysis to perform. These may
-  be \describe{ \item{'add'}{paramters in \code{which.par}
+  be \describe{ \item{'add'}{parameters in \code{which.par}
   will be constrained each item one at a time. This is
-  beneficial when using anchoring items, and when
+  beneficial when examining DIF from a model with
+  parameters freely estimated across groups, and when
   inspecting differences via the Wald test}
-  \item{'drop'}{paramters in \code{which.par} will be
+  \item{'drop'}{parameters in \code{which.par} will be
   freely estimated for items that are not specified in
   \code{anchor}. This is useful when supplying an overly
-  restrictive model and attempting}
+  restrictive model and attempting to detect DIF with a
+  slightly less restrictive model}
   \item{'drop_sequential'}{sequentially loop over the items
   being tested, and at the end of the loop treat items that
   violate the \code{seq_stat} criteria as demonstrating
@@ -43,13 +43,15 @@
   previously demonstrated DIF as variable across groups,
   and the remaining test items that previously showed
   invariance are re-tested. The algorithm stops when no
-  more items showing DIF are found}
-  \item{'add_sequential'}{sequentially loop over the items
-  being tested, and at the end of the loop treat DIF tests
-  that satisfy the \code{seq_stat} criteria as invariant.
-  The loop is then re-run on the remaining items to
-  determine if they are still displaying DIF, and when no
-  new invariant item is found the algorithm stops} }}
+  more items showing DIF are found and returns the items
+  that displayed DIF} \item{'add_sequential'}{sequentially
+  loop over the items being tested, and at the end of the
+  loop treat DIF tests that satisfy the \code{seq_stat}
+  criteria as invariant. The loop is then re-run on the
+  remaining invariant items to determine if they are now
+  displaying DIF in the less constrained model, and when no
+  new invariant item is found the algorithm stops and
+  returns the items that displayed DIF} }}
 
   \item{seq_stat}{select a statistic to test for in the
   sequential schemes. Potential values are (in descending
@@ -67,13 +69,14 @@
   \code{\link{multipleGroup}}}
 }
 \description{
-  This function runs the Wald and likelihood-ratio approach
-  for testing differential item functioning (DIF). This is
-  primarily a convenience wrapper to the
+  This function runs the Wald and likelihood-ratio
+  approaches for testing differential item functioning
+  (DIF). This is primarily a convenience wrapper to the
   \code{\link{multipleGroup}} function for performing
-  standard DIF procedures. Independent models can be
-  estimated in parallel automatically by defining a
-  parallel object with \code{\link{mirtCluster}}.
+  standard DIF procedures. Models can be estimated in
+  parallel automatically by defining a parallel object with
+  \code{\link{mirtCluster}}, which will help to decrease
+  the runtime.
 }
 \examples{
 \dontrun{

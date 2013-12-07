@@ -116,7 +116,10 @@
   dichotomous and polytomous data under the item response
   theory paradigm using either Cai's (2010)
   Metropolis-Hastings Robbins-Monro (MHRM) algorithm or
-  with an EM algorithm approach.
+  with an EM algorithm approach. This function may be used
+  for detecting differential item functioning (DIF),
+  thought the \code{\link{DIF}} function may provide a more
+  convenient approach.
 }
 \details{
   By default the estimation in \code{multipleGroup} assumes
@@ -191,7 +194,7 @@ itemnames <- colnames(dat)
 refmodel <- multipleGroup(dat, models, group = group,
                              invariance=c('free_means', 'free_varcov', itemnames))
 
-#loop over items (in practice, run in parallel to increase speed)
+#loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
@@ -334,7 +337,8 @@ anova(EH, EH1)
   \code{\link{probtrace}}, \code{\link{boot.mirt}},
   \code{\link{imputeMissing}}, \code{\link{itemfit}},
   \code{\link{mod2values}}, \code{\link{simdata}},
-  \code{\link{createItem}}, \code{\link{mirtCluster}}
+  \code{\link{createItem}}, \code{\link{mirtCluster}},
+  \code{\link{DIF}}
 }
 \keyword{models}
 

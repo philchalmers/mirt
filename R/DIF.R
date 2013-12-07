@@ -1,34 +1,36 @@
 #' Differential item functioning tests
 #'
-#' This function runs the Wald and likelihood-ratio approach for testing differential 
+#' This function runs the Wald and likelihood-ratio approaches for testing differential 
 #' item functioning (DIF). This is primarily a convenience wrapper to the \code{\link{multipleGroup}}
-#' function for performing standard DIF procedures. Independent models can be estimated in 
-#' parallel automatically by defining a parallel object with \code{\link{mirtCluster}}.
+#' function for performing standard DIF procedures. Models can be estimated in 
+#' parallel automatically by defining a parallel object with \code{\link{mirtCluster}}, which will help 
+#' to decrease the runtime.
 #' 
 #' @aliases DIF
 #' @param MGmodel an object returned from \code{\link{multipleGroup}} to be used as the reference model
-#' @param which.par a character vector containing the parameter names which should be will be inspected 
-#'   for DIF. 
-#' @param Wald logical; perform Wald tests for DIF instead of likelihood ratio test? 
-#'   Only applicable when there are anchor items
+#' @param which.par a character vector containing the parameter names which will be inspected for DIF
+#' @param Wald logical; perform Wald tests for DIF instead of likelihood ratio test?
 #' @param items2test a numeric vector, or character vector containing the item names, indicating which items
-#'   should be tested for DIF. In models where anchor items are known, omit them from this vector. For example, 
+#'   will be tested for DIF. In models where anchor items are known, omit them from this vector. For example, 
 #'   if items 1 and 2 are anchors in a 10 item test, then \code{items = 3:10} would work for testing the 
-#'   remaining items (important when using sequential schemes)
+#'   remaining items (important to remember when using sequential schemes)
 #' @param scheme type of DIF analysis to perform. These may be 
 #' \describe{ 
-#'   \item{'add'}{paramters in \code{which.par} will be constrained each item one at a time. This 
-#'     is beneficial when using anchoring items, and when inspecting differences via the Wald test}
-#'   \item{'drop'}{paramters in \code{which.par} will be freely estimated for items that are not 
-#'     specified in \code{anchor}. This is useful when supplying an overly restrictive model and attempting}
+#'   \item{'add'}{parameters in \code{which.par} will be constrained each item one at a time. This 
+#'     is beneficial when examining DIF from a model with parameters freely estimated across groups, 
+#'     and when inspecting differences via the Wald test}
+#'   \item{'drop'}{parameters in \code{which.par} will be freely estimated for items that are not 
+#'     specified in \code{anchor}. This is useful when supplying an overly restrictive model and attempting to 
+#'     detect DIF with a slightly less restrictive model}
 #'   \item{'drop_sequential'}{sequentially loop over the items being tested, and at the end of the loop treat 
 #'     items that violate the \code{seq_stat} criteria as demonstrating DIF. The loop is then re-run, leaving the items
 #'     that previously demonstrated DIF as variable across groups, and the remaining test items that previously showed
-#'     invariance are re-tested. The algorithm stops when no more items showing DIF are found}
+#'     invariance are re-tested. The algorithm stops when no more items showing DIF are found and returns the items that 
+#'     displayed DIF}
 #'   \item{'add_sequential'}{sequentially loop over the items being tested, and at the end of the loop treat 
 #'     DIF tests that satisfy the \code{seq_stat} criteria as invariant. The loop is then re-run on the remaining
-#'     items to determine if they are still displaying DIF, and when no new invariant item is found the algorithm
-#'     stops}  
+#'     invariant items to determine if they are now displaying DIF in the less constrained model, 
+#'     and when no new invariant item is found the algorithm stops and returns the items that displayed DIF}  
 #' }
 #' @param seq_stat select a statistic to test for in the sequential schemes. Potential values are
 #'   (in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, and \code{'BIC'}. 
