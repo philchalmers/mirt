@@ -1,4 +1,5 @@
 S3method(print,wald)
+export(DIF)
 export(PLCI.mirt)
 export(bfactor)
 export(boot.mirt)

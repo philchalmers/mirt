@@ -13,9 +13,12 @@
 
   \item{object2}{a second model estimated from any of the
   mirt package estimation methods}
+
+  \item{verbose}{logical; print additional information to
+  console?}
 }
 \description{
-  \code{anova(object, object2)}
+  \code{anova(object, object2, verbose = TRUE)}
 }
 \examples{
 \dontrun{

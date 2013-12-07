@@ -54,7 +54,7 @@
   mirt functions to use in estimation. To use the defined
   objects pass to the \code{mirt(..., customItems =
   list())} command, and ensure that the classes are
-  properly labelled and unique in the list.
+  properly labeled and unique in the list.
 }
 \details{
   Additionally, the \code{summary()} function will not

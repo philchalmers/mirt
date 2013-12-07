@@ -110,14 +110,14 @@ COV <- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
 model <- mirt.model(Q, COV=COV)
 
 ## constrain various items slopes and all intercepts in single group model to be equal,
-#   and use a lognormal prior for all the slopes
+#   and use a log-normal prior for all the slopes
 s <- 'F = 1-10
       CONSTRAIN = (1-3, 5, 6, a1), (1-10, d)
       PRIOR = (1-10, a1, lnorm, .2, .2)'
 model <- mirt.model(s)
 
 
-## constrain various items slopes and intercepts accross groups for use in multipleGroup(),
+## constrain various items slopes and intercepts across groups for use in multipleGroup(),
 #  and constrain first two slopes within 'group1' to be equal
 s <- 'F = 1-10
       CONSTRAIN = (1-2, a1)

@@ -54,7 +54,7 @@
 #'   information function, \code{'infocontour'} for the test information contours,
 #'   \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
 #'   and \code{'score'} for the expected total score plot
-#' @param empiricalhist logical; estimate prior distribtuion using an empirical histogram approach.
+#' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
 #'   see \code{mirt} for details
 #' @param key see \code{\link{mirt}} for details
 #' @param itemtype see \code{\link{mirt}} for details

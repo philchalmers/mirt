@@ -197,7 +197,7 @@ model <- mirt.model('Theta = 1-32')
 
 itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 
-#notice that the 'fixed = ~ ... + items' argument is ommited
+#notice that the 'fixed = ~ ... + items' argument is omitted
 LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign)
 summary(LLTM)
 coef(LLTM)

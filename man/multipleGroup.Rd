@@ -87,7 +87,7 @@
   relative efficiency plot, and \code{'score'} for the
   expected total score plot}
 
-  \item{empiricalhist}{logical; estimate prior distribtuion
+  \item{empiricalhist}{logical; estimate prior distribution
   using an empirical histogram approach.  see \code{mirt}
   for details}
 

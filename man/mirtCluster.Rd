@@ -15,7 +15,7 @@
 }
 \description{
   This function defines a object that is placed in a
-  relavent internal enviroment defined in mirt. Internal
+  relevant internal environment defined in mirt. Internal
   functions such as \code{calcLogLik}, \code{fscores}, etc,
   will utilize this object automatically to capitalize on
   parallel processing architecture. The object defined is a

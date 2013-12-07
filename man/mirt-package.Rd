@@ -15,8 +15,8 @@
   Confirmatory bi-factor and two-tier analyses are
   available for modeling item testlets. Multiple group
   analysis and mixed effects designs also are available for
-  detecting differential item functioning and modelling
-  item and person covariates.
+  detecting differential item functioning and modeling item
+  and person covariates.
 
   Users interested in the most recent version of this
   package can visit

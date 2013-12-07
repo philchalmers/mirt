@@ -255,11 +255,12 @@ setMethod(
 
 #' Compare nested models
 #'
-#' \code{anova(object, object2)}
+#' \code{anova(object, object2, verbose = TRUE)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param object2 a second model estimated from any of the mirt package estimation methods
+#' @param verbose logical; print additional information to console?
 #'
 #' @name anova-method
 #' @aliases anova,ExploratoryClass-method anova,ConfirmatoryClass-method 
@@ -276,7 +277,7 @@ setMethod(
 setMethod(
     f = "anova",
     signature = signature(object = 'ExploratoryClass'),
-    definition = function(object, object2){
+    definition = function(object, object2, verbose = TRUE){
         df <- object@df - object2@df
         if(df < 0){
             temp <- object
@@ -284,11 +285,13 @@ setMethod(
             object2 <- temp
         }
         X2 <- round(2*object2@logLik - 2*object@logLik, 3)
-        cat('\nModel 1: ')
-        print(object@Call)
-        cat('Model 2: ')
-        print(object2@Call)
-        cat('\n')
+        if(verbose){
+            cat('\nModel 1: ')
+            print(object@Call)
+            cat('Model 2: ')
+            print(object2@Call)
+            cat('\n')
+        }
         ret <- data.frame(AIC = c(object@AIC, object2@AIC),
                           AICc = c(object@AICc, object2@AICc),
                           SABIC = c(object@SABIC, object2@SABIC),

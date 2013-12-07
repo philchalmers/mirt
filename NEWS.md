@@ -1,5 +1,9 @@
 # Changes in mirt 1.x
 
+- new DIF() function to quicky calculate common differential item functioning routines, similar 
+  to how IRTLRDIF worked. Supports likelihood ratio testings as well as the Wald approach, and includes
+  forward and backword sequential DIF searching methods 
+
 - added a `shiny = TRUE` option to `itemplot()` to download and run the interactive shiny applet. 
   Useful for instructive purposes, as well as understanding how the internal parameters of mirt behave
 

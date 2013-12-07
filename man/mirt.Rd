@@ -175,7 +175,7 @@ Theory)}
   data to all estimation functions}{e.g., \code{mod <-
   mirt(Science, 1, large = internaldat)}} }}
 
-  \item{empiricalhist}{logical; estimate prior distribtuion
+  \item{empiricalhist}{logical; estimate prior distribution
   using an empirical histogram approach.  Only applicable
   for unidimensional models estimated with the EM
   algorithm.  The number of cycles, TOL, and quadpts are
@@ -225,7 +225,7 @@ Theory)}
   requires that the input data all have 0 as the lowest
   category. The format is the same as the \code{mod@K} slot
   in all converged models} \item{GenRandomPars}{logical;
-  generate random starting values prior to optimatization
+  generate random starting values prior to optimization
   instead of using the fixed internal starting values?}
   \item{customPriorFun}{a custom function used to determine
   the normalized density for integration in the EM
@@ -392,7 +392,7 @@ Theory)}
   * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
 
   For partial credit model (when \code{itemtype = 'Rasch'};
-  unidimenional only) the above model is further
+  unidimensional only) the above model is further
   constrained so that \eqn{ak = (0,1,\ldots, k-1)},
   \eqn{a_1 = 1}, and the latent variance of \eqn{\theta_1}
   is freely estimated.
@@ -530,7 +530,7 @@ anova(pmod1, pmod2)
 coef(gpcmod)
 
 #for the nominal model the lowest and highest categories are assumed to be the
-#  theoretically lowest and highest categories that related to the latetent trait(s), however
+#  theoretically lowest and highest categories that related to the latent trait(s), however
 #  a custom nominal.highlow matrix can be passed to declare which item category should be
 #  treated as the 'highest' and 'lowest' instead
 (nomod <- mirt(Science, 1, 'nominal'))

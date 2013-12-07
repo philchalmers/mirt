@@ -155,7 +155,7 @@
 # #to test this item structure hypothesis (more intercept designs are possible by including more columns).
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
-#' #notice that the 'fixed = ~ ... + items' argument is ommited
+#' #notice that the 'fixed = ~ ... + items' argument is omitted
 #' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign)
 #' summary(LLTM)
 #' coef(LLTM)

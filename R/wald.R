@@ -60,6 +60,8 @@ wald <- function(object, L, C = 0){
     if(!is.matrix(L))
         L <- matrix(L, 1)
     pars <- object@pars
+    if(is(object, 'MultipleGroupClass'))
+        pars <- object@cmods
     covB <- solve(object@information)
     B <- parnum <- c()
     if(is(object, 'MultipleGroupClass')){
@@ -91,6 +93,8 @@ wald <- function(object, L, C = 0){
     B <- B[keep]
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
     ret <- list(W=W, df = nrow(L))
+    p <- 1 - pchisq(ret$W, ret$df)
+    ret$p <- p
     class(ret) <- 'wald'
     ret
 }
@@ -101,10 +105,7 @@ wald <- function(object, L, C = 0){
 #' @param x an object of class 'wald'
 #' @param ... additional arguments to be passed
 print.wald <- function(x, ...){
-    W <- x$W
-    df <- x$df
-    p <- 1 - pchisq(x$W, x$df)
-    cat('\nWald test: \nW = ', round(W, 3), ', df = ', df, ', p = ',
-        round(p, 3), '\n', sep='')
+    cat('\nWald test: \nW = ', round(x$W, 3), ', df = ', x$df, ', p = ',
+        round(x$p, 3), '\n', sep='')
 }
 

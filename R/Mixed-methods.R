@@ -144,7 +144,7 @@ setMethod(
 setMethod(
     f = "anova",
     signature = signature(object = 'MixedClass'),
-    definition = function(object, object2)
+    definition = function(object, object2, verbose = TRUE)
     {
         nitems <- length(object@K)
         if(length(object@df) == 0 || length(object2@df) == 0)
@@ -156,11 +156,13 @@ setMethod(
             object2 <- tmp
         }
         X2 <- round(2*object2@logLik - 2*object@logLik, 3)
-        cat('\nModel 1: ')
-        print(object@Call)
-        cat('Model 2: ')
-        print(object2@Call)
-        cat('\n')
+        if(verbose){
+            cat('\nModel 1: ')
+            print(object@Call)
+            cat('Model 2: ')
+            print(object2@Call)
+            cat('\n')
+        }
         ret <- data.frame(AIC = c(object@AIC, object2@AIC),
                           AICc = c(object@AICc, object2@AICc),
                           SABIC = c(object@SABIC, object2@SABIC),

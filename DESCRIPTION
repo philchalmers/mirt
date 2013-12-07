@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.0.6
+Version: 1.0.7
 Date: 2013-11-01
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -85,3 +85,4 @@ Collate:
     'expected.item.R'
     'PLCI.mirt.R'
     'read.mirt.R'
+    'DIF.R'

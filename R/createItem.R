@@ -2,7 +2,7 @@
 #'
 #' Initializes the proper S4 class and methods necessary for mirt functions to use in estimation. To use
 #' the defined objects pass to the \code{mirt(..., customItems = list())} command, and ensure that the classes
-#' are properly labelled and unique in the list.
+#' are properly labeled and unique in the list.
 #'
 #' Additionally, the \code{summary()} function will not return proper standardized loadings since the function
 #' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001 are filled in
