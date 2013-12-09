@@ -68,10 +68,6 @@
 #' #  Information matrix with S-EM, therefore drop TOL for better accuracy
 #' model <- multipleGroup(dat, 1, group, SE = TRUE, technical = list(TOL = 1e-6))
 #' 
-#' #test whether freeing only slopes results in DIF
-#' resulta1 <- DIF(model, 'a1') 
-#' resulta1
-#' 
 #' #test whether freeing slopes and intercepts results in DIF
 #' resulta1d <- DIF(model, c('a1', 'd')) 
 #' resulta1d
@@ -79,6 +75,17 @@
 #' #same as above, but using Wald tests with Benjamini & Hochberg adjustment
 #' resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr') 
 #' resulta1dWald
+#' 
+#' #test whether freeing only slopes results in DIF for all items
+#' resulta1 <- DIF(model, 'a1') 
+#' resulta1
+#' 
+#' #following up on resulta1d, to determine whether it's a1 or d parameter causing DIF
+#' itemplot(model, 1)
+#' itemplot(model, 2)
+#' itemplot(model, 3)
+#' (a1s <- DIF(model, 'a1', items2test = 1:3))
+#' (ds <- DIF(model, 'd', items2test = 1:3))
 #' 
 #' #### using items 4 to 15 as anchors 
 #' itemnames <- colnames(dat)
