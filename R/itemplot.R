@@ -1,6 +1,6 @@
 #' Displays item surface and information plots
 #'
-#' \code{itemplot} displays various item based IRT plots, with special options for plotting items 
+#' \code{itemplot} displays various item based IRT plots, with special options for plotting items
 #' that contain several 0 slope parameters. Supports up to three dimensional models.
 #'
 #'
@@ -19,10 +19,10 @@
 #' @param CEdraws draws number of draws to use for confidence envelope
 #' @param rot a list of rotation coordinates to be used for 3 dimensional plots
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce dimensionality?
-#'   Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several 
+#'   Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several
 #'   zero slopes
-#' @param shiny logical; run interactive display for item plots using the \code{shiny} interface. 
-#'   This primarily is an instructive tool for demonstrating how item response curves 
+#' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
+#'   This primarily is an instructive tool for demonstrating how item response curves
 #'   behave when adjusting their parameters
 #' @param ... additional arguments to be passed to \code{lattice} and \code{coef()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -52,13 +52,13 @@
 #' pmod <- mirt(Science, 1, SE=TRUE, SE.type = 'MHRM')
 #' itemplot(pmod, 3)
 #' itemplot(pmod, 3, CE = TRUE)
-#' 
+#'
 #' #interactive shiny applet
 #' itemplot(shiny = TRUE)
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10), 
+                     CEdraws = 1000, drop.zeros = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      shiny = FALSE, ...){
     if(shiny){
         require(shiny)

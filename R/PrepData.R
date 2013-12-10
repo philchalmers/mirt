@@ -4,7 +4,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                      fulldata = NULL, key, nominal.highlow)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
-    if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))    
+    if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV', 'CONSTRAIN', 'CONSTRAINB', 'PRIOR')
     data <- as.matrix(data)
@@ -15,9 +15,9 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(!is.null(nominal.highlow)){
         if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix')
         if(all(dim(nominal.highlow) != c(2,J))) stop('nominal.highlow does not have the correct dimensions')
-        if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ])) 
+        if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ]))
             stop('nominal.highlow low and high categories must differ')
-    }    
+    }
     if(is(model, 'numeric') && length(model) == 1L){
         if(model != 1L) exploratory <- TRUE
         tmp <- tempfile('tempfile')
@@ -52,7 +52,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
     for(i in 1L:J) K[i] <- length(uniques[[i]])
     if(!is.null(technical$customK)){
         K <- technical$customK
-        for(i in 1L:J) 
+        for(i in 1L:J)
             uniques[[i]] <- 0L:(K[i]-1L)
     }
     if(any(K < 2L))
@@ -143,7 +143,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                 constrain[[length(constrain) + 1L]] <- rsmConstraint
             }
         }
-    }    
+    }
     npars <- sum(sapply(pars, function(x) sum(x@est)))
     if(is.null(prodlist)) prodlist <- list()
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,

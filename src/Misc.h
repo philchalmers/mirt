@@ -6,12 +6,12 @@ using std::vector;
 #define _MISC_H
 
 NumericMatrix polyOuter(const NumericMatrix &, const vector<double> &,
-	const vector<double> &, const vector<double> &, const vector<double> &, 
+	const vector<double> &, const vector<double> &, const vector<double> &,
 	const vector<double> &, const vector<double> &);
 
-void itemTrace(vector<double> &, vector<double> &, const vector<double> &, const double *, 
+void itemTrace(vector<double> &, vector<double> &, const vector<double> &, const double *,
         const NumericMatrix &, const double *, const double *, const vector<double> &);
-        
+
 double logit(const double *);
 
 double antilogit(const double *);
@@ -22,5 +22,5 @@ SEXP vec2mat(vector<double> &, const int &, const int &);
 
 const double ABS_MAX_Z = 30;
 
-#endif 
+#endif
 

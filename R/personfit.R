@@ -114,11 +114,11 @@ personfit <- function(x, method = 'EAP', ...){
                 resid[, i] <- rowSums(dat*Emat) - rowSums(Emat * P)
                 W[ ,i] <- rowSums((Emat - rowSums(Emat * P))^2 * P)
                 C[ ,i] <- rowSums((Emat - rowSums(Emat * P))^4 * P)
-            }            
-            W[W^2 < 1e-5] <- sqrt(1e-5)                
+            }
+            W[W^2 < 1e-5] <- sqrt(1e-5)
             if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))
             outfit <- rowSums(resid^2/W) / J
-            q.outfit <- sqrt(rowSums((C / W^2) / J^2) - 1 / J)            
+            q.outfit <- sqrt(rowSums((C / W^2) / J^2) - 1 / J)
             q.outfit[q.outfit > 1.4142] <- 1.4142
             z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
             infit <- rowSums(resid^2) / rowSums(W)

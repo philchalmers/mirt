@@ -1,6 +1,6 @@
 #' Function to calculate item information
 #'
-#' Given an internal mirt item object extracted by using \code{\link{extract.item}}, 
+#' Given an internal mirt item object extracted by using \code{\link{extract.item}},
 #' compute the item information.
 #'
 #' @aliases iteminfo
@@ -8,7 +8,7 @@
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param degrees a vector of angles in degrees that are between 0 and 90 that jointly sum to 90.
 #' Only applicable when the input object is multidimensional
-#' @param total.info logical; return the total information curve for the item? If \code{FALSE}, 
+#' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #' information curves for each category are returned as a matrix
 #' @keywords information
 #' @seealso
@@ -24,10 +24,10 @@
 #'
 #' #do something with the info?
 #' plot(Theta, info.2, type = 'l', main = 'Item information')
-#' 
+#'
 #' #category information curves
 #' cat.info <- iteminfo(extr.2, Theta, total.info = FALSE)
-#' plot(Theta, cat.info[,1], type = 'l', ylim = c(0, max(cat.info)), 
+#' plot(Theta, cat.info[,1], type = 'l', ylim = c(0, max(cat.info)),
 #'      ylab = 'info', main = 'Category information')
 #' for(i in 2:ncol(cat.info))
 #'    lines(Theta, cat.info[,i], col = i)

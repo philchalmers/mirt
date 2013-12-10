@@ -4,7 +4,7 @@
 #' model information matrix be computed (including \code{SE = TRUE} when using the EM method). Use
 #' \code{wald(model)} to observe how the information matrix columns are named, especially if
 #' the estimated model contains constrained parameters (e.g., 1PL). The information matrix names
-#' are labelled according to which parameter number(s) they correspond to (to check the 
+#' are labelled according to which parameter number(s) they correspond to (to check the
 #' numbering use \code{\link{mod2values}} on the estimated object).
 #'
 #'

@@ -1,6 +1,6 @@
 #include"Misc.h"
 
-RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot) 
+RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 {
     BEGIN_RCPP
 
@@ -10,26 +10,26 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
     const int asMatrix = as<int>(RasMatrix);
     const int N = Theta.nrow();
     const int nfact = Theta.ncol();
-    
-    const int len = par.size();    
+
+    const int len = par.size();
     const double utmp = par[len-1];
     const double gtmp = par[len-2];
     const double g = antilogit(&gtmp);
     const double u = antilogit(&utmp);
 	const double d = par[len-3];
     const int USEOT = ot.size() > 1;
-    
-    vector<double> P(N);    
+
+    vector<double> P(N);
 	for (int i = 0; i <	N; ++i){
-        double z = d;        
-		for (int j = 0; j <	nfact; ++j)		
-			z += par[j] * Theta(i,j); 
+        double z = d;
+		for (int j = 0; j <	nfact; ++j)
+			z += par[j] * Theta(i,j);
         if(USEOT) z += ot[i];
         if(z > ABS_MAX_Z) z = ABS_MAX_Z;
         else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
-        P[i] = g + (u - g) /(1.0 + exp(-z));    
+        P[i] = g + (u - g) /(1.0 + exp(-z));
 	}
-	
+
     if(asMatrix){
         NumericMatrix ret(N, 2);
         for(int j = 0; j < N; ++j){
@@ -43,27 +43,27 @@ RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 }
 
 // graded
-RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP Rot, SEXP Risrating) 
+RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP Rot, SEXP Risrating)
 {
     BEGIN_RCPP
 
-    const vector<double> par = as< vector<double> >(Rpar);	
+    const vector<double> par = as< vector<double> >(Rpar);
     const vector<double> ot = as< vector<double> >(Rot);
 	const NumericMatrix Theta(RTheta);
 	const int itemexp = as<int>(Ritemexp);
     const int israting = as<int>(Risrating);
     const int parsize = par.size();
-    
+
     vector<double> a(Theta.ncol());
     for(int i = 0; i < Theta.ncol(); ++i) a[i] = par[i];
     int ncat = parsize - Theta.ncol();
     if(israting) ncat -= 1;
-    vector<double> d(ncat,0.0);        
+    vector<double> d(ncat,0.0);
     if(israting){
         const double t = par[parsize-1];
         for(int i = Theta.ncol(); i < parsize - 1; ++i)
             d[i - Theta.ncol()] = par[i] + t;
-    } else {        
+    } else {
         for(int i = Theta.ncol(); i < parsize; ++i)
             d[i - Theta.ncol()] = par[i];
     }
@@ -74,7 +74,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 
 	for(int i = 0; i < nquad; ++i)
         Pk(i,0) = 1.0;
-    for(int i = 0; i < ncat; ++i){        
+    for(int i = 0; i < ncat; ++i){
         vector<double> tmp1(nquad), tmp2(nquad);
         itemTrace(tmp1, tmp2, a, &d[i], Theta, &nullzero, &nullone, ot);
         for(int j = 0; j < nquad; ++j)
@@ -86,7 +86,7 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
         for(int i = 0; i < P.nrow(); ++i){
             for(int j = 0; j < P.ncol(); ++j){
                 if(P(i,j) < 1e-20) P(i,j) = 1e-20;
-                else if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;        
+                else if((1.0 - P(i,j)) < 1e-20) P(i,j) = 1.0 - 1e-20;
             }
         }
         return(P);
@@ -96,14 +96,14 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 	END_RCPP
 }
 
-RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta, 
-    SEXP RreturnNum, SEXP Rot) 
+RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
+    SEXP RreturnNum, SEXP Rot)
 {
     BEGIN_RCPP
 
 	const vector<double> a = as< vector<double> >(Ra);
 	const vector<double> ak = as< vector<double> >(Rak);
-	const vector<double> d = as< vector<double> >(Rd);	
+	const vector<double> d = as< vector<double> >(Rd);
     const vector<double> ot = as< vector<double> >(Rot);
 	const NumericMatrix Theta(RTheta);
 	const int returnNum = as<int>(RreturnNum);
@@ -131,7 +131,7 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
                 if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
                 Num(i,j) = exp(z[j]);
                 Den[i] += Num(i,j);
-            }       
+            }
         }
     } else {
     	for(int i = 0; i < nquad; ++i){
@@ -156,10 +156,10 @@ RcppExport SEXP nominalTraceLinePts(SEXP Ra, SEXP Rak, SEXP Rd, SEXP RTheta,
 	END_RCPP
 }
 
-RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risrating) 
+RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risrating)
 {
     BEGIN_RCPP
-    
+
     const vector<double> par = as< vector<double> >(Rpar);
     const int israting = as<int>(Risrating);
     const NumericMatrix Theta(RTheta);
@@ -181,16 +181,16 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
     for(int i = 0; i < ak.length(); ++i) ak(i) = i;
     IntegerVector returnNum(1);
     NumericMatrix P = nominalTraceLinePts(a, ak, d, Theta, returnNum, Rot);
-    
+
     return(P);
-    END_RCPP   
+    END_RCPP
 }
 
-RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEXP Rncat) 
+RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEXP Rncat)
 {
     BEGIN_RCPP
-    
-    const vector<double> par = as< vector<double> >(Rpar);    
+
+    const vector<double> par = as< vector<double> >(Rpar);
     const NumericMatrix Theta(RTheta);
     const int correct = as<int>(Rcorrect);
     const int ncat = as<int>(Rncat);
@@ -205,8 +205,8 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
     }
     const IntegerVector isfalse(1);
     NumericMatrix Pnom, traces(Theta.nrow(), ncat);
-    NumericVector P = traceLinePts(dpar, Theta, isfalse, isfalse); 
-    Pnom = nominalTraceLinePts(a, ak, d, Theta, isfalse, isfalse); 
+    NumericVector P = traceLinePts(dpar, Theta, isfalse, isfalse);
+    Pnom = nominalTraceLinePts(a, ak, d, Theta, isfalse, isfalse);
     int k = 0;
     for(int i = 0; i < traces.ncol(); ++i){
         if((i+1) == correct){
@@ -217,15 +217,15 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
         }
         ++k;
     }
-    
+
     return(traces);
     END_RCPP
 }
 
-RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot) 
+RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEXP Rot)
 {
     BEGIN_RCPP
-    
+
     const vector<double> par = as< vector<double> >(Rpar);
     const NumericMatrix Theta(RTheta);
     const int asMatrix = as<int>(RasMatrix);
@@ -238,11 +238,11 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
     const double gtmp = par[nfact*2];
     const double g = antilogit(&gtmp);
     vector<double> P(Theta.nrow(), 1.0);
-    
+
     for(int j = 0; j < nfact; ++j)
         for(int i = 0; i < Theta.nrow(); ++i)
             P[i] = P[i] * (1.0 / (1.0 + exp(-(a[j] * Theta(i,j) + d[j]))));
-    for(int i = 0; i < Theta.nrow(); ++i){    
+    for(int i = 0; i < Theta.nrow(); ++i){
         P[i] = g + (1.0 - g) * P[i];
         if(P[i] < 1e-20) P[i] = 1e-20;
         else if (P[i] > 1.0 - 1e-20) P[i] = 1.0 - 1e-20;
@@ -255,14 +255,14 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP RasMatrix, SEX
         }
         return(ret);
     } else return(wrap(P));
-    
-    END_RCPP   
+
+    END_RCPP
 }
 
-RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Roffterm) 
+RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Roffterm)
 {
     BEGIN_RCPP
-    
+
     const List pars(Rpars);
     const NumericMatrix Theta(RTheta);
     const NumericMatrix offterm(Roffterm);
@@ -277,7 +277,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     NumericMatrix FD = item.slot("fixed.design");
     int USEFIXED = 0;
     if(FD.nrow() > 2) USEFIXED = 1;
-    
+
     for(int which = 0; which < J; ++which){
         S4 item = pars[which];
         IntegerVector ncat = item.slot("ncat");
@@ -287,8 +287,8 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
         NumericMatrix P;
         IntegerVector itemclass = item.slot("itemclass");
         IntegerVector correct;
-        
-        /* 
+
+        /*
             1 = dich
             2 = graded
             3 = gpcm
@@ -299,7 +299,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
             8 = nestlogit
             9 = custom....have to do in R for now
         */
-        
+
         if(USEFIXED){
             NumericMatrix itemFD = item.slot("fixed.design");
             NumericMatrix NewTheta(Theta.nrow(), nfact + itemFD.ncol());
@@ -309,30 +309,30 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                 NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
             switch(itemclass(0)){
                 case 1 :
-                    P = traceLinePts(par, NewTheta, istrue, ot); 
-                    break;            
+                    P = traceLinePts(par, NewTheta, istrue, ot);
+                    break;
                 case 2 :
-                    P = gradedTraceLinePts(par, NewTheta, istrue, ot, isfalse); 
-                    break;                
+                    P = gradedTraceLinePts(par, NewTheta, istrue, ot, isfalse);
+                    break;
                 case 3 :
                     P = gpcmTraceLinePts(par, NewTheta, ot, isfalse);
-                    break;            
+                    break;
                 case 4 :
                     for(int i = 0; i < nfact; ++i) a(i) = par(i);
                     for(int i = 0; i < ncat(0); ++i){
                         ak(i) = par(i+nfact);
-                        d(i) = par(i+nfact+ncat(0)); 
+                        d(i) = par(i+nfact+ncat(0));
                     }
                     P = nominalTraceLinePts(a, ak, d, NewTheta, isfalse, ot);
                     break;
                 case 5 :
-                    P = gradedTraceLinePts(par, NewTheta, istrue, ot, istrue); 
+                    P = gradedTraceLinePts(par, NewTheta, istrue, ot, istrue);
                     break;
                 case 6 :
                     P = gpcmTraceLinePts(par, NewTheta, ot, istrue);
                     break;
                 case 7 :
-                    P = partcompTraceLinePts(par, NewTheta, istrue, ot);            
+                    P = partcompTraceLinePts(par, NewTheta, istrue, ot);
                     break;
                 case 8 :
                     correct = item.slot("correctcat");
@@ -341,37 +341,37 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                 case 9 :
                     continue;
                     break;
-                default : 
+                default :
                     Rprintf("How in the heck did you get here from a switch statement?\n");
                     break;
-            }            
-        } else {    
+            }
+        } else {
             switch(itemclass(0)){
                 case 1 :
-                    P = traceLinePts(par, Theta, istrue, ot); 
-                    break;            
+                    P = traceLinePts(par, Theta, istrue, ot);
+                    break;
                 case 2 :
-                    P = gradedTraceLinePts(par, Theta, istrue, ot, isfalse); 
-                    break;                
+                    P = gradedTraceLinePts(par, Theta, istrue, ot, isfalse);
+                    break;
                 case 3 :
                     P = gpcmTraceLinePts(par, Theta, ot, isfalse);
-                    break;            
+                    break;
                 case 4 :
                     for(int i = 0; i < nfact; ++i) a(i) = par(i);
                     for(int i = 0; i < ncat(0); ++i){
                         ak(i) = par(i+nfact);
-                        d(i) = par(i+nfact+ncat(0)); 
+                        d(i) = par(i+nfact+ncat(0));
                     }
                     P = nominalTraceLinePts(a, ak, d, Theta, isfalse, ot);
                     break;
                 case 5 :
-                    P = gradedTraceLinePts(par, Theta, istrue, ot, istrue); 
+                    P = gradedTraceLinePts(par, Theta, istrue, ot, istrue);
                     break;
                 case 6 :
                     P = gpcmTraceLinePts(par, Theta, ot, istrue);
                     break;
                 case 7 :
-                    P = partcompTraceLinePts(par, Theta, istrue, ot);            
+                    P = partcompTraceLinePts(par, Theta, istrue, ot);
                     break;
                 case 8 :
                     correct = item.slot("correctcat");
@@ -380,7 +380,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
                 case 9 :
                     continue;
                     break;
-                default : 
+                default :
                     Rprintf("How in the heck did you get here from a switch statement?\n");
                     break;
             }
@@ -389,7 +389,7 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
             itemtrace(_, where + i) = P(_, i);
         where += P.ncol();
     }
-    
+
     return(itemtrace);
-    END_RCPP   
+    END_RCPP
 }

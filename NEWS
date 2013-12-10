@@ -1,3 +1,48 @@
+		 Changes in mirt 1.x
+
+  - three dimensional models supported in `itemplot()` for types `trace`,
+  `score`, `info`, and `SE`
+
+  - new DIF() function to quicky calculate common differential item functioning
+  routines, similar to how IRTLRDIF worked. Supports likelihood ratio testings
+  as well as the Wald approach, and includes forward and backword sequential
+  DIF searching methods
+
+  - added a `shiny = TRUE` option to `itemplot()` to run the interactive
+  shiny applet.  Useful for instructive purposes, as well as understanding
+  how the internal parameters of mirt behave
+
+  - `type = 'trace'` and `type = 'infotrace'` support added to `plot`
+  generic for multiple group objects
+
+  - `fscores(..., method = 'EAPsum')` returns observed and expected values,
+  along with general fit statistics that are printed to the console and
+  returned as a 'fit' attribute
+
+  - removed multinomial constant in log-likelihood since it has no influence
+  on nested model comparisons
+
+  - `SE.type = 'crossprod'` added for computing the parameter information
+  matrix based on the variance of the Fisher scoring vector
+
+  - `customPriorFun` input to technical list now available for utilizing
+  user defined prior distribution functions in the EM algorithm
+
+  - empirical histogram estimation now available in `mirt()` and
+  `multipleGroup()` for unidimensional models. Additional plot `type =
+  'empiricalhist'` also added to the `plot()` generic
+
+  - reimplement `read.mirt()` with better consistency checking between the
+  `plink` package
+
+BUG FIXES
+
+  - remove `as.integer()` in MultipleGroup df slot
+
+  - pass proper item type when using custom pattern calles in `fscores()`
+
+  - return proper object in personfit when gpcm models used
+
 		 Changes in mirt 1.0
 
 NEW FEATURES

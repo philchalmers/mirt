@@ -4,7 +4,7 @@
 #' maximum-likelihood multiple group analysis for dichotomous and polytomous
 #' data under the item response theory paradigm using either Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This function
-#' may be used for detecting differential item functioning (DIF), thought the \code{\link{DIF}} function 
+#' may be used for detecting differential item functioning (DIF), thought the \code{\link{DIF}} function
 #' may provide a more convenient approach.
 #'
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally
@@ -15,7 +15,7 @@
 #' \code{mod2values} or from passing \code{pars = 'values'}, or by supplying a \code{constrain} list
 #' for user defined equality constraints between parameters.
 #'
-#' @aliases multipleGroup 
+#' @aliases multipleGroup
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model a single model object returned from \code{mirt.model()} declaring how
@@ -25,14 +25,14 @@
 #'   \describe{
 #'     \item{\code{'free_means'}}{for freely estimating all latent means (reference group constrained to 0)}
 #'     \item{\code{'free_var'}}{for freely estimating all latent variances (reference group constrained to 1's)}
-#'     \item{\code{'free_cov'}}{for freely estimating all latent covariances (reference group constrained to an 
+#'     \item{\code{'free_cov'}}{for freely estimating all latent covariances (reference group constrained to an
 #'     Identity matrix)}
 #'     \item{\code{'free_varcov'}}{calls both \code{'free_var'} and \code{'free_cov'}}
 #'     \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
 #'     \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for
 #'     nominal models this also includes the category specific slope parameters}
 #'    }
-#'   
+#'
 #'   Additionally, specifying specific item name bundles (from \code{colnames(data)}) will
 #'   constrain all freely estimated parameters in each item to be equal across groups. This is useful
 #'   for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
@@ -66,7 +66,7 @@
 #' @param parprior see \code{\link{mirt}} for details
 #' @param pars see \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed
-#' @param technical list specifying subtle parameters that can be adjusted. See 
+#' @param technical list specifying subtle parameters that can be adjusted. See
 #'   \code{\link{mirt}} for details
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
@@ -97,7 +97,7 @@
 #'
 #' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
 #' #equal intercepts, free variance and means
-#' mod_scalar2 <- multipleGroup(dat, models, group = group, 
+#' mod_scalar2 <- multipleGroup(dat, models, group = group,
 #'                              invariance=c('slopes', 'intercepts', 'free_var','free_means'))
 #' mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
 #'                              invariance=c('slopes', 'intercepts', 'free_var'))
@@ -125,7 +125,7 @@
 #' constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 #' equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain)
 #' anova(equalslopes, mod_configural)
-#' 
+#'
 #' #same as above, but using mirt.model syntax
 #' newmodel <- mirt.model('
 #'     F = 1-15
@@ -156,7 +156,7 @@
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
-#'                              invariance=c('free_means', 'free_varcov', 'intercepts', 
+#'                              invariance=c('free_means', 'free_varcov', 'intercepts',
 #'                              itemnames[-i]))
 #'
 #'
@@ -198,16 +198,16 @@
 #' #same as above, but with MHRM (more accurate with 3 factors, but slower)
 #' #define mirt cluster to compute log-likelihoods faster
 #' mirtCluster()
-#' 
+#'
 #' #completely separate analyses
-#' mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM') 
+#' mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM')
 #' #equal slopes
-#' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM') 
+#' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM')
 #' #equal means, slopes, intercepts
-#' mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM', 
+#' mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM',
 #'                              invariance=c('slopes', 'intercepts', 'free_varcov'))
 #' #equal means, slopes, intercepts
-#' mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM', 
+#' mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM',
 #'                              invariance=c('slopes', 'intercepts'))
 #'
 #' anova(mod_metric, mod_configural)
@@ -242,7 +242,7 @@
 #' plot(mod_configural2, type = 'SE')
 #' plot(mod_configural2, type = 'RE')
 #' itemplot(mod_configural2, 10)
-#' 
+#'
 #' ############
 #' ## empical histogram example (normal and bimodal groups)
 #' set.seed(1234)
@@ -253,11 +253,11 @@
 #' Theta <- rbind(ThetaNormal, ThetaBimodal)
 #' dat <- simdata(a, d, 4000, itemtype = 'dich', Theta=Theta)
 #' group <- rep(c('G1', 'G2'), each=2000)
-#' 
+#'
 #' EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
 #' coef(EH)
 #' plot(EH, type = 'empiricalhist', npts = 60)
-#' 
+#'
 #' #dif test for item 1
 #' EH1 <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat)[-1])
 #' anova(EH, EH1)
@@ -267,11 +267,11 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
                           draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                          key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE, 
+                          key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE,
                           verbose = TRUE, ...)
 {
     Call <- match.call()
-    if(length(model) > 1L) 
+    if(length(model) > 1L)
         stop('multipleGroup only supports single group inputs')
     invariance.check <- invariance %in% c('free_means', 'free_var', 'free_varcov')
     if(empiricalhist && any(invariance.check))

@@ -15,19 +15,19 @@
 #' @examples
 #'
 #' \dontrun{
-#' 
+#'
 #' #standard
 #' mod <- mirt(Science, 1)
 #' booted <- boot.mirt(mod)
 #' plot(booted)
 #' booted
-#' 
+#'
 #' #run in parallel using snow back-end using all available cores
 #' mod <- mirt(Science, 1)
 #' booted <- boot.mirt(mod, parallel = 'snow', ncpus = parallel::detectCores())
 #' booted
-#' 
-#' 
+#'
+#'
 #' }
 boot.mirt <- function(x, R = 100, ...){
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group, ...) {

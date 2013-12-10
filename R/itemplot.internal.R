@@ -131,13 +131,13 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 3) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')
-    theta <- seq(-4,4, length.out=40)    
-    if(nfact == 3) theta <- seq(-4,4, length.out=20)    
-    prodlist <- attr(x@pars, 'prodlist')    
-    if(length(prodlist) > 0){        
-        Theta <- thetaComb(theta, x@nfact)        
+    theta <- seq(-4,4, length.out=40)
+    if(nfact == 3) theta <- seq(-4,4, length.out=20)
+    prodlist <- attr(x@pars, 'prodlist')
+    if(length(prodlist) > 0){
+        Theta <- thetaComb(theta, x@nfact)
         ThetaFull <- prodterms(Theta,prodlist)
-    } else Theta <- ThetaFull <- thetaComb(theta, nfact)    
+    } else Theta <- ThetaFull <- thetaComb(theta, nfact)
     if(is(x, 'ExploratoryClass')){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
         x@pars[[item]]@par <- as.numeric(cfs[[item]])
@@ -153,7 +153,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                 warning('Information plots require the degrees input to be of length 3')
             } else {
                 info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
-            } 
+            }
         }
         if(nfact == 2){
             for(i in 1:length(degrees))
@@ -162,7 +162,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         } else {
             info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
         }
-    } else message('Information functions could not be computed')    
+    } else message('Information functions could not be computed')
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE && nfact != 3){
@@ -265,7 +265,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             stop('Cannot draw contours for 1 factor models')
         } else {
             stop('Plot type not supported for unidimensional model')
-        }        
+        }
     } else if(nfact == 2){
         plt <- data.frame(info = info, SE = 1/sqrt(info), Theta1 = Theta[,1], Theta2 = Theta[,2])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2])
@@ -318,14 +318,14 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         } else {
             stop('Plot type not supported for 2 dimensional model')
         }
-    } else {        
-        plt <- data.frame(info = info, SE = 1/sqrt(info), Theta1 = Theta[,1], Theta2 = Theta[,2], 
+    } else {
+        plt <- data.frame(info = info, SE = 1/sqrt(info), Theta1 = Theta[,1], Theta2 = Theta[,2],
                           Theta3 = Theta[,3])
         plt2 <- data.frame(P = P, Theta1 = Theta[,1], Theta2 = Theta[,2], Theta3 = Theta[,3])
         colnames(plt2) <- c(paste("P", 1:ncol(P), sep=''), "Theta1", "Theta2", "Theta3")
         plt2 <- reshape(plt2, direction='long', varying = paste("P", 1:ncol(P), sep=''), v.names = 'P',
                         times = paste("P", 1:ncol(P), sep=''))
-        plt$score <- score        
+        plt$score <- score
         if(type == 'trace'){
             return(lattice::wireframe(P ~ Theta1 + Theta2|Theta3, data = plt2, group = time,
                                       main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
@@ -340,15 +340,15 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             return(lattice::wireframe(info ~ Theta1 + Theta2|Theta3, data = plt,
                                       main = paste("Item", item, "Information"),
                                       zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                      scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))            
+                                      scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
         } else if(type == 'SE'){
             return(lattice::wireframe(SE ~ Theta1 + Theta2|Theta3, data = plt, main = paste("Item", item, "Standard Errors"),
                                       zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       scales = list(arrows = FALSE),
                                       colorkey = TRUE, drape = TRUE, screen=rot, ...))
         } else {
-            stop('Plot type not supported for 3 dimensional model')            
+            stop('Plot type not supported for 3 dimensional model')
         }
-        
+
     }
 }

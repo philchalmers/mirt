@@ -1,7 +1,7 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
                      key, nominal.highlow)
-{    
+{
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
@@ -58,7 +58,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(tmpval, 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 0L:(K[i]-1L), sep=''), 'c')
         }
-        if(itemtype[i] == 'nominal'){            
+        if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
             if(is.null(nominal.highlow)){
                 val[nfact + 1L] <- 0
@@ -73,7 +73,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
             val <- c(lambdas[i,], rep(1, nfact), guess[i], 999)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
-        }        
+        }
         if(all(itemtype[i] != valid.items)) next
         startvalues[[i]] <- val
     }
@@ -82,7 +82,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     for(i in 1L:J){
         if(itemtype[i] == 'Rasch' && K[i] == 2L)
             freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)
-        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){            
+        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
             if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1L] <- TRUE
@@ -106,15 +106,15 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-1L))
         if(itemtype[i] == 'rsm')
             freepars[[i]] <- c(rep(FALSE, nfact), FALSE, rep(TRUE, K[i]))
-        if(itemtype[i] == 'nominal'){            
-            estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))                        
+        if(itemtype[i] == 'nominal'){
+            estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
             if(is.null(nominal.highlow)){
                 estpars[nfact + 1L] <- FALSE
                 estpars[nfact + K[i]] <- FALSE
             } else {
                 estpars[nfact + nominal.highlow[2L, i]] <- FALSE
                 estpars[nfact + nominal.highlow[1L, i]] <- FALSE
-            }                        
+            }
             estpars[c(nfact + K[i] + 1L)] <- FALSE
             freepars[[i]] <- estpars
         }
@@ -132,7 +132,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     nfixedeffects <- 0
     fixed.design.list <- vector('list', J)
     for(i in 1L:J) fixed.design.list[[i]] <- matrix(0)
-    if(!is.null(mixed.design)){         
+    if(!is.null(mixed.design)){
         fixed.design <- mixed.design$fixed
         betas <- rep(0, ncol(fixed.design))
         estbetas <- rep(TRUE, length(betas))
@@ -147,9 +147,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         freepars <- lapply(freepars, function(x, valid){
             x[names(x) %in% valid] <- FALSE
             return(x)}, valid=valid.ints)
-        startvalues <- lapply(startvalues, function(x, valid){            
+        startvalues <- lapply(startvalues, function(x, valid){
             x[names(x) %in% valid] <- 0
-            return(x)}, valid=valid.ints)        
+            return(x)}, valid=valid.ints)
         N <- nrow(mixed.design$fixed) / J
         for(i in 1L:J)
             fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), , drop = FALSE]
@@ -201,7 +201,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(freepars[[i]])
             next
         }
-        
+
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             pars[[i]] <- new('dich',
                              par=startvalues[[i]],
@@ -331,7 +331,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(itemtype[i] == 'nominal'){            
+        if(itemtype[i] == 'nominal'){
             pars[[i]] <- new('nominal',
                              par=startvalues[[i]],
                              est=freepars[[i]],
@@ -345,7 +345,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
-                             prior_2=rep(NaN,length(startvalues[[i]])))            
+                             prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
@@ -400,7 +400,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                     pars[[i]]@any.prior <- TRUE
                     p2 <- as.numeric(parprior[[j]][length(parprior[[j]])])
                     p1 <- as.numeric(parprior[[j]][length(parprior[[j]])-1L])
-                    type <- parprior[[j]][length(parprior[[j]])-2L]                    
+                    type <- parprior[[j]][length(parprior[[j]])-2L]
                     pars[[i]]@prior.type[tmp] <- type
                     pars[[i]]@prior_1[tmp] <- p1
                     pars[[i]]@prior_2[tmp] <- p2

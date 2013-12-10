@@ -9,9 +9,9 @@
 #' Metropolis-Hastings Robbins-Monro (MH-RM) algorithm. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory'
 #' person or item level predictors, though these can only be included by using the
-#' \code{\link{mixedmirt}} function. Tests that form a two-tier or bi-factor structure should 
+#' \code{\link{mixedmirt}} function. Tests that form a two-tier or bi-factor structure should
 #' be estimated with the \code{\link{bfactor}} function, which uses a dimension reduction EM
-#' algorithm for modeling item parcels. Multiple group analyses (useful for DIF testing) are 
+#' algorithm for modeling item parcels. Multiple group analyses (useful for DIF testing) are
 #' also available using the \code{\link{multipleGroup}} function.
 #'
 #' \code{mirt} follows the item factor analysis strategy by marginal maximum
@@ -19,7 +19,7 @@
 #' Gibbons and Muraki (1988), and Muraki and Carlson (1995).
 #' Nested models may be compared via the approximate
 #' chi-squared difference test or by a reduction in AIC/BIC values (comparison
-#' via \code{\link{anova}}). 
+#' via \code{\link{anova}}).
 #'
 #' \code{summary} and \code{coef} allow
 #' for all the rotations available from the \code{GPArotation} package (e.g., \code{rotate = 'oblimin'})
@@ -31,7 +31,7 @@
 #' computed using the LD statistic (Chen & Thissen, 1997) in the lower
 #' diagonal of the matrix returned by \code{residuals}, and Cramer's V above
 #' the diagonal.
-#' 
+#'
 #' @section Confirmatory and Exploratory IRT:
 #'
 #' Specification of the confirmatory item factor analysis model follows many of
@@ -50,7 +50,7 @@
 #' \code{fscores}. Again, factor means and variances are fixed to ensure proper identification.
 #' If the model is confirmatory then the returned class will be 'ExploratoryClass'.
 #'
-#' Estimation often begins by computing a matrix of quasi-tetrachoric correlations. A 
+#' Estimation often begins by computing a matrix of quasi-tetrachoric correlations. A
 #' factor analysis with \code{nfact} is then extracted and item parameters are
 #' estimated by \eqn{a_{ij} = f_{ij}/u_j}, where \eqn{f_{ij}} is the factor
 #' loading for the \emph{j}th item on the \emph{i}th factor, and \eqn{u_j} is
@@ -59,12 +59,12 @@
 #' normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain
 #' \eqn{d_j = q_j / u_j}. A similar implementation is also used for obtaining
 #' initial values for polytomous items.
-#' 
-#' Note that internally, the \eqn{g} and \eqn{u} parameters are transformed using a logit 
-#' transformation (\eqn{log(x/(1-x))}), and can be reversed by using \eqn{1 / (1 + exp(-x))} 
+#'
+#' Note that internally, the \eqn{g} and \eqn{u} parameters are transformed using a logit
+#' transformation (\eqn{log(x/(1-x))}), and can be reversed by using \eqn{1 / (1 + exp(-x))}
 #' following convergence. This also applies when computing confidence intervals for these parameters,
 #' and is done so automatically if \code{coef(mod, rawug = FALSE)}.
-#' 
+#'
 #' @section Convergence for quadrature methods:
 #'
 #' Unrestricted full-information factor analysis is known to have problems with
@@ -73,12 +73,12 @@
 #' means greater than .95, or items that are only .05 greater than the
 #' guessing parameter, should be considered for removal from the analysis or
 #' treated with prior parameter distributions. The same type of reasoning is
-#' applicable when including upper bound parameters as well. Also, increasing the 
-#' number of quadrature points per dimension may help to stabilize the estimation process 
+#' applicable when including upper bound parameters as well. Also, increasing the
+#' number of quadrature points per dimension may help to stabilize the estimation process
 #' in higher dimensions. Finally, solutions that are not well defined also will have difficulty
 #' converging, and can indicate that the model has been misspecified (e.g., extracting too many
 #' dimensions).
-#' 
+#'
 #' @section Convergence for MH-RM method:
 #'
 #' For the MH-RM algorithm, when the number of iterations grows very high (e.g., greater than 1500) or
@@ -90,7 +90,7 @@
 #' @section IRT Models:
 #'
 #' The parameter labels use the follow convention, here using two factors and \eqn{k} as the number
-#' of categories. 
+#' of categories.
 #'
 #' \describe{
 #' \item{Rasch}{
@@ -109,7 +109,7 @@
 #' }
 #' \item{grsm}{
 #' A more constrained version of the graded model where graded spacing is equal accross item blocks
-#' and only adjusted by a single 'difficulty' parameter (c) while the latent variance 
+#' and only adjusted by a single 'difficulty' parameter (c) while the latent variance
 #' of \eqn{\theta} is freely estimated. Again,
 #' \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
 #' but now
@@ -120,31 +120,31 @@
 #' in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(k-1)} = (k - 1)}.
 #' \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}
 #' {\sum_1^k exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
-#' 
-#' For partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above model 
-#' is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent 
-#' variance of \eqn{\theta_1} is freely estimated. 
-#' 
-#' In the nominal model this parametrizations helps to identify the empirical ordering of the 
-#' categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is 
-#' more positively related to the latent trait(s) being measured. For instance, if an item was 
-#' truly ordinal (such as a Likert scale), and had 4 response categories, we would expect 
+#'
+#' For partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above model
+#' is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent
+#' variance of \eqn{\theta_1} is freely estimated.
+#'
+#' In the nominal model this parametrizations helps to identify the empirical ordering of the
+#' categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is
+#' more positively related to the latent trait(s) being measured. For instance, if an item was
+#' truly ordinal (such as a Likert scale), and had 4 response categories, we would expect
 #' to see \eqn{ak_0 < ak_1 < ak_2 < ak_3} following estimation. If on the other hand \eqn{ak_0 > ak_1}
-#' then it would appear that the second category is less related to to the trait than the first, and 
+#' then it would appear that the second category is less related to to the trait than the first, and
 #' therefore the second category should be understood as the 'lowest score'.
-#' 
-#' NOTE: The nominal model can become numerical unstable if poor choices for the high and low values 
+#'
+#' NOTE: The nominal model can become numerical unstable if poor choices for the high and low values
 #' are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. It is recommended to choose
-#' high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1 
+#' high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1
 #' either by theoretical means or by re-estimating the model with better values following convergence.
-#' 
+#'
 #' }
 #' \item{rsm}{
 #' A more constrained version of the partial credit model where the spacing is equal
-#' accross item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this is 
-#' analogous to the relationship between the graded model and the grsm (with an additional 
-#' constraint regarding the fixed discrimination parameters; the discrimination constraint can, 
-#' however, be relaxed by adjusting the starting values specifications manually and applying 
+#' accross item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this is
+#' analogous to the relationship between the graded model and the grsm (with an additional
+#' constraint regarding the fixed discrimination parameters; the discrimination constraint can,
+#' however, be relaxed by adjusting the starting values specifications manually and applying
 #' additional equality constraints).
 #' }
 #' \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
@@ -161,7 +161,7 @@
 #' }
 #' }
 #'
-#' @aliases mirt 
+#' @aliases mirt
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model an object returned from \code{mirt.model()} declaring how
@@ -174,12 +174,12 @@
 #'   '4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
 #'   and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
 #'   3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response model,
-#'   rating scale graded response model, generalized partial credit model, Rasch rating scale model, 
+#'   rating scale graded response model, generalized partial credit model, Rasch rating scale model,
 #'   nominal model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
 #'   models, respectively. User defined item classes
 #'   can also be defined using the \code{\link{createItem}} function
 #' @param method a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
-#'   for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to 
+#'   for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
 #'   use the MH-RM algorithm
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when using
 #'   the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
@@ -194,12 +194,12 @@
 #'   stochastic approximation, Bock and Lieberman style information (use only with small number of items), or
 #'   supplemented EM (SEM) computations for Bock and Lieberman style information matrix
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix.
-#'   Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach 
-#'   (EM only), \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option), and \code{'crossprod'} 
-#'   for simple standard error computations based on the Fisher scoring variance. 
-#'   Note that for the \code{'SEM'} option increasing 
-#'   the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be 
-#'   run in parallel if a \code{\link{mirtCluster}} object has been defined. 
+#'   Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach
+#'   (EM only), \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option), and \code{'crossprod'}
+#'   for simple standard error computations based on the Fisher scoring variance.
+#'   Note that for the \code{'SEM'} option increasing
+#'   the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be
+#'   run in parallel if a \code{\link{mirtCluster}} object has been defined.
 #'   Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
@@ -214,23 +214,23 @@
 #'   If \code{rotate != ''} in the \code{summary}
 #'   input then the default from the object is ignored and the new rotation from the list
 #'   is used instead. Rotations currently supported are: promax, oblimin, varimax, quartimin,
-#'   targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ, 
+#'   targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ,
 #'   tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 #'   To constrain parameters to be equal create a list with separate concatenated vectors signifying which
 #'   parameters to constrain. For example, to set parameters 1 and 5 equal, and also set parameters 2, 6, and 10 equal
-#'   use \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the 
+#'   use \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the
 #'   \code{\link{mirt.model}} syntax
 #' @param parprior a list of user declared prior item probabilities. To see how to define the
 #'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
-#'   Can define either normal (e.g., intercepts, lower/guessing and upper bounds), 
-#'   log-normal (e.g., for univariate slopes), or beta prior probabilities. 
+#'   Can define either normal (e.g., intercepts, lower/guessing and upper bounds),
+#'   log-normal (e.g., for univariate slopes), or beta prior probabilities.
 #'   To specify a prior the form is c('priortype', ...), where normal priors
-#'   are \code{parprior = list(c(parnumbers, 'norm', mean, sd))}, 
+#'   are \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
 #'   \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
-#'   \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta. Priors can also be specified 
+#'   \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta. Priors can also be specified
 #'   using \code{\link{mirt.model}} syntax
 #' @param pars a data.frame with the structure of how the starting values, parameter numbers, estimation
 #'   logical values, etc, are defined. The user may observe how the model defines the values by using \code{pars =
@@ -238,8 +238,8 @@
 #'   mymodifiedpars}
 #' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the
 #'   data contains no NA's
-#' @param quadpts number of quadrature points per dimension (must be an odd number). 
-#'   By default the number of quadrature uses the following scheme: 
+#' @param quadpts number of quadrature points per dimension (must be an odd number).
+#'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
 #' @param large a logical, indicating whether the internal collapsed data should be returned,
 #'   or list of internally computed mirt parameters containing the data. If \code{TRUE} a list containing
@@ -253,8 +253,8 @@
 #'   \code{mod <- mirt(Science, 1, large = internaldat)}}
 #' }
 #' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
-#'   Only applicable for unidimensional models estimated with the EM algorithm. 
-#'   The number of cycles, TOL, and quadpts are adjusted 
+#'   Only applicable for unidimensional models estimated with the EM algorithm.
+#'   The number of cycles, TOL, and quadpts are adjusted
 #'   accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
 #' @param nominal.highlow optional matrix indicating the highest (row 1) and lowest (row 2) categories
 #'   to be used for the nominal response model. Using this input may result in better numerical stability.
@@ -279,25 +279,25 @@
 #'     \item{gain}{a vector of two values specifying the numerator and exponent
 #'          values for the RM gain function \eqn{(val1 / cycle)^val2}. Default is \code{c(0.15,0.65)}}
 #'     \item{customK}{a numeric value to be used to explicitly declare the number of response categories
-#'           for each item. This should only be used when constructing mirt model for reasons other 
+#'           for each item. This should only be used when constructing mirt model for reasons other
 #'           than parameter estimation (such as to obtain factor scores), and requires that the input data
-#'           all have 0 as the lowest category. The format is the same as the 
+#'           all have 0 as the lowest category. The format is the same as the
 #'           \code{mod@@K} slot in all converged models}
-#'     \item{GenRandomPars}{logical; generate random starting values prior to optimization instead of 
+#'     \item{GenRandomPars}{logical; generate random starting values prior to optimization instead of
 #'          using the fixed internal starting values?}
-#'     \item{customPriorFun}{a custom function used to determine the normalized density for integration 
+#'     \item{customPriorFun}{a custom function used to determine the normalized density for integration
 #'          in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
-#'          with the same length as number of rows in \code{Theta}} 
+#'          with the same length as number of rows in \code{Theta}}
 #'   }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-#'   \code{\link{residuals-method}}, \code{\link{plot-method}}, \code{\link{fitted-method}},  
+#'   \code{\link{residuals-method}}, \code{\link{plot-method}}, \code{\link{fitted-method}},
 #'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
 #'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-#'   \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, 
+#'   \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}},
 #'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
 #'
 #' @references
@@ -314,7 +314,7 @@
 #'
 #' Bock, R. D. & Lieberman, M. (1970). Fitting a response model for n dichotomously
 #' scored items. \emph{Psychometrika, 35}, 179-197.
-#' 
+#'
 #' Cai, L. (2010a). High-Dimensional exploratory item factor analysis by a
 #' Metropolis-Hastings Robbins-Monro algorithm. \emph{Psychometrika, 75},
 #' 33-57.
@@ -325,8 +325,8 @@
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' 
-#' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item 
+#'
+#' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 #' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
 #'
 #' Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
@@ -380,20 +380,20 @@
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
 #' #internally g and u pars are stored as logits, so usually a good idea to include normal prior
-#' #  to help stabilize the paramteres. For a value around .182 use a mean 
+#' #  to help stabilize the paramteres. For a value around .182 use a mean
 #' #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
 #' (mod1.3PL.norm <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
 #'     parprior = list(c(19, 'norm', -1.5, 3))))
 #' coef(mod1.3PL.norm)
-#' 
+#'
 #' #could also define priors using mirt.model() syntax
 #' model <- mirt.model('F = 1-5
 #'                      PRIOR = (5, g, norm, -1.5, 3)')
 #' mod1.3PL.norm2 <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
 #' coef(mod1.3PL.norm2)
-#' 
+#'
 #' #two factors (exploratory)
-#' mod2 <- mirt(data, 2) 
+#' mod2 <- mirt(data, 2)
 #' coef(mod2)
 #' summary(mod2, rotate = 'oblimin') #oblimin rotation
 #' residuals(mod2)
@@ -412,7 +412,7 @@
 #' cmod <- mirt(data, cmodel)
 #' coef(cmod)
 #' anova(cmod, mod2)
-#' 
+#'
 #' ###########
 #' #data from the 'ltm' package in numeric format
 #' pmod1 <- mirt(Science, 1)
@@ -426,14 +426,14 @@
 #' values #note that slopes are numbered 1,5,9,13, or index with values$parnum[values$name == 'a1']
 #' (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
 #' coef(pmod1_equalslopes)
-#' 
+#'
 #' # using mirt.model syntax, constrain all item slopes to be equal
 #' model <- mirt.model('
 #'    F = 1-4
 #'    CONSTRAIN = (1-4, a1)')
 #' (pmod1_equalslopes <- mirt(Science, model))
 #' coef(pmod1_equalslopes)
-#' 
+#'
 #' coef(pmod1_equalslopes)
 #' anova(pmod1_equalslopes, pmod1) #significantly worse fit with almost all criteria
 #'
@@ -446,13 +446,13 @@
 #' #unidimensional fit with a generalized partial credit and nominal model
 #' (gpcmod <- mirt(Science, 1, 'gpcm'))
 #' coef(gpcmod)
-#' 
-#' #for the nominal model the lowest and highest categories are assumed to be the 
+#'
+#' #for the nominal model the lowest and highest categories are assumed to be the
 #' #  theoretically lowest and highest categories that related to the latent trait(s), however
 #' #  a custom nominal.highlow matrix can be passed to declare which item category should be
-#' #  treated as the 'highest' and 'lowest' instead 
+#' #  treated as the 'highest' and 'lowest' instead
 #' (nomod <- mirt(Science, 1, 'nominal'))
-#' coef(nomod) #ordering of ak values suggest that the items are indeed ordinal 
+#' coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 #' anova(gpcmod, nomod)
 #' itemplot(nomod, 3)
 #'
@@ -466,7 +466,7 @@
 #' mod1 <- mirt(data, 1)
 #' mod2 <- mirt(data, 2)
 #' #difficulty converging with reduced quadpts, reduce TOL
-#' mod3 <- mirt(data, 3, technical = list(TOL = .001)) 
+#' mod3 <- mirt(data, 3, technical = list(TOL = .001))
 #' anova(mod1,mod2)
 #' anova(mod2, mod3) #negative AIC, 2 factors probably best
 #'
@@ -487,7 +487,7 @@
 #' #use much better start values to save iterations
 #' sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values')
 #' sv[,'value'] <- c(as.vector(t(cbind(a,d,c))),0,1)
-#' 
+#'
 #' #also possible to edit start values with a GUI approach with
 #' #   sv <- edit(sv)
 #'
@@ -626,7 +626,7 @@
 #' itemplot(mod.combo, 2, type = 'infocontour')
 #'
 #' ## empical histogram examples (normal, skew and bimodality)
-#' #make some data 
+#' #make some data
 #' set.seed(1234)
 #' a <- matrix(rlnorm(50, .2, .2))
 #' d <- matrix(rnorm(50))
@@ -636,35 +636,35 @@
 #' datNormal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaNormal)
 #' datBimodal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaBimodal)
 #' datSkew <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaSkew)
-#' 
+#'
 #' normal <- mirt(datNormal, 1, empiricalhist = TRUE)
 #' plot(normal, type = 'empiricalhist')
 #' histogram(ThetaNormal, breaks=30)
-#' 
+#'
 #' bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
 #' plot(bimodal, type = 'empiricalhist')
 #' histogram(ThetaBimodal, breaks=30)
-#' 
+#'
 #' skew <- mirt(datSkew, 1, empiricalhist = TRUE)
 #' plot(skew, type = 'empiricalhist')
 #' histogram(ThetaSkew, breaks=30)
-#' 
-#' 
+#'
+#'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
-                 method = 'EM', pars = NULL, constrain = NULL, parprior = NULL, 
+                 method = 'EM', pars = NULL, constrain = NULL, parprior = NULL,
                  calcNull = TRUE, draws = 5000, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
-                 key = NULL, nominal.highlow = NULL, large = FALSE, 
+                 key = NULL, nominal.highlow = NULL, large = FALSE,
                  accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE,
-                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target, 
+                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
                       rsm.block=rsm.block, technical=technical, verbose=verbose,
-                      calcNull=calcNull, SE.type=SE.type, large=large, key=key, 
+                      calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))

@@ -7,7 +7,7 @@
 #'
 #' @aliases fitIndices
 #' @param obj an estimated model object from the mirt package
-#' @param calcNull logical; calculate statistics for the null model as well? 
+#' @param calcNull logical; calculate statistics for the null model as well?
 #' Allows for statistics such as the limited information TLI and CFI
 #' @param prompt logical; prompt user for input if the internal matrices are too large?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -54,11 +54,11 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
                            sqrt(newret$Total.M2 - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0)
         if(calcNull){
             null.mod <- try(multipleGroup(obj@data, 1, group=obj@group,
-                                          technical=list(NULL.MODEL=TRUE, TOL=1e-3), 
-                                          verbose=FALSE))            
+                                          technical=list(NULL.MODEL=TRUE, TOL=1e-3),
+                                          verbose=FALSE))
             null.fit <- fitIndices(null.mod, prompt=FALSE)
-            newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) / 
-                (null.fit$Total.M2 / null.fit$df.M2 - 1)           
+            newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) /
+                (null.fit$Total.M2 / null.fit$df.M2 - 1)
             newret$CFI.M2 <- 1 - (newret$Total.M2 - newret$df.M2) / (null.fit$Total.M2 - null.fit$df.M2)
             if(newret$CFI.M2 > 1) newret$CFI.M2 <- 1
             if(newret$CFI.M2 < 0 ) newret$CFI.M2 <- 0
@@ -160,11 +160,11 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
                         sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (sum(r)-1)), 0)
         if(calcNull){
-            null.mod <- try(mirt(obj@data, 1, technical=list(NULL.MODEL=TRUE, TOL=1e-3), 
-                                 verbose=FALSE))            
-            null.fit <- fitIndices(null.mod, prompt=FALSE)            
-            ret$TLI.M2 <- (null.fit$M2 / null.fit$df.M2 - ret$M2/ret$df.M2) / 
-                (null.fit$M2 / null.fit$df.M2 - 1)           
+            null.mod <- try(mirt(obj@data, 1, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
+                                 verbose=FALSE))
+            null.fit <- fitIndices(null.mod, prompt=FALSE)
+            ret$TLI.M2 <- (null.fit$M2 / null.fit$df.M2 - ret$M2/ret$df.M2) /
+                (null.fit$M2 / null.fit$df.M2 - 1)
             ret$CFI.M2 <- 1 - (ret$M2 - ret$df.M2) / (null.fit$M2 - null.fit$df.M2)
             if(ret$CFI.M2 > 1) ret$CFI.M2 <- 1
             if(ret$CFI.M2 < 0) ret$CFI.M2 <- 0

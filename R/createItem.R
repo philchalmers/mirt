@@ -53,7 +53,7 @@
 #' tail(sv) #looks good
 #' mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
 #' coef(mod)
-#' mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), 
+#' mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x),
 #'    verbose = TRUE, method = 'MHRM')
 #' coef(mod2)
 #'
@@ -92,29 +92,29 @@
 #' x3 <- createItem(name, par=par, est=est, P=P.mycov, userdata=covdata)
 #' mod <- mirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3), method = 'MHRM')
 #' coef(mod)
-#' 
+#'
 #' ###nominal response model (Bock 1972 version)
 #' Tnom.dev <- function(ncat) {
 #'    T <- matrix(1/ncat, ncat, ncat - 1)
 #'    diag(T[-1, ]) <-  diag(T[-1, ]) - 1
-#'    return(T)    
+#'    return(T)
 #' }
-#' 
+#'
 #' name <- 'nom'
 #' par <- c(alp=c(3,0,-3),gam=rep(.4,3))
 #' est <- rep(TRUE, length(par))
-#' P.nom <- function(par, Theta, ncat){    
+#' P.nom <- function(par, Theta, ncat){
 #'    alp <- par[1:(ncat-1)]
-#'    gam <- par[ncat:length(par)]    
+#'    gam <- par[ncat:length(par)]
 #'    a <- Tnom.dev(ncat) %*% alp
-#'    c <- Tnom.dev(ncat) %*% gam       
+#'    c <- Tnom.dev(ncat) %*% gam
 #'    z <- matrix(0, nrow(Theta), ncat)
 #'    for(i in 1:ncat)
 #'        z[,i] <- a[i] * Theta + c[i]
 #'    P <- exp(z) / rowSums(exp(z))
 #'    P
 #' }
-#' 
+#'
 #' nom1 <- createItem(name, par=par, est=est, P=P.nom)
 #' nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 #' coef(nommod)

@@ -63,7 +63,7 @@
 #'
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' #method='ML' agrees better with eRm package
-#' itemfit(raschfit, method = 'ML') #infit and outfit stats 
+#' itemfit(raschfit, method = 'ML') #infit and outfit stats
 #'
 #' #similar example to Kang and Chen 2007
 #' a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
@@ -106,8 +106,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     J <- ncol(x@data)
     itemloc <- x@itemloc
     pars <- x@pars
-    if(Zh || X2){        
-        sc <- fscores(x, verbose = FALSE, full.scores = TRUE, method=method, ...)        
+    if(Zh || X2){
+        sc <- fscores(x, verbose = FALSE, full.scores = TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
         fulldata <- x@fulldata
@@ -159,7 +159,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 ret$outfit <- outfit
                 ret$z.outfit <- z.outfit
                 ret$infit <- infit
-                ret$z.infit <- z.infit            
+                ret$z.infit <- z.infit
             }
         }
     }
@@ -336,7 +336,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
             df.S_X2[i] <- (ncol(O[[i]])-1L) * nrow(O[[i]]) - sum(pars[[i]]@est) - sum(is.na(E[[i]]))
         }
-        S_X2[df.S_X2 <= 0] <- NaN        
+        S_X2[df.S_X2 <= 0] <- NaN
         ret$S_X2 <- S_X2
         ret$df.S_X2 <- df.S_X2
         ret$p.S_X2 <- round(1 - pchisq(S_X2, df.S_X2), 4)

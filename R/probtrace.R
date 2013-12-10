@@ -23,7 +23,7 @@
 #' }
 probtrace <- function(x, Theta){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
-    if(!is.matrix(Theta)) stop('Theta input must be a matrix')    
+    if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(ncol(Theta) != x@nfact)
         stop('Theta does not have the correct number of dimensions')
     P <- ProbTrace(x=x, Theta=Theta)

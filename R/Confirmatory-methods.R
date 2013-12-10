@@ -21,7 +21,7 @@ setMethod(
             cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
             if(!is.nan(x@p)){
                 cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), sep='')
-                cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3), 
+                cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3),
                     ", TLI = ", round(x@TLI,3), sep='')
             }
         }
@@ -77,14 +77,14 @@ setMethod(
         nLambdas <- ncol(object@F)
         allPars <- list()
         if(IRTpars){
-            if(object@nfact > 1L) 
+            if(object@nfact > 1L)
                 stop('traditional parameterization is only available for unidimensional models')
             for(i in 1:(J+1))
                 allPars[[i]] <- round(mirt2traditional(object@pars[[i]]), digits)
         } else {
             if(length(object@pars[[1]]@SEpar) > 0){
                 for(i in 1:(J+1)){
-                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, 
+                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
                                                    object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
                                                    object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
                                              3, byrow = TRUE), digits)
@@ -113,7 +113,7 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE, 
+    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
                           printvalue = NULL, verbose = TRUE, ...)
     {
         K <- object@K
@@ -163,7 +163,7 @@ setMethod(
             res <- round(res,digits)
             return(res)
         }
-        if(restype == 'exp'){            
+        if(restype == 'exp'){
             r <- object@tabdata[ ,ncol(object@tabdata)]
             res <- round((r - object@Pl * nrow(object@data)) /
                 sqrt(object@Pl * nrow(object@data)),digits)
@@ -173,14 +173,14 @@ setMethod(
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,expected,res)
-            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")            
+            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")
             if(full.scores){
                 tabdata[, 'exp'] <- object@Pl / r * N
                 tabdata2 <- object@tabdatalong
                 tabdata2 <- tabdata2[,-ncol(tabdata2)]
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
                 sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
-                scoremat <- tabdata[match(sfulldata, stabdata2), 'exp', drop = FALSE]                
+                scoremat <- tabdata[match(sfulldata, stabdata2), 'exp', drop = FALSE]
                 res <- (1-scoremat) / sqrt(scoremat)
                 colnames(res) <- 'res'
                 ret <- cbind(object@data, scoremat, res)
@@ -192,7 +192,7 @@ setMethod(
                 if(!is.null(printvalue)){
                     if(!is.numeric(printvalue)) stop('printvalue is not a number.')
                     tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
-                }                
+                }
                 return(tabdata)
             }
         }
@@ -269,14 +269,14 @@ mirt2traditional <- function(x){
             par[i] <- -par[i]/par[1]
         names(par) <- c('a', paste0('b', 1:(length(par)-1)))
     } else if(cls == 'gpcm'){
-        ds <- par[-1]/par[1]        
+        ds <- par[-1]/par[1]
         newd <- numeric(length(ds)-1)
         for(i in 1:length(newd))
             newd[i] <- -(ds[i+1] - ds[i])
         par <- c(par[1], newd)
         names(par) <- c('a', paste0('b', 1:length(newd)))
     } else if(cls == 'nominal'){
-        as <- par[2:(ncat+1)] * par[1] 
+        as <- par[2:(ncat+1)] * par[1]
         as <- as - mean(as)
         ds <- par[(ncat+2):length(par)]
         ds <- ds - mean(ds)
@@ -286,17 +286,17 @@ mirt2traditional <- function(x){
         par1 <- par[1:4]
         par1[2] <- -par1[2]/par1[1]
         names(par1) <- c('a', 'b', 'g', 'u')
-        par2 <- par[5:length(par)]        
+        par2 <- par[5:length(par)]
         as <- par2[1:(ncat-1)]
         as <- as - mean(as)
         ds <- par2[-c(1:(ncat-1))]
         ds <- ds - mean(ds)
         names(as) <- paste0('a', 1:(ncat-1))
-        names(ds) <- paste0('c', 1:(ncat-1))        
+        names(ds) <- paste0('c', 1:(ncat-1))
         par <- c(par1, as, ds)
     } else {
         names(par) <- names(x@est)
-    }    
+    }
     ret <- matrix(par, 1L, dimnames=list('par', names(par)))
     ret
 }

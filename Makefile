@@ -8,7 +8,7 @@ build:
 	cd ..;\
 	R CMD build $(PKGSRC)
 
-install: 
+install:
 	cd ..;\
 	R CMD INSTALL $(PKGNAME)
 
@@ -16,16 +16,16 @@ check: build
 	cd ..;\
 	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
 
-news: 
+news:
 	sed -e 's/^-/  -/' -e 's/^## *//' -e 's/^#/\t\t/' <NEWS.md | fmt -80 >NEWS
-	
-test: 
+
+test:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_package('mirt')"
 
 clean:
 	$(RM) src/*.o
 	$(RM) src/*.so
-	$(RM) ../$(PKGNAME)_$(PKGVERS).tar.gz 
+	$(RM) ../$(PKGNAME)_$(PKGVERS).tar.gz
 	$(RM) -r ../$(PKGNAME).Rcheck/
-	
+
 

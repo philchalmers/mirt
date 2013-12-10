@@ -21,7 +21,7 @@
 #' however to parametrized them for meaningful interpretation the first category intercept should
 #' equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
 #' correct item traceline). For nested logit models the 'correct' category is always the lowest category
-#' (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that have already been 
+#' (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that have already been
 #' estimated to understand the itemtypes more intimately
 #' @param nominal a matrix of specific item category slopes for nominal models.
 #' Should be the dimensions as the intercept specification with one less column, with \code{NA}
@@ -118,7 +118,7 @@
 #'
 #' nominal <- matrix(NA, nrow(d), ncol(d))
 #' #the first 0 and last (ncat - 1) = 2 values are the recommended constraints
-#' nominal[4, ] <- c(0,1.2,2) 
+#' nominal[4, ] <- c(0,1.2,2)
 #'
 #' sigma <- diag(3)
 #' sigma[2,3] <- sigma[3,2] <- .25

@@ -28,7 +28,7 @@
 #'
 #'
 #' }
-imputeMissing <- function(x, Theta){    
+imputeMissing <- function(x, Theta){
     if(is(x, 'MixedClass'))
         stop('mixedmirt xs not yet supported')
     if(is(x, 'MultipleGroupClass')){

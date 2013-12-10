@@ -332,7 +332,7 @@ setMethod(
         par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
                  rnorm(1L),
                  rnorm(1L, -2, .5),
-                 rnorm(1L, 2, .5), 0, 
+                 rnorm(1L, 2, .5), 0,
                  abs(rnorm(x@ncat-2L, (x@ncat-2L) / 2, sd = 1)), x@ncat,
                  rnorm(x@ncat-2L))
         x@par[x@est] <- par[x@est]
@@ -378,7 +378,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'rsm'),
     definition = function(x){
-        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5), 0, 
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5), 0,
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE),
                  rnorm(1L))
         x@par[x@est] <- par[x@est]
@@ -390,7 +390,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'nominal'),
     definition = function(x){
-        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), 0, 
+        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), 0,
                  abs(rnorm(x@ncat-1L, (x@ncat-1L) / 2, sd = 1)), 0,
                  rnorm(x@ncat-1L))
         x@par[x@est] <- par[x@est]
@@ -441,10 +441,10 @@ setMethod(
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'dich', Theta = 'matrix'),
-    definition = function(x, Theta, useDesign = TRUE, ot=0){     
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.mirt(x@par, Theta=Theta, asMatrix=TRUE, ot=ot)        
+        P <- P.mirt(x@par, Theta=Theta, asMatrix=TRUE, ot=ot)
         return(P)
     }
 )
@@ -472,7 +472,7 @@ P.nestlogit <- function(par, Theta, correct, ncat)
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'graded', Theta = 'matrix'),
-    definition = function(x, Theta, itemexp = TRUE, useDesign = TRUE, ot=0){        
+    definition = function(x, Theta, itemexp = TRUE, useDesign = TRUE, ot=0){
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
         return(P.poly(x@par, Theta=Theta, itemexp=itemexp, ot=ot))
@@ -601,7 +601,7 @@ setMethod("initialize",
 setMethod(
     f = "DrawValues",
     signature = signature(x = 'RandomPars', Theta = 'matrix'),
-    definition = function(x, Theta, pars, fulldata, itemloc, offterm0){        
+    definition = function(x, Theta, pars, fulldata, itemloc, offterm0){
         J <- length(pars) - 1L
         theta0 <- x@drawvals
         N <- nrow(theta0)
@@ -617,12 +617,12 @@ setMethod(
         log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
         itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(fulldata))
         if(x@between){
-            offterm1 <- matrix(0, nrow(itemtrace0), J)            
+            offterm1 <- matrix(0, nrow(itemtrace0), J)
             tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
-            for(i in 1L:J) offterm1[,i] <- tmp1            
-        } else {            
-            tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])            
-            offterm1 <- matrix(tmp1, nrow(itemtrace0), J, byrow = TRUE)            
+            for(i in 1L:J) offterm1[,i] <- tmp1
+        } else {
+            tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
+            offterm1 <- matrix(tmp1, nrow(itemtrace0), J, byrow = TRUE)
         }
         offterm1 <- offterm1 + offterm0
         for (i in 1L:J){
@@ -632,14 +632,14 @@ setMethod(
                 ProbTrace(x=pars[[i]], Theta=Theta, ot=offterm1[,i])
         }
         if(x@between){
-            totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, 
-                            rep(0, nrow(fulldata)), rep(0, nrow(fulldata)))    
-            total_0 <- totals[[1L]] 
-            total_1 <- totals[[2L]]            
+            totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1,
+                            rep(0, nrow(fulldata)), rep(0, nrow(fulldata)))
+            total_0 <- totals[[1L]]
+            total_1 <- totals[[2L]]
             total_0 <- tapply(total_0, x@mtch, sum) + log_den0
             total_1 <- tapply(total_1, x@mtch, sum) + log_den1
         } else {
-            totals <- .Call('denRowSums', t(fulldata), t(itemtrace0), t(itemtrace1), 
+            totals <- .Call('denRowSums', t(fulldata), t(itemtrace0), t(itemtrace1),
                             rep(0, ncol(fulldata)), rep(0, ncol(fulldata)))
             tmp0 <- totals[[1L]]
             tmp1 <- totals[[2L]]

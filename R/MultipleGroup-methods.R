@@ -21,7 +21,7 @@ setMethod(
             cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
             if(!is.nan(x@p)){
                 cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), sep='')
-                cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3), 
+                cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3),
                     ", TLI = ", round(x@TLI,3), '\n\n', sep='')
                 for(g in 1:length(x@cmods))
                     cat(as.character(x@groupNames[g]), " group: G2 = ", round(x@cmods[[g]]@G2,2), '\n', sep='')
@@ -69,7 +69,7 @@ setMethod(
                     allPars[[g]][[i]] <- matrix(round(object@cmods[[g]]@pars[[i]]@par, digits), 1L)
                     colnames(allPars[[g]][[i]]) <- names(object@cmods[[1L]]@pars[[i]]@parnum)
                     rownames(allPars[[g]][[i]]) <- 'par'
-                    
+
                 }
             }
             names(allPars[[g]]) <- c(itemnames, 'GroupPars')
@@ -148,7 +148,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45, 
+    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           auto.key = TRUE, ...)
@@ -242,10 +242,10 @@ setMethod(
                 return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = TRUE, ...))
             if(type == 'empiricalhist'){
-                if(!length(x@Prior)) stop('Empirical histogram was not estimated for this object')                
-                Prior <- Theta <- pltfull <- vector('list', ngroups)                
+                if(!length(x@Prior)) stop('Empirical histogram was not estimated for this object')
+                Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
-                    Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts), 
+                    Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
                                            length.out = x@quadpts))
                     Prior[[g]] <- x@Prior[[g]] * nrow(x@data)
                     cuts <- cut(Theta[[g]], floor(npts/2))
@@ -260,21 +260,21 @@ setMethod(
                 plt <- do.call(rbind, pltfull)
                 return(xyplot(Prior ~ Theta, plt, group=group, auto.key = TRUE,
                               xlab = expression(theta), ylab = 'Expected Frequency',
-                              type = 'b', main = 'Empirical Histogram', ...))                
+                              type = 'b', main = 'Empirical Histogram', ...))
             }
             if(type == 'trace'){
                 plt <- vector('list', ngroups)
                 P <- vector('list', length(which.items))
-                for(g in 1L:ngroups){                    
+                for(g in 1L:ngroups){
                     names(P) <- colnames(x@data)[which.items]
                     for(i in which.items){
                         tmp <- probtrace(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
                         if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
-                        tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta), 
+                        tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
                                                                      labels=paste0('cat', 1L:ncol(tmp))))
                         P[[i]] <- tmp2
                     }
-                    nrs <- sapply(P, nrow)                
+                    nrs <- sapply(P, nrow)
                     Pstack <- do.call(rbind, P)
                     names <- c()
                     for(i in 1L:length(nrs))
@@ -294,13 +294,13 @@ setMethod(
                     for(i in which.items)
                         I[,i] <- iteminfo(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
                     I <- t(na.omit(t(I)))
-                    items <- gl(n=length(unique(which.items)), k=nrow(Theta), 
+                    items <- gl(n=length(unique(which.items)), k=nrow(Theta),
                                 labels = paste('Item', which.items))
                     plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items, group=x@groupNames[g])
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
-                return(xyplot(I ~ Theta | group, plt, group = item, 
+                return(xyplot(I ~ Theta | group, plt, group = item,
                               xlab = expression(theta), ylab = expression(I(theta)),
                               auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
             }

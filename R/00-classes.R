@@ -41,21 +41,21 @@ setClass("AllModelClass",
                         CFI='numeric',
                         'VIRTUAL'),
              validity = function(object) return(TRUE)
-)    
-    
+)
+
 #------------------------------------------------------------------------------
 #' Class "ExploratoryClass"
-#' 
-#' Defines the object returned from \code{\link{mirt}} when model is exploratory. 
+#'
+#' Defines the object returned from \code{\link{mirt}} when model is exploratory.
 #'
 #' @section Slots:
-#' 
+#'
 #' \describe{
 #'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
-#'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }    
+#'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }                
+#'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
 #'     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
 #'     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
 #'     \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
@@ -69,21 +69,21 @@ setClass("AllModelClass",
 #'     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
 #'     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }    
+#'     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }      
+#'     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'     \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
 #'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
-#'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}    
+#'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'     \item{\code{Target}:}{Object of class \code{"numeric"}, dummy rotation matrix}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #' }
 #' @section Methods:
-#' 
+#'
 #' \describe{
 #'     \item{anova}{\code{signature(object = "ExploratoryClass")}}
 #'     \item{coef}{\code{signature(object = "ExploratoryClass")}}
@@ -99,7 +99,7 @@ setClass("AllModelClass",
 #' @rdname ExploratoryClass-class
 #' @exportClass ExploratoryClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords classes 
+#' @keywords classes
 # @examples
 setClass(
     Class = 'ExploratoryClass', contains = 'AllModelClass',
@@ -111,19 +111,19 @@ setClass(
 
 #------------------------------------------------------------------------------
 #' Class "ConfirmatoryClass"
-#' 
+#'
 #' Defines the object returned from \code{\link{bfactor}} and \code{\link{mirt}}
 #' when the estimated model is confirmatory.
 #'
 #' @section Slots:
-#' 
+#'
 #' \describe{
 #'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
-#'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }    
+#'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }            
-#'     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }    
+#'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
+#'     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
 #'     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
 #'     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
 #'     \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
@@ -137,22 +137,22 @@ setClass(
 #'     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
 #'     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }    
+#'     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'     \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
 #'         \code{empiricalhist = TRUE}}
 #'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }          
+#'     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
-#'     \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}  
-#'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}        
+#'     \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
+#'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'   }
 #' @section Methods:
-#' 
+#'
 #' \describe{
 #'    \item{coef}{\code{signature(object = "ConfirmatoryClass")}}
 #'    \item{print}{\code{signature(x = "ConfirmatoryClass")} }
@@ -168,7 +168,7 @@ setClass(
 #' @rdname ConfirmatoryClass-class
 #' @exportClass ConfirmatoryClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords classes 
+#' @keywords classes
 # @examples
 # @keywords classes
 setClass(
@@ -181,18 +181,18 @@ setClass(
 
 #------------------------------------------------------------------------------
 #' Class "MultipleGroupClass"
-#' 
+#'
 #' Defines the object returned from \code{\link{multipleGroup}}.
 #'
 #' @section Slots:
-#' 
+#'
 #'  \describe{
 #'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
-#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }    
+#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }            
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}    
+#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
+#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}
 #'    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
 #'    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
 #'    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
@@ -208,36 +208,36 @@ setClass(
 #'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
 #'    \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }    
+#'    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }          
+#'    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
 #'    \item{\code{invariance}:}{Object of class \code{"character"}, invariance input}
-#'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}             
+#'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'    \item{\code{group}:}{Object of class \code{"factor"}, group membership}
 #'    \item{\code{groupNames}:}{Object of class \code{"character"}, names of groups}
 #'    \item{\code{cmods}:}{Object of class \code{"list"}, a list containing estimated ConfirmatoryClass models }
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:
-#' 
-#' \describe{  
+#'
+#' \describe{
 #'    \item{coef}{\code{signature(object = "MultipleGroupClass")}}
-#'    \item{print}{\code{signature(x = "MultipleGroupClass")} }    
-#'    \item{show}{\code{signature(object = "MultipleGroupClass")} }    
-#'    \item{anova}{\code{signature(object = "MultipleGroupClass")} }  
+#'    \item{print}{\code{signature(x = "MultipleGroupClass")} }
+#'    \item{show}{\code{signature(object = "MultipleGroupClass")} }
+#'    \item{anova}{\code{signature(object = "MultipleGroupClass")} }
 #' }
 #'
 #' @name MultipleGroupClass-class
 #' @rdname MultipleGroupClass-class
 #' @exportClass MultipleGroupClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords classes 
+#' @keywords classes
 # @examples
 # @keywords classes
 setClass(
@@ -253,18 +253,18 @@ setClass(
 
 #------------------------------------------------------------------------------
 #' Class "MixedClass"
-#' 
+#'
 #' Defines the object returned from \code{\link{mixedmirt}}.
 #'
 #' @section Slots:
-#' 
+#'
 #'  \describe{
 #'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }    
-#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }    
+#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }            
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}    
+#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
+#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}
 #'    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
 #'    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
 #'    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
@@ -278,21 +278,21 @@ setClass(
 #'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
 #'    \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }    
+#'    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }          
+#'    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-#'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}    
+#'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'    \item{\code{cand.t.var}:}{Object of class \code{"numeric"}, parameter used to control the MH sampler for Theta}
-#'    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}  
-#'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}        
+#'    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
+#'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:
-#' 
+#'
 #'  \describe{
 #'    \item{coef}{\code{signature(object = "MixedClass")}}
 #'    \item{print}{\code{signature(x = "MixedClass")} }
@@ -308,7 +308,7 @@ setClass(
 #' @rdname MixedClass-class
 #' @exportClass MixedClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords classes 
+#' @keywords classes
 # @examples
 # @keywords classes
 setClass(

@@ -1,6 +1,6 @@
 #' Compute random effects
 #'
-#' Stochastically compute random effects for \code{MixedClass} objects with Metropolis-Hastings 
+#' Stochastically compute random effects for \code{MixedClass} objects with Metropolis-Hastings
 #' samplers and averaging over the draws. Returns a list of the estimated effects.
 #'
 #' @aliases randef
@@ -13,7 +13,7 @@
 #' @examples
 #' \dontrun{
 #' effects <- randef(mod1, ndraws = 2000, thin = 20)
-#' 
+#'
 #' }
 randef <- function(x, ndraws = 1000, thin = 10){
     if(!is(x, 'MixedClass'))
@@ -29,11 +29,11 @@ randef <- function(x, ndraws = 1000, thin = 10){
     }
     J <- ncol(x@data)
     N <- nrow(x@fulldata)
-    Theta <- tmpTheta <- matrix(0, N, x@nfact)        
+    Theta <- tmpTheta <- matrix(0, N, x@nfact)
     if(length(random) > 0L){
         OffTerm <- OffTerm(random, J=J, N=N)
     } else OffTerm <- matrix(0, 1, ncol(x@data))
-    gstructgrouppars <- ExtractGroupPars(x@pars[[J+1L]])    
+    gstructgrouppars <- ExtractGroupPars(x@pars[[J+1L]])
     for(i in 1L:20L){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@fulldata,
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
@@ -42,11 +42,11 @@ randef <- function(x, ndraws = 1000, thin = 10){
         if(length(random) > 0L){
             for(j in 1L:length(random))
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
-                                                   pars=x@pars, fulldata=x@fulldata, 
-                                                   offterm0=OffTerm)  
+                                                   pars=x@pars, fulldata=x@fulldata,
+                                                   offterm0=OffTerm)
             OffTerm <- OffTerm(random, J=J, N=N)
         }
-    }    
+    }
     for(i in 1L:ndraws){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@fulldata,
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
@@ -56,8 +56,8 @@ randef <- function(x, ndraws = 1000, thin = 10){
         if(length(random) > 0L){
             for(j in 1L:length(random)){
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
-                                                   pars=x@pars, fulldata=x@fulldata, 
-                                                   offterm0=OffTerm)  
+                                                   pars=x@pars, fulldata=x@fulldata,
+                                                   offterm0=OffTerm)
                 if(i %% thin == 0) Random[[j]] <- Random[[j]] + random[[j]]@drawvals
             }
             OffTerm <- OffTerm(random, J=J, N=N)
@@ -74,9 +74,9 @@ randef <- function(x, ndraws = 1000, thin = 10){
             attr(Random[[j]], 'Proportion Accepted') <- NULL
             colnames(Random[[j]]) <- colnames(x@random[[j]]@gdesign)
             ret[[length(ret) + 1L]] <- Random[[j]]
-            retnames <- c(retnames, colnames(x@random[[j]]@gdesign)[1L])            
+            retnames <- c(retnames, colnames(x@random[[j]]@gdesign)[1L])
         }
     }
     names(ret) <- retnames
-    ret    
+    ret
 }

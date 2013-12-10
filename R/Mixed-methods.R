@@ -39,25 +39,25 @@ setMethod(
     definition = function(object, digits = 3, ...)
     {
         cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
-            "\n\n", sep = "")        
+            "\n\n", sep = "")
         nbetas <- ncol(object@pars[[1L]]@fixed.design)
         out <- data.frame()
         if(nbetas > 0L){
-            out <- data.frame(Estimate=object@pars[[1L]]@par[1L:nbetas], 
+            out <- data.frame(Estimate=object@pars[[1L]]@par[1L:nbetas],
                                     'Std.Error'=object@pars[[1L]]@SEpar[1L:nbetas],
                                     row.names=names(object@pars[[1L]]@est[1L:nbetas]))
             out$'z.value' <- out$Estimate / out$'Std.Error'
-        }        
+        }
         if(all(dim(out) != 0L)){
-            cat('--------------\nFIXED EFFECTS:\n')        
+            cat('--------------\nFIXED EFFECTS:\n')
             print(round(out, digits))
-        }        
+        }
         cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')
         cat('Correlations on upper diagonal\n')
         par <- object@pars[[length(object@pars)]]@par[-c(1L:object@nfact)]
         sigma <- matrix(0, object@nfact, object@nfact)
         sigma[lower.tri(sigma, TRUE)] <- par
-        if(object@nfact > 1L){           
+        if(object@nfact > 1L){
             sigma <- sigma + t(sigma) - diag(diag(sigma))
             csigma <- cov2cor(sigma)
             sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
@@ -67,15 +67,15 @@ setMethod(
         listnames <- 'Theta'
         if(length(object@random) > 0L){
             for(i in 1L:length(object@random)){
-                par <- object@random[[i]]@par                
+                par <- object@random[[i]]@par
                 sigma <- matrix(0, object@random[[i]]@ndim, object@random[[i]]@ndim)
-                sigma[lower.tri(sigma, TRUE)] <- par                
+                sigma[lower.tri(sigma, TRUE)] <- par
                 if(ncol(sigma) > 1L){
                     sigma <- sigma + t(sigma) - diag(diag(sigma))
                     csigma <- cov2cor(sigma)
                     sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
                 }
-                colnames(sigma) <- rownames(sigma) <- 
+                colnames(sigma) <- rownames(sigma) <-
                     paste0('COV_', colnames(object@random[[i]]@gdesign))
                 rand[[length(rand) + 1L]] <- sigma
                 listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
@@ -103,7 +103,7 @@ setMethod(
         allPars <- list()
         if(length(object@pars[[1]]@SEpar) > 0){
             for(i in 1:(J+1)){
-                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par, 
+                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
                                                object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
                                                object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
                                              3, byrow = TRUE), digits)
@@ -124,19 +124,19 @@ setMethod(
             },  digits=digits)
         }
         listnames <- c(colnames(object@data), 'GroupPars')
-        if(length(object@random) > 0L){            
+        if(length(object@random) > 0L){
             for(i in 1L:length(object@random)){
-                allPars[[length(allPars) + 1L]] <- 
-                    round(matrix(c(object@random[[i]]@par, 
+                allPars[[length(allPars) + 1L]] <-
+                    round(matrix(c(object@random[[i]]@par,
                                    object@random[[i]]@par - z*object@random[[i]]@SEpar,
                                    object@random[[i]]@par + z*object@random[[i]]@SEpar),
                                  3, byrow = TRUE), digits)
                 rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
                 colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
                 listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
-            }            
+            }
         }
-        names(allPars) <- listnames        
+        names(allPars) <- listnames
         return(allPars)
     }
 )
