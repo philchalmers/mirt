@@ -58,7 +58,8 @@
 \description{
   \code{itemplot} displays various item based IRT plots,
   with special options for plotting items that contain
-  several 0 slope parameters.
+  several 0 slope parameters. Supports up to three
+  dimensional models.
 }
 \examples{
 \dontrun{

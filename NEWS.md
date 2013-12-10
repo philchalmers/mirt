@@ -1,10 +1,12 @@
 # Changes in mirt 1.x
 
+- three dimensional models supported in `itemplot()` for types `trace`, `score`, `info`, and `SE`
+
 - new DIF() function to quicky calculate common differential item functioning routines, similar 
   to how IRTLRDIF worked. Supports likelihood ratio testings as well as the Wald approach, and includes
   forward and backword sequential DIF searching methods 
 
-- added a `shiny = TRUE` option to `itemplot()` to download and run the interactive shiny applet. 
+- added a `shiny = TRUE` option to `itemplot()` to run the interactive shiny applet. 
   Useful for instructive purposes, as well as understanding how the internal parameters of mirt behave
 
 - `type = 'trace'` and `type = 'infotrace'` support added to `plot` generic for multiple group objects

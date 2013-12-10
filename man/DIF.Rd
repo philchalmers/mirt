@@ -21,38 +21,39 @@
   containing the item names, indicating which items will be
   tested for DIF. In models where anchor items are known,
   omit them from this vector. For example, if items 1 and 2
-  are anchors in a 10 item test, then \code{items = 3:10}
-  would work for testing the remaining items (important to
-  remember when using sequential schemes)}
+  are anchors in a 10 item test, then \code{items2test =
+  3:10} would work for testing the remaining items
+  (important to remember when using sequential schemes)}
 
   \item{scheme}{type of DIF analysis to perform, either by
   adding or dropping constraints across groups.  These can
   be: \describe{ \item{'add'}{parameters in
   \code{which.par} will be constrained each item one at a
-  time. This is beneficial when examining DIF from a model
-  with parameters freely estimated across groups, and when
+  time for items that are specified in \code{items2test}.
+  This is beneficial when examining DIF from a model with
+  parameters freely estimated across groups, and when
   inspecting differences via the Wald test}
   \item{'drop'}{parameters in \code{which.par} will be
-  freely estimated for items that are not specified in
-  \code{anchor}. This is useful when supplying an overly
-  restrictive model and attempting to detect DIF with a
-  slightly less restrictive model}
-  \item{'drop_sequential'}{sequentially loop over the items
-  being tested, and at the end of the loop treat items that
-  violate the \code{seq_stat} criteria as demonstrating
-  DIF. The loop is then re-run, leaving the items that
-  previously demonstrated DIF as variable across groups,
-  and the remaining test items that previously showed
-  invariance are re-tested. The algorithm stops when no
-  more items showing DIF are found and returns the items
-  that displayed DIF} \item{'add_sequential'}{sequentially
-  loop over the items being tested, and at the end of the
-  loop treat DIF tests that satisfy the \code{seq_stat}
-  criteria as invariant. The loop is then re-run on the
-  remaining invariant items to determine if they are now
-  displaying DIF in the less constrained model, and when no
-  new invariant item is found the algorithm stops and
-  returns the items that displayed DIF} }}
+  freely estimated for items that are specified in
+  \code{items2test}. This is useful when supplying an
+  overly restrictive model and attempting to detect DIF
+  with a slightly less restrictive model}
+  \item{'add_sequential'}{sequentially loop over the items
+  being tested, and at the end of the loop treat DIF tests
+  that satisfy the \code{seq_stat} criteria as invariant.
+  The loop is then re-run on the remaining invariant items
+  to determine if they are now displaying DIF in the less
+  constrained model, and when no new invariant item is
+  found the algorithm stops and returns the items that
+  displayed DIF} \item{'drop_sequential'}{sequentially loop
+  over the items being tested, and at the end of the loop
+  treat items that violate the \code{seq_stat} criteria as
+  demonstrating DIF. The loop is then re-run, leaving the
+  items that previously demonstrated DIF as variable across
+  groups, and the remaining test items that previously
+  showed invariance are re-tested. The algorithm stops when
+  no more items showing DIF are found and returns the items
+  that displayed DIF} }}
 
   \item{seq_stat}{select a statistic to test for in the
   sequential schemes. Potential values are (in descending
@@ -88,12 +89,13 @@
 \examples{
 \dontrun{
 
-#simulate data where group 2 has a lower slopes in and less extreme intercepts
+#simulate data where group 2 has a smaller slopes and more extreme intercepts
 set.seed(12345)
 a1 <- a2 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d1 <- d2 <- matrix(rnorm(15,0,.7),ncol=1)
 a2[1:2, ] <- a1[1:2, ]/3
 d1[c(1,3), ] <- d2[c(1,3), ]/4
+head(data.frame(a.group1 = a1, a.group2 = a2, d.group1 = d1, d.group2 = d2))
 itemtype <- rep('dich', nrow(a1))
 N <- 1000
 dataset1 <- simdata(a1, d1, N, itemtype)
