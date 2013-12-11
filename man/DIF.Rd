@@ -110,7 +110,7 @@ mirtCluster()
 #  Information matrix with S-EM, therefore drop TOL for better accuracy
 model <- multipleGroup(dat, 1, group, SE = TRUE, technical = list(TOL = 1e-6))
 
-#test whether freeing slopes and intercepts results in DIF
+#test whether adding slopes and intercepts constraints results in DIF
 resulta1d <- DIF(model, c('a1', 'd'))
 resulta1d
 
@@ -118,7 +118,7 @@ resulta1d
 resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
 resulta1dWald
 
-#test whether freeing only slopes results in DIF for all items
+#test whether adding only slope constraints results in DIF for all items
 resulta1 <- DIF(model, 'a1')
 resulta1
 
@@ -136,7 +136,8 @@ model_anchor <- multipleGroup(dat, model = 1, group = group,
 anchor <- DIF(model_anchor, c('a1', 'd'), items2test = 1:3)
 anchor
 
-### drop down approach when specifying a highly constrained model
+### drop down approach (freely estimating parameters accross groups) when
+### specifying a highly constrained model with estimated latent parameters
 model_constrained <- multipleGroup(dat, 1, group,
   invariance = c(colnames(dat), 'free_means', 'free_var'))
 dropdown <- DIF(model_constrained, 'd', scheme = 'drop')
@@ -148,7 +149,7 @@ model <- multipleGroup(dat, 1, group)
 stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential')
 stepup
 
-#step down procedure
+#step down procedure for highly constrained model
 model <- multipleGroup(dat, 1, group, invariance = itemnames)
 stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 stepdown
