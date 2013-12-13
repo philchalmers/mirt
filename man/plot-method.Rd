@@ -40,8 +40,9 @@
 
   \item{facet_items}{logical; apply grid of plots accross
   items or groups? Applicable only to
-  \code{multipleGroupClass} objects. Default is
-  \code{FALSE}}
+  \code{MultipleGroupClass} objects. Default is to facet
+  accross groups (see \code{\link{DIF}} for an example of
+  the latter)}
 
   \item{auto.key}{logical parameter passed to the
   \code{lattice} package}
@@ -51,7 +52,8 @@
 \description{
   \code{plot(x, y, type = 'info', npts = 50, theta_angle =
   45, which.items = 1:ncol(x@data), rot = list(xaxis = -70,
-  yaxis = 30, zaxis = 10), auto.key = TRUE, ...)}
+  yaxis = 30, zaxis = 10), facet_items = FALSE, auto.key =
+  TRUE, ...)}
 }
 \examples{
 \dontrun{

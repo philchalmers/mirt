@@ -426,7 +426,7 @@ setMethod(
 #' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45,
 #'                          which.items = 1:ncol(x@@data),
 #'                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-#'                          auto.key = TRUE, ...)}
+#'                          facet_items = FALSE, auto.key = TRUE, ...)}
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
@@ -446,7 +446,8 @@ setMethod(
 #' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
 #' @param facet_items logical; apply grid of plots accross items or groups? Applicable only to
-#'   \code{multipleGroupClass} objects. Default is \code{FALSE}
+#'   \code{MultipleGroupClass} objects. Default is to facet accross groups (see \code{\link{DIF}} for
+#'   an example of the latter)
 #' @param auto.key logical parameter passed to the \code{lattice} package
 #' @param ... additional arguments to be passed
 #'

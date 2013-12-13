@@ -76,7 +76,9 @@
 
   \item{type}{the \code{type} of plot argument passed to
   \code{plot()}. Default is 'trace', though another good
-  option is 'infotrace'}
+  option is 'infotrace'. For ease of viewing, the
+  \code{facet_item} argument to mirt's \code{plot()}
+  function is set to \code{TRUE}}
 
   \item{p.adjust}{string to be passed to the
   \code{\link{p.adjust}} function to adjust p-values.
@@ -130,6 +132,7 @@ resulta1d
 #same as above, but using Wald tests with Benjamini & Hochberg adjustment
 resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
 resulta1dWald
+round(resulta1dWald$adj_pvals, 4)
 
 #test whether adding only slope constraints results in DIF for all items
 resulta1 <- DIF(model, 'a1')

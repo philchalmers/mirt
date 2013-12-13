@@ -43,7 +43,8 @@
 #' @param plotdif logical; create itemplots for items that are displaying DIF according to the
 #'   \code{seq_stat} criteria? Only available for 'add' type schemes
 #' @param type the \code{type} of plot argument passed to \code{plot()}. Default is 'trace', though
-#'   another good option is 'infotrace'
+#'   another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to mirt's
+#'   \code{plot()} function is set to \code{TRUE}
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 #'   Adjustments are located in the \code{adj_pvals} element in the returned list
 #' @param verbose logical print extra information to the console?
@@ -82,6 +83,7 @@
 #' #same as above, but using Wald tests with Benjamini & Hochberg adjustment
 #' resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
 #' resulta1dWald
+#' round(resulta1dWald$adj_pvals, 4)
 #'
 #' #test whether adding only slope constraints results in DIF for all items
 #' resulta1 <- DIF(model, 'a1')
