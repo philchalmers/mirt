@@ -267,40 +267,43 @@ setMethod(
                 P <- vector('list', length(which.items))
                 for(g in 1L:ngroups){
                     names(P) <- colnames(x@data)[which.items]
+                    count <- 1
                     for(i in which.items){
                         tmp <- probtrace(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
                         if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
-                        tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
+                        tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(ThetaFull),
                                                                      labels=paste0('cat', 1L:ncol(tmp))))
-                        P[[i]] <- tmp2
+                        P[[count]] <- tmp2
+                        count <- count + 1
                     }
                     nrs <- sapply(P, nrow)
                     Pstack <- do.call(rbind, P)
                     names <- c()
                     for(i in 1L:length(nrs))
-                        names <- c(names, rep(names(P)[i], nrs[i]))
-                    plotobj <- data.frame(Pstack, item=names, Theta=Theta, group=x@groupNames[g])
+                        if(!is.null(nrs[i]))
+                            names <- c(names, rep(names(P)[i], nrs[i]))
+                    plotobj <- data.frame(Pstack, item=names, Theta=ThetaFull, group=x@groupNames[g])
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
-                return(xyplot(P ~ Theta|group, plt, group = item, ylim = c(-0.1,1.1),,
+                return(xyplot(P ~ Theta|item, plt, group = group, ylim = c(-0.1,1.1),,
                               xlab = expression(theta), ylab = expression(P(theta)),
                               auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
             }
             if(type == 'infotrace'){
                 plt <- vector('list', ngroups)
                 for(g in 1L:ngroups){
-                    I <- matrix(NA, nrow(Theta), J)
+                    I <- matrix(NA, nrow(ThetaFull), J)
                     for(i in which.items)
                         I[,i] <- iteminfo(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
                     I <- t(na.omit(t(I)))
-                    items <- gl(n=length(unique(which.items)), k=nrow(Theta),
+                    items <- gl(n=length(unique(which.items)), k=nrow(ThetaFull),
                                 labels = paste('Item', which.items))
-                    plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items, group=x@groupNames[g])
+                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items, group=x@groupNames[g])
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
-                return(xyplot(I ~ Theta | group, plt, group = item,
+                return(xyplot(I ~ Theta | item, plt, group = group,
                               xlab = expression(theta), ylab = expression(I(theta)),
                               auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
             }

@@ -40,10 +40,14 @@
 #'   or p > .05 in the drop scheme), along with the specified \code{p.adjust} input
 #' @param max_run a number indicating the maximum number of cycles to perform in sequential searches.
 #'   The default is to perform search until no further DIF is found
+#' @param plotdif logitical; create itemplots for items that are displaying DIF according to the 
+#'   \code{seq_stat} criteria? Only available for 'add' type schemes
+#' @param type the \code{type} of plot argument passed to \code{plot()}. Default is 'trace', though 
+#'   another good option is 'infotrace'
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 #'   Adjustments are located in the \code{adj_pvals} element in the returned list
 #' @param verbose logical print extra information to the console?
-#' @param ... additional arguments to be passed to \code{\link{multipleGroup}}
+#' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords DIF
 #' @export DIF
@@ -71,8 +75,8 @@
 #' #  Information matrix with S-EM, therefore drop TOL for better accuracy
 #' model <- multipleGroup(dat, 1, group, SE = TRUE, technical = list(TOL = 1e-6))
 #'
-#' #test whether adding slopes and intercepts constraints results in DIF
-#' resulta1d <- DIF(model, c('a1', 'd'))
+#' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
+#' resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)
 #' resulta1d
 #'
 #' #same as above, but using Wald tests with Benjamini & Hochberg adjustment
@@ -84,9 +88,6 @@
 #' resulta1
 #'
 #' #following up on resulta1d, to determine whether it's a1 or d parameter causing DIF
-#' itemplot(model, 1)
-#' itemplot(model, 2)
-#' itemplot(model, 3)
 #' (a1s <- DIF(model, 'a1', items2test = 1:3))
 #' (ds <- DIF(model, 'd', items2test = 1:3))
 #'
@@ -117,7 +118,8 @@
 #'
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@data),
-                seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', max_run = Inf, verbose = TRUE, ...){
+                seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', max_run = Inf, 
+                plotdif = FALSE, type = 'trace', verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop, ...)
     {
@@ -278,6 +280,31 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         }
         ps <- p.adjust(ps, p.adjust)
         res$adj_pvals <- ps
+    }
+    if(plotdif && any(scheme %in% c('add', 'add_sequential'))){
+        if(seq_stat != 'p'){
+            statdiff <- do.call(c, lapply(res, function(x, stat){
+                if(stat == 'p') return(x[2L, 'p'])
+                return(x[1L, stat] - x[2L, stat])
+            }, stat = seq_stat))
+            keep <- statdiff < 0
+        } else {
+            statdiff <- res$adj_pvals
+            if(is.null(statdiff)){
+                if(Wald){
+                    statdiff <- do.call(c, lapply(res, function(x) x$p))
+                } else {
+                    statdiff <- do.call(c, lapply(res, function(x, stat){
+                        if(stat == 'p') return(x[2L, 'p'])
+                        return(x[1L, stat] - x[2L, stat])
+                    }, stat = 'p'))
+                }                
+            }
+            statdiff <- p.adjust(statdiff, p.adjust)
+            keep <- statdiff > pval
+        }
+        which.item <- which(!keep)
+        print(plot(MGmodel, type = type, which.items=which.item))
     }
     return(res)
 }

@@ -5,7 +5,7 @@
   DIF(MGmodel, which.par, scheme = "add",
     items2test = 1:ncol(MGmodel@data), seq_stat = "SABIC",
     Wald = FALSE, p.adjust = "none", max_run = Inf,
-    verbose = TRUE, ...)
+    plotdif = FALSE, type = "trace", verbose = TRUE, ...)
 }
 \arguments{
   \item{MGmodel}{an object returned from
@@ -70,6 +70,14 @@
   cycles to perform in sequential searches.  The default is
   to perform search until no further DIF is found}
 
+  \item{plotdif}{logitical; create itemplots for items that
+  are displaying DIF according to the \code{seq_stat}
+  criteria? Only available for 'add' type schemes}
+
+  \item{type}{the \code{type} of plot argument passed to
+  \code{plot()}. Default is 'trace', though another good
+  option is 'infotrace'}
+
   \item{p.adjust}{string to be passed to the
   \code{\link{p.adjust}} function to adjust p-values.
   Adjustments are located in the \code{adj_pvals} element
@@ -79,7 +87,7 @@
   console?}
 
   \item{...}{additional arguments to be passed to
-  \code{\link{multipleGroup}}}
+  \code{\link{multipleGroup}} and \code{plot}}
 }
 \description{
   This function runs the Wald and likelihood-ratio
@@ -115,8 +123,8 @@ mirtCluster()
 #  Information matrix with S-EM, therefore drop TOL for better accuracy
 model <- multipleGroup(dat, 1, group, SE = TRUE, technical = list(TOL = 1e-6))
 
-#test whether adding slopes and intercepts constraints results in DIF
-resulta1d <- DIF(model, c('a1', 'd'))
+#test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
+resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)
 resulta1d
 
 #same as above, but using Wald tests with Benjamini & Hochberg adjustment
@@ -128,9 +136,6 @@ resulta1 <- DIF(model, 'a1')
 resulta1
 
 #following up on resulta1d, to determine whether it's a1 or d parameter causing DIF
-itemplot(model, 1)
-itemplot(model, 2)
-itemplot(model, 3)
 (a1s <- DIF(model, 'a1', items2test = 1:3))
 (ds <- DIF(model, 'd', items2test = 1:3))
 
