@@ -38,6 +38,11 @@
   to be used when plotting. Default is to use all available
   items}
 
+  \item{facet_items}{logical; apply grid of plots accross
+  items or groups? Applicable only to
+  \code{multipleGroupClass} objects. Default is
+  \code{FALSE}}
+
   \item{auto.key}{logical parameter passed to the
   \code{lattice} package}
 

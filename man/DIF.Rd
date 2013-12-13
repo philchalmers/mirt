@@ -70,7 +70,7 @@
   cycles to perform in sequential searches.  The default is
   to perform search until no further DIF is found}
 
-  \item{plotdif}{logitical; create itemplots for items that
+  \item{plotdif}{logical; create itemplots for items that
   are displaying DIF according to the \code{seq_stat}
   criteria? Only available for 'add' type schemes}
 

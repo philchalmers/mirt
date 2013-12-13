@@ -445,6 +445,8 @@ setMethod(
 #' @param rot allows rotation of the 3D graphics
 #' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
+#' @param facet_items logical; apply grid of plots accross items or groups? Applicable only to
+#'   \code{multipleGroupClass} objects. Default is \code{FALSE}
 #' @param auto.key logical parameter passed to the \code{lattice} package
 #' @param ... additional arguments to be passed
 #'
