@@ -4,7 +4,8 @@
 \usage{
   DIF(MGmodel, which.par, scheme = "add",
     items2test = 1:ncol(MGmodel@data), seq_stat = "SABIC",
-    Wald = FALSE, p.adjust = "none", verbose = TRUE, ...)
+    Wald = FALSE, p.adjust = "none", max_run = Inf,
+    verbose = TRUE, ...)
 }
 \arguments{
   \item{MGmodel}{an object returned from
@@ -64,6 +65,10 @@
   difference of p < .05 in the add scheme, or p > .05 in
   the drop scheme), along with the specified
   \code{p.adjust} input}
+
+  \item{max_run}{a number indicating the maximum number of
+  cycles to perform in sequential searches.  The default is
+  to perform search until no further DIF is found}
 
   \item{p.adjust}{string to be passed to the
   \code{\link{p.adjust}} function to adjust p-values.

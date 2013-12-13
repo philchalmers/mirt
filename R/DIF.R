@@ -38,6 +38,8 @@
 #'   If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
 #'   (e.g., \code{seq_stat = .05} will test for the difference of p < .05 in the add scheme,
 #'   or p > .05 in the drop scheme), along with the specified \code{p.adjust} input
+#' @param max_run a number indicating the maximum number of cycles to perform in sequential searches.
+#'   The default is to perform search until no further DIF is found
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 #'   Adjustments are located in the \code{adj_pvals} element in the returned list
 #' @param verbose logical print extra information to the console?
@@ -115,7 +117,7 @@
 #'
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@data),
-                seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', verbose = TRUE, ...){
+                seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', max_run = Inf, verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop, ...)
     {
@@ -193,6 +195,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
         updatedModel <- MGmodel
+        run_number <- 2L
+        if(run_number > max_run) 
+            stop('max_run number must be greater than 1 for sequential searches')
         while(TRUE){
             statdiff <- do.call(c, lapply(res, function(x, stat){
                 if(stat == 'p') return(x[2L, 'p'])
@@ -243,6 +248,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
             names(tmp) <- itemnames[pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
+            if(run_number == max_run) break
+            run_number <- run_number + 1L
         }
         if(verbose)
             cat('\nComputing final DIF estimates...')
