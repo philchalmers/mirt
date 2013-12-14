@@ -445,9 +445,8 @@ setMethod(
 #' @param rot allows rotation of the 3D graphics
 #' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
-#' @param facet_items logical; apply grid of plots accross items or groups? Applicable only to
-#'   \code{MultipleGroupClass} objects. Default is to facet accross groups (see \code{\link{DIF}} for
-#'   an example of the latter)
+#' @param facet_items logical; apply grid of plots accross items? If \code{FALSE}, items will be 
+#'   placed in one plot for each group 
 #' @param auto.key logical parameter passed to the \code{lattice} package
 #' @param ... additional arguments to be passed
 #'
@@ -469,7 +468,7 @@ setMethod(
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          auto.key = TRUE, ...)
+                          facet_items = FALSE, auto.key = TRUE, ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace', 'infoSE', 'score', 'empiricalhist'))
             stop(type, " is not a valid plot type.")
@@ -571,9 +570,16 @@ setMethod(
                 for(i in 1L:length(nrs))
                     names <- c(names, rep(names(P)[i], nrs[i]))
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
-                return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(-0.1,1.1),,
-                       xlab = expression(theta), ylab = expression(P(theta)),
-                       auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                if(facet_items){
+                    return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1),,
+                                  xlab = expression(theta), ylab = expression(P(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                } else {
+                    return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(-0.1,1.1),,
+                                  xlab = expression(theta), ylab = expression(P(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                }
+                
             }
             if(type == 'infotrace'){
                 I <- matrix(NA, nrow(Theta), J)
@@ -583,9 +589,15 @@ setMethod(
                 items <- gl(n=length(unique(which.items)), k=nrow(Theta),
                             labels = paste('Item', which.items))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
+                if(facet_items){
+                    return(xyplot(I ~ Theta|item, plotobj, 
+                                  xlab = expression(theta), ylab = expression(I(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                } else {
                 return(xyplot(I ~ Theta, plotobj, group = item,
                               xlab = expression(theta), ylab = expression(I(theta)),
                               auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                }
             }
             if(type == 'score')
                 return(xyplot(score ~ Theta, plt,

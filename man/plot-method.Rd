@@ -39,10 +39,8 @@
   items}
 
   \item{facet_items}{logical; apply grid of plots accross
-  items or groups? Applicable only to
-  \code{MultipleGroupClass} objects. Default is to facet
-  accross groups (see \code{\link{DIF}} for an example of
-  the latter)}
+  items? If \code{FALSE}, items will be placed in one plot
+  for each group}
 
   \item{auto.key}{logical parameter passed to the
   \code{lattice} package}

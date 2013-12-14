@@ -1,5 +1,8 @@
 # Changes in mirt 1.x
 
+- `facet_items` argument added to plot() to control whether seperate plots should be constructed 
+  for each item or to merge them onto a single plot
+
 - three dimensional models supported in `itemplot()` for types `trace`, `score`, `info`, and `SE`
 
 - new DIF() function to quicky calculate common differential item functioning routines, similar
