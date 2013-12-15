@@ -167,7 +167,7 @@ setMethod(
 
 #' Extract raw coefs from model object
 #'
-#' \code{coef(object, CI = .95, rotate = '', Target = NULL, digits = 3,
+#' \code{coef(object, CI = .95, rotate = '', Target = NULL, digits = 3, IRTpars = FALSE,
 #'    rawug = FALSE, verbose = TRUE, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},

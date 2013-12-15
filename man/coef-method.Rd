@@ -43,7 +43,8 @@
 }
 \description{
   \code{coef(object, CI = .95, rotate = '', Target = NULL,
-  digits = 3, rawug = FALSE, verbose = TRUE, ...)}
+  digits = 3, IRTpars = FALSE, rawug = FALSE, verbose =
+  TRUE, ...)}
 }
 \examples{
 \dontrun{
