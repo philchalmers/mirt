@@ -286,15 +286,9 @@ setMethod(
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
-                if(facet_items){
-                    return(xyplot(P ~ Theta|item, plt, group = group, ylim = c(-0.1,1.1),,
-                                  xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
-                } else {
-                    return(xyplot(P ~ Theta|group, plt, group = item, ylim = c(-0.1,1.1),,
-                                  xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
-                }
+                return(xyplot(P ~ Theta|item*group, plt, group = cat, ylim = c(-0.1,1.1),
+                              xlab = expression(theta), ylab = expression(P(theta)),
+                              auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
             }
             if(type == 'infotrace'){
                 plt <- vector('list', ngroups)

@@ -48,9 +48,14 @@
 }
 \examples{
 \dontrun{
-x <- mirt(Science, 2)
+dat <- expand.table(LSAT7)
+x <- mirt(dat, 1)
 coef(x)
-coef(x, rotate = 'varimax')
+coef(x, IRTpars = TRUE)
+
+x2 <- mirt(Science, 2)
+coef(x2)
+coef(x2, rotate = 'varimax')
 }
 }
 \seealso{

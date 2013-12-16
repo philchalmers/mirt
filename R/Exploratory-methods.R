@@ -196,9 +196,14 @@ setMethod(
 #' @examples
 #'
 #' \dontrun{
-#' x <- mirt(Science, 2)
+#' dat <- expand.table(LSAT7)
+#' x <- mirt(dat, 1)
 #' coef(x)
-#' coef(x, rotate = 'varimax')
+#' coef(x, IRTpars = TRUE)
+#' 
+#' x2 <- mirt(Science, 2)
+#' coef(x2)
+#' coef(x2, rotate = 'varimax')
 #' }
 setMethod(
     f = "coef",
@@ -461,6 +466,17 @@ setMethod(
 #' x <- mirt(Science, 1)
 #' plot(x)
 #' plot(x, type = 'trace')
+#' plot(x, type = 'infotrace')
+#' plot(x, type = 'infotrace', facet_items = TRUE)
+#' plot(x, type = 'infoSE')
+#' 
+#' set.seed(1234)
+#' group <- sample(c('g1','g2'), nrow(Science), TRUE)
+#' x2 <- multipleGroup(Science, 1, group)
+#' plot(x2)
+#' plot(x2, type = 'trace')
+#' plot(x2, type = 'score')
+#' 
 #' }
 setMethod(
     f = "plot",
@@ -570,15 +586,9 @@ setMethod(
                 for(i in 1L:length(nrs))
                     names <- c(names, rep(names(P)[i], nrs[i]))
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
-                if(facet_items){
-                    return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1),,
-                                  xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
-                } else {
-                    return(xyplot(P ~ Theta, plotobj, group = item, ylim = c(-0.1,1.1),,
-                                  xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
-                }
+                return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
+                              xlab = expression(theta), ylab = expression(P(theta)),
+                              auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
                 
             }
             if(type == 'infotrace'){
@@ -594,9 +604,9 @@ setMethod(
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
                 } else {
-                return(xyplot(I ~ Theta, plotobj, group = item,
-                              xlab = expression(theta), ylab = expression(I(theta)),
-                              auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                    return(xyplot(I ~ Theta, plotobj, group = item,
+                                  xlab = expression(theta), ylab = expression(I(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
                 }
             }
             if(type == 'score')

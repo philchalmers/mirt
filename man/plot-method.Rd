@@ -58,6 +58,17 @@
 x <- mirt(Science, 1)
 plot(x)
 plot(x, type = 'trace')
+plot(x, type = 'infotrace')
+plot(x, type = 'infotrace', facet_items = TRUE)
+plot(x, type = 'infoSE')
+
+set.seed(1234)
+group <- sample(c('g1','g2'), nrow(Science), TRUE)
+x2 <- multipleGroup(Science, 1, group)
+plot(x2)
+plot(x2, type = 'trace')
+plot(x2, type = 'score')
+
 }
 }
 
