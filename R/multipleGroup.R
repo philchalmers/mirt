@@ -109,7 +109,8 @@
 #' residuals(mod_scalar2)
 #' plot(mod_configural)
 #' plot(mod_configural, type = 'score')
-#' plot(mod_configural, type = 'trace', auto.key = FALSE)
+#' plot(mod_configural, type = 'trace')
+#' plot(mod_configural, type = 'trace', which.items = 1:4)
 #' itemplot(mod_configural, 2)
 #' itemplot(mod_configural, 2, type = 'RE')
 #'

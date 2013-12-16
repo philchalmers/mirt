@@ -67,7 +67,12 @@ group <- sample(c('g1','g2'), nrow(Science), TRUE)
 x2 <- multipleGroup(Science, 1, group)
 plot(x2)
 plot(x2, type = 'trace')
+plot(x2, type = 'trace', which.items = 1:2)
 plot(x2, type = 'score')
+
+x3 <- mirt(Science, 2)
+plot(x3)
+plot(x3, type = 'SE')
 
 }
 }
