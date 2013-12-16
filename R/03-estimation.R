@@ -146,20 +146,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
         }
     }
+    RETURNVALUES <- FALSE
     if(!is.null(pars)){
         if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random, MG = TRUE)
             mixed.design$random <- attr(PrepList, 'random')
             attr(PrepList, 'random') <- NULL
         }
-        if(!is.null(attr(pars, 'values'))){
-            return(ReturnPars(PrepList, PrepList[[1L]]$itemnames,
-                              random=mixed.design$random, MG = TRUE))
-        } else if(is.character(pars)){
-            if(pars == 'values')
-                return(ReturnPars(PrepList, PrepList[[1L]]$itemnames,
-                                  random=mixed.design$random, MG = TRUE))
-        }
+        if(!is.null(attr(pars, 'values')) || (is.character(pars) && pars == 'values'))
+            RETURNVALUES <- TRUE
     }
     pars <- vector('list', Data$ngroups)
     for(g in 1L:Data$ngroups)
@@ -189,6 +184,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
             names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
         }
+    }
+    if(RETURNVALUES){
+        for(g in 1L:Data$ngroups)
+            PrepList[[g]]$pars <- pars[[g]]
+        return(ReturnPars(PrepList, PrepList[[1L]]$itemnames,
+                          random=mixed.design$random, MG = TRUE))
+        
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,

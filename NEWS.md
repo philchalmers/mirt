@@ -32,6 +32,9 @@
 
 ## BUG FIXES
 
+- starting values for `multipleGroup()` now returns proper estimated parameter information from
+  the `invariance` input argument
+
 - remove `as.integer()` in MultipleGroup df slot
 
 - pass proper item type when using custom pattern calles in `fscores()`

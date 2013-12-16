@@ -94,6 +94,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
            else est <- c(est, rep(FALSE, length(pars[[g]][[j]]@est)))
        }
     }
+    groupest <- FALSE
+    for(g in 1L:ngroups)
+        groupest <- any(groupest, pars[[g]][[J+1]]@est)
     if(length(constrain) > 0L)
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- FALSE
@@ -169,7 +172,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         start <- proc.time()[3L]
         preMstep.longpars2 <- preMstep.longpars
         preMstep.longpars <- longpars
-        if(all(!est)) break
+        if(all(!est) && !groupest) break
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           NO.CUSTOM=NO.CUSTOM, PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
