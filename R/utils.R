@@ -749,6 +749,7 @@ nameInfoMatrix <- function(info, correction, L, npars){
     matind[lower.tri(matind, diag = TRUE)] <- tmp[lower.tri(tmp, diag = TRUE)]
     matind <- matind * L
     matind[matind == 0 ] <- NA
+    matind[!is.na(matind)] <- tmp[!is.na(matind)]
     shortnames <- c()
     for(i in 1L:length(correction)){
         keep <- is.na(matind[ , 1L])

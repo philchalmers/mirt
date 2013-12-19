@@ -134,6 +134,7 @@ setMethod(
                 r <- r[!is.na(expected)]
                 expected <- expected[!is.na(expected)]
 				G2 <- 2 * sum(r*log(r/(sum(r)*expected)))
+                df <- object@df
 				object@G2 <- G2
                 if(logLikpre == 0){
     				null.mod <- object@null.mod
