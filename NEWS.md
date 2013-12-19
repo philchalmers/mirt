@@ -19,8 +19,8 @@
 
 - removed multinomial constant in log-likelihood since it has no influence on nested model comparisons
 
-- `SE.type = 'crossprod'` added for computing the parameter information matrix based on the
-  variance of the Fisher scoring vector
+- `SE.type = 'crossprod'` and `Fisher` added for computing the parameter information matrix based on the
+  variance of the Fisher scoring vector and complete Fisher information matrix, respectively
 
 - `customPriorFun` input to technical list now available for utilizing user defined prior distribution
   functions in the EM algorithm

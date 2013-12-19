@@ -1193,6 +1193,30 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
     Prior <- ESTIMATE$Prior
     Igrad <- Ihess <- matrix(0, length(DX), length(DX))
     tabdata <- PrepList[[1L]]$tabdata
+    if(!simple){
+        K <- PrepList[[1L]]$K
+        resp <- vector('list', nitems)
+        for(i in 1L:nitems)
+            resp[[i]] <- 0L:(K[i]-1L)
+        resp <- expand.grid(resp)
+        stringfulldata <- apply(resp, 1L, paste, sep='', collapse = '/')
+        stringtabdata <- unique(stringfulldata)
+        tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
+        tabdata2 <- do.call(rbind, tabdata2)
+        tabdata2[tabdata2 == 99999L] <- NA
+        tabdata <- matrix(0L, nrow(tabdata2), sum(K))
+        for(i in 1L:nitems){
+            uniq <- sort(na.omit(unique(tabdata2[,i])))
+            if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
+            for(j in 1L:length(uniq))
+                tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
+        }
+        tabdata <- cbind(tabdata, 1L)
+        collectL <- numeric(nrow(tabdata))
+        collectgrad <- matrix(0, nrow(tabdata), length(DX))
+        for(g in 1L:ngroups)
+            PrepList[[g]]$tabdata <- tabdata
+    }
     for(pat in 1L:nrow(tabdata)){
         for(g in 1L:ngroups){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
@@ -1207,12 +1231,25 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
                 DX[pars[[g]][[i]]@parnum] <- dx
             }
         }
-        out <- L %*% outer(DX, DX) %*% L
-        Igrad <- Igrad + out
+        if(simple){
+            out <- L %*% outer(DX, DX) %*% L
+            Igrad <- Igrad + out
+        } else {
+            collectL[pat] <- rlist$expected
+            DX <- as.numeric(L %*% DX)
+            DX[DX != 0] <-  rlist$expected - exp(log(rlist$expected) - DX[DX != 0])
+            collectgrad[pat, ] <- DX
+        }
     }
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     colnames(Igrad) <- rownames(Igrad) <- names(ESTIMATE$correction)
-    info <- Igrad * nrow(tabdata) / N
+    if(simple){
+        info <- Igrad * nrow(tabdata) / N    
+    } else {
+        collectgrad <- collectgrad[, ESTIMATE$estindex_unique]
+        info <- N * t(collectgrad) %*% diag(1/collectL) %*% collectgrad
+    }
+    colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
     info[lengthsplit > 2L, lengthsplit > 2L] <- 1

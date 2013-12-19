@@ -407,10 +407,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                nfact=nfact, constrain=constrain, verbose=FALSE,
                                                startlongpars=startlongpars),
                                    DERIV=DERIV)
-        } else if(opts$SE.type == 'crossprod' && opts$method == 'EM'){
+        } else if(opts$SE.type == 'crossprod' && opts$method != 'MIXED'){
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,
                                   constrain=constrain, N=nrow(data))
 
+        } else if(opts$SE.type == 'Fisher' && opts$method != 'MIXED'){
+            ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,
+                                  constrain=constrain, N=nrow(data), simple=FALSE)
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior

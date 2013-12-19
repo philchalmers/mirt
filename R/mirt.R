@@ -190,17 +190,17 @@
 #' @param key a numeric vector of the response scoring key. Required when using nested logit item types, and
 #'   must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
 #'   so use \code{NA} in item locations that are not applicable
-#' @param SE logical; estimate the standard errors? Calculates the information matrix from MHRM subroutine for
-#'   stochastic approximation, Bock and Lieberman style information (use only with small number of items), or
-#'   supplemented EM (SEM) computations for Bock and Lieberman style information matrix
-#' @param SE.type type of estimation method to use for calculating the parameter information matrix.
-#'   Can be \code{'MHRM'} for stochastic estimation, \code{'BL'} for the Bock and Lieberman approach
-#'   (EM only), \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option), and \code{'crossprod'}
-#'   for simple standard error computations based on the Fisher scoring variance.
-#'   Note that for the \code{'SEM'} option increasing
-#'   the number of EM cycles (\code{NCYCLES}, see below) will help to improve the accuracy, and will be
-#'   run in parallel if a \code{\link{mirtCluster}} object has been defined.
-#'   Bootstrapped standard errors are also possible but must be run with the \code{\link{boot.mirt}} function
+#' @param SE logical; estimate the standard errors? See \code{SE.type} for the type of estimates available
+#' @param SE.type type of estimation method to use for calculating the parameter information matrix for computing 
+#'   standard errors and \code{\link{Wald}} tests. Can be \code{'MHRM'} for stochastic approximation, 
+#'   \code{'BL'} for the Bock and Lieberman approach (numerical evaluation of observed Hessian), 
+#'   \code{'Fisher'} for the expected information, \code{'SEM'} for the supplemented EM 
+#'   (disables the \code{accelerate} option), and \code{'crossprod'}
+#'   for simple standard error computations based on the variance of the Fisher scores.
+#'   Note that for the \code{'SEM'} option increasing the number of EM cycles (\code{NCYCLES} and \code{TOL}, see below) 
+#'   will help to improve the accuracy, and will be run in parallel if a \code{\link{mirtCluster}} object has been defined.
+#'   Bootstrapped and profiled-likelihood standard errors are also possible, but must be run with the 
+#'   \code{\link{boot.mirt}} and \code{PLCI.mirt}} functions, respectively
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
 #'   vector corresponding to each item
