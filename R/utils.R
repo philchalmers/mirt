@@ -994,7 +994,9 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     return(ESTIMATE)
 }
 
-SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV){
+SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
+                   collectLL, from = 3L){
+    
     TOL <- sqrt(list$TOL)
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -1026,7 +1028,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
     }
 
-    for (cycles in 3L:NCYCLES){
+    for (cycles in from:NCYCLES){
 
         longpars <- MLestimates
         longpars[estindex] <- EMhistory[cycles, estindex]

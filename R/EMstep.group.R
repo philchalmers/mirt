@@ -120,6 +120,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     preMstep.longpars2 <- preMstep.longpars <- longpars
     accel <- 0
     Estep.time <- Mstep.time <- 0
+    collectLL <- rep(NA, NCYCLES)
 
     #EM
     for (cycles in 1L:NCYCLES){
@@ -148,7 +149,6 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                 Prior[[g]] <- list$customPriorFun(gTheta[[g]])
         }
         #Estep
-        lastLL <- LL
         LL <- 0
         for(g in 1L:ngroups){
             if(BFACTOR){
@@ -162,6 +162,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
         }
+        collectLL[cycles] <- LL
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
@@ -228,7 +229,7 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
-                    time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time))))
+                    time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)), collectLL=na.omit(collectLL)))
     }
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,

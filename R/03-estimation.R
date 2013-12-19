@@ -288,7 +288,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SEM=opts$SE.type == 'SEM' && opts$SE,
+                                         SEM=any(opts$SE.type %in% c('SEM', 'complete')) && opts$SE,
                                          accelerate=opts$accelerate,
                                          customPriorFun=opts$customPriorFun),
                              Theta=Theta, DERIV=DERIV)
@@ -340,7 +340,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
         if(opts$verbose) cat('\n\nCalculating information matrix...\n')
-        if(opts$SE.type == 'SEM' && opts$method == 'EM'){
+        if(opts$SE.type == 'complete' && opts$method == 'EM'){
+            info <- -ESTIMATE$hess
+            ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+        } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
+            collectLL <- as.numeric(ESTIMATE$collectLL)
+            collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
+            from <- min(which(collectLL >= .9)) + 1L
             dontrun <- FALSE
             if(ESTIMATE$cycles <= 5L){
                 dontrun <- TRUE
@@ -370,7 +376,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                            sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                            EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
-                                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE,
+                                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from,
                                                DERIV=DERIV))
                 } else {
                     for(i in 1L:ncol(DM))
@@ -382,7 +388,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                       sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
                                                       nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                       EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
-                                          Theta=Theta, theta=theta, ESTIMATE=ESTIMATE,
+                                          Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from,
                                           DERIV=DERIV)
                 }
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,

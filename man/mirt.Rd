@@ -76,18 +76,21 @@ Theory)}
   \code{'BL'} for the Bock and Lieberman approach
   (numerical evaluation of observed Hessian),
   \code{'Fisher'} for the expected information,
+  \code{'complete'} for information based on the
+  complete-data Hessian used in EM algorithm (EM only),
   \code{'SEM'} for the supplemented EM (disables the
-  \code{accelerate} option), and \code{'crossprod'} for
-  simple standard error computations based on the variance
-  of the Fisher scores.  Note that for the \code{'SEM'}
-  option increasing the number of EM cycles (\code{NCYCLES}
-  and \code{TOL}, see below) will help to improve the
-  accuracy, and will be run in parallel if a
-  \code{\link{mirtCluster}} object has been defined.
-  Bootstrapped and profiled-likelihood standard errors are
-  also possible, but must be run with the
-  \code{\link{boot.mirt}} and \code{PLCI.mirt}} functions,
-  respectively}
+  \code{accelerate} option; EM only), and
+  \code{'crossprod'} for standard error computations based
+  on the variance of the Fisher scores.
+
+  Note that for the \code{'SEM'} option increasing the
+  number of EM cycles (\code{NCYCLES} and \code{TOL}, see
+  below) will help to improve the accuracy, and will be run
+  in parallel if a \code{\link{mirtCluster}} object has
+  been defined.  Bootstrapped and profiled-likelihood
+  standard errors are also possible, but must be run with
+  the \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}
+  functions, respectively}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
   entered as a single value to assign a global guessing

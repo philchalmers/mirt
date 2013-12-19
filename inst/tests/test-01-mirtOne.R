@@ -16,7 +16,7 @@ test_that('dich', {
     expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm1, digits = 4)))
-    expect_equal(cfs, c(0.9879, 0.6428, 1.333, 1.856, 1.6012, 2.1108, 0, NA, NA, 1, NA, NA, 1.0809, 0.754, 1.4078, 0.808, 0.6298, 0.9861, 0, NA, NA, 1, NA, NA, 1.7061, 1.124, 2.2882, 1.8044, 1.4126, 2.1962, 0, NA, NA, 1, NA, NA, 0.7651, 0.5012, 1.0291, 0.486, 0.3397, 0.6323, 0, NA, NA, 1, NA, NA, 0.7358, 0.4391, 1.0324, 1.8545, 1.6306, 2.0784, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA), 
+    expect_equal(cfs, c(0.9879, 0.6442, 1.3315, 1.856, 1.6007, 2.1114, 0, NA, NA, 1, NA, NA, 1.0809, 0.7519, 1.4098, 0.808, 0.6302, 0.9857, 0, NA, NA, 1, NA, NA, 1.7061, 1.1053, 2.3069, 1.8044, 1.4146, 2.1942, 0, NA, NA, 1, NA, NA, 0.7651, 0.5038, 1.0265, 0.486, 0.3407, 0.6314, 0, NA, NA, 1, NA, NA, 0.7358, 0.4428, 1.0288, 1.8545, 1.6316, 2.0774, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA), 
                  tollerance = 1e-2)    
     expect_is(modm1, 'ConfirmatoryClass')          
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'BL', verbose=FALSE)
