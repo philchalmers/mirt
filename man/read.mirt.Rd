@@ -69,16 +69,6 @@ plot(plinkpars)
 itemplot(mod2, 1)
 
 #gpcm
-mod3 <- mirt(Science, 2, itemtype = 'gpcm')
-plinkpars <- read.mirt(mod3)
-plot(plinkpars)
-itemplot(mod3, 1)
-
-#nominal
-mod4 <- mirt(Science, 2, itemtype = 'nominal')
-plinkpars <- read.mirt(mod4)
-plot(plinkpars)
-itemplot(mod4, 1)
 }
 }
 \author{

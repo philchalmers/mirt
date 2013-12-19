@@ -63,16 +63,16 @@
 #' itemplot(mod2, 1)
 #'
 #' #gpcm
-#' mod3 <- mirt(Science, 2, itemtype = 'gpcm')
-#' plinkpars <- read.mirt(mod3)
-#' plot(plinkpars)
-#' itemplot(mod3, 1)
-#'
-#' #nominal
-#' mod4 <- mirt(Science, 2, itemtype = 'nominal')
-#' plinkpars <- read.mirt(mod4)
-#' plot(plinkpars)
-#' itemplot(mod4, 1)
+# mod3 <- mirt(Science, 2, itemtype = 'gpcm')
+# plinkpars <- read.mirt(mod3)
+# plot(plinkpars)
+# itemplot(mod3, 1)
+#
+# #nominal
+# mod4 <- mirt(Science, 2, itemtype = 'nominal')
+# plinkpars <- read.mirt(mod4)
+# plot(plinkpars)
+# itemplot(mod4, 1)
 #' }
 read.mirt <- function (x, as.irt.pars = TRUE, ...)
 {
@@ -148,7 +148,11 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
             a <- ab[1:nfact]
             ab <- ab[-(1:nfact)]
             cat[i] <- x@pars[[i]]@ncat
-            pars[i, 1:length(ab)] <- ab
+            if(nfact == 1L){
+                pars[i, 1:length(ab)] <- ab
+            } else {
+                stop('Multidimensional gpcm not yet supported')
+            }
             next
         }
 
@@ -156,7 +160,11 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
             plink.items[i] <- 'nrm'
             ab <- listpars[[i]][1, ]
             cat[i] <- x@pars[[i]]@ncat
-            pars[i, 1:length(ab)] <- ab
+            if(nfact == 1L){
+                pars[i, 1:length(ab)] <- ab
+            } else {
+                stop('Multidimensional nrm not yet supported')
+            }
             next
         }
 

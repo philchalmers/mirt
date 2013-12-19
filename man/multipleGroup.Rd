@@ -201,7 +201,7 @@ for(i in 1:ncol(dat))
     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
                              invariance=c('free_means', 'free_varcov', itemnames[-i]))
 
-(anovas <- lapply(estmodels, anova, object2=refmodel))
+(anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
 
 #family-wise error control
 p <- do.call(rbind, lapply(anovas, function(x) x[2, 'p']))
@@ -216,7 +216,7 @@ for(i in 1:ncol(dat))
                              itemnames[-i]))
 
 
-(anovas <- lapply(estmodels, anova, object2=refmodel))
+(anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
 
 #############
 #multiple factors
@@ -282,9 +282,9 @@ dataset1 <- simdata(a, d, N, itemtype)
 dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
-models <- mirt.model('F1 = 1-15')
+model <- mirt.model('F1 = 1-15')
 
-mod_configural <- multipleGroup(dat, models, group = group)
+mod_configural <- multipleGroup(dat, model, group = group)
 plot(mod_configural)
 plot(mod_configural, type = 'SE')
 itemplot(mod_configural, 1)
@@ -293,7 +293,10 @@ fs <- fscores(mod_configural)
 head(fs[["D1"]])
 fscores(mod_configural, method = 'EAPsum')
 
-mod_configural2 <- multipleGroup(dat, models2, group = group)
+# constrain slopes within each group to be equal (but not accross groups)
+model2 <- mirt.model('F1 = 1-15
+                      CONSTRAIN = (1-15, a1)')
+mod_configural2 <- multipleGroup(dat, model2, group = group)
 plot(mod_configural2, type = 'infocontour')
 plot(mod_configural2, type = 'SE')
 plot(mod_configural2, type = 'RE')

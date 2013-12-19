@@ -793,7 +793,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 }
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NaN,
-                     rotate = 'varimax', Target = NaN, SE = TRUE, verbose = TRUE,
+                     rotate = 'varimax', Target = NaN, SE = FALSE, verbose = TRUE,
                      SEtol = .0001, grsm.block = NULL, D = 1,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',

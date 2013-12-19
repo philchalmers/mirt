@@ -1,4 +1,7 @@
-		 Changes in mirt 1.x
+		 Changes in mirt 1.1
+
+  - `facet_items` argument added to plot() to control whether seperate plots
+  should be constructed for each item or to merge them onto a single plot
 
   - three dimensional models supported in `itemplot()` for types `trace`,
   `score`, `info`, and `SE`
@@ -22,8 +25,9 @@
   - removed multinomial constant in log-likelihood since it has no influence
   on nested model comparisons
 
-  - `SE.type = 'crossprod'` added for computing the parameter information
-  matrix based on the variance of the Fisher scoring vector
+  - `SE.type = 'crossprod'` and `Fisher` added for computing the parameter
+  information matrix based on the variance of the Fisher scoring vector and
+  complete Fisher information matrix, respectively
 
   - `customPriorFun` input to technical list now available for utilizing
   user defined prior distribution functions in the EM algorithm
@@ -36,6 +40,9 @@
   `plink` package
 
 BUG FIXES
+
+  - starting values for `multipleGroup()` now returns proper estimated
+  parameter information from the `invariance` input argument
 
   - remove `as.integer()` in MultipleGroup df slot
 

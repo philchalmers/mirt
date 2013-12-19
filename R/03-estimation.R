@@ -315,7 +315,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1L]]$nfactNames,
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                           startlongpars=startlongpars),
+                                           startlongpars=startlongpars, SE=opts$SE),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
@@ -329,7 +329,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfactNames=PrepList[[1L]]$nfactNames,
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                           startlongpars=startlongpars),
+                                           startlongpars=startlongpars, SE=opts$SE),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
@@ -337,9 +337,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     opts$times$end.time.Estimate <- proc.time()[3L]
     opts$times$start.time.SE <- proc.time()[3L]
-    if(!opts$NULL.MODEL && opts$SE){
+    if(!opts$NULL.MODEL && opts$SE && opts$method != 'MIXED'){
         tmp <- ESTIMATE
-        if(opts$verbose) cat('\n\nCalculating information matrix...\n')
+        if(opts$verbose){
+            if(opts$method == 'MHRM' && opts$SE.type == 'MHRM'){
+                
+            } else {
+                cat('\n\nCalculating information matrix...\n')
+            }
+        }
         if(opts$SE.type == 'complete' && opts$method == 'EM'){
             info <- -ESTIMATE$hess
             ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
@@ -411,7 +417,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                nfactNames=PrepList[[1L]]$nfactNames,
                                                itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                nfact=nfact, constrain=constrain, verbose=FALSE,
-                                               startlongpars=startlongpars),
+                                               startlongpars=startlongpars, SE=opts$SE),
                                    DERIV=DERIV)
         } else if(opts$SE.type == 'crossprod' && opts$method != 'MIXED'){
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,

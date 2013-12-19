@@ -342,7 +342,8 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                                   gamma, max(abs(gamma*correction))), sep='')
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
         else conv <- 0L
-        if(conv == 3L) break
+        if(!list$SE && conv == 3L) break
+        if(list$SE && cycles >= (400L + BURNIN + SEMCYCLES) && conv == 3L) break
 
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
         if(gamma == .25){

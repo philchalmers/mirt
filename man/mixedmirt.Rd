@@ -5,7 +5,7 @@
   mixedmirt(data, covdata = NULL, model, fixed = ~1,
     random = NULL, itemtype = "Rasch", itemdesign = NULL,
     constrain = NULL, pars = NULL, return.design = FALSE,
-    draws = 5000, ...)
+    SE = FALSE, draws = 5000, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -62,6 +62,13 @@
 
   \item{return.design}{logical; return the design matrices
   before they have (potentially) been reassigned?}
+
+  \item{SE}{logical; while standard errors are always
+  computed for the MHRM algorithm this option forces the
+  number of iterations to be no less than 400 so that the
+  information matrix is computed more accurately.  An
+  alternative approach would be to drop the \code{TOL}
+  criteria from the techinical list input}
 
   \item{draws}{the number of Monte Carlo draws to estimate
   the log-likelihood for the MH-RM algorithm. Default is
@@ -198,12 +205,13 @@ model <- mirt.model('Theta = 1-32')
 itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 
 #notice that the 'fixed = ~ ... + items' argument is omitted
-LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign)
+LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign,
+   SE = TRUE) # SE argument ensures that the information matrix is computed accurately
 summary(LLTM)
 coef(LLTM)
 wald(LLTM)
 L <- c(-1, 1, 0)
-wald(LLTM, L) #first half different from second
+wald(LLTM, L) #first half not different from second
 
 #compare to items with estimated slopes (2PL)
 twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
@@ -217,8 +225,6 @@ L <- matrix(0, 1, 34)
 L[1, 1] <- 1
 L[1, 2] <- -1
 wald(twoPL, L) #n.s.
-#twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
-#    half of the test is any easier/harder than the last
 
 ##LLTM with item error term
 LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,

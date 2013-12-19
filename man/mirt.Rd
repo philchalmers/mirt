@@ -67,11 +67,15 @@ Theory)}
   \code{NA} in item locations that are not applicable}
 
   \item{SE}{logical; estimate the standard errors? See
-  \code{SE.type} for the type of estimates available}
+  \code{SE.type} for the type of estimates available. Using
+  \code{SE = TRUE} when \code{method = 'MHRM'} will force
+  the estimation to terminate no earlier than 400
+  iterations to ensure that the information matrix is well
+  approximated}
 
   \item{SE.type}{type of estimation method to use for
   calculating the parameter information matrix for
-  computing standard errors and \code{\link{Wald}} tests.
+  computing standard errors and \code{\link{wald}} tests.
   Can be \code{'MHRM'} for stochastic approximation,
   \code{'BL'} for the Bock and Lieberman approach
   (numerical evaluation of observed Hessian),
@@ -83,13 +87,14 @@ Theory)}
   \code{'crossprod'} for standard error computations based
   on the variance of the Fisher scores.
 
-  Note that for the \code{'SEM'} option increasing the
-  number of EM cycles (\code{NCYCLES} and \code{TOL}, see
-  below) will help to improve the accuracy, and will be run
-  in parallel if a \code{\link{mirtCluster}} object has
-  been defined.  Bootstrapped and profiled-likelihood
-  standard errors are also possible, but must be run with
-  the \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}
+  Note that for \code{'SEM'} and \code{'MHRM'} option
+  increasing the number of iterations (\code{NCYCLES} and
+  \code{TOL}, see below) will help to improve the accuracy,
+  and will be run in parallel if a
+  \code{\link{mirtCluster}} object has been defined.
+  Bootstrapped and profiled-likelihood standard errors are
+  also possible, but must be run with the
+  \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}
   functions, respectively}
 
   \item{guess}{fixed pseudo-guessing parameters. Can be
@@ -111,12 +116,13 @@ Theory)}
   using \code{summary}; default is \code{'oblimin'}.  If
   \code{rotate != ''} in the \code{summary} input then the
   default from the object is ignored and the new rotation
-  from the list is used instead. Rotations currently
-  supported are: promax, oblimin, varimax, quartimin,
-  targetT, targetQ, pstT, pstQ, oblimax, entropy,
-  quartimax, simplimax, bentlerT, bentlerQ, tandemI,
-  tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ,
-  mccammon, bifactorT, bifactorQ}
+  from the list is used instead.
+
+  Rotations currently supported are: promax, oblimin,
+  varimax, quartimin, targetT, targetQ, pstT, pstQ,
+  oblimax, entropy, quartimax, simplimax, bentlerT,
+  bentlerQ, tandemI, tandemII, geominT, geominQ, cfT, cfQ,
+  infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ}
 
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
@@ -172,13 +178,15 @@ Theory)}
   then be passed back into \code{large} to avoid
   reorganizing the data in every estimation (useful when
   the dataset are very large and computing the tabularized
-  data is computationally burdensome). Therefore, the best
-  strategy for large data is to always pass the internal
-  data to the estimation function, shown below: \describe{
-  \item{Compute organized data}{e.g., \code{internaldat <-
-  mirt(Science, 1, large = TRUE)}} \item{Pass the organized
-  data to all estimation functions}{e.g., \code{mod <-
-  mirt(Science, 1, large = internaldat)}} }}
+  data is computationally burdensome).
+
+  The best strategy for large data is to always pass the
+  internal data to the estimation function, shown below:
+  \describe{ \item{Compute organized data}{e.g.,
+  \code{internaldat <- mirt(Science, 1, large = TRUE)}}
+  \item{Pass the organized data to all estimation
+  functions}{e.g., \code{mod <- mirt(Science, 1, large =
+  internaldat)}} }}
 
   \item{empiricalhist}{logical; estimate prior distribution
   using an empirical histogram approach.  Only applicable
@@ -359,7 +367,11 @@ Theory)}
   steps greater than 0.25) then the model may either be ill
   defined or have a very flat likelihood surface, and
   genuine maximum-likelihood parameter estimates may be
-  difficult to find.
+  difficult to find. Additionally, it is recommended that
+  at least 400 cycles are run through to approximate the
+  obsevered information matrix accurately, which can be
+  accomplished either by decreasing the \code{TOL} criteria
+  or setting \code{SE = TRUE}.
 }
 
 \section{IRT Models}{

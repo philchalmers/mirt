@@ -1,4 +1,4 @@
-# Changes in mirt 1.x
+# Changes in mirt 1.1
 
 - `facet_items` argument added to plot() to control whether seperate plots should be constructed 
   for each item or to merge them onto a single plot

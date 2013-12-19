@@ -58,6 +58,9 @@
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
 #' @param return.design logical; return the design matrices before they have (potentially)
 #'   been reassigned?
+#' @param SE logical; while standard errors are always computed for the MHRM algorithm this option forces
+#'   the number of iterations to be no less than 400 so that the information matrix is computed more accurately.
+#'   An alternative approach would be to drop the \code{TOL} criteria from the techinical list input
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
 #'   is 5000
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
@@ -156,12 +159,13 @@
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
 #' #notice that the 'fixed = ~ ... + items' argument is omitted
-#' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign)
+#' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign, 
+#'    SE = TRUE) # SE argument ensures that the information matrix is computed accurately 
 #' summary(LLTM)
 #' coef(LLTM)
 #' wald(LLTM)
 #' L <- c(-1, 1, 0)
-#' wald(LLTM, L) #first half different from second
+#' wald(LLTM, L) #first half not different from second
 #'
 #' #compare to items with estimated slopes (2PL)
 #' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
@@ -175,8 +179,6 @@
 #' L[1, 1] <- 1
 #' L[1, 2] <- -1
 #' wald(twoPL, L) #n.s.
-#' #twoPL model better than LLTM, and don't draw the incorrect conclusion that the first
-#' #    half of the test is any easier/harder than the last
 #'
 #' ##LLTM with item error term
 #' LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,
@@ -209,7 +211,7 @@
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE,
-                      draws = 5000, ...)
+                      SE = FALSE, draws = 5000, ...)
 {
     Call <- match.call()
     svinput <- pars
@@ -290,7 +292,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is.data.frame(svinput)) pars <- svinput
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
-                      draws=draws, ...)
+                      SE=SE, draws=draws, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)
