@@ -1489,8 +1489,8 @@ shinyItemplot <- function(){
                         if(input$a1) par[names(par) == 'a1'] <- input$a1par
                         if(input$a2) par[names(par) == 'a2'] <- input$a2par
                         if(input$d) par[names(par) == 'd'] <- input$dpar
-                        if(input$g) par[names(par) == 'g'] <- mirt:::logit(input$gpar)
-                        if(input$u) par[names(par) == 'u'] <- mirt:::logit(input$upar)
+                        if(input$g) par[names(par) == 'g'] <- logit(input$gpar)
+                        if(input$u) par[names(par) == 'u'] <- logit(input$upar)
                         if(input$d0) par[names(par) == 'd0'] <- input$d0par
                         if(input$d1) par[names(par) == 'd1'] <- input$d1par
                         if(input$d2) par[names(par) == 'd2'] <- input$d2par
