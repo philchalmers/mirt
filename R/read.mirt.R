@@ -80,9 +80,10 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
         stop('You must install the plink package.')
     cls <- class(x)
     if(class(x) == 'MultipleGroupClass'){
-        pars <- vector(length(x@cmods))
+        pars <- vector('list', length(x@cmods))
         for(i in 1:length(pars))
-            pars[[i]] <- read.mirt(x@cmods, as.irt.pars=as.irt.pars, ...)
+            pars[[i]] <- read.mirt(x@cmods[[i]], as.irt.pars=as.irt.pars, ...)
+        names(pars) <- x@groupNames
         return(pars)
     }
     if(class(x) == 'MixedClass')
