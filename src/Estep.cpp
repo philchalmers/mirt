@@ -131,7 +131,7 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
     BEGIN_RCPP
 
     const NumericMatrix itemtrace(Ritemtrace);
-    const NumericMatrix tabdata(Rtabdata);
+    const IntegerMatrix tabdata(Rtabdata);
     const NumericMatrix Theta(RTheta);
     const vector<double> prior = as< vector<double> >(Rprior);
     const vector<double> mu = as< vector<double> >(Rmu);
