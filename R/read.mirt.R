@@ -62,7 +62,21 @@
 #' plot(plinkpars)
 #' itemplot(mod2, 1)
 #'
-#' #gpcm
+#' ### multiple group
+#' set.seed(1234)
+#' dat <- expand.table(LSAT7)
+#' group <- sample(c('g1', 'g2'), nrow(dat), TRUE)
+#' mod <- multipleGroup(dat, 1, group)
+#' 
+#' # convert, and combine pars
+#' plinkMG <- read.mirt(mod)
+#' combine <- matrix(1:5, 5, 2)
+#' comb <- combine.pars(plinkMG, combine, grp.names=unique(group))
+#' out <- plink(comb, rescale="SL")
+#' equate(out)
+#' equate(out, method = 'OSE')
+#'
+# #gpcm
 # mod3 <- mirt(Science, 2, itemtype = 'gpcm')
 # plinkpars <- read.mirt(mod3)
 # plot(plinkpars)

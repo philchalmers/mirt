@@ -1,4 +1,16 @@
+# Changes in mirt 1.x
+
+## NEW FEATURES
+
+- 
+
+## BUG FIXES
+
+- `read.mirt` crash fix for multiple group analyses objects (reported by Felix Hansen)
+
 # Changes in mirt 1.1
+
+## NEW FEATURES
 
 - `facet_items` argument added to plot() to control whether seperate plots should be constructed 
   for each item or to merge them onto a single plot
