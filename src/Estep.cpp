@@ -126,38 +126,42 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 }
 
 //EAP estimates used in multipleGroup
-RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu)
+RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu)
 {
     BEGIN_RCPP
 
-    const NumericMatrix itemtrace(Ritemtrace);
+    const NumericMatrix logitemtrace(Rlogitemtrace);
     const IntegerMatrix tabdata(Rtabdata);
     const NumericMatrix Theta(RTheta);
     const vector<double> prior = as< vector<double> >(Rprior);
     const vector<double> mu = as< vector<double> >(Rmu);
     const int n = prior.size(); //nquad
+    const int N = tabdata.nrow();
     const int nitems = tabdata.ncol();
     const int nfact = Theta.ncol();
-    NumericMatrix scores(tabdata.nrow(), nfact), scores2(tabdata.nrow(), nfact*(nfact + 1)/2);
+    vector<double> scores(N * nfact);
+    vector<double> scores2(N * nfact*(nfact + 1)/2);
 
-    for(int pat = 0; pat < tabdata.nrow(); ++pat){
+    for(int pat = 0; pat < N; ++pat){
 
-        vector<double> L(n, 1.0);
+        vector<double> L(n, 0.0);
         for(int j = 0; j < n; ++j){
             for(int i = 0; i < nitems; ++i)
                 if(tabdata(pat, i))
-                    L[j] = L[j] * itemtrace(j, i);
+                    L[j] = L[j] + logitemtrace(j, i);
         }
 
         vector<double> thetas(nfact, 0.0);
         double denom = 0.0;
-        for(int j = 0; j < n; ++j)
-            denom += (L[j] * prior[j]);
+        for(int j = 0; j < n; ++j){
+            L[j] = exp(L[j] + log(prior[j]));
+            denom += L[j];
+        }
 
         for(int k = 0; k < nfact; ++k){
             for(int j = 0; j < n; ++j)
-                thetas[k] += Theta(j, k) * L[j] * prior[j] / denom;
-            scores(pat, k) = thetas[k];
+                thetas[k] += Theta(j, k) * L[j] / denom;
+            scores[pat + k*N] = thetas[k];
         }
 
         int ind = 0;
@@ -167,9 +171,9 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
                 if(i <= k){
                     for(int j = 0; j < n; ++j)
                         thetas2[ind] += (Theta(j, i) - thetas[i]) * (Theta(j, k) - thetas[k]) *
-                            L[j] * prior[j] / denom;
+                            L[j] / denom;
                     thetas2[ind] += (thetas[i] - mu[i]) * (thetas[k] - mu[k]);
-                    scores2(pat, ind) = thetas2[ind];
+                    scores2[pat + ind*N] = thetas2[ind];
                     ind += 1;
                 }
             }
@@ -177,8 +181,8 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
     }
 
     List ret;
-    ret["scores"] = scores;
-    ret["scores2"] = scores2;
+    ret["scores"] = vec2mat(scores, N, nfact);
+    ret["scores2"] = vec2mat(scores2, N, nfact*(nfact + 1)/2);
     return(ret);
 
     END_RCPP
