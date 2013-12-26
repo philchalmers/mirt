@@ -395,11 +395,14 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         if(min(got) == 0) got <- got + 1
         O <- matrix(0, nrow(E), 1)
         O[got, 1] <- Otmp
+        keep <- O != 0
         ret$observed <- O
         ret$expected <- E
+        O <- O[keep]
+        E <- E[keep]
         df <- length(ret$observed) - 1
         X2 <- sum((ret$observed - ret$expected)^2 / ret$expected)
-        G2 <- 2 * sum(ret$observed * log(ret$observed/(ret$expected)))
+        G2 <- 2 * sum(O * log(O/E))
         attr(ret, 'fit') <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE),
                                        G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE))
         if(verbose){

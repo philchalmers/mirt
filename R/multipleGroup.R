@@ -183,37 +183,27 @@
 #'    F1 = 1-5
 #'    F2 = 6-10
 #'    F3 = 11-15')
+#'    
+#' #define mirt cluster to use parallel architecture
+#' mirtCluster()
 #'
 #' #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 #' mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses
 #' mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes')) #equal slopes
-#' mod_scalar <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
-#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))
 #' mod_fullconstrain <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
 #'                              invariance=c('slopes', 'intercepts'))
 #'
 #' anova(mod_metric, mod_configural)
-#' anova(mod_scalar, mod_metric)
-#' anova(mod_fullconstrain, mod_scalar)
+#' anova(mod_fullconstrain, mod_metric)
 #'
-#' #same as above, but with MHRM (more accurate with 3 factors, but slower)
-#' #define mirt cluster to compute log-likelihoods faster
-#' mirtCluster()
-#'
-#' #completely separate analyses
-#' mod_configural <- multipleGroup(dat, models, group = group, method = 'MHRM')
-#' #equal slopes
-#' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM')
-#' #equal means, slopes, intercepts
-#' mod_scalar <- multipleGroup(dat, models, group = group, method = 'MHRM',
-#'                              invariance=c('slopes', 'intercepts', 'free_varcov'))
-#' #equal means, slopes, intercepts
-#' mod_fullconstrain <- multipleGroup(dat, models, group = group, method = 'MHRM',
+#' #same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
+#' mod_configural <- multipleGroup(dat, model, group = group, method = 'MHRM')
+#' mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes'), method = 'MHRM')
+#' mod_fullconstrain <- multipleGroup(dat, model, group = group, method = 'MHRM',
 #'                              invariance=c('slopes', 'intercepts'))
 #'
 #' anova(mod_metric, mod_configural)
-#' anova(mod_scalar, mod_metric)
-#' anova(mod_fullconstrain, mod_scalar)
+#' anova(mod_fullconstrain, mod_metric)
 #'
 #' ############
 #' #polytomous item example
