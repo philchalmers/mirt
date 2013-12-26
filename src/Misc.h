@@ -24,3 +24,6 @@ const double ABS_MAX_Z = 30;
 
 #endif
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif

@@ -248,7 +248,7 @@ Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, NO.CUSTOM=FALSE,
     X <- tabdata[ ,1L:(ncol(tabdata) - 1L), drop = FALSE]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
-    retlist <- .Call("Estep", itemtrace, prior, X, r)
+    retlist <- .Call("Estep", itemtrace, prior, X, r, mirtClusterEnv$ncores)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
@@ -262,7 +262,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
     X <- tabdata[ ,1L:(ncol(tabdata) - 1L)]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems)
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems, mirtClusterEnv$ncores)
     r1 <- matrix(0, nrow(Theta), ncol(X))
     for (i in 1L:J){
         r1[ ,itemloc[i]:(itemloc[i+1L]-1L)] <-
