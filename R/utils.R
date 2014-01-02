@@ -811,7 +811,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$SE = SE
     opts$SE.type = SE.type
     opts$verbose = verbose
-    opts$SEtol = SEtol
+    opts$SEtol = ifelse(is.null(technical$SEtol), .0001, technical$SEtol)
     opts$grsm.block = grsm.block
     opts$D = D
     opts$rsm.block = rsm.block
@@ -819,7 +819,11 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$customPriorFun = technical$customPriorFun
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
-    if(SE.type == 'SEM' && SE) opts$accelerate <- FALSE
+    if(SE.type == 'SEM' && SE){
+        opts$accelerate <- FALSE
+        if(is.null(technical$TOL)) technical$TOL <- 1e-6
+        opts$SEtol <- ifelse(is.null(technical$SEtol), sqrt(technical$TOL), technical$SEtol)
+    }
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
     opts$technical <- technical
     opts$use <- use
@@ -997,8 +1001,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
 
 SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
                    collectLL, from = 3L){
-    
-    TOL <- sqrt(list$TOL)
+    TOL <- list$TOL
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
     L <- ESTIMATE$L

@@ -217,11 +217,17 @@ Theory)}
   parameters for estimation. May be: \describe{
   \item{MAXQUAD}{maximum number of quadratures; default
   10000} \item{TOL}{EM or MH-RM convergence threshold;
-  defaults are .0001 and .001} \item{SEtol}{tolerance value
-  used to stop the MHRM estimation when \code{SE = TRUE}
-  and \code{SE.type = 'MHRM'} and \code{method = 'EM'}.
-  Lower values will take longer but may be more stable for
-  computing the information matrix. Default is .0001}
+  defaults are .0001 and .001. If \code{SE.type = 'SEM'}
+  and this value is not specified, the default is set to
+  \code{1e-6}} \item{SEtol}{tolerance value used to stop
+  the MHRM estimation when \code{SE = TRUE} and
+  \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower
+  values will take longer but may be more stable for
+  computing the information matrix. Default is .0001.
+
+  If \code{SE.type = 'SEM'}, this is the tollerance used to
+  terminate the S-EM computations for each parameter, and
+  if not specified the default is \code{sqrt(TOL)}}
   \item{NCYCLES}{maximum number of EM or MH-RM cycles;
   defaults are 500 and 2000} \item{BURNIN}{number of burn
   in cycles (stage 1) in MH-RM; default 150}

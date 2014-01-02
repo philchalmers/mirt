@@ -64,8 +64,12 @@
   class \code{"character"}, names of groups}
   \item{\code{cmods}:}{Object of class \code{"list"}, a
   list containing estimated ConfirmatoryClass models }
-  \item{\code{Call}:}{Object of class \code{"call"}, call }
-  }
+  \item{\code{condnum}:}{Object of class \code{"numeric"},
+  condition number of information matrix}
+  \item{\code{secondordertest}:}{Object of class
+  \code{"logical"}, indicate whether information matrix
+  passes second-order test} \item{\code{Call}:}{Object of
+  class \code{"call"}, call } }
 }
 
 \section{Methods}{

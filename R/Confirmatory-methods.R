@@ -13,6 +13,11 @@ setMethod(
             cat("Converged in ", x@iter, " iterations", EMquad, ". \n", sep = "")
         else
             cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")
+        if(!is.nan(x@condnum))
+            cat("Condition number of information matrix = ", x@condnum, 
+                '\nSecond-order test: model ', if(!x@secondordertest) 
+                    'is a possible saddle point (non-maximum)' else 
+                    'is a possible local maximum', '\n', sep = "")
         if(length(x@logLik) > 0){
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0,
                                                                paste(', SE = ', round(x@SElogLik,3)),

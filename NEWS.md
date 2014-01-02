@@ -2,6 +2,12 @@
 
 ## NEW FEATURES
 
+- if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = sqrt(TOL)` for each 
+  parameter to better approximate the information matrix
+
+- second-order test and condition number added to estimation objects when information matrix is
+  computed
+
 - `tables` argument can be passed to `residuals()` to return all observed and expected tables
   used in computing the LD statistics
 

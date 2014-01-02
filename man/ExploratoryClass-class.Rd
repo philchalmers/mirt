@@ -54,7 +54,11 @@
   or 'MHRM'} \item{\code{null.mod}:}{Object of class
   \code{"ExploratoryClass"}, null model}
   \item{\code{Target}:}{Object of class \code{"numeric"},
-  dummy rotation matrix} \item{\code{Call}:}{Object of
+  dummy rotation matrix} \item{\code{condnum}:}{Object of
+  class \code{"numeric"}, condition number of information
+  matrix} \item{\code{secondordertest}:}{Object of class
+  \code{"logical"}, indicate whether information matrix
+  passes second-order test} \item{\code{Call}:}{Object of
   class \code{"call"}, call } }
 }
 

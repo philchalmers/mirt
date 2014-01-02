@@ -38,6 +38,8 @@ setClass("AllModelClass",
                         method='character',
                         itemtype='character',
                         time='numeric',
+                        condnum='numeric',
+                        secondordertest='logical',
                         CFI='numeric',
                         'VIRTUAL'),
              validity = function(object) return(TRUE)
@@ -80,6 +82,9 @@ setClass("AllModelClass",
 #'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'     \item{\code{Target}:}{Object of class \code{"numeric"}, dummy rotation matrix}
+#'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
+#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'       second-order test}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #' }
 #' @section Methods:
@@ -149,6 +154,9 @@ setClass(
 #'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'     \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
 #'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
+#'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
+#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'       second-order test}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'   }
 #' @section Methods:
@@ -222,6 +230,9 @@ setClass(
 #'    \item{\code{group}:}{Object of class \code{"factor"}, group membership}
 #'    \item{\code{groupNames}:}{Object of class \code{"character"}, names of groups}
 #'    \item{\code{cmods}:}{Object of class \code{"list"}, a list containing estimated ConfirmatoryClass models }
+#'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
+#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'       second-order test}
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:
@@ -289,6 +300,9 @@ setClass(
 #'    \item{\code{cand.t.var}:}{Object of class \code{"numeric"}, parameter used to control the MH sampler for Theta}
 #'    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
 #'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
+#'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
+#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'       second-order test}
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:

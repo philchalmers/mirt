@@ -376,7 +376,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
                     DM <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SEM.SE,
                                                pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
-                                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
+                                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                            nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                            sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
@@ -388,7 +388,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     for(i in 1L:ncol(DM))
                         DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
                                           PrepList=PrepList,
-                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
+                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                       nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                       itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                       sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
@@ -399,8 +399,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 }
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
-                info <- solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM))
-                ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
+                if(is(info, 'try-error')){
+                    warning('information matrix in SEM could not be computed due to instability')
+                } else ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
             }
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
             ESTIMATE <- BL.SE(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
@@ -658,6 +660,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    itemtype=PrepList[[1L]]$itemtype,
                    information=ESTIMATE$info)
     }
+    if(length(mod@information) > 1L){        
+        mod@condnum <- norm(mod@information) * norm(solve(mod@information))
+        ev <- eigen(mod@information)$values
+        if(is.complex(ev)){
+            mod@secondordertest <- FALSE
+        } else {
+            mod@secondordertest <- all(ev > 0) || all(ev < 0)
+        }
+    } else mod@condnum <- NaN
     time <- opts$time
     mod@time <- c(TOTAL = as.numeric(proc.time()[3L] - time$start.time),
                   DATA = as.numeric(time$end.time.Data - time$start.time.Data),
