@@ -2,7 +2,7 @@
 
 ## NEW FEATURES
 
-- `tables` argument can be passed to `residuals()` to return all obeserved and expected tables
+- `tables` argument can be passed to `residuals()` to return all observed and expected tables
   used in computing the LD statistics
 
 ## BUG FIXES
@@ -148,7 +148,7 @@
 
 # Changes in mirt 0.8.0
 
-NEW FEATURES
+## NEW FEATURES
 
 - support for random effect predictors now available in `mixedmirt()`, along with a `randef()` function
   for computing MAP predictions for the random parameters

@@ -1,4 +1,18 @@
-		 Changes in mirt 1.1
+Changes in mirt 1.x
+
+NEW FEATURES
+
+  - `tables` argument can be passed to `residuals()` to return all obeserved
+  and expected tables used in computing the LD statistics
+
+BUG FIXES
+
+  - `read.mirt` crash fix for multiple group analyses objects (reported by
+  Felix Hansen)
+
+Changes in mirt 1.1
+
+NEW FEATURES
 
   - `facet_items` argument added to plot() to control whether seperate plots
   should be constructed for each item or to merge them onto a single plot
@@ -50,7 +64,7 @@ BUG FIXES
 
   - return proper object in personfit when gpcm models used
 
-		 Changes in mirt 1.0
+Changes in mirt 1.0
 
 NEW FEATURES
 
@@ -93,7 +107,7 @@ BUG FIXES
   - fix the global df values, and restrict G2 statistic when tables are
   too sparse
 
-		 Changes in mirt 0.9.0
+Changes in mirt 0.9.0
 
 NEW FEATURES
 
@@ -153,7 +167,7 @@ BUG FIXES
 
   - math fix for beta priors
 
-		 Changes in mirt 0.8.0
+Changes in mirt 0.8.0
 
 NEW FEATURES
 
@@ -211,7 +225,7 @@ BUG FIXES
   - SEM information matrix computed with more accuracy (M-step was not
   identical to original EM), and fixed when equality constrains are imposed
 
-		 Changes in mirt 0.7.0
+Changes in mirt 0.7.0
 
 NEW FEATURES
 
@@ -265,7 +279,7 @@ BUG FIXES
 
   - `response.vector` input now supports NA inputs (reported by Neil Rubens)
 
-		 Changes in mirt 0.6.0
+Changes in mirt 0.6.0
 
 NEW FEATURES
 
@@ -342,7 +356,7 @@ BUG FIXES
   by Ken Beath)
 
 
-		 Changes in mirt 0.5.0
+Changes in mirt 0.5.0
 
 
   - all dichotomous, graded rating scale, (generalized) partial credit,
@@ -384,7 +398,7 @@ BUG FIXES
   - standard errors no longer slightly positively biased when parameter
   constraints are imposed
 
-		 Changes in mirt 0.4.2
+Changes in mirt 0.4.2
 
   - item probability functions now only permit permissible values, and models
   may converge even when the log-likelihood decreases during estimation. In
@@ -419,7 +433,7 @@ BUG FIXES
   - more than one parameter can now be passed to parprior to make specifying
   identical priors more convenient
 
-		 Changes in mirt 0.4.1
+Changes in mirt 0.4.1
 
   - relative efficiency plots added to itemplot(). Works directly for
   multipleGroup analysis and for comparing different item types (e.g.,
@@ -459,7 +473,7 @@ BUG FIXES
   and guarantees consistency across methods (i.e., no more quasi-Newton
   algorithms used)
 
-		 Changes in mirt 0.4.0
+Changes in mirt 0.4.0
 
   - Added itemfit() and personfit() functions for uni and multidimensional
   models. Within itemfit empirical response curves can also be plotted for
@@ -499,7 +513,7 @@ BUG FIXES
   - General bug fixes as usual that were spawned from all the added
   features. Overall, stay frosty.
 
-		 Changes in mirt 0.3.1
+Changes in mirt 0.3.1
 
   - Individual classes now correspond to the type of methods: ExploratoryClass,
   ConfirmatoryClass, and MultipleGroupClass
@@ -516,7 +530,7 @@ BUG FIXES
   - Standard errors for mirt now automatically calculated (borrowed from
   running a tweaked MHRM run)
 
-		 Changes in mirt 0.3.0
+Changes in mirt 0.3.0
 
   - radically changed the underlying mechanisms for the estimation functions
   and in doing so have decided that polymirt() was redundant and could be
@@ -573,7 +587,7 @@ BUG FIXES
   - more accurate standard errors for MAP and ML factor scores, and specific
   factors in bfactorClass objects can now be estimated for all methods
 
-		 Changes in mirt 0.2.6-1
+Changes in mirt 0.2.6-1
 
   - dropped the ball and had lots of bug fixes this round. Future commits
   will avoid this problem by utilizing the testthat package to test code
@@ -589,7 +603,7 @@ BUG FIXES
 
   - fixed item slope models estimated in mirt() with associated standard errors
 
-		 Changes in mirt 0.2.6
+Changes in mirt 0.2.6
 
   - null model computed, allowing for model statistics such as TLI
 
@@ -605,7 +619,7 @@ BUG FIXES
 
   - coef() now has a rotate option for returning rotated IRT parameters
 
-		 Changes in mirt 0.2.5
+Changes in mirt 0.2.5
 
   - Fixed translation bug in the C++ code from bfactor() causing illegal
   vector length throw
@@ -622,7 +636,7 @@ BUG FIXES
 
   - oblique rotations return invisible factor correlation matrix
 
-		 Changes in mirt 0.2.4
+Changes in mirt 0.2.4
 
   - degrees of freedom correctly adjusted when using noncompensatory items
 
@@ -633,7 +647,7 @@ BUG FIXES
 
   - bugfix in drawThetas when noncompensatory items used
 
-		 Changes in mirt 0.2.3
+Changes in mirt 0.2.3
 
   - bugfixes for fscores, itemplot, and generic functions
 
@@ -647,14 +661,14 @@ BUG FIXES
 
   - Generic plot()'s now use lattice plots extensively
 
-		 Changes in mirt 0.2.2
+Changes in mirt 0.2.2
 
   - Ported src code into Rcpp for future tweaking.
 
   - Added better fitted() function when missing data exist (noticed by
   Erin Horn)
 
-		 Changes in mirt 0.2.1
+Changes in mirt 0.2.1
 
   - ML estimation of factor scores for mirt and bfactor
 
@@ -666,7 +680,7 @@ BUG FIXES
   - Provide better identification criteria for confmirt() (suggested by
   Hendrik Lohse)
 
-		 Changes in mirt 0.2.0
+Changes in mirt 0.2.0
 
   - parameter standard errors added for mirt() (1 factor only) and bfactor()
   models
@@ -682,10 +696,10 @@ BUG FIXES
 
   - documentation fixes with roxygenize
 
-		 Changes in mirt 0.1.20
+Changes in mirt 0.1.20
 
   - allow lower bound beta priors to vary over items (suggested by James Lee)
 
-		 Changes in mirt 0.1.6
+Changes in mirt 0.1.6
 
   - bias fix for mirt() function (noticed by Pedro Barbetta)
