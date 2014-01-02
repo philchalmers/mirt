@@ -16,7 +16,7 @@ test_that('dich', {
     expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm1, digits = 4)))
-    expect_equal(cfs, c(0.9879, 0.6442, 1.3315, 1.856, 1.6007, 2.1114, 0, NA, NA, 1, NA, NA, 1.0809, 0.7519, 1.4098, 0.808, 0.6302, 0.9857, 0, NA, NA, 1, NA, NA, 1.7061, 1.1053, 2.3069, 1.8044, 1.4146, 2.1942, 0, NA, NA, 1, NA, NA, 0.7651, 0.5038, 1.0265, 0.486, 0.3407, 0.6314, 0, NA, NA, 1, NA, NA, 0.7358, 0.4428, 1.0288, 1.8545, 1.6316, 2.0774, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA), 
+    expect_equal(cfs, c(0.9876, 0.64, 1.3351, 1.8559, 1.5987, 2.113, 0, NA, NA, 1, NA, NA, 1.0808, 0.7525, 1.4091, 0.808, 0.6299, 0.9861, 0, NA, NA, 1, NA, NA, 1.7075, 1.0922, 2.3227, 1.8052, 1.4081, 2.2023, 0, NA, NA, 1, NA, NA, 0.765, 0.5018, 1.0282, 0.486, 0.3395, 0.6325, 0, NA, NA, 1, NA, NA, 0.7357, 0.441, 1.0304, 1.8545, 1.631, 2.0779, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA), 
                  tollerance = 1e-2)    
     expect_is(modm1, 'ConfirmatoryClass')          
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'BL', verbose=FALSE)
@@ -79,9 +79,7 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(as.numeric(as.matrix(fm6)) - c(0, 1, 2, 3, 4, 5, -1.86658192945326, -1.43145812172939, -0.948768946608248, -0.413197495468693, 0.151688441471554, 0.726983431734596, 0.687274771185597, 0.683151658641026, 0.694186119529085, 0.721086634187972, 0.758750386799023, 0.800462035386804, 12, 40, 114, 205, 321, 308, 10.07773181541, 44.6534534093701, 109.776473457804, 207.75299446646, 319.192972299934, 308.546374551022), -1e-2, 1e-2))
     
     res1 <- residuals(modm1, verbose = FALSE)
-    expect_equal(as.numeric(res1), c(NA, -0.452, -0.853, 2.576, 2.393, -0.021, NA, 1.06, -0.266, 
-                                     -1.382, -0.029, 0.033, NA, -0.153, -0.003, 0.051, -0.016, -0.012, 
-                                     NA, 0, 0.049, -0.037, -0.002, 0, NA), 
+    expect_equal(as.numeric(res1), c(NA, -0.45, -0.855, 2.58, 2.396, -0.021, NA, 1.055, -0.265, -1.381, -0.029, 0.032, NA, -0.154, -0.003, 0.051, -0.016, -0.012, NA, 0, 0.049, -0.037, -0.002, 0, NA), 
                  tollerance = 1e-2)
     res2 <- residuals(modm2, verbose = FALSE)
     expect_is(res1, 'matrix')
@@ -98,8 +96,7 @@ test_that('dich', {
     expect_is(ifit, 'data.frame')
     expect_true(mirt:::closeEnough(as.numeric(ifit$Zh) - c(1.431838, 6.354917, 5.310844, 5.804449, 
                                                            0.696139), -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(as.numeric(ifit$X2) - c(15.691499, 39.888656, 23.843572, 
-                                                           69.410816,  9.509994), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(as.numeric(ifit$X2) - c(15.694581, 39.887041, 23.808112, 69.419155,  9.509922), -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(as.numeric(ifit$S_X2) - c(4.749440, 14.451071,  1.270381,
                                                              5.237400,  0.941125), -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(as.numeric(ifit$df) - c(5,5,5,6,5), -1e-4, 1e-4))
@@ -121,7 +118,7 @@ test_that('dich', {
     expect_equal(modm1@df, 20)
     modm2 <- suppressMessages(mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE))
     expect_equal(modm2@df, 19)
-    modm3 <- mirt(data, model, SE = TRUE, verbose=FALSE)
+    modm3 <- suppressMessages(mirt(data, model, SE = TRUE, verbose=FALSE))
     expect_is(modm3, 'ConfirmatoryClass')
     
     fm1 <- fscores(modm1, verbose = FALSE)

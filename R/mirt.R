@@ -385,8 +385,9 @@
 #'
 #' (mod1 <- mirt(data, 1))
 #' coef(mod1)
-#' coef(mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
-#' coef(mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
+#' (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
+#' coef(mod2)
+#' (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 #' residuals(mod1)
 #' plot(mod1) #test information function
 #' plot(mod1, type = 'trace') #trace lines
@@ -416,9 +417,9 @@
 #'
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table
-#' scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores for original data
+#' scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores
 #'
-#' #confirmatory
+#' #confirmatory (as an example, model is not identified since you need 3 items per factor)
 #' cmodel <- mirt.model('
 #'    F1 = 1,4,5
 #'    F2 = 2,3')
@@ -427,6 +428,8 @@
 #' cmod <- mirt(data, cmodel)
 #' coef(cmod)
 #' anova(cmod, mod2)
+#' #check if identified by looking at second order condition
+#' (cmod <- mirt(data, cmodel, SE = T))
 #'
 #' ###########
 #' #data from the 'ltm' package in numeric format

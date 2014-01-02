@@ -823,6 +823,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
         opts$accelerate <- FALSE
         if(is.null(technical$TOL)) technical$TOL <- 1e-6
         opts$SEtol <- ifelse(is.null(technical$SEtol), sqrt(technical$TOL), technical$SEtol)
+        if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
     opts$technical <- technical
