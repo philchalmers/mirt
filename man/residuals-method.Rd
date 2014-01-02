@@ -14,6 +14,10 @@
   Thissen, 1997) or \code{'exp'} for the expected values
   for the frequencies of every response pattern}
 
+  \item{tables}{logical; for LD restype, return the
+  observed, expected, and standarized residual tables for
+  each item combination?}
+
   \item{digits}{number of significant digits to be rounded}
 
   \item{df.p}{logical; print the degrees of freedom and
@@ -35,13 +39,14 @@
 }
 \description{
   \code{residuals(object, restype = 'LD', digits = 3, df.p
-  = FALSE, full.scores = FALSE, printvalue = NULL, verbose
-  = TRUE, ...)}
+  = FALSE, full.scores = FALSE, printvalue = NULL, tables =
+  FALSE, verbose = TRUE, ...)}
 }
 \examples{
 \dontrun{
 x <- mirt(Science, 1)
 residuals(x)
+residuals(x, tables = TRUE)
 residuals(x, restype = 'exp')
 }
 }

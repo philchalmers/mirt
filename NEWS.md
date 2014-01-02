@@ -2,7 +2,8 @@
 
 ## NEW FEATURES
 
-- 
+- `tables` argument can be passed to `residuals()` to return all obeserved and expected tables
+  used in computing the LD statistics
 
 ## BUG FIXES
 

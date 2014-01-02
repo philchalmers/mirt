@@ -312,13 +312,15 @@ setMethod(
 #' Compute model residuals
 #'
 #' \code{residuals(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
-#'                          printvalue = NULL, verbose = TRUE, ...)}
+#'                          printvalue = NULL, tables = FALSE, verbose = TRUE, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
 #' @param restype type of residuals to be displayed.
 #'   Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
 #'   expected values for the frequencies of every response pattern
+#' @param tables logical; for LD restype, return the observed, expected, and standarized residual
+#'   tables for each item combination?
 #' @param digits number of significant digits to be rounded
 #' @param df.p logical; print the degrees of freedom and p-values?
 #' @param full.scores logical; compute relavent statistics
@@ -339,13 +341,14 @@ setMethod(
 #' \dontrun{
 #' x <- mirt(Science, 1)
 #' residuals(x)
+#' residuals(x, tables = TRUE)
 #' residuals(x, restype = 'exp')
 #' }
 setMethod(
     f = "residuals",
     signature = signature(object = 'ExploratoryClass'),
     definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
-                          printvalue = NULL, verbose = TRUE, ...)
+                          printvalue = NULL, tables = FALSE, verbose = TRUE, ...)
     {
         K <- object@K
         data <- object@data
@@ -362,6 +365,8 @@ setMethod(
         df <- (object@K - 1) %o% (object@K - 1)
         diag(df) <- NA
         colnames(df) <- rownames(df) <- colnames(res)
+        itemnames <- colnames(data)
+        listtabs <- list()
         if(restype == 'LD'){
             for(i in 1:J){
                 for(j in 1:J){
@@ -378,9 +383,14 @@ setMethod(
                         res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
                         res[i,j] <- sign(res[j,i]) * sqrt( abs(res[j,i]) / (N*min(c(K[i],K[j]) - 1L)))
                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
+                        if(tables){
+                            tmp <- paste0(itemnames[i], '_', itemnames[j])
+                            listtabs[[tmp]] <- list(Obs=tab, Exp=Etab, std_res=(tab-Etab)/sqrt(Etab))
+                        }
                     }
                 }
             }
+            if(tables) return(listtabs)
             if(df.p){
                 cat("Degrees of freedom (lower triangle) and p-values:\n\n")
                 print(round(df, digits))
