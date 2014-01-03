@@ -227,7 +227,7 @@ Theory)}
 
   If \code{SE.type = 'SEM'}, this is the tollerance used to
   terminate the S-EM computations for each parameter, and
-  if not specified the default is \code{sqrt(TOL)}}
+  if not specified the default is \code{.001}}
   \item{NCYCLES}{maximum number of EM or MH-RM cycles;
   defaults are 500 and 2000} \item{BURNIN}{number of burn
   in cycles (stage 1) in MH-RM; default 150}

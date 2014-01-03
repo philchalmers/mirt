@@ -379,7 +379,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                            nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                                           sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                                           sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                            EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
                                                Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from,
@@ -391,7 +391,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                       nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                       itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                                      sitems=sitems, specific=oldmodel, NULL.MODEL=opts$NULL.MODEL,
+                                                      sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                                       nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                       EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
                                           Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from,
@@ -660,8 +660,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    itemtype=PrepList[[1L]]$itemtype,
                    information=ESTIMATE$info)
     }
-    if(length(mod@information) > 1L){        
-        mod@condnum <- norm(mod@information) * norm(solve(mod@information))
+    if(length(mod@information) > 1L){
+        mod@condnum <- norm(mod@information, type='2') * norm(solve(mod@information), type='2')
         ev <- eigen(mod@information)$values
         if(is.complex(ev)){
             mod@secondordertest <- FALSE

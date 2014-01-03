@@ -822,8 +822,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- FALSE
         if(is.null(technical$TOL)) technical$TOL <- 1e-6
-        opts$SEtol <- ifelse(is.null(technical$SEtol), sqrt(technical$TOL), technical$SEtol)
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
+        opts$SEtol <- ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     }
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
     opts$technical <- technical
@@ -1007,11 +1007,13 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     J <- length(itemloc) - 1L
     L <- ESTIMATE$L
     MSTEPTOL <- list$MSTEPTOL
+    sitems <- list$sitems
+    specific <- list$specific
     ngroups <- ESTIMATE$ngroups
     NCYCLES <- ESTIMATE$cycles
     if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history')
     BFACTOR <- list$BFACTOR
-    gitemtrace <- gstructgrouppars <- prior <- Prior <- rlist <- vector('list', ngroups)
+    gitemtrace <- gstructgrouppars <- prior <- Prior <- Priorbetween <- rlist <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars
     redun_constr <- ESTIMATE$redun_constr
     EMhistory <- ESTIMATE$EMhistory
@@ -1030,6 +1032,11 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         gTheta[[g]] <- Theta
         if(length(prodlist) > 0L)
             gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
+        if(BFACTOR){
+            Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
+            prior[[g]] <- dnorm(theta, 0, 1)
+            prior[[g]] <- prior[[g]]/sum(prior[[g]])
+        }
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
     }
 
@@ -1047,9 +1054,12 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             for(g in 1L:ngroups){
                 gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
                 if(BFACTOR){
-                    prior[[g]] <- dnorm(theta, 0, 1)
-                    prior[[g]] <- prior[[g]]/sum(prior[[g]])
-                    Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
+                    sel <- 1L:(nfact-ncol(sitems))
+                    Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
+                                                          gstructgrouppars[[g]]$gmeans[sel],
+                                                          gstructgrouppars[[g]]$gcov[sel,sel,drop=FALSE])
+                    Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
+                    Prior[[g]] <- apply(expand.grid(Priorbetween[[g]], prior[[g]]), 1, prod)
                     next
                 }
                 Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
@@ -1062,12 +1072,11 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
                                             Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
-                                            specific=list$specific, sitems=list$sitems,
+                                            Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
                                             itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
             } else {
-                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc,
-                                         NO.CUSTOM=NO.CUSTOM)
+                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, NO.CUSTOM=NO.CUSTOM,
+                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc)
             }
         }
         for(g in 1L:ngroups){
@@ -1251,7 +1260,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, simple=TRUE){
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     colnames(Igrad) <- rownames(Igrad) <- names(ESTIMATE$correction)
     if(simple){
-        info <- Igrad * nrow(tabdata) / N    
+        info <- Igrad * nrow(tabdata) / N
     } else {
         collectgrad <- collectgrad[, ESTIMATE$estindex_unique]
         info <- N * t(collectgrad) %*% diag(1/collectL) %*% collectgrad

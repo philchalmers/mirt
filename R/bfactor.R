@@ -213,7 +213,7 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
     if(is.null(group)) group <- rep('all', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group,
                       method = 'EM', verbose=verbose,
-                      BFACTOR = TRUE, SE=SE, ...)
+                      BFACTOR = TRUE, SE=SE, SE.type=SE.type, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

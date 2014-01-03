@@ -2,7 +2,7 @@
 
 ## NEW FEATURES
 
-- if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = sqrt(TOL)` for each 
+- if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = .001` for each 
   parameter to better approximate the information matrix
 
 - second-order test and condition number added to estimation objects when information matrix is
