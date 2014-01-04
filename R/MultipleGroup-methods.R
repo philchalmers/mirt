@@ -46,47 +46,13 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'MultipleGroupClass',
-    definition = function(object, CI = .95, digits = 3, rawug = FALSE, verbose = TRUE, ...)
+    definition = function(object, ...)
     {
-        if(CI >= 1 || CI <= 0)
-            stop('CI must be between 0 and 1')
-        z <- abs(qnorm((1 - CI)/2))
-        SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         ngroups <- length(object@cmods)
         allPars <- vector('list', ngroups)
         names(allPars) <- object@groupNames
-        itemnames <- colnames(object@data)
-        J <- length(itemnames)
-        for(g in 1:ngroups){
-            allPars[[g]] <- list()
-            if(length(object@cmods[[1]]@pars[[1]]@SEpar) > 0){
-                for(i in 1:(J+1)){
-                    allPars[[g]][[i]] <- round(
-                        matrix(c(object@cmods[[g]]@pars[[i]]@par,
-                                 object@cmods[[g]]@pars[[i]]@par - z*object@cmods[[g]]@pars[[i]]@SEpar,
-                                 object@cmods[[g]]@pars[[i]]@par + z*object@cmods[[g]]@pars[[i]]@SEpar),
-                               3, byrow = TRUE), digits)
-                    rownames(allPars[[g]][[i]]) <- c('par', SEnames)
-                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[1L]]@pars[[i]]@parnum)
-                }
-            } else {
-                for(i in 1:(J+1)){
-                    allPars[[g]][[i]] <- matrix(round(object@cmods[[g]]@pars[[i]]@par, digits), 1L)
-                    colnames(allPars[[g]][[i]]) <- names(object@cmods[[1L]]@pars[[i]]@parnum)
-                    rownames(allPars[[g]][[i]]) <- 'par'
-
-                }
-            }
-            names(allPars[[g]]) <- c(itemnames, 'GroupPars')
-        }
-        if(!rawug){
-            for(g in 1:ngroups){
-                allPars[[g]] <- lapply(allPars[[g]], function(x, digits){
-                    x[ , colnames(x) %in% c('g', 'u')] <- round(antilogit(x[ , colnames(x) %in% c('g', 'u')]), digits)
-                    x
-                }, digits=digits)
-            }
-        }
+        for(g in 1:ngroups)
+            allPars[[g]] <- coef(object@cmods[[g]], ...)
         return(allPars)
     }
 )
