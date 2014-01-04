@@ -15,6 +15,8 @@
 
 - `read.mirt` crash fix for multiple group analyses objects (reported by Felix Hansen)
 
+- updated math for `SE.type = 'crossprod'`
+
 # Changes in mirt 1.1
 
 ## NEW FEATURES
