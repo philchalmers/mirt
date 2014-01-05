@@ -64,10 +64,6 @@ test_that('item and group predictors', {
                        itemdesign = itemdesign, verbose = FALSE, draws = 10))
     expect_is(LLTM2, 'MixedClass')
     expect_equal(LLTM@df - LLTM2@df, 1)
-    expect_equal(LLTM@logLik - LLTM2@logLik, 1.622451, tolerance = 1e-2)
-    cfs <- na.omit(as.numeric(do.call(c, coef(LLTM2, digits=4))))[1:20]
-    expect_equal(cfs, c(-0.0638, -1.7593, 1.6318, 0.2909, -1.7351, 2.317, 1.5022, -3.3885, 6.3929, 0.0027, -6.4064, 6.4118, 1, 0, 0, 1, -0.0638, -1.7593, 1.6318, 0.2909),
-                 tolerance = 1e-2)
 })
 
 test_that('polytomous', {
