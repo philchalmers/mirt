@@ -356,8 +356,7 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
         Mstep.time <- Mstep.time + proc.time()[3L] - start
     } ###END BIG LOOP
     if(verbose) cat('\r\n')
-    info <- Phi - outer(phi,phi)
-    diag(info) <- abs(diag(info)) #diag of latent variances neg sometimes, why?
+    info <- Phi + outer(phi,phi)
     #Reload final pars list
     if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM){
         message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
