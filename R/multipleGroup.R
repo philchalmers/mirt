@@ -58,6 +58,8 @@
 #'   and \code{'score'} for the expected total score plot
 #' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
 #'   see \code{mirt} for details
+#' @param GenRandomPars logical; generate random starting values prior to optimization instead of
+#'          using the fixed internal starting values?
 #' @param key see \code{\link{mirt}} for details
 #' @param itemtype see \code{\link{mirt}} for details
 #' @param constrain see \code{\link{mirt}} for details
@@ -262,7 +264,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
                           draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
                           key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE,
-                          verbose = TRUE, ...)
+                          GenRandomPars = FALSE, verbose = TRUE, ...)
 {
     Call <- match.call()
     if(length(model) > 1L)
@@ -284,7 +286,8 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,
-                      SE.type = SE.type, key=key, accelerate=accelerate, draws=draws, ...)
+                      SE.type = SE.type, key=key, accelerate=accelerate, draws=draws, 
+                      GenRandomPars=GenRandomPars, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

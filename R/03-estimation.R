@@ -1,7 +1,7 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
-                       nominal.highlow = NULL, ...)
+                       nominal.highlow = NULL, GenRandomPars = FALSE, ...)
 {
     start.time=proc.time()[3L]
     if(missing(data) || is.null(nrow(data))) stop('data argument is required')
@@ -139,12 +139,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames)
-    if(!is.null(opts$technical$GenRandomPars)){
-        if(opts$technical$GenRandomPars){
-            for(g in 1L:Data$ngroups)
-                for(i in 1L:length(PrepList[[g]]$pars))
-                    PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
-        }
+    if(GenRandomPars){
+        for(g in 1L:Data$ngroups)
+            for(i in 1L:length(PrepList[[g]]$pars))
+                PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
     }
     RETURNVALUES <- FALSE
     if(!is.null(pars)){

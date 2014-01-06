@@ -60,12 +60,12 @@ test_that('poly', {
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
                                        abs(c(-2.5689536, -1.8493210, -0.6202252, -1.1195381, -2.4169928, -0.7386485,  2.3431580,  0.7169414, -0.2393583, -0.4576444,  2.2886770,  1.5675075)),
-                                   -1e-4, 1e-4))
+                                   -1e-2, 1e-2))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
     fm4 <- fscores(modp4, verbose = FALSE)
     expect_is(fm4, 'matrix')
-    expect_true(mirt:::closeEnough(fm4[1:6,'F1'] - c(-2.7018396, -1.4440938, -0.7925279, -0.5404553, -2.5218059, -1.1443389), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fm4[1:6,'F1'] - c(-2.7014033, -1.4432191, -0.7929087, -0.5390761, -2.5216331, -1.1445815), -1e-4, 1e-4))
     fm5 <- fscores(modp5, verbose = FALSE)
     expect_is(fm5, 'matrix')
     expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.6953386, -1.4445425, -0.7365539,

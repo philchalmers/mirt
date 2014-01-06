@@ -16,27 +16,30 @@ test_that('dich', {
     expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm1, digits = 4)))
+    expect_equal(modm1@condnum, 29.02193, tolerance = 1e-4)
     expect_equal(cfs, c(0.9876, 0.64, 1.3351, 1.8559, 1.5987, 2.113, 0, NA, NA, 1, NA, NA, 1.0808, 0.7525, 1.4091, 0.808, 0.6299, 0.9861, 0, NA, NA, 1, NA, NA, 1.7075, 1.0922, 2.3227, 1.8052, 1.4081, 2.2023, 0, NA, NA, 1, NA, NA, 0.765, 0.5018, 1.0282, 0.486, 0.3395, 0.6325, 0, NA, NA, 1, NA, NA, 0.7357, 0.441, 1.0304, 1.8545, 1.631, 2.0779, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm1, 'ConfirmatoryClass')
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'BL', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2, digits=4)))
+    expect_equal(modm2@condnum, 30.23925, tolerance = 1e-4)
     expect_equal(cfs, c(0.988, 0.6406, 1.3354, 1.8561, 1.5984, 2.1138, 0, NA, NA, 1, NA, NA, 1.081, 0.7501, 1.4119, 0.808, 0.6291, 0.9869, 0, NA, NA, 1, NA, NA, 1.706, 1.0779, 2.334, 1.8043, 1.4036, 2.205, 0, NA, NA, 1, NA, NA, 0.7651, 0.5022, 1.028, 0.486, 0.3392, 0.6328, 0, NA, NA, 1, NA, NA, 0.7358, 0.4395, 1.032, 1.8545, 1.6302, 2.0787, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm2, 'ConfirmatoryClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     expect_equal(modm3@df, 25)
-    modm3 <- suppressWarnings(mirt(data, 1, itemtype = 'Rasch', SE = TRUE, technical=list(TOL=1e-6), verbose=FALSE))
+    modm3 <- suppressWarnings(mirt(data, 1, itemtype = 'Rasch', SE = TRUE, verbose=FALSE))
     expect_is(modm3, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm3)))
     expect_equal(cfs, c(1, NA, NA, 1.868, 1.68, 2.057, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.791, 0.634, 0.948, 0, NA, NA, 1, NA, NA, 1, NA, NA, 1.461, 1.287, 1.635, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.522, 0.369, 0.674, 0, NA, NA, 1, NA, NA, 1, NA, NA, 1.993, 1.8, 2.186, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1.023, 0.354, 1.692),
                  tolerance = 1e-2)
     model <- mirt.model('F = 1-5
                         CONSTRAIN = (1-5, a1)', quiet=TRUE)
-    modm4 <- mirt(data, model, verbose = FALSE)
+    modm4 <- mirt(data, model, verbose = FALSE, SE=T, SE.type = 'crossprod')
+    expect_equal(modm4@condnum, 22.14881, tolerance = 1e-4)
     cfs <- as.numeric(do.call(c, coef(modm4)))
-    expect_equal(cfs, c(1.011, 1.868, 0, 1, 1.011, 0.791, 0, 1, 1.011, 1.461, 0, 1, 1.011, 0.521, 0, 1, 1.011, 1.993, 0, 1, 0, 1),
+    expect_equal(cfs, c(1.01, 0.378, 1.643, 1.868, 1.669, 2.066, 0, NA, NA, 1, NA, NA, 1.01, 0.378, 1.643, 0.791, 0.631, 0.951, 0, NA, NA, 1, NA, NA, 1.01, 0.378, 1.643, 1.461, 1.277, 1.644, 0, NA, NA, 1, NA, NA, 1.01, 0.378, 1.643, 0.521, 0.367, 0.676, 0, NA, NA, 1, NA, NA, 1.01, 0.378, 1.643, 1.993, 1.793, 2.193, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     svalues <- mirt(data, 1, pars = 'values', verbose=FALSE)
     svalues[22, 'value'] <- 2
@@ -47,7 +50,7 @@ test_that('dich', {
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(7.816, 10.923, 0.134, 0.893, 14.116, 3.414, 0.337, 0.875, 9.987, 5.625, 0.369, 0.933, 3.841, 4.099, 0.127, 0.703, 1.68, 3.267, 0.155, 0.91, 0, 1), tolerance = 1e-2)
+    expect_equal(cfs, c(8.348, 11.635, 0.135, 0.893, 16.264, 3.85, 0.338, 0.877, 10.558, 5.953, 0.369, 0.933, 3.801, 4.059, 0.127, 0.703, 1.677, 3.265, 0.154, 0.91, 0, 1), tolerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 21)

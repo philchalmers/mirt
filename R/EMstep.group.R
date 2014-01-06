@@ -6,7 +6,6 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
         stop('empirical histogram only available for unidimensional models')
     NCYCLES <- list$NCYCLES
     TOL <- list$TOL
-    MSTEPTOL <- list$MSTEPTOL
     BFACTOR <- list$BFACTOR
     itemloc <- list$itemloc
     ngroups <- length(pars)
@@ -276,7 +275,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, NO.CUSTOM){
     p <- longpars[est]
     opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
-                     control=list(maxit=ifelse(cycle > 10L, 10L, 5L), fnscale = -1L),
+                     control=list(maxit=ifelse(cycle > 10L, 25L, 10L), fnscale = -1L),
                      DERIV=DERIV, rlist=rlist, NO.CUSTOM=NO.CUSTOM,
                      est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                      PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,

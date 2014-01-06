@@ -9,9 +9,9 @@ Theory)}
     calcNull = TRUE, draws = 5000, rotate = "oblimin",
     Target = NaN, quadpts = NULL, grsm.block = NULL,
     rsm.block = NULL, key = NULL, nominal.highlow = NULL,
-    large = FALSE, accelerate = TRUE,
-    empiricalhist = FALSE, verbose = TRUE,
-    technical = list(), ...)
+    large = FALSE, GenRandomPars = FALSE,
+    accelerate = TRUE, empiricalhist = FALSE,
+    verbose = TRUE, technical = list(), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -210,17 +210,22 @@ Theory)}
   the log-likelihood for the MH-RM algorithm. Default is
   5000}
 
+  \item{GenRandomPars}{logical; generate random starting
+  values prior to optimization instead of using the fixed
+  internal starting values?}
+
   \item{verbose}{logical; print observed log-likelihood
   value at each iteration?}
 
   \item{technical}{a list containing lower level technical
   parameters for estimation. May be: \describe{
-  \item{MAXQUAD}{maximum number of quadratures; default
-  10000} \item{TOL}{EM or MH-RM convergence threshold;
-  defaults are .0001 and .001. If \code{SE.type = 'SEM'}
-  and this value is not specified, the default is set to
-  \code{1e-6}} \item{SEtol}{tolerance value used to stop
-  the MHRM estimation when \code{SE = TRUE} and
+  \item{MAXQUAD}{maximum number of quadratures, which you
+  can increase if you have more than 4GB or RAM on your PC;
+  default 10000} \item{TOL}{EM or MH-RM convergence
+  threshold; defaults are .0001 and .001. If \code{SE.type
+  = 'SEM'} and this value is not specified, the default is
+  set to \code{1e-6}} \item{SEtol}{tolerance value used to
+  stop the MHRM estimation when \code{SE = TRUE} and
   \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower
   values will take longer but may be more stable for
   computing the information matrix. Default is .0001.
@@ -243,12 +248,9 @@ Theory)}
   estimation (such as to obtain factor scores), and
   requires that the input data all have 0 as the lowest
   category. The format is the same as the \code{mod@K} slot
-  in all converged models} \item{GenRandomPars}{logical;
-  generate random starting values prior to optimization
-  instead of using the fixed internal starting values?}
-  \item{customPriorFun}{a custom function used to determine
-  the normalized density for integration in the EM
-  algorithm. Must be of the form
+  in all converged models} \item{customPriorFun}{a custom
+  function used to determine the normalized density for
+  integration in the EM algorithm. Must be of the form
   \code{function(Theta){...}}, and return a numeric vector
   with the same length as number of rows in \code{Theta}}
   }}
@@ -740,7 +742,7 @@ a <- matrix(rlnorm(50, .2, .2))
 d <- matrix(rnorm(50))
 ThetaNormal <- matrix(rnorm(2000))
 ThetaBimodal <- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
-ThetaSkew <- scale(matrix(rchisq(2000, 5))) #positive skew
+ThetaSkew <- scale(matrix(rchisq(2000, 3))) #positive skew
 datNormal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaNormal)
 datBimodal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaBimodal)
 datSkew <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaSkew)

@@ -9,7 +9,7 @@
     draws = 5000, quadpts = NULL, grsm.block = NULL,
     rsm.block = NULL, key = NULL, technical = list(),
     accelerate = TRUE, empiricalhist = FALSE,
-    verbose = TRUE, ...)
+    GenRandomPars = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -90,6 +90,10 @@
   \item{empiricalhist}{logical; estimate prior distribution
   using an empirical histogram approach.  see \code{mirt}
   for details}
+
+  \item{GenRandomPars}{logical; generate random starting
+  values prior to optimization instead of using the fixed
+  internal starting values?}
 
   \item{key}{see \code{\link{mirt}} for details}
 
