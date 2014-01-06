@@ -353,6 +353,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             collectLL <- as.numeric(ESTIMATE$collectLL)
             collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
             from <- min(which(collectLL >= .9)) + 1L
+            to <- min(which(collectLL >= (1 - opts$SEtol/10))) + 1L
             dontrun <- FALSE
             if(ESTIMATE$cycles <= 5L){
                 dontrun <- TRUE
@@ -374,7 +375,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
                 if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-                    DM <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SEM.SE,
+                    DM <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SE.SEM,
                                                pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
                                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                            nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
@@ -382,11 +383,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                            sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                            EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
-                                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from,
+                                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                                                DERIV=DERIV))
                 } else {
                     for(i in 1L:ncol(DM))
-                        DM[i, ] <- SEM.SE(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
+                        DM[i, ] <- SE.SEM(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
                                           PrepList=PrepList,
                                           list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                       nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
@@ -394,7 +395,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                       sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                                       nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                       EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
-                                          Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from,
+                                          Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                                           DERIV=DERIV)
                 }
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,

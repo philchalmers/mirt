@@ -1000,8 +1000,8 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     return(ESTIMATE)
 }
 
-SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
-                   collectLL, from = 3L){
+SE.SEM <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
+                   collectLL, from, to){
     TOL <- list$TOL
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -1028,6 +1028,8 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     gTheta <- vector('list', ngroups)
     ANY.PRIOR <- rep(FALSE, ngroups)
     NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
+    converged <- logical(sum(estpars & !redun_constr))
+    rijfull <- rep(NA, length(converged))
     for(g in 1L:ngroups){
         gTheta[[g]] <- Theta
         if(length(prodlist) > 0L)
@@ -1040,7 +1042,7 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
     }
 
-    for (cycles in from:NCYCLES){
+    for (cycles in from:to){
 
         longpars <- MLestimates
         longpars[estindex] <- EMhistory[cycles, estindex]
@@ -1091,13 +1093,19 @@ SEM.SE <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
                           constrain=constrain, cycle=cycles, DERIV=DERIV)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
-        sign <- sign(denom)
-        if(sign == 0) sign <- 1
-        if(abs(denom) < 1e-10) denom <- 1e-10 * sign
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
-        if(all(abs(rij - rijlast) < TOL)) break
+        diff <- abs(rij - rijlast) < TOL
+        converged <- diff | converged
+        which <- is.na(rijfull) & converged
+        rijfull[which] <- rij[which]
+        if(all(!is.na(rijfull))) break
     } #END EM
-    return(rij)
+    if(cycles == to){
+        warning(sum(is.na(rijfull)), ' element(s) in the S-EM computation for row ',
+                which(estindex), ' did not converge')
+        rijfull[is.na(rijfull)] <- rij[is.na(rijfull)]
+    }
+    return(rijfull)
 }
 
 make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
