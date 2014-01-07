@@ -126,7 +126,8 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     inv.Eta <- ginv(Eta)
     pars <- obj@pars
     quadpts <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
-    Theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+    theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+    Theta <- thetaComb(theta, obj@nfact)
     gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
     Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
                                    gstructgrouppars$gcov)
