@@ -104,7 +104,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
                     for(k2 in 1L:(K[j]-1L)){
                         loc1 <- itemloc[i] + k1
                         loc2 <- itemloc[j] + k2
-                        T[ind, ] <- as.numeric(tabdata[, loc1] & tabdata[, loc2])
+                        T[ind, ] <- as.integer(tabdata[, loc1] & tabdata[, loc2])
                         ind <- ind + 1L
                     }
                 }
@@ -125,17 +125,21 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     T.p_theta <- T %*% p_theta
     inv.Eta <- ginv(Eta)
     pars <- obj@pars
-    quadpts <- ceiling(40/(obj@nfact^1.5))
-    theta <- seq(-4, 4, length.out = quadpts)
-    Theta <- thetaComb(theta, obj@nfact)
+    quadpts <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+    Theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
     gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
     Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
                                    gstructgrouppars$gcov)
     itemloc <- obj@itemloc
     Prior <- Prior/sum(Prior)
-    delta <- NULL
+    whichpar <- integer(nitems)
+    for(i in 1L:nitems)
+        whichpar[i] <- sum(pars[[i]]@est)
+    npick <- sum(whichpar)
+    whichpar <- c(0L, cumsum(whichpar)) + 1L
+    delta <- matrix(NA, nrow(tabdata), npick, byrow = TRUE)
+    DX <- rep(NA, npick)
     for(pat in 1L:nrow(tabdata)){
-        DX <- c()
         rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
                             Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE)
         for(i in 1L:nitems){
@@ -143,9 +147,8 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
             pars[[i]]@dat <- rlist$r1[, tmp]
             pars[[i]]@itemtrace <- rlist$itemtrace[, tmp]
             dx <- Deriv(pars[[i]], Theta=Theta, EM = TRUE, estHess=FALSE)$grad
-            DX <- c(DX, dx[pars[[i]]@est])
+            DX[whichpar[i]:(whichpar[i+1L]-1L)] <- dx[pars[[i]]@est]
         }
-        if(is.null(delta)) delta <- matrix(NA, nrow(tabdata), length(DX), byrow = TRUE)
         delta[pat, ] <- DX
     }
     delta2 <- T %*% delta

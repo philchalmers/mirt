@@ -67,10 +67,9 @@ setMethod(
             }
             itemtrace <- computeItemtrace(pars=pars, Theta=theta, itemloc=itemloc, offterm=ot,
                                           NO.CUSTOM=NO.CUSTOM)
-            return(exp(rowSums(log(itemtrace)*fulldata)))
+            return(rowSums(log(itemtrace)*fulldata))
         }
         pars <- object@pars
-	    tol <- .Machine$double.eps
         fulldata <- object@fulldata
         prodlist <- object@prodlist
         itemloc <- object@itemloc
@@ -90,6 +89,7 @@ setMethod(
         } else for(draw in 1L:draws)
             LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist, NO.CUSTOM=NO.CUSTOM,
                                   fulldata=fulldata, object=object, J=J, random=object@random, ot=ot)
+        LL <- exp(LL)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)
         logLik <- sum(log(rwmeans))

@@ -49,26 +49,7 @@ boot.mirt <- function(x, R = 100, ...){
         if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
         return(longpars)
     }
-    loadSE <- function(pars, SEs, nfact, MG, explor){
-        ind1 <- 1L
-        if(MG){
-            for(g in 1L:length(pars)){
-                for(i in 1L:length(pars[[g]]@pars)){
-                    ind2 <- ind1 + length(pars[[g]]@pars[[i]]@par) - 1L
-                    pars[[g]]@pars[[i]]@SEpar <- SEs[ind1:ind2]
-                    ind1 <- ind2 + 1L
-                }
-            }
-        } else {
-            for(i in 1L:length(x@pars)){
-                ind2 <- ind1 + length(pars[[i]]@par) - 1L
-                pars[[i]]@SEpar <- SEs[ind1:ind2]
-                if(explor) pars[[i]]@SEpar[1L:nfact] <- NA
-                ind1 <- ind2 + 1L
-            }
-        }
-        return(pars)
-    }
+    
     if(is(x, 'MixedClass'))
         stop('Bootstapped standard errors not supported for MixedClass objects')
     return.boot <- TRUE
@@ -92,17 +73,9 @@ boot.mirt <- function(x, R = 100, ...){
     npars <- length(longpars)
     boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
                   parprior=parprior, model=model, itemtype=itemtype, group=group, ...)
-    if(return.boot){
-        if(explor) message('Note: bootstrapped standard errors for slope parameters for exploratory
-                           models are not meaningful.')
-        return(boots)
-    }
-    ret@information <- matrix(0)
-    SEs <- apply(boots$t,2, sd)
-    SEs[SEs == 0] <- NA
-    retpars <- loadSE(pars=pars, SEs=SEs, nfact=x@nfact, MG=MG, explor=explor)
-    if(MG) ret@cmods <- retpars else ret@pars <- retpars
-    return(ret)
+    if(explor) message('Note: bootstrapped standard errors for slope parameters for exploratory
+                       models are not meaningful.')
+    return(boots)
 }
 
 
