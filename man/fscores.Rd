@@ -4,9 +4,8 @@
 \usage{
   fscores(object, rotate = "", full.scores = FALSE,
     method = "EAP", quadpts = NULL,
-    response.pattern = NULL, degrees = NULL,
-    returnER = FALSE, mean = NULL, cov = NULL,
-    verbose = TRUE, scores.only = FALSE)
+    response.pattern = NULL, returnER = FALSE, mean = NULL,
+    cov = NULL, verbose = TRUE, scores.only = FALSE)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -40,10 +39,6 @@
   \item{cov}{a custom matrix of the latent variable
   covariance matrix. If NULL, the default for 'group'
   values from the computed mirt object will be used}
-
-  \item{degrees}{the degrees argument to be passed to
-  \code{\link{iteminfo}}, only necessary for
-  multidimensional models when \code{method = 'WLE'}}
 
   \item{response.pattern}{an optional argument used to
   calculate the factor scores and standard errors for a

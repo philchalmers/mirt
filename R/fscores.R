@@ -26,8 +26,6 @@
 #' computed mirt object will be used
 #' @param cov a custom matrix of the latent variable covariance matrix. If NULL, the default for 'group' values
 #' from the computed mirt object will be used
-#' @param degrees the degrees argument to be passed to \code{\link{iteminfo}}, only necessary for
-#' multidimensional models when \code{method = 'WLE'}
 #' @param response.pattern an optional argument used to calculate the factor scores and standard errors
 #' for a given response vector or matrix
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
@@ -74,12 +72,12 @@
 #'
 #'   }
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                    quadpts = NULL, response.pattern = NULL, degrees = NULL,
+                    quadpts = NULL, response.pattern = NULL, 
                     returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = FALSE)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
-                            quadpts=quadpts, response.pattern=response.pattern, degrees=degrees,
+                            quadpts=quadpts, response.pattern=response.pattern, 
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             scores.only=scores.only)
     ret

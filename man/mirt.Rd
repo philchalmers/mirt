@@ -253,7 +253,10 @@ Theory)}
   integration in the EM algorithm. Must be of the form
   \code{function(Theta){...}}, and return a numeric vector
   with the same length as number of rows in \code{Theta}}
-  }}
+  \item{customTheta}{a custom \code{Theta} grid, in matrix
+  form, used for integration.  If not defined, the grid is
+  determined internally based on the number of
+  \code{quadpts}} }}
 
   \item{...}{additional arguments to be passed}
 }

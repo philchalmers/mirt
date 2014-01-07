@@ -280,6 +280,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 Theta <- thetaComb(theta, nfact)
             } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.')
         }
+        if(!is.null(opts$technical$customTheta)){
+            Theta <- opts$technical$customTheta
+            if(!is.matrix(Theta)) stop('customTheta input must be a matrix')
+            opts$quadpts <- nrow(Theta)
+        }
         ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
                              list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                          nfactNames=PrepList[[1L]]$nfactNames, theta=theta, EH=opts$empiricalhist,

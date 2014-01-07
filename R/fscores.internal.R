@@ -2,7 +2,7 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                          quadpts = NULL, response.pattern = NULL, degrees = NULL,
+                          quadpts = NULL, response.pattern = NULL, 
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
 	    #local functions for apply
@@ -26,14 +26,14 @@ setMethod(
 	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, degrees){
+	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
 	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, degrees=degrees))
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
             TI <- 0
             for(i in 1L:(length(itemloc)-1L))
-                TI <- TI + iteminfo(pars[[i]], Theta=estimate$estimate, degrees=degrees)
+                TI <- TI + iteminfo(pars[[i]], Theta=estimate$estimate)
 	        SEest <- 1 / sqrt(TI)
 	        return(c(estimate$estimate, SEest))
 	    }
@@ -60,7 +60,7 @@ setMethod(
             newmod <- mirt(response.pattern, nfact, itemtype = object@itemtype, pars=sv, calcNull=FALSE,
                            technical=list(customK=object@K))
             ret <- fscores(newmod, rotate=rotate, full.scores=full.scores, scores.only=scores.only,
-                           method=method, quadpts=quadpts, verbose=FALSE, degrees=degrees,
+                           method=method, quadpts=quadpts, verbose=FALSE,
                            response.pattern=NULL)
             if(!scores.only || !full.scores)
                 ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
@@ -155,15 +155,16 @@ setMethod(
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		}
         if(method == 'WLE'){
+            if(nfact > 1L)
+                stop('WLE method only supported for unidimensional models')
             itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
             if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
                 tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, WLE,
                                             scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc,
-                                            gp=gp, prodlist=prodlist, degrees=degrees))
+                                            gp=gp, prodlist=prodlist))
             } else {
                 tmp <- t(apply(matrix(1:nrow(scores)), 1, WLE, scores=scores, pars=pars,
-                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               degrees=degrees))
+                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
             }
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
@@ -213,12 +214,12 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-	                      quadpts = NULL, response.pattern = NULL, degrees = NULL,
+	                      quadpts = NULL, response.pattern = NULL, 
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
-                       response.pattern=response.pattern, degrees=degrees, returnER=returnER, verbose=verbose,
+                       response.pattern=response.pattern, returnER=returnER, verbose=verbose,
                        mean=gmean, cov=gcov, scores.only=scores.only)
         return(ret)
 	}
@@ -229,7 +230,7 @@ setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                          quadpts = NULL, response.pattern = NULL, degrees = NULL,
+                          quadpts = NULL, response.pattern = NULL, 
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
     {
         cmods <- object@cmods
@@ -239,7 +240,7 @@ setMethod(
         ret <- vector('list', length(cmods))
         for(g in 1L:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
-                           quadpts=quadpts, degrees=degrees, returnER=returnER, verbose=verbose,
+                           quadpts=quadpts, returnER=returnER, verbose=verbose,
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=scores.only)
         names(ret) <- object@groupNames
         if(full.scores){
@@ -276,7 +277,7 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
     L
 }
 
-gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
+gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist){
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
     if(length(prodlist) > 0L)
@@ -301,7 +302,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, degrees){
             d2P[[k]][ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- d2Pitem
             dW[k] <- dW[k] + sum(dPitem * d2Pitem / itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)])
         }
-        I <- I + iteminfo(x=pars[[i]], Theta=Theta, degrees=degrees)
+        I <- I + iteminfo(x=pars[[i]], Theta=Theta)
     }
     dW <- 1/(2*I^2) * dW
     for(i in 1L:nfact)
