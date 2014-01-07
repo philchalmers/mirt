@@ -226,7 +226,10 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))
     if(is.null(itemdesign)){
         itemdesign <- data.frame(items = factor(1L:ncol(data)))
-    } else itemdesign$items <- factor(1L:ncol(data))
+    } else {
+        if(!is.null(itemdesign$items)) stop('itemdesign internally reserves the predictor name \'items\'. Please Change ')
+        itemdesign$items <- factor(1L:ncol(data))
+    }
     if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
         stop('Predictor variable inputs must be data.frame objects')
     dropcases <- which(rowSums(is.na(covdata)) != 0)
