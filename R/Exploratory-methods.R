@@ -172,8 +172,8 @@ setMethod(
 
 #' Extract raw coefs from model object
 #'
-#' \code{coef(object, CI = .95, rotate = '', Target = NULL, digits = 3, IRTpars = FALSE,
-#'    rawug = FALSE, verbose = TRUE, ...)}
+#' \code{coef(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3, 
+#'    IRTpars = FALSE, rawug = FALSE, verbose = TRUE, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -186,6 +186,7 @@ setMethod(
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
+#' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded
 #' @param verbose logical; allow information to be printed to the console?
 #' @param rawug logical; return the untranformed internal g and u parameters?
@@ -206,17 +207,29 @@ setMethod(
 #' coef(x)
 #' coef(x, IRTpars = TRUE)
 #' 
+#' #with computed information matrix
+#' x <- mirt(dat, 1, SE = TRUE)
+#' coef(x)
+#' coef(x, printSE = TRUE)
+#' 
+#' #two factors
 #' x2 <- mirt(Science, 2)
 #' coef(x2)
 #' coef(x2, rotate = 'varimax')
+#' 
 #' }
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, CI = .95, rotate = '', Target = NULL, digits = 3,
-                          rawug = FALSE, verbose = TRUE, ...){
+    definition = function(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3,
+                          IRTpars = FALSE, rawug = FALSE, verbose = TRUE, ...){
+        if(printSE) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
+        if(rotate == ''){
+            rotate <- try(slot(object, 'rotate'), TRUE)
+            if(is(rotate, 'try-error')) rotate <- 'none'
+        }
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         K <- object@K
@@ -225,6 +238,7 @@ setMethod(
         a <- matrix(0, J, nfact)
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@pars[[i]])
+        
         if (ncol(a) > 1 && rotate != 'none'){
             rotname <- ifelse(rotate == '', object@rotate, rotate)
             if(verbose) cat("\nRotation: ", rotname, "\n\n")
@@ -236,20 +250,37 @@ setMethod(
                 object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         allPars <- list()
-        if(length(object@pars[[1]]@SEpar) > 0){
-            for(i in 1:(J+1)){
-                allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
-                                               object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
-                                               object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
-                                             3, byrow = TRUE), digits)
-                rownames(allPars[[i]]) <- c('par', SEnames)
-                colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
-            }
+        if(IRTpars){
+            if(object@nfact > 1L)
+                stop('traditional parameterization is only available for unidimensional models')
+            for(i in 1:(J+1))
+                allPars[[i]] <- round(mirt2traditional(object@pars[[i]]), digits)
         } else {
-            for(i in 1:(J+1)){
-                allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
-                colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
-                rownames(allPars[[i]]) <- 'par'
+            if(length(object@pars[[1]]@SEpar) > 0){
+                if(printSE){
+                    for(i in 1:(J+1)){
+                        allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
+                                                       object@pars[[i]]@SEpar),
+                                                     2, byrow = TRUE), digits)
+                        rownames(allPars[[i]]) <- c('par', 'SE')
+                        colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    }
+                } else {
+                    for(i in 1:(J+1)){
+                        allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
+                                                       object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
+                                                       object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
+                                                     3, byrow = TRUE), digits)
+                        rownames(allPars[[i]]) <- c('par', SEnames)
+                        colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    }
+                }
+            } else {
+                for(i in 1:(J+1)){
+                    allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
+                    colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    rownames(allPars[[i]]) <- 'par'
+                }
             }
         }
         if(!rawug){
@@ -364,7 +395,9 @@ setMethod(
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
-        Theta <- object@Theta
+        quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+        theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+        Theta <- thetaComb(theta, nfact)
         prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
         prior <- prior/sum(prior)
         df <- (object@K - 1) %o% (object@K - 1)

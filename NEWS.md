@@ -2,6 +2,9 @@
 
 ## NEW FEATURES
 
+- `printSE` argument can now be passed to `coef()` for printing the standard errors instead of 
+  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE`
+
 - mixedmirt has `SE` set to `TRUE` by default to ensure a more accurate information matrix
 
 - if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = .001` for each 

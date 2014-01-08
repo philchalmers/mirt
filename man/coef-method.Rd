@@ -29,6 +29,9 @@
   Typical values are around .3 in most statistical
   software. Default is 0 for no suppression}
 
+  \item{printSE}{logical; print the standard errors instead
+  of the confidence intervals?}
+
   \item{digits}{number of significant digits to be rounded}
 
   \item{verbose}{logical; allow information to be printed
@@ -42,9 +45,9 @@
   \item{...}{additional arguments to be passed}
 }
 \description{
-  \code{coef(object, CI = .95, rotate = '', Target = NULL,
-  digits = 3, IRTpars = FALSE, rawug = FALSE, verbose =
-  TRUE, ...)}
+  \code{coef(object, CI = .95, printSE = FALSE, rotate =
+  '', Target = NULL, digits = 3, IRTpars = FALSE, rawug =
+  FALSE, verbose = TRUE, ...)}
 }
 \examples{
 \dontrun{
@@ -53,9 +56,16 @@ x <- mirt(dat, 1)
 coef(x)
 coef(x, IRTpars = TRUE)
 
+#with computed information matrix
+x <- mirt(dat, 1, SE = TRUE)
+coef(x)
+coef(x, printSE = TRUE)
+
+#two factors
 x2 <- mirt(Science, 2)
 coef(x2)
 coef(x2, rotate = 'varimax')
+
 }
 }
 \seealso{
