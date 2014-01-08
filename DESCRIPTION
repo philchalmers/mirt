@@ -86,3 +86,4 @@ Collate:
     'PLCI.mirt.R'
     'read.mirt.R'
     'DIF.R'
+    'SE.methods.R'
