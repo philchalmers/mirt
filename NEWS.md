@@ -2,6 +2,8 @@
 
 ## NEW FEATURES
 
+- mixedmirt has `SE` set to `TRUE` by default to ensure a more accurate information matrix
+
 - if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = .001` for each 
   parameter to better approximate the information matrix
 
@@ -16,6 +18,8 @@
 - `read.mirt` crash fix for multiple group analyses objects (reported by Felix Hansen)
 
 - updated math for `SE.type = 'crossprod'`
+
+- bias correction for standard errors in models that include equality constraints
 
 # Changes in mirt 1.1
 

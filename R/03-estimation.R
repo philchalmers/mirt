@@ -244,6 +244,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:Data$nitems)
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }
+    Ls <- makeLmats(pars, constrain, random = mixed.design$random)
     opts$times$end.time.Data <- proc.time()[3L]
 
     #EM estimation
@@ -285,7 +286,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(!is.matrix(Theta)) stop('customTheta input must be a matrix')
             opts$quadpts <- nrow(Theta)
         }
-        ESTIMATE <- EM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+        ESTIMATE <- EM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList,
                              list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,
                                          nfactNames=PrepList[[1L]]$nfactNames, theta=theta, EH=opts$empiricalhist,
                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
@@ -311,7 +312,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Pl <- list(Pl)
     } else if(opts$method == 'MHRM'){ #MHRM estimation
         Theta <- matrix(0, Data$N, nitems)
-        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                            KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=FALSE,
@@ -324,7 +325,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
     } else if(opts$method == 'MIXED'){
-        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain,
+        ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls,
                                     PrepList=PrepList, random=mixed.design$random,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
@@ -379,7 +380,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 diag(estmat) <- TRUE
                 if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
                     DM <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SE.SEM,
-                                               pars=ESTIMATE$pars, constrain=constrain, PrepList=PrepList,
+                                               pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList,
                                                list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                            nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
@@ -390,7 +391,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                DERIV=DERIV))
                 } else {
                     for(i in 1L:ncol(DM))
-                        DM[i, ] <- SE.SEM(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain,
+                        DM[i, ] <- SE.SEM(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
                                           PrepList=PrepList,
                                           list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                                       nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
@@ -411,12 +412,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
             ESTIMATE <- SE.BL(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
                               BFACTOR=opts$BFACTOR, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
-                              constrain=constrain, specific=oldmodel, sitems=sitems, EH=opts$empiricalhist,
+                              constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems, EH=opts$empiricalhist,
                               EHPrior=ESTIMATE$Prior)
         } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
             if(opts$empiricalhist)
                 stop('MHRM standard error not available when using empirical histograms')
-            ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, PrepList=PrepList,
+            ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList,
                                    list = list(NCYCLES=opts$NCYCLES, BURNIN=1L, SEMCYCLES=5L,
                                                KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=opts$USEEM,
                                                gain=opts$gain,
@@ -427,11 +428,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                    DERIV=DERIV)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) && opts$method != 'MIXED'){
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,
-                                  constrain=constrain, N=nrow(data), type=opts$SE.type)
+                                  constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type)
 
         } else if(opts$SE.type == 'Fisher' && opts$method != 'MIXED'){
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,
-                                  constrain=constrain, N=nrow(data))
+                                  constrain=constrain, Ls=Ls, N=nrow(data))
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior

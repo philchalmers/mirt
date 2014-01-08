@@ -1,4 +1,4 @@
-SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain,
+SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
                   specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL){
     LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
                    NO.CUSTOM, EH, EHPrior){
@@ -38,9 +38,6 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
         LL
     }
     
-    L <- ESTIMATE$L
-    L2 <- L
-    L2[L2 != 0] <- 1
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
     infological=ESTIMATE$infological
@@ -68,18 +65,18 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                               EH=EH, EHPrior=EHPrior)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
-    Hess <- L2 %*% Hess %*% L2
+    Hess <- updateHess(h=Hess, L2=Ls$L2, L3=Ls$L3)
     info <- Hess[infological, infological]
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
     return(ESTIMATE)
 }
 
-SE.SEM <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
+SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
                    collectLL, from, to){
     TOL <- list$TOL
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
-    L <- ESTIMATE$L
+    L <- Ls$L
     MSTEPTOL <- list$MSTEPTOL
     sitems <- list$sitems
     specific <- list$specific
@@ -182,14 +179,12 @@ SE.SEM <- function(est, pars, constrain, PrepList, list, Theta, theta, BFACTOR, 
     return(rijfull)
 }
 
-SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, type){
+SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc
     ngroups <- length(pars)
     nitems <- length(pars[[1L]]) - 1L
     L <- ESTIMATE$L
-    L2 <- L
-    L2[L2 != 0] <- 1
     DX <- numeric(ncol(L))
     Prior <- ESTIMATE$Prior
     Igrad <- IgradP <- Ihess <- matrix(0, length(DX), length(DX))
@@ -214,7 +209,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, type){
                     DX[pars[[g]][[i]]@parnum] <- tmp$grad
                 }
             }
-            Igrad <- Igrad + L2 %*% outer(DX, DX) %*% L2 * r
+            Igrad <- Igrad + updateHess(outer(DX, DX), L2=Ls$L2, L3=Ls$L3) * r
         }
     } else {
         for(pat in 1L:nrow(PrepList[[1L]]$tabdata)){
@@ -240,12 +235,12 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, type){
                     }
                 }
             }
-            Ihess <- Ihess + L2 %*% tmphess %*% L2
+            Ihess <- Ihess + updateHess(tmphess, L2=Ls$L2, L3=Ls$L3)
             tmpderiv <- tmpderiv * w 
             for(j in 1L:nrow(Theta))
-                IgradP <- IgradP + L2 %*% outer(tmpderiv[j,], tmpderiv[j,]) %*% L2 * r
+                IgradP <- IgradP + updateHess(outer(tmpderiv[j,], tmpderiv[j,]), L2=Ls$L2, L3=Ls$L3) * r
             DX <- colSums(tmpderiv)
-            Igrad <- Igrad + L2 %*% outer(DX, DX) %*% L2 * r
+            Igrad <- Igrad + updateHess(outer(DX, DX), L2=Ls$L2, L3=Ls$L3) * r
         }
     }
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
@@ -274,12 +269,12 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, N, type){
     return(ESTIMATE)
 }
 
-SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, N){
+SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N){
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc
     ngroups <- length(pars)
     nitems <- length(pars[[1L]]) - 1L
-    L <- ESTIMATE$L
+    L <- Ls$L
     DX <- numeric(ncol(L))
     Prior <- ESTIMATE$Prior
     Igrad <- Ihess <- matrix(0, length(DX), length(DX))

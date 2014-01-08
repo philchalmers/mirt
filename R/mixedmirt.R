@@ -211,7 +211,7 @@
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE,
-                      SE = FALSE, draws = 5000, ...)
+                      SE = TRUE, draws = 5000, ...)
 {
     Call <- match.call()
     svinput <- pars

@@ -1,4 +1,4 @@
-MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
+MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DERIV)
 {
     if(is.null(random)) random <- list()
     RAND <- length(random) > 0L
@@ -86,23 +86,9 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
     stagecycle <- 1L
     converge <- 1L
     noninvcount <- 0L
-    L <- c()
-    for(g in 1L:ngroups)
-        for(i in 1L:(J+1L))
-            L <- c(L, pars[[g]][[i]]@est)
-    if(RAND)
-        for(i in 1L:length(random))
-            L <- c(L, random[[i]]@est)
     estindex <- index[estpars]
-    L <- diag(as.numeric(L))
-    redun_constr <- rep(FALSE, length(estpars))
-    if(length(constrain) > 0L){
-        for(i in 1L:length(constrain)){
-            L[constrain[[i]], constrain[[i]]] <- 1L/length(constrain[[i]])
-            for(j in 2L:length(constrain[[i]]))
-                redun_constr[constrain[[i]][j]] <- TRUE
-        }
-    }
+    L <- Ls$L; L2 <- Ls$L2; L3 <- Ls$L3
+    redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
     if(any(diag(L)[!estpars] > 0L)){
         redindex <- index[!estpars]
@@ -271,9 +257,11 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
             }
         }
         grad <- g %*% L
-        ave.h <- (-1)*L %*% h %*% L
+        ave.h <- (-1)* L %*% h %*% L
+        ave.h2 <- -updateHess(h, L2=Ls$L2, L3=Ls$L3)
         grad <- grad[1L, estpars & !redun_constr]
         ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
+        ave.h2 <- ave.h2[estpars & !redun_constr, estpars & !redun_constr]
         if(any(is.na(grad)))
             stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')
         if(is.na(attr(gtheta0[[1L]],"log.lik")))
@@ -342,17 +330,16 @@ MHRM.group <- function(pars, constrain, PrepList, list, random = list(), DERIV)
                                   gamma, max(abs(gamma*correction))), sep='')
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
         else conv <- 0L
-        if(!list$SE && conv == 3L) break
-        if(list$SE && cycles >= (400L + BURNIN + SEMCYCLES) && conv == 3L) break
-
+        if(!list$SE && conv >= 3L) break
+        if(list$SE && cycles >= (400L + BURNIN + SEMCYCLES) && conv >= 3L) break
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
         if(gamma == .25){
             gamma <- 0
             phi <- grad
-            Phi <- Tau
+            Phi <- ave.h2
         }
         phi <- phi + gamma*(grad - phi)
-        Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
+        Phi <- Phi + gamma*(ave.h2 - outer(grad,grad) - Phi)
         Mstep.time <- Mstep.time + proc.time()[3L] - start
     } ###END BIG LOOP
     if(verbose) cat('\r\n')

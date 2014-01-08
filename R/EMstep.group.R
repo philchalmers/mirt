@@ -1,4 +1,4 @@
-EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
+EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
 {
     verbose <- list$verbose
     nfact <- list$nfact
@@ -48,20 +48,9 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
     converge <- 1L
     inverse_fail_count <- 1L
     ##
-    L <- c()
-    for(g in 1L:ngroups)
-        for(i in 1L:(J+1L))
-            L <- c(L, pars[[g]][[i]]@est)
     estindex <- index[estpars]
-    L <- diag(as.numeric(L))
-    redun_constr <- rep(FALSE, length(estpars))
-    if(length(constrain) > 0L){
-        for(i in 1L:length(constrain)){
-            L[constrain[[i]], constrain[[i]]] <- 1L/length(constrain[[i]])
-            for(j in 2L:length(constrain[[i]]))
-                redun_constr[constrain[[i]][j]] <- TRUE
-        }
-    }
+    L <- Ls$L; L2 <- Ls$L2; L3 <- Ls$L3
+    redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
     if(any(diag(L)[!estpars] > 0L)){
         redindex <- index[!estpars]
@@ -220,9 +209,8 @@ EM.group <- function(pars, constrain, PrepList, list, Theta, DERIV)
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
             ind1 <- ind2 + 1L
         }
-        hess <- L %*% h %*% L
+        hess <- updateHess(h=h, L2=L2, L3=L3)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
-        #return internal functions for SEM.SE
         return(list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,

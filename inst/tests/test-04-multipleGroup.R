@@ -119,7 +119,7 @@ test_that('three factor', {
                                                  verbose = FALSE, draws = 10))
     expect_is(mod_metric, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.3033, 0.8979, 1.7087, 0, NA, NA, 0, NA, NA, 0.6597, 0.4733, 0.846, 0, NA, NA, 1, NA, NA, 1.2852, 0.7639),
+    expect_equal(cfs, c(1.3033, 1.0679, 1.5387, 0, NA, NA, 0, NA, NA, 0.6597, 0.4832, 0.8361, 0, NA, NA, 1, NA, NA, 1.2852, 1.0436),
                  tolerance = 1e-2)
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
