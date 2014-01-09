@@ -84,7 +84,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     NCYCLES <- ESTIMATE$cycles
     if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history')
     BFACTOR <- list$BFACTOR
-    gitemtrace <- gstructgrouppars <- prior <- Prior <- Priorbetween <- rlist <- vector('list', ngroups)
+    prior <- rlist <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars
     redun_constr <- ESTIMATE$redun_constr
     EMhistory <- ESTIMATE$EMhistory
@@ -121,25 +121,9 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[[constrain[[i]][1L]]]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        if(list$EH){
-            Prior[[1L]] <- list$EHPrior[[1L]]
-        } else {
-            for(g in 1L:ngroups){
-                gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-                if(BFACTOR){
-                    sel <- 1L:(nfact-ncol(sitems))
-                    Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
-                                                          gstructgrouppars[[g]]$gmeans[sel],
-                                                          gstructgrouppars[[g]]$gcov[sel,sel,drop=FALSE])
-                    Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
-                    Prior[[g]] <- apply(expand.grid(Priorbetween[[g]], prior[[g]]), 1, prod)
-                    next
-                }
-                Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
-                                               gstructgrouppars[[g]]$gcov)
-                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
-            }
-        }
+        tmp <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups, nfact=nfact,
+                           J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
+        Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
         for(g in 1L:ngroups){
             if(BFACTOR){

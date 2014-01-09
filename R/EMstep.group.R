@@ -58,7 +58,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
              paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
-    Prior <- prior <- Priorbetween <- gstructgrouppars <- rlist <- r <- list()
+    prior <- rlist <- r <- list()
     #make sure constrained pars are equal
     tmp <- L
     tmp2 <- diag(tmp)
@@ -114,28 +114,9 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     for (cycles in 1L:NCYCLES){
         #priors
         start <- proc.time()[3L]
-        for(g in 1L:ngroups){
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-            if(BFACTOR){
-                sel <- 1L:(nfact-ncol(sitems))
-                Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
-                                        gstructgrouppars[[g]]$gmeans[sel],
-                                        gstructgrouppars[[g]]$gcov[sel,sel,drop=FALSE])
-                Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
-                Prior[[g]] <- apply(expand.grid(Priorbetween[[g]], prior[[g]]), 1, prod)
-                next
-            }
-            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
-                                           gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
-        }
-        if(list$EH && cycles > 1L){
-            for(g in 1L:ngroups)
-                Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
-        } else if(!is.null(list$customPriorFun)){
-            for(g in 1L:ngroups)
-                Prior[[g]] <- list$customPriorFun(gTheta[[g]])
-        }
+        tmp <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups, nfact=nfact,
+                           J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
+        Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
         LL <- 0
         for(g in 1L:ngroups){
