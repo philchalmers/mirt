@@ -114,7 +114,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     for (cycles in 1L:NCYCLES){
         #priors
         start <- proc.time()[3L]
-        tmp <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups, nfact=nfact,
+        tmp <- updatePrior(pars=pars, gTheta=gTheta, Thetabetween=Thetabetween,
+                           list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
@@ -146,7 +147,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           NO.CUSTOM=NO.CUSTOM, PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                          rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV)
+                          rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV, groupest=groupest,
+                          list=list, nfact=nfact, BFACTOR=BFACTOR, sitems=sitems, TOL=TOL)
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){
             dX2 <- preMstep.longpars - preMstep.longpars2
             dX <- longpars - preMstep.longpars
@@ -241,10 +243,12 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
-                  UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, NO.CUSTOM){
+                  UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, NO.CUSTOM, 
+                  groupest, list, nfact, BFACTOR, sitems, TOL){
     p <- longpars[est]
+    maxit <- ifelse(cycle > 10L, 25L, 10L)
     opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
-                     control=list(maxit=ifelse(cycle > 10L, 25L, 10L), fnscale = -1L),
+                     control=list(maxit=maxit, fnscale = -1L),
                      DERIV=DERIV, rlist=rlist, NO.CUSTOM=NO.CUSTOM,
                      est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                      PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
@@ -264,12 +268,21 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     i = J + 1L
-    for(group in 1L:ngroups){
-        if(any(pars[[group]][[i]]@est)){
-            newpars <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], EM = TRUE,
-                           pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
-                           itemloc=itemloc, prior=Prior[[group]])
-            longpars[pars[[group]][[i]]@parnum[pars[[group]][[i]]@est]] <- newpars
+    if(groupest){
+        for(j in 1L:maxit){
+            lastlongpars <- longpars
+            pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+            Prior <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups, nfact=nfact,
+                               J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycle, rlist=rlist)$Prior
+            for(group in 1L:ngroups){
+                if(any(pars[[group]][[i]]@est)){
+                    newpars <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], EM = TRUE,
+                                   pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
+                                   itemloc=itemloc, prior=Prior[[group]])
+                    longpars[pars[[group]][[i]]@parnum[pars[[group]][[i]]@est]] <- newpars
+                }
+            }
+            if(all(abs(lastlongpars - longpars) < TOL)) break
         }
     }
     return(longpars)

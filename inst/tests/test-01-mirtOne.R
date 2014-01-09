@@ -29,10 +29,11 @@ test_that('dich', {
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     expect_equal(modm3@df, 25)
-    modm3 <- suppressWarnings(mirt(data, 1, itemtype = 'Rasch', SE = TRUE, verbose=FALSE))
+    dat <- expand.table(LSAT6)
+    modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm3)))
-    expect_equal(cfs, c(1, NA, NA, 1.868, 1.68, 2.057, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.791, 0.634, 0.948, 0, NA, NA, 1, NA, NA, 1, NA, NA, 1.461, 1.287, 1.635, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.522, 0.369, 0.674, 0, NA, NA, 1, NA, NA, 1, NA, NA, 1.993, 1.8, 2.186, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1.023, 0.354, 1.692),
+    expect_equal(cfs, c(1, NA, NA, 2.73, 2.478, 2.982, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.999, 0.842, 1.155, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.24, 0.1, 0.38, 0, NA, NA, 1, NA, NA, 1, NA, NA, 1.306, 1.14, 1.473, 0, NA, NA, 1, NA, NA, 1, NA, NA, 2.099, 1.899, 2.3, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0.57, 0.369, 0.772),
                  tolerance = 1e-2)
     model <- mirt.model('F = 1-5
                         CONSTRAIN = (1-5, a1)', quiet=TRUE)
@@ -66,11 +67,11 @@ test_that('dich', {
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(fm2[1:6,'F1'] - c(-1.8165552, -1.4946906, -1.4822982,
                                                      -1.1789899, -1.0958928, -0.7951026), -1e-2, 1e-2))
-    fm3 <- fscores(modm3, method = 'ML', full.scores = TRUE, verbose = FALSE)
+    fm3 <- fscores(modm4, method = 'ML', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
     expect_true(fm3[1, 'F1'] == -Inf && fm3[1000, 'F1'] == Inf)
     expect_true(mirt:::closeEnough(as.numeric(fm3[c(13,34,40),'F1'])
-                                   - c(-2.812972, -1.769511, -2.812972), -1e-2, 1e-2))
+                                   - c(-2.783489, -1.750890, -2.783489), -1e-2, 1e-2))
     fm3 <- fscores(modm3, method = 'ML', full.scores = TRUE, verbose = FALSE, scores.only=TRUE)
     expect_is(fm3, 'matrix')
     fm4 <- fscores(modm6, method = 'ML', full.scores = TRUE, verbose = FALSE)
@@ -111,7 +112,7 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(fitm1$df.M2 - 5, -1e-4, 1e-4))
     fitm2 <- fitIndices(modm3)
     expect_is(fitm2, 'data.frame')
-    expect_true(mirt:::closeEnough(fitm2$M2 - 22.57281, -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fitm2$M2 - 5.338253, -1e-4, 1e-4))
     expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
 
     data <- expand.table(LSAT7)

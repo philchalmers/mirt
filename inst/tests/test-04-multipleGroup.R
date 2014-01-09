@@ -36,7 +36,11 @@ test_that('one factor', {
                             CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')
     expect_is(mod_scalar1, 'MultipleGroupClass')
-
+    mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', empiricalhist=TRUE)
+    expect_is(mod_EH, 'MultipleGroupClass')
+    cfs <- as.numeric(do.call(c, coef(mod_EH, digits=4)[[1L]]))
+    expect_equal(cfs, c(0.9365, 0.5812, 0, 1, 1.1684, -0.6627, 0, 1, 0.7785, -0.1108, 0, 1, 0.9798, 0.8588, 0, 1, 1.1043, 0.3577, 0, 1, 0.4196, 0.4956, 0, 1, 1.0319, 1.1185, 0, 1, 0.7728, -0.3598, 0, 1, 0.8059, -1.0227, 0, 1, 0.7308, -1.0671, 0, 1, 0.7971, 1.1918, 0, 1, 1.4157, -0.0992, 0, 1, 1.2363, 0.6845, 0, 1, 0.9261, 0.4367, 0, 1, 0.7865, -0.0549, 0, 1, 0, 1),
+                 tolerance = 1e-2)
 
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',

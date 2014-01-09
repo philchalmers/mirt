@@ -266,7 +266,8 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, gTheta, list, ngroups, nfact, J, BFACTOR, sitems, cycles, rlist){
+updatePrior <- function(pars, gTheta, Thetabetween, list, ngroups, nfact, J, 
+                        BFACTOR, sitems, cycles, rlist, prior){
     gstructgrouppars <- Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
         Prior[[1L]] <- list$EHPrior[[1L]]
@@ -287,9 +288,16 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J, BFACTOR, sitems, 
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
     }
-    if(list$EH && cycles > 1L){
-        for(g in 1L:ngroups)
-            Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
+    if(list$EH){
+        if(cycles > 1L){
+            for(g in 1L:ngroups)
+                Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
+        } else {
+            for(g in 1L:ngroups){
+                Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]], 0, matrix(1))
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+            }
+        }
     } else if(!is.null(list$customPriorFun)){
         for(g in 1L:ngroups)
             Prior[[g]] <- list$customPriorFun(gTheta[[g]])

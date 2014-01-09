@@ -2,6 +2,9 @@
 
 ## NEW FEATURES
 
+- S-EM computation of the information matrix now supports latent parameters (previously was only 
+  effective with estimation item-level parameters). 
+
 - `printSE` argument can now be passed to `coef()` for printing the standard errors instead of 
   confidence intervals. As a consequence, `rawug` is automatically set to `TRUE`
 

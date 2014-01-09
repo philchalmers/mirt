@@ -356,25 +356,23 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
             collectLL <- as.numeric(ESTIMATE$collectLL)
             collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
-            from <- min(which(collectLL >= .9)) + 1L
+            from <- max(min(which(collectLL >= .9)) + 1L, 10L)
             to <- min(which(collectLL >= (1 - opts$SEtol/10))) + 1L
             dontrun <- FALSE
-            if(ESTIMATE$cycles <= 5L){
+            if(to <= from){
                 dontrun <- TRUE
-                warning('Too few EM interations to compute SEM information matrix. Information matrix
-                        not calculated')
+                warning('Too few EM interations to compute S-EM information matrix. Information matrix
+                        not calculated. Consider decreasing TOL further to increase EM iteration 
+                        count or starting father away from ML estimates by passing \'GenRandomPars = TRUE\'')
             }
             lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
             lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-            if(any(lengthsplit > 2L)){
-                warning('Group covariance and mean parameters are not well estimated by the S-EM algorithm.
-                        It is better to use SE.type = \'MHRM\', SE.type = \'BL\', or resort to the
-                        boot.mirt() and PLCI.mirt() functions')
-            }
+            is.latent <- lengthsplit > 2L
             if(!dontrun){
                 if(ESTIMATE$cycles <= 10L)
                     message('Very few EM cycles performed. Consider decreasing TOL further to
-                            increase EM iteration count')
+                            increase EM iteration count or starting father away from ML estimates by 
+                            passing \'GenRandomPars = TRUE\'')
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
@@ -388,7 +386,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                            EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
                                                Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
-                                               DERIV=DERIV))
+                                               DERIV=DERIV, is.latent=is.latent))
                 } else {
                     for(i in 1L:ncol(DM))
                         DM[i, ] <- SE.SEM(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
@@ -400,11 +398,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                       nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                                       EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
                                           Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
-                                          DERIV=DERIV)
+                                          DERIV=DERIV, is.latent=is.latent)
                 }
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
+                DM[, is.latent] <- 0
                 info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
+                info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
                 if(is(info, 'try-error')){
                     warning('information matrix in SEM could not be computed due to instability')
                 } else ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)

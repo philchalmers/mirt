@@ -72,7 +72,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
 }
 
 SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
-                   collectLL, from, to){
+                   collectLL, from, to, is.latent){
     TOL <- list$TOL
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -100,6 +100,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     ANY.PRIOR <- rep(FALSE, ngroups)
     NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
     converged <- logical(sum(estpars & !redun_constr))
+    if(!is.latent[est]) converged[is.latent] <- TRUE
     rijfull <- rep(NA, length(converged))
     for(g in 1L:ngroups){
         gTheta[[g]] <- Theta
@@ -112,6 +113,9 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         }
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
     }
+    groupest <- FALSE
+    for(g in 1L:ngroups)
+        groupest <- any(groupest, pars[[g]][[J+1]]@est)
     
     for (cycles in from:to){
         
@@ -121,7 +125,8 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[[constrain[[i]][1L]]]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        tmp <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups, nfact=nfact,
+        tmp <- updatePrior(pars=pars, gTheta=gTheta, Thetabetween=Thetabetween,
+                           list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
@@ -142,10 +147,11 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
                 pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
             }
         }
-        longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J, rlist=rlist,
+        longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           NO.CUSTOM=NO.CUSTOM, PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                          constrain=constrain, cycle=cycles, DERIV=DERIV)
+                          rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV, groupest=groupest,
+                          list=list, nfact=nfact, BFACTOR=BFACTOR, sitems=sitems, TOL=TOL*TOL)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
@@ -155,11 +161,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         rijfull[which] <- rij[which]
         if(all(!is.na(rijfull))) break
     } #END EM
-    if(cycles == to){
-        warning(sum(is.na(rijfull)), ' element(s) in the S-EM computation for row ',
-                which(estindex), ' did not converge')
-        rijfull[is.na(rijfull)] <- rij[is.na(rijfull)]
-    }
+    rijfull[is.na(rijfull)] <- rij[is.na(rijfull)]
     return(rijfull)
 }
 

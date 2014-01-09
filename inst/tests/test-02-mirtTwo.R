@@ -51,6 +51,11 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
     expect_equal(cfs, c(1.057, 0.674, 1.439, 4.876, 3.913, 5.84, 2.649, 2.21, 3.089, -1.472, -1.789, -1.156, 1.219, 0.856, 1.582, 2.918, 2.445, 3.39, 0.9, 0.619, 1.18, -2.263, -2.662, -1.864, 2.255, 1.289, 3.221, 5.178, 3.712, 6.643, 2.19, 1.47, 2.911, -1.943, -2.575, -1.311, 0.77, 0.464, 1.076, 0, NA, NA, 2.159, 1.552, 2.767, 2.973, 2.294, 3.653, 1.767, 1.136, 2.398, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
+    modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE)
+    expect_is(modp6, 'ConfirmatoryClass')
+    cfs <- as.numeric(do.call(c, coef(modp6, verbose = FALSE)))
+    expect_equal(cfs, c(0.764, 5.211, 2.662, -1.281, 1.031, 2.999, 1.025, -2.095, 3.172, 6.42, 3.44, -1.639, 0.924, 3.479, 1.109, -1.518, 0, 1),
+                 tolerance = 1e-2)
 
     fm1 <- fscores(modp1, verbose = FALSE)
     expect_is(fm1, 'matrix')
