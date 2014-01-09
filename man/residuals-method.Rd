@@ -10,8 +10,9 @@
   \code{ConfirmatoryClass} or \code{MultipleGroupClass}}
 
   \item{restype}{type of residuals to be displayed.  Can be
-  either \code{'LD'} for a local dependence matrix (Chen &
-  Thissen, 1997) or \code{'exp'} for the expected values
+  either \code{'LD'} or \code{'LDG2'} for a local
+  dependence matrix based on the X2 or G2 statistics (Chen
+  & Thissen, 1997), or \code{'exp'} for the expected values
   for the frequencies of every response pattern}
 
   \item{tables}{logical; for LD restype, return the

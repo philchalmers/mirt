@@ -2,6 +2,9 @@
 
 ## NEW FEATURES
 
+- new `restype = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2 
+  instead of X2
+
 - S-EM computation of the information matrix now supports latent parameters (previously was only 
   effective with estimation item-level parameters). 
 

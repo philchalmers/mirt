@@ -353,7 +353,8 @@ setMethod(
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
 #' @param restype type of residuals to be displayed.
-#'   Can be either \code{'LD'} for a local dependence matrix (Chen & Thissen, 1997) or \code{'exp'} for the
+#'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the 
+#'   X2 or G2 statistics (Chen & Thissen, 1997), or \code{'exp'} for the
 #'   expected values for the frequencies of every response pattern
 #' @param tables logical; for LD restype, return the observed, expected, and standarized residual
 #'   tables for each item combination?
@@ -405,7 +406,8 @@ setMethod(
         colnames(df) <- rownames(df) <- colnames(res)
         itemnames <- colnames(data)
         listtabs <- list()
-        if(restype == 'LD'){
+        calcG2 <- ifelse(restype == 'LDG2', TRUE, FALSE)
+        if(restype %in% c('LD', 'LDG2')){
             for(i in 1:J){
                 for(j in 1:J){
                     if(i < j){
@@ -418,7 +420,13 @@ setMethod(
                                 Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)
                         s <- gamma.cor(tab) - gamma.cor(Etab)
                         if(s == 0) s <- 1
-                        res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+                        if(calcG2){
+                            tmp <- tab
+                            tmp[tab == 0] <- NA
+                            res[j,i] <- 2 * sum(tmp * log(tmp/Etab), na.rm=TRUE) * sign(s)
+                        } else {
+                            res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
+                        }
                         res[i,j] <- sign(res[j,i]) * sqrt( abs(res[j,i]) / (N*min(c(K[i],K[j]) - 1L)))
                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
                         if(tables){
