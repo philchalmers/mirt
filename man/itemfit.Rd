@@ -4,7 +4,8 @@
 \usage{
   itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150,
     mincell = 1, S_X2.tables = FALSE,
-    empirical.plot = NULL, method = "EAP", ...)
+    empirical.plot = NULL, method = "EAP", Theta = NULL,
+    ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -39,6 +40,11 @@
   \item{method}{type of factor score estimation method. See
   \code{\link{fscores}} for more detail}
 
+  \item{Theta}{a matrix of factor scores used for
+  statistics that require emperical estimates. If supplied,
+  arguments typically passed to \code{fscores()} will be
+  ignored and these values will be used instead}
+
   \item{...}{additional arguments to be passed to
   \code{fscores()}}
 }
@@ -69,6 +75,9 @@ fit
 itemfit(x, empirical.plot = 1) #empirical item plot
 #method='ML' agrees better with eRm package
 itemfit(raschfit, method = 'ML') #infit and outfit stats
+#same as above, but inputting ML estimates instead
+Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE, scores.only=TRUE)
+itemfit(raschfit, Theta=Theta)
 
 #similar example to Kang and Chen 2007
 a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))

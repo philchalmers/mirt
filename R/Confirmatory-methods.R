@@ -75,15 +75,6 @@ setMethod(
 )
 
 setMethod(
-    f = "fitted",
-    signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, ...){
-        class(object) <- 'ExploratoryClass'
-        fitted(object, ...)
-    }
-)
-
-setMethod(
     f = "plot",
     signature = signature(x = 'ConfirmatoryClass', y = 'missing'),
     definition = function(x, y, ...)

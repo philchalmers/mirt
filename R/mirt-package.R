@@ -21,11 +21,10 @@
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
-#' @importFrom stats anova fitted residuals
+#' @importFrom stats anova residuals
 #' @importFrom MASS ginv
 #' @import lattice GPArotation mvtnorm Rcpp stats4 methods
 #' @exportMethod anova
-#' @exportMethod fitted
 #' @exportMethod residuals
 #' @exportMethod summary
 #' @keywords package
@@ -175,8 +174,8 @@ NULL
 #'
 #' #reproduce table 3 in Bock (1997)
 #' fs <- round(fscores(mod, verbose = FALSE)[,c('F1','SE_F1')],2)
-#' fttd <- round(fitted(mod),1)
-#' table <- data.frame(fttd, fs)
+#' fttd <- residuals(mod, restype = 'exp')
+#' table <- data.frame(fttd[,-ncol(fttd)], fs)
 #' table
 #' 
 #' #using nominal.highlow matrix to specify lowest and highest categories

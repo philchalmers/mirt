@@ -71,7 +71,6 @@
   "MixedClass")} } \item{summary}{\code{signature(object =
   "MixedClass")} } \item{logLik}{\code{signature(object =
   "MixedClass")} } \item{anova}{\code{signature(object =
-  "MixedClass")} } \item{fitted}{\code{signature(object =
   "MixedClass")} } }
 }
 \author{

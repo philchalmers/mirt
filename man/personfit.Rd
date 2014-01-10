@@ -2,7 +2,7 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-  personfit(x, method = "EAP", ...)
+  personfit(x, method = "EAP", Theta = NULL, ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -11,6 +11,11 @@
 
   \item{method}{type of factor score estimation method. See
   \code{\link{fscores}} for more detail}
+
+  \item{Theta}{a matrix of factor scores used for
+  statistics that require emperical estimates. If supplied,
+  arguments typically passed to \code{fscores()} will be
+  ignored and these values will be used instead}
 
   \item{...}{additional arguments to be passed to
   \code{fscores()}}
@@ -37,6 +42,10 @@ data <- simdata(a,d, 2000, items)
 x <- mirt(data, 1)
 fit <- personfit(x)
 head(fit)
+
+#using precomputed Theta
+Theta <- fscores(x, method = 'MAP', full.scores = TRUE, scores.only = TRUE)
+personfit(x, Theta=Theta)
 
   }
 }

@@ -78,8 +78,6 @@
   \item{logLik}{\code{signature(object =
   "ConfirmatoryClass")} }
   \item{anova}{\code{signature(object =
-  "ConfirmatoryClass")} }
-  \item{fitted}{\code{signature(object =
   "ConfirmatoryClass")} } }
 }
 \author{

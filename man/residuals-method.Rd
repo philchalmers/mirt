@@ -12,7 +12,8 @@
   \item{restype}{type of residuals to be displayed.  Can be
   either \code{'LD'} or \code{'LDG2'} for a local
   dependence matrix based on the X2 or G2 statistics (Chen
-  & Thissen, 1997), or \code{'exp'} for the expected values
+  & Thissen, 1997), \code{'Q3'} for the statistic proposed
+  by Yen (1984), or \code{'exp'} for the expected values
   for the frequencies of every response pattern}
 
   \item{tables}{logical; for LD restype, return the
@@ -36,19 +37,44 @@
   \item{verbose}{logical; allow information to be printed
   to the console?}
 
-  \item{...}{additional arguments to be passed}
+  \item{Theta}{a matrix of factor scores used for
+  statistics that require emperical estimates (i.e., Q3).
+  If supplied, arguments typically passed to
+  \code{fscores()} will be ignored and these values will be
+  used instead}
+
+  \item{...}{additional arguments to be passed to
+  \code{fscores()}}
 }
 \description{
   \code{residuals(object, restype = 'LD', digits = 3, df.p
   = FALSE, full.scores = FALSE, printvalue = NULL, tables =
-  FALSE, verbose = TRUE, ...)}
+  FALSE, verbose = TRUE, Theta = NULL, ...)}
 }
 \examples{
 \dontrun{
+
 x <- mirt(Science, 1)
 residuals(x)
 residuals(x, tables = TRUE)
 residuals(x, restype = 'exp')
+
+# with and without supplied factor scores
+Theta <- fscores(x, full.scores=TRUE, scores.only=TRUE)
+residuals(x, restype = 'Q3', Theta=Theta)
+residuals(x, restype = 'Q3', method = 'ML')
+
 }
+}
+\references{
+  Chen, W. H. & Thissen, D. (1997). Local dependence
+  indices for item pairs using item response theory.
+  \emph{Journal of Educational and Behavioral Statistics,
+  22}, 265-289.
+
+  Yen, W. (1984). Effects of local item dependence on the
+  fit and equating performance of the three parameter
+  logistic model. \emph{Applied Psychological Measurement,
+  8}, 125-145.
 }
 

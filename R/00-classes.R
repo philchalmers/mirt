@@ -92,7 +92,6 @@ setClass("AllModelClass",
 #' \describe{
 #'     \item{anova}{\code{signature(object = "ExploratoryClass")}}
 #'     \item{coef}{\code{signature(object = "ExploratoryClass")}}
-#'     \item{fitted}{\code{signature(object = "ExploratoryClass")}}
 #'     \item{plot}{\code{signature(x = "ExploratoryClass", y = "missing")}}
 #'     \item{print}{\code{signature(x = "ExploratoryClass")} }
 #'     \item{residuals}{\code{signature(object = "ExploratoryClass")}}
@@ -169,7 +168,6 @@ setClass(
 #'    \item{summary}{\code{signature(object = "ConfirmatoryClass")} }
 #'    \item{logLik}{\code{signature(object = "ConfirmatoryClass")} }
 #'    \item{anova}{\code{signature(object = "ConfirmatoryClass")} }
-#'    \item{fitted}{\code{signature(object = "ConfirmatoryClass")} }
 #' }
 #'
 #' @name ConfirmatoryClass-class
@@ -315,7 +313,6 @@ setClass(
 #'    \item{summary}{\code{signature(object = "MixedClass")} }
 #'    \item{logLik}{\code{signature(object = "MixedClass")} }
 #'    \item{anova}{\code{signature(object = "MixedClass")} }
-#'    \item{fitted}{\code{signature(object = "MixedClass")} }
 #'   }
 #'
 #' @name MixedClass-class

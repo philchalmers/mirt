@@ -348,14 +348,14 @@ setMethod(
 #' Compute model residuals
 #'
 #' \code{residuals(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
-#'                          printvalue = NULL, tables = FALSE, verbose = TRUE, ...)}
+#'                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
 #' @param restype type of residuals to be displayed.
 #'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the 
-#'   X2 or G2 statistics (Chen & Thissen, 1997), or \code{'exp'} for the
-#'   expected values for the frequencies of every response pattern
+#'   X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
+#'   Yen (1984), or \code{'exp'} for the expected values for the frequencies of every response pattern
 #' @param tables logical; for LD restype, return the observed, expected, and standarized residual
 #'   tables for each item combination?
 #' @param digits number of significant digits to be rounded
@@ -366,26 +366,43 @@ setMethod(
 #'   option. Only prints patterns that have standardized residuals greater than
 #'   \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param verbose logical; allow information to be printed to the console?
-#' @param ... additional arguments to be passed
+#' @param Theta a matrix of factor scores used for statistics that require emperical estimates (i.e., Q3). 
+#'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
+#'   be used instead
+#' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @name residuals-method
 #' @aliases residuals,ExploratoryClass-method residuals,ConfirmatoryClass-method
 #'   residuals,MultipleGroupClass-method
 #' @docType methods
 #' @rdname residuals-method
+#' @references
+#' 
+#' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
+#' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
+#' 
+#' Yen, W. (1984). Effects of local item dependence on the fit and equating performance of the three
+#' parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.
 #' @examples
 #'
 #' \dontrun{
+#' 
 #' x <- mirt(Science, 1)
 #' residuals(x)
 #' residuals(x, tables = TRUE)
 #' residuals(x, restype = 'exp')
+#' 
+#' # with and without supplied factor scores
+#' Theta <- fscores(x, full.scores=TRUE, scores.only=TRUE)
+#' residuals(x, restype = 'Q3', Theta=Theta)
+#' residuals(x, restype = 'Q3', method = 'ML')
+#' 
 #' }
 setMethod(
     f = "residuals",
     signature = signature(object = 'ExploratoryClass'),
     definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
-                          printvalue = NULL, tables = FALSE, verbose = TRUE, ...)
+                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)
     {
         K <- object@K
         data <- object@data
@@ -398,16 +415,20 @@ setMethod(
         colnames(res) <- rownames(res) <- colnames(data)
         quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
-        Theta <- thetaComb(theta, nfact)
-        prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
-        prior <- prior/sum(prior)
-        df <- (object@K - 1) %o% (object@K - 1)
-        diag(df) <- NA
-        colnames(df) <- rownames(df) <- colnames(res)
+        if(restype != 'Q3'){
+            Theta <- thetaComb(theta, nfact)
+        } else if(is.null(Theta)){
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
+        }
         itemnames <- colnames(data)
         listtabs <- list()
         calcG2 <- ifelse(restype == 'LDG2', TRUE, FALSE)
         if(restype %in% c('LD', 'LDG2')){
+            prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
+            prior <- prior/sum(prior)
+            df <- (object@K - 1) %o% (object@K - 1)
+            diag(df) <- NA
+            colnames(df) <- rownames(df) <- colnames(res)
             for(i in 1:J){
                 for(j in 1:J){
                     if(i < j){
@@ -445,8 +466,7 @@ setMethod(
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
             res <- round(res,digits)
             return(res)
-        }
-        if(restype == 'exp'){
+        } else if(restype == 'exp'){
             r <- object@tabdata[ ,ncol(object@tabdata)]
             res <- round((r - object@Pl * nrow(object@data)) /
                              sqrt(object@Pl * nrow(object@data)),digits)
@@ -478,7 +498,32 @@ setMethod(
                 }
                 return(tabdata)
             }
+        } else if(restype == 'Q3'){
+            dat <- matrix(NA, N, 2L)
+            diag(res) <- 1
+            for(i in 1L:J){
+                ei <- extract.item(object, item=i)
+                EI <- expected.item(ei, Theta=Theta)
+                dat[ ,1L] <- object@data[ ,i] - EI
+                for(j in 1L:J){
+                    if(i < j){
+                        ej <- extract.item(object, item=i)
+                        EJ <- expected.item(ej, Theta=Theta)
+                        dat[,2L] <- object@data[ ,j] - EJ
+                        tmpdat <- na.omit(dat)
+                        n <- nrow(tmpdat)
+                        Sz <- sqrt(1 / (n-3))
+                        res[i,j] <- res[j,i] <- cor(tmpdat)[1L,2L]
+                    }
+                }
+            }
+            if(verbose) cat("Q3 matrix:\n\n")
+            res <- round(res,digits)
+            return(res)
+        } else {
+            stop('specified restype does not exist')
         }
+        
     }
 )
 
@@ -691,37 +736,5 @@ setMethod(
                               type = 'b', main = 'Empirical Histogram', ...))
             }
         }
-    }
-)
-
-#' Compute fitted values
-#'
-#' \code{fitted(object, digits = 3, ...)}
-#'
-#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-#'   \code{MultipleGroupClass}
-#' @param digits number of significant digits to be rounded
-#' @param ... additional arguments to be passed
-#'
-#' @name fitted-method
-#' @aliases fitted,ExploratoryClass-method fitted,ConfirmatoryClass-method
-#'   fitted,MultipleGroupClass-method
-#' @docType methods
-#' @rdname fitted-method
-#' @examples
-#'
-#' \dontrun{
-#' x <- mirt(Science, 1)
-#' fitted(x)
-#' }
-setMethod(
-    f = "fitted",
-    signature = signature(object = 'ExploratoryClass'),
-    definition = function(object, digits = 3, ...){
-        Exp <- round(nrow(object@data) * object@Pl,digits)
-        tabdata <- object@tabdata
-        Exp[is.na(rowSums(tabdata))] <- NA
-        tabdata <- cbind(tabdata,Exp)
-        return(tabdata)
     }
 )

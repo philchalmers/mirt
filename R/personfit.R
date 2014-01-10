@@ -11,6 +11,9 @@
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
 #' \code{MultipleGroupClass}
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
+#' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If 
+#'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
+#'   be used instead
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit
@@ -42,10 +45,14 @@
 #' x <- mirt(data, 1)
 #' fit <- personfit(x)
 #' head(fit)
+#' 
+#' #using precomputed Theta
+#' Theta <- fscores(x, method = 'MAP', full.scores = TRUE, scores.only = TRUE)
+#' personfit(x, Theta=Theta)
 #'
 #'   }
 #'
-personfit <- function(x, method = 'EAP', ...){
+personfit <- function(x, method = 'EAP', Theta = NULL, ...){
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
@@ -55,22 +62,15 @@ personfit <- function(x, method = 'EAP', ...){
         names(ret) <- names(x@cmods)
         return(ret)
     }
-    full.scores <- TRUE
-    if(!is.null(list(...)$sc)) sc <- list(...)$sc
-    else sc <- fscores(x, verbose = FALSE, full.scores=full.scores, method=method, ...)
+    if(is.null(Theta))
+        Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, 
+                         scores.only=TRUE, method=method, ...)
     J <- ncol(x@data)
     itemloc <- x@itemloc
     pars <- x@pars
     prodlist <- attr(pars, 'prodlist')
     nfact <- x@nfact + length(prodlist)
-    if(full.scores){
-        fulldata <- x@fulldata
-        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1L), drop = FALSE]
-    } else {
-        fulldata <- x@tabdatalong
-        fulldata <- fulldata[,-ncol(fulldata)]
-        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1L) - nfact, drop = FALSE]
-    }
+    fulldata <- x@fulldata
     if(method %in% c('ML', 'WLE')){
         for(i in 1L:ncol(Theta)){
             tmp <- Theta[,i]
@@ -125,17 +125,13 @@ personfit <- function(x, method = 'EAP', ...){
             q.infit <- sqrt(rowSums(C - W^2) / rowSums(W)^2)
             q.infit[q.infit > 1.4142] <- 1.4142
             z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
-            if(full.scores) ret <- data.frame(x@data, outfit=outfit, z.outfit=z.outfit,
-                                              infit=infit, z.infit=z.infit, Zh=Zh)
-            else ret <- data.frame(x@tabdata, outfit=outfit, z.outfit=z.outfit,
-                                   infit=infit, z.infit=z.infit, Zh=Zh)
+            ret <- data.frame(x@data, outfit=outfit, z.outfit=z.outfit,
+                              infit=infit, z.infit=z.infit, Zh=Zh)
         } else {
-            if(full.scores) ret <- data.frame(x@data, Zh=Zh)
-            else ret <- data.frame(x@tabdata, Zh=Zh)
+            ret <- data.frame(x@data, Zh=Zh)
         }
     } else {
-        if(full.scores) ret <- data.frame(x@data, Zh=Zh)
-        else ret <- data.frame(x@tabdata, Zh=Zh)
+        ret <- data.frame(x@data, Zh=Zh)
     }
     return(ret)
 }

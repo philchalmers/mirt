@@ -16,10 +16,12 @@
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} statistic
 #' @param empirical.plot a single numeric value or character of the item name  indicating which item to plot
-#'  (via \code{itemplot}) and
-#' overlay with the empirical \eqn{\theta} groupings. Only applicable when \code{type = 'X2'}.
-#' The default is \code{NULL}, therefore no plots are drawn
+#'  (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings. Only applicable
+#'  when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots are drawn
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
+#' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If 
+#'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
+#'   be used instead
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
@@ -64,6 +66,9 @@
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' #method='ML' agrees better with eRm package
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats
+#' #same as above, but inputting ML estimates instead
+#' Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE, scores.only=TRUE)
+#' itemfit(raschfit, Theta=Theta)
 #'
 #' #similar example to Kang and Chen 2007
 #' a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
@@ -88,7 +93,7 @@
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
-                    empirical.plot = NULL, method = 'EAP', ...){
+                    empirical.plot = NULL, method = 'EAP', Theta = NULL, ...){
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
@@ -96,7 +101,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         for(g in 1L:length(x@cmods)){
             x@cmods[[g]]@itemtype <- x@itemtype
             ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size, mincell = 1,
-                                S_X2.tables = FALSE, method=method, ...)
+                                S_X2.tables = FALSE, method=method, Theta=Theta, ...)
         }
         names(ret) <- x@groupNames
         return(ret)
@@ -107,11 +112,12 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     itemloc <- x@itemloc
     pars <- x@pars
     if(Zh || X2){
-        sc <- fscores(x, verbose = FALSE, full.scores = TRUE, method=method, ...)
+        if(is.null(Theta))
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, 
+                             scores.only=TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
         fulldata <- x@fulldata
-        Theta <- sc[ ,ncol(sc):(ncol(sc) - nfact + 1L), drop = FALSE]
         if(method %in% c('ML', 'WLE')){
             for(i in 1L:ncol(Theta)){
                 tmp <- Theta[,i]
@@ -146,7 +152,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 oneslopes[i] <- closeEnough(x@pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
             if(all(oneslopes)){
                 attr(x, 'inoutfitreturn') <- TRUE
-                pf <- personfit(x, method=method, sc=sc)
+                pf <- personfit(x, method=method, Theta=Theta)
                 z2 <- pf$resid^2 / pf$W
                 outfit <- colSums(z2) / N
                 q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)

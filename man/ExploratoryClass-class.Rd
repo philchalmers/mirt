@@ -65,9 +65,7 @@
 \section{Methods}{
   \describe{ \item{anova}{\code{signature(object =
   "ExploratoryClass")}} \item{coef}{\code{signature(object
-  = "ExploratoryClass")}}
-  \item{fitted}{\code{signature(object =
-  "ExploratoryClass")}} \item{plot}{\code{signature(x =
+  = "ExploratoryClass")}} \item{plot}{\code{signature(x =
   "ExploratoryClass", y = "missing")}}
   \item{print}{\code{signature(x = "ExploratoryClass")} }
   \item{residuals}{\code{signature(object =

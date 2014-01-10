@@ -2,8 +2,11 @@
 
 ## NEW FEATURES
 
+- removed `fitted()` generic since `residuals(model, restype = 'exp')` gives essentially the same 
+  information
+
 - new `restype = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2 
-  instead of X2
+  instead of X2, and `restype = 'Q3'` added as well
 
 - S-EM computation of the information matrix now supports latent parameters (previously was only 
   effective with estimation item-level parameters). 
