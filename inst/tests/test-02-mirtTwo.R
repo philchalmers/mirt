@@ -76,8 +76,12 @@ test_that('poly', {
     expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.6953386, -1.4445425, -0.7365539,
                                                      -0.5624948, -2.5085663, -1.1733173), -1e-4, 1e-4))
 
-    resmat <- residuals(modp3, restype = 'Q3', Theta = fm3[,'F1'], verbose = FALSE)
+    resmat <- residuals(modp3, type = 'Q3', Theta = fm3[,'F1'], verbose = FALSE)
     expect_equal(as.numeric(resmat), c(1, -0.167, -0.144, 0.085, -0.167, 1, -0.055, -0.217, -0.144, -0.055, 1, -0.448, 0.085, -0.217, -0.448, 1))
+    resmatLD <- residuals(modp3, type = 'LD', verbose = FALSE)
+    expect_equal(as.numeric(resmatLD), c(NA, -20.127, -13.328, 19.607, -0.131, NA, 10.872, -21.561, -0.106, 0.096, NA, -17.541, 0.129, -0.135, -0.122, NA))
+    resmatG2 <- residuals(modp3, type = 'LDG2', verbose = FALSE)
+    expect_equal(as.numeric(resmatG2), c(NA, -22.903, -12.621, 23.24, -0.14, NA, 10.728, -17.242, -0.104, 0.096, NA, -18.519, 0.141, -0.121, -0.125, NA))
     cof1 <- coef(modp1)
     expect_is(cof1, 'list')
     cof2 <- coef(modp2, verbose = FALSE)

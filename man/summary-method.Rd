@@ -33,9 +33,9 @@
   suppress = 0, digits = 3, verbose = TRUE, ...)}
 }
 \details{
-  Tranforms coefficients into a standardized factor
+  Transforms coefficients into a standardized factor
   loading's metric. For \code{MixedClass} objects, the
-  fixed and random coeffiicents are printed.
+  fixed and random coefficients are printed.
 }
 \examples{
 \dontrun{

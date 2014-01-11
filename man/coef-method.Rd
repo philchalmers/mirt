@@ -37,7 +37,7 @@
   \item{verbose}{logical; allow information to be printed
   to the console?}
 
-  \item{rawug}{logical; return the untranformed internal g
+  \item{rawug}{logical; return the untransformed internal g
   and u parameters?  If \code{FALSE}, g and u's are
   converted with the original format along with delta
   standard errors}

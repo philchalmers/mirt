@@ -38,7 +38,7 @@
   to be used when plotting. Default is to use all available
   items}
 
-  \item{facet_items}{logical; apply grid of plots accross
+  \item{facet_items}{logical; apply grid of plots across
   items? If \code{FALSE}, items will be placed in one plot
   for each group}
 

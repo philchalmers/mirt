@@ -32,9 +32,9 @@ setMethod(
         else
             cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")
         if(!is.nan(x@condnum))
-            cat("Condition number of information matrix = ", x@condnum, 
-                '\nSecond-order test: model ', if(!x@secondordertest) 
-                    'is a possible saddle point (non-maximum)' else 
+            cat("Condition number of information matrix = ", x@condnum,
+                '\nSecond-order test: model ', if(!x@secondordertest)
+                    'is a possible saddle point (non-maximum)' else
                         'is a possible local maximum', '\n', sep = "")
         if(length(x@logLik) > 0){
             cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0,
@@ -83,8 +83,8 @@ setMethod(
 #'
 #' \code{summary(object, rotate = '', Target = NULL, suppress = 0, digits = 3, verbose = TRUE, ...)}
 #'
-#' Tranforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
-#' the fixed and random coeffiicents are printed.
+#' Transforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
+#' the fixed and random coefficients are printed.
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -164,7 +164,7 @@ setMethod(
                 print(Phi)
             }
             if(any(h2 > 1))
-                warning("Solution has heywood cases. Interpret with caution.")
+                warning("Solution has Heywood cases. Interpret with caution.")
             invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))
         }
     }
@@ -172,7 +172,7 @@ setMethod(
 
 #' Extract raw coefs from model object
 #'
-#' \code{coef(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3, 
+#' \code{coef(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3,
 #'    IRTpars = FALSE, rawug = FALSE, verbose = TRUE, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -189,7 +189,7 @@ setMethod(
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded
 #' @param verbose logical; allow information to be printed to the console?
-#' @param rawug logical; return the untranformed internal g and u parameters?
+#' @param rawug logical; return the untransformed internal g and u parameters?
 #'   If \code{FALSE}, g and u's are converted with the original format along with delta standard errors
 #' @param ... additional arguments to be passed
 #'
@@ -206,17 +206,17 @@ setMethod(
 #' x <- mirt(dat, 1)
 #' coef(x)
 #' coef(x, IRTpars = TRUE)
-#' 
+#'
 #' #with computed information matrix
 #' x <- mirt(dat, 1, SE = TRUE)
 #' coef(x)
 #' coef(x, printSE = TRUE)
-#' 
+#'
 #' #two factors
 #' x2 <- mirt(Science, 2)
 #' coef(x2)
 #' coef(x2, rotate = 'varimax')
-#' 
+#'
 #' }
 setMethod(
     f = "coef",
@@ -238,7 +238,7 @@ setMethod(
         a <- matrix(0, J, nfact)
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@pars[[i]])
-        
+
         if (ncol(a) > 1 && rotate != 'none'){
             rotname <- ifelse(rotate == '', object@rotate, rotate)
             if(verbose) cat("\nRotation: ", rotname, "\n\n")
@@ -347,26 +347,26 @@ setMethod(
 
 #' Compute model residuals
 #'
-#' \code{residuals(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
+#' \code{residuals(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
 #'                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
-#' @param restype type of residuals to be displayed.
-#'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the 
+#' @param type type of residuals to be displayed.
+#'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
 #'   X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
 #'   Yen (1984), or \code{'exp'} for the expected values for the frequencies of every response pattern
-#' @param tables logical; for LD restype, return the observed, expected, and standarized residual
+#' @param tables logical; for LD type, return the observed, expected, and standardized residual
 #'   tables for each item combination?
 #' @param digits number of significant digits to be rounded
 #' @param df.p logical; print the degrees of freedom and p-values?
-#' @param full.scores logical; compute relavent statistics
+#' @param full.scores logical; compute relevant statistics
 #'  for each subject in the original data?
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
 #'   option. Only prints patterns that have standardized residuals greater than
 #'   \code{abs(printvalue)}. The default (NULL) prints all response patterns
 #' @param verbose logical; allow information to be printed to the console?
-#' @param Theta a matrix of factor scores used for statistics that require emperical estimates (i.e., Q3). 
+#' @param Theta a matrix of factor scores used for statistics that require empirical estimates (i.e., Q3).
 #'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
 #' @param ... additional arguments to be passed to \code{fscores()}
@@ -377,31 +377,31 @@ setMethod(
 #' @docType methods
 #' @rdname residuals-method
 #' @references
-#' 
+#'
 #' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 #' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
-#' 
+#'
 #' Yen, W. (1984). Effects of local item dependence on the fit and equating performance of the three
 #' parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.
 #' @examples
 #'
 #' \dontrun{
-#' 
+#'
 #' x <- mirt(Science, 1)
 #' residuals(x)
 #' residuals(x, tables = TRUE)
-#' residuals(x, restype = 'exp')
-#' 
+#' residuals(x, type = 'exp')
+#'
 #' # with and without supplied factor scores
 #' Theta <- fscores(x, full.scores=TRUE, scores.only=TRUE)
-#' residuals(x, restype = 'Q3', Theta=Theta)
-#' residuals(x, restype = 'Q3', method = 'ML')
-#' 
+#' residuals(x, type = 'Q3', Theta=Theta)
+#' residuals(x, type = 'Q3', method = 'ML')
+#'
 #' }
 setMethod(
     f = "residuals",
     signature = signature(object = 'ExploratoryClass'),
-    definition = function(object, restype = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
+    definition = function(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)
     {
         K <- object@K
@@ -415,15 +415,15 @@ setMethod(
         colnames(res) <- rownames(res) <- colnames(data)
         quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
-        if(restype != 'Q3'){
+        if(type != 'Q3'){
             Theta <- thetaComb(theta, nfact)
         } else if(is.null(Theta)){
             Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
         }
         itemnames <- colnames(data)
         listtabs <- list()
-        calcG2 <- ifelse(restype == 'LDG2', TRUE, FALSE)
-        if(restype %in% c('LD', 'LDG2')){
+        calcG2 <- ifelse(type == 'LDG2', TRUE, FALSE)
+        if(type %in% c('LD', 'LDG2')){
             prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
             prior <- prior/sum(prior)
             df <- (object@K - 1) %o% (object@K - 1)
@@ -466,7 +466,7 @@ setMethod(
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
             res <- round(res,digits)
             return(res)
-        } else if(restype == 'exp'){
+        } else if(type == 'exp'){
             r <- object@tabdata[ ,ncol(object@tabdata)]
             res <- round((r - object@Pl * nrow(object@data)) /
                              sqrt(object@Pl * nrow(object@data)),digits)
@@ -498,7 +498,7 @@ setMethod(
                 }
                 return(tabdata)
             }
-        } else if(restype == 'Q3'){
+        } else if(type == 'Q3'){
             dat <- matrix(NA, N, 2L)
             diag(res) <- 1
             for(i in 1L:J){
@@ -521,9 +521,9 @@ setMethod(
             res <- round(res,digits)
             return(res)
         } else {
-            stop('specified restype does not exist')
+            stop('specified type does not exist')
         }
-        
+
     }
 )
 
@@ -551,8 +551,8 @@ setMethod(
 #' @param rot allows rotation of the 3D graphics
 #' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
-#' @param facet_items logical; apply grid of plots accross items? If \code{FALSE}, items will be 
-#'   placed in one plot for each group 
+#' @param facet_items logical; apply grid of plots across items? If \code{FALSE}, items will be
+#'   placed in one plot for each group
 #' @param auto.key logical parameter passed to the \code{lattice} package
 #' @param ... additional arguments to be passed
 #'
@@ -570,7 +570,7 @@ setMethod(
 #' plot(x, type = 'infotrace')
 #' plot(x, type = 'infotrace', facet_items = TRUE)
 #' plot(x, type = 'infoSE')
-#' 
+#'
 #' set.seed(1234)
 #' group <- sample(c('g1','g2'), nrow(Science), TRUE)
 #' x2 <- multipleGroup(Science, 1, group)
@@ -578,11 +578,11 @@ setMethod(
 #' plot(x2, type = 'trace')
 #' plot(x2, type = 'trace', which.items = 1:2)
 #' plot(x2, type = 'score')
-#' 
+#'
 #' x3 <- mirt(Science, 2)
 #' plot(x3)
 #' plot(x3, type = 'SE')
-#' 
+#'
 #' }
 setMethod(
     f = "plot",
@@ -695,7 +695,7 @@ setMethod(
                 return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
                               xlab = expression(theta), ylab = expression(P(theta)),
                               auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
-                
+
             }
             if(type == 'infotrace'){
                 I <- matrix(NA, nrow(Theta), J)
@@ -706,7 +706,7 @@ setMethod(
                             labels = paste('Item', which.items))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
                 if(facet_items){
-                    return(xyplot(I ~ Theta|item, plotobj, 
+                    return(xyplot(I ~ Theta|item, plotobj,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
                 } else {

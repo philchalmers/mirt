@@ -1,23 +1,28 @@
 # Changes in mirt 1.x
 
-## NEW FEATURES
+## MAJOR CHANGES
 
-- removed `fitted()` generic since `residuals(model, restype = 'exp')` gives essentially the same 
+- `restype` argument to `residuals()` changed to `type` to be more consistent with the rest of the 
+  package
+
+- removed `fitted()` generic since `residuals(model, type = 'exp')` gives essentially the same 
   information
-
-- new `restype = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2 
-  instead of X2, and `restype = 'Q3'` added as well
-
-- S-EM computation of the information matrix now supports latent parameters (previously was only 
-  effective with estimation item-level parameters). 
-
-- `printSE` argument can now be passed to `coef()` for printing the standard errors instead of 
-  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE`
-
+  
 - mixedmirt has `SE` set to `TRUE` by default to ensure a more accurate information matrix
 
 - if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = .001` for each 
   parameter to better approximate the information matrix
+
+## NEW FEATURES
+
+- new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2 
+  instead of X2, and `type = 'Q3'` added as well
+
+- S-EM computation of the information matrix now supports latent parameters (previously was only 
+  effective with estimation item-level parameters) 
+
+- `printSE` argument can now be passed to `coef()` for printing the standard errors instead of 
+  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE`
 
 - second-order test and condition number added to estimation objects when information matrix is
   computed
