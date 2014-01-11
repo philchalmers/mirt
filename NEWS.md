@@ -15,6 +15,9 @@
 
 ## NEW FEATURES
 
+- `mirt.model()` support for multiline inputs, provided that a comma is placed at the end of 
+  the input lines to be continued
+
 - new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2 
   instead of X2, and `type = 'Q3'` added as well
 

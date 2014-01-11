@@ -123,6 +123,12 @@ mirt.model <- function(input = NULL, file = "", COV = NULL, quiet = TRUE, ...)
     }
     if(!is.null(input)){
         minput <- strsplit(input, '\\n')
+        for(j in length(minput[[1L]]):1L){
+            if(!grepl(pattern='=', minput[[1L]][j])){
+                minput[[1L]][j-1L] <- paste(minput[[1L]][j-1L], minput[[1L]][j])
+                minput[[1L]] <- minput[[1L]][-j]
+            }
+        }
         file <- tempfile()
         write.table(minput, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
     }
