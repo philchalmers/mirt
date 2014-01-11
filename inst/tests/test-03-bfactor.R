@@ -89,8 +89,6 @@ test_that('dich data', {
 
     res <- residuals(simmod, verbose = FALSE)
     expect_is(res, 'matrix')
-    fit <- fitted(simmod)
-    expect_is(fit, 'matrix')
     sum <- summary(simmod, verbose = FALSE)
     expect_is(sum, 'list')
 })

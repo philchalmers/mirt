@@ -418,7 +418,7 @@ setMethod(
         if(restype != 'Q3'){
             Theta <- thetaComb(theta, nfact)
         } else if(is.null(Theta)){
-            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
+            Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
         }
         itemnames <- colnames(data)
         listtabs <- list()

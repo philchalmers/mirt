@@ -93,8 +93,6 @@ test_that('confirmatory mods', {
 
     TI <- plot(mod1)
     expect_is(TI, 'trellis')
-    fit <- fitted(mod1)
-    expect_is(fit, 'matrix')
     res <- residuals(mod1, verbose = FALSE)
     expect_is(res, 'matrix')
     IP <- itemplot(mod1, 1)
