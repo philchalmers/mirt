@@ -866,7 +866,7 @@ updateHess <- function(h, L2, L3){
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NaN,
                      rotate = 'varimax', Target = NaN, SE = FALSE, verbose = TRUE,
-                     SEtol = .0001, grsm.block = NULL, D = 1,
+                     SEtol = .0001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'MHRM', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
@@ -891,9 +891,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$customPriorFun = technical$customPriorFun
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
+    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM') 1e-4 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- FALSE
-        if(is.null(technical$TOL)) technical$TOL <- 1e-6
+        if(is.null(TOL)) opts$TOL <- 1e-6
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
         opts$SEtol <- ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     }
@@ -907,7 +908,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
-    opts$TOL <- ifelse(is.null(technical$TOL), if(method == 'EM') 1e-4 else 1e-3, technical$TOL)
     opts$empiricalhist <- empiricalhist
     if(empiricalhist){
         if(opts$method != 'EM')

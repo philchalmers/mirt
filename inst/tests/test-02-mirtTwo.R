@@ -13,7 +13,7 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
-    modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE, technical = list(TOL=1e-6))
+    modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 0.669, 1.412, 4.863, 3.904, 5.822, 2.639, 2.203, 3.075, -1.465, -1.775, -1.156, 1.226, 0.866, 1.586, 2.924, 2.442, 3.406, 0.901, 0.617, 1.185, -2.266, -2.663, -1.869, 2.301, 1.334, 3.267, 5.245, 3.782, 6.708, 2.219, 1.506, 2.932, -1.967, -2.613, -1.322, 1.094, 0.731, 1.456, 3.347, 2.804, 3.89, 0.991, 0.716, 1.267, -1.688, -2.016, -1.359, 0, NA, NA, 1, NA, NA),
@@ -45,8 +45,7 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp4, verbose = FALSE, digits=4)))
     expect_equal(cfs, c(1.0408, 4.862, 2.6387, -1.4664, 1.2063, 2.9083, 0.8958, -2.254, 2.3376, 5.2972, 2.2404, -1.9886, 0.7986, 0, 1.0782, 1.7756, 3, 0, 2.1964, 2.9637, 1.6742, 0, 1),
                  tolerance = 1e-2)
-    modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, verbose=FALSE,
-                  technical = list(TOL=1e-6))
+    modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, verbose=FALSE)
     expect_is(modp5, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
     expect_equal(cfs, c(1.057, 0.674, 1.439, 4.876, 3.913, 5.84, 2.649, 2.21, 3.089, -1.472, -1.789, -1.156, 1.219, 0.856, 1.582, 2.918, 2.445, 3.39, 0.9, 0.619, 1.18, -2.263, -2.662, -1.864, 2.255, 1.289, 3.221, 5.178, 3.712, 6.643, 2.19, 1.47, 2.911, -1.943, -2.575, -1.311, 0.77, 0.464, 1.076, 0, NA, NA, 2.159, 1.552, 2.767, 2.973, 2.294, 3.653, 1.767, 1.136, 2.398, 0, NA, NA, 1, NA, NA),

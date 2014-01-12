@@ -73,8 +73,8 @@
 #' # define a parallel cluster (optional) to help speed up internal functions
 #' mirtCluster()
 #'
-#' #  Information matrix with S-EM, therefore drop TOL for better accuracy
-#' model <- multipleGroup(dat, 1, group, SE = TRUE, technical = list(TOL = 1e-6))
+#' #  Information matrix with S-EM
+#' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
 #' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
 #' resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)

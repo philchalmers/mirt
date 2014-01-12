@@ -53,8 +53,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         newret$RMSEA.M2 <- ifelse((newret$Total.M2 - newret$df.M2) > 0,
                            sqrt(newret$Total.M2 - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0)
         if(calcNull){
-            null.mod <- try(multipleGroup(obj@data, 1, group=obj@group,
-                                          technical=list(NULL.MODEL=TRUE, TOL=1e-3),
+            null.mod <- try(multipleGroup(obj@data, 1, group=obj@group, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
             null.fit <- fitIndices(null.mod, prompt=FALSE)
             newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) /
@@ -164,7 +163,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
                         sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (sum(r)-1)), 0)
         if(calcNull){
-            null.mod <- try(mirt(obj@data, 1, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
+            null.mod <- try(mirt(obj@data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
             null.fit <- fitIndices(null.mod, prompt=FALSE)
             ret$TLI.M2 <- (null.fit$M2 / null.fit$df.M2 - ret$M2/ret$df.M2) /

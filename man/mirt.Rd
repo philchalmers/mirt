@@ -7,11 +7,12 @@ Theory)}
     SE = FALSE, SE.type = "SEM", method = "EM",
     pars = NULL, constrain = NULL, parprior = NULL,
     calcNull = TRUE, draws = 5000, rotate = "oblimin",
-    Target = NaN, quadpts = NULL, grsm.block = NULL,
-    rsm.block = NULL, key = NULL, nominal.highlow = NULL,
-    large = FALSE, GenRandomPars = FALSE,
-    accelerate = TRUE, empiricalhist = FALSE,
-    verbose = TRUE, technical = list(), ...)
+    Target = NaN, quadpts = NULL, TOL = NULL,
+    grsm.block = NULL, rsm.block = NULL, key = NULL,
+    nominal.highlow = NULL, large = FALSE,
+    GenRandomPars = FALSE, accelerate = TRUE,
+    empiricalhist = FALSE, verbose = TRUE,
+    technical = list(), ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -170,6 +171,13 @@ Theory)}
   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11,
   '4'=7, '5'=5, 3)}}
 
+  \item{TOL}{convergence threshold for EM or MH-RM;
+  defaults are .0001 and .001. If \code{SE.type = 'SEM'}
+  and this value is not specified, the default is set to
+  \code{1e-6}. If \code{empiricalhist = TRUE} and
+  \code{TOL} is not specified then the default \code{3e-5}
+  will be used}
+
   \item{large}{a logical, indicating whether the internal
   collapsed data should be returned, or list of internally
   computed mirt parameters containing the data. If
@@ -221,11 +229,8 @@ Theory)}
   parameters for estimation. May be: \describe{
   \item{MAXQUAD}{maximum number of quadratures, which you
   can increase if you have more than 4GB or RAM on your PC;
-  default 10000} \item{TOL}{EM or MH-RM convergence
-  threshold; defaults are .0001 and .001. If \code{SE.type
-  = 'SEM'} and this value is not specified, the default is
-  set to \code{1e-6}} \item{SEtol}{tolerance value used to
-  stop the MHRM estimation when \code{SE = TRUE} and
+  default 10000} \item{SEtol}{tolerance value used to stop
+  the MHRM estimation when \code{SE = TRUE} and
   \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower
   values will take longer but may be more stable for
   computing the information matrix. Default is .0001.
@@ -579,7 +584,7 @@ data <- key2binary(SAT12,
 mod1 <- mirt(data, 1)
 mod2 <- mirt(data, 2)
 #difficulty converging with reduced quadpts, reduce TOL
-mod3 <- mirt(data, 3, technical = list(TOL = .001))
+mod3 <- mirt(data, 3, TOL = .001)
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 

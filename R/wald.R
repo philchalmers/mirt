@@ -10,8 +10,8 @@
 #'
 #' @aliases wald
 #' @param L a coefficient matrix with dimensions nconstrasts x npars, or a vector if only one
-#' set of contrasts is being tested. Omitting this value will return the column names of the
-#' information matrix used to identify the (potentially constrained) parameters
+#'   set of contrasts is being tested. Omitting this value will return the column names of the
+#'   information matrix used to identify the (potentially constrained) parameters
 #' @param object estimated object from \code{mirt}, \code{bfactor},
 #' \code{multipleGroup}, or \code{mixedmirt}
 #' @param C a constant vector/matrix to be compared along side L
@@ -28,25 +28,30 @@
 #' #see how the information matrix relates to estimated parameters, and how it lines up with the index
 #' (infonames <- wald(mod))
 #' index <- mod2values(mod)
-#' index
+#' index[index$est, ]
 #'
 #' #second item slope equal to 0?
 #' L <- rep(0, 10)
-#' names(L) <- infonames
+#' names(L) <- infonames #labelling is optional
 #' L[3] <- 1
 #' wald(mod, L)
 #'
-#' #simultaneously test equal factor slopes for item 2 and 3, and 4 and 5
+#' #simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
 #' L <- matrix(0, 2, 10)
-#' colnames(L) <- infonames #colnames() not required
+#' colnames(L) <- infonames #again, labelling not required
 #' L[1,1] <- L[2, 7] <- 1
 #' L[1,3] <- L[2, 9] <- -1
 #' L
 #' wald(mod, L)
 #'
 #' #logLiklihood tests (requires estimating a new model)
-#' mod2 <- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
+#' cmodel <- mirt.model('theta = 1-5
+#'                       CONSTRAIN = (1,2, a1), (4,5, a1)')
+#' mod2 <- mirt(data, cmodel) 
+#' #or, eqivalently                     
+#' #mod2 <- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
 #' anova(mod2, mod)
+#' 
 #' }
 wald <- function(object, L, C = 0){
     if(all(dim(object@information) == c(1,1)))

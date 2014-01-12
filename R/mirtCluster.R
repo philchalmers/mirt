@@ -32,7 +32,7 @@ mirtCluster <- function(ncores, remove = FALSE){
     if(!require(parallel)) require(parallel)
     if(remove){
         if(is.null(mirtClusterEnv$MIRTCLUSTER)){
-            message('No MIRTCLUSTER object has been defined')
+            message('There is no visible mirtCluster() definition')
             return(invisible())
         }
         stopCluster(mirtClusterEnv$MIRTCLUSTER)
@@ -41,7 +41,7 @@ mirtCluster <- function(ncores, remove = FALSE){
         return(invisible())
     }
     if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-        message('MIRTCLUSTER object already defined')
+        message('mirtCluster() has already been defined')
         return(invisible())
     }
     if(missing(ncores))

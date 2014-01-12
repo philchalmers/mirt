@@ -6,10 +6,11 @@
     guess = 0, upper = 1, SE = FALSE, SE.type = "SEM",
     invariance = "", pars = NULL, method = "EM",
     constrain = NULL, parprior = NULL, calcNull = TRUE,
-    draws = 5000, quadpts = NULL, grsm.block = NULL,
-    rsm.block = NULL, key = NULL, technical = list(),
-    accelerate = TRUE, empiricalhist = FALSE,
-    GenRandomPars = FALSE, verbose = TRUE, ...)
+    draws = 5000, quadpts = NULL, TOL = NULL,
+    grsm.block = NULL, rsm.block = NULL, key = NULL,
+    technical = list(), accelerate = TRUE,
+    empiricalhist = FALSE, GenRandomPars = FALSE,
+    verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -108,6 +109,8 @@
   \item{parprior}{see \code{\link{mirt}} for details}
 
   \item{pars}{see \code{\link{mirt}} for details}
+
+  \item{TOL}{see \code{\link{mirt}} for details}
 
   \item{...}{additional arguments to be passed}
 

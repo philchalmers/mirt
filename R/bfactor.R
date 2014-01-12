@@ -155,6 +155,7 @@
 #' # Two-tier model
 #'
 #' #simulate data
+#' set.seed(1234)
 #' a <- matrix(c(
 #' 0,1,0.5,NA,NA,
 #' 0,1,0.5,NA,NA,
@@ -178,7 +179,6 @@
 #'
 #' sigma <- diag(5)
 #' sigma[1,2] <- sigma[2,1] <- .4
-#' set.seed(1234)
 #' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 #'
 #' specific <- c(rep(1,5),rep(2,6),rep(3,5))
@@ -187,7 +187,7 @@
 #'     G2 = 9-16
 #'     COV = G1*G2')
 #'
-#' simmod <- bfactor(dataset, specific, model, quadpts = 9, technical = list(TOL = 1e-3))
+#' simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
 #' coef(simmod)
 #' summary(simmod)
 #'

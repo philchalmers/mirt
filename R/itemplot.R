@@ -49,7 +49,7 @@
 #' itemplot(mod3, 3, type = 'info')
 #'
 #' #polytomous items
-#' pmod <- mirt(Science, 1, SE=TRUE, SE.type = 'MHRM')
+#' pmod <- mirt(Science, 1, SE=TRUE)
 #' itemplot(pmod, 3)
 #' itemplot(pmod, 3, CE = TRUE)
 #'

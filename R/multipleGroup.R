@@ -67,12 +67,13 @@
 #' @param rsm.block see \code{\link{mirt}} for details
 #' @param parprior see \code{\link{mirt}} for details
 #' @param pars see \code{\link{mirt}} for details
+#' @param TOL see \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed
 #' @param technical list specifying subtle parameters that can be adjusted. See
 #'   \code{\link{mirt}} for details
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-#'   \code{\link{residuals-method}}, \code{\link{plot-method}}, 
+#'   \code{\link{residuals-method}}, \code{\link{plot-method}},
 #'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
 #'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
@@ -185,7 +186,7 @@
 #'    F1 = 1-5
 #'    F2 = 6-10
 #'    F3 = 11-15')
-#'    
+#'
 #' #define mirt cluster to use parallel architecture
 #' mirtCluster()
 #'
@@ -229,7 +230,7 @@
 #' fs <- fscores(mod_configural)
 #' head(fs[["D1"]])
 #' fscores(mod_configural, method = 'EAPsum')
-#' 
+#'
 #' # constrain slopes within each group to be equal (but not accross groups)
 #' model2 <- mirt.model('F1 = 1-15
 #'                       CONSTRAIN = (1-15, a1)')
@@ -262,7 +263,7 @@
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                           SE = FALSE, SE.type = 'SEM', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
-                          draws = 5000, quadpts = NULL, grsm.block = NULL, rsm.block = NULL,
+                          draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL, rsm.block = NULL,
                           key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE,
                           GenRandomPars = FALSE, verbose = TRUE, ...)
 {
@@ -286,8 +287,8 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
                       parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
                       technical = technical, verbose = verbose, calcNull=calcNull,
-                      SE.type = SE.type, key=key, accelerate=accelerate, draws=draws, 
-                      GenRandomPars=GenRandomPars, ...)
+                      SE.type = SE.type, key=key, accelerate=accelerate, draws=draws,
+                      GenRandomPars=GenRandomPars, TOL=TOL, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

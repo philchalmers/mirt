@@ -2,29 +2,30 @@
 
 ## MAJOR CHANGES
 
-- `restype` argument to `residuals()` changed to `type` to be more consistent with the rest of the 
+- `TOL` convergence criteria moved outside of the `technical` input to its own argument
+
+- `restype` argument to `residuals()` changed to `type` to be more consistent with the rest of the
   package
 
-- removed `fitted()` generic since `residuals(model, type = 'exp')` gives essentially the same 
-  information
-  
-- mixedmirt has `SE` set to `TRUE` by default to ensure a more accurate information matrix
+- removed `fitted()` generic since `residuals(model, type = 'exp')` gives essentially the same
+  output
 
-- if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = .001` for each 
+- mixedmirt has `SE` set to `TRUE` by default to help construct a more accurate information matrix
+
+- if not specified, S-EM `TOL` dropped to `1e-6` in the EM, and `SEtol = .001` for each
   parameter to better approximate the information matrix
 
 ## NEW FEATURES
 
-- `mirt.model()` support for multiline inputs, provided that a comma is placed at the end of 
-  the input lines to be continued
+- `mirt.model()` support for multiline inputs
 
-- new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2 
+- new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2
   instead of X2, and `type = 'Q3'` added as well
 
-- S-EM computation of the information matrix now supports latent parameters (previously was only 
-  effective with estimation item-level parameters) 
+- S-EM computation of the information matrix support for latent parameters (previously was only
+  effective with estimation item-level parameters)
 
-- `printSE` argument can now be passed to `coef()` for printing the standard errors instead of 
+- `printSE` argument can now be passed to `coef()` for printing the standard errors instead of
   confidence intervals. As a consequence, `rawug` is automatically set to `TRUE`
 
 - second-order test and condition number added to estimation objects when information matrix is
@@ -45,7 +46,7 @@
 
 ## NEW FEATURES
 
-- `facet_items` argument added to plot() to control whether seperate plots should be constructed 
+- `facet_items` argument added to plot() to control whether seperate plots should be constructed
   for each item or to merge them onto a single plot
 
 - three dimensional models supported in `itemplot()` for types `trace`, `score`, `info`, and `SE`
