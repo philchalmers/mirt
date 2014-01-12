@@ -41,31 +41,6 @@ test_that('mixed dich', {
                  tolerance = 1e-2)
 })
 
-test_that('item and group predictors', {
-    data <- key2binary(SAT12,
-                       key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-    model <- mirt.model('Theta = 1-32', quiet = TRUE)
-
-    itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
-    fs <- scale(rowSums(data))
-    covdata <- data.frame(gender=ifelse(fs > 1, 'M', 'F'))
-
-    sv <- mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder + gender,
-                    itemdesign = itemdesign, pars = 'values')
-    expect_is(sv, 'data.frame')
-    suppressWarnings(LLTM <- mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder + gender,
-                      itemdesign = itemdesign, verbose = FALSE, draws = 10))
-    expect_is(LLTM, 'MixedClass')
-    cfs <- na.omit(as.numeric(do.call(c, coef(LLTM, digits=4))))[1:20]
-    sv2 <- suppressWarnings(mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder * gender,
-                     itemdesign = itemdesign, pars='values'))
-    expect_is(sv2, 'data.frame')
-    LLTM2 <- suppressWarnings(mixedmirt(data, covdata, model = model, fixed = ~ 0 + itemorder * gender,
-                       itemdesign = itemdesign, verbose = FALSE, draws = 10))
-    expect_is(LLTM2, 'MixedClass')
-    expect_equal(LLTM@df - LLTM2@df, 1)
-})
-
 test_that('polytomous', {
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
     model <- mirt.model('F1 = 1-4', quiet = TRUE)
