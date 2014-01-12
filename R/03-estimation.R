@@ -515,6 +515,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        pars=cmods[[1L]]@pars,
                        model=list(oldmodel),
                        df=df,
+                       p=NaN,
                        itemloc=PrepList[[1L]]$itemloc,
                        method=opts$method,
                        AIC=AIC,
