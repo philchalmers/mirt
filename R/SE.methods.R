@@ -37,7 +37,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
         }
         LL
     }
-    
+
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
     infological=ESTIMATE$infological
@@ -116,9 +116,9 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     groupest <- FALSE
     for(g in 1L:ngroups)
         groupest <- any(groupest, pars[[g]][[J+1]]@est)
-    
+
     for (cycles in from:to){
-        
+
         longpars <- MLestimates
         longpars[estindex] <- EMhistory[cycles, estindex]
         if(length(constrain) > 0L)
@@ -188,13 +188,13 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
                 for(i in 1L:nitems){
                     tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                     pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
-                    pars[[g]][[i]]@dat <- matrix(gtabdata[, tmp, drop=FALSE], nrow(Theta), 
+                    pars[[g]][[i]]@dat <- matrix(gtabdata[, tmp, drop=FALSE], nrow(Theta),
                                                  length(tmp), byrow = TRUE) * w
                     tmp <- Deriv(pars[[g]][[i]], Theta=Theta, EM=TRUE, estHess=FALSE)
                     DX[pars[[g]][[i]]@parnum] <- tmp$grad
                 }
             }
-            Igrad <- Igrad + updateHess(outer(DX, DX), L2=Ls$L2, L3=Ls$L3) * r
+            Igrad <- Igrad + outer(DX, DX) * r
         }
     } else {
         for(pat in 1L:nrow(PrepList[[1L]]$tabdata)){
@@ -215,19 +215,22 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
                     for(j in 1L:nrow(Theta)){
                         tmp <- Deriv(pars[[g]][[i]], Theta=Theta[j, , drop=FALSE], EM=TRUE, estHess=TRUE)
                         tmpderiv[j,pars[[g]][[i]]@parnum] <- tmp$grad
-                        tmphess[pars[[g]][[i]]@parnum, pars[[g]][[i]]@parnum] <- 
+                        tmphess[pars[[g]][[i]]@parnum, pars[[g]][[i]]@parnum] <-
                             tmphess[pars[[g]][[i]]@parnum, pars[[g]][[i]]@parnum] + tmp$hess * w[j] * r
                     }
                 }
             }
-            Ihess <- Ihess + updateHess(tmphess, L2=Ls$L2, L3=Ls$L3)
-            tmpderiv <- tmpderiv * w 
+            Ihess <- Ihess + tmphess
+            tmpderiv <- tmpderiv * w
             for(j in 1L:nrow(Theta))
-                IgradP <- IgradP + updateHess(outer(tmpderiv[j,], tmpderiv[j,]), L2=Ls$L2, L3=Ls$L3) * r
+                IgradP <- IgradP + outer(tmpderiv[j,], tmpderiv[j,]) * r
             DX <- colSums(tmpderiv)
-            Igrad <- Igrad + updateHess(outer(DX, DX), L2=Ls$L2, L3=Ls$L3) * r
+            Igrad <- Igrad + outer(DX, DX) * r
         }
     }
+    Igrad <- updateHess(Igrad, L2=Ls$L2, L3=Ls$L3)
+    IgradP <- updateHess(IgradP, L2=Ls$L2, L3=Ls$L3)
+    Ihess <- updateHess(Ihess, L2=Ls$L2, L3=Ls$L3)
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
@@ -299,16 +302,13 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N){
                 dx <- tmp$grad
                 DX[pars[[g]][[i]]@parnum] <- dx
             }
-        }        
+        }
         collectL[pat] <- rlist$expected
-        DX <- as.numeric(L %*% DX)
         DX[DX != 0] <-  rlist$expected - exp(log(rlist$expected) - DX[DX != 0])
         collectgrad[pat, ] <- DX
     }
-    Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
-    colnames(Igrad) <- rownames(Igrad) <- names(ESTIMATE$correction)
-    collectgrad <- collectgrad[, ESTIMATE$estindex_unique]
     info <- N * t(collectgrad) %*% diag(1/collectL) %*% collectgrad
+    info <- updateHess(info, L2=Ls$L2, L3=Ls$L3)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
