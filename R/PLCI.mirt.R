@@ -73,9 +73,13 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     }
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, sv, get.LL, parprior){
-        lower <- ifelse(lbound[parnum] == -Inf, -10, lbound[parnum])
-        upper <- ifelse(ubound[parnum] == Inf, 10, ubound[parnum])
+        lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
+        upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
         mid <- pars[parnum]
+        if(parnames[parnum] %in% c('g', 'u')){
+            lower <- 0
+            upper <- 1
+        }
         if(mid > lower){
             opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, large=large,
                                   which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior,
