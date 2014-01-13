@@ -19,9 +19,10 @@
   indicating which item to plot}
 
   \item{type}{plot type to use, information
-  (\code{'info'}), standard errors (\code{'SE'}),
-  information and standard errors (\code{'infoSE'}), item
-  trace lines (\code{'trace'}), relative efficiency lines
+  (\code{'info'}), standard errors (\code{'SE'}), item
+  trace lines (\code{'trace'}), information and standard
+  errors (\code{'infoSE'}) or information and trace lines
+  (\code{'infotrace'}), relative efficiency lines
   (\code{'RE'}), expected score \code{'score'}, or
   information contours \code{('infocontour')} (not for
   \code{MultipleGroupClass} objects)}

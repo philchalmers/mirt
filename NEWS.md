@@ -17,6 +17,8 @@
 
 ## NEW FEATURES
 
+- `type = 'infotrace'` added to `itemplot()` to plot trace lines and information on the same plot
+
 - `mirt.model()` support for multiline inputs
 
 - new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2

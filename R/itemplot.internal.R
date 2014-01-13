@@ -261,6 +261,14 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
             if(!require(latticeExtra)) require(latticeExtra)
             return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
+        } else if(type == 'infotrace'){
+            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), group=time,
+                            main = paste('Trace lines and information for item', item), 
+                           ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
+            obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
+                           ylim = c(-0.1,max(plt$info) + .5))
+            if(!require(latticeExtra)) require(latticeExtra)
+            return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
         } else if(type == 'infocontour'){
             stop('Cannot draw contours for 1 factor models')
         } else {
