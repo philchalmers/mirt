@@ -110,25 +110,13 @@ setMethod(
 		W <- W/sum(W)
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
 	    log_itemtrace <- log(itemtrace)
-	    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-	        tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, EAP,
-	                                    log_itemtrace=log_itemtrace, tabdata=tabdata,
-                                        ThetaShort=ThetaShort, W=W))
-	    } else {
-	        tmp <- t(apply(matrix(1:nrow(scores)), 1, EAP, log_itemtrace=log_itemtrace, tabdata=tabdata,
-	                       ThetaShort=ThetaShort, W=W))
-	    }
+	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
+                       tabdata=tabdata, ThetaShort=ThetaShort, W=W)
 	    scores <- tmp[ ,1:nfact, drop = FALSE]
 	    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		if(method == "MAP"){
-            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-                tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, MAP,
-                                     scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc,
-                                     gp=gp, prodlist=prodlist))
-            } else {
-                tmp <- t(apply(matrix(1:nrow(scores)), 1, MAP, scores=scores, pars=pars,
-                             tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
-            }
+            tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
+                             tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist)
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		}
@@ -143,14 +131,8 @@ setMethod(
             scores[rowSums(tmp2) == J,] <- -Inf
             SEscores[rowSums(tmp2) == J,] <- NA
 			SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
-            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-                tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, ML,
-                                            scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc,
-                                            gp=gp, prodlist=prodlist))
-            } else {
-                tmp <- t(apply(matrix(1:nrow(scores)), 1, ML, scores=scores, pars=pars,
-                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
-            }
+            tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
+                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist)
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		}
@@ -158,14 +140,8 @@ setMethod(
             if(nfact > 1L)
                 stop('WLE method only supported for unidimensional models')
             itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
-            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-                tmp <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, matrix(1:nrow(scores)), 1, WLE,
-                                            scores=scores, pars=pars, tabdata=tabdata, itemloc=itemloc,
-                                            gp=gp, prodlist=prodlist))
-            } else {
-                tmp <- t(apply(matrix(1:nrow(scores)), 1, WLE, scores=scores, pars=pars,
-                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist))
-            }
+            tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
+                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist)
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
         }

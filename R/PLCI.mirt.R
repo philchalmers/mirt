@@ -127,15 +127,9 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
-    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-        result <- t(parallel::parSapply(cl=mirtClusterEnv$MIRTCLUSTER, 1L:length(parnums), LLpar,
-                                        parnums=parnums, parnames=parnames, lbound=lbound, ubound=ubound,
-                                        dat=dat, model=model,
-                                        large=large, sv=sv, get.LL=get.LL, parprior=parprior))
-    } else {
-        result <- t(sapply(1L:length(parnums), LLpar, parnums=parnums, parnames=parnames, lbound=lbound,
-                           ubound=ubound, dat=dat, model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior))
-    }
+    result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, 
+                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat, 
+                       model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100))
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums], value=pars,
                       result, row.names=NULL)

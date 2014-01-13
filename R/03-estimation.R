@@ -376,30 +376,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
-                if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-                    DM <- t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, estmat, MARGIN=1L, FUN=SE.SEM,
-                                               pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList,
-                                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
-                                                           nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
-                                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                                           sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
-                                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                                           EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
-                                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
-                                               DERIV=DERIV, is.latent=is.latent))
-                } else {
-                    for(i in 1L:ncol(DM))
-                        DM[i, ] <- SE.SEM(est=estmat[i,], pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
-                                          PrepList=PrepList,
-                                          list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
-                                                      nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
-                                                      itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
-                                                      sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
-                                                      nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                                      EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
-                                          Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
-                                          DERIV=DERIV, is.latent=is.latent)
-                }
+                DM <- myApply(X=estmat, MARGIN=1L, FUN=SE.SEM, pars=ESTIMATE$pars, constrain=constrain, 
+                              list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
+                                          nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
+                                          itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
+                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
+                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
+                                          EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
+                              Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
+                              DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList)
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
                 DM[, is.latent] <- 0

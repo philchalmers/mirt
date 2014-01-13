@@ -1353,3 +1353,27 @@ shinyItemplot <- function(){
 
     return(ret)
 }
+
+myApply <- function(X, MARGIN, FUN, ...){
+    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+        return(t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, X=X, MARGIN=MARGIN, FUN=FUN, ...)))
+    } else {
+        return(t(apply(X=X, MARGIN=MARGIN, FUN=FUN, ...)))
+    }
+}
+
+myLapply <- function(X, FUN, ...){
+    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+        return(parallel::parLapply(cl=mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
+    } else {
+        return(lapply(X=X, FUN=FUN, ...))
+    }
+}
+
+mySapply <- function(X, FUN, ...){
+    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+        return(t(parallel::parSapply(cl=mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
+    } else {
+        return(t(sapply(X=X, FUN=FUN, ...)))
+    }
+}

@@ -185,16 +185,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
     drop <- scheme == 'drop' || scheme == 'drop_sequential'
     invariance <- MGmodel@invariance[MGmodel@invariance %in% c('free_means', 'free_var', 'free_varcov', 'free_cov')]
     if(!length(invariance)) invariance <- ''
-
-    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-        res <- parLapply(cl=mirtClusterEnv$MIRTCLUSTER, X=items2test, fun=loop_test,
-                         model=MGmodel, drop=drop, which.par=which.par, values=values,
-                         Wald=Wald, itemnames=itemnames, invariance=invariance, ...)
-    } else {
-        res <- lapply(X=items2test, FUN=loop_test, model=MGmodel,
-                      which.par=which.par, values=values, Wald=Wald, drop=drop,
-                      itemnames=itemnames, invariance=invariance, ...)
-    }
+    res <- myLapply(X=items2test, FUN=loop_test, model=MGmodel, which.par=which.par, values=values, 
+                    Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -240,15 +232,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                                           verbose = FALSE, ...)
             pick <- !keep
             if(drop) pick <- !pick
-            if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-                tmp <- parLapply(cl=mirtClusterEnv$MIRTCLUSTER, X=items2test[pick], fun=loop_test,
-                                 model=updatedModel, drop=drop, which.par=which.par, values=values,
-                                 Wald=Wald, itemnames=itemnames, invariance=invariance, ...)
-            } else {
-                tmp <- lapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
-                              which.par=which.par, values=values, Wald=Wald, drop=drop,
-                              itemnames=itemnames, invariance=invariance, ...)
-            }
+            tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
+                            which.par=which.par, values=values, Wald=Wald, drop=drop,
+                            itemnames=itemnames, invariance=invariance, ...)
             names(tmp) <- itemnames[pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
@@ -257,15 +243,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         }
         if(verbose)
             cat('\nComputing final DIF estimates...')
-        if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-            res <- parLapply(cl=mirtClusterEnv$MIRTCLUSTER, X=items2test[!keep], fun=loop_test,
-                             model=updatedModel, drop=FALSE, which.par=which.par, values=values,
-                             Wald=Wald, itemnames=itemnames, invariance=invariance, ...)
-        } else {
-            res <- lapply(X=items2test[!keep], FUN=loop_test, model=updatedModel,
-                          which.par=which.par, values=values, Wald=Wald, drop=FALSE,
-                          itemnames=itemnames, invariance=invariance, ...)
-        }
+        res <- myLapply(X=items2test[!keep], FUN=loop_test, model=updatedModel,
+                        which.par=which.par, values=values, Wald=Wald, drop=FALSE,
+                        itemnames=itemnames, invariance=invariance, ...)
         names(res) <- itemnames[!keep]
     }
 

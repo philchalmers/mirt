@@ -82,13 +82,9 @@ setMethod(
             ot <- matrix(0, 1, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
         NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
-        if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-            LL <- parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, LL, MARGIN=1, FUN=LLdraws, nfact=nfact,
-                                     N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
-                                     random=object@random, ot=ot, NO.CUSTOM=NO.CUSTOM)
-        } else for(draw in 1L:draws)
-            LL[ ,draw] <- LLdraws(nfact=nfact, N=N, grp=grp, prodlist=prodlist, NO.CUSTOM=NO.CUSTOM,
-                                  fulldata=fulldata, object=object, J=J, random=object@random, ot=ot)
+        LL <- t(myApply(X=LL, MARGIN=1L, FUN=LLdraws, nfact=nfact,
+                        N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
+                        random=object@random, ot=ot, NO.CUSTOM=NO.CUSTOM))
         LL <- exp(LL)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)
