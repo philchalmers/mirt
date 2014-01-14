@@ -269,7 +269,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     mixed.design <- list(fixed=mm, random=mr)
     if(is.null(constrain)) constrain <- list()
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, TOL=TOL,
-                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values')
+                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values', ...)
     mmnames <- colnames(mm)
     N <- nrow(data)
     if(ncol(mm) > 0L){
