@@ -17,10 +17,11 @@
   or trace lines (only available when all items are
   dichotomous), \code{'infoSE'} for a combined test
   information and standard error plot, and \code{'score'}
-  for the expected total score. If \code{empiricalhist =
-  TRUE} was used then the type \code{'empiricalhist'} also
-  will be available to generate the empirical histogram
-  plot}
+  and \code{'scorecontour'} for the expected total score
+  surface and contour plots.  If \code{empiricalhist =
+  TRUE} was used in estimation then the type
+  \code{'empiricalhist'} also will be available to generate
+  the empirical histogram plot}
 
   \item{theta_angle}{numeric values ranging from 0 to 90
   used in \code{plot}.  If a vector is used then a bubble
@@ -45,13 +46,20 @@
   \item{auto.key}{logical parameter passed to the
   \code{lattice} package}
 
-  \item{...}{additional arguments to be passed}
+  \item{ehist.cut}{a probability value indicating a
+  threshold for excliding cases in empirical histogram
+  plots. Values larger than the default will include more
+  points in the tails of the plot, potentially squishing
+  the 'meat' of the plot to take up less area than visually
+  desired}
+
+  \item{...}{additional arguments to be passed to lattice}
 }
 \description{
   \code{plot(x, y, type = 'info', npts = 50, theta_angle =
   45, which.items = 1:ncol(x@data), rot = list(xaxis = -70,
   yaxis = 30, zaxis = 10), facet_items = FALSE, auto.key =
-  TRUE, ...)}
+  TRUE, ehist.cut = 1e-10, ...)}
 }
 \examples{
 \dontrun{

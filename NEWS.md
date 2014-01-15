@@ -17,7 +17,10 @@
 
 ## NEW FEATURES
 
-- `type = 'infotrace'` added to `itemplot()` to plot trace lines and information on the same plot
+- `type = 'scorecontour'` added to `plot()` for a contour plot with the expected total scores
+
+- `type = 'infotrace'` added to `itemplot()` to plot trace lines and information on the same plot,
+  as well as `type = 'tracecontour'` for a contour plot using trace lines
 
 - `mirt.model()` support for multiline inputs
 

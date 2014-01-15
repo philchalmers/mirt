@@ -532,7 +532,7 @@ setMethod(
 #' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45,
 #'                          which.items = 1:ncol(x@@data),
 #'                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-#'                          facet_items = FALSE, auto.key = TRUE, ...)}
+#'                          facet_items = FALSE, auto.key = TRUE, ehist.cut = 1e-10, ...)}
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
@@ -540,8 +540,9 @@ setMethod(
 #'   information function, \code{'infocontour'} for the test information contours,
 #'   \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
 #'   for all item probability information or trace lines (only available when all items are dichotomous),
-#'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} for
-#'   the expected total score. If \code{empiricalhist = TRUE} was used then the type \code{'empiricalhist'}
+#'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and 
+#'   \code{'scorecontour'} for the expected total score surface and contour plots. 
+#'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
@@ -554,7 +555,10 @@ setMethod(
 #' @param facet_items logical; apply grid of plots across items? If \code{FALSE}, items will be
 #'   placed in one plot for each group
 #' @param auto.key logical parameter passed to the \code{lattice} package
-#' @param ... additional arguments to be passed
+#' @param ehist.cut a probability value indicating a threshold for excliding cases in empirical 
+#'   histogram plots. Values larger than the default will include more points in the tails of the 
+#'   plot, potentially squishing the 'meat' of the plot to take up less area than visually desired
+#' @param ... additional arguments to be passed to lattice
 #'
 #' @name plot-method
 #' @aliases plot,ExploratoryClass-method plot,ConfirmatoryClass-method
@@ -590,10 +594,9 @@ setMethod(
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          facet_items = FALSE, auto.key = TRUE, ...)
+                          facet_items = FALSE, auto.key = TRUE, main = NULL,
+                          drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
     {
-        if (!type %in% c('info','infocontour', 'SE', 'trace', 'infotrace', 'infoSE', 'score', 'empiricalhist'))
-            stop(type, " is not a valid plot type.")
         if (any(theta_angle > 90 | theta_angle < 0))
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
@@ -638,45 +641,69 @@ setMethod(
         if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2")
             plt$SE <- 1 / sqrt(plt$info)
-            if(type == 'infocontour')
+            if(type == 'infocontour'){
+                if(is.null(main))
+                    main <- paste("Test Information Contour")
                 return(contourplot(info ~ Theta1 * Theta2, data = plt,
-                                   main = paste("Test Information Contour"), xlab = expression(theta[1]),
+                                   main = main, xlab = expression(theta[1]),
                                    ylab = expression(theta[2])))
-            if(type == 'info')
-                return(wireframe(info ~ Theta1 + Theta2, data = plt, main = "Test Information",
+            } else if(type == 'scorecontour'){
+                if(is.null(main))
+                    main <- paste("Expected Score Contour")
+                    return(contourplot(score ~ Theta1 * Theta2, data = plt,
+                                       main = main, xlab = expression(theta[1]),
+                                       ylab = expression(theta[2])))
+            } else if(type == 'info'){
+                if(is.null(main))
+                    main <- "Test Information"
+                return(wireframe(info ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
-            if(type == 'score')
-                return(wireframe(score ~ Theta1 + Theta2, data = plt, main = "Expected Total Score",
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape))
+            } else if(type == 'score'){
+                if(is.null(main))
+                    main <- "Expected Total Score"
+                return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
-            if(type == 'infoangle')
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape))
+            } else if(type == 'infoangle'){
+                if(is.null(main))
+                    main <- 'Information across different angles'
                 symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue',
                         xlab = expression(theta[1]), ylab = expression(theta[2]),
-                        main = 'Information across different angles')
-            if(type == 'SE')
-                return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = "Test Standard Errors",
+                        main = main)
+            } else if(type == 'SE'){
+                if(is.null(main))
+                    main <- "Test Standard Errors"
+                return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape))
+            } else {
+                stop('plot type not supported for two dimensional model')
+            }
         } else {
             colnames(plt) <- c("info", "score", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
-            if(type == 'info')
-                return(xyplot(info~Theta, plt, type='l',main = 'Test Information',
+            if(type == 'info'){
+                if(is.null(main))
+                    main <- 'Test Information'
+                return(xyplot(info~Theta, plt, type='l', main = main,
                               xlab = expression(theta), ylab=expression(I(theta))))
-            if(type == 'infocontour')
-                cat('No \'contour\' plots for 1-dimensional models\n')
-            if(type == 'SE')
-                return(xyplot(SE~Theta, plt, type='l',main = 'Test Standard Errors',
+            } else if(type == 'SE'){
+                if(is.null(main))
+                    main <- 'Test Standard Errors'
+                return(xyplot(SE~Theta, plt, type='l', main = main,
                        xlab = expression(theta), ylab=expression(SE(theta))))
-            if(type == 'infoSE'){
-                obj1 <- xyplot(info~Theta, plt, type='l',main = 'Test Information and Standard Errors',
+            } else if(type == 'infoSE'){
+                if(is.null(main))
+                    main <- 'Test Information and Standard Errors'
+                obj1 <- xyplot(info~Theta, plt, type='l', main = main,
                                xlab = expression(theta), ylab=expression(I(theta)))
                 obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
                 if(!require(latticeExtra)) require(latticeExtra)
-                return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
-            }
-            if(type == 'trace'){
+                return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
+            } else if(type == 'trace'){
+                if(is.null(main))
+                    main <- 'Item trace lines'
                 P <- vector('list', length(which.items))
                 names(P) <- colnames(x@data)[which.items]
                 for(i in which.items){
@@ -694,10 +721,11 @@ setMethod(
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
                 return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
                               xlab = expression(theta), ylab = expression(P(theta)),
-                              auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                              auto.key = auto.key, type = 'l', main = main, ...))
 
-            }
-            if(type == 'infotrace'){
+            } else if(type == 'infotrace'){
+                if(is.null(main))
+                    main <- 'Item information trace lines'
                 I <- matrix(NA, nrow(Theta), J)
                 for(i in which.items)
                     I[,i] <- iteminfo(extract.item(x, i), ThetaFull)
@@ -708,18 +736,21 @@ setMethod(
                 if(facet_items){
                     return(xyplot(I ~ Theta|item, plotobj,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                                  auto.key = auto.key, type = 'l', main = main, ...))
                 } else {
                     return(xyplot(I ~ Theta, plotobj, group = item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                                  auto.key = auto.key, type = 'l', main = main, ...))
                 }
-            }
-            if(type == 'score')
+            } else if(type == 'score'){
+                if(is.null(main))
+                    main <- 'Expected Total Score'
                 return(xyplot(score ~ Theta, plt,
                               xlab = expression(theta), ylab = expression(Total(theta)),
-                              type = 'l', main = 'Expected Total Score', ...))
-            if(type == 'empiricalhist'){
+                              type = 'l', main = main, ...))
+            } else if(type == 'empiricalhist'){
+                if(is.null(main))
+                    main <- 'Empirical Histogram'
                 if(all(is.nan(x@Prior))) stop('Empirical histogram was not estimated for this object')
                 Theta <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
                                     length.out = x@quadpts))
@@ -727,13 +758,15 @@ setMethod(
                 cuts <- cut(Theta, floor(npts/2))
                 Prior <- do.call(c, lapply(split(Prior, cuts), mean))
                 Theta <- do.call(c, lapply(split(Theta, cuts), mean))
-                keep1 <- min(which(Prior > 1e-10))
-                keep2 <- max(which(Prior > 1e-10))
+                keep1 <- min(which(Prior > ehist.cut))
+                keep2 <- max(which(Prior > ehist.cut))
                 plt <- data.frame(Theta = Theta, Prior = Prior)
                 plt <- plt[keep1:keep2, , drop=FALSE]
                 return(xyplot(Prior ~ Theta, plt,
                               xlab = expression(theta), ylab = 'Expected Frequency',
-                              type = 'b', main = 'Empirical Histogram', ...))
+                              type = 'b', main = main, ...))
+            } else {
+                stop('plot not supported for unidimensional models')
             }
         }
     }

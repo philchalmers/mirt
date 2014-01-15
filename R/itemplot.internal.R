@@ -36,7 +36,8 @@ setMethod(
 setMethod(
     f = "itemplot.internal",
     signature = signature(object = 'MultipleGroupClass'),
-    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, rot, ...)
+    definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, rot,
+        auto.key = TRUE, main = NULL, ...)
     {
         Pinfo <- list()
         gnames <- object@groupNames
@@ -73,17 +74,22 @@ setMethod(
         if(all(dat2$cat == '0')) dat2$cat <- rep('1', length(dat2$cat))
         if(nfact == 1){
             if(type == 'info'){
-                return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l',
-                                       auto.key = TRUE, main = paste('Information for item', item),
+                if(is.null(main))
+                    main <- paste('Information for item', item)
+                return(xyplot(info ~ Theta, dat, group=group, type = 'l',
+                                       auto.key = auto.key, main = main,
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))
             } else if(type == 'trace'){
-                return(lattice::xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l',
-                            auto.key = TRUE, main = paste("Item", item, "Trace"), ylim = c(-0.1,1.1),
+                if(is.null(main))
+                    main <- paste("Item", item, "Trace")
+                return(xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l',
+                            auto.key = auto.key, main = main, ylim = c(-0.1,1.1),
                             ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else if(type == 'RE'){
-                return(lattice::xyplot(info ~ Theta, dat, group=group, type = 'l',
-                                       auto.key = TRUE,
-                                       main = paste('Relative efficiency for item', item),
+                if(is.null(main))
+                    main <- paste('Relative efficiency for item', item)
+                return(xyplot(info ~ Theta, dat, group=group, type = 'l',
+                                       auto.key = auto.key, main = main,
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
             } else {
                 stop('Plot type not supported for unidimensional model')
@@ -97,27 +103,30 @@ setMethod(
             colnames(dat) <- Names
             colnames(dat2) <- Names2
             if(type == 'info'){
-                return(lattice::wireframe(info ~ Theta1 + Theta2, data = dat, group=group,
-                                          main=paste("Item", item, "Information"),
+                if(is.null(main))
+                    main <- paste("Item", item, "Information")
+                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=group, main=main,
                                           zlab=expression(I(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), screen=rot,
                                           scales = list(arrows = FALSE),
-                                          auto.key = TRUE, ...))
+                                          auto.key = auto.key, ...))
             } else if(type == 'trace'){
-                return(lattice::wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = group,
-                                          main = paste("Item", item, "Trace"),
+                if(is.null(main))
+                    main <- paste("Item", item, "Trace")
+                return(wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = group, main = main,
                                           zlab=expression(P(theta)),
                                           xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), zlim = c(-0.1,1.1),
                                           scales = list(arrows = FALSE), screen=rot,
-                                          auto.key = TRUE, ...))
+                                          auto.key = auto.key, ...))
             } else if(type == 'RE'){
-                return(lattice::wireframe(info ~ Theta1 + Theta2, data = dat, group=group,
-                                          main=paste("Relative efficiency for item", item),
+                if(is.null(main))
+                    main <- paste("Relative efficiency for item", item)
+                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=group, main=main,
                                           zlab=expression(RE(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]),
                                           scales = list(arrows = FALSE), screen=rot,
-                                          auto.key = TRUE, ...))
+                                          auto.key = auto.key, ...))
             } else {
                 stop('Plot type not supported for 2 dimensional model')
             }
@@ -126,7 +135,9 @@ setMethod(
 )
 
 
-itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot, ...){
+itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot,
+                          cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
+                          add.ylab2 = TRUE, drape = TRUE, ...){
     if(drop.zeros) x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 3) stop('Can not plot high dimensional models')
@@ -226,51 +237,58 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         plt2$upper <- as.numeric(CEprobupper)
         plt2$lower <- as.numeric(CEproblower)
         if(type == 'trace'){
+            if(is.null(main))
+                main <- paste('Trace lines for item', item)
             if(CE){
-                return(lattice::xyplot(P + upper + lower ~ Theta|time, plt2, type = 'l',
+                return(xyplot(P + upper + lower ~ Theta|time, plt2, type = 'l',
                                 col = c('black', 'red', 'red'), lty = c(1,2,2),
-                                main = paste('Trace lines for item', item), ylim = c(-0.1,1.1),
+                                main = main, ylim = c(-0.1,1.1),
                                 ylab = expression(P(theta)), xlab = expression(theta), ... ))
             }
             else
-                return(lattice::xyplot(P ~ Theta, plt2, group = time, type = 'l', auto.key = TRUE,
-                                main = paste('Trace lines for item', item), ylim = c(-0.1,1.1),
+                return(xyplot(P ~ Theta, plt2, group = time, type = 'l', auto.key = auto.key,
+                                main = main, ylim = c(-0.1,1.1),
                                 ylab = expression(P(theta)), xlab = expression(theta), ... ))
         } else if(type == 'info'){
+            if(is.null(main))
+                main <- paste('Information for item', item)
             if(CE){
-                return(lattice::xyplot(info + CEinfoupper + CEinfolower ~ Theta, plt, type = 'l',
+                return(xyplot(info + CEinfoupper + CEinfolower ~ Theta, plt, type = 'l',
                                 col = c('black', 'red', 'red'), lty = c(1,2,2),
-                                main = paste('Information for item', item),
-                                ylab = expression(I(theta)), xlab = expression(theta), ... ))
+                                main = main, ylab = expression(I(theta)), xlab = expression(theta), ... ))
             } else
-                return(lattice::xyplot(info ~ Theta, plt, type = 'l',
-                                auto.key = TRUE, main = paste('Information for item', item),
+                return(xyplot(info ~ Theta, plt, type = 'l',
+                                auto.key = auto.key, main = main,
                                 ylab = expression(I(theta)), xlab = expression(theta), ...))
         } else if(type == 'score'){
-            return(lattice::xyplot(score ~ Theta, plt, type = 'l',
-                            auto.key = TRUE, main = paste('Expected score for item', item),
+            if(is.null(main))
+                main <- paste('Expected score for item', item)
+            return(xyplot(score ~ Theta, plt, type = 'l',
+                            auto.key = auto.key, main = main,
                             ylab = expression(E(theta)), xlab = expression(theta), ...))
         } else if(type == 'SE'){
-            return(lattice::xyplot(SE ~ Theta, plt, type = 'l',
-                                   auto.key = TRUE, main = paste('Standard error plot for item', item),
+            if(is.null(main))
+                main <- paste('Standard error plot for item', item)
+            return(xyplot(SE ~ Theta, plt, type = 'l',
+                                   auto.key = auto.key, main = main,
                                    ylab = expression(SE(theta)), xlab = expression(theta), ...))
         } else if(type == 'infoSE'){
+            if(is.null(main))
+                main <- paste('Item information and standard errors for item', item)
             obj1 <- xyplot(info~Theta, plt, type='l',
-                           main = paste('Item information and standard errors for item', item),
-                           xlab = expression(theta), ylab=expression(I(theta)))
+                           main = main, xlab = expression(theta), ylab=expression(I(theta)))
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
             if(!require(latticeExtra)) require(latticeExtra)
-            return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
+            return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
         } else if(type == 'infotrace'){
-            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), group=time,
-                            main = paste('Trace lines and information for item', item), 
+            if(is.null(main))
+                main <- paste('Trace lines and information for item', item)
+            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), group=time, main = main,
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
             obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
                            ylim = c(-0.1,max(plt$info) + .5))
             if(!require(latticeExtra)) require(latticeExtra)
-            return(doubleYScale(obj1, obj2, add.ylab2 = TRUE))
-        } else if(type == 'infocontour'){
-            stop('Cannot draw contours for 1 factor models')
+            return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
         } else {
             stop('Plot type not supported for unidimensional model')
         }
@@ -286,43 +304,58 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         plt2$upper <- as.numeric(CEprobupper)
         plt2$lower <- as.numeric(CEproblower)
         if(type == 'infocontour'){
+            if(is.null(main))
+                main <- paste("Item", item, "Information Contour")
             return(contourplot(info ~ Theta1 * Theta2, data = plt,
-                               main = paste("Item", item, "Information Contour"), xlab = expression(theta[1]),
+                               main = main, xlab = expression(theta[1]),
                                ylab = expression(theta[2]), ...))
+        } else if(type == 'tracecontour'){
+            if(is.null(main))
+                main <- paste("Item", item, "Probabiliy Contour")
+            return(contourplot(P ~ Theta1 * Theta2, data = plt2,
+                               main = main, xlab = expression(theta[1]),
+                               ylab = expression(theta[2]), cuts=cuts, ...))
         } else if(type == 'info'){
+            if(is.null(main))
+                main <- paste("Item", item, "Information")
             if(CE)
-                return(lattice::wireframe(info + CEinfolower + CEinfoupper ~ Theta1 + Theta2, data = plt,
-                                   main = paste("Item", item, "Information"), col = c('black', 'red', 'red'),
+                return(wireframe(info + CEinfolower + CEinfoupper ~ Theta1 + Theta2, data = plt,
+                                   main = main, col = c('black', 'red', 'red'),
                                    zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                   scales=list(arrows = FALSE), colorkey=TRUE, drape=TRUE, screen=rot, ...))
+                                   scales=list(arrows = FALSE), colorkey=colorkey, drape=drape, screen=rot, ...))
             else
-                return(lattice::wireframe(info ~ Theta1 + Theta2, data = plt,
-                             main = paste("Item", item, "Information"),
+                return(wireframe(info ~ Theta1 + Theta2, data = plt, main = main,
                              zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                             scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                             scales = list(arrows = FALSE), colorkey=colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'trace'){
+            if(is.null(main))
+                main <- paste("Item", item, "Trace")
             if(CE)
-                return(lattice::wireframe(P + upper + lower ~ Theta1 + Theta2 | time, data = plt2,
-                                          main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
+                return(wireframe(P + upper + lower ~ Theta1 + Theta2 | time, data = plt2,
+                                          main = main, zlim = c(-0.1,1.1),
                                           zlab=expression(P(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), col = c('black', 'red', 'red'),
-                                          scales=list(arrows = FALSE), colorkey=TRUE, drape=TRUE, screen=rot, ...))
+                                          scales=list(arrows = FALSE), colorkey=colorkey, drape=drape, screen=rot, ...))
 
             else
-                return(lattice::wireframe(P ~ Theta1 + Theta2, data = plt2, group = time,
-                             main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
+                return(wireframe(P ~ Theta1 + Theta2, data = plt2, group = time,
+                             main = main, zlim = c(-0.1,1.1),
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                             scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                             scales = list(arrows = FALSE), colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'score'){
-            return(lattice::wireframe(score ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Expected Scores"),
+            if(is.null(main))
+                main <- paste("Item", item, "Expected Scores")
+            return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
                                       zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
-                                      colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                                      colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'SE'){
-            return(lattice::wireframe(SE ~ Theta1 + Theta2, data = plt, main = paste("Item", item, "Standard Errors"),
+            if(is.null(main))
+                main <- paste("Item", item, "Standard Errors")
+            return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = main,
                                       zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       scales = list(arrows = FALSE),
-                                      colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                                      colorkey = colorkey, drape = drape, screen=rot, ...))
         } else {
             stop('Plot type not supported for 2 dimensional model')
         }
@@ -335,25 +368,32 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                         times = paste("P", 1:ncol(P), sep=''))
         plt$score <- score
         if(type == 'trace'){
-            return(lattice::wireframe(P ~ Theta1 + Theta2|Theta3, data = plt2, group = time,
-                                      main = paste("Item", item, "Trace"), zlim = c(-0.1,1.1),
+            if(is.null(main))
+                main <- paste("Item", item, "Trace")
+            return(wireframe(P ~ Theta1 + Theta2|Theta3, data = plt2, group = time,
+                                      main = main, zlim = c(-0.1,1.1),
                                       zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                      scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                                      scales = list(arrows = FALSE), colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'score'){
-            return(lattice::wireframe(score ~ Theta1 + Theta2|Theta3, data = plt, main = paste("Item", item, "Expected Scores"),
+            if(is.null(main))
+                main <- paste("Item", item, "Expected Scores")
+            return(wireframe(score ~ Theta1 + Theta2|Theta3, data = plt, main = main,
                                       zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
-                                      colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                                      colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'info'){
-            return(lattice::wireframe(info ~ Theta1 + Theta2|Theta3, data = plt,
-                                      main = paste("Item", item, "Information"),
+            if(is.null(main))
+                main <- paste("Item", item, "Information")
+            return(wireframe(info ~ Theta1 + Theta2|Theta3, data = plt, main = main,
                                       zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                      scales = list(arrows = FALSE), colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                                      scales = list(arrows = FALSE), colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'SE'){
-            return(lattice::wireframe(SE ~ Theta1 + Theta2|Theta3, data = plt, main = paste("Item", item, "Standard Errors"),
+            if(is.null(main))
+                main <- paste("Item", item, "Standard Errors")
+            return(wireframe(SE ~ Theta1 + Theta2|Theta3, data = plt, main = main,
                                       zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                       scales = list(arrows = FALSE),
-                                      colorkey = TRUE, drape = TRUE, screen=rot, ...))
+                                      colorkey = colorkey, drape = drape, screen=rot, ...))
         } else {
             stop('Plot type not supported for 3 dimensional model')
         }

@@ -24,7 +24,8 @@
   errors (\code{'infoSE'}) or information and trace lines
   (\code{'infotrace'}), relative efficiency lines
   (\code{'RE'}), expected score \code{'score'}, or
-  information contours \code{('infocontour')} (not for
+  information and trace line contours (\code{'infocontour'}
+  and \code{'tracecontour'}; not supported for
   \code{MultipleGroupClass} objects)}
 
   \item{degrees}{the degrees argument to be used if there
@@ -79,13 +80,17 @@ itemplot(mod1, 2, type = 'info', CE = TRUE)
 mods <- list(twoPL = mod1, onePL = mod2)
 itemplot(mods, 1, type = 'RE')
 
-#multidimensional info
+#multidimensional
 itemplot(mod3, 3, type = 'info')
+itemplot(mod3, 3, type = 'infocontour')
+itemplot(mod3, 3, type = 'tracecontour')
 
 #polytomous items
 pmod <- mirt(Science, 1, SE=TRUE)
 itemplot(pmod, 3)
 itemplot(pmod, 3, CE = TRUE)
+itemplot(pmod, 3, type = 'score')
+itemplot(pmod, 3, type = 'infotrace')
 
 #interactive shiny applet
 itemplot(shiny = TRUE)

@@ -1127,7 +1127,7 @@ shinyItemplot <- function(){
 
                         selectInput(inputId = "plottype",
                                     label = "Type of plot to display:",
-                                    choices = c('trace', 'info', 'score', 'infocontour', 'SE', 'infoSE'),
+                                    choices = c('trace', 'info', 'score', 'infocontour', 'SE', 'infoSE', 'tracecontour'),
                                     selected = 'trace'),
 
                         checkboxInput(inputId = "nfact",

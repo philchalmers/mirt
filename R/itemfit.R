@@ -192,11 +192,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 ind <- 1L:length(inames)
                 empirical.plot <- ind[inames == empirical.plot]
             }
-            P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
-            plot(ThetaFull, P[,1], type = 'l', ylim = c(0,1), las = 1,
-                 main =paste('Item', empirical.plot), ylab = expression(P(theta)), xlab = expression(theta))
-            for(i in 2L:ncol(P))
-                lines(ThetaFull, P[,i], col = i)
+            empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
+            empirical.plot_points <- matrix(NA, length(unique(Groups)), x@K[empirical.plot] + 1L)
         }
         for (i in 1L:J){
             if(!is.null(empirical.plot) && i != empirical.plot) next
@@ -207,8 +204,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 mtheta <- matrix(mean(Theta[Groups == j,]), nrow=1)
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
-                    col <- 2:length(tmp)
-                    points(rep(mtheta, length(tmp) - 1), tmp[-1], col = col, pch = col+2)
+                    empirical.plot_points[j, ] <- c(mtheta, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
                 if(any(N * P < 2)){
@@ -220,7 +216,27 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
         }
         X2[X2 == 0] <- NA
-        if(!is.null(empirical.plot)) return(invisible(NULL))
+        if(!is.null(empirical.plot)){
+            K <- x@K[empirical.plot]
+            while(nrow(empirical.plot_points) < nrow(empirical.plot_P))
+                empirical.plot_points <- rbind(empirical.plot_points, 
+                                               rep(NA, length(empirical.plot_points[1,])))
+            colnames(empirical.plot_points) <- c('theta', paste0('p.', 1:K))
+            plt.1 <- data.frame(id = 1:nrow(ThetaFull), Theta=ThetaFull, P=empirical.plot_P)
+            plt.2 <- data.frame(id = 1:nrow(empirical.plot_points), empirical.plot_points)
+            plt.1 <- reshape(plt.1, varying = 3:ncol(plt.1), direction = 'long', timevar = 'cat')
+            plt.2 <- reshape(plt.2, varying = 3:ncol(plt.2), direction = 'long', timevar = 'cat')
+            plt <- cbind(plt.1, plt.2)
+            if(K == 2) plt <- plt[plt$cat != 1, ]
+            return(xyplot(P ~ Theta, plt, group = cat, 
+                          main = paste('Empirical plot for item', empirical.plot), ylim = c(-0.1,1.1),
+                          xlab = expression(theta), ylab=expression(P(theta)), 
+                          auto.key=ifelse(K==2, FALSE, TRUE),
+                          panel = function(x, y, groups, subscripts, ...){
+                              panel.xyplot(x=x, y=y, groups=groups, type='l', subscripts=subscripts, ...)
+                              panel.points(cbind(plt$theta, plt$p), col=groups, pch=groups, ...)
+                          }))
+        }
         ret$X2 <- X2
         ret$df <- df
         ret$p.X2 <- round(1 - pchisq(X2, df), 4)
