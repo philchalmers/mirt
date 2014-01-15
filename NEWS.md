@@ -20,18 +20,22 @@
 - `type = 'scorecontour'` added to `plot()` for a contour plot with the expected total scores
 
 - `type = 'infotrace'` added to `itemplot()` to plot trace lines and information on the same plot,
-  as well as `type = 'tracecontour'` for a contour plot using trace lines
+  and `type = 'tracecontour'` for a contour plot using trace lines (suggested by Armi Lantano)
 
 - `mirt.model()` support for multiline inputs
 
 - new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2
   instead of X2, and `type = 'Q3'` added as well
 
-- S-EM computation of the information matrix support for latent parameters (previously was only
-  effective with estimation item-level parameters)
+- S-EM computation of the information matrix support for latent parameters, which previously 
+  was only effective when estimation item-level parameters
+  
+- new `empirical.CI` argument in `itemfit()` used when plotting confidence intervals for 
+  dichotomous items (suggested by Okan Bulut)
 
 - `printSE` argument can now be passed to `coef()` for printing the standard errors instead of
-  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE`
+  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE` (suggested 
+  by Olivia Bertelli)
 
 - second-order test and condition number added to estimation objects when information matrix is
   computed

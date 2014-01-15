@@ -4,8 +4,8 @@
 \usage{
   itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150,
     mincell = 1, S_X2.tables = FALSE,
-    empirical.plot = NULL, method = "EAP", Theta = NULL,
-    ...)
+    empirical.plot = NULL, empirical.CI = 0,
+    method = "EAP", Theta = NULL, ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -36,6 +36,13 @@
   \eqn{\theta} groupings. Only applicable when \code{type =
   'X2'}. The default is \code{NULL}, therefore no plots are
   drawn}
+
+  \item{empirical.CI}{a numeric value indicating the width
+  of the empirical confidence interval ranging between 0
+  and 1 (default of 0 plots not interval). For example, a
+  95% confidence interval would be plotted if
+  \code{empirical.CI = .95}. Only applicable to dichotomous
+  items}
 
   \item{method}{type of factor score estimation method. See
   \code{\link{fscores}} for more detail}
@@ -73,6 +80,7 @@ fit <- itemfit(x)
 fit
 
 itemfit(x, empirical.plot = 1) #empirical item plot
+itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99\% CI's
 #method='ML' agrees better with eRm package
 itemfit(raschfit, method = 'ML') #infit and outfit stats
 #same as above, but inputting ML estimates instead

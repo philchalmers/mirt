@@ -7,17 +7,20 @@
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-#' \code{MultipleGroupClass}
+#'   \code{MultipleGroupClass}
 #' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are only
-#' interested in computing the S-X2 quickly
+#'   interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
-#' collapsed across items first if polytomous, and then across scores if necessary
+#'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} statistic
 #' @param empirical.plot a single numeric value or character of the item name  indicating which item to plot
-#'  (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings. Only applicable
-#'  when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots are drawn
+#'   (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings. Only applicable
+#'   when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots are drawn
+#' @param empirical.CI a numeric value indicating the width of the empirical confidence interval ranging 
+#'   between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence interval would be 
+#'   plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
 #' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If 
 #'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
@@ -64,6 +67,7 @@
 #' fit
 #'
 #' itemfit(x, empirical.plot = 1) #empirical item plot
+#' itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99% CI's
 #' #method='ML' agrees better with eRm package
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats
 #' #same as above, but inputting ML estimates instead
@@ -93,7 +97,7 @@
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
-                    empirical.plot = NULL, method = 'EAP', Theta = NULL, ...){
+                    empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, ...){
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
@@ -193,7 +197,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 empirical.plot <- ind[inames == empirical.plot]
             }
             empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
-            empirical.plot_points <- matrix(NA, length(unique(Groups)), x@K[empirical.plot] + 1L)
+            empirical.plot_points <- matrix(NA, length(unique(Groups)), x@K[empirical.plot] + 2L)
         }
         for (i in 1L:J){
             if(!is.null(empirical.plot) && i != empirical.plot) next
@@ -204,7 +208,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                 mtheta <- matrix(mean(Theta[Groups == j,]), nrow=1)
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
-                    empirical.plot_points[j, ] <- c(mtheta, tmp)
+                    empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
                 if(any(N * P < 2)){
@@ -218,23 +222,40 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         X2[X2 == 0] <- NA
         if(!is.null(empirical.plot)){
             K <- x@K[empirical.plot]
+            EPCI.lower <- EPCI.upper <- NULL
+            if(K == 2 && empirical.CI != 0){
+                p.L <- function(x, alpha) if (x[1] == 0) 0 else qbeta(alpha, x[1], x[2] - x[1] + 1)
+                p.U <- function(x, alpha) if (x[1] == x[2]) 1 else qbeta(1 - alpha, x[1] + 1, x[2] - x[1])
+                N <- empirical.plot_points[,2]
+                O <- empirical.plot_points[,ncol(empirical.plot_points)] * N
+                EPCI.lower <- apply(cbind(O, N), 1, p.L, (1-empirical.CI)/2)
+                EPCI.upper <- apply(cbind(O, N), 1, p.U, (1-empirical.CI)/2)
+            }
+            empirical.plot_points <- empirical.plot_points[,-2]
+            colnames(empirical.plot_points) <- c('theta', paste0('p.', 1:K))
             while(nrow(empirical.plot_points) < nrow(empirical.plot_P))
                 empirical.plot_points <- rbind(empirical.plot_points, 
                                                rep(NA, length(empirical.plot_points[1,])))
-            colnames(empirical.plot_points) <- c('theta', paste0('p.', 1:K))
             plt.1 <- data.frame(id = 1:nrow(ThetaFull), Theta=ThetaFull, P=empirical.plot_P)
-            plt.2 <- data.frame(id = 1:nrow(empirical.plot_points), empirical.plot_points)
             plt.1 <- reshape(plt.1, varying = 3:ncol(plt.1), direction = 'long', timevar = 'cat')
+            plt.2 <- data.frame(id = 1:nrow(empirical.plot_points), empirical.plot_points)
             plt.2 <- reshape(plt.2, varying = 3:ncol(plt.2), direction = 'long', timevar = 'cat')
             plt <- cbind(plt.1, plt.2)
             if(K == 2) plt <- plt[plt$cat != 1, ]
             return(xyplot(P ~ Theta, plt, group = cat, 
                           main = paste('Empirical plot for item', empirical.plot), ylim = c(-0.1,1.1),
                           xlab = expression(theta), ylab=expression(P(theta)), 
-                          auto.key=ifelse(K==2, FALSE, TRUE),
-                          panel = function(x, y, groups, subscripts, ...){
+                          auto.key=ifelse(K==2, FALSE, TRUE), EPCI.lower=EPCI.lower,
+                          EPCI.upper=EPCI.upper,
+                          panel = function(x, y, groups, subscripts, EPCI.lower, EPCI.upper, ...){
                               panel.xyplot(x=x, y=y, groups=groups, type='l', subscripts=subscripts, ...)
-                              panel.points(cbind(plt$theta, plt$p), col=groups, pch=groups, ...)
+                              panel.points(cbind(plt$theta, plt$p), col=groups, pch=groups, ...)     
+                              if(!is.null(EPCI.lower)){
+                                  theta <- na.omit(plt$theta)
+                                  for(i in 1:length(theta))
+                                      panel.lines(c(theta[i], theta[i]), c(EPCI.lower[i], EPCI.upper[i]),
+                                                  lty = 2, col = 'red')
+                              }
                           }))
         }
         ret$X2 <- X2
