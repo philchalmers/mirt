@@ -899,6 +899,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
         opts$SEtol <- ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     }
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
+    if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
     opts$technical <- technical
     opts$use <- use
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000L, technical$MAXQUAD)

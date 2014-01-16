@@ -28,7 +28,8 @@
   instead of X2, and `type = 'Q3'` added as well
 
 - S-EM computation of the information matrix support for latent parameters, which previously 
-  was only effective when estimation item-level parameters
+  was only effective when estimation item-level parameters. A technical option has also been
+  added to force the information matrix to be symmetric (default is set to `TRUE`)
   
 - new `empirical.CI` argument in `itemfit()` used when plotting confidence intervals for 
   dichotomous items (suggested by Okan Bulut)

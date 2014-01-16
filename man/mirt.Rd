@@ -243,7 +243,12 @@ Theory)}
   in cycles (stage 1) in MH-RM; default 150}
   \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM;
   default 50} \item{set.seed}{seed number used during
-  estimation. Default is 12345} \item{gain}{a vector of two
+  estimation. Default is 12345}
+  \item{symmetric_SEM}{logical; force S-EM information
+  matrix to be symmetric? Default is TRUE so that
+  computation of standard errors are more stable. Setting
+  this to FALSE can help to detect solutions that have not
+  reached the ML estimate} \item{gain}{a vector of two
   values specifying the numerator and exponent values for
   the RM gain function \eqn{(val1 / cycle)^val2}. Default
   is \code{c(0.15,0.65)}} \item{customK}{a numeric value to

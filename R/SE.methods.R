@@ -165,17 +165,8 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
 }
 
 SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
-    pars <- ESTIMATE$pars
-    itemloc <- PrepList[[1L]]$itemloc
-    ngroups <- length(pars)
-    nitems <- length(pars[[1L]]) - 1L
-    L <- ESTIMATE$L
-    DX <- numeric(ncol(L))
-    Prior <- ESTIMATE$Prior
-    Igrad <- IgradP <- Ihess <- matrix(0, length(DX), length(DX))
-    fast <- ifelse(type == 'crossprod', TRUE, FALSE)
-    if(fast){
-        for(pat in 1L:nrow(PrepList[[1L]]$tabdata)){
+    fn <- function(which, PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad){
+        for(pat in which){
             for(g in 1L:ngroups){
                 gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
                 r <- gtabdata[,ncol(gtabdata)]
@@ -184,7 +175,6 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
                 rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata,
                                     Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
                 w <- rlist$r1[,pick]
-                tmpderiv <- matrix(0, nrow(Theta), length(DX))
                 for(i in 1L:nitems){
                     tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                     pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
@@ -196,6 +186,30 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
             }
             Igrad <- Igrad + outer(DX, DX) * r
         }
+        Igrad
+    }
+    pars <- ESTIMATE$pars
+    itemloc <- PrepList[[1L]]$itemloc
+    ngroups <- length(pars)
+    nitems <- length(pars[[1L]]) - 1L
+    L <- ESTIMATE$L
+    DX <- numeric(ncol(L))
+    Prior <- ESTIMATE$Prior
+    Igrad <- IgradP <- Ihess <- matrix(0, length(DX), length(DX))
+    fast <- ifelse(type == 'crossprod', TRUE, FALSE)
+    if(fast){
+        which <- vector('list', mirtClusterEnv$ncores)
+        pick <- floor(seq(from=0L, to=nrow(PrepList[[1L]]$tabdata),  
+                    length.out = mirtClusterEnv$ncores+1L))
+        for(i in 1L:length(which)) which[[i]] <- (pick[i]+1L):pick[i+1L]
+        if(max(pick)/mirtClusterEnv$ncores >= 50){
+            tmp <- myLapply(which, fn, PrepList=PrepList, ngroups=ngroups, pars=pars, 
+                            Theta=Theta, Prior=Prior, itemloc=itemloc, Igrad=Igrad)
+        } else {
+            tmp <- lapply(which, fn, PrepList=PrepList, ngroups=ngroups, pars=pars, 
+                          Theta=Theta, Prior=Prior, itemloc=itemloc, Igrad=Igrad)
+        }
+        Igrad <- Reduce(`+`, tmp)
     } else {
         for(pat in 1L:nrow(PrepList[[1L]]$tabdata)){
             for(g in 1L:ngroups){

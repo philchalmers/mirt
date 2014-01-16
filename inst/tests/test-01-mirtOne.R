@@ -16,7 +16,7 @@ test_that('dich', {
     expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm1, digits = 4)))
-    expect_equal(modm1@condnum, 29.02193, tolerance = 1e-4)
+    expect_equal(modm1@condnum, 29.08059, tolerance = 1e-4)
     expect_equal(cfs, c(0.9876, 0.64, 1.3351, 1.8559, 1.5987, 2.113, 0, NA, NA, 1, NA, NA, 1.0808, 0.7525, 1.4091, 0.808, 0.6299, 0.9861, 0, NA, NA, 1, NA, NA, 1.7075, 1.0922, 2.3227, 1.8052, 1.4081, 2.2023, 0, NA, NA, 1, NA, NA, 0.765, 0.5018, 1.0282, 0.486, 0.3395, 0.6325, 0, NA, NA, 1, NA, NA, 0.7357, 0.441, 1.0304, 1.8545, 1.631, 2.0779, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm1, 'ConfirmatoryClass')
