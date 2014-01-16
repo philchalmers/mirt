@@ -103,6 +103,39 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
 	END_RCPP
 }
 
+RcppExport SEXP sumExpected(SEXP Rtdata, SEXP Rtabdata, SEXP Rrwmeans, SEXP Rnitems)
+{
+    BEGIN_RCPP
+
+    const IntegerMatrix tdata(Rtdata);
+    const IntegerMatrix tabdata(Rtabdata);
+    const NumericVector rwmeans(Rrwmeans);
+    const int nitems = as<int>(Rnitems);
+    const int N = tdata.ncol();
+    const int n = tabdata.nrow();
+    const int J = tdata.nrow();
+    vector<double> expected(n);
+
+    for(int i = 0; i < n; ++i){
+        int count = 0;
+        double tempexp = 0.0;
+        for(int NN = 0; NN < N; ++NN){
+            int tmp = 0;
+            for(int j = 0; j < J; ++j)
+                tmp += tabdata(i, j) == tdata(j, NN);
+            if(tmp == nitems){
+                count += 1;
+                tempexp = tempexp + rwmeans(NN);
+            }
+        }
+        if(count) expected[i] = tempexp / count;
+    }
+
+    return(wrap(expected));
+
+    END_RCPP
+}
+
 double antilogit(const double *x){
     double ret;
     if(*x > 998.0) ret = 1.0;

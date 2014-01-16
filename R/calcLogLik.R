@@ -98,13 +98,7 @@ setMethod(
 		data <- object@data
         tabdata <- object@tabdata
         r <- tabdata[,ncol(tabdata)]
-		expected <- rep(0,nrow(tabdata))
-		for (j in 1L:nrow(tabdata)){
-			TFvec <- colSums(ifelse(t(data) == tabdata[j,1L:J],1,0)) == J
-			TFvec[is.na(TFvec)] <- FALSE
-			expected[j] <- mean(rwmeans[TFvec])
-		}
-		expected[is.nan(expected)] <- NA
+        expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J)
 		tabdata <- cbind(tabdata,expected*N)
         object@Pl <- expected
 		logN <- 0
@@ -127,8 +121,9 @@ setMethod(
 			if(any(is.na(data))){
 			    object@G2 <- NaN
 			} else {
-                r <- r[!is.na(expected)]
-                expected <- expected[!is.na(expected)]
+                pick <- r != 0
+                r <- r[pick]
+                expected <- expected[pick]
 				G2 <- 2 * sum(r*log(r/(sum(r)*expected)))
                 df <- object@df
 				object@G2 <- G2
