@@ -101,14 +101,6 @@ setMethod(
         expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J)
 		tabdata <- cbind(tabdata,expected*N)
         object@Pl <- expected
-		logN <- 0
-		logr <- rep(0,length(r))
-		for (i in 1L:N) logN <- logN + log(i)
-		for (i in 1L:length(r))
-			for (j in 1L:r[i])
-				logr[i] <- logr[i] + log(j)
-		if(sum(logr) != 0)
-			logLik <- logLik + logN/sum(logr)
         nestpars <- nconstr <- 0L
         for(i in 1:length(pars))
             nestpars <- nestpars + sum(pars[[i]]@est)
