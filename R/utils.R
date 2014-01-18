@@ -151,17 +151,8 @@ cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.o
 	cormat <- cor(fulldata, use=use)
     cormat[is.na(cormat)] <- 0
 	cormat <- abs(cormat)^(1/1.15) * sign(cormat)
-	if(smooth){
-		eig <- eigen(cormat)
-		negvalues <- eig$values < 0
-		if (any(negvalues)) {
-			negeig <- sum(abs(eig$value[eig$value < 0]))
-			eig$value[eig$value < 0] <- 0
-			L <- nitems/sum(eig$value)*eig$value[!negvalues]
-			V <- eig$vector[ ,!negvalues]
-			cormat <- V %*% diag(L) %*% t(V)
-		}
-	}
+	if(smooth)
+		cormat <- smooth.cor(cormat)
 	cormat
 }
 
@@ -1085,15 +1076,15 @@ reloadRandom <- function(random, longpars, parstart){
     random
 }
 
-smooth.cov <- function(x){
-    eigens <- eigen(x)
-    if(min(eigens$values) < .Machine$double.eps){
-        eigens$values[eigens$values < .Machine$double.eps] <- 100 *
-            .Machine$double.eps
-        nvar <- dim(x)[1L]
-        tot <- sum(eigens$values)
-        eigens$values <- eigens$values * nvar/tot
-        x <- eigens$vectors %*% diag(eigens$values) %*% t(eigens$vectors)
+smooth.cor <- function(x){
+    eig <- eigen(x)
+    negvalues <- eig$values <= 0
+    while (any(negvalues)) {
+        eig2 <- ifelse(eig$values < 0, 100 * .Machine$double.eps, eig$values)
+        x <- eig$vectors %*% diag(eig2) %*% t(eig$vectors)
+        x <- x/sqrt(diag(x) %*% t(diag(x)))
+        eig <- eigen(x)
+        negvalues <- eig$values <= .Machine$double.eps
     }
     x
 }
