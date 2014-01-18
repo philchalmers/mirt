@@ -82,7 +82,7 @@ setMethod(
             ot <- matrix(0, 1, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
         NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
-        LL <- t(myApply(X=LL, MARGIN=1L, FUN=LLdraws, nfact=nfact,
+        LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact,
                         N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
                         random=object@random, ot=ot, NO.CUSTOM=NO.CUSTOM))
         LL <- exp(LL)
