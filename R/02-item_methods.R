@@ -625,14 +625,14 @@ setMethod(
         }
         if(x@between){
             totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1,
-                            rep(0, nrow(fulldata)), rep(0, nrow(fulldata)))
+                            rep(0, nrow(fulldata)), rep(0, nrow(fulldata)), mirtClusterEnv$ncores)
             total_0 <- totals[[1L]]
             total_1 <- totals[[2L]]
             total_0 <- tapply(total_0, x@mtch, sum) + log_den0
             total_1 <- tapply(total_1, x@mtch, sum) + log_den1
         } else {
             totals <- .Call('denRowSums', t(fulldata), t(itemtrace0), t(itemtrace1),
-                            rep(0, ncol(fulldata)), rep(0, ncol(fulldata)))
+                            rep(0, ncol(fulldata)), rep(0, ncol(fulldata)), mirtClusterEnv$ncores)
             tmp0 <- totals[[1L]]
             tmp1 <- totals[[2L]]
             LL0 <- LL1 <- numeric(J)
