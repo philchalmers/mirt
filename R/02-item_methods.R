@@ -444,29 +444,27 @@ setMethod(
     definition = function(x, Theta, useDesign = TRUE, ot=0){
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- P.mirt(x@par, Theta=Theta, asMatrix=TRUE, ot=ot)
+        P <- P.mirt(x@par, Theta=Theta, ot=ot)
         return(P)
     }
 )
 
 P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
 {
-    return(.Call("traceLinePts", par, Theta, asMatrix, ot, FALSE))
+    return(.Call("traceLinePts", par, Theta, ot))
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        if(nrow(x@fixed.design) > 1L && useDesign)
-            Theta <- cbind(x@fixed.design, Theta)
         return(P.nestlogit(x@par, Theta=Theta, correct=x@correctcat, ncat=x@ncat))
     }
 )
 
 P.nestlogit <- function(par, Theta, correct, ncat)
 {
-    return(.Call("nestlogitTraceLinePts", par, Theta, correct, ncat, FALSE))
+    return(.Call("nestlogitTraceLinePts", par, Theta, correct, ncat))
 }
 
 setMethod(
@@ -533,33 +531,27 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        a <- x@par[1L:x@nfact]
-        ak <- x@par[(x@nfact+1L):(x@nfact + x@ncat)]
-        d <- x@par[(length(x@par) - x@ncat + 1L):length(x@par)]
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.nominal(a=a, ak=ak, d=d, Theta=Theta, ot=ot))
+        return(P.nominal(par=x@par, ncat=x@ncat, Theta=Theta, ot=ot))
     }
 )
 
-#d[1] == 0, ak[1] == 0, ak[length(ak)] == length(ak) - 1
-P.nominal <- function(a, ak, d, Theta, returnNum = FALSE, ot = 0){
-    return(.Call("nominalTraceLinePts", a, ak, d, Theta, returnNum, ot))
+P.nominal <- function(par, ncat, Theta, returnNum = FALSE, ot = 0){
+    return(.Call("nominalTraceLinePts", par, ncat, Theta, returnNum, ot))
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        if(nrow(x@fixed.design) > 1L && useDesign)
-            Theta <- cbind(x@fixed.design, Theta)
-        return(P.comp(x@par, Theta=Theta, asMatrix=TRUE))
+        return(P.comp(x@par, Theta=Theta))
     }
 )
 
-P.comp <- function(par, Theta, asMatrix = FALSE, ot = 0)
+P.comp <- function(par, Theta, ot = 0)
 {
-    return(.Call('partcompTraceLinePts', par, Theta, asMatrix, ot, FALSE))
+    return(.Call('partcompTraceLinePts', par, Theta))
 }
 
 #----------------------------------------------------------------------------

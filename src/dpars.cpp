@@ -352,7 +352,7 @@ RcppExport SEXP dparsDich(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP Rrs, SEXP Ro
 	const vector<double> par = as< vector<double> >(Rx);
     const NumericMatrix Theta(RTheta);
 	const NumericMatrix rs(Rrs);
-	const vector<double> ot = as< vector<double> >(Rot);
+	const NumericVector ot(Rot);
     const int estHess = as<int>(RestHess);
 
 	const int nfact = Theta.ncol();

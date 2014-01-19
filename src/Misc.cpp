@@ -24,7 +24,7 @@ NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,
 }
 
 void itemTrace(vector<double> &P, vector<double> &Pstar, const vector<double> &a, const double *d,
-        const NumericMatrix &Theta, const double *g, const double *u, const vector<double> &ot)
+        const NumericMatrix &Theta, const double *g, const double *u, const NumericVector &ot)
 {
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
@@ -71,7 +71,7 @@ RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
 }
 
 RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
-    SEXP Rlog_den0, SEXP Rlog_den1)
+    SEXP Rlog_den0, SEXP Rlog_den1, SEXP Rncores)
 {
     BEGIN_RCPP
 
@@ -80,10 +80,12 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
     const NumericMatrix itemtrace1(Ritemtrace1);
     const vector<double> log_den0 = as< vector<double> >(Rlog_den0);
     const vector<double> log_den1 = as< vector<double> >(Rlog_den1);
+    const int ncores = as<int>(Rncores);
     List ret;
     vector<double> Sum0(fulldata.nrow()), Sum1(fulldata.nrow());
+    omp_set_num_threads(ncores);
 
-
+#pragma omp parallel for
     for(int i = 0; i < fulldata.nrow(); ++i){
         double rs0 = 0.0;
         double rs1 = 0.0;

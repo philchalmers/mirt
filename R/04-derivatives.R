@@ -105,8 +105,8 @@ setMethod(
                 d <- pars[1L:nfact]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,999), thetas)
-                Pstar <- P.comp(c(a,d,-999,999),thetas)
+                P <- P.comp(c(a,d,c,999), thetas)[,2L]
+                Pstar <- P.comp(c(a,d,-999,999),thetas)[,2L]
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 c <- antilogit(c)
@@ -115,7 +115,7 @@ setMethod(
                 dd <- da <- rep(0,nfact)
                 dc <- sum(r/P * (g_1g * (1 - Pstar)) + (f-r)/Q * (g_1g * (Pstar - 1)))
                 for(i in 1L:nfact){
-                    Pk <- P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))
+                    Pk <- P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))[,2L]
                     Qk <- 1 - Pk
                     dd[i] <- sum((1-c)*Pstar*Qk*const1)
                     da[i] <- sum((1-c)*Pstar*Qk*thetas[,i]*const1)
@@ -127,8 +127,8 @@ setMethod(
                 d <- pars[1L:nfact]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,999), thetas)
-                Pstar <- P.comp(c(a,d,-999,999),thetas)
+                P <- P.comp(c(a,d,c,999), thetas)[,2L]
+                Pstar <- P.comp(c(a,d,-999,999),thetas)[,2L]
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 g <- c <- antilogit(c)
@@ -146,9 +146,9 @@ setMethod(
                             d2 <- strsplit(Names[c(i,j)],"_")[[2L]]
                             k <- as.numeric(d1[2L])
                             m <- as.numeric(d2[2L])
-                            Pk <- P.mirt(c(a[k],d[k],-999,999),matrix(thetas[,k]))
+                            Pk <- P.mirt(c(a[k],d[k],-999,999),matrix(thetas[,k]))[,2L]
                             Qk <- 1 - Pk
-                            Pm <- P.mirt(c(a[m],d[m],-999,999),matrix(thetas[,m]))
+                            Pm <- P.mirt(c(a[m],d[m],-999,999),matrix(thetas[,m]))[,2L]
                             Qm <- 1 - Pm
                             if(i == j && d1[1L] == 'd'){
                                 hess[i,i] <- sum(r/P * ((1-g)*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) -
@@ -264,7 +264,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
-        num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, returnNum=TRUE, ot=offterm)
+        num <- P.nominal(c(a, ak, d), ncat=nzetas, Theta=Theta, returnNum=TRUE, ot=offterm)
         tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                P=P, num=num, dat=dat, gpcm=TRUE)
         keep <- rep(TRUE, length(tmp$grad))
@@ -297,15 +297,13 @@ setMethod(
         ak <- x@par[(x@nfact+4L):(x@nfact+4L+x@ncat-2L)]
         dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
         correct <- x@correctcat
-        if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
-            Theta <- cbind(x@fixed.design, Theta)
-        Pd <- P.mirt(c(a, d, g, u), Theta=Theta)
+        Pd <- P.mirt(c(a, d, g, u), Theta=Theta)[,2L]
         g <- antilogit(g)
         u <- antilogit(u)
         Qd <- 1 - Pd
-        Pstar <- P.mirt(c(a, d, -999, 999), Theta=Theta)
+        Pstar <- P.mirt(c(a, d, -999, 999), Theta=Theta)[,2L]
         Qstar <- 1 - Pstar
-        num <- P.nominal(a=rep(1, nfact), ak=ak, d=dk, Theta=Theta, returnNum=TRUE)
+        num <- P.nominal(c(rep(1, nfact), ak, dk), ncat=length(dk), Theta=Theta, returnNum=TRUE)
         den <- rowSums(num)
         Pn <- num/den
         cdat <- dat[,correct]
@@ -350,7 +348,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
-        num <- P.nominal(a=a, ak=ak, d=dshift, Theta=Theta, returnNum=TRUE, ot=offterm)
+        num <- P.nominal(c(a, ak, dshift), ncat=length(ak), Theta=Theta, returnNum=TRUE, ot=offterm)
         tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, estHess=estHess,
                                P=P, num=num, dat=dat)
         keep <- rep(TRUE, length(tmp$grad))
@@ -426,7 +424,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
-        num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, returnNum=TRUE, ot=offterm)
+        num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum=TRUE, ot=offterm)
         ret <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
                                P=P, num=num, dat=dat)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -660,7 +658,7 @@ setMethod(
         g <- antilogit(x@par[parlength - 1L])
         d <- x@par[parlength - 2L]
         a <- x@par[1L:nfact]
-        Pstar <- P.mirt(c(a, d, -999, 999), Theta)
+        Pstar <- P.mirt(c(a, d, -999, 999), Theta)[,2L]
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
         for(i in 1L:nfact){
@@ -733,14 +731,14 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)
-        P <- P.comp(c(a, d, g, 999), Theta)
-        Pstar <- P.comp(c(a, d, -999, 999), Theta)
+        P <- P.comp(c(a, d, g, 999), Theta)[,2L]
+        Pstar <- P.comp(c(a, d, -999, 999), Theta)[,2L]
         g <- antilogit(g)
         u <- antilogit(u)
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
         for(j in 1L:nfact){
-            Pn <- P.mirt(c(a[j], d[j], -999, 999), Theta)
+            Pn <- P.mirt(c(a[j], d[j], -999, 999), Theta)[,2L]
             grad[[2L]][ ,j] <- (u-g)*Pstar*a[j]*(1 - Pn)
             grad[[1L]][ ,j] <- -1*grad[[2L]][ ,j]
             hess[[2L]][ ,j] <- (u-g)*a[j]^2*Pstar*(1 - 3*Pn + 2*Pn^2)
@@ -757,8 +755,8 @@ setMethod(
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
         ak <- 0:(x@ncat - 1L)
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta)
-        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, returnNum = TRUE)
+        P <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta)
+        Num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         grad <- hess <- vector('list', x@ncat)
         for(i in 1L:x@ncat)
@@ -786,8 +784,8 @@ setMethod(
         d <- d[-length(d)]
         d[-1L] <- d[-1L] + t
         ak <- 0:(x@ncat - 1L)
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta)
-        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, returnNum = TRUE)
+        P <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta)
+        Num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         grad <- hess <- vector('list', x@ncat)
         for(i in 1L:x@ncat)
@@ -812,8 +810,8 @@ setMethod(
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
         ak <- x@par[(x@nfact+1):(x@nfact+x@ncat)]
-        P <- P.nominal(a=a, ak=ak, d=d, Theta=Theta)
-        Num <- P.nominal(a=a, ak=ak, d=d, Theta=Theta, returnNum = TRUE)
+        P <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta)
+        Num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         grad <- hess <- vector('list', x@ncat)
         for(i in 1L:x@ncat)
@@ -841,11 +839,11 @@ setMethod(
         u <- x@par[x@nfact+3L]
         ak <- x@par[(x@nfact+4L):(x@nfact+4L+x@ncat-2L)]
         dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
-        Pn <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta)
-        Num <- P.nominal(a=rep(1,ncol(Theta)), ak=ak, d=dk, Theta=Theta, returnNum = TRUE)
+        Pn <- P.nominal(c(rep(1,ncol(Theta)), ak, dk), ncat=length(dk), Theta=Theta)
+        Num <- P.nominal(c(rep(1,ncol(Theta)), ak, dk), ncat=length(dk), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
-        Pstar <- P.mirt(c(a, d, -999, 999), Theta)
-        Q <- 1 - P.mirt(c(a, d, g, u), Theta)
+        Pstar <- P.mirt(c(a, d, -999, 999), Theta)[,2L]
+        Q <- P.mirt(c(a, d, g, u), Theta)[,1]
         g <- antilogit(g)
         u <- antilogit(u)
         Num2 <- P <- matrix(0, nrow(Theta), x@ncat)

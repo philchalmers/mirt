@@ -44,7 +44,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
                                    offterm=OffTerm, NO.CUSTOM=NO.CUSTOM)
     itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
                                    offterm=OffTerm, NO.CUSTOM=NO.CUSTOM)
-    totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0, log_den1)
+    totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0, 
+                    log_den1, mirtClusterEnv$ncores)
     total_0 <- totals[[1L]]
     total_1 <- totals[[2L]]
     diff <- total_1 - total_0
@@ -935,7 +936,7 @@ reloadPars <- function(longpars, pars, ngroups, J){
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
-                             NO.CUSTOM=FALSE){
+                             NO.CUSTOM=TRUE){
     if(!NO.CUSTOM){
         if(any(sapply(pars, class) %in% 'custom')){ #sanity check, not important for custom anyway
             itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
