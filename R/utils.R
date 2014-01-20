@@ -27,7 +27,7 @@ prodterms <- function(theta0, prodlist)
 
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
-                        prior.mu, prodlist, OffTerm, NO.CUSTOM=FALSE)
+                        prior.mu, prodlist, OffTerm, CUSTOM.IND)
 {
     N <- nrow(fulldata)
     J <- length(pars) - 1L
@@ -41,9 +41,9 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         theta1 <- prodterms(theta1,prodlist)
     }
     itemtrace0 <- computeItemtrace(pars=pars, Theta=theta0, itemloc=itemloc,
-                                   offterm=OffTerm, NO.CUSTOM=NO.CUSTOM)
+                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
     itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
-                                   offterm=OffTerm, NO.CUSTOM=NO.CUSTOM)
+                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
     totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0, 
                     log_den1, mirtClusterEnv$ncores)
     total_0 <- totals[[1L]]
@@ -543,6 +543,7 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     type <- esplit[[i]][length(esplit[[i]])-3L]
                     if(!(type %in% c('norm', 'beta', 'lnorm')))
                         stop('Prior type specified in PRIOR = ... not available')
+                    type <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
                     val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                     val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                     for(j in 1L:length(sel)){
@@ -561,6 +562,7 @@ UpdatePrior <- function(PrepList, model, groupNames){
                 type <- esplit[[i]][length(esplit[[i]])-3L]
                 if(!(type %in% c('norm', 'beta', 'lnorm')))
                     stop('Prior type specified in PRIOR = ... not available')
+                type <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
                 val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                 val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                 for(j in 1L:length(sel)){
@@ -595,7 +597,9 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             est <- c(est, tmpgroup[[i]]@est)
             lbound <- c(lbound, tmpgroup[[i]]@lbound)
             ubound <- c(ubound, tmpgroup[[i]]@ubound)
-            prior.type <- c(prior.type, tmpgroup[[i]]@prior.type)
+            tmp <- sapply(as.character(tmpgroup[[i]]@prior.type), 
+                                 function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+            prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
             prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
         }
@@ -618,6 +622,8 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
     }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
     par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
+    prior.type <- sapply(as.character(prior.type), 
+                         function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
                       prior_1=prior_1, prior_2=prior_2)
@@ -645,7 +651,9 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
                 PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,'est'])
                 PrepList[[g]]$pars[[i]]@lbound[j] <- pars[ind,'lbound']
                 PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']
-                PrepList[[g]]$pars[[i]]@prior.type[j] <- as.character(pars[ind,'prior.type'])
+                tmp <- as.character(pars[ind,'prior.type'])                
+                PrepList[[g]]$pars[[i]]@prior.type[j] <- 
+                    switch(tmp, norm=1L, lnorm=2L, beta=3L, 0L)
                 PrepList[[g]]$pars[[i]]@prior_1[j] <- pars[ind,'prior_1']
                 PrepList[[g]]$pars[[i]]@prior_2[j] <- pars[ind,'prior_2']
                 ind <- ind + 1L
@@ -656,7 +664,7 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
                     stop('Graded model intercepts for item ', i, ' in group ', g,
                          ' do not descend from highest to lowest. Please fix')
             }
-            PrepList[[g]]$pars[[i]]@any.prior <- any(c('norm','lnorm','beta') %in%
+            PrepList[[g]]$pars[[i]]@any.prior <- any(1L:3L %in%
                                                          PrepList[[g]]$pars[[i]]@prior.type)
         }
     }
@@ -678,8 +686,8 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
 
 #new gradient and hessian with priors
 DerivativePriors <- function(x, grad, hess){
-    if(any(x@prior.type %in% 'norm')){
-        ind <- x@prior.type %in% 'norm'
+    if(any(x@prior.type %in% 1L)){ #norm
+        ind <- x@prior.type %in% 1L
         val <- x@par[ind]
         mu <- x@prior_1[ind]
         s <- x@prior_2[ind]
@@ -689,8 +697,8 @@ DerivativePriors <- function(x, grad, hess){
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
-    if(any(x@prior.type %in% 'lnorm')){
-        ind <- x@prior.type %in% 'lnorm'
+    if(any(x@prior.type %in% 2L)){ #lnorm
+        ind <- x@prior.type %in% 2L
         val <- x@par[ind]
         val <- ifelse(val > 0, val, 1e-10)
         lval <- log(val)
@@ -702,8 +710,8 @@ DerivativePriors <- function(x, grad, hess){
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
-    if(any(x@prior.type %in% 'beta')){
-        ind <- x@prior.type %in% 'beta'
+    if(any(x@prior.type %in% 3L)){ #beta
+        ind <- x@prior.type %in% 3L
         val <- x@par[ind]
         val <- ifelse(val < 1e-10, 1e-10, val)
         val <- ifelse(val > 1-1e-10, 1-1e-10, val)
@@ -720,8 +728,8 @@ DerivativePriors <- function(x, grad, hess){
 
 #new likelihood with priors
 LL.Priors <- function(x, LL){
-    if(any(x@prior.type %in% 'norm')){
-        ind <- x@prior.type %in% 'norm'
+    if(any(x@prior.type %in% 1L)){
+        ind <- x@prior.type %in% 1L
         val <- x@par[ind]
         u <- x@prior_1[ind]
         s <- x@prior_2[ind]
@@ -730,8 +738,8 @@ LL.Priors <- function(x, LL){
             LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
-    if(any(x@prior.type %in% 'lnorm')){
-        ind <- x@prior.type %in% 'lnorm'
+    if(any(x@prior.type %in% 2L)){
+        ind <- x@prior.type %in% 2L
         val <- x@par[ind]
         val <- ifelse(val > 0, val, 1e-100)
         u <- x@prior_1[ind]
@@ -741,8 +749,8 @@ LL.Priors <- function(x, LL){
             LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
         }
     }
-    if(any(x@prior.type %in% 'beta')){
-        ind <- x@prior.type %in% 'beta'
+    if(any(x@prior.type %in% 3L)){
+        ind <- x@prior.type %in% 3L
         val <- x@par[ind]
         a <- x@prior_1[ind]
         b <- x@prior_2[ind]
@@ -936,20 +944,13 @@ reloadPars <- function(longpars, pars, ngroups, J){
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
-                             NO.CUSTOM=TRUE){
-    if(!NO.CUSTOM){
-        if(any(sapply(pars, class) %in% 'custom')){ #sanity check, not important for custom anyway
-            itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
-            for(i in 1L:(length(pars)-1L))
-                if(class(pars[[i]]) == 'custom')
-                    itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
-            return(itemtrace)
-        } else {
-            return(.Call('computeItemTrace', pars, Theta, itemloc, offterm))
-        }
-    } else {
-        return(.Call('computeItemTrace', pars, Theta, itemloc, offterm))
+                             CUSTOM.IND){
+    itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+    if(length(CUSTOM.IND)){
+        for(i in CUSTOM.IND)
+            itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
     }
+    return(itemtrace)
 }
 
 assignItemtrace <- function(pars, itemtrace, itemloc){
@@ -1042,7 +1043,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         between=between,
                         cand.t.var=.5,
                         any.prior=FALSE,
-                        prior.type=rep('none', length(par)),
+                        prior.type=rep(0L, length(par)),
                         prior_1=rep(NaN,length(par)),
                         prior_2=rep(NaN,length(par)),
                         drawvals=drawvals,

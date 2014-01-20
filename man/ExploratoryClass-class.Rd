@@ -58,8 +58,12 @@
   class \code{"numeric"}, condition number of information
   matrix} \item{\code{secondordertest}:}{Object of class
   \code{"logical"}, indicate whether information matrix
-  passes second-order test} \item{\code{Call}:}{Object of
-  class \code{"call"}, call } }
+  passes second-order test}
+  \item{\code{CUSTOM.IND}:}{Object of class
+  \code{"integer"}, an internal index}
+  \item{\code{SLOW.IND}:}{Object of class \code{"integer"},
+  an internal index} \item{\code{Call}:}{Object of class
+  \code{"call"}, call } }
 }
 
 \section{Methods}{

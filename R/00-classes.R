@@ -41,6 +41,8 @@ setClass("AllModelClass",
                         condnum='numeric',
                         secondordertest='logical',
                         CFI='numeric',
+                        CUSTOM.IND='integer',
+                        SLOW.IND='integer',
                         'VIRTUAL'),
              validity = function(object) return(TRUE)
 )
@@ -85,6 +87,8 @@ setClass("AllModelClass",
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
+#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
+#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #' }
 #' @section Methods:
@@ -156,6 +160,8 @@ setClass(
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
+#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
+#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'   }
 #' @section Methods:
@@ -231,6 +237,8 @@ setClass(
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
+#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
+#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:
@@ -301,6 +309,8 @@ setClass(
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
+#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
+#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:

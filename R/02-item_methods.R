@@ -593,7 +593,7 @@ setMethod("initialize",
 setMethod(
     f = "DrawValues",
     signature = signature(x = 'RandomPars', Theta = 'matrix'),
-    definition = function(x, Theta, pars, fulldata, itemloc, offterm0){
+    definition = function(x, Theta, pars, fulldata, itemloc, offterm0, CUSTOM.IND){
         J <- length(pars) - 1L
         theta0 <- x@drawvals
         N <- nrow(theta0)
@@ -617,12 +617,10 @@ setMethod(
             offterm1 <- matrix(tmp1, nrow(itemtrace0), J, byrow = TRUE)
         }
         offterm1 <- offterm1 + offterm0
-        for (i in 1L:J){
-            itemtrace0[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-                ProbTrace(x=pars[[i]], Theta=Theta, ot=offterm0[,i])
-            itemtrace1[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <-
-                ProbTrace(x=pars[[i]], Theta=Theta, ot=offterm1[,i])
-        }
+        itemtrace0 <- computeItemtrace(pars, Theta=Theta, offterm=offterm0, 
+                                       itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+        itemtrace1 <- computeItemtrace(pars, Theta=Theta, offterm=offterm1, 
+                                       itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
         if(x@between){
             totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1,
                             rep(0, nrow(fulldata)), rep(0, nrow(fulldata)), mirtClusterEnv$ncores)

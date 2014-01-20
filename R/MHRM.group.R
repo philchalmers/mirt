@@ -10,7 +10,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     SEMCYCLES <- list$SEMCYCLES
     KDRAWS <- list$KDRAWS
     TOL <- list$TOL
-    NO.CUSTOM <- !any(sapply(pars[[1L]], class) %in% 'custom')
+    CUSTOM.IND <- list$CUSTOM.IND
     gain <- list$gain
     itemloc <- list$itemloc
     ngroups <- length(pars)
@@ -43,7 +43,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     for(g in 1L:ngroups){
         for(i in 1L:30L){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
-                                        itemloc=itemloc, cand.t.var=cand.t.var, NO.CUSTOM=NO.CUSTOM,
+                                        itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             if(i > 5L){
@@ -153,7 +153,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                 for(i in 1L:30L){
                     random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
                                                        pars=pars[[1L]], fulldata=gfulldata[[1L]],
-                                                       offterm0=OffTerm)
+                                                       offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                     OffTerm <- OffTerm(random, J=J, N=N)
                     if(i > 5L){
                         if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
@@ -177,7 +177,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
             tmp <- .1
             for(i in 1L:30L){
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=gfulldata[[1L]],
-                                             itemloc=itemloc, cand.t.var=cand.t.var, NO.CUSTOM=NO.CUSTOM,
+                                             itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                              prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
                                              prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
                 if(i > 5L){
@@ -206,7 +206,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
         for(g in 1L:ngroups){
             for(i in 1L:5L)
                 gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=gfulldata[[g]],
-                                      itemloc=itemloc, cand.t.var=cand.t.var, NO.CUSTOM=NO.CUSTOM,
+                                      itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                       prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                       prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             LL <- LL + attr(gtheta0[[g]], "log.lik")
@@ -216,7 +216,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                 for(i in 1L:5L){
                     random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
                                                        pars=pars[[1L]], fulldata=gfulldata[[1L]],
-                                                       offterm0=OffTerm)
+                                                       offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                     OffTerm <- OffTerm(random, J=J, N=N)
                 }
             }
@@ -232,7 +232,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
             gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]], offterm=OffTerm,
-                                                Theta=thetatemp, itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
+                                                Theta=thetatemp, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
             pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]],
                                          itemloc=itemloc)
             for (i in 1L:J){
@@ -243,7 +243,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                 longpars[pars[[group]][[i]]@parnum] <- pars[[group]][[i]]@par
             }
             i <- i + 1L
-            deriv <- Deriv(x=pars[[group]][[i]], Theta=gtheta0[[group]])
+            deriv <- Deriv(x=pars[[group]][[i]], Theta=gtheta0[[group]], CUSTOM.IND=CUSTOM.IND)
             longpars[pars[[group]][[i]]@parnum] <- pars[[group]][[i]]@par
             g[pars[[group]][[i]]@parnum] <- deriv$grad
             h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess

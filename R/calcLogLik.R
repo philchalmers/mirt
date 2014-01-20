@@ -54,19 +54,20 @@ setMethod(
 	definition = function(object, draws = 5000, G2 = TRUE)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
-                            NO.CUSTOM){
+                            CUSTOM.IND){
             theta <- mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
             if(length(random) > 0L){
                 for(i in 1L:length(random)){
                     random[[i]]@drawvals <- DrawValues(x=random[[i]], Theta=theta, pars=pars,
-                                                fulldata=fulldata, itemloc=itemloc, offterm0=ot)
+                                                       fulldata=fulldata, itemloc=itemloc, 
+                                                       offterm0=ot, CUSTOM.IND=CUSTOM.IND)
                 }
                 ot <- OffTerm(random, J=J, N=N)
             }
             itemtrace <- computeItemtrace(pars=pars, Theta=theta, itemloc=itemloc, offterm=ot,
-                                          NO.CUSTOM=NO.CUSTOM)
+                                          CUSTOM.IND=CUSTOM.IND)
             return(rowSums(log(itemtrace)*fulldata))
         }
         pars <- object@pars
@@ -81,10 +82,9 @@ setMethod(
         if(length(object@random) == 0L){
             ot <- matrix(0, 1, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
-        NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
         LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact,
                         N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
-                        random=object@random, ot=ot, NO.CUSTOM=NO.CUSTOM))
+                        random=object@random, ot=ot, CUSTOM.IND=object@CUSTOM.IND))
         LL <- exp(LL)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)
@@ -98,7 +98,7 @@ setMethod(
 		data <- object@data
         tabdata <- object@tabdata
         r <- tabdata[,ncol(tabdata)]
-        expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J)
+        expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J, mirtClusterEnv$ncores)
 		tabdata <- cbind(tabdata,expected*N)
         object@Pl <- expected
         nestpars <- nconstr <- 0L

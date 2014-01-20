@@ -6,29 +6,31 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
 	{
 	    #local functions for apply
-	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
+	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND){
 	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE))
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE, 
+                                CUSTOM.IND=CUSTOM.IND))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
 	        SEest <- try(sqrt(diag(solve(estimate$hessian))))
 	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
+	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND){
 	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
                 return(c(scores[ID, ], rep(NA, ncol(scores))))
 	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=TRUE))
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=TRUE, 
+                                CUSTOM.IND=CUSTOM.IND))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
 	        SEest <- try(sqrt(diag(solve(estimate$hessian))))
 	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist){
+	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND){
 	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist))
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, CUSTOM.IND=CUSTOM.IND))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
             TI <- 0
@@ -75,6 +77,7 @@ setMethod(
         pars <- object@pars
 		K <- object@K
         J <- length(K)
+        CUSTOM.IND <- object@CUSTOM.IND
         prodlist <- attr(pars, 'prodlist')
         nfact <- object@nfact
         nLambdas <- object@nfact
@@ -91,7 +94,8 @@ setMethod(
         if(!is.null(gmean)) gp$gmeans <- gmean
         if(!is.null(gcov)) gp$gcov <- gcov
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
-                                             quadpts=quadpts, gp=gp, verbose=verbose))
+                                             quadpts=quadpts, gp=gp, verbose=verbose, 
+                                             CUSTOM.IND=CUSTOM.IND))
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(-4,4,length.out = quadpts))
 		ThetaShort <- Theta <- thetaComb(theta,nfact)
@@ -108,7 +112,8 @@ setMethod(
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
 		W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
 		W <- W/sum(W)
-        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
+                                      CUSTOM.IND=CUSTOM.IND)
 	    log_itemtrace <- log(itemtrace)
 	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                        tabdata=tabdata, ThetaShort=ThetaShort, W=W)
@@ -116,7 +121,8 @@ setMethod(
 	    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		if(method == "MAP"){
             tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
-                             tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist)
+                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
+                           CUSTOM.IND=CUSTOM.IND)
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		}
@@ -132,16 +138,19 @@ setMethod(
             SEscores[rowSums(tmp2) == J,] <- NA
 			SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
             tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
-                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist)
+                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
+                           CUSTOM.IND=CUSTOM.IND)
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
 		}
         if(method == 'WLE'){
             if(nfact > 1L)
                 stop('WLE method only supported for unidimensional models')
-            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
+            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+                                          CUSTOM.IND=CUSTOM.IND)
             tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
-                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist)
+                           tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
+                           CUSTOM.IND=CUSTOM.IND)
             scores <- tmp[ ,1:nfact, drop = FALSE]
             SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
         }
@@ -240,20 +249,21 @@ setMethod(
 )
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, ML=FALSE)
+MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ML=FALSE)
 {
     ThetaShort <- Theta
-    Theta <- matrix(Theta, nrow=1)
+    Theta <- matrix(Theta, nrow=1L)
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta,prodlist)
-    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
+    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+                                  CUSTOM.IND=CUSTOM.IND)
     L <- sum(log(itemtrace)[as.logical(patdata)])
     prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L
 }
 
-gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist){
+gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND){
     ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1)
     if(length(prodlist) > 0L)
@@ -265,7 +275,8 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist){
         dP[[i]] <- d2P[[i]] <- itemtrace
     I <- numeric(1)
     dW <- dL <- numeric(nfact)
-    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
+    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+                                  CUSTOM.IND=CUSTOM.IND)
     for (i in 1L:(length(itemloc)-1L)){
         deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
         for(k in 1L:nfact){
@@ -288,7 +299,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist){
     MIN
 }
 
-EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose){
+EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -321,7 +332,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     K <- x@K
     J <- length(K)
     itemloc <- x@itemloc
-    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc)
+    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
+                                  CUSTOM.IND=CUSTOM.IND)
     itemtrace <- t(itemtrace)
     tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1

@@ -23,25 +23,6 @@ NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,
 	return d2Louter;
 }
 
-void itemTrace(vector<double> &P, vector<double> &Pstar, const vector<double> &a, const double *d,
-        const NumericMatrix &Theta, const double *g, const double *u, const NumericVector &ot)
-{
-    const int nquad = Theta.nrow();
-    const int nfact = Theta.ncol();
-    const int USEOT = ot.size() > 1;
-
-	for (int i = 0; i <	nquad; ++i){
-        double z = *d;
-    	for (int j = 0; j <	nfact; ++j)
-			z += a[j] * Theta(i,j);
-        if(USEOT) z += ot[i];
-        if(z > ABS_MAX_Z) z = ABS_MAX_Z;
-        else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
-        Pstar[i] = 1.0 / (1.0 + exp(-z));
-    	P[i] = *g + (*u - *g) * Pstar[i];
-	}
-}
-
 RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
 {
     BEGIN_RCPP
@@ -105,19 +86,22 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
 	END_RCPP
 }
 
-RcppExport SEXP sumExpected(SEXP Rtdata, SEXP Rtabdata, SEXP Rrwmeans, SEXP Rnitems)
+RcppExport SEXP sumExpected(SEXP Rtdata, SEXP Rtabdata, SEXP Rrwmeans, SEXP Rnitems, SEXP Rncores)
 {
     BEGIN_RCPP
 
     const IntegerMatrix tdata(Rtdata);
     const IntegerMatrix tabdata(Rtabdata);
     const NumericVector rwmeans(Rrwmeans);
+    const int ncores = as<int>(Rncores);
     const int nitems = as<int>(Rnitems);
     const int N = tdata.ncol();
     const int n = tabdata.nrow();
     const int J = tdata.nrow();
     vector<double> expected(n);
+    omp_set_num_threads(ncores);
 
+#pragma omp parallel for
     for(int i = 0; i < n; ++i){
         int count = 0;
         double tempexp = 0.0;

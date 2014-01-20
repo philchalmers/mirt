@@ -12,7 +12,7 @@ setClass("GroupPars",
                         lbound='numeric',
                         ubound='numeric',
                         any.prior='logical',
-                        prior.type='character',
+                        prior.type='integer',
                         prior_1='numeric',
                         prior_2='numeric')
 )
@@ -32,7 +32,7 @@ setClass("RandomPars",
                         drawvals='matrix',
                         mtch='numeric',
                         any.prior='logical',
-                        prior.type='character',
+                        prior.type='integer',
                         prior_1='numeric',
                         prior_2='numeric')
 )
@@ -55,7 +55,7 @@ setClass("AllItemsClass",
                         lbound='numeric',
                         ubound='numeric',
                         any.prior='logical',
-                        prior.type='character',
+                        prior.type='integer',
                         prior_1='numeric',
                         prior_2='numeric',
                         'VIRTUAL')

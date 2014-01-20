@@ -141,12 +141,13 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     DX <- rep(NA, npick)
     for(pat in 1L:nrow(tabdata)){
         rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
-                            Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE)
+                            Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE,
+                            CUSTOM.IND=obj@CUSTOM.IND)
         for(i in 1L:nitems){
             tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
             pars[[i]]@dat <- rlist$r1[, tmp]
             pars[[i]]@itemtrace <- rlist$itemtrace[, tmp]
-            dx <- Deriv(pars[[i]], Theta=Theta, EM = TRUE, estHess=FALSE)$grad
+            dx <- Deriv(pars[[i]], Theta=Theta, estHess=FALSE)$grad
             DX[whichpar[i]:(whichpar[i+1L]-1L)] <- dx[pars[[i]]@est]
         }
         delta[pat, ] <- DX

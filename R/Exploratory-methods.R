@@ -632,7 +632,7 @@ setMethod(
             for(i in 1:J)
                 x@pars[[i]]@par[1:nfact] <- a[i, ]
         }
-        itemtrace <- computeItemtrace(x@pars, ThetaFull, x@itemloc)
+        itemtrace <- computeItemtrace(x@pars, ThetaFull, x@itemloc, CUSTOM.IND=x@CUSTOM.IND)
         score <- c()
         for(i in 1:J)
             score <- c(score, 0:(x@K[i]-1))

@@ -1,7 +1,7 @@
 SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
-                  specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL){
+                  CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL){
     LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-                   NO.CUSTOM, EH, EHPrior){
+                   CUSTOM.IND, EH, EHPrior){
         longpars[est] <- p
         pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         gstructgrouppars <- prior <- Prior <- vector('list', ngroups)
@@ -27,11 +27,11 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                 expected <- Estep.bfactor(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata,
                                           Theta=Theta, prior=prior[[g]],
                                           specific=specific, sitems=sitems,
-                                          itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)$expected
+                                          itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)$expected
             } else {
                 expected <- Estep.mirt(pars=pars2[[g]], tabdata=PrepList[[g]]$tabdata,
                                        Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
-                                       NO.CUSTOM=NO.CUSTOM)$expected
+                                       CUSTOM.IND=CUSTOM.IND)$expected
             }
             LL <- LL + sum(PrepList[[g]]$tabdata[,ncol(PrepList[[g]]$tabdata)] * log(expected))
         }
@@ -57,11 +57,10 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
             pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
         }
     }
-    NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
     hess <- numDeriv::hessian(LL, x=shortpars, est=est, longpars=longpars,
                               pars=pars, ngroups=ngroups, J=J,
                               Theta=Theta, PrepList=PrepList,
-                              specific=specific, sitems=sitems, NO.CUSTOM=NO.CUSTOM,
+                              specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                               EH=EH, EHPrior=EHPrior)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
@@ -98,7 +97,6 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     nfact <- ncol(Theta)
     gTheta <- vector('list', ngroups)
     ANY.PRIOR <- rep(FALSE, ngroups)
-    NO.CUSTOM <- !any(sapply(pars, class) %in% 'custom')
     converged <- logical(sum(estpars & !redun_constr))
     if(!is.latent[est]) converged[is.latent] <- TRUE
     rijfull <- rep(NA, length(converged))
@@ -135,10 +133,11 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
                                             Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
-                                            itemloc=itemloc, NO.CUSTOM=NO.CUSTOM)
+                                            itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND)
             } else {
-                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, NO.CUSTOM=NO.CUSTOM,
-                                         Theta=gTheta[[g]], prior=Prior[[g]], itemloc=itemloc)
+                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
+                                         CUSTOM.IND=list$CUSTOM.IND, Theta=gTheta[[g]], 
+                                         prior=Prior[[g]], itemloc=itemloc)
             }
         }
         for(g in 1L:ngroups){
@@ -149,8 +148,9 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
-                          NO.CUSTOM=NO.CUSTOM, PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                          rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV, groupest=groupest)
+                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
+                          rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV, groupest=groupest,
+                          CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
@@ -164,15 +164,16 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     return(rijfull)
 }
 
-SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
-    fn <- function(which, PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad){
+SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type, CUSTOM.IND, SLOW.IND){
+    fn <- function(which, PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, 
+                   CUSTOM.IND, SLOW.IND){
         for(pat in which){
             for(g in 1L:ngroups){
                 gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
                 r <- gtabdata[,ncol(gtabdata)]
                 gtabdata[,ncol(gtabdata)] <- 1L
                 pick <- min(which(gtabdata == 1L))
-                rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata,
+                rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND,
                                     Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
                 w <- rlist$r1[,pick]
                 for(i in 1L:nitems){
@@ -180,7 +181,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
                     pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
                     pars[[g]][[i]]@dat <- matrix(gtabdata[, tmp, drop=FALSE], nrow(Theta),
                                                  length(tmp), byrow = TRUE) * w
-                    tmp <- Deriv(pars[[g]][[i]], Theta=Theta, EM=TRUE, estHess=FALSE)
+                    tmp <- Deriv(pars[[g]][[i]], Theta=Theta, estHess=FALSE)
                     DX[pars[[g]][[i]]@parnum] <- tmp$grad
                 }
             }
@@ -204,10 +205,12 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
         for(i in 1L:length(which)) which[[i]] <- (pick[i]+1L):pick[i+1L]
         if(max(pick)/mirtClusterEnv$ncores >= 50){
             tmp <- myLapply(which, fn, PrepList=PrepList, ngroups=ngroups, pars=pars, 
-                            Theta=Theta, Prior=Prior, itemloc=itemloc, Igrad=Igrad)
+                            Theta=Theta, Prior=Prior, itemloc=itemloc, Igrad=Igrad,
+                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND)
         } else {
             tmp <- lapply(which, fn, PrepList=PrepList, ngroups=ngroups, pars=pars, 
-                          Theta=Theta, Prior=Prior, itemloc=itemloc, Igrad=Igrad)
+                          Theta=Theta, Prior=Prior, itemloc=itemloc, Igrad=Igrad,
+                          CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND)
         }
         Igrad <- Reduce(`+`, tmp)
     } else {
@@ -217,7 +220,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
                 r <- gtabdata[,ncol(gtabdata)]
                 gtabdata[,ncol(gtabdata)] <- 1L
                 pick <- min(which(gtabdata == 1L))
-                rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata,
+                rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND,
                                     Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
                 w <- rlist$r1[,pick]
                 tmpderiv <- matrix(0, nrow(Theta), length(DX))
@@ -227,7 +230,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
                     pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
                     pars[[g]][[i]]@dat <- gtabdata[, tmp, drop=FALSE]
                     for(j in 1L:nrow(Theta)){
-                        tmp <- Deriv(pars[[g]][[i]], Theta=Theta[j, , drop=FALSE], EM=TRUE, estHess=TRUE)
+                        tmp <- Deriv(pars[[g]][[i]], Theta=Theta[j, , drop=FALSE], estHess=TRUE)
                         tmpderiv[j,pars[[g]][[i]]@parnum] <- tmp$grad
                         tmphess[pars[[g]][[i]]@parnum, pars[[g]][[i]]@parnum] <-
                             tmphess[pars[[g]][[i]]@parnum, pars[[g]][[i]]@parnum] + tmp$hess * w[j] * r
@@ -271,7 +274,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type){
     return(ESTIMATE)
 }
 
-SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N){
+SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND){
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc
     ngroups <- length(pars)
@@ -306,7 +309,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N){
     for(pat in 1L:nrow(tabdata)){
         for(g in 1L:ngroups){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
-            rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata,
+            rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND,
                                 Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
             for(i in 1L:nitems){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
