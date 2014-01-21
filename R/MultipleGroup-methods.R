@@ -110,7 +110,8 @@ setMethod(
             message('Adjusted so that the lowest category score for every item is 0')
         gscore <- c()
         for(g in 1:ngroups){
-            itemtrace <- computeItemtrace(x@cmods[[g]]@pars, ThetaFull, x@itemloc)
+            itemtrace <- computeItemtrace(x@cmods[[g]]@pars, ThetaFull, x@itemloc, 
+                                          CUSTOM.IND=x@CUSTOM.IND)
             score <- c()
             for(i in 1:J)
                 score <- c(score, 0:(x@K[i]-1))
