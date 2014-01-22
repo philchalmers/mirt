@@ -17,11 +17,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
-    gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
     for(g in 1L:ngroups){
-        gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-        gfulldata[[g]] <- PrepList[[g]]$fulldata
-        gtheta0[[g]] <- matrix(0, nrow(gfulldata[[g]]), nfact)
         for(i in 1L:(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
             estpars <- c(estpars, pars[[g]][[i]]@est)
@@ -45,10 +41,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
             ind1 <- ind2 + 1L
         }
     }
-    stagecycle <- 1L
     converge <- 1L
-    inverse_fail_count <- 1L
-    ##
     estindex <- index[estpars]
     L <- Ls$L; L2 <- Ls$L2; L3 <- Ls$L3
     redun_constr <- Ls$redun_constr
