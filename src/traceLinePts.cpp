@@ -117,6 +117,79 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta)
     END_RCPP
 }
 
+static void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
+    const List &pars, const NumericVector &ot, const vector<int> &itemloc, const int &which,
+    const int &nfact, const int &N, const int &USEFIXED)
+{
+    NumericMatrix theta = Theta;
+    int nfact2 = nfact;
+    S4 item = pars[which];
+    int ncat = as<int>(item.slot("ncat"));
+    vector<double> par = as< vector<double> >(item.slot("par"));
+    vector<double> P(N*ncat);
+    int itemclass = as<int>(item.slot("itemclass"));
+    int correct = 0;
+    if(itemclass == 8)
+        correct = as<int>(item.slot("correctcat"));
+
+    /*
+        1 = dich
+        2 = graded
+        3 = gpcm
+        4 = nominal
+        5 = grsm
+        6 = rsm
+        7 = partcomp
+        8 = nestlogit
+        9 = custom....have to do in R for now
+    */
+
+    if(USEFIXED){
+        NumericMatrix itemFD = item.slot("fixed.design");
+        nfact2 = nfact + itemFD.ncol();
+        NumericMatrix NewTheta(Theta.nrow(), nfact2);
+        for(int i = 0; i < itemFD.ncol(); ++i)
+            NewTheta(_,i) = itemFD(_,i);
+        for(int i = 0; i < nfact; ++i)
+            NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
+        theta = NewTheta;
+    }
+    switch(itemclass){
+        case 1 :
+            P_dich(P, par, theta, ot, N, nfact2);
+            break;
+        case 2 :
+            P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 0);
+            break;
+        case 3 :
+            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 1, 0);
+            break;
+        case 4 :
+            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0, 0);
+            break;
+        case 5 :
+            P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 1);
+            break;
+        case 6 :
+            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 1, 1);
+            break;
+        case 7 :
+            P_comp(P, par, theta, N, nfact2);
+            break;
+        case 8 :
+            P_nested(P, par, theta, N, nfact2, ncat, correct);
+            break;
+        case 9 :
+            break;
+        default :
+            Rprintf("How in the heck did you get here from a switch statement?\n");
+            break;
+    }
+    int where = (itemloc[which]-1) * N;
+    for(int i = 0; i < N*ncat; ++i)
+        itemtrace[where + i] = P[i];
+}
+
 RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Roffterm)
 {
     BEGIN_RCPP
@@ -134,76 +207,9 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     int USEFIXED = 0;
     if(FD.nrow() > 2) USEFIXED = 1;
 
-    for(int which = 0; which < J; ++which){
-        NumericMatrix theta = Theta;
-        int nfact2 = nfact;
-        S4 item = pars[which];
-        int ncat = as<int>(item.slot("ncat"));
-        vector<double> par = as< vector<double> >(item.slot("par"));
-        vector<double> P(N*ncat);
-        int itemclass = as<int>(item.slot("itemclass"));
-        int correct = 0;
-        if(itemclass == 8)            
-            correct = as<int>(item.slot("correctcat"));
-
-        /*
-            1 = dich
-            2 = graded
-            3 = gpcm
-            4 = nominal
-            5 = grsm
-            6 = rsm
-            7 = partcomp
-            8 = nestlogit
-            9 = custom....have to do in R for now
-        */
-
-        if(USEFIXED){
-            NumericMatrix itemFD = item.slot("fixed.design");
-            nfact2 = nfact + itemFD.ncol();
-            NumericMatrix NewTheta(Theta.nrow(), nfact2);
-            for(int i = 0; i < itemFD.ncol(); ++i)
-                NewTheta(_,i) = itemFD(_,i);
-            for(int i = 0; i < nfact; ++i)
-                NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
-            theta = NewTheta;
-        }
-        switch(itemclass){
-            case 1 :
-                P_dich(P, par, theta, offterm(_, which), N, nfact2);
-                break;
-            case 2 :
-                P_graded(P, par, theta, offterm(_, which), N, nfact2, ncat-1, 1, 0);
-                break;
-            case 3 :
-                P_nominal(P, par, theta, offterm(_, which), N, nfact2, ncat, 0, 1, 0);
-                break;
-            case 4 :
-                P_nominal(P, par, theta, offterm(_, which), N, nfact2, ncat, 0, 0, 0);
-                break;
-            case 5 :
-                P_graded(P, par, theta, offterm(_, which), N, nfact2, ncat-1, 1, 1);
-                break;
-            case 6 :
-                P_nominal(P, par, theta, offterm(_, which), N, nfact2, ncat, 0, 1, 1);
-                break;
-            case 7 :
-                P_comp(P, par, theta, N, nfact2);
-                break;
-            case 8 :
-                P_nested(P, par, theta, N, nfact2, ncat, correct);
-                break;
-            case 9 :
-                continue;
-                break;
-            default :
-                Rprintf("How in the heck did you get here from a switch statement?\n");
-                break;
-        }
-        int where = (itemloc[which]-1) * N;
-        for(int i = 0; i < N*ncat; ++i)
-            itemtrace[where + i] = P[i];
-    }
+    for(int which = 0; which < J; ++which)
+        _computeItemTrace(itemtrace, Theta, pars, offterm(_, which), itemloc,
+            which, nfact, N, USEFIXED);
 
     NumericMatrix ret = vec2mat(itemtrace, N, itemloc[J]-1);
     return(ret);

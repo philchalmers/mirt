@@ -503,6 +503,60 @@ static void d_priors(vector<double> &grad, NumericMatrix &hess, const int &ind,
     hess(ind, ind) = hess(ind, ind) + h;
 }
 
+static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List &gpars,
+    const List &gTheta, const NumericMatrix &offterm, const int &nitems,
+    const int &npars, const int &estHess, const int &USEFIXED, const int &group)
+{
+    List pars = gpars[group];
+    NumericMatrix Theta = gTheta[group];
+    int nfact = Theta.ncol();
+    int N = Theta.nrow();
+    for(int i = 0; i < nitems; ++i){
+        S4 item = pars[i];
+        int nfact2 = nfact;
+        NumericMatrix theta = Theta;
+        if(USEFIXED){
+            NumericMatrix itemFD = item.slot("fixed.design");
+            nfact2 = nfact + itemFD.ncol();
+            NumericMatrix NewTheta(Theta.nrow(), nfact2);
+            for(int j = 0; j < itemFD.ncol(); ++j)
+                NewTheta(_,j) = itemFD(_,j);
+            for(int j = 0; j < nfact; ++j)
+                NewTheta(_,j + itemFD.ncol()) = Theta(_,j);
+            theta = NewTheta;
+        }
+        vector<double> par = as< vector<double> >(item.slot("par"));
+        vector<double> tmpgrad(par.size());
+        NumericMatrix tmphess(par.size(), par.size());
+        int itemclass = as<int>(item.slot("itemclass"));
+        int ncat = as<int>(item.slot("ncat"));
+        vector<int> prior_type = as< vector<int> >(item.slot("prior.type"));
+        vector<double> prior_1 = as< vector<double> >(item.slot("prior_1"));
+        vector<double> prior_2 = as< vector<double> >(item.slot("prior_2"));
+        NumericMatrix dat = item.slot("dat");
+        switch(itemclass){
+            case 1 :
+                d_dich(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, estHess);
+                break;
+            case 2 :
+                d_poly(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat - 1, estHess);
+                break;
+            default :
+                break;
+        }
+        vector<int> parnum = as< vector<int> >(item.slot("parnum"));
+        int where = parnum[0] - 1;
+        for(int len = 0; len < par.size(); ++len){
+            if(prior_type[len])
+                d_priors(tmpgrad, tmphess, len, prior_type[len], prior_1[len], prior_2[len], par[len]);
+            grad[where + len] = tmpgrad[len];
+            if(estHess){
+                for(int len2 = 0; len2 < par.size(); ++len2)
+                    hess(where + len, where + len2) = tmphess(len, len2);
+            }
+        }
+    }
+}
 
 RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     SEXP Rnpars, SEXP RestHess, SEXP RUSEFIXED)
@@ -519,57 +573,9 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     vector<double> grad(npars);
     NumericMatrix hess(npars, npars);
 
-    for(int g = 0; g < gpars.length(); ++g){
-        List pars = gpars[g];
-        NumericMatrix Theta = gTheta[g];
-        int nfact = Theta.ncol();
-        int N = Theta.nrow();
-        for(int i = 0; i < nitems; ++i){
-            S4 item = pars[i];
-            int nfact2 = nfact;
-            NumericMatrix theta = Theta;
-            if(USEFIXED){
-                NumericMatrix itemFD = item.slot("fixed.design");
-                nfact2 = nfact + itemFD.ncol();
-                NumericMatrix NewTheta(Theta.nrow(), nfact2);
-                for(int j = 0; j < itemFD.ncol(); ++j)
-                    NewTheta(_,j) = itemFD(_,j);
-                for(int j = 0; j < nfact; ++j)
-                    NewTheta(_,j + itemFD.ncol()) = Theta(_,j);
-                theta = NewTheta;
-            }
-            vector<double> par = as< vector<double> >(item.slot("par"));
-            vector<double> tmpgrad(par.size());
-            NumericMatrix tmphess(par.size(), par.size());
-            int itemclass = as<int>(item.slot("itemclass"));
-            int ncat = as<int>(item.slot("ncat"));
-            vector<int> prior_type = as< vector<int> >(item.slot("prior.type"));
-            vector<double> prior_1 = as< vector<double> >(item.slot("prior_1"));
-            vector<double> prior_2 = as< vector<double> >(item.slot("prior_2"));
-            NumericMatrix dat = item.slot("dat");
-            switch(itemclass){
-                case 1 :
-                    d_dich(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, estHess);
-                    break;
-                case 2 :
-                    d_poly(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat - 1, estHess);
-                    break;
-                default :
-                    break;
-            }
-            vector<int> parnum = as< vector<int> >(item.slot("parnum"));
-            int where = parnum[0] - 1;
-            for(int len = 0; len < par.size(); ++len){
-                if(prior_type[len])
-                    d_priors(tmpgrad, tmphess, len, prior_type[len], prior_1[len], prior_2[len], par[len]);
-                grad[where + len] = tmpgrad[len];
-                if(estHess){
-                    for(int len2 = 0; len2 < par.size(); ++len2)
-                        hess(where + len, where + len2) = tmphess(len, len2);
-                }
-            }
-        }
-    }
+    for(int group = 0; group < gpars.length(); ++group)
+        _computeDpars(grad, hess, gpars, gTheta, offterm, nitems, npars,
+            estHess, USEFIXED, group);
 
     List ret;
     ret["grad"] = wrap(grad);
