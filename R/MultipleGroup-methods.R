@@ -72,7 +72,7 @@ setMethod(
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          facet_items = FALSE, auto.key = TRUE, ...)
+                          facet_items = TRUE, auto.key = TRUE, ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
             stop(type, " is not a valid plot type.")
@@ -208,9 +208,15 @@ setMethod(
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
-                return(xyplot(P ~ Theta|item, plt, group = cat:group, ylim = c(-0.1,1.1),
-                       xlab = expression(theta), ylab = expression(P(theta)),
-                       auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                if(facet_items){
+                    return(xyplot(P ~ Theta|item, plt, group = cat:group, ylim = c(-0.1,1.1),
+                           xlab = expression(theta), ylab = expression(P(theta)),
+                           auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                } else {
+                    return(xyplot(P ~ Theta|group, plt, group = cat:item, ylim = c(-0.1,1.1),
+                                  xlab = expression(theta), ylab = expression(P(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                }
             }
             if(type == 'infotrace'){
                 plt <- vector('list', ngroups)

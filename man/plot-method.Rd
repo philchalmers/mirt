@@ -58,7 +58,7 @@
 \description{
   \code{plot(x, y, type = 'info', npts = 50, theta_angle =
   45, which.items = 1:ncol(x@data), rot = list(xaxis = -70,
-  yaxis = 30, zaxis = 10), facet_items = FALSE, auto.key =
+  yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key =
   TRUE, ehist.cut = 1e-10, ...)}
 }
 \examples{
@@ -67,7 +67,7 @@ x <- mirt(Science, 1)
 plot(x)
 plot(x, type = 'trace')
 plot(x, type = 'infotrace')
-plot(x, type = 'infotrace', facet_items = TRUE)
+plot(x, type = 'infotrace', facet_items = FALSE)
 plot(x, type = 'infoSE')
 
 set.seed(1234)
@@ -76,6 +76,7 @@ x2 <- multipleGroup(Science, 1, group)
 plot(x2)
 plot(x2, type = 'trace')
 plot(x2, type = 'trace', which.items = 1:2)
+plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 plot(x2, type = 'score')
 
 x3 <- mirt(Science, 2)

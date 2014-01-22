@@ -532,7 +532,7 @@ setMethod(
 #' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45,
 #'                          which.items = 1:ncol(x@@data),
 #'                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-#'                          facet_items = FALSE, auto.key = TRUE, ehist.cut = 1e-10, ...)}
+#'                          facet_items = TRUE, auto.key = TRUE, ehist.cut = 1e-10, ...)}
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
@@ -572,7 +572,7 @@ setMethod(
 #' plot(x)
 #' plot(x, type = 'trace')
 #' plot(x, type = 'infotrace')
-#' plot(x, type = 'infotrace', facet_items = TRUE)
+#' plot(x, type = 'infotrace', facet_items = FALSE)
 #' plot(x, type = 'infoSE')
 #'
 #' set.seed(1234)
@@ -581,6 +581,7 @@ setMethod(
 #' plot(x2)
 #' plot(x2, type = 'trace')
 #' plot(x2, type = 'trace', which.items = 1:2)
+#' plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 #' plot(x2, type = 'score')
 #'
 #' x3 <- mirt(Science, 2)
@@ -594,7 +595,7 @@ setMethod(
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          facet_items = FALSE, auto.key = TRUE, main = NULL,
+                          facet_items = TRUE, auto.key = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
     {
         if (any(theta_angle > 90 | theta_angle < 0))
@@ -719,9 +720,15 @@ setMethod(
                 for(i in 1L:length(nrs))
                     names <- c(names, rep(names(P)[i], nrs[i]))
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
-                return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
-                              xlab = expression(theta), ylab = expression(P(theta)),
-                              auto.key = auto.key, type = 'l', main = main, ...))
+                if(facet_items){
+                    return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
+                                  xlab = expression(theta), ylab = expression(P(theta)),
+                                  auto.key = auto.key, type = 'l', main = main, ...))
+                } else {
+                    return(xyplot(P ~ Theta, plotobj, group=item, ylim = c(-0.1,1.1),
+                                  xlab = expression(theta), ylab = expression(P(theta)),
+                                  auto.key = auto.key, type = 'l', main = main, ...))
+                }
 
             } else if(type == 'infotrace'){
                 if(is.null(main))
