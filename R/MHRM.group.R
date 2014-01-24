@@ -18,7 +18,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     prodlist <- PrepList[[1L]]$prodlist
     nfullpars <- 0L
     estpars <- c()
-    gfulldata <- gtheta0 <- gstructgrouppars <- gitemtrace <- vector('list', ngroups)
+    gfulldata <- gtheta0 <- gstructgrouppars <- vector('list', ngroups)
     for(g in 1L:ngroups){
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
         gfulldata[[g]] <- PrepList[[g]]$fulldata
@@ -231,10 +231,6 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
         for(group in 1L:ngroups){
             thetatemp <- gtheta0[[group]]
             if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
-            gitemtrace[[group]] <- computeItemtrace(pars=pars[[group]], offterm=OffTerm,
-                                                Theta=thetatemp, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-            pars[[group]] <- assignItemtrace(pars=pars[[group]], itemtrace=gitemtrace[[group]],
-                                         itemloc=itemloc)
             for (i in 1L:J){
                 deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=thetatemp,
                                estHess=TRUE, offterm=OffTerm[,i])
