@@ -614,7 +614,9 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             est <- c(est, random[[i]]@est)
             lbound <- c(lbound, random[[i]]@lbound)
             ubound <- c(ubound, random[[i]]@ubound)
-            prior.type <- c(prior.type, random[[i]]@prior.type)
+            tmp <- sapply(as.character(random[[i]]@prior.type), 
+                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+            prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, random[[i]]@prior_1)
             prior_2 <- c(prior_2, random[[i]]@prior_2)
             class <- c(class, rep('RandomPars', length(random[[i]]@parnum)))
