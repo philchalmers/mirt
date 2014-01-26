@@ -226,7 +226,7 @@ setMethod(
         for(g in 1L:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose,
-                                mean=gmean[[g]], cov=gcov[[g]], scores.only=scores.only)
+                                mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE)
         names(ret) <- object@groupNames
         if(full.scores){
             id <- c()
@@ -235,14 +235,12 @@ setMethod(
                 id <- c(id, rownames(ret[[g]]))
                 fulldata <- rbind(fulldata, ret[[g]])
             }
-            if(!scores.only){
-                fulldata <- fulldata[-1L, ]
-                fulldata <- data.frame(id=as.numeric(id), fulldata)
-                ret <- fulldata[order(fulldata$id), ]
-                ret <- ret[ ,-1L]
-            } else {
-                ret <- fulldata[-1L, , drop = FALSE]
-            }
+            fulldata <- fulldata[-1L, ]
+            fulldata <- data.frame(id=as.numeric(id), fulldata)
+            ret <- fulldata[order(fulldata$id), ]
+            ret <- ret[ ,-1L]
+            if(scores.only)
+                ret <- ret[ ,!(colnames(ret) %in% colnames(object@data)), drop=FALSE]
         }
         return(ret)
     }

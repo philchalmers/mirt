@@ -46,6 +46,9 @@
 
 ## BUG FIXES
 
+- using `scores.only = TRUE` for multipleGroup objects returns the correct person ordering
+  (reported by Mateusz Zoltak)
+
 - `read.mirt` crash fix for multiple group analyses objects (reported by Felix Hansen)
 
 - updated math for `SE.type = 'crossprod'`
