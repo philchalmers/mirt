@@ -56,9 +56,9 @@ test_that('one factor', {
     fs4 <- fscores(mod_missing, full.scores = TRUE)
     fs5 <- fscores(mod_metric, full.scores = TRUE, scores.only=TRUE)
     expect_is(fs1, 'list')
-    expect_is(fs2, 'data.frame')
+    expect_is(fs2, 'matrix')
     expect_is(fs3, 'list')
-    expect_is(fs4, 'data.frame')
+    expect_is(fs4, 'matrix')
 
     fit1 <- fitIndices(mod_metric)
     expect_is(fit1, 'data.frame')

@@ -242,7 +242,8 @@ setMethod(
             if(scores.only)
                 ret <- ret[ ,!(colnames(ret) %in% colnames(object@data)), drop=FALSE]
         }
-        ret <- as.matrix(ret)
+        if(is.data.frame(ret))
+            ret <- as.matrix(ret)
         return(ret)
     }
 )
