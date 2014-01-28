@@ -17,6 +17,8 @@
 
 ## NEW FEATURES
 
+- `as.data.frame` logical option for `coef()` to convert list to a row-stacked data.frame
+
 - `type = 'scorecontour'` added to `plot()` for a contour plot with the expected total scores
 
 - `type = 'infotrace'` added to `itemplot()` to plot trace lines and information on the same plot,

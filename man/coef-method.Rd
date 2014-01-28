@@ -34,6 +34,9 @@
 
   \item{digits}{number of significant digits to be rounded}
 
+  \item{as.data.frame}{logical; convert list output to a
+  data.frame instead?}
+
   \item{verbose}{logical; allow information to be printed
   to the console?}
 
@@ -47,7 +50,7 @@
 \description{
   \code{coef(object, CI = .95, printSE = FALSE, rotate =
   '', Target = NULL, digits = 3, IRTpars = FALSE, rawug =
-  FALSE, verbose = TRUE, ...)}
+  FALSE, as.data.frame = FALSE, verbose = TRUE, ...)}
 }
 \examples{
 \dontrun{
@@ -60,6 +63,7 @@ coef(x, IRTpars = TRUE)
 x <- mirt(dat, 1, SE = TRUE)
 coef(x)
 coef(x, printSE = TRUE)
+coef(x, as.data.frame = TRUE)
 
 #two factors
 x2 <- mirt(Science, 2)

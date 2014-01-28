@@ -173,7 +173,7 @@ setMethod(
 #' Extract raw coefs from model object
 #'
 #' \code{coef(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3,
-#'    IRTpars = FALSE, rawug = FALSE, verbose = TRUE, ...)}
+#'    IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -188,6 +188,7 @@ setMethod(
 #'   statistical software. Default is 0 for no suppression
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded
+#' @param as.data.frame logical; convert list output to a data.frame instead?
 #' @param verbose logical; allow information to be printed to the console?
 #' @param rawug logical; return the untransformed internal g and u parameters?
 #'   If \code{FALSE}, g and u's are converted with the original format along with delta standard errors
@@ -211,6 +212,7 @@ setMethod(
 #' x <- mirt(dat, 1, SE = TRUE)
 #' coef(x)
 #' coef(x, printSE = TRUE)
+#' coef(x, as.data.frame = TRUE)
 #'
 #' #two factors
 #' x2 <- mirt(Science, 2)
@@ -222,7 +224,7 @@ setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
     definition = function(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3,
-                          IRTpars = FALSE, rawug = FALSE, verbose = TRUE, ...){
+                          IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...){
         if(printSE) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
@@ -290,6 +292,8 @@ setMethod(
             },  digits=digits)
         }
         names(allPars) <- c(colnames(object@data), 'GroupPars')
+        if(as.data.frame)
+            allPars <- t(as.data.frame(allPars))
         return(allPars)
     }
 )
