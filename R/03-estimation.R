@@ -322,7 +322,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                                           startlongpars=startlongpars, SE=opts$SE),
+                                           startlongpars=startlongpars, SE=opts$SE,
+                                           cand.t.var=opts$technical$MHcand),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
@@ -337,7 +338,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                                           startlongpars=startlongpars, SE=opts$SE),
+                                           startlongpars=startlongpars, SE=opts$SE,
+                                           cand.t.var=opts$technical$MHcand),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)

@@ -266,7 +266,14 @@ Theory)}
   \item{customTheta}{a custom \code{Theta} grid, in matrix
   form, used for integration.  If not defined, the grid is
   determined internally based on the number of
-  \code{quadpts}} }}
+  \code{quadpts}} \item{MHcand}{a vector of values used to
+  tune the MH sampler. Larger values will cause the
+  acceptance ratio to decrease. Only one value is required
+  for unconditional item factor analysis
+  (\code{mixedmirt()} requires additional values for random
+  effect).  If null, these values are determined
+  internally, attempting to make the draws between .2 and
+  .5} }}
 
   \item{...}{additional arguments to be passed}
 }

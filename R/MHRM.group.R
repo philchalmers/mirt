@@ -46,18 +46,22 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
-            if(i > 5L){
-                if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
-                    cand.t.var <- cand.t.var + tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
-                    cand.t.var <- cand.t.var - tmp
-                else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
-                    cand.t.var <- cand.t.var - 2*tmp
-                if (cand.t.var < 0){
-                    cand.t.var <- tmp
-                    tmp <- tmp / 2
+            if(is.null(list$cand.t.var)){
+                if(i > 5L){
+                    if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
+                    else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
+                        cand.t.var <- cand.t.var + tmp
+                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
+                        cand.t.var <- cand.t.var - tmp
+                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
+                        cand.t.var <- cand.t.var - 2*tmp
+                    if (cand.t.var < 0){
+                        cand.t.var <- tmp
+                        tmp <- tmp / 2
+                    }
                 }
+            } else {
+                cand.t.var <- list$cand.t.var[1L]
             }
         }
     }
@@ -155,17 +159,21 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                                                        pars=pars[[1L]], fulldata=gfulldata[[1L]],
                                                        offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                     OffTerm <- OffTerm(random, J=J, N=N)
-                    if(i > 5L){
-                        if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
-                            random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
-                        if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
-                            random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
-                        if(attr(random[[j]]@drawvals,"Proportion Accepted") < .05)
-                            random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 5*tmp
-                        if (random[[j]]@cand.t.var < 0){
-                            random[[j]]@cand.t.var <- tmp
-                            tmp <- tmp / 10
+                    if(is.null(list$cand.t.var)){
+                        if(i > 5L){
+                            if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
+                                random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
+                            if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
+                                random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
+                            if(attr(random[[j]]@drawvals,"Proportion Accepted") < .05)
+                                random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 5*tmp
+                            if (random[[j]]@cand.t.var < 0){
+                                random[[j]]@cand.t.var <- tmp
+                                tmp <- tmp / 10
+                            }
                         }
+                    } else {
+                        random[[j]]@cand.t.var <- list$cand.t.var[j + 1L]
                     }
                 }
                 #better start values
@@ -180,18 +188,22 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                                              itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                              prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
                                              prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
-                if(i > 5L){
-                    if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                    else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
-                        cand.t.var <- cand.t.var + tmp
-                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
-                        cand.t.var <- cand.t.var - tmp
-                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
-                        cand.t.var <- cand.t.var - 2*tmp
-                    if (cand.t.var < 0){
-                        cand.t.var <- tmp
-                        tmp <- tmp / 2
+                if(is.null(list$cand.t.var)){
+                    if(i > 5L){
+                        if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
+                        else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
+                            cand.t.var <- cand.t.var + tmp
+                        else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
+                            cand.t.var <- cand.t.var - tmp
+                        else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
+                            cand.t.var <- cand.t.var - 2*tmp
+                        if (cand.t.var < 0){
+                            cand.t.var <- tmp
+                            tmp <- tmp / 2
+                        }
                     }
+                } else {
+                    cand.t.var <- list$cand.t.var[1L]
                 }
             }
             tmp <- nrow(gtheta0[[1L]])
@@ -263,12 +275,19 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
         if(is.na(attr(gtheta0[[1L]],"log.lik")))
             stop('Estimation halted. Model did not converge.')
         if(verbose){
+            AR <- do.call(c, lapply(gtheta0, function(x) attr(x, "Proportion Accepted")))
+            if(RAND && cycles > 100L) AR <- c(AR, do.call(c, lapply(random, 
+                                        function(x) attr(x@drawvals, "Proportion Accepted"))))
+            AR <- paste0(sapply(AR, function(x) sprintf('%.2f', x)), collapse='; ')
             if(cycles <= BURNIN)
-                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f", cycles, LL)
+                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f, AR = %s", 
+                                    cycles, LL, AR)
             if(cycles > BURNIN && cycles <= BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN, LL)
+                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f, AR = %s", 
+                                    cycles-BURNIN, LL, AR)
             if(cycles > BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f", cycles-BURNIN-SEMCYCLES, LL)
+                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f, AR = %s", 
+                                    cycles-BURNIN-SEMCYCLES, LL, AR)
         }
         if(stagecycle < 3L){
             if(qr(ave.h)$rank != ncol(ave.h)){
