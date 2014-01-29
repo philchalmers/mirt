@@ -17,6 +17,9 @@
 
 ## NEW FEATURES
 
+- two new `SE.type` inputs: 'Louis' and 'sandwich' for computing Louis' 1982 computation of
+  the observed information matrix, and for a sandwich estimate of the covariance matrix
+
 - `as.data.frame` logical option for `coef()` to convert list to a row-stacked data.frame
 
 - `type = 'scorecontour'` added to `plot()` for a contour plot with the expected total scores

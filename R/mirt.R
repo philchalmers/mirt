@@ -201,8 +201,10 @@
 #'   \code{'BL'} for the Bock and Lieberman approach (numerical evaluation of observed Hessian), 
 #'   \code{'Fisher'} for the expected information, \code{'complete'} for information based on the 
 #'   complete-data Hessian used in EM algorithm (EM only), \code{'SEM'} for the supplemented EM 
-#'   (disables the \code{accelerate} option; EM only), and \code{'crossprod'}
-#'   for standard error computations based on the variance of the Fisher scores.
+#'   (disables the \code{accelerate} option; EM only), \code{'crossprod'}
+#'   for standard error computations based on the variance of the Fisher scores, \code{'Louis'} 
+#'   for Louis' (1982) computation of the observed information matrix, 
+#'   and \code{'sandwich'} for the sandwich covariance estimate.
 #'   
 #'   Note that for \code{'SEM'} and \code{'MHRM'} option increasing the number of iterations 
 #'   (\code{NCYCLES} and \code{TOL}, see below)  will help to improve the accuracy, and will be 

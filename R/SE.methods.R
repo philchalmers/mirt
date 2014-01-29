@@ -238,10 +238,10 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type, CUSTOM.
                 }
             }
             Ihess <- Ihess + tmphess
-            tmpderiv <- tmpderiv * w
+            tmpderiv2 <- tmpderiv * sqrt(w)
             for(j in 1L:nrow(Theta))
-                IgradP <- IgradP + outer(tmpderiv[j,], tmpderiv[j,]) * r
-            DX <- colSums(tmpderiv)
+                IgradP <- IgradP + outer(tmpderiv2[j,], tmpderiv2[j,]) * r
+            DX <- colSums(tmpderiv * w)
             Igrad <- Igrad + outer(DX, DX) * r
         }
     }
