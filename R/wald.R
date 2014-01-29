@@ -97,6 +97,7 @@ wald <- function(object, L, C = 0){
         keep <- c(keep, as.numeric(strsplit(Names[i], '.', fixed = TRUE)[[1]][2]))
     B <- B[keep]
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
+    W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))
     p <- 1 - pchisq(ret$W, ret$df)
     ret$p <- p

@@ -171,6 +171,9 @@
 #' #compare to items with estimated slopes (2PL)
 #' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
 #'                    itemdesign = itemdesign)
+#' #twoPL not mixing too well (AR should be between .2 and .5), decrease MHcand
+#' twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
+#'                   itemdesign = itemdesign, technical = list(MHcand = 0.8))
 #' anova(twoPL, LLTM) #much better fit
 #' summary(twoPL)
 #' coef(twoPL)

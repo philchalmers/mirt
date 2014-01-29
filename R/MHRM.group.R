@@ -276,18 +276,24 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
             stop('Estimation halted. Model did not converge.')
         if(verbose){
             AR <- do.call(c, lapply(gtheta0, function(x) attr(x, "Proportion Accepted")))
-            if(RAND && cycles > 100L) AR <- c(AR, do.call(c, lapply(random, 
+            CTV <- cand.t.var
+            if(RAND && cycles > 100L){
+                AR <- c(AR, do.call(c, lapply(random, 
                                         function(x) attr(x@drawvals, "Proportion Accepted"))))
+                CTV <- c(CTV, do.call(c, lapply(random, 
+                                                function(x) x@cand.t.var)))
+            }
             AR <- paste0(sapply(AR, function(x) sprintf('%.2f', x)), collapse='; ')
+            CTV <- paste0(sapply(CTV, function(x) sprintf('%.2f', x)), collapse='; ')
             if(cycles <= BURNIN)
-                printmsg <- sprintf("\rStage 1: Cycle = %i, Log-Lik = %.1f, AR = %s", 
-                                    cycles, LL, AR)
+                printmsg <- sprintf("\rStage 1 = %i, LL = %.1f, AR(%s) = [%s]", 
+                                    cycles, LL, CTV, AR)
             if(cycles > BURNIN && cycles <= BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 2: Cycle = %i, Log-Lik = %.1f, AR = %s", 
-                                    cycles-BURNIN, LL, AR)
+                printmsg <- sprintf("\rStage 2 = %i, LL = %.1f, AR(%s) = [%s]", 
+                                    cycles-BURNIN, LL, CTV, AR)
             if(cycles > BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 3: Cycle = %i, Log-Lik = %.1f, AR = %s", 
-                                    cycles-BURNIN-SEMCYCLES, LL, AR)
+                printmsg <- sprintf("\rStage 3 = %i, LL = %.1f, AR(%s) = [%s]", 
+                                    cycles-BURNIN-SEMCYCLES, LL, CTV, AR)
         }
         if(stagecycle < 3L){
             if(qr(ave.h)$rank != ncol(ave.h)){
@@ -310,7 +316,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                 for(i in 1L:length(constrain))
                     longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
             if(verbose)
-                cat(printmsg, sprintf(", Max Change = %.4f\r", max(abs(gamma*correction))), sep='')
+                cat(printmsg, sprintf(", Max-Change = %.4f\r", max(abs(gamma*correction))), sep='')
             if(stagecycle == 2L){
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
@@ -341,7 +347,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
             for(i in 1L:length(constrain))
                 longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         if(verbose)
-            cat(printmsg, sprintf(", gam = %.3f, Max Change = %.4f\r",
+            cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f\r",
                                   gamma, max(abs(gamma*correction))), sep='')
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
         else conv <- 0L
