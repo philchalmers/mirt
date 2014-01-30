@@ -211,7 +211,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 		if(ncol(Theta) != nfact || nrow(Theta) != N)
 			stop("The input Theta matrix does not have the correct dimensions")
 	if(is.null(Theta)) Theta <- mvtnorm::rmvnorm(N,mu,sigma)
-    if(is.null(nominal)) nominal <- matrix(NA, nitems, 1)
+    if(is.null(nominal)) nominal <- matrix(NA, nitems, max(K))
 	data <- matrix(0, N, nitems)
     a[is.na(a)] <- 0
 	for(i in 1L:nitems){
@@ -219,7 +219,11 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	        par <- na.omit(c(a[i, ],d[i,1], guess[i], upper[i], nominal[i,-1L],d[i,-1L]))
 	        obj <- new(itemtype[i], par=par, nfact=nfact, correctcat=1L)
 	    } else {
-            par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
+            if(itemtype[i] == 'gpcm'){
+                par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,],guess[i],upper[i]))
+            } else {
+                par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
+            }
             obj <- new(itemtype[i], par=par, nfact=nfact)
 	    }
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit')))

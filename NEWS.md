@@ -2,6 +2,8 @@
 
 ## MAJOR CHANGES
 
+- generalized partial credit models now display fixed scoring coefs
+
 - `TOL` convergence criteria moved outside of the `technical` input to its own argument
 
 - `restype` argument to `residuals()` changed to `type` to be more consistent with the rest of the

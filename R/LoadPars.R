@@ -26,8 +26,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(itemtype[i] == 'Rasch' && K[i] > 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
-            val <- c(tmpval, 0, zetas[[i]])
-            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 0L:(K[i]-1L), sep=''))
+            val <- c(tmpval, 0:(K[i]-1L), 0, zetas[[i]])
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                            paste('d', 0L:(K[i]-1L), sep=''))
         }
         if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
@@ -49,14 +50,16 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''), 'c')
         }
         if(itemtype[i] == 'gpcm'){
-            val <- c(lambdas[i,], 0, zetas[[i]])
-            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 0L:(K[i]-1L), sep=''))
+            val <- c(lambdas[i,], 0:(K[i]-1), 0, zetas[[i]])
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                            paste('d', 0L:(K[i]-1L), sep=''))
         }
         if(itemtype[i] == 'rsm'){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
-            val <- c(tmpval, 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
-            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 0L:(K[i]-1L), sep=''), 'c')
+            val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                            paste('d', 0L:(K[i]-1L), sep=''), 'c')
         }
         if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
@@ -97,15 +100,16 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             freepars[[i]] <- estpars
         }
         if(itemtype[i] == 'Rasch' && K[i] > 2L)
-            freepars[[i]] <- c(rep(FALSE,nfact), FALSE, rep(TRUE, K[i]-1L))
+            freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]), 
+                               FALSE, rep(TRUE, K[i]-1L))
         if(itemtype[i] == 'grsm')
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
         if(itemtype[i] == 'graded')
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
         if(itemtype[i] == 'gpcm')
-            freepars[[i]] <- c(estLambdas[i, ], FALSE, rep(TRUE, K[i]-1L))
+            freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]-1L))
         if(itemtype[i] == 'rsm')
-            freepars[[i]] <- c(rep(FALSE, nfact), FALSE, rep(TRUE, K[i]))
+            freepars[[i]] <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
         if(itemtype[i] == 'nominal'){
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
             if(is.null(nominal.highlow)){

@@ -246,7 +246,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Ls <- makeLmats(pars, constrain, random = mixed.design$random)    
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% 'custom')
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% c('custom', 'rating', 'rsm', 'partcomp', 
-                                                      'nestlogit', 'nominal', 'gpcm')) #TODO remove last two
+                                                      'nestlogit'))
     opts$times$end.time.Data <- proc.time()[3L]
 
     #EM estimation

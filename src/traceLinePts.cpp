@@ -54,7 +54,7 @@ RcppExport SEXP nominalTraceLinePts(SEXP Rpar, SEXP Rncat, SEXP RTheta, SEXP Rre
     const int N = Theta.nrow();
     NumericVector ot(Rot);
     vector<double> P(N*ncat);
-    P_nominal(P, par, Theta, ot, N, nfact, ncat, returnNum, 0, 0);
+    P_nominal(P, par, Theta, ot, N, nfact, ncat, returnNum, 0);
     NumericMatrix ret = vec2mat(P, N, ncat);
     return(ret);
 
@@ -70,18 +70,15 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
     const int israting = as<int>(Risrating);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    int ncat = par.size() - nfact;
-    if(israting) --ncat;
+    int ncat = (par.size() - nfact)/2;
     NumericVector ot(Rot);
     vector<double> P(N*ncat);
-    P_nominal(P, par, Theta, ot, N, nfact, ncat, 0, 1, israting);
+    P_nominal(P, par, Theta, ot, N, nfact, ncat, 0, israting);
     NumericMatrix ret = vec2mat(P, N, ncat);
     return(ret);
 
     END_RCPP
 }
-
-
 
 RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEXP Rncat)
 {
@@ -162,16 +159,16 @@ static void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Th
             P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 0);
             break;
         case 3 :
-            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 1, 0);
+            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);
             break;
         case 4 :
-            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0, 0);
+            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);
             break;
         case 5 :
             P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 1);
             break;
         case 6 :
-            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 1, 1);
+            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 1);
             break;
         case 7 :
             P_comp(P, par, theta, N, nfact2);

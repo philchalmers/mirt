@@ -255,21 +255,9 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        dat <- x@dat
-        nfact <- x@nfact
-        nzetas <- ncol(dat)
-        a <- ExtractLambdas(x)
-        d <- ExtractZetas(x)
-        ak <- 0:(length(d)-1L)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
-        num <- P.nominal(c(a, ak, d), ncat=nzetas, Theta=Theta, returnNum=TRUE, ot=offterm)
-        tmp <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
-                               P=P, num=num, dat=dat, gpcm=TRUE)
-        keep <- rep(TRUE, length(tmp$grad))
-        keep[(nfact+1L):(nfact+length(d))] <- FALSE
-        ret <- list(grad=tmp$grad[keep], hess=tmp$hess[keep, keep])
+        ret <- .Call("dparsNominal", x, Theta, offterm, FALSE, estHess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
@@ -344,15 +332,11 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
+        oldpar <- x@par
+        tmp <- .Call("dparsNominal", x, Theta, offterm, TRUE, estHess)        
         num <- P.nominal(c(a, ak, dshift), ncat=length(ak), Theta=Theta, returnNum=TRUE, ot=offterm)
-        tmp <- nominalParDeriv(a=a, ak=ak, d=dshift, Theta=Theta, estHess=estHess,
-                               P=P, num=num, dat=dat)
-        keep <- rep(TRUE, length(tmp$grad))
-        keep[(nfact+1L):(nfact+length(d))] <- FALSE
-        grad <- c(tmp$grad[keep], 0)
-        hess <- tmp$hess[keep, keep]
-        hess <- cbind(hess, rep(0, nrow(hess)))
-        hess <- rbind(hess, rep(0, ncol(hess)))
+        grad <- tmp$grad
+        hess <- tmp$hess
 
         #quick calcs for derivs
         nfact <- length(a)
@@ -374,29 +358,30 @@ setMethod(
         ak0 <- ak
         ak0[1L] <- 0
         cind <- length(grad)
-        tmp <- 0
-        for(i in 1L:nzetas)
-            tmp <- tmp + dat[,i]*numD^2 / numsum^2 - dat[,i]*numD2/numsum
-        hess[cind, cind] <- sum(tmp)
-        for(j in 1L:nzetas){
+        if(estHess){
             tmp <- 0
             for(i in 1L:nzetas)
-                tmp <- tmp + dat[,i]*P[,j]*numD/numsum - dat[,i]*P[,j]
-            hess[cind, nfact+j] <- hess[nfact+j, cind] <- sum(tmp)
-        }
-        for(j in 1L:nfact){
-            tmp <- 0
-            for(i in 1L:nzetas)
-                tmp <- tmp + dat[,i]*numD*numakThetaD[,j]/numsum^2 -
-                    dat[,i]* (num %*% ak0*Theta[,j])/numsum
-            hess[cind, j] <- hess[j, cind] <- sum(tmp)
+                tmp <- tmp + dat[,i]*numD^2 / numsum^2 - dat[,i]*numD2/numsum
+            hess[cind, cind] <- sum(tmp)
+            for(j in 1L:nzetas){
+                tmp <- 0
+                for(i in 1L:nzetas)
+                    tmp <- tmp + dat[,i]*P[,j]*numD/numsum - dat[,i]*P[,j]
+                hess[cind, nfact+j] <- hess[nfact+j, cind] <- sum(tmp)
+            }
+            for(j in 1L:nfact){
+                tmp <- 0
+                for(i in 1L:nzetas)
+                    tmp <- tmp + dat[,i]*numD*numakThetaD[,j]/numsum^2 -
+                        dat[,i]* (num %*% ak0*Theta[,j])/numsum
+                hess[cind, j] <- hess[j, cind] <- sum(tmp)
+            }
         }
         ####
-        #TEMP - can't seem to get the last value of the gradient quite right for some reason....
+        #FIXME - can't seem to get the last value of the gradient quite right for some reason....
         x2 <- x
         x2@est <- c(rep(FALSE, length(x2@est)-1L), TRUE)
         grad[x2@est] <- numDeriv::grad(EML, x@par[x2@est], obj=x2, Theta=Theta)
-        #grad[x2@est] <- numDeriv::grad(L, x@par[x2@est], obj=x2, Theta=Theta, ot=offterm)
         ####
         ret <- list(grad=grad, hess=hess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -408,18 +393,9 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'nominal', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        dat <- x@dat
-        nfact <- x@nfact
-        nzetas <- ncol(dat)
-        a <- ExtractLambdas(x)
-        ak <- x@par[(nfact+1L):(nzetas + nfact)]
-        d <- ExtractZetas(x)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
-        num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum=TRUE, ot=offterm)
-        ret <- nominalParDeriv(a=a, ak=ak, d=d, Theta=Theta, estHess=estHess,
-                               P=P, num=num, dat=dat)
+        ret <- .Call("dparsNominal", x, Theta, offterm, FALSE, estHess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }

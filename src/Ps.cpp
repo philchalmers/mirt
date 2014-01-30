@@ -92,24 +92,18 @@ static void P_graded(vector<double> &P, const vector<double> &par,
 
 static void P_nominal(vector<double> &P, const vector<double> &par,
     const NumericMatrix &Theta, const NumericVector &ot, const int &N,
-    const int &nfact, const int &ncat, const int &returnNum, const int &isgpcm,
+    const int &nfact, const int &ncat, const int &returnNum, 
     const int &israting)
 {
     vector<double> a(nfact), ak(ncat), d(ncat);
     for(int i = 0; i < nfact; ++i)
         a[i] = par[i];
-    if(isgpcm){
-        for(int i = 0; i < ncat; ++i){
-            ak[i] = i;
-            if(israting){
-                if(i) d[i] = par[i + nfact] + par[par.size()-1];
-            } else {
-                d[i] = par[i + nfact];
-            }
-        }
-    } else {
-        for(int i = 0; i < ncat; ++i){
-            ak[i] = par[i + nfact];
+    for(int i = 0; i < ncat; ++i){
+        ak[i] = par[i + nfact];
+        if(israting){
+            if(i) 
+                d[i] = par[i + nfact + ncat] + par[par.size()-1];
+        } else {            
             d[i] = par[i + nfact + ncat];
         }
     }
@@ -177,7 +171,7 @@ static void P_nested(vector<double> &P, const vector<double> &par,
         npar[i - (nfact+3) + nfact] = par[i];
     vector<double> Pd(N*2), Pn(N*(ncat-1));
     P_dich(Pd, dpar, Theta, dummy, N, nfact);
-    P_nominal(Pn, npar, Theta, dummy, N, nfact, ncat-1, 0, 0, 0);
+    P_nominal(Pn, npar, Theta, dummy, N, nfact, ncat-1, 0, 0);
     NumericMatrix PD = vec2mat(Pd, N, 2);
     NumericMatrix PN = vec2mat(Pn, N, ncat-1);
 
