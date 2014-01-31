@@ -164,7 +164,7 @@ mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype =
 anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 
 #continuous predictor with group
-mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ)
+mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items + pseudoIQ)
 summary(mod2)
 anova(mod1b, mod2)
 

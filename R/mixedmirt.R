@@ -114,7 +114,7 @@
 #' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
 #'
 #' #continuous predictor with group
-#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + pseudoIQ)
+#' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items + pseudoIQ)
 #' summary(mod2)
 #' anova(mod1b, mod2)
 #'
@@ -291,7 +291,13 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         }
         attr(sv, 'values') <- pars
         pars <- sv
-    } else pars <- sv
+    } else {
+        if(sum(sv$name == 'd') == ncol(data)){
+            sv$value[sv$name == 'd'] <- 0
+            sv$est[sv$name == 'd'] <- FALSE
+        }
+        pars <- sv
+    }
     if(RETVALUES){
         attr(pars, 'values') <- NULL
         return(pars)
