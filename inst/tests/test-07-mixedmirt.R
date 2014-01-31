@@ -37,7 +37,7 @@ test_that('mixed dich', {
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 1011)
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
-    expect_equal(cfs, c(1, NA, NA, -0.5628, -0.7142, -0.4114, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.9804, -1.1376, -0.8233, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.5697, -0.7212, -0.4182, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.089, -0.0559, 0.2339, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.8288, 0.6887, 0.9689, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.1077, -0.2544, 0.039, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.549, -0.7003, -0.3978, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.9957, -1.153, -0.8383, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.8979, -1.0537, -0.7421, 0, NA, NA, 1, NA, NA, 1, NA, NA, 2.8328, 2.6225, 3.0431, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0.3687, 0.253, 0.4844, 0.6415, 0.4113, 0.8718),
+    expect_equal(cfs, c(1, NA, NA, -0.5542, -0.7049, -0.4035, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.9713, -1.1252, -0.8174, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.5611, -0.7119, -0.4103, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.0964, -0.0489, 0.2418, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.8346, 0.6967, 0.9725, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.0999, -0.247, 0.0473, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.5405, -0.6911, -0.3898, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.9865, -1.1405, -0.8325, 0, NA, NA, 1, NA, NA, 1, NA, NA, -0.8889, -1.0421, -0.7356, 0, NA, NA, 1, NA, NA, 1, NA, NA, 2.8345, 2.6455, 3.0235, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0.3561, 0.2906, 0.4216, 0.6512, 0.3052, 0.9972),
                  tolerance = 1e-2)
 })
 

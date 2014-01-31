@@ -316,7 +316,7 @@
 #'          cause the acceptance ratio to decrease. Only one value is required for unconditional 
 #'          item factor analysis (\code{mixedmirt()} requires additional values for random effect). 
 #'          If null, these values are determined internally, attempting to make the draws between
-#'          .2 and .5}
+#'          .1 and .4}
 #'   }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

@@ -874,6 +874,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
                      ...)
 {
     opts <- list()
+    if(method == 'MHRM' && SE.type == 'SEM') SE.type <- 'MHRM'
     D <- 1
     opts$method = method
     opts$draws = draws

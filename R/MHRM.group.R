@@ -11,6 +11,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     KDRAWS <- list$KDRAWS
     TOL <- list$TOL
     CUSTOM.IND <- list$CUSTOM.IND
+    USE.FIXED <- nrow(pars[[1L]][[1L]]@fixed.design) > 1L
     gain <- list$gain
     itemloc <- list$itemloc
     ngroups <- length(pars)
@@ -71,19 +72,12 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     k <- 1L
     gamma <- .25
     longpars <- rep(NA,nfullpars)
-    ind1 <- 1L
     for(g in 1L:ngroups){
-        for(i in 1L:(J+1L)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
-            longpars[ind1:ind2] <- pars[[g]][[i]]@par
-            ind1 <- ind2 + 1L
-        }
+        for(i in 1L:(J+1L))
+            longpars[pars[[g]][[i]]@parnum] <- pars[[g]][[i]]@par
         if(RAND){
-            for(i in 1L:length(random)){
-                ind2 <- ind1 + length(random[[i]]@par) - 1L
-                longpars[ind1:ind2] <- random[[i]]@par
-                ind1 <- ind2 + 1L
-            }
+            for(i in 1L:length(random))
+                longpars[random[[i]]@parnum] <- random[[i]]@par
         }
     }
     names(longpars) <- names(estpars)
@@ -237,31 +231,41 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
 
         #Step 2. Find average of simulated data gradients and hessian
         start <- proc.time()[3L]
-        g.m <- h.m <- group.m <- list()
-        longpars <- g <- rep(0, nfullpars)
-        h <- matrix(0, nfullpars, nfullpars)
-        for(group in 1L:ngroups){
-            thetatemp <- gtheta0[[group]]
-            if(length(prodlist) > 0L) thetatemp <- prodterms(thetatemp,prodlist)
-            for (i in 1L:J){
-                deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=thetatemp,
-                               estHess=TRUE, offterm=OffTerm[,i])
-                g[pars[[group]][[i]]@parnum] <- deriv$grad
-                h[pars[[group]][[i]]@parnum,pars[[group]][[i]]@parnum] <- deriv$hess
-                longpars[pars[[group]][[i]]@parnum] <- pars[[group]][[i]]@par
+        gthetatmp <- gtheta0
+        if(length(prodlist) > 0L)
+            gthetatmp <- lapply(gtheta0, function(x, prodlist) prodterms(x, prodlist),
+                              prodlist=prodlist)
+        tmp <- .Call('computeDPars', pars, gthetatmp, OffTerm, length(longpars), TRUE, 
+                     USE.FIXED)
+        g <- tmp$grad; h <- tmp$hess
+        if(length(list$SLOW.IND)){
+            for(group in 1L:ngroups){
+                for (i in list$SLOW.IND){
+                    deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gthetatmp[[group]], 
+                                                 estHess=TRUE)
+                    g[pars[[group]][[i]]@parnum] <- deriv$grad
+                    h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
+                }
             }
-            i <- i + 1L
+        }
+        for(group in 1L:ngroups){
+            i <- J + 1L
             deriv <- Deriv(x=pars[[group]][[i]], Theta=gtheta0[[group]], CUSTOM.IND=CUSTOM.IND)
-            longpars[pars[[group]][[i]]@parnum] <- pars[[group]][[i]]@par
             g[pars[[group]][[i]]@parnum] <- deriv$grad
             h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
         }
         if(RAND){
-            for(i in 1L:length(random)){
-                deriv <- RandomDeriv(x=random[[i]])
-                longpars[random[[i]]@parnum] <- random[[i]]@par
-                g[random[[i]]@parnum] <- deriv$grad
-                h[random[[i]]@parnum, random[[i]]@parnum] <- deriv$hess
+            if(cycles <= 100L){
+                for(i in 1L:length(random)){
+                    g[random[[i]]@parnum] <- 0
+                    h[random[[i]]@parnum, random[[i]]@parnum] <- diag(length(random[[i]]@parnum))
+                }
+            } else {
+                for(i in 1L:length(random)){
+                    deriv <- RandomDeriv(x=random[[i]])
+                    g[random[[i]]@parnum] <- deriv$grad
+                    h[random[[i]]@parnum, random[[i]]@parnum] <- deriv$hess
+                }
             }
         }
         grad <- g %*% L
@@ -371,13 +375,9 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
         converge <- 0L
     }
     if(list$USEEM) longpars <- list$startlongpars
-    ind1 <- 1L
     for(g in 1L:ngroups){
-        for(i in 1L:(J+1L)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
-            pars[[g]][[i]]@par <- longpars[ind1:ind2]
-            ind1 <- ind2 + 1L
-        }
+        for(i in 1L:(J+1L))
+            pars[[g]][[i]]@par <- longpars[pars[[g]][[i]]@parnum]
     }
     SEtmp <- abs(diag(qr.solve(info)))
     if(any(SEtmp < 0)){
@@ -390,20 +390,13 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
-    ind1 <- 1L
     for(g in 1L:ngroups){
-        for(i in 1L:(J+1L)){
-            ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
-            pars[[g]][[i]]@SEpar <- SE[ind1:ind2]
-            ind1 <- ind2 + 1L
-        }
+        for(i in 1L:(J+1L))
+            pars[[g]][[i]]@SEpar <- SE[pars[[g]][[i]]@parnum]
     }
     if(RAND){
-        for(i in 1L:length(random)){
-            ind2 <- ind1 + length(random[[i]]@par) - 1L
-            random[[i]]@SEpar <- SE[ind1:ind2]
-            ind1 <- ind2 + 1L
-        }
+        for(i in 1L:length(random))
+            random[[i]]@SEpar <- SE[random[[i]]@parnum]
     }
     names(correction) <- names(estpars)[estindex_unique]
     info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=length(longpars))

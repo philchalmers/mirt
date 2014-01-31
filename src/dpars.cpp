@@ -559,12 +559,10 @@ static void d_priors(vector<double> &grad, NumericMatrix &hess, const int &ind,
     hess(ind, ind) = hess(ind, ind) + h;
 }
 
-static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List &gpars,
-    const List &gTheta, const NumericMatrix &offterm, const int &nitems,
-    const int &npars, const int &estHess, const int &USEFIXED, const int &group)
+static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List &pars,
+    const NumericMatrix &Theta, const NumericMatrix &offterm, const int &nitems,
+    const int &npars, const int &estHess, const int &USEFIXED)
 {
-    List pars = gpars[group];
-    NumericMatrix Theta = gTheta[group];
     int nfact = Theta.ncol();
     int N = Theta.nrow();
     for(int i = 0; i < nitems; ++i){
@@ -635,9 +633,12 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     vector<double> grad(npars);
     NumericMatrix hess(npars, npars);
 
-    for(int group = 0; group < gpars.length(); ++group)
-        _computeDpars(grad, hess, gpars, gTheta, offterm, nitems, npars,
-            estHess, USEFIXED, group);
+    for(int group = 0; group < gpars.length(); ++group){
+        List pars = gpars[group];
+        NumericMatrix Theta = gTheta[group];
+        _computeDpars(grad, hess, pars, Theta, offterm, nitems, npars,
+            estHess, USEFIXED);
+    }
 
     List ret;
     ret["grad"] = wrap(grad);

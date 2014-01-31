@@ -274,8 +274,8 @@ Theory)}
   for unconditional item factor analysis
   (\code{mixedmirt()} requires additional values for random
   effect).  If null, these values are determined
-  internally, attempting to make the draws between .2 and
-  .5} }}
+  internally, attempting to make the draws between .1 and
+  .4} }}
 
   \item{...}{additional arguments to be passed}
 }
