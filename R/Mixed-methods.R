@@ -121,13 +121,15 @@ setMethod(
         listnames <- c(colnames(object@data), 'GroupPars')
         if(length(object@random) > 0L){
             if(printSE){
-                allPars[[length(allPars) + 1L]] <-
-                    round(matrix(c(object@random[[i]]@par,
-                                   object@random[[i]]@SEpar),
-                                 2, byrow = TRUE), digits)
-                rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
-                colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
-                listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+                for(i in 1L:length(object@random)){
+                    allPars[[length(allPars) + 1L]] <-
+                        round(matrix(c(object@random[[i]]@par,
+                                       object@random[[i]]@SEpar),
+                                     2, byrow = TRUE), digits)
+                    rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
+                    colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
+                    listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+                }
             } else {
                 for(i in 1L:length(object@random)){
                     allPars[[length(allPars) + 1L]] <-
