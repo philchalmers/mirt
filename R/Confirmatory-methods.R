@@ -99,9 +99,9 @@ mirt2traditional <- function(x){
         names(par) <- c('a', paste0('b', 1:(length(par)-1)))
     } else if(cls == 'gpcm'){
         ds <- par[-1]/par[1]
-        newd <- numeric(length(ds)-1)
+        newd <- numeric(length(ds)/2)
         for(i in 1:length(newd))
-            newd[i] <- -(ds[i+1] - ds[i])
+            newd[i] <- -(ds[i+length(newd)] - ds[i])
         par <- c(par[1], newd)
         names(par) <- c('a', paste0('b', 1:length(newd)))
     } else if(cls == 'nominal'){

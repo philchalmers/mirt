@@ -270,7 +270,7 @@ setMethod(
     signature = signature(x = 'gpcm'),
     definition = function(x){
         par <- x@par
-        d <- par[-(1L:x@nfact)]
+        d <- par[(length(par)-x@ncat+1L):length(par)]
         d
     }
 )
