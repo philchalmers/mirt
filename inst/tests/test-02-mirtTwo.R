@@ -7,6 +7,24 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
+    modLouis <- mirt(Science, 1, SE=T, SE.type='Louis', verbose=FALSE)
+    expect_is(modp1, 'ConfirmatoryClass')
+    cfs <- as.numeric(do.call(c, coef(modLouis, digits = 5, printSE=TRUE)))
+    expect_equal(cfs, c(1.0416, 0.1883, 4.86371, 0.49058, 2.63978, 0.22257, -1.46592, 0.15863, 1.22583, 0.1818, 2.92402, 0.23925, 0.90114, 0.14289, -2.26652, 0.20304, 2.29511, 0.48523, 5.23747, 0.73208, 2.21511, 0.35808, -1.96461, 0.32343, 1.09488, 0.1833, 3.34766, 0.27648, 0.99163, 0.14048, -1.6881, 0.16859, 0, NA, 1, NA),
+                 tolerance = 1e-4)
+    expect_equal(modLouis@condnum, 98.36997, tolerance = 1e-2)
+    modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
+    expect_is(modp1, 'ConfirmatoryClass')
+    cfs <- as.numeric(do.call(c, coef(modsandwich, digits = 5, printSE=TRUE)))
+    expect_equal(cfs, c(1.0416, 0.23843, 4.86371, 0.46757, 2.63978, 0.24649, -1.46592, 0.17158, 1.22583, 0.19197, 2.92402, 0.24647, 0.90114, 0.14591, -2.26652, 0.19888, 2.29511, 0.52407, 5.23747, 0.81335, 2.21511, 0.37544, -1.96461, 0.33878, 1.09488, 0.22703, 3.34766, 0.29195, 0.99163, 0.14486, -1.6881, 0.18012, 0, NA, 1, NA),
+                 tolerance = 1e-4)
+    expect_equal(modsandwich@condnum, 142.5913, tolerance = 1e-2)
+    modp1 <- mirt(Science, 1, verbose=FALSE)
+    expect_is(modp1, 'ConfirmatoryClass')
+    expect_equal(modp1@df, 239)
+    cfs <- as.numeric(do.call(c, coef(modp1)))
+    expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
+                 tolerance = 1e-2)
     vals <- mirt(Science, 1, large = TRUE, verbose=FALSE)
     modp1 <- mirt(Science, 1, large = vals, verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')

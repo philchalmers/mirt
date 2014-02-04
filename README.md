@@ -38,16 +38,19 @@ library('devtools')
 install_github('philchalmers/mirt')
 ```
 
-If the `devtools` approach does not work on your system, then you can download and install the
-repository directly by using the following. 
+### Installing from source via git
 
-1) Obtain recent gcc, g++, and gfortran compilers (see above).
+If the `devtools` approach does not work on your system, then you can download and install the
+repository directly. 
+
+1) Obtain recent gcc, g++, and gfortran compilers (see above instructions).
 
 2) Install the [git command line tools](http://git-scm.com/downloads).
 
-3) Open a terminal/command-line tool and type the following. This will download the repository 
-code to your computer, and install the package (Windows users may also have to add R and git 
-to their [path](http://www.computerhope.com/issues/ch000549.htm))
+3) Open a terminal/command-line tool. The following code will download the repository 
+code to your computer, and install the package directly using R tools 
+(Windows users may also have to add R and git to their 
+[path](http://www.computerhope.com/issues/ch000549.htm))
 
 ```
 git clone https://github.com/philchalmers/mirt

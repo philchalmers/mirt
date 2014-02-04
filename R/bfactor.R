@@ -69,11 +69,6 @@
 #' \emph{Applied Psychological Measurement, 31}, 4-19
 #'
 #' @keywords models
-#' @usage
-#' bfactor(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))),
-#' SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
-#'
-#'
 #' @export bfactor
 #' @examples
 #'
@@ -194,7 +189,7 @@
 #'     }
 #'
 bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))),
-                    SE = FALSE, SE.type = 'SEM', group = NULL, verbose = TRUE, ...)
+                    SE = FALSE, SE.type = 'crossprod', group = NULL, verbose = TRUE, ...)
 {
     Call <- match.call()
     if(!is.numeric(model))

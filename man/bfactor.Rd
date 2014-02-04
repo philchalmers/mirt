@@ -2,9 +2,10 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
-  bfactor(data, model, model2 = mirt.model(paste0('G = 1-',
-    ncol(data))), SE = FALSE, SE.type = 'SEM', group =
-    NULL, verbose = TRUE, ...)
+  bfactor(data, model,
+    model2 = mirt.model(paste0("G = 1-", ncol(data))),
+    SE = FALSE, SE.type = "crossprod", group = NULL,
+    verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that

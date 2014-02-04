@@ -85,18 +85,20 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     names(longpars) <- names(est)
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
-    gTheta <- vector('list', ngroups)
     ANY.PRIOR <- rep(FALSE, ngroups)
-    for(g in 1L:ngroups){
-        gTheta[[g]] <- Theta
-        if(length(prodlist) > 0L)
-            gTheta[[g]] <- prodterms(gTheta[[g]],prodlist)
-        if(BFACTOR){
-            Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
+    if(length(prodlist) > 0L)
+        Theta <- prodterms(Theta, prodlist)
+    if(BFACTOR){
+        Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
+        for(g in 1L:ngroups){
             prior[[g]] <- dnorm(theta, 0, 1)
             prior[[g]] <- prior[[g]]/sum(prior[[g]])
         }
+    }
+    gTheta <- vector('list', ngroups)
+    for(g in 1L:ngroups){
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
+        gTheta[[g]] <- Theta
     }
     preMstep.longpars2 <- preMstep.longpars <- longpars
     accel <- 0
@@ -107,7 +109,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     for (cycles in 1L:NCYCLES){
         #priors
         start <- proc.time()[3L]
-        tmp <- updatePrior(pars=pars, gTheta=gTheta, Thetabetween=Thetabetween,
+        tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
@@ -116,12 +118,12 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
-                                            Theta=gTheta[[g]], prior=prior[[g]], Prior=Prior[[g]],
+                                            Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, 
                                             sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
-                                         CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[g]], 
+                                         CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
                                          prior=Prior[[g]], itemloc=itemloc)
             }
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
@@ -172,14 +174,14 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         ind1 <- 1L
         for(group in 1L:ngroups){
             for (i in 1L:J){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[g]], estHess=TRUE)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, estHess=TRUE)
                 ind2 <- ind1 + length(deriv$grad) - 1L
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1L
             }
             i <- i + 1L
             deriv <- Deriv(x=pars[[group]][[i]], CUSTOM.IND=CUSTOM.IND,
-                           Theta=gTheta[[g]], EM = TRUE,
+                           Theta=Theta, EM = TRUE,
                            pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
                            itemloc=itemloc, estHess=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
@@ -198,7 +200,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                 logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                 estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
-                Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)))
+                Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
+                prior=prior, Priorbetween=Priorbetween, sitems=sitems)
     ret
 }
 
@@ -226,14 +229,9 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
     X <- tabdata[ ,1L:(ncol(tabdata) - 1L)]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems, mirtClusterEnv$ncores)
-    r1 <- matrix(0, nrow(Theta), ncol(X))
-    for (i in 1L:J){
-        r1[ ,itemloc[i]:(itemloc[i+1L]-1L)] <-
-            retlist$r1[ ,itemloc[i]:(itemloc[i+1L]-1L) + (specific[i] - 1L)*ncol(X) ]
-    }
-    r1 <- r1 * Prior
-    return(list(r1=r1, expected=retlist$expected))
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems, Prior,
+                     mirtClusterEnv$ncores)
+    return(retlist)
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
@@ -251,7 +249,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
 #     #uncomment for testing with nlm
 #     opt <- try(optim(f=Mstep.LL, p,
 #                      DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-#                      est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+#                      est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta,
 #                      PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
 #                      UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
 #                silent=TRUE)

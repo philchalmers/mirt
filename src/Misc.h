@@ -1,9 +1,9 @@
-#include<Rcpp.h>
-using namespace Rcpp;
-using std::vector;
-
 #ifndef _MISC_H
 #define _MISC_H
+
+#include <Rcpp.h>
+using namespace Rcpp;
+using std::vector;
 
 NumericMatrix polyOuter(const NumericMatrix &, const vector<double> &,
 	const vector<double> &, const vector<double> &, const vector<double> &,

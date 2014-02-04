@@ -13,11 +13,12 @@ test_that('one factor', {
     MGmodel1 <- 'F1 = 1-15'
     models <- mirt.model(MGmodel1, quiet = TRUE)
 
-    mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM')
+    mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', 
+                                    group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_configural, digits=4)[[1L]]))
-    cfs <- cfs[cfs != 0 & cfs != 1]
-    expect_equal(cfs, c(1.0693, 0.5541, 1.278, -0.6918, 0.8833, -0.1375, 1.1112, 0.8295, 1.2481, 0.3265, 0.476, 0.4796, 1.1617, 1.0847, 0.8586, -0.3852, 0.89, -1.048, 0.8085, -1.0908, 0.9013, 1.1642, 1.5832, -0.135, 1.4098, 0.6542, 1.0401, 0.4073, 0.8804, -0.0812),
+    cfs <- as.numeric(na.omit(cfs[cfs != 0 & cfs != 1]))
+    expect_equal(cfs, c(1.0693, 0.8484, 1.2901, 0.5541, 0.392, 0.7162, 1.278, 1.0225, 1.5335, -0.6918, -0.8705, -0.513, 0.8833, 0.6898, 1.0768, -0.1375, -0.2844, 0.0094, 1.1112, 0.8848, 1.3377, 0.8295, 0.6576, 1.0014, 1.2481, 1.0102, 1.4861, 0.3265, 0.1607, 0.4922, 0.476, 0.3118, 0.6402, 0.4796, 0.3432, 0.6161, 1.1617, 0.9322, 1.3912, 1.0847, 0.9013, 1.2682, 0.8586, 0.6638, 1.0535, -0.3852, -0.5338, -0.2367, 0.89, 0.6815, 1.0985, -1.048, -1.2174, -0.8787, 0.8085, 0.6115, 1.0056, -1.0908, -1.2579, -0.9237, 0.9013, 0.6958, 1.1069, 1.1642, 0.9902, 1.3382, 1.5832, 1.2885, 1.8779, -0.135, -0.3173, 0.0473, 1.4098, 1.1458, 1.6738, 0.6542, 0.4719, 0.8365, 1.0401, 0.826, 1.2542, 0.4073, 0.2506, 0.564, 0.8804, 0.6853, 1.0754, -0.0812, -0.2278, 0.0653),
                  tolerance = 1e-2)
     expect_equal(mod_configural@df, 32707)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE,

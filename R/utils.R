@@ -259,7 +259,7 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, gTheta, Thetabetween, list, ngroups, nfact, J, 
+updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, 
                         BFACTOR, sitems, cycles, rlist, prior){
     gstructgrouppars <- Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
@@ -276,7 +276,7 @@ updatePrior <- function(pars, gTheta, Thetabetween, list, ngroups, nfact, J,
                 Prior[[g]] <- apply(expand.grid(Priorbetween[[g]], prior[[g]]), 1, prod)
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
+            Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
                                            gstructgrouppars[[g]]$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
@@ -287,13 +287,13 @@ updatePrior <- function(pars, gTheta, Thetabetween, list, ngroups, nfact, J,
                 Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
         } else {
             for(g in 1L:ngroups){
-                Prior[[g]] <- mvtnorm::dmvnorm(gTheta[[g]], 0, matrix(1))
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta, 0, matrix(1))
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }
         }
     } else if(!is.null(list$customPriorFun)){
         for(g in 1L:ngroups)
-            Prior[[g]] <- list$customPriorFun(gTheta[[g]])
+            Prior[[g]] <- list$customPriorFun(Theta)
     }
     return(list(Prior=Prior, Priorbetween=Priorbetween))
 }

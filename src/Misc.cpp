@@ -1,4 +1,4 @@
-#include"Misc.h"
+#include "Misc.h"
 
 NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,
 	const vector<double> &Pk_1, const vector<double> &PQ_1, const vector<double> &PQ,

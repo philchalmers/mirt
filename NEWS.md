@@ -2,6 +2,8 @@
 
 ## MAJOR CHANGES
 
+- `bfactor()` default SE.type set to 'crossprod' rather than 'SEM'
+
 - generalized partial credit models now display fixed scoring coefs
 
 - `TOL` convergence criteria moved outside of the `technical` input to its own argument
