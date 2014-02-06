@@ -9,6 +9,8 @@
 #' @param obj an estimated model object from the mirt package
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
+# @param collapse_poly logical; collapse across polytomous item categories to reduce 
+#   sparceness? Will also helo to reduce the internal matrix sizes
 #' @param prompt logical; prompt user for input if the internal matrices are too large?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -28,6 +30,7 @@
 #' fitIndices(mod2, calcNull = TRUE)
 #' }
 fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
+    collapse_poly = FALSE
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
@@ -87,20 +90,33 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
     Tmat <- matrix(NA, sum(K-1L) + sum((K-1L)*(sum(K-1L))), nrow(tabdata))
+    Pmat <- matrix(0L, nitems*(nitems+1L)/2, ncol(Tmat))
     Gamma <- diag(p_theta) - outer(p_theta, p_theta)
-    ind <- 1L
+    ind <- ind2 <- 1L
     #find univariate marginals
     for(i in 1L:nitems){
+        if(collapse_poly){
+            Pmat[i, ind2:(ind2+K[i]-2L)] <- 2L:K[i] - 1L
+            ind2 <- ind2 + K[i] - 1L
+        }
         for(j in 1L:(K[i]-1L)){
             loc <- itemloc[i] + j
             Tmat[ind, ] <- as.integer(tabdata[, loc])
+            Pmat[i, ind2:(ind2+K[i]-2L)] <- 2L:K[i] - 1L
             ind <- ind + 1L
         }
     }
     #find bivariate marginals
+    ind1 <- nitems + 1L
     for(i in 1L:nitems){
         for(j in 1L:nitems){
             if(i < j){
+                if(collapse_poly){
+                    tmp <- kronecker(2L:K[i] - 1L, 2L:K[j] - 1L)
+                    Pmat[ind1, ind2:(ind2+length(tmp)-1L)] <- tmp
+                    ind1 <- ind1 + 1L
+                    ind2 <- ind2 + length(tmp)
+                }
                 for(k1 in 1L:(K[i]-1L)){
                     for(k2 in 1L:(K[j]-1L)){
                         loc1 <- itemloc[i] + k1
@@ -116,17 +132,21 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     if(nrow(Tmat) > 4000L){
         if(prompt){
             cat('Internal matricies are very large and computations will therefore take an extended
-                amount of time and require large amounts of RAM. The largest matrix has', nrow(T), 'columns.
+                amount of time and require large amounts of RAM. The largest matrix has', nrow(Tmat), 'columns.
                 Do you wish to continue anyways?')
             input <- readline("(yes/no): ")
             if(input == 'no') stop('Execution halted.')
             if(input != 'yes') stop('Illegal user input')
         }
     }
-    Eta <- Tmat %*% Gamma %*% t_Tmat
+    if(collapse_poly){
+        Pmat <- Pmat[ ,2L:(min(which(colSums(Pmat) == 0L)))-1L]
+        Tmat <- Pmat %*% Tmat
+    }
+    Eta <- Tmat %*% Gamma %*% t(Tmat)
     T.p <- Tmat %*% p
     T.p_theta <- Tmat %*% p_theta
-    inv.Eta <- ginv(as.matrix(Eta))
+    inv.Eta <- ginv(Eta)
     pars <- obj@pars
     quadpts <- obj@quadpts
     if(is.nan(quadpts)) 
@@ -175,14 +195,14 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         }
         delta[pat, ] <- DX
     }
-    delta2 <- T %*% delta
+    delta2 <- Tmat %*% delta
     delta2.invEta.delta2 <- t(delta2) %*% inv.Eta %*% delta2
     C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(delta2.invEta.delta2) %*%
         t(delta2) %*% inv.Eta
     M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)
     ret$M2 <- M2
     if(is.null(attr(obj, 'MG'))){
-        ret$df.M2 <- nrow(T) - obj@nest
+        ret$df.M2 <- nrow(Tmat) - obj@nest
         ret$p.M2 <- 1 - pchisq(M2, ret$df.M2)
         ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
                         sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (sum(r)-1)), 0)
@@ -197,7 +217,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
             if(ret$CFI.M2 < 0) ret$CFI.M2 <- 0
         }
     } else {
-        ret$nrowT <- nrow(T)
+        ret$nrowT <- nrow(Tmat)
     }
     return(as.data.frame(ret))
 }
