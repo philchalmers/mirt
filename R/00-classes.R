@@ -87,6 +87,7 @@ setClass("AllModelClass",
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
+#'     \item{\code{bfactor}:}{Object of class \code{"list"}, an empty list}
 #'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
@@ -113,7 +114,8 @@ setClass(
     Class = 'ExploratoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     Target='numeric',
-                                    rotate='character'),
+                                    rotate='character',
+                                    bfactor='list'),
     validity = function(object) return(TRUE)
 )
 
@@ -158,6 +160,7 @@ setClass(
 #'     \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
 #'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
+#'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
 #'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
 #'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
@@ -187,7 +190,8 @@ setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     random='list',
-                                    Prior='numeric'),
+                                    Prior='numeric',
+                                    bfactor='list'),
     validity = function(object) return(TRUE)
 )
 
@@ -235,6 +239,7 @@ setClass(
 #'    \item{\code{groupNames}:}{Object of class \code{"character"}, names of groups}
 #'    \item{\code{cmods}:}{Object of class \code{"list"}, a list containing estimated ConfirmatoryClass models }
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
+#'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
 #'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
 #'       second-order test}
 #'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
@@ -264,7 +269,8 @@ setClass(
                                     groupNames='factor',
                                     invariance='character',
                                     cmods='list',
-                                    Prior='list'),
+                                    Prior='list',
+                                    bfactor='list'),
     validity = function(object) return(TRUE)
 )
 

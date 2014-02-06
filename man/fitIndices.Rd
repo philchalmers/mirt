@@ -9,7 +9,7 @@
   package}
 
   \item{calcNull}{logical; calculate statistics for the
-  null model as well? Allows for statistics such as the
+  null model as well?  Allows for statistics such as the
   limited information TLI and CFI}
 
   \item{prompt}{logical; prompt user for input if the

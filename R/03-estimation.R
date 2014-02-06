@@ -569,6 +569,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        Pl=Pl[[1L]],
                        CUSTOM.IND=CUSTOM.IND,
                        SLOW.IND=SLOW.IND,
+                       bfactor=list(),
                        data=Data$data,
                        converge=ESTIMATE$converge,
                        nfact=nfact,
@@ -620,6 +621,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        factorNames=PrepList[[1L]]$factorNames,
                        constrain=constrain,
                        parprior=parprior,
+                       bfactor=if(opts$method == 'EM') 
+                           list(prior=ESTIMATE$prior, Priorbetween=ESTIMATE$Priorbetween,
+                                sitems=ESTIMATE$sitems, specific=specific) else list(),
                        nest=as.integer(dfsubtr),
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
@@ -664,6 +668,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    Pl=Pl,
                    CUSTOM.IND=CUSTOM.IND,
                    SLOW.IND=SLOW.IND,
+                   bfactor=if(opts$method == 'EM') 
+                       list(prior=ESTIMATE$prior, Priorbetween=ESTIMATE$Priorbetween,
+                            sitems=ESTIMATE$sitems, specific=specific) else list(),
                    nest=as.integer(dfsubtr),
                    itemtype=PrepList[[1L]]$itemtype,
                    information=ESTIMATE$info)

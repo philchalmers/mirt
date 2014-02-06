@@ -58,7 +58,8 @@
   class \code{"numeric"}, condition number of information
   matrix} \item{\code{secondordertest}:}{Object of class
   \code{"logical"}, indicate whether information matrix
-  passes second-order test}
+  passes second-order test} \item{\code{bfactor}:}{Object
+  of class \code{"list"}, an empty list}
   \item{\code{CUSTOM.IND}:}{Object of class
   \code{"integer"}, an internal index}
   \item{\code{SLOW.IND}:}{Object of class \code{"integer"},

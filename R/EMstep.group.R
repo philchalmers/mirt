@@ -226,7 +226,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 {
     J <- length(itemloc) - 1L
     r <- tabdata[ ,ncol(tabdata)]
-    X <- tabdata[ ,1L:(ncol(tabdata) - 1L)]
+    X <- tabdata[ ,1L:(ncol(tabdata) - 1L), drop = FALSE]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems, Prior,

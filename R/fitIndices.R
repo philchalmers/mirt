@@ -8,7 +8,7 @@
 #' @aliases fitIndices
 #' @param obj an estimated model object from the mirt package
 #' @param calcNull logical; calculate statistics for the null model as well?
-#' Allows for statistics such as the limited information TLI and CFI
+#'   Allows for statistics such as the limited information TLI and CFI
 #' @param prompt logical; prompt user for input if the internal matrices are too large?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -37,8 +37,10 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         ngroups <- length(cmods)
         ret <- vector('list', length(cmods))
         for(g in 1L:ngroups){
-            attr(cmods[[g]], 'MG') <- TRUE
-            ret[[g]] <- fitIndices(cmods[[g]])
+            attr(cmods[[g]], 'MG') <- g
+            cmods[[g]]@bfactor <- obj@bfactor
+            cmods[[g]]@quadpts <- obj@quadpts
+            ret[[g]] <- fitIndices(cmods[[g]], prompt = if(g == 1L) prompt else FALSE)
         }
         newret <- list()
         newret$M2 <- numeric(ngroups)
@@ -67,7 +69,9 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         newret$M2 <- NULL
         return(data.frame(as.list(M2s), newret))
     }
+    
     ret <- list()
+    group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
     tabdata <- obj@tabdatalong
     if(any(is.na(obj@tabdata)))
         stop('M2 can not be calulated for data with missing values.')
@@ -79,19 +83,17 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     N <- sum(r)
     p <- r/N
     p_theta <- obj@Pl[NOROWNA]
-    p_theta <- p_theta
+    p_theta <- p_theta / sum(p_theta)
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
-    T <- matrix(NA, sum(K) + sum(K*(sum(K))), nrow(tabdata))
+    Tmat <- matrix(NA, sum(K-1L) + sum((K-1L)*(sum(K-1L))), nrow(tabdata))
     Gamma <- diag(p_theta) - outer(p_theta, p_theta)
     ind <- 1L
-
-    ## M2 stat
     #find univariate marginals
     for(i in 1L:nitems){
         for(j in 1L:(K[i]-1L)){
             loc <- itemloc[i] + j
-            T[ind, ] <- tabdata[, loc]
+            Tmat[ind, ] <- as.integer(tabdata[, loc])
             ind <- ind + 1L
         }
     }
@@ -103,34 +105,46 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
                     for(k2 in 1L:(K[j]-1L)){
                         loc1 <- itemloc[i] + k1
                         loc2 <- itemloc[j] + k2
-                        T[ind, ] <- as.integer(tabdata[, loc1] & tabdata[, loc2])
+                        Tmat[ind, ] <- as.integer(tabdata[, loc1] & tabdata[, loc2])
                         ind <- ind + 1L
                     }
                 }
             }
         }
     }
-    T <- T[1L:(ind-1L), ]
-    if(nrow(T) > 4000L && prompt){
-        cat('Internal matricies are very large and computations will therefore take an extended
-            amount of time and require large amounts of RAM. The largest matrix has', nrow(T), 'columns.
-            Do you wish to continue anyways?')
-        input <- readline("(yes/no): ")
-        if(input == 'no') stop('Execution halted.')
-        if(input != 'yes') stop('Illegal user input')
+    Tmat <- Tmat[1L:(ind-1L), ]
+    if(nrow(Tmat) > 4000L){
+        if(prompt){
+            cat('Internal matricies are very large and computations will therefore take an extended
+                amount of time and require large amounts of RAM. The largest matrix has', nrow(T), 'columns.
+                Do you wish to continue anyways?')
+            input <- readline("(yes/no): ")
+            if(input == 'no') stop('Execution halted.')
+            if(input != 'yes') stop('Illegal user input')
+        }
     }
-    Eta <- T %*% Gamma %*% t(T)
-    T.p <- T %*% p
-    T.p_theta <- T %*% p_theta
-    inv.Eta <- ginv(Eta)
+    Eta <- Tmat %*% Gamma %*% t_Tmat
+    T.p <- Tmat %*% p
+    T.p_theta <- Tmat %*% p_theta
+    inv.Eta <- ginv(as.matrix(Eta))
     pars <- obj@pars
-    quadpts <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
-    theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
-    Theta <- thetaComb(theta, obj@nfact)
-    gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-    Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
-                                   gstructgrouppars$gcov)
+    quadpts <- obj@quadpts
+    if(is.nan(quadpts)) 
+        quadpts <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
     itemloc <- obj@itemloc
+    bfactorlist <- obj@bfactor
+    theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+    if(is.null(bfactorlist$Priorbetween[[1L]])){
+        Theta <- thetaComb(theta, obj@nfact)
+        prior <- Priorbetween <- sitems <- specific <- NULL
+    } else {
+        Theta <- obj@Theta        
+        prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
+        sitems <- bfactorlist$sitems; specific <- bfactorlist$specific
+    }
+    gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
+    Prior <- Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
+                                       gstructgrouppars$gcov)
     Prior <- Prior/sum(Prior)
     whichpar <- integer(nitems)
     for(i in 1L:nitems)
@@ -139,14 +153,23 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     whichpar <- c(0L, cumsum(whichpar)) + 1L
     delta <- matrix(NA, nrow(tabdata), npick, byrow = TRUE)
     DX <- rep(NA, npick)
+    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
+                                  CUSTOM.IND=obj@CUSTOM.IND)
     for(pat in 1L:nrow(tabdata)){
-        rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
-                            Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE,
-                            CUSTOM.IND=obj@CUSTOM.IND)
+        if(is.null(prior)){
+            rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
+                                Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE,
+                                CUSTOM.IND=obj@CUSTOM.IND, itemtrace=itemtrace)
+        } else {
+            rlist <- Estep.bfactor(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
+                                   Theta=Theta, prior=prior, Prior=Prior,
+                                   Priorbetween=Priorbetween, specific=specific, 
+                                   sitems=sitems, itemloc=itemloc, CUSTOM.IND=obj@CUSTOM.IND, 
+                                   itemtrace=itemtrace)
+        }
         for(i in 1L:nitems){
             tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
             pars[[i]]@dat <- rlist$r1[, tmp]
-            pars[[i]]@itemtrace <- rlist$itemtrace[, tmp]
             dx <- Deriv(pars[[i]], Theta=Theta, estHess=FALSE)$grad
             DX[whichpar[i]:(whichpar[i+1L]-1L)] <- dx[pars[[i]]@est]
         }

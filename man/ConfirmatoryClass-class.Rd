@@ -60,6 +60,8 @@
   \code{"ExploratoryClass"}, null model}
   \item{\code{condnum}:}{Object of class \code{"numeric"},
   condition number of information matrix}
+  \item{\code{bfactor}:}{Object of class \code{"list"},
+  contains information from bfactor() estimation}
   \item{\code{secondordertest}:}{Object of class
   \code{"logical"}, indicate whether information matrix
   passes second-order test}
