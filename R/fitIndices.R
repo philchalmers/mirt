@@ -9,8 +9,9 @@
 #' @param obj an estimated model object from the mirt package
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
-# @param collapse_poly logical; collapse across polytomous item categories to reduce 
-#   sparceness? Will also helo to reduce the internal matrix sizes
+#' @param collapse_poly logical; collapse across polytomous item categories to reduce 
+#'   sparceness? Will also helo to reduce the internal matrix sizes. THIS FEATURE IS 
+#'   CURRENTLY EXPERIMENTAL AND SHOULD NOT BE TRUSTED
 #' @param prompt logical; prompt user for input if the internal matrices are too large?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -29,8 +30,7 @@
 #' (mod2 <- mirt(Science, 1))
 #' fitIndices(mod2, calcNull = TRUE)
 #' }
-fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
-    collapse_poly = FALSE
+fitIndices <- function(obj, calcNull = FALSE, collapse_poly = FALSE, prompt = TRUE){
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
@@ -90,7 +90,8 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     tabdata <- tabdata[, -ncol(tabdata)]
     itemloc <- obj@itemloc
     Tmat <- matrix(NA, sum(K-1L) + sum((K-1L)*(sum(K-1L))), nrow(tabdata))
-    Pmat <- matrix(0L, nitems*(nitems+1L)/2, ncol(Tmat))
+    if(collapse_poly)
+        Pmat <- matrix(0L, nitems*(nitems+1L)/2, sum(K-1L) + sum((K-1L)*(sum(K-1L))))
     Gamma <- diag(p_theta) - outer(p_theta, p_theta)
     ind <- ind2 <- 1L
     #find univariate marginals
@@ -102,7 +103,6 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         for(j in 1L:(K[i]-1L)){
             loc <- itemloc[i] + j
             Tmat[ind, ] <- as.integer(tabdata[, loc])
-            Pmat[i, ind2:(ind2+K[i]-2L)] <- 2L:K[i] - 1L
             ind <- ind + 1L
         }
     }
@@ -110,7 +110,7 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
     ind1 <- nitems + 1L
     for(i in 1L:nitems){
         for(j in 1L:nitems){
-            if(i < j){
+            if(i > j){
                 if(collapse_poly){
                     tmp <- kronecker(2L:K[i] - 1L, 2L:K[j] - 1L)
                     Pmat[ind1, ind2:(ind2+length(tmp)-1L)] <- tmp
@@ -129,6 +129,11 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
         }
     }
     Tmat <- Tmat[1L:(ind-1L), ]
+    if(collapse_poly){
+        Pmat <- Pmat[ , which(colSums(Pmat) != 0L)]
+        if(is.numeric(collapse_poly)) return(list(T=Tmat, P=Pmat))
+        Tmat <- Pmat %*% Tmat
+    }
     if(nrow(Tmat) > 4000L){
         if(prompt){
             cat('Internal matricies are very large and computations will therefore take an extended
@@ -138,10 +143,6 @@ fitIndices <- function(obj, calcNull = FALSE, prompt = TRUE){
             if(input == 'no') stop('Execution halted.')
             if(input != 'yes') stop('Illegal user input')
         }
-    }
-    if(collapse_poly){
-        Pmat <- Pmat[ ,2L:(min(which(colSums(Pmat) == 0L)))-1L]
-        Tmat <- Pmat %*% Tmat
     }
     Eta <- Tmat %*% Gamma %*% t(Tmat)
     T.p <- Tmat %*% p

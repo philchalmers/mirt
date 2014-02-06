@@ -2,7 +2,8 @@
 \alias{fitIndices}
 \title{Compute Extra Model Fit Indices}
 \usage{
-  fitIndices(obj, calcNull = FALSE, prompt = TRUE)
+  fitIndices(obj, calcNull = FALSE, collapse_poly = FALSE,
+    prompt = TRUE)
 }
 \arguments{
   \item{obj}{an estimated model object from the mirt
@@ -11,6 +12,11 @@
   \item{calcNull}{logical; calculate statistics for the
   null model as well?  Allows for statistics such as the
   limited information TLI and CFI}
+
+  \item{collapse_poly}{logical; collapse across polytomous
+  item categories to reduce sparceness? Will also helo to
+  reduce the internal matrix sizes. THIS FEATURE IS
+  CURRENTLY EXPERIMENTAL AND SHOULD NOT BE TRUSTED}
 
   \item{prompt}{logical; prompt user for input if the
   internal matrices are too large?}
