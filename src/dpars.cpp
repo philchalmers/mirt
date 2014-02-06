@@ -253,7 +253,7 @@ RcppExport SEXP dparsNominal(SEXP Rx, SEXP RTheta, SEXP Roffterm,
 {
     BEGIN_RCPP
 
-    const S4 x(Rx);
+    S4 x(Rx);
     const NumericMatrix dat = x.slot("dat");
     const vector<double> par = as< vector<double> >(x.slot("par"));
     const int ncat = as<int>(x.slot("ncat"));
@@ -666,7 +666,7 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
 }
 
 RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
-    SEXP RPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc, 
+    SEXP RPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc,
     SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor, SEXP Riscross)
 {
     BEGIN_RCPP
@@ -707,7 +707,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             vector<double> Prior = as< vector<double> >(tmpvec);
             vector<double> expected(1), r1vec(N*J);
             if(isbifactor){
-               _Estepbfactor(expected, r1vec, itemtrace, prior, Priorbetween, vone, 1, 
+               _Estepbfactor(expected, r1vec, itemtrace, prior, Priorbetween, vone, 1,
                     dat, sitems, Prior);
             } else {
                 _Estep(expected, r1vec, Prior, vone, dat, itemtrace, 1);
@@ -761,7 +761,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             }
         }
     }
-    
+
     List ret;
     ret["Igrad"] = Igrad;
     ret["IgradP"] = IgradP;

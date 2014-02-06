@@ -7,7 +7,9 @@
 \title{Compute model residuals}
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
-  \code{ConfirmatoryClass} or \code{MultipleGroupClass}}
+  \code{ConfirmatoryClass} or \code{MultipleGroupClass}.
+  Bifactor models are automatically detected and utilized
+  for better accuracy}
 
   \item{type}{type of residuals to be displayed.  Can be
   either \code{'LD'} or \code{'LDG2'} for a local

@@ -252,8 +252,12 @@ setMethod(
     {
         ret <- vector('list', length(object@groupNames))
         names(ret) <- object@groupNames
-        for(g in 1:length(ret))
-            ret[[g]] <- residuals(object@cmods[[g]], verbose = FALSE, ...)
+        for(g in 1L:length(ret)){
+            cmod <- object@cmods[[g]]
+            cmod@quadpts <- object@quadpts
+            cmod@bfactor <- object@bfactor
+            ret[[g]] <- residuals(cmod, verbose = FALSE, ...)            
+        }
         ret
     }
 )

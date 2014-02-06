@@ -355,7 +355,8 @@ setMethod(
 #'                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
-#'   \code{MultipleGroupClass}
+#'   \code{MultipleGroupClass}. Bifactor models are automatically detected and utilized for 
+#'   better accuracy
 #' @param type type of residuals to be displayed.
 #'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
 #'   X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
@@ -417,10 +418,17 @@ setMethod(
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
-        quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+        quadpts <- object@quadpts
+        if(is.nan(quadpts)) 
+            quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+        bfactorlist <- object@bfactor
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
         if(type != 'Q3'){
-            Theta <- thetaComb(theta, nfact)
+            if(is.null(bfactorlist$Priorbetween[[1L]])){
+                Theta <- thetaComb(theta, nfact)
+            } else {
+                Theta <- object@Theta
+            }
         } else if(is.null(Theta)){
             Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
         }
@@ -428,7 +436,8 @@ setMethod(
         listtabs <- list()
         calcG2 <- ifelse(type == 'LDG2', TRUE, FALSE)
         if(type %in% c('LD', 'LDG2')){
-            prior <- mvtnorm::dmvnorm(Theta,rep(0,nfact),diag(nfact))
+            groupPars <- ExtractGroupPars(object@pars[[length(object@pars)]])
+            prior <- mvtnorm::dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
             prior <- prior/sum(prior)
             df <- (object@K - 1) %o% (object@K - 1)
             diag(df) <- NA
