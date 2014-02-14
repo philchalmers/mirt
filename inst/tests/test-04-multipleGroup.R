@@ -61,12 +61,12 @@ test_that('one factor', {
     expect_is(fs3, 'list')
     expect_is(fs4, 'matrix')
 
-    fit1 <- fitIndices(mod_metric)
-    expect_is(fit1, 'data.frame')
-    expect_true(mirt:::closeEnough(fit1[1:2] - c(85.68641, 120.6908), -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(fit1$df.M2 - 195, -1e-4, 1e-4))
-    fit2 <- itemfit(mod_metric)
-    expect_is(fit2, 'list')
+#     fit1 <- fitIndices(mod_metric)
+#     expect_is(fit1, 'data.frame')
+#     expect_true(mirt:::closeEnough(fit1[1:2] - c(85.68641, 120.6908), -1e-2, 1e-2))
+#     expect_true(mirt:::closeEnough(fit1$df.M2 - 195, -1e-4, 1e-4))
+#     fit2 <- itemfit(mod_metric)
+#     expect_is(fit2, 'list')
 
     #missing data
     set.seed(1234)
