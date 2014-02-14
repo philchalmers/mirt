@@ -76,7 +76,8 @@
 #'   \code{\link{residuals-method}}, \code{\link{plot-method}},
 #'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{fitIndices}},
+#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, 
+#   \code{\link{fitIndices}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #'   \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
 #'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}, \code{\link{DIF}}

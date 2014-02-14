@@ -836,3 +836,15 @@ setMethod(
     }
 )
 
+###
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'dich', Theta = 'matrix', prior = 'numeric'),
+    definition = function(x, Theta, prior){
+        P <- ProbTrace(x, Theta)
+        tmp <- P * (1-P)
+        tmp[,1] <- tmp[,1] * Theta
+        return(colSums(tmp*prior)) #FIXME U2PL only
+    }
+)

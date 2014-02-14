@@ -21,8 +21,6 @@
 
 ## NEW FEATURES
 
-- bifactor/two-tier optimization of M2 statistic in `fitIndicies`
-
 - two new `SE.type` inputs: 'Louis' and 'sandwich' for computing Louis' 1982 computation of
   the observed information matrix, and for a sandwich estimate of the covariance matrix
 
@@ -56,9 +54,6 @@
   used in computing the LD statistics
 
 ## BUG FIXES
-
-- normalize the expected proportions in M2 statistic calculation for better behaviour in
-  larger datasets
 
 - using `scores.only = TRUE` for multipleGroup objects returns the correct person ordering
   (reported by Mateusz Zoltak)

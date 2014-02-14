@@ -1,36 +1,36 @@
-#' Compute Extra Model Fit Indices
-#'
-#' Compute additional model fit indices that do not come as direct results following parameter
-#' convergence. Will compute the M2 (Maydeu-Olivares & Joe, 2006) statistic by default, and
-#' returns a data.frame containing various model fit statistics.
-#'
-#'
-#' @aliases fitIndices
-#' @param obj an estimated model object from the mirt package
-#' @param calcNull logical; calculate statistics for the null model as well?
-#'   Allows for statistics such as the limited information TLI and CFI
-#' @param collapse_poly logical; collapse across polytomous item categories to reduce 
-#'   sparceness? Will also helo to reduce the internal matrix sizes. THIS FEATURE IS 
-#'   CURRENTLY EXPERIMENTAL AND SHOULD NOT BE TRUSTED
-#' @param prompt logical; prompt user for input if the internal matrices are too large?
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @references
-#' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
-#' multidimensional contingency tables Psychometrika, 71, 713-732.
-#' @keywords model fit
-#' @export fitIndices
-#' @examples
-#' \dontrun{
-#' #LSAT6 example
-#' dat <- expand.table(LSAT6)
-#' (mod1 <- mirt(dat, 1, itemtype = '2PL', constrain = list(c(1,5,9,13,17))))
-#' fitIndices(mod1)
-#'
-#' #Science data with computing the null model M2 stat
-#' (mod2 <- mirt(Science, 1))
-#' fitIndices(mod2, calcNull = TRUE)
-#' }
-fitIndices <- function(obj, calcNull = FALSE, collapse_poly = FALSE, prompt = TRUE){
+# Compute Extra Model Fit Indices
+#
+# Compute additional model fit indices that do not come as direct results following parameter
+# convergence. Will compute the M2 (Maydeu-Olivares & Joe, 2006) statistic by default, and
+# returns a data.frame containing various model fit statistics.
+#
+#
+# @aliases fitIndices
+# @param obj an estimated model object from the mirt package
+# @param calcNull logical; calculate statistics for the null model as well?
+#   Allows for statistics such as the limited information TLI and CFI
+# @param collapse_poly logical; collapse across polytomous item categories to reduce 
+#   sparceness? Will also helo to reduce the internal matrix sizes. THIS FEATURE IS 
+#   CURRENTLY EXPERIMENTAL AND SHOULD NOT BE TRUSTED
+# @param prompt logical; prompt user for input if the internal matrices are too large?
+# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+# @references
+# Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
+# multidimensional contingency tables Psychometrika, 71, 713-732.
+# @keywords model fit
+# @export fitIndices
+# @examples
+# \dontrun{
+# #LSAT6 example
+# dat <- expand.table(LSAT6)
+# (mod1 <- mirt(dat, 1, itemtype = '2PL', constrain = list(c(1,5,9,13,17))))
+# fitIndices(mod1)
+#
+# #Science data with computing the null model M2 stat
+# (mod2 <- mirt(Science, 1))
+# fitIndices(mod2, calcNull = TRUE)
+# }
+fitIndices <- function(obj, calcNull = FALSE, collapse_poly = TRUE, prompt = TRUE){
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
@@ -76,82 +76,30 @@ fitIndices <- function(obj, calcNull = FALSE, collapse_poly = FALSE, prompt = TR
     ret <- list()
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
     tabdata <- obj@tabdatalong
+    nitems <- ncol(obj@data)
     if(any(is.na(obj@tabdata)))
         stop('M2 can not be calulated for data with missing values.')
-    NOROWNA <- rowSums(is.na(obj@tabdata)) == 0
-    tabdata <- tabdata[NOROWNA, ]
+    adj <- apply(obj@data, 2, min)
+    dat <- t(t(obj@data) - adj)
+    N <- nrow(dat)
+#     if(!collapse_poly){
+#         dat <- expand.table(tabdata)
+#         browser()
+#     }
+    P  <- colMeans(dat)
+    cross <- crossprod(dat, dat)
+    P  <- c(P, cross[lower.tri(cross)]/N)    
+    df <- length(P) - obj@nest
+    if(df <= 0L)
+        stop('Negative degrees of freedom')
     K <- obj@K
-    nitems <- length(K)
-    r <- tabdata[, ncol(tabdata)]
-    N <- sum(r)
-    p <- r/N
-    p_theta <- obj@Pl[NOROWNA]
-    p_theta <- p_theta / sum(p_theta)
-    tabdata <- tabdata[, -ncol(tabdata)]
-    itemloc <- obj@itemloc
-    Tmat <- matrix(NA, sum(K-1L) + sum((K-1L)*(sum(K-1L))), nrow(tabdata))
-    if(collapse_poly)
-        Pmat <- matrix(0L, nitems*(nitems+1L)/2, sum(K-1L) + sum((K-1L)*(sum(K-1L))))
-    Gamma <- diag(p_theta) - outer(p_theta, p_theta)
-    ind <- ind2 <- 1L
-    #find univariate marginals
-    for(i in 1L:nitems){
-        if(collapse_poly){
-            Pmat[i, ind2:(ind2+K[i]-2L)] <- 2L:K[i] - 1L
-            ind2 <- ind2 + K[i] - 1L
-        }
-        for(j in 1L:(K[i]-1L)){
-            loc <- itemloc[i] + j
-            Tmat[ind, ] <- as.integer(tabdata[, loc])
-            ind <- ind + 1L
-        }
-    }
-    #find bivariate marginals
-    ind1 <- nitems + 1L
-    for(i in 1L:nitems){
-        for(j in 1L:nitems){
-            if(i > j){
-                if(collapse_poly){
-                    tmp <- kronecker(2L:K[i] - 1L, 2L:K[j] - 1L)
-                    Pmat[ind1, ind2:(ind2+length(tmp)-1L)] <- tmp
-                    ind1 <- ind1 + 1L
-                    ind2 <- ind2 + length(tmp)
-                }
-                for(k1 in 1L:(K[i]-1L)){
-                    for(k2 in 1L:(K[j]-1L)){
-                        loc1 <- itemloc[i] + k1
-                        loc2 <- itemloc[j] + k2
-                        Tmat[ind, ] <- as.integer(tabdata[, loc1] & tabdata[, loc2])
-                        ind <- ind + 1L
-                    }
-                }
-            }
-        }
-    }
-    Tmat <- Tmat[1L:(ind-1L), ]
-    if(collapse_poly){
-        Pmat <- Pmat[ , which(colSums(Pmat) != 0L)]
-        if(is.numeric(collapse_poly)) return(list(T=Tmat, P=Pmat))
-        Tmat <- Pmat %*% Tmat
-    }
-    if(nrow(Tmat) > 4000L){
-        if(prompt){
-            cat('Internal matricies are very large and computations will therefore take an extended
-                amount of time and require large amounts of RAM. The largest matrix has', nrow(Tmat), 'columns.
-                Do you wish to continue anyways?')
-            input <- readline("(yes/no): ")
-            if(input == 'no') stop('Execution halted.')
-            if(input != 'yes') stop('Illegal user input')
-        }
-    }
-    Eta <- Tmat %*% Gamma %*% t(Tmat)
-    T.p <- Tmat %*% p
-    T.p_theta <- Tmat %*% p_theta
-    inv.Eta <- ginv(Eta)
     pars <- obj@pars
-    quadpts <- obj@quadpts
+    quadpts <- obj@quadpts    
     if(is.nan(quadpts)) 
         quadpts <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+    npars <- 0
+    for(i in 1L:(nitems+1L))
+        npars <- npars + sum(pars[[i]]@est)
     itemloc <- obj@itemloc
     bfactorlist <- obj@bfactor
     theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
@@ -167,46 +115,34 @@ fitIndices <- function(obj, calcNull = FALSE, collapse_poly = FALSE, prompt = TR
     Prior <- Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
                                        gstructgrouppars$gcov)
     Prior <- Prior/sum(Prior)
-    whichpar <- integer(nitems)
-    for(i in 1L:nitems)
-        whichpar[i] <- sum(pars[[i]]@est)
-    npick <- sum(whichpar)
-    whichpar <- c(0L, cumsum(whichpar)) + 1L
-    delta <- matrix(NA, nrow(tabdata), npick, byrow = TRUE)
-    DX <- rep(NA, npick)
-    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
-                                  CUSTOM.IND=obj@CUSTOM.IND)
-    for(pat in 1L:nrow(tabdata)){
-        if(is.null(prior)){
-            rlist <- Estep.mirt(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
-                                Theta=Theta, prior=Prior, itemloc=itemloc, deriv=TRUE,
-                                CUSTOM.IND=obj@CUSTOM.IND, itemtrace=itemtrace)
-        } else {
-            rlist <- Estep.bfactor(pars=pars, tabdata=matrix(c(tabdata[pat, ], r[pat]), 1),
-                                   Theta=Theta, prior=prior, Prior=Prior,
-                                   Priorbetween=Priorbetween, specific=specific, 
-                                   sitems=sitems, itemloc=itemloc, CUSTOM.IND=obj@CUSTOM.IND, 
-                                   itemtrace=itemtrace)
+    E1 <- numeric(nitems)
+    E2 <- numeric(nitems*(nitems - 1L)/2L)
+    ind <- 1L
+    for(i in 1L:nitems){
+        x <- extract.item(obj, i)
+        Ex <- expected.item(x, Theta, min=0L)
+        E1[i] <- sum(Ex * Prior)
+        for(j in 1L:nitems){
+            if(i > j){
+                y <- extract.item(obj, j)
+                Ey <- expected.item(y, Theta, min=0L)
+                E2[ind] <- sum(Ex * Ey * Prior)
+                ind <- ind + 1L
+            }
         }
-        for(i in 1L:nitems){
-            tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-            pars[[i]]@dat <- rlist$r1[, tmp]
-            dx <- Deriv(pars[[i]], Theta=Theta, estHess=FALSE)$grad
-            DX[whichpar[i]:(whichpar[i+1L]-1L)] <- dx[pars[[i]]@est]
-        }
-        delta[pat, ] <- DX
     }
-    delta2 <- Tmat %*% delta
-    delta2.invEta.delta2 <- t(delta2) %*% inv.Eta %*% delta2
-    C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(delta2.invEta.delta2) %*%
-        t(delta2) %*% inv.Eta
-    M2 <- N * t(T.p - T.p_theta) %*% C2 %*% (T.p - T.p_theta)
+    E <- c(E1, E2)
+    inv.Eta <- ginv(diag(E) - outer(E, E))
+    #delta2.invEta.delta2 <- t(delta2) %*% inv.Eta %*% delta2
+    #C2 <- inv.Eta - inv.Eta %*% delta2 %*% solve(delta2.invEta.delta2) %*% t(delta2) %*% inv.Eta
+    C2 <- diag(length(P)) #this is just a placeholder
+    M2 <- N * t(P - E) %*% C2 %*% (P - E) #the weight matrix C2 is missing...fack
     ret$M2 <- M2
     if(is.null(attr(obj, 'MG'))){
-        ret$df.M2 <- nrow(Tmat) - obj@nest
+        ret$df.M2 <- df
         ret$p.M2 <- 1 - pchisq(M2, ret$df.M2)
         ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
-                        sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (sum(r)-1)), 0)
+                        sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (N-1)), 0)
         if(calcNull){
             null.mod <- try(mirt(obj@data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
@@ -218,7 +154,7 @@ fitIndices <- function(obj, calcNull = FALSE, collapse_poly = FALSE, prompt = TR
             if(ret$CFI.M2 < 0) ret$CFI.M2 <- 0
         }
     } else {
-        ret$nrowT <- nrow(Tmat)
+        ret$nrowT <- length(P)
     }
     return(as.data.frame(ret))
 }
