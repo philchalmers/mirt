@@ -549,6 +549,9 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                     for(j in 1L:length(sel)){
                         which <- names(pars[[g]][[j]]@est) == name
+                        if(names(pars[[g]][[sel[j]]]@par)[which] %in% c('g', 'u') && 
+                               type == 3L)
+                            warning('\'beta\' prior for g and u parameters is not recommended')
                         if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
                         pars[[g]][[sel[j]]]@any.prior <- TRUE
                         pars[[g]][[sel[j]]]@prior.type[which] <- type
