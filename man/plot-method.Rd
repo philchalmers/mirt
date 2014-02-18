@@ -9,6 +9,9 @@
   \item{x}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass} or \code{MultipleGroupClass}}
 
+  \item{y}{an arbitrary missing argument required for
+  \code{R CMD check}}
+
   \item{type}{type of plot to view; can be \code{'info'} to
   show the test information function, \code{'infocontour'}
   for the test information contours, \code{'SE'} for the
@@ -47,11 +50,23 @@
   \code{lattice} package}
 
   \item{ehist.cut}{a probability value indicating a
-  threshold for excliding cases in empirical histogram
+  threshold for excluding cases in empirical histogram
   plots. Values larger than the default will include more
   points in the tails of the plot, potentially squishing
   the 'meat' of the plot to take up less area than visually
   desired}
+
+  \item{main}{argument passed to lattice. Default generated
+  automatically}
+
+  \item{drape}{logical argument passed to lattice. Default
+  generated automatically}
+
+  \item{colorkey}{logical argument passed to lattice.
+  Default generated automatically}
+
+  \item{add.ylab2}{logical argument passed to lattice.
+  Default generated automatically}
 
   \item{...}{additional arguments to be passed to lattice}
 }
@@ -59,7 +74,8 @@
   \code{plot(x, y, type = 'info', npts = 50, theta_angle =
   45, which.items = 1:ncol(x@data), rot = list(xaxis = -70,
   yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key =
-  TRUE, ehist.cut = 1e-10, ...)}
+  TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
+  ehist.cut = 1e-10, add.ylab2 = TRUE, ...)}
 }
 \examples{
 \dontrun{

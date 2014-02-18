@@ -24,11 +24,6 @@
   \item{Target}{a dummy variable matrix indicting a target
   rotation pattern}
 
-  \item{suppress}{a numeric value indicating which
-  (possibly rotated) factor loadings should be suppressed.
-  Typical values are around .3 in most statistical
-  software. Default is 0 for no suppression}
-
   \item{printSE}{logical; print the standard errors instead
   of the confidence intervals?}
 

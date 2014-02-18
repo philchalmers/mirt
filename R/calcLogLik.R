@@ -136,7 +136,7 @@ setMethod(
 setMethod(
     f = "calcLogLik",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, draws = 2000, G2 = TRUE)
+    definition = function(object, draws = 5000, G2 = TRUE)
     {
         class(object) <- 'ExploratoryClass'
         ret <- calcLogLik(object, draws=draws, G2=G2)

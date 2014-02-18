@@ -57,7 +57,7 @@ setMethod(
 #'
 #' Print model object summaries to the console.
 #'
-#' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
 #' @name show-method
@@ -183,9 +183,6 @@ setMethod(
 #'   Only applicable to unidimensional models
 #' @param rotate see \code{\link{mirt}} for details
 #' @param Target a dummy variable matrix indicting a target rotation pattern
-#' @param suppress a numeric value indicating which (possibly rotated) factor
-#'   loadings should be suppressed. Typical values are around .3 in most
-#'   statistical software. Default is 0 for no suppression
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded
 #' @param as.data.frame logical; convert list output to a data.frame instead?
@@ -355,7 +352,7 @@ setMethod(
 #'                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)}
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
-#'   \code{MultipleGroupClass}. Bifactor models are automatically detected and utilized for 
+#'   \code{MultipleGroupClass}. Bifactor models are automatically detected and utilized for
 #'   better accuracy
 #' @param type type of residuals to be displayed.
 #'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
@@ -419,7 +416,7 @@ setMethod(
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
         quadpts <- object@quadpts
-        if(is.nan(quadpts)) 
+        if(is.nan(quadpts))
             quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
         bfactorlist <- object@bfactor
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
@@ -543,18 +540,20 @@ setMethod(
 #' Plot various test implied functions from models
 #'
 #' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45,
-#'                          which.items = 1:ncol(x@@data),
-#'                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-#'                          facet_items = TRUE, auto.key = TRUE, ehist.cut = 1e-10, ...)}
+#'                           which.items = 1:ncol(x@@data),
+#'                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+#'                           facet_items = TRUE, auto.key = TRUE, main = NULL,
+#'                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)}
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
+#' @param y an arbitrary missing argument required for \code{R CMD check}
 #' @param type type of plot to view; can be \code{'info'} to show the test
 #'   information function, \code{'infocontour'} for the test information contours,
 #'   \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
 #'   for all item probability information or trace lines (only available when all items are dichotomous),
-#'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and 
-#'   \code{'scorecontour'} for the expected total score surface and contour plots. 
+#'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and
+#'   \code{'scorecontour'} for the expected total score surface and contour plots.
 #'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}.
@@ -568,9 +567,13 @@ setMethod(
 #' @param facet_items logical; apply grid of plots across items? If \code{FALSE}, items will be
 #'   placed in one plot for each group
 #' @param auto.key logical parameter passed to the \code{lattice} package
-#' @param ehist.cut a probability value indicating a threshold for excliding cases in empirical 
-#'   histogram plots. Values larger than the default will include more points in the tails of the 
+#' @param ehist.cut a probability value indicating a threshold for excluding cases in empirical
+#'   histogram plots. Values larger than the default will include more points in the tails of the
 #'   plot, potentially squishing the 'meat' of the plot to take up less area than visually desired
+#' @param main argument passed to lattice. Default generated automatically
+#' @param drape logical argument passed to lattice. Default generated automatically
+#' @param colorkey logical argument passed to lattice. Default generated automatically
+#' @param add.ylab2 logical argument passed to lattice. Default generated automatically
 #' @param ... additional arguments to be passed to lattice
 #'
 #' @name plot-method
@@ -612,7 +615,7 @@ setMethod(
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
     {
         if (any(theta_angle > 90 | theta_angle < 0))
-            stop('Improper angle specifed. Must be between 0 and 90.')
+            stop('Improper angle specified. Must be between 0 and 90.')
         if(length(theta_angle) > 1) type = 'infoangle'
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@nfact

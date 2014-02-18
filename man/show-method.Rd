@@ -7,7 +7,7 @@
 \alias{show-method}
 \title{Show model object}
 \arguments{
-  \item{x}{an object of class \code{ExploratoryClass},
+  \item{object}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass}, \code{MultipleGroupClass}, or
   \code{MixedClass}}
 }
