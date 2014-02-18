@@ -1119,7 +1119,7 @@ shinyItemplot <- function(){
 
                         selectInput(inputId = "itemclass",
                                     label = "Class of mirt item:",
-                                    choices = c('dich', 'graded', 'nominal', 'gpcm', 'partcomp', 'nestlogit'),
+                                    choices = c('dich', 'graded', 'nominal', 'gpcm', 'partcomp'), #'nestlogit'
                                     selected = 'dich'),
 
                         h6('Note: for nestlogit the first category is assumed to be the correct response option.'),

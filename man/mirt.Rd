@@ -550,7 +550,6 @@ anova(cmod, mod2)
 pmod1 <- mirt(Science, 1)
 plot(pmod1)
 summary(pmod1)
-fitIndices(pmod1) #M2 limited information statistic
 
 #Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
 #first obtain parameter index

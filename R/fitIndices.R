@@ -16,7 +16,7 @@
 # @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 # @references
 # Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
-# multidimensional contingency tables Psychometrika, 71, 713-732.
+# multidimensional contingency tables. Psychometrika, 71, 713-732.
 # @keywords model fit
 # @export fitIndices
 # @examples

@@ -1,6 +1,9 @@
-# Changes in mirt 1.x
+# Changes in mirt 1.2
 
 ## MAJOR CHANGES
+
+- `fitIndices()` removed for now, and will be reimplemented more efficiently at a later
+   release
 
 - `bfactor()` default SE.type set to 'crossprod' rather than 'SEM'
 
@@ -8,11 +11,9 @@
 
 - `TOL` convergence criteria moved outside of the `technical` input to its own argument
 
-- `restype` argument to `residuals()` changed to `type` to be more consistent with the rest of the
-  package
+- `restype` argument to `residuals()` changed to `type` to be more consistent with the package
 
-- removed `fitted()` generic since `residuals(model, type = 'exp')` gives essentially the same
-  output
+- removed `fitted()` since `residuals(model, type = 'exp')` gives essentially the same output
 
 - mixedmirt has `SE` set to `TRUE` by default to help construct a more accurate information matrix
 
@@ -22,7 +23,7 @@
 ## NEW FEATURES
 
 - two new `SE.type` inputs: 'Louis' and 'sandwich' for computing Louis' 1982 computation of
-  the observed information matrix, and for a sandwich estimate of the covariance matrix
+  the observed information matrix, and for the sandwich estimate of the covariance matrix
 
 - `as.data.frame` logical option for `coef()` to convert list to a row-stacked data.frame
 
@@ -31,24 +32,25 @@
 - `type = 'infotrace'` added to `itemplot()` to plot trace lines and information on the same plot,
   and `type = 'tracecontour'` for a contour plot using trace lines (suggested by Armi Lantano)
 
-- `mirt.model()` support for multiline inputs
+- `mirt.model()` support for multi-line inputs
 
 - new `type = 'LDG2'` input for `residuals()` to compute local dependence stat based on G2
   instead of X2, and `type = 'Q3'` added as well
 
-- S-EM computation of the information matrix support for latent parameters, which previously 
+- S-EM computation of the information matrix support for latent parameters, which previously
   was only effective when estimation item-level parameters. A technical option has also been
-  added to force the information matrix to be symmetric (default is set to `TRUE`)
-  
-- new `empirical.CI` argument in `itemfit()` used when plotting confidence intervals for 
+  added to force the information matrix to be symmetric (default is set to `TRUE` for better
+  numerical stability)
+
+- new `empirical.CI` argument in `itemfit()` used when plotting confidence intervals for
   dichotomous items (suggested by Okan Bulut)
 
 - `printSE` argument can now be passed to `coef()` for printing the standard errors instead of
-  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE` (suggested 
+  confidence intervals. As a consequence, `rawug` is automatically set to `TRUE` (suggested
   by Olivia Bertelli)
 
-- second-order test and condition number added to estimation objects when information matrix is
-  computed
+- second-order test and condition number added to estimated objects when an information
+  matrix is computed
 
 - `tables` argument can be passed to `residuals()` to return all observed and expected tables
   used in computing the LD statistics
@@ -58,7 +60,7 @@
 - using `scores.only = TRUE` for multipleGroup objects returns the correct person ordering
   (reported by Mateusz Zoltak)
 
-- `read.mirt` crash fix for multiple group analyses objects (reported by Felix Hansen)
+- `read.mirt()` crash fix for multiple group analyses objects (reported by Felix Hansen)
 
 - updated math for `SE.type = 'crossprod'`
 
