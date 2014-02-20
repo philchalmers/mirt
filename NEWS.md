@@ -2,8 +2,8 @@
 
 ## MAJOR CHANGES
 
-- `fitIndices()` removed for now, and will be reimplemented more efficiently at a later
-   release
+- `fitIndices()` replaced with `M2()` function, and currently limted to only dichotomous items
+  of class 'dich'
 
 - `bfactor()` default SE.type set to 'crossprod' rather than 'SEM'
 

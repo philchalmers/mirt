@@ -841,10 +841,12 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'dich', Theta = 'matrix', prior = 'numeric'),
-    definition = function(x, Theta, prior){
+    definition = function(x, Theta, prior, extra_term = 1){
         P <- ProbTrace(x, Theta)
-        tmp <- P * (1-P)
-        tmp[,1] <- tmp[,1] * Theta
-        return(colSums(tmp*prior)) #FIXME U2PL only
+        PQ <- apply(P, 1, prod) 
+        ret <- c(colSums(Theta * PQ * extra_term * prior), 
+                 sum(PQ * extra_term * prior), 
+                 colSums(P * extra_term * prior))
+        ret
     }
 )

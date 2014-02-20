@@ -325,7 +325,7 @@
 #'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
 #'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, 
-#   \code{\link{fitIndices}},
+#'   \code{\link{M2}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #'   \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}},
 #'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
@@ -422,6 +422,8 @@
 #'                      PRIOR = (5, g, norm, -1.5, 3)')
 #' mod1.3PL.norm2 <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
 #' coef(mod1.3PL.norm2)
+#' #limited information fit statistics
+#' M2(mod1.3PL.norm, calcNull=TRUE)
 #'
 #' #two factors (exploratory)
 #' mod2 <- mirt(data, 2)
