@@ -11,14 +11,6 @@
   \item{calcNull}{logical; calculate statistics for the
   null model as well?  Allows for statistics such as the
   limited information TLI and CFI}
-
-  \item{collapse_poly}{logical; collapse across polytomous
-  item categories to reduce sparceness? Will also helo to
-  reduce the internal matrix sizes. THIS FEATURE IS
-  CURRENTLY EXPERIMENTAL AND SHOULD NOT BE TRUSTED}
-
-  \item{prompt}{logical; prompt user for input if the
-  internal matrices are too large?}
 }
 \description{
   Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic

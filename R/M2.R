@@ -8,10 +8,8 @@
 #' @param obj an estimated model object from the mirt package
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
-#' @param collapse_poly logical; collapse across polytomous item categories to reduce 
-#'   sparceness? Will also helo to reduce the internal matrix sizes. THIS FEATURE IS 
-#'   CURRENTLY EXPERIMENTAL AND SHOULD NOT BE TRUSTED
-#' @param prompt logical; prompt user for input if the internal matrices are too large?
+# @param collapse_poly logical; collapse across polytomous item categories to reduce 
+#   sparceness? Will also helo to reduce the internal matrix sizes
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in

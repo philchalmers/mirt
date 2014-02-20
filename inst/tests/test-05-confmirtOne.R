@@ -19,9 +19,11 @@ test_that('exploratory mods', {
     expect_is(W1, 'wald')
     expect_is(W2, 'wald')
     expect_true(mirt:::closeEnough(W1$W - 212.3752, -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(W2$W - 2.080472, -1e-2, 1e-2))
-    fitonefact <- fitIndices(onefact)
+    expect_true(mirt:::closeEnough(W2$W - 2.080472, -1e-2, 1e-2))    
+    
+    fitonefact <- M2(onefact)
     expect_is(fitonefact, 'data.frame')
+    expect_equal(fitonefact$M2, 11.92959, tolerance = 1e-2)
     suppressWarnings(twofact <- mirt(fulldata, 2, verbose = FALSE, draws = 10, method = 'MHRM'))
     cfs <- as.numeric(do.call(c, coef(twofact, digits=4, verbose = FALSE)))
     expect_equal(cfs, c(0.6554, 0.3298, 0.9809, -0.5402, -0.8506, -0.2299, 1.8729, 1.6067, 2.1391, 0, NA, NA, 1, NA, NA, 1.3934, 1.1936, 1.5931, 0.1951, -0.1692, 0.5595, 0.8725, 0.7105, 1.0346, 0, NA, NA, 1, NA, NA, 1.6312, 1.4964, 1.7659, -0.1309, -0.4369, 0.1752, 1.8022, 1.7488, 1.8556, 0, NA, NA, 1, NA, NA, 0.5695, 0.3373, 0.8016, -0.2449, -0.4873, -0.0024, 0.4801, 0.3345, 0.6258, 0, NA, NA, 1, NA, NA, -0.0045, -0.4225, 0.4136, -1.7778, -1.9745, -1.581, 2.5053, 2.111, 2.8995, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0, NA, NA, 1, NA, NA, -0.4354, NA, NA, 1, NA, NA),
