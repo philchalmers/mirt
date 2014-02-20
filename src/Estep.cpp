@@ -8,11 +8,13 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
     const int nquad = prior.size();
     const int nitems = data.ncol();
     const int npat = r.size();
+    #ifdef SUPPORT_OPENMP
     if(nquad * nitems > 1000){
         omp_set_num_threads(ncores);
     } else {
         omp_set_num_threads(1);
     }
+    #endif
 
     #pragma omp parallel for
     for (int pat = 0; pat < npat; ++pat){
@@ -69,7 +71,9 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, const NumericMa
     const int &ncores, const IntegerMatrix &data, const IntegerMatrix &sitems,
     const vector<double> &Prior)
 {
+     #ifdef SUPPORT_OPENMP
     omp_set_num_threads(ncores);
+    #endif
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
     const int npquad = prior.size();
@@ -166,10 +170,15 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 }
 
 //EAP estimates used in multipleGroup
-RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu)
+RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu,
+    SEXP Rncores)
 {
     BEGIN_RCPP
 
+    const int ncores = as<int>(Rncores); //nquad
+    #ifdef SUPPORT_OPENMP
+    omp_set_num_threads(ncores);
+    #endif
     const NumericMatrix logitemtrace(Rlogitemtrace);
     const IntegerMatrix tabdata(Rtabdata);
     const NumericMatrix Theta(RTheta);

@@ -64,7 +64,9 @@ RcppExport SEXP denRowSums(SEXP Rfulldata, SEXP Ritemtrace0, SEXP Ritemtrace1,
     const int ncores = as<int>(Rncores);
     List ret;
     vector<double> Sum0(fulldata.nrow()), Sum1(fulldata.nrow());
+    #ifdef SUPPORT_OPENMP
     omp_set_num_threads(ncores);
+    #endif
 
 #pragma omp parallel for
     for(int i = 0; i < fulldata.nrow(); ++i){
@@ -99,7 +101,9 @@ RcppExport SEXP sumExpected(SEXP Rtdata, SEXP Rtabdata, SEXP Rrwmeans, SEXP Rnit
     const int n = tabdata.nrow();
     const int J = tdata.nrow();
     vector<double> expected(n);
+    #ifdef SUPPORT_OPENMP
     omp_set_num_threads(ncores);
+    #endif
 
 #pragma omp parallel for
     for(int i = 0; i < n; ++i){
