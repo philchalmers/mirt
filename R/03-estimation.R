@@ -623,7 +623,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior=parprior,
                        bfactor=if(opts$method == 'EM') 
                            list(prior=ESTIMATE$prior, Priorbetween=ESTIMATE$Priorbetween,
-                                sitems=ESTIMATE$sitems, specific=specific) else list(),
+                                sitems=ESTIMATE$sitems, specific=specific, 
+                                Prior=ESTIMATE$Prior) else list(),
                        nest=as.integer(dfsubtr),
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,

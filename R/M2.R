@@ -111,7 +111,8 @@ M2 <- function(obj, calcNull = FALSE){
     } else {
         Theta <- obj@Theta        
         prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
-        sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; Prior <- obj@Prior
+        sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; 
+        Prior <- bfactorlist$Prior[[group]]
     }
     if(collapse_poly){
         E1 <- numeric(nitems)

@@ -2,7 +2,7 @@
 
 ## MAJOR CHANGES
 
-- `fitIndices()` replaced with `M2()` function, and currently limted to only dichotomous items
+- `fitIndices()` replaced with `M2()` function, and currently limited to only dichotomous items
   of class 'dich'
 
 - `bfactor()` default SE.type set to 'crossprod' rather than 'SEM'
