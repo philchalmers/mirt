@@ -1,4 +1,4 @@
-# Changes in mirt 1.2
+# Changes in mirt 1.2.1
 
 ## MAJOR CHANGES
 
