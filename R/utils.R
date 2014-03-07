@@ -1128,6 +1128,12 @@ shinyItemplot <- function(){
                                     label = "Type of plot to display:",
                                     choices = c('trace', 'info', 'score', 'infocontour', 'SE', 'infoSE', 'tracecontour'),
                                     selected = 'trace'),
+                        
+                        numericInput("theta_lim_low", "Theta lower range:", -4,
+                                     min = -35, max = 35),
+                        
+                        numericInput("theta_lim_high", "Theta upper range:", 4,
+                                     min = -35, max = 35),
 
                         checkboxInput(inputId = "nfact",
                                       label = "Multidimensional?",
@@ -1334,7 +1340,8 @@ shinyItemplot <- function(){
 
                     output$main_plot <- renderPlot({
                         mod <- genmod(input)
-                        print(itemplot(mod, 1, type=input$plottype, rotate = 'none'))
+                        print(itemplot(mod, 1, type=input$plottype, rotate = 'none',
+                                       theta_lim=c(input$theta_lim_low, input$theta_lim_high)))
                     })
 
                     output$coefs <- renderPrint({
