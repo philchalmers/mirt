@@ -539,7 +539,7 @@ setMethod(
 
 #' Plot various test implied functions from models
 #'
-#' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45,
+#' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45, theta_lim = c(-4,4),
 #'                           which.items = 1:ncol(x@@data),
 #'                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
 #'                           facet_items = TRUE, auto.key = TRUE, main = NULL,
@@ -559,6 +559,8 @@ setMethod(
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
 #'   (e.g., \code{theta_angle = seq(0, 90, by=10)})
+#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
+#'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
 #'   Larger values make plots look smoother
 #' @param rot allows rotation of the 3D graphics
@@ -609,7 +611,7 @@ setMethod(
     f = "plot",
     signature = signature(x = 'ExploratoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
-                          which.items = 1:ncol(x@data),
+                          theta_lim = c(-4,4), which.items = 1:ncol(x@data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
@@ -622,7 +624,7 @@ setMethod(
         if(nfact > 2) stop("Can't plot high dimensional solutions.")
         if(nfact == 1) theta_angle <- 0
         J <- length(x@pars) - 1
-        theta <- seq(-4,4,length.out=npts)
+        theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@pars, 'prodlist')
         if(length(prodlist) > 0)

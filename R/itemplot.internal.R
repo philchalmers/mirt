@@ -136,14 +136,14 @@ setMethod(
 
 
 itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot,
-                          cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
+                          theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
                           add.ylab2 = TRUE, drape = TRUE, ...){
     if(drop.zeros) x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 3) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')
-    theta <- seq(-4,4, length.out=40)
-    if(nfact == 3) theta <- seq(-4,4, length.out=20)
+    theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
+    if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
     prodlist <- attr(x@pars, 'prodlist')
     if(length(prodlist) > 0){
         Theta <- thetaComb(theta, x@nfact)

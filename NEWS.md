@@ -1,3 +1,9 @@
+# Changes in mirt 1.3
+
+## NEW FEATURES
+
+- `theta_lim` input to `plot()` and `itemplot()` for modifying range of latent values evaluated
+
 # Changes in mirt 1.2.1
 
 ## MAJOR CHANGES

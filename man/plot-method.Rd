@@ -32,6 +32,10 @@
   angles specified (e.g., \code{theta_angle = seq(0, 90,
   by=10)})}
 
+  \item{theta_lim}{lower and upper limits of the latent
+  trait (theta) to be evaluated, and is used in conjunction
+  with \code{npts}}
+
   \item{npts}{number of quadrature points to be used for
   plotting features.  Larger values make plots look
   smoother}
@@ -72,10 +76,11 @@
 }
 \description{
   \code{plot(x, y, type = 'info', npts = 50, theta_angle =
-  45, which.items = 1:ncol(x@data), rot = list(xaxis = -70,
-  yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key =
-  TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
-  ehist.cut = 1e-10, add.ylab2 = TRUE, ...)}
+  45, theta_lim = c(-4,4), which.items = 1:ncol(x@data),
+  rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+  facet_items = TRUE, auto.key = TRUE, main = NULL, drape =
+  TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 =
+  TRUE, ...)}
 }
 \examples{
 \dontrun{

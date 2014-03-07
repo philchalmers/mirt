@@ -22,6 +22,8 @@
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce dimensionality?
 #'   Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several
 #'   zero slopes
+#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
+#'   used in conjunction with \code{npts}
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
 #'   This primarily is an instructive tool for demonstrating how item response curves
 #'   behave when adjusting their parameters
@@ -64,7 +66,7 @@
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
                      CEdraws = 1000, drop.zeros = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                     shiny = FALSE, ...){
+                     theta_lim = c(-4,4), shiny = FALSE, ...){
     if(shiny){
         require(shiny)
         runApp(shinyItemplot())
@@ -75,7 +77,8 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     if(!is.numeric(item)) item <- ind[inames == item]
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
-                             CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot, ...)
+                             CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot, 
+                             theta_lim=theta_lim, ...)
     if(is.null(ret)) return(invisible(ret))
     else return(ret)
 }

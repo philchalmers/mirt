@@ -6,7 +6,7 @@
     CE = FALSE, CEalpha = 0.05, CEdraws = 1000,
     drop.zeros = FALSE,
     rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-    shiny = FALSE, ...)
+    theta_lim = c(-4, 4), shiny = FALSE, ...)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -48,6 +48,10 @@
   Useful in objects returned from \code{\link{bfactor}} or
   other confirmatory models that contain several zero
   slopes}
+
+  \item{theta_lim}{lower and upper limits of the latent
+  trait (theta) to be evaluated, and is used in conjunction
+  with \code{npts}}
 
   \item{shiny}{logical; run interactive display for item
   plots using the \code{shiny} interface.  This primarily
