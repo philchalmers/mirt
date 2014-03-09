@@ -6,16 +6,16 @@
 \alias{show,MultipleGroupClass-method}
 \alias{show-method}
 \title{Show model object}
+\usage{
+\S4method{show}{ExploratoryClass}(object)
+}
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass}, \code{MultipleGroupClass}, or
   \code{MixedClass}}
 }
 \description{
-  \code{show(object)}
-}
-\details{
-  Print model object summaries to the console.
+Print model object summaries to the console.
 }
 \examples{
 \dontrun{

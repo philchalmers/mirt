@@ -2,10 +2,9 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-  itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150,
-    mincell = 1, S_X2.tables = FALSE,
-    empirical.plot = NULL, empirical.CI = 0,
-    method = "EAP", Theta = NULL, ...)
+itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1,
+  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
+  method = "EAP", Theta = NULL, ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -56,13 +55,12 @@
   \code{fscores()}}
 }
 \description{
-  \code{itemfit} calculates the Zh values from Drasgow,
-  Levine and Williams (1985), \eqn{\chi^2} values for
-  unidimensional models, and S-X2 statistics for
-  unidimensional models (Kang & Chen, 2007; Orlando &
-  Thissen, 2000). For Rasch, partial credit, and rating
-  scale models infit and outfit statistics are also
-  produced.
+\code{itemfit} calculates the Zh values from Drasgow,
+Levine and Williams (1985), \eqn{\chi^2} values for
+unidimensional models, and S-X2 statistics for
+unidimensional models (Kang & Chen, 2007; Orlando &
+Thissen, 2000). For Rasch, partial credit, and rating scale
+models infit and outfit statistics are also produced.
 }
 \examples{
 \dontrun{
@@ -110,28 +108,28 @@ tables$E[[1]]
   }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
-  Drasgow, F., Levine, M. V., & Williams, E. A. (1985).
-  Appropriateness measurement with polychotomous item
-  response models and standardized indices. \emph{Journal
-  of Mathematical and Statistical Psychology, 38}, 67-86.
+Drasgow, F., Levine, M. V., & Williams, E. A. (1985).
+Appropriateness measurement with polychotomous item
+response models and standardized indices. \emph{Journal of
+Mathematical and Statistical Psychology, 38}, 67-86.
 
-  Kang, T. & Chen, Troy, T. (2007). An investigation of the
-  performance of the generalized S-X2 item-fit index for
-  polytomous IRT models. ACT
+Kang, T. & Chen, Troy, T. (2007). An investigation of the
+performance of the generalized S-X2 item-fit index for
+polytomous IRT models. ACT
 
-  Orlando, M. & Thissen, D. (2000). Likelihood-based item
-  fit indices for dichotomous item response theory models.
-  \emph{Applied Psychological Measurement, 24}, 50-64.
+Orlando, M. & Thissen, D. (2000). Likelihood-based item fit
+indices for dichotomous item response theory models.
+\emph{Applied Psychological Measurement, 24}, 50-64.
 
-  Reise, S. P. (1990). A comparison of item- and person-fit
-  methods of assessing model-data fit in IRT. \emph{Applied
-  Psychological Measurement, 14}, 127-137.
+Reise, S. P. (1990). A comparison of item- and person-fit
+methods of assessing model-data fit in IRT. \emph{Applied
+Psychological Measurement, 14}, 127-137.
 }
 \seealso{
-  \code{\link{personfit}}
+\code{\link{personfit}}
 }
 \keyword{fit}
 \keyword{item}

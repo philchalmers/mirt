@@ -1,10 +1,11 @@
+\docType{class}
 \name{ConfirmatoryClass-class}
 \alias{ConfirmatoryClass-class}
 \title{Class "ConfirmatoryClass"}
 \description{
-  Defines the object returned from \code{\link{bfactor}}
-  and \code{\link{mirt}} when the estimated model is
-  confirmatory.
+Defines the object returned from \code{\link{bfactor}} and
+\code{\link{mirt}} when the estimated model is
+confirmatory.
 }
 \section{Slots}{
   \describe{ \item{\code{iter}:}{Object of class
@@ -87,7 +88,7 @@
   "ConfirmatoryClass")} } }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
 

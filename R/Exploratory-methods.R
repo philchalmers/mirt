@@ -1,7 +1,5 @@
 #' Print the model objects
 #'
-#' \code{print(x)}
-#'
 #' Print model object summaries to the console.
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -53,8 +51,6 @@ setMethod(
 
 #' Show model object
 #'
-#' \code{show(object)}
-#'
 #' Print model object summaries to the console.
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -80,8 +76,6 @@ setMethod(
 )
 
 #' Summary of model object
-#'
-#' \code{summary(object, rotate = '', Target = NULL, suppress = 0, digits = 3, verbose = TRUE, ...)}
 #'
 #' Transforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
 #' the fixed and random coefficients are printed.
@@ -172,8 +166,7 @@ setMethod(
 
 #' Extract raw coefs from model object
 #'
-#' \code{coef(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3,
-#'    IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...)}
+#' Return a list (or data.frame) of raw item and group level coefficients.
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -297,7 +290,7 @@ setMethod(
 
 #' Compare nested models
 #'
-#' \code{anova(object, object2, verbose = TRUE)}
+#' Compare nested models using likelihood ratio, AIC, BIC, etc.
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -348,8 +341,7 @@ setMethod(
 
 #' Compute model residuals
 #'
-#' \code{residuals(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
-#'                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)}
+#' Return model implied residuals for linear dependencies between items or at the person level.
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}. Bifactor models are automatically detected and utilized for
@@ -539,11 +531,7 @@ setMethod(
 
 #' Plot various test implied functions from models
 #'
-#' \code{plot(x, y, type = 'info', npts = 50, theta_angle = 45, theta_lim = c(-4,4),
-#'                           which.items = 1:ncol(x@@data),
-#'                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-#'                           facet_items = TRUE, auto.key = TRUE, main = NULL,
-#'                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)}
+#' Plot various test implied response functions from models estimated in the mirt package.
 #'
 #' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
 #'   \code{MultipleGroupClass}
@@ -580,7 +568,7 @@ setMethod(
 #'
 #' @name plot-method
 #' @aliases plot,ExploratoryClass-method plot,ConfirmatoryClass-method
-#'   plot,MultipleGroupClass-method
+#'   plot,MultipleGroupClass-method plot,ExploratoryClass,missing-method
 #' @docType methods
 #' @rdname plot-method
 #' @examples

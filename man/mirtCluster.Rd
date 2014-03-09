@@ -2,7 +2,7 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-  mirtCluster(ncores, remove = FALSE)
+mirtCluster(ncores, remove = FALSE)
 }
 \arguments{
   \item{ncores}{number of cores to be used in the returned
@@ -14,15 +14,14 @@
   \code{mirtCluster()}?}
 }
 \description{
-  This function defines a object that is placed in a
-  relevant internal environment defined in mirt. Internal
-  functions such as \code{calcLogLik}, \code{fscores}, etc,
-  will utilize this object automatically to capitalize on
-  parallel processing architecture. The object defined is a
-  call from \code{parallel::makeCluster()}. Note that if
-  you are defining other parallel objects (for simulation
-  desings, for example) it is not recommended to define a
-  mirtCluster.
+This function defines a object that is placed in a relevant
+internal environment defined in mirt. Internal functions
+such as \code{calcLogLik}, \code{fscores}, etc, will
+utilize this object automatically to capitalize on parallel
+processing architecture. The object defined is a call from
+\code{parallel::makeCluster()}. Note that if you are
+defining other parallel objects (for simulation desings,
+for example) it is not recommended to define a mirtCluster.
 }
 \examples{
 \dontrun{
@@ -39,7 +38,7 @@ mirtCluster()
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{parallel}
 

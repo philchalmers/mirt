@@ -2,7 +2,7 @@
 \alias{extract.item}
 \title{Extract an item object from mirt objects}
 \usage{
-  extract.item(x, item, group = NULL, drop.zeros = FALSE)
+extract.item(x, item, group = NULL, drop.zeros = FALSE)
 }
 \arguments{
   \item{x}{mirt model of class 'ExploratoryClass',
@@ -22,8 +22,7 @@
   slopes}
 }
 \description{
-  Extract the internal mirt objects from any estimated
-  model.
+Extract the internal mirt objects from any estimated model.
 }
 \examples{
 \dontrun{

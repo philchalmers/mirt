@@ -2,7 +2,7 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-  personfit(x, method = "EAP", Theta = NULL, ...)
+personfit(x, method = "EAP", Theta = NULL, ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -21,13 +21,13 @@
   \code{fscores()}}
 }
 \description{
-  \code{personfit} calculates the Zh values from Drasgow,
-  Levine and Williams (1985) for unidimensional and
-  multidimensional models. For Rasch models infit and
-  outfit statistics are also produced. The returned object
-  is a \code{data.frame} consisting either of the tabulated
-  data or full data with the statistics appended to the
-  rightmost columns.
+\code{personfit} calculates the Zh values from Drasgow,
+Levine and Williams (1985) for unidimensional and
+multidimensional models. For Rasch models infit and outfit
+statistics are also produced. The returned object is a
+\code{data.frame} consisting either of the tabulated data
+or full data with the statistics appended to the rightmost
+columns.
 }
 \examples{
 \dontrun{
@@ -50,20 +50,20 @@ personfit(x, Theta=Theta)
   }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
-  Drasgow, F., Levine, M. V., & Williams, E. A. (1985).
-  Appropriateness measurement with polychotomous item
-  response models and standardized indices. \emph{Journal
-  of Mathematical and Statistical Psychology, 38}, 67-86.
+Drasgow, F., Levine, M. V., & Williams, E. A. (1985).
+Appropriateness measurement with polychotomous item
+response models and standardized indices. \emph{Journal of
+Mathematical and Statistical Psychology, 38}, 67-86.
 
-  Reise, S. P. (1990). A comparison of item- and person-fit
-  methods of assessing model-data fit in IRT. \emph{Applied
-  Psychological Measurement, 14}, 127-137.
+Reise, S. P. (1990). A comparison of item- and person-fit
+methods of assessing model-data fit in IRT. \emph{Applied
+Psychological Measurement, 14}, 127-137.
 }
 \seealso{
-  \code{\link{itemfit}}
+\code{\link{itemfit}}
 }
 \keyword{fit}
 \keyword{person}

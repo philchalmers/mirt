@@ -6,16 +6,16 @@
 \alias{print,MultipleGroupClass-method}
 \alias{print-method}
 \title{Print the model objects}
+\usage{
+\S4method{print}{ExploratoryClass}(x)
+}
 \arguments{
   \item{x}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass}, \code{MultipleGroupClass}, or
   \code{MixedClass}}
 }
 \description{
-  \code{print(x)}
-}
-\details{
-  Print model object summaries to the console.
+Print model object summaries to the console.
 }
 \examples{
 \dontrun{

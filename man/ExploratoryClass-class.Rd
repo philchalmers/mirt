@@ -1,9 +1,10 @@
+\docType{class}
 \name{ExploratoryClass-class}
 \alias{ExploratoryClass-class}
 \title{Class "ExploratoryClass"}
 \description{
-  Defines the object returned from \code{\link{mirt}} when
-  model is exploratory.
+Defines the object returned from \code{\link{mirt}} when
+model is exploratory.
 }
 \section{Slots}{
   \describe{ \item{\code{iter}:}{Object of class
@@ -80,7 +81,7 @@
   "ExploratoryClass")}} }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
 

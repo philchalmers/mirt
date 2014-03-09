@@ -2,7 +2,7 @@
 \alias{probtrace}
 \title{Function to calculate probability trace lines}
 \usage{
-  probtrace(x, Theta)
+probtrace(x, Theta)
 }
 \arguments{
   \item{x}{an extracted internal mirt object containing
@@ -12,9 +12,9 @@
   (unidimensional/multidimensional) of latent trait values}
 }
 \description{
-  Given an internal mirt object extracted from an estimated
-  model compute the probability trace lines for all
-  categories.
+Given an internal mirt object extracted from an estimated
+model compute the probability trace lines for all
+categories.
 }
 \examples{
 \dontrun{
@@ -28,7 +28,7 @@ head(data.frame(traceline, Theta=Theta))
 }
 }
 \seealso{
-  \code{\link{extract.item}}
+\code{\link{extract.item}}
 }
 \keyword{tracelines}
 

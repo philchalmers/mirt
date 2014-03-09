@@ -2,10 +2,9 @@
 \alias{DIF}
 \title{Differential item functioning tests}
 \usage{
-  DIF(MGmodel, which.par, scheme = "add",
-    items2test = 1:ncol(MGmodel@data), seq_stat = "SABIC",
-    Wald = FALSE, p.adjust = "none", max_run = Inf,
-    plotdif = FALSE, type = "trace", verbose = TRUE, ...)
+DIF(MGmodel, which.par, scheme = "add", items2test = 1:ncol(MGmodel@data),
+  seq_stat = "SABIC", Wald = FALSE, p.adjust = "none", max_run = Inf,
+  plotdif = FALSE, type = "trace", verbose = TRUE, ...)
 }
 \arguments{
   \item{MGmodel}{an object returned from
@@ -92,14 +91,14 @@
   \code{\link{multipleGroup}} and \code{plot}}
 }
 \description{
-  This function runs the Wald and likelihood-ratio
-  approaches for testing differential item functioning
-  (DIF). This is primarily a convenience wrapper to the
-  \code{\link{multipleGroup}} function for performing
-  standard DIF procedures. Models can be estimated in
-  parallel automatically by defining a parallel object with
-  \code{\link{mirtCluster}}, which will help to decrease
-  the runtime.
+This function runs the Wald and likelihood-ratio approaches
+for testing differential item functioning (DIF). This is
+primarily a convenience wrapper to the
+\code{\link{multipleGroup}} function for performing
+standard DIF procedures. Models can be estimated in
+parallel automatically by defining a parallel object with
+\code{\link{mirtCluster}}, which will help to decrease the
+runtime.
 }
 \examples{
 \dontrun{
@@ -170,7 +169,7 @@ stepdown
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{DIF}
 

@@ -6,6 +6,9 @@
 \alias{anova,MultipleGroupClass-method}
 \alias{anova-method}
 \title{Compare nested models}
+\usage{
+\S4method{anova}{ExploratoryClass}(object, object2, verbose = TRUE)
+}
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass}, \code{MultipleGroupClass}, or
@@ -18,7 +21,8 @@
   console?}
 }
 \description{
-  \code{anova(object, object2, verbose = TRUE)}
+Compare nested models using likelihood ratio, AIC, BIC,
+etc.
 }
 \examples{
 \dontrun{

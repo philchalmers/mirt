@@ -2,7 +2,7 @@
 \alias{boot.mirt}
 \title{Calculate bootstrapped standard errors for estimated models}
 \usage{
-  boot.mirt(x, R = 100, ...)
+boot.mirt(x, R = 100, ...)
 }
 \arguments{
   \item{x}{an estimated object from \code{mirt},
@@ -15,10 +15,10 @@
   \code{boot(...)}}
 }
 \description{
-  Given an internal mirt object estimate the bootstrapped
-  standard errors. It may be beneficial to run the
-  computations using multi-core architecture (e.g., the
-  \code{parallel} package).
+Given an internal mirt object estimate the bootstrapped
+standard errors. It may be beneficial to run the
+computations using multi-core architecture (e.g., the
+\code{parallel} package).
 }
 \examples{
 \dontrun{
@@ -38,7 +38,7 @@ booted
 }
 }
 \seealso{
-  \code{\link{PLCI.mirt}}
+\code{\link{PLCI.mirt}}
 }
 \keyword{bootstrapped}
 \keyword{errors}

@@ -2,8 +2,8 @@
 \alias{simdata}
 \title{Simulate response patterns}
 \usage{
-  simdata(a, d, N, itemtype, sigma = NULL, mu = NULL,
-    guess = 0, upper = 1, nominal = NULL, Theta = NULL)
+simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
+  upper = 1, nominal = NULL, Theta = NULL)
 }
 \arguments{
   \item{a}{a matrix of slope parameters. If slopes are to
@@ -64,13 +64,13 @@
   \code{ncol(Theta) == ncol(a)}}
 }
 \description{
-  Simulates response patterns for compensatory and
-  noncompensatory MIRT models from multivariate normally
-  distributed factor (\eqn{\theta}) scores, or from a user
-  input matrix of \eqn{\theta}'s.
+Simulates response patterns for compensatory and
+noncompensatory MIRT models from multivariate normally
+distributed factor (\eqn{\theta}) scores, or from a user
+input matrix of \eqn{\theta}'s.
 }
 \details{
-  Returns a data matrix simulated from the parameters.
+Returns a data matrix simulated from the parameters.
 }
 \examples{
 \dontrun{
@@ -205,11 +205,11 @@ dataset <- simdata(a,d,2000,items,nominal=nominal)
    }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
-  Reckase, M. D. (2009). \emph{Multidimensional Item
-  Response Theory}. New York: Springer.
+Reckase, M. D. (2009). \emph{Multidimensional Item Response
+Theory}. New York: Springer.
 }
 \keyword{data}
 

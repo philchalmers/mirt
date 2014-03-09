@@ -2,10 +2,9 @@
 \alias{mixedmirt}
 \title{Mixed effects modeling for MIRT models}
 \usage{
-  mixedmirt(data, covdata = NULL, model, fixed = ~1,
-    random = NULL, itemtype = "Rasch", itemdesign = NULL,
-    constrain = NULL, pars = NULL, return.design = FALSE,
-    SE = TRUE, draws = 5000, TOL = NULL, ...)
+mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
+  itemtype = "Rasch", itemdesign = NULL, constrain = NULL, pars = NULL,
+  return.design = FALSE, SE = TRUE, draws = 5000, TOL = NULL, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -82,45 +81,44 @@
   detail}
 }
 \description{
-  \code{mixedmirt} fits MIRT models using FIML estimation
-  to dichotomous and polytomous IRT models conditional on
-  fixed and random effect of person and item level
-  covariates. This can also be understood as 'explanatory
-  IRT' if only fixed effects are modeled, or
-  multilevel/mixed IRT if random and fixed effects are
-  included. The method uses the MH-RM algorithm
-  exclusively. Additionally, computation of the
-  log-likelihood can be sped up by using parallel
-  estimation via \code{\link{mirtCluster}}.
+\code{mixedmirt} fits MIRT models using FIML estimation to
+dichotomous and polytomous IRT models conditional on fixed
+and random effect of person and item level covariates. This
+can also be understood as 'explanatory IRT' if only fixed
+effects are modeled, or multilevel/mixed IRT if random and
+fixed effects are included. The method uses the MH-RM
+algorithm exclusively. Additionally, computation of the
+log-likelihood can be sped up by using parallel estimation
+via \code{\link{mirtCluster}}.
 }
 \details{
-  For dichotomous response models, \code{mixedmirt} follows
-  the general form
+For dichotomous response models, \code{mixedmirt} follows
+the general form
 
-  \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 +
-  exp(-1 * [\mathbf{\theta a} + \mathbf{X \beta} +
-  \mathbf{Z \gamma}])}}
+\deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-1
+* [\mathbf{\theta a} + \mathbf{X \beta} + \mathbf{Z
+\gamma}])}}
 
-  where X is a design matrix with associated \eqn{\beta}
-  fixed effect coefficients, and Z is a design matrix with
-  associated \eqn{\gamma} random effects. For simplicity
-  and easier interpretation, the unique item intercept
-  values typically found in \eqn{\mathbf{X \beta}} are
-  extracted and reassigned within mirt's 'intercept'
-  parameters (e.g., \code{'d'}).  To observe how the design
-  matrices are structured prior to reassignment and
-  estimation pass the argument \code{return.design = TRUE}.
+where X is a design matrix with associated \eqn{\beta}
+fixed effect coefficients, and Z is a design matrix with
+associated \eqn{\gamma} random effects. For simplicity and
+easier interpretation, the unique item intercept values
+typically found in \eqn{\mathbf{X \beta}} are extracted and
+reassigned within mirt's 'intercept' parameters (e.g.,
+\code{'d'}).  To observe how the design matrices are
+structured prior to reassignment and estimation pass the
+argument \code{return.design = TRUE}.
 
-  Polytomous IRT models follow a similar format except the
-  item intercepts are automatically estimated internally,
-  rendering the \code{items} argument in the fixed formula
-  redundant and therefore must be omitted from the
-  specification. If there are a mixture of dichotomous and
-  polytomous items the intercepts for the dichotomous
-  models are also estimated for consistency.
+Polytomous IRT models follow a similar format except the
+item intercepts are automatically estimated internally,
+rendering the \code{items} argument in the fixed formula
+redundant and therefore must be omitted from the
+specification. If there are a mixture of dichotomous and
+polytomous items the intercepts for the dichotomous models
+are also estimated for consistency.
 
-  To simulate maximum a posteriori estimates for the random
-  effects use the \code{\link{randef}} function.
+To simulate maximum a posteriori estimates for the random
+effects use the \code{\link{randef}} function.
 }
 \examples{
 \dontrun{
@@ -263,12 +261,12 @@ coef(mod3)
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-  \code{\link{anova-method}}, \code{\link{coef-method}},
-  \code{\link{summary-method}} \code{\link{randef}},
-  \code{\link{calcLogLik}}, \code{\link{mirtCluster}},
-  \code{\link{mirt}}
+\code{\link{anova-method}}, \code{\link{coef-method}},
+\code{\link{summary-method}} \code{\link{randef}},
+\code{\link{calcLogLik}}, \code{\link{mirtCluster}},
+\code{\link{mirt}}
 }
 

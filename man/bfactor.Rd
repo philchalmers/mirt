@@ -2,10 +2,8 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
-  bfactor(data, model,
-    model2 = mirt.model(paste0("G = 1-", ncol(data))),
-    SE = FALSE, SE.type = "crossprod", group = NULL,
-    verbose = TRUE, ...)
+bfactor(data, model, model2 = mirt.model(paste0("G = 1-", ncol(data))),
+  SE = FALSE, SE.type = "crossprod", group = NULL, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -47,34 +45,34 @@
   details}
 }
 \description{
-  \code{bfactor} fits a confirmatory maximum likelihood
-  two-tier/bifactor model to dichotomous and polytomous
-  data under the item response theory paradigm. The IRT
-  models are fit using a dimensional reduction EM algorithm
-  so that regardless of the number of specific factors
-  estimated the model only uses the number of factors in
-  the second-tier structure plus 1. For the bifactor model
-  the maximum number of dimensions is only 2 since the
-  second-tier only consists of a ubiquitous unidimensional
-  factor. See \code{\link{mirt}} for appropriate methods to
-  be used on the objects returned from the estimation.
+\code{bfactor} fits a confirmatory maximum likelihood
+two-tier/bifactor model to dichotomous and polytomous data
+under the item response theory paradigm. The IRT models are
+fit using a dimensional reduction EM algorithm so that
+regardless of the number of specific factors estimated the
+model only uses the number of factors in the second-tier
+structure plus 1. For the bifactor model the maximum number
+of dimensions is only 2 since the second-tier only consists
+of a ubiquitous unidimensional factor. See
+\code{\link{mirt}} for appropriate methods to be used on
+the objects returned from the estimation.
 }
 \details{
-  \code{bfactor} follows the item factor analysis strategy
-  explicated by Gibbons and Hedeker (1992), Gibbons et al.
-  (2007), and Cai (2010). Nested models may be compared via
-  an approximate chi-squared difference test or by a
-  reduction in AIC or BIC (accessible via
-  \code{\link{anova}}). See \code{\link{mirt}} for more
-  details regarding the IRT estimation approach used in
-  this package. The default is to use 21 quadrature for
-  each dimensions, but this can be over-written by passing
-  a \code{quadpts = #} argument.
+\code{bfactor} follows the item factor analysis strategy
+explicated by Gibbons and Hedeker (1992), Gibbons et al.
+(2007), and Cai (2010). Nested models may be compared via
+an approximate chi-squared difference test or by a
+reduction in AIC or BIC (accessible via
+\code{\link{anova}}). See \code{\link{mirt}} for more
+details regarding the IRT estimation approach used in this
+package. The default is to use 21 quadrature for each
+dimensions, but this can be over-written by passing a
+\code{quadpts = #} argument.
 
-  Note: for multiple group two-tier analyses only the
-  second-tier means and variances should be freed since the
-  specific factors are not treated independently due to the
-  dimension reduction technique.
+Note: for multiple group two-tier analyses only the
+second-tier means and variances should be freed since the
+specific factors are not treated independently due to the
+dimension reduction technique.
 }
 \examples{
 \dontrun{
@@ -194,43 +192,41 @@ summary(simmod)
     }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
-  Cai, L. (2010). A two-tier full-information item factor
-  analysis model with applications. \emph{Psychometrika,
-  75}, 581-612.
+Cai, L. (2010). A two-tier full-information item factor
+analysis model with applications. \emph{Psychometrika, 75},
+581-612.
 
-  Chalmers, R., P. (2012). mirt: A Multidimensional Item
-  Response Theory Package for the R Environment.
-  \emph{Journal of Statistical Software, 48}(6), 1-29.
+Chalmers, R., P. (2012). mirt: A Multidimensional Item
+Response Theory Package for the R Environment.
+\emph{Journal of Statistical Software, 48}(6), 1-29.
 
-  Gibbons, R. D., & Hedeker, D. R. (1992). Full-information
-  Item Bi-Factor Analysis. \emph{Psychometrika, 57},
-  423-436.
+Gibbons, R. D., & Hedeker, D. R. (1992). Full-information
+Item Bi-Factor Analysis. \emph{Psychometrika, 57}, 423-436.
 
-  Gibbons, R. D., Darrell, R. B., Hedeker, D., Weiss, D.
-  J., Segawa, E., Bhaumik, D. K., Kupfer, D. J., Frank, E.,
-  Grochocinski, V. J., & Stover, A. (2007).
-  Full-Information item bifactor analysis of graded
-  response data. \emph{Applied Psychological Measurement,
-  31}, 4-19
+Gibbons, R. D., Darrell, R. B., Hedeker, D., Weiss, D. J.,
+Segawa, E., Bhaumik, D. K., Kupfer, D. J., Frank, E.,
+Grochocinski, V. J., & Stover, A. (2007). Full-Information
+item bifactor analysis of graded response data.
+\emph{Applied Psychological Measurement, 31}, 4-19
 }
 \seealso{
-  \code{\link{anova-method}}, \code{\link{coef-method}},
-  \code{\link{summary-method}},
-  \code{\link{residuals-method}},
-  \code{\link{plot-method}}, \code{\link{expand.table}},
-  \code{\link{key2binary}}, \code{\link{mirt.model}},
-  \code{\link{mirt}}, \code{\link{bfactor}},
-  \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-  \code{\link{wald}}, \code{\link{itemplot}},
-  \code{\link{fscores}}, \code{\link{M2}},
-  \code{\link{extract.item}}, \code{\link{iteminfo}},
-  \code{\link{testinfo}}, \code{\link{probtrace}},
-  \code{\link{boot.mirt}}, \code{\link{imputeMissing}},
-  \code{\link{itemfit}}, \code{\link{mod2values}},
-  \code{\link{simdata}}, \code{\link{createItem}}
+\code{\link{anova-method}}, \code{\link{coef-method}},
+\code{\link{summary-method}},
+\code{\link{residuals-method}}, \code{\link{plot-method}},
+\code{\link{expand.table}}, \code{\link{key2binary}},
+\code{\link{mirt.model}}, \code{\link{mirt}},
+\code{\link{bfactor}}, \code{\link{multipleGroup}},
+\code{\link{mixedmirt}}, \code{\link{wald}},
+\code{\link{itemplot}}, \code{\link{fscores}},
+\code{\link{M2}}, \code{\link{extract.item}},
+\code{\link{iteminfo}}, \code{\link{testinfo}},
+\code{\link{probtrace}}, \code{\link{boot.mirt}},
+\code{\link{imputeMissing}}, \code{\link{itemfit}},
+\code{\link{mod2values}}, \code{\link{simdata}},
+\code{\link{createItem}}
 }
 \keyword{models}
 

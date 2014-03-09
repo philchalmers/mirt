@@ -2,7 +2,7 @@
 \alias{key2binary}
 \title{Convert response patterns to binary data}
 \usage{
-  key2binary(fulldata, key)
+key2binary(fulldata, key)
 }
 \arguments{
   \item{fulldata}{an object of class \code{data.frame},
@@ -14,13 +14,12 @@
   \code{fulldata}}
 }
 \value{
-  Returns a numeric matrix with all the response patterns
-  in dichotomous format.
+Returns a numeric matrix with all the response patterns in
+dichotomous format.
 }
 \description{
-  The \code{key2binary} function will convert response
-  pattern data to a dichotomous format, given a response
-  key.
+The \code{key2binary} function will convert response
+pattern data to a dichotomous format, given a response key.
 }
 \examples{
 \dontrun{
@@ -32,6 +31,6 @@ dicho.SAT12 <- key2binary(SAT12,key)
     }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 

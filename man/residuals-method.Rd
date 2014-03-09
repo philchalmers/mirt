@@ -5,6 +5,11 @@
 \alias{residuals,MultipleGroupClass-method}
 \alias{residuals-method}
 \title{Compute model residuals}
+\usage{
+\S4method{residuals}{ExploratoryClass}(object, type = "LD", digits = 3,
+  df.p = FALSE, full.scores = FALSE, printvalue = NULL, tables = FALSE,
+  verbose = TRUE, Theta = NULL, ...)
+}
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass} or \code{MultipleGroupClass}.
@@ -49,9 +54,8 @@
   \code{fscores()}}
 }
 \description{
-  \code{residuals(object, type = 'LD', digits = 3, df.p =
-  FALSE, full.scores = FALSE, printvalue = NULL, tables =
-  FALSE, verbose = TRUE, Theta = NULL, ...)}
+Return model implied residuals for linear dependencies
+between items or at the person level.
 }
 \examples{
 \dontrun{
@@ -69,14 +73,13 @@ residuals(x, type = 'Q3', method = 'ML')
 }
 }
 \references{
-  Chen, W. H. & Thissen, D. (1997). Local dependence
-  indices for item pairs using item response theory.
-  \emph{Journal of Educational and Behavioral Statistics,
-  22}, 265-289.
+Chen, W. H. & Thissen, D. (1997). Local dependence indices
+for item pairs using item response theory. \emph{Journal of
+Educational and Behavioral Statistics, 22}, 265-289.
 
-  Yen, W. (1984). Effects of local item dependence on the
-  fit and equating performance of the three parameter
-  logistic model. \emph{Applied Psychological Measurement,
-  8}, 125-145.
+Yen, W. (1984). Effects of local item dependence on the fit
+and equating performance of the three parameter logistic
+model. \emph{Applied Psychological Measurement, 8},
+125-145.
 }
 

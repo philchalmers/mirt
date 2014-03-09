@@ -2,7 +2,7 @@
 \alias{imputeMissing}
 \title{Imputing plausible data for missing values}
 \usage{
-  imputeMissing(x, Theta)
+imputeMissing(x, Theta)
 }
 \arguments{
   \item{x}{an estimated model x from the mirt package}
@@ -11,10 +11,10 @@
   latent trait scores (e.g., via \code{\link{fscores}})}
 }
 \description{
-  Given an estimated model from any of mirt's model fitting
-  functions and an estimate of the latent trait, impute
-  plausible missing data values. Returns the original data
-  in a \code{data.frame} without any NA values.
+Given an estimated model from any of mirt's model fitting
+functions and an estimate of the latent trait, impute
+plausible missing data values. Returns the original data in
+a \code{data.frame} without any NA values.
 }
 \examples{
 \dontrun{
@@ -35,7 +35,7 @@ fulldata <- imputeMissing(mod, scores)
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{data}
 \keyword{impute}

@@ -2,7 +2,7 @@
 \alias{expand.table}
 \title{Expand summary table of patterns and frequencies}
 \usage{
-  expand.table(tabdata)
+expand.table(tabdata)
 }
 \arguments{
   \item{tabdata}{An object of class \code{data.frame},
@@ -11,13 +11,13 @@
   column.}
 }
 \value{
-  Returns a numeric matrix with all the response patterns.
+Returns a numeric matrix with all the response patterns.
 }
 \description{
-  The \code{expand.table} function expands a summary table
-  of unique response patterns to a full sized data-set. The
-  response frequencies must be on the rightmost column of
-  the input data.
+The \code{expand.table} function expands a summary table of
+unique response patterns to a full sized data-set. The
+response frequencies must be on the rightmost column of the
+input data.
 }
 \examples{
 \dontrun{
@@ -26,7 +26,7 @@ LSAT7full <- expand.table(LSAT7)
    }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{data}
 

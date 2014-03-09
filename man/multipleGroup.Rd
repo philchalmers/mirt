@@ -2,15 +2,12 @@
 \alias{multipleGroup}
 \title{Multiple Group Estimation}
 \usage{
-  multipleGroup(data, model, group, itemtype = NULL,
-    guess = 0, upper = 1, SE = FALSE, SE.type = "SEM",
-    invariance = "", pars = NULL, method = "EM",
-    constrain = NULL, parprior = NULL, calcNull = TRUE,
-    draws = 5000, quadpts = NULL, TOL = NULL,
-    grsm.block = NULL, rsm.block = NULL, key = NULL,
-    technical = list(), accelerate = TRUE,
-    empiricalhist = FALSE, GenRandomPars = FALSE,
-    verbose = TRUE, ...)
+multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,
+  SE = FALSE, SE.type = "SEM", invariance = "", pars = NULL,
+  method = "EM", constrain = NULL, parprior = NULL, calcNull = TRUE,
+  draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL,
+  rsm.block = NULL, key = NULL, technical = list(), accelerate = TRUE,
+  empiricalhist = FALSE, GenRandomPars = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{data}{a \code{matrix} or \code{data.frame} that
@@ -118,28 +115,27 @@
   can be adjusted. See \code{\link{mirt}} for details}
 }
 \description{
-  \code{multipleGroup} performs a full-information
-  maximum-likelihood multiple group analysis for
-  dichotomous and polytomous data under the item response
-  theory paradigm using either Cai's (2010)
-  Metropolis-Hastings Robbins-Monro (MHRM) algorithm or
-  with an EM algorithm approach. This function may be used
-  for detecting differential item functioning (DIF),
-  thought the \code{\link{DIF}} function may provide a more
-  convenient approach.
+\code{multipleGroup} performs a full-information
+maximum-likelihood multiple group analysis for dichotomous
+and polytomous data under the item response theory paradigm
+using either Cai's (2010) Metropolis-Hastings Robbins-Monro
+(MHRM) algorithm or with an EM algorithm approach. This
+function may be used for detecting differential item
+functioning (DIF), thought the \code{\link{DIF}} function
+may provide a more convenient approach.
 }
 \details{
-  By default the estimation in \code{multipleGroup} assumes
-  that the models are maximally independent, and therefore
-  could initially be performed by sub-setting the data and
-  running identical models with \code{mirt} and aggregating
-  the results (e.g., log-likelihood). However, constrains
-  may be imposed across groups by invoking various
-  \code{invariance} keywords and \code{constrain = ...}
-  arguments, by inputting user specified design matrix from
-  \code{mod2values} or from passing \code{pars = 'values'},
-  or by supplying a \code{constrain} list for user defined
-  equality constraints between parameters.
+By default the estimation in \code{multipleGroup} assumes
+that the models are maximally independent, and therefore
+could initially be performed by sub-setting the data and
+running identical models with \code{mirt} and aggregating
+the results (e.g., log-likelihood). However, constrains may
+be imposed across groups by invoking various
+\code{invariance} keywords and \code{constrain = ...}
+arguments, by inputting user specified design matrix from
+\code{mod2values} or from passing \code{pars = 'values'},
+or by supplying a \code{constrain} list for user defined
+equality constraints between parameters.
 }
 \examples{
 \dontrun{
@@ -323,24 +319,24 @@ anova(EH, EH1)
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-  \code{\link{anova-method}}, \code{\link{coef-method}},
-  \code{\link{summary-method}},
-  \code{\link{residuals-method}},
-  \code{\link{plot-method}}, \code{\link{expand.table}},
-  \code{\link{key2binary}}, \code{\link{mirt.model}},
-  \code{\link{mirt}}, \code{\link{bfactor}},
-  \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-  \code{\link{wald}}, \code{\link{itemplot}},
-  \code{\link{fscores}}, \code{\link{M2}},
-  \code{\link{extract.item}}, \code{\link{iteminfo}},
-  \code{\link{testinfo}}, \code{\link{probtrace}},
-  \code{\link{boot.mirt}}, \code{\link{imputeMissing}},
-  \code{\link{itemfit}}, \code{\link{mod2values}},
-  \code{\link{simdata}}, \code{\link{createItem}},
-  \code{\link{mirtCluster}}, \code{\link{DIF}}
+\code{\link{anova-method}}, \code{\link{coef-method}},
+\code{\link{summary-method}},
+\code{\link{residuals-method}}, \code{\link{plot-method}},
+\code{\link{expand.table}}, \code{\link{key2binary}},
+\code{\link{mirt.model}}, \code{\link{mirt}},
+\code{\link{bfactor}}, \code{\link{multipleGroup}},
+\code{\link{mixedmirt}}, \code{\link{wald}},
+\code{\link{itemplot}}, \code{\link{fscores}},
+\code{\link{M2}}, \code{\link{extract.item}},
+\code{\link{iteminfo}}, \code{\link{testinfo}},
+\code{\link{probtrace}}, \code{\link{boot.mirt}},
+\code{\link{imputeMissing}}, \code{\link{itemfit}},
+\code{\link{mod2values}}, \code{\link{simdata}},
+\code{\link{createItem}}, \code{\link{mirtCluster}},
+\code{\link{DIF}}
 }
 \keyword{models}
 

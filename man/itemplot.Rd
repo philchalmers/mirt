@@ -2,11 +2,9 @@
 \alias{itemplot}
 \title{Displays item surface and information plots}
 \usage{
-  itemplot(object, item, type = "trace", degrees = 45,
-    CE = FALSE, CEalpha = 0.05, CEdraws = 1000,
-    drop.zeros = FALSE,
-    rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-    theta_lim = c(-4, 4), shiny = FALSE, ...)
+itemplot(object, item, type = "trace", degrees = 45, CE = FALSE,
+  CEalpha = 0.05, CEdraws = 1000, drop.zeros = FALSE, rot = list(xaxis =
+  -70, yaxis = 30, zaxis = 10), theta_lim = c(-4, 4), shiny = FALSE, ...)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -62,10 +60,9 @@
   \code{lattice} and \code{coef()}}
 }
 \description{
-  \code{itemplot} displays various item based IRT plots,
-  with special options for plotting items that contain
-  several 0 slope parameters. Supports up to three
-  dimensional models.
+\code{itemplot} displays various item based IRT plots, with
+special options for plotting items that contain several 0
+slope parameters. Supports up to three dimensional models.
 }
 \examples{
 \dontrun{
@@ -101,7 +98,7 @@ itemplot(shiny = TRUE)
     }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{plot}
 

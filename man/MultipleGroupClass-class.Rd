@@ -1,9 +1,10 @@
+\docType{class}
 \name{MultipleGroupClass-class}
 \alias{MultipleGroupClass-class}
 \title{Class "MultipleGroupClass"}
 \description{
-  Defines the object returned from
-  \code{\link{multipleGroup}}.
+Defines the object returned from
+\code{\link{multipleGroup}}.
 }
 \section{Slots}{
   \describe{ \item{\code{iter}:}{Object of class
@@ -88,7 +89,7 @@
   "MultipleGroupClass")} } }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
 

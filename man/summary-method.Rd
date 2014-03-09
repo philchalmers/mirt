@@ -6,6 +6,10 @@
 \alias{summary,MultipleGroupClass-method}
 \alias{summary-method}
 \title{Summary of model object}
+\usage{
+\S4method{summary}{ExploratoryClass}(object, rotate = "", Target = NULL,
+  suppress = 0, digits = 3, verbose = TRUE, ...)
+}
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass}, \code{MultipleGroupClass}, or
@@ -29,13 +33,9 @@
   \item{...}{additional arguments to be passed}
 }
 \description{
-  \code{summary(object, rotate = '', Target = NULL,
-  suppress = 0, digits = 3, verbose = TRUE, ...)}
-}
-\details{
-  Transforms coefficients into a standardized factor
-  loading's metric. For \code{MixedClass} objects, the
-  fixed and random coefficients are printed.
+Transforms coefficients into a standardized factor
+loading's metric. For \code{MixedClass} objects, the fixed
+and random coefficients are printed.
 }
 \examples{
 \dontrun{
@@ -45,6 +45,6 @@ summary(x, rotate = 'varimax')
 }
 }
 \seealso{
-  \code{\link{coef-method}}
+\code{\link{coef-method}}
 }
 

@@ -2,7 +2,7 @@
 \alias{read.mirt}
 \title{Translate mirt parameters for plink package}
 \usage{
-  read.mirt(x, as.irt.pars = TRUE, ...)
+read.mirt(x, as.irt.pars = TRUE, ...)
 }
 \arguments{
   \item{x}{an object returned from \code{mirt, bfactor}, or
@@ -15,8 +15,8 @@
   \code{coef()}}
 }
 \description{
-  This function exports item parameters from the
-  \code{mirt} package to the \code{plink} package.
+This function exports item parameters from the \code{mirt}
+package to the \code{plink} package.
 }
 \examples{
 \dontrun{
@@ -85,7 +85,7 @@ equate(out, method = 'OSE')
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{plink}
 

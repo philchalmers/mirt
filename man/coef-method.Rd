@@ -6,6 +6,11 @@
 \alias{coef,MultipleGroupClass-method}
 \alias{coef-method}
 \title{Extract raw coefs from model object}
+\usage{
+\S4method{coef}{ExploratoryClass}(object, CI = 0.95, printSE = FALSE,
+  rotate = "", Target = NULL, digits = 3, IRTpars = FALSE,
+  rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...)
+}
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
   \code{ConfirmatoryClass}, \code{MultipleGroupClass}, or
@@ -43,9 +48,8 @@
   \item{...}{additional arguments to be passed}
 }
 \description{
-  \code{coef(object, CI = .95, printSE = FALSE, rotate =
-  '', Target = NULL, digits = 3, IRTpars = FALSE, rawug =
-  FALSE, as.data.frame = FALSE, verbose = TRUE, ...)}
+Return a list (or data.frame) of raw item and group level
+coefficients.
 }
 \examples{
 \dontrun{
@@ -68,6 +72,6 @@ coef(x2, rotate = 'varimax')
 }
 }
 \seealso{
-  \code{\link{summary-method}}
+\code{\link{summary-method}}
 }
 

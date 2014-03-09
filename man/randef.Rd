@@ -2,7 +2,7 @@
 \alias{randef}
 \title{Compute random effects}
 \usage{
-  randef(x, ndraws = 1000, thin = 10)
+randef(x, ndraws = 1000, thin = 10)
 }
 \arguments{
   \item{x}{an estimated model object from the
@@ -15,10 +15,9 @@
   use every 10th draw}
 }
 \description{
-  Stochastically compute random effects for
-  \code{MixedClass} objects with Metropolis-Hastings
-  samplers and averaging over the draws. Returns a list of
-  the estimated effects.
+Stochastically compute random effects for \code{MixedClass}
+objects with Metropolis-Hastings samplers and averaging
+over the draws. Returns a list of the estimated effects.
 }
 \examples{
 \dontrun{
@@ -27,7 +26,7 @@ effects <- randef(mod1, ndraws = 2000, thin = 20)
 }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{effects}
 \keyword{random}

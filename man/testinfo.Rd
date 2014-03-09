@@ -2,7 +2,7 @@
 \alias{testinfo}
 \title{Function to calculate test information}
 \usage{
-  testinfo(x, Theta, degrees = NULL, group = NULL)
+testinfo(x, Theta, degrees = NULL, group = NULL)
 }
 \arguments{
   \item{x}{an estimated mirt object}
@@ -18,7 +18,7 @@
   objects only)}
 }
 \description{
-  Given an estimated model compute the test information.
+Given an estimated model compute the test information.
 }
 \examples{
 \dontrun{

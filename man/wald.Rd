@@ -3,9 +3,9 @@
 \alias{wald}
 \title{Wald test for mirt models}
 \usage{
-  wald(object, L, C = 0)
+wald(object, L, C = 0)
 
-  \method{print}{wald} (x, ...)
+\method{print}{wald}(x, ...)
 }
 \arguments{
   \item{L}{a coefficient matrix with dimensions nconstrasts
@@ -26,16 +26,16 @@
   \item{...}{additional arguments to be passed}
 }
 \description{
-  Compute a Wald test given an \code{L} vector or matrix of
-  numeric contrasts. Requires that the model information
-  matrix be computed (including \code{SE = TRUE} when using
-  the EM method). Use \code{wald(model)} to observe how the
-  information matrix columns are named, especially if the
-  estimated model contains constrained parameters (e.g.,
-  1PL). The information matrix names are labelled according
-  to which parameter number(s) they correspond to (to check
-  the numbering use \code{\link{mod2values}} on the
-  estimated object).
+Compute a Wald test given an \code{L} vector or matrix of
+numeric contrasts. Requires that the model information
+matrix be computed (including \code{SE = TRUE} when using
+the EM method). Use \code{wald(model)} to observe how the
+information matrix columns are named, especially if the
+estimated model contains constrained parameters (e.g.,
+1PL). The information matrix names are labelled according
+to which parameter number(s) they correspond to (to check
+the numbering use \code{\link{mod2values}} on the estimated
+object).
 }
 \examples{
 \dontrun{

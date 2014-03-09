@@ -1,8 +1,9 @@
+\docType{class}
 \name{MixedClass-class}
 \alias{MixedClass-class}
 \title{Class "MixedClass"}
 \description{
-  Defines the object returned from \code{\link{mixedmirt}}.
+Defines the object returned from \code{\link{mixedmirt}}.
 }
 \section{Slots}{
   \describe{ \item{\code{iter}:}{Object of class
@@ -78,7 +79,7 @@
   "MixedClass")} } }
 }
 \author{
-  Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
 
