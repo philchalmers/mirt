@@ -2,7 +2,8 @@
 #'
 #' Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
 #' or WLE (Warm, 1989) factor scores with a multivariate normal
-#' prior distribution. Will return either a table with the computed scores and standard errors,
+#' prior distribution using equally spaced quadrature. 
+#' Will return either a table with the computed scores and standard errors,
 #' the original data matrix with scores appended to the rightmost column, or the scores only. By
 #' default the latent means are set to be 0 for each factor, and the covariance matrix is set to the
 #' identity matrix, though these can be overwritten. Iterative estimation methods can be estimated
@@ -11,25 +12,28 @@
 #'
 #' @aliases fscores
 #' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-#' \code{MultipleGroupClass}
+#'   \code{MultipleGroupClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
-#' factor scores for each unique pattern is displayed. Otherwise the original
-#' data matrix is returned with the computed factor scores appended to the
-#' rightmost column
+#'   factor scores for each unique pattern is displayed. Otherwise the original
+#'   data matrix is returned with the computed factor scores appended to the
+#'   rightmost column
 #' @param rotate rotation declaration to be used when estimating the factor scores. If \code{""} then the
-#' \code{object@@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)
+#'   \code{object@@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)
 #' @param method type of factor score estimation method. Can be expected
-#' a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-#' (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores (\code{"EAPsum"})
-#' @param quadpts number of quadratures to use per dimension
+#'   a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
+#'   (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores (\code{"EAPsum"})
+#' @param quadpts number of quadratures to use per dimension. If not specified, the value will be determined
+#'   from the input model object, otherwise a suitable one will be created which decreases as the number of
+#'   dimensions increases (and therefore for estimates such as EAP, will be less accurate)
+#' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
 #' @param mean a vector for custom latent variable means. If NULL, the default for 'group' values from the
-#' computed mirt object will be used
+#'   computed mirt object will be used
 #' @param cov a custom matrix of the latent variable covariance matrix. If NULL, the default for 'group' values
-#' from the computed mirt object will be used
+#'   from the computed mirt object will be used
 #' @param response.pattern an optional argument used to calculate the factor scores and standard errors
-#' for a given response vector or matrix
+#'   for a given response vector or matrix
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
-#' estimates as a numeric values?
+#'   estimates as a numeric values?
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when \code{full.scores = TRUE})
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -52,9 +56,11 @@
 #'
 #' mod <- mirt(Science, 1)
 #' tabscores <- fscores(mod)
+#' head(tabscores)
 #' fullscores <- fscores(mod, full.scores = TRUE)
+#' head(fullscores)
 #' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
-#' scores <- fscores(mod, full.scores = TRUE, scores.only = TRUE)
+#' scores <- fscores(mod, full.scores = TRUE, scores.only = FALSE)
 #' head(scores)
 #'
 #' #calculate MAP for a given response vector
@@ -70,15 +76,15 @@
 #' mirtCluster()
 #' fscores(mod, method='WLE')
 #'
-#'   }
+#'}
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL, 
                     returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    scores.only = FALSE)
+                    scores.only = TRUE, theta_lim = c(-4,4))
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, 
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
-                            scores.only=scores.only)
+                            scores.only=scores.only, theta_lim=theta_lim)
     ret
 }

@@ -1,5 +1,9 @@
 # Changes in mirt 1.3
 
+## MAJOR CHANGES
+
+- scores.only option now set to `TRUE` in `fscores()`
+
 ## NEW FEATURES
 
 - `theta_lim` input to `plot()` and `itemplot()` for modifying range of latent values evaluated

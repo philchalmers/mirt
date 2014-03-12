@@ -247,6 +247,28 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% 'custom')
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% c('custom', 'rating', 'rsm', 'partcomp', 
                                                       'nestlogit'))
+    #warnings
+    wmsg <- 'Lower and upper bound parameters (g and u) should use \'norm\' (i.e., logit) prior'
+    for(g in 1L:length(pars)){
+        for(i in 1L:length(pars[[1L]])){
+            if(class(pars[[g]][[i]]) == 'dich'){
+                pt <- pars[[g]][[i]]@prior.type
+                if(!(pt[length(pt)-1L] %in% c(0L, 1L))) warning(wmsg)
+                if(!(pt[length(pt)] %in% c(0L, 1L))) warning(wmsg)
+                next
+            } else if(class(pars[[g]][[i]]) == 'partcomp'){
+                pt <- pars[[g]][[i]]@prior.type
+                if(!(pt[length(pt)-1L] %in% c(0L, 1L))) warning(wmsg)
+                if(!(pt[length(pt)] %in% c(0L, 1L))) warning(wmsg)
+                next
+            } else if(class(pars[[g]][[i]]) == 'nestlogit'){
+                pt <- pars[[g]][[i]]@prior.type
+                if(!(pt[nfact + 2L] %in% c(0L, 1L))) warning(wmsg)
+                if(!(pt[nfact + 3L] %in% c(0L, 1L))) warning(wmsg)
+                next
+            }
+        }
+    }
     opts$times$end.time.Data <- proc.time()[3L]
 
     #EM estimation
