@@ -4,7 +4,8 @@
 \usage{
 fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, returnER = FALSE,
-  mean = NULL, cov = NULL, verbose = TRUE, scores.only = FALSE)
+  mean = NULL, cov = NULL, verbose = TRUE, scores.only = TRUE,
+  theta_lim = c(-4, 4))
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -29,7 +30,14 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   expected a-posteriori for sum scores (\code{"EAPsum"})}
 
   \item{quadpts}{number of quadratures to use per
-  dimension}
+  dimension. If not specified, the value will be determined
+  from the input model object, otherwise a suitable one
+  will be created which decreases as the number of
+  dimensions increases (and therefore for estimates such as
+  EAP, will be less accurate)}
+
+  \item{theta_lim}{lower and upper range to evaluate latent
+  trait integral for each dimension}
 
   \item{mean}{a vector for custom latent variable means. If
   NULL, the default for 'group' values from the computed
@@ -55,25 +63,27 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
 \description{
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for
 sum-scores (Thissen et al., 1995), or WLE (Warm, 1989)
-factor scores with a multivariate normal prior
-distribution. Will return either a table with the computed
-scores and standard errors, the original data matrix with
-scores appended to the rightmost column, or the scores
-only. By default the latent means are set to be 0 for each
-factor, and the covariance matrix is set to the identity
-matrix, though these can be overwritten. Iterative
-estimation methods can be estimated in parallel to decrease
-estimation times if a \code{\link{mirtCluster}} object is
-available.
+factor scores with a multivariate normal prior distribution
+using equally spaced quadrature. Will return either a table
+with the computed scores and standard errors, the original
+data matrix with scores appended to the rightmost column,
+or the scores only. By default the latent means are set to
+be 0 for each factor, and the covariance matrix is set to
+the identity matrix, though these can be overwritten.
+Iterative estimation methods can be estimated in parallel
+to decrease estimation times if a \code{\link{mirtCluster}}
+object is available.
 }
 \examples{
 \dontrun{
 
 mod <- mirt(Science, 1)
 tabscores <- fscores(mod)
+head(tabscores)
 fullscores <- fscores(mod, full.scores = TRUE)
+head(fullscores)
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
-scores <- fscores(mod, full.scores = TRUE, scores.only = TRUE)
+scores <- fscores(mod, full.scores = TRUE, scores.only = FALSE)
 head(scores)
 
 #calculate MAP for a given response vector
@@ -89,7 +99,7 @@ fscores(mod, method='ML')
 mirtCluster()
 fscores(mod, method='WLE')
 
-  }
+}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
