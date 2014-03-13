@@ -296,7 +296,7 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
             if(x[[i]]@any.prior)
                 LL <- LL.Priors(x=x[[i]], LL=LL)
     }
-    return(LL)
+    return(ifelse(is.finite(LL), LL, -1e10))
 }
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,

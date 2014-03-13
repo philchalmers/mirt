@@ -59,33 +59,41 @@ void P_graded(vector<double> &P, const vector<double> &par,
         for(int i = nfact; i < parsize; ++i)
             d[i - nfact] = par[i];
     }
-    const double nullzero = 0.0, nullone = 1.0;
-    NumericMatrix Pk(N, nint + 2);
-
-    for(int i = 0; i < N; ++i)
-        Pk(i,0) = 1.0;
-    for(int i = 0; i < nint; ++i){
-        vector<double> tmp1(N), tmp2(N);
-        itemTrace(tmp1, tmp2, a, &d[i], Theta, &nullzero, &nullone, ot);
-        for(int j = 0; j < N; ++j)
-            Pk(j,i+1) = tmp2[j];
-    }
-    if(itemexp){
-        int which = N * (nint + 1) - 1;
-        for(int i = (Pk.ncol()-2); i >= 0; --i){
-            for(int j = (N-1); j >= 0; --j){
-                P[which] = Pk(j,i) - Pk(j,i+1);
-                if(P[which] < 1e-20) P[which] = 1e-20;
-                else if((1.0 - P[which]) < 1e-20) P[which] = 1.0 - 1e-20;
-                --which;
-            }
+    int notordered = 0;
+    for(int i = 1; i < nint; ++i)
+        notordered += d[i-1] <= d[i]; 
+    if(notordered){
+        for(int i = 0; i < P.size(); ++i)
+            P[i] = 0.0;
+    } else {        
+        const double nullzero = 0.0, nullone = 1.0;
+        NumericMatrix Pk(N, nint + 2);
+    
+        for(int i = 0; i < N; ++i)
+            Pk(i,0) = 1.0;
+        for(int i = 0; i < nint; ++i){
+            vector<double> tmp1(N), tmp2(N);
+            itemTrace(tmp1, tmp2, a, &d[i], Theta, &nullzero, &nullone, ot);
+            for(int j = 0; j < N; ++j)
+                Pk(j,i+1) = tmp2[j];
         }
-    } else {
-        int which = 0;
-        for(int i = 0; i < Pk.ncol(); ++i){
-            for(int j = 0; j < Pk.nrow(); ++j){
-                P[which] = Pk(j,i);
-                ++which;
+        if(itemexp){
+            int which = N * (nint + 1) - 1;
+            for(int i = (Pk.ncol()-2); i >= 0; --i){
+                for(int j = (N-1); j >= 0; --j){
+                    P[which] = Pk(j,i) - Pk(j,i+1);
+                    if(P[which] < 1e-20) P[which] = 1e-20;
+                    else if((1.0 - P[which]) < 1e-20) P[which] = 1.0 - 1e-20;
+                    --which;
+                }
+            }
+        } else {
+            int which = 0;
+            for(int i = 0; i < Pk.ncol(); ++i){
+                for(int j = 0; j < Pk.nrow(); ++j){
+                    P[which] = Pk(j,i);
+                    ++which;
+                }
             }
         }
     }
