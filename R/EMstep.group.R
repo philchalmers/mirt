@@ -52,7 +52,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
              paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!')
     }
-    prior <- rlist <- r <- list()
+    prior <- rlist <- r <- Priorbetween <- vector('list', ngroups)
     #make sure constrained pars are equal
     tmp <- L
     tmp2 <- diag(tmp)
@@ -93,6 +93,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         for(g in 1L:ngroups){
             prior[[g]] <- dnorm(theta, 0, 1)
             prior[[g]] <- prior[[g]]/sum(prior[[g]])
+            tmp <- thetaComb(prior[[g]], ncol(Thetabetween))
+            Priorbetween[[g]] <- apply(tmp, 1, prod)
         }
     }
     gTheta <- vector('list', ngroups)
@@ -112,7 +114,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
-        Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+        Prior <- tmp$Prior
         #Estep
         LL <- 0
         for(g in 1L:ngroups){

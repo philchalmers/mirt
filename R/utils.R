@@ -261,23 +261,19 @@ bfactor2mod <- function(model, J){
 
 updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, 
                         BFACTOR, sitems, cycles, rlist, prior){
-    gstructgrouppars <- Prior <- Priorbetween <- vector('list', ngroups)
+    Prior <- vector('list', ngroups)
     if(list$EH){
         Prior[[1L]] <- list$EHPrior[[1L]]
     } else {
         for(g in 1L:ngroups){
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+            gp <- ExtractGroupPars(pars[[g]][[J+1L]])
             if(BFACTOR){
-                sel <- 1L:(nfact-ncol(sitems))
-                Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
-                                                      gstructgrouppars[[g]]$gmeans[sel],
-                                                      gstructgrouppars[[g]]$gcov[sel,sel,drop=FALSE])
-                Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
-                Prior[[g]] <- apply(expand.grid(Priorbetween[[g]], prior[[g]]), 1, prod)
+                sel <- 1L:(nfact-ncol(sitems) + 1L)
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,sel])
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,1L:nfact,drop=FALSE],gstructgrouppars[[g]]$gmeans,
-                                           gstructgrouppars[[g]]$gcov)
+            Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
     }
@@ -295,7 +291,7 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
         for(g in 1L:ngroups)
             Prior[[g]] <- list$customPriorFun(Theta)
     }
-    return(list(Prior=Prior, Priorbetween=Priorbetween))
+    return(list(Prior=Prior))
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,

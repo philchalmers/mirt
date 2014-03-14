@@ -83,7 +83,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     NCYCLES <- ESTIMATE$cycles
     if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history')
     BFACTOR <- list$BFACTOR
-    prior <- rlist <- vector('list', ngroups)
+    prior <- rlist <- Priorbetween <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars
     redun_constr <- ESTIMATE$redun_constr
     EMhistory <- ESTIMATE$EMhistory
@@ -106,6 +106,8 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         for(g in 1L:ngroups){
             prior[[g]] <- dnorm(theta, 0, 1)
             prior[[g]] <- prior[[g]]/sum(prior[[g]])
+            tmp <- thetaComb(prior[[g]], ncol(Thetabetween))
+            Priorbetween[[g]] <- apply(tmp, 1, prod)
         }
     }
     gTheta <- vector('list', ngroups)
@@ -128,7 +130,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
-        Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+        Prior <- tmp$Prior
         #Estep
         for(g in 1L:ngroups){
             if(BFACTOR){
@@ -237,7 +239,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Prior <- ESTIMATE$Prior
     prior <- ESTIMATE$prior
     Priorbetween <- ESTIMATE$Priorbetween
-    isbifactor <- length(prior) > 0L
+    isbifactor <- length(Priorbetween[[1L]]) > 0L
     if(!isbifactor){
         prior <- Priorbetween <- list(matrix(0))
     }

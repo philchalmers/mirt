@@ -387,6 +387,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             from <- max(min(which(collectLL >= .9)) + 1L, 10L)
             to <- min(which(collectLL >= (1 - opts$SEtol/10))) + 1L
             dontrun <- FALSE
+            if(from == 10L && to < from) from <- 1L
             if(to <= from){
                 dontrun <- TRUE
                 warning('Too few EM interations to compute S-EM information matrix. Information matrix

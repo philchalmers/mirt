@@ -452,8 +452,10 @@ setMethod(
             siglong <- x@par[-(1L:nfact)]
             sig <- matrix(0,nfact,nfact)
             selcov <- lower.tri(sig, diag=TRUE)
-            scores2 <- matrix(0, nrow(tabdata), sum(selcov))
-            thetas2 <- numeric(sum(selcov))
+            sig[selcov] <- siglong
+            if(nfact != 1L)
+                sig <- sig + t(sig) - diag(diag(sig))
+            prior <- mvtnorm::dmvnorm(Theta, mu, sig)
             ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu, 
                          mirtClusterEnv$ncores)
             tmp <- cbind(ret$scores, ret$scores2) * r
