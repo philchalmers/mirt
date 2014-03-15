@@ -69,19 +69,21 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
     }
-    est <- c()
+    est <- groupest <- c()
     for(g in 1L:ngroups){
        for(j in 1L:(J+1L)){
-           if(!is(pars[[g]][[j]], 'GroupPars')) est <- c(est, pars[[g]][[j]]@est)
-           else est <- c(est, rep(FALSE, length(pars[[g]][[j]]@est)))
+           if(!is(pars[[g]][[j]], 'GroupPars')){
+               est <- c(est, pars[[g]][[j]]@est)
+               groupest <- c(groupest, rep(FALSE, length(pars[[g]][[j]]@est)))
+           } else {
+               est <- c(est, rep(FALSE, length(pars[[g]][[j]]@est)))
+               groupest <- c(groupest, pars[[g]][[j]]@est)
+           }
        }
     }
-    groupest <- FALSE
-    for(g in 1L:ngroups)
-        groupest <- any(groupest, pars[[g]][[J+1]]@est)
-    if(length(constrain) > 0L)
+    if(length(constrain))
        for(i in 1L:length(constrain))
-           est[constrain[[i]][-1L]] <- FALSE
+           est[constrain[[i]][-1L]] <- groupest[constrain[[i]][-1L]] <- FALSE
     names(longpars) <- names(est)
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
@@ -141,11 +143,12 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         start <- proc.time()[3L]
         preMstep.longpars2 <- preMstep.longpars
         preMstep.longpars <- longpars
-        if(all(!est) && !groupest) break
+        if(all(!est) && all(!groupest)) break
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
-                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, 
+                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
+                          BFACTOR=BFACTOR, nfact=nfact,
                           rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV)
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){
             dX2 <- preMstep.longpars - preMstep.longpars2
@@ -238,7 +241,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, CUSTOM.IND, 
-                  SLOW.IND, groupest){
+                  SLOW.IND, groupest, BFACTOR, nfact){
     p <- longpars[est]
     maxit <- ifelse(cycle > 10L, 25L, 10L)
     opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
@@ -257,28 +260,26 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
 #                silent=TRUE)
     if(is(opt, 'try-error'))
         stop(opt)
-    longpars[est] <- opt$par
-    if(length(constrain) > 0L)
+    longpars[est] <- opt$par    
+    i = J + 1L
+    if(any(groupest)){
+        p <- longpars[groupest]
+        res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
+                   constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist), 
+                   silent=TRUE)
+        if(is(res, 'try-error')) stop(res)
+        longpars[groupest] <- res$estimate
+    }
+    if(length(constrain))
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
-    i = J + 1L
-    if(groupest){
-        for(group in 1L:ngroups){
-            if(any(pars[[group]][[i]]@est)){
-                newpars <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], EM = TRUE,
-                               pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
-                               itemloc=itemloc, prior=Prior[[group]], CUSTOM.IND=CUSTOM.IND)
-                longpars[pars[[group]][[i]]@parnum[pars[[group]][[i]]@est]] <- newpars
-            }
-        }
-    }
     return(longpars)
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND, 
                      SLOW.IND, constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, ANY.PRIOR){
     longpars[est] <- p
-    if(length(constrain) > 0L)
+    if(length(constrain))
        for(i in 1L:length(constrain))
            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -287,6 +288,35 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
         LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
     return(sum(LLs))
+}
+
+Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist){
+    ngroups <- length(pars); J <- length(pars[[1L]]) - 1L
+    longpars[groupest] <- p
+    if(length(constrain))
+        for(i in 1L:length(constrain))
+            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+    LL <- 0
+    ind <- 1L
+    for(g in 1L:ngroups){
+        est <- pars[[g]][[J+1L]]@est
+        nest <- sum(est)
+        if(nest){
+            pars[[g]][[J+1L]]@par[est] <- p[ind:(nest + ind - 1L)]
+            ind <- ind + nest
+        } else next
+        gstructgrouppars <- ExtractGroupPars(pars[[g]][[J+1L]])
+        chl <- try(chol(gstructgrouppars$gcov), silent=TRUE)
+        if(is(chl, 'try-error')) return(1e100)
+        tmp <- rlist[[g]]$r * mvtnorm::dmvnorm(Theta[ ,1L:nfact,drop=FALSE],
+                                       gstructgrouppars$gmeans,
+                                       gstructgrouppars$gcov, log=TRUE)
+        LL <- LL + sum(tmp)
+        if(pars[[g]][[J+1L]]@any.prior)
+            LL <- LL.Priors(x=pars[[g]][[J+1L]], LL=LL)
+    }
+    return(ifelse(is.nan(LL), 1e100, -LL))
 }
 
 LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
@@ -298,7 +328,7 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
             if(x[[i]]@any.prior)
                 LL <- LL.Priors(x=x[[i]], LL=LL)
     }
-    return(ifelse(is.finite(LL), LL, -1e10))
+    return(ifelse(is.finite(LL), LL, -1e100))
 }
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,

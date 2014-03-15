@@ -6,6 +6,9 @@
 
 ## NEW FEATURES
 
+- group-level (i.e., means/covariances) equality constrains are now available for 
+  the EM algorithm
+
 - `theta_lim` input to `plot()` and `itemplot()` for modifying range of latent values evaluated
 
 # Changes in mirt 1.2.1

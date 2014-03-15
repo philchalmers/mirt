@@ -152,9 +152,9 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
-                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
+                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact, 
                           rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV, groupest=groupest,
-                          CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND)
+                          CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, BFACTOR=list$BFACTOR)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom

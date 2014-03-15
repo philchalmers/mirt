@@ -212,7 +212,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rr <- rr + r
     }
     df <- prod(PrepList[[1L]]$K) - 1
-    if(df > 1e10) df <- 1e10
+    if(df > 1e100) df <- 1e100
     nestpars <- nconstr <- 0L
     for(g in 1L:Data$ngroups)
         for(i in 1L:(nitems+1L))

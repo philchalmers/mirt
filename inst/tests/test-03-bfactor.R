@@ -104,4 +104,47 @@ test_that('dich data', {
     expect_is(res, 'matrix')
     sum <- summary(simmod, verbose = FALSE)
     expect_is(sum, 'list')
+
+    #two-tier
+    set.seed(1234)
+    a <- matrix(c(
+        0,1,0.5,NA,NA,
+        0,1,0.5,NA,NA,
+        0,1,0.5,NA,NA,
+        0,1,0.5,NA,NA,
+        0,1,0.5,NA,NA,
+        0,1,NA,0.5,NA,
+        0,1,NA,0.5,NA,
+        0,1,NA,0.5,NA,
+        1,0,NA,0.5,NA,
+        1,0,NA,0.5,NA,
+        1,0,NA,0.5,NA,
+        1,0,NA,NA,0.5,
+        1,0,NA,NA,0.5,
+        1,0,NA,NA,0.5,
+        1,0,NA,NA,0.5,
+        1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
+    
+    d <- matrix(rnorm(16))
+    items <- rep('dich', 16)
+    
+    sigma <- diag(5)
+    sigma[1,2] <- sigma[2,1] <- .4
+    dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+    
+    specific <- c(rep(1,5),rep(2,6),rep(3,5))
+    model <- mirt.model('
+        G1 = 1-8
+        G2 = 9-16
+        COV = G1*G2')
+    
+    simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3, verbose=FALSE)
+    expect_is(simmod, 'ConfirmatoryClass')
+    expect_equal(simmod@df, 65486)
+    cfs <- as.numeric(do.call(c, coef(simmod, digits=4)))
+    cfs <- cfs[cfs != 0 & cfs != 1]
+    expect_equal(cfs, c(1.0446, 0.2528, -1.0999, 1.0437, -0.0697, 0.3401, 1.1812, 0.8542, 1.1167, 0.9012, -0.1261, -2.2464, 1.1154, 0.1682, 0.4154, 0.9214, 0.8993, 0.4576, 0.7885, 0.6894, -0.5995, 0.7904, 0.9063, -0.5454, 0.9463, 0.3678, -0.4902, 0.5622, -0.8357, 0.9798, 0.6816, -0.5055, 1.0865, 0.3121, -1.0032, 1.0799, 0.0492, -0.7506, 1.1237, 0.1171, 0.0668, 1.0469, 0.5358, 0.9295, 0.9941, 0.6271, -0.0473, 0.122),
+                 tolerance = 1e-2)
+    fs <- fscores(simmod, scores.only=T, returnER=TRUE)
+    expect_equal(as.numeric(fs), c(0.6681483, 0.7312055, 0.1627788, 0.4266472, 0.1538396), tolerance = 1e-2)
 })

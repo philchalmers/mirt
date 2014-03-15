@@ -428,7 +428,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
-                          tabdata = NULL, prior = NULL, estHess=FALSE){
+                          tabdata = NULL, estHess=FALSE, prior = NULL){
         if(EM){
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))

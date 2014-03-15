@@ -171,11 +171,13 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
 
 //EAP estimates used in multipleGroup
 RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu,
-    SEXP Rncores)
+    SEXP Rfull, SEXP Rr, SEXP Rncores)
 {
     BEGIN_RCPP
 
-    const int ncores = as<int>(Rncores); //nquad
+    const int ncores = as<int>(Rncores);
+    const int full = as<int>(Rfull);
+    const vector<int> r = as< vector<int> >(Rr);
     #ifdef SUPPORT_OPENMP
     omp_set_num_threads(ncores);
     #endif
@@ -230,6 +232,20 @@ RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rp
         }
     }
 
+    if(full){
+        const int NN = std::accumulate(r.begin(), r.end(), 0);
+        NumericMatrix fullscores(NN, nfact);
+        NumericMatrix scoresmat = vec2mat(scores, N, nfact);
+        int ind = 0;
+        for(int pat = 0; pat < N; ++pat){
+            for(int j = 0; j < r[pat]; ++j){
+                for(int i = 0; i < nfact; ++i)
+                    fullscores(ind, i) = scoresmat(pat, i);
+            ++ind;
+            }
+        }
+        return(fullscores);
+    }
     List ret;
     ret["scores"] = vec2mat(scores, N, nfact);
     ret["scores2"] = vec2mat(scores2, N, nfact*(nfact + 1)/2);
