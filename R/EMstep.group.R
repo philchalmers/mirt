@@ -148,7 +148,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
-                          BFACTOR=BFACTOR, nfact=nfact,
+                          BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
                           rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV)
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){
             dX2 <- preMstep.longpars - preMstep.longpars2
@@ -241,7 +241,7 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, CUSTOM.IND, 
-                  SLOW.IND, groupest, BFACTOR, nfact){
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween){
     p <- longpars[est]
     maxit <- ifelse(cycle > 10L, 25L, 10L)
     opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
@@ -265,7 +265,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
     if(any(groupest)){
         p <- longpars[groupest]
         res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
-                   constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist), 
+                   constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist, 
+                       Thetabetween=Thetabetween), 
                    silent=TRUE)
         if(is(res, 'try-error')) stop(res)
         longpars[groupest] <- res$estimate
@@ -290,7 +291,8 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
     return(sum(LLs))
 }
 
-Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist){
+Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist,
+                      Thetabetween){
     ngroups <- length(pars); J <- length(pars[[1L]]) - 1L
     longpars[groupest] <- p
     if(length(constrain))
@@ -300,18 +302,24 @@ Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, group
     LL <- 0
     ind <- 1L
     for(g in 1L:ngroups){
+        if(BFACTOR){
+            theta <- Thetabetween
+            rr <- rlist[[g]]$r2
+        } else {
+            theta <- Theta[ ,1L:nfact,drop=FALSE]
+            rr <- rlist[[g]]$r1
+        }
         est <- pars[[g]][[J+1L]]@est
         nest <- sum(est)
         if(nest){
             pars[[g]][[J+1L]]@par[est] <- p[ind:(nest + ind - 1L)]
             ind <- ind + nest
         } else next
-        gstructgrouppars <- ExtractGroupPars(pars[[g]][[J+1L]])
-        chl <- try(chol(gstructgrouppars$gcov), silent=TRUE)
+        gp <- ExtractGroupPars(pars[[g]][[J+1L]])
+        chl <- try(chol(gp$gcov), silent=TRUE)
         if(is(chl, 'try-error')) return(1e100)
-        tmp <- rlist[[g]]$r * mvtnorm::dmvnorm(Theta[ ,1L:nfact,drop=FALSE],
-                                       gstructgrouppars$gmeans,
-                                       gstructgrouppars$gcov, log=TRUE)
+        tmp <- rr * mvtnorm::dmvnorm(theta, gp$gmeans[1L:ncol(theta)], 
+                                     gp$gcov[1L:ncol(theta),1L:ncol(theta), drop=FALSE], log=TRUE)
         LL <- LL + sum(tmp)
         if(pars[[g]][[J+1L]]@any.prior)
             LL <- LL.Priors(x=pars[[g]][[J+1L]], LL=LL)

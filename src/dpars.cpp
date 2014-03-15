@@ -705,9 +705,9 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             NumericMatrix itemtrace = gitemtrace[g];
             NumericVector tmpvec = gPrior(_,g);
             vector<double> Prior = as< vector<double> >(tmpvec);
-            vector<double> expected(1), r1vec(N*J);
+            vector<double> expected(1), r1vec(N*J), r2vec(N);
             if(isbifactor){
-               _Estepbfactor(expected, r1vec, itemtrace, prior, Priorbetween, vone, 1,
+               _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone, 1,
                     dat, sitems, Prior);
             } else {
                 _Estep(expected, r1vec, Prior, vone, dat, itemtrace, 1);
