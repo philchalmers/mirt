@@ -285,6 +285,24 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         sitems <- matrix(0L, nrow=sum(PrepList[[1L]]$K), ncol=nspec)
         specific <- NULL
         if(opts$BFACTOR){
+            for(g in 1L:length(pars)){
+                tmp <- pars[[g]][[nitems+1L]]
+                gp <- ExtractGroupPars(tmp)
+                tmp@par <- as.numeric(tmp@est)
+                gp2 <- ExtractGroupPars(tmp)
+                ind <- (length(gp$gmeans)-ncol(sitems)+1L):length(gp$gmeans)
+                gmeans <- gp$gmeans[ind]
+                gcov <- gp$gcov[ind, ind, drop=FALSE]
+                lgmeans <- gp2$gmeans[ind]
+                lgcov <- gp2$gcov[ind, ind, drop=FALSE]
+                if(any(lgmeans != 0) || any(lgcov != 0))
+                    stop('Cannot freely estimate specific factor parameters in 
+                         quadrature reduction method')
+                if(!all(gmeans == 0)) 
+                    stop('Means for specific factors must be 0')
+                if(!all(gcov == diag(ncol(sitems))))
+                    stop('Covariance matrix for specific factors must be an identity matrix')
+            }
             specific <- attr(oldmodel, 'specific')
             specific[is.na(specific)] <- 1L
             for(i in 1L:nitems) temp[i, specific[i]] <- 1L
