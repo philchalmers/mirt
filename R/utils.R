@@ -261,7 +261,7 @@ bfactor2mod <- function(model, J){
 
 updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, 
                         BFACTOR, sitems, cycles, rlist, prior){
-    Prior <- vector('list', ngroups)
+    Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
         Prior[[1L]] <- list$EHPrior[[1L]]
     } else {
@@ -269,7 +269,11 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
             gp <- ExtractGroupPars(pars[[g]][[J+1L]])
             if(BFACTOR){
                 sel <- 1L:(nfact-ncol(sitems) + 1L)
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,sel])
+                sel2 <- sel[-length(sel)]
+                Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
+                                                      gp$gmeans[sel2], gp$gcov[sel2,sel2,drop=FALSE])
+                Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
+                Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
                 next
             }
@@ -291,7 +295,7 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
         for(g in 1L:ngroups)
             Prior[[g]] <- list$customPriorFun(Theta)
     }
-    return(list(Prior=Prior))
+    return(list(Prior=Prior, Priorbetween=Priorbetween))
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,

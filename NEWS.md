@@ -11,6 +11,10 @@
 
 - `theta_lim` input to `plot()` and `itemplot()` for modifying range of latent values evaluated
 
+## BUG FIXES
+
+- fix crash in two-tier models when correlations are estimated (reported by David Wu)
+
 # Changes in mirt 1.2.1
 
 ## MAJOR CHANGES

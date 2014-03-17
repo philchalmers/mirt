@@ -124,7 +124,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                                             expected[pat];
         #pragma omp critical
         for (int i = 0; i < nbquad; ++i)
-            ri[i] += Pls[i] * r[pat] / expected[pat];
+            ri[i] += Pls[i] * r[pat] * Priorbetween[i] / expected[pat];
         for (int item = 0; item < nitems; ++item)
             if (data(pat,item))
                 for (int fact = 0; fact < sfact; ++fact)
