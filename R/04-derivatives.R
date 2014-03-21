@@ -65,21 +65,21 @@ setMethod(
             for(i in 1L:ncol(rs))
                 ddc <- ddc + rs[,i]/P[,i]  * (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
                     Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                    rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L])^2
+                    rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L])^2
             hess[cind, cind] <- sum(ddc)
             for(i in 1L:nzetas)
                 hess[cind, nfact + i] <- hess[nfact + i, cind] <-
-                    sum((rs[,i]/P[,i] * D2 * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                    rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
-                    rs[,i+1L]/P[,i+1L] * D2 * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
-                    rs[,i+1L]/P[,i+1L]^2 * D2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L])))
+                    sum((rs[,i]/P[,i] * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                    rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
+                    rs[,i+1L]/P[,i+1L] * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
+                    rs[,i+1L]/P[,i+1L]^2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L])))
             for(j in 1L:nfact){
                 tmp <- 0
                 for(i in 1L:ncol(rs))
-                        tmp <- tmp + (rs[,i]/P[,i] * D2 * Theta[,j] *
+                        tmp <- tmp + (rs[,i]/P[,i] * Theta[,j] *
                                           (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
                                                Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                                 rs[,i]/P[,i]^2 * D2 * (PQfull[,i] - PQfull[,i+1L]) * Theta[,j] *
+                                 rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * Theta[,j] *
                                       (PQfull[,i] - PQfull[,i+1L]))
                 hess[cind, j] <- hess[j, cind] <- sum(tmp)
             }

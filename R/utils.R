@@ -62,6 +62,35 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     return(theta1)
 }
 
+imputePars <- function(pars, covB, imputenums, constrain){
+    shift <- mvtnorm::rmvnorm(1L, sigma=covB)
+    for(i in 1L:length(pars)){
+        pn <- pars[[i]]@parnum 
+        pick2 <- imputenums %in% pn
+        pick1 <- pn %in% imputenums
+        pars[[i]]@par[pick1] <- pars[[i]]@par[pick1] + shift[pick2]
+        if(is(pars[[i]], 'graded')){
+            where <- (length(pars[[i]]@par) - pars[[i]]@ncat + 2L):length(pars[[i]]@par)
+            pars[[i]]@par[where] <- sort(pars[[i]]@par[where], decreasing=TRUE)
+        } else if(is(pars[[i]], 'grsm')){
+            where <- (length(pars[[i]]@par) - pars[[i]]@ncat + 1L):(length(pars[[i]]@par)-1L)
+            pars[[i]]@par[where] <- sort(pars[[i]]@par[where], decreasing=TRUE)
+        }
+    }
+    if(length(constrain)){
+        for(con in 1L:length(constrain)){
+            tmp <- shift[imputenums %in% constrain[[con]][1L]]
+            if(length(tmp)){
+                for(i in 1L:length(pars)){
+                    pick <- pars[[i]]@parnum %in% constrain[[con]][-1L]
+                    pars[[i]]@par[pick] <- tmp + pars[[i]]@par[pick]
+                }
+            }
+        }
+    }
+    return(pars)
+}
+
 # Rotation function
 Rotate <- function(F, rotate, Target = NULL, ...)
 {

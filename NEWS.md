@@ -6,6 +6,9 @@
 
 ## NEW FEATURES
 
+- multiple imputation (MI) option in `fscores()`, useful for obtaining less biased factor score 
+  estimates when model parameter variability is large (usually due to smaller sample size)
+
 - group-level (i.e., means/covariances) equality constrains are now available for 
   the EM algorithm
 

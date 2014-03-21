@@ -437,11 +437,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                             ngroups=Data$ngroups, J=Data$nitems)
                 DM[, is.latent] <- 0
                 info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
-                info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
-                if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
                 if(is(info, 'try-error')){
                     warning('information matrix in SEM could not be computed due to instability')
-                } else ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                } else {
+                    info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
+                    if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
+                    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                }
             }
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
             ESTIMATE <- SE.BL(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,

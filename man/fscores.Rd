@@ -5,7 +5,7 @@
 fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, returnER = FALSE,
   mean = NULL, cov = NULL, verbose = TRUE, scores.only = TRUE,
-  theta_lim = c(-4, 4))
+  theta_lim = c(-4, 4), MI = 0)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -47,6 +47,10 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   covariance matrix. If NULL, the default for 'group'
   values from the computed mirt object will be used}
 
+  \item{MI}{a number indicating how many multiple
+  imputation draws to perform. Default is 0, indicating
+  that no MI draws will be performed}
+
   \item{response.pattern}{an optional argument used to
   calculate the factor scores and standard errors for a
   given response vector or matrix}
@@ -64,15 +68,21 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for
 sum-scores (Thissen et al., 1995), or WLE (Warm, 1989)
 factor scores with a multivariate normal prior distribution
-using equally spaced quadrature. Will return either a table
-with the computed scores and standard errors, the original
-data matrix with scores appended to the rightmost column,
-or the scores only. By default the latent means are set to
-be 0 for each factor, and the covariance matrix is set to
-the identity matrix, though these can be overwritten.
-Iterative estimation methods can be estimated in parallel
-to decrease estimation times if a \code{\link{mirtCluster}}
-object is available.
+using equally spaced quadrature. Additionally, multiple
+imputation variants are possible for each estimator if a
+parameter information matrix was computed, which are useful
+if the sample size/number of items were small (causing the
+parameter estimates to be variable).
+}
+\details{
+The function will return either a table with the computed
+scores and standard errors, the original data matrix with
+scores appended to the rightmost column, or the scores
+only. By default the latent means and covariances are
+determined from the estimated object, though these can be
+overwritten. Iterative estimation methods can be estimated
+in parallel to decrease estimation times if a
+\code{\link{mirtCluster}} object is available.
 }
 \examples{
 \dontrun{
@@ -98,6 +108,10 @@ fscores(mod, method='ML')
 #WLE estimation, run in parallel using available cores
 mirtCluster()
 fscores(mod, method='WLE')
+
+#multiple imputation using 30 draws for EAP scores. Requires information matrix
+mod <- mirt(Science, 1, SE=TRUE)
+fscores(mod, MI = 30)
 
 }
 }
