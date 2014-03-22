@@ -5,7 +5,7 @@
 fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, returnER = FALSE,
   mean = NULL, cov = NULL, verbose = TRUE, scores.only = TRUE,
-  theta_lim = c(-4, 4), MI = 0)
+  full.scores.SE = FALSE, theta_lim = c(-4, 4), MI = 0)
 }
 \arguments{
   \item{object}{a computed model object of class
@@ -59,6 +59,10 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   (also known as marginal reliability) estimates as a
   numeric values?}
 
+  \item{full.scores.SE}{logical; when \code{full.scores ==
+  TRUE}, also return the standard errors associated with
+  each respondent? Default is \code{FALSE}}
+
   \item{verbose}{logical; print verbose output messages?}
 
   \item{scores.only}{logical; return only the factor scores
@@ -91,10 +95,13 @@ mod <- mirt(Science, 1)
 tabscores <- fscores(mod)
 head(tabscores)
 fullscores <- fscores(mod, full.scores = TRUE)
+fullscores_with_SE <- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
 head(fullscores)
+head(fullscores_with_SE)
+
+#chage method argument to use MAP estimates
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
-scores <- fscores(mod, full.scores = TRUE, scores.only = FALSE)
-head(scores)
+head(fullscores)
 
 #calculate MAP for a given response vector
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))

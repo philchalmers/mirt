@@ -3,7 +3,8 @@ setMethod(
 	signature = 'ExploratoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI, 
-	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
+	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
+	                      full.scores.SE)
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND){
@@ -202,10 +203,16 @@ setMethod(
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
                 sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
+                SEscoremat <- SEscores[match(sfulldata, stabdata2), , drop = FALSE]
     			colnames(scoremat) <- colnames(scores)
+    			colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             } else {
                 scoremat <- scores
+                SEscoremat <- SEscores
+                colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             }
+            if(full.scores.SE)
+                scoremat <- cbind(scoremat, SEscoremat)
             if(scores.only) return(scoremat)
 			else return(cbind(fulldata,scoremat))
 		} else {
@@ -240,12 +247,14 @@ setMethod(
 	signature = 'ConfirmatoryClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
 	                      quadpts = NULL, response.pattern = NULL, theta_lim, MI,
-	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
+	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
+	                      full.scores.SE)
 	{
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=returnER, verbose=verbose,
-                       mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI)
+                       mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
+                       full.scores.SE=full.scores.SE)
         return(ret)
 	}
 )
@@ -256,7 +265,8 @@ setMethod(
     signature = 'MultipleGroupClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
-                          returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only)
+                          returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
+                          full.scores.SE)
     {
         cmods <- object@cmods
         ngroups <- length(cmods)
@@ -266,7 +276,8 @@ setMethod(
         for(g in 1L:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
-                                mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI)
+                                mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
+                           full.scores.SE=full.scores.SE)
         names(ret) <- object@groupNames
         if(full.scores){
             id <- c()

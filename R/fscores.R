@@ -40,6 +40,8 @@
 #'   for a given response vector or matrix
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
+#' @param full.scores.SE logical; when \code{full.scores == TRUE}, also return the 
+#'   standard errors associated with each respondent? Default is \code{FALSE}
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when \code{full.scores = TRUE})
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -64,10 +66,13 @@
 #' tabscores <- fscores(mod)
 #' head(tabscores)
 #' fullscores <- fscores(mod, full.scores = TRUE)
+#' fullscores_with_SE <- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
 #' head(fullscores)
+#' head(fullscores_with_SE)
+#' 
+#' #chage method argument to use MAP estimates
 #' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
-#' scores <- fscores(mod, full.scores = TRUE, scores.only = FALSE)
-#' head(scores)
+#' head(fullscores) 
 #'
 #' #calculate MAP for a given response vector
 #' fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
@@ -90,11 +95,12 @@
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL, 
                     returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    scores.only = TRUE, theta_lim = c(-4,4), MI = 0)
+                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-4,4), MI = 0)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, 
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
-                            scores.only=scores.only, theta_lim=theta_lim, MI=MI)
+                            scores.only=scores.only, theta_lim=theta_lim, MI=MI,
+                            full.scores.SE=full.scores.SE)
     ret
 }

@@ -6,13 +6,16 @@
 
 ## NEW FEATURES
 
+- `full.scores.SE` logical option for `fscores()` to return standard errors for each respondent
+
 - multiple imputation (MI) option in `fscores()`, useful for obtaining less biased factor score 
   estimates when model parameter variability is large (usually due to smaller sample size)
 
 - group-level (i.e., means/covariances) equality constrains are now available for 
   the EM algorithm
 
-- `theta_lim` input to `plot()` and `itemplot()` for modifying range of latent values evaluated
+- `theta_lim` input to `plot()`, `itemplot()`, and `fscores()` for modifying range of 
+  latent values evaluated
 
 ## BUG FIXES
 
