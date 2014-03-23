@@ -1145,10 +1145,12 @@ shinyItemplot <- function(){
 
                         selectInput(inputId = "itemclass",
                                     label = "Class of mirt item:",
-                                    choices = c('dich', 'graded', 'nominal', 'gpcm', 'partcomp'), #'nestlogit'
+                                    choices = c('dich' = 'dich', 
+                                                'graded' = 'graded', 
+                                                'nominal' = 'nominal', 
+                                                'gpcm' = 'gpcm', 
+                                                'partcomp' = 'partcomp'),
                                     selected = 'dich'),
-
-                        h6('Note: for nestlogit the first category is assumed to be the correct response option.'),
 
                         selectInput(inputId = "plottype",
                                     label = "Type of plot to display:",
@@ -1164,135 +1166,62 @@ shinyItemplot <- function(){
                         checkboxInput(inputId = "nfact",
                                       label = "Multidimensional?",
                                       value = FALSE),
-
-                        #         conditionalPanel(condition = "input.nfact == true",
-                        #                          h5('Rotate axis:'),
-                        #
-                        #                          sliderInput(inputId = "zaxis",
-                        #                                      label = "z-axis:",
-                        #                                      min = -180, max = 180, value = 10, step = 5)
-                        #         ),
-
-                        h5('Check the boxes below to make sliders appear for editing parameters.'),
-
-                        checkboxInput(inputId = "a1",
-                                      label = "a1",
-                                      value = TRUE),
-                        conditionalPanel(condition = "input.a1 == true",
-                                         sliderInput(inputId = "a1par",
-                                                     label = "a1 value:",
-                                                     min = -3, max = 3, value = 1, step = 0.2)
-                        ),
-
-                        checkboxInput(inputId = "a2",
-                                      label = "a2",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.a2 == true",
+                        
+                        sliderInput(inputId = "a1par",
+                                    label = "a1 value:",
+                                    min = -3, max = 3, value = 1, step = 0.2),
+                        conditionalPanel(condition = "input.nfact == true",
                                          sliderInput(inputId = "a2par",
                                                      label = "a2 value:",
-                                                     min = -3, max = 3, value = 1, step = 0.2)
-                        ),
+                                                     min = -3, max = 3, value = 1, step = 0.2)),
 
-                        checkboxInput(inputId = "d",
-                                      label = "d",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.d == true",
+                        conditionalPanel(condition = "input.itemclass == 'dich'",
                                          sliderInput(inputId = "dpar",
                                                      label = "d value:",
-                                                     min = -5, max = 5, value = 0, step = 0.25)
-                        ),
-
-                        checkboxInput(inputId = "g",
-                                      label = "g",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.g == true",
+                                                     min = -5, max = 5, value = 0, step = 0.25),
                                          sliderInput(inputId = "gpar",
                                                      label = "g value:",
-                                                     min = 0, max = 1, value = 0, step = 0.05)
-                        ),
-
-                        checkboxInput(inputId = "u",
-                                      label = "u",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.u == true",
+                                                     min = 0, max = 1, value = 0, step = 0.05),
                                          sliderInput(inputId = "upar",
                                                      label = "u value:",
-                                                     min = 0, max = 1, value = 1, step = 0.05)
+                                                     min = 0, max = 1, value = 1, step = 0.05)                                         
                         ),
-
-                        checkboxInput(inputId = "d0",
-                                      label = "d0",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.d0 == true",
-                                         sliderInput(inputId = "d0par",
-                                                     label = "d0 value:",
-                                                     min = -5, max = 5, value = 0, step = 0.25)
-                        ),
-
-                        checkboxInput(inputId = "d1",
-                                      label = "d1",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.d1 == true",
+                        
+                        conditionalPanel(condition = "input.itemclass != 'dich'",
+                                         conditionalPanel(condition = "input.itemclass == 'gpcm' || 
+                                                          input.itemclass == 'nominal'",
+                                                          sliderInput(inputId = "d0par",
+                                                                      label = "d0 value (default fixed at 0):",
+                                                                      min = -5, max = 5, value = 0, step = 0.25)
+                                         ),
                                          sliderInput(inputId = "d1par",
                                                      label = "d1 value:",
-                                                     min = -5, max = 5, value = 1, step = 0.25)
-                        ),
-
-                        checkboxInput(inputId = "d2",
-                                      label = "d2",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.d2 == true",
+                                                     min = -5, max = 5, value = 1, step = 0.25),
                                          sliderInput(inputId = "d2par",
                                                      label = "d2 value:",
-                                                     min = -5, max = 5, value = 0, step = 0.25)
+                                                     min = -5, max = 5, value = 0, step = 0.25),
+                                         conditionalPanel(condition = "input.itemclass != 'partcomp'",
+                                             sliderInput(inputId = "d3par",
+                                                         label = "d3 value:",
+                                                         min = -5, max = 5, value = -1, step = 0.25)
+                                         )
                         ),
-
-                        checkboxInput(inputId = "d3",
-                                      label = "d3",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.d3 == true",
-                                         sliderInput(inputId = "d3par",
-                                                     label = "d3 value:",
-                                                     min = -5, max = 5, value = -1, step = 0.25)
-                        ),
-
-                        checkboxInput(inputId = "ak0",
-                                      label = "ak0",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.ak0 == true",
+                                                
+                        conditionalPanel(condition = "input.itemclass == 'nominal'",                         
                                          sliderInput(inputId = "ak0par",
-                                                     label = "ak0 value:",
-                                                     min = -3, max = 3, value = 0, step = 0.2)
-                        ),
-
-                        checkboxInput(inputId = "ak1",
-                                      label = "ak1",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.ak1 == true",
+                                                     label = "ak0 value (default fixed at 0):",
+                                                     min = -3, max = 3, value = 0, step = 0.2),
                                          sliderInput(inputId = "ak1par",
                                                      label = "ak0 value:",
-                                                     min = -3, max = 3, value = 1, step = 0.2)
-                        ),
-
-                        checkboxInput(inputId = "ak2",
-                                      label = "ak2",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.ak2 == true",
+                                                     min = -3, max = 3, value = 1, step = 0.2),
                                          sliderInput(inputId = "ak2par",
                                                      label = "ak2 value:",
-                                                     min = -3, max = 3, value = 2, step = 0.2)
-                        ),
-
-                        checkboxInput(inputId = "ak3",
-                                      label = "ak3",
-                                      value = FALSE),
-                        conditionalPanel(condition = "input.ak3 == true",
+                                                     min = -3, max = 3, value = 2, step = 0.2),
                                          sliderInput(inputId = "ak3par",
-                                                     label = "ak3 value:",
+                                                     label = "ak3 value (default fixed at (ncat-1)):",
                                                      min = -3, max = 3, value = 3, step = 0.2)
                         )
-
-                        ),
+                    ),
 
                     mainPanel(
                         verbatimTextOutput("coefs"),
@@ -1309,6 +1238,7 @@ shinyItemplot <- function(){
                         itemtype <- switch(input$itemclass,
                                            dich='2PL',
                                            graded='graded',
+                                           gpcm='gpcm',
                                            nominal='nominal',
                                            nestlogit='2PLNRM',
                                            partcomp='PC2PL',
@@ -1347,19 +1277,19 @@ shinyItemplot <- function(){
                         sv$est <- FALSE
                         mod <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA)))
                         par <- mod@pars[[1]]@par
-                        if(input$a1) par[names(par) == 'a1'] <- input$a1par
-                        if(input$a2) par[names(par) == 'a2'] <- input$a2par
-                        if(input$d) par[names(par) == 'd'] <- input$dpar
-                        if(input$g) par[names(par) == 'g'] <- logit(input$gpar)
-                        if(input$u) par[names(par) == 'u'] <- logit(input$upar)
-                        if(input$d0) par[names(par) == 'd0'] <- input$d0par
-                        if(input$d1) par[names(par) == 'd1'] <- input$d1par
-                        if(input$d2) par[names(par) == 'd2'] <- input$d2par
-                        if(input$d3) par[names(par) == 'd3'] <- input$d3par
-                        if(input$ak0) par[names(par) == 'ak0'] <- input$ak0par
-                        if(input$ak1) par[names(par) == 'ak1'] <- input$ak1par
-                        if(input$ak2) par[names(par) == 'ak2'] <- input$ak2par
-                        if(input$ak3) par[names(par) == 'ak3'] <- input$ak3par
+                        par[names(par) == 'a1'] <- input$a1par
+                        par[names(par) == 'a2'] <- input$a2par
+                        par[names(par) == 'd'] <- input$dpar
+                        par[names(par) == 'g'] <- logit(input$gpar)
+                        par[names(par) == 'u'] <- logit(input$upar)
+                        par[names(par) == 'd0'] <- input$d0par
+                        par[names(par) == 'd1'] <- input$d1par
+                        par[names(par) == 'd2'] <- input$d2par
+                        par[names(par) == 'd3'] <- input$d3par
+                        par[names(par) == 'ak0'] <- input$ak0par
+                        par[names(par) == 'ak1'] <- input$ak1par
+                        par[names(par) == 'ak2'] <- input$ak2par
+                        par[names(par) == 'ak3'] <- input$ak3par
                         mod@pars[[1]]@par <- par
                         mod
                         }
