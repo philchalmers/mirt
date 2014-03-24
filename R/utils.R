@@ -1137,11 +1137,9 @@ shinyItemplot <- function(){
 
                     sidebarPanel(
 
-                        h5('Select an internal mirt item class, the type of plot to display, the number of factors,
-                           and use the checkbox to include sliders for adjusting multiple item parameters.
-                           Note that if the slider label you choose does not appear in the output box then the
-                           associated slider will have no effect on the graphic.
-                           See ?mirt::mirt and ?mirt::simdata for more details.'),
+                        h5('Select an internal mirt item class, the type of plot to display, whether the plot
+                           inputs should be the classical or modern IRT parameterizations, and whether the plot
+                           should be unidimensional or multidimensional. See ?mirt for more details.'),
 
                         selectInput(inputId = "itemclass",
                                     label = "Class of mirt item:",
@@ -1162,64 +1160,150 @@ shinyItemplot <- function(){
                         
                         numericInput("theta_lim_high", "Theta upper range:", 4,
                                      min = -35, max = 35),
+                        
+                        checkboxInput(inputId = "classical",
+                                      label = "Use traditional IRT parameterization inputs? \n
+                                      Only applicable to class dich, graded, gpcm, and nominal.",
+                                      value = FALSE),
 
                         checkboxInput(inputId = "nfact",
                                       label = "Multidimensional?",
                                       value = FALSE),
                         
-                        sliderInput(inputId = "a1par",
-                                    label = "a1 value:",
-                                    min = -3, max = 3, value = 1, step = 0.2),
-                        conditionalPanel(condition = "input.nfact == true",
-                                         sliderInput(inputId = "a2par",
-                                                     label = "a2 value:",
-                                                     min = -3, max = 3, value = 1, step = 0.2)),
-
-                        conditionalPanel(condition = "input.itemclass == 'dich'",
-                                         sliderInput(inputId = "dpar",
-                                                     label = "d value:",
-                                                     min = -5, max = 5, value = 0, step = 0.25),
-                                         sliderInput(inputId = "gpar",
-                                                     label = "g value:",
-                                                     min = 0, max = 1, value = 0, step = 0.05),
-                                         sliderInput(inputId = "upar",
-                                                     label = "u value:",
-                                                     min = 0, max = 1, value = 1, step = 0.05)                                         
-                        ),
+                        #-------------------------------------------------------------------------
                         
-                        conditionalPanel(condition = "input.itemclass != 'dich'",
-                                         conditionalPanel(condition = "input.itemclass == 'gpcm' || 
-                                                          input.itemclass == 'nominal'",
-                                                          sliderInput(inputId = "d0par",
-                                                                      label = "d0 value (default fixed at 0):",
-                                                                      min = -5, max = 5, value = 0, step = 0.25)
-                                         ),
-                                         sliderInput(inputId = "d1par",
-                                                     label = "d1 value:",
-                                                     min = -5, max = 5, value = 1, step = 0.25),
-                                         sliderInput(inputId = "d2par",
-                                                     label = "d2 value:",
-                                                     min = -5, max = 5, value = 0, step = 0.25),
-                                         conditionalPanel(condition = "input.itemclass != 'partcomp'",
-                                             sliderInput(inputId = "d3par",
-                                                         label = "d3 value:",
-                                                         min = -5, max = 5, value = -1, step = 0.25)
-                                         )
+                        conditionalPanel(condition = "input.classical == false",
+                            
+                                sliderInput(inputId = "a1par",
+                                            label = "a1 value:",
+                                            min = -3, max = 3, value = 1, step = 0.2),
+                                
+                                conditionalPanel(condition = "input.nfact == true",
+                                                 sliderInput(inputId = "a2par",
+                                                             label = "a2 value:",
+                                                             min = -3, max = 3, value = 1, step = 0.2)),
+        
+                                conditionalPanel(condition = "input.itemclass == 'dich'",
+                                                 sliderInput(inputId = "dpar",
+                                                             label = "d value:",
+                                                             min = -5, max = 5, value = 0, step = 0.25),
+                                                 sliderInput(inputId = "gpar",
+                                                             label = "g value:",
+                                                             min = 0, max = 1, value = 0, step = 0.05),
+                                                 sliderInput(inputId = "upar",
+                                                             label = "u value:",
+                                                             min = 0, max = 1, value = 1, step = 0.05)                                         
+                                ),
+                                
+                                conditionalPanel(condition = "input.itemclass != 'dich'",
+                                                 conditionalPanel(condition = "input.itemclass == 'gpcm' || 
+                                                                  input.itemclass == 'nominal'",
+                                                                  sliderInput(inputId = "d0par",
+                                                                              label = "d0 value (default fixed at 0):",
+                                                                              min = -5, max = 5, value = 0, step = 0.25)
+                                                 ),
+                                                 sliderInput(inputId = "d1par",
+                                                             label = "d1 value:",
+                                                             min = -5, max = 5, value = 1, step = 0.25),
+                                                 sliderInput(inputId = "d2par",
+                                                             label = "d2 value:",
+                                                             min = -5, max = 5, value = 0, step = 0.25),
+                                                 conditionalPanel(condition = "input.itemclass != 'partcomp'",
+                                                     sliderInput(inputId = "d3par",
+                                                                 label = "d3 value:",
+                                                                 min = -5, max = 5, value = -1, step = 0.25)
+                                                 )
+                                ),
+                                                        
+                                conditionalPanel(condition = "input.itemclass == 'nominal'",                         
+                                                 sliderInput(inputId = "ak0par",
+                                                             label = "ak0 value (default fixed at 0):",
+                                                             min = -3, max = 3, value = 0, step = 0.2),
+                                                 sliderInput(inputId = "ak1par",
+                                                             label = "ak0 value:",
+                                                             min = -3, max = 3, value = 1, step = 0.2),
+                                                 sliderInput(inputId = "ak2par",
+                                                             label = "ak2 value:",
+                                                             min = -3, max = 3, value = 2, step = 0.2),
+                                                 sliderInput(inputId = "ak3par",
+                                                             label = "ak3 value (default fixed at (ncat-1)):",
+                                                             min = -3, max = 3, value = 3, step = 0.2)
+                            )
                         ),
-                                                
-                        conditionalPanel(condition = "input.itemclass == 'nominal'",                         
-                                         sliderInput(inputId = "ak0par",
-                                                     label = "ak0 value (default fixed at 0):",
-                                                     min = -3, max = 3, value = 0, step = 0.2),
-                                         sliderInput(inputId = "ak1par",
-                                                     label = "ak0 value:",
-                                                     min = -3, max = 3, value = 1, step = 0.2),
-                                         sliderInput(inputId = "ak2par",
-                                                     label = "ak2 value:",
-                                                     min = -3, max = 3, value = 2, step = 0.2),
-                                         sliderInput(inputId = "ak3par",
-                                                     label = "ak3 value (default fixed at (ncat-1)):",
-                                                     min = -3, max = 3, value = 3, step = 0.2)
+                    
+                    conditionalPanel(condition = "input.classical == true",       
+                                    
+                                     conditionalPanel(condition = "input.itemclass == 'dich'",
+                                                      sliderInput(inputId = "a1parc",
+                                                                  label = "a value:",
+                                                                  min = -3, max = 3, value = 1, step = 0.2),
+                                                      sliderInput(inputId = "bpar", 
+                                                                  label = "b value:",
+                                                                  min = -5, max = 5, value = 0, step = 0.25),
+                                                      sliderInput(inputId = "gparc",
+                                                                  label = "g value:",
+                                                                  min = 0, max = 1, value = 0, step = 0.05),
+                                                      sliderInput(inputId = "uparc",
+                                                                  label = "u value:",
+                                                                  min = 0, max = 1, value = 1, step = 0.05)                                         
+                                     ),                   
+                                     
+                                     conditionalPanel(condition = "input.itemclass == 'graded'",
+                                                      sliderInput(inputId = "a1pard",
+                                                                  label = "a value:",
+                                                                  min = -3, max = 3, value = 1, step = 0.2),
+                                                      sliderInput(inputId = "bpar1d", 
+                                                                  label = "b1 value:",
+                                                                  min = -5, max = 5, value = -1, step = 0.25),
+                                                      sliderInput(inputId = "bpar2d", 
+                                                                  label = "b2 value:",
+                                                                  min = -5, max = 5, value = 0, step = 0.25),
+                                                      sliderInput(inputId = "bpar3d", 
+                                                                  label = "b3 value:",
+                                                                  min = -5, max = 5, value = 1, step = 0.25)
+                                     ),
+                                     
+                                     conditionalPanel(condition = "input.itemclass == 'gpcm'",
+                                                      sliderInput(inputId = "a1pare",
+                                                                  label = "a value:",
+                                                                  min = -3, max = 3, value = 1, step = 0.2),
+                                                      sliderInput(inputId = "bpar1e", 
+                                                                  label = "b1 value:",
+                                                                  min = -5, max = 5, value = -1, step = 0.25),
+                                                      sliderInput(inputId = "bpar2e", 
+                                                                  label = "b2 value:",
+                                                                  min = -5, max = 5, value = 0, step = 0.25),
+                                                      sliderInput(inputId = "bpar3e", 
+                                                                  label = "b3 value:",
+                                                                  min = -5, max = 5, value = 1, step = 0.25)
+                                     ),
+                                     
+                                     conditionalPanel(condition = "input.itemclass == 'nominal'",
+                                                      sliderInput(inputId = "a1parf",
+                                                                  label = "a1 value:",
+                                                                  min = -3, max = 3, value = -1.4, step = 0.2),
+                                                      sliderInput(inputId = "a2parf", 
+                                                                  label = "a2 value:",
+                                                                  min = -3, max = 3, value = -0.4, step = 0.2),
+                                                      sliderInput(inputId = "a3parf",
+                                                                  label = "a3 value:",
+                                                                  min = -3, max = 3, value = 0.4, step = 0.2),
+                                                      sliderInput(inputId = "a4parf",
+                                                                  label = "a4 value:",
+                                                                  min = -3, max = 3, value = 1.4, step = 0.2),
+                                                      sliderInput(inputId = "bpar1f", 
+                                                                  label = "b1 value:",
+                                                                  min = -5, max = 5, value = -1, step = 0.25),
+                                                      sliderInput(inputId = "bpar2f", 
+                                                                  label = "b2 value:",
+                                                                  min = -5, max = 5, value = 0, step = 0.25),
+                                                      sliderInput(inputId = "bpar3f", 
+                                                                  label = "b3 value:",
+                                                                  min = -5, max = 5, value = 1, step = 0.25),
+                                                      sliderInput(inputId = "bpar4f", 
+                                                                  label = "b4 value:",
+                                                                  min = -5, max = 5, value = 1.5, step = 0.25)
+                                     )                                     
                         )
                     ),
 
@@ -1277,19 +1361,35 @@ shinyItemplot <- function(){
                         sv$est <- FALSE
                         mod <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA)))
                         par <- mod@pars[[1]]@par
-                        par[names(par) == 'a1'] <- input$a1par
-                        par[names(par) == 'a2'] <- input$a2par
-                        par[names(par) == 'd'] <- input$dpar
-                        par[names(par) == 'g'] <- logit(input$gpar)
-                        par[names(par) == 'u'] <- logit(input$upar)
-                        par[names(par) == 'd0'] <- input$d0par
-                        par[names(par) == 'd1'] <- input$d1par
-                        par[names(par) == 'd2'] <- input$d2par
-                        par[names(par) == 'd3'] <- input$d3par
-                        par[names(par) == 'ak0'] <- input$ak0par
-                        par[names(par) == 'ak1'] <- input$ak1par
-                        par[names(par) == 'ak2'] <- input$ak2par
-                        par[names(par) == 'ak3'] <- input$ak3par
+                        if(input$classical){
+                            if(itemclass[1L] == 'dich'){
+                                par <- c(input$a1parc, input$bpar, logit(input$gparc), logit(input$uparc))
+                            } else if(itemclass[1L] == 'graded'){
+                                par <- c(input$a1pard, input$bpar1d, input$bpar2d, input$bpar3d)
+                            } else if(itemclass[1L] == 'gpcm'){
+                                par <- c(input$a1pare, input$bpar1e, input$bpar2e, input$bpar3e)
+                            } else if(itemclass[1L] == 'nominal'){
+                                par <- c(input$a1parf, input$a2parf, input$a3parf, input$a4parf, 
+                                         input$bpar1f, input$bpar2f, input$bpar3f, input$bpar4f)
+                            } else {
+                                stop('Classical parameterization not available for selected item class')
+                            }
+                            par <- traditional2mirt(x=par, cls=itemclass[1L], ncat=mod@pars[[1]]@ncat)
+                        } else {
+                            par[names(par) == 'a1'] <- input$a1par
+                            par[names(par) == 'a2'] <- input$a2par
+                            par[names(par) == 'd'] <- input$dpar
+                            par[names(par) == 'g'] <- logit(input$gpar)
+                            par[names(par) == 'u'] <- logit(input$upar)
+                            par[names(par) == 'd0'] <- input$d0par
+                            par[names(par) == 'd1'] <- input$d1par
+                            par[names(par) == 'd2'] <- input$d2par
+                            par[names(par) == 'd3'] <- input$d3par
+                            par[names(par) == 'ak0'] <- input$ak0par
+                            par[names(par) == 'ak1'] <- input$ak1par
+                            par[names(par) == 'ak2'] <- input$ak2par
+                            par[names(par) == 'ak3'] <- input$ak3par
+                        }
                         mod@pars[[1]]@par <- par
                         mod
                         }

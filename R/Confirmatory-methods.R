@@ -130,3 +130,41 @@ mirt2traditional <- function(x){
     ret <- matrix(par, 1L, dimnames=list('par', names(par)))
     ret
 }
+
+traditional2mirt <- function(x, cls, ncat, digits = 3){
+    if(cls == 'dich'){
+        par <- x
+        par[2L] <- -par[2L]*par[1L]
+        names(par) <- c('a1', 'd', 'g', 'u')
+    } else if(cls == 'graded'){
+        par <- x
+        for(i in 2L:ncat)
+            par[i] <- -par[i]*par[1L]
+        names(par) <- c('a1', paste0('d', 1:(length(par)-1)))        
+    } else if(cls == 'gpcm'){
+        par <- c(x[1L], 0L:(ncat-1L), 0, x[-1L])
+        ds <- -par[-c(1:(ncat+1))]*par[1]
+        newd <- numeric(length(ds))
+        for(i in length(ds):2L)
+            newd[i] <- (ds[i] + ds[i-1L])
+        for(i in length(newd):3L)
+            newd[i] <- newd[i] + newd[i-2L]
+        par <- c(par[1:(ncat+1)], newd)
+        names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
+    } else if(cls == 'nominal'){
+        as <- x[1L:(length(x)/2)]
+        ds <- x[-c(1L:(length(x)/2))]
+        a1 <- (as[ncat] - as[1L]) / (ncat-1L)
+        ak <- 1:ncat - 1
+        for(i in 2:(ncat-1))
+            ak[i] <- -(as[1L] - as[i]) / a1
+        dk <- ak
+        for(i in 2:ncat)
+            dk[i] <- ds[i] - ds[1L]
+        par <- c(a1, ak, dk)
+        names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
+    } else {
+        stop('traditional2mirt item class not supported')
+    }
+    par
+}
