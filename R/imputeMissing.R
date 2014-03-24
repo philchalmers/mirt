@@ -52,12 +52,10 @@ imputeMissing <- function(x, Theta){
         if(!any(is.na(data[,i]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
-        for(j in 1L:length(NAind)){
-            sampl <- sample(1L:ncol(P), 1, prob = P[NAind[j], , drop = FALSE])
-            if(any(class(pars[[i]]) %in% c('dich', 'gpcm', 'partcomp', 'rsm')))
-                sampl <- sampl - 1L
-            data[NAind[j], i] <- sampl
-        }
+        range <- c(min(data[,i], na.rm=TRUE), max(data[,i], na.rm=TRUE))
+        for(j in 1L:length(NAind))
+            data[NAind[j], i] <- sample(range[1L]:range[2L], 1, 
+                                        prob = P[NAind[j], , drop = FALSE])
     }
     return(data)
 }
