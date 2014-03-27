@@ -70,9 +70,15 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         tmp <- gsub(" ","",tmp)
         for(i in 1L:length(tmp)){
             tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1L]]
-            ind1 <- find[tmp2[1L] == factorNames]
-            ind2 <- find[tmp2[2L] == factorNames]
-            estgcov[ind2,ind1] <- TRUE
+            for(j in 1L:length(tmp2)){
+                for(k in 1L:length(tmp2)){
+                    if(j > k){
+                        ind1 <- find[tmp2[k] == factorNames]
+                        ind2 <- find[tmp2[j] == factorNames]
+                        estgcov[ind2,ind1] <- TRUE
+                    }
+                }
+            }
         }
     }
     gcov <- ifelse(estgcov,.25,0)
@@ -80,6 +86,13 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     #MEAN
     gmeans <- rep(0, nfact)
     estgmeans <- rep(FALSE, nfact)
+    if(any(model[,1L] == 'MEAN')){
+        tmp <- model[model[,1L] == 'MEAN',2L]
+        tmp <- strsplit(tmp,",")[[1L]]
+        tmp <- gsub(" ","",tmp)
+        for(i in 1L:length(tmp))
+            estgmeans[find[tmp[i] == factorNames]] <- TRUE        
+    }
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
         loads <- eigen(Rpoly)$vector[,1L:nfact, drop = FALSE]

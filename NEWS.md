@@ -6,6 +6,10 @@
 
 ## NEW FEATURES
 
+- `mirt.model()` syntax supports multiple * combinations in `COV = ` for more easily specifying 
+  covariation blocks between factors. Also allows variances to be freed by specifying the same
+  factor name, e.g., `F*F`
+
 - `full.scores.SE` logical option for `fscores()` to return standard errors for each respondent
 
 - multiple imputation (MI) option in `fscores()`, useful for obtaining less biased factor score 
