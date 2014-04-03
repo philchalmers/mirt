@@ -2,9 +2,16 @@
 
 ## MAJOR CHANGES
 
+- better shiny UI which adapts to the itemtype specifically, and allows for classical parameter
+  inputs (special thanks to Jonathan Lehrfeld for providing code that inspired both these changes)
+
 - scores.only option now set to `TRUE` in `fscores()`
 
+- `type = 'score'` for plot generics no longer adjusts the categories for expected test scores
+
 ## NEW FEATURES
+
+- new `expected.test()` function, which is an extension of `expected.item()` but for the whole test
 
 - `mirt.model()` syntax supports multiple * combinations in `COV = ` for more easily specifying 
   covariation blocks between factors. Also allows variances to be freed by specifying the same

@@ -23,15 +23,14 @@ ability parameter(s).
 \dontrun{
 mod <- mirt(Science, 1)
 extr.2 <- extract.item(mod, 2)
-Theta <- fscores(mod, full.scores=TRUE, scores.only=TRUE)
+Theta <- matrix(seq(-6,6, length.out=200))
 expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
-
 head(data.frame(expected, Theta=Theta))
 
 }
 }
 \seealso{
-\code{\link{extract.item}}
+\code{\link{extract.item}}, , \code{\link{expected.test}}
 }
 \keyword{expected}
 \keyword{value}

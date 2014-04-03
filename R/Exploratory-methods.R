@@ -628,9 +628,7 @@ setMethod(
                     info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
             }
         }
-        adj <- apply(x@data, 2, min)
-        if(any(adj > 0) && type == 'score')
-            message('Adjusted so that the lowest category score for every item is 0')
+        adj <- apply(x@data, 2, min, na.rm=TRUE)
         tmp <- try(x@rotate, silent = TRUE)
         if (x@nfact > 1 && !is(tmp,'try-error')){
             rotname <- x@rotate
@@ -642,7 +640,7 @@ setMethod(
         itemtrace <- computeItemtrace(x@pars, ThetaFull, x@itemloc, CUSTOM.IND=x@CUSTOM.IND)
         score <- c()
         for(i in 1:J)
-            score <- c(score, 0:(x@K[i]-1))
+            score <- c(score, 0:(x@K[i]-1) + adj[i])
         score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
         plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))
         if(nfact == 2){

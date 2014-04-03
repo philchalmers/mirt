@@ -7,19 +7,17 @@
 #' @param x an extracted internal mirt object containing item information
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param min a constant value added to the expected values indicating the lowest theoretical
-#' category. Default is 0
+#'   category. Default is 0
 #' @keywords expected value
 #' @export expected.item
-#' @seealso
-#' \code{\link{extract.item}}
+#' @seealso \code{\link{extract.item}}, , \code{\link{expected.test}}
 #' @examples
 #'
 #' \dontrun{
 #' mod <- mirt(Science, 1)
 #' extr.2 <- extract.item(mod, 2)
-#' Theta <- fscores(mod, full.scores=TRUE, scores.only=TRUE)
+#' Theta <- matrix(seq(-6,6, length.out=200))
 #' expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
-#'
 #' head(data.frame(expected, Theta=Theta))
 #'
 #' }

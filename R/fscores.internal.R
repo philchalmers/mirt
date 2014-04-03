@@ -132,7 +132,6 @@ setMethod(
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta,prodlist)
                 W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
-                W <- W/sum(W)
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
                                               CUSTOM.IND=CUSTOM.IND)
                 log_itemtrace <- log(itemtrace)
