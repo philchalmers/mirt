@@ -9,6 +9,9 @@
 
 - `type = 'score'` for plot generics no longer adjusts the categories for expected test scores
 
+- M-step optimizer in EM now deters out-of-order graded response model intercepts (was a problem 
+  if the startvalues were too far from the ML estimate in graded models)
+
 ## NEW FEATURES
 
 - new `expected.test()` function, which is an extension of `expected.item()` but for the whole test
