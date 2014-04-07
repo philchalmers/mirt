@@ -238,7 +238,6 @@
 #' model2 <- mirt.model('F1 = 1-15
 #'                       CONSTRAIN = (1-15, a1)')
 #' mod_configural2 <- multipleGroup(dat, model2, group = group)
-#' plot(mod_configural2, type = 'infocontour')
 #' plot(mod_configural2, type = 'SE')
 #' plot(mod_configural2, type = 'RE')
 #' itemplot(mod_configural2, 10)

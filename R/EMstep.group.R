@@ -33,11 +33,13 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     lastpars2 <- lastpars1 <- listpars
     index <- 1L:nfullpars
     longpars <- rep(NA,nfullpars)
+    latent_longpars <- logical(nfullpars)
     ind1 <- 1L
     for(g in 1L:ngroups){
         for(i in 1L:(J+1L)){
             ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
             longpars[ind1:ind2] <- pars[[g]][[i]]@par
+            if(i == (J+1L)) latent_longpars[ind1:ind2] <- TRUE
             ind1 <- ind2 + 1L
         }
     }
@@ -154,7 +156,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
             d2X2 <- dX - dX2
             accel <- 1 - sqrt((dX %*% dX) / (d2X2 %*% d2X2))
             if(accel < -5) accel <- -5
-            longpars <- (1 - accel) * longpars + accel * preMstep.longpars
+            tmp <- (1 - accel) * longpars + accel * preMstep.longpars
+            longpars[!latent_longpars] <- tmp[!latent_longpars]
         }
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         EMhistory[cycles+1L,] <- longpars
@@ -316,6 +319,8 @@ Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, group
         gp <- ExtractGroupPars(pars[[g]][[J+1L]])
         chl <- try(chol(gp$gcov), silent=TRUE)
         if(is(chl, 'try-error')) return(1e100)
+        tmp <- outer(diag(gp$gcov), diag(gp$gcov))
+        if(any(gp$gcov[lower.tri(tmp)] >= tmp[lower.tri(tmp)])) return(1e100)
         tmp <- rr * mvtnorm::dmvnorm(theta, gp$gmeans[1L:ncol(theta)], 
                                      gp$gcov[1L:ncol(theta),1L:ncol(theta), drop=FALSE], log=TRUE)
         LL <- LL + sum(tmp)
