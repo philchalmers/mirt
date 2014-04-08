@@ -271,6 +271,10 @@ setMethod(
         ngroups <- length(cmods)
         for(g in 1L:ngroups)
             class(cmods[[g]]) <- 'ConfirmatoryClass'
+        if(MI > 0){
+            object <- assignInformationMG(object)
+            cmods <- object@cmods
+        }
         ret <- vector('list', length(cmods))
         for(g in 1L:ngroups)
             ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,

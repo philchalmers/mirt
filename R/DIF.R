@@ -51,6 +51,7 @@
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords DIF
+#' @seealso \code{\link{multipleGroup}}, \code{\link{DTF}}
 #' @export DIF
 #' @examples
 #' \dontrun{

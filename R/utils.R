@@ -1122,6 +1122,27 @@ smooth.cor <- function(x){
     x
 }
 
+assignInformationMG <- function(object){
+    J <- ncol(object@data)
+    names <- colnames(object@information)
+    spl_names <- strsplit(names, split="\\.")
+    spl_names_par <- sapply(spl_names, function(x) x[1L])
+    spl_names <- lapply(spl_names, 
+                        function(x) as.numeric(x[-1L]))
+    spl_names <- do.call(rbind, spl_names)
+    for(g in 1L:length(object@cmods)){
+        from <- object@cmods[[g]]@pars[[1L]]@parnum[1L]
+        to <- object@cmods[[g]]@pars[[J+1L]]@parnum[length(
+            object@cmods[[g]]@pars[[J+1L]]@parnum)]
+        pick <- spl_names[,g] >= from & spl_names[,g] <= to
+        tmp <- object@information[pick,pick]
+        colnames(tmp) <- rownames(tmp) <- 
+            paste(spl_names_par[pick], spl_names[pick,g], sep='.')
+        object@cmods[[g]]@information <- tmp
+    }
+    object
+}
+
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 
