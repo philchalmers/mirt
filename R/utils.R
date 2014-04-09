@@ -998,6 +998,8 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     J <- length(pars[[1L]]) - 1L
     info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=ESTIMATE$L,
                            npars=length(longpars))
+    isna <- rowSums(is.na(info)) > 0L
+    info <- info[!isna, !isna, drop=FALSE]
     ESTIMATE$info <- info
     SEtmp <- diag(solve(info))
     if(any(SEtmp < 0)){
@@ -1006,8 +1008,8 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     }
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
-    SE[ESTIMATE$estindex_unique] <- SEtmp
-    index <- 1L:length(longpars)
+    SE[ESTIMATE$estindex_unique[!isna]] <- SEtmp
+    index <- 1L:ncol(info)
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]

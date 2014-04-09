@@ -40,7 +40,7 @@ test_that('dich', {
     modm4 <- mirt(data, model, verbose = FALSE, SE=T, SE.type = 'crossprod')
     expect_equal(modm4@condnum, 7.271957, tolerance = 1e-4)
     cfs <- as.numeric(do.call(c, coef(modm4)))
-    expect_equal(cfs, c(1.01, 0.696, 1.325, 1.868, 1.658, 2.078, 0, NA, NA, 1, NA, NA, 1.01, 0.696, 1.325, 0.791, 0.629, 0.953, 0, NA, NA, 1, NA, NA, 1.01, 0.696, 1.325, 1.461, 1.266, 1.655, 0, NA, NA, 1, NA, NA, 1.01, 0.696, 1.325, 0.521, 0.365, 0.678, 0, NA, NA, 1, NA, NA, 1.01, 0.696, 1.325, 1.993, 1.785, 2.2, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
+    expect_equal(cfs, c(1.01, 0.696, 1.325, 1.868, 1.658, 2.078, 0, NA, NA, 1, NA, NA, 1.01, 0.696, 1.325, 0.791, 0.629, 0.953, 0, NA, NA, 1, NA, NA, 1.01, NA, NA, 1.461, 1.266, 1.655, 0, 0, 0, 1, NA, NA, 1.01, NA, NA, 0.521, 0.365, 0.678, 0, NA, NA, 1, NA, NA, 1.01, 0.696, 1.325, 1.993, 1.785, 2.2, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     svalues <- mirt(data, 1, pars = 'values', verbose=FALSE)
     svalues[22, 'value'] <- 2

@@ -267,7 +267,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         p <- longpars[groupest]
         res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
                    constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist, 
-                       Thetabetween=Thetabetween), 
+                       Thetabetween=Thetabetween, iterlim = 15L), 
                    silent=TRUE)
         if(is(res, 'try-error')) stop(res)
         longpars[groupest] <- res$estimate

@@ -106,15 +106,13 @@ setMethod(
         for(g in 2:ngroups) Theta <- rbind(Theta, ThetaFull)
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@groupNames)
         adj <- apply(x@data, 2, min)
-        if(any(adj > 0) && type == 'score')
-            message('Adjusted so that the lowest category score for every item is 0')
         gscore <- c()
         for(g in 1:ngroups){
             itemtrace <- computeItemtrace(x@cmods[[g]]@pars, ThetaFull, x@itemloc, 
                                           CUSTOM.IND=x@CUSTOM.IND)
             score <- c()
             for(i in 1:J)
-                score <- c(score, 0:(x@K[i]-1))
+                score <- c(score, 0:(x@K[i]-1) + adj[i])
             score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
             gscore <- c(gscore, rowSums(score * itemtrace))
         }

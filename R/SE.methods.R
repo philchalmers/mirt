@@ -247,7 +247,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     tabdata <- tabdata[,-ncol(tabdata)]
     gitemtrace <- rs <- vector('list', ngroups)
     for(g in 1L:ngroups){
-        rs[[g]] <- PrepList[[1L]]$tabdata[,ncol(tabdata)+1L]
+        rs[[g]] <- PrepList[[g]]$tabdata[,ncol(tabdata)+1L]
         gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, 
                                             itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     }
@@ -289,7 +289,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    info[lengthsplit > 2L, lengthsplit > 2L] <- 1
+    info[lengthsplit > 2L, lengthsplit > 2L] <- NA
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
     if(any(lengthsplit > 2L)){
         for(g in 1L:ngroups){
