@@ -5,16 +5,13 @@ PKGSRC  := $(shell basename `pwd`)
 all: install
 
 build:
-	cd ..;\
-	R CMD build $(PKGSRC)
+	Rscript -e "library('devtools',quietly=TRUE); build()"
 
 install:
-	cd ..;\
-	R CMD INSTALL $(PKGNAME)
+	Rscript -e "library('devtools',quietly=TRUE); install()"
 
-check: build
-	cd ..;\
-	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
+check:
+	Rscript -e "library('devtools',quietly=TRUE); check(cran=FALSE)"
 
 news:
 	sed -e 's/^-/  -/' -e 's/^## *//' -e 's/^# //' <NEWS.md | fmt -80 >NEWS

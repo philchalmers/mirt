@@ -16,8 +16,11 @@ DTF(mod, MI = NULL, CI = 0.95, npts = 200, digits = 4,
 
   \item{CI}{range of condfidince interval when using MI}
 
-  \item{npts}{number of points to use in the integration,
-  ranging from -6 to 6}
+  \item{npts}{number of points to use in the integration}
+
+  \item{theta_lim}{lower and upper limits of the latent
+  trait (theta) to be evaluated, and is used in conjunction
+  with \code{npts}}
 
   \item{digits}{number of digits to round result to}
 }

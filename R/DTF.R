@@ -14,7 +14,9 @@
 #'   for the expected test scores (100 or more). Requires an estimated parameter
 #'   information matrix
 #' @param CI range of condfidince interval when using MI
-#' @param npts number of points to use in the integration, ranging from -6 to 6
+#' @param npts number of points to use in the integration
+#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
+#'   used in conjunction with \code{npts}
 #' @param digits number of digits to round result to
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
