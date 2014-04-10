@@ -125,8 +125,8 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
         T1 <- expected.test(mod, Theta, group=1)
         T2 <- expected.test(mod, Theta, group=2)
         D <- T1 - T2
-        uDTF <- mean(abs(D))
-        uDTF_percent <- uDTF/max_score * 100
+        uDTF <- mean(D^2)
+        uDTF_percent <- sqrt(uDTF)/max_score * 100
         sDTF <- mean(D)
         sDTF_percent <- sDTF/max_score * 100
         max_DTF_percent <- max(abs(D))/max_score * 100
@@ -139,15 +139,21 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
         scores <- do.call(rbind, list_scores)
         CM <- apply(scores, 2, mean)
         SD <- apply(scores, 2, sd)
+        t_sDTF <- CM[1L] / SD[1L]
+        p_sDTF <- pt(abs(t_sDTF), df=MI-1, lower.tail=FALSE)
+        t_DTF <- CM[3L] / SD[3L]
+        p_DTF <- pt(t_DTF, df=MI-1, lower.tail=FALSE) * 2 #one-tailed
         tt <- qt(CI + (1-CI)/2, df=MI-1)
         upper <- CM + tt * SD
         lower <- CM - tt * SD
         signed <- rbind(upper[1:2], CM[1:2], lower[1:2])
         unsigned <- rbind(upper[3:5], CM[3:5], lower[3:5])
+        tests <- c(p_sDTF, p_DTF)
+        names(tests) <- c("P(sDTF = 0)", "P(uDTF = 0)")
         rownames(signed) <- rownames(unsigned) <-
             c(paste0('CI_', round(CI + (1-CI)/2,3)), 'value',
               paste0('CI_', round((1-CI)/2, 3)))
-        ret <- list(signed=signed, unsigned=unsigned)
+        ret <- list(signed=signed, unsigned=unsigned, tests=tests)
     }
     ret <- lapply(ret, round, digits=digits)
     ret

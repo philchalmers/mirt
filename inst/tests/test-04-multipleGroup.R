@@ -23,7 +23,7 @@ test_that('one factor', {
     expect_equal(mod_configural@df, 32707)
     dtf <- DTF(mod_configural, digits=7)
     cfs <- as.numeric(c(dtf$signed, dtf$unsigned))
-    expect_equal(cfs, c(-0.0562109, -0.3747396, 0.2838383, 1.8922554, 4.4389564), tolerance=1e-3)
+    expect_equal(cfs, c(-0.0562109, -0.3747396, 0.1187070, 2.2969256, 4.4389564), tolerance=1e-3)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE,
                                 method = 'EM')
     expect_is(mod_metric, 'MultipleGroupClass')
