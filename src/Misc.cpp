@@ -42,9 +42,7 @@ RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
                 p(j) = longpars(ind+j);
             ind += len;
             item.slot("par") = p;
-            glist[i] = item;
         }
-        pars[g] = glist;
     }
 
     return(pars);
