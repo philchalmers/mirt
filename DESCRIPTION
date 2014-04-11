@@ -3,8 +3,8 @@ Version: 1.2.7
 Date: 2014-02-20
 Type: Package
 Title: Multidimensional Item Response Theory
-Authors@R: c( person("Phil", "Chalmers", email = "rphilip.chalmers@gmail.com",
-    role = c("aut", "cre")), person("Joshua", "Pritikin", role=c('ctb')))
+Authors@R: c( person("Phil", family="Chalmers", email = "rphilip.chalmers@gmail.com",
+    role = c("aut", "cre")), person("Joshua", family="Pritikin", role=c('ctb')))
 Description: Analysis of dichotomous and polytomous response data using
     unidimensional and multidimensional latent trait models under the Item
     Response Theory paradigm. Exploratory and confirmatory models can be
@@ -35,6 +35,8 @@ ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
 LinkingTo: Rcpp
-Repository: github
+Author: Phil Chalmers [cre, aut],
+    Joshua Pritikin [ctb]
+Repository: CRAN
 License: GPL (>= 2)
 URL: https://github.com/philchalmers/mirt
