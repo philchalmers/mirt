@@ -970,8 +970,21 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     return(opts)
 }
 
-reloadPars <- function(longpars, pars, ngroups, J){
-    return(.Call('reloadPars', longpars, pars, ngroups, J))
+reloadPars <- function(longpars, pars, ngroups, J){    
+    if(FALSE){
+        pars <- .Call('reloadPars', longpars, pars, ngroups, J)
+    } else {
+        #slower version for now till R 3.1.0 evaluation bug gets fixed. FIXME
+        ind <- 1L
+        for(g in 1L:ngroups){
+            for(i in 1L:(J+1L)){
+                tmp <- pars[[g]][[i]]@par
+                pars[[g]][[i]]@par <- longpars[ind:(ind+length(tmp)-1L)]
+                ind <- ind + length(tmp)
+            }
+        }
+    }
+    return(pars)
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
