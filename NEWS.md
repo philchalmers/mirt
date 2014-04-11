@@ -2,6 +2,10 @@
 
 ## MAJOR CHANGES
 
+- M-step optimizer now automatically selected to be 'BFGS' if there are no bounded parameters, and
+  'L-BFGS-B' otherwise. Some models will have notibly different parameter estimates because of 
+  this, but should have nearly identical model log-likelihoods
+
 - better shiny UI which adapts to the itemtype specifically, and allows for classical parameter
   inputs (special thanks to Jonathan Lehrfeld for providing code that inspired both these changes)
 

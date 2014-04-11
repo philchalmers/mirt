@@ -87,6 +87,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- groupest[constrain[[i]][-1L]] <- FALSE
     names(longpars) <- names(est)
+    Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'
+    if(list$Moptim == 'Brent') Moptim <- 'Brent'
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
     ANY.PRIOR <- rep(FALSE, ngroups)
@@ -147,7 +149,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
-                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND,
+                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
                           BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
                           rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV)
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){
@@ -170,7 +172,10 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     if(cycles == NCYCLES){
         message('EM iterations terminated after ', cycles, ' iterations.')
         converge <- 0L
-    }
+    } else if(cycles == 1L && !(all(!est) && all(!groupest))){
+        warnings('M-step optimimizer converged immediately. Solution is either at the ML or
+                 starting values are causing issues and should be adjusted. ')
+    } 
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
@@ -197,7 +202,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         hess <- updateHess(h=h, L2=L2, L3=L3)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
         return(list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
-                    logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
+                    logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
@@ -242,23 +247,37 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, CUSTOM.IND, 
-                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween){
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim){
     p <- longpars[est]
-    maxit <- ifelse(cycle > 10L, 25L, 10L)
-    opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
-                     control=list(maxit=maxit, fnscale = -1L),
-                     DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                     est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                     PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                     UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est]),
-            silent=TRUE)
-#     #uncomment for testing with nlm
-#     opt <- try(optim(f=Mstep.LL, p,
-#                      DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-#                      est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, Theta=Theta,
-#                      PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-#                      UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
-#                silent=TRUE)
+    if(Moptim == 'BFGS'){
+        maxit <- ifelse(cycle > 10L, 30L, 10L)
+        opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
+                         control=list(maxit=maxit, fnscale = -1L),
+                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                silent=TRUE)
+    } else if(Moptim == 'L-BFGS-B'){
+        maxit <- ifelse(cycle > 10L, 50L, 20L)
+        opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
+                         control=list(maxit=maxit, fnscale = -1L),
+                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
+                         upper=UBOUND[est]),
+                   silent=TRUE)
+    } else if(Moptim == 'Brent'){
+        maxit <- ifelse(cycle > 10L, 250L, 100L)
+        opt <- try(optim(f=Mstep.LL, p, control=list(maxit=maxit, fnscale = -1L),
+                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
+                         upper=UBOUND[est]),
+                   silent=TRUE)
+    }
     if(is(opt, 'try-error'))
         stop(opt)
     longpars[est] <- opt$par    
