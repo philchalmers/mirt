@@ -173,7 +173,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         message('EM iterations terminated after ', cycles, ' iterations.')
         converge <- 0L
     } else if(cycles == 1L && !(all(!est) && all(!groupest))){
-        warnings('M-step optimimizer converged immediately. Solution is either at the ML or
+        warning('M-step optimimizer converged immediately. Solution is either at the ML or
                  starting values are causing issues and should be adjusted. ')
     } 
     infological <- estpars & !redun_constr
@@ -250,7 +250,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                   SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim){
     p <- longpars[est]
     if(Moptim == 'BFGS'){
-        maxit <- ifelse(cycle > 10L, 30L, 10L)
+        maxit <- ifelse(cycle > 10L, 20L, 10L)
         opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
                          control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
@@ -259,7 +259,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                          UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                 silent=TRUE)
     } else if(Moptim == 'L-BFGS-B'){
-        maxit <- ifelse(cycle > 10L, 50L, 20L)
+        maxit <- ifelse(cycle > 10L, 40L, 20L)
         opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
                          control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
@@ -270,7 +270,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                    silent=TRUE)
     } else if(Moptim == 'Brent'){
         maxit <- ifelse(cycle > 10L, 250L, 100L)
-        opt <- try(optim(f=Mstep.LL, p, control=list(maxit=maxit, fnscale = -1L),
+        opt <- try(optim(p, fn=Mstep.LL, method='L-BFGS-B', control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                          est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                          PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,

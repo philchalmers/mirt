@@ -719,7 +719,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    itemtype=PrepList[[1L]]$itemtype,
                    information=ESTIMATE$info)
     }
-    if(length(mod@information) > 1L){
+    if(length(mod@information) > 1L && !ESTIMATE$fail_invert_info){
         mod@condnum <- norm(mod@information, type='2') * norm(solve(mod@information), type='2')
         ev <- eigen(mod@information)$values
         if(is.complex(ev)){

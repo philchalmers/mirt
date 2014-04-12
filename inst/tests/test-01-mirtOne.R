@@ -30,7 +30,7 @@ test_that('dich', {
     expect_is(modm3, 'ConfirmatoryClass')
     expect_equal(modm3@df, 25)
     dat <- expand.table(LSAT6)
-    modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, verbose=FALSE)
+    modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm3)))
     expect_equal(cfs, c(1, NA, NA, 2.73, 2.478, 2.982, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.999, 0.842, 1.155, 0, NA, NA, 1, NA, NA, 1, NA, NA, 0.24, 0.1, 0.38, 0, NA, NA, 1, NA, NA, 1, NA, NA, 1.306, 1.14, 1.473, 0, NA, NA, 1, NA, NA, 1, NA, NA, 2.099, 1.899, 2.3, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0.57, 0.369, 0.772),
@@ -51,7 +51,7 @@ test_that('dich', {
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(4.206, 6.138, 0.131, 0.896, 12.553, 2.707, 0.33, 0.89, 4.725, 2.934, 0.339, 0.938, 4.535, 4.851, 0.121, 0.7, 1.791, 3.445, 0.151, 0.907, 0, 1), tolerance = 1e-2)
+    expect_equal(cfs, c(4.276, 6.238, 0.132, 0.896, 12.935, 2.819, 0.329, 0.89, 4.675, 2.918, 0.337, 0.938, 4.592, 4.908, 0.122, 0.699, 1.791, 3.446, 0.151, 0.907, 0, 1), tolerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 21)

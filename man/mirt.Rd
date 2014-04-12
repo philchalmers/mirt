@@ -4,7 +4,7 @@
 Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  SE.type = "SEM", method = "EM", pars = NULL, constrain = NULL,
+  SE.type = "crossprod", method = "EM", pars = NULL, constrain = NULL,
   parprior = NULL, calcNull = TRUE, draws = 5000, rotate = "oblimin",
   Target = NaN, quadpts = NULL, TOL = NULL, grsm.block = NULL,
   rsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
@@ -272,7 +272,14 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   (\code{mixedmirt()} requires additional values for random
   effect).  If null, these values are determined
   internally, attempting to make the draws between .1 and
-  .4} }}
+  .4} \item{Moptim}{Choose which optimizer to use. By
+  default the EM algorithm with use the \code{'BFGS'} when
+  there are no upper and lower bounds, and
+  \code{'L-BFGS-B'} when there are. For debugging purposes
+  the estimator \code{'Brent'} may also be used, though its
+  routine use is not recommended. The MH-RM algorithm uses
+  the Newton-Raphson by default, and currently cannot be
+  changed} }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -494,7 +501,8 @@ data <- expand.table(LSAT7)
 
 (mod1 <- mirt(data, 1))
 coef(mod1)
-(mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
+(mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with crossprod method
+(mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 coef(mod2)
 (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 residuals(mod1)

@@ -317,6 +317,11 @@
 #'          item factor analysis (\code{mixedmirt()} requires additional values for random effect). 
 #'          If null, these values are determined internally, attempting to make the draws between
 #'          .1 and .4}
+#'     \item{Moptim}{Choose which optimizer to use. By default the EM algorithm with use the 
+#'          \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'} when there
+#'          are. For debugging purposes the estimator \code{'Brent'} may also be used, though 
+#'          its routine use is not recommended. The MH-RM algorithm uses the Newton-Raphson by 
+#'          default, and currently cannot be changed}
 #'   }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -400,7 +405,8 @@
 #'
 #' (mod1 <- mirt(data, 1))
 #' coef(mod1)
-#' (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with SEM method
+#' (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with crossprod method
+#' (mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 #' coef(mod2)
 #' (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 #' residuals(mod1)
@@ -445,7 +451,7 @@
 #' cmod <- mirt(data, cmodel)
 #' coef(cmod)
 #' anova(cmod, mod2)
-#' #check if identified by looking at second order condition
+#' #check if identified by compting information matrix
 #' (cmod <- mirt(data, cmodel, SE = T))
 #'
 #' ###########
@@ -686,7 +692,7 @@
 #'
 #'
 #' }
-mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'SEM',
+mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, SE.type = 'crossprod',
                  method = 'EM', pars = NULL, constrain = NULL, parprior = NULL,
                  calcNull = TRUE, draws = 5000, rotate = 'oblimin',
                  Target = NaN, quadpts = NULL, TOL = NULL, grsm.block = NULL, rsm.block = NULL,

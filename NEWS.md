@@ -2,6 +2,9 @@
 
 ## MAJOR CHANGES
 
+- Default `SE.type` changed to `crossprod` since it is better at detecting when models are not 
+  identified compared to `SEM`, and is generally much cheaper to compute for larger models
+
 - M-step optimizer now automatically selected to be 'BFGS' if there are no bounded parameters, and
   'L-BFGS-B' otherwise. Some models will have notibly different parameter estimates because of 
   this, but should have nearly identical model log-likelihoods

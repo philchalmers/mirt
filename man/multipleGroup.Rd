@@ -3,7 +3,7 @@
 \title{Multiple Group Estimation}
 \usage{
 multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,
-  SE = FALSE, SE.type = "SEM", invariance = "", pars = NULL,
+  SE = FALSE, SE.type = "crossprod", invariance = "", pars = NULL,
   method = "EM", constrain = NULL, parprior = NULL, calcNull = TRUE,
   draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL,
   rsm.block = NULL, key = NULL, technical = list(), accelerate = TRUE,

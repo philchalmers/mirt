@@ -961,7 +961,11 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
-    if(is.null(technical$Moptim)) opts$Moptim <- 'BFGS'
+    if(is.null(technical$Moptim)){
+        opts$Moptim <- if(method == 'EM') 'BFGS' else 'NR'
+    } else {
+        opts$Moptim <- technical$Moptim
+    }
     if(!is.null(large)){
         if(is.logical(large))
             if(large) opts$returnPrepList <- TRUE
@@ -1015,6 +1019,12 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     isna <- rowSums(is.na(info)) > 0L
     info <- info[!isna, !isna, drop=FALSE]
     ESTIMATE$info <- info
+    acov <- try(solve(info), TRUE)
+    if(is(acov, 'try-error')){
+        warning('Could not invert information matrix; model likely is not identified.')
+        ESTIMATE$fail_invert_info <- TRUE
+        return(ESTIMATE)
+    } else ESTIMATE$fail_invert_info <- FALSE
     SEtmp <- diag(solve(info))
     if(any(SEtmp < 0)){
         warning("Negative SEs set to NaN.\n")
