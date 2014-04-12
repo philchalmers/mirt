@@ -87,8 +87,11 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- groupest[constrain[[i]][-1L]] <- FALSE
     names(longpars) <- names(est)
-    Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'
-    if(list$Moptim == 'Brent') Moptim <- 'Brent'
+    if(list$Moptim != 'BFGS') {
+        Moptim <- list$Moptim    
+    } else {
+        Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'    
+    }
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
     ANY.PRIOR <- rep(FALSE, ngroups)
@@ -268,15 +271,22 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                          UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
                          upper=UBOUND[est]),
                    silent=TRUE)
-    } else if(Moptim == 'Brent'){
-        maxit <- ifelse(cycle > 10L, 250L, 100L)
-        opt <- try(optim(p, fn=Mstep.LL, method='L-BFGS-B', control=list(maxit=maxit, fnscale = -1L),
+    } else if(Moptim == 'Nelder-Mead'){
+        opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=list(fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                          est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                          PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
-                         upper=UBOUND[est]),
+                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                    silent=TRUE)
+    } else if(Moptim == 'SANN'){
+        opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=list(fnscale = -1L),
+                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                   silent=TRUE)
+    } else {
+        stop('M-step optimzer not supported')
     }
     if(is(opt, 'try-error'))
         stop(opt)

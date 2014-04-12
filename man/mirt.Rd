@@ -275,11 +275,11 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   .4} \item{Moptim}{Choose which optimizer to use. By
   default the EM algorithm with use the \code{'BFGS'} when
   there are no upper and lower bounds, and
-  \code{'L-BFGS-B'} when there are. For debugging purposes
-  the estimator \code{'Brent'} may also be used, though its
-  routine use is not recommended. The MH-RM algorithm uses
-  the Newton-Raphson by default, and currently cannot be
-  changed} }}
+  \code{'L-BFGS-B'} when there are. The
+  \code{'Nelder-Mead'} and \code{'SANN'} estimators may
+  also be used, though their routine use generally is not
+  required. The MH-RM algorithm uses the Newton-Raphson by
+  default, and currently cannot be changed} }}
 
   \item{...}{additional arguments to be passed}
 }
@@ -547,7 +547,7 @@ cmodel <- mirt.model('
 cmod <- mirt(data, cmodel)
 coef(cmod)
 anova(cmod, mod2)
-#check if identified by looking at second order condition
+#check if identified by compting information matrix
 (cmod <- mirt(data, cmodel, SE = T))
 
 ###########

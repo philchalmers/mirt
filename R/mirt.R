@@ -319,8 +319,8 @@
 #'          .1 and .4}
 #'     \item{Moptim}{Choose which optimizer to use. By default the EM algorithm with use the 
 #'          \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'} when there
-#'          are. For debugging purposes the estimator \code{'Brent'} may also be used, though 
-#'          its routine use is not recommended. The MH-RM algorithm uses the Newton-Raphson by 
+#'          are. The \code{'Nelder-Mead'} and \code{'SANN'} estimators may also be used, though 
+#'          their routine use generally is not required. The MH-RM algorithm uses the Newton-Raphson by 
 #'          default, and currently cannot be changed}
 #'   }
 #' @param ... additional arguments to be passed
