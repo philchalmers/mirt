@@ -451,7 +451,7 @@
 #' cmod <- mirt(data, cmodel)
 #' coef(cmod)
 #' anova(cmod, mod2)
-#' #check if identified by compting information matrix
+#' #check if identified by computing information matrix
 #' (cmod <- mirt(data, cmodel, SE = T))
 #'
 #' ###########

@@ -21,6 +21,8 @@
 
 ## NEW FEATURES
 
+- `printCI` logical option to `summary()` to print confidence intervals for standardized loadings
+
 - `DTF()` function added for compting various differential test functioning methods based on the
   expected total score function (sometimes called the 'true score' function)
 

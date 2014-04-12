@@ -479,14 +479,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.post <- proc.time()[3L]
     cmods <- list()
     for(g in 1L:Data$ngroups){
-        lambdas <- Lambdas(ESTIMATE$pars[[g]]) * opts$D/1.702
-        if (ncol(lambdas) > 1L) norm <- sqrt(1 + rowSums(lambdas^2))
-        else norm <- as.matrix(sqrt(1 + lambdas[ ,1L]^2))
-        alp <- as.matrix(lambdas/norm)
-        F <- alp
+        Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
         if(opts$method != 'MIXED')
-            colnames(F) <- PrepList[[g]]$factorNames
-        h2 <- rowSums(F^2)
+            colnames(Flist$F) <- PrepList[[g]]$factorNames
+        h2 <- rowSums(Flist$F^2)
+        F <- Flist$F
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc,
                           tabdata=PrepList[[g]]$tabdata2, data=Data$data[group == Data$groupNames[[g]], ],
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[g]]$prodlist,
@@ -581,7 +578,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        cand.t.var=ESTIMATE$cand.t.var,
                        information=ESTIMATE$info)
         } else if(PrepList[[1L]]$exploratory){
-            FF <- alp %*% t(alp)
+            FF <- F %*% t(F)
             V <- eigen(FF)$vector[ ,1L:nfact]
             L <- eigen(FF)$values[1L:nfact]
             if (nfact == 1L) F <- as.matrix(V * sqrt(L))

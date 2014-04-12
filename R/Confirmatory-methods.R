@@ -20,7 +20,7 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'ConfirmatoryClass',
-    definition = function(object, suppress = 0, digits = 3, verbose = TRUE, ...)
+    definition = function(object, suppress = 0, digits = 3, verbose = TRUE, printCI = NA, ...)
     {
         nfact <- ncol(object@F)
         itemnames <- colnames(object@data)
@@ -33,14 +33,26 @@ setMethod(
         Phi <- gpars$gcov
         Phi <- round(Phi, digits)
         colnames(Phi) <- rownames(Phi) <- paste('F',1:ncol(Phi), sep='')
+        Flist <- list()
         if(verbose){
             cat("\nFactor loadings metric: \n")
             print(cbind(F, h2),digits)
             cat("\nSS loadings: ",round(SS,digits), "\n")
             cat("\nFactor covariance: \n")
             print(Phi)
+            if(!is.na(printCI)){
+                Flist <- Lambdas(object@pars, Names=itemnames, explor=FALSE, alpha=1-printCI)
+                cat("\n----------------------------------------------------")
+                cat("\n", paste0(printCI*100,"%"), "Confidence Intervals for Standardized Loadings: \n")  
+                lo <- paste0(colnames(Flist$lower), '_2.5')
+                hi <- paste0(colnames(Flist$lower), '_97.5')
+                tmp <- data.frame(round(Flist$lower, digits),"."='.', 
+                                  round(Flist$upper, digits))
+                colnames(tmp) <- c(lo, '.', hi)
+                print(tmp)
+            }
         }
-        invisible(list(F=F, fcor=Phi))
+        invisible(list(F=F, fcor=Phi, lower=Flist$lower, upper=Flist$upper))
     }
 )
 

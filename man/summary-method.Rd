@@ -8,7 +8,7 @@
 \title{Summary of model object}
 \usage{
 \S4method{summary}{ExploratoryClass}(object, rotate = "", Target = NULL,
-  suppress = 0, digits = 3, verbose = TRUE, ...)
+  suppress = 0, digits = 3, printCI = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{object}{an object of class \code{ExploratoryClass},
@@ -24,6 +24,10 @@
   (possibly rotated) factor loadings should be suppressed.
   Typical values are around .3 in most statistical
   software. Default is 0 for no suppression}
+
+  \item{printCI}{print a confidence interval for
+  standardized loadings (e.g., \code{printCI = .95} gives a
+  95\% confidence interval)}
 
   \item{digits}{number of significant digits to be rounded}
 
@@ -42,6 +46,10 @@ and random coefficients are printed.
 x <- mirt(Science, 2)
 summary(x)
 summary(x, rotate = 'varimax')
+
+#print confidence interval (requires computed information matrix)
+x2 <- mirt(Science, 1, SE=TRUE)
+summary(x2, printCI=.95)
 }
 }
 \seealso{
