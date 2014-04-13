@@ -557,6 +557,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        BIC=BIC,
                        SABIC=SABIC,
                        logLik=logLik,
+                       SElogLik=SElogLik,
                        F=F,
                        h2=h2,
                        infomethod=opts$SE.type,
