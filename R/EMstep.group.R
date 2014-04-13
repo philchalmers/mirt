@@ -153,7 +153,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                          BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
+                          BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, SEM=list$SEM,
                           rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV)
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){
             dX2 <- preMstep.longpars - preMstep.longpars2
@@ -250,10 +250,10 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, CUSTOM.IND, 
-                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim){
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, SEM){
     p <- longpars[est]
     if(Moptim == 'BFGS'){
-        maxit <- ifelse(cycle > 10L, 20L, 10L)
+        maxit <- ifelse(cycle > 10L, ifelse(SEM, 100L, 20L), 10L)
         opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
                          control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
@@ -262,7 +262,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                          UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                 silent=TRUE)
     } else if(Moptim == 'L-BFGS-B'){
-        maxit <- ifelse(cycle > 10L, 40L, 20L)
+        maxit <- ifelse(cycle > 10L, ifelse(SEM, 100L, 40L), 20L)
         opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
                          control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
