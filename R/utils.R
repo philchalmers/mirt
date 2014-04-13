@@ -246,20 +246,11 @@ Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
         tmp@par <- pars[[i]]@par + z * pars[[i]]@SEpar
         upperlambdas[i,] <- ExtractLambdas(tmp)/1.702
     }
-    if(ncol(lambdas) > 1L){
-        norm <- sqrt(1 + rowSums(lambdas^2))
-    } else {
-        norm <- as.matrix(sqrt(1 + lambdas[ ,1L]^2))
-    }
+    norm <- sqrt(1 + rowSums(lambdas^2))
     F <- as.matrix(lambdas/norm)
     if(!explor){
-        if(ncol(lambdas) > 1L){
-            norml <- sqrt(1 + rowSums(lowerlambdas^2))
-            normh <- sqrt(1 + rowSums(upperlambdas^2))
-        } else {
-            norml <- as.matrix(sqrt(1 + lowerlambdas[ ,1L]^2))
-            normh <- as.matrix(sqrt(1 + upperlambdas[ ,1L]^2))
-        }
+        norml <- sqrt(1 + rowSums(lowerlambdas^2, na.rm=TRUE))
+        normh <- sqrt(1 + rowSums(upperlambdas^2, na.rm=TRUE))
         ret <- list(F=F, lower=as.matrix(lowerlambdas/norml), 
                     upper=as.matrix(upperlambdas/normh))
     } else {

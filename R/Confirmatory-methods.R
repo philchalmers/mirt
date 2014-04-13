@@ -44,8 +44,10 @@ setMethod(
                 Flist <- Lambdas(object@pars, Names=itemnames, explor=FALSE, alpha=1-printCI)
                 cat("\n----------------------------------------------------")
                 cat("\n", paste0(printCI*100,"%"), "Confidence Intervals for Standardized Loadings: \n")  
-                lo <- paste0(colnames(Flist$lower), '_2.5')
-                hi <- paste0(colnames(Flist$lower), '_97.5')
+                lb <- paste0('(', (1-printCI)/2, ')')
+                ub <- paste0('(', printCI + (1-printCI)/2, ')')
+                lo <- paste0(colnames(F), lb)
+                hi <- paste0(colnames(F), ub)
                 tmp <- data.frame(round(Flist$lower, digits),"."='.', 
                                   round(Flist$upper, digits))
                 colnames(tmp) <- c(lo, '.', hi)
