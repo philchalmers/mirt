@@ -22,22 +22,27 @@ setMethod(
     definition = function(x){
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
-        cat("Full-information item factor analysis with ", x@nfact, " factors \n", sep="")
+        cat("Full-information item factor analysis with ", x@nfact, " factor(s)\n", sep="")
         EMquad <- ''
         if(x@method == 'EM') EMquad <- c(' with ', x@quadpts, ' quadrature')
+        method <- x@method
+        if(method == 'MIXED') method <- 'MHRM'
         if(x@converge == 1)
-            cat("Converged in ", x@iter, " iterations", EMquad, ". \n", sep = "")
+            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ', 
+                method, " iterations", EMquad, "\n", sep = "")
         else
-            cat("Estimation stopped after ", x@iter, " iterations", EMquad, ". \n", sep="")
-        if(!is.nan(x@condnum))
-            cat("Condition number of information matrix = ", x@condnum,
+            cat("Estimation failed to converge within ", x@TOL, ' tolerance after ', 
+                x@iter, ' ', method, " iterations", EMquad, ". \n", sep="")
+        if(!is.nan(x@condnum)){
+            cat("Information matrix estimated with method:", x@infomethod)
+            cat("\nCondition number of information matrix = ", x@condnum,
                 '\nSecond-order test: model ', if(!x@secondordertest)
                     'is not a maximum, or the information matrix is too inaccurate' else
                         'is a possible local maximum', '\n', sep = "")
+        }
         if(length(x@logLik) > 0){
-            cat("Log-likelihood = ", x@logLik, ifelse(length(x@SElogLik) > 0,
-                                                      paste(', SE = ', round(x@SElogLik,3)),
-                                                      ''), "\n",sep='')
+            cat("\nLog-likelihood = ", x@logLik, if(method == 'MHRM')
+                paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
             cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
             cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
             if(!is.nan(x@p)){

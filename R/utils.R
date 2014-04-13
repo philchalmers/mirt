@@ -921,7 +921,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
                      ...)
 {
     opts <- list()
-    if(method == 'MHRM' && SE.type == 'SEM') SE.type <- 'MHRM'
+    if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
     D <- 1
     opts$method = method
     opts$draws = draws
@@ -943,7 +943,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$TOL <- ifelse(is.null(TOL), if(method == 'EM') 1e-4 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- FALSE
-        if(is.null(TOL)) opts$TOL <- 1e-6
+        if(is.null(TOL)) opts$TOL <- 1e-5
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
         opts$SEtol <- ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     }

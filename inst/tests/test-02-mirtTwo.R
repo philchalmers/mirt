@@ -34,7 +34,7 @@ test_that('poly', {
     modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp1)))
-    expect_equal(cfs, c(1.041, 0.637, 1.445, 4.863, 3.853, 5.872, 2.639, 2.193, 3.085, -1.465, -1.808, -1.123, 1.226, 0.574, 1.877, 2.924, 1.145, 4.703, 0.901, 0.315, 1.487, -2.266, -2.678, -1.855, 2.301, 1.304, 3.297, 5.245, 3.713, 6.777, 2.219, 1.451, 2.986, -1.967, -2.635, -1.3, 1.094, 0.709, 1.479, 3.347, 2.803, 3.891, 0.991, 0.709, 1.274, -1.688, -2.044, -1.331, 0, NA, NA, 1, NA, NA),
+    expect_equal(cfs, c(1.041, 0.657, 1.424, 4.863, 3.343, 6.382, 2.639, 2.18, 3.099, -1.466, -1.77, -1.161, 1.226, 0.884, 1.567, 2.924, 2.454, 3.394, 0.901, 0.614, 1.189, -2.266, -2.646, -1.887, 2.3, 1.34, 3.259, 5.244, 3.837, 6.651, 2.218, 1.518, 2.919, -1.967, -2.602, -1.333, 1.094, 0.732, 1.456, 3.347, 2.808, 3.886, 0.991, 0.723, 1.26, -1.688, -2.017, -1.358, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     suppressMessages(modp2 <- mirt(Science, 2, verbose=FALSE))
     expect_is(modp2, 'ExploratoryClass')
@@ -66,7 +66,7 @@ test_that('poly', {
     modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp5, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
-    expect_equal(cfs, c(1.057, 0.671, 1.442, 4.876, 3.909, 5.843, 2.649, 2.209, 3.09, -1.472, -1.789, -1.155, 1.219, 0.858, 1.58, 2.918, 2.448, 3.387, 0.9, 0.621, 1.179, -2.263, -2.663, -1.863, 2.255, 1.297, 3.213, 5.178, 3.707, 6.648, 2.19, 1.466, 2.914, -1.943, -2.574, -1.311, 0.77, 0.458, 1.083, 0, NA, NA, 1, NA, NA, 2, NA, NA, 3, NA, NA, 0, NA, NA, 2.159, 1.544, 2.775, 2.973, 2.284, 3.663, 1.767, 1.131, 2.403, 0, NA, NA, 1, NA, NA),
+    expect_equal(cfs, c(1.057, 0.672, 1.441, 4.876, 3.368, 6.384, 2.65, 2.197, 3.102, -1.472, -1.785, -1.159, 1.219, 0.84, 1.598, 2.918, 2.449, 3.387, 0.9, 0.616, 1.183, -2.263, -2.684, -1.843, 2.254, 1.336, 3.173, 5.177, 3.78, 6.573, 2.19, 1.497, 2.883, -1.942, -2.557, -1.327, 0.771, 0.472, 1.069, 0, NA, NA, 1, NA, NA, 2, NA, NA, 3, NA, NA, 0, NA, NA, 2.16, 1.55, 2.769, 2.973, 2.289, 3.658, 1.767, 1.134, 2.4, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE)
     expect_is(modp6, 'ConfirmatoryClass')
@@ -77,7 +77,7 @@ test_that('poly', {
     fm1 <- fscores(modp1, verbose = FALSE)
     expect_is(fm1, 'matrix')
     expect_true(mirt:::closeEnough(fm1[1:6,'F1'] - c(-2.7173474, -1.4189304, -0.7155405,
-                                                     -0.4452374, -2.5339610, -1.2481305), -1e-4, 1e-4))
+                                                     -0.4452374, -2.5339610, -1.2481305), -1e-2, 1e-2))
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
@@ -92,7 +92,7 @@ test_that('poly', {
     fm5 <- fscores(modp5, verbose = FALSE)
     expect_is(fm5, 'matrix')
     expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.6953386, -1.4445425, -0.7365539,
-                                                     -0.5624948, -2.5085663, -1.1733173), -1e-4, 1e-4))
+                                                     -0.5624948, -2.5085663, -1.1733173), -1e-2, 1e-2))
 
     resmat <- residuals(modp3, type = 'Q3', Theta = fm3[,'F1'], verbose = FALSE)
     expect_equal(as.numeric(resmat), c(1, -0.167, -0.144, 0.084, -0.167, 1, -0.055, -0.218, -0.144, -0.055, 1, -0.447, 0.084, -0.218, -0.447, 1))

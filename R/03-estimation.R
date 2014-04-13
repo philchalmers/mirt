@@ -559,6 +559,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        logLik=logLik,
                        F=F,
                        h2=h2,
+                       infomethod=opts$SE.type,
                        tabdata=PrepList[[1L]]$tabdata2,
                        Pl=Pl[[1L]],
                        data=Data$data,
@@ -576,7 +577,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        itemtype=PrepList[[1L]]$itemtype,
                        random=ESTIMATE$random,
                        cand.t.var=ESTIMATE$cand.t.var,
-                       information=ESTIMATE$info)
+                       information=ESTIMATE$info,
+                       TOL=opts$TOL)
         } else if(PrepList[[1L]]$exploratory){
             FF <- F %*% t(F)
             V <- eigen(FF)$vector[ ,1L:nfact]
@@ -602,6 +604,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        BIC=BIC,
                        SABIC=SABIC,
                        logLik=logLik,
+                       SElogLik=SElogLik,
                        F=F,
                        h2=h2,
                        tabdata=PrepList[[1L]]$tabdata2,
@@ -625,7 +628,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        nest=as.integer(dfsubtr),
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
-                       information=ESTIMATE$info)
+                       information=ESTIMATE$info,
+                       infomethod=opts$SE.type,
+                       TOL=opts$TOL)
         } else {
             mod <- new('ConfirmatoryClass', iter=ESTIMATE$cycles,
                        pars=cmods[[1L]]@pars,
@@ -642,6 +647,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        BIC=BIC,
                        SABIC=SABIC,
                        logLik=logLik,
+                       SElogLik=SElogLik,
                        F=F,
                        h2=h2,
                        CUSTOM.IND=CUSTOM.IND,
@@ -668,7 +674,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        nest=as.integer(dfsubtr),
                        fulldata=PrepList[[1L]]$fulldata,
                        itemtype=PrepList[[1L]]$itemtype,
-                       information=ESTIMATE$info)
+                       information=ESTIMATE$info,
+                       infomethod=opts$SE.type,
+                       TOL=opts$TOL)
         }
     } else {
         tabdatalong <- PrepList[[1L]]$tabdata
@@ -714,7 +722,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                             sitems=ESTIMATE$sitems, specific=specific) else list(),
                    nest=as.integer(dfsubtr),
                    itemtype=PrepList[[1L]]$itemtype,
-                   information=ESTIMATE$info)
+                   information=ESTIMATE$info,
+                   infomethod=opts$SE.type,
+                   TOL=opts$TOL)
     }
     if(length(mod@information) > 1L && !ESTIMATE$fail_invert_info){
         mod@condnum <- norm(mod@information, type='2') * norm(solve(mod@information), type='2')

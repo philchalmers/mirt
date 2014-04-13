@@ -61,6 +61,10 @@ Defines the object returned from \code{\link{mixedmirt}}.
   \item{\code{secondordertest}:}{Object of class
   \code{"logical"}, indicate whether information matrix
   passes second-order test}
+  \item{\code{infomethod}:}{Object of class
+  \code{"character"}, indiciates which information
+  estimation method was used} \item{\code{TOL}:}{Object of
+  class \code{"numeric"}, tollerence stopping criteria}
   \item{\code{CUSTOM.IND}:}{Object of class
   \code{"integer"}, an internal index}
   \item{\code{SLOW.IND}:}{Object of class \code{"integer"},

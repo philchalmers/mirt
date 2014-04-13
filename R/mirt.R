@@ -254,7 +254,7 @@
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
 #' @param TOL convergence threshold for EM or MH-RM; defaults are .0001 and .001. If \code{SE.type = 'SEM'} and this
-#'   value is not specified, the default is set to \code{1e-6}. If \code{empiricalhist = TRUE} and \code{TOL} is 
+#'   value is not specified, the default is set to \code{1e-5}. If \code{empiricalhist = TRUE} and \code{TOL} is 
 #'   not specified then the default \code{3e-5} will be used
 #' @param large a logical, indicating whether the internal collapsed data should be returned,
 #'   or list of internally computed mirt parameters containing the data. If \code{TRUE} a list containing
