@@ -1,6 +1,5 @@
 S3method(print,wald)
 export(DIF)
-export(DTF)
 export(M2)
 export(PLCI.mirt)
 export(bfactor)

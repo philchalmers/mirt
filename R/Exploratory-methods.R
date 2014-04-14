@@ -22,17 +22,20 @@ setMethod(
     definition = function(x){
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
-        cat("Full-information item factor analysis with ", x@nfact, " factor(s)\n", sep="")
+        cat("Full-information item factor analysis with ", x@nfact, " factor(s).\n", sep="")
         EMquad <- ''
-        if(x@method == 'EM') EMquad <- c(' with ', x@quadpts, ' quadrature')
+        if(x@method == 'EM') EMquad <- c('\n     using ', x@quadpts, ' quadrature')
         method <- x@method
         if(method == 'MIXED') method <- 'MHRM'
         if(x@converge == 1)
             cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ', 
-                method, " iterations", EMquad, "\n", sep = "")
+                method, " iterations.\n", sep = "")
         else
-            cat("Estimation failed to converge within ", x@TOL, ' tolerance after ', 
-                x@iter, ' ', method, " iterations", EMquad, ". \n", sep="")
+            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ', 
+                x@iter, ' ', method, " iterations.\n", sep="")
+        if(method == 'EM')
+            cat('Number of rectangular quadrature used:', x@quadpts)
+        cat('\n')
         if(!is.nan(x@condnum)){
             cat("Information matrix estimated with method:", x@infomethod)
             cat("\nCondition number of information matrix = ", x@condnum,
