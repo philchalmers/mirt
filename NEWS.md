@@ -23,9 +23,6 @@
 
 - `printCI` logical option to `summary()` to print confidence intervals for standardized loadings
 
-- `DTF()` function added for compting various differential test functioning methods based on the
-  expected total score function (sometimes called the 'true score' function)
-
 - new `expected.test()` function, which is an extension of `expected.item()` but for the whole test
 
 - `mirt.model()` syntax supports multiple * combinations in `COV = ` for more easily specifying 

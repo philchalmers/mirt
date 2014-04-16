@@ -172,7 +172,7 @@ stepdown
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{multipleGroup}}, \code{\link{DTF}}
+\code{\link{multipleGroup}}
 }
 \keyword{DIF}
 

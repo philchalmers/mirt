@@ -79,8 +79,8 @@
 #'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{M2}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #'   \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}, \code{\link{DIF}},
-#'   \code{\link{DTF}}
+#'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}, \code{\link{DIF}}
+#   \code{\link{DTF}}
 #' @keywords models
 #' @export multipleGroup
 #' @examples

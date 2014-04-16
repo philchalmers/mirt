@@ -335,7 +335,7 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 \code{\link{imputeMissing}}, \code{\link{itemfit}},
 \code{\link{mod2values}}, \code{\link{simdata}},
 \code{\link{createItem}}, \code{\link{mirtCluster}},
-\code{\link{DIF}}, \code{\link{DTF}}
+\code{\link{DIF}}
 }
 \keyword{models}
 
