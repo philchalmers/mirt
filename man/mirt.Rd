@@ -177,15 +177,15 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   \code{TOL} is not specified then the default \code{3e-5}
   will be used}
 
-  \item{large}{a logical, indicating whether the internal
-  collapsed data should be returned, or list of internally
-  computed mirt parameters containing the data. If
-  \code{TRUE} a list containing the organized data used
-  prior to estimation is returned. This list object can
-  then be passed back into \code{large} to avoid
-  reorganizing the data in every estimation (useful when
-  the dataset are very large and computing the tabularized
-  data is computationally burdensome).
+  \item{large}{either a \code{logical}, indicating whether
+  the internal collapsed data should be returned, or a
+  \code{list} of internally computed data tables. If
+  \code{TRUE} is passed, a list containing the organized
+  tables is returned. This list object can then be passed
+  back into \code{large} to avoid reorganizing the data
+  again (useful when the dataset are very large and
+  computing the tabularized data is computationally
+  burdensome).
 
   The best strategy for large data is to always pass the
   internal data to the estimation function, shown below:

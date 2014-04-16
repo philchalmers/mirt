@@ -1,7 +1,7 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
-                       nominal.highlow = NULL, GenRandomPars = FALSE, ...)
+                       nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE, ...)
 {
     start.time=proc.time()[3L]
     if(missing(data) || is.null(nrow(data))) stop('data argument is required')
@@ -100,25 +100,28 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!is.null(opts$PrepList)){
         PrepList <- opts$PrepList
     } else {
-        tmpdata <- Data$data
-        tmpdata[is.na(tmpdata)] <- 99999L
-        stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
-        stringtabdata <- unique(stringfulldata)
-        tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,
-                                  group=Data$group, groupNames=Data$groupNames, nitem=Data$nitems,
-                                  K=PrepListFull$K, itemloc=PrepListFull$itemloc,
-                                  Names=PrepListFull$Names, itemnames=PrepListFull$itemnames)
+        if(!is.list(large)){
+            tmpdata <- Data$data
+            tmpdata[is.na(tmpdata)] <- 99999L
+            stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
+            stringtabdata <- unique(stringfulldata)
+            tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,
+                                      group=Data$group, groupNames=Data$groupNames, nitem=Data$nitems,
+                                      K=PrepListFull$K, itemloc=PrepListFull$itemloc,
+                                      Names=PrepListFull$Names, itemnames=PrepListFull$itemnames)
+            if(is.logical(large) && large){
+                return(tmptabdata)
+            } else large <- tmptabdata
+        } 
         for(g in 1L:Data$ngroups){
             select <- Data$group == Data$groupNames[g]
             for(i in 1L:Data$nitems)
                 PrepList[[g]]$pars[[i]]@dat <-
                     PrepListFull$fulldata[select, PrepListFull$itemloc[i]:(PrepListFull$itemloc[i+1L]-1L), drop = FALSE]
             PrepList[[g]]$fulldata <- PrepListFull$fulldata[select, ]
-            PrepList[[g]]$tabdata <- tmptabdata$tabdata[[g]]
-            PrepList[[g]]$tabdata2 <- tmptabdata$tabdata2[[g]]
+            PrepList[[g]]$tabdata <- large$tabdata[[g]]
+            PrepList[[g]]$tabdata2 <- large$tabdata2[[g]]
         }
-        rm(tmpdata, tmptabdata, stringfulldata, stringtabdata, select, parnumber,
-           PrepListFull, selectmod)
     }
     if(opts$returnPrepList) return(PrepList)
     if(opts$BFACTOR){
@@ -526,7 +529,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
-                                     large=opts$PrepList, key=key, verbose=FALSE)))
+                                     large=large, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
             message('Null model calculation did not converge.')
             null.mod <- unclass(new('ConfirmatoryClass'))
