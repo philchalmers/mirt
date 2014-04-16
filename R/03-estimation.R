@@ -493,7 +493,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           K=PrepList[[g]]$K, tabdatalong=PrepList[[g]]$tabdata, nfact=nfact,
                           constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
                           fulldata=PrepList[[g]]$fulldata, factorNames=PrepList[[g]]$factorNames,
-                          random=ESTIMATE$random, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND)
+                          random=ESTIMATE$random, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                          itemtype=PrepList[[g]]$itemtype)
     }
     #missing stats for MHRM
     if(opts$method =='MHRM' || opts$method == 'MIXED'){

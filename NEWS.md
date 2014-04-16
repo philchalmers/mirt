@@ -45,6 +45,9 @@
 
 ## BUG FIXES
 
+- `personfit()` crash for multipleGroup objects since itemtype slot was not filled (reported
+  by Michael Hunter)
+
 - fix crash in two-tier models when correlations are estimated (reported by David Wu)
 
 - R 3.1.0 appears to evaluate List objects differently at the c level causing strange behaviour, 
