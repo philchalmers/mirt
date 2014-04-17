@@ -1,3 +1,4 @@
+# WARNING: These tests require the developemental version of mirt to aquire the large datasets
 #
 # "largeData" context is a set of tests checking consistency of item parameters
 # and factor scores estimetes obtained in mirt and the other software 
@@ -7,7 +8,7 @@ context('largeData')
 
 test_that('large1dim', {
   require(plyr)
-  mirtCluster(3)
+  mirtCluster(parallel::detectCores())
   
   data <- dataComplete[, grep('^i[0-9]', names(dataComplete))]
   itemTypes = ifelse(
@@ -15,7 +16,7 @@ test_that('large1dim', {
     'graded', 
     '2PL'
   )
-  model = mirt(data, 1, itemtype=itemTypes, se=T)
+  model = mirt(data, 1, itemtype=itemTypes, SE=TRUE, verbose=FALSE)
   
   mplusParams = paramComplete # are part of data/dataComplete.RData
   mirtParams = mod2values(model)[, c('item', 'name', 'value')]
@@ -26,19 +27,17 @@ test_that('large1dim', {
   for(n in c('^a1$', '^d')){
     filter = grepl(n, params$name)
     comp = abs(cor(params[filter, 3], params[filter, 5]))
-    plot(params[filter, 3], params[filter, 5], main=paste0(n, ': cor(', round(comp, 3), ')'))
-    expect_equal(comp, 1, tolerance = 0.05)
+    #plot(params[filter, 3], params[filter, 5], main=paste0(n, ': cor(', round(comp, 3), ')'))
+    expect_equal(comp, 1, tolerance = 0.02)
   }
 
   mirtScores = fscores(model, full.scores=T, method='EAP')
   comp = cor(mirtScores[, 1], dataComplete$theta)
-  plot(mirtScores[, 1], dataComplete$theta)
+  #plot(mirtScores[, 1], dataComplete$theta)
   expect_equal(comp, 1, tolerance = 0.01)  
 })
 
 test_that('sparse1dim', {
-  require(plyr)
-  mirtCluster(3)
   
   data <- dataSparse[, grep('^i[0-9]', names(dataSparse))]
   itemTypes = ifelse(
@@ -46,7 +45,7 @@ test_that('sparse1dim', {
     'graded', 
     '2PL'
   )
-  model = mirt(data, 1, itemtype=itemTypes, se=T)
+  model = mirt(data, 1, itemtype=itemTypes, SE=T, verbose=FALSE)
   
   mplusParams = paramSparse # are part of data/dataSparse.RData
   mirtParams = mod2values(model)[, c('item', 'name', 'value')]
@@ -57,19 +56,17 @@ test_that('sparse1dim', {
   for(n in c('^a1$', '^d')){
     filter = grepl(n, params$name)
     comp = abs(cor(params[filter, 3], params[filter, 5]))
-    plot(params[filter, 3], params[filter, 5], main=paste0(n, ': cor(', round(comp, 3), ')'))
-    expect_equal(comp, 1, tolerance = 0.05)
+    #plot(params[filter, 3], params[filter, 5], main=paste0(n, ': cor(', round(comp, 3), ')'))
+    expect_equal(comp, 1, tolerance = 0.02)
   }
   
   mirtScores = fscores(model, full.scores=T, method='EAP')
   comp = cor(mirtScores[, 1], dataSparse$theta)
-  plot(mirtScores[, 1], dataSparse$theta)
+  #plot(mirtScores[, 1], dataSparse$theta)
   expect_equal(comp, 1, tolerance = 0.01)  
 })
 
 test_that('large2dim', {
-  require(plyr)
-  mirtCluster(3)
   
   data <- data2Dim[, grep('^[ij][0-9]', names(data2Dim))]
   itemTypes = ifelse(
@@ -82,7 +79,7 @@ test_that('large2dim', {
     theta2 = 13-52
     COV = theta1 * theta2
   ')
-  model = mirt(data, modelDef, itemtype=itemTypes, se=T)
+  model = mirt(data, modelDef, itemtype=itemTypes, SE=T, verbose=FALSE)
   
   mplusParams = param2Dim # are part of data/dataSparse.RData
   mirtParams = mod2values(model)[, c('item', 'name', 'value')]
@@ -93,8 +90,8 @@ test_that('large2dim', {
   for(n in c('^a1$', '^d')){
     filter = grepl(n, params$name)
     comp = abs(cor(params[filter, 3], params[filter, 5]))
-    plot(params[filter, 3], params[filter, 5], main=paste0(n, ': cor(', round(comp, 3), ')'))
-    expect_equal(comp, 1, tolerance = 0.05)
+    #plot(params[filter, 3], params[filter, 5], main=paste0(n, ': cor(', round(comp, 3), ')'))
+    expect_equal(comp, 1, tolerance = 0.02)
   }
   filter = grepl('COV_21', params$name)
   expect_equal(params[filter, 3], params[filter, 5], tolerance = 0.01)
@@ -102,10 +99,10 @@ test_that('large2dim', {
   mirtScores = fscores(model, full.scores=T, method='EAP')
   
   comp = cor(mirtScores[, 1], data2Dim$theta1)
-  plot(mirtScores[, 1], data2Dim$theta1)
+  #plot(mirtScores[, 1], data2Dim$theta1)
   expect_equal(comp, 1, tolerance = 0.01)  
 
   comp = cor(mirtScores[, 2], data2Dim$theta2)
-  plot(mirtScores[, 2], data2Dim$theta2)
+  #plot(mirtScores[, 2], data2Dim$theta2)
   expect_equal(comp, 1, tolerance = 0.01)  
 })

@@ -32,8 +32,6 @@ Suggests:
     boot,
     latticeExtra,
     shiny,
-    plyr,
-    stringr,
     parallel
 ByteCompile: yes
 LazyLoad: yes
