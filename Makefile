@@ -23,6 +23,9 @@ news:
 test:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_package('mirt')"
 
+extratest:
+	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_dir('inst/extratests')"
+
 clean:
 	$(RM) src/*.o
 	$(RM) src/*.so

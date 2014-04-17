@@ -6,3 +6,4 @@ mirt.Rproj
 src/*.dll
 src-i386/
 src-x64/
+.Rhistory
