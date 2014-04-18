@@ -111,7 +111,7 @@
 #'
 #' #model using 2PL items instead of Rasch
 #' mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL')
-#' anova(mod1, mod1b) #much better with 2PL models using all criteria (as expected, given simdata pars)
+#' anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, given simdata pars)
 #'
 #' #continuous predictor with group
 #' mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items + pseudoIQ)

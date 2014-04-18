@@ -234,7 +234,7 @@
 #' head(fs[["D1"]])
 #' fscores(mod_configural, method = 'EAPsum')
 #'
-#' # constrain slopes within each group to be equal (but not accross groups)
+#' # constrain slopes within each group to be equal (but not across groups)
 #' model2 <- mirt.model('F1 = 1-15
 #'                       CONSTRAIN = (1-15, a1)')
 #' mod_configural2 <- multipleGroup(dat, model2, group = group)
@@ -243,7 +243,7 @@
 #' itemplot(mod_configural2, 10)
 #'
 #' ############
-#' ## empical histogram example (normal and bimodal groups)
+#' ## empirical histogram example (normal and bimodal groups)
 #' set.seed(1234)
 #' a <- matrix(rlnorm(50, .2, .2))
 #' d <- matrix(rnorm(50))

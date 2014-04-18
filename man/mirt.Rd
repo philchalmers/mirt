@@ -184,7 +184,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   tables is returned. This list object can then be passed
   back into \code{large} to avoid reorganizing the data
   again (useful when the dataset are very large and
-  computing the tabularized data is computationally
+  computing the tabulated data is computationally
   burdensome).
 
   The best strategy for large data is to always pass the
@@ -234,7 +234,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   values will take longer but may be more stable for
   computing the information matrix. Default is .0001.
 
-  If \code{SE.type = 'SEM'}, this is the tollerance used to
+  If \code{SE.type = 'SEM'}, this is the tolerance used to
   terminate the S-EM computations for each parameter, and
   if not specified the default is \code{.001}}
   \item{NCYCLES}{maximum number of EM or MH-RM cycles;
@@ -401,7 +401,7 @@ in the lower diagonal of the matrix returned by
   genuine maximum-likelihood parameter estimates may be
   difficult to find. Additionally, it is recommended that
   at least 400 cycles are run through to approximate the
-  obsevered information matrix accurately, which can be
+  observed information matrix accurately, which can be
   accomplished either by decreasing the \code{TOL} criteria
   or setting \code{SE = TRUE}.
 }
@@ -446,7 +446,7 @@ in the lower diagonal of the matrix returned by
   \eqn{a_1 = 1}, and the latent variance of \eqn{\theta_1}
   is freely estimated.
 
-  In the nominal model this parametrizations helps to
+  In the nominal model this parametrization helps to
   identify the empirical ordering of the categories by
   inspecting the \eqn{ak} values. Larger values indicate
   that the item category is more positively related to the
@@ -513,7 +513,7 @@ plot(mod1, type = 'trace') #trace lines
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
 #internally g and u pars are stored as logits, so usually a good idea to include normal prior
-#  to help stabilize the paramteres. For a value around .182 use a mean
+#  to help stabilize the parameters. For a value around .182 use a mean
 #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
 (mod1.3PL.norm <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
     parprior = list(c(19, 'norm', -1.5, 3))))
@@ -819,6 +819,10 @@ algorithm for confirmatory item factor analysis.
 Chalmers, R., P. (2012). mirt: A Multidimensional Item
 Response Theory Package for the R Environment.
 \emph{Journal of Statistical Software, 48}(6), 1-29.
+
+Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood
+Estimation of Noncompensatory IRT Models with the MH-RM
+Algorithm. \emph{Applied Psychological Measurement}.
 
 Chen, W. H. & Thissen, D. (1997). Local dependence indices
 for item pairs using item response theory. \emph{Journal of

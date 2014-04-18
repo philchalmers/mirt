@@ -61,6 +61,9 @@ Mathematical and Statistical Psychology, 38}, 67-86.
 Reise, S. P. (1990). A comparison of item- and person-fit
 methods of assessing model-data fit in IRT. \emph{Applied
 Psychological Measurement, 14}, 127-137.
+
+Wright B. D. & Masters, G. N. (1982). \emph{Rating scale
+analysis}. MESA Press.
 }
 \seealso{
 \code{\link{itemfit}}

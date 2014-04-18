@@ -86,7 +86,7 @@
 #' to the console too often (indicating that the parameters were being constrained since they are naturally
 #' moving in steps greater than 0.25) then the model may either be ill defined or have a
 #' very flat likelihood surface, and genuine maximum-likelihood parameter estimates may be difficult to find.
-#' Additionally, it is recommended that at least 400 cycles are run through to approximate the obsevered information
+#' Additionally, it is recommended that at least 400 cycles are run through to approximate the observed information
 #' matrix accurately, which can be accomplished either by decreasing the \code{TOL} criteria or setting
 #' \code{SE = TRUE}.
 #'
@@ -128,7 +128,7 @@
 #' is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent
 #' variance of \eqn{\theta_1} is freely estimated.
 #'
-#' In the nominal model this parametrizations helps to identify the empirical ordering of the
+#' In the nominal model this parametrization helps to identify the empirical ordering of the
 #' categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is
 #' more positively related to the latent trait(s) being measured. For instance, if an item was
 #' truly ordinal (such as a Likert scale), and had 4 response categories, we would expect
@@ -194,22 +194,22 @@
 #'   must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
 #'   so use \code{NA} in item locations that are not applicable
 #' @param SE logical; estimate the standard errors? See \code{SE.type} for the type of estimates available. Using
-#'   \code{SE = TRUE} when \code{method = 'MHRM'} will force the estimation to terminate no earlier than 400 
+#'   \code{SE = TRUE} when \code{method = 'MHRM'} will force the estimation to terminate no earlier than 400
 #'   iterations to ensure that the information matrix is well approximated
-#' @param SE.type type of estimation method to use for calculating the parameter information matrix for computing 
-#'   standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic approximation, 
-#'   \code{'BL'} for the Bock and Lieberman approach (numerical evaluation of observed Hessian), 
-#'   \code{'Fisher'} for the expected information, \code{'complete'} for information based on the 
-#'   complete-data Hessian used in EM algorithm (EM only), \code{'SEM'} for the supplemented EM 
+#' @param SE.type type of estimation method to use for calculating the parameter information matrix for computing
+#'   standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic approximation,
+#'   \code{'BL'} for the Bock and Lieberman approach (numerical evaluation of observed Hessian),
+#'   \code{'Fisher'} for the expected information, \code{'complete'} for information based on the
+#'   complete-data Hessian used in EM algorithm (EM only), \code{'SEM'} for the supplemented EM
 #'   (disables the \code{accelerate} option; EM only), \code{'crossprod'}
-#'   for standard error computations based on the variance of the Fisher scores, \code{'Louis'} 
-#'   for Louis' (1982) computation of the observed information matrix, 
+#'   for standard error computations based on the variance of the Fisher scores, \code{'Louis'}
+#'   for Louis' (1982) computation of the observed information matrix,
 #'   and \code{'sandwich'} for the sandwich covariance estimate.
-#'   
-#'   Note that for \code{'SEM'} and \code{'MHRM'} option increasing the number of iterations 
-#'   (\code{NCYCLES} and \code{TOL}, see below)  will help to improve the accuracy, and will be 
+#'
+#'   Note that for \code{'SEM'} and \code{'MHRM'} option increasing the number of iterations
+#'   (\code{NCYCLES} and \code{TOL}, see below)  will help to improve the accuracy, and will be
 #'   run in parallel if a \code{\link{mirtCluster}} object has been defined.
-#'   Bootstrapped and profiled-likelihood standard errors are also possible, but must be run with the 
+#'   Bootstrapped and profiled-likelihood standard errors are also possible, but must be run with the
 #'   \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}} functions, respectively
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
@@ -223,8 +223,8 @@
 #'   parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
 #'   If \code{rotate != ''} in the \code{summary}
 #'   input then the default from the object is ignored and the new rotation from the list
-#'   is used instead. 
-#'   
+#'   is used instead.
+#'
 #'   Rotations currently supported are: promax, oblimin, varimax, quartimin,
 #'   targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ,
 #'   tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ
@@ -254,14 +254,14 @@
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
 #' @param TOL convergence threshold for EM or MH-RM; defaults are .0001 and .001. If \code{SE.type = 'SEM'} and this
-#'   value is not specified, the default is set to \code{1e-5}. If \code{empiricalhist = TRUE} and \code{TOL} is 
+#'   value is not specified, the default is set to \code{1e-5}. If \code{empiricalhist = TRUE} and \code{TOL} is
 #'   not specified then the default \code{3e-5} will be used
-#' @param large either a \code{logical}, indicating whether the internal collapsed data should 
-#'   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed, 
+#' @param large either a \code{logical}, indicating whether the internal collapsed data should
+#'   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
 #'   a list containing  the organized tables is returned. This list object can then be passed back into
 #'   \code{large} to avoid reorganizing the data again (useful when the dataset are very large
-#'   and computing the tabularized data is computationally burdensome). 
-#'   
+#'   and computing the tabulated data is computationally burdensome).
+#'
 #'   The best strategy for large data is to always pass the internal data to the estimation function, shown below:
 #'   \describe{
 #'   \item{Compute organized data}{e.g., \code{internaldat <- mirt(Science, 1, large = TRUE)}}
@@ -285,13 +285,13 @@
 #' @param verbose logical; print observed log-likelihood value at each iteration?
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #'   \describe{
-#'     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than 4GB or RAM on your PC; 
+#'     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than 4GB or RAM on your PC;
 #'       default 10000}
 #'     \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
 #'     and \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower values will take longer but may be more
 #'     stable for computing the information matrix. Default is .0001.
-#'     
-#'     If \code{SE.type = 'SEM'}, this is the tollerance used to terminate the S-EM computations for each parameter,
+#'
+#'     If \code{SE.type = 'SEM'}, this is the tolerance used to terminate the S-EM computations for each parameter,
 #'     and if not specified the default is \code{.001}}
 #'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
 #'     \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
@@ -310,26 +310,26 @@
 #'     \item{customPriorFun}{a custom function used to determine the normalized density for integration
 #'          in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
 #'          with the same length as number of rows in \code{Theta}}
-#'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration. 
+#'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'          If not defined, the grid is determined internally based on the number of \code{quadpts}}
-#'     \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will 
-#'          cause the acceptance ratio to decrease. Only one value is required for unconditional 
-#'          item factor analysis (\code{mixedmirt()} requires additional values for random effect). 
+#'     \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will
+#'          cause the acceptance ratio to decrease. Only one value is required for unconditional
+#'          item factor analysis (\code{mixedmirt()} requires additional values for random effect).
 #'          If null, these values are determined internally, attempting to make the draws between
 #'          .1 and .4}
-#'     \item{Moptim}{Choose which optimizer to use. By default the EM algorithm with use the 
+#'     \item{Moptim}{Choose which optimizer to use. By default the EM algorithm with use the
 #'          \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'} when there
-#'          are. The \code{'Nelder-Mead'} and \code{'SANN'} estimators may also be used, though 
-#'          their routine use generally is not required. The MH-RM algorithm uses the Newton-Raphson by 
+#'          are. The \code{'Nelder-Mead'} and \code{'SANN'} estimators may also be used, though
+#'          their routine use generally is not required. The MH-RM algorithm uses the Newton-Raphson by
 #'          default, and currently cannot be changed}
 #'   }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-#'   \code{\link{residuals-method}}, \code{\link{plot-method}}, 
+#'   \code{\link{residuals-method}}, \code{\link{plot-method}},
 #'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
 #'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
-#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, 
+#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}},
 #'   \code{\link{M2}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
 #'   \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}},
@@ -360,6 +360,9 @@
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#'
+#' Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
+#' Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement}.
 #'
 #' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 #' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
@@ -417,7 +420,7 @@
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
 #' #internally g and u pars are stored as logits, so usually a good idea to include normal prior
-#' #  to help stabilize the paramteres. For a value around .182 use a mean
+#' #  to help stabilize the parameters. For a value around .182 use a mean
 #' #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
 #' (mod1.3PL.norm <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
 #'     parprior = list(c(19, 'norm', -1.5, 3))))

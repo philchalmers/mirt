@@ -37,7 +37,7 @@ setMethod(
             cat('Number of rectangular quadrature used:', x@quadpts)
         cat('\n')
         if(!is.nan(x@condnum)){
-            cat("Information matrix estimated with method:", x@infomethod)
+            cat("\nInformation matrix estimated with method:", x@infomethod)
             cat("\nCondition number of information matrix = ", x@condnum,
                 '\nSecond-order test: model ', if(!x@secondordertest)
                     'is not a maximum, or the information matrix is too inaccurate' else

@@ -1,3 +1,66 @@
+Changes in mirt 1.3
+
+MAJOR CHANGES
+
+  - Default `SE.type` changed to `crossprod` since it is better at detecting
+  when models are not identified compared to `SEM`, and is generally much
+  cheaper to compute for larger models
+
+  - M-step optimizer now automatically selected to be 'BFGS' if there are
+  no bounded parameters, and 'L-BFGS-B' otherwise. Some models will have
+  notibly different parameter estimates because of this, but should have
+  nearly identical model log-likelihoods
+
+  - better shiny UI which adapts to the itemtype specifically, and allows
+  for classical parameter inputs (special thanks to Jonathan Lehrfeld for
+  providing code that inspired both these changes)
+
+  - scores.only option now set to `TRUE` in `fscores()`
+
+  - `type = 'score'` for plot generics no longer adjusts the categories for
+  expected test scores
+
+  - M-step optimizer in EM now deters out-of-order graded response model
+  intercepts (was a problem if the startvalues were too far from the ML
+  estimate in graded models)
+
+NEW FEATURES
+
+  - `printCI` logical option to `summary()` to print confidence intervals
+  for standardized loadings
+
+  - new `expected.test()` function, which is an extension of `expected.item()`
+  but for the whole test
+
+  - `mirt.model()` syntax supports multiple * combinations in `COV = ` for
+  more easily specifying covariation blocks between factors. Also allows
+  variances to be freed by specifying the same factor name, e.g., `F*F`
+
+  - `full.scores.SE` logical option for `fscores()` to return standard errors
+  for each respondent
+
+  - multiple imputation (MI) option in `fscores()`, useful for obtaining less
+  biased factor score estimates when model parameter variability is large
+  (usually due to smaller sample size)
+
+  - group-level (i.e., means/covariances) equality constrains are now
+  available for the EM algorithm
+
+  - `theta_lim` input to `plot()`, `itemplot()`, and `fscores()` for modifying
+  range of latent values evaluated
+
+BUG FIXES
+
+  - `personfit()` crash for multipleGroup objects since itemtype slot was
+  not filled (reported by Michael Hunter)
+
+  - fix crash in two-tier models when correlations are estimated (reported
+  by David Wu)
+
+  - R 3.1.0 appears to evaluate List objects differently at the c level
+  causing strange behaviour, therefore slower R versions of some internal
+  function (such as mirt:::reloadPars()) will be used until a patch is formed
+
 Changes in mirt 1.2.1
 
 MAJOR CHANGES

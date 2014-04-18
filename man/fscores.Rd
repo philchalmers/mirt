@@ -75,8 +75,7 @@ factor scores with a multivariate normal prior distribution
 using equally spaced quadrature. Additionally, multiple
 imputation variants are possible for each estimator if a
 parameter information matrix was computed, which are useful
-if the sample size/number of items were small (causing the
-parameter estimates to be variable).
+if the sample size/number of items were small.
 }
 \details{
 The function will return either a table with the computed

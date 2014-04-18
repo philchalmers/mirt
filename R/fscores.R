@@ -2,14 +2,13 @@
 #'
 #' Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
 #' or WLE (Warm, 1989) factor scores with a multivariate normal
-#' prior distribution using equally spaced quadrature. Additionally, multiple imputation 
-#' variants are possible for each estimator if a parameter information matrix was computed, which 
-#' are useful if the sample size/number of items were small (causing the parameter estimates to be 
-#' variable). 
-#' 
+#' prior distribution using equally spaced quadrature. Additionally, multiple imputation
+#' variants are possible for each estimator if a parameter information matrix was computed, which
+#' are useful if the sample size/number of items were small.
+#'
 #' The function will return either a table with the computed scores and standard errors,
 #' the original data matrix with scores appended to the rightmost column, or the scores only. By
-#' default the latent means and covariances are determined from the estimated object, 
+#' default the latent means and covariances are determined from the estimated object,
 #' though these can be overwritten. Iterative estimation methods can be estimated
 #' in parallel to decrease estimation times if a \code{\link{mirtCluster}} object is available.
 #'
@@ -40,7 +39,7 @@
 #'   for a given response vector or matrix
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
-#' @param full.scores.SE logical; when \code{full.scores == TRUE}, also return the 
+#' @param full.scores.SE logical; when \code{full.scores == TRUE}, also return the
 #'   standard errors associated with each respondent? Default is \code{FALSE}
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when \code{full.scores = TRUE})
@@ -69,10 +68,10 @@
 #' fullscores_with_SE <- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
 #' head(fullscores)
 #' head(fullscores_with_SE)
-#' 
+#'
 #' #chage method argument to use MAP estimates
 #' fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
-#' head(fullscores) 
+#' head(fullscores)
 #'
 #' #calculate MAP for a given response vector
 #' fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
@@ -86,19 +85,19 @@
 #' #WLE estimation, run in parallel using available cores
 #' mirtCluster()
 #' fscores(mod, method='WLE')
-#' 
+#'
 #' #multiple imputation using 30 draws for EAP scores. Requires information matrix
 #' mod <- mirt(Science, 1, SE=TRUE)
 #' fscores(mod, MI = 30)
 #'
 #'}
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
-                    quadpts = NULL, response.pattern = NULL, 
+                    quadpts = NULL, response.pattern = NULL,
                     returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-4,4), MI = 0)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
-                            quadpts=quadpts, response.pattern=response.pattern, 
+                            quadpts=quadpts, response.pattern=response.pattern,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             scores.only=scores.only, theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE)
