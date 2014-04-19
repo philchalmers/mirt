@@ -350,7 +350,7 @@ Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, group
         if(is(chl, 'try-error')) return(1e100)
         tmp <- outer(diag(gp$gcov), diag(gp$gcov))
         if(any(gp$gcov[lower.tri(tmp)] >= tmp[lower.tri(tmp)])) return(1e100)
-        tmp <- rr * mvtnorm::dmvnorm(theta, gp$gmeans[1L:ncol(theta)], 
+        tmp <- rr * mirt_dmvnorm(theta, gp$gmeans[1L:ncol(theta)], 
                                      gp$gcov[1L:ncol(theta),1L:ncol(theta), drop=FALSE], log=TRUE)
         LL <- LL + sum(tmp)
         if(pars[[g]][[J+1L]]@any.prior)

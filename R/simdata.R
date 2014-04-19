@@ -210,7 +210,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	if(!is.null(Theta))
 		if(ncol(Theta) != nfact || nrow(Theta) != N)
 			stop("The input Theta matrix does not have the correct dimensions")
-	if(is.null(Theta)) Theta <- mvtnorm::rmvnorm(N,mu,sigma)
+	if(is.null(Theta)) Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
     if(is.null(nominal)) nominal <- matrix(NA, nitems, max(K))
 	data <- matrix(0, N, nitems)
     a[is.na(a)] <- 0

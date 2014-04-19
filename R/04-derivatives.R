@@ -455,7 +455,7 @@ setMethod(
             sig[selcov] <- siglong
             if(nfact != 1L)
                 sig <- sig + t(sig) - diag(diag(sig))
-            prior <- mvtnorm::dmvnorm(Theta, mu, sig)
+            prior <- mirt_dmvnorm(Theta, mu, sig)
             ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu, 
                          mirtClusterEnv$ncores)
             tmp <- cbind(ret$scores, ret$scores2) * r
@@ -586,7 +586,7 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     gpars <- ExtractGroupPars(obj)
     mu <- gpars$gmeans
     sigma <- gpars$gcov
-    prior <- mvtnorm::dmvnorm(Theta, mean=mu, sigma=sigma)
+    prior <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
     prior <- prior/sum(prior)
     rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc,
                         CUSTOM.IND=CUSTOM.IND)

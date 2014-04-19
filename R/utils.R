@@ -33,9 +33,9 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     J <- length(pars) - 1L
     unif <- runif(N)
     sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
-    theta1 <- theta0 + mvtnorm::rmvnorm(N,prior.mu, sigma)
-    log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
-    log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
+    theta1 <- theta0 + mirt_rmvnorm(N,prior.mu, sigma)
+    log_den0 <- mirt_dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
+    log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
     if(length(prodlist) > 0L){
         theta0 <- prodterms(theta0,prodlist)
         theta1 <- prodterms(theta1,prodlist)
@@ -63,7 +63,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
 }
 
 imputePars <- function(pars, covB, imputenums, constrain){
-    shift <- mvtnorm::rmvnorm(1L, sigma=covB)
+    shift <- mirt_rmvnorm(1L, sigma=covB)
     for(i in 1L:length(pars)){
         pn <- pars[[i]]@parnum 
         pick2 <- imputenums %in% pn
@@ -317,14 +317,14 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
             if(BFACTOR){
                 sel <- 1L:(nfact-ncol(sitems) + 1L)
                 sel2 <- sel[-length(sel)]
-                Priorbetween[[g]] <- mvtnorm::dmvnorm(Thetabetween,
+                Priorbetween[[g]] <- mirt_dmvnorm(Thetabetween,
                                                       gp$gmeans[sel2], gp$gcov[sel2,sel2,drop=FALSE])
                 Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
+                Prior[[g]] <- mirt_dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
                 next
             }
-            Prior[[g]] <- mvtnorm::dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
+            Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
     }
@@ -334,7 +334,7 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
                 Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
         } else {
             for(g in 1L:ngroups){
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta, 0, matrix(1))
+                Prior[[g]] <- mirt_dmvnorm(Theta, 0, matrix(1))
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }
         }
@@ -1188,6 +1188,41 @@ assignInformationMG <- function(object){
         object@cmods[[g]]@information <- tmp
     }
     object
+}
+
+mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
+                         check = FALSE)
+{    
+    # Version modified from mvtnorm::rmvnorm, version 0.9-9996, 19-April, 2014. 
+    if(check){
+        if (!isSymmetric(sigma, tol = sqrt(.Machine$double.eps), check.attributes = FALSE)) 
+            stop("sigma must be a symmetric matrix")
+        if (length(mean) != nrow(sigma)) 
+            stop("mean and sigma have non-conforming size")
+    }
+    ev <- eigen(sigma, symmetric = TRUE)
+    if(check)
+        if (!all(ev$values >= -sqrt(.Machine$double.eps) * abs(ev$values[1])))
+            warning("sigma is numerically not positive definite")
+    retval <- ev$vectors %*%  diag(sqrt(ev$values), length(ev$values)) %*% t(ev$vectors)
+    retval <- matrix(rnorm(n * ncol(sigma)), nrow = n) %*%  retval
+    retval <- sweep(retval, 2, mean, "+")
+    colnames(retval) <- names(mean)
+    retval
+}
+
+mirt_dmvnorm <- function(x, mean, sigma, log = FALSE)
+{
+    # Version modified from mvtnorm::dmvnorm, version 0.9-9996, 19-April, 2014. 
+    if(is.vector(x)) x <- matrix(x, nrow=1L)
+    if (missing(mean)) mean <- rep(0, length = ncol(x))
+    if (missing(sigma)) sigma <- diag(ncol(x))
+    distval <- mahalanobis(x, center = mean, cov = sigma)
+    logdet <- sum(log(eigen(sigma, symmetric=TRUE,
+                            only.values=TRUE)$values))
+    logretval <- -(ncol(x)*log(2*pi) + logdet + distval)/2
+    if(log) return(logretval)
+    exp(logretval)
 }
 
 mirtClusterEnv <- new.env()

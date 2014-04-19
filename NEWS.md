@@ -54,6 +54,9 @@
 - R 3.1.0 appears to evaluate List objects differently at the c level causing strange behaviour, 
   therefore slower R versions of some internal function (such as mirt:::reloadPars()) will be used
   until a patch is formed
+  
+- behaviour of `mvtnorm::dmvnorm` changed as of version 0.9-9999, causing widely different 
+  convergence results. Similar versions of older mvtnorm functions are now implemented instead
 
 # Changes in mirt 1.2.1
 

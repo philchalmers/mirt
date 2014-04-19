@@ -604,9 +604,9 @@ setMethod(
         d <- if(ncol(theta0) == 1) matrix(prior.t.var) else diag(diag(prior.t.var))
         prior.t.var <- prior.t.var + t(prior.t.var) - d
         sigma <- if(ncol(theta0) == 1L) matrix(x@cand.t.var) else diag(rep(x@cand.t.var,ncol(theta0)))
-        theta1 <- theta0 + mvtnorm::rmvnorm(N, prior.mu, sigma)
-        log_den0 <- mvtnorm::dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
-        log_den1 <- mvtnorm::dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
+        theta1 <- theta0 + mirt_rmvnorm(N, prior.mu, sigma)
+        log_den0 <- mirt_dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
+        log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
         itemtrace0 <- itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(fulldata))
         if(x@between){
             offterm1 <- matrix(0, nrow(itemtrace0), J)

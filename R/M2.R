@@ -105,7 +105,7 @@ M2 <- function(obj, calcNull = FALSE){
         Theta <- thetaComb(theta, obj@nfact)
         prior <- Priorbetween <- sitems <- specific <- NULL
         gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-        Prior <- Prior <- mvtnorm::dmvnorm(Theta,gstructgrouppars$gmeans,
+        Prior <- Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
                                            gstructgrouppars$gcov)
         Prior <- Prior/sum(Prior)
     } else {

@@ -16,7 +16,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                     Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
                     next
                 }
-                Prior[[g]] <- mvtnorm::dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+                Prior[[g]] <- mirt_dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
                                                gstructgrouppars[[g]]$gcov)
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }

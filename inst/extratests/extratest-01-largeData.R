@@ -7,8 +7,9 @@
 context('largeData')
 
 test_that('large1dim', {
-  require(plyr)
-  mirtCluster(parallel::detectCores())
+  require(mirt)
+  library(plyr)
+  mirtCluster(2L)
   
   data <- dataComplete[, grep('^i[0-9]', names(dataComplete))]
   itemTypes = ifelse(

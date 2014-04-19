@@ -440,7 +440,7 @@ setMethod(
         calcG2 <- ifelse(type == 'LDG2', TRUE, FALSE)
         if(type %in% c('LD', 'LDG2')){
             groupPars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-            prior <- mvtnorm::dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
+            prior <- mirt_dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
             prior <- prior/sum(prior)
             df <- (object@K - 1) %o% (object@K - 1)
             diag(df) <- NA

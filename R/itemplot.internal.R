@@ -191,8 +191,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         smallinfo <- solve(x@information[tmp, tmp])
         #make symetric
         smallinfo <-(smallinfo + t(smallinfo))/2
-        delta <- mvtnorm::rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
-        tmp <- mvtnorm::dmvnorm(delta, mu, smallinfo)
+        delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
+        tmp <- mirt_dmvnorm(delta, mu, smallinfo)
         sorttmp <- sort(tmp)
         lower <- sorttmp[floor(length(tmp) * CEalpha/2)]
         upper <- sorttmp[ceiling(length(tmp) * (1-CEalpha/2))]

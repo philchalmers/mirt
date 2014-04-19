@@ -55,7 +55,7 @@ setMethod(
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
                             CUSTOM.IND){
-            theta <- mvtnorm::rmvnorm(N,grp$gmeans, grp$gcov)
+            theta <- mirt_rmvnorm(N,grp$gmeans, grp$gcov)
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
             if(length(random) > 0L){

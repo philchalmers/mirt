@@ -131,7 +131,7 @@ setMethod(
                 ThetaShort <- Theta <- thetaComb(theta,nfact)
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta,prodlist)
-                W <- mvtnorm::dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
+                W <- mirt_dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
                                               CUSTOM.IND=CUSTOM.IND)
                 log_itemtrace <- log(itemtrace)
@@ -305,21 +305,21 @@ setMethod(
 # MAP scoring for mirt
 MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ML=FALSE)
 {
-    ThetaShort <- Theta
     Theta <- matrix(Theta, nrow=1L)
+    ThetaShort <- Theta
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta,prodlist)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
     L <- sum(log(itemtrace)[as.logical(patdata)])
-    prior <- mvtnorm::dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
+    prior <- mirt_dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L
 }
 
 gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND){
+    Theta <- matrix(Theta, nrow=1L)
     ThetaShort <- Theta
-    Theta <- matrix(Theta, nrow=1)
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta,prodlist)
     nfact <- ncol(Theta)
@@ -380,7 +380,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     if(x@nfact > 1L) stop('EAP sum score method only is applicable to unidimensional models')
     if(is.null(quadpts)) quadpts <- 40
     Theta <- as.matrix(seq(-4,4,length.out = quadpts))
-    prior <- mvtnorm::dmvnorm(Theta,gp$gmeans,gp$gcov)
+    prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
     prior <- prior/sum(prior)
     pars <- x@pars
     K <- x@K

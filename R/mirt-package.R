@@ -22,8 +22,8 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @importFrom stats anova residuals
-#' @importFrom MASS ginv
-#' @import lattice GPArotation mvtnorm Rcpp stats4 methods
+# @importFrom MASS ginv
+#' @import lattice GPArotation Rcpp stats4 methods
 #' @exportMethod anova
 #' @exportMethod residuals
 #' @exportMethod summary
