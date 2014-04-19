@@ -388,20 +388,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
     }
+    if(opts$method == 'MHRM' || opts$method == 'MIXED')
+        ESTIMATE <- loadESTIMATEinfo(info=ESTIMATE$info, ESTIMATE=ESTIMATE, constrain=constrain)
     opts$times$end.time.Estimate <- proc.time()[3L]
     opts$times$start.time.SE <- proc.time()[3L]
-    if(!opts$NULL.MODEL && opts$SE && opts$method != 'MIXED'){
+    if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
-        if(opts$verbose){
-            if(opts$method == 'MHRM' && opts$SE.type == 'MHRM'){
-                
-            } else {
-                cat('\n\nCalculating information matrix...\n')
-            }
-        }
+        if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED'))
+            cat('\n\nCalculating information matrix...\n')
         if(opts$SE.type == 'complete' && opts$method == 'EM'){
-            info <- -ESTIMATE$hess
-            ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+            ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain)
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
             collectLL <- as.numeric(ESTIMATE$collectLL)
             collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
@@ -438,14 +434,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList)
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
-                DM[, is.latent] <- 0
-                info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
+                DM <- DM[!is.latent, !is.latent, drop=FALSE]
+                tmp1 <- -solve(ESTIMATE$hess[!is.latent, !is.latent])
+                info <- try(solve(tmp1 %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
                 if(is(info, 'try-error')){
                     warning('information matrix in SEM could not be computed due to instability')
                 } else {
-                    info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
-                    if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
-                    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                    tmp1 <- matrix(0, ncol(estmat), ncol(estmat))
+                    tmp1[!is.latent, !is.latent] <- info
+                    ESTIMATE <- loadESTIMATEinfo(info=tmp1, ESTIMATE=ESTIMATE, constrain=constrain)
                 }
             }
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){

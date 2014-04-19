@@ -1034,8 +1034,10 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     J <- length(pars[[1L]]) - 1L
     info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=ESTIMATE$L,
                            npars=length(longpars))
-    isna <- rowSums(is.na(info)) > 0L
-    info <- info[!isna, !isna, drop=FALSE]
+    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
+    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
+    is.latent <- lengthsplit > 2L
+    info <- info[!is.latent, !is.latent]
     ESTIMATE$info <- info
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
@@ -1050,7 +1052,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     }
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
-    SE[ESTIMATE$estindex_unique[!isna]] <- SEtmp
+    SE[ESTIMATE$estindex_unique[!is.latent]] <- SEtmp
     index <- 1L:ncol(info)
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
@@ -1110,6 +1112,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         ret[[i]] <- new('RandomPars',
                         par=par,
                         est=est,
+                        SEpar=rep(NaN,length(par)),
                         ndim=ndim,
                         lbound=lbound,
                         ubound=rep(Inf, length(par)),

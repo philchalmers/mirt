@@ -71,25 +71,15 @@ wald <- function(object, L, C = 0){
     B <- parnum <- c()
     if(is(object, 'MultipleGroupClass')){
         for(g in 1L:length(pars)){
-            for(i in 1L:length(pars[[g]]@pars)){
+            for(i in 1L:(length(pars[[g]]@pars)-1L)){
                 B <- c(B, pars[[g]]@pars[[i]]@par)
                 parnum <- c(parnum, pars[[g]]@pars[[i]]@parnum)
             }
         }
     } else {
-        for(i in 1L:length(pars)){
+        for(i in 1L:(length(pars)-1L)){
             B <- c(B, pars[[i]]@par)
             parnum <- c(parnum, pars[[i]]@parnum)
-        }
-    }
-    if(is(object, 'MixedClass')){
-        if(length(object@random)){
-            for(i in 1L:length(object@random)){
-                B <- c(B, object@random[[i]]@par)
-                tmp <- object@random[[i]]@parnum
-                names(tmp) <- names(object@random[[i]]@est)
-                parnum <- c(parnum, tmp)
-            }
         }
     }
     keep <- c()

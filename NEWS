@@ -2,7 +2,12 @@ Changes in mirt 1.3
 
 MAJOR CHANGES
 
-  - Default `SE.type` changed to `crossprod` since it is better at detecting
+  - latent mean and variance terms in the Information matrix have been
+  completely removed since they are not appropriate for computing unbiased
+  standard errors or to be used in Wald tests.  Provides better condition
+  number behaviour and second-order convergence tests as well
+
+  - default `SE.type` changed to `crossprod` since it is better at detecting
   when models are not identified compared to `SEM`, and is generally much
   cheaper to compute for larger models
 

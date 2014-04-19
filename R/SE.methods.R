@@ -280,6 +280,10 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
+    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
+    is.latent <- lengthsplit > 1L
+    Ihess <- Ihess[!is.latent, !is.latent]; Igrad <- Igrad[!is.latent, !is.latent]
+    IgradP <- IgradP[!is.latent, !is.latent]
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){
@@ -288,11 +292,10 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         tmp <- solve(-Ihess - IgradP + Igrad)
         info <- solve(tmp %*% Igrad %*% tmp)
     }
-    colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
-    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    info[lengthsplit > 2L, lengthsplit > 2L] <- NA
-    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+    colnames(info) <- rownames(info) <- names(ESTIMATE$correction)[!is.latent]
+    tmp <- matrix(0, length(is.latent), length(is.latent))
+    tmp[!is.latent, !is.latent] <- info
+    ESTIMATE <- loadESTIMATEinfo(info=tmp, ESTIMATE=ESTIMATE, constrain=constrain)
     if(any(lengthsplit > 2L)){
         for(g in 1L:ngroups){
             tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar
@@ -344,7 +347,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                 pars[[g]][[i]]@dat <- rlist$r1[, tmp]
                 pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
-                tmp <- Deriv(pars[[g]][[i]], Theta=Theta, EM = TRUE, estHess=FALSE)
+                tmp <- Deriv(pars[[g]][[i]], Theta=Theta, estHess=FALSE)
                 dx <- tmp$grad
                 DX[pars[[g]][[i]]@parnum] <- dx
             }

@@ -26,15 +26,15 @@ test_that('exploratory mods', {
     expect_equal(fitonefact$M2, 11.92959, tolerance = 1e-2)
     suppressWarnings(twofact <- mirt(fulldata, 2, verbose = FALSE, draws = 10, method = 'MHRM'))
     cfs <- as.numeric(do.call(c, coef(twofact, digits=4, verbose = FALSE)))
-    expect_equal(cfs, c(0.6554, 0.3298, 0.9809, -0.5402, -0.8506, -0.2299, 1.8729, 1.6067, 2.1391, 0, NA, NA, 1, NA, NA, 1.3934, 1.1936, 1.5931, 0.1951, -0.1692, 0.5595, 0.8725, 0.7105, 1.0346, 0, NA, NA, 1, NA, NA, 1.6312, 1.4964, 1.7659, -0.1309, -0.4369, 0.1752, 1.8022, 1.7488, 1.8556, 0, NA, NA, 1, NA, NA, 0.5695, 0.3373, 0.8016, -0.2449, -0.4873, -0.0024, 0.4801, 0.3345, 0.6258, 0, NA, NA, 1, NA, NA, -0.0045, -0.4225, 0.4136, -1.7778, -1.9745, -1.581, 2.5053, 2.111, 2.8995, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0, NA, NA, 1, NA, NA, -0.4354, NA, NA, 1, NA, NA),
+    expect_equal(cfs, c(0.6554, 0.3298, 0.9809, -0.5402, -0.8507, -0.2297, 1.8729, 1.6067, 2.1391, 0, NA, NA, 1, NA, NA, 1.3934, 1.1931, 1.5936, 0.1951, -0.1695, 0.5598, 0.8725, 0.7104, 1.0346, 0, NA, NA, 1, NA, NA, 1.6312, NaN, NaN, -0.1309, NaN, NaN, 1.8022, 1.7479, 1.8565, 0, NA, NA, 1, NA, NA, 0.5695, 0.3373, 0.8016, -0.2449, -0.4874, -0.0023, 0.4801, 0.3345, 0.6258, 0, NA, NA, 1, NA, NA, -0.0045, -0.4227, 0.4137, -1.7778, -1.975, -1.5806, 2.5053, 2.1109, 2.8996, 0, NA, NA, 1, NA, NA, 0, NA, NA, 0, NA, NA, 1, NA, NA, -0.4354, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(twofact, 'ExploratoryClass')
-    modm7 <- suppressMessages(mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
-                                                                     c(4,8,12,16,20,'norm', 1.7, 1)), method = 'MHRM', draws = 10))
+    modm7 <- suppressWarnings(suppressMessages(mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
+                                                                     c(4,8,12,16,20,'norm', 1.7, 1)), method = 'MHRM', draws = 10)))
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(3.2, 1.055, 5.346, 4.795, 2.944, 6.645, 0.125, 0.028, 0.419, 0.902, 0.869, 0.928, 8.599, 4.618, 12.58, 1.951, 0.132, 3.77, 0.331, 0.215, 0.471, 0.886, 0.695, 0.963, 3.978, -7.554, 15.51, 2.637, -1.829, 7.103, 0.313, 0.056, 0.779, 0.942, 0.862, 0.976, 2.893, 1.685, 4.101, 3.095, 1.28, 4.91, 0.118, 0.024, 0.419, 0.715, 0.676, 0.75, 1.92, 0.072, 3.768, 3.628, 0.705, 6.55, 0.147, 0.023, 0.558, 0.905, 0.833, 0.948, 0, NA, NA, 1, NA, NA), tolerance = 1e-2)
+    expect_equal(cfs, c(3.2, 1.054, 5.346, 4.795, 2.942, 6.647, 0.125, 0.028, 0.419, 0.902, 0.869, 0.928, 8.599, 4.614, 12.583, 1.951, 0.13, 3.773, 0.331, 0.215, 0.471, 0.886, 0.695, 0.963, 3.978, -7.556, 15.512, 2.637, -1.83, 7.104, 0.313, 0.056, 0.779, 0.942, 0.862, 0.976, 2.893, NaN, NaN, 3.095, NaN, NaN, 0.118, 0.024, 0.419, 0.715, 0.676, 0.75, 1.92, 0.072, 3.768, 3.628, 0.705, 6.55, 0.147, 0.023, 0.558, 0.905, 0.833, 0.948, 0, NA, NA, 1, NA, NA), tolerance = 1e-2)
     fulldata[1,1] <- fulldata[2,2] <- NA
     onefactmissing <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(onefactmissing, 'ConfirmatoryClass')

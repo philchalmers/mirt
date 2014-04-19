@@ -37,9 +37,6 @@ ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
 LinkingTo: Rcpp
-Author: Phil Chalmers [aut, cre, cph],
-    Joshua Pritikin [ctb],
-    Mateusz Zoltak [ctb]
 License: GPL (>= 3)
 Repository: CRAN
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
