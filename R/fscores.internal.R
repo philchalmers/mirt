@@ -103,7 +103,7 @@ setMethod(
 		tabdata <- object@tabdatalong
 		tabdata <- tabdata[ ,-ncol(tabdata), drop = FALSE]
 		keep <- object@tabdata[,ncol(object@tabdata)] > 0L
-		tabdata <- tabdata[keep, ]
+		tabdata <- tabdata[keep, , drop=FALSE]
         USETABDATA <- TRUE
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
         list_SEscores <- list_scores <- vector('list', MI)
@@ -229,7 +229,7 @@ setMethod(
                 print(round(reliability, 4L))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
-            ret <- cbind(object@tabdata[keep, ],scores,SEscores)
+            ret <- cbind(object@tabdata[keep, ,drop=FALSE],scores,SEscores)
             if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
 			return(ret)
 		}

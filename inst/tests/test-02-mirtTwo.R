@@ -73,11 +73,15 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp6, verbose = FALSE)))
     expect_equal(cfs, c(0.789, 5.158, 2.624, -1.344, 1.047, 2.943, 0.962, -2.184, 2.681, 5.726, 2.782, -1.808, 0.931, 3.423, 1.047, -1.592, 0, 1),
                  tolerance = 1e-2)
-
+    
+    fm0 <- fscores(modp1, method='EAP', response.pattern = c(1,2,3,4))
+    expect_equal(as.numeric(fm0[,c('F1','SE_F1')]), c(-0.3494903, 0.6004922), tolerance=1e-4)
     fm1 <- fscores(modp1, verbose = FALSE)
     expect_is(fm1, 'matrix')
     expect_true(mirt:::closeEnough(fm1[1:6,'F1'] - c(-2.7173474, -1.4189304, -0.7155405,
                                                      -0.4452374, -2.5339610, -1.2481305), -1e-2, 1e-2))
+    fm1b <- fscores(modp1, verbose = FALSE, full.scores=TRUE)
+    expect_equal(cor(fm1b, rowSums(Science))[1], .969, tolerance = .02)
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -

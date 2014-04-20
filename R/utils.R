@@ -1053,7 +1053,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
     SE[ESTIMATE$estindex_unique[!is.latent]] <- SEtmp
-    index <- 1L:ncol(info)
+    index <- 1L:length(longpars)
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
