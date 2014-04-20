@@ -14,6 +14,8 @@
 #' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If 
 #'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
+#' @param stats.only logical; return only the person fit statistics without their associated
+#'   response pattern?  
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit
@@ -52,18 +54,41 @@
 #' #using precomputed Theta
 #' Theta <- fscores(x, method = 'MAP', full.scores = TRUE, scores.only = TRUE)
 #' personfit(x, Theta=Theta)
+#' 
+#' #muliple group Rasch model example
+#' set.seed(12345)
+#' a <- matrix(rep(1, 15), ncol=1)
+#' d <- matrix(rnorm(15,0,.7),ncol=1)
+#' itemtype <- rep('dich', nrow(a))
+#' N <- 1000
+#' dataset1 <- simdata(a, d, N, itemtype)
+#' dataset2 <- simdata(a, d, N, itemtype, sigma = matrix(1.5))
+#' dat <- rbind(dataset1, dataset2)
+#' group <- c(rep('D1', N), rep('D2', N))
+#' MGmodel1 <- 'F1 = 1-15'
+#' models <- mirt.model(MGmodel1, quiet = TRUE)
+#' mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
+#' coef(mod_Rasch)
+#' pf <- personfit(mod_Rasch, method='MAP')
+#' head(pf)
 #'
 #'   }
 #'
-personfit <- function(x, method = 'EAP', Theta = NULL, ...){
+personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(any(is.na(x@data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
-        ret <- list()
+        ret <- vector('list', length(x@cmods))
         for(g in 1L:length(x@cmods))
-            ret[[g]] <- personfit(x@cmods[[g]], method=method, ...)
-        names(ret) <- names(x@cmods)
-        return(ret)
+            ret[[g]] <- personfit(x@cmods[[g]], method=method, stats.only=stats.only, ...)
+        ret2 <- matrix(0, nrow(x@data), ncol(ret[[1L]]))
+        for(g in 1L:length(x@cmods)){
+            pick <- x@groupNames[g] == x@group
+            ret2[pick, ] <- as.matrix(ret[[g]])
+        }
+        colnames(ret2) <- colnames(ret[[1L]])
+        rownames(ret2) <- rownames(x@data)
+        return(as.data.frame(ret2))
     }
     if(is.null(Theta))
         Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, 
@@ -136,6 +161,8 @@ personfit <- function(x, method = 'EAP', Theta = NULL, ...){
     } else {
         ret <- data.frame(x@data, Zh=Zh)
     }
+    if(stats.only)
+        ret <- ret[, !(colnames(ret) %in% colnames(x@data)), drop=FALSE]
     return(ret)
 }
 

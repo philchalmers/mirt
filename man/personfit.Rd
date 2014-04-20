@@ -2,7 +2,7 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-personfit(x, method = "EAP", Theta = NULL, ...)
+personfit(x, method = "EAP", Theta = NULL, stats.only = TRUE, ...)
 }
 \arguments{
   \item{x}{a computed model object of class
@@ -16,6 +16,9 @@ personfit(x, method = "EAP", Theta = NULL, ...)
   statistics that require emperical estimates. If supplied,
   arguments typically passed to \code{fscores()} will be
   ignored and these values will be used instead}
+
+  \item{stats.only}{logical; return only the person fit
+  statistics without their associated response pattern?}
 
   \item{...}{additional arguments to be passed to
   \code{fscores()}}
@@ -46,6 +49,23 @@ head(fit)
 #using precomputed Theta
 Theta <- fscores(x, method = 'MAP', full.scores = TRUE, scores.only = TRUE)
 personfit(x, Theta=Theta)
+
+#muliple group Rasch model example
+set.seed(12345)
+a <- matrix(rep(1, 15), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+itemtype <- rep('dich', nrow(a))
+N <- 1000
+dataset1 <- simdata(a, d, N, itemtype)
+dataset2 <- simdata(a, d, N, itemtype, sigma = matrix(1.5))
+dat <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+MGmodel1 <- 'F1 = 1-15'
+models <- mirt.model(MGmodel1, quiet = TRUE)
+mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
+coef(mod_Rasch)
+pf <- personfit(mod_Rasch, method='MAP')
+head(pf)
 
   }
 }
