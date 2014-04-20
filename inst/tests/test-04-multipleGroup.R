@@ -18,7 +18,9 @@ test_that('one factor', {
     cfs <- as.numeric(na.omit(do.call(rbind, coef(mod_Rasch, digits=5, printSE=TRUE, as.data.frame=TRUE))))
     expect_equal(cfs, c(0.545, -0.63665, -0.14376, 0.80569, 0.30492, 0.55009, 1.03783, -0.40416, -1.08672, -1.15675, 1.20202, -0.10968, 0.58072, 0.40407, -0.08536, 0.60372, -0.4505, -0.19841, 1.02121, 0.41623, 0.66369, 1.19678, -0.4028, -1.0233, -1.11901, 1.38872, -0.11527, 0.50138, 0.50138, -0.09971, 0.07974, 0.07977, 0.07809, 0.08083, 0.07878, 0.07937, 0.08405, 0.0783, 0.0834, 0.08447, 0.08523, 0.07865, 0.07975, 0.07838, 0.07795, 0.08454, 0.08442, 0.08268, 0.0882, 0.08401, 0.08539, 0.09027, 0.08389, 0.08684, 0.0885, 0.09122, 0.08414, 0.08454, 0.08447, 0.08317),
                  tolerance = 1e-3)
-    pf <- personfit(mod_Rasch)
+    EAP <- fscores(mod_Rasch, full.scores=TRUE)
+    expect_equal(cor(EAP, rowSums(dat))[1], .99, tolerance = 1e-2)
+    pf <- personfit(mod_Rasch, Theta=EAP)
     pffit <- c(as.numeric(as.matrix(head(pf))), as.numeric(as.matrix(tail(pf))))
     expect_equal(pffit, c(0.6388, 0.8582, 0.83267, 0.99725, 1.05999, 1.03414, -1.51153, -0.24137, -0.19464, 0.09861, 0.3459, 0.24062, 0.699, 0.89307, 0.84912, 1.08481, 0.98964, 1.05882, -1.48336, -0.26539, -0.31212, 0.40918, -0.00498, 0.40736, 1.39643, 0.34987, 0.38458, -0.21882, -0.05278, -0.30241, 1.15408, 1.54886, 0.69589, 1.64176, 1.054, 0.47791, 0.5427, 1.01894, -1.43216, 1.13883, 0.30973, -0.96363, 0.91257, 0.98546, 0.73961, 1.10462, 0.96747, 0.66029, -0.29309, 0.09788, -1.5242, 0.38551, -0.12126, -0.82876, 0.12927, -0.21665, 1.41519, -0.5449, 0.05218, 0.89503),
                  tolerance = 1e-3)
@@ -63,8 +65,11 @@ test_that('one factor', {
 
     fs1 <- fscores(mod_metric, verbose = FALSE)
     expect_true(mirt:::closeEnough(fs1[[1]][1:6, 'F1'] - c(-2.084760, -1.683841, -1.412181,
-                                                           -1.656879, -1.324689, -1.092169), -1e-2, 1e-2))
-    fs2 <- fscores(mod_metric, full.scores = TRUE)
+                                                           -1.324478, -1.091952, -1.741399), -1e-2, 1e-2))
+    fs2 <- fscores(mod_metric, full.scores = TRUE, full.scores.SE=TRUE, method = 'ML')
+    expect_equal(as.numeric(head(fs2)), c(0.5531893,  1.1960187,  1.8287234,  1.1133180, -0.5164821, -0.2322618,  0.4968711,  0.6002451,  0.7688432,
+                                          0.5831489,  0.4716423,  0.4613523),
+                tolerance = 1e-4)
     fs3 <- fscores(mod_missing, verbose = FALSE)
     fs4 <- fscores(mod_missing, full.scores = TRUE)
     fs5 <- fscores(mod_metric, full.scores = TRUE, scores.only=TRUE)
@@ -147,5 +152,5 @@ test_that('three factor', {
 
     fs1 <- fscores(mod_metric, verbose = FALSE)
     expect_is(fs1, 'list')
-    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-1.4408510, -1.0031699, -0.4670222, -0.2485374, -0.9508328, -0.6012160), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.95083283,  0.06506389, -0.53194554, -0.35161021,  0.53556601, -0.95083283), -1e-4, 1e-4))
 })

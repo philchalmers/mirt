@@ -102,11 +102,9 @@ setMethod(
 		fulldata <- object@data
 		tabdata <- object@tabdatalong
 		tabdata <- tabdata[ ,-ncol(tabdata), drop = FALSE]
+		keep <- object@tabdata[,ncol(object@tabdata)] > 0L
+		tabdata <- tabdata[keep, ]
         USETABDATA <- TRUE
-        if(full.scores && nrow(tabdata) > nrow(fulldata)/5){
-            USETABDATA <- FALSE
-            tabdata <- object@fulldata
-        }
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
         list_SEscores <- list_scores <- vector('list', MI)
         if(MI == 0) MI <- 1	    
@@ -149,16 +147,14 @@ setMethod(
                 scores <- tmp[ ,1:nfact, drop = FALSE]
                 SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
     		} else if(method == "ML"){
-                tabdata2 <- object@tabdata[,-ncol(object@tabdata)]
-    			tmp2 <- tabdata[,itemloc[-1L] - 1L, drop = FALSE]
-                tmp2[is.na(tabdata2)] <- 1
-    			scores[rowSums(tmp2) == J,] <- Inf
-                SEscores[rowSums(tmp2) == J,] <- NA
-                tmp2 <- tabdata[,itemloc[-length(itemloc)], drop = FALSE]
-                tmp2[is.na(tabdata2)] <- 1
-                scores[rowSums(tmp2) == J,] <- -Inf
-                SEscores[rowSums(tmp2) == J,] <- NA
-    			SEscores[is.na(scores[,1L]), ] <- rep(NA, nfact)
+                isna <- apply(object@tabdata[,-ncol(object@tabdata)], 1L, 
+                              function(x) sum(is.na(x)))[keep]
+    			allzero <- (rowSums(tabdata[,itemloc[-length(itemloc)]]) + isna) == J
+    			allmcat <- (rowSums(tabdata[,itemloc[-1L]-1L]) + isna) == J
+    			scores[allmcat,] <- Inf
+                SEscores[allmcat,] <- NA                
+                scores[allzero,] <- -Inf
+                SEscores[allzero,] <- NA
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
                                CUSTOM.IND=CUSTOM.IND)
@@ -198,7 +194,7 @@ setMethod(
 		if (full.scores){
             if(USETABDATA){
                 tabdata2 <- object@tabdatalong
-                tabdata2 <- tabdata2[,-ncol(tabdata2)]
+                tabdata2 <- tabdata2[tabdata2[,ncol(tabdata2)] > 0L, -ncol(tabdata2)]
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
                 sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
@@ -233,7 +229,7 @@ setMethod(
                 print(round(reliability, 4L))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
-            ret <- cbind(object@tabdata,scores,SEscores)
+            ret <- cbind(object@tabdata[keep, ],scores,SEscores)
             if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
 			return(ret)
 		}
