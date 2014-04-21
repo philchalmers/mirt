@@ -137,10 +137,10 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                  Consider removing it from the item2test input or adding relevant parameters to which.par')
         if(Wald){
             wv <- wald(model)
-            L <- matrix(0, length(parnum), length(wv))
+            L <- matrix(0, length(parnum), nrow(wv))
             for(i in 1L:length(parnum)){
-                L[i, paste0(which.par[i], '.', parnum[[i]][1L]) == wv] <- 1
-                L[i, paste0(which.par[i], '.', parnum[[i]][2L]) == wv] <- -1
+                L[i, paste0(which.par[i], '.', parnum[[i]][1L]) == wv$infoname] <- 1
+                L[i, paste0(which.par[i], '.', parnum[[i]][2L]) == wv$infoname] <- -1
             }
             res <- wald(model, L)
             return(res)

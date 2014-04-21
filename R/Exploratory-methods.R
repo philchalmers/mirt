@@ -346,9 +346,9 @@ setMethod(
                           SABIC = c(object@SABIC, object2@SABIC),
                           BIC = c(object@BIC, object2@BIC),
                           logLik = c(object@logLik, object2@logLik),
-                          X2 = c('', X2),
-                          df = c('', abs(df)),
-                          p = c('', round(1 - pchisq(X2,abs(df)),3)))
+                          X2 = c(NaN, X2),
+                          df = c(NaN, abs(df)),
+                          p = c(NaN, round(1 - pchisq(X2,abs(df)),3)))
         return(ret)
     }
 )

@@ -7,34 +7,45 @@ test_that('extras', {
     mod1 <- mirt(data, 1, verbose=FALSE)
     
     set.seed(12345)
-    a1 <- a2 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
-    d1 <- d2 <- matrix(rnorm(15,0,.7),ncol=1)
+    a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
+    d1 <- d2 <- matrix(rnorm(10,0,.7),ncol=1)
     a2[1:2, ] <- a1[1:2, ]/3
     d1[c(1,3), ] <- d2[c(1,3), ]/4
-    head(data.frame(a.group1 = a1, a.group2 = a2, d.group1 = d1, d.group2 = d2))
     itemtype <- rep('dich', nrow(a1))
     N <- 1000
     dataset1 <- simdata(a1, d1, N, itemtype)
     dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
     dat <- rbind(dataset1, dataset2)
     group <- c(rep('D1', N), rep('D2', N))
-    model1 <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE)
+    model1a <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'Louis')
+    model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'BL')
+    expect_equal(as.numeric(model1a@information - model1b@information), numeric(ncol(model1a@information)^2),
+                 tolerance = 1e-3)
     model2 <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, 
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))
     
-    boot <- boot.mirt(model1, R=5)
+    boot <- boot.mirt(model1a, R=5)
     cfs <- boot$t0
     cfs <- cfs[cfs != 0 & cfs != 1]
-    expect_equal(cfs, c(1.1319, 0.1772, 1.3074, -0.6995, 0.9705, 0.1217, 1.1235, 0.8317, 1.2338, 0.3238, 0.4847, 0.4804, 1.1465, 1.0791, 0.8362, -0.3832, 0.8757, -1.0441, 0.8032, -1.0894, 0.9031, 1.1644, 1.5724, -0.1368, 1.3984, 0.6504, 1.0773, 0.4108, 0.8692, -0.0815, 0.5239, 0.6302, 0.5529, -0.5649, 1.3728, -0.2063, 1.2107, 1.0205, 1.258, 0.4231, 0.4662, 0.5413, 1.5702, 1.3373, 1.1292, -0.3902, 0.9303, -0.9375, 0.9328, -1.0265, 1.1988, 1.3824, 1.9066, -0.1398, 1.2711, 0.5115, 1.4832, 0.5471, 1.1101, -0.0948),
+    expect_equal(cfs, c(1.03027, -0.03172, 1.18018, 1.36523, 1.1824, 0.10923, 0.94459, 0.36701, 1.09781, -0.53252, 0.38686, 0.48484, 1.4409, -0.6983, 0.80128, -0.22106, 0.80456, 0.83075, 0.7102, 0.24493, 0.67924, 0.10731, 0.47428, 1.27867, 1.42737, 0.41311, 1.29134, 0.51946, 1.36572, -0.39269, 0.64571, 0.60175, 1.44829, -0.4938, 1.2331, -0.20888, 1.08338, 0.95549, 0.98608, 0.1816),
                  tolerance=1e-3)
     PLCI <- PLCI.mirt(mod1, parnum=c(1,2))
     expect_equal(c(PLCI$lower_2.5, PLCI$upper_97.5), c(0.7580446, 1.6843469, 1.2564076, 2.0529152),
                  tolerance=1e-3)
-    DIFF <- DIF(model1, which.par='d', items2test = 1:3)
+    DIFF <- DIF(model1a, which.par='d', items2test = 1:3)
     expect_is(DIFF, 'list')
-    expect_equal(DIFF[[1L]][2,'logLik'], -18035.15, tolerance = 1e-3)
+    expect_equal(DIFF[[1L]][2,'logLik'], -12508.15, tolerance = 1e-3)    
+    DIFF2 <- DIF(model2, which.par=c('a1', 'd'), items2test = 1:3, scheme='drop')
+    expect_is(DIFF2, 'list')
+    expect_equal(DIFF2[[1L]][,'logLik'], c(-12534.13, -12528.83), tolerance = 1e-3)    
     
-    WALD <- DIF(model1, which.par='d', items2test = 1:3, Wald=TRUE)
+    WALD <- DIF(model1a, which.par='d', items2test = 1:3, Wald=TRUE)
+    expect_is(WALD, 'list')
+    expect_equal(WALD[[1]]$W[1], 1.779436, tolerance = 1e-4)
+    expect_equal(WALD[[1]]$p[1], .1822186, tolerance = 1e-4)
+    WALD2 <- DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr') 
+    expect_equal(as.numeric(WALD2$adj_pvals), c(0.0777, 0.0010, 0.0777, 0.1611, 0.1652, 0.1611, 
+                                                0.2662, 0.0777, 0.2344, 0.1652), tolerance = 1e-3)     
     extr.2 <- extract.item(mod1, 2)
     Theta <- matrix(seq(-6,6, length.out=200))
     expected <- expected.item(extr.2, Theta)

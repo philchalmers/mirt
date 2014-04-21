@@ -1,5 +1,6 @@
 setClass("AllModelClass",
          representation(pars='list',
+                        shortpars='numeric',
                         model='list',
                         K='numeric',
                         G2='numeric',
@@ -58,6 +59,7 @@ setClass("AllModelClass",
 #' \describe{
 #'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'     \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
 #'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
 #'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
@@ -133,6 +135,7 @@ setClass(
 #' \describe{
 #'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'     \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
 #'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
 #'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
@@ -210,6 +213,7 @@ setClass(
 #'  \describe{
 #'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'    \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
 #'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
 #'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
@@ -291,6 +295,7 @@ setClass(
 #'  \describe{
 #'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
+#'    \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
 #'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
 #'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
 #'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }

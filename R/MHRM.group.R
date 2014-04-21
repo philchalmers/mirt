@@ -383,6 +383,6 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, correction=correction,
                 longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),
-                estindex_unique=estindex_unique)
+                estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr])
     ret
 }

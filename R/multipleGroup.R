@@ -143,7 +143,7 @@
 #' #############
 #' #DIF test for each item (using all other items as anchors)
 #' itemnames <- colnames(dat)
-#' refmodel <- multipleGroup(dat, models, group = group,
+#' refmodel <- multipleGroup(dat, models, group = group, SE=TRUE,
 #'                              invariance=c('free_means', 'free_varcov', itemnames))
 #'
 #' #loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
@@ -166,8 +166,11 @@
 #'                              invariance=c('free_means', 'free_varcov', 'intercepts',
 #'                              itemnames[-i]))
 #'
-#'
 #' (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
+#'
+#' #quickly test with Wald test using DIF()
+#' mod_configural2 <- multipleGroup(dat, models, group = group, SE=TRUE)
+#' DIF(mod_configural2, which.par = c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
 #'
 #' #############
 #' #multiple factors

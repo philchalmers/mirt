@@ -3,9 +3,7 @@
 #' Compute a Wald test given an \code{L} vector or matrix of numeric contrasts. Requires that the
 #' model information matrix be computed (including \code{SE = TRUE} when using the EM method). Use
 #' \code{wald(model)} to observe how the information matrix columns are named, especially if
-#' the estimated model contains constrained parameters (e.g., 1PL). The information matrix names
-#' are labelled according to which parameter number(s) they correspond to (to check the
-#' numbering use \code{\link{mod2values}} on the estimated object).
+#' the estimated model contains constrained parameters (e.g., 1PL). 
 #'
 #'
 #' @aliases wald
@@ -32,13 +30,11 @@
 #'
 #' #second item slope equal to 0?
 #' L <- rep(0, 10)
-#' names(L) <- infonames #labelling is optional
 #' L[3] <- 1
 #' wald(mod, L)
 #'
 #' #simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
 #' L <- matrix(0, 2, 10)
-#' colnames(L) <- infonames #again, labelling not required
 #' L[1,1] <- L[2, 7] <- 1
 #' L[1,3] <- L[2, 9] <- -1
 #' L
@@ -59,8 +55,9 @@ wald <- function(object, L, C = 0){
             stop('No information matrix has been calculated for the model')
     Names <- colnames(object@information)
     if(missing(L)){
-        names(Names) <- 1:length(Names)
-        return(Names)
+        index <- 1L:length(Names)
+        ret <- data.frame(infoname=Names, par = round(object@shortpars,3))
+        return(ret)
     }
     if(!is.matrix(L))
         L <- matrix(L, 1)
@@ -68,24 +65,7 @@ wald <- function(object, L, C = 0){
     if(is(object, 'MultipleGroupClass'))
         pars <- object@cmods
     covB <- solve(object@information)
-    B <- parnum <- c()
-    if(is(object, 'MultipleGroupClass')){
-        for(g in 1L:length(pars)){
-            for(i in 1L:(length(pars[[g]]@pars)-1L)){
-                B <- c(B, pars[[g]]@pars[[i]]@par)
-                parnum <- c(parnum, pars[[g]]@pars[[i]]@parnum)
-            }
-        }
-    } else {
-        for(i in 1L:(length(pars)-1L)){
-            B <- c(B, pars[[i]]@par)
-            parnum <- c(parnum, pars[[i]]@parnum)
-        }
-    }
-    keep <- c()
-    for(i in 1L:length(Names))
-        keep <- c(keep, as.numeric(strsplit(Names[i], '.', fixed = TRUE)[[1]][2]))
-    B <- B[keep]
+    B <- object@shortpars
     W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))

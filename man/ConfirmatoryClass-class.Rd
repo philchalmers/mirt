@@ -12,6 +12,8 @@ confirmatory.
   \code{"numeric"}, number of iterations }
   \item{\code{pars}:}{Object of class \code{"list"},
   estimated parameter objects list }
+  \item{\code{shortpars}:}{Object of class
+  \code{"numeric"}, unique estimated parameters}
   \item{\code{model}:}{Object of class \code{"list"}, list
   containing original model } \item{\code{K}:}{Object of
   class \code{"numeric", number of item categories} }
