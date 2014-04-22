@@ -3,7 +3,7 @@
 \alias{wald}
 \title{Wald test for mirt models}
 \usage{
-wald(object, L, C = rep(0, ncol(L)))
+wald(object, L, C)
 
 \method{print}{wald}(x, ...)
 }
