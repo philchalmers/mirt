@@ -215,7 +215,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rr <- rr + r
     }
     df <- prod(PrepList[[1L]]$K) - 1
-    if(df > 1e100) df <- 1e100
+    if(df > 1e10) df <- 1e10
     nestpars <- nconstr <- 0L
     for(g in 1L:Data$ngroups)
         for(i in 1L:(nitems+1L))
@@ -434,16 +434,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList)
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
-                DM <- DM[!is.latent, !is.latent, drop=FALSE]
-                tmp1 <- -solve(ESTIMATE$hess[!is.latent, !is.latent])
-                info <- try(solve(tmp1 %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
+                DM[, is.latent] <- 0
+                info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
+                info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
+                if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
                 if(is(info, 'try-error')){
                     warning('information matrix in SEM could not be computed due to instability')
-                } else {
-                    tmp1 <- matrix(0, ncol(estmat), ncol(estmat))
-                    tmp1[!is.latent, !is.latent] <- info
-                    ESTIMATE <- loadESTIMATEinfo(info=tmp1, ESTIMATE=ESTIMATE, constrain=constrain)
-                }
+                } else ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
             }
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
             ESTIMATE <- SE.BL(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
@@ -728,13 +725,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    infomethod=opts$SE.type,
                    TOL=opts$TOL)
     }
-    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    is.latent <- lengthsplit > 2L
-    mod@shortpars <- as.numeric(ESTIMATE$shortpars[!is.latent])
+    mod@shortpars <- as.numeric(ESTIMATE$shortpars)
     if(length(mod@information) > 1L && !ESTIMATE$fail_invert_info){
-        mod@condnum <- norm(mod@information, type='2') * norm(solve(mod@information), type='2')
-        ev <- eigen(mod@information)$values
+        isna <- is.na(diag(mod@information))
+        info <- mod@information[!isna, !isna]
+        mod@condnum <- norm(info, type='2') * norm(solve(info), type='2')
+        ev <- eigen(info)$values
         if(is.complex(ev)){
             mod@secondordertest <- FALSE
         } else {

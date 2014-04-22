@@ -4,7 +4,7 @@ test_that('extras', {
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     data <- expand.table(LSAT7)
     data <- rbind(data, data)
-    mod1 <- mirt(data, 1, verbose=FALSE)
+    mod1 <- mirt(data, 1, verbose=FALSE, SE=TRUE)
     
     set.seed(12345)
     a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
@@ -62,5 +62,9 @@ test_that('extras', {
     ti <- testinfo(mod1, Theta=Theta)
     expect_equal(ti[1:6, 1], c(0.06609361, 0.06919815, 0.07244372, 0.07583628, 0.07938197, 0.08308716),
                  tolerance = 1e-5)
+    set.seed(1234)
+    fs <- fscores(mod1, MI=20, verbose=FALSE)
+    expect_is(fs, 'matrix')
+    expect_equal(fs[1:3,'F1'], c(-1.853914, -1.509722, -1.514913), tolerance=1e-3)
 })
 

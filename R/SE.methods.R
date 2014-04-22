@@ -281,7 +281,8 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-    is.latent <- lengthsplit > 1L
+    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
+    is.latent <- lengthsplit > 2L
     Ihess <- Ihess[!is.latent, !is.latent]; Igrad <- Igrad[!is.latent, !is.latent]
     IgradP <- IgradP[!is.latent, !is.latent]
     if(type == 'Louis'){
@@ -293,7 +294,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         info <- solve(tmp %*% Igrad %*% tmp)
     }
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)[!is.latent]
-    tmp <- matrix(0, length(is.latent), length(is.latent))
+    tmp <- matrix(NA, length(is.latent), length(is.latent))
     tmp[!is.latent, !is.latent] <- info
     ESTIMATE <- loadESTIMATEinfo(info=tmp, ESTIMATE=ESTIMATE, constrain=constrain)
     if(any(lengthsplit > 2L)){
@@ -361,7 +362,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    info[lengthsplit > 2L, lengthsplit > 2L] <- 1
+    info[lengthsplit > 2L, lengthsplit > 2L] <- NA
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
     if(any(lengthsplit > 2L)){
         for(g in 1L:ngroups){

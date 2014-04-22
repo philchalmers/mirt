@@ -1034,11 +1034,9 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     J <- length(pars[[1L]]) - 1L
     info <- nameInfoMatrix(info=info, correction=ESTIMATE$correction, L=ESTIMATE$L,
                            npars=length(longpars))
-    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    is.latent <- lengthsplit > 2L
-    info <- info[!is.latent, !is.latent]
     ESTIMATE$info <- info
+    isna <- is.na(diag(info))
+    info <- info[!isna, !isna]
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
         warning('Could not invert information matrix; model likely is not identified.')
@@ -1052,7 +1050,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     }
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
-    SE[ESTIMATE$estindex_unique[!is.latent]] <- SEtmp
+    SE[ESTIMATE$estindex_unique[!isna]] <- SEtmp
     index <- 1L:length(longpars)
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
