@@ -24,6 +24,12 @@ test_that('extras', {
     model2 <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, 
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))
     
+    acov <- fscores(mod1, return.acov=TRUE)
+    expect_equal(acov[[1]][1], .47235, tolerance=1e-3)
+    acov <- fscores(mod1, return.acov=TRUE, full.scores=TRUE)
+    expect_equal(acov[[500]][1], 0.4986606, tolerance=1e-3)
+    acov <- fscores(model1a, return.acov=TRUE, full.scores=TRUE)
+    expect_equal(acov[[500]][1], .3452783, tolerance=1e-3)
     boot <- boot.mirt(model1a, R=5)
     cfs <- boot$t0
     cfs <- cfs[cfs != 0 & cfs != 1]

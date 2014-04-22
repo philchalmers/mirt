@@ -21,6 +21,9 @@
 
 ## NEW FEATURES
 
+- `return.acov` logical added to `fscores()` to return a list of matricies containing the 
+  ACOV theta values used to compute the SEs (suggested by Shiyang Su)
+
 - `printCI` logical option to `summary()` to print confidence intervals for standardized loadings
 
 - new `expected.test()` function, which is an extension of `expected.item()` but for the whole test

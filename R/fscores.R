@@ -39,6 +39,8 @@
 #'   for a given response vector or matrix
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
+#' @param return.acov logical; return a list containing covariance matricies instead of factors 
+#'   scores? \code{impute = TRUE} not supported with this option
 #' @param full.scores.SE logical; when \code{full.scores == TRUE}, also return the
 #'   standard errors associated with each respondent? Default is \code{FALSE}
 #' @param verbose logical; print verbose output messages?
@@ -93,13 +95,13 @@
 #'}
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL,
-                    returnER = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
+                    returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-4,4), MI = 0)
 {
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             scores.only=scores.only, theta_lim=theta_lim, MI=MI,
-                            full.scores.SE=full.scores.SE)
+                            full.scores.SE=full.scores.SE, return.acov=return.acov)
     ret
 }
