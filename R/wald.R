@@ -7,12 +7,13 @@
 #'
 #'
 #' @aliases wald
-#' @param L a coefficient matrix with dimensions nconstrasts x npars, or a vector if only one
-#'   set of contrasts is being tested. Omitting this value will return the column names of the
+#' @param L a coefficient matrix with dimensions nconstrasts x npars. 
+#'   Omitting this value will return the column names of the
 #'   information matrix used to identify the (potentially constrained) parameters
 #' @param object estimated object from \code{mirt}, \code{bfactor},
 #' \code{multipleGroup}, or \code{mixedmirt}
-#' @param C a constant vector/matrix to be compared along side L
+#' @param C a constant vector of population parameters to be compared along side L, where 
+#'   \code{length(C) == ncol(L)}. If missing, a vector of 0's will be constructed
 #' @keywords wald
 #' @export wald
 #' @examples
@@ -29,8 +30,8 @@
 #' index[index$est, ]
 #'
 #' #second item slope equal to 0?
-#' L <- rep(0, 10)
-#' L[3] <- 1
+#' L <- matrix(0, 1, 10)
+#' L[1,3] <- 1
 #' wald(mod, L)
 #'
 #' #simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
@@ -49,24 +50,30 @@
 #' anova(mod2, mod)
 #' 
 #' }
-wald <- function(object, L, C = 0){
+wald <- function(object, L, C){
     if(all(dim(object@information) == c(1,1)))
         if(object@information[1,1] == 0L)
             stop('No information matrix has been calculated for the model')
     Names <- colnames(object@information)
     if(missing(L)){
         index <- 1L:length(Names)
-        ret <- data.frame(infoname=Names, par = round(object@shortpars,3))
+        ret <- as.data.frame(t(data.frame(infoname=Names, par = round(object@shortpars,3))))
+        colnames(ret) <- index
         return(ret)
     }
     if(!is.matrix(L))
-        L <- matrix(L, 1)
+        L <- matrix(L, 1L)
+    if(missing(C))
+        C <- numeric(ncol(L))
+    if(!is.vector(C))
+        stop('C must be a vector of constant population parameters')
+    
     pars <- object@pars
     if(is(object, 'MultipleGroupClass'))
         pars <- object@cmods
     covB <- solve(object@information)
     B <- object@shortpars
-    W <- t(L %*% B - C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - C)
+    W <- t(L %*% B - L %*% C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - L %*% C)
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))
     p <- 1 - pchisq(ret$W, ret$df)

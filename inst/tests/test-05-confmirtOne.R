@@ -9,9 +9,9 @@ test_that('exploratory mods', {
     expect_equal(cfs, c(0.9872, 0.6398, 1.3346, 1.8552, 1.5939, 2.1165, 0, NA, NA, 1, NA, NA, 1.0775, 0.7408, 1.4143, 0.8071, 0.6324, 0.9819, 0, NA, NA, 1, NA, NA, 1.7159, 1.0693, 2.3624, 1.8095, 1.4294, 2.1896, 0, NA, NA, 1, NA, NA, 0.7506, 0.5026, 0.9985, 0.4842, 0.3232, 0.6452, 0, NA, NA, 1, NA, NA, 0.7582, 0.4499, 1.0665, 1.8643, 1.609, 2.1195, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     names <- wald(onefact)
-    L <- matrix(0, 1, nrow(names))
+    L <- matrix(0, 1, ncol(names))
     L[1, c(1,3,5,7,9)] <- 1
-    L2 <- matrix(0, 2, nrow(names))
+    L2 <- matrix(0, 2, ncol(names))
     L2[1, 1] <- L2[2, 3] <- 1
     L2[1, 7] <- L2[2, 9] <- -1
     W1 <- wald(onefact, L)

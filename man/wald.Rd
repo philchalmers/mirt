@@ -3,14 +3,13 @@
 \alias{wald}
 \title{Wald test for mirt models}
 \usage{
-wald(object, L, C = 0)
+wald(object, L, C = rep(0, ncol(L)))
 
 \method{print}{wald}(x, ...)
 }
 \arguments{
   \item{L}{a coefficient matrix with dimensions nconstrasts
-  x npars, or a vector if only one set of contrasts is
-  being tested. Omitting this value will return the column
+  x npars.  Omitting this value will return the column
   names of the information matrix used to identify the
   (potentially constrained) parameters}
 
@@ -18,8 +17,9 @@ wald(object, L, C = 0)
   \code{bfactor}, \code{multipleGroup}, or
   \code{mixedmirt}}
 
-  \item{C}{a constant vector/matrix to be compared along
-  side L}
+  \item{C}{a constant vector of population parameters to be
+  compared along side L, where \code{length(C) == ncol(L)}.
+  If missing, a vector of 0's will be constructed}
 
   \item{x}{an object of class 'wald'}
 
@@ -48,8 +48,8 @@ index <- mod2values(mod)
 index[index$est, ]
 
 #second item slope equal to 0?
-L <- rep(0, 10)
-L[3] <- 1
+L <- matrix(0, 1, 10)
+L[1,3] <- 1
 wald(mod, L)
 
 #simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
