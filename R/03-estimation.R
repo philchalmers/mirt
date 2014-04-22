@@ -388,8 +388,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
     }
-    if(opts$method == 'MHRM' || opts$method == 'MIXED')
-        ESTIMATE <- loadESTIMATEinfo(info=ESTIMATE$info, ESTIMATE=ESTIMATE, constrain=constrain)
     opts$times$end.time.Estimate <- proc.time()[3L]
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){

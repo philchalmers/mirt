@@ -379,10 +379,38 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
         for(i in 1L:(J+1L))
             pars[[g]][[i]]@par <- longpars[pars[[g]][[i]]@parnum]
     }
+    acov <- try(solve(info), TRUE)
+    if(is(acov, 'try-error')){
+        warning('Could not invert information matrix; model likely is not identified.')
+        fail_invert_info <- TRUE
+    } else {
+        fail_invert_info <- FALSE
+        SEtmp <- abs(diag(acov))
+        if(any(SEtmp < 0)){
+            warning("Negative SEs set to NaN.\n")
+            SEtmp[SEtmp < 0 ] <- NaN
+        }
+        SEtmp <- sqrt(SEtmp)
+        SE <- rep(NA, length(longpars))
+        SE[estindex_unique] <- SEtmp
+        if(length(constrain) > 0L)
+            for(i in 1L:length(constrain))
+                SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
+        for(g in 1L:ngroups){
+            for(i in 1L:(J+1L))
+                pars[[g]][[i]]@SEpar <- SE[pars[[g]][[i]]@parnum]
+        } 
+        if(RAND){
+            for(i in 1L:length(random))
+                random[[i]]@SEpar <- SE[random[[i]]@parnum]
+        }
+    }
     names(correction) <- names(estpars)[estindex_unique]
+    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=info, correction=correction,
                 longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),
-                estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr])
+                estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr],
+                fail_invert_info=fail_invert_info)
     ret
 }
