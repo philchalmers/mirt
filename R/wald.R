@@ -11,7 +11,7 @@
 #'   Omitting this value will return the column names of the
 #'   information matrix used to identify the (potentially constrained) parameters
 #' @param object estimated object from \code{mirt}, \code{bfactor},
-#' \code{multipleGroup}, or \code{mixedmirt}
+#'   \code{multipleGroup}, or \code{mixedmirt}
 #' @param C a constant vector of population parameters to be compared along side L, where 
 #'   \code{length(C) == ncol(L)}. By default a vector of 0's is constructed
 #' @keywords wald
