@@ -13,7 +13,7 @@
 #' @param object estimated object from \code{mirt}, \code{bfactor},
 #' \code{multipleGroup}, or \code{mixedmirt}
 #' @param C a constant vector of population parameters to be compared along side L, where 
-#'   \code{length(C) == ncol(L)}. If missing, a vector of 0's will be constructed
+#'   \code{length(C) == ncol(L)}. By default a vector of 0's is constructed
 #' @keywords wald
 #' @export wald
 #' @examples
@@ -50,7 +50,7 @@
 #' anova(mod2, mod)
 #' 
 #' }
-wald <- function(object, L, C){
+wald <- function(object, L, C = 0){
     if(all(dim(object@information) == c(1,1)))
         if(object@information[1,1] == 0L)
             stop('No information matrix has been calculated for the model')
@@ -61,19 +61,24 @@ wald <- function(object, L, C){
         colnames(ret) <- index
         return(ret)
     }
-    if(!is.matrix(L))
-        L <- matrix(L, 1L)
-    if(missing(C))
-        C <- numeric(ncol(L))
+    if(!is.matrix(L)){
+        stop('L must be a matrix')
+    } else if(ncol(L) != length(Names)){
+        stop('L does not have an appropriate number of columns')
+    }
     if(!is.vector(C))
         stop('C must be a vector of constant population parameters')
-    
+    if(length(C) == 1L){
+        C <- numeric(ncol(L))
+    } else if(length(C) != ncol(L)){
+        stop('length(C) must be the same as ncol(L)')
+    }
     pars <- object@pars
     if(is(object, 'MultipleGroupClass'))
         pars <- object@cmods
     covB <- solve(object@information)
     B <- object@shortpars
-    W <- t(L %*% B - L %*% C) %*% solve(L %*% covB %*% t(L)) %*% (L %*% B - L %*% C)
+    W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))
     p <- 1 - pchisq(ret$W, ret$df)
@@ -89,6 +94,6 @@ wald <- function(object, L, C){
 #' @param ... additional arguments to be passed
 print.wald <- function(x, ...){
     cat('\nWald test: \nW = ', round(x$W, 3), ', df = ', x$df, ', p = ',
-        round(x$p, 3), '\n', sep='')
+        round(x$p, 4), '\n', sep='')
 }
 

@@ -6,8 +6,8 @@
 #'
 #'
 #' @param tabdata An object of class \code{data.frame}, \code{matrix}, or
-#' \code{table} with the unique response patterns and the number of frequencies
-#' in the rightmost column.
+#'   \code{table} with the unique response patterns and the number of frequencies
+#'   in the rightmost column.
 #' @return Returns a numeric matrix with all the response patterns.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords data

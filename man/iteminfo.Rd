@@ -12,7 +12,7 @@ iteminfo(x, Theta, degrees = NULL, total.info = TRUE)
   (multidimensional) of latent trait values}
 
   \item{degrees}{a vector of angles in degrees that are
-  between 0 and 90 that jointly sum to 90. Only applicable
+  between 0 and 90 that jointly sum to 90.  Only applicable
   when the input object is multidimensional}
 
   \item{total.info}{logical; return the total information

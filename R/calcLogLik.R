@@ -16,23 +16,22 @@
 #' \S4method{calcLogLik}{MixedClass}(object,
 #'    draws = 5000)
 #' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
-#' calcLogLik,ConfirmatoryClass-method calcLogLik,MixedClass-method
+#'   calcLogLik,ConfirmatoryClass-method calcLogLik,MixedClass-method
 #' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
 #' @param draws the number of Monte Carlo draws
 #' @param G2 logical; estimate the G2 model fit statistic?
 #' @param ... parameters that are passed
 #' @section Methods:
 #' \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")},
-#' \code{signature(object = "ExploratoryClass")}, \code{signature(object = "MixedClass")} }
+#'           \code{signature(object = "ExploratoryClass")}, \code{signature(object = "MixedClass")} }
 #' }
 #' @return Returns an object with the log-likelihood and Monte Carlo standard errors,
-#' and (possibly) the G^2 and other model fit statistic if there is no missing data.
+#'   and (possibly) the G^2 and other model fit statistic if there is no missing data.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @docType methods
 #' @rdname calcLogLik-method
 #' @export calcLogLik
-#' @seealso
-#' \code{\link{mirt}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}
+#' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}
 #' @keywords calcLogLik
 #' @examples
 #'

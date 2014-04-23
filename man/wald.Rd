@@ -3,7 +3,7 @@
 \alias{wald}
 \title{Wald test for mirt models}
 \usage{
-wald(object, L, C)
+wald(object, L, C = 0)
 
 \method{print}{wald}(x, ...)
 }
@@ -19,7 +19,7 @@ wald(object, L, C)
 
   \item{C}{a constant vector of population parameters to be
   compared along side L, where \code{length(C) == ncol(L)}.
-  If missing, a vector of 0's will be constructed}
+  By default a vector of 0's is constructed}
 
   \item{x}{an object of class 'wald'}
 

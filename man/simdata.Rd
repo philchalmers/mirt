@@ -17,7 +17,7 @@ simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 
   \item{itemtype}{a character vector of length
   \code{nrow(a)} (or 1, if all the item types are the same)
-  specifying the type of items to simulate. Can be
+  specifying the type of items to simulate.  Can be
   \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'},
   or \code{'partcomp'}, for dichotomous, graded,
   generalized partial credit, nominal, nested logit, and
@@ -34,7 +34,7 @@ simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   understand the itemtypes more intimately}
 
   \item{nominal}{a matrix of specific item category slopes
-  for nominal models. Should be the dimensions as the
+  for nominal models.  Should be the dimensions as the
   intercept specification with one less column, with
   \code{NA} in locations where not applicable. Note that
   during estimation the first slope will be constrained to

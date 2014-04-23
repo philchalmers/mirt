@@ -13,21 +13,21 @@
 #' @param par a named vector of the starting values for the parameters
 #' @param est a logical vector indicating which parameters should be freely estimated by default
 #' @param P the probability trace function for all categories (first column is category 1, second category two, etc).
-#' First input contains a vector of all the item parameters, the second input must be a matrix called \code{Theta}, and
-#' the third input must be the number of categories called \code{ncat}.
-#' Function also must return a \code{matrix} object of category probabilities
+#'   First input contains a vector of all the item parameters, the second input must be a matrix called \code{Theta}, and
+#'   the third input must be the number of categories called \code{ncat}.
+#'   Function also must return a \code{matrix} object of category probabilities
 #' @param gr gradient function (vector of first derivatives) used in estimation.
-#' If not specified a numeric approximation will be used
+#'   If not specified a numeric approximation will be used
 #' @param hss Hessian function (matrix of second derivatives) used in estimation.
-#' If not specified a numeric approximation will be used (required for the MH-RM algorithm only)
+#'   If not specified a numeric approximation will be used (required for the MH-RM algorithm only)
 #' @param userdata an optional matrix of person level covariate data that can be used in estimation. This
-#' matrix with be used in the probability function by passing \code{Theta = cbind(Theta, userdata)}. Note that
-#' this only makes sense to use when the estimation uses the MH-RM engine since the number of rows in Theta
-#' will be the same as the number of rows in the covariate data (similar to how \code{mixedmirt} works)
+#'   matrix with be used in the probability function by passing \code{Theta = cbind(Theta, userdata)}. Note that
+#'   this only makes sense to use when the estimation uses the MH-RM engine since the number of rows in Theta
+#'   will be the same as the number of rows in the covariate data (similar to how \code{mixedmirt} works)
 #' @param lbound optional vector indicating the lower bounds of the parameters. If not specified then
-#' the bounds will be set to -Inf
+#'   the bounds will be set to -Inf
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified then
-#' the bounds will be set to Inf
+#'   the bounds will be set to Inf
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords createItem
 #' @export createItem

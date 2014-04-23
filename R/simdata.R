@@ -7,42 +7,40 @@
 #' Returns a data matrix simulated from the parameters.
 #'
 #' @param a a matrix of slope parameters. If slopes are to be constrained to
-#' zero then use \code{NA}. \code{a} may also be a similar matrix specifying
-#' factor loadings if \code{factor.loads = TRUE}
+#'   zero then use \code{NA}. \code{a} may also be a similar matrix specifying
+#'   factor loadings if \code{factor.loads = TRUE}
 #' @param d a matrix of intercepts. The matrix should have as many columns as
-#' the item with the largest number of categories, and filled empty locations
-#' with \code{NA}
+#'   the item with the largest number of categories, and filled empty locations
+#'   with \code{NA}
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are the same)
-#' specifying the type of items to simulate.
-#' Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
-#' dichotomous, graded, generalized
-#' partial credit, nominal, nested logit, and partially compensatory models. Note that
-#' for the gpcm, nominal, and nested logit models there should be as many parameters as desired categories,
-#' however to parametrized them for meaningful interpretation the first category intercept should
-#' equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
-#' correct item traceline). For nested logit models the 'correct' category is always the lowest category
-#' (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that have already been
-#' estimated to understand the itemtypes more intimately
+#'   specifying the type of items to simulate.
+#'   Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
+#'   dichotomous, graded, generalized partial credit, nominal, nested logit, and partially compensatory models. Note that
+#'   for the gpcm, nominal, and nested logit models there should be as many parameters as desired categories,
+#'   however to parametrized them for meaningful interpretation the first category intercept should
+#'   equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
+#'   correct item traceline). For nested logit models the 'correct' category is always the lowest category
+#'   (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that have already been
+#'   estimated to understand the itemtypes more intimately
 #' @param nominal a matrix of specific item category slopes for nominal models.
-#' Should be the dimensions as the intercept specification with one less column, with \code{NA}
-#' in locations where not applicable. Note that during estimation the first slope will be constrained
-#' to 0 and the last will be constrained to the number of categories minus 1,
-#' so it is best to set these as the values for the first and last categories as well
+#'   Should be the dimensions as the intercept specification with one less column, with \code{NA}
+#'   in locations where not applicable. Note that during estimation the first slope will be constrained
+#'   to 0 and the last will be constrained to the number of categories minus 1,
+#'   so it is best to set these as the values for the first and last categories as well
 #' @param N sample size
 #' @param guess a vector of guessing parameters for each item; only applicable
-#' for dichotomous items. Must be either a scalar value that will affect all of
-#' the dichotomous items, or a vector with as many values as to be simulated
-#' items
+#'   for dichotomous items. Must be either a scalar value that will affect all of
+#'   the dichotomous items, or a vector with as many values as to be simulated items
 #' @param upper same as \code{guess}, but for upper bound parameters
 #' @param sigma a covariance matrix of the underlying distribution. Default is
-#' the identity matrix
+#'   the identity matrix
 #' @param mu a mean vector of the underlying distribution. Default is a vector
-#' of zeros
+#'   of zeros
 #' @param Theta a user specified matrix of the underlying ability parameters,
-#' where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}
+#'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @references Reckase, M. D. (2009). \emph{Multidimensional Item Response
-#' Theory}. New York: Springer.
+#' @references 
+#' Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: Springer.
 #' @keywords data
 #' @export simdata
 #' @examples

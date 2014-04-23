@@ -17,18 +17,18 @@ createItem(name, par, est, P, gr = NULL, hss = NULL, lbound = NULL,
 
   \item{P}{the probability trace function for all
   categories (first column is category 1, second category
-  two, etc). First input contains a vector of all the item
+  two, etc).  First input contains a vector of all the item
   parameters, the second input must be a matrix called
   \code{Theta}, and the third input must be the number of
-  categories called \code{ncat}. Function also must return
+  categories called \code{ncat}.  Function also must return
   a \code{matrix} object of category probabilities}
 
   \item{gr}{gradient function (vector of first derivatives)
-  used in estimation. If not specified a numeric
+  used in estimation.  If not specified a numeric
   approximation will be used}
 
   \item{hss}{Hessian function (matrix of second
-  derivatives) used in estimation. If not specified a
+  derivatives) used in estimation.  If not specified a
   numeric approximation will be used (required for the
   MH-RM algorithm only)}
 

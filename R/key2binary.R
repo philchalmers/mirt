@@ -5,11 +5,11 @@
 #'
 #'
 #' @param fulldata an object of class \code{data.frame}, \code{matrix}, or
-#' \code{table} with the response patterns
+#'   \code{table} with the response patterns
 #' @param key a vector consisting of the 'correct' response to the items. Each
-#' value corresponds to each column in \code{fulldata}
+#'   value corresponds to each column in \code{fulldata}
 #' @return Returns a numeric matrix with all the response patterns in
-#' dichotomous format.
+#'   dichotomous format.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @export key2binary
 #' @examples

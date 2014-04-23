@@ -348,7 +348,7 @@ setMethod(
                           logLik = c(object@logLik, object2@logLik),
                           X2 = c(NaN, X2),
                           df = c(NaN, abs(df)),
-                          p = c(NaN, round(1 - pchisq(X2,abs(df)),3)))
+                          p = c(NaN, round(1 - pchisq(X2,abs(df)),4)))
         return(ret)
     }
 )

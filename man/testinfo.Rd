@@ -10,7 +10,7 @@ testinfo(x, Theta, degrees = NULL, group = NULL)
   \item{Theta}{a matrix of latent trait values}
 
   \item{degrees}{a vector of angles in degrees that are
-  between 0 and 90 that jointly sum to 90. Only applicable
+  between 0 and 90 that jointly sum to 90.  Only applicable
   when the input object is multidimensional}
 
   \item{group}{a number signifying which group the item

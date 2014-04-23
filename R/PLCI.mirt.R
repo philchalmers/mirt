@@ -10,7 +10,7 @@
 #' @param mod a converged mirt model
 #' @param alpha two-tailed alpha critical level
 #' @param parnum a numeric vector indicating which parameters to estimate. Use \code{\link{mod2values}}
-#' to determine parameter numbers. If \code{NULL}, all possible parameters are used
+#'   to determine parameter numbers. If \code{NULL}, all possible parameters are used
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
 #' @seealso
