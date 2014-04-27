@@ -47,17 +47,17 @@ test_that('extras', {
     
     WALD <- DIF(model1a, which.par='d', items2test = 1:3, Wald=TRUE)
     expect_is(WALD, 'list')
-    expect_equal(WALD[[1]]$W[1], 1.779436, tolerance = 1e-4)
-    expect_equal(WALD[[1]]$p[1], .1822186, tolerance = 1e-4)
+    expect_equal(WALD[[1]]$W[1], 1.779187, tolerance = 1e-4)
+    expect_equal(WALD[[1]]$p[1], .1822492, tolerance = 1e-4)
     WALD2 <- DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr') 
     expect_equal(as.numeric(WALD2$adj_pvals), c(0.0777, 0.0010, 0.0777, 0.1611, 0.1652, 0.1611, 
                                                 0.2662, 0.0777, 0.2344, 0.1652), tolerance = 1e-3)     
     extr.2 <- extract.item(mod1, 2)
     Theta <- matrix(seq(-6,6, length.out=200))
     expected <- expected.item(extr.2, Theta)
-    expect_equal(expected[1:3], c(0.003411474, 0.003640396, 0.003884619), tolerance=1e-4)
+    expect_equal(expected[1:3], c(0.003410341, 0.003639192, 0.003883341), tolerance=1e-4)
     expected <- expected.test(mod1, Theta=Theta)
-    expect_equal(expected[1:3], c(0.1083644, 0.1133925, 0.1186483), tolerance=1e-4)
+    expect_equal(expected[1:3], c(0.1080229, 0.1130387, 0.1182821), tolerance=1e-4)
     data[1,1] <- NA
     data <- imputeMissing(mod1, Theta=fscores(mod1, full.scores=TRUE))
     expect_is(data, 'matrix')
@@ -66,7 +66,7 @@ test_that('extras', {
     expect_equal(pb[1:6, 1], c(0.9965885, 0.9963596, 0.9961154, 0.9958548, 0.9955769, 0.9952804),
                  tolerance = 1e-5)
     ti <- testinfo(mod1, Theta=Theta)
-    expect_equal(ti[1:6, 1], c(0.06609361, 0.06919815, 0.07244372, 0.07583628, 0.07938197, 0.08308716),
+    expect_equal(ti[1:6, 1], c(0.06597813, 0.06908035, 0.07232371, 0.07571415, 0.07925785, 0.08296122),
                  tolerance = 1e-5)
     set.seed(1234)
     fs <- fscores(mod1, MI=20, verbose=FALSE)

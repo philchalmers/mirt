@@ -13,8 +13,8 @@ test_that('dich data', {
                  tolerance = 1e-2)
     fs <- fscores(mod1, verbose = FALSE)
     expect_is(fs, 'matrix')
-    expect_true(mirt:::closeEnough(fs[1:6,'F1'] - c(-0.63861476, -0.07471563, -1.91230226,
-                                                    -1.99390197, -2.00031725, -1.91345332), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fs[1:6,'F1'] - c(-0.60798152, -0.07507832, -1.91232080, 
+                                                    -1.99377540, -2.00032202, -1.90839100), -1e-2, 1e-2))
     cof <- coef(mod1, verbose = FALSE)
     expect_is(cof, 'list')
     sum <- summary(mod1, verbose = FALSE)

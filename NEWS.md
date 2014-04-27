@@ -1,3 +1,14 @@
+# Changes in mirt 1.4
+
+## MAJOR CHANGES
+
+- increase number of Mstep iterations proportionally in quasi-Newtron algorithms 
+  as the estimation approaches the ML
+
+## BUG FIXES
+
+- drop dimensions fix for nested logit models
+
 # Changes in mirt 1.3
 
 ## MAJOR CHANGES

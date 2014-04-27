@@ -110,7 +110,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         gTheta[[g]] <- Theta
     }
     preMstep.longpars2 <- preMstep.longpars <- longpars
-    accel <- 0
+    accel <- 0; Mrate <- 10
     Estep.time <- Mstep.time <- 0
     collectLL <- rep(NA, NCYCLES)
 
@@ -138,6 +138,12 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
             LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
         }
         collectLL[cycles] <- LL
+        if(list$SEM){
+            Mrate <- .2
+        } else {
+            if(cycles > 1L)
+                Mrate = -1000 * (1 - 1 / (collectLL[cycles] / collectLL[cycles-1L]))
+        }
         for(g in 1L:ngroups){
             for(i in 1L:J){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
@@ -153,8 +159,8 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                          BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, SEM=list$SEM,
-                          rlist=rlist, constrain=constrain, cycle=cycles, DERIV=DERIV)
+                          BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
+                          rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate)
         if(list$accelerate && cycles > 10L && cycles %% 3 == 0L){
             dX2 <- preMstep.longpars - preMstep.longpars2
             dX <- longpars - preMstep.longpars
@@ -251,11 +257,12 @@ Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, spec
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
-                  UBOUND, LBOUND, constrain, cycle, DERIV, Prior, rlist, CUSTOM.IND, 
-                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, SEM){
+                  UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, 
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate){
     p <- longpars[est]
+    if(Mrate < .2) Mrate <- .2
     if(Moptim == 'BFGS'){
-        maxit <- ifelse(cycle > 10L, ifelse(SEM, 100L, 20L), 10L)
+        maxit <- ifelse(Mrate > 1, 10, ceiling(1/Mrate * 10))
         opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
                          control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
@@ -264,7 +271,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                          UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                 silent=TRUE)
     } else if(Moptim == 'L-BFGS-B'){
-        maxit <- ifelse(cycle > 10L, ifelse(SEM, 100L, 40L), 20L)
+        maxit <- ifelse(Mrate > 1, 20, ceiling(1/Mrate * 10))
         opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
                          control=list(maxit=maxit, fnscale = -1L),
                          DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
@@ -296,9 +303,10 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
     i = J + 1L
     if(any(groupest)){
         p <- longpars[groupest]
+        iterlim <- ifelse(Mrate > 1, 10, ceiling(1/Mrate * 10))
         res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
                    constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist, 
-                       Thetabetween=Thetabetween, iterlim = 15L), 
+                       Thetabetween=Thetabetween, iterlim=iterlim), 
                    silent=TRUE)
         if(is(res, 'try-error')) stop(res)
         longpars[groupest] <- res$estimate
