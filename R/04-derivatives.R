@@ -305,10 +305,10 @@ setMethod(
         for(j in 1L:nd){
             grad[nfact+3L+j] <- sum((
                 (idat[,j] * Qd * rowSums(Theta) * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) -
-                    rowSums(idat[,-j]) * rowSums(Theta) * Pn[,j]))
+                    rowSums(idat[,-j, drop=FALSE]) * rowSums(Theta) * Pn[,j]))
             grad[nfact+3L+nd+j] <- sum((
                 (idat[,j] * Qd * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) -
-                    rowSums(idat[,-j]) * Pn[,j]))
+                    rowSums(idat[,-j, drop=FALSE]) * Pn[,j]))
         }
         ret <- list(grad=grad, hess=hess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
