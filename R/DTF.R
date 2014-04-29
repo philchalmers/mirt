@@ -94,13 +94,22 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
         MI <- 1L
         impute <- FALSE
     } else {
-        if(is(try(chol(mod@information), silent=TRUE), 'try-error')){
+        if(length(mod@information) == 1L)
+            stop('Stop an information matrix must be computed')
+        info <- mod@information
+        is_na <- is.na(diag(info))
+        info <- info[!is_na, !is_na]
+        if(is(try(chol(info), silent=TRUE), 'try-error')){
             stop('Proper information matrix must be precomputed in model')
         } else {
             impute <- TRUE
             list_scores <- vector('list', MI)
             mod <- assignInformationMG(mod)
-            covBs <- lapply(mod@cmods, function(x) solve(x@information))
+            covBs <- lapply(mod@cmods, function(x){
+                info <- x@information
+                is_na <- is.na(diag(info))
+                return(solve(info[!is_na, !is_na]))
+                })
             imputenums <- vector('list', 2L)
             for(g in 1L:2L){
                 names <- colnames(covBs[[g]])
