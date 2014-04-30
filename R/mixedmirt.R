@@ -239,7 +239,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     dropcases <- which(rowSums(is.na(covdata)) != 0)
     if(length(dropcases) > 0L){
         data <- data[-dropcases, ]
-        covdata <- covdata[-dropcases, ]
+        covdata <- covdata[-dropcases, ,drop=FALSE]
     }
     pick <- sapply(covdata, is.numeric)
     if(any(pick)){
