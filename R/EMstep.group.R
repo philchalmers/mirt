@@ -92,6 +92,10 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     } else {
         Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'    
     }
+    if(Moptim == 'L-BFGS-B'){
+        LBOUND[LBOUND == -Inf] <- -1e10
+        UBOUND[UBOUND == Inf] <- 1e10
+    }
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
     ANY.PRIOR <- rep(FALSE, ngroups)

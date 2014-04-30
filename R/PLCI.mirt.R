@@ -79,6 +79,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         if(parnames[parnum] %in% c('g', 'u')){
             lower <- 0
             upper <- 1
+        } else if(parnames[parnum] %in% c('COV_11')){
+            lower <- 0
         }
         if(mid > lower){
             opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, large=large,
@@ -135,7 +137,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat, 
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100))
-    ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums], value=pars,
-                      result, row.names=NULL)
+    ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums], 
+                      parnum=parnums, value=pars, result, row.names=NULL)
     ret
 }
