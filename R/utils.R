@@ -949,6 +949,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     }
     if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
     if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
+    opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn
+    opts$message <- if(is.null(technical$message)) TRUE else technical$message
     opts$technical <- technical
     opts$use <- use
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000L, technical$MAXQUAD)
@@ -1027,7 +1029,7 @@ assignItemtrace <- function(pars, itemtrace, itemloc){
     pars
 }
 
-loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
+loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     longpars <- ESTIMATE$longpars
     pars <- ESTIMATE$pars
     ngroups <- length(pars)
@@ -1039,13 +1041,15 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain){
     info <- info[!isna, !isna]
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
-        warning('Could not invert information matrix; model likely is not identified.')
+        if(warn)
+            warning('Could not invert information matrix; model likely is not identified.')
         ESTIMATE$fail_invert_info <- TRUE
         return(ESTIMATE)
     } else ESTIMATE$fail_invert_info <- FALSE
     SEtmp <- diag(solve(info))
     if(any(SEtmp < 0)){
-        warning("Negative SEs set to NaN.\n")
+        if(warn)
+            warning("Negative SEs set to NaN.\n")
         SEtmp[SEtmp < 0 ] <- NaN
     }
     SEtmp <- sqrt(SEtmp)

@@ -1,5 +1,5 @@
 SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
-                  CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL){
+                  CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL, warn){
     LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
                    CUSTOM.IND, EH, EHPrior){
         longpars[est] <- p
@@ -66,7 +66,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
     Hess[est, est] <- -hess
     Hess <- updateHess(h=Hess, L2=Ls$L2, L3=Ls$L3)
     info <- Hess[infological, infological]
-    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     return(ESTIMATE)
 }
 
@@ -170,7 +170,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
 }
 
 SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type, 
-                      CUSTOM.IND, SLOW.IND){
+                      CUSTOM.IND, SLOW.IND, warn, message){
     
     fn <- function(which, PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, Igrad2, Ihess,
                    CUSTOM.IND, SLOW.IND, whichitems, iscross, npars){
@@ -296,7 +296,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)[!is.latent]
     tmp <- matrix(NA, length(is.latent), length(is.latent))
     tmp[!is.latent, !is.latent] <- info
-    ESTIMATE <- loadESTIMATEinfo(info=tmp, ESTIMATE=ESTIMATE, constrain=constrain)
+    ESTIMATE <- loadESTIMATEinfo(info=tmp, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     if(any(lengthsplit > 2L)){
         for(g in 1L:ngroups){
             tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar
@@ -307,7 +307,8 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     return(ESTIMATE)
 }
 
-SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND){
+SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND, 
+                      warn){
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc
     ngroups <- length(pars)
@@ -363,7 +364,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
     info[lengthsplit > 2L, lengthsplit > 2L] <- NA
-    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     if(any(lengthsplit > 2L)){
         for(g in 1L:ngroups){
             tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar

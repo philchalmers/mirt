@@ -230,9 +230,11 @@ shinyItemplot <- function(){
                 }
                 dat <- simdata(a=a, d=d, N=100,
                                itemtype=itemclass, nominal=nominal)
-                sv <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars = 'values', key=c(1, NA)))
+                sv <- mirt(dat, model, itemtype=itemtype, pars = 'values', key=c(1, NA), 
+                           technical=list(message=FALSE))
                 sv$est <- FALSE
-                mod <- suppressMessages(mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA)))
+                mod <- mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA),
+                            technical=list(message=FALSE))
                 par <- mod@pars[[1]]@par
                 if(input$classical){
                     if(itemclass[1L] == 'dich'){

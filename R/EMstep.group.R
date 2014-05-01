@@ -183,10 +183,12 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         Mstep.time <- Mstep.time + proc.time()[3L] - start
     } #END EM
     if(cycles == NCYCLES){
-        message('EM iterations terminated after ', cycles, ' iterations.')
+        if(list$message)
+            message('EM iterations terminated after ', cycles, ' iterations.')
         converge <- 0L
     } else if(cycles == 1L && !(all(!est) && all(!groupest))){
-        warning('M-step optimimizer converged immediately. Solution is either at the ML or
+        if(list$warn)
+            warning('M-step optimimizer converged immediately. Solution is either at the ML or
                  starting values are causing issues and should be adjusted. ')
     } 
     infological <- estpars & !redun_constr

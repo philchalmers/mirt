@@ -250,12 +250,15 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   reached the ML estimate} \item{gain}{a vector of two
   values specifying the numerator and exponent values for
   the RM gain function \eqn{(val1 / cycle)^val2}. Default
-  is \code{c(0.15,0.65)}} \item{customK}{a numeric value to
-  be used to explicitly declare the number of response
-  categories for each item. This should only be used when
-  constructing mirt model for reasons other than parameter
-  estimation (such as to obtain factor scores), and
-  requires that the input data all have 0 as the lowest
+  is \code{c(0.15,0.65)}} \item{warn}{logical; include
+  warning messages during estimation? Default is TRUE}
+  \item{message}{logical; include general messages during
+  estimation? Default is TRUE} \item{customK}{a numeric
+  value to be used to explicitly declare the number of
+  response categories for each item. This should only be
+  used when constructing mirt model for reasons other than
+  parameter estimation (such as to obtain factor scores),
+  and requires that the input data all have 0 as the lowest
   category. The format is the same as the \code{mod@K} slot
   in all converged models} \item{customPriorFun}{a custom
   function used to determine the normalized density for

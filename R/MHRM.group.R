@@ -371,7 +371,8 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     info <- Phi + outer(phi,phi)
     #Reload final pars list
     if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM){
-        message('MHRM terminated after ', NCYCLES, ' iterations.')
+        if(list$message)
+            message('MHRM terminated after ', NCYCLES, ' iterations.')
         converge <- 0L
     }
     if(list$USEEM) longpars <- list$startlongpars
@@ -381,13 +382,15 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     }
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
-        warning('Could not invert information matrix; model likely is not identified.')
+        if(list$warn)
+            warning('Could not invert information matrix; model likely is not identified.')
         fail_invert_info <- TRUE
     } else {
         fail_invert_info <- FALSE
         SEtmp <- abs(diag(acov))
         if(any(SEtmp < 0)){
-            warning("Negative SEs set to NaN.\n")
+            if(list$warn)
+                warning("Negative SEs set to NaN.\n")
             SEtmp[SEtmp < 0 ] <- NaN
         }
         SEtmp <- sqrt(SEtmp)

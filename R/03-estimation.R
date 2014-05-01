@@ -8,12 +8,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(missing(model)) stop('model argument (numeric or from mirt.model) is required')
     if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data))
         stop('group input provided is not valid')
+    opts <- makeopts(...)
     if(any(is.na(group))){
-        message('NA values in group removed, along with associated rows in data')
+        if(opts$message)
+            message('NA values in group removed, along with associated rows in data')
         data <- data[!is.na(group), ]
         group <- group[!is.na(group)]
-    }
-    opts <- makeopts(...)
+    }    
     if(!is.null(customItems)) opts$calcNull <- FALSE
     opts$times <- list(start.time=start.time)
     # on exit, reset the seed to override internal
@@ -79,7 +80,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                  fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow)
     if(any(PrepListFull$itemtype == 'nominal') && is.null(nominal.highlow) && !opts$NULL.MODEL
        && opts$verbose)
-        message('\'nominal.highlow\' matrix not specified, highest and lowest categories are used by default')
+        if(opts$message)
+            message('\'nominal.highlow\' matrix not specified, highest and lowest categories are used by default')
     parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
     for(g in 1L:Data$ngroups){
         if(g != 1L){
@@ -339,7 +341,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                          SEM=any(opts$SE.type %in% c('SEM', 'complete')) && opts$SE,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                                         customPriorFun=opts$customPriorFun, Moptim=opts$Moptim),
+                                         customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
+                                         message=opts$message),
                              Theta=Theta, DERIV=DERIV)
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
@@ -366,7 +369,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars, SE=opts$SE,
-                                           cand.t.var=opts$technical$MHcand),
+                                           cand.t.var=opts$technical$MHcand, warn=opts$warn,
+                                           message=opts$message),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
@@ -382,7 +386,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars, SE=opts$SE,
-                                           cand.t.var=opts$technical$MHcand),
+                                           cand.t.var=opts$technical$MHcand, warn=opts$warn,
+                                           message=opts$message),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
@@ -395,7 +400,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED'))
             cat('\n\nCalculating information matrix...\n')
         if(opts$SE.type == 'complete' && opts$method == 'EM'){
-            ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain)
+            ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain,
+                                         warn=opts$warn)
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
             collectLL <- as.numeric(ESTIMATE$collectLL)
             collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
@@ -403,8 +409,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             to <- min(which(collectLL >= (1 - opts$SEtol/10)))
             dontrun <- FALSE
             if(from == to){
-                warning('SEM window is too small to compute information matrix. 
-                        Consider changing the starting values')
+                if(opts$warn)
+                    warning('SEM window is too small to compute information matrix. 
+                            Consider changing the starting values')
                 dontrun <- TRUE
             }
             lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
@@ -412,7 +419,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             is.latent <- lengthsplit > 2L
             if(!dontrun){
                 if(ESTIMATE$cycles <= 10L)
-                    message('Very few EM cycles performed. Consider decreasing TOL further to
+                    if(opts$message)
+                        message('Very few EM cycles performed. Consider decreasing TOL further to
                             increase EM iteration count or starting farther away from ML estimates by 
                             passing the \'GenRandomPars = TRUE\' argument')
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
@@ -425,7 +433,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, Moptim=ESTIMATE$Moptim,
-                                          EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior),
+                                          EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior, warn=opts$warn,
+                                          message=opts$message),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList)
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
@@ -435,14 +444,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
                 if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
                 if(is(info, 'try-error')){
-                    warning('information matrix in SEM could not be computed due to instability')
-                } else ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain)
+                    if(opts$warn)
+                        warning('information matrix in SEM could not be computed due to instability')
+                } else ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain,
+                                                    warn=opts$warn)
             }
         } else if(opts$SE.type == 'BL' && opts$method != 'MIXED'){
             ESTIMATE <- SE.BL(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList,
                               BFACTOR=opts$BFACTOR, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
                               constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems, EH=opts$empiricalhist,
-                              CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior)
+                              CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior, warn=opts$warn)
         } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
             if(opts$empiricalhist)
                 stop('MHRM standard error not available when using empirical histograms')
@@ -452,18 +463,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                gain=opts$gain, nfactNames=PrepList[[1L]]$nfactNames,
                                                itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                nfact=nfact, constrain=constrain, verbose=FALSE,
-                                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                                               startlongpars=startlongpars, SE=opts$SE),
+                                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, message=opts$message,
+                                               startlongpars=startlongpars, SE=opts$SE, warn=opts$warn),
                                    DERIV=DERIV)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) && opts$method != 'MIXED'){
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,
                                   constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
-                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND)
+                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
+                                  message=opts$message)
 
         } else if(opts$SE.type == 'Fisher' && opts$method != 'MIXED'){
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta,
                                   constrain=constrain, Ls=Ls, N=nrow(data),
-                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND)
+                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn)
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior
@@ -522,7 +534,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
                                      large=large, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
-            message('Null model calculation did not converge.')
+            if(opts$message)
+                message('Null model calculation did not converge.')
             null.mod <- unclass(new('ConfirmatoryClass'))
         } else if(!is.nan(G2)) {
             TLI.G2 <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)

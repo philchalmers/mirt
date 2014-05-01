@@ -40,8 +40,8 @@
 PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
 
     compute.LL <- function(dat, model, sv, large, parprior){
-        tmpmod <- suppressMessages(mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
-                                        large=large, calcNull=FALSE))
+        tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
+                                        large=large, calcNull=FALSE, technical=list(message=FALSE))
         tmpmod@logLik
     }
 
