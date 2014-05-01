@@ -120,12 +120,12 @@ test_that('dich', {
         F2 = 3-5', quiet = TRUE)
     modm1 <- mirt(data, model, verbose=FALSE)
     expect_equal(modm1@df, 20)
-    modm2 <- suppressMessages(mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE))
+    modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2, digits = 4)))
     expect_equal(cfs, c(0.6514, 0, 1.7031, 0, 1, 1.4872, 0, 0.9174, 0, 1, 2.5151, 3.4949, 3.1337, 5.2577, 0, 1, 0, 0.7058, 0.4789, 0, 1, 0, 0.8524, 1.9092, 0, 1, 0, 0, 1, 0, 1),
                  tolerance = 1e-2)
     expect_equal(modm2@df, 19)
-    modm3 <- suppressMessages(mirt(data, model, SE = TRUE, verbose=FALSE))
+    modm3 <- mirt(data, model, SE = TRUE, verbose=FALSE)
     expect_is(modm3, 'ConfirmatoryClass')
 
     fm1 <- fscores(modm1, verbose = FALSE)

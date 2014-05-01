@@ -37,7 +37,7 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 0.656, 1.425, 4.863, 3.849, 5.876, 2.639, 2.196, 3.083, -1.466, -1.782, -1.149, 1.226, 0.887, 1.565, 2.924, 2.45, 3.398, 0.901, 0.614, 1.188, -2.266, -2.639, -1.894, 2.3, 1.325, 3.275, 5.244, 3.804, 6.685, 2.218, 1.488, 2.949, -1.967, -2.605, -1.329, 1.094, 0.727, 1.461, 3.347, 2.801, 3.893, 0.991, 0.717, 1.266, -1.688, -2.018, -1.357, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
-    suppressMessages(modp2 <- mirt(Science, 2, verbose=FALSE))
+    modp2 <- mirt(Science, 2, verbose=FALSE)
     expect_is(modp2, 'ExploratoryClass')
     expect_equal(modp2@df, 236)
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
@@ -59,7 +59,7 @@ test_that('poly', {
                                            5.176,  2.173, -1.978,  1.121,  3.357,  0.987, -1.714,  0.000,  1.000),
                                    -1e-2, 1e-2))
 
-    modp4 <- suppressMessages(mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE))
+    modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
     expect_is(modp4, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp4, verbose = FALSE, digits=4)))
     expect_equal(cfs, c(1.0408, 4.862, 2.6387, -1.4664, 1.2063, 2.9083, 0.8958, -2.254, 2.3376, 5.2972, 2.2404, -1.9886, 0.7986, 0, 1.0782, 1.7756, 3, 0, 2.1964, 2.9637, 1.6742, 0, 1),

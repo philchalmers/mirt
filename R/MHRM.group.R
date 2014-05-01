@@ -371,7 +371,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
     info <- Phi + outer(phi,phi)
     #Reload final pars list
     if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM){
-        message('MHRM iterations terminated after ', NCYCLES, ' iterations.')
+        message('MHRM terminated after ', NCYCLES, ' iterations.')
         converge <- 0L
     }
     if(list$USEEM) longpars <- list$startlongpars

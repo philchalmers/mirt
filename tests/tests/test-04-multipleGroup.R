@@ -137,8 +137,8 @@ test_that('three factor', {
     model2 <- mirt.model(MGmodelg1, quiet = TRUE)
     models <- model1
 
-    suppressWarnings(mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
-                                                 verbose = FALSE, draws = 10))
+    mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), method = 'MHRM',
+                                                 verbose = FALSE, draws = 10)
     expect_is(mod_metric, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
     expect_equal(cfs, c(1.1577, 0.9415, 1.374, 0, NA, NA, 0, NA, NA, 0.7025, 0.5314, 0.8736, 0, NA, NA, 1, NA, NA, 1.3494, 1.09),

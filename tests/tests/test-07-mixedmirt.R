@@ -27,8 +27,8 @@ test_that('mixed dich', {
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
-    mod1b <- suppressWarnings(mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
-                                        itemtype = '2PL', verbose = FALSE, draws = 10))
+    mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
+                                        itemtype = '2PL', verbose = FALSE, draws = 10)
     expect_is(mod1b, 'MixedClass')
     expect_equal(mod1b@df, 1001)
     cfs <- as.numeric(do.call(c, coef(mod1b, digits=4)))
@@ -36,8 +36,8 @@ test_that('mixed dich', {
                  tolerance = 1e-2)
 
     covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
-    rmod1 <- suppressMessages(mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group,
-                                        draws = 10, verbose = FALSE))
+    rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group,
+                                        draws = 10, verbose = FALSE)
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 1011)
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
@@ -48,23 +48,23 @@ test_that('mixed dich', {
 test_that('polytomous', {
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
     model <- mirt.model('F1 = 1-4', quiet = TRUE)
-    suppressWarnings(mod <- mixedmirt(Science, covdat, model=model,
-                                       fixed = ~ 0 + group, verbose = FALSE, draws = 10))
+    mod <- mixedmirt(Science, covdat, model=model,
+                                       fixed = ~ 0 + group, verbose = FALSE, draws = 10)
     expect_is(mod, 'MixedClass')
     cfs <- as.numeric(na.omit(do.call(c, coef(mod, digits=4))))
     expect_equal(cfs, c(-0.0554, -0.3786, 0.2677, 1, 0, 1, 2, 3, 0, 3.0659, 2.0604, 4.0715, 5.6639, 4.7144, 6.6134, 4.3081, 3.483, 5.1332, -0.0554, -0.3786, 0.2677, 1, 0, 1, 2, 3, 0, 1.8901, 1.489, 2.2913, 2.8141, 2.6023, 3.0258, 0.9977, 0.6632, 1.3322, -0.0554, -0.3786, 0.2677, 1, 0, 1, 2, 3, 0, 2.6354, 2.0281, 3.2427, 4.0635, 3.5425, 4.5845, 2.9626, 2.7111, 3.2141, -0.0554, -0.3786, 0.2677, 1, 0, 1, 2, 3, 0, 2.4406, 1.9513, 2.9298, 3.3509, 2.9824, 3.7194, 2.0312, 1.7978, 2.2646, 0, 0.9521, 0.5819, 1.3223),
                  tolerance = 1e-2)
 
-    suppressWarnings(mod2 <- mixedmirt(Science, covdat, model=model, draws = 10,
-                                       fixed = ~ 0 + group, itemtype = 'gpcm', verbose = FALSE))
+    mod2 <- mixedmirt(Science, covdat, model=model, draws = 10,
+                                       fixed = ~ 0 + group, itemtype = 'gpcm', verbose = FALSE)
     expect_is(mod2, 'MixedClass')
     expect_equal(mod@df - mod2@df, 3)
     cfs <- as.numeric(na.omit(do.call(c, coef(mod2, digits=4))))
     expect_equal(cfs, c(-0.1601, -0.4883, 0.1682, 0.8223, 0.5184, 1.1262, 0, 1, 2, 3, 0, 2.8303, 1.7347, 3.9259, 5.3709, 4.2186, 6.5232, 4.1417, 3.1204, 5.163, -0.1601, -0.4883, 0.1682, 0.8402, 0.5711, 1.1094, 0, 1, 2, 3, 0, 1.7885, 1.3101, 2.2669, 2.7338, 2.3147, 3.1529, 1.0821, 0.8821, 1.2821, -0.1601, -0.4883, 0.1682, 2.5353, 1.409, 3.6616, 0, 1, 2, 3, 0, 5.2316, 3.3755, 7.0876, 7.6801, 5.2949, 10.0652, 5.7051, 4.2908, 7.1194, -0.1601, -0.4883, 0.1682, 0.6943, 0.4433, 0.9453, 0, 1, 2, 3, 0, 2.1432, 1.5978, 2.6887, 3.0122, 2.4892, 3.5353, 1.9308, 1.6538, 2.2079, 0, 1),
                  tolerance = 1e-2)
 
-    suppressWarnings(mod3 <- mixedmirt(Science, covdat, model=model, draws = 10,
-                                       fixed = ~ 0 + group, itemtype = 'graded', verbose = FALSE))
+    mod3 <- mixedmirt(Science, covdat, model=model, draws = 10,
+                                       fixed = ~ 0 + group, itemtype = 'graded', verbose = FALSE)
     expect_is(mod3, 'MixedClass')
     expect_equal(mod3@df, 238)
     cfs <- as.numeric(na.omit(do.call(c, coef(mod3, digits=4))))
@@ -72,8 +72,8 @@ test_that('polytomous', {
                  tolerance = 1e-2)
 
     covdat$group <- factor(rep(paste0('G',1:20), length.out = nrow(Science)))
-    rmod1 <- suppressMessages(mixedmirt(Science, covdat, model=model, draws=10, random = ~ 1|group,
-                       itemtype = 'graded', verbose = FALSE))
+    rmod1 <- mixedmirt(Science, covdat, model=model, draws=10, random = ~ 1|group,
+                       itemtype = 'graded', verbose = FALSE)
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 238)
     cfs <- as.numeric(na.omit(do.call(c, coef(rmod1, digits=4))))
