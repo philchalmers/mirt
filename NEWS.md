@@ -4,6 +4,10 @@
 
 - increase number of Mstep iterations proportionally in quasi-Newtron algorithms 
   as the estimation approaches the ML
+  
+## NEW FEATURES
+
+- M2* statistic added for polytomous item types
 
 ## BUG FIXES
 

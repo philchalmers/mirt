@@ -102,7 +102,7 @@ setGeneric('Deriv', function(x, Theta, ...) standardGeneric("Deriv"))
 
 setGeneric('DerivTheta', function(x, Theta) standardGeneric("DerivTheta"))
 
-setGeneric('dP', function(x, Theta, prior, ...) standardGeneric("dP"))
+setGeneric('dP', function(x, Theta) standardGeneric("dP"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))
 

@@ -1,17 +1,24 @@
 #' Compute M2 statistic
 #'
-#' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic and associated fit indicies.
-#' For now, only dichotomous models are supported.
+#' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the 
+#' M2* statistic for polytomous data (collapsing over response categories for better stability;
+#' see Cai and Hansen, 2013), as well as associated fit indicies that are based on 
+#' fitting the null model.
 #'
 #'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package
+#' @param quadpts number of quadrature points to use during estimation. If \code{NULL}, \code{quadpts}
+#'   will be extracted from the \code{obj}; if not available, a suitable value will be chosen based
+#'   on the rubric found in \code{\link{mirt}}
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
-# @param collapse_poly logical; collapse across polytomous item categories to reduce 
-#   sparceness? Will also helo to reduce the internal matrix sizes
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
+#' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
+#' hierarchical item factor models. British Journal of Mathematical and Statistical 
+#' Psychology, 66, 245-276.
+#' 
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
 #' multidimensional contingency tables Psychometrika, 71, 713-732.
 #' @keywords model fit
@@ -26,10 +33,9 @@
 # (mod2 <- mirt(Science, 1))
 # M2(mod2, calcNull = TRUE)
 #' }
-M2 <- function(obj, calcNull = FALSE){
+M2 <- function(obj, calcNull = FALSE, quadpts = NULL){
     
     #if MG loop
-    collapse_poly <- TRUE
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
     if(is(obj, 'MultipleGroupClass')){
@@ -71,8 +77,8 @@ M2 <- function(obj, calcNull = FALSE){
         return(data.frame(as.list(M2s), newret))
     }
     
-    if(!all(sapply(obj@pars, class) %in% c('dich', 'GroupPars')))
-       stop('M2 currently only supported for dichotomous objects')
+    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'GroupPars')))
+       stop('M2 currently only supported for \'dich\' and \'graded\' objects')
     ret <- list()
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
     tabdata <- obj@tabdatalong
@@ -82,19 +88,15 @@ M2 <- function(obj, calcNull = FALSE){
     adj <- apply(obj@data, 2, min)
     dat <- t(t(obj@data) - adj)
     N <- nrow(dat)
-    if(!collapse_poly){
-        dat <- expand.table(tabdata)
-        dat <- dat[,-obj@itemloc]
-    }
     p  <- colMeans(dat)
     cross <- crossprod(dat, dat)
     p <- c(p, cross[lower.tri(cross)]/N)
-    p <- p[p != 0]
     K <- obj@K
     pars <- obj@pars
-    quadpts <- obj@quadpts    
-    if(is.nan(quadpts)) 
-        quadpts <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+    quadpts2 <- obj@quadpts    
+    if(is.nan(quadpts2)) 
+        quadpts2 <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+    if(is.null(quadpts)) quadpts <- quadpts2
     estpars <- c()
     for(i in 1L:(nitems+1L))
         estpars <- c(estpars, pars[[i]]@est)
@@ -114,51 +116,49 @@ M2 <- function(obj, calcNull = FALSE){
         sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; 
         Prior <- bfactorlist$Prior[[group]]
     }
-    if(collapse_poly){
-        E1 <- numeric(nitems)
-        E2 <- matrix(NA, nitems, nitems)
-        names <- integer(nitems * (nitems -1)/2)
-        names <- rbind(names, names)
-        ind <- 1
-        for(i in 1L:nitems){
-            x <- extract.item(obj, i)
-            Ex <- expected.item(x, Theta, min=0L)
-            E1[i] <- sum(Ex * Prior)
-            for(j in 1L:nitems){
-                if(i > j){
-                    y <- extract.item(obj, j)
-                    Ey <- expected.item(y, Theta, min=0L)
-                    E2[i,j] <- sum(Ex * Ey * Prior)
-                    names[1,ind] <- i
-                    names[2,ind] <- j
-                    ind <- ind+1
-                }
+    E1 <- numeric(nitems)
+    E2 <- matrix(NA, nitems, nitems)
+    EIs <- EIs2 <- matrix(0, nrow(Theta), nitems)
+    DP <- matrix(0, nrow(Theta), length(estpars))
+    wherepar <- c(numeric(nitems), length(estpars)-1L)
+    ind <- 1L
+    for(i in 1L:nitems){
+        wherepar[i] <- ind
+        x <- extract.item(obj, i)
+        EIs[,i] <- expected.item(x, Theta, min=0L)
+        tmp <- ProbTrace(x, Theta)
+        for(j in ncol(tmp):2L)
+            tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
+        cfs <- c(0,1)
+        if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
+        EIs2[,i] <- t(cfs %*% t(tmp))
+        tmp <- length(x@parnum)
+        DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
+        ind <- ind + tmp
+    }
+    ind <- 1L
+    for(i in 1L:nitems){
+        E1[i] <- sum(EIs[,i] * Prior)
+        for(j in 1L:nitems){
+            if(i > j){
+                E2[i,j] <- sum(EIs[,i] * EIs[,j] * Prior)
+                ind <- ind + 1L
             }
         }
-        e <- c(E1, E2[lower.tri(E2)])
-        names(e) <- c(paste0('pi.', 1L:nitems), paste0('pi.', names[1L,], names[2L,]))
-    } else {
-        browser()
-        #TODO direct method for polytomous items
     }
-    
+    e <- c(E1, E2[lower.tri(E2)])
     delta1 <- matrix(0, nitems, length(estpars))
     delta2 <- matrix(0, length(p) - nitems, length(estpars))
     ind <- 1L
     offset <- pars[[1L]]@parnum[1L] - 1L
     for(i in 1L:nitems){
-        x <- extract.item(obj, i)
-        dp <- dP(x, Theta, Prior)
+        dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * Prior)
         delta1[i, pars[[i]]@parnum - offset] <- dp
         for(j in 1L:nitems){
-            if(i < j){ 
-                y <- extract.item(obj, j)
-                P <- ProbTrace(y, Theta)[,2]
-                dp <- dP(x, Theta, Prior, extra_term=P)
+            if(i < j){
+                dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * EIs[,j] * Prior)
                 delta2[ind, pars[[i]]@parnum - offset] <- dp
-                
-                P <- ProbTrace(x, Theta)[,2]
-                dp <- dP(y, Theta, Prior, extra_term=P)
+                dp <- colSums(DP[ , wherepar[j]:(wherepar[j+1L]-1L), drop=FALSE] * EIs[,i] * Prior)
                 delta2[ind, pars[[j]]@parnum - offset] <- dp
                 ind <- ind + 1L
             }
@@ -166,71 +166,12 @@ M2 <- function(obj, calcNull = FALSE){
     }
     delta <- rbind(delta1, delta2)
     delta <- delta[, estpars, drop=FALSE]
-    
-    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
-                                  CUSTOM.IND=obj@CUSTOM.IND)
-    itemtrace <- itemtrace[,-itemloc]
-    Xi11 <- matrix(NA, nrow(delta1), nrow(delta1))
-    Xi12 <- matrix(NA, nrow(delta1), nrow(delta2))
-    Xi22 <- matrix(NA, nrow(delta2), nrow(delta2))    
-    for(i in 1L:nrow(Xi11)){
-        for(j in 1L:nrow(Xi11)){    
-            if(i >= j){
-                pab <- sum(itemtrace[,i] * itemtrace[,j] * Prior)
-                pa <- sum(itemtrace[,i] * Prior)
-                pb <- sum(itemtrace[,j] * Prior)
-                if(i == j) pab <- pa
-                Xi11[i,j] <- Xi11[j,i] <- pab - pa*pb
-            }
-        }
-    }
-    for(k in 1L:nitems){
-        ind <- 1L
-        for(i in 1L:nitems){
-            for(j in 1L:nitems){
-                if(i < j){
-                    pabc <- sum(itemtrace[,i] * itemtrace[,j] * itemtrace[,k] * Prior)
-                    pab <- sum(itemtrace[,i] * itemtrace[,j] * Prior)
-                    pc <- sum(itemtrace[,k] * Prior)
-                    if(i == k || j == k)
-                        pabc <- sum(itemtrace[,i] * itemtrace[,j] * Prior)
-                    Xi12[k, ind] <- pabc - pab*pc
-                    ind <- ind + 1L
-                }
-            }
-        }
-    }   
-    ind1 <- 1
-    for(k in 1L:nitems){
-        for(l in 1L:nitems){
-            if(k < l){
-                ind2 <- 1L
-                for(i in 1L:nitems){
-                    for(j in 1L:nitems){
-                        if(i < j){
-                            pabcd <- sum(itemtrace[,i] * itemtrace[,j] * 
-                                             itemtrace[,k] * itemtrace[,l] * Prior)
-                            pab <- sum(itemtrace[,i] * itemtrace[,j] * Prior)
-                            pcd <- sum(itemtrace[,k] * itemtrace[,l] * Prior)
-                            if(all(sort(c(i,j)) == sort(c(k,l)))){
-                                pabcd <- pab
-                            } else if(i == k || j == k){
-                                pabcd <- sum(itemtrace[,i]*itemtrace[,j]*itemtrace[,l]*Prior)
-                            } else if(i == l || j == l){
-                                pabcd <- sum(itemtrace[,i]*itemtrace[,j]*itemtrace[,k]*Prior)
-                            }
-                            Xi22[ind1, ind2] <- pabcd - pab*pcd
-                            ind2 <- ind2 + 1L
-                        }
-                    }
-                }
-                ind1 <- ind1 + 1L
-            }
-        }
-    }
-    Xi2 <- rbind(cbind(Xi11, Xi12), cbind(t(Xi12), Xi22))    
+    Xi2els <- .Call('buildXi2els', nrow(delta1), nrow(delta2), nitems, EIs, EIs2, Prior)
+    Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))    
     tmp <- qr.Q(qr(delta), complete=TRUE)
-    deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp)]
+    if((ncol(delta) + 1L) > ncol(tmp))
+        stop('M2 cannot be calulated since df is too low')
+    deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
     M2 <- N * t(p - e) %*% C2 %*% (p - e)
     ret$M2 <- M2

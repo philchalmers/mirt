@@ -843,13 +843,23 @@ setMethod(
 
 setMethod(
     f = "dP",
-    signature = signature(x = 'dich', Theta = 'matrix', prior = 'numeric'),
-    definition = function(x, Theta, prior, extra_term = 1){
+    signature = signature(x = 'dich', Theta = 'matrix'),
+    definition = function(x, Theta){
         P <- ProbTrace(x, Theta)
-        PQ <- apply(P, 1, prod) 
-        ret <- c(colSums(Theta * PQ * extra_term * prior), 
-                 sum(PQ * extra_term * prior), 
-                 colSums(P * extra_term * prior))
+        PQ <- apply(P, 1L, prod) 
+        ret <- cbind(Theta * PQ, PQ, P)
+        ret
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'graded', Theta = 'matrix'),
+    definition = function(x, Theta){
+        P <- ProbTrace(x, Theta, itemexp=FALSE)
+        P <- P[,-c(1, ncol(P)), drop=FALSE]
+        PQ <- P * (1 - P)
+        ret <- cbind(Theta * rowSums(PQ), PQ) 
         ret
     }
 )
