@@ -15,6 +15,7 @@ Description: Analysis of dichotomous and polytomous response data using
     Multiple group analysis and mixed effects designs also are available for
     detecting differential item functioning and modelling item and person
     covariates.
+Roxygen: list(wrap = FALSE)
 Depends:
     R (>= 2.15),
     stats4,

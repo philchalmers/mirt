@@ -54,10 +54,14 @@ wald <- function(object, L, C = 0){
     if(all(dim(object@information) == c(1,1)))
         if(object@information[1,1] == 0L)
             stop('No information matrix has been calculated for the model')
-    Names <- colnames(object@information)
+    info <- object@information
+    keep <- !is.na(diag(info))
+    info <- info[keep, keep, drop=FALSE]
+    Names <- colnames(info)
+    B <- object@shortpars[keep]
     if(missing(L)){
         index <- 1L:length(Names)
-        ret <- as.data.frame(t(data.frame(infoname=Names, par = round(object@shortpars,3))))
+        ret <- as.data.frame(t(data.frame(infoname=Names, par = round(B, 3))))
         colnames(ret) <- index
         return(ret)
     }
@@ -73,27 +77,11 @@ wald <- function(object, L, C = 0){
     } else if(length(C) != ncol(L)){
         stop('length(C) must be the same as ncol(L)')
     }
-    pars <- object@pars
-    if(is(object, 'MultipleGroupClass'))
-        pars <- object@cmods
-    covB <- solve(object@information)
-    B <- object@shortpars
+    covB <- solve(info)
     W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))
     p <- 1 - pchisq(ret$W, ret$df)
     ret$p <- p
-    class(ret) <- 'wald'
-    ret
+    as.data.frame(ret)
 }
-
-#' @S3method print wald
-#' @rdname wald
-#' @method print wald
-#' @param x an object of class 'wald'
-#' @param ... additional arguments to be passed
-print.wald <- function(x, ...){
-    cat('\nWald test: \nW = ', round(x$W, 3), ', df = ', x$df, ', p = ',
-        round(x$p, 4), '\n', sep='')
-}
-

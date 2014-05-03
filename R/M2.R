@@ -29,11 +29,8 @@
 #' (mod1 <- mirt(dat, 1))
 #' M2(mod1)
 #'
-# #Science data with computing the null model M2 stat
-# (mod2 <- mirt(Science, 1))
-# M2(mod2, calcNull = TRUE)
 #' }
-M2 <- function(obj, calcNull = FALSE, quadpts = NULL){
+M2 <- function(obj, calcNull = TRUE, quadpts = NULL){
     
     #if MG loop
     if(is(obj, 'MixedClass'))
@@ -47,7 +44,7 @@ M2 <- function(obj, calcNull = FALSE, quadpts = NULL){
             attr(cmods[[g]], 'MG') <- g
             cmods[[g]]@bfactor <- obj@bfactor
             cmods[[g]]@quadpts <- obj@quadpts
-            ret[[g]] <- M2(cmods[[g]], calcNull=FALSE)
+            ret[[g]] <- M2(cmods[[g]], calcNull=FALSE, quadpts=quadpts)
         }
         newret <- list()
         newret$M2 <- numeric(ngroups)
@@ -64,7 +61,7 @@ M2 <- function(obj, calcNull = FALSE, quadpts = NULL){
         if(calcNull){
             null.mod <- try(multipleGroup(obj@data, 1, group=obj@group, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
-            null.fit <- M2(null.mod)
+            null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
             newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) /
                 (null.fit$Total.M2 / null.fit$df.M2 - 1)
             newret$CFI.M2 <- 1 - (newret$Total.M2 - newret$df.M2) / (null.fit$Total.M2 - null.fit$df.M2)
@@ -184,7 +181,7 @@ M2 <- function(obj, calcNull = FALSE, quadpts = NULL){
         if(calcNull){
             null.mod <- try(mirt(obj@data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
-            null.fit <- M2(null.mod)
+            null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
             ret$TLI.M2 <- (null.fit$M2 / null.fit$df.M2 - ret$M2/ret$df.M2) /
                 (null.fit$M2 / null.fit$df.M2 - 1)
             ret$CFI.M2 <- 1 - (ret$M2 - ret$df.M2) / (null.fit$M2 - null.fit$df.M2)

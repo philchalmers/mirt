@@ -16,8 +16,6 @@ test_that('exploratory mods', {
     L2[1, 7] <- L2[2, 9] <- -1
     W1 <- wald(onefact, L)
     W2 <- wald(onefact, L2)
-    expect_is(W1, 'wald')
-    expect_is(W2, 'wald')
     expect_true(mirt:::closeEnough(W1$W - 212.3752, -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(W2$W - 2.080472, -1e-2, 1e-2))    
     
