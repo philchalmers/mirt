@@ -5,11 +5,16 @@
 - increase number of Mstep iterations proportionally in quasi-Newtron algorithms 
   as the estimation approaches the ML
   
+- 'rsm' itemtype removed for now until optimized version is implemented
+  
 ## NEW FEATURES
 
 - M2* statistic added for polytomous item types
 
 ## BUG FIXES
+
+- large bias correction in information matrix and standard errors for models that 
+  contain equality constraints (standard errors were too high)
 
 - drop dimensions fix for nested logit models
 
@@ -137,8 +142,6 @@
 - `read.mirt()` crash fix for multiple group analyses objects (reported by Felix Hansen)
 
 - updated math for `SE.type = 'crossprod'`
-
-- bias correction for standard errors in models that include equality constraints
 
 # Changes in mirt 1.1
 
@@ -478,8 +481,6 @@
   Currently only supports fixed effect predictors, but random effect predictors are being developed
 
 - more structured output when using the anova() generic
-
-- standard errors no longer slightly positively biased when parameter constraints are imposed
 
 # Changes in mirt 0.4.2
 

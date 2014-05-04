@@ -8,7 +8,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   SE.type = "crossprod", method = "EM", pars = NULL, constrain = NULL,
   parprior = NULL, calcNull = TRUE, draws = 5000, rotate = "oblimin",
   Target = NaN, quadpts = NULL, TOL = NULL, grsm.block = NULL,
-  rsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
+  key = NULL, nominal.highlow = NULL, large = FALSE,
   GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE,
   verbose = TRUE, technical = list(), ...)
 }
@@ -24,10 +24,10 @@ more details}
 \item{itemtype}{type of items to be modeled, declared as a vector for each item or a single value
 which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
 however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
-'4PL', 'graded', 'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
+'4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
 and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
 3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response model,
-rating scale graded response model, generalized partial credit model, Rasch rating scale model,
+rating scale graded response model, generalized partial credit model,
 nominal model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
 models, respectively. User defined item classes
 can also be defined using the \code{\link{createItem}} function}
@@ -41,8 +41,6 @@ the grsm, NA represents items that do not belong to the grsm block (other items 
 in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
 \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same
 group and therefore have the same number of item categories}
-
-\item{rsm.block}{same as \code{grsm.block}, but for \code{'rsm'} blocks}
 
 \item{key}{a numeric vector of the response scoring key. Required when using nested logit item types, and
 must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
@@ -351,14 +349,6 @@ are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. I
 high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1
 either by theoretical means or by re-estimating the model with better values following convergence.
 
-}
-\item{rsm}{
-A more constrained version of the partial credit model where the spacing is equal
-accross item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this is
-analogous to the relationship between the graded model and the grsm (with an additional
-constraint regarding the fixed discrimination parameters; the discrimination constraint can,
-however, be relaxed by adjusting the starting values specifications manually and applying
-additional equality constraints).
 }
 \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
 \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *

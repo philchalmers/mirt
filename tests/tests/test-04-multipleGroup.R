@@ -69,7 +69,7 @@ test_that('one factor', {
     fs2 <- fscores(mod_metric, full.scores = TRUE, full.scores.SE=TRUE, method = 'ML')
     expect_equal(as.numeric(head(fs2)), c(0.5531893,  1.1960187,  1.8287234,  1.1133180, -0.5164821, -0.2322618,  0.4968711,  0.6002451,  0.7688432,
                                           0.5831489,  0.4716423,  0.4613523),
-                tolerance = 1e-4)
+                tolerance = 1e-2)
     fs3 <- fscores(mod_missing, verbose = FALSE)
     fs4 <- fscores(mod_missing, full.scores = TRUE)
     fs5 <- fscores(mod_metric, full.scores = TRUE, scores.only=TRUE)
@@ -141,7 +141,7 @@ test_that('three factor', {
                                                  verbose = FALSE, draws = 10)
     expect_is(mod_metric, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.1577, 0.9415, 1.374, 0, NA, NA, 0, NA, NA, 0.7025, 0.5314, 0.8736, 0, NA, NA, 1, NA, NA, 1.3494, 1.09),
+    expect_equal(cfs, c(1.1467, 0.9011, 1.3924, 0, NA, NA, 0, NA, NA, 0.7102, 0.516, 0.9045, 0, NA, NA, 1, NA, NA, 1.3616, 1.12),
                  tolerance = 1e-2)
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', SE=TRUE)
     expect_is(mod_configural, 'MultipleGroupClass')
@@ -152,5 +152,5 @@ test_that('three factor', {
 
     fs1 <- fscores(mod_metric, verbose = FALSE)
     expect_is(fs1, 'list')
-    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.95083283,  0.06506389, -0.53194554, -0.35161021,  0.53556601, -0.95083283), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.95771569,  0.05945627, -0.53511123, -0.34960500,  0.52387440, -0.95771569), -1e-4, 1e-4))
 })

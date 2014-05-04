@@ -5,7 +5,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
-                    'grsm', 'gpcm', 'rsm', 'nominal', 'PC2PL','PC3PL',
+                    'grsm', 'gpcm', 'nominal', 'PC2PL','PC3PL', #'rsm,
                     '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')
     invalid.items <- is.na(match(itemtype, valid.items))
     if (any(invalid.items & !(itemtype %in% customItemNames))) {

@@ -902,6 +902,7 @@ makeLmats <- function(pars, constrain, random = NULL){
                 redun_constr[constrain[[i]][j]] <- TRUE
         }
     }
+    L[L > 0] <- L2[L > 0] <- L3[L > 0] <- 1
     return(list(L=L, L2=L2, L3=L3, redun_constr=redun_constr))
 }
 

@@ -180,8 +180,8 @@ LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = ite
 summary(LLTM)
 coef(LLTM)
 wald(LLTM)
-L <- c(-1, 1, 0)
-wald(LLTM, L) #first half not different from second
+L <- matrix(c(-1, 1, 0), 1)
+wald(LLTM, L) #first half different from second
 
 #compare to items with estimated slopes (2PL)
 twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
@@ -197,7 +197,7 @@ wald(twoPL)
 L <- matrix(0, 1, 34)
 L[1, 1] <- 1
 L[1, 2] <- -1
-wald(twoPL, L) #n.s.
+wald(twoPL, L) #n.s., which is the correct conclusion. Rasch approach gave wrong inference
 
 ##LLTM with item error term
 LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,

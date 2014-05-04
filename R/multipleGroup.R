@@ -64,7 +64,7 @@
 #' @param itemtype see \code{\link{mirt}} for details
 #' @param constrain see \code{\link{mirt}} for details
 #' @param grsm.block see \code{\link{mirt}} for details
-#' @param rsm.block see \code{\link{mirt}} for details
+# @param rsm.block see \code{\link{mirt}} for details
 #' @param parprior see \code{\link{mirt}} for details
 #' @param pars see \code{\link{mirt}} for details
 #' @param TOL see \code{\link{mirt}} for details
@@ -268,7 +268,7 @@
 multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                           SE = FALSE, SE.type = 'crossprod', invariance = '', pars = NULL,
                           method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
-                          draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL, rsm.block = NULL,
+                          draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL, 
                           key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE,
                           GenRandomPars = FALSE, verbose = TRUE, ...)
 {
@@ -290,7 +290,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance,
                       itemtype=itemtype, guess=guess, upper=upper, empiricalhist=empiricalhist,
                       pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
-                      parprior=parprior, quadpts=quadpts, method=method, rsm.block=rsm.block,
+                      parprior=parprior, quadpts=quadpts, method=method, 
                       technical = technical, verbose = verbose, calcNull=calcNull,
                       SE.type = SE.type, key=key, accelerate=accelerate, draws=draws,
                       GenRandomPars=GenRandomPars, TOL=TOL, ...)
