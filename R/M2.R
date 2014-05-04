@@ -117,10 +117,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL){
     E2 <- matrix(NA, nitems, nitems)
     EIs <- EIs2 <- matrix(0, nrow(Theta), nitems)
     DP <- matrix(0, nrow(Theta), length(estpars))
-    wherepar <- c(numeric(nitems), length(estpars)-1L)
+    wherepar <- c(1L, numeric(nitems))
     ind <- 1L
     for(i in 1L:nitems){
-        wherepar[i] <- ind
         x <- extract.item(obj, i)
         EIs[,i] <- expected.item(x, Theta, min=0L)
         tmp <- ProbTrace(x, Theta)
@@ -132,6 +131,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL){
         tmp <- length(x@parnum)
         DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
         ind <- ind + tmp
+        wherepar[i+1L] <- ind
     }
     ind <- 1L
     for(i in 1L:nitems){
