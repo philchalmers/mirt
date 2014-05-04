@@ -503,8 +503,11 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         df <- length(ret$observed) - 1
         X2 <- sum((ret$observed - ret$expected)^2 / ret$expected)
         G2 <- 2 * sum(O * log(O/E))
+        tmp <- suppressWarnings(expand.table(cbind(ret$Theta, ret$SE.Theta, ret$observed)))
+        rxx <- var(tmp[,1L]) / (var(tmp[,1L]) + mean(tmp[,2L]^2))
         attr(ret, 'fit') <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE),
-                                       G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE))
+                                       G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE),
+                                       reliability=rxx)
         if(verbose){
             print(attr(ret, 'fit'))
             cat('\n')
