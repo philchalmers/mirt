@@ -4,7 +4,7 @@
 \title{Create a user defined item with correct generic functions}
 \usage{
 createItem(name, par, est, P, gr = NULL, hss = NULL, lbound = NULL,
-  ubound = NULL, userdata = NULL)
+  ubound = NULL)
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -18,16 +18,15 @@ First input contains a vector of all the item parameters, the second input must 
 the third input must be the number of categories called \code{ncat}.
 Function also must return a \code{matrix} object of category probabilities}
 
-\item{gr}{gradient function (vector of first derivatives) used in estimation.
-If not specified a numeric approximation will be used}
+\item{gr}{gradient function (vector of first derivatives) of the log-likelihood used in estimation.
+The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object defined
+by \code{createItem()} and \code{Theta} is a matrix of latent trait parameters. Tabulated (EM)
+or raw (MHRM) data are located in the \code{x@dat} slot, and are used to form the complete
+data log-likelihood. If not specified a numeric approximation will be used}
 
-\item{hss}{Hessian function (matrix of second derivatives) used in estimation.
-If not specified a numeric approximation will be used (required for the MH-RM algorithm only)}
-
-\item{userdata}{an optional matrix of person level covariate data that can be used in estimation. This
-matrix with be used in the probability function by passing \code{Theta = cbind(Theta, userdata)}. Note that
-this only makes sense to use when the estimation uses the MH-RM engine since the number of rows in Theta
-will be the same as the number of rows in the covariate data (similar to how \code{mixedmirt} works)}
+\item{hss}{Hessian function (matrix of second derivatives) of the log-likelihood used in estimation.
+If not specified a numeric approximation will be used (required for the MH-RM algorithm only).
+The input is idential to the \code{gr} argument}
 
 \item{lbound}{optional vector indicating the lower bounds of the parameters. If not specified then
 the bounds will be set to -Inf}
@@ -41,7 +40,7 @@ the defined objects pass to the \code{mirt(..., customItems = list())} command, 
 are properly labeled and unique in the list.
 }
 \details{
-Additionally, the \code{summary()} function will not return proper standardized loadings since the function
+The \code{summary()} function will not return proper standardized loadings since the function
 is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001 are filled in
 as place-holders.
 }
@@ -85,25 +84,6 @@ P.nonlin <- function(par,Theta, ncat=2){
 x2 <- createItem(name, par=par, est=est, P=P.nonlin)
 
 mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose = TRUE)
-coef(mod)
-
-### covariate included data
-name <- 'mycov'
-par <- c(a1 = .5, a2 =.5, d = 0)
-est <- c(TRUE, TRUE, TRUE)
-P.mycov <- function(par,Theta, ncat){
-     a1 <- par[1]
-     a2 <- par[2]
-     d <- par[3]
-     #notice here that the covariate data is found in Theta,
-     #    use browser() to jump in for debugging if needed
-     P1 <- 1 / (1 + exp(-1*(a1 * Theta[,1] + a2*Theta[,2] + d)))
-     cbind(1-P1, P1)
-}
-
-covdata <- matrix(c(rep(0, 500), rep(1,500)), nrow=nrow(dat))
-x3 <- createItem(name, par=par, est=est, P=P.mycov, userdata=covdata)
-mod <- mirt(dat, 1, c(rep('2PL',4), 'mycov'), customItems=list(mycov=x3), method = 'MHRM')
 coef(mod)
 
 ###nominal response model (Bock 1972 version)
