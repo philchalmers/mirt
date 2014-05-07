@@ -74,8 +74,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL){
         return(data.frame(as.list(M2s), newret))
     }
     
-    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'GroupPars')))
-       stop('M2 currently only supported for \'dich\' and \'graded\' objects')
+    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 'GroupPars')))
+       stop('M2 currently only supported for \'dich\', \'graded\', \'gpcm\', and \'nominal\' objects')
     ret <- list()
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
     tabdata <- obj@tabdatalong
