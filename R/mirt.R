@@ -324,6 +324,8 @@
 #'          are. The \code{'Nelder-Mead'} and \code{'SANN'} estimators may also be used, though
 #'          their routine use generally is not required. The MH-RM algorithm uses the Newton-Raphson by
 #'          default, and currently cannot be changed}
+#'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
+#'          Default is TRUE}
 #'   }
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
