@@ -38,10 +38,12 @@ boot.mirt <- function(x, R = 100, ...){
         if(!is.null(group)){
             mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
                                  constrain=constrain, parprior=parprior, method='EM',
-                                 calcNull=FALSE, verbose = FALSE, ...))
+                                 calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE), 
+                                 ...))
         } else {
             mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
-                        parprior=parprior, calcNull=FALSE, verbose=FALSE, ...))
+                        parprior=parprior, calcNull=FALSE, verbose=FALSE, 
+                        technical=list(parallel=FALSE), ...))
         }
         if(is(mod, 'try-error')) return(rep(NA, npars))
         structure <- mod2values(mod)

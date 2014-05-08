@@ -41,7 +41,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
 
     compute.LL <- function(dat, model, sv, large, parprior){
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
-                                        large=large, calcNull=FALSE, technical=list(message=FALSE))
+                                        large=large, calcNull=FALSE, technical=list(message=FALSE,
+                                                                                    parallel=FALSE))
         tmpmod@logLik
     }
 

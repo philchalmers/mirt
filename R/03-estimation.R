@@ -426,6 +426,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
+                if(!opts$technical$parallel){
+                    MIRTCLUSTER <- mirtClusterEnv$MIRTCLUSTER; ncores <- mirtClusterEnv$ncores
+                    mirtClusterEnv$MIRTCLUSTER <- NULL
+                    mirtClusterEnv$ncores <- 1L
+                }
                 DM <- myApply(X=estmat, MARGIN=1L, FUN=SE.SEM, pars=ESTIMATE$pars, constrain=constrain, 
                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                           nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
@@ -437,6 +442,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           message=opts$message),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList)
+                if(!opts$technical$parallel){
+                    mirtClusterEnv$MIRTCLUSTER <- MIRTCLUSTER
+                    mirtClusterEnv$MIRTCLUSTER <- ncores
+                }
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
                 DM[, is.latent] <- 0
@@ -504,12 +513,21 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         flush.console()
         logLik <- G2 <- SElogLik <- 0
         Pl <- list()
+        if(!opts$technical$parallel){
+            MIRTCLUSTER <- mirtClusterEnv$MIRTCLUSTER; ncores <- mirtClusterEnv$ncores
+            mirtClusterEnv$MIRTCLUSTER <- NULL
+            mirtClusterEnv$ncores <- 1L
+        }
         for(g in 1L:Data$ngroups){
             cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return')
             logLik <- logLik + cmods[[g]]@logLik
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
             G2 <- G2 + cmods[[g]]@G2
             Pl[[g]] <- cmods[[g]]@Pl
+        }
+        if(!opts$technical$parallel){
+            mirtClusterEnv$MIRTCLUSTER <- MIRTCLUSTER
+            mirtClusterEnv$MIRTCLUSTER <- ncores
         }
     }
 
@@ -531,7 +549,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         opts$calcNull <- FALSE
     }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
-        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, technical=list(NULL.MODEL=TRUE, TOL=1e-3),
+        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype, 
+                                     technical=list(NULL.MODEL=TRUE, TOL=1e-3,
+                                                    parallel=opts$technical$parallel),
                                      large=large, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
             if(opts$message)

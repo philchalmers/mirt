@@ -954,6 +954,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$message <- if(is.null(technical$message)) TRUE else technical$message
     opts$technical <- technical
     opts$use <- use
+    opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
     if(opts$method == 'EM')
