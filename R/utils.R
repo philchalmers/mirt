@@ -1233,7 +1233,7 @@ mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 
 myApply <- function(X, MARGIN, FUN, ...){
-    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+    if(mirtClusterEnv$ncores > 1L){
         return(t(parallel::parApply(cl=mirtClusterEnv$MIRTCLUSTER, X=X, MARGIN=MARGIN, FUN=FUN, ...)))
     } else {
         return(t(apply(X=X, MARGIN=MARGIN, FUN=FUN, ...)))
@@ -1241,7 +1241,7 @@ myApply <- function(X, MARGIN, FUN, ...){
 }
 
 myLapply <- function(X, FUN, ...){
-    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+    if(mirtClusterEnv$ncores > 1L){
         return(parallel::parLapply(cl=mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
     } else {
         return(lapply(X=X, FUN=FUN, ...))
@@ -1249,7 +1249,7 @@ myLapply <- function(X, FUN, ...){
 }
 
 mySapply <- function(X, FUN, ...){
-    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+    if(mirtClusterEnv$ncores > 1L){
         return(t(parallel::parSapply(cl=mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
     } else {
         return(t(sapply(X=X, FUN=FUN, ...)))

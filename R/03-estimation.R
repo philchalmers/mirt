@@ -427,8 +427,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
                 if(!opts$technical$parallel){
-                    MIRTCLUSTER <- mirtClusterEnv$MIRTCLUSTER; ncores <- mirtClusterEnv$ncores
-                    mirtClusterEnv$MIRTCLUSTER <- NULL
+                    ncores <- mirtClusterEnv$ncores
                     mirtClusterEnv$ncores <- 1L
                 }
                 DM <- myApply(X=estmat, MARGIN=1L, FUN=SE.SEM, pars=ESTIMATE$pars, constrain=constrain, 
@@ -442,10 +441,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           message=opts$message),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList)
-                if(!opts$technical$parallel){
-                    mirtClusterEnv$MIRTCLUSTER <- MIRTCLUSTER
-                    mirtClusterEnv$MIRTCLUSTER <- ncores
-                }
+                if(!opts$technical$parallel)
+                    mirtClusterEnv$ncores <- ncores
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
                 DM[, is.latent] <- 0
@@ -514,8 +511,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         logLik <- G2 <- SElogLik <- 0
         Pl <- list()
         if(!opts$technical$parallel){
-            MIRTCLUSTER <- mirtClusterEnv$MIRTCLUSTER; ncores <- mirtClusterEnv$ncores
-            mirtClusterEnv$MIRTCLUSTER <- NULL
+            ncores <- mirtClusterEnv$ncores
             mirtClusterEnv$ncores <- 1L
         }
         for(g in 1L:Data$ngroups){
@@ -525,10 +521,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             G2 <- G2 + cmods[[g]]@G2
             Pl[[g]] <- cmods[[g]]@Pl
         }
-        if(!opts$technical$parallel){
-            mirtClusterEnv$MIRTCLUSTER <- MIRTCLUSTER
-            mirtClusterEnv$MIRTCLUSTER <- ncores
-        }
+        if(!opts$technical$parallel)
+            mirtClusterEnv$ncores <- ncores
     }
 
     ####post estimation stats
