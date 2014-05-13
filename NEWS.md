@@ -9,6 +9,8 @@
   
 ## NEW FEATURES
 
+- multidimensional ideal-point models added for dichotomous items
+
 - M2* statistic added for polytomous item types
 
 ## BUG FIXES

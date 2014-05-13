@@ -73,6 +73,14 @@ setMethod(
 
 setMethod(
     f = "print",
+    signature = signature(x = 'ideal'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
     signature = signature(x = 'GroupPars'),
     definition = function(x, ...){
         cat('Object of class:', class(x))
@@ -146,6 +154,14 @@ setMethod(
 setMethod(
     f = "show",
     signature = signature(object = 'partcomp'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'ideal'),
     definition = function(object){
         print(object)
     }
@@ -234,6 +250,14 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'ideal'),
+    definition = function(x){
+        x@par[1L:x@nfact]
+    }
+)
+
 #----------------------------------------------------------------------------
 setMethod(
     f = "ExtractZetas",
@@ -299,6 +323,15 @@ setMethod(
     signature = signature(x = 'partcomp'),
     definition = function(x){
         d <- x@par[(x@nfact+1L):(length(x@par)-2L)]
+        d
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'ideal'),
+    definition = function(x){
+        d <- x@par[length(x@par)]
         d
     }
 )
@@ -406,6 +439,17 @@ setMethod(
                  rlnorm(x@nfact, meanlog=.2, sdlog=.5),
                  rnorm(1L, -2, .5),
                  rnorm(1L, 2, .5))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'ideal'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5), 
+                 -rlnorm(1, meanlog=0, sdlog=.5))
         x@par[x@est] <- par[x@est]
         x
     }
@@ -552,6 +596,27 @@ setMethod(
 P.comp <- function(par, Theta, ot = 0)
 {
     return(.Call('partcompTraceLinePts', par, Theta))
+}
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'ideal', Theta = 'matrix'),
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
+        return(P.ideal(x@par, Theta=Theta))
+    }
+)
+
+P.ideal <- function(par, Theta, ot = 0)
+{
+    alpha <- par[length(par)]
+    beta <- par[-length(par)]
+    eta <- -0.5*(Theta %*% beta + alpha)^2
+    eta <- ifelse(eta < -20, -20, eta)
+    P <- exp(eta)
+    P <- cbind((1-P), P)
+    P <- ifelse(P < 1e-20, 1e-20, P)
+    P <- ifelse(P > (1 - 1e-20), (1 - 1e-20), P)
+    return(P)
 }
 
 #----------------------------------------------------------------------------

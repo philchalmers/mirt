@@ -78,6 +78,8 @@ setClass("partcomp", contains = 'AllItemsClass')
 setClass("nestlogit", contains = 'AllItemsClass',
          representation = representation(correctcat='integer'))
 
+setClass("ideal", contains = 'AllItemsClass')
+
 setClass('custom', contains = 'AllItemsClass',
          representation = representation(name='character',
                                          P='function',

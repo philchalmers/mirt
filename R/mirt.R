@@ -5,7 +5,7 @@
 #' to dichotomous and polytomous data under the item response theory paradigm.
 #' Fits univariate and multivariate Rasch, 2-4PL, graded, (generalized) partial credit,
 #' nominal, graded rating scale, Rasch rating scale, nested logistic,
-#' and partially compensatory models using the traditional EM algorithm or Cai's (2010)
+#' ideal point, and partially compensatory models using the traditional EM algorithm or Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro (MH-RM) algorithm. User defined item classes
 #' can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory'
 #' person or item level predictors, though these can only be included by using the
@@ -150,6 +150,10 @@
 # however, be relaxed by adjusting the starting values specifications manually and applying
 # additional equality constraints).
 # }
+#' \item{ideal}{
+#' The ideal point model has the form, with the upper bound constraint on \eqn{d} set to 0:
+#' \deqn{P(x = 1 | \theta, \psi) = exp(-0.5 * (a_1 * \theta_1 + a_2 * \theta_2 + d)^2)}
+#' }
 #' \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
 #' \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
 #' \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
@@ -174,11 +178,11 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #'   which will be repeated globally. The NULL default assumes that the items follow a graded or 2PL structure,
 #'   however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
-#'   '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
+#'   '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM',
 #'   and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
 #'   3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response model,
 #'   rating scale graded response model, generalized partial credit model,
-#'   nominal model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
+#'   nominal model, ideal-point model, 2-3PL partially compensatory model, and 2-4 parameter nested logistic
 #'   models, respectively. User defined item classes
 #'   can also be defined using the \code{\link{createItem}} function
 #' @param method a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
@@ -378,6 +382,10 @@
 #'
 #' Rasch, G. (1960). Probabilistic models for some intelligence and attainment tests.
 #' \emph{Danish Institute for Educational Research}.
+#' 
+#' Maydeu-Olivares, A., Hernandez, A. & McDonald, R. P. (2006).
+#' A Multidimensional Ideal Point Item Response Theory Model for Binary Data.
+#' \emph{Multivariate Behavioral Research, 41}, 445-471.
 #'
 #' Muraki, E. (1992). A generalized partial credit model: Application of an EM algorithm.
 #' \emph{Applied Psychological Measurement, 16}, 159-176.

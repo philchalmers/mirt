@@ -426,6 +426,30 @@ nominalParDeriv <- function(a, ak, d, Theta, P, num, dat, estHess, gpcm = FALSE)
 
 setMethod(
     f = "Deriv",
+    signature = signature(x = 'ideal', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        d <- x@par[length(x@par)]
+        a <- x@par[-length(x@par)]
+        P <- ProbTrace(x, Theta=Theta)[,2L]
+        Q <- (1 - P)
+        Q <- ifelse(Q < 1e-7, 1e-7, Q)
+        int <- as.numeric(Theta %*% a + d)
+        for(i in 1L:ncol(Theta))
+            grad[i] <- -sum( x@dat[,1] * int * Theta[,i] * -P / Q + 
+                               x@dat[,2] * int * Theta[,i])
+        grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q + 
+                           2 * x@dat[,2] * int)/2
+        if(estHess)
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                         Theta=Theta)
+        return(list(grad = grad, hess=hess))
+    }
+)
+
+setMethod(
+    f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
                           tabdata = NULL, estHess=FALSE, prior = NULL){
@@ -839,6 +863,28 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'ideal', Theta = 'matrix'),
+    definition = function(x, Theta){
+        N <- nrow(Theta)
+        nfact <- ncol(Theta)
+        P <- ProbTrace(x, Theta=Theta)[,2L]
+        d <- x@par[length(x@par)]
+        a <- x@par[-length(x@par)]
+        int <- as.numeric(t(a %*% t(Theta)) + d)
+        grad <- hess <- vector('list', 2L)
+        grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
+        for(i in 1L:nfact){
+            grad[[2L]][ ,i] <- 2 * a[i] * int * P
+            grad[[1L]][ ,i] <- -1 * grad[[2L]][ ,i]
+            hess[[2L]][ ,i] <- 2 * a[i]^2 * int * P + 4 * int^2 * a[i]^2 * P
+            hess[[1L]][ ,i] <- -1 * hess[[2L]][ ,i]
+        }
+        return(list(grad=grad, hess=hess))
+    }
+)
+
 ###
 
 setMethod(
@@ -898,5 +944,21 @@ setMethod(
             dp[,nfact + j] <- dp[,nfact + ncat + j] * aTheta
         }
         return(dp)
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'ideal', Theta = 'matrix'),
+    definition = function(x, Theta){
+        P <- ProbTrace(x, Theta=Theta)[,2L]
+        dp <- matrix(0, nrow(Theta), length(x@par))
+        d <- x@par[length(x@par)]
+        a <- x@par[-length(x@par)]
+        int <- as.numeric(t(a %*% t(Theta)) + d)
+        for(i in 1L:ncol(Theta))
+            dp[,i] <- -2 * Theta[,i] * int * P
+        dp[,i+1L] <- -2 * int * P
+        dp
     }
 )

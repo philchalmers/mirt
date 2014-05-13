@@ -6,7 +6,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
                     'grsm', 'gpcm', 'nominal', 'PC2PL','PC3PL', #'rsm,
-                    '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')
+                    '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM', 'ideal')
     invalid.items <- is.na(match(itemtype, valid.items))
     if (any(invalid.items & !(itemtype %in% customItemNames))) {
       stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
@@ -22,46 +22,38 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmpval[lambdas[i,] != 0] <- 1
             val <- c(tmpval, zetas[[i]], guess[i], upper[i])
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u')
-        }
-        if(itemtype[i] == 'Rasch' && K[i] > 2L){
+        } else if(itemtype[i] == 'Rasch' && K[i] > 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
             val <- c(tmpval, 0:(K[i]-1L), 0, zetas[[i]])
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))
-        }
-        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
+        } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u')
-        }
-        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
+        } else if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i],
                      0, rep(.5, K[i] - 2L), rep(0, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u',
                             paste('ak', 0L:(K[i]-2L), sep=''),
                             paste('d', 0L:(K[i]-2L), sep=''))
-        }
-        if(itemtype[i] == 'graded'){
+        } else if(itemtype[i] == 'graded'){
             val <- c(lambdas[i,], zetas[[i]])
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
-        }
-        if(itemtype[i] == 'grsm'){
+        } else  if(itemtype[i] == 'grsm'){
             val <- c(lambdas[i,], seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''), 'c')
-        }
-        if(itemtype[i] == 'gpcm'){
+        } else if(itemtype[i] == 'gpcm'){
             val <- c(lambdas[i,], 0:(K[i]-1), 0, zetas[[i]])
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))
-        }
-        if(itemtype[i] == 'rsm'){
+        } else if(itemtype[i] == 'rsm'){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
             val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''), 'c')
-        }
-        if(itemtype[i] == 'nominal'){
+        } else if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
             if(is.null(nominal.highlow)){
                 val[nfact + 1L] <- 0
@@ -72,10 +64,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             }
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))
-        }
-        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+        } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
             val <- c(lambdas[i,], rep(1, nfact), guess[i], 999)
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
+        } else if(itemtype[i] == 'ideal'){
+            val <- c(lambdas[i,]/2, -0.5)
+            names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')
         }
         if(all(itemtype[i] != valid.items)) next
         startvalues[[i]] <- val
@@ -83,34 +77,32 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     #freepars
     freepars <- vector('list', J)
     for(i in 1L:J){
-        if(itemtype[i] == 'Rasch' && K[i] == 2L)
+        if(itemtype[i] == 'Rasch' && K[i] == 2L){
             freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)
-        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
+        } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
             if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1L] <- TRUE
             if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
             freepars[[i]] <- estpars
-        }
-        if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
+        } else if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE, rep(TRUE, (K[i]-1L)*2))
             estpars[c(nfact+4L, length(estpars)-(K[i]-2L) )] <- FALSE
             if(any(itemtype[i] == c('3PLNRM', '4PLNRM'))) estpars[nfact+2] <- TRUE
             if(any(itemtype[i] == c('3PLuNRM', '4PLNRM'))) estpars[nfact+3] <- TRUE
             freepars[[i]] <- estpars
-        }
-        if(itemtype[i] == 'Rasch' && K[i] > 2L)
+        } else if(itemtype[i] == 'Rasch' && K[i] > 2L){
             freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]), 
                                FALSE, rep(TRUE, K[i]-1L))
-        if(itemtype[i] == 'grsm')
+        } else if(itemtype[i] == 'grsm'){
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
-        if(itemtype[i] == 'graded')
+        } else if(itemtype[i] == 'graded'){
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
-        if(itemtype[i] == 'gpcm')
+        } else if(itemtype[i] == 'gpcm'){
             freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]-1L))
-        if(itemtype[i] == 'rsm')
+        } else if(itemtype[i] == 'rsm'){
             freepars[[i]] <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
-        if(itemtype[i] == 'nominal'){
+        } else if(itemtype[i] == 'nominal'){
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
             if(is.null(nominal.highlow)){
                 estpars[nfact + 1L] <- FALSE
@@ -121,12 +113,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             }
             estpars[c(nfact + K[i] + 1L)] <- FALSE
             freepars[[i]] <- estpars
-        }
-        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+        } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
             if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
             estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
             if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1L] <- TRUE
             freepars[[i]] <- estpars
+        } else if(itemtype[i] == 'ideal'){
+            if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
+            freepars[[i]] <- c(estLambdas[i, ], TRUE)
         }
         if(all(itemtype[i] != valid.items)) next
         names(freepars[[i]]) <- names(startvalues[[i]])
@@ -369,6 +363,25 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              fixed.design=fixed.design.list[[i]],
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+        
+        if(any(itemtype[i] == c('ideal'))){
+            pars[[i]] <- new('ideal', par=startvalues[[i]], est=freepars[[i]],
+                             nfact=nfact,
+                             ncat=2L,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             itemclass=9L,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=c(rep(Inf, length(startvalues[[i]])-1L), 0),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)

@@ -23,6 +23,11 @@ test_that('extras', {
                  tolerance = 1e-3)
     model2 <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, 
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))
+    modideal <- mirt(dataset1, model = mirt.model('F1 = 1-6
+                                                  F2 = 5-10'), 'ideal', verbose = FALSE)
+    cfs <- as.numeric(coef(modideal, digits=5, verbose=FALSE)[[5]])
+    expect_equal(modideal@logLik, -6435.657, tolerance = 1e-3)
+    expect_equal(cfs, c(0.73246, 1.26111, -1.41768), tolerance = 1e-3)
     
     acov <- fscores(mod1, return.acov=TRUE)
     expect_equal(acov[[1]][1], .47235, tolerance=1e-3)
