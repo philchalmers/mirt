@@ -26,6 +26,9 @@
 #'
 #'  To simulate maximum a posteriori estimates for the random effects use the \code{\link{randef}}
 #'  function.
+#'  
+#' @return function returns an object of class \code{MixedClass} 
+#'   (\link{MixedClass-class}).
 #'
 #' @aliases mixedmirt
 #' @param data a \code{matrix} or \code{data.frame} that consists of

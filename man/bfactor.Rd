@@ -34,6 +34,10 @@ the bifactor model}
 \item{...}{additional arguments to be passed to the main estimation function. See \code{\link{mirt}}
 for more details}
 }
+\value{
+function returns an object of class \code{ConfirmatoryClass}
+  (\link{ConfirmatoryClass-class}).
+}
 \description{
 \code{bfactor} fits a confirmatory maximum likelihood two-tier/bifactor model to
 dichotomous and polytomous data under the item response theory paradigm.

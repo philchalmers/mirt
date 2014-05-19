@@ -14,6 +14,9 @@
 #' \code{constrain = ...} arguments, by inputting user specified design matrix from
 #' \code{mod2values} or from passing \code{pars = 'values'}, or by supplying a \code{constrain} list
 #' for user defined equality constraints between parameters.
+#' 
+#' @return function returns an object of class \code{MultipleGroupClass} 
+#'   (\link{MultipleGroupClass-class}).
 #'
 #' @aliases multipleGroup
 #' @param data a \code{matrix} or \code{data.frame} that consists of

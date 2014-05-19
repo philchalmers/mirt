@@ -21,6 +21,9 @@
 #' Note: for multiple group two-tier analyses only the second-tier means and variances
 #' should be freed since the specific factors are not treated independently due to the
 #' dimension reduction technique.
+#' 
+#' @return function returns an object of class \code{ConfirmatoryClass} 
+#'   (\link{ConfirmatoryClass-class}).
 #'
 #' @aliases bfactor
 #' @param data a \code{matrix} or \code{data.frame} that consists of

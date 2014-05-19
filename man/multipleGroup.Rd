@@ -91,6 +91,10 @@ using the fixed internal starting values?}
 \item{technical}{list specifying subtle parameters that can be adjusted. See
 \code{\link{mirt}} for details}
 }
+\value{
+function returns an object of class \code{MultipleGroupClass}
+  (\link{MultipleGroupClass-class}).
+}
 \description{
 \code{multipleGroup} performs a full-information
 maximum-likelihood multiple group analysis for dichotomous and polytomous

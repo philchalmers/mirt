@@ -202,6 +202,12 @@ using the fixed internal starting values?}
 
 \item{...}{additional arguments to be passed}
 }
+\value{
+function returns an object of class \code{ExploratoryClass}
+  (\link{ExploratoryClass-class}) if the estimated model
+  was exploratory, or \code{ConfirmatoryClass} (\link{ConfirmatoryClass-class})
+  if the model has unique axes that do not require rotation.
+}
 \description{
 \code{mirt} fits an unconditional maximum likelihood factor analysis model
 to dichotomous and polytomous data under the item response theory paradigm.

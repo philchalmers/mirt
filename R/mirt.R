@@ -89,6 +89,11 @@
 #' Additionally, it is recommended that at least 400 cycles are run through to approximate the observed information
 #' matrix accurately, which can be accomplished either by decreasing the \code{TOL} criteria or setting
 #' \code{SE = TRUE}.
+#' 
+#' @return function returns an object of class \code{ExploratoryClass} 
+#'   (\link{ExploratoryClass-class}) if the estimated model
+#'   was exploratory, or \code{ConfirmatoryClass} (\link{ConfirmatoryClass-class}) 
+#'   if the model has unique axes that do not require rotation.
 #'
 #' @section IRT Models:
 #'

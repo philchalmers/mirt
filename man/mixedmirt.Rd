@@ -60,6 +60,10 @@ is 5000}
 \item{...}{additional arguments to be passed to the MH-RM estimation engine. See
   \code{\link{mirt}} for more detail}
 }
+\value{
+function returns an object of class \code{MixedClass}
+  (\link{MixedClass-class}).
+}
 \description{
 \code{mixedmirt} fits MIRT models using FIML estimation to dichotomous and polytomous
 IRT models conditional on fixed and random effect of person and item level covariates.
