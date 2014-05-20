@@ -110,10 +110,10 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, impute = 0, 
                     ...){
     
-    fn <- function(collect, x, Theta, ...){
-        tmpdat <- imputeMissing(x, Theta)
-        tmpmod <- mirt(tmpdat, x@nfact, pars = vals)
-        tmpmod@pars <- x@pars
+    fn <- function(collect, obj, Theta, ...){
+        tmpdat <- imputeMissing(obj, Theta)
+        tmpmod <- mirt(tmpdat, obj@nfact, pars = vals)
+        tmpmod@pars <- obj@pars
         return(itemfit(tmpmod, Theta=Theta, ...))
     } 
     
@@ -127,7 +127,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(collect, fn, x=x, Theta=Theta, vals=vals, 
+        collect <- myLapply(collect, fn, obj=x, Theta=Theta, vals=vals, 
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0, ...)
