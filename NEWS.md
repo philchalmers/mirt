@@ -2,12 +2,15 @@
 
 ## MAJOR CHANGES
 
-- increase number of Mstep iterations proportionally in quasi-Newtron algorithms 
+- increase number of Mstep iterations proportionally in quasi-Newton algorithms 
   as the estimation approaches the ML
   
 - 'rsm' itemtype removed for now until optimized version is implemented
   
 ## NEW FEATURES
+
+- `impute` option for `itemfit()` and `M2()` to estimate statistics via plausible imputation when 
+  missing data are present
 
 - multidimensional ideal-point models added for dichotomous items
 
@@ -28,7 +31,7 @@
   identified compared to `SEM`, and is generally much cheaper to compute for larger models
 
 - M-step optimizer now automatically selected to be 'BFGS' if there are no bounded parameters, and
-  'L-BFGS-B' otherwise. Some models will have notibly different parameter estimates because of 
+  'L-BFGS-B' otherwise. Some models will have notably different parameter estimates because of 
   this, but should have nearly identical model log-likelihoods
 
 - better shiny UI which adapts to the itemtype specifically, and allows for classical parameter
@@ -43,7 +46,7 @@
 
 ## NEW FEATURES
 
-- `return.acov` logical added to `fscores()` to return a list of matricies containing the 
+- `return.acov` logical added to `fscores()` to return a list of matrices containing the 
   ACOV theta values used to compute the SEs (suggested by Shiyang Su)
 
 - `printCI` logical option to `summary()` to print confidence intervals for standardized loadings
@@ -149,7 +152,7 @@
 
 ## NEW FEATURES
 
-- `facet_items` argument added to plot() to control whether seperate plots should be constructed
+- `facet_items` argument added to plot() to control whether separate plots should be constructed
   for each item or to merge them onto a single plot
 
 - three dimensional models supported in `itemplot()` for types `trace`, `score`, `info`, and `SE`
@@ -177,7 +180,7 @@
 - empirical histogram estimation now available in `mirt()` and `multipleGroup()` for unidimensional
   models. Additional plot `type = 'empiricalhist'` also added to the `plot()` generic
 
-- reimplement `read.mirt()` with better consistency checking between the `plink` package
+- re-implement `read.mirt()` with better consistency checking between the `plink` package
 
 ## BUG FIXES
 
@@ -396,7 +399,7 @@
 - improve speed of estimation in multipleGroup() when latent means/variances are estimated
 
 - multipleGroup(invariance = '') can include item names to specify which items are to
-  be considered invariant accross groups. Useful for anchoring and DIF testing
+  be considered invariant across groups. Useful for anchoring and DIF testing
 
 - type = 'trace' option added to plot() to display all item trace lines on a single
   graph (dichotomous items only)

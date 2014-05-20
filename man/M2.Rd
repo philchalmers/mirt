@@ -3,7 +3,7 @@
 \alias{M2}
 \title{Compute M2 statistic}
 \usage{
-M2(obj, calcNull = TRUE, quadpts = NULL)
+M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -14,6 +14,12 @@ on the rubric found in \code{\link{mirt}}}
 
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI}
+
+\item{Theta}{a matrix of factor scores for each person used for imputation}
+
+\item{impute}{a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
+when there are missing data present. This requires a precomputed \code{Theta} input. Will return
+a data.frame object with the mean estimates of the stats and their imputed standard deviations}
 }
 \description{
 Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
@@ -26,6 +32,13 @@ fitting the null model.
 dat <- expand.table(LSAT7)
 (mod1 <- mirt(dat, 1))
 M2(mod1)
+
+#M2 imputed with missing data present (run in parallel)
+dat[sample(1:prod(dim(dat)), 250)] <- NA
+mod2 <- mirt(dat, 1)
+mirtCluster()
+Theta <- fscores(mod2, full.scores=TRUE)
+M2(mod2, Theta=Theta, impute = 10)
 
 }
 }

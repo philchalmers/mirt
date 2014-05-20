@@ -22,9 +22,12 @@
 #'   between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence interval would be 
 #'   plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
-#' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If 
+#' @param Theta a matrix of factor scores for each person used for statistics that require empirical estimates. If 
 #'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
-#'   be used instead
+#'   be used instead. Also required when estimating statistics with missing data via imputation
+#' @param impute a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
+#'   when there are missing data present. This requires a precomputed \code{Theta} input. Will return
+#'   a data.frame object with the mean estimates of the stats and their imputed standard deviations
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
@@ -93,19 +96,65 @@
 #' tables$O[[1]]
 #' tables$E[[1]]
 #'
-#'
+#' # fit stats with missing data (run in parallel using all cores)
+#' data[sample(1:prod(dim(data)), 500)] <- NA
+#' raschfit <- mirt(data, 1, itemtype='Rasch')
+#' 
+#' mirtCluster()
+#' Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE)
+#' itemfit(raschfit, impute = 10, Theta=Theta)
+#' 
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
-                    empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, ...){
-    if(any(is.na(x@data)))
-        stop('Fit statistics cannot be computed when there are missing data.')
+                    empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, impute = 0, 
+                    ...){
+    
+    fn <- function(collect, x, Theta, ...){
+        tmpdat <- imputeMissing(x, Theta)
+        tmpmod <- mirt(tmpdat, x@nfact, pars = vals)
+        tmpmod@pars <- x@pars
+        return(itemfit(tmpmod, Theta=Theta, ...))
+    } 
+    
+    if(is(x, 'MixedClass'))
+        stop('mixedmirt objects not supported')
+    
+    if(any(is.na(x@data)) && !is(x, 'MultipleGroupClass')){
+        if(impute == 0 || is.null(Theta))
+            stop('Fit statistics cannot be computed when there are missing data. Pass suitable
+                 Theta and impute arguments to compute statistics following multiple data inputations')
+        collect <- vector('list', impute)
+        vals <- mod2values(x)
+        vals$est <- FALSE
+        collect <- myLapply(collect, fn, x=x, Theta=Theta, vals=vals, 
+                            Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
+                            S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
+                            empirical.CI=empirical.CI, method=method, impute=0, ...)
+        ave <- SD <- collect[[1L]]
+        pick1 <- 1:nrow(ave)
+        pick2 <- sapply(ave, is.numeric)
+        ave[pick1, pick2] <- SD[pick1, pick2] <- 0
+        for(i in 1L:impute)
+            ave[pick1, pick2] <- ave[pick1, pick2] + collect[[i]][pick1, pick2]
+        ave[pick1, pick2] <- ave[pick1, pick2]/impute
+        for(i in 1L:impute)
+            SD[pick1, pick2] <- (ave[pick1, pick2] - collect[[i]][pick1, pick2])^2
+        SD[pick1, pick2] <- sqrt(SD[pick1, pick2]/impute)
+        SD$item <- paste0('SD_', SD$item)
+        SD <- rbind(NA, SD)
+        return(rbind(ave, SD))
+    }
     if(is(x, 'MultipleGroupClass')){
-        ret <- list()
+        ret <- vector('list', length(x@cmods))
         for(g in 1L:length(x@cmods)){
             x@cmods[[g]]@itemtype <- x@itemtype
-            ret[[g]] <- itemfit(x@cmods[[g]], group.size=group.size, mincell = 1,
-                                S_X2.tables = FALSE, method=method, Theta=Theta, ...)
+            tmpTheta <- NULL
+            if(!is.null(Theta))
+                tmpTheta <- Theta[x@groupNames[g] == x@group, , drop=FALSE]
+            ret[[g]] <- itemfit(x@cmods[[g]], Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
+                                S_X2.tables=S_X2.tables, empirical.plot=empirical.plot, Theta=tmpTheta,
+                                empirical.CI=empirical.CI, method=method, impute=impute, ...)
         }
         names(ret) <- x@groupNames
         return(ret)

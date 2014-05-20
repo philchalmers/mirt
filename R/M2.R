@@ -13,6 +13,10 @@
 #'   on the rubric found in \code{\link{mirt}}
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
+#' @param Theta a matrix of factor scores for each person used for imputation
+#' @param impute a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
+#'   when there are missing data present. This requires a precomputed \code{Theta} input. Will return
+#'   a data.frame object with the mean estimates of the stats and their imputed standard deviations
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
@@ -28,13 +32,58 @@
 #' dat <- expand.table(LSAT7)
 #' (mod1 <- mirt(dat, 1))
 #' M2(mod1)
+#' 
+#' #M2 imputed with missing data present (run in parallel)
+#' dat[sample(1:prod(dim(dat)), 250)] <- NA
+#' mod2 <- mirt(dat, 1)
+#' mirtCluster()
+#' Theta <- fscores(mod2, full.scores=TRUE)
+#' M2(mod2, Theta=Theta, impute = 10)
 #'
 #' }
-M2 <- function(obj, calcNull = TRUE, quadpts = NULL){
+M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
+    
+    fn <- function(collect, obj, Theta, ...){
+        dat <- imputeMissing(obj, Theta)
+        tmpobj <- obj
+        tmpobj@data <- dat
+        if(is(obj, 'MultipleGroupClass')){
+            large <- multipleGroup(dat, 1, group=obj@group, large = TRUE)
+            for(g in 1L:length(obj@groupNames)){
+                tmpobj@cmods[[g]]@data <- dat[obj@groupNames[g] == obj@group, , drop=FALSE]
+                tmpobj@cmods[[g]]@tabdata <- large$tabdata2[[g]]
+                tmpobj@cmods[[g]]@tabdatalong <- large$tabdata[[g]]
+            }
+        } else {
+            large <- mirt(dat, 1, large = TRUE)
+            tmpobj@tabdata <- large$tabdata2[[1L]]
+            tmpobj@tabdatalong <- large$tabdata[[1L]]
+        }
+        return(M2(tmpobj, ...))
+    }
     
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
+    if(any(is.na(obj@data))){
+        if(impute == 0 || is.null(Theta))
+            stop('Fit statistics cannot be computed when there are missing data. Pass suitable
+                 Theta and impute arguments to compute statistics following multiple data inputations')
+        collect <- vector('list', impute)
+        collect <- myLapply(collect, fn, obj=obj, Theta=Theta, calcNull=calcNull,
+                            quadpts=quadpts)
+        ave <- SD <- collect[[1L]]
+        ave[ave!= 0] <- SD[SD!=0] <- 0
+        for(i in 1L:impute)
+            ave <- ave + collect[[i]]
+        ave <- ave/impute
+        for(i in 1L:impute)
+            SD <- (ave - collect[[i]])^2
+        SD <- sqrt(SD/impute)
+        ret <- rbind(ave, SD)
+        rownames(ret) <- c('stats', 'SD_stats')
+        return(ret)
+    }
     if(is(obj, 'MultipleGroupClass')){
         cmods <- obj@cmods
         r <- obj@tabdata[, ncol(obj@tabdata)]
