@@ -9,6 +9,9 @@
   
 ## NEW FEATURES
 
+- support custom item type `fscores()` computations when `response.pattern` is passed instead
+  of the original data
+
 - `impute` option for `itemfit()` and `M2()` to estimate statistics via plausible imputation when 
   missing data are present
 

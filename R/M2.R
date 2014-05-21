@@ -120,7 +120,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         M2s <- as.numeric(newret$M2)
         names(M2s) <- paste0(obj@groupNames, '.M2')
         newret$M2 <- NULL
-        return(data.frame(as.list(M2s), newret))
+        newret <- data.frame(as.list(M2s), newret)
+        rownames(newret) <- 'stats'
+        return(newret)
     }
     
     if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 'ideal', 'GroupPars')))
@@ -241,5 +243,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
     } else {
         ret$nrowT <- length(p)
     }
-    return(as.data.frame(ret))
+    ret <- as.data.frame(ret)
+    rownames(ret) <- 'stats'
+    return(ret)
 }

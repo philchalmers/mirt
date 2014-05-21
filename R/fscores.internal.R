@@ -88,8 +88,11 @@ setMethod(
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@data)
+            customItems <- NULL
+            if(any(names(object@Call) == 'customItems'))
+                customItems <- eval(object@Call[[which(names(object@Call) == 'customItems')]])
             newmod <- mirt(response.pattern, nfact, itemtype = object@itemtype, pars=sv, calcNull=FALSE,
-                           technical=list(customK=object@K))
+                           technical=list(customK=object@K), customItems=customItems)
             ret <- fscores(newmod, rotate=rotate, full.scores=full.scores, scores.only=scores.only,
                            method=method, quadpts=quadpts, verbose=FALSE,
                            response.pattern=NULL, return.acov=return.acov)
