@@ -9,6 +9,9 @@
   
 ## NEW FEATURES
 
+- `returnList` argument added to `simdata()` to return a list containing the S4 item objects, 
+  Theta matrix, and simulated data
+
 - support custom item type `fscores()` computations when `response.pattern` is passed instead
   of the original data
 

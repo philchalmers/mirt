@@ -1,3 +1,34 @@
+Changes in mirt 1.4
+
+MAJOR CHANGES
+
+  - increase number of Mstep iterations proportionally in quasi-Newton
+  algorithms as the estimation approaches the ML
+
+  - 'rsm' itemtype removed for now until optimized version is implemented
+
+NEW FEATURES
+
+  - `returnList` argument added to `simdata()` to return a list containing
+  the S4 item objects, Theta matrix, and simulated data
+
+  - support custom item type `fscores()` computations when `response.pattern`
+  is passed instead of the original data
+
+  - `impute` option for `itemfit()` and `M2()` to estimate statistics via
+  plausible imputation when missing data are present
+
+  - multidimensional ideal-point models added for dichotomous items
+
+  - M2* statistic added for polytomous item types
+
+BUG FIXES
+
+  - large bias correction in information matrix and standard errors for
+  models that contain equality constraints (standard errors were too high)
+
+  - drop dimensions fix for nested logit models
+
 Changes in mirt 1.3
 
 MAJOR CHANGES
@@ -8,7 +39,7 @@ MAJOR CHANGES
 
   - M-step optimizer now automatically selected to be 'BFGS' if there are
   no bounded parameters, and 'L-BFGS-B' otherwise. Some models will have
-  notibly different parameter estimates because of this, but should have
+  notably different parameter estimates because of this, but should have
   nearly identical model log-likelihoods
 
   - better shiny UI which adapts to the itemtype specifically, and allows
@@ -26,7 +57,7 @@ MAJOR CHANGES
 
 NEW FEATURES
 
-  - `return.acov` logical added to `fscores()` to return a list of matricies
+  - `return.acov` logical added to `fscores()` to return a list of matrices
   containing the ACOV theta values used to compute the SEs (suggested by
   Shiyang Su)
 
@@ -144,14 +175,11 @@ BUG FIXES
 
   - updated math for `SE.type = 'crossprod'`
 
-  - bias correction for standard errors in models that include equality
-  constraints
-
 Changes in mirt 1.1
 
 NEW FEATURES
 
-  - `facet_items` argument added to plot() to control whether seperate plots
+  - `facet_items` argument added to plot() to control whether separate plots
   should be constructed for each item or to merge them onto a single plot
 
   - three dimensional models supported in `itemplot()` for types `trace`,
@@ -187,7 +215,7 @@ NEW FEATURES
   `multipleGroup()` for unidimensional models. Additional plot `type =
   'empiricalhist'` also added to the `plot()` generic
 
-  - reimplement `read.mirt()` with better consistency checking between the
+  - re-implement `read.mirt()` with better consistency checking between the
   `plink` package
 
 BUG FIXES
@@ -430,7 +458,7 @@ NEW FEATURES
   are estimated
 
   - multipleGroup(invariance = '') can include item names to specify which
-  items are to be considered invariant accross groups. Useful for anchoring
+  items are to be considered invariant across groups. Useful for anchoring
   and DIF testing
 
   - type = 'trace' option added to plot() to display all item trace lines
@@ -531,9 +559,6 @@ Changes in mirt 0.5.0
   predictors, but random effect predictors are being developed
 
   - more structured output when using the anova() generic
-
-  - standard errors no longer slightly positively biased when parameter
-  constraints are imposed
 
 Changes in mirt 0.4.2
 
