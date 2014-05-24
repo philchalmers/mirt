@@ -25,7 +25,6 @@ install:
   - "[ ! -d ~/R ] && mkdir ~/R"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages("devtools", dep = TRUE, repos = "http://cran.rstudio.org")'
   - Rscript -e 'install.packages("mirt", dep = TRUE, repos = "http://cran.rstudio.org")'
 
 # run tests
