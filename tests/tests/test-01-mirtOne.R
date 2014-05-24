@@ -1,5 +1,8 @@
 context('mirtOne')
 
+require('parallel', quietly=TRUE)
+mirtCluster()
+
 test_that('dich', {
     data <- expand.table(LSAT7)
     mod1 <- mirt(data, 1, verbose=FALSE)
