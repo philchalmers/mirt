@@ -93,17 +93,13 @@ setMethod(
                 customItems <- eval(object@Call[[which(names(object@Call) == 'customItems')]])
             newmod <- mirt(response.pattern, nfact, itemtype = object@itemtype, pars=sv, calcNull=FALSE,
                            technical=list(customK=object@K), customItems=customItems)
-            ret <- fscores(newmod, rotate=rotate, full.scores=full.scores, scores.only=scores.only,
-                           method=method, quadpts=quadpts, verbose=FALSE,
+            ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
+                           method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                            response.pattern=NULL, return.acov=return.acov)
-            if(!scores.only || !full.scores)
-                ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
-                    matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
-            if(drop){
-                if(full.scores){
-                    ret <- ret[-1L, , drop=FALSE]
-                } else ret[1L, ncol(response.pattern)+1L] <- 1L
-            }
+            ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
+                matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
+            if(drop)
+                ret <- ret[1L, , drop=FALSE]
             return(ret)
         }
         pars <- object@pars
@@ -231,7 +227,7 @@ setMethod(
 		if (full.scores){
             if(USETABDATA){
                 tabdata2 <- object@tabdatalong
-                tabdata2 <- tabdata2[tabdata2[,ncol(tabdata2)] > 0L, -ncol(tabdata2)]
+                tabdata2 <- tabdata2[tabdata2[,ncol(tabdata2)] > 0L, -ncol(tabdata2), drop=FALSE]
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
                 sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]

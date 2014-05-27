@@ -2,8 +2,10 @@
 
 ## MAJOR CHANGES
 
+- removed 'Freq' column when passing a `response.pattern` argument to `fscores()`
+
 - increase number of Mstep iterations proportionally in quasi-Newton algorithms 
-  as the estimation approaches the ML
+  as the estimation approaches the ML location
   
 - 'rsm' itemtype removed for now until optimized version is implemented
   
