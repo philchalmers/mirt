@@ -320,7 +320,7 @@ MHRM.group <- function(pars, constrain, Ls, PrepList, list, random = list(), DER
                 for(i in 1L:length(constrain))
                     longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
             if(verbose)
-                cat(printmsg, sprintf(", Max-Change = %.4f\r", max(abs(gamma*correction))), sep='')
+                cat(printmsg, sprintf(", Max-Change = %.4f", max(abs(gamma*correction))), sep='')
             if(stagecycle == 2L){
                 SEM.stores[[cycles - BURNIN]] <- longpars
                 SEM.stores2[[cycles - BURNIN]] <- ave.h
