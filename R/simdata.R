@@ -228,6 +228,10 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	    } else {
             if(itemtype[i] == 'gpcm'){
                 par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,],guess[i],upper[i]))
+            } else if(itemtype[i] == 'ideal'){
+                if(K[i] > 2) stop('ideal point models for dichotomous items only')
+                if(d[i,1] > 0) stop('ideal point intercepts must be negative')
+                par <- na.omit(c(a[i, ],d[i,]))
             } else {
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
             }
@@ -237,7 +241,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
         data[,i] <- apply(P, 1L, fn, ns = ncol(P))
-        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp'))) data[ ,i] <- data[ ,i] - 1L
+        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp', 'ideal'))) 
+            data[ ,i] <- data[ ,i] - 1L
         itemobjects[[i]] <- obj
 	}
 	colnames(data) <- paste("Item_", 1L:nitems, sep="")
