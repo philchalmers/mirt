@@ -449,7 +449,12 @@
 #' mod1.3PL.norm2 <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
 #' coef(mod1.3PL.norm2)
 #' #limited information fit statistics
-#' M2(mod1.3PL.norm, calcNull=TRUE)
+#' M2(mod1.3PL.norm)
+#' 
+#' #unidimensional ideal point model
+#' idealpt <- mirt(data, 1, itemtype = 'ideal')
+#' plot(idealpt, type = 'trace', facet_items = TRUE)
+#' plot(idealpt, type = 'trace', facet_items = FALSE)
 #'
 #' #two factors (exploratory)
 #' mod2 <- mirt(data, 2)

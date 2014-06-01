@@ -158,6 +158,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     info <- 0
     if(is(x@pars[[item]], 'custom') && any(type %in% c('info', 'infocontour')))
         stop('Unable to compute information for custom items')
+    if(is(x@pars[[item]], 'ideal') && any(type %in% c('info', 'infocontour')))
+        warning('Information function for ideal point models are currently experimental')
     if(!class(x@pars[[item]]) %in% c('custom')){
         if(nfact == 3){
             if(length(degrees) != 3 && any(type %in% 'info', 'SE')){

@@ -4,10 +4,25 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE, ...)
 {
     start.time=proc.time()[3L]
-    if(missing(data) || is.null(nrow(data))) stop('data argument is required')
-    if(missing(model)) stop('model argument (numeric or from mirt.model) is required')
+    if(missing(data) || is.null(nrow(data))) 
+        stop('data argument is required')
+    if(missing(model) || !is(model, 'numeric') && !is(model, 'mirt.model')) 
+        stop('model argument (numeric or from mirt.model() function) is required')
     if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data))
         stop('group input provided is not valid')
+    if(!is.null(itemtype))
+        stopifnot(is(itemtype, 'character'))
+    if(!is.null(constrain))
+        stopifnot(is(constrain, 'list'))
+    if(!is.null(parprior))
+        stopifnot(is(parprior, 'list'))
+    if(!is.null(customItems))
+        stopifnot(is(customItems, 'list'))
+    if(!is.null(nominal.highlow))
+        stopifnot(is(nominal.highlow, 'matrix'))
+    stopifnot(is(invariance, 'character'))
+    stopifnot(is(GenRandomPars, 'logical'))
+    stopifnot(is(large, 'logical') || is(large, 'list'))
     opts <- makeopts(...)
     if(any(is.na(group))){
         if(opts$message)
@@ -32,10 +47,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     if(length(group) != nrow(data))
         stop('length of group not equal to number of rows in data.')
-    if(any(is.na(group))){
+    if(any(is.na(group)))
         stop('Unknown group memberships cannot be estimated. Please remove the NA values in group
                 and the associated rows in the data input.')
-    }
 
     ##
     opts$times$start.time.Data <- proc.time()[3L]

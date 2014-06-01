@@ -634,6 +634,8 @@ setMethod(
         info <- 0
         if(any(sapply(x@pars, is , 'custom')) && type != 'trace')
             stop('Information function for custom classes not available')
+        if(any(sapply(x@pars, is , 'ideal')) && type != 'trace')
+            warning('Information function for ideal point models are currently experimental')
         if(all(!sapply(x@pars, is , 'custom'))){
             for(l in 1:length(theta_angle)){
                 ta <- theta_angle[l]
