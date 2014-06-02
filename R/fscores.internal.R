@@ -76,11 +76,8 @@ setMethod(
 	    if(return.acov && returnER)
 	        stop('simultaneous returnER and return.acov option not supported')
         if(!is.null(response.pattern)){
-            drop <- FALSE
-            if(!is.matrix(response.pattern)){
-                response.pattern <- rbind(response.pattern, response.pattern)
-                drop <- TRUE
-            }
+            if(!is.matrix(response.pattern))
+                response.pattern <- matrix(response.pattern, 1L)
             nfact <- object@nfact
             sv <- mod2values(object)
             sv$est <- FALSE
@@ -88,18 +85,17 @@ setMethod(
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@data)
-            customItems <- NULL
-            if(any(names(object@Call) == 'customItems'))
-                customItems <- eval(object@Call[[which(names(object@Call) == 'customItems')]])
-            newmod <- mirt(response.pattern, nfact, itemtype = object@itemtype, pars=sv, calcNull=FALSE,
-                           technical=list(customK=object@K), customItems=customItems)
+            large <- mirt(response.pattern, nfact, technical=list(customK=object@K), 
+                          large=TRUE)
+            newmod <- object
+            newmod@data <- response.pattern
+            newmod@tabdata <- large$tabdata2[[1L]]
+            newmod@tabdatalong <- large$tabdata[[1L]]
             ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                            method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                            response.pattern=NULL, return.acov=return.acov)
             ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
                 matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
-            if(drop)
-                ret <- ret[1L, , drop=FALSE]
             return(ret)
         }
         pars <- object@pars
@@ -177,10 +173,10 @@ setMethod(
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov)
     		} else if(method == "ML"){
-                isna <- apply(object@tabdata[,-ncol(object@tabdata)], 1L, 
+                isna <- apply(object@tabdata[,-ncol(object@tabdata),drop=FALSE], 1L, 
                               function(x) sum(is.na(x)))[keep]
-    			allzero <- (rowSums(tabdata[,itemloc[-length(itemloc)]]) + isna) == J
-    			allmcat <- (rowSums(tabdata[,itemloc[-1L]-1L]) + isna) == J
+    			allzero <- (rowSums(tabdata[,itemloc[-length(itemloc)], drop=FALSE]) + isna) == J
+    			allmcat <- (rowSums(tabdata[,itemloc[-1L]-1L, drop=FALSE]) + isna) == J
     			scores[allmcat,] <- Inf
                 SEscores[allmcat,] <- NA                
                 scores[allzero,] <- -Inf
@@ -226,10 +222,10 @@ setMethod(
         }
 		if (full.scores){
             if(USETABDATA){
-                tabdata2 <- object@tabdatalong
+                tabdata2 <- object@tabdata
                 tabdata2 <- tabdata2[tabdata2[,ncol(tabdata2)] > 0L, -ncol(tabdata2), drop=FALSE]
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
-                sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
+                sfulldata <- apply(object@data, 1, paste, sep='', collapse = '/')
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
