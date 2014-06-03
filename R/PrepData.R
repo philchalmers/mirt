@@ -100,13 +100,6 @@ PrepData <- function(data, model, itemtype, guess, upper,
         attr(pars, 'parnumber') <- NULL
         return(pars)
     }
-    if(nfact > 1L){
-        tmp <- do.call(rbind, lapply(pars, function(x, nfact) x@est[1L:nfact], nfact=nfact))
-        tmp <- tmp[-nrow(tmp), , drop=FALSE]
-        if(all(tmp)) exploratory <- TRUE
-    }
-    if(exploratory && any(itemtype %in% c('PC2PL', 'PC3PL')))
-        stop('Partially compensatory models can only be estimated within a confirmatory model')
     #within group constraints
     constrain <- list()
     if(any(itemtype == 'grsm')){

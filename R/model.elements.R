@@ -93,6 +93,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         for(i in 1L:length(tmp))
             estgmeans[find[tmp[i] == factorNames]] <- TRUE        
     }
+    exploratory <- exploratory || (all(estlam[,1L:nfact]) && nfact > 1L)
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
         loads <- eigen(Rpoly)$vector[,1L:nfact, drop = FALSE]
@@ -101,6 +102,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         cs <- sqrt(u)
         lambdas <- loads/cs * (1.702/D)
     }
+    if(exploratory && any(itemtype %in% c('PC2PL', 'PC3PL')))
+        stop('Partially compensatory models can only be estimated within a confirmatory model')
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
                     nfact=nfact+length(prodlist), parprior=parprior,
