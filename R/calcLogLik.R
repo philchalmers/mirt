@@ -1,52 +1,52 @@
-#' Monte Carlo Log-Likelihood Calculation
-#'
-#' Calculates a new object that contain the Monte Carlo estimated observed
-#' log-likelihood values for mirt objects estimated with the MH-RM algorithm.
-#' Can be estimated in parallel automatically by defining a parallel object with
-#' \code{\link{mirtCluster}}.
-#'
-#' @name calcLogLik
-#' @usage
-#' calcLogLik(object, ...)
-#'
-#' \S4method{calcLogLik}{ExploratoryClass}(object,
-#'    draws = 5000, G2 = TRUE)
-#' \S4method{calcLogLik}{ConfirmatoryClass}(object,
-#'    draws = 5000, G2 = TRUE)
-#' \S4method{calcLogLik}{MixedClass}(object,
-#'    draws = 5000)
-#' @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
-#'   calcLogLik,ConfirmatoryClass-method calcLogLik,MixedClass-method
-#' @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
-#' @param draws the number of Monte Carlo draws
-#' @param G2 logical; estimate the G2 model fit statistic?
-#' @param ... parameters that are passed
-#' @section Methods:
-#' \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")},
-#'           \code{signature(object = "ExploratoryClass")}, \code{signature(object = "MixedClass")} }
-#' }
-#' @return Returns an object with the log-likelihood and Monte Carlo standard errors,
-#'   and (possibly) the G^2 and other model fit statistic if there is no missing data.
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @docType methods
-#' @rdname calcLogLik-method
-#' @export calcLogLik
-#' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}
-#' @keywords calcLogLik
-#' @examples
-#'
-#' \dontrun{
-#'
-#' # no parallel
-#' mod1withLogLik <- calcLogLik(mod1, draws=5000)
-#'
-#' #with parallel using detected number of cores
-#' library(parallel)
-#' mirtCluster(detectCores())
-#' mod1withLogLik <- calcLogLik(mod1, draws=5000)
-#'
-#'   }
-#'
+# Monte Carlo Log-Likelihood Calculation
+#
+# Calculates a new object that contain the Monte Carlo estimated observed
+# log-likelihood values for mirt objects estimated with the MH-RM algorithm.
+# Can be estimated in parallel automatically by defining a parallel object with
+# \code{\link{mirtCluster}}.
+#
+# @name calcLogLik
+# @usage
+# calcLogLik(object, ...)
+#
+# \S4method{calcLogLik}{ExploratoryClass}(object,
+#    draws = 5000, G2 = TRUE)
+# \S4method{calcLogLik}{ConfirmatoryClass}(object,
+#    draws = 5000, G2 = TRUE)
+# \S4method{calcLogLik}{MixedClass}(object,
+#    draws = 5000)
+# @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
+#   calcLogLik,ConfirmatoryClass-method calcLogLik,MixedClass-method
+# @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
+# @param draws the number of Monte Carlo draws
+# @param G2 logical; estimate the G2 model fit statistic?
+# @param ... parameters that are passed
+# @section Methods:
+# \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")},
+#           \code{signature(object = "ExploratoryClass")}, \code{signature(object = "MixedClass")} }
+# }
+# @return Returns an object with the log-likelihood and Monte Carlo standard errors,
+#   and (possibly) the G^2 and other model fit statistic if there is no missing data.
+# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+# @docType methods
+# @rdname calcLogLik-method
+# @export calcLogLik
+# @seealso \code{\link{mirt}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}
+# @keywords calcLogLik
+# @examples
+#
+# \dontrun{
+#
+# # no parallel
+# mod1withLogLik <- calcLogLik(mod1, draws=5000)
+#
+# #with parallel using detected number of cores
+# library(parallel)
+# mirtCluster(detectCores())
+# mod1withLogLik <- calcLogLik(mod1, draws=5000)
+#
+#   }
+#
 setMethod(
 	f = "calcLogLik",
 	signature = signature(object = 'ExploratoryClass'),
@@ -70,7 +70,7 @@ setMethod(
             return(rowSums(log(itemtrace)*fulldata))
         }
         pars <- object@pars
-        fulldata <- object@fulldata
+        fulldata <- object@Data$fulldata
         prodlist <- object@prodlist
         itemloc <- object@itemloc
         N <- nrow(fulldata)
@@ -79,7 +79,7 @@ setMethod(
         LL <- matrix(0, N, draws)
         grp <- ExtractGroupPars(pars[[length(pars)]])
         if(length(object@random) == 0L){
-            ot <- matrix(0, 1, J)
+            ot <- matrix(0, 1L, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
         LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact,
                         N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
@@ -94,25 +94,25 @@ setMethod(
             logLikpre <- logLik
             G2 <- TRUE
         }
-		data <- object@data
-        tabdata <- object@tabdata
-        r <- tabdata[,ncol(tabdata)]
+		data <- object@Data$data
+        tabdata <- cbind(object@Data$tabdata, object@Data$Freq[[1L]])
+        r <- object@Data$Freq[[1L]]
         expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J, mirtClusterEnv$ncores)
 		tabdata <- cbind(tabdata,expected*N)
         object@Pl <- expected
         nestpars <- nconstr <- 0L
-        for(i in 1:length(pars))
+        for(i in 1L:length(pars))
             nestpars <- nestpars + sum(pars[[i]]@est)
         if(length(object@constrain) > 0L)
-            for(i in 1:length(object@constrain))
+            for(i in 1L:length(object@constrain))
                 nconstr <- nconstr + length(object@constrain[[i]]) - 1L
         nfact <- object@nfact - length(prodlist)
-        nmissingtabdata <- sum(is.na(rowSums(object@tabdata)))
+        nmissingtabdata <- sum(is.na(rowSums(object@Data$tabdata)))
 		if(G2){
 			if(any(is.na(data))){
 			    object@G2 <- NaN
 			} else {
-                pick <- r != 0
+                pick <- r != 0L
                 r <- r[pick]
                 expected <- expected[pick]
 				G2 <- 2 * sum(r*log(r/(sum(r)*expected)))

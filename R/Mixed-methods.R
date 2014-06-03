@@ -118,7 +118,7 @@ setMethod(
                 x
             },  digits=digits)
         }
-        listnames <- c(colnames(object@data), 'GroupPars')
+        listnames <- c(colnames(object@Data$data), 'GroupPars')
         if(length(object@random) > 0L){
             if(printSE){
                 for(i in 1L:length(object@random)){

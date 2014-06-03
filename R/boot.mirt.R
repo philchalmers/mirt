@@ -55,13 +55,12 @@ boot.mirt <- function(x, R = 100, ...){
     if(is(x, 'MixedClass'))
         stop('Bootstapped standard errors not supported for MixedClass objects')
     return.boot <- TRUE
-    dat <- x@data
+    dat <- x@Data$data
     method <- x@method
     itemtype <- x@itemtype
     MG <- is(x, 'MultipleGroupClass')
     explor <- is(x, 'ExploratoryClass')
-    pars <- if(MG) x@cmods else x@pars
-    group <- if(MG) x@group else NULL
+    group <- if(MG) x@Data$group else NULL
     model <- x@model[[1L]]
     parprior <- x@parprior
     constrain <- x@constrain

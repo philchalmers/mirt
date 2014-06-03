@@ -2,6 +2,9 @@
 
 ## MAJOR CHANGES
 
+- `@Data` slot added for organizing data based arguments. Removed several data slots from
+  estimated objects as a consequence
+
 - removed 'Freq' column when passing a `response.pattern` argument to `fscores()`
 
 - increase number of Mstep iterations proportionally in quasi-Newton algorithms 

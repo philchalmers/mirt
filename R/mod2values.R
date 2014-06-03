@@ -23,15 +23,15 @@
 #' }
 mod2values <- function(x){
     if(is(x, 'MultipleGroupClass')){
-        PrepList <- x@cmods
-        names(PrepList) <- x@groupNames
+        PrepList <- x@pars
+        names(PrepList) <- x@Data$groupNames
         MG <- TRUE
     } else {
         PrepList <- list(pars=x@pars)
         names(PrepList) <- 'all'
         MG <- FALSE
     }
-    itemnames <- colnames(x@data)
+    itemnames <- colnames(x@Data$data)
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     for(g in 1L:length(PrepList)){

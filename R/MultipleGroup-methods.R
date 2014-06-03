@@ -22,11 +22,11 @@ setMethod(
     signature = 'MultipleGroupClass',
     definition = function(object, ...)
     {
-        ngroups <- length(object@cmods)
+        ngroups <- length(object@pars)
         allPars <- vector('list', ngroups)
-        names(allPars) <- object@groupNames
+        names(allPars) <- object@Data$groupNames
         for(g in 1:ngroups)
-            allPars[[g]] <- coef(object@cmods[[g]], ...)
+            allPars[[g]] <- coef(object@pars[[g]], ...)
         return(allPars)
     }
 )
@@ -35,14 +35,14 @@ setMethod(
     f = "summary",
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, digits = 3, verbose = TRUE, ...) {
-        ngroups <- length(object@cmods)
-        groupind <- length(object@cmods[[1]]@pars)
+        ngroups <- length(object@pars)
+        groupind <- length(object@pars[[1]]@pars)
         nfact <- object@nfact
         ret <- list()
         coeflist <- coef(object)
         for(g in 1:ngroups){
-            if(verbose) cat('\n----------\nGROUP:', as.character(object@groupNames[g]), '\n')
-            ret[[g]] <- summary(object@cmods[[g]], digits=digits, verbose=verbose, ...)
+            if(verbose) cat('\n----------\nGROUP:', as.character(object@Data$groupNames[g]), '\n')
+            ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, ...)
             if(is(coeflist[[g]][[groupind]], 'matrix'))
                 ret[[g]]$mean <- coeflist[[g]][[groupind]][1, 1:nfact]
             else ret[[g]]$mean <- coeflist[[g]][[groupind]][1:nfact]
@@ -70,9 +70,10 @@ setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
-                          which.items = 1:ncol(x@data),
+                          which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          facet_items = TRUE, auto.key = TRUE, ...)
+                          facet_items = TRUE, auto.key = TRUE,
+                          theta_lim = c(-4,4), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
             stop(type, " is not a valid plot type.")
@@ -80,13 +81,13 @@ setMethod(
             stop('Improper angle specifed. Must be between 0 and 90.')
         if(length(theta_angle) > 1) stop('No info-angle plot is available')
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
-        ngroups <- length(x@cmods)
-        J <- length(x@cmods[[1]]@pars) - 1
+        ngroups <- length(x@pars)
+        J <- length(x@pars[[1]]@pars) - 1L
         nfact <- x@nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.")
         if(nfact == 1) theta_angle <- 0
-        pars <- x@cmods
-        theta <- seq(-4,4,length.out=npts)
+        pars <- x@pars
+        theta <- seq(theta_lim[1],theta_lim[2],length.out=npts)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@pars, 'prodlist')
         if(length(prodlist) > 0)
@@ -104,11 +105,11 @@ setMethod(
         info <- do.call(rbind, infolist)
         Theta <- ThetaFull
         for(g in 2:ngroups) Theta <- rbind(Theta, ThetaFull)
-        groups <- gl(ngroups, nrow(ThetaFull), labels=x@groupNames)
-        adj <- apply(x@data, 2, min)
+        groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
+        adj <- apply(x@Data$data, 2, min)
         gscore <- c()
         for(g in 1:ngroups){
-            itemtrace <- computeItemtrace(x@cmods[[g]]@pars, ThetaFull, x@itemloc, 
+            itemtrace <- computeItemtrace(x@pars[[g]]@pars, ThetaFull, x@itemloc, 
                                           CUSTOM.IND=x@CUSTOM.IND)
             score <- c()
             for(i in 1:J)
@@ -167,13 +168,13 @@ setMethod(
                 for(g in 1L:ngroups){
                     Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
                                            length.out = x@quadpts))
-                    Prior[[g]] <- x@Prior[[g]] * nrow(x@data)
+                    Prior[[g]] <- x@Prior[[g]] * nrow(x@Data$data)
                     cuts <- cut(Theta[[g]], floor(npts/2))
                     Prior[[g]] <- do.call(c, lapply(split(Prior[[g]], cuts), mean))
                     Theta[[g]] <- do.call(c, lapply(split(Theta[[g]], cuts), mean))
                     keep1 <- min(which(Prior[[g]] > 1e-10))
                     keep2 <- max(which(Prior[[g]] > 1e-10))
-                    plt <- data.frame(Theta=Theta[[g]], Prior=Prior[[g]], group=x@groupNames[g])
+                    plt <- data.frame(Theta=Theta[[g]], Prior=Prior[[g]], group=x@Data$groupNames[g])
                     plt <- plt[keep1:keep2, , drop=FALSE]
                     pltfull[[g]] <- plt
                 }
@@ -186,10 +187,10 @@ setMethod(
                 plt <- vector('list', ngroups)
                 P <- vector('list', length(which.items))
                 for(g in 1L:ngroups){
-                    names(P) <- colnames(x@data)[which.items]
+                    names(P) <- colnames(x@Data$data)[which.items]
                     count <- 1
                     for(i in which.items){
-                        tmp <- probtrace(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
+                        tmp <- probtrace(extract.item(x, i, group=x@Data$groupNames[g]), ThetaFull)
                         if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
                         tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(ThetaFull),
                                                                      labels=paste0('cat', 1L:ncol(tmp))))
@@ -202,7 +203,7 @@ setMethod(
                     for(i in 1L:length(nrs))
                         if(!is.null(nrs[i]))
                             names <- c(names, rep(names(P)[i], nrs[i]))
-                    plotobj <- data.frame(Pstack, item=names, Theta=ThetaFull, group=x@groupNames[g])
+                    plotobj <- data.frame(Pstack, item=names, Theta=ThetaFull, group=x@Data$groupNames[g])
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
@@ -221,11 +222,12 @@ setMethod(
                 for(g in 1L:ngroups){
                     I <- matrix(NA, nrow(ThetaFull), J)
                     for(i in which.items)
-                        I[,i] <- iteminfo(extract.item(x, i, group=x@groupNames[g]), ThetaFull)
+                        I[,i] <- iteminfo(extract.item(x, i, group=x@Data$groupNames[g]), ThetaFull)
                     I <- t(na.omit(t(I)))
                     items <- gl(n=length(unique(which.items)), k=nrow(ThetaFull),
                                 labels = paste('Item', which.items))
-                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items, group=x@groupNames[g])
+                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items, 
+                                          group=x@Data$groupNames[g])
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
@@ -248,10 +250,13 @@ setMethod(
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, ...)
     {
-        ret <- vector('list', length(object@groupNames))
-        names(ret) <- object@groupNames
+        ret <- vector('list', length(object@Data$groupNames))
+        names(ret) <- object@Data$groupNames
         for(g in 1L:length(ret)){
-            cmod <- object@cmods[[g]]
+            cmod <- object@pars[[g]]
+            cmod@Data <- object@Data
+            cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupName[g], ]
+            cmod@Data$Freq[[1L]] <- cmod@Data$Freq[[g]]
             cmod@quadpts <- object@quadpts
             cmod@bfactor <- object@bfactor
             ret[[g]] <- residuals(cmod, verbose = FALSE, ...)            

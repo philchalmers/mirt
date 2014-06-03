@@ -25,7 +25,7 @@ setMethod(
     signature = signature(object = 'list'),
     definition = function(object, ...)
     {
-        newobject <- new('MultipleGroupClass', cmods=object, nfact=object[[1]]@nfact,
+        newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@nfact,
                          groupNames=factor(names(object)))
         x <- itemplot.internal(newobject, ...)
         return(invisible(x))
@@ -40,22 +40,22 @@ setMethod(
         auto.key = TRUE, main = NULL, ...)
     {
         Pinfo <- list()
-        gnames <- object@groupNames
+        gnames <- object@Data$groupNames
         nfact <- object@nfact
-        K <- object@cmods[[1]]@pars[[item]]@ncat
-        for(g in 1:length(gnames)){
-            object@cmods[[g]]@information <- object@information
-            Pinfo[[g]] <- itemplot.main(object@cmods[[g]], item=item, type='RETURN',
+        K <- object@pars[[1L]]@pars[[item]]@ncat
+        for(g in 1L:length(gnames)){
+            object@pars[[g]]@information <- object@information
+            Pinfo[[g]] <- itemplot.main(object@pars[[g]], item=item, type='RETURN',
                                         degrees=degrees, CE=FALSE, CEalpha=CEalpha,
                                         CEdraws=CEdraws, rot=rot, ...)
             Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
         }
         if(type == 'RE'){
-            for(g in length(gnames):1)
-                Pinfo[[g]]$info <- Pinfo[[g]]$info / Pinfo[[1]]$info
+            for(g in length(gnames):1L)
+                Pinfo[[g]]$info <- Pinfo[[g]]$info / Pinfo[[1L]]$info
         }
         dat <- Pinfo[[1]]
-        for(g in 2:length(gnames))
+        for(g in 2L:length(gnames))
             dat <- rbind(dat, Pinfo[[g]])
         if(K == 2){
             K <- 1

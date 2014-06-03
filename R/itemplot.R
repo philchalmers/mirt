@@ -71,8 +71,8 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
         require(shiny)
         runApp(shinyItemplot())
     }
-    if(is.list(object)) inames <- colnames(object[[1]]@data)
-    else inames <- colnames(object@data)
+    if(is.list(object)) inames <- colnames(object[[1]]@Data$data)
+    else inames <- colnames(object@Data$data)
     ind <- 1:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])

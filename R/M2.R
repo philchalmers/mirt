@@ -46,18 +46,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
         tmpobj <- obj
-        tmpobj@data <- dat
+        tmpobj@Data$data <- dat
         if(is(obj, 'MultipleGroupClass')){
-            large <- multipleGroup(dat, 1, group=obj@group, large = TRUE)
-            for(g in 1L:length(obj@groupNames)){
-                tmpobj@cmods[[g]]@data <- dat[obj@groupNames[g] == obj@group, , drop=FALSE]
-                tmpobj@cmods[[g]]@tabdata <- large$tabdata2[[g]]
-                tmpobj@cmods[[g]]@tabdatalong <- large$tabdata[[g]]
-            }
-        } else {
-            large <- mirt(dat, 1, large = TRUE)
-            tmpobj@tabdata <- large$tabdata2[[1L]]
-            tmpobj@tabdatalong <- large$tabdata[[1L]]
+            for(g in 1L:length(obj@groupNames))
+                tmpobj@pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group, 
+                                                  , drop=FALSE]
         }
         return(M2(tmpobj, ...))
     }
@@ -65,7 +58,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
-    if(any(is.na(obj@data))){
+    if(any(is.na(obj@Data$data))){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
                  Theta and impute arguments to compute statistics following multiple data inputations')
@@ -85,19 +78,19 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         return(ret)
     }
     if(is(obj, 'MultipleGroupClass')){
-        cmods <- obj@cmods
-        r <- obj@tabdata[, ncol(obj@tabdata)]
-        ngroups <- length(cmods)
-        ret <- vector('list', length(cmods))
+        pars <- obj@pars
+        ngroups <- length(pars)
+        ret <- vector('list', length(pars))
         for(g in 1L:ngroups){
-            attr(cmods[[g]], 'MG') <- g
-            cmods[[g]]@bfactor <- obj@bfactor
-            cmods[[g]]@quadpts <- obj@quadpts
-            ret[[g]] <- M2(cmods[[g]], calcNull=FALSE, quadpts=quadpts)
+            attr(pars[[g]], 'MG') <- g
+            pars[[g]]@bfactor <- obj@bfactor
+            pars[[g]]@quadpts <- obj@quadpts
+            pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ])
+            ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts)
         }
         newret <- list()
         newret$M2 <- numeric(ngroups)
-        names(newret$M2) <- obj@groupNames
+        names(newret$M2) <- obj@Data$groupNames
         for(g in 1L:ngroups)
             newret$M2[g] <- ret[[g]]$M2
         newret$Total.M2 <- sum(newret$M2)
@@ -106,9 +99,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         newret$df.M2 <- Tsum - obj@nest
         newret$p.M2 <- 1 - pchisq(newret$Total.M2, newret$df.M2)
         newret$RMSEA.M2 <- ifelse((newret$Total.M2 - newret$df.M2) > 0,
-                                  sqrt(newret$Total.M2 - newret$df.M2) / sqrt(newret$df.M2 * (sum(r)-1)), 0)
+                                  sqrt(newret$Total.M2 - newret$df.M2) / sqrt(newret$df.M2 * (obj@Data$N-1)), 0)
         if(calcNull){
-            null.mod <- try(multipleGroup(obj@data, 1, group=obj@group, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
+            null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
             newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) /
@@ -118,7 +111,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
             if(newret$CFI.M2 < 0 ) newret$CFI.M2 <- 0
         }
         M2s <- as.numeric(newret$M2)
-        names(M2s) <- paste0(obj@groupNames, '.M2')
+        names(M2s) <- paste0(obj@Data$groupNames, '.M2')
         newret$M2 <- NULL
         newret <- data.frame(as.list(M2s), newret)
         rownames(newret) <- 'stats'
@@ -130,12 +123,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
             \'gpcm\', and \'nominal\' objects')
     ret <- list()
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
-    tabdata <- obj@tabdatalong
-    nitems <- ncol(obj@data)
-    if(any(is.na(obj@tabdata)))
+    nitems <- ncol(obj@Data$data)
+    if(any(is.na(obj@Data$data)))
         stop('M2 can not be calulated for data with missing values.')
-    adj <- apply(obj@data, 2, min)
-    dat <- t(t(obj@data) - adj)
+    adj <- apply(obj@Data$data, 2, min)
+    dat <- t(t(obj@Data$data) - adj)
     N <- nrow(dat)
     p  <- colMeans(dat)
     cross <- crossprod(dat, dat)
@@ -231,7 +223,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
                                sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (N-1)), 0)
         if(calcNull){
-            null.mod <- try(mirt(obj@data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
+            null.mod <- try(mirt(obj@Data$data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
             ret$TLI.M2 <- (null.fit$M2 / null.fit$df.M2 - ret$M2/ret$df.M2) /

@@ -72,7 +72,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}}
-#'   \code{\link{randef}}, \code{\link{calcLogLik}}, \code{\link{mirtCluster}}, \code{\link{mirt}}
+#'   \code{\link{randef}}, \code{\link{mirtCluster}}, \code{\link{mirt}}
 #' @export mixedmirt
 #' @examples
 #'

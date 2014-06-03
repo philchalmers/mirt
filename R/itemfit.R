@@ -120,7 +120,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     if(is(x, 'MixedClass'))
         stop('mixedmirt objects not supported')
     
-    if(any(is.na(x@data)) && !is(x, 'MultipleGroupClass')){
+    if(any(is.na(x@Data$data)) && !is(x, 'MultipleGroupClass')){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
                  Theta and impute arguments to compute statistics following multiple data inputations')
@@ -146,22 +146,24 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         return(rbind(ave, SD))
     }
     if(is(x, 'MultipleGroupClass')){
-        ret <- vector('list', length(x@cmods))
-        for(g in 1L:length(x@cmods)){
-            x@cmods[[g]]@itemtype <- x@itemtype
-            tmpTheta <- NULL
-            if(!is.null(Theta))
-                tmpTheta <- Theta[x@groupNames[g] == x@group, , drop=FALSE]
-            ret[[g]] <- itemfit(x@cmods[[g]], Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
+        ret <- vector('list', length(x@pars))
+        if(is.null(Theta))
+            Theta <- fscores(x, method=method, scores.only=TRUE, full.scores=TRUE, ...)
+        for(g in 1L:length(x@pars)){
+            tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            tmp <- x@pars[[g]]
+            tmp@Data <- x@Data
+            tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[g]]
+            ret[[g]] <- itemfit(tmp, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot, Theta=tmpTheta,
                                 empirical.CI=empirical.CI, method=method, impute=impute, ...)
         }
-        names(ret) <- x@groupNames
+        names(ret) <- x@Data$groupNames
         return(ret)
     }
     if(S_X2.tables) Zh <- X2 <- FALSE
-    ret <- data.frame(item=colnames(x@data))
-    J <- ncol(x@data)
+    ret <- data.frame(item=colnames(x@Data$data))
+    J <- ncol(x@Data$data)
     itemloc <- x@itemloc
     pars <- x@pars
     if(Zh || X2){
@@ -170,7 +172,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
                              scores.only=TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
-        fulldata <- x@fulldata
+        fulldata <- x@Data$fulldata[[1L]]
         if(method %in% c('ML', 'WLE')){
             for(i in 1L:ncol(Theta)){
                 tmp <- Theta[,i]
@@ -241,7 +243,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             theta <- seq(-4,4, length.out=40)
             ThetaFull <- thetaComb(theta, nfact)
             if(!is.numeric(empirical.plot)){
-                inames <- colnames(x@data)
+                inames <- colnames(x@Data$data)
                 ind <- 1L:length(inames)
                 empirical.plot <- ind[inames == empirical.plot]
             }
@@ -408,7 +410,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         return(list(O=O, E=E))
     }
     if(x@nfact == 1L){
-        dat <- x@data
+        dat <- x@Data$data
         adj <- apply(dat, 2, min)
         if(any(adj > 0))
             message('Data adjusted so that the lowest category score for every item is 0')

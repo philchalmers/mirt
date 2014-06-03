@@ -612,7 +612,9 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     sigma <- gpars$gcov
     prior <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
     prior <- prior/sum(prior)
-    rlist <- Estep.mirt(pars=pars, tabdata=tabdata, Theta=Theta, prior=prior, itemloc=itemloc,
+    freq <- tabdata[,ncol(tabdata)]
+    rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata)], freq=freq,
+                        Theta=Theta, prior=prior, itemloc=itemloc,
                         CUSTOM.IND=CUSTOM.IND)
     LL <- sum(r*log(rlist$expected))
     LL <- LL.Priors(x=obj, LL=LL)

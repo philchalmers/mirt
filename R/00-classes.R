@@ -1,19 +1,17 @@
 setClass("AllModelClass",
          representation(pars='list',
+                        Data='list',
                         shortpars='numeric',
                         model='list',
-                        K='numeric',
                         G2='numeric',
                         df='numeric',
                         p='numeric',
                         AIC='numeric',
                         AICc='numeric',
+                        K='numeric',
                         F='matrix',
                         h2='numeric',
-                        tabdata='matrix',
-                        tabdatalong='matrix',
                         Theta='matrix',
-                        data='matrix',
                         converge='numeric',
                         itemloc = 'numeric',
                         BIC='numeric',
@@ -32,7 +30,6 @@ setClass("AllModelClass",
                         prodlist='list',
                         constrain='list',
                         parprior='list',
-                        fulldata='matrix',
                         information='matrix',
                         infomethod='character',
                         factorNames='character',
@@ -57,6 +54,7 @@ setClass("AllModelClass",
 #' @section Slots:
 #'
 #' \describe{
+#'     \item{\code{Data}:}{Object of class \code{"list"}, contains various data matricies and properties }
 #'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
 #'     \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
@@ -75,12 +73,9 @@ setClass("AllModelClass",
 #'     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
 #'     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'     \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
 #'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
@@ -133,6 +128,7 @@ setClass(
 #' @section Slots:
 #'
 #' \describe{
+#'     \item{\code{Data}:}{Object of class \code{"list"}, contains various data matricies and properties }
 #'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
 #'     \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
@@ -152,14 +148,11 @@ setClass(
 #'     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
 #'     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'     \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'     \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'     \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
 #'         \code{empiricalhist = TRUE}}
 #'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'     \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
@@ -232,21 +225,15 @@ setClass(
 #'        \code{empiricalhist = TRUE}}
 #'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'    \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
 #'    \item{\code{invariance}:}{Object of class \code{"character"}, invariance input}
 #'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
-#'    \item{\code{group}:}{Object of class \code{"factor"}, group membership}
-#'    \item{\code{groupNames}:}{Object of class \code{"character"}, names of groups}
-#'    \item{\code{cmods}:}{Object of class \code{"list"}, a list containing estimated ConfirmatoryClass models }
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
 #'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
@@ -276,10 +263,7 @@ setClass(
 setClass(
     Class = 'MultipleGroupClass', contains = 'AllModelClass',
     representation = representation(Pl='list',
-                                    group='factor',
-                                    groupNames='factor',
                                     invariance='character',
-                                    cmods='list',
                                     Prior='list',
                                     bfactor='list'),
     validity = function(object) return(TRUE)
@@ -293,6 +277,7 @@ setClass(
 #' @section Slots:
 #'
 #'  \describe{
+#'    \item{\code{Data}:}{Object of class \code{"list"}, contains various data matricies and properties }
 #'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
 #'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
 #'    \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
@@ -312,12 +297,9 @@ setClass(
 #'    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
 #'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
 #'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'    \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-#'    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
 #'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
 #'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}

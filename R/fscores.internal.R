@@ -81,16 +81,15 @@ setMethod(
             nfact <- object@nfact
             sv <- mod2values(object)
             sv$est <- FALSE
-            mins <- apply(object@data, 2, min, na.rm=TRUE)
+            mins <- apply(object@Data$data, 2, min, na.rm=TRUE)
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
-            colnames(response.pattern) <- colnames(object@data)
+            colnames(response.pattern) <- colnames(object@Data$data)
             large <- mirt(response.pattern, nfact, technical=list(customK=object@K), 
                           large=TRUE)
             newmod <- object
-            newmod@data <- response.pattern
-            newmod@tabdata <- large$tabdata2[[1L]]
-            newmod@tabdatalong <- large$tabdata[[1L]]
+            newmod@Data<- list(data=response.pattern, tabdata=large$tabdata2, 
+                               tabdatalong=large$tabdata, Freq=large$Freq)
             ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                            method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                            response.pattern=NULL, return.acov=return.acov)
@@ -122,10 +121,9 @@ setMethod(
                                              CUSTOM.IND=CUSTOM.IND))
         if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
-		fulldata <- object@data
-		tabdata <- object@tabdatalong
-		tabdata <- tabdata[ ,-ncol(tabdata), drop = FALSE]
-		keep <- object@tabdata[,ncol(object@tabdata)] > 0L
+		fulldata <- object@Data$data
+		tabdata <- object@Data$tabdatalong
+		keep <- object@Data$Freq[[1L]] > 0L
 		tabdata <- tabdata[keep, , drop=FALSE]
         USETABDATA <- TRUE
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
@@ -173,7 +171,7 @@ setMethod(
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov)
     		} else if(method == "ML"){
-                isna <- apply(object@tabdata[,-ncol(object@tabdata),drop=FALSE], 1L, 
+                isna <- apply(object@Data$tabdata[,-ncol(object@Data$tabdata),drop=FALSE], 1L, 
                               function(x) sum(is.na(x)))[keep]
     			allzero <- (rowSums(tabdata[,itemloc[-length(itemloc)], drop=FALSE]) + isna) == J
     			allmcat <- (rowSums(tabdata[,itemloc[-1L]-1L, drop=FALSE]) + isna) == J
@@ -222,10 +220,9 @@ setMethod(
         }
 		if (full.scores){
             if(USETABDATA){
-                tabdata2 <- object@tabdata
-                tabdata2 <- tabdata2[tabdata2[,ncol(tabdata2)] > 0L, -ncol(tabdata2), drop=FALSE]
+                tabdata2 <- object@Data$tabdata[keep, , drop=FALSE]
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
-                sfulldata <- apply(object@data, 1, paste, sep='', collapse = '/')
+                sfulldata <- apply(object@Data$data, 1, paste, sep='', collapse = '/')
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
@@ -254,7 +251,7 @@ setMethod(
                 names(ret) <- paste0('pattern_', 1:nrow(scores))
                 return(ret)
             }
-            r <- object@tabdata[,ncol(object@tabdata)]
+            r <- object@Data$Freq[[1L]]
             T <- E <- matrix(NA, 1, ncol(scores))
             for(i in 1L:nrow(scores)){
                 if(any(scores[i, ] %in% c(Inf, -Inf))) next
@@ -272,7 +269,7 @@ setMethod(
                 print(round(reliability, 4L))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
-            ret <- cbind(object@tabdata[keep, ,drop=FALSE],scores,SEscores)
+            ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
             if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
 			return(ret)
 		}
@@ -306,25 +303,30 @@ setMethod(
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
                           full.scores.SE, return.acov = FALSE)
     {
-        cmods <- object@cmods
-        ngroups <- length(cmods)
+        pars <- object@pars
+        ngroups <- length(pars)
         for(g in 1L:ngroups)
-            class(cmods[[g]]) <- 'ConfirmatoryClass'
+            class(pars[[g]]) <- 'ConfirmatoryClass'
         if(MI > 0){
             object <- assignInformationMG(object)
-            cmods <- object@cmods
+            pars <- object@pars
         }
-        ret <- vector('list', length(cmods))
-        for(g in 1L:ngroups)
-            ret[[g]] <- fscores(cmods[[g]], rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
+        ret <- vector('list', length(pars))
+        for(g in 1L:ngroups){
+            tmp <- pars[[g]]
+            tmp@Data <- object@Data
+            tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[g],,drop=FALSE]
+            tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[g]]
+            ret[[g]] <- fscores(tmp, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
                            full.scores.SE=full.scores.SE, return.acov=return.acov)
-        names(ret) <- object@groupNames
+        }
+        names(ret) <- object@Data$groupNames
         if(full.scores){
             if(return.acov){
-                group <- object@group
-                groupNames <- object@groupNames
+                group <- object@Data$group
+                groupNames <- object@Data$groupNames
                 count <- numeric(length(groupNames))
                 out <- vector('list', length(group))
                 for(i in 1L:length(group)){
@@ -346,7 +348,7 @@ setMethod(
             ret <- fulldata[order(fulldata$id), ]
             ret <- ret[ ,-1L]
             if(scores.only)
-                ret <- ret[ ,!(colnames(ret) %in% colnames(object@data)), drop=FALSE]
+                ret <- ret[ ,!(colnames(ret) %in% colnames(object@Data$data)), drop=FALSE]
         }
         if(is.data.frame(ret))
             ret <- as.matrix(ret)
@@ -472,8 +474,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     ret <- data.frame(Sum.Scores=Sum.Scores, Theta=thetas, SE.Theta=SEthetas)
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
-        if(any(is.na(x@data))) stop('Full scores requires a complete dataset (no N\'s)')
-        dat <- x@data
+        if(any(is.na(x@Data$data))) stop('Full scores requires a complete dataset (no N\'s)')
+        dat <- x@Data$data
         adj <- apply(dat, 2, min)
         if(any(adj > 0L)) message('Data adjusted so that every item has a lowest score of 0')
         dat <- t(t(dat) - adj)
@@ -481,7 +483,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         EAPscores <- ret$Theta[match(scores, ret$Sum.Scores)]
         ret <- data.frame(Sum.Scores=scores, Theta=EAPscores)
     } else {
-        dat <- x@data
+        dat <- x@Data$data
         E <- L1 %*% prior * nrow(dat)
         adj <- apply(dat, 2, min)
         dat <- t(t(dat) - adj)

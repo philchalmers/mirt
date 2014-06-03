@@ -87,7 +87,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
 
     if(class(mod) != 'MultipleGroupClass')
         stop('mod input was not estimated by multipleGroup()')
-    if(length(mod@cmods) != 2L)
+    if(length(mod@pars) != 2L)
         stop('DTF only supports two group models at a time')
     J <- length(mod@K)
     if(is.null(MI)){
@@ -105,7 +105,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
             impute <- TRUE
             list_scores <- vector('list', MI)
             mod <- assignInformationMG(mod)
-            covBs <- lapply(mod@cmods, function(x){
+            covBs <- lapply(mod@pars, function(x){
                 info <- x@information
                 is_na <- is.na(diag(info))
                 return(solve(info[!is_na, !is_na]))
@@ -123,12 +123,12 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
 
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
     Theta <- thetaComb(theta, mod@nfact)
-    max_score <- sum(apply(mod@data, 2, min) + (mod@K - 1L))
+    max_score <- sum(apply(mod@Data$data, 2, min) + (mod@Data$K - 1L))
     omod <- mod
     for(mi in 1L:MI){
         if(impute){
             for(g in 1L:2L)
-                mod@cmods[[g]]@pars <- imputePars(pars=omod@cmods[[g]]@pars, covB=covBs[[g]],
+                mod@pars[[g]]@pars <- imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
                                                   imputenums=imputenums[[g]], constrain=omod@constrain)
         }
         T1 <- expected.test(mod, Theta, group=1)

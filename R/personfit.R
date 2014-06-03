@@ -75,37 +75,42 @@
 #'   }
 #'
 personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
-    if(any(is.na(x@data)))
+    if(any(is.na(x@Data$data)))
         stop('Fit statistics cannot be computed when there are missing data.')
     if(is(x, 'MultipleGroupClass')){
-        ret <- vector('list', length(x@cmods))
-        for(g in 1L:length(x@cmods))
-            ret[[g]] <- personfit(x@cmods[[g]], method=method, stats.only=stats.only, ...)
-        ret2 <- matrix(0, nrow(x@data), ncol(ret[[1L]]))
-        for(g in 1L:length(x@cmods)){
-            pick <- x@groupNames[g] == x@group
+        ret <- vector('list', length(x@pars))
+        if(is.null(Theta))
+            Theta <- fscores(x, method=method, scores.only=TRUE, full.scores=TRUE, ...)
+        for(g in 1L:length(x@pars)){          
+            pick <- x@Data$groupNames[g] == x@Data$group
+            x@pars[[g]]@Data$data <- x@Data$data[pick, , drop=FALSE]
+            x@pars[[g]]@Data$fulldata[[1L]] <- x@Data$fulldata[[g]]
+            ret[[g]] <- personfit(x@pars[[g]], method=method, stats.only=stats.only,
+                                  Theta=Theta[pick, , drop=FALSE], ...)
+        }   
+        ret2 <- matrix(0, nrow(x@Data$data), ncol(ret[[1L]]))
+        for(g in 1L:length(x@pars)){
+            pick <- x@Data$groupNames[g] == x@Data$group
             ret2[pick, ] <- as.matrix(ret[[g]])
         }
         colnames(ret2) <- colnames(ret[[1L]])
-        rownames(ret2) <- rownames(x@data)
+        rownames(ret2) <- rownames(x@Data$data)
         return(as.data.frame(ret2))
     }
     if(is.null(Theta))
         Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, 
                          scores.only=TRUE, method=method, ...)
-    J <- ncol(x@data)
+    J <- ncol(x@Data$data)
     itemloc <- x@itemloc
     pars <- x@pars
     prodlist <- attr(pars, 'prodlist')
     nfact <- x@nfact + length(prodlist)
-    fulldata <- x@fulldata
-    if(method %in% c('ML', 'WLE')){
-        for(i in 1L:ncol(Theta)){
-            tmp <- Theta[,i]
-            tmp[tmp %in% c(-Inf, Inf)] <- NA
-            Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
-            Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
-        }
+    fulldata <- x@Data$fulldata[[1L]]
+    for(i in 1L:ncol(Theta)){
+        tmp <- Theta[,i]
+        tmp[tmp %in% c(-Inf, Inf)] <- NA
+        Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
+        Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
     }
     N <- nrow(Theta)
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
@@ -153,16 +158,16 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
             q.infit <- sqrt(rowSums(C - W^2) / rowSums(W)^2)
             q.infit[q.infit > 1.4142] <- 1.4142
             z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
-            ret <- data.frame(x@data, outfit=outfit, z.outfit=z.outfit,
+            ret <- data.frame(x@Data$data, outfit=outfit, z.outfit=z.outfit,
                               infit=infit, z.infit=z.infit, Zh=Zh)
         } else {
-            ret <- data.frame(x@data, Zh=Zh)
+            ret <- data.frame(x@Data$data, Zh=Zh)
         }
     } else {
-        ret <- data.frame(x@data, Zh=Zh)
+        ret <- data.frame(x@Data$data, Zh=Zh)
     }
     if(stats.only)
-        ret <- ret[, !(colnames(ret) %in% colnames(x@data)), drop=FALSE]
+        ret <- ret[, !(colnames(ret) %in% colnames(x@Data$data)), drop=FALSE]
     return(ret)
 }
 

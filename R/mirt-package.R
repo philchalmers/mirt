@@ -40,6 +40,12 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' mod <- mirt(Science, 1)
+#' plot(mod, type = 'trace')
+#' }
 NULL
 
 #' Description of SAT12 data

@@ -11,6 +11,7 @@ when the estimated model is confirmatory.
 
 
 \describe{
+    \item{\code{Data}:}{Object of class \code{"list"}, contains various data matricies and properties }
     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
     \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
@@ -30,14 +31,11 @@ when the estimated model is confirmatory.
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-    \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-    \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
     \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
         \code{empiricalhist = TRUE}}
     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-    \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}

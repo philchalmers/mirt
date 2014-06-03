@@ -19,12 +19,12 @@
 #' extr.1 <- extract.item(mod, 1)
 #' }
 extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
-    inames <- colnames(x@data)
+    inames <- colnames(x@Data$data)
     ind <- 1L:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
     if(is(x, 'MultipleGroupClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?')
-        ret <- x@cmods[[group]]@pars[[item]]
+        ret <- x@pars[[group]]@pars[[item]]
     } else {
         ret <- x@pars[[item]]
     }

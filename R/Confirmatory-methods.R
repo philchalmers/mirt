@@ -23,7 +23,7 @@ setMethod(
     definition = function(object, suppress = 0, digits = 3, verbose = TRUE, printCI = NA, ...)
     {
         nfact <- ncol(object@F)
-        itemnames <- colnames(object@data)
+        itemnames <- colnames(object@Data$data)
         F <- object@F
         h2 <- as.matrix(object@h2)
         colnames(h2) <- 'h2'

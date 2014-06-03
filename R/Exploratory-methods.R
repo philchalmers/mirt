@@ -133,7 +133,7 @@ setMethod(
             colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)
             loads <- round(cbind(F,h2),digits)
-            rownames(loads) <- colnames(object@data)
+            rownames(loads) <- colnames(object@Data$data)
             if(verbose){
                 cat("\nUnrotated factor loadings: \n\n")
                 print(loads)
@@ -156,7 +156,7 @@ setMethod(
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
             loads <- round(cbind(L,h2),digits)
-            rownames(loads) <- colnames(object@data)
+            rownames(loads) <- colnames(object@Data$data)
             Phi <- diag(ncol(F))
             if(!rotF$orthogonal){
                 Phi <- rotF$Phi
@@ -295,7 +295,7 @@ setMethod(
                 x
             },  digits=digits)
         }
-        names(allPars) <- c(colnames(object@data), 'GroupPars')
+        names(allPars) <- c(colnames(object@Data$data), 'GroupPars')
         if(as.data.frame)
             allPars <- t(as.data.frame(allPars))
         return(allPars)
@@ -413,7 +413,7 @@ setMethod(
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)
     {
         K <- object@K
-        data <- object@data
+        data <- object@Data$data
         N <- nrow(data)
         J <- ncol(data)
         nfact <- ncol(object@F)
@@ -483,26 +483,25 @@ setMethod(
             res <- round(res,digits)
             return(res)
         } else if(type == 'exp'){
-            r <- object@tabdata[ ,ncol(object@tabdata)]
-            res <- round((r - object@Pl * nrow(object@data)) /
-                             sqrt(object@Pl * nrow(object@data)),digits)
+            r <- object@Data$Freq[[1L]]
+            res <- round((r - object@Pl * nrow(object@Data$data)) /
+                             sqrt(object@Pl * nrow(object@Data$data)),digits)
             expected <- round(N * object@Pl,digits)
-            tabdata <- object@tabdata
+            tabdata <- object@Data$tabdata
             rownames(tabdata) <- NULL
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
-            tabdata <- data.frame(tabdata,expected,res)
-            colnames(tabdata) <- c(colnames(object@tabdata),"exp","res")
+            tabdata <- data.frame(tabdata,object@Data$Freq[[1L]],expected,res)
+            colnames(tabdata) <- c(colnames(object@Data$tabdata),"freq","exp","res")
             if(full.scores){
                 tabdata[, 'exp'] <- object@Pl / r * N
-                tabdata2 <- object@tabdatalong
-                tabdata2 <- tabdata2[,-ncol(tabdata2)]
+                tabdata2 <- object@Data$tabdata
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
-                sfulldata <- apply(object@fulldata, 1, paste, sep='', collapse = '/')
+                sfulldata <- apply(object@Data$data, 1, paste, sep='', collapse = '/')
                 scoremat <- tabdata[match(sfulldata, stabdata2), 'exp', drop = FALSE]
                 res <- (1-scoremat) / sqrt(scoremat)
                 colnames(res) <- 'res'
-                ret <- cbind(object@data, scoremat, res)
+                ret <- cbind(object@Data$data, scoremat, res)
                 ret[is.na(rowSums(ret)), c('exp', 'res')] <- NA
                 rownames(ret) <- NULL
                 return(ret)
@@ -520,12 +519,12 @@ setMethod(
             for(i in 1L:J){
                 ei <- extract.item(object, item=i)
                 EI <- expected.item(ei, Theta=Theta)
-                dat[ ,1L] <- object@data[ ,i] - EI
+                dat[ ,1L] <- object@Data$data[ ,i] - EI
                 for(j in 1L:J){
                     if(i < j){
                         ej <- extract.item(object, item=i)
                         EJ <- expected.item(ej, Theta=Theta)
-                        dat[,2L] <- object@data[ ,j] - EJ
+                        dat[,2L] <- object@Data$data[ ,j] - EJ
                         tmpdat <- na.omit(dat)
                         n <- nrow(tmpdat)
                         Sz <- sqrt(1 / (n-3))
@@ -613,7 +612,7 @@ setMethod(
     f = "plot",
     signature = signature(x = 'ExploratoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
-                          theta_lim = c(-4,4), which.items = 1:ncol(x@data),
+                          theta_lim = c(-4,4), which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
@@ -644,7 +643,7 @@ setMethod(
                     info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
             }
         }
-        adj <- apply(x@data, 2, min, na.rm=TRUE)
+        adj <- apply(x@Data$data, 2, min, na.rm=TRUE)
         tmp <- try(x@rotate, silent = TRUE)
         if (x@nfact > 1 && !is(tmp,'try-error')){
             rotname <- x@rotate
@@ -726,7 +725,7 @@ setMethod(
                 if(is.null(main))
                     main <- 'Item trace lines'
                 P <- vector('list', length(which.items))
-                names(P) <- colnames(x@data)[which.items]
+                names(P) <- colnames(x@Data$data)[which.items]
                 for(i in which.items){
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
                     if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
@@ -781,7 +780,7 @@ setMethod(
                 if(all(is.nan(x@Prior))) stop('Empirical histogram was not estimated for this object')
                 Theta <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
                                     length.out = x@quadpts))
-                Prior <- x@Prior * nrow(x@data)
+                Prior <- x@Prior * nrow(x@Data$data)
                 cuts <- cut(Theta, floor(npts/2))
                 Prior <- do.call(c, lapply(split(Prior, cuts), mean))
                 Theta <- do.call(c, lapply(split(Theta, cuts), mean))

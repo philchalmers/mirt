@@ -3,9 +3,10 @@
 \alias{DIF}
 \title{Differential item functioning tests}
 \usage{
-DIF(MGmodel, which.par, scheme = "add", items2test = 1:ncol(MGmodel@data),
-  seq_stat = "SABIC", Wald = FALSE, p.adjust = "none", max_run = Inf,
-  plotdif = FALSE, type = "trace", verbose = TRUE, ...)
+DIF(MGmodel, which.par, scheme = "add",
+  items2test = 1:ncol(MGmodel@Data$data), seq_stat = "SABIC",
+  Wald = FALSE, p.adjust = "none", max_run = Inf, plotdif = FALSE,
+  type = "trace", verbose = TRUE, ...)
 }
 \arguments{
 \item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference model}
@@ -134,7 +135,6 @@ stepup
 model <- multipleGroup(dat, 1, group, invariance = itemnames)
 stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 stepdown
-
 }
 }
 \author{

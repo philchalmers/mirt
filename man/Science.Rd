@@ -7,6 +7,12 @@
 A 4-item data set borrowed from \code{ltm} package in R, first example
 of the \code{grm()} function. See more complete documentation therein.
 }
+\examples{
+\dontrun{
+mod <- mirt(Science, 1)
+plot(mod, type = 'trace')
+}
+}
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }

@@ -25,11 +25,9 @@
 #' 
 #' }
 expected.test <- function(x, Theta, group = NULL){
-    if(is(x, 'MultipleGroupClass')){
-        J <- length(x@cmods[[1]]@pars) - 1
-    } else J <- length(x@pars) - 1
+    J <- ncol(x@Data$data)
     score <- numeric(nrow(Theta))
-    mins <- apply(x@data, 2L, min, na.rm=TRUE)
+    mins <- apply(x@Data$data, 2L, min, na.rm=TRUE)
     for(i in 1L:J){
         item <- extract.item(x, i, group=group)
         score <- score + expected.item(item, Theta=Theta, min=0L) + mins[i]

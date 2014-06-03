@@ -96,12 +96,12 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }
 
-    dat <- mod@data
+    dat <- mod@Data$data
     model <- mod@model[[1L]]
     parprior <- mod@parprior
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
-    large <- mirt(mod@data, mod@model[[1L]], large = TRUE)
+    large <- mirt(mod@Data$data, mod@model[[1L]], large = TRUE)
     #set lbounds to 0 to avoid sign flipping in slopes
     sv$lbound[sv$name == 'a1'] <- 0
     if(!is.null(parnum)){

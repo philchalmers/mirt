@@ -38,7 +38,7 @@
 #' }
 testinfo <- function(x, Theta, degrees = NULL, group = NULL){
     if(is(x, 'MultipleGroupClass'))
-        J <- length(x@cmods[[1]]@pars) - 1
+        J <- length(x@pars[[1]]@pars) - 1
     else J <- length(x@pars) - 1
     info <- 0
     for(i in 1L:J){

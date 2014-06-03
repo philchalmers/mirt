@@ -867,15 +867,15 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     tabdata[is.na(tabdata)] <- 0L
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
-    ret1 <- ret2 <- vector('list', length(groupNames))
+    groupFreq <- vector('list', length(groupNames))
+    names(groupFreq) <- groupNames
     for(g in 1L:length(groupNames)){
         Freq <- integer(length(stringtabdata))
         tmpstringdata <- stringfulldata[group == groupNames[g]]
         Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(match(tmpstringdata, stringtabdata)))
-        ret1[[g]] <- cbind(tabdata, Freq)
-        ret2[[g]] <- cbind(tabdata2, Freq)
+        groupFreq[[g]] <- Freq
     }
-    ret <- list(tabdata=ret1, tabdata2=ret2)
+    ret <- list(tabdata=tabdata, tabdata2=tabdata2, Freq=groupFreq)
     ret
 }
 
@@ -1174,22 +1174,22 @@ smooth.cor <- function(x){
 }
 
 assignInformationMG <- function(object){
-    J <- ncol(object@data)
+    J <- ncol(object@Data$data)
     names <- colnames(object@information)
     spl_names <- strsplit(names, split="\\.")
     spl_names_par <- sapply(spl_names, function(x) x[1L])
     spl_names <- lapply(spl_names, 
                         function(x) as.numeric(x[-1L]))
     spl_names <- do.call(rbind, spl_names)
-    for(g in 1L:length(object@cmods)){
-        from <- object@cmods[[g]]@pars[[1L]]@parnum[1L]
-        to <- object@cmods[[g]]@pars[[J+1L]]@parnum[length(
-            object@cmods[[g]]@pars[[J+1L]]@parnum)]
+    for(g in 1L:length(object@pars)){
+        from <- object@pars[[g]]@pars[[1L]]@parnum[1L]
+        to <- object@pars[[g]]@pars[[J+1L]]@parnum[length(
+            object@pars[[g]]@pars[[J+1L]]@parnum)]
         pick <- spl_names[,g] >= from & spl_names[,g] <= to
         tmp <- object@information[pick,pick]
         colnames(tmp) <- rownames(tmp) <- 
             paste(spl_names_par[pick], spl_names[pick,g], sep='.')
-        object@cmods[[g]]@information <- tmp
+        object@pars[[g]]@information <- tmp
     }
     object
 }

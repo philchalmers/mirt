@@ -1,4 +1,4 @@
-EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
+EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
 {
     verbose <- list$verbose
     nfact <- list$nfact
@@ -62,8 +62,6 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
     diag(tmp) <- tmp2
     longpars <- as.numeric(tmp %*% longpars)
     LL <- 0
-    for(g in 1L:ngroups)
-        r[[g]] <- PrepList[[g]]$tabdata[, ncol(PrepList[[g]]$tabdata)]
     LBOUND <- UBOUND <- c()
     for(g in 1L:ngroups){
         for(i in 1L:(J+1L)){
@@ -130,16 +128,16 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         LL <- 0
         for(g in 1L:ngroups){
             if(BFACTOR){
-                rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata,
+                rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, 
                                             sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
             } else {
-                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=PrepList[[g]]$tabdata, 
+                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                          CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
                                          prior=Prior[[g]], itemloc=itemloc)
             }
-            LL <- LL + sum(r[[g]]*log(rlist[[g]]$expected))
+            LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
         }
         collectLL[cycles] <- LL
         if(!list$SEM){
@@ -150,12 +148,9 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
                 Mrate <- ifelse(is.finite(Mrate), Mrate, 1e-6)
             }
         }
-        for(g in 1L:ngroups){
-            for(i in 1L:J){
-                tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
-            }
-        }
+        for(g in 1L:ngroups)
+            for(i in 1L:J)
+                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L))]
         Estep.time <- Estep.time + proc.time()[3L] - start
         start <- proc.time()[3L]
         preMstep.longpars2 <- preMstep.longpars
@@ -213,7 +208,7 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
             i <- i + 1L
             deriv <- Deriv(x=pars[[group]][[i]], CUSTOM.IND=CUSTOM.IND,
                            Theta=Theta, EM = TRUE,
-                           pars=pars[[group]], tabdata=PrepList[[group]]$tabdata,
+                           pars=pars[[group]], tabdata=cbind(Data$tabdatalong, Data$Freq[[group]]),
                            itemloc=itemloc, estHess=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
@@ -221,48 +216,48 @@ EM.group <- function(pars, constrain, Ls, PrepList, list, Theta, DERIV)
         }
         hess <- updateHess(h=h, L2=L2, L3=L3)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
-        return(list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
+        ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)), 
-                    collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr]))
+                    collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr])
+    } else {
+        ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
+                    logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
+                    estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
+                    Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
+                    prior=prior, Priorbetween=Priorbetween, sitems=sitems,
+                    shortpars=longpars[estpars & !redun_constr])
     }
-    ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
-                logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
-                estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
-                Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
-                prior=prior, Priorbetween=Priorbetween, sitems=sitems,
-                shortpars=longpars[estpars & !redun_constr])
+    for(g in 1L:ngroups)
+        for(i in 1L:J)
+            ret$pars[[g]][[i]]@dat <- matrix(0)
     ret
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, Theta, prior, itemloc, CUSTOM.IND,
+Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND,
                        itemtrace=NULL, deriv = FALSE)
 {
     nquad <- nrow(Theta)
     J <- length(itemloc) - 1L
-    r <- tabdata[ ,ncol(tabdata)]
-    X <- tabdata[ ,1L:(ncol(tabdata) - 1L), drop = FALSE]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estep", itemtrace, prior, X, r, mirtClusterEnv$ncores)
+    retlist <- .Call("Estep", itemtrace, prior, tabdata, freq, mirtClusterEnv$ncores)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, Theta, prior, Prior, Priorbetween, specific,
+Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween, specific,
                           CUSTOM.IND, sitems, itemloc, itemtrace=NULL)
 {
     J <- length(itemloc) - 1L
-    r <- tabdata[ ,ncol(tabdata)]
-    X <- tabdata[ ,1L:(ncol(tabdata) - 1L), drop = FALSE]
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, X, r, sitems, Prior,
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior,
                      mirtClusterEnv$ncores)
     return(retlist)
 }

@@ -31,21 +31,15 @@ Defines the object returned from \code{\link{multipleGroup}}.
        \code{empiricalhist = TRUE}}
    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-   \item{\code{tabdata}:}{Object of class \code{"matrix"}, tabulated data }
-   \item{\code{tabdatalong}:}{Object of class \code{"matrix"}, dichotomous version of tabulated data }
    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-   \item{\code{data}:}{Object of class \code{"matrix"}, complete data }
    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
    \item{\code{invariance}:}{Object of class \code{"character"}, invariance input}
    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
-   \item{\code{group}:}{Object of class \code{"factor"}, group membership}
-   \item{\code{groupNames}:}{Object of class \code{"character"}, names of groups}
-   \item{\code{cmods}:}{Object of class \code{"list"}, a list containing estimated ConfirmatoryClass models }
    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes

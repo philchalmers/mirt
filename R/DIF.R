@@ -119,9 +119,8 @@
 #' model <- multipleGroup(dat, 1, group, invariance = itemnames)
 #' stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 #' stepdown
-#'
 #' }
-DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@data),
+DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@Data$data),
                 seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', max_run = Inf,
                 plotdif = FALSE, type = 'trace', verbose = TRUE, ...){
 
@@ -157,7 +156,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
             for(i in 1L:length(parnum))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
-        newmodel <- multipleGroup(model@data, model@model[[1L]], group=model@group,
+        newmodel <- multipleGroup(model@Data$data, model@model[[1L]], group=model@Data$group,
                                   invariance = invariance, constrain=constrain,
                                   verbose = FALSE, ...)
         aov <- anova(newmodel, model, verbose = FALSE)
@@ -165,7 +164,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         return(aov)
     }
 
-    itemnames <- colnames(MGmodel@data)
+    itemnames <- colnames(MGmodel@Data$data)
     if(!any(scheme %in% c('add', 'drop', 'add_sequential', 'drop_sequential')))
         stop('scheme input is not valid')
     if(Wald){
@@ -182,7 +181,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         stop('Invalid seq_stat input')
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
-    data <- MGmodel@data
+    data <- MGmodel@Data$data
     invariance <- MGmodel@invariance
     values <- mod2values(MGmodel)
     drop <- scheme == 'drop' || scheme == 'drop_sequential'
@@ -230,7 +229,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                     }
                 }
             }
-            updatedModel <- multipleGroup(MGmodel@data, MGmodel@model[[1L]], group=MGmodel@group,
+            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@model[[1L]], group=MGmodel@Data$group,
                                           invariance = invariance, constrain=constrain,
                                           verbose = FALSE, ...)
             pick <- !keep

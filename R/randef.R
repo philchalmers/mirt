@@ -27,16 +27,16 @@ randef <- function(x, ndraws = 1000, thin = 10){
         for(i in 1L:length(Random))
             Random[[i]] <- matrix(0, nrow(x@random[[i]]@drawvals), ncol(x@random[[i]]@drawvals))
     }
-    J <- ncol(x@data)
-    N <- nrow(x@fulldata)
+    J <- ncol(x@Data$data)
+    N <- nrow(x@Data$fulldata[[1L]])
     Theta <- tmpTheta <- matrix(0, N, x@nfact)
     if(length(random) > 0L){
         OffTerm <- OffTerm(random, J=J, N=N)
-    } else OffTerm <- matrix(0, 1, ncol(x@data))
+    } else OffTerm <- matrix(0, 1, ncol(x@Data$data))
     gstructgrouppars <- ExtractGroupPars(x@pars[[J+1L]])
     CUSTOM.IND <- x@CUSTOM.IND
     for(i in 1L:20L){
-        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@fulldata,
+        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
                                 prior.mu=gstructgrouppars$gmeans, prodlist=list(),
@@ -44,13 +44,13 @@ randef <- function(x, ndraws = 1000, thin = 10){
         if(length(random) > 0L){
             for(j in 1L:length(random))
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
-                                                   pars=x@pars, fulldata=x@fulldata,
+                                                   pars=x@pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
             OffTerm <- OffTerm(random, J=J, N=N)
         }
     }
     for(i in 1L:ndraws){
-        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@fulldata,
+        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
                                 prior.mu=gstructgrouppars$gmeans, prodlist=list(),
@@ -59,7 +59,7 @@ randef <- function(x, ndraws = 1000, thin = 10){
         if(length(random) > 0L){
             for(j in 1L:length(random)){
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
-                                                   pars=x@pars, fulldata=x@fulldata,
+                                                   pars=x@pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                 if(i %% thin == 0) Random[[j]] <- Random[[j]] + random[[j]]@drawvals
             }
