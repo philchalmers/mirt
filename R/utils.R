@@ -853,7 +853,7 @@ nameInfoMatrix <- function(info, correction, L, npars){
 }
 
 maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem, K, itemloc,
-                        Names, itemnames){
+                        Names, itemnames, survey.weights){
     tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
     tabdata2 <- do.call(rbind, tabdata2)
     tabdata2[tabdata2 == 99999L] <- NA
@@ -872,7 +872,15 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     for(g in 1L:length(groupNames)){
         Freq <- integer(length(stringtabdata))
         tmpstringdata <- stringfulldata[group == groupNames[g]]
-        Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(match(tmpstringdata, stringtabdata)))
+        if(!is.null(survey.weights)){
+            mtc <- match(tmpstringdata, stringtabdata)
+            Freq <- mySapply(1L:nrow(tabdata), function(x, std, tstd, w)
+                sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata, 
+                w=survey.weights)
+        } else {
+            Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
+                match(tmpstringdata, stringtabdata)))
+        }
         groupFreq[[g]] <- Freq
     }
     ret <- list(tabdata=tabdata, tabdata2=tabdata2, Freq=groupFreq)

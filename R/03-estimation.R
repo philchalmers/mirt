@@ -1,7 +1,8 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
-                       nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE, ...)
+                       nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE,
+                       survey.weights = NULL, ...)
 {
     start.time=proc.time()[3L]
     if(missing(data) || is.null(nrow(data))) 
@@ -24,6 +25,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     stopifnot(is(GenRandomPars, 'logical'))
     stopifnot(is(large, 'logical') || is(large, 'list'))
     opts <- makeopts(...)
+    if(!is.null(survey.weights)){
+        stopifnot(opts$method == 'EM')
+        stopifnot(length(survey.weights) == nrow(data))
+        
+    }
     if(any(is.na(group))){
         if(opts$message)
             message('NA values in group removed, along with associated rows in data')
@@ -123,8 +129,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             stringtabdata <- unique(stringfulldata)
             tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,
                                       group=Data$group, groupNames=Data$groupNames, nitem=Data$nitems,
-                                      K=PrepListFull$K, itemloc=PrepListFull$itemloc,
-                                      Names=PrepListFull$Names, itemnames=PrepListFull$itemnames)
+                                      K=PrepListFull$K, itemloc=PrepListFull$itemloc, 
+                                      Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
+                                      survey.weights=survey.weights)
             if(is.logical(large) && large){
                 return(tmptabdata)
             } else large <- tmptabdata

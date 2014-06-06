@@ -14,6 +14,9 @@
   
 ## NEW FEATURES
 
+- new `survey.weights` argument can be passed to parameter estimation functions (i.e., `mirt()`) to 
+  apply so-called stratification/survey-weights during estimation
+
 - `returnList` argument added to `simdata()` to return a list containing the S4 item objects, 
   Theta matrix, and simulated data
 

@@ -681,8 +681,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
     const NumericMatrix rs(Rrs); //group stacked
     const vector<double> prior = as< vector<double> >(Rprior);
     const vector<double> Priorbetween = as< vector<double> >(RPriorbetween);
-    const IntegerVector one(1, 1);
-    const vector<int> vone(1, 1);
+    const vector<double> vone(1.0, 1);
     const int N = Theta.nrow();
     const int nfact = Theta.ncol();
     const int J = itemloc[itemloc.size()-1] - 1;

@@ -6,9 +6,9 @@ Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   SE.type = "crossprod", method = "EM", pars = NULL, constrain = NULL,
-  parprior = NULL, calcNull = TRUE, draws = 5000, rotate = "oblimin",
-  Target = NaN, quadpts = NULL, TOL = NULL, grsm.block = NULL,
-  key = NULL, nominal.highlow = NULL, large = FALSE,
+  parprior = NULL, calcNull = TRUE, draws = 5000, survey.weights = NULL,
+  rotate = "oblimin", Target = NaN, quadpts = NULL, TOL = NULL,
+  grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
   GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE,
   verbose = TRUE, technical = list(), ...)
 }
@@ -45,6 +45,10 @@ group and therefore have the same number of item categories}
 \item{key}{a numeric vector of the response scoring key. Required when using nested logit item types, and
 must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
 so use \code{NA} in item locations that are not applicable}
+
+\item{survey.weights}{a optional numeric vector of survey weights to apply for each case in the
+data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT approach).
+The sum of the \code{survey.weights} must equal the total sample size for proper weighting to be applied}
 
 \item{SE}{logical; estimate the standard errors? See \code{SE.type} for the type of estimates available. Using
 \code{SE = TRUE} when \code{method = 'MHRM'} will force the estimation to terminate no earlier than 400
@@ -478,6 +482,14 @@ coef(gpcmod)
 coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 anova(gpcmod, nomod)
 itemplot(nomod, 3)
+
+## example applying survey weights.
+# weight the first half of the cases to be more representative of population
+survey.weights <- c(rep(2, nrow(Science)/2), rep(1, nrow(Science)/2))
+survey.weights <- survey.weights/sum(survey.weights) * nrow(Science)
+unweighted <- mirt(Science, 1)
+weighted <- mirt(Science, 1, survey.weights=survey.weights)
+
 
 ###########
 #empirical dimensionality testing that includes 'guessing'
