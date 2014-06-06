@@ -41,7 +41,7 @@ from the computed mirt object will be used}
 that no MI draws will be performed}
 
 \item{response.pattern}{an optional argument used to calculate the factor scores and standard errors
-for a given response vector or matrix}
+for a given response vector or matrix/data.frame}
 
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}

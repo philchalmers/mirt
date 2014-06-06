@@ -36,7 +36,7 @@
 #' @param MI a number indicating how many multiple imputation draws to perform. Default is 0, indicating
 #'   that no MI draws will be performed
 #' @param response.pattern an optional argument used to calculate the factor scores and standard errors
-#'   for a given response vector or matrix
+#'   for a given response vector or matrix/data.frame
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
 #' @param return.acov logical; return a list containing covariance matricies instead of factors 

@@ -76,6 +76,8 @@ setMethod(
 	    if(return.acov && returnER)
 	        stop('simultaneous returnER and return.acov option not supported')
         if(!is.null(response.pattern)){
+            if(is.data.frame(response.pattern))
+                response.pattern <- as.matrix(response.pattern)
             if(!is.matrix(response.pattern))
                 response.pattern <- matrix(response.pattern, 1L)
             nfact <- object@nfact
