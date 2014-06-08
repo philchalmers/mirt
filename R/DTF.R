@@ -46,7 +46,8 @@
 # plot(mod, type = 'score')
 #
 # DTF(mod)
-# DTF(mod, MI = 100) #95% C.I. for DTI containins 0
+# mirtCluster()
+# DTF(mod, MI = 200) #95% C.I. for DTI containins 0
 # 
 # ## -------------
 # ## random slopes and intercepts for 15 items, and latent mean difference 
@@ -62,11 +63,10 @@
 #                       invariance=c('free_means', 'free_var'))
 # plot(mod2, type = 'score')
 # 
-# mirtCluster()
 # #significant DIF in multiple items....
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30) 
 # DTF(mod2) #...but not substantial DTF due to randomness of DIF
-# DTF(mod2, MI=100)
+# DTF(mod2, MI=200)
 # 
 # ## -------------
 # ## systematic differing slopes and intercepts (clear DTF)
@@ -80,11 +80,32 @@
 # 
 # DIF(mod3, c('a1', 'd'), items2test=16:30) 
 # DTF(mod3) #huge unsigned bias. Signed bias indicates group 2 scores generally lower
-# DTF(mod3, MI=100) 
+# DTF(mod3, MI=200) 
 # 
 # }
 DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6,6)){
 
+    fn <- function(x, omod, impute, covBs, imputenums, Theta){
+        mod <- omod
+        if(impute){
+            for(g in 1L:2L)
+                mod@pars[[g]]@pars <- imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
+                                                 imputenums=imputenums[[g]], constrain=omod@constrain)
+        }
+        T1 <- expected.test(mod, Theta, group=1)
+        T2 <- expected.test(mod, Theta, group=2)
+        D <- T1 - T2
+        uDTF <- mean(D^2)
+        uDTF_percent <- sqrt(uDTF)/max_score * 100
+        sDTF <- mean(D)
+        sDTF_percent <- sDTF/max_score * 100
+        max_DTF_percent <- max(abs(D))/max_score * 100
+        ret <- list(signed = c(DTF=sDTF, `DTF(%)`=sDTF_percent),
+                    unsigned = c(DTF=uDTF, `DTF(%)`=uDTF_percent,
+                                 `max.DTF(%)`=max_DTF_percent))
+        ret
+    }
+    
     if(class(mod) != 'MultipleGroupClass')
         stop('mod input was not estimated by multipleGroup()')
     if(length(mod@pars) != 2L)
@@ -124,28 +145,11 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
     Theta <- thetaComb(theta, mod@nfact)
     max_score <- sum(apply(mod@Data$data, 2, min) + (mod@Data$K - 1L))
-    omod <- mod
-    for(mi in 1L:MI){
-        if(impute){
-            for(g in 1L:2L)
-                mod@pars[[g]]@pars <- imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
-                                                  imputenums=imputenums[[g]], constrain=omod@constrain)
-        }
-        T1 <- expected.test(mod, Theta, group=1)
-        T2 <- expected.test(mod, Theta, group=2)
-        D <- T1 - T2
-        uDTF <- mean(D^2)
-        uDTF_percent <- sqrt(uDTF)/max_score * 100
-        sDTF <- mean(D)
-        sDTF_percent <- sDTF/max_score * 100
-        max_DTF_percent <- max(abs(D))/max_score * 100
-        ret <- list(signed = c(DTF=sDTF, `DTF(%)`=sDTF_percent),
-                    unsigned = c(DTF=uDTF, `DTF(%)`=uDTF_percent,
-                                 `max.DTF(%)`=max_DTF_percent))
-        if(impute) list_scores[[mi]] <- c(ret$signed, ret$unsigned)
-    }
+    list_scores <- myLapply(1L:MI, fn, omod=mod, impute=impute, covBs=covBs, 
+                            imputenums=imputenums, Theta=Theta)
     if(impute){
-        scores <- do.call(rbind, list_scores)
+        tmp <- lapply(list_scores, do.call, what=c)
+        scores <- do.call(rbind, tmp)
         CM <- apply(scores, 2, mean)
         SD <- apply(scores, 2, sd)
         t_sDTF <- CM[1L] / SD[1L]
@@ -163,7 +167,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
             c(paste0('CI_', round(CI + (1-CI)/2,3)), 'value',
               paste0('CI_', round((1-CI)/2, 3)))
         ret <- list(signed=signed, unsigned=unsigned, tests=tests)
-    }
+    } else ret <- list_scores[[1L]]
     ret <- lapply(ret, round, digits=digits)
     ret
 }
