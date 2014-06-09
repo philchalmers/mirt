@@ -85,7 +85,7 @@
 # }
 DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6,6)){
 
-    fn <- function(x, omod, impute, covBs, imputenums, Theta){
+    fn <- function(x, omod, impute, covBs, imputenums, Theta, sign = 1L){
         mod <- omod
         if(impute){
             for(g in 1L:2L)
@@ -95,14 +95,16 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
         T1 <- expected.test(mod, Theta, group=1)
         T2 <- expected.test(mod, Theta, group=2)
         D <- T1 - T2
-        uDTF <- mean(D^2)
-        uDTF_percent <- sqrt(uDTF)/max_score * 100
+        if(length(sign) > 1L) sign <- sign(D) * sign
+        uDTF <- mean(D^2 * sign)
+        uDTF_percent <- sqrt(abs(uDTF))/max_score * 100
         sDTF <- mean(D)
         sDTF_percent <- sDTF/max_score * 100
         max_DTF_percent <- max(abs(D))/max_score * 100
         ret <- list(signed = c(DTF=sDTF, `DTF(%)`=sDTF_percent),
                     unsigned = c(DTF=uDTF, `DTF(%)`=uDTF_percent,
                                  `max.DTF(%)`=max_DTF_percent))
+        attr(ret, 'sign') <- sign(D)
         ret
     }
     
@@ -144,30 +146,37 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
 
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
     Theta <- thetaComb(theta, mod@nfact)
-    max_score <- sum(apply(mod@Data$data, 2, min) + (mod@Data$K - 1L))
-    list_scores <- myLapply(1L:MI, fn, omod=mod, impute=impute, covBs=covBs, 
+    max_score <- sum(apply(mod@Data$data, 2L, min) + (mod@Data$K - 1L))
+    list_scores <- myLapply(1L, fn, omod=mod, impute=impute, covBs=covBs, 
                             imputenums=imputenums, Theta=Theta)
     if(impute){
+        olist_scores <- list_scores
+        list_scores <- myLapply(1L:MI, fn, omod=mod, impute=impute, covBs=covBs, 
+                                imputenums=imputenums, Theta=Theta, 
+                                sign=attr(list_scores[[1L]], 'sign'))
         tmp <- lapply(list_scores, do.call, what=c)
         scores <- do.call(rbind, tmp)
-        CM <- apply(scores, 2, mean)
-        SD <- apply(scores, 2, sd)
+        CM <- lapply(olist_scores, do.call, what=c)[[1L]]
+        SD <- apply(scores, 2L, sd)
         t_sDTF <- CM[1L] / SD[1L]
-        p_sDTF <- pt(abs(t_sDTF), df=MI-1, lower.tail=FALSE)
+        p_sDTF <- pt(abs(t_sDTF), df=MI-1L, lower.tail=FALSE) * 2
         t_DTF <- CM[3L] / SD[3L]
-        p_DTF <- pt(t_DTF, df=MI-1, lower.tail=FALSE) * 2 #one-tailed
-        tt <- qt(CI + (1-CI)/2, df=MI-1)
+        p_DTF <- pt(t_DTF, df=MI-1L, lower.tail=FALSE) * 2
+        tt <- qt(CI + (1-CI)/2, df=MI-1L)
         upper <- CM + tt * SD
         lower <- CM - tt * SD
+        if(lower[2L] < 0) lower[2L] <- 0
+        if(lower[3L] < 0) lower[3L:4L] <- 0
         signed <- rbind(upper[1:2], CM[1:2], lower[1:2])
         unsigned <- rbind(upper[3:5], CM[3:5], lower[3:5])
         tests <- c(p_sDTF, p_DTF)
         names(tests) <- c("P(sDTF = 0)", "P(uDTF = 0)")
         rownames(signed) <- rownames(unsigned) <-
-            c(paste0('CI_', round(CI + (1-CI)/2,3)), 'value',
-              paste0('CI_', round((1-CI)/2, 3)))
+            c(paste0('CI_', round(CI + (1-CI)/2, 3L)), 'value',
+              paste0('CI_', round((1-CI)/2, 3L)))
         ret <- list(signed=signed, unsigned=unsigned, tests=tests)
     } else ret <- list_scores[[1L]]
+    attr(ret, 'sign') <- NULL
     ret <- lapply(ret, round, digits=digits)
     ret
 }
