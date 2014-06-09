@@ -147,11 +147,11 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
     Theta <- thetaComb(theta, mod@nfact)
     max_score <- sum(apply(mod@Data$data, 2L, min) + (mod@Data$K - 1L))
-    list_scores <- myLapply(1L, fn, omod=mod, impute=impute, covBs=covBs, 
-                            imputenums=imputenums, Theta=Theta)
+    list_scores <- myLapply(1L, fn, omod=mod, impute=FALSE, covBs=NULL, 
+                            imputenums=NULL, Theta=Theta)
     if(impute){
         olist_scores <- list_scores
-        list_scores <- myLapply(1L:MI, fn, omod=mod, impute=impute, covBs=covBs, 
+        list_scores <- myLapply(1L:MI, fn, omod=mod, impute=TRUE, covBs=covBs, 
                                 imputenums=imputenums, Theta=Theta, 
                                 sign=attr(list_scores[[1L]], 'sign'))
         tmp <- lapply(list_scores, do.call, what=c)
