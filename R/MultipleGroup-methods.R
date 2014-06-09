@@ -25,8 +25,11 @@ setMethod(
         ngroups <- length(object@pars)
         allPars <- vector('list', ngroups)
         names(allPars) <- object@Data$groupNames
-        for(g in 1:ngroups)
-            allPars[[g]] <- coef(object@pars[[g]], ...)
+        for(g in 1:ngroups){
+            tmp <- object@pars[[g]]
+            tmp@Data$data <- object@Data$data[1L, , drop=FALSE]
+            allPars[[g]] <- coef(tmp, ...)
+        }
         return(allPars)
     }
 )
