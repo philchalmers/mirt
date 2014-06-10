@@ -17,7 +17,6 @@
 # @param npts number of points to use in the integration
 # @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
 #   used in conjunction with \code{npts}
-# @param digits number of digits to round result to
 # @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 # @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 # @keywords DTF
@@ -83,9 +82,9 @@
 # DTF(mod3, MI=200) 
 # 
 # }
-DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6,6)){
+DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6)){
 
-    fn <- function(x, omod, impute, covBs, imputenums, Theta, sign = 1L){
+    fn <- function(x, omod, impute, covBs, imputenums, Theta){
         mod <- omod
         if(impute){
             for(g in 1L:2L)
@@ -95,9 +94,8 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
         T1 <- expected.test(mod, Theta, group=1)
         T2 <- expected.test(mod, Theta, group=2)
         D <- T1 - T2
-        if(length(sign) > 1L) sign <- sign(D) * sign
-        uDTF <- mean(D^2 * sign)
-        uDTF_percent <- sqrt(abs(uDTF))/max_score * 100
+        uDTF <- mean(D^2)
+        uDTF_percent <- sqrt(uDTF)/max_score * 100
         sDTF <- mean(D)
         sDTF_percent <- sDTF/max_score * 100
         max_DTF_percent <- max(abs(D))/max_score * 100
@@ -152,21 +150,24 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
     if(impute){
         olist_scores <- list_scores
         list_scores <- myLapply(1L:MI, fn, omod=mod, impute=TRUE, covBs=covBs, 
-                                imputenums=imputenums, Theta=Theta, 
-                                sign=attr(list_scores[[1L]], 'sign'))
+                                imputenums=imputenums, Theta=Theta)
         tmp <- lapply(list_scores, do.call, what=c)
         scores <- do.call(rbind, tmp)
         CM <- lapply(olist_scores, do.call, what=c)[[1L]]
         SD <- apply(scores, 2L, sd)
-        t_sDTF <- CM[1L] / SD[1L]
+        t_sDTF <- CM['signed.DTF'] / SD['signed.DTF']
         p_sDTF <- pt(abs(t_sDTF), df=MI-1L, lower.tail=FALSE) * 2
-        t_DTF <- CM[3L] / SD[3L]
+        t_DTF <- CM['unsigned.DTF'] / SD['unsigned.DTF']
         p_DTF <- pt(t_DTF, df=MI-1L, lower.tail=FALSE) * 2
-        tt <- qt(CI + (1-CI)/2, df=MI-1L)
-        upper <- CM + tt * SD
-        lower <- CM - tt * SD
-        if(lower[2L] < 0) lower[2L] <- 0
-        if(lower[3L] < 0) lower[3L:4L] <- 0
+        CIs <- apply(scores, 2L, function(x, CI){
+            ss <- sort(x)
+            N <- length(ss)
+            ret <- c(lower = ss[floor(N * (1-CI)/2)], 
+                     upper = ss[ceiling(N * (1 - (1-CI)/2))])
+            ret
+        }, CI=CI)
+        if(!is.matrix(CIs)) stop('Too few MI draws were specified')
+        lower <- CIs["lower",]; upper <- CIs["upper",]
         signed <- rbind(upper[1:2], CM[1:2], lower[1:2])
         unsigned <- rbind(upper[3:5], CM[3:5], lower[3:5])
         tests <- c(p_sDTF, p_DTF)
@@ -177,6 +178,5 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, digits = 4, theta_lim=c(-6
         ret <- list(signed=signed, unsigned=unsigned, tests=tests)
     } else ret <- list_scores[[1L]]
     attr(ret, 'sign') <- NULL
-    ret <- lapply(ret, round, digits=digits)
     ret
 }
