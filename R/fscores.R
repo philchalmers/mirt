@@ -2,9 +2,12 @@
 #'
 #' Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
 #' or WLE (Warm, 1989) factor scores with a multivariate normal
-#' prior distribution using equally spaced quadrature. Additionally, multiple imputation
-#' variants are possible for each estimator if a parameter information matrix was computed, which
-#' are useful if the sample size/number of items were small.
+#' prior distribution using equally spaced quadrature. EAP scores for models with more than
+#' three factors are generally not recommended since the integration grid becomes very large,
+#' resulting in slower estimation and less precision if the \code{quadpts} are too low.
+#' Therefore, MAP scores schould be used instead of EAP scores for higher dimensional models. 
+#' Multiple imputation variants are possible for each estimator if a parameter 
+#' information matrix was computed, which are useful if the sample size/number of items were small.
 #'
 #' The function will return either a table with the computed scores and standard errors,
 #' the original data matrix with scores appended to the rightmost column, or the scores only. By
@@ -25,9 +28,11 @@
 #' @param method type of factor score estimation method. Can be expected
 #'   a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 #'   (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores (\code{"EAPsum"})
-#' @param quadpts number of quadratures to use per dimension. If not specified, the value will be determined
-#'   from the input model object, otherwise a suitable one will be created which decreases as the number of
-#'   dimensions increases (and therefore for estimates such as EAP, will be less accurate)
+#' @param quadpts number of quadratures to use per dimension. If not specified, a suitable 
+#'   one will be created which decreases as the number of dimensions increases 
+#'   (and therefore for estimates such as EAP, will be less accurate). This is determined from 
+#'   the switch statement 
+#'   \code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}
 #' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
 #' @param mean a vector for custom latent variable means. If NULL, the default for 'group' values from the
 #'   computed mirt object will be used
@@ -96,8 +101,10 @@
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-4,4), MI = 0)
+                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0)
 {
+    if(is.null(quadpts))
+        quadpts <- switch(as.character(object@nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,

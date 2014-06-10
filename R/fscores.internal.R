@@ -121,7 +121,6 @@ setMethod(
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
                                              quadpts=quadpts, gp=gp, verbose=verbose, 
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim))
-        if (is.null(quadpts)) quadpts <- ceiling(40/(nfact^1.5))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		fulldata <- object@Data$data
 		tabdata <- object@Data$tabdatalong
@@ -410,7 +409,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 }
 
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim = c(-4,4)){
+                   theta_lim){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -435,7 +434,6 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
     if(x@nfact > 1L) stop('EAP sum score method only is applicable to unidimensional models')
-    if(is.null(quadpts)) quadpts <- 40
     Theta <- as.matrix(seq(theta_lim[1L],theta_lim[2L],length.out = quadpts))
     prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
     prior <- prior/sum(prior)

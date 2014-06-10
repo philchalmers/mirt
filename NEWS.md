@@ -2,6 +2,9 @@
 
 ## MAJOR CHANGES
 
+- changed default `theta_lim` to `c(-6,6)` and number of quadrature defaults 
+  increased as well
+
 - `@Data` slot added for organizing data based arguments. Removed several data slots from
   estimated objects as a consequence
 

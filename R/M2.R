@@ -5,12 +5,11 @@
 #' see Cai and Hansen, 2013), as well as associated fit indicies that are based on 
 #' fitting the null model.
 #'
-#'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package
-#' @param quadpts number of quadrature points to use during estimation. If \code{NULL}, \code{quadpts}
-#'   will be extracted from the \code{obj}; if not available, a suitable value will be chosen based
-#'   on the rubric found in \code{\link{mirt}}
+#' @param quadpts number of quadrature points to use during estimation. If \code{NULL}, 
+#'   a suitable value will be chosen based
+#'   on the rubric found in \code{\link{fscores}}
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
 #' @param Theta a matrix of factor scores for each person used for imputation
@@ -84,7 +83,6 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         for(g in 1L:ngroups){
             attr(pars[[g]], 'MG') <- g
             pars[[g]]@bfactor <- obj@bfactor
-            pars[[g]]@quadpts <- obj@quadpts
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ])
             ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts)
         }
@@ -134,10 +132,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
     p <- c(p, cross[lower.tri(cross)]/N)
     K <- obj@K
     pars <- obj@pars
-    quadpts2 <- obj@quadpts    
-    if(is.nan(quadpts2)) 
-        quadpts2 <- switch(as.character(obj@nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
-    if(is.null(quadpts)) quadpts <- quadpts2
+    if(is.null(quadpts)) 
+        quadpts <- switch(as.character(obj@nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
     estpars <- c()
     for(i in 1L:(nitems+1L))
         estpars <- c(estpars, pars[[i]]@est)

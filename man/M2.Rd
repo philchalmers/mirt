@@ -8,9 +8,9 @@ M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0)
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
 
-\item{quadpts}{number of quadrature points to use during estimation. If \code{NULL}, \code{quadpts}
-will be extracted from the \code{obj}; if not available, a suitable value will be chosen based
-on the rubric found in \code{\link{mirt}}}
+\item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
+a suitable value will be chosen based
+on the rubric found in \code{\link{fscores}}}
 
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI}

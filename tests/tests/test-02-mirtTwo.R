@@ -79,25 +79,23 @@ test_that('poly', {
     expect_equal(as.numeric(fm0[,c('F1','SE_F1')]), c(-0.3494903, 0.6004922), tolerance=1e-4)
     fm1 <- fscores(modp1, verbose = FALSE)
     expect_is(fm1, 'matrix')
-    expect_true(mirt:::closeEnough(fm1[1:6,'F1'] - c(-2.7173474, -1.4189304, -0.7155405,
-                                                     -0.4452374, -2.5339610, -1.2481305), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fm1[1:6,'F1'] - c(-2.7488324, -1.4190140, -0.7154329, -0.4453752, -2.5438490, -1.2481072), -1e-2, 1e-2))
     fm1b <- fscores(modp1, verbose = FALSE, full.scores=TRUE)
     expect_equal(cor(fm1b, rowSums(Science))[1], .969, tolerance = .02)
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
-                                       abs(c(2.5707445, 1.8477329, 0.6198135, 1.1152277, 2.4184494,
-                                             0.7455961, 2.3420774, 0.7085009, 0.2521220, 0.4697231, 2.2881277, 1.5731773)),
+                                       abs(c(2.6215942, 1.8525867, 0.6209020, 1.1175021, 2.4442223, 0.7433109, 2.3733280, 0.7154136, 0.2434079,
+                                             0.4614485, 2.3085583, 1.5700213)),
                                    -1e-2, 1e-2))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
     fm4 <- fscores(modp4, verbose = FALSE)
     expect_is(fm4, 'matrix')
-    expect_true(mirt:::closeEnough(fm4[1:6,'F1'] - c(-2.7019062, -1.4445202, -0.7918323, -0.5414979, -2.5217170, -1.1439799), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fm4[1:6,'F1'] - c(-2.7320802, -1.4459303, -0.7910009, -0.5438761, -2.5310045, -1.1434060), -1e-2, 1e-2))
     fm5 <- fscores(modp5, verbose = FALSE)
     expect_is(fm5, 'matrix')
-    expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.6953386, -1.4445425, -0.7365539,
-                                                     -0.5624948, -2.5085663, -1.1733173), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.7249561, -1.4446593, -0.7364399, -0.5627047, -2.5174376, -1.1732461), -1e-2, 1e-2))
 
     resmat <- residuals(modp3, type = 'Q3', Theta = fm3[,'F1'], verbose = FALSE)
     expect_equal(as.numeric(resmat), c(1, -0.167, -0.144, 0.084, -0.167, 1, -0.055, -0.218, -0.144, -0.055, 1, -0.446, 0.084, -0.218, -0.446, 1), tolerance=1e-2)

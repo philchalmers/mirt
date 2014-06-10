@@ -152,5 +152,5 @@ test_that('three factor', {
 
     fs1 <- fscores(mod_metric, verbose = FALSE)
     expect_is(fs1, 'list')
-    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.95771569,  0.05945627, -0.53511123, -0.34960500,  0.52387440, -0.95771569), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.97386290,  0.05447403, -0.52062751, -0.32303232,  0.50560860, -0.97386290), -1e-4, 1e-4))
 })

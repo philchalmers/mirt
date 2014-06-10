@@ -956,7 +956,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
         opts$SEtol <- ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     }
-    if(BFACTOR && is.nan(quadpts)) opts$quadpts <- 21L
     if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
     opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn
     opts$message <- if(is.null(technical$message)) TRUE else technical$message

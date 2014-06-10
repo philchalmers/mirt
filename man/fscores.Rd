@@ -6,7 +6,7 @@
 fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, returnER = FALSE,
   return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-  scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-4, 4),
+  scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6, 6),
   MI = 0)
 }
 \arguments{
@@ -25,9 +25,11 @@ rightmost column}
 a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores (\code{"EAPsum"})}
 
-\item{quadpts}{number of quadratures to use per dimension. If not specified, the value will be determined
-from the input model object, otherwise a suitable one will be created which decreases as the number of
-dimensions increases (and therefore for estimates such as EAP, will be less accurate)}
+\item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
+one will be created which decreases as the number of dimensions increases
+(and therefore for estimates such as EAP, will be less accurate). This is determined from
+the switch statement
+\code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}}
 
 \item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension}
 
@@ -59,9 +61,12 @@ standard errors associated with each respondent? Default is \code{FALSE}}
 \description{
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
 or WLE (Warm, 1989) factor scores with a multivariate normal
-prior distribution using equally spaced quadrature. Additionally, multiple imputation
-variants are possible for each estimator if a parameter information matrix was computed, which
-are useful if the sample size/number of items were small.
+prior distribution using equally spaced quadrature. EAP scores for models with more than
+three factors are generally not recommended since the integration grid becomes very large,
+resulting in slower estimation and less precision if the \code{quadpts} are too low.
+Therefore, MAP scores schould be used instead of EAP scores for higher dimensional models.
+Multiple imputation variants are possible for each estimator if a parameter
+information matrix was computed, which are useful if the sample size/number of items were small.
 }
 \details{
 The function will return either a table with the computed scores and standard errors,

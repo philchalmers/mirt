@@ -43,7 +43,7 @@ test_that('exploratory mods', {
 
     fs1 <- fscores(onefact, verbose = FALSE, mean=c(1), cov=matrix(2))
     expect_is(fs1, 'matrix')
-    expect_true(mirt:::closeEnough(fs1[1:3,'F1'] - c(-2.148334, -1.681619, -1.687547), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fs1[1:3,'F1'] - c(-2.185196, -1.689718, -1.694422), -1e-2, 1e-2))
     fs2 <- fscores(twofact, verbose = FALSE)
     expect_is(fs2, 'matrix')
     fs3 <- fscores(onefactmissing, verbose = FALSE)

@@ -31,7 +31,7 @@ test_that('extras', {
     expect_equal(cfs, c(0.73246, 1.26111, -1.41768), tolerance = 1e-3)
     
     acov <- fscores(mod1, return.acov=TRUE)
-    expect_equal(acov[[1]][1], 0.4724832, tolerance=1e-3)
+    expect_equal(acov[[1]][1], 0.4799239, tolerance=1e-3)
     acov <- fscores(mod1, return.acov=TRUE, full.scores=TRUE)
     expect_equal(acov[[500]][1], 0.4994252, tolerance=1e-3)
     acov <- fscores(model1a, return.acov=TRUE, full.scores=TRUE)

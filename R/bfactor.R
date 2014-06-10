@@ -40,6 +40,7 @@
 #'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
 #'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
+#' @param quadpts number of quadrature nodes to use. Default is 21
 #' @param SE logical; calculate information matrix and standard errors?
 #' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
 #' @param verbose logical; print observed log-likelihood value at each iteration?
@@ -193,7 +194,8 @@
 #'     }
 #'
 bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))),
-                    SE = FALSE, SE.type = 'crossprod', group = NULL, verbose = TRUE, ...)
+                    SE = FALSE, SE.type = 'crossprod', group = NULL, quadpts = 21,
+                    verbose = TRUE, ...)
 {
     Call <- match.call()
     if(!is.numeric(model))
@@ -211,7 +213,7 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
     attr(model, 'specific') <- specific
     if(is.null(group)) group <- rep('all', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group,
-                      method = 'EM', verbose=verbose,
+                      method = 'EM', verbose=verbose, quadpts=quadpts,
                       BFACTOR = TRUE, SE=SE, SE.type=SE.type, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call

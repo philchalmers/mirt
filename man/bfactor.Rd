@@ -4,7 +4,8 @@
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
 bfactor(data, model, model2 = mirt.model(paste0("G = 1-", ncol(data))),
-  SE = FALSE, SE.type = "crossprod", group = NULL, verbose = TRUE, ...)
+  SE = FALSE, SE.type = "crossprod", group = NULL, quadpts = 21,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -24,6 +25,8 @@ the model will fit a unidimensional model in the second-tier, and therefore be e
 the bifactor model}
 
 \item{group}{a factor variable indicating group membership used for multiple group analyses}
+
+\item{quadpts}{number of quadrature nodes to use. Default is 21}
 
 \item{SE}{logical; calculate information matrix and standard errors?}
 
