@@ -486,7 +486,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     } else {
         dat <- x@Data$data
         E <- L1 %*% prior * nrow(dat)
-        adj <- apply(dat, 2, min)
+        adj <- apply(dat, 2, min, na.rm=TRUE)
         dat <- t(t(dat) - adj)
         Otmp <- matrix(table(sort(rowSums(dat))))
         got <- as.numeric(names(table(sort(rowSums(dat)))))
