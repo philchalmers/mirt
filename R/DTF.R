@@ -96,15 +96,14 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6)){
         T1 <- expected.test(mod, Theta, group=1)
         T2 <- expected.test(mod, Theta, group=2)
         D <- T1 - T2
-        uDTF <- mean(D^2)
-        uDTF_percent <- sqrt(uDTF)/max_score * 100
+        uDTF <- mean(abs(D))
+        uDTF_percent <- uDTF/max_score * 100
         sDTF <- mean(D)
         sDTF_percent <- sDTF/max_score * 100
         max_DTF_percent <- max(abs(D))/max_score * 100
         ret <- list(signed = c(DTF=sDTF, `DTF(%)`=sDTF_percent),
                     unsigned = c(DTF=uDTF, `DTF(%)`=uDTF_percent,
                                  `max.DTF(%)`=max_DTF_percent))
-        attr(ret, 'sign') <- sign(D)
         ret
     }
     
@@ -160,8 +159,6 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6)){
         CM <- apply(scores, 2L, mean)
         t_sDTF <- CM['signed.DTF'] / SD['signed.DTF']
         p_sDTF <- pt(abs(t_sDTF), df=MI-1L, lower.tail=FALSE) * 2
-        t_DTF <- CM['unsigned.DTF'] / SD['unsigned.DTF']
-        p_DTF <- pt(t_DTF, df=MI-1L, lower.tail=FALSE) * 2
         CIs <- apply(scores, 2L, function(x, CI){
             ss <- sort(x)
             N <- length(ss)
@@ -173,8 +170,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6)){
         lower <- CIs["lower",]; upper <- CIs["upper",]
         signed <- rbind(upper[1:2], CM[1:2], lower[1:2])
         unsigned <- rbind(upper[3:5], CM[3:5], lower[3:5])
-        tests <- c(p_sDTF, p_DTF)
-        names(tests) <- c("P(sDTF = 0)", "P(uDTF = 0)")
+        tests <- c("P(sDTF = 0)" = p_sDTF)
         rownames(signed) <- rownames(unsigned) <-
             c(paste0('CI_', round(CI + (1-CI)/2, 3L)), 'value',
               paste0('CI_', round((1-CI)/2, 3L)))
