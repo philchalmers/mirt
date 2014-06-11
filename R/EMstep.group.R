@@ -266,46 +266,47 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, 
                   SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate){
     p <- longpars[est]
-    if(Moptim == 'BFGS'){
-        maxit <- max(ceiling(Mrate * 50), 15)
-        opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
-                         control=list(maxit=maxit, fnscale = -1L),
-                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
-                silent=TRUE)
-    } else if(Moptim == 'L-BFGS-B'){
-        maxit <- max(ceiling(Mrate * 50), 15)
-        opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
-                         control=list(maxit=maxit, fnscale = -1L),
-                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
-                         upper=UBOUND[est]),
-                   silent=TRUE)
-    } else if(Moptim == 'Nelder-Mead'){
-        opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=list(fnscale = -1L),
-                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
-                   silent=TRUE)
-    } else if(Moptim == 'SANN'){
-        opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=list(fnscale = -1L),
-                         DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                         est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                         PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                         UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
-                   silent=TRUE)
-    } else {
-        stop('M-step optimzer not supported')
+    if(length(p)){
+        if(Moptim == 'BFGS'){
+            maxit <- max(ceiling(Mrate * 50), 15)
+            opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
+                             control=list(maxit=maxit, fnscale = -1L),
+                             DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                             est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                    silent=TRUE)
+        } else if(Moptim == 'L-BFGS-B'){
+            maxit <- max(ceiling(Mrate * 50), 15)
+            opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
+                             control=list(maxit=maxit, fnscale = -1L),
+                             DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                             est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
+                             upper=UBOUND[est]),
+                       silent=TRUE)
+        } else if(Moptim == 'Nelder-Mead'){
+            opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=list(fnscale = -1L),
+                             DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                             est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                       silent=TRUE)
+        } else if(Moptim == 'SANN'){
+            opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=list(fnscale = -1L),
+                             DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                             est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                       silent=TRUE)
+        } else {
+            stop('M-step optimzer not supported')
+        }
+        if(is(opt, 'try-error'))
+            stop(opt)
+        longpars[est] <- opt$par
     }
-    if(is(opt, 'try-error'))
-        stop(opt)
-    longpars[est] <- opt$par    
-    i = J + 1L
     if(any(groupest)){
         p <- longpars[groupest]
         maxit <- max(ceiling(Mrate * 100), 35)

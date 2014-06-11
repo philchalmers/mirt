@@ -185,6 +185,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nfact <- PrepList[[1L]]$pars[[nitems+1L]]@nfact
     if(nfact != 1L && any(c('Rasch') %in% itemtype ) && PrepList[[1L]]$exploratory)
        stop('Rasch itemtypes are for confimatory models only.')
+    if(PrepList[[1L]]$exploratory && opts$SE){
+        warning('Calculating Parameter information matrix for exploratory item factor analysis models 
+                gives meaningless results, and has been disabled. Use a confirmatory model 
+                to obtain meaningful standard errors, or set SE = FALSE.')
+        opts$SE <- FALSE
+    }
     nLambdas <- PrepList[[1L]]$pars[[1L]]@nfact
     if(is.null(constrain)) constrain <- list()
     #default MG uses configural model (independent groups but each identified)
@@ -387,7 +393,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars, SE=opts$SE,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                           message=opts$message),
+                                           message=opts$message, expl=PrepList[[1L]]$exploratory),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)
@@ -404,7 +410,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars, SE=opts$SE,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                           message=opts$message),
+                                           message=opts$message, expl=FALSE),
                                DERIV=DERIV)
         rlist <- vector('list', Data$ngroups)
         for(g in 1L:Data$ngroups)

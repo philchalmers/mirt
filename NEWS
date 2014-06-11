@@ -2,6 +2,10 @@ Changes in mirt 1.4
 
 MAJOR CHANGES
 
+  - calculating the information matrix for exploratory item factor analysis
+  models has been disabled since the rotational indeterminacy of the model
+  results in improper parameter variation
+
   - changed default `theta_lim` to `c(-6,6)` and number of quadrature defaults
   increased as well
 
