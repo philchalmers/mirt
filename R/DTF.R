@@ -12,7 +12,9 @@
 # @param mod a multipleGroup object which estimated only 2 groups
 # @param MI a number indicating how many draws to take to form a suitable multiple imputation
 #   for the expected test scores (100 or more). Requires an estimated parameter
-#   information matrix
+#   information matrix. Values returned are the medians of the bootstrap distribution,
+#   with a 'bias' attribute indicating the observed difference between the sample estiamtes and 
+#   bootstrap draws
 # @param CI range of condfidince interval when using MI
 # @param npts number of points to use in the integration
 # @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
@@ -153,8 +155,9 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6)){
                                 imputenums=imputenums, Theta=Theta)
         tmp <- lapply(list_scores, do.call, what=c)
         scores <- do.call(rbind, tmp)
-        CM <- lapply(olist_scores, do.call, what=c)[[1L]]
+        oCM <- lapply(olist_scores, do.call, what=c)[[1L]]
         SD <- apply(scores, 2L, sd)
+        CM <- apply(scores, 2L, mean)
         t_sDTF <- CM['signed.DTF'] / SD['signed.DTF']
         p_sDTF <- pt(abs(t_sDTF), df=MI-1L, lower.tail=FALSE) * 2
         t_DTF <- CM['unsigned.DTF'] / SD['unsigned.DTF']
@@ -176,6 +179,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6)){
             c(paste0('CI_', round(CI + (1-CI)/2, 3L)), 'value',
               paste0('CI_', round((1-CI)/2, 3L)))
         ret <- list(signed=signed, unsigned=unsigned, tests=tests)
+        attr(ret, 'bias') <- oCM - CM
     } else ret <- list_scores[[1L]]
     attr(ret, 'sign') <- NULL
     ret
