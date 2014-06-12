@@ -456,12 +456,14 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
         change <- ifelse(change < -.25, -.25, change) 
         plast2 <- plast
         plast <- p
-        flip <- sign(plast - plast2) * sign(change)
-        flip[flip == -1L] <- 0.5
-        if(iter > 2L) change <- change*flip
-        p <- p + change
-        dif <- p - plast
+        p <- p + change       
+        if(iter > 1L){
+            flip <- (sign(lastchange) * sign(change)) == -1L
+            p[flip] <- (plast[flip] + p[flip]) / 2            
+        }
+        dif <- plast - p
         if(all(abs(dif) < TOL)) break
+        lastchange <- change
     }
     return(list(par=p))
 }
