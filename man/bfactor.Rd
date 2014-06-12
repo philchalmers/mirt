@@ -4,8 +4,7 @@
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
 bfactor(data, model, model2 = mirt.model(paste0("G = 1-", ncol(data))),
-  SE = FALSE, SE.type = "crossprod", group = NULL, quadpts = 21,
-  verbose = TRUE, ...)
+  group = NULL, quadpts = 21, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -28,14 +27,8 @@ the bifactor model}
 
 \item{quadpts}{number of quadrature nodes to use. Default is 21}
 
-\item{SE}{logical; calculate information matrix and standard errors?}
-
-\item{SE.type}{type of standard errors to calculate. See \code{\link{mirt}} for details}
-
-\item{verbose}{logical; print observed log-likelihood value at each iteration?}
-
-\item{...}{additional arguments to be passed to the main estimation function. See \code{\link{mirt}}
-for more details}
+\item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
+for more details and examples}
 }
 \value{
 function returns an object of class \code{ConfirmatoryClass}
@@ -202,15 +195,7 @@ Full-Information item bifactor analysis of graded response data.
 \emph{Applied Psychological Measurement, 31}, 4-19
 }
 \seealso{
-\code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-  \code{\link{residuals-method}}, \code{\link{plot-method}},
-  \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-  \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-  \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}},
-  \code{\link{M2}},
-  \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-  \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-  \code{\link{simdata}}, \code{\link{createItem}}
+\code{\link{mirt}}
 }
 \keyword{models}
 

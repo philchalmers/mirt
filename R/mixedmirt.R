@@ -64,15 +64,11 @@
 #' @param SE logical; while standard errors are always computed for the MHRM algorithm this option forces
 #'   the number of iterations to be no less than 400 so that the information matrix is computed more accurately.
 #'   An alternative approach would be to drop the \code{TOL} criteria
-#' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
-#'   is 5000
-#' @param TOL convergence threshold for MH-RM; default is .001
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
-#'   \code{\link{mirt}} for more detail
+#'   \code{\link{mirt}} for more details and examples
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}}
-#'   \code{\link{randef}}, \code{\link{mirtCluster}}, \code{\link{mirt}}
+#' @seealso \code{\link{mirt}}, \code{\link{randef}}
 #' @export mixedmirt
 #' @examples
 #'
@@ -218,7 +214,7 @@
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE,
-                      SE = TRUE, draws = 5000, TOL = NULL, ...)
+                      SE = TRUE, ...)
 {
     Call <- match.call()
     svinput <- pars
@@ -274,7 +270,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     } else mr <- list()
     mixed.design <- list(fixed=mm, random=mr)
     if(is.null(constrain)) constrain <- list()
-    sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, TOL=TOL,
+    sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, 
                      D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values', ...)
     mmnames <- colnames(mm)
     N <- nrow(data)
@@ -308,7 +304,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is.data.frame(svinput)) pars <- svinput
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
-                      SE=SE, draws=draws, TOL=TOL, ...)
+                      SE=SE, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)

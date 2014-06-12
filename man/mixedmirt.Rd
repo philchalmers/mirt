@@ -5,7 +5,7 @@
 \usage{
 mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
   itemtype = "Rasch", itemdesign = NULL, constrain = NULL, pars = NULL,
-  return.design = FALSE, SE = TRUE, draws = 5000, TOL = NULL, ...)
+  return.design = FALSE, SE = TRUE, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -52,13 +52,8 @@ been reassigned?}
 the number of iterations to be no less than 400 so that the information matrix is computed more accurately.
 An alternative approach would be to drop the \code{TOL} criteria}
 
-\item{draws}{the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
-is 5000}
-
-\item{TOL}{convergence threshold for MH-RM; default is .001}
-
 \item{...}{additional arguments to be passed to the MH-RM estimation engine. See
-  \code{\link{mirt}} for more detail}
+  \code{\link{mirt}} for more details and examples}
 }
 \value{
 function returns an object of class \code{MixedClass}
@@ -237,7 +232,6 @@ coef(mod3)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}}
-  \code{\link{randef}}, \code{\link{mirtCluster}}, \code{\link{mirt}}
+\code{\link{mirt}}, \code{\link{randef}}
 }
 

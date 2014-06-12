@@ -3,12 +3,7 @@
 \alias{multipleGroup}
 \title{Multiple Group Estimation}
 \usage{
-multipleGroup(data, model, group, itemtype = NULL, guess = 0, upper = 1,
-  SE = FALSE, SE.type = "crossprod", invariance = "", pars = NULL,
-  method = "EM", constrain = NULL, parprior = NULL, calcNull = TRUE,
-  draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL,
-  key = NULL, technical = list(), accelerate = TRUE,
-  empiricalhist = FALSE, GenRandomPars = FALSE, verbose = TRUE, ...)
+multipleGroup(data, model, group, invariance = "", ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -36,60 +31,8 @@ the factor model is to be estimated. See \code{\link{mirt.model}} for more detai
   for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
   functioning (DIF) across groups}
 
-\item{guess}{initial (or fixed) values for the pseudo-guessing parameter. Can be
-entered as a single value to assign a global guessing parameter or may be entered as
-a numeric vector for each item}
-
-\item{upper}{initial (or fixed) upper bound parameters for 4-PL model. Can be
-entered as a single value to assign a global upper bound parameter or may be entered as a
-numeric vector corresponding to each item}
-
-\item{accelerate}{see \code{\link{mirt}} for more details}
-
-\item{SE}{logical; estimate the information matrix for standard errors?}
-
-\item{SE.type}{see \code{\link{mirt}} for more details}
-
-\item{verbose}{logical; display iteration history during estimation?}
-
-\item{draws}{the number of Monte Carlo draws to estimate the log-likelihood}
-
-\item{quadpts}{the number of quadratures to be used per dimensions when \code{method = 'EM'}}
-
-\item{calcNull}{logical; calculate the Null model for fit statics (e.g., TLI)?}
-
-\item{method}{a character indicating whether to use the EM (\code{'EM'}) or the MH-RM
-(\code{'MHRM'}) algorithm}
-
-\item{type}{type of plot to view; can be \code{'info'} to show the test
-information function, \code{'infocontour'} for the test information contours,
-\code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
-and \code{'score'} for the expected total score plot}
-
-\item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
-see \code{mirt} for details}
-
-\item{GenRandomPars}{logical; generate random starting values prior to optimization instead of
-using the fixed internal starting values?}
-
-\item{key}{see \code{\link{mirt}} for details}
-
-\item{itemtype}{see \code{\link{mirt}} for details}
-
-\item{constrain}{see \code{\link{mirt}} for details}
-
-\item{grsm.block}{see \code{\link{mirt}} for details}
-
-\item{parprior}{see \code{\link{mirt}} for details}
-
-\item{pars}{see \code{\link{mirt}} for details}
-
-\item{TOL}{see \code{\link{mirt}} for details}
-
-\item{...}{additional arguments to be passed}
-
-\item{technical}{list specifying subtle parameters that can be adjusted. See
-\code{\link{mirt}} for details}
+\item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
+for details and examples}
 }
 \value{
 function returns an object of class \code{MultipleGroupClass}
@@ -97,7 +40,7 @@ function returns an object of class \code{MultipleGroupClass}
 }
 \description{
 \code{multipleGroup} performs a full-information
-maximum-likelihood multiple group analysis for dichotomous and polytomous
+maximum-likelihood multiple group analysis for any combination of dichotomous and polytomous
 data under the item response theory paradigm using either Cai's (2010)
 Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This function
 may be used for detecting differential item functioning (DIF), thought the \code{\link{DIF}} function
@@ -299,14 +242,7 @@ anova(EH, EH1)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-  \code{\link{residuals-method}}, \code{\link{plot-method}},
-  \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-  \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-  \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{M2}},
-  \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-  \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-  \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}, \code{\link{DIF}}
+\code{\link{mirt}}, \code{\link{DIF}}
 }
 \keyword{models}
 

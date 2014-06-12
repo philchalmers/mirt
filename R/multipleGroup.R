@@ -1,7 +1,7 @@
 #' Multiple Group Estimation
 #'
 #' \code{multipleGroup} performs a full-information
-#' maximum-likelihood multiple group analysis for dichotomous and polytomous
+#' maximum-likelihood multiple group analysis for any combination of dichotomous and polytomous
 #' data under the item response theory paradigm using either Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This function
 #' may be used for detecting differential item functioning (DIF), thought the \code{\link{DIF}} function
@@ -40,49 +40,13 @@
 #'   constrain all freely estimated parameters in each item to be equal across groups. This is useful
 #'   for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
 #'   functioning (DIF) across groups
-#' @param guess initial (or fixed) values for the pseudo-guessing parameter. Can be
-#'   entered as a single value to assign a global guessing parameter or may be entered as
-#'   a numeric vector for each item
-#' @param upper initial (or fixed) upper bound parameters for 4-PL model. Can be
-#'   entered as a single value to assign a global upper bound parameter or may be entered as a
-#'   numeric vector corresponding to each item
-#' @param accelerate see \code{\link{mirt}} for more details
-#' @param SE logical; estimate the information matrix for standard errors?
-#' @param SE.type see \code{\link{mirt}} for more details
-#' @param verbose logical; display iteration history during estimation?
-#' @param draws the number of Monte Carlo draws to estimate the log-likelihood
-#' @param quadpts the number of quadratures to be used per dimensions when \code{method = 'EM'}
-#' @param calcNull logical; calculate the Null model for fit statics (e.g., TLI)?
-#' @param method a character indicating whether to use the EM (\code{'EM'}) or the MH-RM
-#'   (\code{'MHRM'}) algorithm
-#' @param type type of plot to view; can be \code{'info'} to show the test
-#'   information function, \code{'infocontour'} for the test information contours,
-#'   \code{'SE'} for the test standard error function, \code{'RE'} for the relative efficiency plot,
-#'   and \code{'score'} for the expected total score plot
-#' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
-#'   see \code{mirt} for details
-#' @param GenRandomPars logical; generate random starting values prior to optimization instead of
-#'          using the fixed internal starting values?
-#' @param key see \code{\link{mirt}} for details
-#' @param itemtype see \code{\link{mirt}} for details
-#' @param constrain see \code{\link{mirt}} for details
-#' @param grsm.block see \code{\link{mirt}} for details
-# @param rsm.block see \code{\link{mirt}} for details
-#' @param parprior see \code{\link{mirt}} for details
-#' @param pars see \code{\link{mirt}} for details
-#' @param TOL see \code{\link{mirt}} for details
-#' @param ... additional arguments to be passed
-#' @param technical list specifying subtle parameters that can be adjusted. See
-#'   \code{\link{mirt}} for details
+#' @param method a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
+#'   for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
+#'   use the MH-RM algorithm
+#' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
+#'   for details and examples
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-#'   \code{\link{residuals-method}}, \code{\link{plot-method}},
-#'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}}, \code{\link{M2}},
-#'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-#'   \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#'   \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}, \code{\link{DIF}}
+#' @seealso \code{\link{mirt}}, \code{\link{DIF}}
 #   \code{\link{DTF}}
 #' @keywords models
 #' @export multipleGroup
@@ -268,19 +232,17 @@
 #' anova(EH, EH1)
 #'
 #' }
-multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
-                          SE = FALSE, SE.type = 'crossprod', invariance = '', pars = NULL,
-                          method = 'EM', constrain = NULL, parprior = NULL, calcNull = TRUE,
-                          draws = 5000, quadpts = NULL, TOL = NULL, grsm.block = NULL, 
-                          key = NULL, technical = list(), accelerate = TRUE, empiricalhist = FALSE,
-                          GenRandomPars = FALSE, verbose = TRUE, ...)
+multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ...)
 {
     Call <- match.call()
+    dots <- list(...)
+    constrain <- dots$constrain
     if(length(model) > 1L)
         stop('multipleGroup only supports single group inputs')
     invariance.check <- invariance %in% c('free_means', 'free_var', 'free_varcov')
-    if(empiricalhist && any(invariance.check))
-        stop('freeing group parameters not meaningful when estimating empirical histograms')
+    if(!is.null(dots$empiricalhist))
+        if(dots$empiricalhist && any(invariance.check))
+            stop('freeing group parameters not meaningful when estimating empirical histograms')
     if(sum(invariance.check == 2L) && length(constrain) == 0){
         warn <- TRUE
         if(is(model, 'mirt.model')){
@@ -290,13 +252,7 @@ multipleGroup <- function(data, model, group, itemtype = NULL, guess = 0, upper 
         if(warn)
             stop('Model is not identified without further constrains (may require additional anchoring items).')
     }
-    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance,
-                      itemtype=itemtype, guess=guess, upper=upper, empiricalhist=empiricalhist,
-                      pars=pars, constrain=constrain, SE=SE, grsm.block=grsm.block,
-                      parprior=parprior, quadpts=quadpts, method=method, 
-                      technical = technical, verbose = verbose, calcNull=calcNull,
-                      SE.type = SE.type, key=key, accelerate=accelerate, draws=draws,
-                      GenRandomPars=GenRandomPars, TOL=TOL, ...)
+    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

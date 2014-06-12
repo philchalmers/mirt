@@ -41,21 +41,10 @@
 #'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param quadpts number of quadrature nodes to use. Default is 21
-#' @param SE logical; calculate information matrix and standard errors?
-#' @param SE.type type of standard errors to calculate. See \code{\link{mirt}} for details
-#' @param verbose logical; print observed log-likelihood value at each iteration?
-#' @param ... additional arguments to be passed to the main estimation function. See \code{\link{mirt}}
-#'   for more details
+#' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
+#'   for more details and examples
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-#'   \code{\link{residuals-method}}, \code{\link{plot-method}},
-#'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-#'   \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}},
-#'   \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}},
-#'   \code{\link{M2}},
-#'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-#'   \code{\link{boot.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}}, \code{\link{mod2values}},
-#'   \code{\link{simdata}}, \code{\link{createItem}}
+#' @seealso \code{\link{mirt}}
 #' @references
 #'
 #' Cai, L. (2010). A two-tier full-information item factor analysis model with applications.
@@ -194,8 +183,7 @@
 #'     }
 #'
 bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))),
-                    SE = FALSE, SE.type = 'crossprod', group = NULL, quadpts = 21,
-                    verbose = TRUE, ...)
+                    group = NULL, quadpts = 21, ...)
 {
     Call <- match.call()
     if(!is.numeric(model))
@@ -213,8 +201,8 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
     attr(model, 'specific') <- specific
     if(is.null(group)) group <- rep('all', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group,
-                      method = 'EM', verbose=verbose, quadpts=quadpts,
-                      BFACTOR = TRUE, SE=SE, SE.type=SE.type, ...)
+                      method = 'EM', quadpts=quadpts,
+                      BFACTOR = TRUE, ...)
     if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

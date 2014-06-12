@@ -51,10 +51,11 @@ test_that('one factor', {
                             CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')
     expect_is(mod_scalar1, 'MultipleGroupClass')
-    mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', empiricalhist=TRUE)
+    mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', 
+                            empiricalhist=TRUE, optimizer = 'NR')
     expect_is(mod_EH, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_EH, digits=4)[[1L]]))
-    expect_equal(cfs, c(0.9157, 0.5762, 0, 1, 1.1492, -0.6687, 0, 1, 0.7621, -0.1143, 0, 1, 0.962, 0.8544, 0, 1, 1.084, 0.3526, 0, 1, 0.409, 0.4941, 0, 1, 1.0155, 1.1149, 0, 1, 0.757, -0.3631, 0, 1, 0.7929, -1.027, 0, 1, 0.7202, -1.0713, 0, 1, 0.7833, 1.1886, 0, 1, 1.3881, -0.1058, 0, 1, 1.2098, 0.6779, 0, 1, 0.9116, 0.4329, 0, 1, 0.7701, -0.0585, 0, 1, 0, 1),
+    expect_equal(cfs, c(0.9339, 0.5807, 0, 1, 1.1652, -0.6633, 0, 1, 0.7763, -0.1112, 0, 1, 0.9771, 0.8583, 0, 1, 1.1012, 0.3572, 0, 1, 0.4185, 0.4954, 0, 1, 1.0291, 1.118, 0, 1, 0.7706, -0.3602, 0, 1, 0.8036, -1.0231, 0, 1, 0.7288, -1.0674, 0, 1, 0.7949, 1.1914, 0, 1, 1.4117, -0.0999, 0, 1, 1.2329, 0.6838, 0, 1, 0.9236, 0.4362, 0, 1, 0.7843, -0.0553, 0, 1, 0, 1),
                  tolerance = 1e-2)
 
     dat[1,1] <- dat[2,2] <- NA

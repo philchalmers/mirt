@@ -37,29 +37,14 @@ can also be defined using the \code{\link{createItem}} function}
 for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
 use the MH-RM algorithm}
 
-\item{optimizer}{a character indicating which optimizer to use. By default, the EM algorithm
+\item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM algorithm
 will use the \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'}
 when there are. Other options include the Newton-Raphson (\code{'NR'}), which often will
-be more efficient than the \code{'BFGS'} but often not as stable for more complex models
-(such as the nominal or nested logit models) or if poor start values are provided,
-and does not support upper and lower bound constraints.
-As well, the \code{'Nelder-Mead'} and \code{'SANN'}
-estimators may also be used, though their routine use generally is not required.
+be more efficient than the \code{'BFGS'} but not as stable for more complex models
+(such as the nominal or nested logit models) and does not support
+upper and lower bound constraints. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
+estimators are also available, though their routine use generally is not required or recommended.
 The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed}
-
-\item{grsm.block}{an optional numeric vector indicating where the blocking should occur when using
-the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
-in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
-\code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same
-group and therefore have the same number of item categories}
-
-\item{key}{a numeric vector of the response scoring key. Required when using nested logit item types, and
-must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
-so use \code{NA} in item locations that are not applicable}
-
-\item{survey.weights}{a optional numeric vector of survey weights to apply for each case in the
-data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT approach).
-The sum of the \code{survey.weights} must equal the total sample size for proper weighting to be applied}
 
 \item{SE}{logical; estimate the standard errors? See \code{SE.type} for the type of estimates available. Using
 \code{SE = TRUE} when \code{method = 'MHRM'} will force the estimation to terminate no earlier than 400
@@ -92,18 +77,6 @@ vector corresponding to each item}
 \item{accelerate}{logical; use a general acceleration algorithm described by Ramsey (1975)? Default
 is \code{TRUE}}
 
-\item{rotate}{type of rotation to perform after the initial orthogonal
-  parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
-  If \code{rotate != ''} in the \code{summary}
-  input then the default from the object is ignored and the new rotation from the list
-  is used instead.
-
-  Rotations currently supported are: promax, oblimin, varimax, quartimin,
-  targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ,
-  tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ}
-
-\item{Target}{a dummy variable matrix indicting a target rotation pattern}
-
 \item{constrain}{a list of user declared equality constraints. To see how to define the
 parameters correctly use \code{pars = 'values'} initially to see how the parameters are labeled.
 To constrain parameters to be equal create a list with separate concatenated vectors signifying which
@@ -126,9 +99,6 @@ logical values, etc, are defined. The user may observe how the model defines the
 'values'}, and this object can in turn be modified and input back into the estimation with \code{pars =
 mymodifiedpars}}
 
-\item{calcNull}{logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the
-data contains no NA's}
-
 \item{quadpts}{number of quadrature points per dimension (must be an odd number).
 By default the number of quadrature uses the following scheme:
 \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}}
@@ -136,6 +106,50 @@ By default the number of quadrature uses the following scheme:
 \item{TOL}{convergence threshold for EM or MH-RM; defaults are .0001 and .001. If \code{SE.type = 'SEM'} and this
 value is not specified, the default is set to \code{1e-5}. If \code{empiricalhist = TRUE} and \code{TOL} is
 not specified then the default \code{3e-5} will be used}
+
+\item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
+Only applicable for unidimensional models estimated with the EM algorithm.
+The number of cycles, TOL, and quadpts are adjusted
+accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)}
+
+\item{nominal.highlow}{optional matrix indicating the highest (row 1) and lowest (row 2) categories
+to be used for the nominal response model. Using this input may result in better numerical stability.
+The matrix input should be a 2 by nitems numeric matrix, where each number represents the \emph{reduced}
+category representation (mirt omits categories that are missing, so if the unique values for an item
+are c(1,2,5,6) they are treated as being the same as c(1,2,3,4). Viewing the starting values will help
+to identify the categories)}
+
+\item{survey.weights}{a optional numeric vector of survey weights to apply for each case in the
+data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT approach).
+The sum of the \code{survey.weights} must equal the total sample size for proper weighting to be applied}
+
+\item{GenRandomPars}{logical; generate random starting values prior to optimization instead of
+using the fixed internal starting values?}
+
+\item{grsm.block}{an optional numeric vector indicating where the blocking should occur when using
+the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
+in the test data). For example, to specify two blocks of 3 with a 2PL item for the last item:
+\code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed to be within the same
+group and therefore have the same number of item categories}
+
+\item{key}{a numeric vector of the response scoring key. Required when using nested logit item types, and
+must be the same length as the number of items used. Items that are not nested logit will ignore this vector,
+so use \code{NA} in item locations that are not applicable}
+
+\item{rotate}{type of rotation to perform after the initial orthogonal
+  parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
+  If \code{rotate != ''} in the \code{summary}
+  input then the default from the object is ignored and the new rotation from the list
+  is used instead.
+
+  Rotations currently supported are: promax, oblimin, varimax, quartimin,
+  targetT, targetQ, pstT, pstQ, oblimax, entropy, quartimax, simplimax, bentlerT, bentlerQ,
+  tandemI, tandemII, geominT, geominQ, cfT, cfQ, infomaxT, infomaxQ, mccammon, bifactorT, bifactorQ}
+
+\item{Target}{a dummy variable matrix indicting a target rotation pattern}
+
+\item{calcNull}{logical; calculate the Null model for fit statics (e.g., TLI)? Only applicable if the
+data contains no NA's and the data is not overaly sparse}
 
 \item{large}{either a \code{logical}, indicating whether the internal collapsed data should
   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
@@ -150,23 +164,8 @@ not specified then the default \code{3e-5} will be used}
   \code{mod <- mirt(Science, 1, large = internaldat)}}
 }}
 
-\item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
-Only applicable for unidimensional models estimated with the EM algorithm.
-The number of cycles, TOL, and quadpts are adjusted
-accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)}
-
-\item{nominal.highlow}{optional matrix indicating the highest (row 1) and lowest (row 2) categories
-to be used for the nominal response model. Using this input may result in better numerical stability.
-The matrix input should be a 2 by nitems numeric matrix, where each number represents the \emph{reduced}
-category representation (mirt omits categories that are missing, so if the unique values for an item
-are c(1,2,5,6) they are treated as being the same as c(1,2,3,4). Viewing the starting values will help
-to identify the categories)}
-
 \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM algorithm. Default
 is 5000}
-
-\item{GenRandomPars}{logical; generate random starting values prior to optimization instead of
-using the fixed internal starting values?}
 
 \item{verbose}{logical; print observed log-likelihood value at each iteration?}
 
@@ -175,11 +174,11 @@ using the fixed internal starting values?}
     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than 4GB or RAM on your PC;
       default 10000}
     \item{SEtol}{tolerance value used to stop the MHRM estimation when \code{SE = TRUE}
-    and \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower values will take longer but may be more
-    stable for computing the information matrix. Default is .0001.
+      and \code{SE.type = 'MHRM'} and \code{method = 'EM'}. Lower values will take longer but may be more
+      stable for computing the information matrix. Default is .0001.
 
-    If \code{SE.type = 'SEM'}, this is the tolerance used to terminate the S-EM computations for each parameter,
-    and if not specified the default is \code{.001}}
+      If \code{SE.type = 'SEM'}, this is the tolerance used to terminate the S-EM computations for each parameter,
+      and if not specified the default is \code{.001}}
     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
     \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
     \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
@@ -192,22 +191,22 @@ using the fixed internal starting values?}
     \item{warn}{logical; include warning messages during estimation? Default is TRUE}
     \item{message}{logical; include general messages during estimation? Default is TRUE}
     \item{customK}{a numeric value to be used to explicitly declare the number of response categories
-          for each item. This should only be used when constructing mirt model for reasons other
-          than parameter estimation (such as to obtain factor scores), and requires that the input data
-          all have 0 as the lowest category. The format is the same as the
-          \code{mod@K} slot in all converged models}
+      for each item. This should only be used when constructing mirt model for reasons other
+      than parameter estimation (such as to obtain factor scores), and requires that the input data
+      all have 0 as the lowest category. The format is the same as the
+      \code{mod@K} slot in all converged models}
     \item{customPriorFun}{a custom function used to determine the normalized density for integration
-         in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
-         with the same length as number of rows in \code{Theta}}
+      in the EM algorithm. Must be of the form \code{function(Theta){...}}, and return a numeric vector
+      with the same length as number of rows in \code{Theta}}
     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
-         If not defined, the grid is determined internally based on the number of \code{quadpts}}
+      If not defined, the grid is determined internally based on the number of \code{quadpts}}
     \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will
-         cause the acceptance ratio to decrease. Only one value is required for unconditional
-         item factor analysis (\code{mixedmirt()} requires additional values for random effect).
-         If null, these values are determined internally, attempting to make the draws between
-         .1 and .4}
+      cause the acceptance ratio to decrease. Only one value is required for unconditional
+      item factor analysis (\code{mixedmirt()} requires additional values for random effect).
+      If null, these values are determined internally, attempting to make the draws between
+      .1 and .4}
     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
-         Default is TRUE}
+      Default is TRUE}
   }}
 
 \item{...}{additional arguments to be passed}
@@ -220,42 +219,21 @@ function returns an object of class \code{ExploratoryClass}
 }
 \description{
 \code{mirt} fits an unconditional maximum likelihood factor analysis model
-to dichotomous and polytomous data under the item response theory paradigm.
-Fits univariate and multivariate Rasch, 2-4PL, graded, (generalized) partial credit,
-nominal, graded rating scale, Rasch rating scale, nested logistic,
-ideal point, and partially compensatory models using the traditional EM algorithm or Cai's (2010)
-Metropolis-Hastings Robbins-Monro (MH-RM) algorithm. User defined item classes
-can also be defined using the \code{\link{createItem}} function. Models may also contain 'explanatory'
-person or item level predictors, though these can only be included by using the
-\code{\link{mixedmirt}} function. Tests that form a two-tier or bi-factor structure should
-be estimated with the \code{\link{bfactor}} function, which uses a dimension reduction EM
-algorithm for modeling item parcels. Multiple group analyses (useful for DIF testing) are
+to any mixture of dichotomous and polytomous data under the item response theory paradigm
+using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with
+an EM algorithm approach outlined by Bock and Aiken (1981).
+Models containing 'explanatory' person or item level predictors
+can only be included by using the \code{\link{mixedmirt}} function. Tests that form a
+two-tier or bi-factor structure should be estimated with the \code{\link{bfactor}} function,
+which uses a dimension reduction EM algorithm for modeling item parcels.
+Multiple group analyses (useful for DIF testing) are
 also available using the \code{\link{multipleGroup}} function.
-}
-\details{
-\code{mirt} follows the item factor analysis strategy by marginal maximum
-likelihood estimation (MML) outlined in Bock and Aiken (1981), Bock,
-Gibbons and Muraki (1988), and Muraki and Carlson (1995).
-Nested models may be compared via the approximate
-chi-squared difference test or by a reduction in AIC/BIC values (comparison
-via \code{\link{anova}}).
-
-\code{summary} and \code{coef} allow
-for all the rotations available from the \code{GPArotation} package (e.g., \code{rotate = 'oblimin'})
-as well as a \code{'promax'} rotation. Using \code{plot} will plot the test information function
-or the test standard errors
-for 1 and 2 dimensional solutions, or all item trace lines if only 1 dimensional the test is only
-dichotomous items. To examine
-individual item plots use \code{\link{itemplot}}. Residuals are
-computed using the LD statistic (Chen & Thissen, 1997) in the lower
-diagonal of the matrix returned by \code{residuals}, and Cramer's V above
-the diagonal.
 }
 \section{Confirmatory and Exploratory IRT}{
 
 
 Specification of the confirmatory item factor analysis model follows many of
-the rules in the SEM framework for confirmatory factor analysis. The
+the rules in the structural equation modeling framework for confirmatory factor analysis. The
 variances of the latent factors are automatically fixed to 1 to help
 facilitate model identification. All parameters may be fixed to constant
 values or set equal to other parameters using the appropriate declarations.
@@ -263,9 +241,9 @@ If the model is confirmatory then the returned class will be 'ConfirmatoryClass'
 models may also contain 'explanatory' person or item level predictors, though including predictors
 is limited only to the \code{\link{mixedmirt}} function.
 
-When specifying a single number as the second input to mirt an exploratory IRT model is estimated and
-can be viewed as a stochastic analogue of the EM algorithm, with much of the same behaviour and
-specifications. Rotation and target matrix options will be used in this subroutine and will be
+When specifying a single number greater than 1 as the \code{model} input to mirt
+an exploratory IRT model will be estimated. Rotation and target matrix options will be
+used in this subroutine and will be
 passed to the returned object for use in generic functions such as \code{summary()} and
 \code{fscores}. Again, factor means and variances are fixed to ensure proper identification.
 If the model is confirmatory then the returned class will be 'ExploratoryClass'.
@@ -280,7 +258,7 @@ normal of the item facility (i.e., item easiness), \eqn{q_j}, to obtain
 \eqn{d_j = q_j / u_j}. A similar implementation is also used for obtaining
 initial values for polytomous items.
 
-Note that internally, the \eqn{g} and \eqn{u} parameters are transformed using a logit
+Note that internally the \eqn{g} and \eqn{u} parameters are transformed using a logit
 transformation (\eqn{log(x/(1-x))}), and can be reversed by using \eqn{1 / (1 + exp(-x))}
 following convergence. This also applies when computing confidence intervals for these parameters,
 and is done so automatically if \code{coef(mod, rawug = FALSE)}.
@@ -315,6 +293,54 @@ matrix accurately, which can be accomplished either by decreasing the \code{TOL}
 \code{SE = TRUE}.
 }
 
+\section{Additional helper functions}{
+
+
+Additional functions are available in the package which can be useful pre- and post-estimation.
+These are:
+
+\describe{
+  \item{\code{\link{mirt.model}}}{
+    Define the IRT model specification use special syntax. Useful for defining between and within group
+    parameter constraints, prior parameter distributions, and specifying the slope coefficients for each factor}
+  \item{\code{\link{coef-method}}}{
+    Extract raw coefficients from the model, along with their standard errors and confidence intervals}
+  \item{\code{\link{summary-method}}}{
+    Extract standardized loadings from model. Accepts a \code{rotate} argument for exploratory item response model}
+  \item{\code{\link{anova-method}}}{
+    Compare nested models using likelihood ratio statistics as well as information criteria
+    such as the AIC and BIC}
+  \item{\code{\link{residuals-method}}}{
+    Compute pairwise residuals between each item using methods such as the LD statistic (Chen & Thissen, 1997),
+    as well as response pattern residuals}
+  \item{\code{\link{plot-method}}}{
+    Plot various types of test level plots including the test score and information functions and more}
+  \item{\code{\link{itemplot}}}{
+    Plot various types of item level plots, including the score, standard error, and information functions,
+    and more}
+  \item{\code{\link{createItem}}}{
+    Create a customized \code{itemtype} that does not currently exist in the package}
+  \item{\code{\link{imputeMissing}}}{
+	   Impute missing data given some computed Theta matrix}
+  \item{\code{\link{fscores}}}{
+    Find predicted scores for the latent traits using estimation methods such as EAP, MAP, ML, WLE, and EAPsum}
+  \item{\code{\link{wald}}}{
+    Compute Wald statistics follow the convergence of a model with a suitable information matrix}
+  \item{\code{\link{M2}}}{
+    Limited information goodness of fit test statistic based to determine how well the model fits the data}
+  \item{\code{\link{itemfit}} and \code{\link{personfit}}}{
+    Goodness of fit statistics at the item and person levels, such as the S-X2, infit, outfit, and more}
+  \item{\code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}}{
+    Compute estimated parameter confidence intervals via the bootstrap and profiled-likelihood methods}
+  \item{\code{\link{read.mirt}}}{
+    Translates mirt objects into objects suitable for use with the \code{plink} package}
+  \item{\code{\link{mirtCluster}}}{
+    Define a cluster for the package functions to use for capitalizing on multi-core architecture to utilize
+    available CPUs when possible. Will help to decrease estimation times for tasks that can be run in parallel}
+
+}
+}
+
 \section{IRT Models}{
 
 
@@ -322,68 +348,67 @@ The parameter labels use the follow convention, here using two factors and \eqn{
 of categories.
 
 \describe{
-\item{Rasch}{
-Only one intercept estimated, and the latent variance of \eqn{\theta} is freely estimated. If
-the data have more than two categories then a partial credit model is used instead (see 'gpcm' below).
-\deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
-}
-\item{2-4PL}{
-Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
-\deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
-}
-\item{graded}{
-The graded model consists of sequential 2PL models, and here \eqn{k} is
-the predicted category.
-\deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
-}
-\item{grsm}{
-A more constrained version of the graded model where graded spacing is equal accross item blocks
-and only adjusted by a single 'difficulty' parameter (c) while the latent variance
-of \eqn{\theta} is freely estimated. Again,
-\deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
-but now
-\deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
-}
-\item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and orderd values
-from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
-in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(k-1)} = (k - 1)}.
-\deqn{P(x = k | \theta, \psi) = \frac{exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}
-{\sum_1^k exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
+  \item{Rasch}{
+    Only one intercept estimated, and the latent variance of \eqn{\theta} is freely estimated. If
+    the data have more than two categories then a partial credit model is used instead (see 'gpcm' below).
+    \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
+  }
+  \item{2-4PL}{
+    Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
+    \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
+  }
+  \item{graded}{
+    The graded model consists of sequential 2PL models, and here \eqn{k} is
+    the predicted category.
+    \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
+  }
+  \item{grsm}{
+    A more constrained version of the graded model where graded spacing is equal accross item blocks
+    and only adjusted by a single 'difficulty' parameter (c) while the latent variance
+    of \eqn{\theta} is freely estimated. Again,
+    \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
+    but now
+    \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
+  }
+  \item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and orderd values
+    from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for identification
+    in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(k-1)} = (k - 1)}.
+    \deqn{P(x = k | \theta, \psi) = \frac{exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}
+    {\sum_1^k exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
 
-For partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above model
-is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent
-variance of \eqn{\theta_1} is freely estimated.
+    For partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above model
+    is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the latent
+    variance of \eqn{\theta_1} is freely estimated.
 
-In the nominal model this parametrization helps to identify the empirical ordering of the
-categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is
-more positively related to the latent trait(s) being measured. For instance, if an item was
-truly ordinal (such as a Likert scale), and had 4 response categories, we would expect
-to see \eqn{ak_0 < ak_1 < ak_2 < ak_3} following estimation. If on the other hand \eqn{ak_0 > ak_1}
-then it would appear that the second category is less related to to the trait than the first, and
-therefore the second category should be understood as the 'lowest score'.
+    In the nominal model this parametrization helps to identify the empirical ordering of the
+    categories by inspecting the \eqn{ak} values. Larger values indicate that the item category is
+    more positively related to the latent trait(s) being measured. For instance, if an item was
+    truly ordinal (such as a Likert scale), and had 4 response categories, we would expect
+    to see \eqn{ak_0 < ak_1 < ak_2 < ak_3} following estimation. If on the other hand \eqn{ak_0 > ak_1}
+    then it would appear that the second category is less related to to the trait than the first, and
+    therefore the second category should be understood as the 'lowest score'.
 
-NOTE: The nominal model can become numerical unstable if poor choices for the high and low values
-are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. It is recommended to choose
-high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1
-either by theoretical means or by re-estimating the model with better values following convergence.
-
-}
-\item{ideal}{
-The ideal point model has the form, with the upper bound constraint on \eqn{d} set to 0:
-\deqn{P(x = 1 | \theta, \psi) = exp(-0.5 * (a_1 * \theta_1 + a_2 * \theta_2 + d)^2)}
-}
-\item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
-\deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
-\frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
-}
-\item{2-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
-The model is broken into two components for the probability of endorsement. For successful endorsement
-the probability trace is the 1-4PL model, while for unsuccessful endorsement:
-\deqn{P(x = 0 | \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
-which is the product of the compliment of the dichotomous trace line with the nominal
-response model. In the nominal model, the slope parameters defined above are constrained to be 1's,
-while the last value of the \eqn{ak} is freely estimated.
-}
+    NOTE: The nominal model can become numerical unstable if poor choices for the high and low values
+    are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. It is recommended to choose
+    high and low anchors that cause the estimated parameters to fall between 0 and the number of categories - 1
+    either by theoretical means or by re-estimating the model with better values following convergence.
+  }
+  \item{ideal}{
+    The ideal point model has the form, with the upper bound constraint on \eqn{d} set to 0:
+    \deqn{P(x = 1 | \theta, \psi) = exp(-0.5 * (a_1 * \theta_1 + a_2 * \theta_2 + d)^2)}
+  }
+  \item{partcomp}{Partially compensatory models consist of the products of 2PL probability curves.
+    \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
+    \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
+  }
+  \item{2-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
+    The model is broken into two components for the probability of endorsement. For successful endorsement
+    the probability trace is the 1-4PL model, while for unsuccessful endorsement:
+    \deqn{P(x = 0 | \theta, \psi) = (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
+    which is the product of the compliment of the dichotomous trace line with the nominal
+    response model. In the nominal model, the slope parameters defined above are constrained to be 1's,
+    while the last value of the \eqn{ak} is freely estimated.
+  }
 }
 }
 \examples{
@@ -568,9 +593,9 @@ for(i in 1:5){
     plot(Theta, info2, type = 'l', main = paste('Information for item', i), ylab = 'Information')
     lines(Theta, info, col = 'red')
 }
+par(mfrow = c(1,1))
 
 #test information
-par(mfrow = c(1,1))
 plot(Theta, testinfo(mod2, Theta), type = 'l', main = 'Test information', ylab = 'Information')
 lines(Theta, testinfo(mod0, Theta), col = 'red')
 
@@ -722,7 +747,7 @@ Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 
 Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
-Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement}.
+Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 339-358.
 
 Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
@@ -763,15 +788,10 @@ and Full-information Item Factor Analysis} [Computer software]. Lincolnwood,
 IL: Scientific Software International.
 }
 \seealso{
-\code{\link{anova-method}}, \code{\link{coef-method}}, \code{\link{summary-method}},
-  \code{\link{residuals-method}}, \code{\link{plot-method}},
-  \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mirt.model}}, \code{\link{mirt}},
-  \code{\link{bfactor}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}, \code{\link{mod2values}},
-  \code{\link{wald}}, \code{\link{itemplot}}, \code{\link{fscores}},
-  \code{\link{M2}},
+\code{\link{bfactor}},  \code{\link{multipleGroup}},  \code{\link{mixedmirt}},
+  \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mod2values}},
   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}}, \code{\link{probtrace}},
-  \code{\link{boot.mirt}}, \code{\link{PLCI.mirt}}, \code{\link{imputeMissing}}, \code{\link{itemfit}},
-  \code{\link{simdata}}, \code{\link{createItem}}, \code{\link{mirtCluster}}
+  \code{\link{simdata}}
 }
 \keyword{models}
 

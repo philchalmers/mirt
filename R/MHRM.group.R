@@ -353,7 +353,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             for(i in 1L:length(constrain))
                 longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         if(verbose)
-            cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f\r",
+            cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f",
                                   gamma, max(abs(gamma*correction))), sep='')
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
         else conv <- 0L

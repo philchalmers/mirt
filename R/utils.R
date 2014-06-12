@@ -921,12 +921,12 @@ updateHess <- function(h, L2, L3){
     hess
 }
 
-makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NaN,
+makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
                      rotate = 'varimax', Target = NaN, SE = FALSE, verbose = TRUE,
                      SEtol = .0001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
-                     SE.type = 'MHRM', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
+                     SE.type = 'crossprod', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
                      optimizer = NULL, ...)
 {
     opts <- list()

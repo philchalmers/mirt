@@ -304,7 +304,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method == 'EM'){
         if(is.null(opts$quadpts))
             opts$quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
-        if(opts$quadpts %% 2 == 0) stop('Must use an odd number for quadpts')
         if(opts$quadpts < 3) stop('Must use more than 2 quadpts')
         Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                         length.out = opts$quadpts))
