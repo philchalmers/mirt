@@ -5,12 +5,13 @@
 Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  SE.type = "crossprod", method = "EM", pars = NULL, constrain = NULL,
-  parprior = NULL, calcNull = TRUE, draws = 5000, survey.weights = NULL,
-  rotate = "oblimin", Target = NaN, quadpts = NULL, TOL = NULL,
-  grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
-  GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE,
-  verbose = TRUE, technical = list(), ...)
+  SE.type = "crossprod", method = "EM", optimizer = NULL, pars = NULL,
+  constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000,
+  survey.weights = NULL, rotate = "oblimin", Target = NaN,
+  quadpts = NULL, TOL = NULL, grsm.block = NULL, key = NULL,
+  nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
+  accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE,
+  technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -35,6 +36,16 @@ can also be defined using the \code{\link{createItem}} function}
 \item{method}{a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
 for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
 use the MH-RM algorithm}
+
+\item{optimizer}{a character indicating which optimizer to use. By default, the EM algorithm
+will use the \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'}
+when there are. Other options include the Newton-Raphson (\code{'NR'}), which often will
+be more efficient than the \code{'BFGS'} but often not as stable for more complex models
+(such as the nominal or nested logit models) or if poor start values are provided,
+and does not support upper and lower bound constraints.
+As well, the \code{'Nelder-Mead'} and \code{'SANN'}
+estimators may also be used, though their routine use generally is not required.
+The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed}
 
 \item{grsm.block}{an optional numeric vector indicating where the blocking should occur when using
 the grsm, NA represents items that do not belong to the grsm block (other items that may be estimated
@@ -195,11 +206,6 @@ using the fixed internal starting values?}
          item factor analysis (\code{mixedmirt()} requires additional values for random effect).
          If null, these values are determined internally, attempting to make the draws between
          .1 and .4}
-    \item{Moptim}{Choose which optimizer to use. By default the EM algorithm with use the
-         \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'} when there
-         are. The \code{'Nelder-Mead'} and \code{'SANN'} estimators may also be used, though
-         their routine use generally is not required. The MH-RM algorithm uses the Newton-Raphson by
-         default, and currently cannot be changed}
     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
          Default is TRUE}
   }}

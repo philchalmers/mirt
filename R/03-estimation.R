@@ -760,6 +760,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    infomethod=opts$SE.type,
                    TOL=opts$TOL)
     }
+    mod@Moptim <- opts$Moptim
     mod@shortpars <- as.numeric(ESTIMATE$shortpars)
     if(length(mod@information) > 1L && !ESTIMATE$fail_invert_info){
         isna <- is.na(diag(mod@information))

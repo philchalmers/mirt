@@ -927,7 +927,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'MHRM', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
-                     ...)
+                     optimizer = NULL, ...)
 {
     opts <- list()
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
@@ -990,10 +990,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = Na
     opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
-    if(is.null(technical$Moptim)){
+    if(is.null(optimizer)){
         opts$Moptim <- if(method == 'EM') 'BFGS' else 'NR'
     } else {
-        opts$Moptim <- technical$Moptim
+        opts$Moptim <- optimizer
     }
     if(!is.null(large)){
         if(is.logical(large))

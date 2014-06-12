@@ -161,7 +161,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
                           BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
-                          rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate)
+                          rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
+                          TOL=list$MSTEPTOL)
         if(list$accelerate && Mrate > .01 && cycles %% 3 == 0L){
             dX2 <- preMstep.longpars - preMstep.longpars2
             dX <- longpars - preMstep.longpars
@@ -264,8 +265,9 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, 
-                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate){
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL){
     p <- longpars[est]
+    #Moptim <- 'NR'
     if(length(p)){
         if(Moptim == 'BFGS'){
             maxit <- max(ceiling(Mrate * 50), 15)
@@ -300,6 +302,11 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                        silent=TRUE)
+        } else if(Moptim == 'NR'){
+            opt <- try(Mstep.NR(p=p, est=est, longpars=longpars, pars=pars, ngroups=ngroups, 
+                                J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
+                                constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
+                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL))
         } else {
             stop('M-step optimzer not supported')
         }
@@ -406,4 +413,55 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     }
     grad <- g %*% L
     return(grad[est])
+}
+
+Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,
+                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, NO.CUSTOM, SLOW.IND,
+                     TOL)
+{
+    plast2 <- plast <- p
+    if(!all(L %in% c(0,1)))
+        stop('Linear contraints not yet supported in this optimizer')
+    for(iter in 1L:50L){
+        longpars[est] <- p
+        if(length(constrain) > 0L)
+            for(i in 1L:length(constrain))
+                longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+        dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L)
+        if(length(SLOW.IND)){        
+            for(group in 1L:ngroups){
+                for (i in SLOW.IND){
+                    deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]], 
+                                                 estHess=TRUE)
+                    tmp <- pars[[group]][[i]]@parnum
+                    dd$grad[tmp] <- deriv$grad
+                    dd$hess[tmp, tmp] <- deriv$hess
+                }
+            }
+        }
+        grad <- L %*% dd$grad
+        hess <- -L %*% dd$hess %*% L
+        g <- grad[est]
+        h <- hess[est, est]
+        trychol <- try(chol(h), silent=TRUE)
+        if(is(trychol, 'try-error')){
+            ev <- eigen(h)
+            ev$values[ev$values <= 0] <- .Machine$double.eps*100
+            h <- t(ev$vector) %*% diag(ev$values) %*% ev$vector
+            trychol <- chol(h)
+        }
+        change <- as.numeric(g %*% chol2inv(trychol))
+        change <- ifelse(change > .25, .25, change) 
+        change <- ifelse(change < -.25, -.25, change) 
+        plast2 <- plast
+        plast <- p
+        flip <- sign(plast - plast2) * sign(change)
+        flip[flip == -1L] <- 0.5
+        if(iter > 2L) change <- change*flip
+        p <- p + change
+        dif <- p - plast
+        if(all(abs(dif) < TOL)) break
+    }
+    return(list(par=p))
 }

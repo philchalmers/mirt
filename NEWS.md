@@ -20,6 +20,10 @@
   
 ## NEW FEATURES
 
+- `optimizer` argument added to estimation function to switch the default optimizer. Multiple 
+  optimizers are now available, including the BFGS (EM default), L-BFGS-B, 
+  Newton-Raphson, Nelder-Mead, and SANN
+
 - new `survey.weights` argument can be passed to parameter estimation functions (i.e., `mirt()`) to 
   apply so-called stratification/survey-weights during estimation
 

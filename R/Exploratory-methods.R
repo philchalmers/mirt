@@ -33,6 +33,7 @@ setMethod(
         else
             cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ', 
                 x@iter, ' ', method, " iterations.\n", sep="")
+        cat('M-step optimizer used:', x@Moptim, '\n')
         if(method == 'EM')
             cat('Number of rectangular quadrature used:', x@quadpts)
         cat('\n')
