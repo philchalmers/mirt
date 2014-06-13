@@ -45,7 +45,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
     }
     converge <- 1L
     estindex <- index[estpars]
-    L <- Ls$L; L2 <- Ls$L2; L3 <- Ls$L3
+    L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
     if(any(diag(L)[!estpars] > 0L)){
@@ -90,7 +90,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
     } else {
         Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'    
     }
-    if(Moptim == 'L-BFGS-B'){
+    if(Moptim == 'NR'){
+        if(!all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf)))
+            stop('Newton-Raphson optimizer does not support box-constriants')
+    } else if(Moptim == 'L-BFGS-B'){
         LBOUND[LBOUND == -Inf] <- -1e10
         UBOUND[UBOUND == Inf] <- 1e10
     }
@@ -215,7 +218,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
             ind1 <- ind2 + 1L
         }
-        hess <- updateHess(h=h, L2=L2, L3=L3)
+        hess <- updateHess(h=h, L=L)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
@@ -411,7 +414,11 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
             }
         }
     }
-    grad <- g %*% L
+    if(length(constrain)){
+        grad <- g %*% L
+    } else {
+        grad <- g
+    }
     return(grad[est])
 }
 
@@ -420,8 +427,6 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
                      TOL)
 {
     plast2 <- plast <- p
-    if(!all(L %in% c(0,1)))
-        stop('Linear contraints not yet supported in this optimizer')
     for(iter in 1L:50L){
         longpars[est] <- p
         if(length(constrain) > 0L)
@@ -440,8 +445,13 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
                 }
             }
         }
-        grad <- L %*% dd$grad
-        hess <- -L %*% dd$hess %*% L
+        if(length(constrain)){
+            grad <- updateGrad(dd$grad, L)
+            hess <- updateHess(-dd$hess, L)
+        } else {
+            grad <- dd$grad
+            hess <- -dd$hess
+        }
         g <- grad[est]
         h <- hess[est, est]
         trychol <- try(chol(h), silent=TRUE)

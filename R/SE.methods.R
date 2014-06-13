@@ -66,7 +66,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                               EH=EH, EHPrior=EHPrior, Data=Data)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
-    Hess <- updateHess(h=Hess, L2=Ls$L2, L3=Ls$L3)
+    Hess <- updateHess(h=Hess, L=Ls$L)
     info <- Hess[infological, infological]
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     return(ESTIMATE)
@@ -271,9 +271,9 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
             }
         }
     }
-    Igrad <- updateHess(Igrad, L2=Ls$L2, L3=Ls$L3)
-    IgradP <- updateHess(IgradP, L2=Ls$L2, L3=Ls$L3)
-    Ihess <- updateHess(Ihess, L2=Ls$L2, L3=Ls$L3)
+    Igrad <- updateHess(Igrad, L=Ls$L)
+    IgradP <- updateHess(IgradP, L=Ls$L)
+    Ihess <- updateHess(Ihess, L=Ls$L)
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
@@ -355,7 +355,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
         collectgrad[pat, ] <- DX
     }
     info <- N * t(collectgrad) %*% diag(1/collectL) %*% collectgrad
-    info <- updateHess(info, L2=Ls$L2, L3=Ls$L3)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
+    info <- updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))

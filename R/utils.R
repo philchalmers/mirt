@@ -898,28 +898,20 @@ makeLmats <- function(pars, constrain, random = NULL){
     if(length(random))
         for(i in 1L:length(random))
             L <- c(L, random[[i]]@est)
-    L <- L2 <- L3 <- diag(as.numeric(L))
+    L <- diag(as.numeric(L))
     redun_constr <- rep(FALSE, ncol(L))
     if(length(constrain) > 0L){
         for(i in 1L:length(constrain)){
-            LC <- length(constrain[[i]])
-            L[constrain[[i]], constrain[[i]]] <- 1/LC
-            L2[constrain[[i]], constrain[[i]]] <- sqrt(1/LC)
-            L3[constrain[[i]], constrain[[i]]] <- f(LC)
+            L[constrain[[i]], constrain[[i]]] <- 1L
             for(j in 2L:length(constrain[[i]]))
                 redun_constr[constrain[[i]][j]] <- TRUE
         }
     }
-    L[L > 0] <- L2[L > 0] <- L3[L > 0] <- 1
-    return(list(L=L, L2=L2, L3=L3, redun_constr=redun_constr))
+    return(list(L=L, redun_constr=redun_constr))
 }
 
-updateHess <- function(h, L2, L3){
-    hess <- L3 %*% h %*% L3
-    tmp <- L2 %*% h %*% L2
-    diag(hess) <- diag(tmp)
-    hess
-}
+updateGrad <- function(g, L) L %*% g
+updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
                      rotate = 'varimax', Target = NaN, SE = FALSE, verbose = TRUE,
