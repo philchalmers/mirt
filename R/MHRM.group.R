@@ -112,9 +112,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             UBOUND <- c(UBOUND, random[[i]]@ubound)
         }
     }
-    if(!all(c(LBOUND[estpars & !redun_constr], UBOUND[estpars & !redun_constr]) %in% 
-                c(-Inf, Inf)))
-        stop('Newton-Raphson optimizer does not support box-constriants')
     for(g in 1L:ngroups)
         for(i in 1L:J)
             pars[[g]][[i]]@dat <- Data$fulldata[[g]][, c(itemloc[i]:(itemloc[i+1L] - 1L))]
@@ -274,13 +271,13 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             }
         }
         if(length(constrain)){
-            grad <- updateGrad(g, L)
+            grad <- as.numeric(updateGrad(g, L))
             ave.h <- updateHess(-h, L)
         } else {
-            grad <- matrix(g, nrow=1L)
+            grad <- g
             ave.h <- -h
         }
-        grad <- grad[1L, estpars & !redun_constr]
+        grad <- grad[estpars & !redun_constr]
         ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
         if(any(is.na(grad)))
             stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')
@@ -322,6 +319,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             correction[correction > 1] <- 1
             correction[correction < -1] <- -1
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
+            longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
+            longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
             if(length(constrain) > 0L)
                 for(i in 1L:length(constrain))
                     longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
@@ -351,6 +350,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         correction[gamma*correction > .25] <- .25/gamma
         correction[gamma*correction < -.25] <- -.25/gamma
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
+        longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
+        longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
         if(length(constrain) > 0L)
             for(i in 1L:length(constrain))
                 longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
