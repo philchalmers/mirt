@@ -3,7 +3,7 @@
 \alias{multipleGroup}
 \title{Multiple Group Estimation}
 \usage{
-multipleGroup(data, model, group, invariance = "", ...)
+multipleGroup(data, model, group, invariance = "", method = "EM", ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -30,6 +30,10 @@ the factor model is to be estimated. See \code{\link{mirt.model}} for more detai
   constrain all freely estimated parameters in each item to be equal across groups. This is useful
   for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
   functioning (DIF) across groups}
+
+\item{method}{a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
+for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
+use the MH-RM algorithm}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}
@@ -81,6 +85,12 @@ mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
                              invariance=c('slopes', 'intercepts', 'free_var'))
 mod_fullconstrain <- multipleGroup(dat, models, group = group,
                              invariance=c('slopes', 'intercepts'))
+slot(mod_fullconstrain, 'time') #time of estimation components
+
+#optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+mod_fullconstrain <- multipleGroup(dat, models, group = group, optimizer = 'NR',
+                             invariance=c('slopes', 'intercepts'))
+slot(mod_fullconstrain, 'time') #time of estimation componenets
 
 summary(mod_scalar2)
 coef(mod_scalar2)

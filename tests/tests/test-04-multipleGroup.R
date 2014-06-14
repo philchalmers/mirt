@@ -24,7 +24,7 @@ test_that('one factor', {
     pffit <- c(as.numeric(as.matrix(head(pf))), as.numeric(as.matrix(tail(pf))))
     expect_equal(pffit, c(0.6388, 0.8582, 0.83267, 0.99725, 1.05999, 1.03414, -1.51153, -0.24137, -0.19464, 0.09861, 0.3459, 0.24062, 0.699, 0.89307, 0.84912, 1.08481, 0.98964, 1.05882, -1.48336, -0.26539, -0.31212, 0.40918, -0.00498, 0.40736, 1.39643, 0.34987, 0.38458, -0.21882, -0.05278, -0.30241, 1.15408, 1.54886, 0.69589, 1.64176, 1.054, 0.47791, 0.5427, 1.01894, -1.43216, 1.13883, 0.30973, -0.96363, 0.91257, 0.98546, 0.73961, 1.10462, 0.96747, 0.66029, -0.29309, 0.09788, -1.5242, 0.38551, -0.12126, -0.82876, 0.12927, -0.21665, 1.41519, -0.5449, 0.05218, 0.89503),
                  tolerance = 1e-3)
-    mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', 
+    mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', optimizer='NR',
                                     group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_configural, digits=4)[[1L]]))
@@ -36,7 +36,7 @@ test_that('one factor', {
 #     cfs <- as.numeric(c(dtf$signed, dtf$unsigned))
 #     expect_equal(cfs, c(-0.0562109, -0.3747396, 0.1187070, 2.2969256, 4.4389564), tolerance=1e-3)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE,
-                                method = 'EM')
+                                method = 'EM', optimizer = 'NR')
     expect_is(mod_metric, 'MultipleGroupClass')
     expect_equal(mod_metric@df, 32722)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
@@ -144,7 +144,8 @@ test_that('three factor', {
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
     expect_equal(cfs, c(1.1467, 0.9011, 1.3924, 0, NA, NA, 0, NA, NA, 0.7102, 0.516, 0.9045, 0, NA, NA, 1, NA, NA, 1.3616, 1.12),
                  tolerance = 1e-2)
-    mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', SE=TRUE)
+    mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', SE=TRUE,
+                                    optimizer = 'NR')
     expect_is(mod_configural, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_configural, digits=4)[[1]]))
     cfs <- cfs[cfs != 0 & cfs != 1]

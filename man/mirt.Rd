@@ -46,7 +46,8 @@ upper and lower bound constraints. As well, the \code{'Nelder-Mead'} and \code{'
 estimators are also available, though their routine use generally is not required or recommended.
 The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed}
 
-\item{SE}{logical; estimate the standard errors? See \code{SE.type} for the type of estimates available. Using
+\item{SE}{logical; estimate the standard errors by computing the parameter information matrix?
+ See \code{SE.type} for the type of estimates available. Using
 \code{SE = TRUE} when \code{method = 'MHRM'} will force the estimation to terminate no earlier than 400
 iterations to ensure that the information matrix is well approximated}
 
@@ -530,9 +531,15 @@ data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
 mod1 <- mirt(data, 1)
-mod2 <- mirt(data, 2)
+slot(mod1, 'time') #time elapsed for each estimation component
+
+#optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+mod1 <- mirt(data, 1, optimizer = 'NR')
+slot(mod1, 'time')
+
+mod2 <- mirt(data, 2, optimizer = 'NR')
 #difficulty converging with reduced quadpts, reduce TOL
-mod3 <- mirt(data, 3, TOL = .001)
+mod3 <- mirt(data, 3, TOL = .001, optimizer = 'NR')
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 
