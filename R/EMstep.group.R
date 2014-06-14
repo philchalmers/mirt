@@ -90,10 +90,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
     } else {
         Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'    
     }
-    if(Moptim == 'NR'){
-        if(!all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf)))
-            stop('Newton-Raphson optimizer does not support box-constriants')
-    } else if(Moptim == 'L-BFGS-B'){
+    if(Moptim == 'L-BFGS-B'){
         LBOUND[LBOUND == -Inf] <- -1e10
         UBOUND[UBOUND == Inf] <- 1e10
     }
