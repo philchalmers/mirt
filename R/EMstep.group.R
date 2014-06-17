@@ -171,6 +171,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
                 LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
             }
             collectLL[cycles] <- LL
+            if(is.nan(LL))
+                stop('Optimization error: Could not compute observed log-likelihood. Try
+                     estimating with different starting values by passing GenRandomPars = TRUE')
             if(!list$SEM){
                 if(cycles > 1L){
                     tmp <- collectLL[cycles-1L] - collectLL[cycles]
