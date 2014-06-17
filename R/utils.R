@@ -1195,7 +1195,7 @@ assignInformationMG <- function(object){
 }
 
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc){
+               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta){
     longpars[est] <- p
     pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     gstructgrouppars <- prior <- Prior <- vector('list', ngroups)

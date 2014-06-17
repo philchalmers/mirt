@@ -119,9 +119,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
         start <- proc.time()[3L]
         opt <- try(optim(longpars[est], BL.LL, BL.grad, est=est, longpars=longpars,
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, theta=Thetabetween,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                         EH=list$EH, EHPrior=EHPrior, Data=Data, method=Moptim, 
+                         EH=list$EH, EHPrior=NULL, Data=Data, method=Moptim, 
                          control=list(fnscale=-1, reltol=TOL)), silent=TRUE)    
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par

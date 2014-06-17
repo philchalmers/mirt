@@ -23,7 +23,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
                               pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                               Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
                               specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                              EH=EH, EHPrior=EHPrior, Data=Data)
+                              EH=EH, EHPrior=EHPrior, Data=Data, theta=theta)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- updateHess(h=Hess, L=Ls$L)
