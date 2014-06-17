@@ -115,17 +115,23 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
     accel <- 0; Mrate <- ifelse(list$SEM, 1, .4)
     Estep.time <- Mstep.time <- 0
     collectLL <- rep(NA, NCYCLES)
-
-    #EM
-    for (cycles in 1L:NCYCLES){
-        #priors
+    if(list$BL){
         start <- proc.time()[3L]
+        opt <- try(optim(longpars[est], BL.LL, BL.grad, est=est, longpars=longpars,
+                         pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
+                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                         specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
+                         EH=list$EH, EHPrior=EHPrior, Data=Data, method=Moptim, 
+                         control=list(fnscale=-1, reltol=TOL)), silent=TRUE)    
+        cycles <- as.integer(opt$counts[1L])
+        longpars[est] <- opt$par
+        converge <- as.numeric(opt$convergence == 0)
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-        #Estep
         LL <- 0
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups){
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
@@ -139,59 +145,85 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
             }
             LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
         }
-        collectLL[cycles] <- LL
-        if(!list$SEM){
-            if(cycles > 1L){
-                tmp <- collectLL[cycles-1L] - collectLL[cycles]
-                if(tmp < 0)
-                    Mrate <- exp(tmp)
-                Mrate <- ifelse(is.finite(Mrate), Mrate, 1e-6)
-            }
-        }
-        for(g in 1L:ngroups)
-            for(i in 1L:J)
-                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L))]
         Estep.time <- Estep.time + proc.time()[3L] - start
-        start <- proc.time()[3L]
-        preMstep.longpars2 <- preMstep.longpars
-        preMstep.longpars <- longpars
-        if(all(!est) && all(!groupest)) break
-        longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
-                          gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
-                          CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
-                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                          BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
-                          rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
-                          TOL=list$MSTEPTOL)
-        if(list$accelerate && Mrate > .01 && cycles %% 3 == 0L){
-            dX2 <- preMstep.longpars - preMstep.longpars2
-            dX <- longpars - preMstep.longpars
-            d2X2 <- dX - dX2
-            accel <- 1 - sqrt((dX %*% dX) / (d2X2 %*% d2X2))
-            if(accel < -5) accel <- -5
-            tmp <- (1 - accel) * longpars + accel * preMstep.longpars
-            longpars[!latent_longpars] <- tmp[!latent_longpars]
-        }
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        EMhistory[cycles+1L,] <- longpars
-        if(verbose)
-            cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
-                        cycles, LL, max(abs(preMstep.longpars - longpars))))
-        if(all(abs(preMstep.longpars - longpars) < TOL)){
-            if(!list$accelerate) break
-            else if(cycles %% 3 != 1L) break
-        }
-        Mstep.time <- Mstep.time + proc.time()[3L] - start
-    } #END EM
-    if(cycles == NCYCLES){
-        if(list$message)
-            message('EM iterations terminated after ', cycles, ' iterations.')
-        converge <- 0L
-    } else if(cycles == 1L && !(all(!est) && all(!groupest))){
-        if(list$warn)
-            warning('M-step optimimizer converged immediately. Solution is either at the ML or
-                 starting values are causing issues and should be adjusted. ')
-    } 
+    } else {
+        #EM
+        for (cycles in 1L:NCYCLES){
+            #priors
+            start <- proc.time()[3L]
+            tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
+                               list=list, ngroups=ngroups, nfact=nfact, prior=prior,
+                               J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
+            Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+            #Estep
+            LL <- 0
+            for(g in 1L:ngroups){
+                if(BFACTOR){
+                    rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                                Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
+                                                Priorbetween=Priorbetween[[g]], specific=specific, 
+                                                sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                } else {
+                    rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                             CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
+                                             prior=Prior[[g]], itemloc=itemloc)
+                }
+                LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
+            }
+            collectLL[cycles] <- LL
+            if(!list$SEM){
+                if(cycles > 1L){
+                    tmp <- collectLL[cycles-1L] - collectLL[cycles]
+                    if(tmp < 0)
+                        Mrate <- exp(tmp)
+                    Mrate <- ifelse(is.finite(Mrate), Mrate, 1e-6)
+                }
+            }
+            for(g in 1L:ngroups)
+                for(i in 1L:J)
+                    pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L))]
+            Estep.time <- Estep.time + proc.time()[3L] - start
+            start <- proc.time()[3L]
+            preMstep.longpars2 <- preMstep.longpars
+            preMstep.longpars <- longpars
+            if(all(!est) && all(!groupest)) break
+            longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
+                              gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
+                              CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
+                              PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
+                              BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
+                              rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
+                              TOL=list$MSTEPTOL)
+            if(list$accelerate && Mrate > .01 && cycles %% 3 == 0L){
+                dX2 <- preMstep.longpars - preMstep.longpars2
+                dX <- longpars - preMstep.longpars
+                d2X2 <- dX - dX2
+                accel <- 1 - sqrt((dX %*% dX) / (d2X2 %*% d2X2))
+                if(accel < -5) accel <- -5
+                tmp <- (1 - accel) * longpars + accel * preMstep.longpars
+                longpars[!latent_longpars] <- tmp[!latent_longpars]
+            }
+            pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+            EMhistory[cycles+1L,] <- longpars
+            if(verbose)
+                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
+                            cycles, LL, max(abs(preMstep.longpars - longpars))))
+            if(all(abs(preMstep.longpars - longpars) < TOL)){
+                if(!list$accelerate) break
+                else if(cycles %% 3 != 1L) break
+            }
+            Mstep.time <- Mstep.time + proc.time()[3L] - start
+        } #END EM
+        if(cycles == NCYCLES){
+            if(list$message)
+                message('EM iterations terminated after ', cycles, ' iterations.')
+            converge <- 0L
+        } else if(cycles == 1L && !(all(!est) && all(!groupest))){
+            if(list$warn)
+                warning('M-step optimimizer converged immediately. Solution is either at the ML or
+                     starting values are causing issues and should be adjusted. ')
+        } 
+    }
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
@@ -474,3 +506,5 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
     }
     return(list(par=p))
 }
+
+BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)

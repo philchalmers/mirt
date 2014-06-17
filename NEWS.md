@@ -40,6 +40,8 @@
 
 - M2* statistic added for polytomous item types
 
+- Bock and Lieberman (`'BL'`) method argument added (not recommend for serious use)
+
 ## BUG FIXES
 
 - large bias correction in information matrix and standard errors for models that 

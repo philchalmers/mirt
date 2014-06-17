@@ -941,7 +941,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$customPriorFun = technical$customPriorFun
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
-    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM') 1e-4 else 1e-3, TOL)
+    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM') 1e-4 else 
+        if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- FALSE
         if(is.null(TOL)) opts$TOL <- 1e-5
@@ -983,7 +984,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
     if(is.null(optimizer)){
-        opts$Moptim <- if(method == 'EM') 'BFGS' else 'NR'
+        opts$Moptim <- if(method == 'EM' || method == 'BL') 'BFGS' else 'NR'
     } else {
         opts$Moptim <- optimizer
     }
@@ -1191,6 +1192,46 @@ assignInformationMG <- function(object){
         object@pars[[g]]@information <- tmp
     }
     object
+}
+
+BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
+               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc){
+    longpars[est] <- p
+    pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+    gstructgrouppars <- prior <- Prior <- vector('list', ngroups)
+    if(EH){
+        Prior[[1L]] <- EHPrior[[1L]]
+    } else {
+        for(g in 1L:ngroups){
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1L]])
+            if(BFACTOR){
+                prior[[g]] <- dnorm(theta, 0, 1)
+                prior[[g]] <- prior[[g]]/sum(prior[[g]])
+                Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
+                next
+            }
+            Prior[[g]] <- mirt_dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+                                       gstructgrouppars[[g]]$gcov)
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+        }
+    }
+    LL <- 0
+    for(g in 1L:ngroups){
+        if(BFACTOR){
+            expected <- Estep.bfactor(pars=pars2[[g]], 
+                                      tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                      Theta=Theta, prior=prior[[g]],
+                                      specific=specific, sitems=sitems,
+                                      itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)$expected
+        } else {
+            expected <- Estep.mirt(pars=pars2[[g]], 
+                                   tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                   Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
+                                   CUSTOM.IND=CUSTOM.IND)$expected
+        }
+        LL <- LL + sum(Data$Freq[[g]] * log(expected))
+    }
+    LL
 }
 
 mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),

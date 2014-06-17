@@ -35,7 +35,8 @@ can also be defined using the \code{\link{createItem}} function}
 
 \item{method}{a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
 for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
-use the MH-RM algorithm}
+use the MH-RM algorithm, as well as \code{'BL'} for the Bock and Lieberman approach (generally
+not recommended for serious use)}
 
 \item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM algorithm
 will use the \code{'BFGS'} when there are no upper and lower bounds, and \code{'L-BFGS-B'}
