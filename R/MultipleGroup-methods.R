@@ -76,7 +76,7 @@ setMethod(
                           which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE,
-                          theta_lim = c(-4,4), ...)
+                          theta_lim = c(-6,6), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
             stop(type, " is not a valid plot type.")

@@ -28,10 +28,10 @@ shinyItemplot <- function(){
                             choices = c('trace', 'info', 'score', 'infocontour', 'SE', 'infoSE', 'tracecontour'),
                             selected = 'trace'),
                 
-                numericInput("theta_lim_low", "Theta lower range:", -4,
+                numericInput("theta_lim_low", "Theta lower range:", -6,
                              min = -35, max = 35),
                 
-                numericInput("theta_lim_high", "Theta upper range:", 4,
+                numericInput("theta_lim_high", "Theta upper range:", 6,
                              min = -35, max = 35),
                 
                 checkboxInput(inputId = "classical",

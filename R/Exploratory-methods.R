@@ -613,7 +613,7 @@ setMethod(
     f = "plot",
     signature = signature(x = 'ExploratoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
-                          theta_lim = c(-4,4), which.items = 1:ncol(x@Data$data),
+                          theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)

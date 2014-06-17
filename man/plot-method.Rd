@@ -9,7 +9,7 @@
 \title{Plot various test implied functions from models}
 \usage{
 \S4method{plot}{ExploratoryClass,missing}(x, y, type = "info", npts = 50,
-  theta_angle = 45, theta_lim = c(-4, 4),
+  theta_angle = 45, theta_lim = c(-6, 6),
   which.items = 1:ncol(x@Data$data), rot = list(xaxis = -70, yaxis = 30,
   zaxis = 10), facet_items = TRUE, auto.key = TRUE, main = NULL,
   drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE,

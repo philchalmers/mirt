@@ -504,7 +504,7 @@
 #' coef(cmod)
 #' anova(cmod, mod2)
 #' #check if identified by computing information matrix
-#' (cmod <- mirt(data, cmodel, SE = T))
+#' (cmod <- mirt(data, cmodel, SE = TRUE))
 #'
 #' ###########
 #' #data from the 'ltm' package in numeric format
