@@ -19,10 +19,10 @@
 #'  To observe how the design matrices are structured prior to reassignment and estimation pass
 #'  the argument \code{return.design = TRUE}.
 #'
-#'  Polytomous IRT models follow a similar format except the item intercepts are automatically estimated
-#'  internally, rendering the \code{items} argument in the fixed formula redundant and therefore
-#'  must be omitted from the specification. If there are a mixture of dichotomous and polytomous
-#'  items the intercepts for the dichotomous models are also estimated for consistency.
+#'  Polytomous IRT models follow a similar format except the item intercepts are automatically 
+#'  estimated internally, rendering the \code{items} argument in the fixed formula redundant and 
+#'  therefore must be omitted from the specification. If there are a mixture of dichotomous and 
+#'  polytomous items the intercepts for the dichotomous models are also estimated for consistency.
 #'
 #'  To simulate maximum a posteriori estimates for the random effects use the \code{\link{randef}}
 #'  function.
@@ -40,30 +40,31 @@
 #'   more details
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory')
 #'   predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for
-#'   each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign} input.
-#'   If any polytomous items are being model the \code{items} are argument is not valid since all
-#'   intercept parameters are freely estimated and identified with the parameterizations found in
-#'   \code{\link{mirt}}, and the first column in the fixed design matrix (commonly the intercept or a reference
-#'   group) is omitted
+#'   each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign}
+#'   input. If any polytomous items are being model the \code{items} are argument is not valid 
+#'   since all intercept parameters are freely estimated and identified with the parameterizations 
+#'   found in \code{\link{mirt}}, and the first column in the fixed design matrix 
+#'   (commonly the intercept or a reference group) is omitted
 #' @param random a right sided formula or list of formulas containing crossed random effects
 #'   of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are
-#'   random numeric predictors within each group. If no intercept value is specified then by default the
-#'   correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by including
-#'   the \code{~ -1 + ...} constant
+#'   random numeric predictors within each group. If no intercept value is specified then by default
+#'   the correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by 
+#'   including the \code{~ -1 + ...} constant
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect does not support the following
 #'   item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where
-#'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of fixed
-#'   effect predictors (i.e., item intercepts). By default an \code{items} variable is reserved for
-#'   modeling the item intercept parameters
+#'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of 
+#'   fixed effect predictors (i.e., item intercepts). By default an \code{items} variable is 
+#'   reserved for modeling the item intercept parameters
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for
 #'   more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
 #' @param return.design logical; return the design matrices before they have (potentially)
 #'   been reassigned?
-#' @param SE logical; while standard errors are always computed for the MHRM algorithm this option forces
-#'   the number of iterations to be no less than 400 so that the information matrix is computed more accurately.
-#'   An alternative approach would be to drop the \code{TOL} criteria
+#' @param SE logical; while standard errors are always computed for the MHRM algorithm this option 
+#'   forces the number of iterations to be no less than 400 so that the information matrix is 
+#'   computed more accurately. Default is TRUE. An alternative approach would be to drop the 
+#'   \code{TOL} criteria
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
 #'   \code{\link{mirt}} for more details and examples
 #'
@@ -154,8 +155,9 @@
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' model <- mirt.model('Theta = 1-32')
 #'
-# #Suppose that the first 16 items were suspected to be easier than the last 16 items, and we wish
-# #to test this item structure hypothesis (more intercept designs are possible by including more columns).
+#' # Suppose that the first 16 items were suspected to be easier than the last 16 items, 
+#' #   and we wish to test this item structure hypothesis (more intercept designs are possible 
+#' #   by including more columns).
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
 #' #notice that the 'fixed = ~ ... + items' argument is omitted
@@ -230,7 +232,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is.null(itemdesign)){
         itemdesign <- data.frame(items = factor(1L:ncol(data)))
     } else {
-        if(!is.null(itemdesign$items)) stop('itemdesign internally reserves the predictor name \'items\'. Please Change ')
+        if(!is.null(itemdesign$items)) 
+            stop('itemdesign internally reserves the predictor name \'items\'. Please Change ')
         itemdesign$items <- factor(1L:ncol(data))
     }
     if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
@@ -243,8 +246,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     pick <- sapply(covdata, is.numeric)
     if(any(pick)){
         if(any(covdata[,pick] > 10 || covdata[,pick] < -10))
-            warning('continuous variables in covdata should be rescaled to fall between -10 and 10 for
-                    better numerical stability')
+            warning('continuous variables in covdata should be rescaled to fall 
+                     between -10 and 10 for better numerical stability')
     }
     longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID',
                         varying=list(1L:ncol(data) + 1L), direction='long')
@@ -271,7 +274,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     mixed.design <- list(fixed=mm, random=mr)
     if(is.null(constrain)) constrain <- list()
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, 
-                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values', ...)
+                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values', 
+                     ...)
     mmnames <- colnames(mm)
     N <- nrow(data)
     if(ncol(mm) > 0L){

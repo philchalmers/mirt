@@ -5,7 +5,8 @@
 #'
 #' @aliases probtrace
 #' @param x an extracted internal mirt object containing item information
-#' @param Theta a vector (unidimensional) or matrix (unidimensional/multidimensional) of latent trait values
+#' @param Theta a vector (unidimensional) or matrix (unidimensional/multidimensional) of 
+#'   latent trait values
 #' @keywords tracelines
 #' @export probtrace
 #' @seealso

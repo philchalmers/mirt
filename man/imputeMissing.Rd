@@ -8,12 +8,13 @@ imputeMissing(x, Theta)
 \arguments{
 \item{x}{an estimated model x from the mirt package}
 
-\item{Theta}{a matrix containing the estimates of the latent trait scores (e.g., via \code{\link{fscores}})}
+\item{Theta}{a matrix containing the estimates of the latent trait scores
+(e.g., via \code{\link{fscores}})}
 }
 \description{
-Given an estimated model from any of mirt's model fitting functions and an estimate of the latent trait,
-impute plausible missing data values. Returns the original data in a \code{data.frame}
-without any NA values.
+Given an estimated model from any of mirt's model fitting functions and an estimate of the
+latent trait, impute plausible missing data values. Returns the original data in a
+\code{data.frame} without any NA values.
 }
 \examples{
 \dontrun{

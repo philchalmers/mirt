@@ -11,8 +11,8 @@ itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1,
 \item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
 \code{MultipleGroupClass}}
 
-\item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are only
-interested in computing the S-X2 quickly}
+\item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
+only interested in computing the S-X2 quickly}
 
 \item{X2}{logical; calculate the X2 statistic for unidimensional models?}
 
@@ -21,25 +21,29 @@ collapsed across items first if polytomous, and then across scores if necessary}
 
 \item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
 
-\item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2} statistic}
+\item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
+statistic}
 
-\item{empirical.plot}{a single numeric value or character of the item name  indicating which item to plot
-(via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings. Only applicable
-when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots are drawn}
+\item{empirical.plot}{a single numeric value or character of the item name  indicating which
+item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings.
+Only applicable when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots
+are drawn}
 
-\item{empirical.CI}{a numeric value indicating the width of the empirical confidence interval ranging
-between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence interval would be
-plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items}
+\item{empirical.CI}{a numeric value indicating the width of the empirical confidence interval
+ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
+interval would be plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items}
 
 \item{method}{type of factor score estimation method. See \code{\link{fscores}} for more detail}
 
-\item{Theta}{a matrix of factor scores for each person used for statistics that require empirical estimates. If
-supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
-be used instead. Also required when estimating statistics with missing data via imputation}
+\item{Theta}{a matrix of factor scores for each person used for statistics that require
+empirical estimates. If supplied, arguments typically passed to \code{fscores()} will be
+ignored and these values will be used instead. Also required when estimating statistics
+with missing data via imputation}
 
-\item{impute}{a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
-when there are missing data present. This requires a precomputed \code{Theta} input. Will return
-a data.frame object with the mean estimates of the stats and their imputed standard deviations}
+\item{impute}{a number indicating how many imputations to perform (passed to
+\code{\link{imputeMissing}}) when there are missing data present. This requires a
+precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
+of the stats and their imputed standard deviations}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
@@ -112,8 +116,8 @@ polychotomous item response models and standardized indices.
 Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the generalized
 S-X2 item-fit index for polytomous IRT models. ACT
 
-Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item response theory
-models. \emph{Applied Psychological Measurement, 24}, 50-64.
+Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item
+response theory models. \emph{Applied Psychological Measurement, 24}, 50-64.
 
 Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit
 in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.

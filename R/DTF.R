@@ -18,10 +18,10 @@
 # @param npts number of points to use in the integration
 # @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
 #   used in conjunction with \code{npts}
-# @param Theta_nodes an optional matrix of Theta values to be evaluated in the MI draws for the sDTF 
-#   statistic. However, these values are not averaged accross, and instead give the bootstrap
-#   condifence intervals at the repespective Theta nodes. Useful when following up a large uDTF/sDTF
-#   statistic to determine where the difference between the test curves are large 
+# @param Theta_nodes an optional matrix of Theta values to be evaluated in the MI draws for the 
+#   sDTF statistic. However, these values are not averaged accross, and instead give the bootstrap
+#   condifence intervals at the repespective Theta nodes. Useful when following up a large 
+#   uDTF/sDTF statistic to determine where the difference between the test curves are large 
 #   (while still accounting for sampling variability). Returns a matrix with observed
 #   variability)
 # @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -96,7 +96,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_n
         if(impute){
             for(g in 1L:2L)
                 mod@pars[[g]]@pars <- imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
-                                                 imputenums=imputenums[[g]], constrain=omod@constrain)
+                                            imputenums=imputenums[[g]], constrain=omod@constrain)
         }
         if(!is.null(Theta_nodes)){
             T1 <- expected.test(mod, Theta_nodes, group=1)

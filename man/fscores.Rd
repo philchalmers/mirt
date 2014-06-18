@@ -10,20 +10,22 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   MI = 0)
 }
 \arguments{
-\item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-\code{MultipleGroupClass}}
+\item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+or \code{MultipleGroupClass}}
 
 \item{full.scores}{if \code{FALSE} (default) then a summary table with
 factor scores for each unique pattern is displayed. Otherwise the original
 data matrix is returned with the computed factor scores appended to the
 rightmost column}
 
-\item{rotate}{rotation declaration to be used when estimating the factor scores. If \code{""} then the
-\code{object@rotate} default value is used (only applicable to \code{ExploratoryClass} objects)}
+\item{rotate}{rotation declaration to be used when estimating the factor scores. If \code{""}
+then the \code{object@rotate} default value is used (only applicable to
+\code{ExploratoryClass} objects)}
 
 \item{method}{type of factor score estimation method. Can be expected
 a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-(\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores (\code{"EAPsum"})}
+(\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
+(\code{"EAPsum"})}
 
 \item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases
@@ -33,17 +35,17 @@ the switch statement
 
 \item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension}
 
-\item{mean}{a vector for custom latent variable means. If NULL, the default for 'group' values from the
-computed mirt object will be used}
-
-\item{cov}{a custom matrix of the latent variable covariance matrix. If NULL, the default for 'group' values
+\item{mean}{a vector for custom latent variable means. If NULL, the default for 'group' values
 from the computed mirt object will be used}
 
-\item{MI}{a number indicating how many multiple imputation draws to perform. Default is 0, indicating
-that no MI draws will be performed}
+\item{cov}{a custom matrix of the latent variable covariance matrix. If NULL, the default for
+'group' values from the computed mirt object will be used}
 
-\item{response.pattern}{an optional argument used to calculate the factor scores and standard errors
-for a given response vector or matrix/data.frame}
+\item{MI}{a number indicating how many multiple imputation draws to perform. Default is 0,
+indicating that no MI draws will be performed}
+
+\item{response.pattern}{an optional argument used to calculate the factor scores and standard
+errors for a given response vector or matrix/data.frame}
 
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}
@@ -56,7 +58,8 @@ standard errors associated with each respondent? Default is \code{FALSE}}
 
 \item{verbose}{logical; print verbose output messages?}
 
-\item{scores.only}{logical; return only the factor scores (only applicable when \code{full.scores = TRUE})}
+\item{scores.only}{logical; return only the factor scores (only applicable when
+\code{full.scores = TRUE})}
 }
 \description{
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
@@ -115,9 +118,9 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 \references{
 Embretson, S. E. & Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
 
-Thissen, D., Pommerich, M., Billeaud, K., & Williams, V. S. L. (1995). Item Response Theory for Scores
-on Tests Including Polytomous Items with Ordered Responses. \emph{Applied Psychological
-Measurement, 19}, 39-49
+Thissen, D., Pommerich, M., Billeaud, K., & Williams, V. S. L. (1995).
+Item Response Theory for Scores on Tests Including Polytomous Items with Ordered Responses.
+\emph{Applied Psychological Measurement, 19}, 39-49
 
 Warm, T. A. (1989). Weighted likelihood estimation of ability in item response theory.
 \emph{Psychometrika, 54}, 427-450.

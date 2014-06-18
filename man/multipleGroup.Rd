@@ -16,24 +16,26 @@ the factor model is to be estimated. See \code{\link{mirt.model}} for more detai
 
 \item{invariance}{a character vector containing the following possible options:
   \describe{
-    \item{\code{'free_means'}}{for freely estimating all latent means (reference group constrained to 0)}
-    \item{\code{'free_var'}}{for freely estimating all latent variances (reference group constrained to 1's)}
-    \item{\code{'free_cov'}}{for freely estimating all latent covariances (reference group constrained to an
-    Identity matrix)}
+    \item{\code{'free_means'}}{for freely estimating all latent means
+      (reference group constrained to 0)}
+    \item{\code{'free_var'}}{for freely estimating all latent variances
+      (reference group constrained to 1's)}
+    \item{\code{'free_cov'}}{for freely estimating all latent covariances
+      (reference group constrained to an Identity matrix)}
     \item{\code{'free_varcov'}}{calls both \code{'free_var'} and \code{'free_cov'}}
     \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
-    \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all groups, note for
-    nominal models this also includes the category specific slope parameters}
+    \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all
+      groups, note for nominal models this also includes the category specific slope parameters}
    }
 
   Additionally, specifying specific item name bundles (from \code{colnames(data)}) will
-  constrain all freely estimated parameters in each item to be equal across groups. This is useful
-  for selecting 'anchor' items for vertical and horizontal scaling, and for detecting differential item
-  functioning (DIF) across groups}
+  constrain all freely estimated parameters in each item to be equal across groups. This is
+  useful for selecting 'anchor' items for vertical and horizontal scaling, and for detecting
+  differential item functioning (DIF) across groups}
 
-\item{method}{a character object specifying the estimation algorithm to be used. The default is \code{'EM'},
-for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may also be passed to
-use the MH-RM algorithm}
+\item{method}{a character object specifying the estimation algorithm to be used. The default is
+\code{'EM'}, for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may
+also be passed to use the MH-RM algorithm}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}
@@ -46,18 +48,18 @@ function returns an object of class \code{MultipleGroupClass}
 \code{multipleGroup} performs a full-information
 maximum-likelihood multiple group analysis for any combination of dichotomous and polytomous
 data under the item response theory paradigm using either Cai's (2010)
-Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This function
-may be used for detecting differential item functioning (DIF), thought the \code{\link{DIF}} function
-may provide a more convenient approach.
+Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This
+function may be used for detecting differential item functioning (DIF), thought the
+\code{\link{DIF}} function may provide a more convenient approach.
 }
 \details{
 By default the estimation in \code{multipleGroup} assumes that the models are maximally
-independent, and therefore could initially be performed by sub-setting the data and running identical
-models with \code{mirt} and aggregating the results (e.g., log-likelihood).
-However, constrains may be imposed across groups by invoking various \code{invariance} keywords and
-\code{constrain = ...} arguments, by inputting user specified design matrix from
-\code{mod2values} or from passing \code{pars = 'values'}, or by supplying a \code{constrain} list
-for user defined equality constraints between parameters.
+independent, and therefore could initially be performed by sub-setting the data and running
+identical models with \code{mirt} and aggregating the results (e.g., log-likelihood).
+However, constrains may be automatically imposed across groups by invoking various
+\code{invariance} keywords. Users may also supply a list of parameter equality constraints
+to by \code{constrain} argument, of define equality constraints using the
+\code{\link{mirt.model}} syntax (recommended).
 }
 \examples{
 \dontrun{

@@ -8,8 +8,9 @@ itemplot(object, item, type = "trace", degrees = 45, CE = FALSE,
   -70, yaxis = 30, zaxis = 10), theta_lim = c(-6, 6), shiny = FALSE, ...)
 }
 \arguments{
-\item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-\code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types (e.g., 1PL vs 2PL)}
+\item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+or \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types
+(e.g., 1PL vs 2PL)}
 
 \item{item}{a single numeric value, or the item name, indicating which item to plot}
 
@@ -19,20 +20,21 @@ information and trace lines (\code{'infotrace'}), relative efficiency lines (\co
 expected score \code{'score'}, or information and trace line contours (\code{'infocontour'} and
 \code{'tracecontour'}; not supported for \code{MultipleGroupClass} objects)}
 
-\item{degrees}{the degrees argument to be used if there are exactly two factors. See \code{\link{iteminfo}}
-for more detail}
+\item{degrees}{the degrees argument to be used if there are exactly two factors.
+See \code{\link{iteminfo}} for more detail}
 
 \item{CE}{logical; plot confidence envelope?}
 
-\item{CEalpha}{area remaining in the tail for confidence envelope. Default gives 95\% confidence region}
+\item{CEalpha}{area remaining in the tail for confidence envelope. Default gives 95\% confidence
+region}
 
 \item{CEdraws}{draws number of draws to use for confidence envelope}
 
 \item{rot}{a list of rotation coordinates to be used for 3 dimensional plots}
 
-\item{drop.zeros}{logical; drop slope values that are numerically close to zero to reduce dimensionality?
-Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several
-zero slopes}
+\item{drop.zeros}{logical; drop slope values that are numerically close to zero to reduce
+dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
+models that contain several zero slopes}
 
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}}

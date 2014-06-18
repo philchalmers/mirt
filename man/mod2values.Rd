@@ -10,8 +10,8 @@ mod2values(x)
 }
 \description{
 Given an estimated model from any of mirt's model fitting functions this function will convert
-the model parameters into the design data frame of starting values and other parameter characteristics
-(similar to using the \code{pars = 'values'} for obtaining starting values).
+the model parameters into the design data frame of starting values and other parameter
+characteristics (similar to using the \code{pars = 'values'} for obtaining starting values).
 }
 \examples{
 \dontrun{

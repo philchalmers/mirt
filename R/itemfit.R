@@ -8,26 +8,30 @@
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
 #'   \code{MultipleGroupClass}
-#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are only
-#'   interested in computing the S-X2 quickly
+#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are 
+#'   only interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
-#' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} statistic
-#' @param empirical.plot a single numeric value or character of the item name  indicating which item to plot
-#'   (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings. Only applicable
-#'   when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots are drawn
-#' @param empirical.CI a numeric value indicating the width of the empirical confidence interval ranging 
-#'   between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence interval would be 
-#'   plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items
+#' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2} 
+#'   statistic
+#' @param empirical.plot a single numeric value or character of the item name  indicating which 
+#'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings. 
+#'   Only applicable when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots 
+#'   are drawn
+#' @param empirical.CI a numeric value indicating the width of the empirical confidence interval 
+#'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence 
+#'   interval would be plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
-#' @param Theta a matrix of factor scores for each person used for statistics that require empirical estimates. If 
-#'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
-#'   be used instead. Also required when estimating statistics with missing data via imputation
-#' @param impute a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
-#'   when there are missing data present. This requires a precomputed \code{Theta} input. Will return
-#'   a data.frame object with the mean estimates of the stats and their imputed standard deviations
+#' @param Theta a matrix of factor scores for each person used for statistics that require 
+#'   empirical estimates. If supplied, arguments typically passed to \code{fscores()} will be 
+#'   ignored and these values will be used instead. Also required when estimating statistics 
+#'   with missing data via imputation
+#' @param impute a number indicating how many imputations to perform (passed to 
+#'   \code{\link{imputeMissing}}) when there are missing data present. This requires a 
+#'   precomputed \code{Theta} input. Will return a data.frame object with the mean estimates 
+#'   of the stats and their imputed standard deviations
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
@@ -45,8 +49,8 @@
 #' Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the generalized
 #' S-X2 item-fit index for polytomous IRT models. ACT
 #'
-#' Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item response theory
-#' models. \emph{Applied Psychological Measurement, 24}, 50-64.
+#' Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item 
+#' response theory models. \emph{Applied Psychological Measurement, 24}, 50-64.
 #'
 #' Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit
 #' in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
@@ -107,8 +111,8 @@
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
-                    empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, impute = 0, 
-                    ...){
+                    empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, 
+                    impute = 0, ...){
     
     fn <- function(collect, obj, Theta, ...){
         tmpdat <- imputeMissing(obj, Theta)
@@ -123,7 +127,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     if(any(is.na(x@Data$data)) && !is(x, 'MultipleGroupClass')){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
-                 Theta and impute arguments to compute statistics following multiple data inputations')
+                 Theta and impute arguments to compute statistics following multiple data 
+                 inputations')
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
@@ -155,8 +160,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             tmp@Data <- x@Data
             tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[g]]
             ret[[g]] <- itemfit(tmp, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
-                                S_X2.tables=S_X2.tables, empirical.plot=empirical.plot, Theta=tmpTheta,
-                                empirical.CI=empirical.CI, method=method, impute=impute, ...)
+                                S_X2.tables=S_X2.tables, empirical.plot=empirical.plot, 
+                                Theta=tmpTheta, empirical.CI=empirical.CI, method=method, 
+                                impute=impute, ...)
         }
         names(ret) <- x@Data$groupNames
         return(ret)
@@ -197,7 +203,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             for(i in 1L:ncol(P))
                 for(j in 1L:ncol(P))
                     if(i != j)
-                        sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j]))
+                        sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] * 
+                                                               log_P[,i] * log(P[,i]/P[,j]))
         }
         ret$Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
         #if all Rasch models, infit and outfit
@@ -276,7 +283,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             EPCI.lower <- EPCI.upper <- NULL
             if(K == 2 && empirical.CI != 0){
                 p.L <- function(x, alpha) if (x[1] == 0) 0 else qbeta(alpha, x[1], x[2] - x[1] + 1)
-                p.U <- function(x, alpha) if (x[1] == x[2]) 1 else qbeta(1 - alpha, x[1] + 1, x[2] - x[1])
+                p.U <- function(x, alpha) if (x[1] == x[2]) 1 else 
+                    qbeta(1 - alpha, x[1] + 1, x[2] - x[1])
                 N <- empirical.plot_points[,2]
                 O <- empirical.plot_points[,ncol(empirical.plot_points)] * N
                 EPCI.lower <- apply(cbind(O, N), 1, p.L, (1-empirical.CI)/2)
@@ -294,17 +302,19 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             plt <- cbind(plt.1, plt.2)
             if(K == 2) plt <- plt[plt$cat != 1, ]
             return(xyplot(P ~ Theta, plt, group = cat, 
-                          main = paste('Empirical plot for item', empirical.plot), ylim = c(-0.1,1.1),
-                          xlab = expression(theta), ylab=expression(P(theta)), 
+                          main = paste('Empirical plot for item', empirical.plot), 
+                            ylim = c(-0.1,1.1), xlab = expression(theta), ylab=expression(P(theta)), 
                           auto.key=ifelse(K==2, FALSE, TRUE), EPCI.lower=EPCI.lower,
                           EPCI.upper=EPCI.upper,
                           panel = function(x, y, groups, subscripts, EPCI.lower, EPCI.upper, ...){
-                              panel.xyplot(x=x, y=y, groups=groups, type='l', subscripts=subscripts, ...)
+                              panel.xyplot(x=x, y=y, groups=groups, type='l', 
+                                           subscripts=subscripts, ...)
                               panel.points(cbind(plt$theta, plt$p), col=groups, pch=groups, ...)     
                               if(!is.null(EPCI.lower)){
                                   theta <- na.omit(plt$theta)
                                   for(i in 1:length(theta))
-                                      panel.lines(c(theta[i], theta[i]), c(EPCI.lower[i], EPCI.upper[i]),
+                                      panel.lines(c(theta[i], theta[i]), c(EPCI.lower[i], 
+                                                                           EPCI.upper[i]),
                                                   lty = 2, col = 'red')
                               }
                           }))

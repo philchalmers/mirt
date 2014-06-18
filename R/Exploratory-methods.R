@@ -91,7 +91,15 @@ setMethod(
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
-#' @param rotate see \code{\link{mirt}} for details
+#' @param rotate a string indicating which rotation to use for exploratory models, primarily 
+#'   from the \code{GPArotation} package (see documentation therein).
+#'   
+#'   Rotations currently supported are: \code{'promax'}, \code{'oblimin'}, \code{'varimax'}, 
+#'   \code{'quartimin'}, \code{'targetT'}, \code{'targetQ'}, \code{'pstT'}, \code{'pstQ'}, 
+#'   \code{'oblimax'}, \code{'entropy'}, \code{'quartimax'}, \code{'simplimax'}, 
+#'   \code{'bentlerT'}, \code{'bentlerQ'}, \code{'tandemI'}, \code{'tandemII'}, 
+#'   \code{'geominT'}, \code{'geominQ'}, \code{'cfT'}, \code{'cfQ'}, \code{'infomaxT'},
+#'   \code{'infomaxQ'}, \code{'mccammon'}, \code{'bifactorT'}, \code{'bifactorQ'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most

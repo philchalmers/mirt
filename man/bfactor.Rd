@@ -16,8 +16,8 @@ specific factor loads on the first two items and the second specific factor
 on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load
 on the second-tier factors (have no specific component) \code{NA} values may
 be used as place-holders. These numbers will be translated into a format suitable for
-\code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S' added to the
-respective factor number}
+\code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S'
+added to the respective factor number}
 
 \item{model2}{a two-tier model specification object defined by \code{mirt.model()}. By default
 the model will fit a unidimensional model in the second-tier, and therefore be equivalent to

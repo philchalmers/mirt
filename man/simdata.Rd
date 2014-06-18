@@ -15,21 +15,23 @@ factor loadings if \code{factor.loads = TRUE}}
 the item with the largest number of categories, and filled empty locations
 with \code{NA}}
 
-\item{itemtype}{a character vector of length \code{nrow(a)} (or 1, if all the item types are the same)
-specifying the type of items to simulate.
-Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
-dichotomous, graded, generalized partial credit, nominal, nested logit, and partially compensatory models. Note that
-for the gpcm, nominal, and nested logit models there should be as many parameters as desired categories,
-however to parametrized them for meaningful interpretation the first category intercept should
-equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
-correct item traceline). For nested logit models the 'correct' category is always the lowest category
-(i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that have already been
-estimated to understand the itemtypes more intimately}
+\item{itemtype}{a character vector of length \code{nrow(a)} (or 1, if all the item types are
+  the same) specifying the type of items to simulate.
+
+  Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
+  dichotomous, graded, generalized partial credit, nominal, nested logit, and partially
+  compensatory models. Note that for the gpcm, nominal, and nested logit models there should
+  be as many parameters as desired categories, however to parametrized them for meaningful
+  interpretation the first category intercept should
+  equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
+  correct item traceline). For nested logit models the 'correct' category is always the lowest
+  category (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that
+  have already been estimated to understand the itemtypes more intimately}
 
 \item{nominal}{a matrix of specific item category slopes for nominal models.
 Should be the dimensions as the intercept specification with one less column, with \code{NA}
-in locations where not applicable. Note that during estimation the first slope will be constrained
-to 0 and the last will be constrained to the number of categories minus 1,
+in locations where not applicable. Note that during estimation the first slope will be
+constrained to 0 and the last will be constrained to the number of categories minus 1,
 so it is best to set these as the values for the first and last categories as well}
 
 \item{N}{sample size}
@@ -142,7 +144,7 @@ items <- c('dich','dich','dich','nominal','gpcm','graded')
 
 dataset <- simdata(a,d,2000,items,sigma=sigma,nominal=nominal)
 
-#mod <- bfactor(dataset, c(1,1,1,2,2,2), itemtype = c(rep('2PL', 3), 'nominal', 'gpcm','graded'))
+#mod <- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep('2PL', 3), 'nominal', 'gpcm','graded'))
 #coef(mod)
 
 ####Unidimensional nonlinear factor pattern

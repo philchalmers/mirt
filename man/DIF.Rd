@@ -9,35 +9,40 @@ DIF(MGmodel, which.par, scheme = "add",
   type = "trace", verbose = TRUE, ...)
 }
 \arguments{
-\item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference model}
+\item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference
+model}
 
-\item{which.par}{a character vector containing the parameter names which will be inspected for DIF}
+\item{which.par}{a character vector containing the parameter names which will be inspected for
+DIF}
 
 \item{Wald}{logical; perform Wald tests for DIF instead of likelihood ratio test?}
 
-\item{items2test}{a numeric vector, or character vector containing the item names, indicating which items
-will be tested for DIF. In models where anchor items are known, omit them from this vector. For example,
-if items 1 and 2 are anchors in a 10 item test, then \code{items2test = 3:10} would work for testing the
-remaining items (important to remember when using sequential schemes)}
+\item{items2test}{a numeric vector, or character vector containing the item names, indicating
+which items will be tested for DIF. In models where anchor items are known, omit them from
+this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
+\code{items2test = 3:10} would work for testing the remaining items (important to remember
+when using sequential schemes)}
 
-\item{scheme}{type of DIF analysis to perform, either by adding or dropping constraints across groups.
-  These can be:
+\item{scheme}{type of DIF analysis to perform, either by adding or dropping constraints across
+  groups. These can be:
 \describe{
-  \item{'add'}{parameters in \code{which.par} will be constrained each item one at a time for items that are
-    specified in \code{items2test}. This is beneficial when examining DIF from a model with parameters
-    freely estimated across groups, and when inspecting differences via the Wald test}
+  \item{'add'}{parameters in \code{which.par} will be constrained each item one at a time for
+    items that are specified in \code{items2test}. This is beneficial when examining DIF from a
+    model with parameters freely estimated across groups, and when inspecting differences via
+    the Wald test}
   \item{'drop'}{parameters in \code{which.par} will be freely estimated for items that are
-    specified in \code{items2test}. This is useful when supplying an overly restrictive model and attempting to
-    detect DIF with a slightly less restrictive model}
-  \item{'add_sequential'}{sequentially loop over the items being tested, and at the end of the loop treat
-    DIF tests that satisfy the \code{seq_stat} criteria as invariant. The loop is then re-run on the remaining
-    invariant items to determine if they are now displaying DIF in the less constrained model,
-    and when no new invariant item is found the algorithm stops and returns the items that displayed DIF}
-  \item{'drop_sequential'}{sequentially loop over the items being tested, and at the end of the loop treat
-    items that violate the \code{seq_stat} criteria as demonstrating DIF. The loop is then re-run, leaving the items
-    that previously demonstrated DIF as variable across groups, and the remaining test items that previously showed
-    invariance are re-tested. The algorithm stops when no more items showing DIF are found and returns the items that
-    displayed DIF}
+    specified in \code{items2test}. This is useful when supplying an overly restrictive model
+    and attempting to detect DIF with a slightly less restrictive model}
+  \item{'add_sequential'}{sequentially loop over the items being tested, and at the end of the
+    loop treat DIF tests that satisfy the \code{seq_stat} criteria as invariant. The loop is
+    then re-run on the remaining invariant items to determine if they are now displaying DIF in
+    the less constrained model, and when no new invariant item is found the algorithm stops and
+    returns the items that displayed DIF}
+  \item{'drop_sequential'}{sequentially loop over the items being tested, and at the end of the
+    loop treat items that violate the \code{seq_stat} criteria as demonstrating DIF. The loop is
+    then re-run, leaving the items that previously demonstrated DIF as variable across groups,
+    and the remaining test items that previously showed invariance are re-tested. The algorithm
+    stops when no more items showing DIF are found and returns the items that displayed DIF}
 }}
 
 \item{seq_stat}{select a statistic to test for in the sequential schemes. Potential values are
@@ -46,15 +51,15 @@ If a numeric value is input that ranges between 0 and 1, the 'p' value will be t
 (e.g., \code{seq_stat = .05} will test for the difference of p < .05 in the add scheme,
 or p > .05 in the drop scheme), along with the specified \code{p.adjust} input}
 
-\item{max_run}{a number indicating the maximum number of cycles to perform in sequential searches.
-The default is to perform search until no further DIF is found}
+\item{max_run}{a number indicating the maximum number of cycles to perform in sequential
+searches. The default is to perform search until no further DIF is found}
 
 \item{plotdif}{logical; create itemplots for items that are displaying DIF according to the
 \code{seq_stat} criteria? Only available for 'add' type schemes}
 
 \item{type}{the \code{type} of plot argument passed to \code{plot()}. Default is 'trace', though
-another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to mirt's
-\code{plot()} function is set to \code{TRUE}}
+another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
+mirt's \code{plot()} function is set to \code{TRUE}}
 
 \item{p.adjust}{string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 Adjustments are located in the \code{adj_pvals} element in the returned list}
@@ -65,10 +70,10 @@ Adjustments are located in the \code{adj_pvals} element in the returned list}
 }
 \description{
 This function runs the Wald and likelihood-ratio approaches for testing differential
-item functioning (DIF). This is primarily a convenience wrapper to the \code{\link{multipleGroup}}
-function for performing standard DIF procedures. Models can be estimated in
-parallel automatically by defining a parallel object with \code{\link{mirtCluster}}, which will help
-to decrease the runtime.
+item functioning (DIF). This is primarily a convenience wrapper to the
+\code{\link{multipleGroup}} function for performing standard DIF procedures. Models can be
+estimated in parallel automatically by defining a parallel object with \code{\link{mirtCluster}},
+which will help to decrease the runtime.
 }
 \examples{
 \dontrun{

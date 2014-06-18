@@ -8,7 +8,8 @@ probtrace(x, Theta)
 \arguments{
 \item{x}{an extracted internal mirt object containing item information}
 
-\item{Theta}{a vector (unidimensional) or matrix (unidimensional/multidimensional) of latent trait values}
+\item{Theta}{a vector (unidimensional) or matrix (unidimensional/multidimensional) of
+latent trait values}
 }
 \description{
 Given an internal mirt object extracted from an estimated model

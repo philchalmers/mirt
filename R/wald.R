@@ -24,7 +24,8 @@
 #' mod <- mirt(data, 1, SE = TRUE)
 #' coef(mod)
 #'
-#' #see how the information matrix relates to estimated parameters, and how it lines up with the index
+#' # see how the information matrix relates to estimated parameters, and how it lines up 
+#' #   with the parameter index
 #' (infonames <- wald(mod))
 #' index <- mod2values(mod)
 #' index[index$est, ]

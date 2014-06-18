@@ -1,33 +1,33 @@
 #' Create a user defined item with correct generic functions
 #'
-#' Initializes the proper S4 class and methods necessary for mirt functions to use in estimation. To use
-#' the defined objects pass to the \code{mirt(..., customItems = list())} command, and ensure that the classes
-#' are properly labeled and unique in the list.
+#' Initializes the proper S4 class and methods necessary for mirt functions to use in estimation. 
+#' To use the defined objects pass to the \code{mirt(..., customItems = list())} command, and 
+#' ensure that the classes are properly labeled and unique in the list.
 #'
 #' The \code{summary()} function will not return proper standardized loadings since the function
-#' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001 are filled in
-#' as place-holders. 
+#' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001 
+#' are filled in as place-holders. 
 #'
 #' @aliases createItem
 #' @param name a character indicating the item class name to be defined
 #' @param par a named vector of the starting values for the parameters
 #' @param est a logical vector indicating which parameters should be freely estimated by default
-#' @param P the probability trace function for all categories (first column is category 1, second category two, etc).
-#'   First input contains a vector of all the item parameters, the second input must be a matrix called \code{Theta}, and
-#'   the third input must be the number of categories called \code{ncat}.
-#'   Function also must return a \code{matrix} object of category probabilities
-#' @param gr gradient function (vector of first derivatives) of the log-likelihood used in estimation.
-#'   The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object defined 
-#'   by \code{createItem()} and \code{Theta} is a matrix of latent trait parameters. Tabulated (EM)
-#'   or raw (MHRM) data are located in the \code{x@@dat} slot, and are used to form the complete 
-#'   data log-likelihood. If not specified a numeric approximation will be used
-#' @param hss Hessian function (matrix of second derivatives) of the log-likelihood used in estimation.
-#'   If not specified a numeric approximation will be used (required for the MH-RM algorithm only).
-#'   The input is idential to the \code{gr} argument
-#' @param lbound optional vector indicating the lower bounds of the parameters. If not specified then
-#'   the bounds will be set to -Inf
-#' @param ubound optional vector indicating the lower bounds of the parameters. If not specified then
-#'   the bounds will be set to Inf
+#' @param P the probability trace function for all categories (first column is category 1, second 
+#'   category two, etc). First input contains a vector of all the item parameters, the second input
+#'   must be a matrix called \code{Theta}, and the third input must be the number of categories 
+#'   called \code{ncat}. Function also must return a \code{matrix} object of category probabilities
+#' @param gr gradient function (vector of first derivatives) of the log-likelihood used in 
+#'   estimation. The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object 
+#'   defined by \code{createItem()} and \code{Theta} is a matrix of latent trait parameters. 
+#'   Tabulated (EM) or raw (MHRM) data are located in the \code{x@@dat} slot, and are used to form 
+#'   the complete data log-likelihood. If not specified a numeric approximation will be used
+#' @param hss Hessian function (matrix of second derivatives) of the log-likelihood used in 
+#'   estimation. If not specified a numeric approximation will be used (required for the MH-RM 
+#'   algorithm only). The input is idential to the \code{gr} argument
+#' @param lbound optional vector indicating the lower bounds of the parameters. If not specified 
+#'   then the bounds will be set to -Inf
+#' @param ubound optional vector indicating the lower bounds of the parameters. If not specified 
+#'   then the bounds will be set to Inf
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords createItem
 #' @export createItem

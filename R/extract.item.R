@@ -7,9 +7,9 @@
 #' @param item a number or character signifying which item to extract
 #' @param group a number signifying which group the item should be extracted from (applies to
 #'   'MultipleGroupClass' only)
-#' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce dimensionality?
-#'   Useful in objects returned from \code{\link{bfactor}} or other confirmatory models that contain several
-#'   zero slopes
+#' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce 
+#'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory 
+#'   models that contain several zero slopes
 #' @keywords extract
 #' @export extract.item
 #' @examples

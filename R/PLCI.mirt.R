@@ -1,16 +1,17 @@
 #' Compute profiled-likelihood confidence intervals
 #'
-#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior parameter
-#' distributions as well as equality constraints. For multidimensional models, the CI's for the slopes
-#' are not estimated due to the possibility of signs flipping during estimation. In unidimensional models, the
-#' slope parameters are assumed to be greater than zero, and a lower bound is imposed to ensure that sign
-#' flipping does not occur.
+#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior 
+#' parameter distributions as well as equality constraints. For multidimensional models, the 
+#' CI's for the slopes are not estimated due to the possibility of signs flipping during estimation.
+#' In unidimensional models, the slope parameters are assumed to be greater than zero, and a lower 
+#' bound is imposed to ensure that sign flipping does not occur.
 #'
 #' @aliases PLCI.mirt
 #' @param mod a converged mirt model
 #' @param alpha two-tailed alpha critical level
-#' @param parnum a numeric vector indicating which parameters to estimate. Use \code{\link{mod2values}}
-#'   to determine parameter numbers. If \code{NULL}, all possible parameters are used
+#' @param parnum a numeric vector indicating which parameters to estimate. 
+#'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
+#'   parameters are used
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
 #' @seealso
@@ -66,14 +67,16 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
                 sv$value[itemsv$parnum] <- ds
             }
         }
-        got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior), silent=TRUE)
+        got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior), 
+                      silent=TRUE)
         if(is(got.LL, 'try-error')) return(1e8)
         ret <- (got.LL - get.LL)^2
         attr(ret, 'value') <- value
         ret
     }
 
-    LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, sv, get.LL, parprior){
+    LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, 
+                      sv, get.LL, parprior){
         lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
         mid <- pars[parnum]
@@ -84,14 +87,14 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
             lower <- 0
         }
         if(mid > lower){
-            opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, large=large,
-                                  which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior,
-                                  parnames=parnames, tol = .01)
+            opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, 
+                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL, 
+                                  parprior=parprior, parnames=parnames, tol = .01)
         } else opt.lower <- list(minimum = lower)
         if(mid < upper){
-            opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model, large=large,
-                                  which=parnums[parnum], sv=sv, get.LL=get.LL, parprior=parprior,
-                                  parnames=parnames, tol = .01)
+            opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model, 
+                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL, 
+                                  parprior=parprior, parnames=parnames, tol = .01)
         } else opt.upper <- list(minimum = upper)
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }

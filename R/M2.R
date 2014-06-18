@@ -13,9 +13,10 @@
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
 #' @param Theta a matrix of factor scores for each person used for imputation
-#' @param impute a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
-#'   when there are missing data present. This requires a precomputed \code{Theta} input. Will return
-#'   a data.frame object with the mean estimates of the stats and their imputed standard deviations
+#' @param impute a number indicating how many imputations to perform 
+#'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires 
+#'   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates 
+#'   of the stats and their imputed standard deviations
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
@@ -60,7 +61,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
     if(any(is.na(obj@Data$data))){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
-                 Theta and impute arguments to compute statistics following multiple data inputations')
+                 Theta and impute arguments to compute statistics following multiple 
+                 data inputations')
         collect <- vector('list', impute)
         collect <- myLapply(collect, fn, obj=obj, Theta=Theta, calcNull=calcNull,
                             quadpts=quadpts)
@@ -97,14 +99,17 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         newret$df.M2 <- Tsum - obj@nest
         newret$p.M2 <- 1 - pchisq(newret$Total.M2, newret$df.M2)
         newret$RMSEA.M2 <- ifelse((newret$Total.M2 - newret$df.M2) > 0,
-                                  sqrt(newret$Total.M2 - newret$df.M2) / sqrt(newret$df.M2 * (obj@Data$N-1)), 0)
+                                  sqrt(newret$Total.M2 - newret$df.M2) / 
+                                      sqrt(newret$df.M2 * (obj@Data$N-1)), 0)
         if(calcNull){
-            null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
+            null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, 
+                                          TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
             newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) /
                 (null.fit$Total.M2 / null.fit$df.M2 - 1)
-            newret$CFI.M2 <- 1 - (newret$Total.M2 - newret$df.M2) / (null.fit$Total.M2 - null.fit$df.M2)
+            newret$CFI.M2 <- 1 - (newret$Total.M2 - newret$df.M2) / 
+                (null.fit$Total.M2 - null.fit$df.M2)
             if(newret$CFI.M2 > 1) newret$CFI.M2 <- 1
             if(newret$CFI.M2 < 0 ) newret$CFI.M2 <- 0
         }
@@ -116,7 +121,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         return(newret)
     }
     
-    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 'ideal', 'GroupPars')))
+    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 
+                                           'ideal', 'GroupPars')))
        stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\', 
             \'gpcm\', and \'nominal\' objects')
     ret <- list()

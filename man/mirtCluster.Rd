@@ -16,9 +16,9 @@ cores will be used}
 This function defines a object that is placed in a relevant internal environment defined in mirt.
 Internal functions such as \code{calcLogLik}, \code{fscores}, etc, will utilize this object
 automatically to capitalize on parallel
-processing architecture. The object defined is a call from \code{parallel::makeCluster()}. Note that
-if you are defining other parallel objects (for simulation desings, for example) it is not recommended
-to define a mirtCluster.
+processing architecture. The object defined is a call from \code{parallel::makeCluster()}.
+Note that if you are defining other parallel objects (for simulation desings, for example)
+it is not recommended to define a mirtCluster.
 }
 \examples{
 \dontrun{

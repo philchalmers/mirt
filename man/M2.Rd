@@ -17,9 +17,10 @@ Allows for statistics such as the limited information TLI and CFI}
 
 \item{Theta}{a matrix of factor scores for each person used for imputation}
 
-\item{impute}{a number indicating how many imputations to perform (passed to \code{\link{imputeMissing}})
-when there are missing data present. This requires a precomputed \code{Theta} input. Will return
-a data.frame object with the mean estimates of the stats and their imputed standard deviations}
+\item{impute}{a number indicating how many imputations to perform
+(passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
+a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
+of the stats and their imputed standard deviations}
 }
 \description{
 Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the

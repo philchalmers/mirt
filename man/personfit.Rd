@@ -24,8 +24,8 @@ response pattern?}
 \code{personfit} calculates the Zh values from Drasgow, Levine and Williams (1985) for
 unidimensional and multidimensional models. For Rasch models infit and outfit statistics are
 also produced. The returned object is a \code{data.frame}
-consisting either of the tabulated data or full data with the statistics appended to the rightmost
-columns.
+consisting either of the tabulated data or full data with the statistics appended to the
+rightmost columns.
 }
 \examples{
 \dontrun{

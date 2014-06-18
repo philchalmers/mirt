@@ -1,13 +1,14 @@
 #' Imputing plausible data for missing values
 #'
-#' Given an estimated model from any of mirt's model fitting functions and an estimate of the latent trait,
-#' impute plausible missing data values. Returns the original data in a \code{data.frame}
-#' without any NA values.
+#' Given an estimated model from any of mirt's model fitting functions and an estimate of the 
+#' latent trait, impute plausible missing data values. Returns the original data in a 
+#' \code{data.frame} without any NA values.
 #'
 #'
 #' @aliases imputeMissing
 #' @param x an estimated model x from the mirt package
-#' @param Theta a matrix containing the estimates of the latent trait scores (e.g., via \code{\link{fscores}})
+#' @param Theta a matrix containing the estimates of the latent trait scores 
+#'   (e.g., via \code{\link{fscores}})
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords impute data
 #' @export imputeMissing
