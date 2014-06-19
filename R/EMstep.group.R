@@ -168,7 +168,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
                                              CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
                                              prior=Prior[[g]], itemloc=itemloc)
                 }
-                LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
+                LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected), na.rm = TRUE)
             }
             collectLL[cycles] <- LL
             if(is.nan(LL))

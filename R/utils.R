@@ -1229,7 +1229,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
                                    Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
                                    CUSTOM.IND=CUSTOM.IND)$expected
         }
-        LL <- LL + sum(Data$Freq[[g]] * log(expected))
+        LL <- LL + sum(Data$Freq[[g]] * log(expected), na.rm = TRUE)
     }
     LL
 }
