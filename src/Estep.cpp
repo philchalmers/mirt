@@ -18,6 +18,7 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
 
 //    #pragma omp parallel for
     for (int pat = 0; pat < npat; ++pat){
+        if(r[pat] < 1e-10) continue;
         vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
             posterior[q] = posterior[q] * prior[q];
@@ -84,6 +85,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
 
 //#pragma omp parallel for
     for (int pat = 0; pat < npat; ++pat){
+        if(r[pat] < 1e-10) continue;
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
         vector<double> likelihoods(nquad*sfact, 1.0);
         for (int fact = 0; fact < sfact; ++fact){
