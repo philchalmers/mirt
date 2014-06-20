@@ -765,8 +765,7 @@ setMethod(
                 for(i in which.items)
                     I[,i] <- iteminfo(extract.item(x, i), ThetaFull)
                 I <- t(na.omit(t(I)))
-                items <- gl(n=length(unique(which.items)), k=nrow(Theta),
-                            labels = paste('Item', which.items))
+                items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
                 if(facet_items){
                     return(xyplot(I ~ Theta|item, plotobj,

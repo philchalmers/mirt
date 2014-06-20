@@ -227,14 +227,15 @@ setMethod(
                     for(i in which.items)
                         I[,i] <- iteminfo(extract.item(x, i, group=x@Data$groupNames[g]), ThetaFull)
                     I <- t(na.omit(t(I)))
-                    items <- gl(n=length(unique(which.items)), k=nrow(ThetaFull),
-                                labels = paste('Item', which.items))
-                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items, 
-                                          group=x@Data$groupNames[g])
+                    items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
+                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items) 
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
+                plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull))
+                facet_items <- FALSE
                 if(facet_items){
+                    # this seems to draw extra lines for some reason. Silly lattice TODO
                     return(xyplot(I ~ Theta | item, plt, group = group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))

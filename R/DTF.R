@@ -92,7 +92,7 @@
 # DTF(mod3, MI=200, plot=TRUE, auto.key=TRUE) 
 # 
 # }
-DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_nodes = NULL,
+DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_nodes = NULL,
                 plot = FALSE, ...){
 
     fn <- function(x, omod, impute, covBs, imputenums, Theta, max_score, Theta_nodes = NULL,
