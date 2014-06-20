@@ -24,6 +24,8 @@
 #   uDTF/sDTF statistic to determine where the difference between the test curves are large 
 #   (while still accounting for sampling variability). Returns a matrix with observed
 #   variability)
+# @param plot logical; plot the test score functions with imputed confidence envelopes?
+# @param ... additional arguments to be passed to lattice
 # @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 # @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 # @keywords DTF
@@ -87,11 +89,14 @@
 # DIF(mod3, c('a1', 'd'), items2test=16:30) 
 # DTF(mod3) #huge unsigned bias. Signed bias indicates group 2 scores generally lower
 # DTF(mod3, MI=200) 
+# DTF(mod3, MI=200, plot=TRUE, auto.key=TRUE) 
 # 
 # }
-DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_nodes = NULL){
+DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_nodes = NULL,
+                plot = FALSE, ...){
 
-    fn <- function(x, omod, impute, covBs, imputenums, Theta, max_score, Theta_nodes = NULL){
+    fn <- function(x, omod, impute, covBs, imputenums, Theta, max_score, Theta_nodes = NULL,
+                   plot){
         mod <- omod
         if(impute){
             for(g in 1L:2L)
@@ -107,6 +112,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_n
         }
         T1 <- expected.test(mod, Theta, group=1)
         T2 <- expected.test(mod, Theta, group=2)
+        if(plot) return(c(T1, T2))
         D <- T1 - T2
         uDTF <- mean(abs(D))
         uDTF_percent <- uDTF/max_score * 100
@@ -129,6 +135,12 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_n
         colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1) 
             paste0('Theta.', 1:ncol(Theta_nodes)) else 'Theta'
     }
+    if(plot){
+        if(is.null(MI))
+            stop('Must specificy number of imputations to generate plot')
+        Theta_nodes <- NULL
+    }
+    
     J <- length(mod@K)
     if(is.null(MI)){
         MI <- 1L
@@ -165,7 +177,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_n
     Theta <- thetaComb(theta, mod@nfact)
     max_score <- sum(apply(mod@Data$data, 2L, min) + (mod@Data$K - 1L))
     list_scores <- myLapply(1L, fn, omod=mod, impute=FALSE, covBs=NULL, Theta_nodes=Theta_nodes,
-                            imputenums=NULL, max_score=max_score, Theta=Theta)
+                            imputenums=NULL, max_score=max_score, Theta=Theta, plot=plot)
     if(impute){
         
         bs_range <- function(x, CI){
@@ -179,8 +191,30 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 200, theta_lim=c(-6,6), Theta_n
         
         oCM <- list_scores[[1L]]
         list_scores <- myLapply(1L:MI, fn, omod=mod, impute=TRUE, covBs=covBs, max_score=max_score,
-                                imputenums=imputenums, Theta=Theta, Theta_nodes=Theta_nodes)
+                                imputenums=imputenums, Theta=Theta, Theta_nodes=Theta_nodes, 
+                                plot=plot)
         scores <- do.call(rbind, list_scores)
+        if(plot){            
+            panel.bands <- function(x, y, upper, lower, fill, col,
+                                       subscripts, ..., font, fontface){
+                upper <- upper[subscripts]
+                lower <- lower[subscripts]
+                panel.polygon(c(x, rev(x)), c(upper, rev(lower)), col = fill, border = FALSE,
+                              ...)
+            }            
+            group <- factor(rep(mod@Data$groupNames, each=nrow(Theta)))
+            CIs <- apply(scores, 2L, bs_range, CI=CI)
+            CIs <- CIs[-2L, ]
+            df <- data.frame(Theta=rbind(Theta, Theta), group, TS=oCM, t(CIs))
+            return(xyplot(TS ~ Theta, data=df, groups=group,
+                   upper=df$upper, lower=df$lower, 
+                   panel = function(x, y, ...){
+                       panel.superpose(x, y, panel.groups = panel.bands, type='l', ...)
+                       panel.xyplot(x, y, type='l', lty=1,...)
+                   },
+                   xlab = expression(theta), ylab = expression(T(theta)), 
+                   main = 'Expected Total Score', ...))
+        }
         if(!is.null(Theta_nodes)){
             CIs <- apply(scores, 2L, bs_range, CI=CI)
             rownames(CIs) <- rownames(CIs) <-
