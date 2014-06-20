@@ -2,8 +2,12 @@
 #'
 #' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the 
 #' M2* statistic for polytomous data (collapsing over response categories for better stability;
-#' see Cai and Hansen, 2013), as well as associated fit indicies that are based on 
+#' see Cai and Hansen, 2013), as well as associated fit indices that are based on 
 #' fitting the null model.
+#' 
+#' @return returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+#'   p-value, RMSEA (with 90\% confidence interval), and optionally the TLI and CFI model 
+#'   fit statistics
 #'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package
@@ -17,6 +21,8 @@
 #'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires 
 #'   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates 
 #'   of the stats and their imputed standard deviations
+#' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for 
+#'   RMSEA. Default returns the 90\% interval
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
@@ -41,7 +47,7 @@
 #' M2(mod2, Theta=Theta, impute = 10)
 #'
 #' }
-M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
+M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9){
     
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -78,6 +84,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         rownames(ret) <- c('stats', 'SD_stats')
         return(ret)
     }
+    alpha <- (1 - CI)/2
     if(is(obj, 'MultipleGroupClass')){
         pars <- obj@pars
         ngroups <- length(pars)
@@ -96,22 +103,26 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
         newret$Total.M2 <- sum(newret$M2)
         Tsum <- 0
         for(g in 1L:ngroups) Tsum <- Tsum + ret[[g]]$nrowT
-        newret$df.M2 <- Tsum - obj@nest
-        newret$p.M2 <- 1 - pchisq(newret$Total.M2, newret$df.M2)
-        newret$RMSEA.M2 <- ifelse((newret$Total.M2 - newret$df.M2) > 0,
-                                  sqrt(newret$Total.M2 - newret$df.M2) / 
-                                      sqrt(newret$df.M2 * (obj@Data$N-1)), 0)
+        newret$df <- Tsum - obj@nest
+        newret$p <- 1 - pchisq(newret$Total.M2, newret$df)
+        newret$RMSEA <- ifelse((newret$Total.M2 - newret$df) > 0,
+                                  sqrt(newret$Total.M2 - newret$df) / 
+                                      sqrt(newret$df * (obj@Data$N-1)), 0)
+        RMSEA.90_CI <- RMSEA.CI(newret$Total.M2, newret$df, obj@Data$N, 
+                                ci.lower=alpha, ci.upper=1-alpha)
+        newret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
+        newret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
         if(calcNull){
             null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, 
                                           TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
-            newret$TLI.M2 <- (null.fit$Total.M2 / null.fit$df.M2 - newret$Total.M2/newret$df.M2) /
-                (null.fit$Total.M2 / null.fit$df.M2 - 1)
-            newret$CFI.M2 <- 1 - (newret$Total.M2 - newret$df.M2) / 
-                (null.fit$Total.M2 - null.fit$df.M2)
-            if(newret$CFI.M2 > 1) newret$CFI.M2 <- 1
-            if(newret$CFI.M2 < 0 ) newret$CFI.M2 <- 0
+            newret$TLI <- (null.fit$Total.M2 / null.fit$df - newret$Total.M2/newret$df) /
+                (null.fit$Total.M2 / null.fit$df - 1)
+            newret$CFI <- 1 - (newret$Total.M2 - newret$df) / 
+                (null.fit$Total.M2 - null.fit$df)
+            if(newret$CFI > 1) newret$CFI <- 1
+            if(newret$CFI < 0 ) newret$CFI <- 0
         }
         M2s <- as.numeric(newret$M2)
         names(M2s) <- paste0(obj@Data$groupNames, '.M2')
@@ -220,19 +231,22 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0){
     ret$M2 <- M2
     if(is.null(attr(obj, 'MG'))){
         df <- length(p) - obj@nest
-        ret$df.M2 <- df
-        ret$p.M2 <- 1 - pchisq(M2, ret$df.M2)
-        ret$RMSEA.M2 <- ifelse((M2 - ret$df.M2) > 0,
-                               sqrt(M2 - ret$df.M2) / sqrt(ret$df.M2 * (N-1)), 0)
+        ret$df <- df
+        ret$p <- 1 - pchisq(M2, ret$df)
+        ret$RMSEA <- ifelse((M2 - ret$df) > 0,
+                               sqrt(M2 - ret$df) / sqrt(ret$df * (N-1)), 0)
+        RMSEA.90_CI <- RMSEA.CI(M2, df, N, ci.lower=alpha, ci.upper=1-alpha)
+        ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
+        ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
         if(calcNull){
             null.mod <- try(mirt(obj@Data$data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
-            ret$TLI.M2 <- (null.fit$M2 / null.fit$df.M2 - ret$M2/ret$df.M2) /
-                (null.fit$M2 / null.fit$df.M2 - 1)
-            ret$CFI.M2 <- 1 - (ret$M2 - ret$df.M2) / (null.fit$M2 - null.fit$df.M2)
-            if(ret$CFI.M2 > 1) ret$CFI.M2 <- 1
-            if(ret$CFI.M2 < 0) ret$CFI.M2 <- 0
+            ret$TLI <- (null.fit$M2 / null.fit$df - ret$M2/ret$df) /
+                (null.fit$M2 / null.fit$df - 1)
+            ret$CFI <- 1 - (ret$M2 - ret$df) / (null.fit$M2 - null.fit$df)
+            if(ret$CFI > 1) ret$CFI <- 1
+            if(ret$CFI < 0) ret$CFI <- 0
         }
     } else {
         ret$nrowT <- length(p)

@@ -1173,6 +1173,23 @@ smooth.cor <- function(x){
     x
 }
 
+RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
+    
+    lower.lambda <- function(lambda)pchisq(X2, df=df, ncp=lambda) - ci.upper
+    upper.lambda <- function(lambda) pchisq(X2, df=df, ncp=lambda) - ci.lower
+    
+    lambda.l <- try(uniroot(f=lower.lambda, lower=0, upper=X2)$root, silent=TRUE)
+    lambda.u <- try(uniroot(f=upper.lambda, lower=0, upper=max(N, X2*5))$root, silent=TRUE)
+    if(!is(lambda.l, 'try-error')){
+        RMSEA.lower <- sqrt(lambda.l/(N*df))
+    } else {
+        RMSEA.lower <- 0
+    }
+    RMSEA.upper <- sqrt(lambda.u/(N*df))
+    
+    return(c(RMSEA.lower, RMSEA.upper))
+}
+
 assignInformationMG <- function(object){
     J <- ncol(object@Data$data)
     names <- colnames(object@information)

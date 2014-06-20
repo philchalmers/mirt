@@ -3,7 +3,8 @@
 \alias{M2}
 \title{Compute M2 statistic}
 \usage{
-M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0)
+M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0,
+  CI = 0.9)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -21,11 +22,19 @@ Allows for statistics such as the limited information TLI and CFI}
 (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
 a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
 of the stats and their imputed standard deviations}
+
+\item{CI}{numeric value from 0 to 1 indicating the range of the confidence interval for
+RMSEA. Default returns the 90\% interval}
+}
+\value{
+returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+  p-value, RMSEA (with 90\% confidence interval), and optionally the TLI and CFI model
+  fit statistics
 }
 \description{
 Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
 M2* statistic for polytomous data (collapsing over response categories for better stability;
-see Cai and Hansen, 2013), as well as associated fit indicies that are based on
+see Cai and Hansen, 2013), as well as associated fit indices that are based on
 fitting the null model.
 }
 \examples{

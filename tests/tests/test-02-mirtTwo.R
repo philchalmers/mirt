@@ -135,8 +135,8 @@ test_that('poly', {
     graded <- mirt(data, 1, verbose = FALSE)
     gM2 <- M2(graded, calcNull=TRUE)
     expect_equal(gM2$M2, 6.518739, tolerance = 1e-4)
-    expect_equal(gM2$df.M2, 5)
-    expect_equal(gM2$CFI.M2, .9961693, tolerance = 1e-4)
+    expect_equal(gM2$df, 5)
+    expect_equal(gM2$CFI, .9961693, tolerance = 1e-4)
 
     #item and test info
     Theta <- matrix(seq(-4,4,.01))
