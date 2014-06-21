@@ -20,6 +20,9 @@
   
 ## NEW FEATURES
 
+- link to `mirt` vignettes on Github have been registered with the `knitr` package and 
+  are now available through the package index
+
 - `optimizer` argument added to estimation function to switch the default optimizer. Multiple 
   optimizers are now available, including the BFGS (EM default), L-BFGS-B, 
   Newton-Raphson, Nelder-Mead, and SANN
