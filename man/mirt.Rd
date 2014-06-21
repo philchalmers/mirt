@@ -579,17 +579,13 @@ d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
 c <- seq(-1, 1, length.out=10)
 data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
 
-#use much better start values to save iterations
-sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values')
-sv[,'value'] <- c(as.vector(t(cbind(a,d,c))),0,1)
-
-#also possible to edit start values with a GUI approach with
-#   sv <- edit(sv)
-
 mod1 <- mirt(data, 1)
-mod2 <- mirt(data, 1, itemtype = 'grsm', pars = sv)
+mod2 <- mirt(data, 1, itemtype = 'grsm')
 coef(mod2)
 anova(mod2, mod1) #not sig, mod2 should be preferred
+itemplot(mod2, 1)
+itemplot(mod2, 5)
+itemplot(mod2, 10)
 
 ###########
 # 2PL nominal response model example (Suh and Bolt, 2010)

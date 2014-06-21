@@ -40,8 +40,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if(itemtype[i] == 'graded'){
             val <- c(lambdas[i,], zetas[[i]])
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
-        } else  if(itemtype[i] == 'grsm'){
-            val <- c(lambdas[i,], seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+        } else if(itemtype[i] == 'grsm'){
+            tmp <- zetas[[min(which(K[i] == K))]]
+            val <- c(lambdas[i,], tmp, ifelse(min(which(K[i] == K)) == i, 0, tmp[1L] + zetas[[i]][1L]))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'gpcm'){
             val <- c(lambdas[i,], 0:(K[i]-1), 0, zetas[[i]])
