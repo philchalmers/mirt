@@ -56,11 +56,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
     }
     prior <- rlist <- r <- vector('list', ngroups)
     #make sure constrained pars are equal
-    tmp <- L
-    tmp2 <- diag(tmp)
-    tmp2[tmp2 == 0L] <- 1L
-    diag(tmp) <- tmp2
-    longpars <- as.numeric(tmp %*% longpars)
+    tmp <- rowSums(L)
+    tmp[tmp == 0L] <- 1L
+    check <- as.numeric(L %*% longpars) / tmp
+    longpars[estpars] <- check[estpars]
     LL <- 0
     LBOUND <- UBOUND <- c()
     for(g in 1L:ngroups){

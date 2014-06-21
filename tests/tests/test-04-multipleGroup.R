@@ -142,7 +142,7 @@ test_that('three factor', {
                                                  verbose = FALSE, draws = 10)
     expect_is(mod_metric, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_metric, digits=4)[[1]]))[1:20]
-    expect_equal(cfs, c(1.1467, 0.9011, 1.3924, 0, NA, NA, 0, NA, NA, 0.7102, 0.516, 0.9045, 0, NA, NA, 1, NA, NA, 1.3616, 1.12),
+    expect_equal(cfs, c(1.16, 0.945, 1.375, 0, NA, NA, 0, NA, NA, 0.7031, 0.5508, 0.8554, 0, NA, NA, 1, NA, NA, 1.37, 1.0003),
                  tolerance = 1e-2)
     mod_configural <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', SE=TRUE,
                                     optimizer = 'NR')
@@ -154,5 +154,5 @@ test_that('three factor', {
 
     fs1 <- fscores(mod_metric, verbose = FALSE)
     expect_is(fs1, 'list')
-    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.97386290,  0.05447403, -0.52062751, -0.32303232,  0.50560860, -0.97386290), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.97607767,  0.06003614, -0.51816354, -0.32065709,  0.49872843, -0.97607767), -1e-4, 1e-4))
 })
