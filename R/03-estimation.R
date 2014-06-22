@@ -78,6 +78,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Data$ngroups <- length(Data$groupNames)
     Data$nitems <- ncol(Data$data)
     Data$N <- nrow(Data$data)
+    Data$mins <- apply(data, 2L, min, na.rm=TRUE)
     oldmodel <- model
     if(length(model) == 1L){
         newmodel <- list()

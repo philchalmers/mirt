@@ -8,8 +8,10 @@
 #' @param Theta a matrix of latent trait values
 #' @param group a number signifying which group the item should be extracted from (applies to
 #'   'MultipleGroupClass' objects only)
+#' @param mins logical; include the minimum value constants in the dataset. If FALSE, the 
+#'   expected values for each item are determined from the scoring 0:(ncat-1)
 #' @keywords expected score
-#' @seealso \code{\link{extract.item}}, \code{\link{expected.item}}
+#' @seealso \code{\link{expected.item}}
 #' @export expected.test
 #' @examples
 #'
@@ -24,13 +26,11 @@
 #' tail(cbind(Theta, tscore))
 #' 
 #' }
-expected.test <- function(x, Theta, group = NULL){
-    J <- ncol(x@Data$data)
-    score <- numeric(nrow(Theta))
-    mins <- apply(x@Data$data, 2L, min, na.rm=TRUE)
-    for(i in 1L:J){
-        item <- extract.item(x, i, group=group)
-        score <- score + expected.item(item, Theta=Theta, min=0L) + mins[i]
-    }
-    return(score)
+expected.test <- function(x, Theta, group = NULL, mins = TRUE){
+    pars <- if(is(x, 'MultipleGroupClass')) x@pars[[group]]@pars else x@pars
+    trace <- computeItemtrace(pars, Theta, itemloc=x@itemloc, CUSTOM.IND=x@CUSTOM.IND)
+    score <- do.call(c, lapply(x@K, function(x) 0L:(x-1L)))
+    ret <- as.numeric(score %*% t(trace))
+    if(mins) ret <- ret + sum(x@Data$mins)
+    return(ret)
 }

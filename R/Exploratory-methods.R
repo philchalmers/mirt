@@ -652,7 +652,7 @@ setMethod(
                     info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
             }
         }
-        adj <- apply(x@Data$data, 2, min, na.rm=TRUE)
+        adj <- x@Data$mins
         tmp <- try(x@rotate, silent = TRUE)
         if (x@nfact > 1 && !is(tmp,'try-error')){
             rotname <- x@rotate

@@ -55,7 +55,7 @@
 #
 # DTF(mod)
 # mirtCluster()
-# DTF(mod, MI = 200) #95% C.I. for DTI containins 0
+# DTF(mod, MI = 1000) #95% C.I. for sDTI containins 0. uDTF is very small
 # 
 # ## -------------
 # ## random slopes and intercepts for 15 items, and latent mean difference 
@@ -73,8 +73,8 @@
 # 
 # #significant DIF in multiple items....
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30) 
-# DTF(mod2) #...but not substantial DTF due to randomness of DIF
-# DTF(mod2, MI=200)
+# DTF(mod2)
+# DTF(mod2, MI=1000)
 # 
 # ## -------------
 # ## systematic differing slopes and intercepts (clear DTF)
@@ -88,8 +88,8 @@
 # 
 # DIF(mod3, c('a1', 'd'), items2test=16:30) 
 # DTF(mod3) #huge unsigned bias. Signed bias indicates group 2 scores generally lower
-# DTF(mod3, MI=200) 
-# DTF(mod3, MI=200, plot=TRUE, auto.key=TRUE) 
+# DTF(mod3, MI=1000) 
+# DTF(mod3, MI=1000, plot=TRUE, auto.key=TRUE) 
 # 
 # }
 DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_nodes = NULL,
@@ -104,15 +104,15 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                                             imputenums=imputenums[[g]], constrain=omod@constrain)
         }
         if(!is.null(Theta_nodes)){
-            T1 <- expected.test(mod, Theta_nodes, group=1)
-            T2 <- expected.test(mod, Theta_nodes, group=2)
+            T1 <- expected.test(mod, Theta_nodes, group=1L, mins=FALSE)
+            T2 <- expected.test(mod, Theta_nodes, group=2L, mins=FALSE)
             D <- T1 - T2
             ret <- c("sDTF." = D)
             return(ret)
         }
-        T1 <- expected.test(mod, Theta, group=1)
-        T2 <- expected.test(mod, Theta, group=2)
-        if(plot) return(c(T1, T2))
+        T1 <- expected.test(mod, Theta, group=1L)
+        T2 <- expected.test(mod, Theta, group=2L)
+        if(plot) return(c(T1, T2) + sum(mod@Data$mins))
         D <- T1 - T2
         uDTF <- mean(abs(D))
         uDTF_percent <- uDTF/max_score * 100

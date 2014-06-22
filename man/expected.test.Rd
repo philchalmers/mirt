@@ -3,7 +3,7 @@
 \alias{expected.test}
 \title{Function to calculate expected test score}
 \usage{
-expected.test(x, Theta, group = NULL)
+expected.test(x, Theta, group = NULL, mins = TRUE)
 }
 \arguments{
 \item{x}{an estimated mirt object}
@@ -12,6 +12,9 @@ expected.test(x, Theta, group = NULL)
 
 \item{group}{a number signifying which group the item should be extracted from (applies to
 'MultipleGroupClass' objects only)}
+
+\item{mins}{logical; include the minimum value constants in the dataset. If FALSE, the
+expected values for each item are determined from the scoring 0:(ncat-1)}
 }
 \description{
 Given an estimated model compute the expected test score. Returns the expected values in the
@@ -31,7 +34,7 @@ tail(cbind(Theta, tscore))
 }
 }
 \seealso{
-\code{\link{extract.item}}, \code{\link{expected.item}}
+\code{\link{expected.item}}
 }
 \keyword{expected}
 \keyword{score}

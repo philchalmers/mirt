@@ -108,7 +108,7 @@ setMethod(
         info <- do.call(rbind, infolist)
         Theta <- ThetaFull
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
-        adj <- apply(x@Data$data, 2, min)
+        adj <- x@Data$mins
         gscore <- c()
         for(g in 1:ngroups){
             itemtrace <- computeItemtrace(x@pars[[g]]@pars, ThetaFull, x@itemloc, 

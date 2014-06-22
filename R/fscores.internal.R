@@ -83,7 +83,7 @@ setMethod(
             nfact <- object@nfact
             sv <- mod2values(object)
             sv$est <- FALSE
-            mins <- apply(object@Data$data, 2, min, na.rm=TRUE)
+            mins <- object@Data$mins
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@Data$data)
@@ -477,7 +477,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     if(full.scores){
         if(any(is.na(x@Data$data))) stop('Full scores requires a complete dataset (no N\'s)')
         dat <- x@Data$data
-        adj <- apply(dat, 2, min)
+        adj <- x@Data$min
         if(any(adj > 0L)) message('Data adjusted so that every item has a lowest score of 0')
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
@@ -486,7 +486,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     } else {
         dat <- x@Data$data
         E <- L1 %*% prior * nrow(dat)
-        adj <- apply(dat, 2, min, na.rm=TRUE)
+        adj <- x@Data$min
         dat <- t(t(dat) - adj)
         Otmp <- matrix(table(sort(rowSums(dat))))
         got <- as.numeric(names(table(sort(rowSums(dat)))))

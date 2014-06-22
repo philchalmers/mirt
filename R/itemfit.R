@@ -421,7 +421,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     }
     if(x@nfact == 1L){
         dat <- x@Data$data
-        adj <- apply(dat, 2, min)
+        adj <- x@Data$mins
         if(any(adj > 0))
             message('Data adjusted so that the lowest category score for every item is 0')
         dat <- t(t(dat) - adj)

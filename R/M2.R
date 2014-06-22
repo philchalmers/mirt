@@ -92,7 +92,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         for(g in 1L:ngroups){
             attr(pars[[g]], 'MG') <- g
             pars[[g]]@bfactor <- obj@bfactor
-            pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ])
+            pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
+                                   mins=obj@Data$mins)
             ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts)
         }
         newret <- list()
@@ -141,7 +142,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     nitems <- ncol(obj@Data$data)
     if(any(is.na(obj@Data$data)))
         stop('M2 can not be calulated for data with missing values.')
-    adj <- apply(obj@Data$data, 2, min)
+    adj <- obj@Data$mins
     dat <- t(t(obj@Data$data) - adj)
     N <- nrow(dat)
     p  <- colMeans(dat)
