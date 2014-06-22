@@ -5,7 +5,7 @@
 #' see Cai and Hansen, 2013), as well as associated fit indices that are based on 
 #' fitting the null model.
 #' 
-#' @return returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+#' @return Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
 #'   p-value, RMSEA (with 90\% confidence interval), and optionally the TLI and CFI model 
 #'   fit statistics
 #'

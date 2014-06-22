@@ -233,7 +233,6 @@ setMethod(
                 plt <- do.call(rbind, plt)
                 plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull))
                 if(facet_items){
-                    # this seems to draw extra lines for some reason. Silly lattice TODO
                     return(xyplot(I ~ Theta | item, plt, group = group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))

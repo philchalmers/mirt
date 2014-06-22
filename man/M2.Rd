@@ -27,7 +27,7 @@ of the stats and their imputed standard deviations}
 RMSEA. Default returns the 90\% interval}
 }
 \value{
-returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
   p-value, RMSEA (with 90\% confidence interval), and optionally the TLI and CFI model
   fit statistics
 }
