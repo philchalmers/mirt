@@ -107,7 +107,6 @@ setMethod(
         if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
         info <- do.call(rbind, infolist)
         Theta <- ThetaFull
-        for(g in 2:ngroups) Theta <- rbind(Theta, ThetaFull)
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
         adj <- apply(x@Data$data, 2, min)
         gscore <- c()
@@ -233,7 +232,6 @@ setMethod(
                 }
                 plt <- do.call(rbind, plt)
                 plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull))
-                facet_items <- FALSE
                 if(facet_items){
                     # this seems to draw extra lines for some reason. Silly lattice TODO
                     return(xyplot(I ~ Theta | item, plt, group = group,
