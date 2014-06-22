@@ -1,0 +1,92 @@
+Exercise 1
+========================================================
+
+This exercise requires setting up `mirt()` for estimating IRT models with the data provided, 
+and requires applying some useful generic functions to be used on the estimated objects following 
+convergence. The data is available in the `Exercise_01.Rdata` file. 
+
+Load the dataset into R using the `load()` function, and inspect the defined objects.
+The object named `data` represents an unscored multiple choice test, where each number indicates which 
+category was selected, while the `key` object provides the scoring key (indicates which category is 
+correct). 
+
+```{r setup, include=FALSE}
+# set to true to show my answers
+showcode <- TRUE
+```
+
+### 1) Use `key2binary()` to convert `data` into a new object that indicates correct responses (call it `scored.data`). 
+
+```{r Q1, include=showcode, eval=showcode}
+library(mirt)
+load('Exercise_01.Rdata')
+head(data)
+print(key)
+
+scored.data <- key2binary(data, key)
+head(scored.data)
+```
+
+### 2) Find some general statistical information about this test (means, sds, total scores, etc) to get a feel for the `scored.dat` object. Following that, fit a unidimensional 2PL model for each item and print the model to the R console. 
+
+```{r Q2, include=showcode, eval=showcode}
+psych::describe(scored.data)
+total <- rowSums(scored.data)
+histogram(~total, breaks=50)
+
+unidim <- mirt(scored.data, 1)
+print(unidim)
+```
+
+### 3) Try inspecting the converged model by using `coef()`, `summary()`, `plot()`, and `itemplot()`. Understand the output of the functions by referring to the `?mirt` and `?itemplot` documentation.
+
+```{r Q3, include=showcode, eval=showcode}
+coef(unidim)
+summary(unidim)
+plot(unidim)
+plot(unidim, type = 'score')
+plot(unidim, type = 'trace', auto.key = FALSE)
+
+# item 42 has backwards discrimination compared to other items
+itemplot(unidim, 43)
+itemplot(unidim, 42)
+```
+
+### 4) One item appears to stand out more than the rest for some reason (detectable even without the use of itemfit statistics). You suspect that the key supplied for that item is either reverse coded  or incorrect. Replace the scored item with the original data from `data`, and modify the  default `itemtype` argument to fit a nominal response model for only this item. What do you  notice about the probability tracelines for this item?
+
+```{r Q4, include=showcode, eval=showcode}
+newdata <- scored.data
+newdata[,42] <- data[,42]
+
+itemtype <- rep('2PL', 50)
+itemtype[42] <- 'nominal'
+newmod <- mirt(newdata, 1, itemtype=itemtype)
+
+key[42] #1 scored as correct
+# looks as if the 2nd category is empirically higher than all the others (largest ak)
+coef(newmod)[[42]]
+itemplot(newmod, 42) #2nd category appears to be the correct traceline
+```
+
+### 5) Fix the key according to your observations, created a new dataset called `correct.scored.data`, and re-estimate the unidimenisonal 2PL model. How do the itemtrace and information curves look now?
+
+```{r Q5, include=showcode, eval=showcode}
+key[42] <- 2
+correct.scored.data <- key2binary(data, key)
+mod <- mirt(correct.scored.data, 1)
+itemplot(mod, 42)
+itemplot(mod, 42, type = 'info')
+```
+
+### 6) We happened to discover that the peculiar item has two distinct slopes in the probability response curves. Large slopes in distractors options provide information about lower level individuals, in that if they pick this particular distractor we know more information about their particular $\theta$ location than just that 'they didn't know the answer' (i.e., dichotomous scoring).Fit this item with the 'nestlogit' itemtype, and compare this item information curve to the corrected 2PL information curve. What do you notice? 
+
+```{r Q6, include=showcode, eval=showcode}
+itemtype[42] <- '2PLNRM'
+# nest logit models require scoring key
+nestmod <- mirt(newdata, 1, itemtype=itemtype, key=key)
+itemplot(nestmod, 42)
+
+itemplot(mod, 42, type= 'info', ylim=c(-.1,1.2))
+# curve is higher in the lower end for nestlogit models, indicating more info about less able subjects
+itemplot(nestmod, 42, type= 'info', ylim=c(-.1,1.2))
+```
