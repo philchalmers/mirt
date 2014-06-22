@@ -26,6 +26,7 @@ install:
   - R --version
   - R -e '.libPaths(); sessionInfo()'
   - Rscript -e 'install.packages("mirt", dep = TRUE, repos = "http://cran.rstudio.org")'
+  - Rscript -e 'install.packages(c("knitr", "devtools"), repos = "http://cran.rstudio.org")'
 
 # run tests
 script:
