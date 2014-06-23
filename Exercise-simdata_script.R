@@ -3,7 +3,7 @@
 ####################################################
 
 library(mirt)
-require(mvtnorm)
+library(mvtnorm)
 set.seed(1234)
 
 N <- 2500
@@ -33,9 +33,8 @@ brokekey <- key2binary(data, key)
 # Exercise 2 - multidimensional rating scale model
 ##################################################
 
-#graded rating scale example
-
-#make some data
+library(mirt)
+library(mvtnorm)
 set.seed(2)
 a <- matrix(c(rep(1, 11), numeric(19), rep(1, 10)), ncol=2)
 a <- a[sample(1:20),]
@@ -52,7 +51,7 @@ save(data, file='Exercise_02.Rdata')
 ##################################
 
 library(mirt)
-require(mvtnorm)
+library(mvtnorm)
 set.seed(1234)
 
 N <- 1000
@@ -75,6 +74,8 @@ save(group, data, file='Exercise_03.Rdata')
 # Exercise 4 - mixed effects regression
 #######################################
 
+library(mirt)
+library(mvtnorm)
 set.seed(1234)
 N <- 1500
 Theta <- rmvnorm(N, c(0,0), matrix(c(1,.6,.6,1), 2))
