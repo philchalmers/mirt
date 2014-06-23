@@ -1,4 +1,4 @@
-all: html
+all: vignettes
 
 vignettes:
 	Rscript -e "library('knitr');files=dir();for(file in files[grepl('*.rmd',tolower(files))]) knit2html(file)"	
