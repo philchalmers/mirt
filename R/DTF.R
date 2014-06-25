@@ -157,11 +157,13 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
             impute <- TRUE
             list_scores <- vector('list', MI)
             mod <- assignInformationMG(mod)
-            covBs <- lapply(mod@pars, function(x){
+            covBs <- try(lapply(mod@pars, function(x){
                 info <- x@information
                 is_na <- is.na(diag(info))
                 return(solve(info[!is_na, !is_na]))
-                })
+                }), silent=TRUE)
+            if(is(covBs, 'try-error')) 
+                stop('Could not compute inverse of information matrix')
             imputenums <- vector('list', 2L)
             for(g in 1L:2L){
                 names <- colnames(covBs[[g]])

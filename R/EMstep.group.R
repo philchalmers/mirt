@@ -218,7 +218,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
         } #END EM
         if(cycles == NCYCLES){
             if(list$message)
-                message('EM iterations terminated after ', cycles, ' iterations.')
+                message('EM cycles terminated after ', cycles, ' iterations.')
             converge <- 0L
         } else if(cycles == 1L && !(all(!est) && all(!groupest))){
             if(list$warn)

@@ -78,7 +78,9 @@ wald <- function(object, L, C = 0){
     } else if(length(C) != ncol(L)){
         stop('length(C) must be the same as ncol(L)')
     }
-    covB <- solve(info)
+    covB <- try(solve(info), silent=TRUE)
+    if(is(covB, 'try-error'))
+        stop('Could not properly invert information matrix to obtain parameter covariance matrix')
     W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))
