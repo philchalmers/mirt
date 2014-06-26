@@ -51,7 +51,7 @@ for(i in 1:20){
 }
 
 #estimate model
-mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, TOL=1e-3)
+(mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, TOL=1e-3))
 coef(mod)[[1]]
 coef(mod)[[21]]
 coef(mod)[[41]]
@@ -61,12 +61,9 @@ coef(mod)[[2]]
 
 coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22', 
                        'COV_32', 'COV_33')]
-
-mirtCluster()
-#MAP estimates are not effected by high dimensions
-fs <- fscores(mod, method = 'MAP', full.scores=TRUE)
-head(fs[,c('F1', 'F2', 'F3')]) #person score estimates over time
 ```
+
+When computing latent trait scores it's best to use a method that isn't as affected by higher dimensionality, such as the MAP approach. 
 
 ## Linear latent growth curve IRT 
 
@@ -112,7 +109,4 @@ coef(mod)[[2]]
 coef(mod)[[2]]
 
 coef(mod)$GroupPars[,c('MEAN_1', 'MEAN_2', 'COV_11', 'COV_21', 'COV_22')]
-
-fs <- fscores(mod, method = 'MAP', full.scores=TRUE)
-head(fs[,c('F1', 'F2')]) #intercept and slope estimates
 ```
