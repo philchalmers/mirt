@@ -8,66 +8,74 @@ setMethod(
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                    return.acov = FALSE){
+	                    hessian, return.acov = FALSE){
 	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=TRUE, 
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian, 
                                 CUSTOM.IND=CUSTOM.IND))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
-            vcov <- try(solve(estimate$hessian))
-            if(return.acov) return(vcov)
-	        SEest <- try(sqrt(diag(vcov)))
-	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+            if(hessian){
+                vcov <- try(solve(estimate$hessian))
+                if(return.acov) return(vcov)
+    	        SEest <- try(sqrt(diag(vcov)))
+    	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+            } else SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
 	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                   return.acov = FALSE){
+	                   hessian, return.acov = FALSE){
 	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
                 return(c(scores[ID, ], rep(NA, ncol(scores))))
 	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=TRUE, 
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=hessian, 
                                 CUSTOM.IND=CUSTOM.IND))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
-	        vcov <- try(solve(estimate$hessian))
-	        if(return.acov) return(vcov)
-	        SEest <- try(sqrt(diag(vcov)))
-	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+            if(hessian){
+    	        vcov <- try(solve(estimate$hessian))
+    	        if(return.acov) return(vcov)
+    	        SEest <- try(sqrt(diag(vcov)))
+    	        if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+            } else SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-                        return.acov = FALSE){
-	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+                        hessian, return.acov = FALSE){
+	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ], hessian=FALSE,
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, CUSTOM.IND=CUSTOM.IND))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
-            TI <- 0
-            for(i in 1L:(length(itemloc)-1L))
-                TI <- TI + iteminfo(pars[[i]], Theta=estimate$estimate)
-            if(return.acov) return(1/TI)
-	        SEest <- 1 / sqrt(TI)
+            if(hessian){
+                TI <- 0
+                for(i in 1L:(length(itemloc)-1L))
+                    TI <- TI + iteminfo(pars[[i]], Theta=estimate$estimate)
+                if(return.acov) return(1/TI)
+    	        SEest <- 1 / sqrt(TI)
+            } else SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, return.acov = FALSE){
+	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, return.acov = FALSE){
             nfact <- ncol(ThetaShort)
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
 	        thetas <- colSums(ThetaShort * exp(L) * W / sum(exp(L) * W))
-	        thetadif <- t((t(ThetaShort) - thetas))
-            Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
-            ind <- 1L
-            for(i in 1L:nfact){
-                for(j in 1L:nfact){
-                    if(i <= j){
-                        Thetaprod[,ind] <- thetadif[,i] * thetadif[,j]
-                        ind <- ind + 1L
+            if(hessian){
+    	        thetadif <- t((t(ThetaShort) - thetas))
+                Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+                ind <- 1L
+                for(i in 1L:nfact){
+                    for(j in 1L:nfact){
+                        if(i <= j){
+                            Thetaprod[,ind] <- thetadif[,i] * thetadif[,j]
+                            ind <- ind + 1L
+                        }
                     }
                 }
-            }
-            vcov <- matrix(0, nfact, nfact)
-            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * exp(L) * W / sum(exp(L) * W))
-            if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
-            if(return.acov) return(vcov)
-	        SE <- sqrt(diag(vcov))
+                vcov <- matrix(0, nfact, nfact)
+                vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * exp(L) * W / sum(exp(L) * W))
+                if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+                if(return.acov) return(vcov)
+    	        SE <- sqrt(diag(vcov))
+            } else SE <- rep(NA, nfact)
 	        return(c(thetas, SE))
 	    }
         
@@ -132,6 +140,7 @@ setMethod(
         if(MI == 0) MI <- 1	    
         impute <- MI > 1
         opars <- pars
+        estHess <- !full.scores | return.acov | full.scores.SE
         if(impute){
             if(is(try(chol(object@information), silent=TRUE), 'try-error')){
                 stop('Proper information matrix must be precomputed in model for MI estimation')
@@ -157,10 +166,10 @@ setMethod(
                 log_itemtrace <- log(itemtrace)
                 if(method == 'EAP' && return.acov){
                     tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
-                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE)
+                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
-                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W)
+                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, hessian=estHess && method == 'EAP')
             	    scores <- tmp[ ,1:nfact, drop = FALSE]
             	    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]                
                 }
@@ -170,7 +179,7 @@ setMethod(
     		} else if(method == "MAP"){
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
-                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov)
+                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess)
     		} else if(method == "ML"){
                 isna <- apply(object@Data$tabdata[,-ncol(object@Data$tabdata),drop=FALSE], 1L, 
                               function(x) sum(is.na(x)))[keep]
@@ -182,7 +191,7 @@ setMethod(
                 SEscores[allzero,] <- NA
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov)
+                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess)
     		} else if(method == 'WLE'){
                 if(nfact > 1L)
                     stop('WLE method only supported for unidimensional models')
@@ -190,7 +199,7 @@ setMethod(
                                               CUSTOM.IND=CUSTOM.IND)
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
-                               CUSTOM.IND=CUSTOM.IND)
+                               CUSTOM.IND=CUSTOM.IND, hessian=estHess)
             } else {
                 stop('method not defined')
             }
