@@ -1,0 +1,118 @@
+IRT approaches to longitudinal data
+===================================
+
+Two approaches are demonstrated here for longitudinal data. A direct modeling approach, 
+where a latent variable is estimated for each time point, and a linear latent growth curve 
+approach which estimates the variability of person trajectories. The latter is limited to
+only 3 dimensions for any number of time points, whereas the former increases in complexity
+as the time points increase.
+
+## Direct estimation of latent factors for each wave
+
+Two tier approach used in Cai 2010's two-tier article. This example requires 4 dimensions 
+of integration (1 for each time point + residual item factor)
+
+```{r}
+library(mirt)
+load('longitudinal-IRT.Rdata')
+head(dat)
+```
+
+```{r}
+model <- mirt.model('Time1 = 1-20
+                     Time2 = 21-40
+                     Time3 = 41-60
+                     COV = Time1*Time2*Time3, Time2*Time2, Time3*Time3
+                     MEAN = Time2, Time3')
+itemloadings <- rep(1:20, times = 3) 
+
+#construct constraints dynatically
+#obtain starting values
+sv <- bfactor(dat, itemloadings, model, pars='values')
+
+# set up within time constraints
+wtconstr <- sv$parnum[(sv$name == 'a1' | sv$name == 'a2' | sv$name == 'a3') & sv$est]
+
+# create constraint list
+constraints <- list()
+itemnames <- colnames(dat)
+pick <- c(0,20,40)
+for(i in 1:20){
+    
+    # accross time item constraints
+    constraints[[paste0('slope.', i)]] <- sv$parnum[sv$name == paste0('a',3+i) & sv$est]
+    for(j in 1:2){
+        constraints[[paste0('intercept.', i, '_', j)]] <- 
+            sv$parnum[sv$name == paste0('d',j) & (sv$item %in% itemnames[pick + i]) & sv$est]
+    }
+    
+    #across time constraints
+    constraints[[paste0('Time.', i)]] <- wtconstr[pick + i]
+}
+
+#estimate model
+mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, TOL=1e-3)
+coef(mod)[[1]]
+coef(mod)[[21]]
+coef(mod)[[41]]
+
+coef(mod)[[2]]
+coef(mod)[[2]]
+
+coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22', 
+                       'COV_32', 'COV_33')]
+
+mirtCluster()
+#MAP estimates are not effected by high dimensions
+fs <- fscores(mod, method = 'MAP', full.scores=TRUE)
+head(fs[,c('F1', 'F2', 'F3')]) #person score estimates over time
+```
+
+## Linear latent growth curve IRT 
+
+Specific factors represent residula terms per item. Requires only 3 dimensions 
+(max 3 dimensions of integration for unidimensional models).
+
+```{r}
+model <- mirt.model('Intercept = 1-60
+                     Slope = 1-60
+                     COV = Intercept*Slope, Intercept*Intercept, Slope*Slope
+                     MEAN = Intercept, Slope')
+itemloadings <- rep(1:20, times = 3) 
+
+#construct constraints dynatically
+#obtain starting values
+sv <- bfactor(dat, itemloadings, model, pars='values')
+
+# time constants for linear trend
+sv$value[sv$name == 'a1'] <- 1
+sv$est[sv$name == 'a1'] <- FALSE
+sv$value[sv$name == 'a2'] <- rep(0:2, each=20)
+sv$est[sv$name == 'a2'] <- FALSE
+
+# create constraint list
+constraints <- list()
+itemnames <- colnames(dat)
+pick <- c(0,20,40)
+for(i in 1:20){    
+    # accross time item constraints
+    constraints[[paste0('slope.', i)]] <- sv$parnum[sv$name == paste0('a',2+i) & sv$est]
+    for(j in 1:2){
+        constraints[[paste0('intercept.', i, '_', j)]] <- 
+            sv$parnum[sv$name == paste0('d',j) & (sv$item %in% itemnames[pick + i]) & sv$est]
+    }
+}
+
+mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=15, pars=sv)
+coef(mod)[[1]]
+coef(mod)[[21]]
+coef(mod)[[41]]
+
+coef(mod)[[2]]
+coef(mod)[[2]]
+
+coef(mod)$GroupPars[,c('MEAN_1', 'MEAN_2', 'COV_11', 'COV_21', 'COV_22')]
+
+fs <- fscores(mod, method = 'MAP', full.scores=TRUE)
+head(fs[,c('F1', 'F2')]) #intercept and slope estimates
+```

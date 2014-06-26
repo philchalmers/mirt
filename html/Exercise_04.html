@@ -288,8 +288,8 @@ anova(cmod.2PL, cmod.rasch)
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 26390 26391 26429 26486 -13177   NaN NaN    NaN
-## 2 26393 26394 26459 26558 -13166 23.04  13 0.0412
+## 1 26391 26392 26430 26487 -13178   NaN NaN    NaN
+## 2 26391 26393 26458 26556 -13165 25.78  13 0.0182
 </code></pre>
 
 <h3>3) Using either the 2PL or Rasch model, estimate whether the expected response probabilities could be predicted by <code>Gender</code>, <code>midterm_Math</code>, and <code>midterm_Science</code>. Use <code>Gender</code> only in fitting one model, and all three covariates when fitting another. Inspect the coefficients using <code>summary()</code> and <code>coef()</code>.</h3>
@@ -460,9 +460,9 @@ summary(mod1)
 ##     items + Gender, verbose = FALSE)
 </code></pre>
 
-<pre><code>##     AIC  AICc SABIC   BIC logLik  X2  df   p
-## 1 26390 26391 26429 26486 -13177 NaN NaN NaN
-## 2 25800 25801 25841 25901 -12881 592   1   0
+<pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 26391 26392 26430 26487 -13178   NaN NaN NaN
+## 2 25799 25800 25840 25900 -12881 593.8   1   0
 </code></pre>
 
 <pre><code class="r">mod3 &lt;- mixedmirt(data, covdata, model=model, 
@@ -603,8 +603,8 @@ summary(mod3)
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 25800 25801 25841 25901 -12881   NaN NaN NaN
-## 2 25397 25398 25442 25509 -12678 406.6   2   0
+## 1 25799 25800 25840 25900 -12881   NaN NaN NaN
+## 2 25398 25399 25443 25510 -12678 404.9   2   0
 </code></pre>
 
 <h3>4) Finally, include the <code>school</code> predictor variable in the model containing the other three covariates. Given that <code>school</code> has 50 unique values, it may be beneficial to treat the variable as a &#39;random&#39; so that instead of estimating 49 fixed effect coefficients we can estimate only one variance effect. This can add better stability to the model, while still determining if there is any variability in the responses due to which school the subjects are from. Is there any substantial variability due to <code>school</code>?</h3>
