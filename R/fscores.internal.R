@@ -153,9 +153,13 @@ setMethod(
             }
         }
         for(mi in 1L:MI){
-            if(impute)
-                pars <- imputePars(pars=opars, covB=covB, imputenums=imputenums, 
-                                   constrain=object@constrain)
+            if(impute){
+                while(TRUE){
+                    pars <- try(imputePars(pars=opars, covB=covB, imputenums=imputenums, 
+                                       constrain=object@constrain), silent=TRUE)
+                    if(!is(pars, 'try-error')) break
+                }
+            }
             if(nfact < 3 || method == 'EAP'){
                 ThetaShort <- Theta <- thetaComb(theta,nfact)
                 if(length(prodlist) > 0L)

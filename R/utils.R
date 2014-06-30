@@ -71,10 +71,12 @@ imputePars <- function(pars, covB, imputenums, constrain){
         pars[[i]]@par[pick1] <- pars[[i]]@par[pick1] + shift[pick2]
         if(is(pars[[i]], 'graded')){
             where <- (length(pars[[i]]@par) - pars[[i]]@ncat + 2L):length(pars[[i]]@par)
-            pars[[i]]@par[where] <- sort(pars[[i]]@par[where], decreasing=TRUE)
+            if(!(all(sort(pars[[i]]@par[where], decreasing=TRUE) == pars[[i]]@par[where])))
+                stop('Drawn values out of order')
         } else if(is(pars[[i]], 'grsm')){
             where <- (length(pars[[i]]@par) - pars[[i]]@ncat + 1L):(length(pars[[i]]@par)-1L)
-            pars[[i]]@par[where] <- sort(pars[[i]]@par[where], decreasing=TRUE)
+            if(!(all(sort(pars[[i]]@par[where], decreasing=TRUE) == pars[[i]]@par[where])))
+                stop('Drawn values out of order')
         }
     }
     if(length(constrain)){

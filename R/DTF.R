@@ -99,9 +99,15 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                    plot){
         mod <- omod
         if(impute){
-            for(g in 1L:2L)
-                mod@pars[[g]]@pars <- imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
-                                            imputenums=imputenums[[g]], constrain=omod@constrain)
+            for(g in 1L:2L){
+                while(TRUE){
+                    tmp <- try(imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
+                                          imputenums=imputenums[[g]], constrain=omod@constrain), 
+                               silent=TRUE)
+                    if(!is(tmp, 'try-error')) break
+                }
+                mod@pars[[g]]@pars <- tmp
+            }
         }
         if(!is.null(Theta_nodes)){
             T1 <- expected.test(mod, Theta_nodes, group=1L, mins=FALSE)
