@@ -10,10 +10,10 @@
 \usage{
 \S4method{plot}{ExploratoryClass,missing}(x, y, type = "info", npts = 50,
   theta_angle = 45, theta_lim = c(-6, 6),
-  which.items = 1:ncol(x@Data$data), rot = list(xaxis = -70, yaxis = 30,
-  zaxis = 10), facet_items = TRUE, auto.key = TRUE, main = NULL,
-  drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE,
-  ...)
+  which.items = 1:ncol(x@Data$data), MI = 0, CI = 0.95, rot = list(xaxis
+  = -70, yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key = TRUE,
+  main = NULL, drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10,
+  add.ylab2 = TRUE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
@@ -39,6 +39,13 @@ used in conjunction with \code{npts}}
 
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}
+
+\item{MI}{a single number indicating how many imputations to draw to form bootstrapped confidence
+intervals for the selected test statistic. If greater than 0 a plot will be drawn with a shaded
+region for the interval}
+
+\item{CI}{a number from 0 to 1 indicating the confidence interval to select when MI input is
+used. Default uses the 95\% confidence (CI = .95)}
 
 \item{rot}{allows rotation of the 3D graphics}
 
@@ -69,12 +76,18 @@ Plot various test implied response functions from models estimated in the mirt p
 }
 \examples{
 \dontrun{
-x <- mirt(Science, 1)
+x <- mirt(Science, 1, SE=TRUE)
 plot(x)
 plot(x, type = 'trace')
 plot(x, type = 'infotrace')
 plot(x, type = 'infotrace', facet_items = FALSE)
 plot(x, type = 'infoSE')
+
+# confidence interval plots when information matrix computed
+plot(x, type='score')
+plot(x, type='score', MI=100)
+plot(x, type='info', MI=100)
+plot(x, type='SE', MI=100)
 
 set.seed(1234)
 group <- sample(c('g1','g2'), nrow(Science), TRUE)

@@ -1,3 +1,15 @@
+# Changes in mirt 1.5
+
+## MAJOR CHANGES
+
+- for efficiency, the Hessian is no longer computed in `fscores()` unless it is required in the 
+  returned object
+
+## NEW FEATURES
+
+- confidence envelope plots in `itemplot()` generate sharded regions instead of dotted lines,
+  and confidence interval plots added to `plot()` generic through the `MI` input
+  
 # Changes in mirt 1.4
 
 ## MAJOR CHANGES

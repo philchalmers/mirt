@@ -479,6 +479,8 @@
 #' residuals(mod1)
 #' plot(mod1) #test information function
 #' plot(mod1, type = 'trace') #trace lines
+#' plot(mod2, type = 'score') #expected total score
+#' plot(mod2, type = 'score', MI=200) #expected total score with 95% confidence intervals
 #'
 #' #estimated 3PL model for item 5 only
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
@@ -518,7 +520,6 @@
 #' cmodel <- mirt.model('
 #'    F1 = 1,4,5
 #'    F2 = 2,3')
-#'
 #'
 #' cmod <- mirt(data, cmodel)
 #' coef(cmod)
@@ -575,7 +576,6 @@
 #' survey.weights <- survey.weights/sum(survey.weights) * nrow(Science)
 #' unweighted <- mirt(Science, 1)
 #' weighted <- mirt(Science, 1, survey.weights=survey.weights)
-#' 
 #'
 #' ###########
 #' #empirical dimensionality testing that includes 'guessing'
@@ -698,7 +698,6 @@
 #'   F2 = 4-8
 #'   COV = F1*F2')
 #'
-#'
 #' #compute model, and use parallel computation of the log-likelihood
 #' mirtCluster()
 #' mod1 <- mirt(dataset, model.1, method = 'MHRM')
@@ -712,7 +711,6 @@
 #'   G = 1-8
 #'   F1 = 1-4
 #'   F2 = 5-8')
-#'
 #'
 #' mod3 <- mirt(dataset,model.3, method = 'MHRM')
 #' coef(mod3)
@@ -735,7 +733,6 @@
 #'        F1 = 1-16
 #'        F2 = 17-32
 #'   (F1*F2) = 1-8')
-#'
 #'
 #' (mod.quad <- mirt(data, model.quad))
 #' (mod.combo <- mirt(data, model.combo))
@@ -771,7 +768,6 @@
 #' skew <- mirt(datSkew, 1, empiricalhist = TRUE)
 #' plot(skew, type = 'empiricalhist')
 #' histogram(ThetaSkew, breaks=30)
-#'
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 

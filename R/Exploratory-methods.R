@@ -573,6 +573,11 @@ setMethod(
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
 #'   Larger values make plots look smoother
+#' @param MI a single number indicating how many imputations to draw to form bootstrapped confidence
+#'   intervals for the selected test statistic. If greater than 0 a plot will be drawn with a shaded
+#'   region for the interval
+#' @param CI a number from 0 to 1 indicating the confidence interval to select when MI input is 
+#'   used. Default uses the 95\% confidence (CI = .95) 
 #' @param rot allows rotation of the 3D graphics
 #' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
@@ -596,12 +601,18 @@ setMethod(
 #' @examples
 #'
 #' \dontrun{
-#' x <- mirt(Science, 1)
+#' x <- mirt(Science, 1, SE=TRUE)
 #' plot(x)
 #' plot(x, type = 'trace')
 #' plot(x, type = 'infotrace')
 #' plot(x, type = 'infotrace', facet_items = FALSE)
 #' plot(x, type = 'infoSE')
+#' 
+#' # confidence interval plots when information matrix computed
+#' plot(x, type='score')
+#' plot(x, type='score', MI=100)
+#' plot(x, type='info', MI=100)
+#' plot(x, type='SE', MI=100)
 #'
 #' set.seed(1234)
 #' group <- sample(c('g1','g2'), nrow(Science), TRUE)
@@ -622,7 +633,7 @@ setMethod(
     signature = signature(x = 'ExploratoryClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
-                          rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+                          MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
     {
@@ -667,6 +678,32 @@ setMethod(
             score <- c(score, 0:(x@K[i]-1) + adj[i])
         score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
         plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))
+        if(MI > 0L && nfact == 1L){
+            tmpx <- x
+            if(is(try(chol(x@information), silent=TRUE), 'try-error'))
+                stop('Proper information matrix must be precomputed in model')
+            tmppars <- x@pars
+            covB <- solve(x@information)
+            names <- colnames(covB)
+            tmp <- lapply(names, function(x, split){
+                as.numeric(strsplit(x, split=split)[[1L]][-1L])
+            }, split='\\.')
+            imputenums <- do.call(c, tmp)
+            CIscore <- CIinfo <- matrix(0, MI, length(plt$score))
+            for(i in 1L:MI){                
+                while(TRUE){
+                    tmp <- try(imputePars(pars=x@pars, covB=covB,
+                                          imputenums=imputenums, constrain=x@constrain), 
+                               silent=TRUE)
+                    if(!is(tmp, 'try-error')) break
+                }
+                tmpx@pars <- tmp
+                itemtrace <- computeItemtrace(tmpx@pars, ThetaFull, x@itemloc, CUSTOM.IND=x@CUSTOM.IND)
+                tmpscore <- rowSums(score * itemtrace)
+                CIscore[i, ] <- tmpscore
+                CIinfo[i, ] <- testinfo(tmpx, ThetaFull)[,1L]
+            }
+        }
         if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2")
             plt$SE <- 1 / sqrt(plt$info)
@@ -712,16 +749,58 @@ setMethod(
         } else {
             colnames(plt) <- c("info", "score", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
+            if(MI > 0){
+                bs_range <- function(x, CI){
+                    ss <- sort(x)
+                    N <- length(ss)
+                    ret <- c(upper = ss[ceiling(N * (1 - (1-CI)/2))],                
+                             middle = median(x),
+                             lower = ss[floor(N * (1-CI)/2)])
+                    ret
+                }
+                tmp <- apply(CIscore, 2, bs_range, CI=CI)
+                plt$CIscoreupper <- tmp['upper', ]
+                plt$CIscorelower <- tmp['lower', ]                
+                tmp <- apply(CIinfo, 2, bs_range, CI=CI)
+                plt$CIinfoupper <- tmp['upper', ]
+                plt$CIinfolower <- tmp['lower', ]      
+                plt$CISElower <- 1/sqrt(tmp['upper', ])
+                plt$CISEupper <- 1/sqrt(tmp['lower', ])
+            }
             if(type == 'info'){
                 if(is.null(main))
                     main <- 'Test Information'
-                return(xyplot(info~Theta, plt, type='l', main = main,
-                              xlab = expression(theta), ylab=expression(I(theta))))
+                if(MI > 0){
+                    return(xyplot(info ~ Theta, data=plt, 
+                                  upper=plt$CIinfoupper, lower=plt$CIinfolower, 
+                                  panel = function(x, y, lower, upper, ...){
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                                    col=grey(.9), border = FALSE, ...)
+                                      panel.xyplot(x, y, type='l', lty=1,...)
+                                  },
+                                  main = main, ylim=c(min(plt$CIinfolower), max(plt$CIinfoupper)),
+                                  ylab = expression(I(theta)), xlab = expression(theta), ...))
+                } else {
+                    return(xyplot(info~Theta, plt, type='l', main = main,
+                                  xlab = expression(theta), ylab=expression(I(theta)), ...))
+                }
             } else if(type == 'SE'){
                 if(is.null(main))
                     main <- 'Test Standard Errors'
-                return(xyplot(SE~Theta, plt, type='l', main = main,
-                       xlab = expression(theta), ylab=expression(SE(theta))))
+                if(MI > 0){
+                    return(xyplot(SE ~ Theta, data=plt, 
+                                  upper=plt$CISEupper, lower=plt$CISElower, 
+                                  panel = function(x, y, lower, upper, ...){
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                                    col=grey(.9), border = FALSE, ...)
+                                      panel.xyplot(x, y, type='l', lty=1,...)
+                                  },
+                                  main = main, ylim=c(min(plt$CISElower), max(plt$CISEupper)),
+                                  ylab = expression(I(theta)), xlab = expression(theta), ...))
+                } else {
+                    return(xyplot(SE~Theta, plt, type='l', main = main,
+                           xlab = expression(theta), ylab=expression(SE(theta))))
+                }
             } else if(type == 'infoSE'){
                 if(is.null(main))
                     main <- 'Test Information and Standard Errors'
@@ -757,7 +836,6 @@ setMethod(
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = main, ...))
                 }
-
             } else if(type == 'infotrace'){
                 if(is.null(main))
                     main <- 'Item information trace lines'
@@ -779,9 +857,21 @@ setMethod(
             } else if(type == 'score'){
                 if(is.null(main))
                     main <- 'Expected Total Score'
-                return(xyplot(score ~ Theta, plt,
-                              xlab = expression(theta), ylab = expression(Total(theta)),
-                              type = 'l', main = main, ...))
+                if(MI > 0){
+                    return(xyplot(score ~ Theta, data=plt, 
+                                  upper=plt$CIscoreupper, lower=plt$CIscorelower, 
+                                  panel = function(x, y, lower, upper, ...){
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                                    col=grey(.9), border = FALSE, ...)
+                                      panel.xyplot(x, y, type='l', lty=1,...)
+                                  },
+                                  main = main, 
+                                  ylab = expression(T(theta)), xlab = expression(theta), ...))
+                } else {
+                    return(xyplot(score ~ Theta, plt,
+                                  xlab = expression(theta), ylab = expression(T(theta)),
+                                  type = 'l', main = main, ...))
+                }
             } else if(type == 'empiricalhist'){
                 if(is.null(main))
                     main <- 'Empirical Histogram'

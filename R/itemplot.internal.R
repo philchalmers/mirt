@@ -203,12 +203,16 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         degrees <- if(nfact == 2) c(degrees[i], 90 - degrees[i]) else 0
         CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFull, degrees=degrees)
         CEprobupper <- CEproblower <- ProbTrace(tmpitem, ThetaFull)
+        CEscoreupper <- CEscorelower <- expected.item(tmpitem, ThetaFull, min = x@Data$mins[item])
         for(i in 2:nrow(delta)){
             tmpitem@par[tmpitem@est] <- delta[i, ]
             CEinfo <- iteminfo(tmpitem, ThetaFull, degrees=degrees)
             CEprob <- ProbTrace(tmpitem, ThetaFull)
+            CEscore <- expected.item(tmpitem, ThetaFull, min = x@Data$mins[item])
             CEinfoupper <- apply(cbind(CEinfoupper, CEinfo), 1, max)
             CEinfolower <- apply(cbind(CEinfolower, CEinfo), 1, min)
+            CEscoreupper <- apply(cbind(CEscoreupper, CEscore), 1, max)
+            CEscorelower <- apply(cbind(CEscorelower, CEscore), 1, min)
             for(j in 1:ncol(CEprobupper)){
                 CEprobupper[,j] <- apply(cbind(CEprobupper[,j], CEprob[,j]), 1, max)
                 CEproblower[,j] <- apply(cbind(CEproblower[,j], CEprob[,j]), 1, min)
@@ -216,10 +220,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         }
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
-    score <- matrix(0:(ncol(P) - 1), nrow(Theta), ncol(P), byrow = TRUE)
-    score <- rowSums(score * P)
-    if(class(x@pars[[item]]) %in% c('nominal', 'graded', 'rating'))
-        score <- score + 1
+    score <- expected.item(x@pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
     if(ncol(P) == 2){
         P <- P[ ,-1, drop = FALSE]
         CEprobupper <- CEprobupper[ ,-1, drop = FALSE]
@@ -236,44 +237,86 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         plt$SE <- 1/sqrt(plt$info)
         plt$CEinfoupper <- CEinfoupper
         plt$CEinfolower <- CEinfolower
+        plt$CEscoreupper <- CEscoreupper
+        plt$CEscorelower <- CEscorelower
         plt2$upper <- as.numeric(CEprobupper)
         plt2$lower <- as.numeric(CEproblower)
         if(type == 'trace'){
             if(is.null(main))
                 main <- paste('Trace lines for item', item)
             if(CE){
-                return(xyplot(P + upper + lower ~ Theta|time, plt2, type = 'l',
-                                col = c('black', 'red', 'red'), lty = c(1,2,2),
-                                main = main, ylim = c(-0.1,1.1),
-                                ylab = expression(P(theta)), xlab = expression(theta), ... ))
-            }
-            else
+                return(xyplot(P ~ Theta|time, data=plt2, 
+                       upper=plt2$upper, lower=plt2$lower, 
+                       panel = function(x, y, lower, upper, subscripts, ...){
+                           upper <- upper[subscripts]
+                           lower <- lower[subscripts]
+                           panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                         col=grey(.9), border = FALSE, ...)
+                           panel.xyplot(x, y, type='l', lty=1,...)
+                       },
+                       main = main, ylim = c(-0.1,1.1),
+                       ylab = expression(P(theta)), xlab = expression(theta), ...))
+            } else {
                 return(xyplot(P ~ Theta, plt2, group = time, type = 'l', auto.key = auto.key,
                                 main = main, ylim = c(-0.1,1.1),
                                 ylab = expression(P(theta)), xlab = expression(theta), ... ))
+            }
         } else if(type == 'info'){
             if(is.null(main))
                 main <- paste('Information for item', item)
             if(CE){
-                return(xyplot(info + CEinfoupper + CEinfolower ~ Theta, plt, type = 'l',
-                                col = c('black', 'red', 'red'), lty = c(1,2,2),
-                                main = main, ylab = expression(I(theta)), xlab = expression(theta), ... ))
-            } else
+                return(xyplot(info ~ Theta, data=plt, 
+                              upper=plt$CEinfoupper, lower=plt$CEinfolower, 
+                              panel = function(x, y, lower, upper, ...){
+                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                                col=grey(.9), border = FALSE, ...)
+                                  panel.xyplot(x, y, type='l', lty=1,...)
+                              },
+                              main = main, ylim=c(min(plt$CEinfolower), max(plt$CEinfoupper)),
+                              ylab = expression(I(theta)), xlab = expression(theta), ...))
+            } else {
                 return(xyplot(info ~ Theta, plt, type = 'l',
                                 auto.key = auto.key, main = main,
                                 ylab = expression(I(theta)), xlab = expression(theta), ...))
+            }
         } else if(type == 'score'){
             if(is.null(main))
                 main <- paste('Expected score for item', item)
-            return(xyplot(score ~ Theta, plt, type = 'l',
-                            auto.key = auto.key, main = main,
-                            ylab = expression(E(theta)), xlab = expression(theta), ...))
+            if(CE){
+                return(xyplot(score ~ Theta, data=plt, 
+                              upper=plt$CEscoreupper, lower=plt$CEscorelower, 
+                              panel = function(x, y, lower, upper, ...){
+                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                                col=grey(.9), border = FALSE, ...)
+                                  panel.xyplot(x, y, type='l', lty=1,...)
+                              },
+                              main = main, ylim=c(min(plt$CEscorelower), max(plt$CEscoreupper)),
+                              ylab = expression(E(theta)), xlab = expression(theta), ...))
+            } else {
+                return(xyplot(score ~ Theta, plt, type = 'l',
+                                auto.key = auto.key, main = main,
+                                ylab = expression(E(theta)), xlab = expression(theta), ...))
+            }
         } else if(type == 'SE'){
             if(is.null(main))
                 main <- paste('Standard error plot for item', item)
-            return(xyplot(SE ~ Theta, plt, type = 'l',
-                                   auto.key = auto.key, main = main,
-                                   ylab = expression(SE(theta)), xlab = expression(theta), ...))
+            if(CE){
+                plt$CESEupper <- 1/sqrt(CEinfolower)
+                plt$CESElower <- 1/sqrt(CEinfoupper)
+                return(xyplot(SE ~ Theta, data=plt, 
+                              upper=plt$CESEupper, lower=plt$CESElower, 
+                              panel = function(x, y, lower, upper, ...){
+                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                                col=grey(.9), border = FALSE, ...)
+                                  panel.xyplot(x, y, type='l', lty=1,...)
+                              },
+                              main = main, ylim=c(min(plt$CESElower), max(plt$CESEupper)),
+                              ylab = expression(SE(theta)), xlab = expression(theta), ...))
+            } else {
+                return(xyplot(SE ~ Theta, plt, type = 'l',
+                                       auto.key = auto.key, main = main,
+                                       ylab = expression(SE(theta)), xlab = expression(theta), ...))
+            }
         } else if(type == 'infoSE'){
             if(is.null(main))
                 main <- paste('Item information and standard errors for item', item)
