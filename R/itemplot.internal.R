@@ -235,12 +235,14 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         colnames(plt) <- c("info", "Theta")
         plt$score <- score
         plt$SE <- 1/sqrt(plt$info)
-        plt$CEinfoupper <- CEinfoupper
-        plt$CEinfolower <- CEinfolower
-        plt$CEscoreupper <- CEscoreupper
-        plt$CEscorelower <- CEscorelower
-        plt2$upper <- as.numeric(CEprobupper)
-        plt2$lower <- as.numeric(CEproblower)
+        if(CE){
+            plt$CEinfoupper <- CEinfoupper
+            plt$CEinfolower <- CEinfolower
+            plt$CEscoreupper <- CEscoreupper
+            plt$CEscorelower <- CEscorelower
+            plt2$upper <- as.numeric(CEprobupper)
+            plt2$lower <- as.numeric(CEproblower)
+        }
         if(type == 'trace'){
             if(is.null(main))
                 main <- paste('Trace lines for item', item)
