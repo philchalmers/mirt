@@ -513,11 +513,21 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.post <- proc.time()[3L]
     cmods <- vector('list', Data$ngroups)
     for(g in 1L:Data$ngroups){
-        Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
-        if(opts$method != 'MIXED')
+        if(opts$method == 'MIXED'){
+            F <- matrix(NA)
+            h2 <- numeric(1)
+        } else {
+            Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
             colnames(Flist$F) <- PrepList[[g]]$factorNames
-        h2 <- rowSums((Flist$F %*% t(chol(ExtractGroupPars(pars[[g]][[Data$nitems+1L]])$gcov)))^2)
-        F <- Flist$F
+            tmpcov <- ExtractGroupPars(pars[[g]][[Data$nitems+1L]])$gcov
+            if(ncol(tmpcov) < ncol(Flist$F)){
+                tmpcov2 <- diag(ncol(Flist$F))
+                tmpcov2[1L:ncol(tmpcov), 1L:ncol(tmpcov)] <- tmpcov
+                tmpcov <- tmpcov2
+            }
+            h2 <- rowSums((Flist$F %*% t(chol(tmpcov)))^2)
+            F <- Flist$F
+        }
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc,
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[g]]$prodlist,
                           nfact=nfact, constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
