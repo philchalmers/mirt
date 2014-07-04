@@ -516,7 +516,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
         if(opts$method != 'MIXED')
             colnames(Flist$F) <- PrepList[[g]]$factorNames
-        h2 <- rowSums(Flist$F^2)
+        h2 <- rowSums((Flist$F %*% t(chol(ExtractGroupPars(pars[[g]][[Data$nitems+1L]])$gcov)))^2)
         F <- Flist$F
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc,
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[g]]$prodlist,
