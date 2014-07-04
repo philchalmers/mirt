@@ -606,7 +606,6 @@ EML <- function(par, obj, Theta){
 EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     obj <- pars[[length(pars)]]
     obj@par[obj@est] <- x
-    r <- tabdata[, ncol(tabdata)]
     gpars <- ExtractGroupPars(obj)
     mu <- gpars$gmeans
     sigma <- gpars$gcov
@@ -616,7 +615,9 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata)], freq=freq,
                         Theta=Theta, prior=prior, itemloc=itemloc,
                         CUSTOM.IND=CUSTOM.IND)
-    LL <- sum(r*log(rlist$expected))
+    tmp <- log(rlist$expected)
+    pick <- is.finite(tmp)
+    LL <- sum(freq[pick]*tmp[pick])
     LL <- LL.Priors(x=obj, LL=LL)
     return(LL)
 }

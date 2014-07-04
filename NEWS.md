@@ -7,7 +7,7 @@
 
 ## NEW FEATURES
 
-- confidence envelope plots in `itemplot()` generate sharded regions instead of dotted lines,
+- confidence envelope plots in `itemplot()` generate shaded regions instead of dotted lines,
   and confidence interval plots added to `plot()` generic through the `MI` input
   
 # Changes in mirt 1.4
