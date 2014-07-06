@@ -9,14 +9,11 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
     const int nitems = data.ncol();
     const int npat = r.size();
     #ifdef SUPPORT_OPENMP
-    if(nquad * nitems > 1000){
+    if(npat > 1)
         omp_set_num_threads(ncores);
-    } else {
-        omp_set_num_threads(1);
-    }
     #endif
 
-//    #pragma omp parallel for
+    #pragma omp parallel for
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < 1e-10) continue;
         vector<double> posterior(nquad,1.0);
@@ -32,10 +29,10 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
         expected[pat] = expd;
         for(int q = 0; q < nquad; ++q)
             posterior[q] = r[pat] * posterior[q] / expd;
-//       #pragma omp critical
         for (int item = 0; item < nitems; ++item)
             if (data(pat,item))
                 for(int q = 0; q < nquad; ++q)
+                    #pragma omp atomic
                     r1vec[q + item*nquad] += posterior[q];
     } //end main
 
@@ -71,10 +68,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
     const NumericMatrix &itemtrace, const vector<double> &prior, const vector<double> &Priorbetween, 
     const vector<double> &r, const int &ncores, const IntegerMatrix &data, const IntegerMatrix &sitems,
     const vector<double> &Prior)
-{
-     #ifdef SUPPORT_OPENMP
-    omp_set_num_threads(ncores);
-    #endif
+{    
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
     const int npquad = prior.size();
@@ -82,8 +76,12 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
     const int nquad = nbquad * npquad;
     const int npat = r.size();
     vector<double> r1vec(nquad*nitems*sfact, 0.0);
+    #ifdef SUPPORT_OPENMP
+    if(npat > 1)
+        omp_set_num_threads(ncores);
+    #endif
 
-//#pragma omp parallel for
+    #pragma omp parallel for
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < 1e-10) continue;
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
@@ -124,15 +122,17 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
             for (int i = 0; i < nquad; ++i)
                 posterior[i + nquad*fact] = likelihoods[i + nquad*fact] * r[pat] * Elk[i % nbquad + fact*nbquad] /
                                             expected[pat];
-//        #pragma omp critical
         for (int i = 0; i < nbquad; ++i)
+            #pragma omp atomic
             ri[i] += Pls[i] * r[pat] * Priorbetween[i] / expected[pat];
         for (int item = 0; item < nitems; ++item)
             if (data(pat,item))
                 for (int fact = 0; fact < sfact; ++fact)
-                    for(int q = 0; q < nquad; ++q)
+                    for(int q = 0; q < nquad; ++q)                    
+                        #pragma omp atomic
                         r1vec[q + fact*nquad*nitems + nquad*item] += posterior[q + fact*nquad];
     }   //end main
+    
     for (int item = 0; item < nitems; ++item)
         for (int fact = 0; fact < sfact; ++fact)
             if(sitems(item, fact))
