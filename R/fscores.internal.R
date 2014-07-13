@@ -95,8 +95,8 @@ setMethod(
             response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@Data$data)
-            large <- mirt(response.pattern, nfact, technical=list(customK=object@K), 
-                          large=TRUE)
+            large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@K), 
+                          large=TRUE))
             newmod <- object
             newmod@Data<- list(data=response.pattern, tabdata=large$tabdata2, 
                                tabdatalong=large$tabdata, Freq=large$Freq)
