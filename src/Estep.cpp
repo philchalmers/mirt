@@ -1,6 +1,8 @@
 #include "Misc.h"
 #include "Estep.h"
 
+const double ABSMIN = std::numeric_limits<double>::min();
+
 void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double> &prior,
     const vector<double> &r, const IntegerMatrix &data, const NumericMatrix &itemtrace,
     const int &ncores)
@@ -26,9 +28,11 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
         double expd = 0.0;
         for(int i = 0; i < nquad; ++i)
             expd += posterior[i];
+        if(expd > ABSMIN){
+            for(int q = 0; q < nquad; ++q)
+                posterior[q] = r[pat] * posterior[q] / expd;
+        } else expd = ABSMIN;
         expected[pat] = expd;
-        for(int q = 0; q < nquad; ++q)
-            posterior[q] = r[pat] * posterior[q] / expd;
         for (int item = 0; item < nitems; ++item)
             if (data(pat,item))
                 for(int q = 0; q < nquad; ++q)

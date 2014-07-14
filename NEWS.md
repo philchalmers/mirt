@@ -10,6 +10,10 @@
 - confidence envelope plots in `itemplot()` generate shaded regions instead of dotted lines,
   and confidence interval plots added to `plot()` generic through the `MI` input
   
+## BUG FIXES
+
+- fix divide-by-0 bug in the E-step when number of items is large
+  
 # Changes in mirt 1.4
 
 ## MAJOR CHANGES
