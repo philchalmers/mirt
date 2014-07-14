@@ -103,6 +103,7 @@ setMethod(
             ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                            method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                            response.pattern=NULL, return.acov=return.acov)
+            if(return.acov) return(ret)
             ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
                 matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
             return(ret)
