@@ -53,10 +53,9 @@ imputeMissing <- function(x, Theta){
         if(!any(is.na(data[,i]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
-        range <- c(min(data[,i], na.rm=TRUE), max(data[,i], na.rm=TRUE))
+        uniq <- sort(na.omit(unique(data[,i])))
         for(j in 1L:length(NAind))
-            data[NAind[j], i] <- sample(range[1L]:range[2L], 1, 
-                                        prob = P[NAind[j], , drop = FALSE])
+            data[NAind[j], i] <- sample(uniq, 1L, prob = P[NAind[j], , drop = FALSE])
     }
     return(data)
 }
