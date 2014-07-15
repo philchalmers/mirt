@@ -44,6 +44,9 @@ imputeMissing <- function(x, Theta){
         return(data)
     }
     pars <- x@pars
+    nfact <- pars[[1L]]@nfact
+    if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
+        stop('Theta must be a matrix of size N x nfact')
     K <- x@K
     J <- length(K)
     data <- x@Data$data
