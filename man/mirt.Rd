@@ -109,7 +109,7 @@ By default the number of quadrature uses the following scheme:
 \item{TOL}{convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
 If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
-will be used}
+will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}}
 
 \item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
 Only applicable for unidimensional models estimated with the EM algorithm.

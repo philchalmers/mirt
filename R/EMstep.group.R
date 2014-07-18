@@ -189,6 +189,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
             preMstep.longpars2 <- preMstep.longpars
             preMstep.longpars <- longpars
             if(all(!est) && all(!groupest)) break
+            if(is.nan(TOL)) break
             longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                               gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
@@ -221,7 +222,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
                 message('EM cycles terminated after ', cycles, ' iterations.')
             converge <- 0L
         } else if(cycles == 1L && !(all(!est) && all(!groupest))){
-            if(list$warn)
+            if(list$warn && !is.nan(TOL))
                 warning('M-step optimimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ')
         } 
