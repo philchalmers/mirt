@@ -693,6 +693,7 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
     len <- length(PrepList[[length(PrepList)]]$pars)
     maxparnum <- max(PrepList[[length(PrepList)]]$pars[[len]]@parnum)
     pars$value[pars$name %in% c('g', 'u')] <- logit(pars$value[pars$name %in% c('g', 'u')])
+    PrepList[[1L]]$exploratory <- all(pars$est[pars$name %in% paste0('a', 1L:PrepList[[1L]]$nfact)])
     ind <- 1L
     for(g in 1L:length(PrepList)){
         for(i in 1L:length(PrepList[[g]]$pars)){
