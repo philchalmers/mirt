@@ -90,22 +90,23 @@ setMethod(
                 response.pattern <- matrix(response.pattern, 1L)
             nfact <- object@nfact
             sv <- mod2values(object)
-            sv$est <- FALSE
             mins <- object@Data$mins
-            response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
+            if(!all(mins == 0L))
+                response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@Data$data)
             large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@K), 
                           large=TRUE))
             newmod <- object
-            newmod@Data<- list(data=response.pattern, tabdata=large$tabdata2, 
+            newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2, 
                                tabdatalong=large$tabdata, Freq=large$Freq)
             ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                            method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                            response.pattern=NULL, return.acov=return.acov)
             if(return.acov) return(ret)
-            ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
-                matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
+            if(!all(mins == 0L))
+                ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
+                    matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
             return(ret)
         }
         pars <- object@pars
