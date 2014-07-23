@@ -3,7 +3,7 @@
 \alias{PLCI.mirt}
 \title{Compute profiled-likelihood confidence intervals}
 \usage{
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL)
+PLCI.mirt(mod, alpha = 0.05, parnum = NULL, bound = TRUE)
 }
 \arguments{
 \item{mod}{a converged mirt model}
@@ -13,6 +13,9 @@ PLCI.mirt(mod, alpha = 0.05, parnum = NULL)
 \item{parnum}{a numeric vector indicating which parameters to estimate.
 Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 parameters are used}
+
+\item{bound}{logical; bound the slope parameters for the first factor
+to be larger than 0 during estimation to avoid sign flipping?}
 }
 \description{
 Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior

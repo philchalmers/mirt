@@ -12,6 +12,8 @@
 #' @param parnum a numeric vector indicating which parameters to estimate. 
 #'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 #'   parameters are used
+#' @param bound logical; bound the slope parameters for the first factor 
+#'   to be larger than 0 during estimation to avoid sign flipping?
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
 #' @seealso
@@ -38,7 +40,7 @@
 #' result3
 #'
 #' }
-PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
+PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, bound = TRUE){
 
     compute.LL <- function(dat, model, sv, large, parprior){
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
@@ -106,7 +108,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
     sv <- mod2values(mod)
     large <- mirt(mod@Data$data, mod@model[[1L]], large = TRUE)
     #set lbounds to 0 to avoid sign flipping in slopes
-    sv$lbound[sv$name == 'a1'] <- 0
+    if(bound)
+        sv$lbound[sv$name == 'a1'] <- 0
     if(!is.null(parnum)){
         tmp <- sv$parnum %in% parnum
         pars <- sv$value[tmp]
@@ -124,16 +127,6 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
         parnames <- sv$name[sv$est]
         lbound <- sv$lbound[sv$est]
         ubound <- sv$ubound[sv$est]
-    }
-    if(mod@nfact > 1L && is.null(parnum)){
-        #don't estimate slopes of multidimensional
-        tmp <- !(sv$name %in% paste0('a', 1:20)) & sv$est
-        pars <- sv$value[tmp]
-        parnames <- sv$name[tmp]
-        itemtypes <- sv$class[tmp]
-        parnums <- sv$parnum[tmp]
-        lbound <- sv$lbound[tmp]
-        ubound <- sv$ubound[tmp]
     }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
