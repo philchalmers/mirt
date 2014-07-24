@@ -1,10 +1,7 @@
 #' Compute profiled-likelihood confidence intervals
 #'
 #' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior 
-#' parameter distributions as well as equality constraints. For multidimensional models, the 
-#' CI's for the slopes are not estimated due to the possibility of signs flipping during estimation.
-#' In unidimensional models, the slope parameters are assumed to be greater than zero, and a lower 
-#' bound is imposed to ensure that sign flipping does not occur.
+#' parameter distributions as well as equality constraints. 
 #'
 #' @aliases PLCI.mirt
 #' @param mod a converged mirt model
@@ -12,8 +9,6 @@
 #' @param parnum a numeric vector indicating which parameters to estimate. 
 #'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 #'   parameters are used
-#' @param bound logical; bound the slope parameters for the first factor 
-#'   to be larger than 0 during estimation to avoid sign flipping?
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
 #' @seealso
@@ -40,16 +35,17 @@
 #' result3
 #'
 #' }
-PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, bound = TRUE){
+PLCI.mirt <- function(mod, alpha = .05, parnum = NULL){
 
     compute.LL <- function(dat, model, sv, large, parprior){
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
                                         large=large, calcNull=FALSE, technical=list(message=FALSE,
                                                                                     parallel=FALSE))
-        tmpmod@logLik
+        ret <- list(LL=tmpmod@logLik, vals=mod2values(tmpmod))
+        ret
     }
 
-    f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames){
+    f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns){
         sv$est[which] <- FALSE
         sv$value[which] <- value
         if(sv$class[which] == 'graded'){
@@ -71,6 +67,10 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, bound = TRUE){
         }
         got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior), 
                       silent=TRUE)
+        sv2 <- got.LL$vals
+        got.LL <- got.LL$LL
+        as <- matrix(sv2$value[sv2$name %in% paste0('a', 1L:30L)], ncol(dat))
+        if(sum(asigns * sign(as)) < 0L) return(1e8)
         if(is(got.LL, 'try-error')) return(1e8)
         ret <- (got.LL - get.LL)^2
         attr(ret, 'value') <- value
@@ -78,25 +78,25 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, bound = TRUE){
     }
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, 
-                      sv, get.LL, parprior){
+                      sv, get.LL, parprior, asigns){
         lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
         mid <- pars[parnum]
         if(parnames[parnum] %in% c('g', 'u')){
             lower <- 0
             upper <- 1
-        } else if(parnames[parnum] %in% c('COV_11')){
+        } else if(parnames[parnum] %in% paste0('COV_', 1:30, 1:30)){
             lower <- 0
         }
         if(mid > lower){
             opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, 
                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL, 
-                                  parprior=parprior, parnames=parnames, tol = .01)
+                                  parprior=parprior, parnames=parnames, asigns=asigns, tol = .01)
         } else opt.lower <- list(minimum = lower)
         if(mid < upper){
             opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model, 
                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL, 
-                                  parprior=parprior, parnames=parnames, tol = .01)
+                                  parprior=parprior, parnames=parnames, asigns=asigns, tol = .01)
         } else opt.upper <- list(minimum = upper)
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }
@@ -107,9 +107,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, bound = TRUE){
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
     large <- mirt(mod@Data$data, mod@model[[1L]], large = TRUE)
-    #set lbounds to 0 to avoid sign flipping in slopes
-    if(bound)
-        sv$lbound[sv$name == 'a1'] <- 0
+    as <- matrix(sv$value[sv$name %in% paste0('a', 1L:30L)], ncol(dat))
+    asigns <- sign(as)
     if(!is.null(parnum)){
         tmp <- sv$parnum %in% parnum
         pars <- sv$value[tmp]
@@ -130,7 +129,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, bound = TRUE){
     }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
-    result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, 
+    result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat, 
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100))
