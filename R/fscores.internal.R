@@ -448,8 +448,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         }
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
-    if(x@nfact > 1L) stop('EAP sum score method only is applicable to unidimensional models')
-    Theta <- as.matrix(seq(theta_lim[1L],theta_lim[2L],length.out = quadpts))
+    theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
+    Theta <- thetaComb(theta, x@nfact)
     prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
     prior <- prior/sum(prior)
     pars <- x@pars
@@ -482,10 +482,11 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         }
         return(Elist)
     }
-    thetas <- SEthetas <- numeric(nrow(L1))
-    for(i in 1L:length(thetas)){
-        thetas[i] <- sum(Theta * L1[i, ] * prior / sum(L1[i,] * prior))
-        SEthetas[i] <- sqrt(sum((Theta - thetas[i])^2 * L1[i, ] * prior / sum(L1[i,] * prior)))
+    thetas <- SEthetas <- matrix(0, nrow(L1), x@nfact)
+    for(i in 1L:nrow(thetas)){
+        thetas[i,] <- colSums(Theta * L1[i, ] * prior / sum(L1[i,] * prior))
+        SEthetas[i,] <- sqrt(colSums((t(t(Theta) - thetas[i,]))^2 * L1[i, ] * prior / 
+                                         sum(L1[i,] * prior)))
     }
     ret <- data.frame(Sum.Scores=Sum.Scores, Theta=thetas, SE.Theta=SEthetas)
     rownames(ret) <- ret$Sum.Scores
@@ -496,8 +497,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         if(any(adj > 0L)) message('Data adjusted so that every item has a lowest score of 0')
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
-        EAPscores <- ret$Theta[match(scores, ret$Sum.Scores)]
-        ret <- data.frame(Sum.Scores=scores, Theta=EAPscores)
+        EAPscores <- ret[match(scores, ret$Sum.Scores), -1L, drop=FALSE]
+        ret <- EAPscores[,1L:x@nfact, drop=FALSE]
     } else {
         dat <- x@Data$data
         E <- L1 %*% prior * nrow(dat)
@@ -516,11 +517,14 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         df <- length(ret$observed) - 1
         X2 <- sum((ret$observed - ret$expected)^2 / ret$expected)
         G2 <- 2 * sum(O * log(O/E))
-        tmp <- suppressWarnings(expand.table(cbind(ret$Theta, ret$SE.Theta, ret$observed)))
-        rxx <- var(tmp[,1L]) / (var(tmp[,1L]) + mean(tmp[,2L]^2))
+        tmp <- suppressWarnings(expand.table(cbind(ret[,2L:(ncol(ret)-1L)], ret$observed)))
+        pick <- 1L:x@nfact
+        rxx <- apply(tmp[,pick, drop=FALSE], 2L, var) /
+            (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick, drop=FALSE], 2L, 
+                                                            function(x) mean(x^2)))
         attr(ret, 'fit') <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE),
                                        G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE),
-                                       reliability=rxx)
+                                       rxx=as.list(rxx))
         if(verbose){
             print(attr(ret, 'fit'))
             cat('\n')

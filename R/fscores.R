@@ -5,7 +5,7 @@
 #' prior distribution using equally spaced quadrature. EAP scores for models with more than
 #' three factors are generally not recommended since the integration grid becomes very large,
 #' resulting in slower estimation and less precision if the \code{quadpts} are too low.
-#' Therefore, MAP scores schould be used instead of EAP scores for higher dimensional models. 
+#' Therefore, MAP scores should be used instead of EAP scores for higher dimensional models. 
 #' Multiple imputation variants are possible for each estimator if a parameter 
 #' information matrix was computed, which are useful if the sample size/number of items were small.
 #'
