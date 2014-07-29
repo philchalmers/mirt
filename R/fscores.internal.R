@@ -94,14 +94,31 @@ setMethod(
                 response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
             colnames(response.pattern) <- colnames(object@Data$data)
-            large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@K), 
-                          large=TRUE))
             newmod <- object
-            newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2, 
-                               tabdatalong=large$tabdata, Freq=large$Freq)
-            ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
-                           method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
-                           response.pattern=NULL, return.acov=return.acov)
+            if(nrow(response.pattern) > 1L){
+                large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@K), 
+                              large=TRUE))
+                newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2, 
+                                   tabdatalong=large$tabdata, Freq=large$Freq)
+                ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
+                               method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
+                               response.pattern=NULL, return.acov=return.acov)
+            } else {
+                pick <- which(!is.na(response.pattern))
+                rp <- response.pattern[,pick,drop=FALSE]
+                large <- suppressWarnings(mirt(rp, nfact, large=TRUE,
+                                            technical=list(customK=object@K[pick])))
+                newmod@Data <- list(data=rp, tabdata=large$tabdata2, 
+                                    tabdatalong=large$tabdata, Freq=large$Freq)
+                newmod@pars <- newmod@pars[c(pick, length(newmod@pars))]
+                newmod@itemloc <- c(1L, 1L + cumsum(object@K[pick]))
+                newmod@K <- object@K[pick]
+                ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
+                               method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
+                               response.pattern=NULL, return.acov=return.acov)
+                ret <- cbind(response.pattern, ret[,c(paste0('F', 1L:nfact), 
+                                                      paste0('SE_F', 1L:nfact)), drop=FALSE])
+            }
             if(return.acov) return(ret)
             if(!all(mins == 0L))
                 ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
