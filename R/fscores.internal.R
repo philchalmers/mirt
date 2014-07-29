@@ -89,7 +89,6 @@ setMethod(
             if(!is.matrix(response.pattern))
                 response.pattern <- matrix(response.pattern, 1L)
             nfact <- object@nfact
-            sv <- mod2values(object)
             mins <- object@Data$mins
             if(!all(mins == 0L))
                 response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
