@@ -384,36 +384,39 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         for(i in 1L:(J+1L))
             pars[[g]][[i]]@par <- longpars[pars[[g]][[i]]@parnum]
     }
-    acov <- try(solve(info), TRUE)
-    if(is(acov, 'try-error')){
-        if(list$warn)
-            warning('Could not invert information matrix; model likely is not identified.')
-        fail_invert_info <- TRUE
-    } else {
-        fail_invert_info <- FALSE
-        SEtmp <- abs(diag(acov))
-        if(any(SEtmp < 0)){
+    fail_invert_info <- TRUE
+    if(list$SE){
+        acov <- try(solve(info), TRUE)
+        if(is(acov, 'try-error')){
             if(list$warn)
-                warning("Negative SEs set to NaN.\n")
-            SEtmp[SEtmp < 0 ] <- NaN
-        }
-        SEtmp <- sqrt(SEtmp)
-        SE <- rep(NA, length(longpars))
-        SE[estindex_unique] <- SEtmp
-        if(length(constrain) > 0L)
-            for(i in 1L:length(constrain))
-                SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
-        for(g in 1L:ngroups){
-            for(i in 1L:(J+1L))
-                pars[[g]][[i]]@SEpar <- SE[pars[[g]][[i]]@parnum]
-        } 
-        if(RAND){
-            for(i in 1L:length(random))
-                random[[i]]@SEpar <- SE[random[[i]]@parnum]
+                warning('Could not invert information matrix; model likely is not identified.')
+        } else {
+            fail_invert_info <- FALSE
+            SEtmp <- abs(diag(acov))
+            if(any(SEtmp < 0)){
+                if(list$warn)
+                    warning("Negative SEs set to NaN.\n")
+                SEtmp[SEtmp < 0 ] <- NaN
+            }
+            SEtmp <- sqrt(SEtmp)
+            SE <- rep(NA, length(longpars))
+            SE[estindex_unique] <- SEtmp
+            if(length(constrain) > 0L)
+                for(i in 1L:length(constrain))
+                    SE[index %in% constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
+            for(g in 1L:ngroups){
+                for(i in 1L:(J+1L))
+                    pars[[g]][[i]]@SEpar <- SE[pars[[g]][[i]]@parnum]
+            } 
+            if(RAND){
+                for(i in 1L:length(random))
+                    random[[i]]@SEpar <- SE[random[[i]]@parnum]
+            }
         }
     }
     names(correction) <- names(estpars)[estindex_unique]
     info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
+    if(!list$SE) info <- matrix(0, 1, 1)
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),

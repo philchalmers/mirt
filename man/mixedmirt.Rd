@@ -48,10 +48,8 @@ more detail}
 \item{return.design}{logical; return the design matrices before they have (potentially)
 been reassigned?}
 
-\item{SE}{logical; while standard errors are always computed for the MHRM algorithm this option
-forces the number of iterations to be no less than 400 so that the information matrix is
-computed more accurately. Default is TRUE. An alternative approach would be to drop the
-\code{TOL} criteria}
+\item{SE}{logical; compute the standard errors by approximating the information matrix
+using the MHRM algorithm? Default is TRUE}
 
 \item{...}{additional arguments to be passed to the MH-RM estimation engine. See
   \code{\link{mirt}} for more details and examples}

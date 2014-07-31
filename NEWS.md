@@ -4,6 +4,11 @@
 
 - for efficiency, the Hessian is no longer computed in `fscores()` unless it is required in the 
   returned object
+  
+- estimation with `method = 'MHRM'` now requires and explicity `SE=TRUE` call to compute the
+  information matrix. The matrix is now computed using the ML estimates rather than 
+  approximated after each iteration, and therefore a seperate stage is performed. This provides
+  much better accuracy for the computation of the information matrix
 
 ## NEW FEATURES
 

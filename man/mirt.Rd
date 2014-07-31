@@ -48,9 +48,7 @@ estimators are also available, but their routine use generally is not required o
 The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed}
 
 \item{SE}{logical; estimate the standard errors by computing the parameter information matrix?
- See \code{SE.type} for the type of estimates available. Using
-\code{SE = TRUE} when \code{method = 'MHRM'} will force the estimation to terminate no earlier
-than 400 iterations to ensure that the information matrix is well approximated}
+See \code{SE.type} for the type of estimates available}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
@@ -62,8 +60,8 @@ than 400 iterations to ensure that the information matrix is well approximated}
   for Louis' (1982) computation of the observed information matrix,
   and \code{'sandwich'} for the sandwich covariance estimate.
 
-  Note that for \code{'SEM'} and \code{'MHRM'} option increasing the number of iterations
-  (\code{NCYCLES} and \code{TOL}, see below)  will help to improve the accuracy, and will be
+  Note that for \code{'SEM'} option increasing the number of iterations
+  (\code{NCYCLES} and \code{TOL}, see below) will help to improve the accuracy, and will be
   run in parallel if a \code{\link{mirtCluster}} object has been defined.
   Bootstrapped and profiled-likelihood standard errors are also possible, but must be run
   with the \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}} functions, respectively}
