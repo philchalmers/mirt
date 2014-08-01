@@ -415,7 +415,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                DERIV=DERIV)
         if(opts$SE){
             if(opts$verbose)
-                cat('\n\nCalculating information matrix...\n')
+                cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                    list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                                SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
@@ -452,7 +452,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                DERIV=DERIV)
         if(opts$SE){
             if(opts$verbose)
-                cat('\n\nCalculating information matrix...\n')
+                cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
                               PrepList=PrepList, random=mixed.design$random, Data=Data,
                               list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
