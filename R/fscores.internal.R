@@ -4,14 +4,20 @@ setMethod(
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI, 
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-	                      full.scores.SE, return.acov = FALSE)
+	                      full.scores.SE, return.acov = FALSE, ...)
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                    hessian, return.acov = FALSE){
-	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian, 
-                                CUSTOM.IND=CUSTOM.IND))
+	                    hessian, mirtCAT, return.acov = FALSE){
+            if(mirtCAT){
+                estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
+                                    itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian, 
+                                    CUSTOM.IND=CUSTOM.IND, iterlim=1, stepmax=1e-20))
+            } else {
+    	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
+    	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian, 
+                                    CUSTOM.IND=CUSTOM.IND, iterlim=200))
+            }
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
             if(hessian){
@@ -23,12 +29,19 @@ setMethod(
 	        return(c(estimate$estimate, SEest))
 	    }
 	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                   hessian, return.acov = FALSE){
+	                   hessian, mirtCAT, return.acov = FALSE){
 	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
                 return(c(scores[ID, ], rep(NA, ncol(scores))))
-	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, hessian=hessian, 
-                                CUSTOM.IND=CUSTOM.IND))
+            if(mirtCAT){
+                estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+                                    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, 
+                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, iterlim=1, 
+                                    stepmax=1e-20))
+            } else {
+    	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+    	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, 
+                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, iterlim=200))
+            }
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
             if(hessian){
@@ -102,7 +115,7 @@ setMethod(
                                    tabdatalong=large$tabdata, Freq=large$Freq)
                 ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
-                               response.pattern=NULL, return.acov=return.acov)
+                               response.pattern=NULL, return.acov=return.acov, ...)
             } else {
                 pick <- which(!is.na(response.pattern))
                 rp <- response.pattern[,pick,drop=FALSE]
@@ -115,7 +128,8 @@ setMethod(
                 newmod@K <- object@K[pick]
                 ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
-                               response.pattern=NULL, return.acov=return.acov)
+                               response.pattern=NULL, return.acov=return.acov, ...)
+                if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret[,c(paste0('F', 1L:nfact), 
                                                       paste0('SE_F', 1L:nfact)), drop=FALSE])
             }
@@ -125,6 +139,9 @@ setMethod(
                     matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
             return(ret)
         }
+        dots <- list(...)
+        mirtCAT <- FALSE
+        if(!is.null(dots$mirtCAT)) mirtCAT <- TRUE
         pars <- object@pars
 		K <- object@K
         J <- length(K)
@@ -178,7 +195,7 @@ setMethod(
                     if(!is(pars, 'try-error')) break
                 }
             }
-            if(nfact < 3 || method == 'EAP'){
+            if(nfact < 3 || method == 'EAP' && !mirtCAT){
                 ThetaShort <- Theta <- thetaComb(theta,nfact)
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta,prodlist)
@@ -201,7 +218,7 @@ setMethod(
     		} else if(method == "MAP"){
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, 
-                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess)
+                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, mirtCAT=mirtCAT, hessian=estHess)
     		} else if(method == "ML"){
                 isna <- apply(object@Data$tabdata[,-ncol(object@Data$tabdata),drop=FALSE], 1L, 
                               function(x) sum(is.na(x)))[keep]
@@ -213,7 +230,7 @@ setMethod(
                 SEscores[allzero,] <- NA
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess)
+                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, mirtCAT=mirtCAT, hessian=estHess)
     		} else if(method == 'WLE'){
                 if(nfact > 1L)
                     stop('WLE method only supported for unidimensional models')
@@ -315,13 +332,13 @@ setMethod(
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
 	                      quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-	                      full.scores.SE, return.acov = FALSE)
+	                      full.scores.SE, return.acov = FALSE, ...)
 	{
         class(object) <- 'ExploratoryClass'
         ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=returnER, verbose=verbose,
                        mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
-                       full.scores.SE=full.scores.SE, return.acov = return.acov)
+                       full.scores.SE=full.scores.SE, return.acov = return.acov, ...)
         return(ret)
 	}
 )
@@ -333,7 +350,7 @@ setMethod(
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-                          full.scores.SE, return.acov = FALSE)
+                          full.scores.SE, return.acov = FALSE, ...)
     {
         pars <- object@pars
         ngroups <- length(pars)

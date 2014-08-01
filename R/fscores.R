@@ -53,6 +53,7 @@
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when 
 #'   \code{full.scores = TRUE})
+#' @param ... additional arguments
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
 #' @export fscores
@@ -104,7 +105,7 @@
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0)
+                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, ...)
 {
     if(is.null(quadpts))
         quadpts <- switch(as.character(object@nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
@@ -112,6 +113,6 @@ fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                             quadpts=quadpts, response.pattern=response.pattern,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             scores.only=scores.only, theta_lim=theta_lim, MI=MI,
-                            full.scores.SE=full.scores.SE, return.acov=return.acov)
+                            full.scores.SE=full.scores.SE, return.acov=return.acov, ...)
     ret
 }

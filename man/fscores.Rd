@@ -7,7 +7,7 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, returnER = FALSE,
   return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
   scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6, 6),
-  MI = 0)
+  MI = 0, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -60,6 +60,8 @@ standard errors associated with each respondent? Default is \code{FALSE}}
 
 \item{scores.only}{logical; return only the factor scores (only applicable when
 \code{full.scores = TRUE})}
+
+\item{...}{additional arguments}
 }
 \description{
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
