@@ -417,9 +417,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(opts$verbose)
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
-                                   list = list(NCYCLES=opts$NCYCLES, BURNIN=1L,
+                                   list = list(NCYCLES=1000L, BURNIN=1L,
                                                SEMCYCLES=2L, gain=opts$gain,
-                                               KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=TRUE,
+                                               KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=TRUE,
                                                nfactNames=PrepList[[1L]]$nfactNames,
                                                itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                                nfact=nfact, constrain=constrain, verbose=FALSE,
@@ -455,9 +455,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
                               PrepList=PrepList, random=mixed.design$random, Data=Data,
-                              list = list(NCYCLES=opts$NCYCLES, BURNIN=1L,
+                              list = list(NCYCLES=1000L, BURNIN=1L,
                                           SEMCYCLES=2L, gain=opts$gain,
-                                          KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=TRUE,
+                                          KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=TRUE,
                                           nfactNames=PrepList[[1L]]$nfactNames,
                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
                                           nfact=nfact, constrain=constrain, verbose=FALSE,
@@ -547,7 +547,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(opts$empiricalhist)
                 stop('MHRM standard error not available when using empirical histograms')
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
-                                   list = list(NCYCLES=opts$NCYCLES, BURNIN=1L, SEMCYCLES=2L,
+                                   list = list(NCYCLES=1000L, BURNIN=1L, SEMCYCLES=2L,
                                                KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=opts$USEEM,
                                                gain=opts$gain, nfactNames=PrepList[[1L]]$nfactNames,
                                                itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,

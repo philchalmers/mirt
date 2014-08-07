@@ -919,7 +919,7 @@ updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
                      rotate = 'varimax', Target = NaN, SE = FALSE, verbose = TRUE,
-                     SEtol = .0001, grsm.block = NULL, D = 1, TOL = NULL,
+                     SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'crossprod', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
@@ -937,7 +937,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$SE = SE
     opts$SE.type = SE.type
     opts$verbose = verbose
-    opts$SEtol = ifelse(is.null(technical$SEtol), .0001, technical$SEtol)
+    opts$SEtol = ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     opts$grsm.block = grsm.block
     opts$D = D
     opts$rsm.block = rsm.block
@@ -951,7 +951,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$accelerate <- FALSE
         if(is.null(TOL)) opts$TOL <- 1e-5
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
-        opts$SEtol <- ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     }
     if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
     opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn

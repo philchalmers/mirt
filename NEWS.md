@@ -31,7 +31,7 @@
 
 - fix forcing all SEs MHRM information matrix computations to be positive
 
-- `imputeMissing()` crash fix
+- `imputeMissing()` crash fix for multiple-group models
 
 - fix divide-by-0 bug in the E-step when number of items is large
 
