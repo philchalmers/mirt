@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Name: Bock1997</title>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h3>Name: Bock1997</h3>
+
+<h3>Title: Description of Bock 1997 data</h3>
+
+<pre><code class="r">dat &lt;- expand.table(Bock1997)
+head(dat)
+</code></pre>
+
+<pre><code>##      Item.1 Item.2 Item.3
+## [1,]      1      1      1
+## [2,]      1      1      1
+## [3,]      1      1      1
+## [4,]      1      1      1
+## [5,]      1      1      1
+## [6,]      1      1      1
+</code></pre>
+
+<pre><code class="r">mod &lt;- mirt(dat, 1, &#39;nominal&#39;)
+</code></pre>
+
+<pre><code>## &#39;nominal.highlow&#39; matrix not specified, highest and lowest categories are used by default
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -8398.179, Max-Change: 1.35680
+Iteration: 2, Log-Lik: -7888.489, Max-Change: 0.33597
+Iteration: 3, Log-Lik: -7834.277, Max-Change: 0.30577
+Iteration: 4, Log-Lik: -7809.008, Max-Change: 0.21947
+Iteration: 5, Log-Lik: -7797.240, Max-Change: 0.12673
+Iteration: 6, Log-Lik: -7791.733, Max-Change: 0.09512
+Iteration: 7, Log-Lik: -7788.907, Max-Change: 0.05676
+Iteration: 8, Log-Lik: -7787.842, Max-Change: 0.04026
+Iteration: 9, Log-Lik: -7787.313, Max-Change: 0.02914
+Iteration: 10, Log-Lik: -7787.092, Max-Change: 0.01304
+Iteration: 11, Log-Lik: -7787.030, Max-Change: 0.00874
+Iteration: 12, Log-Lik: -7787.001, Max-Change: 0.01294
+Iteration: 13, Log-Lik: -7786.978, Max-Change: 0.00185
+Iteration: 14, Log-Lik: -7786.975, Max-Change: 0.00129
+Iteration: 15, Log-Lik: -7786.973, Max-Change: 0.00046
+Iteration: 16, Log-Lik: -7786.973, Max-Change: 0.00068
+Iteration: 17, Log-Lik: -7786.973, Max-Change: 0.00043
+Iteration: 18, Log-Lik: -7786.973, Max-Change: 0.00132
+Iteration: 19, Log-Lik: -7786.972, Max-Change: 0.00034
+Iteration: 20, Log-Lik: -7786.972, Max-Change: 0.00076
+Iteration: 21, Log-Lik: -7786.972, Max-Change: 0.00013
+Iteration: 22, Log-Lik: -7786.972, Max-Change: 0.00025
+Iteration: 23, Log-Lik: -7786.972, Max-Change: 0.00059
+Iteration: 24, Log-Lik: -7786.972, Max-Change: 0.00009
+</code></pre>
+
+<pre><code class="r">#reproduce table 3 in Bock (1997)
+fs &lt;- round(fscores(mod, verbose = FALSE)[,c(&#39;F1&#39;,&#39;SE_F1&#39;)],2)
+fttd &lt;- residuals(mod, type = &#39;exp&#39;)
+table &lt;- data.frame(fttd[,-ncol(fttd)], fs)
+table
+</code></pre>
+
+<pre><code>##    Item.1 Item.2 Item.3 freq     exp    F1 SE_F1
+## 1       1      1      1   50  46.445 -1.72  0.68
+## 2       1      1      2   32  37.197 -1.22  0.64
+## 3       1      1      3   15  18.064 -0.95  0.62
+## 4       1      1      4   10   8.691 -0.61  0.61
+## 5       1      2      1   54  59.969 -1.38  0.65
+## 6       1      2      2   80  69.986 -0.91  0.62
+## 7       1      2      3   40  41.671 -0.65  0.61
+## 8       1      2      4   24  25.836 -0.33  0.61
+## 9       1      3      1   27  28.072 -1.07  0.63
+## 10      1      3      2   52  46.704 -0.62  0.61
+## 11      1      3      3   33  33.860 -0.37  0.61
+## 12      1      3      4   27  26.953 -0.04  0.61
+## 13      1      4      1    4   3.941 -0.63  0.61
+## 14      1      4      2   13  10.903 -0.19  0.61
+## 15      1      4      3   10  10.577  0.06  0.61
+## 16      1      4      4   10  12.294  0.40  0.63
+## 17      2      1      1   27  20.199 -1.29  0.64
+## 18      2      1      2   19  26.271 -0.82  0.62
+## 19      2      1      3   11  16.604 -0.57  0.61
+## 20      2      1      4   11  11.098 -0.24  0.61
+## 21      2      2      1   30  36.068 -0.98  0.63
+## 22      2      2      2   78  66.600 -0.53  0.61
+## 23      2      2      3   69  51.212 -0.28  0.61
+## 24      2      2      4   48  43.968  0.05  0.61
+## 25      2      3      1   24  22.897 -0.68  0.61
+## 26      2      3      2   48  59.351 -0.25  0.61
+## 27      2      3      3   52  55.431  0.01  0.61
+## 28      2      3      4   53  61.294  0.34  0.62
+## 29      2      4      1    3   4.970 -0.25  0.61
+## 30      2      4      2   21  21.297  0.19  0.62
+## 31      2      4      3   20  26.758  0.45  0.63
+## 32      2      4      4   54  43.947  0.81  0.65
+## 33      3      1      1    9   7.041 -0.96  0.62
+## 34      3      1      2   12  13.278 -0.51  0.61
+## 35      3      1      3   13  10.333 -0.26  0.61
+## 36      3      1      4    7   9.009  0.06  0.61
+## 37      3      2      1   11  16.093 -0.66  0.61
+## 38      3      2      2   29  42.609 -0.23  0.61
+## 39      3      2      3   37  40.288  0.03  0.61
+## 40      3      2      4   44  45.276  0.36  0.62
+## 41      3      3      1   15  12.959 -0.38  0.61
+## 42      3      3      2   62  47.987  0.06  0.61
+## 43      3      3      3   60  55.257  0.32  0.62
+## 44      3      3      4   88  80.689  0.67  0.64
+## 45      3      4      1    4   3.993  0.05  0.61
+## 46      3      4      2   27  24.629  0.50  0.63
+## 47      3      4      3   43  38.610  0.78  0.65
+## 48      3      4      4   73  85.856  1.17  0.68
+## 49      4      1      1    4   2.537 -0.75  0.62
+## 50      4      1      2    8   6.101 -0.31  0.61
+## 51      4      1      3    7   5.456 -0.06  0.61
+## 52      4      1      4    9   5.698  0.27  0.62
+## 53      4      2      1    7   6.810 -0.46  0.61
+## 54      4      2      2   21  22.922 -0.02  0.61
+## 55      4      2      3   25  24.943  0.23  0.62
+## 56      4      2      4   31  33.768  0.58  0.64
+## 57      4      3      1    8   6.420 -0.17  0.61
+## 58      4      3      2   23  30.272  0.27  0.62
+## 59      4      3      3   35  40.289  0.54  0.63
+## 60      4      3      4   73  71.552  0.90  0.66
+## 61      4      4      1    4   2.508  0.26  0.62
+## 62      4      4      2   21  19.927  0.73  0.65
+## 63      4      4      3   36  36.555  1.02  0.67
+## 64      4      4      4  105 101.205  1.43  0.71
+</code></pre>
+
+<pre><code class="r">#using nominal.highlow matrix to specify lowest and highest categories
+(nominal.highlow &lt;- matrix(c(4,4,4,4,1,1,1,1), 2, byrow = TRUE))
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    4    4    4    4
+## [2,]    1    1    1    1
+</code></pre>
+
+<pre><code class="r">mod &lt;- mirt(dat, 1, &#39;nominal&#39;, nominal.highlow=nominal.highlow)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -8398.179, Max-Change: 1.35680
+Iteration: 2, Log-Lik: -7888.489, Max-Change: 0.33597
+Iteration: 3, Log-Lik: -7834.277, Max-Change: 0.30577
+Iteration: 4, Log-Lik: -7809.008, Max-Change: 0.21947
+Iteration: 5, Log-Lik: -7797.240, Max-Change: 0.12673
+Iteration: 6, Log-Lik: -7791.733, Max-Change: 0.09512
+Iteration: 7, Log-Lik: -7788.907, Max-Change: 0.05676
+Iteration: 8, Log-Lik: -7787.842, Max-Change: 0.04026
+Iteration: 9, Log-Lik: -7787.313, Max-Change: 0.02914
+Iteration: 10, Log-Lik: -7787.092, Max-Change: 0.01304
+Iteration: 11, Log-Lik: -7787.030, Max-Change: 0.00874
+Iteration: 12, Log-Lik: -7787.001, Max-Change: 0.01294
+Iteration: 13, Log-Lik: -7786.978, Max-Change: 0.00185
+Iteration: 14, Log-Lik: -7786.975, Max-Change: 0.00129
+Iteration: 15, Log-Lik: -7786.973, Max-Change: 0.00046
+Iteration: 16, Log-Lik: -7786.973, Max-Change: 0.00068
+Iteration: 17, Log-Lik: -7786.973, Max-Change: 0.00043
+Iteration: 18, Log-Lik: -7786.973, Max-Change: 0.00132
+Iteration: 19, Log-Lik: -7786.972, Max-Change: 0.00034
+Iteration: 20, Log-Lik: -7786.972, Max-Change: 0.00076
+Iteration: 21, Log-Lik: -7786.972, Max-Change: 0.00013
+Iteration: 22, Log-Lik: -7786.972, Max-Change: 0.00025
+Iteration: 23, Log-Lik: -7786.972, Max-Change: 0.00059
+Iteration: 24, Log-Lik: -7786.972, Max-Change: 0.00009
+</code></pre>
+
+<pre><code class="r">coef(mod)
+</code></pre>
+
+<pre><code>## $Item.1
+##       a1 ak0   ak1   ak2 ak3 d0    d1    d2     d3
+## par 0.79   0 1.268 2.303   3  0 0.673 0.537 -0.014
+## 
+## $Item.2
+##        a1 ak0   ak1   ak2 ak3 d0    d1    d2    d3
+## par 0.897   0 0.859 1.717   3  0 1.452 1.636 0.647
+## 
+## $Item.3
+##        a1 ak0  ak1   ak2 ak3 d0    d1    d2    d3
+## par 0.908   0 1.29 2.038   3  0 1.496 1.509 1.459
+## 
+## $GroupPars
+##     MEAN_1 COV_11
+## par      0      1
+</code></pre>
+
+</body>
+
+</html>

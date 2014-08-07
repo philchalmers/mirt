@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Name: fscores</title>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h3>Name: fscores</h3>
+
+<h3>Title: Methods for Function fscores</h3>
+
+<pre><code class="r">mod &lt;- mirt(Science, 1)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.49668
+Iteration: 2, Log-Lik: -1617.364, Max-Change: 0.23978
+Iteration: 3, Log-Lik: -1612.859, Max-Change: 0.26730
+Iteration: 4, Log-Lik: -1610.414, Max-Change: 0.10183
+Iteration: 5, Log-Lik: -1609.894, Max-Change: 0.09358
+Iteration: 6, Log-Lik: -1609.586, Max-Change: 0.30160
+Iteration: 7, Log-Lik: -1609.022, Max-Change: 0.03547
+Iteration: 8, Log-Lik: -1608.980, Max-Change: 0.03002
+Iteration: 9, Log-Lik: -1608.952, Max-Change: 0.14930
+Iteration: 10, Log-Lik: -1608.881, Max-Change: 0.01373
+Iteration: 11, Log-Lik: -1608.877, Max-Change: 0.00734
+Iteration: 12, Log-Lik: -1608.875, Max-Change: 0.01466
+Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.01078
+Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00315
+Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00929
+Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00241
+Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00569
+Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00036
+Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00115
+Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00029
+Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00130
+Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00019
+Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00078
+Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00006
+</code></pre>
+
+<pre><code class="r">tabscores &lt;- fscores(mod)
+</code></pre>
+
+<pre><code>## 
+## Method:  EAP
+## 
+## Empirical Reliability:
+##     F1 
+## 0.6664
+</code></pre>
+
+<pre><code class="r">head(tabscores)
+</code></pre>
+
+<pre><code>##      Comfort Work Future Benefit      F1  SE_F1
+## [1,]       1    1      1       1 -2.7495 0.6294
+## [2,]       1    3      2       1 -1.4202 0.5775
+## [3,]       1    4      2       3 -0.7136 0.6203
+## [4,]       1    4      3       1 -0.4477 0.6513
+## [5,]       2    1      1       1 -2.5437 0.5910
+## [6,]       2    1      2       4 -1.2478 0.5843
+</code></pre>
+
+<pre><code class="r">fullscores &lt;- fscores(mod, full.scores = TRUE)
+fullscores_with_SE &lt;- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
+head(fullscores)
+</code></pre>
+
+<pre><code>##            F1
+## [1,]  0.40196
+## [2,]  0.05212
+## [3,] -0.89018
+## [4,] -0.89018
+## [5,]  0.76459
+## [6,]  0.67019
+</code></pre>
+
+<pre><code class="r">head(fullscores_with_SE)
+</code></pre>
+
+<pre><code>##            F1  SE_F1
+## [1,]  0.40196 0.5981
+## [2,]  0.05212 0.5551
+## [3,] -0.89018 0.5424
+## [4,] -0.89018 0.5424
+## [5,]  0.76459 0.6389
+## [6,]  0.67019 0.5764
+</code></pre>
+
+<pre><code class="r">#chage method argument to use MAP estimates
+fullscores &lt;- fscores(mod, full.scores = TRUE, method=&#39;MAP&#39;)
+head(fullscores)
+</code></pre>
+
+<pre><code>##            F1
+## [1,]  0.42174
+## [2,]  0.05873
+## [3,] -0.91892
+## [4,] -0.91892
+## [5,]  0.78953
+## [6,]  0.68365
+</code></pre>
+
+<pre><code class="r">#calculate MAP for a given response vector
+fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4))
+</code></pre>
+
+<pre><code>##      Comfort Work Future Benefit      F1  SE_F1
+## [1,]       1    2      3       4 -0.3706 0.6056
+</code></pre>
+
+<pre><code class="r">#or matrix
+fscores(mod, method=&#39;MAP&#39;, response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
+</code></pre>
+
+<pre><code>##      Comfort Work Future Benefit      F1  SE_F1
+## [1,]       1    2      3       4 -0.3706 0.6056
+## [2,]       2    2      1       3 -1.6928 0.5777
+</code></pre>
+
+<pre><code class="r">#use custom latent variable properties (diffuse prior for MAP is very close to ML)
+fscores(mod, method=&#39;MAP&#39;, cov = matrix(1000))
+</code></pre>
+
+<pre><code>## 
+## Method:  MAP
+## 
+## Empirical Reliability:
+##     F1 
+## 0.4206
+</code></pre>
+
+<pre><code>##       Comfort Work Future Benefit       F1   SE_F1
+##  [1,]       1    1      1       1 -9.33628  9.6348
+##  [2,]       1    3      2       1 -2.10559  0.6898
+##  [3,]       1    4      2       3 -1.15065  0.7056
+##  [4,]       1    4      3       1 -0.78261  0.8080
+##  [5,]       2    1      1       1 -4.39276  1.1787
+##  [6,]       2    1      2       4 -1.86355  0.6683
+##  [7,]       2    2      1       1 -3.24769  0.8118
+##  [8,]       2    2      2       2 -1.91204  0.5878
+##  [9,]       2    2      2       3 -1.60587  0.6087
+## [10,]       2    2      3       1 -1.47011  0.7142
+## [11,]       2    2      3       2 -1.16963  0.6351
+## [12,]       2    2      3       3 -0.79733  0.6393
+## [13,]       2    2      4       3  0.23812  0.7895
+## [14,]       2    3      1       3 -2.14170  0.7024
+## [15,]       2    3      2       2 -1.60902  0.6261
+## [16,]       2    3      2       3 -1.25392  0.6306
+## [17,]       2    3      3       2 -0.75662  0.6562
+## [18,]       2    3      3       3 -0.33194  0.6983
+## [19,]       2    3      3       4  0.08319  0.7616
+## [20,]       2    3      4       1  0.18604  0.8796
+## [21,]       2    3      4       3  0.76180  0.6812
+## [22,]       2    4      2       1 -1.82318  0.6946
+## [23,]       2    4      4       3  1.30705  0.7537
+## [24,]       2    4      4       4  2.09449  1.0388
+## [25,]       3    1      1       1 -3.53781  1.0008
+## [26,]       3    1      1       3 -2.50949  0.6975
+## [27,]       3    1      2       2 -1.92613  0.6150
+## [28,]       3    1      2       3 -1.58706  0.6437
+## [29,]       3    1      3       2 -1.08880  0.6746
+## [30,]       3    1      3       3 -0.65853  0.6959
+## [31,]       3    1      3       4 -0.28077  0.8077
+## [32,]       3    1      4       3  0.54116  0.7347
+## [33,]       3    1      4       4  1.03765  0.7363
+## [34,]       3    2      1       2 -2.34771  0.6250
+## [35,]       3    2      1       4 -1.91174  0.7103
+## [36,]       3    2      2       1 -1.86197  0.6161
+## [37,]       3    2      2       2 -1.57697  0.5942
+## [38,]       3    2      2       3 -1.25470  0.6026
+## [39,]       3    2      3       1 -1.02642  0.6632
+## [40,]       3    2      3       2 -0.79852  0.6293
+## [41,]       3    2      3       3 -0.40911  0.6679
+## [42,]       3    2      3       4 -0.03715  0.7440
+## [43,]       3    2      4       1  0.01161  0.9015
+## [44,]       3    2      4       2  0.20319  0.7894
+## [45,]       3    2      4       3  0.64204  0.6846
+## [46,]       3    2      4       4  1.10155  0.7187
+## [47,]       3    3      1       3 -1.62726  0.7811
+## [48,]       3    3      2       1 -1.51802  0.6595
+## [49,]       3    3      2       2 -1.23901  0.6172
+## [50,]       3    3      2       3 -0.88173  0.6306
+## [51,]       3    3      2       4 -0.61933  0.7088
+## [52,]       3    3      3       1 -0.54976  0.7111
+## [53,]       3    3      3       2 -0.34773  0.6877
+## [54,]       3    3      3       3  0.08648  0.6870
+## [55,]       3    3      3       4  0.49083  0.6765
+## [56,]       3    3      4       2  0.73141  0.6818
+## [57,]       3    3      4       3  1.04742  0.6502
+## [58,]       3    3      4       4  1.52482  0.7456
+## [59,]       3    4      1       3 -1.37819  0.9442
+## [60,]       3    4      2       3 -0.60694  0.7264
+## [61,]       3    4      3       2  0.09920  0.7679
+## [62,]       3    4      3       3  0.53838  0.6777
+## [63,]       3    4      3       4  0.96247  0.6750
+## [64,]       3    4      4       1  1.21774  0.7588
+## [65,]       3    4      4       2  1.27166  0.7493
+## [66,]       3    4      4       3  1.59919  0.7661
+## [67,]       3    4      4       4  2.42195  1.0396
+## [68,]       4    1      1       4 -2.10449  0.7735
+## [69,]       4    1      2       2 -1.63826  0.6544
+## [70,]       4    1      2       4 -1.01319  0.7247
+## [71,]       4    1      3       4  0.36209  0.7781
+## [72,]       4    2      2       1 -1.56819  0.6516
+## [73,]       4    2      2       3 -0.93440  0.6281
+## [74,]       4    2      3       3  0.05395  0.7109
+## [75,]       4    2      3       4  0.49261  0.7099
+## [76,]       4    2      4       2  0.76144  0.7236
+## [77,]       4    2      4       4  1.76030  0.9306
+## [78,]       4    3      2       3 -0.48340  0.7045
+## [79,]       4    3      3       2  0.13928  0.7183
+## [80,]       4    3      3       3  0.53331  0.6526
+## [81,]       4    3      3       4  0.93041  0.6559
+## [82,]       4    3      4       2  1.21551  0.7197
+## [83,]       4    3      4       3  1.52661  0.7343
+## [84,]       4    3      4       4  2.25852  0.9675
+## [85,]       4    4      3       2  0.64047  0.7075
+## [86,]       4    4      3       3  0.98241  0.6618
+## [87,]       4    4      3       4  1.46684  0.7493
+## [88,]       4    4      4       2  2.02769  1.0097
+## [89,]       4    4      4       3  2.38944  1.0145
+## [90,]       4    4      4       4  7.11003 10.6151
+</code></pre>
+
+<pre><code class="r">fscores(mod, method=&#39;ML&#39;)
+</code></pre>
+
+<pre><code>## 
+## Method:  ML
+## 
+## Empirical Reliability:
+##     F1 
+## 0.7158
+</code></pre>
+
+<pre><code>##       Comfort Work Future Benefit       F1  SE_F1
+##  [1,]       1    1      1       1     -Inf     NA
+##  [2,]       1    3      2       1 -2.10659 0.6900
+##  [3,]       1    4      2       3 -1.15122 0.7058
+##  [4,]       1    4      3       1 -0.78312 0.8082
+##  [5,]       2    1      1       1 -4.39888 1.1815
+##  [6,]       2    1      2       4 -1.86438 0.6684
+##  [7,]       2    2      1       1 -3.24984 0.8127
+##  [8,]       2    2      2       2 -1.91270 0.5878
+##  [9,]       2    2      2       3 -1.60646 0.6088
+## [10,]       2    2      3       1 -1.47086 0.7145
+## [11,]       2    2      3       2 -1.17010 0.6352
+## [12,]       2    2      3       3 -0.79765 0.6395
+## [13,]       2    2      4       3  0.23827 0.7897
+## [14,]       2    3      1       3 -2.14276 0.7025
+## [15,]       2    3      2       2 -1.60965 0.6262
+## [16,]       2    3      2       3 -1.25442 0.6307
+## [17,]       2    3      3       2 -0.75694 0.6563
+## [18,]       2    3      3       3 -0.33210 0.6985
+## [19,]       2    3      3       4  0.08324 0.7619
+## [20,]       2    3      4       1  0.18618 0.8799
+## [21,]       2    3      4       3  0.76215 0.6814
+## [22,]       2    4      2       1 -1.82406 0.6947
+## [23,]       2    4      4       3  1.30779 0.7540
+## [24,]       2    4      4       4  2.09675 1.0403
+## [25,]       3    1      1       1 -3.54137 1.0029
+## [26,]       3    1      1       3 -2.51071 0.6978
+## [27,]       3    1      2       2 -1.92686 0.6151
+## [28,]       3    1      2       3 -1.58772 0.6438
+## [29,]       3    1      3       2 -1.08929 0.6747
+## [30,]       3    1      3       3 -0.65885 0.6961
+## [31,]       3    1      3       4 -0.28095 0.8080
+## [32,]       3    1      4       3  0.54145 0.7348
+## [33,]       3    1      4       4  1.03821 0.7365
+## [34,]       3    2      1       2 -2.34862 0.6251
+## [35,]       3    2      1       4 -1.91271 0.7103
+## [36,]       3    2      2       1 -1.86268 0.6162
+## [37,]       3    2      2       2 -1.57753 0.5943
+## [38,]       3    2      2       3 -1.25516 0.6027
+## [39,]       3    2      3       1 -1.02687 0.6633
+## [40,]       3    2      3       2 -0.79884 0.6294
+## [41,]       3    2      3       3 -0.40929 0.6680
+## [42,]       3    2      3       4 -0.03717 0.7442
+## [43,]       3    2      4       1  0.01163 0.9019
+## [44,]       3    2      4       2  0.20332 0.7896
+## [45,]       3    2      4       3  0.64234 0.6848
+## [46,]       3    2      4       4  1.10212 0.7190
+## [47,]       3    3      1       3 -1.62826 0.7811
+## [48,]       3    3      2       1 -1.51868 0.6596
+## [49,]       3    3      2       2 -1.23948 0.6173
+## [50,]       3    3      2       3 -0.88208 0.6307
+## [51,]       3    3      2       4 -0.61964 0.7090
+## [52,]       3    3      3       1 -0.55004 0.7112
+## [53,]       3    3      3       2 -0.34790 0.6878
+## [54,]       3    3      3       3  0.08653 0.6872
+## [55,]       3    3      3       4  0.49106 0.6766
+## [56,]       3    3      4       2  0.73175 0.6819
+## [57,]       3    3      4       3  1.04786 0.6504
+## [58,]       3    3      4       4  1.52567 0.7460
+## [59,]       3    4      1       3 -1.37942 0.9442
+## [60,]       3    4      2       3 -0.60726 0.7265
+## [61,]       3    4      3       2  0.09926 0.7681
+## [62,]       3    4      3       3  0.53863 0.6779
+## [63,]       3    4      3       4  0.96291 0.6752
+## [64,]       3    4      4       1  1.21844 0.7591
+## [65,]       3    4      4       2  1.27238 0.7497
+## [66,]       3    4      4       3  1.60013 0.7666
+## [67,]       3    4      4       4  2.42458 1.0411
+## [68,]       4    1      1       4 -2.10575 0.7735
+## [69,]       4    1      2       2 -1.63896 0.6545
+## [70,]       4    1      2       4 -1.01372 0.7249
+## [71,]       4    1      3       4  0.36232 0.7783
+## [72,]       4    2      2       1 -1.56886 0.6517
+## [73,]       4    2      2       3 -0.93476 0.6282
+## [74,]       4    2      3       3  0.05398 0.7111
+## [75,]       4    2      3       4  0.49286 0.7100
+## [76,]       4    2      4       2  0.76184 0.7238
+## [77,]       4    2      4       4  1.76182 0.9316
+## [78,]       4    3      2       3 -0.48364 0.7046
+## [79,]       4    3      3       2  0.13936 0.7185
+## [80,]       4    3      3       3  0.53354 0.6527
+## [81,]       4    3      3       4  0.93081 0.6560
+## [82,]       4    3      4       2  1.21614 0.7200
+## [83,]       4    3      4       3  1.52744 0.7347
+## [84,]       4    3      4       4  2.26064 0.9687
+## [85,]       4    4      3       2  0.64079 0.7076
+## [86,]       4    4      3       3  0.98284 0.6619
+## [87,]       4    4      3       4  1.46766 0.7497
+## [88,]       4    4      4       2  2.02976 1.0111
+## [89,]       4    4      4       3  2.39190 1.0160
+## [90,]       4    4      4       4      Inf     NA
+</code></pre>
+
+<pre><code class="r">#WLE estimation, run in parallel using available cores
+mirtCluster()
+</code></pre>
+
+<pre><code>## mirtCluster() has already been defined
+</code></pre>
+
+<pre><code class="r">fscores(mod, method=&#39;WLE&#39;)
+</code></pre>
+
+<pre><code>## 
+## Method:  WLE
+## 
+## Empirical Reliability:
+##     F1 
+## 0.0141
+</code></pre>
+
+<pre><code>##       Comfort Work Future Benefit        F1    SE_F1
+##  [1,]       1    1      1       1 -12.79397  62.0251
+##  [2,]       1    3      2       1  -2.12050   0.6444
+##  [3,]       1    4      2       3  -1.13884   0.6503
+##  [4,]       1    4      3       1  -0.85026   0.6570
+##  [5,]       2    1      1       1 -15.37897 240.9567
+##  [6,]       2    1      2       4  -1.89628   0.6529
+##  [7,]       2    2      1       1  -3.01301   0.7760
+##  [8,]       2    2      2       2  -1.93720   0.6510
+##  [9,]       2    2      2       3  -1.60889   0.6617
+## [10,]       2    2      3       1  -1.45084   0.6598
+## [11,]       2    2      3       2  -1.15781   0.6507
+## [12,]       2    2      3       3  -0.84152   0.6576
+## [13,]       2    2      4       3   0.35249   0.7089
+## [14,]       2    3      1       3  -2.15096   0.6439
+## [15,]       2    3      2       2  -1.61272   0.6617
+## [16,]       2    3      2       3  -1.23547   0.6527
+## [17,]       2    3      3       2  -0.80956   0.6600
+## [18,]       2    3      3       3  -0.42780   0.7073
+## [19,]       2    3      3       4   0.15284   0.7322
+## [20,]       2    3      4       1   0.32125   0.7131
+## [21,]       2    3      4       3   0.78568   0.6649
+## [22,]       2    4      2       1  -1.85738   0.6547
+## [23,]       2    4      4       3   1.19102   0.6881
+## [24,]       2    4      4       4   1.75998   0.8205
+## [25,]       3    1      1       1 -14.62879 162.5485
+## [26,]       3    1      1       3  -2.43965   0.6554
+## [27,]       3    1      2       2  -1.95325   0.6502
+## [28,]       3    1      2       3  -1.58750   0.6617
+## [29,]       3    1      3       2  -1.08635   0.6498
+## [30,]       3    1      3       3  -0.73342   0.6671
+## [31,]       3    1      3       4  -0.40573   0.7104
+## [32,]       3    1      4       3   0.61741   0.6762
+## [33,]       3    1      4       4   0.99074   0.6674
+## [34,]       3    2      1       2  -2.31997   0.6468
+## [35,]       3    2      1       4  -1.94786   0.6505
+## [36,]       3    2      2       1  -1.88975   0.6532
+## [37,]       3    2      2       2  -1.57601   0.6617
+## [38,]       3    2      2       3  -1.23772   0.6528
+## [39,]       3    2      3       1  -1.03360   0.6499
+## [40,]       3    2      3       2  -0.84137   0.6576
+## [41,]       3    2      3       3  -0.49941   0.6971
+## [42,]       3    2      3       4  -0.03856   0.7409
+## [43,]       3    2      4       1   0.06756   0.7382
+## [44,]       3    2      4       2   0.31393   0.7140
+## [45,]       3    2      4       3   0.69201   0.6699
+## [46,]       3    2      4       4   1.04027   0.6709
+## [47,]       3    3      1       3  -1.63817   0.6615
+## [48,]       3    3      2       1  -1.50771   0.6610
+## [49,]       3    3      2       2  -1.22216   0.6523
+## [50,]       3    3      2       3  -0.91121   0.6534
+## [51,]       3    3      2       4  -0.70201   0.6705
+## [52,]       3    3      3       1  -0.64263   0.6775
+## [53,]       3    3      3       2  -0.44158   0.7054
+## [54,]       3    3      3       3   0.14003   0.7333
+## [55,]       3    3      3       4   0.56498   0.6817
+## [56,]       3    3      4       2   0.76216   0.6659
+## [57,]       3    3      4       3   1.00637   0.6684
+## [58,]       3    3      4       4   1.37089   0.7204
+## [59,]       3    4      1       3  -1.33035   0.6559
+## [60,]       3    4      2       3  -0.69478   0.6713
+## [61,]       3    4      3       2   0.17721   0.7299
+## [62,]       3    4      3       3   0.60588   0.6773
+## [63,]       3    4      3       4   0.93896   0.6650
+## [64,]       3    4      4       1   1.12133   0.6789
+## [65,]       3    4      4       2   1.16457   0.6844
+## [66,]       3    4      4       3   1.42793   0.7329
+## [67,]       3    4      4       4   2.08265   0.9209
+## [68,]       4    1      1       4  -2.12267   0.6444
+## [69,]       4    1      2       2  -1.64722   0.6614
+## [70,]       4    1      2       4  -1.02398   0.6500
+## [71,]       4    1      3       4   0.47236   0.6929
+## [72,]       4    2      2       1  -1.56560   0.6617
+## [73,]       4    2      2       3  -0.95518   0.6516
+## [74,]       4    2      3       3   0.09947   0.7363
+## [75,]       4    2      3       4   0.57297   0.6808
+## [76,]       4    2      4       2   0.78773   0.6649
+## [77,]       4    2      4       4   1.50829   0.7520
+## [78,]       4    3      2       3  -0.57987   0.6858
+## [79,]       4    3      3       2   0.21704   0.7258
+## [80,]       4    3      3       3   0.59751   0.6782
+## [81,]       4    3      3       4   0.91522   0.6643
+## [82,]       4    3      4       2   1.12708   0.6796
+## [83,]       4    3      4       3   1.37630   0.7215
+## [84,]       4    3      4       4   1.95962   0.8813
+## [85,]       4    4      3       2   0.69339   0.6698
+## [86,]       4    4      3       3   0.95501   0.6656
+## [87,]       4    4      3       4   1.32062   0.7102
+## [88,]       4    4      4       2   1.71295   0.8069
+## [89,]       4    4      4       3   2.06480   0.9151
+## [90,]       4    4      4       4   3.30714   1.4872
+</code></pre>
+
+<pre><code class="r">#multiple imputation using 30 draws for EAP scores. Requires information matrix
+mod &lt;- mirt(Science, 1, SE=TRUE)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.49668
+Iteration: 2, Log-Lik: -1617.364, Max-Change: 0.23978
+Iteration: 3, Log-Lik: -1612.859, Max-Change: 0.26730
+Iteration: 4, Log-Lik: -1610.414, Max-Change: 0.10183
+Iteration: 5, Log-Lik: -1609.894, Max-Change: 0.09358
+Iteration: 6, Log-Lik: -1609.586, Max-Change: 0.30160
+Iteration: 7, Log-Lik: -1609.022, Max-Change: 0.03547
+Iteration: 8, Log-Lik: -1608.980, Max-Change: 0.03002
+Iteration: 9, Log-Lik: -1608.952, Max-Change: 0.14930
+Iteration: 10, Log-Lik: -1608.881, Max-Change: 0.01373
+Iteration: 11, Log-Lik: -1608.877, Max-Change: 0.00734
+Iteration: 12, Log-Lik: -1608.875, Max-Change: 0.01466
+Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.01078
+Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00315
+Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00929
+Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00241
+Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00569
+Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00036
+Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00115
+Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00029
+Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00130
+Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00019
+Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00078
+Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00006
+## 
+## Calculating information matrix...
+</code></pre>
+
+<pre><code class="r">fscores(mod, MI = 30)
+</code></pre>
+
+<pre><code>## 
+## Method:  EAP
+## 
+## Empirical Reliability:
+##     F1 
+## 0.6479
+</code></pre>
+
+<pre><code>##       Comfort Work Future Benefit       F1  SE_F1
+##  [1,]       1    1      1       1 -2.76715 0.6466
+##  [2,]       1    3      2       1 -1.45833 0.6036
+##  [3,]       1    4      2       3 -0.71220 0.6492
+##  [4,]       1    4      3       1 -0.52346 0.6873
+##  [5,]       2    1      1       1 -2.52842 0.6039
+##  [6,]       2    1      2       4 -1.24230 0.6118
+##  [7,]       2    2      1       1 -2.17290 0.5893
+##  [8,]       2    2      2       2 -1.42120 0.5328
+##  [9,]       2    2      2       3 -1.16347 0.5513
+## [10,]       2    2      3       1 -1.06152 0.6093
+## [11,]       2    2      3       2 -0.87355 0.5756
+## [12,]       2    2      3       3 -0.57960 0.5783
+## [13,]       2    2      4       3  0.02121 0.6675
+## [14,]       2    3      1       3 -1.27394 0.6696
+## [15,]       2    3      2       2 -1.15560 0.5582
+## [16,]       2    3      2       3 -0.86761 0.5794
+## [17,]       2    3      3       2 -0.55236 0.5873
+## [18,]       2    3      3       3 -0.24973 0.5827
+## [19,]       2    3      3       4  0.02053 0.6105
+## [20,]       2    3      4       1 -0.07537 0.7313
+## [21,]       2    3      4       3  0.40220 0.6339
+## [22,]       2    4      2       1 -1.20167 0.6218
+## [23,]       2    4      4       3  0.77714 0.6475
+## [24,]       2    4      4       4  1.17353 0.6606
+## [25,]       3    1      1       1 -2.17296 0.6193
+## [26,]       3    1      1       3 -1.54953 0.6599
+## [27,]       3    1      2       2 -1.36134 0.5590
+## [28,]       3    1      2       3 -1.07602 0.5823
+## [29,]       3    1      3       2 -0.75651 0.6023
+## [30,]       3    1      3       3 -0.43763 0.6005
+## [31,]       3    1      3       4 -0.16905 0.6320
+## [32,]       3    1      4       3  0.22482 0.6657
+## [33,]       3    1      4       4  0.58712 0.6683
+## [34,]       3    2      1       2 -1.56272 0.6030
+## [35,]       3    2      1       4 -1.02443 0.7067
+## [36,]       3    2      2       1 -1.32363 0.5569
+## [37,]       3    2      2       2 -1.13704 0.5402
+## [38,]       3    2      2       3 -0.86590 0.5618
+## [39,]       3    2      3       1 -0.72192 0.5979
+## [40,]       3    2      3       2 -0.56606 0.5692
+## [41,]       3    2      3       3 -0.27822 0.5683
+## [42,]       3    2      3       4 -0.02238 0.5971
+## [43,]       3    2      4       1 -0.11667 0.7052
+## [44,]       3    2      4       2  0.02353 0.6594
+## [45,]       3    2      4       3  0.34500 0.6231
+## [46,]       3    2      4       4  0.67995 0.6333
+## [47,]       3    3      1       3 -0.85933 0.6864
+## [48,]       3    3      2       1 -1.02564 0.5873
+## [49,]       3    3      2       2 -0.84776 0.5685
+## [50,]       3    3      2       3 -0.55063 0.5904
+## [51,]       3    3      2       4 -0.29497 0.6463
+## [52,]       3    3      3       1 -0.37449 0.6038
+## [53,]       3    3      3       2 -0.24364 0.5751
+## [54,]       3    3      3       3  0.04017 0.5651
+## [55,]       3    3      3       4  0.31430 0.5859
+## [56,]       3    3      4       2  0.39576 0.6295
+## [57,]       3    3      4       3  0.67506 0.5917
+## [58,]       3    3      4       4  1.00267 0.6017
+## [59,]       3    4      1       3 -0.56690 0.7567
+## [60,]       3    4      2       3 -0.28805 0.6495
+## [61,]       3    4      3       2  0.03390 0.6076
+## [62,]       3    4      3       3  0.33123 0.5888
+## [63,]       3    4      3       4  0.64386 0.6085
+## [64,]       3    4      4       1  0.68928 0.6741
+## [65,]       3    4      4       2  0.76392 0.6451
+## [66,]       3    4      4       3  1.03001 0.6076
+## [67,]       3    4      4       4  1.39960 0.6281
+## [68,]       4    1      1       4 -0.89027 0.8226
+## [69,]       4    1      2       2 -1.08121 0.5952
+## [70,]       4    1      2       4 -0.48824 0.6955
+## [71,]       4    1      3       4  0.23150 0.6400
+## [72,]       4    2      2       1 -1.04220 0.5923
+## [73,]       4    2      2       3 -0.55777 0.6027
+## [74,]       4    2      3       3  0.05195 0.5809
+## [75,]       4    2      3       4  0.34326 0.6089
+## [76,]       4    2      4       2  0.43424 0.6537
+## [77,]       4    2      4       4  1.09765 0.6395
+## [78,]       4    3      2       3 -0.20147 0.6323
+## [79,]       4    3      3       2  0.09520 0.5864
+## [80,]       4    3      3       3  0.37152 0.5704
+## [81,]       4    3      3       4  0.66919 0.5918
+## [82,]       4    3      4       2  0.78739 0.6224
+## [83,]       4    3      4       3  1.03827 0.5919
+## [84,]       4    3      4       4  1.39465 0.6160
+## [85,]       4    4      3       2  0.41460 0.6162
+## [86,]       4    4      3       3  0.69134 0.5932
+## [87,]       4    4      3       4  1.02637 0.6192
+## [88,]       4    4      4       2  1.19319 0.6494
+## [89,]       4    4      4       3  1.42775 0.6220
+## [90,]       4    4      4       4  1.84426 0.6603
+</code></pre>
+
+</body>
+
+</html>

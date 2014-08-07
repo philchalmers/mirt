@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Name: DIF</title>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h3>Name: DIF</h3>
+
+<h3>Title: Differential item functioning tests</h3>
+
+<pre><code class="r">#simulate data where group 2 has a smaller slopes and more extreme intercepts
+set.seed(12345)
+a1 &lt;- a2 &lt;- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d1 &lt;- d2 &lt;- matrix(rnorm(15,0,.7),ncol=1)
+a2[1:2, ] &lt;- a1[1:2, ]/3
+d1[c(1,3), ] &lt;- d2[c(1,3), ]/4
+head(data.frame(a.group1 = a1, a.group2 = a2, d.group1 = d1, d.group2 = d2))
+</code></pre>
+
+<pre><code>##   a.group1 a.group2 d.group1 d.group2
+## 1   1.1757   0.3919  0.14296   0.5718
+## 2   1.2128   0.4043 -0.62045  -0.6205
+## 3   0.9672   0.9672 -0.05803  -0.2321
+## 4   0.8640   0.8640  0.78450   0.7845
+## 5   1.1818   1.1818  0.20911   0.2091
+## 6   0.4546   0.4546  0.54574   0.5457
+</code></pre>
+
+<pre><code class="r">itemtype &lt;- rep(&#39;dich&#39;, nrow(a1))
+N &lt;- 1000
+dataset1 &lt;- simdata(a1, d1, N, itemtype)
+dataset2 &lt;- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
+dat &lt;- rbind(dataset1, dataset2)
+group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
+
+#### no anchors, all items tested for DIF by adding item constrains one item at a time.
+# define a parallel cluster (optional) to help speed up internal functions
+mirtCluster()
+</code></pre>
+
+<pre><code>## Loading required package: parallel
+</code></pre>
+
+<pre><code class="r">#  Information matrix with S-EM
+model &lt;- multipleGroup(dat, 1, group, SE = TRUE)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -18240.553, Max-Change: 0.47673
+Iteration: 2, Log-Lik: -18070.001, Max-Change: 0.26254
+Iteration: 3, Log-Lik: -18043.490, Max-Change: 0.13853
+Iteration: 4, Log-Lik: -18037.767, Max-Change: 0.07644
+Iteration: 5, Log-Lik: -18036.072, Max-Change: 0.04256
+Iteration: 6, Log-Lik: -18035.494, Max-Change: 0.03409
+Iteration: 7, Log-Lik: -18035.231, Max-Change: 0.01010
+Iteration: 8, Log-Lik: -18035.184, Max-Change: 0.00623
+Iteration: 9, Log-Lik: -18035.166, Max-Change: 0.00483
+Iteration: 10, Log-Lik: -18035.158, Max-Change: 0.00156
+Iteration: 11, Log-Lik: -18035.156, Max-Change: 0.00089
+Iteration: 12, Log-Lik: -18035.155, Max-Change: 0.00108
+Iteration: 13, Log-Lik: -18035.153, Max-Change: 0.00150
+Iteration: 14, Log-Lik: -18035.153, Max-Change: 0.00093
+Iteration: 15, Log-Lik: -18035.152, Max-Change: 0.00055
+Iteration: 16, Log-Lik: -18035.152, Max-Change: 0.00027
+Iteration: 17, Log-Lik: -18035.152, Max-Change: 0.00021
+Iteration: 18, Log-Lik: -18035.152, Max-Change: 0.00022
+Iteration: 19, Log-Lik: -18035.152, Max-Change: 0.00006
+Iteration: 20, Log-Lik: -18035.152, Max-Change: 0.00004
+## 
+## Calculating information matrix...
+</code></pre>
+
+<pre><code class="r">#test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
+resulta1d &lt;- DIF(model, c(&#39;a1&#39;, &#39;d&#39;), plotdif = TRUE)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/> </p>
+
+<pre><code class="r">resulta1d
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36231 36234 36371 36555 -18057   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 44.27   2   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36213 36217 36354 36538 -18049   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 26.83   2   0
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36201 36204 36341 36525 -18042   NaN NaN   NaN
+## 2 36190 36194 36336 36526 -18035 14.28   2 8e-04
+## 
+## $Item_4
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36188 36192 36329 36513 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 2.189   2 0.3347
+## 
+## $Item_5
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36187 36191 36328 36512 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.698   2 0.7054
+## 
+## $Item_6
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36187 36190 36327 36512 -18035   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.446   2 0.8001
+## 
+## $Item_7
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36192 36196 36333 36517 -18038   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 5.788   2 0.0554
+## 
+## $Item_8
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36190 36194 36331 36515 -18037   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 4.082   2 0.1299
+## 
+## $Item_9
+##     AIC  AICc SABIC   BIC logLik  X2  df     p
+## 1 36188 36191 36328 36512 -18036 NaN NaN   NaN
+## 2 36190 36194 36336 36526 -18035 1.3   2 0.522
+## 
+## $Item_10
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36188 36191 36328 36513 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 1.565   2 0.4573
+## 
+## $Item_11
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36190 36194 36331 36515 -18037   NaN NaN   NaN
+## 2 36190 36194 36336 36526 -18035 4.175   2 0.124
+## 
+## $Item_12
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36189 36192 36329 36513 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 2.224   2 0.3289
+## 
+## $Item_13
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36188 36191 36328 36513 -18036   NaN NaN   NaN
+## 2 36190 36194 36336 36526 -18035 1.435   2 0.488
+## 
+## $Item_14
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36192 36196 36333 36517 -18038   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 6.053   2 0.0485
+## 
+## $Item_15
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36189 36193 36330 36514 -18037   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 2.768   2 0.2506
+</code></pre>
+
+<pre><code class="r">#same as above, but using Wald tests with Benjamini &amp; Hochberg adjustment
+resulta1dWald &lt;- DIF(model, c(&#39;a1&#39;, &#39;d&#39;), Wald = TRUE, p.adjust = &#39;fdr&#39;)
+resulta1dWald
+</code></pre>
+
+<pre><code>## $Item_1
+##       W df         p
+## 1 39.92  2 2.147e-09
+## 
+## $Item_2
+##       W df         p
+## 1 22.76  2 1.142e-05
+## 
+## $Item_3
+##       W df        p
+## 1 13.63  2 0.001099
+## 
+## $Item_4
+##       W df      p
+## 1 2.142  2 0.3427
+## 
+## $Item_5
+##        W df      p
+## 1 0.6839  2 0.7104
+## 
+## $Item_6
+##        W df      p
+## 1 0.4357  2 0.8043
+## 
+## $Item_7
+##      W df       p
+## 1 5.54  2 0.06267
+## 
+## $Item_8
+##       W df      p
+## 1 3.967  2 0.1376
+## 
+## $Item_9
+##       W df      p
+## 1 1.265  2 0.5313
+## 
+## $Item_10
+##       W df      p
+## 1 1.538  2 0.4634
+## 
+## $Item_11
+##       W df      p
+## 1 4.002  2 0.1352
+## 
+## $Item_12
+##       W df      p
+## 1 2.151  2 0.3411
+## 
+## $Item_13
+##       W df      p
+## 1 1.426  2 0.4901
+## 
+## $Item_14
+##       W df       p
+## 1 5.744  2 0.05658
+## 
+## $Item_15
+##       W df      p
+## 1 2.643  2 0.2668
+## 
+## $adj_pvals
+##    Item_1    Item_2    Item_3    Item_4    Item_5    Item_6    Item_7 
+## 3.220e-08 8.567e-05 5.493e-03 5.140e-01 7.611e-01 8.043e-01 1.880e-01 
+##    Item_8    Item_9   Item_10   Item_11   Item_12   Item_13   Item_14 
+## 2.949e-01 6.131e-01 6.127e-01 2.949e-01 5.140e-01 6.127e-01 1.880e-01 
+##   Item_15 
+## 5.002e-01
+</code></pre>
+
+<pre><code class="r">round(resulta1dWald$adj_pvals, 4)
+</code></pre>
+
+<pre><code>##  Item_1  Item_2  Item_3  Item_4  Item_5  Item_6  Item_7  Item_8  Item_9 
+##  0.0000  0.0001  0.0055  0.5140  0.7611  0.8043  0.1880  0.2949  0.6131 
+## Item_10 Item_11 Item_12 Item_13 Item_14 Item_15 
+##  0.6127  0.2949  0.5140  0.6127  0.1880  0.5002
+</code></pre>
+
+<pre><code class="r">#test whether adding only slope constraints results in DIF for all items
+resulta1 &lt;- DIF(model, &#39;a1&#39;)
+resulta1
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36208 36212 36351 36539 -18045   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 20.12   1   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36215 36219 36358 36546 -18049   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 26.83   1   0
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36195 36198 36338 36525 -18038   NaN NaN   NaN
+## 2 36190 36194 36336 36526 -18035 6.306   1 0.012
+## 
+## $Item_4
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36189 36192 36332 36519 -18035   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.277   1 0.5987
+## 
+## $Item_5
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36188 36192 36331 36519 -18035   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.021   1 0.8848
+## 
+## $Item_6
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36188 36192 36331 36519 -18035   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.028   1 0.8671
+## 
+## $Item_7
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36193 36197 36336 36524 -18038   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 5.085   1 0.0241
+## 
+## $Item_8
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36192 36196 36335 36523 -18037   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 4.024   1 0.0449
+## 
+## $Item_9
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36188 36192 36331 36519 -18035   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.135   1 0.7133
+## 
+## $Item_10
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36189 36193 36332 36520 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.778   1 0.3778
+## 
+## $Item_11
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36192 36195 36335 36522 -18037   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 3.329   1 0.0681
+## 
+## $Item_12
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36191 36194 36334 36521 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 2.217   1 0.1365
+## 
+## $Item_13
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36189 36192 36332 36519 -18035   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 0.511   1 0.4747
+## 
+## $Item_14
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36194 36198 36337 36524 -18038   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 5.603   1 0.0179
+## 
+## $Item_15
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36191 36195 36334 36522 -18037   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 2.764   1 0.0964
+</code></pre>
+
+<pre><code class="r">#following up on resulta1d, to determine whether it&#39;s a1 or d parameter causing DIF
+(a1s &lt;- DIF(model, &#39;a1&#39;, items2test = 1:3))
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36208 36212 36351 36539 -18045   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 20.12   1   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36215 36219 36358 36546 -18049   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 26.83   1   0
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36195 36198 36338 36525 -18038   NaN NaN   NaN
+## 2 36190 36194 36336 36526 -18035 6.306   1 0.012
+</code></pre>
+
+<pre><code class="r">(ds &lt;- DIF(model, &#39;d&#39;, items2test = 1:3))
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36206 36210 36349 36537 -18044   NaN NaN NaN
+## 2 36190 36194 36336 36526 -18035 17.88   1   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36190 36193 36333 36520 -18036   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 1.392   1 0.2381
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36196 36200 36339 36527 -18039   NaN NaN    NaN
+## 2 36190 36194 36336 36526 -18035 8.187   1 0.0042
+</code></pre>
+
+<pre><code class="r">#### using items 4 to 15 as anchors
+itemnames &lt;- colnames(dat)
+model_anchor &lt;- multipleGroup(dat, model = 1, group = group,
+  invariance = c(itemnames[4:15], &#39;free_means&#39;, &#39;free_var&#39;))
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -18240.553, Max-Change: 0.39947
+Iteration: 2, Log-Lik: -18070.694, Max-Change: 0.16279
+Iteration: 3, Log-Lik: -18050.166, Max-Change: 0.10072
+Iteration: 4, Log-Lik: -18045.824, Max-Change: 0.04741
+Iteration: 5, Log-Lik: -18045.045, Max-Change: 0.02234
+Iteration: 6, Log-Lik: -18044.846, Max-Change: 0.01065
+Iteration: 7, Log-Lik: -18044.777, Max-Change: 0.00534
+Iteration: 8, Log-Lik: -18044.736, Max-Change: 0.00358
+Iteration: 9, Log-Lik: -18044.706, Max-Change: 0.00529
+Iteration: 10, Log-Lik: -18044.672, Max-Change: 0.00304
+Iteration: 11, Log-Lik: -18044.657, Max-Change: 0.00192
+Iteration: 12, Log-Lik: -18044.647, Max-Change: 0.00964
+Iteration: 13, Log-Lik: -18044.625, Max-Change: 0.00558
+Iteration: 14, Log-Lik: -18044.609, Max-Change: 0.00098
+Iteration: 15, Log-Lik: -18044.607, Max-Change: 0.00256
+Iteration: 16, Log-Lik: -18044.605, Max-Change: 0.00076
+Iteration: 17, Log-Lik: -18044.604, Max-Change: 0.00044
+Iteration: 18, Log-Lik: -18044.604, Max-Change: 0.00040
+Iteration: 19, Log-Lik: -18044.603, Max-Change: 0.00030
+Iteration: 20, Log-Lik: -18044.603, Max-Change: 0.00023
+Iteration: 21, Log-Lik: -18044.602, Max-Change: 0.00131
+Iteration: 22, Log-Lik: -18044.602, Max-Change: 0.00067
+Iteration: 23, Log-Lik: -18044.601, Max-Change: 0.00027
+Iteration: 24, Log-Lik: -18044.601, Max-Change: 0.00028
+Iteration: 25, Log-Lik: -18044.601, Max-Change: 0.00019
+Iteration: 26, Log-Lik: -18044.601, Max-Change: 0.00009
+</code></pre>
+
+<pre><code class="r">anchor &lt;- DIF(model_anchor, c(&#39;a1&#39;, &#39;d&#39;), items2test = 1:3)
+anchor
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36212 36213 36299 36414 -18070   NaN NaN NaN
+## 2 36165 36167 36257 36378 -18045 50.77   2   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik   X2  df   p
+## 1 36198 36199 36285 36399 -18063  NaN NaN NaN
+## 2 36165 36167 36257 36378 -18045 36.3   2   0
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36177 36179 36265 36379 -18053   NaN NaN   NaN
+## 2 36165 36167 36257 36378 -18045 16.05   2 3e-04
+</code></pre>
+
+<pre><code class="r">### drop down approach (freely estimating parameters accross groups) when
+### specifying a highly constrained model with estimated latent parameters
+model_constrained &lt;- multipleGroup(dat, 1, group,
+  invariance = c(colnames(dat), &#39;free_means&#39;, &#39;free_var&#39;))
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -18240.553, Max-Change: 0.41222
+Iteration: 2, Log-Lik: -18117.287, Max-Change: 0.16569
+Iteration: 3, Log-Lik: -18102.478, Max-Change: 0.09353
+Iteration: 4, Log-Lik: -18098.767, Max-Change: 0.04902
+Iteration: 5, Log-Lik: -18097.923, Max-Change: 0.02518
+Iteration: 6, Log-Lik: -18097.586, Max-Change: 0.02685
+Iteration: 7, Log-Lik: -18097.279, Max-Change: 0.01852
+Iteration: 8, Log-Lik: -18097.132, Max-Change: 0.01245
+Iteration: 9, Log-Lik: -18097.027, Max-Change: 0.02753
+Iteration: 10, Log-Lik: -18096.937, Max-Change: 0.02498
+Iteration: 11, Log-Lik: -18096.751, Max-Change: 0.00928
+Iteration: 12, Log-Lik: -18096.724, Max-Change: 0.00516
+Iteration: 13, Log-Lik: -18096.708, Max-Change: 0.00417
+Iteration: 14, Log-Lik: -18096.697, Max-Change: 0.00313
+Iteration: 15, Log-Lik: -18096.689, Max-Change: 0.00755
+Iteration: 16, Log-Lik: -18096.682, Max-Change: 0.00671
+Iteration: 17, Log-Lik: -18096.667, Max-Change: 0.00274
+Iteration: 18, Log-Lik: -18096.665, Max-Change: 0.00148
+Iteration: 19, Log-Lik: -18096.664, Max-Change: 0.00099
+Iteration: 20, Log-Lik: -18096.663, Max-Change: 0.00071
+Iteration: 21, Log-Lik: -18096.663, Max-Change: 0.00066
+Iteration: 22, Log-Lik: -18096.662, Max-Change: 0.00057
+Iteration: 23, Log-Lik: -18096.662, Max-Change: 0.00045
+Iteration: 24, Log-Lik: -18096.662, Max-Change: 0.00113
+Iteration: 25, Log-Lik: -18096.661, Max-Change: 0.00104
+Iteration: 26, Log-Lik: -18096.660, Max-Change: 0.00053
+Iteration: 27, Log-Lik: -18096.660, Max-Change: 0.00033
+Iteration: 28, Log-Lik: -18096.660, Max-Change: 0.00034
+Iteration: 29, Log-Lik: -18096.660, Max-Change: 0.00023
+Iteration: 30, Log-Lik: -18096.660, Max-Change: 0.00062
+Iteration: 31, Log-Lik: -18096.660, Max-Change: 0.00044
+Iteration: 32, Log-Lik: -18096.660, Max-Change: 0.00023
+Iteration: 33, Log-Lik: -18096.660, Max-Change: 0.00014
+Iteration: 34, Log-Lik: -18096.660, Max-Change: 0.00015
+Iteration: 35, Log-Lik: -18096.660, Max-Change: 0.00010
+Iteration: 36, Log-Lik: -18096.660, Max-Change: 0.00028
+Iteration: 37, Log-Lik: -18096.660, Max-Change: 0.00020
+Iteration: 38, Log-Lik: -18096.660, Max-Change: 0.00010
+Iteration: 39, Log-Lik: -18096.660, Max-Change: 0.00006
+</code></pre>
+
+<pre><code class="r">dropdown &lt;- DIF(model_constrained, &#39;d&#39;, scheme = &#39;drop&#39;)
+dropdown
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36257 36258 36335 36437 -18097   NaN NaN NaN
+## 2 36234 36235 36314 36419 -18084 25.13   1   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18097 0.302   1 0.5826
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36257 36258 36335 36437 -18097   NaN NaN   NaN
+## 2 36244 36245 36324 36429 -18089 15.08   1 1e-04
+## 
+## $Item_4
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36258 36259 36338 36443 -18096 1.581   1 0.2086
+## 
+## $Item_5
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18097 0.213   1 0.6444
+## 
+## $Item_6
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36257 36258 36335 36437 -18097   NaN NaN   NaN
+## 2 36259 36260 36339 36444 -18097 0.211   1 0.646
+## 
+## $Item_7
+##     AIC  AICc SABIC   BIC logLik  X2  df      p
+## 1 36257 36258 36335 36437 -18097 NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18096 0.4   1 0.5271
+## 
+## $Item_8
+##     AIC  AICc SABIC   BIC logLik   X2  df      p
+## 1 36257 36258 36335 36437 -18097  NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18097 0.08   1 0.7773
+## 
+## $Item_9
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18096 0.371   1 0.5425
+## 
+## $Item_10
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18097 0.179   1 0.6722
+## 
+## $Item_11
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18096 0.573   1 0.4491
+## 
+## $Item_12
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18096 0.574   1 0.4487
+## 
+## $Item_13
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36257 36258 36337 36441 -18095 2.719   1 0.0992
+## 
+## $Item_14
+##     AIC  AICc SABIC   BIC logLik    X2  df      p
+## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
+## 2 36259 36260 36339 36444 -18097 0.075   1 0.7842
+## 
+## $Item_15
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36257 36258 36335 36437 -18097   NaN NaN   NaN
+## 2 36259 36260 36339 36444 -18096 0.345   1 0.557
+</code></pre>
+
+<pre><code class="r">### sequential searches using SABIC as the selection criteria
+# starting from completely different models
+model &lt;- multipleGroup(dat, 1, group)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -18240.553, Max-Change: 0.47673
+Iteration: 2, Log-Lik: -18070.001, Max-Change: 0.26254
+Iteration: 3, Log-Lik: -18043.490, Max-Change: 0.13853
+Iteration: 4, Log-Lik: -18037.767, Max-Change: 0.07644
+Iteration: 5, Log-Lik: -18036.072, Max-Change: 0.04256
+Iteration: 6, Log-Lik: -18035.494, Max-Change: 0.03409
+Iteration: 7, Log-Lik: -18035.231, Max-Change: 0.01010
+Iteration: 8, Log-Lik: -18035.184, Max-Change: 0.00623
+Iteration: 9, Log-Lik: -18035.166, Max-Change: 0.00483
+Iteration: 10, Log-Lik: -18035.158, Max-Change: 0.00156
+Iteration: 11, Log-Lik: -18035.156, Max-Change: 0.00089
+Iteration: 12, Log-Lik: -18035.155, Max-Change: 0.00108
+Iteration: 13, Log-Lik: -18035.153, Max-Change: 0.00150
+Iteration: 14, Log-Lik: -18035.153, Max-Change: 0.00093
+Iteration: 15, Log-Lik: -18035.152, Max-Change: 0.00055
+Iteration: 16, Log-Lik: -18035.152, Max-Change: 0.00027
+Iteration: 17, Log-Lik: -18035.152, Max-Change: 0.00021
+Iteration: 18, Log-Lik: -18035.152, Max-Change: 0.00022
+Iteration: 19, Log-Lik: -18035.152, Max-Change: 0.00006
+Iteration: 20, Log-Lik: -18035.152, Max-Change: 0.00004
+</code></pre>
+
+<pre><code class="r">stepup &lt;- DIF(model, c(&#39;a1&#39;, &#39;d&#39;), scheme = &#39;add_sequential&#39;)
+</code></pre>
+
+<pre><code>## 
+Checking for DIF in 3 more items
+## Computing final DIF estimates...
+</code></pre>
+
+<pre><code class="r">stepup
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36214 36215 36297 36405 -18073   NaN NaN NaN
+## 2 36171 36172 36258 36373 -18050 47.21   2   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36198 36199 36280 36388 -18065   NaN NaN NaN
+## 2 36171 36172 36258 36373 -18050 30.48   2   0
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36184 36186 36267 36375 -18058   NaN NaN   NaN
+## 2 36171 36172 36258 36373 -18050 17.31   2 2e-04
+</code></pre>
+
+<pre><code class="r">#step down procedure for highly constrained model
+model &lt;- multipleGroup(dat, 1, group, invariance = itemnames)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -18240.553, Max-Change: 0.41222
+Iteration: 2, Log-Lik: -18126.198, Max-Change: 0.20971
+Iteration: 3, Log-Lik: -18104.765, Max-Change: 0.12139
+Iteration: 4, Log-Lik: -18100.011, Max-Change: 0.05637
+Iteration: 5, Log-Lik: -18098.666, Max-Change: 0.03262
+Iteration: 6, Log-Lik: -18098.198, Max-Change: 0.02935
+Iteration: 7, Log-Lik: -18097.979, Max-Change: 0.00471
+Iteration: 8, Log-Lik: -18097.954, Max-Change: 0.00498
+Iteration: 9, Log-Lik: -18097.944, Max-Change: 0.00237
+Iteration: 10, Log-Lik: -18097.942, Max-Change: 0.00112
+Iteration: 11, Log-Lik: -18097.940, Max-Change: 0.00043
+Iteration: 12, Log-Lik: -18097.939, Max-Change: 0.00021
+Iteration: 13, Log-Lik: -18097.939, Max-Change: 0.00021
+Iteration: 14, Log-Lik: -18097.939, Max-Change: 0.00020
+Iteration: 15, Log-Lik: -18097.938, Max-Change: 0.00099
+Iteration: 16, Log-Lik: -18097.938, Max-Change: 0.00005
+Iteration: 17, Log-Lik: -18097.938, Max-Change: 0.00004
+</code></pre>
+
+<pre><code class="r">stepdown &lt;- DIF(model, c(&#39;a1&#39;, &#39;d&#39;), scheme = &#39;drop_sequential&#39;)
+</code></pre>
+
+<pre><code>## 
+Checking for DIF in 12 more items
+## Computing final DIF estimates...
+</code></pre>
+
+<pre><code class="r">stepdown
+</code></pre>
+
+<pre><code>## $Item_1
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36214 36215 36297 36405 -18073   NaN NaN NaN
+## 2 36171 36172 36258 36373 -18050 47.21   2   0
+## 
+## $Item_2
+##     AIC  AICc SABIC   BIC logLik    X2  df   p
+## 1 36198 36199 36280 36388 -18065   NaN NaN NaN
+## 2 36171 36172 36258 36373 -18050 30.48   2   0
+## 
+## $Item_3
+##     AIC  AICc SABIC   BIC logLik    X2  df     p
+## 1 36184 36186 36267 36375 -18058   NaN NaN   NaN
+## 2 36171 36172 36258 36373 -18050 17.31   2 2e-04
+</code></pre>
+
+</body>
+
+</html>

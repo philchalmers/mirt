@@ -4,18 +4,65 @@ mirt Vignette Files
 The following contains a list of links to various HTML vignettes with the `mirt` package, 
 generated using R markdown via the `knitr` package and hosted on Github.  
 
-## Package examples from HTML help files
+# mirt HTML function help files
+
+### Primary estimation functions
 
 - [bfactor](http://philchalmers.github.io/mirt/html/bfactor.html)
+- [mirt](http://philchalmers.github.io/mirt/html/mirt.html)
+- [mixedmirt](http://philchalmers.github.io/mirt/html/mixedmirt.html)
+- [multipleGroup](http://philchalmers.github.io/mirt/html/multipleGroup.html)
 
-## Exercise files from 2013 presentation about mirt in Klagenfurt, Austria
+### Secondary computation functions
+
+- [boot.mirt](http://philchalmers.github.io/mirt/html/boot.mirt.html)
+- [DIF](http://philchalmers.github.io/mirt/html/DIF.html)
+- [DTF](http://philchalmers.github.io/mirt/html/DTF.html)
+- [fscores](http://philchalmers.github.io/mirt/html/fscores.html)
+- [itemfit](http://philchalmers.github.io/mirt/html/itemfit.html)
+- [M2](http://philchalmers.github.io/mirt/html/M2.html)
+- [personfit](http://philchalmers.github.io/mirt/html/personfit.html)
+- [PLCI.mirt](http://philchalmers.github.io/mirt/html/PLCI.mirt.html)
+- [wald](http://philchalmers.github.io/mirt/html/wald.html)
+
+### Additional helper functions
+
+- [createItem](http://philchalmers.github.io/mirt/html/createItem.html)
+- [expand.table](http://philchalmers.github.io/mirt/html/expand.table.html)
+- [extract.item](http://philchalmers.github.io/mirt/html/extract.item.html)
+- [imputeMissing](http://philchalmers.github.io/mirt/html/imputeMissing.html)
+- [key2binary](http://philchalmers.github.io/mirt/html/key2binary.html)
+- [mirtCluster](http://philchalmers.github.io/mirt/html/mirtCluster.html)
+- [mod2values](http://philchalmers.github.io/mirt/html/mod2values.html)
+- [read.mirt](http://philchalmers.github.io/mirt/html/read.mirt.html)
+- [expected.item](http://philchalmers.github.io/mirt/html/expected.item.html)
+- [expected.test](http://philchalmers.github.io/mirt/html/expected.test.html)
+- [iteminfo](http://philchalmers.github.io/mirt/html/iteminfo.html)
+- [probtrace](http://philchalmers.github.io/mirt/html/probtrace.html)
+- [testinfo](http://philchalmers.github.io/mirt/html/testinfo.html)
+- [simdata](http://philchalmers.github.io/mirt/html/simdata.html)
+
+### Data examples from the package
+
+- [Bock1997](http://philchalmers.github.io/mirt/html/Bock1997.html)
+- [deAyla](http://philchalmers.github.io/mirt/html/deAyala.html)
+- [LSAT6](http://philchalmers.github.io/mirt/html/LSAT6.html)
+- [LSAT7](http://philchalmers.github.io/mirt/html/LSAT7.html)
+- [SAT12](http://philchalmers.github.io/mirt/html/SAT12.html)
+- [Science](http://philchalmers.github.io/mirt/html/Science.html)
+
+# Exercise files from 2013 presentation about mirt in Klagenfurt, Austria
 
 - [Exercise 1](http://philchalmers.github.io/mirt/html/Exercise_01.html)
 - [Exercise 2](http://philchalmers.github.io/mirt/html/Exercise_02.html)
 - [Exercise 3](http://philchalmers.github.io/mirt/html/Exercise_03.html)
 - [Exercise 4](http://philchalmers.github.io/mirt/html/Exercise_04.html)
 
-## User Contributions
+# Additional Examples
+
+- [Longitudinal IRT](http://philchalmers.github.io/mirt/html/Longitudinal-IRT.html)
+
+### User contributions
 
 If you would like to contribute your own to the collection then feel free to send along your 
 source file (`.Rmd`) to `rphilip.chalmers@gmail.com` and I'll add it to the appropriate package 
