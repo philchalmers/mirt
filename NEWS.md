@@ -12,6 +12,9 @@
   
 ## NEW FEATURES
 
+- vignette files for the package examples are now hosted on Github and can be accessed 
+  by following the link mentioned in the vignette location in the index
+
 - E-step is now computed in parallel (if available) following a `mirtCluster()` definition
 
 - run no M-step optimizations by passing `TOL = NaN`. Useful to have the model converge 

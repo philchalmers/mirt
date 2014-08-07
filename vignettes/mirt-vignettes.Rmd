@@ -6,21 +6,5 @@
 `mirt` Vignette Files
 =====================
 
-The following contains a list of links to various HTML vignettes with the `mirt` package, 
-generated using R markdown via the `knitr` package and hosted on Github.  
-
-Online Vignette Files Archive
-=============================
-
-### Exercise files from 2013 presentation about `mirt` in Klagenfurt, Austria
-
-- [Exercise 1](http://philchalmers.github.io/mirt/html/Exercise_01.html)
-- [Exercise 2](http://philchalmers.github.io/mirt/html/Exercise_02.html)
-- [Exercise 3](http://philchalmers.github.io/mirt/html/Exercise_03.html)
-- [Exercise 4](http://philchalmers.github.io/mirt/html/Exercise_04.html)
-
-# User Contributions
-
-If you would like to contribute your own to the collection then feel free to send along your 
-source file (`.Rmd`) to `rphilip.chalmers@gmail.com` and I'll add it to the appropriate package 
-locations on Github. 
+To access examples, vignettes, and exercise files that have been generated with `knitr` please
+visit [this link](http://philchalmers.github.io/mirt/mirt-vignettes.html).
