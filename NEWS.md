@@ -13,7 +13,7 @@
 ## NEW FEATURES
 
 - vignette files for the package examples are now hosted on Github and can be accessed 
-  by following the link mentioned in the vignette location in the index
+  by following the link mentioned in the vignette location in the index or `?mirt` helpfile
 
 - E-step is now computed in parallel (if available) following a `mirtCluster()` definition
 

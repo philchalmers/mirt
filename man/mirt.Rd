@@ -432,6 +432,13 @@ of categories.
   }
 }
 }
+
+\section{HTML help files, exercises, and examples}{
+
+
+To access examples, vignettes, and exercise files that have been generated with knitr please
+visit \url{http://philchalmers.github.io/mirt/mirt-vignettes.html}.
+}
 \examples{
 \dontrun{
 #load LSAT section 7 data and compute 1 and 2 factor models

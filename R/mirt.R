@@ -219,6 +219,11 @@
 #'     to be 1's, while the last value of the \eqn{ak} is freely estimated.
 #'   }
 #' }
+#' 
+#' @section HTML help files, exercises, and examples:
+#' 
+#' To access examples, vignettes, and exercise files that have been generated with knitr please
+#' visit \url{http://philchalmers.github.io/mirt/mirt-vignettes.html}.
 #'
 #' @aliases mirt
 #' @param data a \code{matrix} or \code{data.frame} that consists of
