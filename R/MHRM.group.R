@@ -392,12 +392,9 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 warning('Could not invert information matrix; model likely is not identified.')
         } else {
             fail_invert_info <- FALSE
-            SEtmp <- abs(diag(acov))
-            if(any(SEtmp < 0)){
-                if(list$warn)
-                    warning("Negative SEs set to NaN.\n")
+            SEtmp <- diag(acov)
+            if(any(SEtmp < 0))
                 SEtmp[SEtmp < 0 ] <- NaN
-            }
             SEtmp <- sqrt(SEtmp)
             SE <- rep(NA, length(longpars))
             SE[estindex_unique] <- SEtmp

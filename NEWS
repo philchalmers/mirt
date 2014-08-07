@@ -1,3 +1,45 @@
+Changes in mirt 1.5
+
+MAJOR CHANGES
+
+  - for efficiency, the Hessian is no longer computed in `fscores()` unless
+  it is required in the returned object
+
+  - estimation with `method = 'MHRM'` now requires and explicity `SE=TRUE`
+  call to compute the information matrix. The matrix is now computed using
+  the ML estimates rather than approximated sequentially after each iteration
+  (very unstable), and therefore a seperate stage is performed. This provides
+  much better accuracy in the computations
+
+NEW FEATURES
+
+  - E-step is now computed in parallel (if available) following a
+  `mirtCluster()` definition
+
+  - run no M-step optimizations by passing `TOL = NaN`. Useful to have
+  the model converge instantly with all parameters exactly equal to the
+  starting values
+
+  - confidence envelope plots in `itemplot()` generate shaded regions instead
+  of dotted lines, and confidence interval plots added to `plot()` generic
+  through the `MI` input
+
+  - passes to `fscores()` slightly more optimized for upcoming mirtCAT
+  package release
+
+  - `method = 'EAPsum'` argument to `fscores()` support for multidimensional
+  models
+
+BUG FIXES
+
+  - fix forcing all SEs MHRM information matrix computations to be positive
+
+  - `imputeMissing()` crash fix
+
+  - fix divide-by-0 bug in the E-step when number of items is large
+
+  - fix crash in EM estimation with `SE.type = 'MHRM'`
+
 Changes in mirt 1.4
 
 MAJOR CHANGES

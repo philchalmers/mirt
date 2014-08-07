@@ -147,4 +147,9 @@ test_that('poly', {
     expect_is(iinfo, 'matrix')
     tinfo <- testinfo(modp1, Theta)
     expect_is(tinfo, 'matrix')
+
+    ER <- fscores(modp2, returnER = TRUE)
+    expect_equal(as.numeric(ER), c(0.4929508, 0.5251592), tolerance=1e-4)
+    ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2))
+    expect_equal(as.numeric(ER2), c(0.4137409, 0.5025562), tolerance=1e-4)
 })

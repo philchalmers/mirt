@@ -3,10 +3,10 @@ context('confmirtOne')
 test_that('exploratory mods', {
     data(LSAT7)
     fulldata <- expand.table(LSAT7)
-    onefact <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM', SE=TRUE)
+    onefact <- mirt(fulldata, 1, verbose = FALSE, SE.type='MHRM', SE=TRUE)
     expect_is(onefact, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(onefact, digits=4)))
-    expect_equal(cfs, c(0.9872,0.6067,1.3677,1.8552,1.5816,2.1289,0,NA,NA,1,NA,NA,1.0775,0.7526,1.4024,0.8071,0.619,0.9953,0,NA,NA,1,NA,NA,1.7159,0.8791,2.5526,1.8095,1.2797,2.3392,0,NA,NA,1,NA,NA,0.7506,0.4513,1.0499,0.4842,0.3336,0.6348,0,NA,NA,1,NA,NA,0.7582,0.4528,1.0636,1.8643,1.6372,2.0913,0,NA,NA,1,NA,NA,0,NA,NA,1,NA,NA),
+    expect_equal(cfs, c(0.9879,0.6648,1.311,1.856,1.6004,2.1117,0,NA,NA,1,NA,NA,1.0809,0.7246,1.4372,0.808,0.6306,0.9854,0,NA,NA,1,NA,NA,1.7059,1.1948,2.217,1.8043,1.4554,2.1531,0,NA,NA,1,NA,NA,0.7652,0.4753,1.0551,0.486,0.3367,0.6353,0,NA,NA,1,NA,NA,0.7358,0.4363,1.0352,1.8545,1.6252,2.0838,0,NA,NA,1,NA,NA,0,NA,NA,1,NA,NA),
                  tolerance = 1e-2)
     names <- wald(onefact)
     L <- matrix(0, 1, ncol(names))
@@ -16,8 +16,8 @@ test_that('exploratory mods', {
     L2[1, 7] <- L2[2, 9] <- -1
     W1 <- wald(onefact, L)
     W2 <- wald(onefact, L2)
-    expect_true(mirt:::closeEnough(W1$W - 198.0846, -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(W2$W - 3.502625, -1e-2, 1e-2))    
+    expect_true(mirt:::closeEnough(W1$W - 226.0766, -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(W2$W - 3.546963, -1e-2, 1e-2))    
     
     fitonefact <- M2(onefact)
     expect_is(fitonefact, 'data.frame')
@@ -43,7 +43,7 @@ test_that('exploratory mods', {
 
     fs1 <- fscores(onefact, verbose = FALSE, mean=c(1), cov=matrix(2))
     expect_is(fs1, 'matrix')
-    expect_true(mirt:::closeEnough(fs1[1:3,'F1'] - c(-2.185196, -1.689718, -1.694422), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fs1[1:3,'F1'] - c(-2.182135, -1.698926, -1.680741), -1e-2, 1e-2))
     fs2 <- fscores(twofact, verbose = FALSE)
     expect_is(fs2, 'matrix')
     fs3 <- fscores(onefactmissing, verbose = FALSE)
