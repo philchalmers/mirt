@@ -365,7 +365,7 @@ Iteration: 17, Log-Lik: -17880.364, Max-Change: 0.00004
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    1.336    0.090    1.237    0.216    1.005    0.000    0.007
+##    1.381    0.107    1.260    0.225    1.021    0.000    0.008
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -397,7 +397,7 @@ Iteration: 17, Log-Lik: -17880.364, Max-Change: 0.00002
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    0.571    0.086    0.474    0.242    0.215    0.000    0.008
+##    0.577    0.089    0.475    0.223    0.240    0.000    0.009
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -3008,8 +3008,8 @@ Stage 3 = 157, LL = -25224.1, AR(1.20) = [0.26; 0.26], gam = 0.0109, Max-Change 
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 37659 37661 37768 37911 -18784   NaN NaN   NaN
-## 2 37643 37647 37788 37979 -18761 46.01  15 1e-04
+## 1 37652 37654 37761 37904 -18781   NaN NaN   NaN
+## 2 37642 37646 37788 37978 -18761 39.86  15 5e-04
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -3023,8 +3023,8 @@ Stage 3 = 157, LL = -25224.1, AR(1.20) = [0.26; 0.26], gam = 0.0109, Max-Change 
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 37818 37819 37890 37986 -18879   NaN NaN NaN
-## 2 37659 37661 37768 37911 -18784 188.6  15   0
+## 1 37821 37822 37894 37989 -18880   NaN NaN NaN
+## 2 37652 37654 37761 37904 -18781 198.8  15   0
 </code></pre>
 
 <pre><code class="r">############
