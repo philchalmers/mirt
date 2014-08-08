@@ -211,8 +211,9 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                 lower <- lower[subscripts]
                 panel.polygon(c(x, rev(x)), c(upper, rev(lower)), col = fill, border = FALSE,
                               ...)
-            }            
-            group <- factor(rep(mod@Data$groupNames, each=nrow(Theta)))
+            }
+            #for some reason the plot is drawn backwords....use rev() for now 
+            group <- rev(factor(rep(mod@Data$groupNames, each=nrow(Theta))))
             CIs <- apply(scores, 2L, bs_range, CI=CI)
             CIs <- CIs[-2L, ]
             df <- data.frame(Theta=rbind(Theta, Theta), group, TS=oCM, t(CIs))
