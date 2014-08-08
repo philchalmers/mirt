@@ -184,7 +184,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
 
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
     Theta <- thetaComb(theta, mod@nfact)
-    max_score <- sum(apply(mod@Data$data, 2L, min) + (mod@Data$K - 1L))
+    max_score <- sum(mod@Data$mins + mod@Data$K - 1L)
     list_scores <- myLapply(1L, fn, omod=mod, impute=FALSE, covBs=NULL, Theta_nodes=Theta_nodes,
                             imputenums=NULL, max_score=max_score, Theta=Theta, plot=plot)
     if(impute){
@@ -216,9 +216,10 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
             CIs <- CIs[-2L, ]
             df <- data.frame(Theta=rbind(Theta, Theta), group, TS=oCM, t(CIs))
             return(xyplot(TS ~ Theta, data=df, groups=group,
-                   upper=df$upper, lower=df$lower, 
-                   panel = function(x, y, ...){
-                       panel.superpose(x, y, panel.groups = panel.bands, type='l', ...)
+                   upper=df$upper, lower=df$lower, col=c('red', 'blue'), 
+                   fill=c('red', 'blue'), alpha=0.2,
+                   panel = function(x, y, alpha, ...){
+                       panel.superpose(x, y, panel.groups = panel.bands, type='l', alpha=alpha, ...)
                        panel.xyplot(x, y, type='l', lty=1,...)
                    },
                    xlab = expression(theta), ylab = expression(T(theta)), 
