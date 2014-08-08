@@ -12,6 +12,8 @@
   
 ## NEW FEATURES
 
+- accept `Etable` default input in `customPriorFun` (suggested by Alexander Robitzsch)
+
 - vignette files for the package examples are now hosted on Github and can be accessed 
   by following the link mentioned in the vignette location in the index or `?mirt` helpfile
 

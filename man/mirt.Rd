@@ -192,9 +192,12 @@ after each iteration cycle? Default is TRUE}
     that the input data all have 0 as the lowest category. The format is the same as the
     \code{mod@K} slot in all converged models}
   \item{customPriorFun}{a custom function used to determine the normalized density for
-    integration in the EM algorithm. Must be of the form \code{function(Theta){...}}, and
-    return a numeric vector with the same length as number of rows in \code{Theta}.
-    For proper integration, the returned vector should sum to 1 (i.e., normalized)}
+    integration in the EM algorithm. Must be of the form \code{function(Theta, Etable){...}},
+    and return a numeric vector with the same length as number of rows in \code{Theta}. The
+    \code{Etable} input contains the aggregated table generated from the current E-step
+    computations. For proper integration, the returned vector should sum to
+    1 (i.e., normalized)}. Note that if using the \code{Etable} it will be NULL
+    on the first call, therefore the prior will have to deal with this issue accordingly
   \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
   \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will
