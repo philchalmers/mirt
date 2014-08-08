@@ -26,6 +26,7 @@
 #'   (while still accounting for sampling variability). Returns a matrix with observed
 #'   variability
 #' @param plot logical; plot the test score functions with imputed confidence envelopes?
+#' @param auto.key logical; automatically generate key in lattice plot?
 #' @param ... additional arguments to be passed to lattice
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
@@ -90,11 +91,11 @@
 #' DIF(mod3, c('a1', 'd'), items2test=16:30) 
 #' DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally lower
 #' DTF(mod3, MI=1000) 
-#' DTF(mod3, MI=1000, plot=TRUE, auto.key=TRUE) 
+#' DTF(mod3, MI=1000, plot=TRUE) 
 #' 
 #' }
 DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_nodes = NULL,
-                plot = FALSE, ...){
+                plot = FALSE, auto.key = TRUE, ...){
 
     fn <- function(x, omod, impute, covBs, imputenums, Theta, max_score, Theta_nodes = NULL,
                    plot){
@@ -215,7 +216,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
             CIs <- apply(scores, 2L, bs_range, CI=CI)
             CIs <- CIs[-2L, ]
             df <- data.frame(Theta=rbind(Theta, Theta), group, TS=oCM, t(CIs))
-            return(xyplot(TS ~ Theta, data=df, groups=group,
+            return(xyplot(TS ~ Theta, data=df, groups=group, auto.key=auto.key,
                    upper=df$upper, lower=df$lower, col=c('red', 'blue'), 
                    fill=c('red', 'blue'), alpha=0.2,
                    panel = function(x, y, alpha, ...){

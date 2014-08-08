@@ -4,7 +4,7 @@
 \title{Differential test functioning}
 \usage{
 DTF(mod, MI = NULL, CI = 0.95, npts = 1000, theta_lim = c(-6, 6),
-  Theta_nodes = NULL, plot = FALSE, ...)
+  Theta_nodes = NULL, plot = FALSE, auto.key = TRUE, ...)
 }
 \arguments{
 \item{mod}{a multipleGroup object which estimated only 2 groups}
@@ -29,6 +29,8 @@ uDTF/sDTF statistic to determine where the difference between the test curves ar
 variability}
 
 \item{plot}{logical; plot the test score functions with imputed confidence envelopes?}
+
+\item{auto.key}{logical; automatically generate key in lattice plot?}
 
 \item{...}{additional arguments to be passed to lattice}
 }
@@ -102,7 +104,7 @@ plot(mod3, type = 'score') #visable DTF happening
 DIF(mod3, c('a1', 'd'), items2test=16:30)
 DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally lower
 DTF(mod3, MI=1000)
-DTF(mod3, MI=1000, plot=TRUE, auto.key=TRUE)
+DTF(mod3, MI=1000, plot=TRUE)
 
 }
 }
