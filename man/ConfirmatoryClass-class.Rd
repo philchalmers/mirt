@@ -33,7 +33,7 @@ when the estimated model is confirmatory.
     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
-    \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
+    \item{\code{Prior}:}{Object of class \code{"list"}, prior distribution used during estimation. Empty unless
         \code{empiricalhist = TRUE}}
     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }

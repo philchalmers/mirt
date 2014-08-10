@@ -14,6 +14,7 @@ setClass("AllModelClass",
                         Theta='matrix',
                         converge='numeric',
                         itemloc = 'numeric',
+                        Prior='list',
                         BIC='numeric',
                         SABIC='numeric',
                         RMSEA='numeric',
@@ -39,6 +40,7 @@ setClass("AllModelClass",
                         time='numeric',
                         condnum='numeric',
                         secondordertest='logical',
+                        empiricalhist='logical',
                         CFI='numeric',
                         CUSTOM.IND='integer',
                         SLOW.IND='integer',
@@ -151,7 +153,7 @@ setClass(
 #'     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
 #'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
-#'     \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
+#'     \item{\code{Prior}:}{Object of class \code{"list"}, prior distribution used during estimation. Empty unless
 #'         \code{empiricalhist = TRUE}}
 #'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
 #'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
@@ -192,7 +194,6 @@ setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     random='list',
-                                    Prior='numeric',
                                     bfactor='list'),
     validity = function(object) return(TRUE)
 )
@@ -265,7 +266,6 @@ setClass(
     Class = 'MultipleGroupClass', contains = 'AllModelClass',
     representation = representation(Pl='list',
                                     invariance='character',
-                                    Prior='list',
                                     bfactor='list'),
     validity = function(object) return(TRUE)
 )

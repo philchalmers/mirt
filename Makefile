@@ -23,6 +23,9 @@ news:
 test:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_dir('tests/tests')"
 
+paralleltest:
+	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);mirtCluster();options(warn=2);test_dir('tests/tests')"
+
 extratest:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_dir('tests/extratests')"
 

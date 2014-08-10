@@ -875,10 +875,11 @@ setMethod(
             } else if(type == 'empiricalhist'){
                 if(is.null(main))
                     main <- 'Empirical Histogram'
-                if(all(is.nan(x@Prior))) stop('Empirical histogram was not estimated for this object')
+                Prior <- x@Prior[[1L]]
+                if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object')
                 Theta <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
                                     length.out = x@quadpts))
-                Prior <- x@Prior * nrow(x@Data$data)
+                Prior <- Prior * nrow(x@Data$data)
                 cuts <- cut(Theta, floor(npts/2))
                 Prior <- do.call(c, lapply(split(Prior, cuts), mean))
                 Theta <- do.call(c, lapply(split(Theta, cuts), mean))
