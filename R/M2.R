@@ -54,7 +54,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         tmpobj <- obj
         tmpobj@Data$data <- dat
         if(is(obj, 'MultipleGroupClass')){
-            for(g in 1L:length(obj@groupNames))
+            for(g in 1L:length(obj@Data$groupNames))
                 tmpobj@pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group, 
                                                   , drop=FALSE]
         }
