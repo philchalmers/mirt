@@ -165,7 +165,7 @@ setMethod(
                 return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = TRUE, ...))
             if(type == 'empiricalhist'){
-                if(!length(x@Prior)) stop('Empirical histogram was not estimated for this object')
+                if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object')
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
                     Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
