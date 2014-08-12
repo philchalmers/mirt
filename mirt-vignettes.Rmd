@@ -61,6 +61,8 @@ generated using R markdown via the `knitr` package and hosted on Github.
 # Additional Examples
 
 - [Longitudinal IRT](http://philchalmers.github.io/mirt/html/Longitudinal-IRT.html)
+- [Latent Class Analysis](http://philchalmers.github.io/mirt/html/mirt_lca3__2014-08-10_1215.html) 
+  (contributed by Alexander Robitzsch)
 
 ### User contributions
 

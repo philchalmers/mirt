@@ -1,0 +1,91 @@
+# mirt example for latent class analysis
+
+#### Contributed by Alexander Robitzsch
+
+The following example demonstrates how the `customTheta` and `customPriorFun` inputs can
+be used to estimate an unconditional latent class analysis. Results are compared to the `sirt`
+package.
+
+```{r}
+library(mirt)
+library(sirt)
+
+#******
+# use data.read dataset
+
+data(data.read,package="sirt")
+dat <- data.read
+
+# define three latent classes
+nclass <- 3
+Theta <- diag(nclass)
+
+# define mirt model
+I <- ncol(dat)  # I = 12
+mirtmodel <- nclass
+
+# get parameters
+mod.pars <- mirt(dat, model=mirtmodel, pars = "values")   
+
+# modify parameters: only slopes refer to item-class probabilities
+set.seed(9976)
+
+# set starting values for class specific item probabilities
+mod.pars[ mod.pars$name == "d" ,"value" ]  <- 0
+mod.pars[ mod.pars$name == "d" ,"est" ]  <- FALSE
+
+b1 <- qnorm( colMeans( dat ) )
+mod.pars[ mod.pars$name == "a1" ,"value" ]  <- b1
+
+# random starting values for other classes
+mod.pars[ mod.pars$name %in% c("a2","a3") ,"value" ]  <- b1+runif( ncol(dat)*(nclass-1) , -1 ,1 )
+head(mod.pars)
+
+#*** define prior for latent class analysis
+lca_prior <- function(Theta,Etable){
+  TP <- nrow(Theta)  
+  if ( is.null(Etable) ){
+      prior <- rep( 1/TP , TP )
+  } else {  
+      prior <- rowSums(Etable)
+  }
+  prior <- prior / sum(prior) 
+  return(prior)
+}
+
+#*** estimate model
+mod1 <- mirt(dat, mirtmodel , technical = list(
+            customTheta=Theta , customPriorFun = lca_prior) ,
+            pars = mod.pars )
+
+#*** extract item parameters
+pars1 <- mod1@pars
+dfr <- sapply( 1:I , FUN = function(ii){
+      pars.ii <- pars1[[ii]]@par
+      return(pars.ii)
+      } )
+coef1 <- t(dfr)
+
+#*** inspect estimated distribution
+mod1@Prior[[1]]   #class proportions
+
+#*** extract class-specific item-probabilities
+probs <- apply( coef1[ , c("a1","a2","a3") ] , 2 , plogis )
+probs
+
+print(mod1)
+
+#-----   compare estimated LCA in sirt
+mod2 <- sirt::rasch.mirtlc( dat , Nclasses = 3 ,seed= -30 ,  nstarts=2 )   
+summary(mod2)
+
+par( mfrow=c(2,1))
+matplot( probs , type="l" , xlab="Item" , main="mirt::mirt")
+matplot( t(mod2$pjk) , type="l" , xlab="Item" , main="sirt::rasch.mirtlc" )
+par( mfrow=c(1,1))
+
+# compare class probabilities
+cbind( sort(mod2$pi.k), sort(mod1@Prior[[1]]))
+
+sessionInfo()
+```
