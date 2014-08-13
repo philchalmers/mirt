@@ -198,7 +198,7 @@ RcppExport SEXP buildXi2els(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems, SEXP REIs,
                                 pab += EIs(n,i) * EIs(n,j) * Prior[n];
                                 pcd += EIs(n,k) * EIs(n,l) * Prior[n];
                             }
-                            if(i == k & j == l){
+                            if((i == k) & (j == l)){
                                 for(int n = 0; n < N; ++n)
                                     pabcd += EIs2(n,i) * EIs2(n,j) * Prior[n];
                             } else if(i == k){

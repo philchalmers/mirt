@@ -63,7 +63,8 @@ void P_graded(vector<double> &P, const vector<double> &par,
     for(int i = 1; i < nint; ++i)
         notordered += d[i-1] <= d[i]; 
     if(notordered){
-        for(int i = 0; i < P.size(); ++i)
+        int P_size = P.size();
+        for(int i = 0; i < P_size; ++i)
             P[i] = 0.0;
     } else {        
         const double nullzero = 0.0, nullone = 1.0;
