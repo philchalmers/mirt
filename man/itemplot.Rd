@@ -78,8 +78,8 @@ itemplot(pmod, 3, CE = TRUE)
 itemplot(pmod, 3, type = 'score')
 itemplot(pmod, 3, type = 'infotrace')
 
-#interactive shiny applet
-itemplot(shiny = TRUE)
+# uncomment to run interactive shiny applet
+# itemplot(shiny = TRUE)
     }
 }
 \author{

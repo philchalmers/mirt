@@ -26,7 +26,7 @@ setMethod(
     definition = function(object, ...)
     {
         newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@nfact,
-                         groupNames=factor(names(object)))
+                         Data=list(groupNames=factor(names(object))))
         x <- itemplot.internal(newobject, ...)
         return(invisible(x))
     }

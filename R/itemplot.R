@@ -62,8 +62,8 @@
 #' itemplot(pmod, 3, type = 'score')
 #' itemplot(pmod, 3, type = 'infotrace')
 #'
-#' #interactive shiny applet
-#' itemplot(shiny = TRUE)
+#' # uncomment to run interactive shiny applet
+#' # itemplot(shiny = TRUE)
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,

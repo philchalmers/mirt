@@ -12,7 +12,16 @@
 #' @export randef
 #' @examples
 #' \dontrun{
-#' effects <- randef(mod1, ndraws = 2000, thin = 20)
+#' #make an arbitrary groups
+#' covdat <- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
+#'
+#' #partial credit model
+#' mod <- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
+#' summary(mod)
+#' 
+#' effects <- randef(mod, ndraws = 2000, thin = 20)
+#' head(effects$Theta)
+#' head(effects$group)
 #'
 #' }
 randef <- function(x, ndraws = 1000, thin = 10){
