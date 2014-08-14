@@ -23,6 +23,7 @@
 #'   of the stats and their imputed standard deviations
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for 
 #'   RMSEA. Default returns the 90\% interval
+#' @param return_resid logical; return the residual matrix used to compute the SRMSR statistic?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
@@ -47,7 +48,8 @@
 #' M2(mod2, Theta=Theta, impute = 10)
 #'
 #' }
-M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9){
+M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
+               return_resid = FALSE){
     
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -171,9 +173,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; 
         Prior <- bfactorlist$Prior[[group]]
     }
-    E1 <- numeric(nitems)
+    E1 <- E11 <- numeric(nitems)
     E2 <- matrix(NA, nitems, nitems)
-    EIs <- EIs2 <- matrix(0, nrow(Theta), nitems)
+    EIs <- EIs2 <- E11s <- matrix(0, nrow(Theta), nitems)
     DP <- matrix(0, nrow(Theta), length(estpars))
     wherepar <- c(1L, numeric(nitems))
     ind <- 1L
@@ -181,6 +183,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         x <- extract.item(obj, i)
         EIs[,i] <- expected.item(x, Theta, min=0L)
         tmp <- ProbTrace(x, Theta)
+        E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
         for(j in ncol(tmp):2L)
             tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
         cfs <- c(0,1)
@@ -194,8 +197,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     ind <- 1L
     for(i in 1L:nitems){
         E1[i] <- sum(EIs[,i] * Prior)
+        E11[i] <- sum(E11s[,i] * Prior)
         for(j in 1L:nitems){
-            if(i > j){
+            if(i >= j){
                 E2[i,j] <- sum(EIs[,i] * EIs[,j] * Prior)
                 ind <- ind + 1L
             }
@@ -239,6 +243,20 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         RMSEA.90_CI <- RMSEA.CI(M2, df, N, ci.lower=alpha, ci.upper=1-alpha)
         ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
+        if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'GroupPars'))){
+            E2[is.na(E2)] <- 0
+            E2 <- E2 + t(E2) 
+            diag(E2) <- E11
+            R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+            Kr <- cov2cor(E2 - outer(E1, E1))
+            ret$SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
+            if(return_resid){
+                ret <- matrix(NA, nrow(R), nrow(R))
+                ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
+                colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
+                return(ret)
+            }
+        }
         if(calcNull){
             null.mod <- try(mirt(obj@Data$data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))

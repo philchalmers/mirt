@@ -12,6 +12,8 @@
   
 ## NEW FEATURES
 
+- return the SRMSR statistic in `M2()` along with the residual matrix (suggested by Dave Flora)
+
 - accept `Etable` default input in `customPriorFun` (suggested by Alexander Robitzsch)
 
 - vignette files for the package examples are now hosted on Github and can be accessed 
