@@ -115,6 +115,13 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
                                 ci.lower=alpha, ci.upper=1-alpha)
         newret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         newret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
+        if(!is.null(ret[[1L]]$SRMSR)){
+            SRMSR <- numeric(ngroups)
+            for(g in 1L:ngroups)
+                SRMSR[g] <- ret[[g]]$SRMSR  
+            names(SRMSR) <- paste0(obj@Data$groupNames, '.SRMSR')
+            SRMSR <- as.list(SRMSR)
+        } else SRMSR <- numeric(0)
         if(calcNull){
             null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, 
                                           TOL=1e-3, technical=list(NULL.MODEL=TRUE),
@@ -130,7 +137,10 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         M2s <- as.numeric(newret$M2)
         names(M2s) <- paste0(obj@Data$groupNames, '.M2')
         newret$M2 <- NULL
-        newret <- data.frame(as.list(M2s), newret)
+        if(length(SRMSR)){
+            names(SRMSR) <- paste0(obj@Data$groupNames, '.SRMSR')
+            newret <- data.frame(as.list(M2s), newret, SRMSR)
+        } else newret <- data.frame(as.list(M2s), newret)
         rownames(newret) <- 'stats'
         return(newret)
     }
@@ -234,6 +244,20 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
     M2 <- N * t(p - e) %*% C2 %*% (p - e)
     ret$M2 <- M2
+    if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+        E2[is.na(E2)] <- 0
+        E2 <- E2 + t(E2) 
+        diag(E2) <- E11
+        R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+        Kr <- cov2cor(E2 - outer(E1, E1))
+        SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
+        if(return_resid){
+            ret <- matrix(NA, nrow(R), nrow(R))
+            ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
+            colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
+            return(ret)
+        }
+    } else SRMSR <- NULL
     if(is.null(attr(obj, 'MG'))){
         df <- length(p) - obj@nest
         ret$df <- df
@@ -243,20 +267,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         RMSEA.90_CI <- RMSEA.CI(M2, df, N, ci.lower=alpha, ci.upper=1-alpha)
         ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
-        if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'GroupPars'))){
-            E2[is.na(E2)] <- 0
-            E2 <- E2 + t(E2) 
-            diag(E2) <- E11
-            R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
-            Kr <- cov2cor(E2 - outer(E1, E1))
-            ret$SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
-            if(return_resid){
-                ret <- matrix(NA, nrow(R), nrow(R))
-                ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
-                colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
-                return(ret)
-            }
-        }
+        if(!is.null(SRMSR)) ret$SRMSR <- SRMSR
         if(calcNull){
             null.mod <- try(mirt(obj@Data$data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
@@ -269,6 +280,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         }
     } else {
         ret$nrowT <- length(p)
+        if(!is.null(SRMSR)) ret$SRMSR <- SRMSR
     }
     ret <- as.data.frame(ret)
     rownames(ret) <- 'stats'
