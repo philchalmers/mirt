@@ -23,7 +23,7 @@
 #'   of the stats and their imputed standard deviations
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for 
 #'   RMSEA. Default returns the 90\% interval
-#' @param return_resid logical; return the residual matrix used to compute the SRMSR statistic?
+#' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
@@ -49,7 +49,7 @@
 #'
 #' }
 M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
-               return_resid = FALSE){
+               residmat = FALSE){
     
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -96,7 +96,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
             pars[[g]]@bfactor <- obj@bfactor
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
                                    mins=obj@Data$mins)
-            ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts)
+            ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts, residmat=residmat)
+        }
+        if(residmat){
+            names(ret) <- obj@Data$groupNames
+            return(ret)
         }
         newret <- list()
         newret$M2 <- numeric(ngroups)
@@ -216,6 +220,20 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         }
     }
     e <- c(E1, E2[lower.tri(E2)])
+    if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+        E2[is.na(E2)] <- 0
+        E2 <- E2 + t(E2) 
+        diag(E2) <- E11
+        R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+        Kr <- cov2cor(E2 - outer(E1, E1))
+        SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
+        if(residmat){
+            ret <- matrix(NA, nrow(R), nrow(R))
+            ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
+            colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
+            return(ret)
+        }
+    } else SRMSR <- NULL
     delta1 <- matrix(0, nitems, length(estpars))
     delta2 <- matrix(0, length(p) - nitems, length(estpars))
     ind <- 1L
@@ -244,20 +262,6 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
     M2 <- N * t(p - e) %*% C2 %*% (p - e)
     ret$M2 <- M2
-    if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
-        E2[is.na(E2)] <- 0
-        E2 <- E2 + t(E2) 
-        diag(E2) <- E11
-        R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
-        Kr <- cov2cor(E2 - outer(E1, E1))
-        SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
-        if(return_resid){
-            ret <- matrix(NA, nrow(R), nrow(R))
-            ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
-            colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
-            return(ret)
-        }
-    } else SRMSR <- NULL
     if(is.null(attr(obj, 'MG'))){
         df <- length(p) - obj@nest
         ret$df <- df
@@ -267,7 +271,6 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         RMSEA.90_CI <- RMSEA.CI(M2, df, N, ci.lower=alpha, ci.upper=1-alpha)
         ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
-        if(!is.null(SRMSR)) ret$SRMSR <- SRMSR
         if(calcNull){
             null.mod <- try(mirt(obj@Data$data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                  verbose=FALSE))
@@ -280,8 +283,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         }
     } else {
         ret$nrowT <- length(p)
-        if(!is.null(SRMSR)) ret$SRMSR <- SRMSR
     }
+    if(!is.null(SRMSR)) ret$SRMSR <- SRMSR
     ret <- as.data.frame(ret)
     rownames(ret) <- 'stats'
     return(ret)
