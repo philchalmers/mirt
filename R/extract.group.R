@@ -6,7 +6,7 @@
 #' @param x mirt model of class 'MultipleGroupClass'
 #' @param group a number signifying which group should be extracted
 #' @keywords extract
-#' @export extract.item
+#' @export extract.group
 #' @examples
 #'
 #' \dontrun{
