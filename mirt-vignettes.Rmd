@@ -20,9 +20,11 @@ generated using R markdown via the `knitr` package and hosted on Github.
 - [DTF](http://philchalmers.github.io/mirt/html/DTF.html)
 - [fscores](http://philchalmers.github.io/mirt/html/fscores.html)
 - [itemfit](http://philchalmers.github.io/mirt/html/itemfit.html)
+- [itemplot](http://philchalmers.github.io/mirt/html/itemplot.html)
 - [M2](http://philchalmers.github.io/mirt/html/M2.html)
 - [personfit](http://philchalmers.github.io/mirt/html/personfit.html)
 - [PLCI.mirt](http://philchalmers.github.io/mirt/html/PLCI.mirt.html)
+- [randef](http://philchalmers.github.io/mirt/html/randef.html)
 - [wald](http://philchalmers.github.io/mirt/html/wald.html)
 
 ### Additional helper functions
@@ -30,6 +32,7 @@ generated using R markdown via the `knitr` package and hosted on Github.
 - [createItem](http://philchalmers.github.io/mirt/html/createItem.html)
 - [expand.table](http://philchalmers.github.io/mirt/html/expand.table.html)
 - [extract.item](http://philchalmers.github.io/mirt/html/extract.item.html)
+- [extract.group](http://philchalmers.github.io/mirt/html/extract.group.html)
 - [imputeMissing](http://philchalmers.github.io/mirt/html/imputeMissing.html)
 - [key2binary](http://philchalmers.github.io/mirt/html/key2binary.html)
 - [mirtCluster](http://philchalmers.github.io/mirt/html/mirtCluster.html)

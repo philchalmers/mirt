@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Name: randef</title>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h3>Name: randef</h3>
+
+<h3>Title: Compute random effects</h3>
+
+<pre><code class="r">#make an arbitrary groups
+covdat &lt;- data.frame(group = rep(paste0(&#39;group&#39;, 1:49), each=nrow(Science)/49))
+
+#partial credit model
+mod &lt;- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
+</code></pre>
+
+<pre><code>## 
+Stage 1 = 1, LL = -3002.5, AR(4.80) = [0.34], Max-Change = 0.2500
+Stage 1 = 2, LL = -2909.6, AR(4.80) = [0.36], Max-Change = 0.2500
+Stage 1 = 3, LL = -2766.6, AR(4.80) = [0.35], Max-Change = 0.2500
+Stage 1 = 4, LL = -2607.3, AR(4.80) = [0.33], Max-Change = 0.2500
+Stage 1 = 5, LL = -2519.2, AR(4.80) = [0.33], Max-Change = 0.2500
+Stage 1 = 6, LL = -2402.2, AR(4.80) = [0.35], Max-Change = 0.2146
+Stage 1 = 7, LL = -2330.0, AR(4.80) = [0.36], Max-Change = 0.2500
+Stage 1 = 8, LL = -2276.0, AR(4.80) = [0.34], Max-Change = 0.2145
+Stage 1 = 9, LL = -2251.8, AR(4.80) = [0.35], Max-Change = 0.2500
+Stage 1 = 10, LL = -2222.6, AR(4.80) = [0.37], Max-Change = 0.2207
+Stage 1 = 11, LL = -2186.8, AR(4.80) = [0.35], Max-Change = 0.2024
+Stage 1 = 12, LL = -2170.9, AR(4.80) = [0.37], Max-Change = 0.2143
+Stage 1 = 13, LL = -2167.7, AR(4.80) = [0.35], Max-Change = 0.1757
+Stage 1 = 14, LL = -2178.6, AR(4.80) = [0.38], Max-Change = 0.1302
+Stage 1 = 15, LL = -2149.3, AR(4.80) = [0.39], Max-Change = 0.1548
+Stage 1 = 16, LL = -2165.2, AR(4.80) = [0.33], Max-Change = 0.1647
+Stage 1 = 17, LL = -2138.9, AR(4.80) = [0.39], Max-Change = 0.1403
+Stage 1 = 18, LL = -2128.4, AR(4.80) = [0.37], Max-Change = 0.1804
+Stage 1 = 19, LL = -2140.3, AR(4.80) = [0.36], Max-Change = 0.1366
+Stage 1 = 20, LL = -2100.4, AR(4.80) = [0.38], Max-Change = 0.1684
+Stage 1 = 21, LL = -2094.8, AR(4.80) = [0.38], Max-Change = 0.1347
+Stage 1 = 22, LL = -2092.2, AR(4.80) = [0.36], Max-Change = 0.1551
+Stage 1 = 23, LL = -2103.9, AR(4.80) = [0.38], Max-Change = 0.1130
+Stage 1 = 24, LL = -2105.9, AR(4.80) = [0.32], Max-Change = 0.1266
+Stage 1 = 25, LL = -2070.6, AR(4.80) = [0.39], Max-Change = 0.1395
+Stage 1 = 26, LL = -2082.7, AR(4.80) = [0.41], Max-Change = 0.1375
+Stage 1 = 27, LL = -2097.2, AR(4.80) = [0.36], Max-Change = 0.1012
+Stage 1 = 28, LL = -2065.9, AR(4.80) = [0.35], Max-Change = 0.1081
+Stage 1 = 29, LL = -2041.8, AR(4.80) = [0.38], Max-Change = 0.1294
+Stage 1 = 30, LL = -2075.5, AR(4.80) = [0.40], Max-Change = 0.1322
+Stage 1 = 31, LL = -2047.8, AR(4.80) = [0.39], Max-Change = 0.0860
+Stage 1 = 32, LL = -2047.7, AR(4.80) = [0.34], Max-Change = 0.0647
+Stage 1 = 33, LL = -2038.2, AR(4.80) = [0.31], Max-Change = 0.0972
+Stage 1 = 34, LL = -2039.5, AR(4.80) = [0.34], Max-Change = 0.0891
+Stage 1 = 35, LL = -2012.6, AR(4.80) = [0.35], Max-Change = 0.0211
+Stage 1 = 36, LL = -2028.3, AR(4.80) = [0.35], Max-Change = 0.0415
+Stage 1 = 37, LL = -2022.1, AR(4.80) = [0.33], Max-Change = 0.0793
+Stage 1 = 38, LL = -2031.3, AR(4.80) = [0.36], Max-Change = 0.0589
+Stage 1 = 39, LL = -2004.1, AR(4.80) = [0.34], Max-Change = 0.0328
+Stage 1 = 40, LL = -2031.4, AR(4.80) = [0.38], Max-Change = 0.0357
+Stage 1 = 41, LL = -2012.0, AR(4.80) = [0.32], Max-Change = 0.0795
+Stage 1 = 42, LL = -2008.3, AR(4.80) = [0.35], Max-Change = 0.0565
+Stage 1 = 43, LL = -2025.2, AR(4.80) = [0.34], Max-Change = 0.0287
+Stage 1 = 44, LL = -2003.4, AR(4.80) = [0.33], Max-Change = 0.0668
+Stage 1 = 45, LL = -1997.7, AR(4.80) = [0.31], Max-Change = 0.0886
+Stage 1 = 46, LL = -2004.9, AR(4.80) = [0.36], Max-Change = 0.0357
+Stage 1 = 47, LL = -2004.0, AR(4.80) = [0.35], Max-Change = 0.0535
+Stage 1 = 48, LL = -1999.7, AR(4.80) = [0.31], Max-Change = 0.0834
+Stage 1 = 49, LL = -2008.6, AR(4.80) = [0.32], Max-Change = 0.0352
+Stage 1 = 50, LL = -2009.4, AR(4.80) = [0.37], Max-Change = 0.0221
+Stage 1 = 51, LL = -1984.2, AR(4.80) = [0.31], Max-Change = 0.0278
+Stage 1 = 52, LL = -2027.2, AR(4.80) = [0.33], Max-Change = 0.0089
+Stage 1 = 53, LL = -2014.3, AR(4.80) = [0.33], Max-Change = 0.0198
+Stage 1 = 54, LL = -1997.9, AR(4.80) = [0.31], Max-Change = 0.0314
+Stage 1 = 55, LL = -1990.4, AR(4.80) = [0.32], Max-Change = 0.0137
+Stage 1 = 56, LL = -2005.8, AR(4.80) = [0.34], Max-Change = 0.0197
+Stage 1 = 57, LL = -1999.0, AR(4.80) = [0.34], Max-Change = 0.0409
+Stage 1 = 58, LL = -1980.6, AR(4.80) = [0.34], Max-Change = 0.0208
+Stage 1 = 59, LL = -2021.2, AR(4.80) = [0.33], Max-Change = 0.0182
+Stage 1 = 60, LL = -1987.9, AR(4.80) = [0.33], Max-Change = 0.0347
+Stage 1 = 61, LL = -1980.5, AR(4.80) = [0.34], Max-Change = 0.0260
+Stage 1 = 62, LL = -2009.8, AR(4.80) = [0.36], Max-Change = 0.0613
+Stage 1 = 63, LL = -2000.4, AR(4.80) = [0.35], Max-Change = 0.0279
+Stage 1 = 64, LL = -1998.5, AR(4.80) = [0.35], Max-Change = 0.0402
+Stage 1 = 65, LL = -1992.3, AR(4.80) = [0.33], Max-Change = 0.0327
+Stage 1 = 66, LL = -2013.8, AR(4.80) = [0.34], Max-Change = 0.0589
+Stage 1 = 67, LL = -1986.2, AR(4.80) = [0.30], Max-Change = 0.0705
+Stage 1 = 68, LL = -1990.3, AR(4.80) = [0.37], Max-Change = 0.0303
+Stage 1 = 69, LL = -2008.5, AR(4.80) = [0.32], Max-Change = 0.0160
+Stage 1 = 70, LL = -1984.8, AR(4.80) = [0.34], Max-Change = 0.0340
+Stage 1 = 71, LL = -2006.6, AR(4.80) = [0.30], Max-Change = 0.0098
+Stage 1 = 72, LL = -2003.3, AR(4.80) = [0.33], Max-Change = 0.0196
+Stage 1 = 73, LL = -2001.2, AR(4.80) = [0.29], Max-Change = 0.0554
+Stage 1 = 74, LL = -1996.8, AR(4.80) = [0.34], Max-Change = 0.0224
+Stage 1 = 75, LL = -2008.8, AR(4.80) = [0.34], Max-Change = 0.0330
+Stage 1 = 76, LL = -2007.2, AR(4.80) = [0.38], Max-Change = 0.0709
+Stage 1 = 77, LL = -1996.6, AR(4.80) = [0.32], Max-Change = 0.0660
+Stage 1 = 78, LL = -1988.6, AR(4.80) = [0.38], Max-Change = 0.0386
+Stage 1 = 79, LL = -1989.3, AR(4.80) = [0.34], Max-Change = 0.0205
+Stage 1 = 80, LL = -2002.0, AR(4.80) = [0.34], Max-Change = 0.0543
+Stage 1 = 81, LL = -2011.3, AR(4.80) = [0.36], Max-Change = 0.0328
+Stage 1 = 82, LL = -2004.5, AR(4.80) = [0.30], Max-Change = 0.0367
+Stage 1 = 83, LL = -1995.2, AR(4.80) = [0.33], Max-Change = 0.0249
+Stage 1 = 84, LL = -1979.8, AR(4.80) = [0.31], Max-Change = 0.0261
+Stage 1 = 85, LL = -2017.6, AR(4.80) = [0.37], Max-Change = 0.0254
+Stage 1 = 86, LL = -1992.7, AR(4.80) = [0.32], Max-Change = 0.0192
+Stage 1 = 87, LL = -1985.4, AR(4.80) = [0.32], Max-Change = 0.0467
+Stage 1 = 88, LL = -1963.8, AR(4.80) = [0.34], Max-Change = 0.0588
+Stage 1 = 89, LL = -1986.0, AR(4.80) = [0.33], Max-Change = 0.0255
+Stage 1 = 90, LL = -2001.0, AR(4.80) = [0.33], Max-Change = 0.0514
+Stage 1 = 91, LL = -1965.1, AR(4.80) = [0.31], Max-Change = 0.0391
+Stage 1 = 92, LL = -1985.1, AR(4.80) = [0.33], Max-Change = 0.0577
+Stage 1 = 93, LL = -1990.2, AR(4.80) = [0.31], Max-Change = 0.0909
+Stage 1 = 94, LL = -1979.4, AR(4.80) = [0.30], Max-Change = 0.0441
+Stage 1 = 95, LL = -1979.0, AR(4.80) = [0.32], Max-Change = 0.0370
+Stage 1 = 96, LL = -1978.1, AR(4.80) = [0.29], Max-Change = 0.0103
+Stage 1 = 97, LL = -1965.4, AR(4.80) = [0.32], Max-Change = 0.0528
+Stage 1 = 98, LL = -1988.4, AR(4.80) = [0.38], Max-Change = 0.0213
+Stage 1 = 99, LL = -1993.4, AR(4.80) = [0.32], Max-Change = 0.0202
+Stage 1 = 100, LL = -1985.5, AR(4.30) = [0.34], Max-Change = 0.0215
+Stage 1 = 101, LL = -1993.5, AR(4.30; 5.50) = [0.33; 0.49], Max-Change = 0.2429
+Stage 1 = 102, LL = -1982.7, AR(4.30; 5.50) = [0.35; 0.51], Max-Change = 0.0295
+Stage 1 = 103, LL = -1976.5, AR(4.30; 5.50) = [0.33; 0.35], Max-Change = 0.0274
+Stage 1 = 104, LL = -2005.7, AR(4.30; 5.50) = [0.38; 0.31], Max-Change = 0.0958
+Stage 1 = 105, LL = -1983.1, AR(4.30; 5.50) = [0.31; 0.39], Max-Change = 0.2500
+Stage 1 = 106, LL = -1991.3, AR(4.30; 5.50) = [0.35; 0.31], Max-Change = 0.0430
+Stage 1 = 107, LL = -1989.1, AR(4.30; 5.50) = [0.38; 0.33], Max-Change = 0.0321
+Stage 1 = 108, LL = -1977.7, AR(4.30; 5.50) = [0.36; 0.39], Max-Change = 0.0448
+Stage 1 = 109, LL = -1973.6, AR(4.30; 5.50) = [0.35; 0.33], Max-Change = 0.0219
+Stage 1 = 110, LL = -1995.5, AR(4.30; 5.50) = [0.34; 0.31], Max-Change = 0.0492
+Stage 1 = 111, LL = -1958.3, AR(4.30; 5.50) = [0.29; 0.20], Max-Change = 0.0083
+Stage 1 = 112, LL = -1985.6, AR(4.30; 5.50) = [0.38; 0.29], Max-Change = 0.0325
+Stage 1 = 113, LL = -1976.7, AR(4.30; 5.50) = [0.35; 0.24], Max-Change = 0.0339
+Stage 1 = 114, LL = -1995.3, AR(4.30; 5.50) = [0.34; 0.33], Max-Change = 0.0302
+Stage 1 = 115, LL = -1989.6, AR(4.30; 5.50) = [0.35; 0.39], Max-Change = 0.0242
+Stage 1 = 116, LL = -1984.7, AR(4.30; 5.50) = [0.34; 0.29], Max-Change = 0.0514
+Stage 1 = 117, LL = -1989.9, AR(4.30; 5.50) = [0.36; 0.39], Max-Change = 0.0225
+Stage 1 = 118, LL = -2001.3, AR(4.30; 5.50) = [0.33; 0.31], Max-Change = 0.0234
+Stage 1 = 119, LL = -1967.9, AR(4.30; 5.50) = [0.31; 0.29], Max-Change = 0.0502
+Stage 1 = 120, LL = -1949.7, AR(4.30; 5.50) = [0.30; 0.24], Max-Change = 0.0294
+Stage 1 = 121, LL = -1973.2, AR(4.30; 5.50) = [0.32; 0.29], Max-Change = 0.0808
+Stage 1 = 122, LL = -1998.7, AR(4.30; 5.50) = [0.32; 0.22], Max-Change = 0.0215
+Stage 1 = 123, LL = -1997.5, AR(4.30; 5.50) = [0.33; 0.16], Max-Change = 0.0490
+Stage 1 = 124, LL = -1979.0, AR(4.30; 5.50) = [0.31; 0.24], Max-Change = 0.0359
+Stage 1 = 125, LL = -1992.8, AR(4.30; 5.50) = [0.32; 0.29], Max-Change = 0.0261
+Stage 1 = 126, LL = -1992.2, AR(4.30; 5.50) = [0.29; 0.22], Max-Change = 0.0272
+Stage 1 = 127, LL = -1979.2, AR(4.30; 5.50) = [0.34; 0.24], Max-Change = 0.0100
+Stage 1 = 128, LL = -1981.6, AR(4.30; 5.50) = [0.35; 0.27], Max-Change = 0.0241
+Stage 1 = 129, LL = -1986.0, AR(4.30; 5.50) = [0.37; 0.24], Max-Change = 0.0155
+Stage 1 = 130, LL = -1954.7, AR(4.30; 5.50) = [0.36; 0.27], Max-Change = 0.0197
+Stage 1 = 131, LL = -1975.5, AR(4.30; 5.50) = [0.35; 0.33], Max-Change = 0.0322
+Stage 1 = 132, LL = -1964.3, AR(4.30; 5.50) = [0.34; 0.29], Max-Change = 0.0112
+Stage 1 = 133, LL = -1987.9, AR(4.30; 5.50) = [0.35; 0.33], Max-Change = 0.0223
+Stage 1 = 134, LL = -1980.8, AR(4.30; 5.50) = [0.31; 0.24], Max-Change = 0.0262
+Stage 1 = 135, LL = -1981.1, AR(4.30; 5.50) = [0.29; 0.31], Max-Change = 0.0097
+Stage 1 = 136, LL = -2002.1, AR(4.30; 5.50) = [0.30; 0.18], Max-Change = 0.0267
+Stage 1 = 137, LL = -1961.6, AR(4.30; 5.50) = [0.33; 0.22], Max-Change = 0.0085
+Stage 1 = 138, LL = -1994.8, AR(4.30; 5.50) = [0.35; 0.29], Max-Change = 0.0425
+Stage 1 = 139, LL = -1983.0, AR(4.30; 5.50) = [0.34; 0.22], Max-Change = 0.0383
+Stage 1 = 140, LL = -1992.9, AR(4.30; 5.50) = [0.39; 0.27], Max-Change = 0.0182
+Stage 1 = 141, LL = -1963.1, AR(4.30; 5.50) = [0.34; 0.27], Max-Change = 0.0362
+Stage 1 = 142, LL = -1991.9, AR(4.30; 5.50) = [0.35; 0.14], Max-Change = 0.0371
+Stage 1 = 143, LL = -1979.5, AR(4.30; 5.50) = [0.34; 0.33], Max-Change = 0.0491
+Stage 1 = 144, LL = -1985.9, AR(4.30; 5.50) = [0.34; 0.20], Max-Change = 0.0522
+Stage 1 = 145, LL = -1954.3, AR(4.30; 5.50) = [0.32; 0.31], Max-Change = 0.0331
+Stage 1 = 146, LL = -1962.1, AR(4.30; 5.50) = [0.31; 0.29], Max-Change = 0.0351
+Stage 1 = 147, LL = -1978.4, AR(4.30; 5.50) = [0.39; 0.12], Max-Change = 0.0144
+Stage 1 = 148, LL = -1975.7, AR(4.30; 5.50) = [0.28; 0.29], Max-Change = 0.0079
+Stage 1 = 149, LL = -1995.1, AR(4.30; 5.50) = [0.35; 0.45], Max-Change = 0.0159
+Stage 1 = 150, LL = -1978.4, AR(4.30; 5.50) = [0.33; 0.16], Max-Change = 0.0263
+Stage 1 = 151, LL = -1983.9, AR(4.30; 5.50) = [0.31; 0.22], Max-Change = 0.0069
+Stage 1 = 152, LL = -1961.8, AR(4.30; 5.50) = [0.32; 0.22], Max-Change = 0.0104
+Stage 1 = 153, LL = -1983.6, AR(4.30; 5.50) = [0.32; 0.33], Max-Change = 0.0359
+Stage 1 = 154, LL = -1984.1, AR(4.30; 5.50) = [0.32; 0.24], Max-Change = 0.0103
+Stage 1 = 155, LL = -1971.2, AR(4.30; 5.50) = [0.28; 0.20], Max-Change = 0.0598
+Stage 1 = 156, LL = -1954.8, AR(4.30; 5.50) = [0.34; 0.18], Max-Change = 0.0123
+Stage 1 = 157, LL = -1967.8, AR(4.30; 5.50) = [0.32; 0.10], Max-Change = 0.0335
+Stage 1 = 158, LL = -1968.6, AR(4.30; 5.50) = [0.38; 0.20], Max-Change = 0.0162
+Stage 1 = 159, LL = -1978.1, AR(4.30; 5.50) = [0.35; 0.20], Max-Change = 0.0108
+Stage 1 = 160, LL = -1968.5, AR(4.30; 5.50) = [0.31; 0.14], Max-Change = 0.0198
+Stage 1 = 161, LL = -1964.8, AR(4.30; 5.50) = [0.31; 0.20], Max-Change = 0.0226
+Stage 1 = 162, LL = -1980.2, AR(4.30; 5.50) = [0.31; 0.22], Max-Change = 0.0245
+Stage 1 = 163, LL = -1964.7, AR(4.30; 5.50) = [0.33; 0.18], Max-Change = 0.0625
+Stage 1 = 164, LL = -1972.9, AR(4.30; 5.50) = [0.30; 0.31], Max-Change = 0.0334
+Stage 1 = 165, LL = -1974.0, AR(4.30; 5.50) = [0.34; 0.24], Max-Change = 0.0470
+Stage 1 = 166, LL = -1990.2, AR(4.30; 5.50) = [0.34; 0.24], Max-Change = 0.0321
+Stage 1 = 167, LL = -1986.7, AR(4.30; 5.50) = [0.32; 0.18], Max-Change = 0.0205
+Stage 1 = 168, LL = -1964.7, AR(4.30; 5.50) = [0.33; 0.18], Max-Change = 0.0331
+Stage 1 = 169, LL = -1982.0, AR(4.30; 5.50) = [0.31; 0.08], Max-Change = 0.0198
+Stage 1 = 170, LL = -1972.1, AR(4.30; 5.50) = [0.35; 0.18], Max-Change = 0.0343
+Stage 1 = 171, LL = -1992.5, AR(4.30; 5.50) = [0.31; 0.22], Max-Change = 0.0508
+Stage 1 = 172, LL = -1989.0, AR(4.30; 5.50) = [0.36; 0.27], Max-Change = 0.0243
+Stage 1 = 173, LL = -1991.1, AR(4.30; 5.50) = [0.35; 0.22], Max-Change = 0.0611
+Stage 1 = 174, LL = -1982.2, AR(4.30; 5.50) = [0.34; 0.22], Max-Change = 0.0308
+Stage 1 = 175, LL = -1995.0, AR(4.30; 5.50) = [0.31; 0.27], Max-Change = 0.0172
+Stage 1 = 176, LL = -2006.5, AR(4.30; 5.50) = [0.36; 0.20], Max-Change = 0.0686
+Stage 1 = 177, LL = -2034.6, AR(4.30; 5.50) = [0.39; 0.08], Max-Change = 0.0376
+Stage 1 = 178, LL = -1991.6, AR(4.30; 5.50) = [0.35; 0.12], Max-Change = 0.0766
+Stage 1 = 179, LL = -1987.6, AR(4.30; 5.50) = [0.36; 0.24], Max-Change = 0.0603
+Stage 1 = 180, LL = -1997.9, AR(4.30; 5.50) = [0.36; 0.14], Max-Change = 0.0258
+Stage 1 = 181, LL = -1981.5, AR(4.30; 5.50) = [0.33; 0.24], Max-Change = 0.0153
+Stage 1 = 182, LL = -1989.3, AR(4.30; 5.50) = [0.30; 0.12], Max-Change = 0.0335
+Stage 1 = 183, LL = -2019.3, AR(4.30; 5.50) = [0.37; 0.20], Max-Change = 0.0396
+Stage 1 = 184, LL = -1982.9, AR(4.30; 5.50) = [0.32; 0.24], Max-Change = 0.0258
+Stage 1 = 185, LL = -1999.5, AR(4.30; 5.50) = [0.32; 0.16], Max-Change = 0.0247
+Stage 1 = 186, LL = -1999.6, AR(4.30; 5.50) = [0.35; 0.14], Max-Change = 0.0365
+Stage 1 = 187, LL = -1983.7, AR(4.30; 5.50) = [0.37; 0.16], Max-Change = 0.0628
+Stage 1 = 188, LL = -1992.6, AR(4.30; 5.50) = [0.30; 0.29], Max-Change = 0.0072
+Stage 1 = 189, LL = -1989.5, AR(4.30; 5.50) = [0.36; 0.12], Max-Change = 0.0195
+Stage 1 = 190, LL = -1975.7, AR(4.30; 5.50) = [0.30; 0.24], Max-Change = 0.0178
+Stage 1 = 191, LL = -1978.7, AR(4.30; 5.50) = [0.35; 0.10], Max-Change = 0.0695
+Stage 1 = 192, LL = -1988.7, AR(4.30; 5.50) = [0.37; 0.22], Max-Change = 0.0262
+Stage 1 = 193, LL = -1976.8, AR(4.30; 5.50) = [0.35; 0.08], Max-Change = 0.0124
+Stage 1 = 194, LL = -1966.0, AR(4.30; 5.50) = [0.34; 0.06], Max-Change = 0.0164
+Stage 1 = 195, LL = -1989.2, AR(4.30; 5.50) = [0.38; 0.14], Max-Change = 0.0511
+Stage 1 = 196, LL = -1997.2, AR(4.30; 5.50) = [0.36; 0.20], Max-Change = 0.0211
+Stage 1 = 197, LL = -1989.9, AR(4.30; 5.50) = [0.34; 0.12], Max-Change = 0.0188
+Stage 1 = 198, LL = -2003.6, AR(4.30; 5.50) = [0.37; 0.18], Max-Change = 0.0301
+Stage 1 = 199, LL = -1966.9, AR(4.30; 5.50) = [0.36; 0.10], Max-Change = 0.0048
+Stage 1 = 200, LL = -1981.7, AR(4.30; 5.50) = [0.39; 0.14], Max-Change = 0.0491
+Stage 2 = 1, LL = -1979.8, AR(4.30; 5.50) = [0.33; 0.18], Max-Change = 0.0421
+Stage 2 = 2, LL = -2000.1, AR(4.30; 5.50) = [0.32; 0.18], Max-Change = 0.0146
+Stage 2 = 3, LL = -1982.8, AR(4.30; 5.50) = [0.38; 0.18], Max-Change = 0.0890
+Stage 2 = 4, LL = -1971.3, AR(4.30; 5.50) = [0.35; 0.16], Max-Change = 0.0262
+Stage 2 = 5, LL = -2014.2, AR(4.30; 5.50) = [0.33; 0.14], Max-Change = 0.0182
+Stage 2 = 6, LL = -1994.9, AR(4.30; 5.50) = [0.39; 0.16], Max-Change = 0.0176
+Stage 2 = 7, LL = -1985.8, AR(4.30; 5.50) = [0.34; 0.20], Max-Change = 0.0172
+Stage 2 = 8, LL = -1990.1, AR(4.30; 5.50) = [0.35; 0.12], Max-Change = 0.0218
+Stage 2 = 9, LL = -1995.3, AR(4.30; 5.50) = [0.30; 0.18], Max-Change = 0.0601
+Stage 2 = 10, LL = -1986.3, AR(4.30; 5.50) = [0.35; 0.16], Max-Change = 0.0606
+Stage 2 = 11, LL = -1973.3, AR(4.30; 5.50) = [0.32; 0.14], Max-Change = 0.0263
+Stage 2 = 12, LL = -2016.2, AR(4.30; 5.50) = [0.34; 0.24], Max-Change = 0.0167
+Stage 2 = 13, LL = -1966.2, AR(4.30; 5.50) = [0.31; 0.14], Max-Change = 0.0240
+Stage 2 = 14, LL = -1993.2, AR(4.30; 5.50) = [0.34; 0.16], Max-Change = 0.0325
+Stage 2 = 15, LL = -1969.9, AR(4.30; 5.50) = [0.31; 0.12], Max-Change = 0.0175
+Stage 2 = 16, LL = -1993.0, AR(4.30; 5.50) = [0.33; 0.20], Max-Change = 0.0226
+Stage 2 = 17, LL = -1973.0, AR(4.30; 5.50) = [0.35; 0.14], Max-Change = 0.0458
+Stage 2 = 18, LL = -1969.7, AR(4.30; 5.50) = [0.31; 0.20], Max-Change = 0.0369
+Stage 2 = 19, LL = -1960.5, AR(4.30; 5.50) = [0.36; 0.18], Max-Change = 0.0183
+Stage 2 = 20, LL = -1971.8, AR(4.30; 5.50) = [0.33; 0.20], Max-Change = 0.0427
+Stage 2 = 21, LL = -1977.3, AR(4.30; 5.50) = [0.33; 0.27], Max-Change = 0.0257
+Stage 2 = 22, LL = -1957.2, AR(4.30; 5.50) = [0.33; 0.24], Max-Change = 0.0209
+Stage 2 = 23, LL = -1971.8, AR(4.30; 5.50) = [0.34; 0.16], Max-Change = 0.0169
+Stage 2 = 24, LL = -1996.6, AR(4.30; 5.50) = [0.34; 0.08], Max-Change = 0.0778
+Stage 2 = 25, LL = -2001.4, AR(4.30; 5.50) = [0.38; 0.18], Max-Change = 0.0233
+Stage 2 = 26, LL = -1993.6, AR(4.30; 5.50) = [0.37; 0.20], Max-Change = 0.0217
+Stage 2 = 27, LL = -1988.8, AR(4.30; 5.50) = [0.37; 0.18], Max-Change = 0.0121
+Stage 2 = 28, LL = -1972.5, AR(4.30; 5.50) = [0.35; 0.24], Max-Change = 0.0199
+Stage 2 = 29, LL = -1975.2, AR(4.30; 5.50) = [0.31; 0.12], Max-Change = 0.0208
+Stage 2 = 30, LL = -1977.9, AR(4.30; 5.50) = [0.34; 0.14], Max-Change = 0.0224
+Stage 2 = 31, LL = -2026.6, AR(4.30; 5.50) = [0.32; 0.29], Max-Change = 0.0413
+Stage 2 = 32, LL = -1994.5, AR(4.30; 5.50) = [0.34; 0.22], Max-Change = 0.0236
+Stage 2 = 33, LL = -1999.2, AR(4.30; 5.50) = [0.38; 0.18], Max-Change = 0.0233
+Stage 2 = 34, LL = -2001.5, AR(4.30; 5.50) = [0.35; 0.12], Max-Change = 0.0950
+Stage 2 = 35, LL = -2011.1, AR(4.30; 5.50) = [0.32; 0.18], Max-Change = 0.0414
+Stage 2 = 36, LL = -2007.9, AR(4.30; 5.50) = [0.34; 0.10], Max-Change = 0.0495
+Stage 2 = 37, LL = -1983.9, AR(4.30; 5.50) = [0.35; 0.10], Max-Change = 0.0806
+Stage 2 = 38, LL = -1988.5, AR(4.30; 5.50) = [0.36; 0.06], Max-Change = 0.0106
+Stage 2 = 39, LL = -1986.4, AR(4.30; 5.50) = [0.34; 0.14], Max-Change = 0.0337
+Stage 2 = 40, LL = -1982.2, AR(4.30; 5.50) = [0.38; 0.14], Max-Change = 0.0135
+Stage 2 = 41, LL = -1988.5, AR(4.30; 5.50) = [0.34; 0.22], Max-Change = 0.0251
+Stage 2 = 42, LL = -1988.3, AR(4.30; 5.50) = [0.30; 0.16], Max-Change = 0.0226
+Stage 2 = 43, LL = -1996.0, AR(4.30; 5.50) = [0.35; 0.14], Max-Change = 0.0089
+Stage 2 = 44, LL = -1995.7, AR(4.30; 5.50) = [0.36; 0.18], Max-Change = 0.0192
+Stage 2 = 45, LL = -1978.1, AR(4.30; 5.50) = [0.37; 0.12], Max-Change = 0.0080
+Stage 2 = 46, LL = -1986.4, AR(4.30; 5.50) = [0.31; 0.08], Max-Change = 0.0220
+Stage 2 = 47, LL = -1989.6, AR(4.30; 5.50) = [0.34; 0.12], Max-Change = 0.0194
+Stage 2 = 48, LL = -1994.3, AR(4.30; 5.50) = [0.37; 0.12], Max-Change = 0.0491
+Stage 2 = 49, LL = -2020.6, AR(4.30; 5.50) = [0.37; 0.12], Max-Change = 0.0340
+Stage 2 = 50, LL = -1991.4, AR(4.30; 5.50) = [0.36; 0.06], Max-Change = 0.0161
+Stage 3 = 1, LL = -2009.2, AR(4.30; 5.50) = [0.35; 0.18], gam = 0.2500, Max-Change = 0.0310
+Stage 3 = 2, LL = -1969.8, AR(4.30; 5.50) = [0.35; 0.16], gam = 0.2914, Max-Change = 0.0206
+Stage 3 = 3, LL = -1999.2, AR(4.30; 5.50) = [0.37; 0.10], gam = 0.1857, Max-Change = 0.0318
+Stage 3 = 4, LL = -1983.2, AR(4.30; 5.50) = [0.36; 0.18], gam = 0.1427, Max-Change = 0.0141
+Stage 3 = 5, LL = -1997.3, AR(4.30; 5.50) = [0.36; 0.16], gam = 0.1183, Max-Change = 0.0028
+Stage 3 = 6, LL = -1970.3, AR(4.30; 5.50) = [0.35; 0.12], gam = 0.1024, Max-Change = 0.0098
+Stage 3 = 7, LL = -1986.5, AR(4.30; 5.50) = [0.36; 0.22], gam = 0.0909, Max-Change = 0.0048
+Stage 3 = 8, LL = -1993.7, AR(4.30; 5.50) = [0.35; 0.22], gam = 0.0823, Max-Change = 0.0144
+Stage 3 = 9, LL = -1964.0, AR(4.30; 5.50) = [0.32; 0.12], gam = 0.0754, Max-Change = 0.0124
+Stage 3 = 10, LL = -1999.8, AR(4.30; 5.50) = [0.30; 0.24], gam = 0.0699, Max-Change = 0.0019
+Stage 3 = 11, LL = -1993.7, AR(4.30; 5.50) = [0.36; 0.12], gam = 0.0652, Max-Change = 0.0040
+Stage 3 = 12, LL = -1969.1, AR(4.30; 5.50) = [0.33; 0.20], gam = 0.0613, Max-Change = 0.0043
+Stage 3 = 13, LL = -2011.0, AR(4.30; 5.50) = [0.31; 0.10], gam = 0.0579, Max-Change = 0.0051
+Stage 3 = 14, LL = -1991.3, AR(4.30; 5.50) = [0.38; 0.12], gam = 0.0550, Max-Change = 0.0116
+Stage 3 = 15, LL = -1985.0, AR(4.30; 5.50) = [0.31; 0.14], gam = 0.0524, Max-Change = 0.0063
+Stage 3 = 16, LL = -2001.8, AR(4.30; 5.50) = [0.35; 0.04], gam = 0.0501, Max-Change = 0.0059
+Stage 3 = 17, LL = -1981.7, AR(4.30; 5.50) = [0.33; 0.20], gam = 0.0481, Max-Change = 0.0087
+Stage 3 = 18, LL = -1989.6, AR(4.30; 5.50) = [0.32; 0.12], gam = 0.0462, Max-Change = 0.0054
+Stage 3 = 19, LL = -1983.4, AR(4.30; 5.50) = [0.32; 0.12], gam = 0.0445, Max-Change = 0.0010
+Stage 3 = 20, LL = -1980.5, AR(4.30; 5.50) = [0.33; 0.31], gam = 0.0430, Max-Change = 0.0026
+Stage 3 = 21, LL = -1996.7, AR(4.30; 5.50) = [0.32; 0.18], gam = 0.0416, Max-Change = 0.0046
+Stage 3 = 22, LL = -1984.1, AR(4.30; 5.50) = [0.38; 0.20], gam = 0.0403, Max-Change = 0.0076
+Stage 3 = 23, LL = -1992.2, AR(4.30; 5.50) = [0.36; 0.12], gam = 0.0391, Max-Change = 0.0024
+Stage 3 = 24, LL = -1995.4, AR(4.30; 5.50) = [0.35; 0.16], gam = 0.0380, Max-Change = 0.0068
+Stage 3 = 25, LL = -2016.7, AR(4.30; 5.50) = [0.33; 0.12], gam = 0.0369, Max-Change = 0.0040
+Stage 3 = 26, LL = -1994.5, AR(4.30; 5.50) = [0.33; 0.12], gam = 0.0360, Max-Change = 0.0014
+Stage 3 = 27, LL = -2003.6, AR(4.30; 5.50) = [0.36; 0.18], gam = 0.0351, Max-Change = 0.0043
+Stage 3 = 28, LL = -1993.4, AR(4.30; 5.50) = [0.32; 0.24], gam = 0.0342, Max-Change = 0.0033
+Stage 3 = 29, LL = -1965.0, AR(4.30; 5.50) = [0.34; 0.20], gam = 0.0334, Max-Change = 0.0016
+Stage 3 = 30, LL = -1984.0, AR(4.30; 5.50) = [0.35; 0.16], gam = 0.0327, Max-Change = 0.0060
+Stage 3 = 31, LL = -2010.2, AR(4.30; 5.50) = [0.37; 0.18], gam = 0.0319, Max-Change = 0.0056
+Stage 3 = 32, LL = -1987.0, AR(4.30; 5.50) = [0.35; 0.22], gam = 0.0313, Max-Change = 0.0044
+Stage 3 = 33, LL = -1991.0, AR(4.30; 5.50) = [0.34; 0.24], gam = 0.0306, Max-Change = 0.0018
+Stage 3 = 34, LL = -1994.2, AR(4.30; 5.50) = [0.35; 0.24], gam = 0.0300, Max-Change = 0.0035
+Stage 3 = 35, LL = -1993.4, AR(4.30; 5.50) = [0.37; 0.22], gam = 0.0294, Max-Change = 0.0017
+Stage 3 = 36, LL = -1995.8, AR(4.30; 5.50) = [0.32; 0.14], gam = 0.0289, Max-Change = 0.0029
+Stage 3 = 37, LL = -1968.8, AR(4.30; 5.50) = [0.31; 0.18], gam = 0.0284, Max-Change = 0.0005
+Stage 3 = 38, LL = -1999.9, AR(4.30; 5.50) = [0.34; 0.12], gam = 0.0279, Max-Change = 0.0011
+Stage 3 = 39, LL = -1976.4, AR(4.30; 5.50) = [0.34; 0.14], gam = 0.0274, Max-Change = 0.0014
+Stage 3 = 40, LL = -1993.7, AR(4.30; 5.50) = [0.35; 0.10], gam = 0.0269, Max-Change = 0.0022
+Stage 3 = 41, LL = -1974.1, AR(4.30; 5.50) = [0.38; 0.18], gam = 0.0265, Max-Change = 0.0016
+Stage 3 = 42, LL = -1965.2, AR(4.30; 5.50) = [0.35; 0.20], gam = 0.0261, Max-Change = 0.0038
+Stage 3 = 43, LL = -1971.7, AR(4.30; 5.50) = [0.32; 0.10], gam = 0.0257, Max-Change = 0.0007
+Stage 3 = 44, LL = -1994.8, AR(4.30; 5.50) = [0.37; 0.14], gam = 0.0253, Max-Change = 0.0032
+Stage 3 = 45, LL = -2000.9, AR(4.30; 5.50) = [0.35; 0.16], gam = 0.0249, Max-Change = 0.0036
+Stage 3 = 46, LL = -1978.3, AR(4.30; 5.50) = [0.32; 0.10], gam = 0.0245, Max-Change = 0.0046
+Stage 3 = 47, LL = -1983.6, AR(4.30; 5.50) = [0.31; 0.20], gam = 0.0242, Max-Change = 0.0029
+Stage 3 = 48, LL = -2000.2, AR(4.30; 5.50) = [0.37; 0.12], gam = 0.0239, Max-Change = 0.0037
+Stage 3 = 49, LL = -2004.2, AR(4.30; 5.50) = [0.34; 0.12], gam = 0.0235, Max-Change = 0.0006
+Stage 3 = 50, LL = -1989.8, AR(4.30; 5.50) = [0.32; 0.18], gam = 0.0232, Max-Change = 0.0020
+Stage 3 = 51, LL = -1983.1, AR(4.30; 5.50) = [0.35; 0.22], gam = 0.0229, Max-Change = 0.0019
+Stage 3 = 52, LL = -2012.9, AR(4.30; 5.50) = [0.34; 0.14], gam = 0.0226, Max-Change = 0.0011
+Stage 3 = 53, LL = -2015.3, AR(4.30; 5.50) = [0.33; 0.22], gam = 0.0223, Max-Change = 0.0011
+Stage 3 = 54, LL = -1998.7, AR(4.30; 5.50) = [0.34; 0.22], gam = 0.0221, Max-Change = 0.0035
+Stage 3 = 55, LL = -1993.1, AR(4.30; 5.50) = [0.33; 0.27], gam = 0.0218, Max-Change = 0.0012
+Stage 3 = 56, LL = -1966.4, AR(4.30; 5.50) = [0.33; 0.18], gam = 0.0215, Max-Change = 0.0016
+Stage 3 = 57, LL = -1984.2, AR(4.30; 5.50) = [0.34; 0.16], gam = 0.0213, Max-Change = 0.0046
+Stage 3 = 58, LL = -1980.0, AR(4.30; 5.50) = [0.33; 0.16], gam = 0.0210, Max-Change = 0.0034
+Stage 3 = 59, LL = -1970.3, AR(4.30; 5.50) = [0.32; 0.08], gam = 0.0208, Max-Change = 0.0035
+Stage 3 = 60, LL = -1981.1, AR(4.30; 5.50) = [0.36; 0.16], gam = 0.0206, Max-Change = 0.0032
+Stage 3 = 61, LL = -1990.0, AR(4.30; 5.50) = [0.32; 0.12], gam = 0.0204, Max-Change = 0.0021
+Stage 3 = 62, LL = -2003.7, AR(4.30; 5.50) = [0.30; 0.12], gam = 0.0201, Max-Change = 0.0009
+Stage 3 = 63, LL = -1974.2, AR(4.30; 5.50) = [0.32; 0.16], gam = 0.0199, Max-Change = 0.0021
+Stage 3 = 64, LL = -2005.1, AR(4.30; 5.50) = [0.35; 0.18], gam = 0.0197, Max-Change = 0.0024
+Stage 3 = 65, LL = -2004.1, AR(4.30; 5.50) = [0.35; 0.14], gam = 0.0195, Max-Change = 0.0016
+Stage 3 = 66, LL = -1985.5, AR(4.30; 5.50) = [0.34; 0.12], gam = 0.0193, Max-Change = 0.0036
+Stage 3 = 67, LL = -1990.6, AR(4.30; 5.50) = [0.33; 0.10], gam = 0.0191, Max-Change = 0.0023
+Stage 3 = 68, LL = -2000.3, AR(4.30; 5.50) = [0.36; 0.20], gam = 0.0189, Max-Change = 0.0026
+Stage 3 = 69, LL = -1986.0, AR(4.30; 5.50) = [0.34; 0.12], gam = 0.0188, Max-Change = 0.0013
+Stage 3 = 70, LL = -1992.9, AR(4.30; 5.50) = [0.36; 0.08], gam = 0.0186, Max-Change = 0.0025
+Stage 3 = 71, LL = -1992.3, AR(4.30; 5.50) = [0.35; 0.18], gam = 0.0184, Max-Change = 0.0017
+Stage 3 = 72, LL = -1987.1, AR(4.30; 5.50) = [0.33; 0.20], gam = 0.0182, Max-Change = 0.0021
+Stage 3 = 73, LL = -1992.2, AR(4.30; 5.50) = [0.32; 0.20], gam = 0.0181, Max-Change = 0.0024
+Stage 3 = 74, LL = -1974.9, AR(4.30; 5.50) = [0.30; 0.16], gam = 0.0179, Max-Change = 0.0020
+Stage 3 = 75, LL = -1977.3, AR(4.30; 5.50) = [0.33; 0.16], gam = 0.0178, Max-Change = 0.0006
+Stage 3 = 76, LL = -1981.3, AR(4.30; 5.50) = [0.34; 0.22], gam = 0.0176, Max-Change = 0.0017
+Stage 3 = 77, LL = -1961.8, AR(4.30; 5.50) = [0.33; 0.24], gam = 0.0175, Max-Change = 0.0062
+Stage 3 = 78, LL = -2008.8, AR(4.30; 5.50) = [0.30; 0.12], gam = 0.0173, Max-Change = 0.0018
+Stage 3 = 79, LL = -1976.6, AR(4.30; 5.50) = [0.31; 0.22], gam = 0.0172, Max-Change = 0.0016
+Stage 3 = 80, LL = -2001.7, AR(4.30; 5.50) = [0.31; 0.12], gam = 0.0170, Max-Change = 0.0027
+Stage 3 = 81, LL = -1966.8, AR(4.30; 5.50) = [0.33; 0.18], gam = 0.0169, Max-Change = 0.0038
+Stage 3 = 82, LL = -1983.2, AR(4.30; 5.50) = [0.35; 0.18], gam = 0.0167, Max-Change = 0.0035
+Stage 3 = 83, LL = -1988.7, AR(4.30; 5.50) = [0.32; 0.16], gam = 0.0166, Max-Change = 0.0030
+Stage 3 = 84, LL = -1998.5, AR(4.30; 5.50) = [0.39; 0.12], gam = 0.0165, Max-Change = 0.0052
+Stage 3 = 85, LL = -2000.0, AR(4.30; 5.50) = [0.36; 0.18], gam = 0.0164, Max-Change = 0.0014
+Stage 3 = 86, LL = -1991.4, AR(4.30; 5.50) = [0.36; 0.18], gam = 0.0162, Max-Change = 0.0012
+Stage 3 = 87, LL = -1983.6, AR(4.30; 5.50) = [0.40; 0.18], gam = 0.0161, Max-Change = 0.0010
+Stage 3 = 88, LL = -1999.4, AR(4.30; 5.50) = [0.35; 0.20], gam = 0.0160, Max-Change = 0.0029
+Stage 3 = 89, LL = -1990.5, AR(4.30; 5.50) = [0.34; 0.08], gam = 0.0159, Max-Change = 0.0026
+Stage 3 = 90, LL = -1997.8, AR(4.30; 5.50) = [0.34; 0.20], gam = 0.0158, Max-Change = 0.0020
+Stage 3 = 91, LL = -1979.6, AR(4.30; 5.50) = [0.34; 0.20], gam = 0.0156, Max-Change = 0.0004
+Stage 3 = 92, LL = -1978.1, AR(4.30; 5.50) = [0.31; 0.10], gam = 0.0155, Max-Change = 0.0019
+Stage 3 = 93, LL = -1978.6, AR(4.30; 5.50) = [0.32; 0.22], gam = 0.0154, Max-Change = 0.0015
+Stage 3 = 94, LL = -1984.9, AR(4.30; 5.50) = [0.30; 0.16], gam = 0.0153, Max-Change = 0.0011
+Stage 3 = 95, LL = -1999.3, AR(4.30; 5.50) = [0.33; 0.27], gam = 0.0152, Max-Change = 0.0036
+Stage 3 = 96, LL = -1976.9, AR(4.30; 5.50) = [0.32; 0.35], gam = 0.0151, Max-Change = 0.0032
+Stage 3 = 97, LL = -1985.8, AR(4.30; 5.50) = [0.36; 0.27], gam = 0.0150, Max-Change = 0.0010
+Stage 3 = 98, LL = -1967.1, AR(4.30; 5.50) = [0.39; 0.14], gam = 0.0149, Max-Change = 0.0010
+Stage 3 = 99, LL = -1987.8, AR(4.30; 5.50) = [0.31; 0.12], gam = 0.0148, Max-Change = 0.0016
+Stage 3 = 100, LL = -2012.7, AR(4.30; 5.50) = [0.33; 0.12], gam = 0.0147, Max-Change = 0.0012
+Stage 3 = 101, LL = -1989.0, AR(4.30; 5.50) = [0.32; 0.16], gam = 0.0146, Max-Change = 0.0064
+Stage 3 = 102, LL = -1978.5, AR(4.30; 5.50) = [0.30; 0.16], gam = 0.0145, Max-Change = 0.0015
+Stage 3 = 103, LL = -1976.8, AR(4.30; 5.50) = [0.38; 0.08], gam = 0.0144, Max-Change = 0.0011
+Stage 3 = 104, LL = -2004.9, AR(4.30; 5.50) = [0.36; 0.16], gam = 0.0143, Max-Change = 0.0019
+Stage 3 = 105, LL = -2003.0, AR(4.30; 5.50) = [0.34; 0.12], gam = 0.0142, Max-Change = 0.0011
+Stage 3 = 106, LL = -1997.9, AR(4.30; 5.50) = [0.34; 0.10], gam = 0.0141, Max-Change = 0.0027
+Stage 3 = 107, LL = -2004.6, AR(4.30; 5.50) = [0.39; 0.14], gam = 0.0141, Max-Change = 0.0010
+Stage 3 = 108, LL = -2004.4, AR(4.30; 5.50) = [0.39; 0.18], gam = 0.0140, Max-Change = 0.0028
+Stage 3 = 109, LL = -1965.8, AR(4.30; 5.50) = [0.31; 0.14], gam = 0.0139, Max-Change = 0.0008
+Stage 3 = 110, LL = -2003.6, AR(4.30; 5.50) = [0.32; 0.08], gam = 0.0138, Max-Change = 0.0014
+Stage 3 = 111, LL = -2007.4, AR(4.30; 5.50) = [0.36; 0.18], gam = 0.0137, Max-Change = 0.0011
+Stage 3 = 112, LL = -1986.3, AR(4.30; 5.50) = [0.33; 0.10], gam = 0.0136, Max-Change = 0.0004
+Stage 3 = 113, LL = -1986.8, AR(4.30; 5.50) = [0.35; 0.16], gam = 0.0136, Max-Change = 0.0008
+Stage 3 = 114, LL = -1981.9, AR(4.30; 5.50) = [0.35; 0.31], gam = 0.0135, Max-Change = 0.0009
+## 
+## Calculating information matrix...
+## 
+## Calculating log-likelihood...
+</code></pre>
+
+<pre><code class="r">summary(mod)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## mixedmirt(data = Science, covdata = covdat, model = 1, random = ~1 | 
+##     group)
+## 
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $Theta
+##       F1
+## F1 0.972
+## 
+## $group
+##           COV_group
+## COV_group    0.0948
+</code></pre>
+
+<pre><code class="r">effects &lt;- randef(mod, ndraws = 2000, thin = 20)
+head(effects$Theta)
+</code></pre>
+
+<pre><code>##            F1
+## [1,]  0.48289
+## [2,]  0.02162
+## [3,] -0.63764
+## [4,] -0.76424
+## [5,] -0.02464
+## [6,]  0.81383
+</code></pre>
+
+<pre><code class="r">head(effects$group)
+</code></pre>
+
+<pre><code>##           group
+## group1  0.02444
+## group2  0.01430
+## group3 -0.02323
+## group4  0.01559
+## group5 -0.02430
+## group6 -0.02388
+</code></pre>
+
+</body>
+
+</html>

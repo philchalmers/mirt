@@ -246,8 +246,8 @@ Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
 <pre><code class="r">M2(mod1)
 </code></pre>
 
-<pre><code>##          M2 df       p   RMSEA  RMSEA_5 RMSEA_95    TLI    CFI
-## stats 11.94  5 0.03565 0.03727 0.008951  0.06497 0.9369 0.9685
+<pre><code>##          M2 df       p   RMSEA  RMSEA_5 RMSEA_95    TLI    CFI   SRMSR
+## stats 11.94  5 0.03565 0.03727 0.008951  0.06497 0.9369 0.9685 0.03196
 </code></pre>
 
 <pre><code class="r">#M2 imputed with missing data present (run in parallel)
@@ -256,32 +256,38 @@ mod2 &lt;- mirt(dat, 1)
 </code></pre>
 
 <pre><code>## 
-Iteration: 1, Log-Lik: -2545.595, Max-Change: 0.14312
-Iteration: 2, Log-Lik: -2538.622, Max-Change: 0.10965
-Iteration: 3, Log-Lik: -2536.396, Max-Change: 0.16226
-Iteration: 4, Log-Lik: -2534.890, Max-Change: 0.04398
-Iteration: 5, Log-Lik: -2534.681, Max-Change: 0.03479
-Iteration: 6, Log-Lik: -2534.552, Max-Change: 0.10717
-Iteration: 7, Log-Lik: -2534.318, Max-Change: 0.01019
-Iteration: 8, Log-Lik: -2534.303, Max-Change: 0.00813
-Iteration: 9, Log-Lik: -2534.293, Max-Change: 0.02830
-Iteration: 10, Log-Lik: -2534.274, Max-Change: 0.00337
-Iteration: 11, Log-Lik: -2534.272, Max-Change: 0.00261
-Iteration: 12, Log-Lik: -2534.272, Max-Change: 0.01006
-Iteration: 13, Log-Lik: -2534.270, Max-Change: 0.00104
-Iteration: 14, Log-Lik: -2534.270, Max-Change: 0.00043
-Iteration: 15, Log-Lik: -2534.270, Max-Change: 0.00033
-Iteration: 16, Log-Lik: -2534.270, Max-Change: 0.00033
-Iteration: 17, Log-Lik: -2534.270, Max-Change: 0.00029
-Iteration: 18, Log-Lik: -2534.270, Max-Change: 0.00168
-Iteration: 19, Log-Lik: -2534.270, Max-Change: 0.00017
-Iteration: 20, Log-Lik: -2534.270, Max-Change: 0.00016
-Iteration: 21, Log-Lik: -2534.270, Max-Change: 0.00023
-Iteration: 22, Log-Lik: -2534.270, Max-Change: 0.00014
-Iteration: 23, Log-Lik: -2534.270, Max-Change: 0.00013
-Iteration: 24, Log-Lik: -2534.270, Max-Change: 0.00024
-Iteration: 25, Log-Lik: -2534.270, Max-Change: 0.00011
-Iteration: 26, Log-Lik: -2534.270, Max-Change: 0.00009
+Iteration: 1, Log-Lik: -2540.252, Max-Change: 0.17242
+Iteration: 2, Log-Lik: -2532.798, Max-Change: 0.12904
+Iteration: 3, Log-Lik: -2530.427, Max-Change: 0.19357
+Iteration: 4, Log-Lik: -2528.853, Max-Change: 0.04908
+Iteration: 5, Log-Lik: -2528.642, Max-Change: 0.03916
+Iteration: 6, Log-Lik: -2528.509, Max-Change: 0.14258
+Iteration: 7, Log-Lik: -2528.230, Max-Change: 0.00926
+Iteration: 8, Log-Lik: -2528.218, Max-Change: 0.00771
+Iteration: 9, Log-Lik: -2528.209, Max-Change: 0.03279
+Iteration: 10, Log-Lik: -2528.191, Max-Change: 0.00293
+Iteration: 11, Log-Lik: -2528.190, Max-Change: 0.00272
+Iteration: 12, Log-Lik: -2528.189, Max-Change: 0.00536
+Iteration: 13, Log-Lik: -2528.189, Max-Change: 0.00131
+Iteration: 14, Log-Lik: -2528.188, Max-Change: 0.00108
+Iteration: 15, Log-Lik: -2528.188, Max-Change: 0.00324
+Iteration: 16, Log-Lik: -2528.188, Max-Change: 0.00031
+Iteration: 17, Log-Lik: -2528.188, Max-Change: 0.00034
+Iteration: 18, Log-Lik: -2528.188, Max-Change: 0.00168
+Iteration: 19, Log-Lik: -2528.188, Max-Change: 0.00025
+Iteration: 20, Log-Lik: -2528.188, Max-Change: 0.00022
+Iteration: 21, Log-Lik: -2528.188, Max-Change: 0.00041
+Iteration: 22, Log-Lik: -2528.188, Max-Change: 0.00018
+Iteration: 23, Log-Lik: -2528.188, Max-Change: 0.00018
+Iteration: 24, Log-Lik: -2528.188, Max-Change: 0.00034
+Iteration: 25, Log-Lik: -2528.188, Max-Change: 0.00015
+Iteration: 26, Log-Lik: -2528.188, Max-Change: 0.00014
+Iteration: 27, Log-Lik: -2528.188, Max-Change: 0.00026
+Iteration: 28, Log-Lik: -2528.188, Max-Change: 0.00012
+Iteration: 29, Log-Lik: -2528.188, Max-Change: 0.00011
+Iteration: 30, Log-Lik: -2528.188, Max-Change: 0.00021
+Iteration: 31, Log-Lik: -2528.188, Max-Change: 0.00010
+Iteration: 32, Log-Lik: -2528.188, Max-Change: 0.00009
 </code></pre>
 
 <pre><code class="r">mirtCluster()
@@ -294,9 +300,12 @@ Iteration: 26, Log-Lik: -2534.270, Max-Change: 0.00009
 M2(mod2, Theta=Theta, impute = 10)
 </code></pre>
 
-<pre><code>##              M2 df       p    RMSEA  RMSEA_5 RMSEA_95      TLI      CFI
-## stats    10.917  5 0.06780 0.033912 0.005590 0.062234 0.944596 0.972298
-## SD_stats  1.013  0 0.03317 0.003352 0.001768 0.002694 0.009476 0.004738
+<pre><code>##              M2 df       p   RMSEA  RMSEA_5 RMSEA_95   TLI      CFI
+## stats    11.993  5 0.04231 0.03714 0.007957 0.064919 0.937 0.968491
+## SD_stats  1.102  0 0.01069 0.00274 0.004129 0.002418 0.010 0.005001
+##             SRMSR
+## stats    0.032653
+## SD_stats 0.001117
 </code></pre>
 
 </body>

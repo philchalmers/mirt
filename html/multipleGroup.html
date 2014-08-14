@@ -235,6 +235,8 @@ M2(mod_configural)
 
 <pre><code>##       D1.M2 D2.M2 Total.M2  df      p RMSEA RMSEA_5 RMSEA_95  TLI CFI
 ## stats 81.49  70.3    151.8 180 0.9378     0       0 0.002463 1.01   1
+##       D1.SRMSR D2.SRMSR
+## stats  0.02358  0.02079
 </code></pre>
 
 <pre><code class="r">mod_metric &lt;- multipleGroup(dat, models, group = group, invariance=c(&#39;slopes&#39;)) #equal slopes
@@ -365,7 +367,7 @@ Iteration: 17, Log-Lik: -17880.364, Max-Change: 0.00004
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    1.381    0.107    1.260    0.225    1.021    0.000    0.008
+##    0.911    0.068    0.834    0.131    0.692    0.000    0.007
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -397,7 +399,7 @@ Iteration: 17, Log-Lik: -17880.364, Max-Change: 0.00002
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    0.577    0.089    0.475    0.223    0.240    0.000    0.009
+##    0.333    0.071    0.253    0.138    0.108    0.000    0.007
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -3008,8 +3010,8 @@ Stage 3 = 157, LL = -25224.1, AR(1.20) = [0.26; 0.26], gam = 0.0109, Max-Change 
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 37652 37654 37761 37904 -18781   NaN NaN   NaN
-## 2 37642 37646 37788 37978 -18761 39.86  15 5e-04
+## 1 37658 37660 37767 37910 -18784   NaN NaN   NaN
+## 2 37646 37650 37792 37983 -18763 41.49  15 3e-04
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -3023,8 +3025,8 @@ Stage 3 = 157, LL = -25224.1, AR(1.20) = [0.26; 0.26], gam = 0.0109, Max-Change 
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 37821 37822 37894 37989 -18880   NaN NaN NaN
-## 2 37652 37654 37761 37904 -18781 198.8  15   0
+## 1 37815 37815 37887 37983 -18877   NaN NaN NaN
+## 2 37658 37660 37767 37910 -18784 186.6  15   0
 </code></pre>
 
 <pre><code class="r">############
