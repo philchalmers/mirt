@@ -88,6 +88,9 @@ test_that('one factor', {
     fit2 <- itemfit(mod_metric)
     expect_is(fit2, 'list')
 
+    g1 <- extract.group(mod_metric, 1)
+    expect_equal(as.numeric(coef(g1)[[1]]), c(1.252, 0.575, 0.000, 1.000), tolerance = 1e-2)
+
     #missing data
     set.seed(1234)
     Theta1 <- rnorm(1000, -1)

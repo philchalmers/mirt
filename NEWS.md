@@ -12,6 +12,9 @@
   
 ## NEW FEATURES
 
+- new `extract.group()` function to extract a single group object from an objects 
+  previously returned by `multipleGroup()` 
+
 - return the SRMSR statistic in `M2()` along with the residual matrix (suggested by Dave Flora)
 
 - accept `Etable` default input in `customPriorFun` (suggested by Alexander Robitzsch)
