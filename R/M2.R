@@ -6,8 +6,8 @@
 #' fitting the null model.
 #' 
 #' @return Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
-#'   p-value, RMSEA (with 90\% confidence interval), and optionally the TLI and CFI model 
-#'   fit statistics
+#'   p-value, RMSEA (with 90\% confidence interval), SRMSR if all items were ordinal, 
+#'   and optionally the TLI and CFI model fit statistics
 #'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package

@@ -28,7 +28,8 @@
 #' used in this subroutine and will be
 #' passed to the returned object for use in generic functions such as \code{summary()} and
 #' \code{fscores()}. Again, factor means and variances are fixed to ensure proper identification.
-#' If the model is exploratory then the returned class will be 'ExploratoryClass'.
+#' If the model is exploratory then the returned class will be \code{'ExploratoryClass'},
+#' otherwise it will be of class \code{'ConfirmatoryClass'}.
 #'
 #' If the model is an exploratory item factor analysis estimation will begin
 #' by computing a matrix of quasi-polychoric correlations. A
@@ -60,7 +61,8 @@
 #' means greater than .95, or items that are only .05 greater than the
 #' guessing parameter, should be considered for removal from the analysis or
 #' treated with prior parameter distributions. The same type of reasoning is
-#' applicable when including upper bound parameters as well. Also, increasing the
+#' applicable when including upper bound parameters as well. For polytomous items, if categories
+#' are rarely endoresed then this will cause similar issues. Also, increasing the
 #' number of quadrature points per dimension may help to stabilize the estimation process
 #' in higher dimensions. Finally, solutions that are not well defined also will have difficulty
 #' converging, and can indicate that the model has been misspecified (e.g., extracting too many
@@ -73,9 +75,9 @@
 #' to the console too often (indicating that the parameters were being constrained since they are 
 #' naturally moving in steps greater than 0.25) then the model may either be ill defined or have a
 #' very flat likelihood surface, and genuine maximum-likelihood parameter estimates may be difficult
-#' to find. Additionally, it is recommended that at least 400 cycles are run through to approximate 
-#' the observed information matrix accurately, which can be accomplished either by decreasing the 
-#' \code{TOL} criteria or setting \code{SE = TRUE}.
+#' to find. Standard errors are computed following the model convergence by passing 
+#' \code{SE = TRUE}, to perform an addition MH-RM stage but treating the maximum-likelihood 
+#' estimates as fixed points.
 #' 
 #' @return function returns an object of class \code{ExploratoryClass} 
 #'   (\link{ExploratoryClass-class}) if the estimated model
@@ -538,7 +540,6 @@
 #' pmod1 <- mirt(Science, 1)
 #' plot(pmod1)
 #' summary(pmod1)
-# fitIndices(pmod1) #M2 limited information statistic
 #'
 #' #Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
 #' #first obtain parameter index

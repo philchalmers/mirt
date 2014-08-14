@@ -6,6 +6,7 @@
 #' @param x mirt model of class 'MultipleGroupClass'
 #' @param group a number signifying which group should be extracted
 #' @keywords extract
+#' @seealso \code{\link{extract.item}}
 #' @export extract.group
 #' @examples
 #'

@@ -80,7 +80,7 @@
 #' # define a parallel cluster (optional) to help speed up internal functions
 #' mirtCluster()
 #'
-#' #  Information matrix with S-EM
+#' #  Information matrix with crossprod
 #' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
 #' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF

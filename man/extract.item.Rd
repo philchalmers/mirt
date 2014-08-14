@@ -26,5 +26,8 @@ mod <- mirt(Science, 1)
 extr.1 <- extract.item(mod, 1)
 }
 }
+\seealso{
+\code{\link{extract.group}}
+}
 \keyword{extract}
 

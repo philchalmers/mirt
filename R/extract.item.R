@@ -11,6 +11,7 @@
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory 
 #'   models that contain several zero slopes
 #' @keywords extract
+#' @seealso \code{\link{extract.group}}
 #' @export extract.item
 #' @examples
 #'

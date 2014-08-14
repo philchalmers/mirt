@@ -254,7 +254,7 @@ anova(EH, EH1)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{mirt}}, \code{\link{DIF}}
+\code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}
 }
 \keyword{models}
 

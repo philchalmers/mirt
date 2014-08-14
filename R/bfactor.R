@@ -60,7 +60,7 @@
 #' Gibbons, R. D., Darrell, R. B., Hedeker, D., Weiss, D. J., Segawa, E., Bhaumik, D. K.,
 #' Kupfer, D. J., Frank, E., Grochocinski, V. J., & Stover, A. (2007).
 #' Full-Information item bifactor analysis of graded response data.
-#' \emph{Applied Psychological Measurement, 31}, 4-19
+#' \emph{Applied Psychological Measurement, 31}, 4-19.
 #'
 #' @keywords models
 #' @export bfactor
@@ -176,6 +176,7 @@
 #'     G2 = 9-16
 #'     COV = G1*G2')
 #'
+#' #quadpts dropped for faster estimation, but not as precise
 #' simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
 #' coef(simmod)
 #' summary(simmod)

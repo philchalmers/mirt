@@ -32,5 +32,8 @@ summary(group.1)
 plot(group.1, type = 'score')
 }
 }
+\seealso{
+\code{\link{extract.item}}
+}
 \keyword{extract}
 

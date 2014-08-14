@@ -63,7 +63,7 @@
 #'
 #' Thissen, D., Pommerich, M., Billeaud, K., & Williams, V. S. L. (1995). 
 #' Item Response Theory for Scores on Tests Including Polytomous Items with Ordered Responses. 
-#' \emph{Applied Psychological Measurement, 19}, 39-49
+#' \emph{Applied Psychological Measurement, 19}, 39-49.
 #'
 #' Warm, T. A. (1989). Weighted likelihood estimation of ability in item response theory.
 #' \emph{Psychometrika, 54}, 427-450.

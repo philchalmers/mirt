@@ -22,7 +22,7 @@
 #' for(i in 1:20)
 #'     dat[NAperson[i], NAitem[i]] <- NA
 #' (mod <- mirt(dat, 1))
-#' scores <- fscores(mod, method = 'MAP', full.scores = TRUE, scores.only = TRUE)
+#' scores <- fscores(mod, method = 'MAP', scores.only = TRUE)
 #'
 #' #re-estimate imputed dataset (good to do this multiple times and average over)
 #' fulldata <- imputeMissing(mod, scores)

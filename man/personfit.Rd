@@ -42,7 +42,7 @@ fit <- personfit(x)
 head(fit)
 
 #using precomputed Theta
-Theta <- fscores(x, method = 'MAP', full.scores = TRUE, scores.only = TRUE)
+Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 personfit(x, Theta=Theta)
 
 #muliple group Rasch model example
