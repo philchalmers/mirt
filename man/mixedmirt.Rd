@@ -5,7 +5,7 @@
 \usage{
 mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
   itemtype = "Rasch", itemdesign = NULL, constrain = NULL, pars = NULL,
-  return.design = FALSE, SE = TRUE, ...)
+  return.design = FALSE, SE = TRUE, internal_constraints = TRUE, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -50,6 +50,10 @@ been reassigned?}
 
 \item{SE}{logical; compute the standard errors by approximating the information matrix
 using the MHRM algorithm? Default is TRUE}
+
+\item{internal_constraints}{logical; use the internally defined constraints for constraining
+effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
+underidentification}
 
 \item{...}{additional arguments to be passed to the MH-RM estimation engine. See
   \code{\link{mirt}} for more details and examples}

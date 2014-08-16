@@ -24,6 +24,12 @@ test_that('mixed dich', {
     L <- matrix(c(1, numeric(ncol(names) - 1L)), 1L)
     wld <- wald(mod1, L, C=as.numeric(L))
     expect_equal(wld$W[1], 2.262686, tolerance = 1e-4)
+    
+    mod1a <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, SE=FALSE,
+                      verbose = FALSE, draws = 10, internal_constraints = FALSE)
+    cfs <- as.numeric(do.call(c, coef(mod1a, digits=4)))
+    expect_equal(cfs, c(0.7872,1.6548,1,-1.3497,0,1,1.3846,2.7506,1,-2.4455,0,1,2.4523,4.3594,1,-3.1411,0,1,0.3555,0.6675,1,-0.2773,0,1,1.5055,2.6693,1,-0.5364,0,1,1.4066,3.1572,1,-1.6433,0,1,0.9762,1.9109,1,-1.5035,0,1,1.4161,2.5814,1,-2.394,0,1,0.8393,1.9342,1,-1.7969,0,1,0.878,2.0502,1,1.7316,0,1,0,0.1445),
+                 tolerance = 1e-2)
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA

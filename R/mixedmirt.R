@@ -63,6 +63,9 @@
 #'   been reassigned?
 #' @param SE logical; compute the standard errors by approximating the information matrix 
 #'   using the MHRM algorithm? Default is TRUE
+#' @param internal_constraints logical; use the internally defined constraints for constraining
+#'   effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of 
+#'   underidentification
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
 #'   \code{\link{mirt}} for more details and examples
 #'
@@ -214,10 +217,11 @@
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE,
-                      SE = TRUE, ...)
+                      SE = TRUE, internal_constraints = TRUE, ...)
 {
     Call <- match.call()
     svinput <- pars
+    iconstrain <- constrain
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
         stop('itemtype contains unsupported classes of items')
@@ -304,6 +308,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
         return(pars)
     }
     if(is.data.frame(svinput)) pars <- svinput
+    if(!internal_constraints) constrain <- iconstrain
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
                       SE=SE, ...)
