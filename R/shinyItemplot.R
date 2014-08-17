@@ -20,7 +20,8 @@ shinyItemplot <- function(){
                                         'graded' = 'graded', 
                                         'nominal' = 'nominal', 
                                         'gpcm' = 'gpcm', 
-                                        'partcomp' = 'partcomp'),
+                                        'partcomp' = 'partcomp', 
+                                        'ideal' = 'ideal'),
                             selected = 'dich'),
                 
                 selectInput(inputId = "plottype",
@@ -68,6 +69,12 @@ shinyItemplot <- function(){
                                                               min = 0, max = 1, value = 1, step = 0.05)                                         
                                  ),
                                  
+                                 conditionalPanel(condition = "input.itemclass == 'ideal'",
+                                                  sliderInput(inputId = "idpar",
+                                                              label = "d value:",
+                                                              min = -5, max = 5, value = 0, step = 0.25)         
+                                 ),
+                                 
                                  conditionalPanel(condition = "input.itemclass != 'dich'",
                                                   conditionalPanel(condition = "input.itemclass == 'gpcm' || 
                                                                    input.itemclass == 'nominal'",
@@ -75,16 +82,19 @@ shinyItemplot <- function(){
                                                                                label = "d0 value (default fixed at 0):",
                                                                                min = -5, max = 5, value = 0, step = 0.25)
                                                   ),
-                                                  sliderInput(inputId = "d1par",
-                                                              label = "d1 value:",
-                                                              min = -5, max = 5, value = 1, step = 0.25),
-                                                  sliderInput(inputId = "d2par",
-                                                              label = "d2 value:",
-                                                              min = -5, max = 5, value = 0, step = 0.25),
-                                                  conditionalPanel(condition = "input.itemclass != 'partcomp'",
-                                                                   sliderInput(inputId = "d3par",
-                                                                               label = "d3 value:",
-                                                                               min = -5, max = 5, value = -1, step = 0.25)
+                                                  
+                                                  conditionalPanel(condition = "input.itemclass != 'ideal'",
+                                                      sliderInput(inputId = "d1par",
+                                                                  label = "d1 value:",
+                                                                  min = -5, max = 5, value = 1, step = 0.25),
+                                                      sliderInput(inputId = "d2par",
+                                                                  label = "d2 value:",
+                                                                  min = -5, max = 5, value = 0, step = 0.25),
+                                                      conditionalPanel(condition = "input.itemclass != 'partcomp'",
+                                                                       sliderInput(inputId = "d3par",
+                                                                                   label = "d3 value:",
+                                                                                   min = -5, max = 5, value = -1, step = 0.25)
+                                                      )
                                                   )
                 ),
                                  
@@ -199,7 +209,8 @@ shinyItemplot <- function(){
                                    nominal='nominal',
                                    nestlogit='2PLNRM',
                                    partcomp='PC2PL',
-                                   nestlogit='2PLNRM')
+                                   nestlogit='2PLNRM',
+                                   ideal='ideal')
                 nominal <- NULL
                 model <- 1
                 if(input$nfact) model <- 2
@@ -254,6 +265,7 @@ shinyItemplot <- function(){
                     par[names(par) == 'a1'] <- input$a1par
                     par[names(par) == 'a2'] <- input$a2par
                     par[names(par) == 'd'] <- input$dpar
+                    par[names(par) == 'd'] <- input$idpar
                     par[names(par) == 'g'] <- logit(input$gpar)
                     par[names(par) == 'u'] <- logit(input$upar)
                     par[names(par) == 'd0'] <- input$d0par
