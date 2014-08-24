@@ -118,7 +118,7 @@ mirt.model <- function(input = NULL, file = "", COV = NULL, quiet = TRUE, ...)
         }
         if(!is.null(COV)){
             tmp <- outer(fnames, fnames, FUN=function(x, y) paste0(x, paste0('*', y)))
-            sel <- upper.tri(COV) & COV
+            sel <- upper.tri(COV,TRUE) & COV
             tmp <- tmp[sel]
             if(length(tmp) > 1L){
                 string <- c(string, paste(c('COV = ', paste0(tmp[-length(tmp)], ','),
