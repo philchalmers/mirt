@@ -170,8 +170,8 @@ setMethod(
             if(!rotF$orthogonal){
                 Phi <- rotF$Phi
                 Phi <- round(Phi, digits)
-                colnames(Phi) <- rownames(Phi) <- colnames(F)
             }
+            colnames(Phi) <- rownames(Phi) <- colnames(F)
             if(verbose){
                 cat("\nRotation: ", rotate, "\n")
                 cat("\nRotated factor loadings: \n\n")

@@ -32,7 +32,7 @@ setMethod(
         gpars <- ExtractGroupPars(object@pars[[length(object@pars)]])
         Phi <- gpars$gcov
         Phi <- round(Phi, digits)
-        colnames(Phi) <- rownames(Phi) <- paste('F',1:ncol(Phi), sep='')
+        colnames(Phi) <- rownames(Phi) <- colnames(F)
         Flist <- list()
         if(verbose){
             cat("\nFactor loadings metric: \n")
