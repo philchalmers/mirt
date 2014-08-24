@@ -93,7 +93,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         for(i in 1L:length(tmp))
             estgmeans[find[tmp[i] == factorNames]] <- TRUE        
     }
-    exploratory <- exploratory || (all(estlam[,1L:nfact]) && nfact > 1L)
+    exploratory <- exploratory || (all(estlam[,1L:nfact]) && nfact > 1L && 
+                                       !any(estgmeans) && !any(estgcov))
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
         loads <- eigen(Rpoly)$vector[,1L:nfact, drop = FALSE]
@@ -114,5 +115,6 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')))
     attr(ret, 'prodlist') <- prodlist
+    attr(ret, 'exploratory') <- exploratory
     return(ret)
 }

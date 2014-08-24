@@ -95,6 +95,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixed.design=mixed.design,
                            customItems=customItems, key=key, nominal.highlow=nominal.highlow)
     prodlist <- attr(pars, 'prodlist')
+    exploratory <- attr(pars, 'exploratory')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){
         names(pars) <- c(itemnames, 'Group_Parameters')
         attr(pars, 'parnumber') <- NULL
