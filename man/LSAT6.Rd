@@ -16,6 +16,11 @@ model <- mirt.model('F = 1-5
 (mod <- mirt(dat, model))
 coef(mod)
 
+#equivalentely, but with a different parameterization
+mod2 <- mirt(dat, 1, itemtype = 'Rasch')
+anova(mod, mod2) #equal
+coef(mod2)
+sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 
 }
 }
