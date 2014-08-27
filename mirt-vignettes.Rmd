@@ -13,6 +13,16 @@ generated using R markdown via the `knitr` package and hosted on Github.
 - [mixedmirt](http://philchalmers.github.io/mirt/html/mixedmirt.html)
 - [multipleGroup](http://philchalmers.github.io/mirt/html/multipleGroup.html)
 
+### S4 generic methods
+
+- [print](http://philchalmers.github.io/mirt/html/print-method.html)
+- [show](http://philchalmers.github.io/mirt/html/show-method.html)
+- [summary](http://philchalmers.github.io/mirt/html/summary-method.html)
+- [coef](http://philchalmers.github.io/mirt/html/coef-method.html)
+- [anova](http://philchalmers.github.io/mirt/html/anova-method.html)
+- [residuals](http://philchalmers.github.io/mirt/html/residuals-method.html)
+- [plot](http://philchalmers.github.io/mirt/html/plot-method.html)
+
 ### Secondary computation functions
 
 - [boot.mirt](http://philchalmers.github.io/mirt/html/boot.mirt.html)
