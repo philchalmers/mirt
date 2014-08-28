@@ -1,0 +1,132 @@
+ltm models with mirt
+===================================
+
+`ltm` is an IRT package which predates the release of `mirt` by several years, and is capable
+of performing IRT analyses primarily for unidimensional models. This vignette demonstrates how 
+equivalent analyses in `ltm` can be run performed in `mirt`. 
+
+## Dichotomous data
+
+```{r}
+library(ltm)
+library(mirt)
+dat <- key2binary(SAT12,
+    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+head(dat)
+```
+
+### 1PL, 2PL, and 3PL model
+
+1PL model
+
+```{r}
+#ltm
+(lmod1 <- ltm::rasch(dat, IRT.param = FALSE))
+summary(lmod1)
+
+#mirt
+model <- mirt.model('Theta = 1-32
+              CONSTRAIN = (1-32, a1)')
+(mmod1 <- mirt::mirt(dat, model))
+coef(mmod1)
+
+# an equivalent parameterization, constraining the slopes to be 1 and freeing the latent variance
+(mmod1b <- mirt::mirt(dat, 1, itemtype = 'Rasch'))
+coef(mmod1b)
+sqrt(coef(mmod1b)[[33]][2]) #SD of latent variable equivalent to constrained slopes
+```
+
+2PL model
+
+```{r}
+#ltm
+(lmod2 <- ltm::ltm(dat ~ z1, IRT.param = FALSE))
+summary(lmod2)
+
+#mirt
+(mmod2 <- mirt::mirt(dat, 1))
+coef(mmod2)
+```
+
+(Exploratory) Multidimensional 2PL model
+
+```{r}
+#ltm 
+lmod3 <- ltm::ltm(dat ~ z1 + z2, IRT.param = FALSE)
+lmod3
+summary(lmod3)
+
+#mirt
+mmod3 <- mirt::mirt(dat, 2)
+mmod3
+coef(mmod3)
+summary(mmod3)
+```
+
+Quadratic model
+
+```{r}
+#ltm
+(lmod4 <- ltm::ltm(dat ~ z1 + I(z1^2), IRT.param = FALSE))
+summary(lmod4)
+
+#mirt (can be more specific about where the loadings should be)
+model <- mirt.model('Theta = 1-32
+                    (Theta*Theta) = 1-32')
+(mmod4 <- mirt::mirt(dat, model))
+coef(mmod4)
+```
+
+3PL model
+
+```{r}
+(lmod5 <- ltm::tpm(dat, IRT.param = FALSE))
+summary(lmod5)
+
+# mirt can also include prior distributions to help stabalize the model
+(mmod5 <- mirt(dat, 1, '3PL'))
+coef(mmod5)
+```
+
+## Polytomous data
+
+### graded response model
+
+`ltm` can get hung up in certain likelihood regions, therefore rerunning the GRM is recommended.
+See this (crossvalidated post)[http://stats.stackexchange.com/questions/63891/is-r-output-reliable-specially-irt-package-ltm/95324#95324] for details.
+
+```{r}
+(lmod6 <- ltm::grm(Science, IRT.param = FALSE))
+summary(lmod6)
+
+(mmod6 <- mirt(Science, 1))
+coef(mmod6)
+```
+
+### generalized partial credit
+
+```{r}
+(lmod7 <- ltm::gpcm(Science, IRT.param = FALSE))
+summary(lmod7)
+
+(mmod7 <- mirt(Science, 1, 'gpcm'))
+coef(mmod7)
+```
+
+## Extra features (e.g., factor scores, residuals, ...)
+
+```{r}
+plot(lmod2, items = 1:3)
+plot(mmod2, type = 'trace', which.items = 1:3)
+plot(mmod2, type = 'trace', which.items = 1:3, facet_items = FALSE)
+
+#scored with EAP estimator
+fs <- factor.scores(lmod2)
+head(fs$score.dat)
+fs2 <- fscores(mmod2)
+head(fs2)
+
+#item fit
+item.fit(lmod2)
+itemfit(mmod2)
+```
