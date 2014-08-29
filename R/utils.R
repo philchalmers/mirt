@@ -203,18 +203,13 @@ d2r <-function(d) pi*d/180
 closeEnough <- function(x, low, up) all(x >= low & x <= up)
 
 logit <- function(x){
-    ret <- log(x / (1 - x))
+    ret <- qlogis(x)
     ret <- ifelse(x == 0, -999, ret)
     ret <- ifelse(x == 1, 999, ret)
     ret
 }
 
-antilogit <- function(x){
-    ret <- 1 / (1 + exp(-x))
-    ret <- ifelse(x == -999, 0, ret)
-    ret <- ifelse(x == 999, 1, ret)
-    ret
-}
+antilogit <- function(x) plogis(x)
 
 test_info <- function(pars, Theta, Alist, K){
     infolist <- list()
