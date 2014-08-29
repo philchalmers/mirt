@@ -1,3 +1,14 @@
+# Changes in mirt 1.6
+
+## MAJOR CHANGES
+
+- `sirt` package added to suggests list. Special thanks to Alexander Robitzsch (author of `sirt`) 
+  for developing useful wrapper functions for mirt such as `mirt.wrapper.coef()`, `tam2mirt()`, and   
+  `lavaan2mirt()`. As well, many examples in `sirt` demonstrate the possiblitity of estimating 
+  specialized IRT models with `mirt`, such as the: Ramsay quotient, latent class,
+  mixed Rasch, located latent class, probabilistic Guttman, nonparametric, discrete graded 
+  membership, and multidimensional IRT discrete traits, DINA, and Rasch copula models. 
+
 # Changes in mirt 1.5
 
 ## MAJOR CHANGES
