@@ -1,0 +1,186 @@
+# mirt example mulitidimensional latent class model
+
+Adapted from the `sirt` package  examples (`rasch.mirtlc`).
+
+```{r}
+library(mirt)
+library(sirt)
+
+set.seed(979)
+I <- 9
+N <- 5000
+b <- seq( - 1.5, 1.5 , len=I)
+b <- rep(b,3)
+
+# define class locations
+theta.k <- c(-3.0, -4.1, -2.8 , 1.7 , 2.3 , 1.8 ,
+0.2 , 0.4 , -0.1 ,
+ 2.6 , 0.1, -0.9, -1.1 ,-0.7 , 0.9 )
+Nclasses <- 5
+theta.k0 <- theta.k <- matrix( theta.k , Nclasses , 3 , byrow=TRUE )
+pi.k <- c(.20,.25,.25,.10,.15)
+theta <- theta.k[ rep( 1:Nclasses , round(N*pi.k) ) , ]
+dimensions <- rep( 1:3 , each=I)
+
+# simulate item responses
+dat <- matrix( NA , nrow=N , ncol=I*3)
+for (ii in 1:(3*I) ){
+dat[,ii] <- 1 * ( runif(N) < plogis( theta[, dimensions[ii] ] - b[ ii] ) )
+}
+colnames(dat) <- paste0( rep( LETTERS[1:3] , each=I ) , 1:(3*I) )
+
+# estimate model
+mod1 <- rasch.mirtlc( dat , Nclasses=Nclasses , dimensions=dimensions ,
+ modeltype="MLC1" ,
+ref.item= c(5,14,23) , glob.conv=.0005, conv1=.0005)
+round(
+ cbind( mod1$theta.k , mod1$pi.k ) , 3 )
+
+cbind(
+ theta.k , pi.k )
+
+# plot class locations
+plot( 1:3 , mod1$theta.k[1,] , xlim=c(1,3) , ylim=c(-5,3) , col=1 , pch=1 , type="n" ,
+axes=FALSE, xlab="Dimension" , ylab="Location")
+axis(1 , 1:3 ) ; axis(2) ; axis(4)
+for (cc in 1:Nclasses){ # cc <- 1
+lines(1:3, mod1$theta.k[cc,] , col=cc , lty=cc )
+points(1:3, mod1$theta.k[cc,] , col=cc , pch =cc )
+}
+
+# estimate model with gdm function in CDM package
+library(CDM)
+
+# define Q-matrix
+Qmatrix <- matrix(0,3*I,3)
+Qmatrix[ cbind( 1:(3*I) , rep(1:3 , each=I) ) ] <- 1
+set.seed(9176)
+
+# random starting values for theta locations
+theta.k <- matrix( 2*rnorm(5*3) , 5 , 3 )
+colnames(theta.k) <- c("Dim1","Dim2","Dim3")
+
+# try possibly different starting values
+# estimate model in CDM
+b.constraint <- cbind( c(5,14,23) , 1 , 0 )
+mod2 <- CDM::gdm( dat , theta.k = theta.k , b.constraint=b.constraint, skillspace="est",
+irtmodel="1PL", Qmatrix=Qmatrix)
+summary(mod2)
+
+#------
+# estimate model with MultiLCIRT package
+library(MultiLCIRT)
+
+# aggregated dataset in order to input only unique response patterns
+out <- MultiLCIRT::aggr_data( as.matrix(dat) , fort=TRUE)
+S <- out$data_dis
+yv <- out$freq
+
+# define matrix to allocate each item to one dimension
+multi1 <- matrix( 1:(3*I) , nrow=3 , byrow=TRUE )
+
+# define reference items in item-dimension allocation matrix
+multi1[ 1 , c(1,5) ] <- c(5,1)
+multi1[ 2 , c(10,14) - 9 ] <- c(14,9)
+multi1[ 3 , c(19,23) - 18 ] <- c(23,19)
+
+# Rasch model with 5 latent classes (random start: start=1)
+mod3 <- MultiLCIRT::est_multi_poly(S,yv,k=5,start=1,link=1,multi=multi1,tol=10^-5 ,
+output=TRUE , disp=TRUE , fort=TRUE)
+
+# estimated location points and class probabilities in MultiLCIRT
+cbind( t( mod3$Th ) , mod3$piv )
+
+# compare results with rasch.mirtlc
+cbind( mod1$theta.k , mod1$pi.k )
+
+# simulated data parameters
+cbind( theta.k , pi.k )
+
+#----
+# estimate model with cutomized input in mirt
+library(mirt)
+
+#-- define Theta design matrix for 5 classes
+Theta <- diag(5)
+Theta <- cbind( Theta , Theta , Theta )
+r1 <- rownames(Theta) <- paste0("C",1:5)
+colnames(Theta) <- c( paste0(r1 , "D1") , paste0(r1 , "D2") , paste0(r1 , "D3") )
+Theta
+
+I <- ncol(dat) # I = 27
+mirtmodel <- mirt::mirt.model("
+C1D1 = 1-9 
+C2D1 = 1-9 
+C3D1 = 1-9 
+C4D1 = 1-9 
+C5D1 = 1-9
+C1D2 = 10-18 
+C2D2 = 10-18 
+C3D2 = 10-18 
+C4D2 = 10-18 
+C5D2 = 10-18
+C1D3 = 19-27 
+C2D3 = 19-27 
+C3D3 = 19-27 
+C4D3 = 19-27 
+C5D3 = 19-27
+CONSTRAIN = (1-9,a1),(1-9,a2),(1-9,a3),(1-9,a4),(1-9,a5),
+(10-18,a6),(10-18,a7),(10-18,a8),(10-18,a9),(10-18,a10),
+(19-27,a11),(19-27,a12),(19-27,a13),(19-27,a14),(19-27,a15)
+")
+
+#-- get initial parameter values
+mod.pars <- mirt::mirt(dat, model=mirtmodel , pars = "values")
+
+#-- redefine initial parameter values
+# set all d parameters initially to zero
+ind <- which( ( mod.pars$name == "d" ) )
+mod.pars[ ind ,"value" ] <- 0
+
+# fix item difficulties of reference items to zero
+mod.pars[ ind[ c(5,14,23) ] , "est"] <- FALSE
+mod.pars[ind,]
+
+# initial item parameters of cluster locations (a1,...,a15)
+ind <- which( ( mod.pars$name %in% paste0("a", c(1,6,11) ) ) & ( mod.pars$est ) )
+mod.pars[ind,"value"] <- -2
+ind <- which( ( mod.pars$name %in% paste0("a", c(1,6,11)+1 ) ) & ( mod.pars$est ) )
+mod.pars[ind,"value"] <- -1
+ind <- which( ( mod.pars$name %in% paste0("a", c(1,6,11)+2 ) ) & ( mod.pars$est ) )
+mod.pars[ind,"value"] <- 0
+ind <- which( ( mod.pars$name %in% paste0("a", c(1,6,11)+3 ) ) & ( mod.pars$est ) )
+mod.pars[ind,"value"] <- 1
+ind <- which( ( mod.pars$name %in% paste0("a", c(1,6,11)+4 ) ) & ( mod.pars$est ) )
+mod.pars[ind,"value"] <- 0
+
+#-- define prior for latent class analysis
+lca_prior <- function(Theta,Etable){
+TP <- nrow(Theta)
+if ( is.null(Etable) ){ prior <- rep( 1/TP , TP ) }
+if ( ! is.null(Etable) ){
+prior <- ( rowSums(Etable[ , seq(1,2*I,2)]) + rowSums(Etable[,seq(2,2*I,2)]) )/I
+}
+prior <- prior / sum(prior)
+return(prior)
+}
+
+#-- estimate model in mirt
+mod4 <- mirt::mirt(dat, mirtmodel , pars = mod.pars , verbose=TRUE ,
+technical = list( customTheta=Theta , customPriorFun = lca_prior ,
+MAXQUAD = 1E20) )
+
+# correct number of estimated parameters
+mod4@nest <- as.integer(sum(mod.pars$est) + nrow(Theta)-1 )
+
+# extract coefficients
+# source.all(pfsirt)
+cmod4 <- mirt.wrapper.coef(mod4)
+
+# estimated item difficulties
+dfr <- data.frame( "sim"=b , "mirt"=-cmod4$coef$d , "sirt"=mod1$item$thresh )
+round( dfr , 4 )
+
+
+sessionInfo()
+```

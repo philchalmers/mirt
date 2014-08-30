@@ -1,0 +1,77 @@
+# mirt example for latent class analysis
+
+Adapted from the `sirt` package  examples (`rasch.mirtlc`).
+
+```{r}
+library(mirt)
+library(sirt)
+
+set.seed(657)
+# simulate data according to the Ramsay model
+N <- 1000
+
+# persons
+I <- 11
+
+# items
+theta <- exp( rnorm( N ) ) # person ability
+b <- exp( seq(-2,2,len=I)) # item difficulty
+K <- rep( 3 , I )
+
+# K parameter (=> guessing)
+# apply simulation function
+dat <- sim.qm.ramsay( theta , b , K )
+mmliter <- 50
+
+# maximum number of iterations
+I <- ncol(dat)
+fixed.K <- rep( 3 , I )
+
+# Ramsay QM with fixed K parameter (K=3 in fixed.K specification)
+mod1 <- rasch.mml2( dat , mmliter = mmliter , irtmodel = "ramsay.qm",
+fixed.K = fixed.K )
+summary(mod1)
+
+#*** estimate Model 1 with user defined function in mirt package
+# create user defined function for Ramsays quotient model
+name <- "ramsayqm"
+par <- c("K" = 3 , "b" = 1 )
+est <- c(TRUE, TRUE)
+P.ramsay <- function(par,Theta,ncat){
+    eps <- .01
+    K <- par[1]
+    b <- par[2]
+    num <- exp( exp( Theta[,1] ) / b )
+    denom <- K + num
+    P1 <- num / denom
+    P1 <- eps + ( 1 - 2*eps ) * P1
+    cbind(1-P1, P1)
+}
+
+# create item response function
+ramsayqm <- mirt::createItem(name, par=par, est=est, P=P.ramsay)
+
+# define parameters to be estimated
+mod1m.pars <- mirt::mirt(dat, 1, rep( "ramsayqm",I) ,
+customItems=list("ramsayqm"=ramsayqm), pars = "values")
+mod1m.pars[ mod1m.pars$name == "K" , "est" ] <- FALSE
+
+# define Theta design matrix
+Theta <- matrix( seq(-3,3,len=10) , ncol=1)
+
+# estimate model
+mod1m <- mirt::mirt(dat, 1, rep( "ramsayqm",I) , customItems=list("ramsayqm"=ramsayqm ),
+pars = mod1m.pars , verbose=TRUE ,
+technical = list( customTheta=Theta , NCYCLES=50)
+)
+print(mod1m)
+summary(mod1m)
+cmod1m <- mirt.wrapper.coef( mod1m )$coef
+
+# compare simulated and estimated values
+dfr <- cbind( b , cmod1m$b , exp(mod1$item$b ) )
+colnames(dfr) <- c("simulated" , "mirt" , "sirt_rasch.mml2")
+round( dfr , 2 )
+
+sessionInfo()
+```

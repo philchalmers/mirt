@@ -1,0 +1,101 @@
+# mirt example graded membership model
+
+Adapted from the `sirt` package  examples (`gom.em`).
+
+```{r}
+library(mirt)
+library(sirt)
+
+# define a 2-class model with graded membership
+set.seed(8765)
+I <- 10
+prob.class1 <- runif( I , 0 , .35 )
+prob.class2 <- runif( I , .70 , .95 )
+prob.class3 <- .5*prob.class1+.5*prob.class2 # probabilities for fuzzy class
+probs <- cbind( prob.class1 , prob.class2 , prob.class3)
+
+# define classes
+N <- 1000
+latent.class <- c( rep(1,round(1/3*N)),rep(2,round(1/2*N)),rep(3,round(1/6*N)))
+
+# simulate item responses
+dat <- matrix( NA , nrow=N , ncol=I )
+for (ii in 1:I){
+dat[,ii] <- probs[ ii , latent.class ]
+dat[,ii] <- 1 * ( runif(N) < dat[,ii] )
+}
+colnames(dat) <- paste0( "I" , 1:I)
+
+#** Model 1: estimate latent class model
+mod1 <- gom.em(dat, K=2, problevels= c(0,1) , model="GOM" )
+summary(mod1)
+
+#** Model 2: estimate GOM
+mod2 <- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model="GOM" )
+summary(mod2)
+
+# inspect distribution
+cbind( mod2$theta.k , mod2$pi.k )
+
+#***
+# Model2m: estimate discrete GOM in mirt
+# define latent classes
+Theta <- c(1, 0, .5, .5, 0, 1)
+Theta <- matrix( Theta , nrow=3 , ncol=2,byrow=TRUE)
+
+# define mirt model
+I <- ncol(dat)
+
+#*** create customized item for mirt model
+name <- "icc_gom"
+par <- c("a1" = -1 , "a2" = 1 )
+est <- c(TRUE, TRUE)
+P.gom <- function(par,Theta,ncat){    
+    # GOM for two extremal classes
+    pext1 <- plogis(par[1])
+    pext2 <- plogis(par[2])
+    P1 <- Theta[,1]*pext1 + Theta[,2]*pext2
+    cbind(1-P1, P1)
+}
+
+# create item response function
+icc_gom <- mirt::createItem(name, par=par, est=est, P=P.gom)
+
+#** define prior for latent class analysis
+lca_prior <- function(Theta,Etable){
+    
+    # number of latent Theta classes
+    TP <- nrow(Theta)
+    
+    # prior in initial iteration
+    if ( is.null(Etable) ){ prior <- rep( 1/TP , TP ) }
+    
+    # process Etable (this is correct for datasets without missing data)
+    if ( ! is.null(Etable) ){
+    # sum over correct and incorrect expected responses
+    prior <- ( rowSums(Etable[ , seq(1,2*I,2)]) + rowSums(Etable[,seq(2,2*I,2)]) )/I
+    }
+    prior <- prior / sum(prior)
+    return(prior)
+}
+
+#*** estimate discrete GOM in mirt package
+mod2m <- mirt::mirt(dat, 1, rep( "icc_gom",I) , customItems=list("icc_gom"=icc_gom),
+    technical = list( customTheta=Theta , customPriorFun = lca_prior) )
+
+# correct number of estimated parameters
+mod2m@nest <- as.integer(sum(mod2values(mod2m)$est) + nrow(Theta)-1 )
+
+# extract log-likelihood and compute AIC and BIC
+mod2m@logLik
+( AIC <- -2*mod2m@logLik+2*mod2m@nest )
+( BIC <- -2*mod2m@logLik+log(mod2m@Data$N)*mod2m@nest )
+
+# extract coefficients
+( cmod2m <- mirt.wrapper.coef(mod2m) )
+
+# compare estimated distributions
+round( cbind( "sirt" = mod2$pi.k , "mirt" = mod2m@Prior[[1]] ) , 5 )
+
+sessionInfo()
+```

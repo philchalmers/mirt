@@ -1,0 +1,94 @@
+# mirt example for mixture Rasch model with two classes
+
+Adapted from the `sirt` package examples (`data.read`).
+
+```{r}
+library(mirt)
+
+data(data.read, package='sirt')
+dat <- data.read
+
+# raschmix (in psychomix)
+mod8a <- psychomix::raschmix(data= as.matrix(dat) , k = 2, scores = "saturated")
+summary(mod8a)
+
+# mrm (in mRm)
+mod8b <- mRm::mrm(data.matrix=dat, cl=2)
+mod8b$conv.to.bound
+plot(mod8b)
+print(mod8b)
+
+# mirt
+#* define theta grid
+theta.k <- seq( -5 , 5 , len=9 )
+TP <- length(theta.k)
+Theta <- matrix( 0 , nrow=2*TP , ncol=4)
+Theta[1:TP,1:2] <- cbind(theta.k , 1 )
+Theta[1:TP + TP,3:4] <- cbind(theta.k , 1 )
+Theta
+
+# define model
+I <- ncol(dat) # I = 12
+mirtmodel <- mirt::mirt.model("
+    F1a = 1-12 # slope
+    F1b = 1-12 # difficulty
+    F2a = 1-12 # slope
+    F2b = 1-12 # difficulty
+    CONSTRAIN = (1-12,a1),(1-12,a3)
+")
+
+# get initial parameter values
+mod.pars <- mirt::mirt(dat, model=mirtmodel , pars = "values")
+
+# set starting values for class specific item probabilities
+mod.pars[ mod.pars$name == "d" ,"value" ] <- 0
+mod.pars[ mod.pars$name == "d" ,"est" ] <- FALSE
+mod.pars[ mod.pars$name == "a1" ,"value" ] <- 1
+mod.pars[ mod.pars$name == "a3" ,"value" ] <- 1
+
+# initial values difficulties
+b1 <- qlogis( colMeans(dat) )
+mod.pars[ mod.pars$name == "a2" ,"value" ] <- b1
+mod.pars[ mod.pars$name == "a4" ,"value" ] <- b1 + runif(I , -1 , 1)
+
+#* define prior for mixed Rasch analysis
+mixed_prior <- function(Theta,Etable){
+    NC <- 2
+    
+     # number of theta classes
+    TP <- nrow(Theta) / NC
+    prior1 <- dnorm( Theta[1:TP,1] )
+    prior1 <- prior1 / sum(prior1)
+    if ( is.null(Etable) ){
+     prior <- c( prior1 , prior1 ) }
+    if ( ! is.null(Etable) ){
+    prior <- ( rowSums( Etable[ , seq(1,2*I,2)] ) +
+    rowSums( Etable[,seq(2,2*I,2)]) )/I
+    a1 <- aggregate( prior , list( rep(1:NC , each=TP) ) , sum )
+    a1[,2] <- a1[,2] / sum( a1[,2])
+    
+    # print some information during estimation
+    cat( paste0( " Class proportions: " ,
+    paste0( round(a1[,2] , 3 ) , collapse= " " ) ) , "\n")
+    a1 <- rep( a1[,2] , each=TP )
+    
+    # specify mixture of two normal distributions
+    prior <- a1*c(prior1,prior1)
+    }
+    prior <- prior / sum(prior)
+    return(prior)
+}
+
+#* estimate model
+mod8c <- mirt::mirt(dat, mirtmodel , pars=mod.pars , verbose=TRUE ,
+technical = list( customTheta=Theta , customPriorFun = mixed_prior ) )
+
+# Like in Model 7e, the number of estimated parameters must be included.
+mod8c@nest <- as.integer(sum(mod.pars$est) + 1)
+
+# two class proportions and therefore one probability is freely estimated.
+#* extract item parameters
+sirt::mirt.wrapper.coef(mod8c)
+
+sessionInfo()
+```
