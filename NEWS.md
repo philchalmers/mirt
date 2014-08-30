@@ -4,10 +4,14 @@
 
 - `sirt` package added to suggests list. Special thanks to Alexander Robitzsch (author of `sirt`) 
   for developing useful wrapper functions for mirt such as `mirt.wrapper.coef()`, `tam2mirt()`, and   
-  `lavaan2mirt()`. As well, many examples in `sirt` demonstrate the possiblitity of estimating 
+  `lavaan2mirt()`. As well, many examples in `sirt` demonstrate the possibility of estimating 
   specialized IRT models with `mirt`, such as the: Ramsay quotient, latent class,
   mixed Rasch, located latent class, probabilistic Guttman, nonparametric, discrete graded 
   membership, and multidimensional IRT discrete traits, DINA, and Rasch copula models. 
+  
+- exploratory IRT models are no longer rotated by default in `coef()`, and now requires an 
+  explicit `rotate` argument
+  
 
 # Changes in mirt 1.5
 
@@ -16,10 +20,10 @@
 - for efficiency, the Hessian is no longer computed in `fscores()` unless it is required in the 
   returned object
   
-- estimation with `method = 'MHRM'` now requires and explicity `SE=TRUE` call to compute the
+- estimation with `method = 'MHRM'` now requires and explicitly `SE=TRUE` call to compute the
   information matrix. The matrix is now computed using the ML estimates rather than 
   approximated sequentially after each iteration (very unstable), and therefore a 
-  seperate stage is performed. This provides much better accuracy in the computations
+  separate stage is performed. This provides much better accuracy in the computations
   
 ## NEW FEATURES
 
@@ -31,7 +35,7 @@
 - accept `Etable` default input in `customPriorFun` (suggested by Alexander Robitzsch)
 
 - vignette files for the package examples are now hosted on Github and can be accessed 
-  by following the link mentioned in the vignette location in the index or `?mirt` helpfile
+  by following the link mentioned in the vignette location in the index or `?mirt` help file
 
 - E-step is now computed in parallel (if available) following a `mirtCluster()` definition
 

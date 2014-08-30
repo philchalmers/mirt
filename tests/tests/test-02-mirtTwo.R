@@ -41,7 +41,7 @@ test_that('poly', {
     expect_is(modp2, 'ExploratoryClass')
     expect_equal(modp2@df, 236)
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
-    expect_equal(abs(cfs), abs(c(1.3248, -0.0373, 5.2047, 2.8665, -1.605, -0.1116, -2.4002, 4.02, 1.2556, -3.1606, 0.9372, -1.1447, 4.5539, 1.9064, -1.6944, 1.7547, 0.0843, 3.9762, 1.1913, -2.0395, 0, 0, 1, -0.4825, 1)),
+    expect_equal(abs(cfs), abs(c(-1.2671,-0.4517,5.208,2.868,-1.6058,-1.7331,1.5939,4.0272,1.258,-3.1661,-1.749,0.4018,4.5529,1.906,-1.6941,-1.5709,-0.6795,3.9716,1.1899,-2.0373,0,0,1,0,1)),
                  tolerance = 1e-2)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'ConfirmatoryClass')

@@ -24,7 +24,7 @@ test_that('exploratory mods', {
     expect_equal(fitonefact$M2, 11.92959, tolerance = 1e-2)
     twofact <- mirt(fulldata, 2, verbose = FALSE, draws = 10, method = 'MHRM')
     cfs <- as.numeric(do.call(c, coef(twofact, digits=4, verbose = FALSE)))
-    expect_equal(cfs, c(0.0023,-1.3362,2.0565,0,1,1.8471,0.1089,1.0121,0,1,1.0655,-0.6646,1.7122,0,1,0.185,-0.7199,0.4962,0,1,-0.0826,-0.9982,1.9631,0,1,0,0,1,-0.5326,1),
+    expect_equal(cfs, c(-1.3034,0.3002,2.0565,0,1,-1.2054,-1.3253,1.0121,0,1,-1.404,-0.6002,1.7122,0,1,-0.8326,0.0323,0.4962,0,1,-0.9138,0.2836,1.9631,0,1,0,0,1,0,1),
                  tolerance = 1e-2)
     expect_is(twofact, 'ExploratoryClass')
     expect_message(modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),

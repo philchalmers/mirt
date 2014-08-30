@@ -236,15 +236,11 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
-    definition = function(object, CI = .95, printSE = FALSE, rotate = '', Target = NULL, digits = 3,
+    definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...){
         if(printSE) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
-        if(rotate == ''){
-            rotate <- try(slot(object, 'rotate'), TRUE)
-            if(is(rotate, 'try-error')) rotate <- 'none'
-        }
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         K <- object@K
