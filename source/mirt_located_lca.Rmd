@@ -1,0 +1,99 @@
+# mirt example for latent class analysis
+
+Adapted from the `sirt` package  examples (`data.reck`).
+
+```{r}
+library(mirt)
+library(sirt)
+library(mvtnorm)
+
+data(data.read)
+dat <- data.read
+I <- ncol(dat)
+
+# use 10th item as the reference item
+ref.item <- 10
+
+# ability grid
+theta.k <- seq(-4,4,len=9)
+
+#-- M12a: rasch.mirtlc (in sirt)
+mod12a <- sirt::rasch.mirtlc(dat , Nclasses=3, modeltype="MLC1" , ref.item=ref.item )
+summary(mod12a)
+
+#-- M12b: gdm (in CDM)
+theta.k <- seq(-1 , 1 , len=3)
+
+# initial matrix
+b.constraint <- matrix( c(10,1,0) , nrow=1,ncol=3)
+
+# estimate model
+mod12b <- CDM::gdm( dat , theta.k = theta.k , skillspace="est" , irtmodel="1PL",
+b.constraint=b.constraint , maxiter=200)
+summary(mod12b)
+
+#-- M12c: mirt (in mirt)
+items <- colnames(dat)
+
+# define three latent classes
+Theta <- diag(3)
+
+# define mirt model
+I <- ncol(dat) # I = 12
+mirtmodel <- mirt::mirt.model("
+C1 = 1-12
+C2 = 1-12
+C3 = 1-12
+CONSTRAIN = (1-12,a1),(1-12,a2),(1-12,a3)
+")
+
+# get parameters
+mod.pars <- mirt(dat, model=mirtmodel , pars = "values")
+
+# set starting values for class specific item probabilities
+mod.pars[ mod.pars$name == "d" ,"value" ] <- qlogis( colMeans(dat,na.rm=TRUE) )
+
+# set item difficulty of reference item to zero
+ind <- which( ( paste(mod.pars$item) == items[ref.item] ) &
+( ( paste(mod.pars$name) == "d" ) ) )
+mod.pars[ ind ,"value" ] <- 0
+mod.pars[ ind ,"est" ] <- FALSE
+
+# initial values for a1, a2 and a3
+mod.pars[ mod.pars$name %in% c("a1","a2","a3") ,"value" ] <- c(-1,0,1)
+mod.pars
+
+#* define prior for latent class analysis
+lca_prior <- function(Theta,Etable){
+    # number of latent Theta classes
+    TP <- nrow(Theta)
+    # prior in initial iteration
+    if ( is.null(Etable) ){
+    prior <- rep( 1/TP , TP )
+    }
+    # process Etable (this is correct for datasets without missing data)
+    if ( ! is.null(Etable) ){
+    # sum over correct and incorrect expected responses
+    prior <- ( rowSums( Etable[ , seq(1,2*I,2)] ) + rowSums( Etable[ , seq(2,2*I,2)]))}
+    prior <- prior / sum(prior)
+    return(prior)
+}
+
+#* estimate model
+mod12c <- mirt(dat, mirtmodel , technical = list(
+customTheta=Theta , customPriorFun = lca_prior) ,
+pars = mod.pars , verbose=TRUE )
+
+# estimated parameters from the user customized prior distribution.
+mod12c@nest <- as.integer(sum(mod.pars$est) + 2)
+
+#* extract item parameters
+coef1 <- mirt.wrapper.coef(mod12c)
+
+#* inspect estimated distribution
+mod12c@Theta
+coef1$coef[1,c("a1","a2","a3")]
+mod12c@Prior[[1]]
+
+sessionInfo()
+```

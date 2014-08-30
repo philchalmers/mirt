@@ -1,0 +1,98 @@
+# mirt example for latent class analysis
+
+Adapted from the `sirt` package  examples (`data.reck`).
+
+```{r}
+library(mirt)
+library(sirt)
+library(mvtnorm)
+
+data(data.read)
+dat <- data.read
+I <- ncol(dat)
+
+
+# define some simple Q-Matrix (does not really make in this application)
+Q <- matrix( 0 , nrow=12,ncol=2)
+Q[1:4,1] <- 1
+Q[5:8,2] <- 1
+Q[9:12,1:2] <- 1
+
+# define discrete theta distribution with 3 dimensions
+Theta <- matrix(c(0,0, 1,0, 0,1, 1,1), byrow=TRUE, ncol=2)
+Theta
+
+#-- Model 14a: din (in CDM)
+mod14a <- CDM::din( dat , q.matrix=Q , rule="DINA")
+summary(mod14a)
+
+# compare used Theta distributions
+cbind( Theta , mod14a$attribute.patt.splitted)
+
+#-- Model 14b: mirt (in mirt)
+# define mirt model
+I <- ncol(dat) # I = 12
+mirtmodel <- mirt::mirt.model("
+F1 = 1-4
+F2 = 5-8
+(F1*F2) = 9-12
+")
+
+#-> constructions like (F1*F2*F3) are also allowed in mirt.model
+# get parameters
+mod.pars <- mirt(dat, model=mirtmodel , pars = "values")
+
+# starting values d parameters (transformed guessing parameters)
+ind <- which( mod.pars$name == "d" )
+mod.pars[ind,"value"] <- qlogis(.2)
+
+# starting values transformed slipping parameters
+ind <- which( ( mod.pars$name %in% paste0("a",1:3) ) & ( mod.pars$est ) )
+mod.pars[ind,"value"] <- qlogis(.8) - qlogis(.2)
+mod.pars
+
+lca_prior <- function(Theta,Etable){
+# number of latent Theta classes
+TP <- nrow(Theta)
+# prior in initial iteration
+if ( is.null(Etable) ){
+prior <- rep( 1/TP , TP )
+}
+# process Etable (this is correct for datasets without missing data)
+if ( ! is.null(Etable) ){
+# sum over correct and incorrect expected responses
+prior <- ( rowSums( Etable[ , seq(1,2*I,2)] ) + rowSums( Etable[ , seq(2,2*I,2)]))}
+prior <- prior / sum(prior)
+return(prior)
+}
+
+#* estimate model
+mod14b <- mirt(dat, mirtmodel , technical = list(
+customTheta=Theta , customPriorFun = lca_prior) ,
+pars = mod.pars , verbose=TRUE )
+
+# estimated parameters from the user customized prior distribution.
+mod14b@nest <- as.integer(sum(mod.pars$est) + 2)
+
+#* extract item parameters
+coef14b <- mirt.wrapper.coef(mod14b)$coef
+
+#-* comparisons of estimated parameters
+# extract guessing and slipping parameters from din
+dfr <- coef(mod14a)[ , c("guess","slip") ]
+colnames(dfr) <- paste0("din.",c("guess","slip") )
+
+# estimated parameters from mirt
+dfr$mirt.guess <- plogis( coef14b$d )
+dfr$mirt.slip <- 1 - plogis( rowSums(coef14b[,c("d","a1","a2","a3")]) )
+
+# comparison
+round(dfr[, c(1,3,2,4)],3)
+dfr <- data.frame( "Theta" = Theta , "din"=mod14a$attribute.patt$class.prob ,
+"mirt" = mod14b@Prior[[1]])
+
+# comparison
+round(dfr,3)
+
+sessionInfo()
+```

@@ -77,16 +77,16 @@ generated using R markdown via the `knitr` package and hosted on Github.
 - [Latent Class Analysis](http://philchalmers.github.io/mirt/html/mirt_lca3__2014-08-10_1215.html) 
   (contributed by Alexander Robitzsch)
 - [ltm models with mirt](http://philchalmers.github.io/mirt/html/ltm_models_with_mirt.html)
-- [Graded Membership Model](http://philchalmers.github.io/mirt/html/mirt_graded_membership.html) 
-  (contributed by Alexander Robitzsch in the `sirt` package)
-- [Mixture Rasch Model](http://philchalmers.github.io/mirt/html/mirt_mixed_Rasch.html) 
-  (contributed by Alexander Robitzsch in the `sirt` package)
-- [Multidimensional Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_multidim_latentclass.html) 
-  (contributed by Alexander Robitzsch in the `sirt` package)
+
+### mirt examples adapted from the sirt package
+
+- [Graded Membership Model](http://philchalmers.github.io/mirt/html/mirt_graded_membership.html)
+- [Mixture Rasch Model](http://philchalmers.github.io/mirt/html/mirt_mixed_Rasch.html)
+- [Multidimensional Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_multidim_latentclass.html)
 - [Multidimensional Discrete Latent Traits Model](http://philchalmers.github.io/mirt/html/mirt_multidim_discrete_traits.html) 
-  (contributed by Alexander Robitzsch in the `sirt` package)
 - [Ramsey Quotient Model](http://philchalmers.github.io/mirt/html/mirt_ramsey_quotient.html) 
-  (contributed by Alexander Robitzsch in the `sirt` package)
+- [DINA Model](http://philchalmers.github.io/mirt/html/mirt_DINA.html)
+- [Located Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_located_lca.html) 
 
 ### User contributions
 
