@@ -80,7 +80,7 @@ generated using R markdown via the `knitr` package and hosted on Github.
 
 ### mirt examples adapted from the sirt package
 
-- [Graded Membership Model](http://philchalmers.github.io/mirt/html/mirt_graded_membership.html)
+- [Grade of Membership Model](http://philchalmers.github.io/mirt/html/mirt_graded_membership.html)
 - [Mixture Rasch Model](http://philchalmers.github.io/mirt/html/mirt_mixed_Rasch.html)
 - [Multidimensional Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_mulitidim_latentclass.html)
 - [Multidimensional Discrete Latent Traits Model](http://philchalmers.github.io/mirt/html/mirt_multidim_discrete_traits.html) 

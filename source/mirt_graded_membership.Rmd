@@ -1,4 +1,4 @@
-# mirt example graded membership model
+# mirt example grade of membership model
 
 Adapted from the `sirt` package  examples (`gom.em`).
 

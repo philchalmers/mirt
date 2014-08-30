@@ -1,6 +1,6 @@
 # mirt example for multidimensional discrete latent traits
 
-Adapted from the `sirt` package  examples (`rasch.mirtlc`).
+Adapted from the `sirt` package  examples (`data.read`).
 
 ```{r}
 library(mirt)
