@@ -1,6 +1,6 @@
-# mirt example for latent class analysis
+# mirt example for the DINA model
 
-Adapted from the `sirt` package  examples (`data.reck`).
+Adapted from the `sirt` package  examples (`data.read`).
 
 ```{r}
 library(mirt)

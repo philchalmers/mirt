@@ -82,9 +82,9 @@ generated using R markdown via the `knitr` package and hosted on Github.
 
 - [Graded Membership Model](http://philchalmers.github.io/mirt/html/mirt_graded_membership.html)
 - [Mixture Rasch Model](http://philchalmers.github.io/mirt/html/mirt_mixed_Rasch.html)
-- [Multidimensional Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_multidim_latentclass.html)
+- [Multidimensional Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_mulitidim_latentclass.html)
 - [Multidimensional Discrete Latent Traits Model](http://philchalmers.github.io/mirt/html/mirt_multidim_discrete_traits.html) 
-- [Ramsey Quotient Model](http://philchalmers.github.io/mirt/html/mirt_ramsey_quotient.html) 
+- [Ramsay Quotient Model](http://philchalmers.github.io/mirt/html/mirt_ramsay_quotient.html) 
 - [DINA Model](http://philchalmers.github.io/mirt/html/mirt_DINA.html)
 - [Located Latent Class Model](http://philchalmers.github.io/mirt/html/mirt_located_lca.html) 
 

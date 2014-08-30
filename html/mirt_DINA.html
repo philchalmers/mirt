@@ -53,9 +53,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-<div id="mirt-example-for-latent-class-analysis" class="section level1">
-<h1>mirt example for latent class analysis</h1>
-<p>Adapted from the <code>sirt</code> package examples (<code>data.reck</code>).</p>
+<div id="mirt-example-for-the-dina-model" class="section level1">
+<h1>mirt example for the DINA model</h1>
+<p>Adapted from the <code>sirt</code> package examples (<code>data.read</code>).</p>
 <pre class="r"><code>library(mirt)</code></pre>
 <pre><code>## Loading required package: stats4
 ## Loading required package: lattice</code></pre>
@@ -91,58 +91,58 @@ Theta</code></pre>
 mod14a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;)</code></pre>
 <pre><code>## ---------------------------------------------------------------------------------
 ## DINA MODEL 
-## ** 2014-08-29 22:54:01 
+## ** 2014-08-30 11:55:31 
 ## ---------------------------------------------------------------------------------
-## Iter.  1  :  22:54:01 ,   loglike =  -2305  / max. param. ch. :  0.5484  / relative deviance change :  1
-## Iter.  2  :  22:54:01 ,   loglike =  -1985  / max. param. ch. :  0.05799  / relative deviance change :  0.1613
-## Iter.  3  :  22:54:01 ,   loglike =  -1979  / max. param. ch. :  0.03289  / relative deviance change :  0.002953
-## Iter.  4  :  22:54:01 ,   loglike =  -1975  / max. param. ch. :  0.02304  / relative deviance change :  0.002097
-## Iter.  5  :  22:54:01 ,   loglike =  -1972  / max. param. ch. :  0.01996  / relative deviance change :  0.001697
-## Iter.  6  :  22:54:01 ,   loglike =  -1969  / max. param. ch. :  0.01788  / relative deviance change :  0.001371
-## Iter.  7  :  22:54:01 ,   loglike =  -1967  / max. param. ch. :  0.01688  / relative deviance change :  0.001083
-## Iter.  8  :  22:54:01 ,   loglike =  -1965  / max. param. ch. :  0.01577  / relative deviance change :  0.00085
-## Iter.  9  :  22:54:01 ,   loglike =  -1964  / max. param. ch. :  0.01468  / relative deviance change :  0.000673
-## Iter.  10  :  22:54:01 ,   loglike =  -1963  / max. param. ch. :  0.01477  / relative deviance change :  0.000542
-## Iter.  11  :  22:54:01 ,   loglike =  -1962  / max. param. ch. :  0.01433  / relative deviance change :  0.000443
-## Iter.  12  :  22:54:01 ,   loglike =  -1961  / max. param. ch. :  0.01352  / relative deviance change :  0.000365
-## Iter.  13  :  22:54:01 ,   loglike =  -1961  / max. param. ch. :  0.0125  / relative deviance change :  0.000302
-## Iter.  14  :  22:54:01 ,   loglike =  -1960  / max. param. ch. :  0.0114  / relative deviance change :  0.000251
-## Iter.  15  :  22:54:01 ,   loglike =  -1960  / max. param. ch. :  0.01029  / relative deviance change :  0.000208
-## Iter.  16  :  22:54:01 ,   loglike =  -1959  / max. param. ch. :  0.009233  / relative deviance change :  0.000172
-## Iter.  17  :  22:54:01 ,   loglike =  -1959  / max. param. ch. :  0.008253  / relative deviance change :  0.000142
-## Iter.  18  :  22:54:01 ,   loglike =  -1959  / max. param. ch. :  0.007365  / relative deviance change :  0.000117
-## Iter.  19  :  22:54:01 ,   loglike =  -1959  / max. param. ch. :  0.00657  / relative deviance change :  9.7e-05
-## Iter.  20  :  22:54:01 ,   loglike =  -1959  / max. param. ch. :  0.005866  / relative deviance change :  8.1e-05
-## Iter.  21  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.005244  / relative deviance change :  6.7e-05
-## Iter.  22  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.004698  / relative deviance change :  5.6e-05
-## Iter.  23  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.004218  / relative deviance change :  4.7e-05
-## Iter.  24  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.003796  / relative deviance change :  4e-05
-## Iter.  25  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.003424  / relative deviance change :  3.4e-05
-## Iter.  26  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.003097  / relative deviance change :  2.9e-05
-## Iter.  27  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.002808  / relative deviance change :  2.5e-05
-## Iter.  28  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.002552  / relative deviance change :  2.1e-05
-## Iter.  29  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.002325  / relative deviance change :  1.8e-05
-## Iter.  30  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.002123  / relative deviance change :  1.6e-05
-## Iter.  31  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001943  / relative deviance change :  1.4e-05
-## Iter.  32  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001782  / relative deviance change :  1.2e-05
-## Iter.  33  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001638  / relative deviance change :  1.1e-05
-## Iter.  34  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001509  / relative deviance change :  9e-06
-## Iter.  35  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001393  / relative deviance change :  8e-06
-## Iter.  36  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001288  / relative deviance change :  7e-06
-## Iter.  37  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001193  / relative deviance change :  6e-06
-## Iter.  38  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001107  / relative deviance change :  6e-06
-## Iter.  39  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.001029  / relative deviance change :  5e-06
-## Iter.  40  :  22:54:01 ,   loglike =  -1958  / max. param. ch. :  0.000957  / relative deviance change :  5e-06
+## Iter.  1  :  11:55:31 ,   loglike =  -2305  / max. param. ch. :  0.5484  / relative deviance change :  1
+## Iter.  2  :  11:55:31 ,   loglike =  -1985  / max. param. ch. :  0.05799  / relative deviance change :  0.1613
+## Iter.  3  :  11:55:31 ,   loglike =  -1979  / max. param. ch. :  0.03289  / relative deviance change :  0.002953
+## Iter.  4  :  11:55:31 ,   loglike =  -1975  / max. param. ch. :  0.02304  / relative deviance change :  0.002097
+## Iter.  5  :  11:55:31 ,   loglike =  -1972  / max. param. ch. :  0.01996  / relative deviance change :  0.001697
+## Iter.  6  :  11:55:31 ,   loglike =  -1969  / max. param. ch. :  0.01788  / relative deviance change :  0.001371
+## Iter.  7  :  11:55:31 ,   loglike =  -1967  / max. param. ch. :  0.01688  / relative deviance change :  0.001083
+## Iter.  8  :  11:55:31 ,   loglike =  -1965  / max. param. ch. :  0.01577  / relative deviance change :  0.00085
+## Iter.  9  :  11:55:31 ,   loglike =  -1964  / max. param. ch. :  0.01468  / relative deviance change :  0.000673
+## Iter.  10  :  11:55:31 ,   loglike =  -1963  / max. param. ch. :  0.01477  / relative deviance change :  0.000542
+## Iter.  11  :  11:55:31 ,   loglike =  -1962  / max. param. ch. :  0.01433  / relative deviance change :  0.000443
+## Iter.  12  :  11:55:31 ,   loglike =  -1961  / max. param. ch. :  0.01352  / relative deviance change :  0.000365
+## Iter.  13  :  11:55:31 ,   loglike =  -1961  / max. param. ch. :  0.0125  / relative deviance change :  0.000302
+## Iter.  14  :  11:55:31 ,   loglike =  -1960  / max. param. ch. :  0.0114  / relative deviance change :  0.000251
+## Iter.  15  :  11:55:31 ,   loglike =  -1960  / max. param. ch. :  0.01029  / relative deviance change :  0.000208
+## Iter.  16  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.009233  / relative deviance change :  0.000172
+## Iter.  17  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.008253  / relative deviance change :  0.000142
+## Iter.  18  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.007365  / relative deviance change :  0.000117
+## Iter.  19  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.00657  / relative deviance change :  9.7e-05
+## Iter.  20  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.005866  / relative deviance change :  8.1e-05
+## Iter.  21  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.005244  / relative deviance change :  6.7e-05
+## Iter.  22  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.004698  / relative deviance change :  5.6e-05
+## Iter.  23  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.004218  / relative deviance change :  4.7e-05
+## Iter.  24  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.003796  / relative deviance change :  4e-05
+## Iter.  25  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.003424  / relative deviance change :  3.4e-05
+## Iter.  26  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.003097  / relative deviance change :  2.9e-05
+## Iter.  27  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002808  / relative deviance change :  2.5e-05
+## Iter.  28  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002552  / relative deviance change :  2.1e-05
+## Iter.  29  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002325  / relative deviance change :  1.8e-05
+## Iter.  30  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002123  / relative deviance change :  1.6e-05
+## Iter.  31  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001943  / relative deviance change :  1.4e-05
+## Iter.  32  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001782  / relative deviance change :  1.2e-05
+## Iter.  33  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001638  / relative deviance change :  1.1e-05
+## Iter.  34  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001509  / relative deviance change :  9e-06
+## Iter.  35  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001393  / relative deviance change :  8e-06
+## Iter.  36  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001288  / relative deviance change :  7e-06
+## Iter.  37  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001193  / relative deviance change :  6e-06
+## Iter.  38  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001107  / relative deviance change :  6e-06
+## Iter.  39  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001029  / relative deviance change :  5e-06
+## Iter.  40  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.000957  / relative deviance change :  5e-06
 ## ---------------------------------------------------------------------------------
-## Time difference of 0.07415 secs</code></pre>
+## Time difference of 0.04729 secs</code></pre>
 <pre class="r"><code>summary(mod14a)</code></pre>
 <pre><code>## Warning: There are at most 4 different skill classes. Returning all skill classes.</code></pre>
 <pre><code>## CDM 3.3-24 (Built 2014-05-25)</code></pre>
 <pre><code>## Call:
 ##  DINA MODEL on 12 items for 2 attributes 
-## Date of Analysis: 2014-08-29 22:54:01 
-## Time difference of 0.07415 secs
-## Computation Time: 0.07415 
+## Date of Analysis: 2014-08-30 11:55:31 
+## Time difference of 0.04729 secs
+## Computation Time: 0.04729 
 ## 
 ## 
 ## Deviance =  3915  |   Log-Likelihood = -1958 

@@ -1,6 +1,6 @@
-# mirt example for latent class analysis
+# mirt example for the Ramsay Quotient Model
 
-Adapted from the `sirt` package  examples (`rasch.mirtlc`).
+Adapted from the `sirt` package  examples (`sim.qm.ramsay`).
 
 ```{r}
 library(mirt)

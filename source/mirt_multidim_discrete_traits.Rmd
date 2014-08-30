@@ -1,4 +1,4 @@
-# mirt example for latent class analysis
+# mirt example for multidimensional discrete latent traits
 
 Adapted from the `sirt` package  examples (`rasch.mirtlc`).
 
