@@ -81,7 +81,7 @@ lca_prior <- function(Theta,Etable){
 
 #*** estimate discrete GOM in mirt package
 mod2m <- mirt::mirt(dat, 1, rep( "icc_gom",I) , customItems=list("icc_gom"=icc_gom),
-    technical = list( customTheta=Theta , customPriorFun = lca_prior) )
+    technical = list( customTheta=Theta , customPriorFun = lca_prior), verbose=FALSE )
 
 # correct number of estimated parameters
 mod2m@nest <- as.integer(sum(mod2values(mod2m)$est) + nrow(Theta)-1 )

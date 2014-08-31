@@ -80,7 +80,7 @@ mixed_prior <- function(Theta,Etable){
 }
 
 #* estimate model
-mod8c <- mirt::mirt(dat, mirtmodel , pars=mod.pars , verbose=TRUE ,
+mod8c <- mirt::mirt(dat, mirtmodel , pars=mod.pars , verbose=FALSE ,
 technical = list( customTheta=Theta , customPriorFun = mixed_prior ) )
 
 # Like in Model 7e, the number of estimated parameters must be included.

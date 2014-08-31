@@ -61,7 +61,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 ## Loading required package: lattice</code></pre>
 <pre class="r"><code>library(sirt)</code></pre>
 <pre><code>## |-----------------------------------------------------------------|
-## | sirt 0.47-27 (2014-08-29)                                       |
+## | sirt 0.47-36 (2014-08-30)                                       |
 ## | Supplementary Item Response Theory                              |
 ## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at &gt;      |
 ## | https://sites.google.com/site/alexanderrobitzsch/software       |
@@ -88,61 +88,15 @@ Theta</code></pre>
 ## [3,]    0    1
 ## [4,]    1    1</code></pre>
 <pre class="r"><code>#-- Model 14a: din (in CDM)
-mod14a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;)</code></pre>
-<pre><code>## ---------------------------------------------------------------------------------
-## DINA MODEL 
-## ** 2014-08-30 11:55:31 
-## ---------------------------------------------------------------------------------
-## Iter.  1  :  11:55:31 ,   loglike =  -2305  / max. param. ch. :  0.5484  / relative deviance change :  1
-## Iter.  2  :  11:55:31 ,   loglike =  -1985  / max. param. ch. :  0.05799  / relative deviance change :  0.1613
-## Iter.  3  :  11:55:31 ,   loglike =  -1979  / max. param. ch. :  0.03289  / relative deviance change :  0.002953
-## Iter.  4  :  11:55:31 ,   loglike =  -1975  / max. param. ch. :  0.02304  / relative deviance change :  0.002097
-## Iter.  5  :  11:55:31 ,   loglike =  -1972  / max. param. ch. :  0.01996  / relative deviance change :  0.001697
-## Iter.  6  :  11:55:31 ,   loglike =  -1969  / max. param. ch. :  0.01788  / relative deviance change :  0.001371
-## Iter.  7  :  11:55:31 ,   loglike =  -1967  / max. param. ch. :  0.01688  / relative deviance change :  0.001083
-## Iter.  8  :  11:55:31 ,   loglike =  -1965  / max. param. ch. :  0.01577  / relative deviance change :  0.00085
-## Iter.  9  :  11:55:31 ,   loglike =  -1964  / max. param. ch. :  0.01468  / relative deviance change :  0.000673
-## Iter.  10  :  11:55:31 ,   loglike =  -1963  / max. param. ch. :  0.01477  / relative deviance change :  0.000542
-## Iter.  11  :  11:55:31 ,   loglike =  -1962  / max. param. ch. :  0.01433  / relative deviance change :  0.000443
-## Iter.  12  :  11:55:31 ,   loglike =  -1961  / max. param. ch. :  0.01352  / relative deviance change :  0.000365
-## Iter.  13  :  11:55:31 ,   loglike =  -1961  / max. param. ch. :  0.0125  / relative deviance change :  0.000302
-## Iter.  14  :  11:55:31 ,   loglike =  -1960  / max. param. ch. :  0.0114  / relative deviance change :  0.000251
-## Iter.  15  :  11:55:31 ,   loglike =  -1960  / max. param. ch. :  0.01029  / relative deviance change :  0.000208
-## Iter.  16  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.009233  / relative deviance change :  0.000172
-## Iter.  17  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.008253  / relative deviance change :  0.000142
-## Iter.  18  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.007365  / relative deviance change :  0.000117
-## Iter.  19  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.00657  / relative deviance change :  9.7e-05
-## Iter.  20  :  11:55:31 ,   loglike =  -1959  / max. param. ch. :  0.005866  / relative deviance change :  8.1e-05
-## Iter.  21  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.005244  / relative deviance change :  6.7e-05
-## Iter.  22  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.004698  / relative deviance change :  5.6e-05
-## Iter.  23  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.004218  / relative deviance change :  4.7e-05
-## Iter.  24  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.003796  / relative deviance change :  4e-05
-## Iter.  25  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.003424  / relative deviance change :  3.4e-05
-## Iter.  26  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.003097  / relative deviance change :  2.9e-05
-## Iter.  27  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002808  / relative deviance change :  2.5e-05
-## Iter.  28  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002552  / relative deviance change :  2.1e-05
-## Iter.  29  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002325  / relative deviance change :  1.8e-05
-## Iter.  30  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.002123  / relative deviance change :  1.6e-05
-## Iter.  31  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001943  / relative deviance change :  1.4e-05
-## Iter.  32  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001782  / relative deviance change :  1.2e-05
-## Iter.  33  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001638  / relative deviance change :  1.1e-05
-## Iter.  34  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001509  / relative deviance change :  9e-06
-## Iter.  35  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001393  / relative deviance change :  8e-06
-## Iter.  36  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001288  / relative deviance change :  7e-06
-## Iter.  37  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001193  / relative deviance change :  6e-06
-## Iter.  38  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001107  / relative deviance change :  6e-06
-## Iter.  39  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.001029  / relative deviance change :  5e-06
-## Iter.  40  :  11:55:31 ,   loglike =  -1958  / max. param. ch. :  0.000957  / relative deviance change :  5e-06
-## ---------------------------------------------------------------------------------
-## Time difference of 0.04729 secs</code></pre>
-<pre class="r"><code>summary(mod14a)</code></pre>
+mod14a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;, progress = FALSE)
+summary(mod14a)</code></pre>
 <pre><code>## Warning: There are at most 4 different skill classes. Returning all skill classes.</code></pre>
-<pre><code>## CDM 3.3-24 (Built 2014-05-25)</code></pre>
+<pre><code>## CDM 3.4-21 (Built 2014-08-31)</code></pre>
 <pre><code>## Call:
 ##  DINA MODEL on 12 items for 2 attributes 
-## Date of Analysis: 2014-08-30 11:55:31 
-## Time difference of 0.04729 secs
-## Computation Time: 0.04729 
+## Date of Analysis: 2014-08-31 16:29:52 
+## Time difference of 0.03746 secs
+## Computation Time: 0.03746 
 ## 
 ## 
 ## Deviance =  3915  |   Log-Likelihood = -1958 
@@ -386,93 +340,9 @@ return(prior)
 #* estimate model
 mod14b &lt;- mirt(dat, mirtmodel , technical = list(
 customTheta=Theta , customPriorFun = lca_prior) ,
-pars = mod.pars , verbose=TRUE )</code></pre>
-<pre><code>## 
-Iteration: 1, Log-Lik: -2542.765, Max-Change: 2.41544
-Iteration: 2, Log-Lik: -1986.545, Max-Change: 0.80390
-Iteration: 3, Log-Lik: -1980.272, Max-Change: 0.71565
-Iteration: 4, Log-Lik: -1975.827, Max-Change: 0.49450
-Iteration: 5, Log-Lik: -1972.253, Max-Change: 0.33396
-Iteration: 6, Log-Lik: -1969.373, Max-Change: 0.59662
-Iteration: 7, Log-Lik: -1965.924, Max-Change: 0.13744
-Iteration: 8, Log-Lik: -1963.981, Max-Change: 0.09075
-Iteration: 9, Log-Lik: -1962.914, Max-Change: 0.40322
-Iteration: 10, Log-Lik: -1961.656, Max-Change: 0.05748
-Iteration: 11, Log-Lik: -1960.898, Max-Change: 0.52895
-Iteration: 12, Log-Lik: -1960.365, Max-Change: 2.56945
-Iteration: 13, Log-Lik: -1959.834, Max-Change: 0.04301
-Iteration: 14, Log-Lik: -1959.485, Max-Change: 0.04155
-Iteration: 15, Log-Lik: -1959.198, Max-Change: 0.23583
-Iteration: 16, Log-Lik: -1959.105, Max-Change: 0.07242
-Iteration: 17, Log-Lik: -1958.445, Max-Change: 0.01300
-Iteration: 18, Log-Lik: -1958.333, Max-Change: 0.02770
-Iteration: 19, Log-Lik: -1958.227, Max-Change: 0.00957
-Iteration: 20, Log-Lik: -1958.145, Max-Change: 0.01356
-Iteration: 21, Log-Lik: -1958.078, Max-Change: 0.04986
-Iteration: 22, Log-Lik: -1958.023, Max-Change: 0.01354
-Iteration: 23, Log-Lik: -1957.943, Max-Change: 0.00862
-Iteration: 24, Log-Lik: -1957.902, Max-Change: 0.02332
-Iteration: 25, Log-Lik: -1957.863, Max-Change: 0.00318
-Iteration: 26, Log-Lik: -1957.826, Max-Change: 0.00715
-Iteration: 27, Log-Lik: -1957.799, Max-Change: 0.04237
-Iteration: 28, Log-Lik: -1957.797, Max-Change: 0.01989
-Iteration: 29, Log-Lik: -1957.740, Max-Change: 0.00391
-Iteration: 30, Log-Lik: -1957.722, Max-Change: 0.00757
-Iteration: 31, Log-Lik: -1957.706, Max-Change: 0.00205
-Iteration: 32, Log-Lik: -1957.693, Max-Change: 0.00443
-Iteration: 33, Log-Lik: -1957.681, Max-Change: 0.02588
-Iteration: 34, Log-Lik: -1957.679, Max-Change: 0.01304
-Iteration: 35, Log-Lik: -1957.655, Max-Change: 0.00278
-Iteration: 36, Log-Lik: -1957.647, Max-Change: 0.00452
-Iteration: 37, Log-Lik: -1957.640, Max-Change: 0.00152
-Iteration: 38, Log-Lik: -1957.634, Max-Change: 0.00362
-Iteration: 39, Log-Lik: -1957.628, Max-Change: 0.00539
-Iteration: 40, Log-Lik: -1957.623, Max-Change: 0.00081
-Iteration: 41, Log-Lik: -1957.619, Max-Change: 0.00211
-Iteration: 42, Log-Lik: -1957.615, Max-Change: 0.00436
-Iteration: 43, Log-Lik: -1957.611, Max-Change: 0.00113
-Iteration: 44, Log-Lik: -1957.608, Max-Change: 0.00151
-Iteration: 45, Log-Lik: -1957.605, Max-Change: 0.00471
-Iteration: 46, Log-Lik: -1957.602, Max-Change: 0.00172
-Iteration: 47, Log-Lik: -1957.600, Max-Change: 0.00098
-Iteration: 48, Log-Lik: -1957.598, Max-Change: 0.00289
-Iteration: 49, Log-Lik: -1957.596, Max-Change: 0.00189
-Iteration: 50, Log-Lik: -1957.594, Max-Change: 0.00126
-Iteration: 51, Log-Lik: -1957.592, Max-Change: 0.00304
-Iteration: 52, Log-Lik: -1957.591, Max-Change: 0.00094
-Iteration: 53, Log-Lik: -1957.590, Max-Change: 0.00114
-Iteration: 54, Log-Lik: -1957.588, Max-Change: 0.00321
-Iteration: 55, Log-Lik: -1957.587, Max-Change: 0.00079
-Iteration: 56, Log-Lik: -1957.586, Max-Change: 0.00035
-Iteration: 57, Log-Lik: -1957.585, Max-Change: 0.00152
-Iteration: 58, Log-Lik: -1957.585, Max-Change: 0.00111
-Iteration: 59, Log-Lik: -1957.584, Max-Change: 0.00036
-Iteration: 60, Log-Lik: -1957.583, Max-Change: 0.00141
-Iteration: 61, Log-Lik: -1957.583, Max-Change: 0.00101
-Iteration: 62, Log-Lik: -1957.582, Max-Change: 0.00028
-Iteration: 63, Log-Lik: -1957.582, Max-Change: 0.00064
-Iteration: 64, Log-Lik: -1957.581, Max-Change: 0.00228
-Iteration: 65, Log-Lik: -1957.581, Max-Change: 0.00024
-Iteration: 66, Log-Lik: -1957.580, Max-Change: 0.00064
-Iteration: 67, Log-Lik: -1957.580, Max-Change: 0.00106
-Iteration: 68, Log-Lik: -1957.580, Max-Change: 0.00079
-Iteration: 69, Log-Lik: -1957.579, Max-Change: 0.00011
-Iteration: 70, Log-Lik: -1957.579, Max-Change: 0.00112
-Iteration: 71, Log-Lik: -1957.579, Max-Change: 0.00037
-Iteration: 72, Log-Lik: -1957.579, Max-Change: 0.00041
-Iteration: 73, Log-Lik: -1957.578, Max-Change: 0.00114
-Iteration: 74, Log-Lik: -1957.578, Max-Change: 0.00091
-Iteration: 75, Log-Lik: -1957.578, Max-Change: 0.00101
-Iteration: 76, Log-Lik: -1957.578, Max-Change: 0.00032
-Iteration: 77, Log-Lik: -1957.578, Max-Change: 0.00019
-Iteration: 78, Log-Lik: -1957.577, Max-Change: 0.00134
-Iteration: 79, Log-Lik: -1957.577, Max-Change: 0.00022
-Iteration: 80, Log-Lik: -1957.577, Max-Change: 0.00061
-Iteration: 81, Log-Lik: -1957.577, Max-Change: 0.00094
-Iteration: 82, Log-Lik: -1957.577, Max-Change: 0.00019
-Iteration: 83, Log-Lik: -1957.577, Max-Change: 0.00059
-Iteration: 84, Log-Lik: -1957.577, Max-Change: 0.00005</code></pre>
-<pre class="r"><code># estimated parameters from the user customized prior distribution.
+pars = mod.pars , verbose=FALSE )
+
+# estimated parameters from the user customized prior distribution.
 mod14b@nest &lt;- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
@@ -513,7 +383,7 @@ round(dfr,3)</code></pre>
 ## 3       0       1 0.047 0.031
 ## 4       1       1 0.553 0.551</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.1.1 (2014-07-10)
+<pre><code>## R version 3.1.0 (2014-04-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## 
 ## locale:
@@ -529,32 +399,32 @@ round(dfr,3)</code></pre>
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] mvtnorm_1.0-0   sirt_0.47-27    mirt_1.5.3      lattice_0.20-29
+## [1] mvtnorm_1.0-0   sirt_0.47-36    mirt_1.5.3      lattice_0.20-29
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] boot_1.3-11          car_2.0-21           CDM_3.3-24          
+##  [1] boot_1.3-11          car_2.0-21           CDM_3.4-21          
 ##  [4] cluster_1.15.2       coda_0.16-1          colorspace_1.2-4    
 ##  [7] combinat_0.0-8       corpcor_1.6.6        digest_0.6.4        
 ## [10] ellipse_0.3-8        evaluate_0.5.5       formatR_1.0         
 ## [13] Formula_1.1-2        ggplot2_1.0.0        glasso_1.8          
-## [16] GPArotation_2012.3-1 grid_3.1.1           gtable_0.1.2        
+## [16] GPArotation_2012.3-1 grid_3.1.0           gtable_0.1.2        
 ## [19] gtools_3.4.1         Hmisc_3.14-4         htmltools_0.2.4     
 ## [22] huge_1.2.6           ic.infer_1.1-5       igraph_0.7.1        
 ## [25] jpeg_0.1-8           kappalab_0.4-6       kernlab_0.9-19      
 ## [28] knitr_1.6            latticeExtra_0.6-26  lavaan_0.5-16       
-## [31] lisrelToR_0.1.4      lme4_1.1-7           lpSolve_5.6.7       
-## [34] MASS_7.3-33          Matrix_1.1-4         matrixcalc_1.0-3    
+## [31] lisrelToR_0.1.4      lme4_1.1-7           lpSolve_5.6.10      
+## [34] MASS_7.3-34          Matrix_1.1-4         matrixcalc_1.0-3    
 ## [37] minqa_1.2.3          mnormt_1.5-1         munsell_0.4.2       
 ## [40] nlme_3.1-117         nloptr_1.0.4         nnet_7.3-8          
 ## [43] pbivnorm_0.5-1       plyr_1.8.1           png_0.1-7           
 ## [46] polycor_0.7-8        proto_0.3-10         psych_1.4.8.11      
 ## [49] qgraph_1.2.5         quadprog_1.5-5       RColorBrewer_1.0-5  
 ## [52] Rcpp_0.11.2          RCurl_1.95-4.3       reshape2_1.4        
-## [55] rmarkdown_0.2.46     rockchalk_1.8.86     scales_0.2.4        
+## [55] rmarkdown_0.2.49     rockchalk_1.8.86     scales_0.2.4        
 ## [58] sem_3.1-5            semPlot_1.0.1        sfsmisc_1.0-26      
-## [61] sm_2.2-5.4           sna_2.3-2            splines_3.1.1       
+## [61] sm_2.2-5.4           sna_2.3-2            splines_3.1.0       
 ## [64] stringr_0.6.2        survival_2.37-7      TAM_1.0-3           
-## [67] tensor_1.5           tools_3.1.1          XML_3.98-1.1</code></pre>
+## [67] tensor_1.5           tools_3.1.0          XML_3.98-1.1</code></pre>
 </div>
 
 

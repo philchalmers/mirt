@@ -61,7 +61,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 ## Loading required package: lattice</code></pre>
 <pre class="r"><code>library(sirt)</code></pre>
 <pre><code>## |-----------------------------------------------------------------|
-## | sirt 0.47-27 (2014-08-29)                                       |
+## | sirt 0.47-36 (2014-08-30)                                       |
 ## | Supplementary Item Response Theory                              |
 ## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at &gt;      |
 ## | https://sites.google.com/site/alexanderrobitzsch/software       |
@@ -79,998 +79,261 @@ ref.item &lt;- 10
 theta.k &lt;- seq(-4,4,len=9)
 
 #-- M12a: rasch.mirtlc (in sirt)
-mod12a &lt;- sirt::rasch.mirtlc(dat , Nclasses=3, modeltype=&quot;MLC1&quot; , ref.item=ref.item )</code></pre>
-<pre><code>## ...........................................................
-## Iteration 1     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 4044.5171 | Deviance change = -4043.51711  START 1 (Seed 0)
-##     Maximum item parameter change = 0.213415
-##     Maximum probability distribution change = 0.069135
-##     Maximum theta parameter change = 1.071313
-## ...........................................................
-## Iteration 2     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3965.9419 | Deviance change = 78.575166  START 1 (Seed 0)
-##     Maximum item parameter change = 0.206608
-##     Maximum probability distribution change = 0.031389
-##     Maximum theta parameter change = 0.08789
-## ...........................................................
-## Iteration 3     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3959.7094 | Deviance change = 6.23254  START 1 (Seed 0)
-##     Maximum item parameter change = 0.032094
-##     Maximum probability distribution change = 0.026644
-##     Maximum theta parameter change = 0.082754
-## ...........................................................
-## Iteration 4     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3956.3211 | Deviance change = 3.388331  START 1 (Seed 0)
-##     Maximum item parameter change = 0.014051
-##     Maximum probability distribution change = 0.022258
-##     Maximum theta parameter change = 0.082053
-## ...........................................................
-## Iteration 5     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3953.8057 | Deviance change = 2.515359  START 1 (Seed 0)
-##     Maximum item parameter change = 0.012577
-##     Maximum probability distribution change = 0.019423
-##     Maximum theta parameter change = 0.071821
-## ...........................................................
-## Iteration 6     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3951.8672 | Deviance change = 1.938538  START 1 (Seed 0)
-##     Maximum item parameter change = 0.011448
-##     Maximum probability distribution change = 0.017176
-##     Maximum theta parameter change = 0.061643
-## ...........................................................
-## Iteration 7     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3950.3394 | Deviance change = 1.527773  START 1 (Seed 0)
-##     Maximum item parameter change = 0.010196
-##     Maximum probability distribution change = 0.015266
-##     Maximum theta parameter change = 0.053129
-## ...........................................................
-## Iteration 8     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3949.1105 | Deviance change = 1.228901  START 1 (Seed 0)
-##     Maximum item parameter change = 0.009068
-##     Maximum probability distribution change = 0.013605
-##     Maximum theta parameter change = 0.046237
-## ...........................................................
-## Iteration 9     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3948.1021 | Deviance change = 1.008364  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008102
-##     Maximum probability distribution change = 0.012145
-##     Maximum theta parameter change = 0.040659
-## ...........................................................
-## Iteration 10     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3947.2585 | Deviance change = 0.843683  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007284
-##     Maximum probability distribution change = 0.010853
-##     Maximum theta parameter change = 0.036102
-## ...........................................................
-## Iteration 11     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3946.539 | Deviance change = 0.719434  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00659
-##     Maximum probability distribution change = 0.009703
-##     Maximum theta parameter change = 0.032337
-## ...........................................................
-## Iteration 12     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3945.9142 | Deviance change = 0.624863  START 1 (Seed 0)
-##     Maximum item parameter change = 0.005998
-##     Maximum probability distribution change = 0.009042
-##     Maximum theta parameter change = 0.029189
-## ...........................................................
-## Iteration 13     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3945.3618 | Deviance change = 0.552365  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00549
-##     Maximum probability distribution change = 0.008555
-##     Maximum theta parameter change = 0.026527
-## ...........................................................
-## Iteration 14     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3944.8653 | Deviance change = 0.496486  START 1 (Seed 0)
-##     Maximum item parameter change = 0.005051
-##     Maximum probability distribution change = 0.008112
-##     Maximum theta parameter change = 0.024253
-## ...........................................................
-## Iteration 15     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3944.412 | Deviance change = 0.453267  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004668
-##     Maximum probability distribution change = 0.007705
-##     Maximum theta parameter change = 0.02229
-## ...........................................................
-## Iteration 16     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3943.9922 | Deviance change = 0.419799  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004331
-##     Maximum probability distribution change = 0.007329
-##     Maximum theta parameter change = 0.020579
-## ...........................................................
-## Iteration 17     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3943.5983 | Deviance change = 0.393924  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004033
-##     Maximum probability distribution change = 0.006979
-##     Maximum theta parameter change = 0.019075
-## ...........................................................
-## Iteration 18     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3943.2243 | Deviance change = 0.37402  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003782
-##     Maximum probability distribution change = 0.006653
-##     Maximum theta parameter change = 0.017742
-## ...........................................................
-## Iteration 19     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3942.8654 | Deviance change = 0.358861  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003762
-##     Maximum probability distribution change = 0.006346
-##     Maximum theta parameter change = 0.016551
-## ...........................................................
-## Iteration 20     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3942.5179 | Deviance change = 0.347502  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003735
-##     Maximum probability distribution change = 0.006057
-##     Maximum theta parameter change = 0.015481
-## ...........................................................
-## Iteration 21     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3942.1787 | Deviance change = 0.339213  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003701
-##     Maximum probability distribution change = 0.005783
-##     Maximum theta parameter change = 0.01453
-## ...........................................................
-## Iteration 22     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3941.8453 | Deviance change = 0.333411  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003662
-##     Maximum probability distribution change = 0.005524
-##     Maximum theta parameter change = 0.01511
-## ...........................................................
-## Iteration 23     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3941.5157 | Deviance change = 0.329625  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003635
-##     Maximum probability distribution change = 0.005278
-##     Maximum theta parameter change = 0.016579
-## ...........................................................
-## Iteration 24     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3941.1882 | Deviance change = 0.327456  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004
-##     Maximum probability distribution change = 0.005044
-##     Maximum theta parameter change = 0.018057
-## ...........................................................
-## Iteration 25     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3940.8617 | Deviance change = 0.326556  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004369
-##     Maximum probability distribution change = 0.004823
-##     Maximum theta parameter change = 0.019546
-## ...........................................................
-## Iteration 26     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3940.5351 | Deviance change = 0.326599  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004742
-##     Maximum probability distribution change = 0.004613
-##     Maximum theta parameter change = 0.021048
-## ...........................................................
-## Iteration 27     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3940.2078 | Deviance change = 0.327271  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00512
-##     Maximum probability distribution change = 0.004414
-##     Maximum theta parameter change = 0.022558
-## ...........................................................
-## Iteration 28     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3939.8796 | Deviance change = 0.328253  START 1 (Seed 0)
-##     Maximum item parameter change = 0.005501
-##     Maximum probability distribution change = 0.004226
-##     Maximum theta parameter change = 0.024069
-## ...........................................................
-## Iteration 29     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3939.5503 | Deviance change = 0.329214  START 1 (Seed 0)
-##     Maximum item parameter change = 0.005884
-##     Maximum probability distribution change = 0.00405
-##     Maximum theta parameter change = 0.025571
-## ...........................................................
-## Iteration 30     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3939.2205 | Deviance change = 0.329805  START 1 (Seed 0)
-##     Maximum item parameter change = 0.006265
-##     Maximum probability distribution change = 0.003884
-##     Maximum theta parameter change = 0.027049
-## ...........................................................
-## Iteration 31     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3938.8909 | Deviance change = 0.329661  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00664
-##     Maximum probability distribution change = 0.00373
-##     Maximum theta parameter change = 0.02848
-## ...........................................................
-## Iteration 32     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3938.5625 | Deviance change = 0.32841  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007003
-##     Maximum probability distribution change = 0.003586
-##     Maximum theta parameter change = 0.029842
-## ...........................................................
-## Iteration 33     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3938.2368 | Deviance change = 0.325685  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007348
-##     Maximum probability distribution change = 0.003452
-##     Maximum theta parameter change = 0.031103
-## ...........................................................
-## Iteration 34     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3937.9156 | Deviance change = 0.32115  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007666
-##     Maximum probability distribution change = 0.003328
-##     Maximum theta parameter change = 0.032232
-## ...........................................................
-## Iteration 35     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3937.6011 | Deviance change = 0.314521  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007949
-##     Maximum probability distribution change = 0.003213
-##     Maximum theta parameter change = 0.033195
-## ...........................................................
-## Iteration 36     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3937.2955 | Deviance change = 0.305603  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008187
-##     Maximum probability distribution change = 0.003106
-##     Maximum theta parameter change = 0.033957
-## ...........................................................
-## Iteration 37     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3937.0012 | Deviance change = 0.294312  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008388
-##     Maximum probability distribution change = 0.003006
-##     Maximum theta parameter change = 0.034488
-## ...........................................................
-## Iteration 38     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3936.7205 | Deviance change = 0.280702  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00854
-##     Maximum probability distribution change = 0.002912
-##     Maximum theta parameter change = 0.034766
-## ...........................................................
-## Iteration 39     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3936.4555 | Deviance change = 0.264966  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008625
-##     Maximum probability distribution change = 0.002822
-##     Maximum theta parameter change = 0.034773
-## ...........................................................
-## Iteration 40     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3936.2081 | Deviance change = 0.247434  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008637
-##     Maximum probability distribution change = 0.002736
-##     Maximum theta parameter change = 0.034507
-## ...........................................................
-## Iteration 41     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.9796 | Deviance change = 0.22854  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008576
-##     Maximum probability distribution change = 0.00265
-##     Maximum theta parameter change = 0.033975
-## ...........................................................
-## Iteration 42     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.7708 | Deviance change = 0.208788  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008444
-##     Maximum probability distribution change = 0.002565
-##     Maximum theta parameter change = 0.033194
-## ...........................................................
-## Iteration 43     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.5821 | Deviance change = 0.188701  START 1 (Seed 0)
-##     Maximum item parameter change = 0.008244
-##     Maximum probability distribution change = 0.002478
-##     Maximum theta parameter change = 0.032191
-## ...........................................................
-## Iteration 44     2014-08-30 11:55:45</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.4133 | Deviance change = 0.168776  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007985
-##     Maximum probability distribution change = 0.00239
-##     Maximum theta parameter change = 0.030999
-## ...........................................................
-## Iteration 45     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.2638 | Deviance change = 0.14945  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007676
-##     Maximum probability distribution change = 0.002298
-##     Maximum theta parameter change = 0.029655
-## ...........................................................
-## Iteration 46     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.1328 | Deviance change = 0.131078  START 1 (Seed 0)
-##     Maximum item parameter change = 0.007326
-##     Maximum probability distribution change = 0.002204
-##     Maximum theta parameter change = 0.028194
-## ...........................................................
-## Iteration 47     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3935.0188 | Deviance change = 0.113918  START 1 (Seed 0)
-##     Maximum item parameter change = 0.006947
-##     Maximum probability distribution change = 0.002107
-##     Maximum theta parameter change = 0.026653
-## ...........................................................
-## Iteration 48     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.9207 | Deviance change = 0.098142  START 1 (Seed 0)
-##     Maximum item parameter change = 0.006573
-##     Maximum probability distribution change = 0.002007
-##     Maximum theta parameter change = 0.025063
-## ...........................................................
-## Iteration 49     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.8369 | Deviance change = 0.083841  START 1 (Seed 0)
-##     Maximum item parameter change = 0.006198
-##     Maximum probability distribution change = 0.001905
-##     Maximum theta parameter change = 0.023453
-## ...........................................................
-## Iteration 50     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.7658 | Deviance change = 0.071036  START 1 (Seed 0)
-##     Maximum item parameter change = 0.005814
-##     Maximum probability distribution change = 0.001802
-##     Maximum theta parameter change = 0.021847
-## ...........................................................
-## Iteration 51     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.7061 | Deviance change = 0.059703  START 1 (Seed 0)
-##     Maximum item parameter change = 0.005426
-##     Maximum probability distribution change = 0.001698
-##     Maximum theta parameter change = 0.020266
-## ...........................................................
-## Iteration 52     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.6563 | Deviance change = 0.049774  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00504
-##     Maximum probability distribution change = 0.001594
-##     Maximum theta parameter change = 0.018727
-## ...........................................................
-## Iteration 53     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.6152 | Deviance change = 0.041159  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004663
-##     Maximum probability distribution change = 0.001492
-##     Maximum theta parameter change = 0.017243
-## ...........................................................
-## Iteration 54     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.5814 | Deviance change = 0.033752  START 1 (Seed 0)
-##     Maximum item parameter change = 0.004297
-##     Maximum probability distribution change = 0.001392
-##     Maximum theta parameter change = 0.015825
-## ...........................................................
-## Iteration 55     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.554 | Deviance change = 0.027437  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003946
-##     Maximum probability distribution change = 0.001294
-##     Maximum theta parameter change = 0.014479
-## ...........................................................
-## Iteration 56     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.5319 | Deviance change = 0.022098  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003612
-##     Maximum probability distribution change = 0.0012
-##     Maximum theta parameter change = 0.013213
-## ...........................................................
-## Iteration 57     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.5143 | Deviance change = 0.01762  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003297
-##     Maximum probability distribution change = 0.001109
-##     Maximum theta parameter change = 0.012027
-## ...........................................................
-## Iteration 58     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.5004 | Deviance change = 0.013893  START 1 (Seed 0)
-##     Maximum item parameter change = 0.003002
-##     Maximum probability distribution change = 0.001023
-##     Maximum theta parameter change = 0.010924
-## ...........................................................
-## Iteration 59     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4896 | Deviance change = 0.010815  START 1 (Seed 0)
-##     Maximum item parameter change = 0.002726
-##     Maximum probability distribution change = 0.000941
-##     Maximum theta parameter change = 0.009902
-## ...........................................................
-## Iteration 60     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4813 | Deviance change = 0.008293  START 1 (Seed 0)
-##     Maximum item parameter change = 0.002471
-##     Maximum probability distribution change = 0.000864
-##     Maximum theta parameter change = 0.00896
-## ...........................................................
-## Iteration 61     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.475 | Deviance change = 0.006243  START 1 (Seed 0)
-##     Maximum item parameter change = 0.002236
-##     Maximum probability distribution change = 0.000791
-##     Maximum theta parameter change = 0.008095
-## ...........................................................
-## Iteration 62     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4704 | Deviance change = 0.00459  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00202
-##     Maximum probability distribution change = 0.000723
-##     Maximum theta parameter change = 0.007304
-## ...........................................................
-## Iteration 63     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4672 | Deviance change = 0.003268  START 1 (Seed 0)
-##     Maximum item parameter change = 0.001822
-##     Maximum probability distribution change = 0.000659
-##     Maximum theta parameter change = 0.006582
-## ...........................................................
-## Iteration 64     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.465 | Deviance change = 0.002222  START 1 (Seed 0)
-##     Maximum item parameter change = 0.001642
-##     Maximum probability distribution change = 0.000601
-##     Maximum theta parameter change = 0.005926
-## ...........................................................
-## Iteration 65     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4635 | Deviance change = 0.001403  START 1 (Seed 0)
-##     Maximum item parameter change = 0.001478
-##     Maximum probability distribution change = 0.000546
-##     Maximum theta parameter change = 0.005331
-## ...........................................................
-## Iteration 66     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4628 | Deviance change = 0.000768  START 1 (Seed 0)
-##     Maximum item parameter change = 0.001329
-##     Maximum probability distribution change = 0.000496
-##     Maximum theta parameter change = 0.004791
-## ...........................................................
-## Iteration 67     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4625 | Deviance change = 0.000284  START 1 (Seed 0)
-##     Maximum item parameter change = 0.001195
-##     Maximum probability distribution change = 0.00045
-##     Maximum theta parameter change = 0.004304
-## ...........................................................
-## Iteration 68     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4626 | Deviance change = -7.8e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 0.001073
-##     Maximum probability distribution change = 0.000408
-##     Maximum theta parameter change = 0.003864
-## ...........................................................
-## Iteration 69     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4629 | Deviance change = -0.000344  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000963
-##     Maximum probability distribution change = 0.000369
-##     Maximum theta parameter change = 0.003468
-## ...........................................................
-## Iteration 70     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4635 | Deviance change = -0.000533  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000864
-##     Maximum probability distribution change = 0.000334
-##     Maximum theta parameter change = 0.003111
-## ...........................................................
-## Iteration 71     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4641 | Deviance change = -0.000662  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000775
-##     Maximum probability distribution change = 0.000301
-##     Maximum theta parameter change = 0.00279
-## ...........................................................
-## Iteration 72     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4649 | Deviance change = -0.000743  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000695
-##     Maximum probability distribution change = 0.000272
-##     Maximum theta parameter change = 0.002501
-## ...........................................................
-## Iteration 73     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4656 | Deviance change = -0.000789  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000623
-##     Maximum probability distribution change = 0.000245
-##     Maximum theta parameter change = 0.002242
-## ...........................................................
-## Iteration 74     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4665 | Deviance change = -0.000806  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000558
-##     Maximum probability distribution change = 0.000221
-##     Maximum theta parameter change = 0.002009
-## ...........................................................
-## Iteration 75     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4673 | Deviance change = -0.000803  START 1 (Seed 0)
-##     Maximum item parameter change = 5e-04
-##     Maximum probability distribution change = 0.000199
-##     Maximum theta parameter change = 0.001801
-## ...........................................................
-## Iteration 76     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.468 | Deviance change = -0.000786  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000448
-##     Maximum probability distribution change = 0.000179
-##     Maximum theta parameter change = 0.001613
-## ...........................................................
-## Iteration 77     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4688 | Deviance change = -0.000757  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000402
-##     Maximum probability distribution change = 0.000161
-##     Maximum theta parameter change = 0.001446
-## ...........................................................
-## Iteration 78     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4695 | Deviance change = -0.000722  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00036
-##     Maximum probability distribution change = 0.000145
-##     Maximum theta parameter change = 0.001295
-## ...........................................................
-## Iteration 79     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4702 | Deviance change = -0.000682  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000322
-##     Maximum probability distribution change = 0.000131
-##     Maximum theta parameter change = 0.00116
-## ...........................................................
-## Iteration 80     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4708 | Deviance change = -0.000639  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000289
-##     Maximum probability distribution change = 0.000117
-##     Maximum theta parameter change = 0.001039
-## ...........................................................
-## Iteration 81     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4714 | Deviance change = -0.000595  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000259
-##     Maximum probability distribution change = 0.000105
-##     Maximum theta parameter change = 0.000931
-## ...........................................................
-## Iteration 82     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.472 | Deviance change = -0.000552  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000232
-##     Maximum probability distribution change = 9.5e-05
-##     Maximum theta parameter change = 0.000834
-## ...........................................................
-## Iteration 83     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4725 | Deviance change = -0.000509  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000208
-##     Maximum probability distribution change = 8.5e-05
-##     Maximum theta parameter change = 0.000747
-## ...........................................................
-## Iteration 84     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.473 | Deviance change = -0.000468  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000186
-##     Maximum probability distribution change = 7.6e-05
-##     Maximum theta parameter change = 0.000669
-## ...........................................................
-## Iteration 85     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4734 | Deviance change = -0.000429  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000166
-##     Maximum probability distribution change = 6.9e-05
-##     Maximum theta parameter change = 0.000599
-## ...........................................................
-## Iteration 86     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4738 | Deviance change = -0.000392  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000149
-##     Maximum probability distribution change = 6.1e-05
-##     Maximum theta parameter change = 0.000537
-## ...........................................................
-## Iteration 87     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4741 | Deviance change = -0.000358  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000134
-##     Maximum probability distribution change = 5.5e-05
-##     Maximum theta parameter change = 0.000481
-## ...........................................................
-## Iteration 88     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4745 | Deviance change = -0.000326  START 1 (Seed 0)
-##     Maximum item parameter change = 0.00012
-##     Maximum probability distribution change = 5e-05
-##     Maximum theta parameter change = 0.000431
-## ...........................................................
-## Iteration 89     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4748 | Deviance change = -0.000296  START 1 (Seed 0)
-##     Maximum item parameter change = 0.000107
-##     Maximum probability distribution change = 4.4e-05
-##     Maximum theta parameter change = 0.000386
-## ...........................................................
-## Iteration 90     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.475 | Deviance change = -0.000268  START 1 (Seed 0)
-##     Maximum item parameter change = 9.6e-05
-##     Maximum probability distribution change = 4e-05
-##     Maximum theta parameter change = 0.000345
-## ...........................................................
-## Iteration 91     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4753 | Deviance change = -0.000243  START 1 (Seed 0)
-##     Maximum item parameter change = 8.6e-05
-##     Maximum probability distribution change = 3.6e-05
-##     Maximum theta parameter change = 0.000309
-## ...........................................................
-## Iteration 92     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4755 | Deviance change = -0.00022  START 1 (Seed 0)
-##     Maximum item parameter change = 7.7e-05
-##     Maximum probability distribution change = 3.2e-05
-##     Maximum theta parameter change = 0.000277
-## ...........................................................
-## Iteration 93     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4757 | Deviance change = -0.000199  START 1 (Seed 0)
-##     Maximum item parameter change = 6.9e-05
-##     Maximum probability distribution change = 2.9e-05
-##     Maximum theta parameter change = 0.000248
-## ...........................................................
-## Iteration 94     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4759 | Deviance change = -0.000179  START 1 (Seed 0)
-##     Maximum item parameter change = 6.2e-05
-##     Maximum probability distribution change = 2.6e-05
-##     Maximum theta parameter change = 0.000222
-## ...........................................................
-## Iteration 95     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.476 | Deviance change = -0.000162  START 1 (Seed 0)
-##     Maximum item parameter change = 5.5e-05
-##     Maximum probability distribution change = 2.3e-05
-##     Maximum theta parameter change = 0.000199
-## ...........................................................
-## Iteration 96     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4762 | Deviance change = -0.000146  START 1 (Seed 0)
-##     Maximum item parameter change = 5e-05
-##     Maximum probability distribution change = 2.1e-05
-##     Maximum theta parameter change = 0.000178
-## ...........................................................
-## Iteration 97     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4763 | Deviance change = -0.000131  START 1 (Seed 0)
-##     Maximum item parameter change = 4.4e-05
-##     Maximum probability distribution change = 1.9e-05
-##     Maximum theta parameter change = 0.00016
-## ...........................................................
-## Iteration 98     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4764 | Deviance change = -0.000118  START 1 (Seed 0)
-##     Maximum item parameter change = 4e-05
-##     Maximum probability distribution change = 1.7e-05
-##     Maximum theta parameter change = 0.000143
-## ...........................................................
-## Iteration 99     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4765 | Deviance change = -0.000106  START 1 (Seed 0)
-##     Maximum item parameter change = 3.6e-05
-##     Maximum probability distribution change = 1.5e-05
-##     Maximum theta parameter change = 0.000128
-## ...........................................................
-## Iteration 100     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4766 | Deviance change = -9.6e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 3.2e-05
-##     Maximum probability distribution change = 1.3e-05
-##     Maximum theta parameter change = 0.000115
-## ...........................................................
-## Iteration 101     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4767 | Deviance change = -8.6e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 2.9e-05
-##     Maximum probability distribution change = 1.2e-05
-##     Maximum theta parameter change = 0.000103
-## ...........................................................
-## Iteration 102     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4768 | Deviance change = -7.7e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 2.6e-05
-##     Maximum probability distribution change = 1.1e-05
-##     Maximum theta parameter change = 9.2e-05
-## ...........................................................
-## Iteration 103     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4769 | Deviance change = -6.9e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 2.3e-05
-##     Maximum probability distribution change = 1e-05
-##     Maximum theta parameter change = 8.3e-05
-## ...........................................................
-## Iteration 104     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4769 | Deviance change = -6.2e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 2.1e-05
-##     Maximum probability distribution change = 9e-06
-##     Maximum theta parameter change = 7.4e-05
-## ...........................................................
-## Iteration 105     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.477 | Deviance change = -5.6e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1.8e-05
-##     Maximum probability distribution change = 8e-06
-##     Maximum theta parameter change = 6.6e-05
-## ...........................................................
-## Iteration 106     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.477 | Deviance change = -5e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1.6e-05
-##     Maximum probability distribution change = 7e-06
-##     Maximum theta parameter change = 5.9e-05
-## ...........................................................
-## Iteration 107     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4771 | Deviance change = -4.5e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1.5e-05
-##     Maximum probability distribution change = 6e-06
-##     Maximum theta parameter change = 5.3e-05
-## ...........................................................
-## Iteration 108     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4771 | Deviance change = -4e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1.3e-05
-##     Maximum probability distribution change = 6e-06
-##     Maximum theta parameter change = 4.8e-05
-## ...........................................................
-## Iteration 109     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4772 | Deviance change = -3.6e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1.2e-05
-##     Maximum probability distribution change = 5e-06
-##     Maximum theta parameter change = 4.3e-05
-## ...........................................................
-## Iteration 110     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4772 | Deviance change = -3.3e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1.1e-05
-##     Maximum probability distribution change = 4e-06
-##     Maximum theta parameter change = 3.8e-05
-## ...........................................................
-## Iteration 111     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4772 | Deviance change = -2.9e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 1e-05
-##     Maximum probability distribution change = 4e-06
-##     Maximum theta parameter change = 3.4e-05
-## ...........................................................
-## Iteration 112     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4772 | Deviance change = -2.6e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 9e-06
-##     Maximum probability distribution change = 4e-06
-##     Maximum theta parameter change = 3.1e-05
-## ...........................................................
-## Iteration 113     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4773 | Deviance change = -2.3e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 8e-06
-##     Maximum probability distribution change = 3e-06
-##     Maximum theta parameter change = 2.7e-05
-## ...........................................................
-## Iteration 114     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4773 | Deviance change = -2.1e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 7e-06
-##     Maximum probability distribution change = 3e-06
-##     Maximum theta parameter change = 2.5e-05
-## ...........................................................
-## Iteration 115     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4773 | Deviance change = -1.9e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 6e-06
-##     Maximum probability distribution change = 3e-06
-##     Maximum theta parameter change = 2.2e-05
-## ...........................................................
-## Iteration 116     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4773 | Deviance change = -1.7e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 5e-06
-##     Maximum probability distribution change = 2e-06
-##     Maximum theta parameter change = 2e-05
-## ...........................................................
-## Iteration 117     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4773 | Deviance change = -1.5e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 5e-06
-##     Maximum probability distribution change = 2e-06
-##     Maximum theta parameter change = 1.8e-05
-## ...........................................................
-## Iteration 118     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4774 | Deviance change = -1.4e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 4e-06
-##     Maximum probability distribution change = 2e-06
-##     Maximum theta parameter change = 1.6e-05
-## ...........................................................
-## Iteration 119     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4774 | Deviance change = -1.2e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 4e-06
-##     Maximum probability distribution change = 2e-06
-##     Maximum theta parameter change = 1.4e-05
-## ...........................................................
-## Iteration 120     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4774 | Deviance change = -1.1e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 4e-06
-##     Maximum probability distribution change = 1e-06
-##     Maximum theta parameter change = 1.3e-05
-## ...........................................................
-## Iteration 121     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4774 | Deviance change = -1e-05  START 1 (Seed 0)
-##     Maximum item parameter change = 3e-06
-##     Maximum probability distribution change = 1e-06
-##     Maximum theta parameter change = 1.1e-05
-## ...........................................................
-## Iteration 122     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
-## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4774 | Deviance change = -9e-06  START 1 (Seed 0)
-##     Maximum item parameter change = 3e-06
-##     Maximum probability distribution change = 1e-06
-##     Maximum theta parameter change = 1e-05
-## ...........................................................
-## Iteration 123     2014-08-30 11:55:46</code></pre>
-<pre><code>## Warning: non-integer #successes in a binomial glm!
+mod12a &lt;- sirt::rasch.mirtlc(dat , Nclasses=3, modeltype=&quot;MLC1&quot; , ref.item=ref.item, 
+                             progress = FALSE )</code></pre>
+<pre><code>## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
+## Warning: glm.fit: algorithm did not converge
+## Warning: non-integer #successes in a binomial glm!
 ## Warning: glm.fit: algorithm did not converge</code></pre>
-<pre><code>##    Deviance = 3934.4774 | Deviance change = -8e-06  START 1 (Seed 0)
-##     Maximum item parameter change = 3e-06
-##     Maximum probability distribution change = 1e-06
-##     Maximum theta parameter change = 9e-06</code></pre>
 <pre class="r"><code>summary(mod12a)</code></pre>
 <pre><code>## ---------------------------------------------------------------------------------------------------------- 
-## sirt 0.47-27 (2014-08-29) 
+## sirt 0.47-36 (2014-08-30) 
 ## 
-## Date of Analysis: 2014-08-30 11:55:46 
-## Time difference of 0.5627 secs
-## Computation time: 0.5627 
+## Date of Analysis: 2014-08-31 16:30:22 
+## Time difference of 0.4547 secs
+## Computation time: 0.4547 
 ## 
 ## Multidimensional Item Response Latent Class Model 
 ## 
@@ -1139,1014 +402,1014 @@ b.constraint &lt;- matrix( c(10,1,0) , nrow=1,ncol=3)
 mod12b &lt;- CDM::gdm( dat , theta.k = theta.k , skillspace=&quot;est&quot; , irtmodel=&quot;1PL&quot;,
 b.constraint=b.constraint , maxiter=200)</code></pre>
 <pre><code>## ......................................................................
-## Iteration 1     2014-08-30 11:55:46 
+## Iteration 1     2014-08-31 16:30:22 
 ##    Deviance = 3975.4685
 ##     Maximum item intercept parameter change =  0.891647  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.08785  
 ## ......................................................................
-## Iteration 2     2014-08-30 11:55:46 
+## Iteration 2     2014-08-31 16:30:22 
 ##    Deviance = 4001.393 | Deviance change = -25.924515  Deviance increases!
 ##     Maximum item intercept parameter change =  0.167581  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.013919  
 ## ......................................................................
-## Iteration 3     2014-08-30 11:55:46 
+## Iteration 3     2014-08-31 16:30:22 
 ##    Deviance = 3988.1822 | Deviance change = 13.210775
 ##     Maximum item intercept parameter change =  0.113534  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002636  
 ## ......................................................................
-## Iteration 4     2014-08-30 11:55:46 
+## Iteration 4     2014-08-31 16:30:22 
 ##    Deviance = 3979.4418 | Deviance change = 8.740395
 ##     Maximum item intercept parameter change =  0.088862  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001584  
 ## ......................................................................
-## Iteration 5     2014-08-30 11:55:46 
+## Iteration 5     2014-08-31 16:30:22 
 ##    Deviance = 3972.6152 | Deviance change = 6.826611
 ##     Maximum item intercept parameter change =  0.076322  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002068  
 ## ......................................................................
-## Iteration 6     2014-08-30 11:55:46 
+## Iteration 6     2014-08-31 16:30:22 
 ##    Deviance = 3967.19 | Deviance change = 5.425235
 ##     Maximum item intercept parameter change =  0.068515  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002242  
 ## ......................................................................
-## Iteration 7     2014-08-30 11:55:46 
+## Iteration 7     2014-08-31 16:30:22 
 ##    Deviance = 3962.874 | Deviance change = 4.316009
 ##     Maximum item intercept parameter change =  0.061335  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.00231  
 ## ......................................................................
-## Iteration 8     2014-08-30 11:55:46 
+## Iteration 8     2014-08-31 16:30:22 
 ##    Deviance = 3959.4385 | Deviance change = 3.435474
 ##     Maximum item intercept parameter change =  0.054841  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002341  
 ## ......................................................................
-## Iteration 9     2014-08-30 11:55:46 
+## Iteration 9     2014-08-31 16:30:22 
 ##    Deviance = 3956.7009 | Deviance change = 2.737591
 ##     Maximum item intercept parameter change =  0.049077  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002358  
 ## ......................................................................
-## Iteration 10     2014-08-30 11:55:46 
+## Iteration 10     2014-08-31 16:30:22 
 ##    Deviance = 3954.5161 | Deviance change = 2.184807
 ##     Maximum item intercept parameter change =  0.043998  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002373  
 ## ......................................................................
-## Iteration 11     2014-08-30 11:55:46 
+## Iteration 11     2014-08-31 16:30:22 
 ##    Deviance = 3952.7693 | Deviance change = 1.746833
 ##     Maximum item intercept parameter change =  0.039509  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002387  
 ## ......................................................................
-## Iteration 12     2014-08-30 11:55:46 
+## Iteration 12     2014-08-31 16:30:22 
 ##    Deviance = 3951.3697 | Deviance change = 1.399576
 ##     Maximum item intercept parameter change =  0.035536  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002405  
 ## ......................................................................
-## Iteration 13     2014-08-30 11:55:46 
+## Iteration 13     2014-08-31 16:30:22 
 ##    Deviance = 3950.2457 | Deviance change = 1.124021
 ##     Maximum item intercept parameter change =  0.032019  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002425  
 ## ......................................................................
-## Iteration 14     2014-08-30 11:55:46 
+## Iteration 14     2014-08-31 16:30:22 
 ##    Deviance = 3949.3405 | Deviance change = 0.905207
 ##     Maximum item intercept parameter change =  0.028888  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002447  
 ## ......................................................................
-## Iteration 15     2014-08-30 11:55:46 
+## Iteration 15     2014-08-31 16:30:22 
 ##    Deviance = 3948.6091 | Deviance change = 0.731375
 ##     Maximum item intercept parameter change =  0.026106  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002473  
 ## ......................................................................
-## Iteration 16     2014-08-30 11:55:46 
+## Iteration 16     2014-08-31 16:30:22 
 ##    Deviance = 3948.0158 | Deviance change = 0.593273
 ##     Maximum item intercept parameter change =  0.023627  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002502  
 ## ......................................................................
-## Iteration 17     2014-08-30 11:55:46 
+## Iteration 17     2014-08-31 16:30:22 
 ##    Deviance = 3947.5322 | Deviance change = 0.48361
 ##     Maximum item intercept parameter change =  0.021408  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002533  
 ## ......................................................................
-## Iteration 18     2014-08-30 11:55:46 
+## Iteration 18     2014-08-31 16:30:22 
 ##    Deviance = 3947.1356 | Deviance change = 0.396627
 ##     Maximum item intercept parameter change =  0.01942  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002567  
 ## ......................................................................
-## Iteration 19     2014-08-30 11:55:46 
+## Iteration 19     2014-08-31 16:30:22 
 ##    Deviance = 3946.8078 | Deviance change = 0.327767
 ##     Maximum item intercept parameter change =  0.017637  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002604  
 ## ......................................................................
-## Iteration 20     2014-08-30 11:55:46 
+## Iteration 20     2014-08-31 16:30:22 
 ##    Deviance = 3946.5344 | Deviance change = 0.273415
 ##     Maximum item intercept parameter change =  0.016039  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002642  
 ## ......................................................................
-## Iteration 21     2014-08-30 11:55:46 
+## Iteration 21     2014-08-31 16:30:22 
 ##    Deviance = 3946.3037 | Deviance change = 0.230697
 ##     Maximum item intercept parameter change =  0.014603  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002683  
 ## ......................................................................
-## Iteration 22     2014-08-30 11:55:46 
+## Iteration 22     2014-08-31 16:30:22 
 ##    Deviance = 3946.1064 | Deviance change = 0.197326
 ##     Maximum item intercept parameter change =  0.013314  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002726  
 ## ......................................................................
-## Iteration 23     2014-08-30 11:55:46 
+## Iteration 23     2014-08-31 16:30:22 
 ##    Deviance = 3945.9349 | Deviance change = 0.171477
 ##     Maximum item intercept parameter change =  0.012155  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002772  
 ## ......................................................................
-## Iteration 24     2014-08-30 11:55:46 
+## Iteration 24     2014-08-31 16:30:22 
 ##    Deviance = 3945.7832 | Deviance change = 0.151691
 ##     Maximum item intercept parameter change =  0.011115  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002818  
 ## ......................................................................
-## Iteration 25     2014-08-30 11:55:46 
+## Iteration 25     2014-08-31 16:30:22 
 ##    Deviance = 3945.6464 | Deviance change = 0.136802
 ##     Maximum item intercept parameter change =  0.010179  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002867  
 ## ......................................................................
-## Iteration 26     2014-08-30 11:55:46 
+## Iteration 26     2014-08-31 16:30:22 
 ##    Deviance = 3945.5205 | Deviance change = 0.125875
 ##     Maximum item intercept parameter change =  0.009337  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002917  
 ## ......................................................................
-## Iteration 27     2014-08-30 11:55:46 
+## Iteration 27     2014-08-31 16:30:22 
 ##    Deviance = 3945.4024 | Deviance change = 0.118162
 ##     Maximum item intercept parameter change =  0.00858  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002969  
 ## ......................................................................
-## Iteration 28     2014-08-30 11:55:46 
+## Iteration 28     2014-08-31 16:30:22 
 ##    Deviance = 3945.2893 | Deviance change = 0.113061
 ##     Maximum item intercept parameter change =  0.007898  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003022  
 ## ......................................................................
-## Iteration 29     2014-08-30 11:55:46 
+## Iteration 29     2014-08-31 16:30:22 
 ##    Deviance = 3945.1792 | Deviance change = 0.11009
 ##     Maximum item intercept parameter change =  0.007283  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003076  
 ## ......................................................................
-## Iteration 30     2014-08-30 11:55:46 
+## Iteration 30     2014-08-31 16:30:22 
 ##    Deviance = 3945.0704 | Deviance change = 0.108864
 ##     Maximum item intercept parameter change =  0.006728  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003131  
 ## ......................................................................
-## Iteration 31     2014-08-30 11:55:46 
+## Iteration 31     2014-08-31 16:30:22 
 ##    Deviance = 3944.9613 | Deviance change = 0.109072
 ##     Maximum item intercept parameter change =  0.006228  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003187  
 ## ......................................................................
-## Iteration 32     2014-08-30 11:55:46 
+## Iteration 32     2014-08-31 16:30:22 
 ##    Deviance = 3944.8508 | Deviance change = 0.110466
 ##     Maximum item intercept parameter change =  0.005775  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003244  
 ## ......................................................................
-## Iteration 33     2014-08-30 11:55:46 
+## Iteration 33     2014-08-31 16:30:22 
 ##    Deviance = 3944.738 | Deviance change = 0.112848
 ##     Maximum item intercept parameter change =  0.005367  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003301  
 ## ......................................................................
-## Iteration 34     2014-08-30 11:55:46 
+## Iteration 34     2014-08-31 16:30:22 
 ##    Deviance = 3944.6219 | Deviance change = 0.11606
 ##     Maximum item intercept parameter change =  0.004997  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003359  
 ## ......................................................................
-## Iteration 35     2014-08-30 11:55:46 
+## Iteration 35     2014-08-31 16:30:22 
 ##    Deviance = 3944.5019 | Deviance change = 0.119975
 ##     Maximum item intercept parameter change =  0.004662  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003416  
 ## ......................................................................
-## Iteration 36     2014-08-30 11:55:46 
+## Iteration 36     2014-08-31 16:30:22 
 ##    Deviance = 3944.3774 | Deviance change = 0.124495
 ##     Maximum item intercept parameter change =  0.004358  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003474  
 ## ......................................................................
-## Iteration 37     2014-08-30 11:55:46 
+## Iteration 37     2014-08-31 16:30:22 
 ##    Deviance = 3944.2479 | Deviance change = 0.129541
 ##     Maximum item intercept parameter change =  0.004083  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003531  
 ## ......................................................................
-## Iteration 38     2014-08-30 11:55:46 
+## Iteration 38     2014-08-31 16:30:22 
 ##    Deviance = 3944.1128 | Deviance change = 0.135051
 ##     Maximum item intercept parameter change =  0.003834  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003587  
 ## ......................................................................
-## Iteration 39     2014-08-30 11:55:46 
+## Iteration 39     2014-08-31 16:30:22 
 ##    Deviance = 3943.9719 | Deviance change = 0.140979
 ##     Maximum item intercept parameter change =  0.003606  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003643  
 ## ......................................................................
-## Iteration 40     2014-08-30 11:55:46 
+## Iteration 40     2014-08-31 16:30:22 
 ##    Deviance = 3943.8246 | Deviance change = 0.147286
 ##     Maximum item intercept parameter change =  0.003399  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003697  
 ## ......................................................................
-## Iteration 41     2014-08-30 11:55:46 
+## Iteration 41     2014-08-31 16:30:22 
 ##    Deviance = 3943.6706 | Deviance change = 0.153944
 ##     Maximum item intercept parameter change =  0.00321  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.00375  
 ## ......................................................................
-## Iteration 42     2014-08-30 11:55:46 
+## Iteration 42     2014-08-31 16:30:22 
 ##    Deviance = 3943.5097 | Deviance change = 0.160932
 ##     Maximum item intercept parameter change =  0.003036  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003801  
 ## ......................................................................
-## Iteration 43     2014-08-30 11:55:46 
+## Iteration 43     2014-08-31 16:30:22 
 ##    Deviance = 3943.3415 | Deviance change = 0.168229
 ##     Maximum item intercept parameter change =  0.002877  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003849  
 ## ......................................................................
-## Iteration 44     2014-08-30 11:55:46 
+## Iteration 44     2014-08-31 16:30:22 
 ##    Deviance = 3943.1657 | Deviance change = 0.175821
 ##     Maximum item intercept parameter change =  0.00273  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003895  
 ## ......................................................................
-## Iteration 45     2014-08-30 11:55:46 
+## Iteration 45     2014-08-31 16:30:22 
 ##    Deviance = 3942.982 | Deviance change = 0.183692
 ##     Maximum item intercept parameter change =  0.002594  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003938  
 ## ......................................................................
-## Iteration 46     2014-08-30 11:55:46 
+## Iteration 46     2014-08-31 16:30:22 
 ##    Deviance = 3942.7901 | Deviance change = 0.191825
 ##     Maximum item intercept parameter change =  0.002468  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003977  
 ## ......................................................................
-## Iteration 47     2014-08-30 11:55:46 
+## Iteration 47     2014-08-31 16:30:22 
 ##    Deviance = 3942.5899 | Deviance change = 0.2002
 ##     Maximum item intercept parameter change =  0.00235  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004012  
 ## ......................................................................
-## Iteration 48     2014-08-30 11:55:46 
+## Iteration 48     2014-08-31 16:30:22 
 ##    Deviance = 3942.3811 | Deviance change = 0.208792
 ##     Maximum item intercept parameter change =  0.002239  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004042  
 ## ......................................................................
-## Iteration 49     2014-08-30 11:55:46 
+## Iteration 49     2014-08-31 16:30:22 
 ##    Deviance = 3942.1636 | Deviance change = 0.217566
 ##     Maximum item intercept parameter change =  0.002134  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004066  
 ## ......................................................................
-## Iteration 50     2014-08-30 11:55:46 
+## Iteration 50     2014-08-31 16:30:22 
 ##    Deviance = 3941.9371 | Deviance change = 0.226478
 ##     Maximum item intercept parameter change =  0.002033  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004085  
 ## ......................................................................
-## Iteration 51     2014-08-30 11:55:46 
+## Iteration 51     2014-08-31 16:30:22 
 ##    Deviance = 3941.7016 | Deviance change = 0.235469
 ##     Maximum item intercept parameter change =  0.001936  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004096  
 ## ......................................................................
-## Iteration 52     2014-08-30 11:55:46 
+## Iteration 52     2014-08-31 16:30:22 
 ##    Deviance = 3941.4572 | Deviance change = 0.244463
 ##     Maximum item intercept parameter change =  0.00184  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.0041  
 ## ......................................................................
-## Iteration 53     2014-08-30 11:55:46 
+## Iteration 53     2014-08-31 16:30:22 
 ##    Deviance = 3941.2038 | Deviance change = 0.253365
 ##     Maximum item intercept parameter change =  0.001745  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004095  
 ## ......................................................................
-## Iteration 54     2014-08-30 11:55:46 
+## Iteration 54     2014-08-31 16:30:22 
 ##    Deviance = 3940.9418 | Deviance change = 0.262053
 ##     Maximum item intercept parameter change =  0.00165  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004081  
 ## ......................................................................
-## Iteration 55     2014-08-30 11:55:46 
+## Iteration 55     2014-08-31 16:30:22 
 ##    Deviance = 3940.6714 | Deviance change = 0.27038
 ##     Maximum item intercept parameter change =  0.001551  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.004056  
 ## ......................................................................
-## Iteration 56     2014-08-30 11:55:46 
+## Iteration 56     2014-08-31 16:30:22 
 ##    Deviance = 3940.3932 | Deviance change = 0.278171
 ##     Maximum item intercept parameter change =  0.001449  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.00402  
 ## ......................................................................
-## Iteration 57     2014-08-30 11:55:46 
+## Iteration 57     2014-08-31 16:30:22 
 ##    Deviance = 3940.108 | Deviance change = 0.285219
 ##     Maximum item intercept parameter change =  0.001341  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003971  
 ## ......................................................................
-## Iteration 58     2014-08-30 11:55:46 
+## Iteration 58     2014-08-31 16:30:22 
 ##    Deviance = 3939.8167 | Deviance change = 0.291292
 ##     Maximum item intercept parameter change =  0.001225  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.00391  
 ## ......................................................................
-## Iteration 59     2014-08-30 11:55:46 
+## Iteration 59     2014-08-31 16:30:22 
 ##    Deviance = 3939.5206 | Deviance change = 0.296137
 ##     Maximum item intercept parameter change =  0.001099  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003834  
 ## ......................................................................
-## Iteration 60     2014-08-30 11:55:46 
+## Iteration 60     2014-08-31 16:30:22 
 ##    Deviance = 3939.2211 | Deviance change = 0.299488
 ##     Maximum item intercept parameter change =  0.000963  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003745  
 ## ......................................................................
-## Iteration 61     2014-08-30 11:55:46 
+## Iteration 61     2014-08-31 16:30:22 
 ##    Deviance = 3938.92 | Deviance change = 0.301081
 ##     Maximum item intercept parameter change =  0.000813  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003641  
 ## ......................................................................
-## Iteration 62     2014-08-30 11:55:46 
+## Iteration 62     2014-08-31 16:30:22 
 ##    Deviance = 3938.6193 | Deviance change = 0.300677
 ##     Maximum item intercept parameter change =  0.00065  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003523  
 ## ......................................................................
-## Iteration 63     2014-08-30 11:55:46 
+## Iteration 63     2014-08-31 16:30:22 
 ##    Deviance = 3938.3212 | Deviance change = 0.29808
 ##     Maximum item intercept parameter change =  0.000693  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003392  
 ## ......................................................................
-## Iteration 64     2014-08-30 11:55:46 
+## Iteration 64     2014-08-31 16:30:22 
 ##    Deviance = 3938.0281 | Deviance change = 0.293167
 ##     Maximum item intercept parameter change =  0.000898  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003248  
 ## ......................................................................
-## Iteration 65     2014-08-30 11:55:46 
+## Iteration 65     2014-08-31 16:30:22 
 ##    Deviance = 3937.7422 | Deviance change = 0.285907
 ##     Maximum item intercept parameter change =  0.001109  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.003092  
 ## ......................................................................
-## Iteration 66     2014-08-30 11:55:46 
+## Iteration 66     2014-08-31 16:30:22 
 ##    Deviance = 3937.4658 | Deviance change = 0.276379
 ##     Maximum item intercept parameter change =  0.001324  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002928  
 ## ......................................................................
-## Iteration 67     2014-08-30 11:55:46 
+## Iteration 67     2014-08-31 16:30:22 
 ##    Deviance = 3937.201 | Deviance change = 0.264778
 ##     Maximum item intercept parameter change =  0.00154  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002757  
 ## ......................................................................
-## Iteration 68     2014-08-30 11:55:46 
+## Iteration 68     2014-08-31 16:30:22 
 ##    Deviance = 3936.9496 | Deviance change = 0.251405
 ##     Maximum item intercept parameter change =  0.001755  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002581  
 ## ......................................................................
-## Iteration 69     2014-08-30 11:55:46 
+## Iteration 69     2014-08-31 16:30:22 
 ##    Deviance = 3936.7129 | Deviance change = 0.236645
 ##     Maximum item intercept parameter change =  0.001965  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002404  
 ## ......................................................................
-## Iteration 70     2014-08-30 11:55:46 
+## Iteration 70     2014-08-31 16:30:22 
 ##    Deviance = 3936.492 | Deviance change = 0.220935
 ##     Maximum item intercept parameter change =  0.002169  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002228  
 ## ......................................................................
-## Iteration 71     2014-08-30 11:55:46 
+## Iteration 71     2014-08-31 16:30:22 
 ##    Deviance = 3936.2873 | Deviance change = 0.20472
 ##     Maximum item intercept parameter change =  0.002362  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002126  
 ## ......................................................................
-## Iteration 72     2014-08-30 11:55:46 
+## Iteration 72     2014-08-31 16:30:22 
 ##    Deviance = 3936.0989 | Deviance change = 0.188423
 ##     Maximum item intercept parameter change =  0.002545  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002089  
 ## ......................................................................
-## Iteration 73     2014-08-30 11:55:46 
+## Iteration 73     2014-08-31 16:30:22 
 ##    Deviance = 3935.9265 | Deviance change = 0.17241
 ##     Maximum item intercept parameter change =  0.002714  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.002044  
 ## ......................................................................
-## Iteration 74     2014-08-30 11:55:46 
+## Iteration 74     2014-08-31 16:30:22 
 ##    Deviance = 3935.7695 | Deviance change = 0.156971
 ##     Maximum item intercept parameter change =  0.002868  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001991  
 ## ......................................................................
-## Iteration 75     2014-08-30 11:55:46 
+## Iteration 75     2014-08-31 16:30:22 
 ##    Deviance = 3935.6272 | Deviance change = 0.142323
 ##     Maximum item intercept parameter change =  0.003006  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001929  
 ## ......................................................................
-## Iteration 76     2014-08-30 11:55:46 
+## Iteration 76     2014-08-31 16:30:22 
 ##    Deviance = 3935.4986 | Deviance change = 0.128602
 ##     Maximum item intercept parameter change =  0.003128  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001861  
 ## ......................................................................
-## Iteration 77     2014-08-30 11:55:46 
+## Iteration 77     2014-08-31 16:30:22 
 ##    Deviance = 3935.3827 | Deviance change = 0.115882
 ##     Maximum item intercept parameter change =  0.003232  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001787  
 ## ......................................................................
-## Iteration 78     2014-08-30 11:55:46 
+## Iteration 78     2014-08-31 16:30:22 
 ##    Deviance = 3935.2785 | Deviance change = 0.104188
 ##     Maximum item intercept parameter change =  0.003317  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001708  
 ## ......................................................................
-## Iteration 79     2014-08-30 11:55:46 
+## Iteration 79     2014-08-31 16:30:22 
 ##    Deviance = 3935.185 | Deviance change = 0.093504
 ##     Maximum item intercept parameter change =  0.003384  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001625  
 ## ......................................................................
-## Iteration 80     2014-08-30 11:55:46 
+## Iteration 80     2014-08-31 16:30:22 
 ##    Deviance = 3935.1012 | Deviance change = 0.083791
 ##     Maximum item intercept parameter change =  0.003433  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001539  
 ## ......................................................................
-## Iteration 81     2014-08-30 11:55:46 
+## Iteration 81     2014-08-31 16:30:22 
 ##    Deviance = 3935.0262 | Deviance change = 0.074992
 ##     Maximum item intercept parameter change =  0.003463  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001452  
 ## ......................................................................
-## Iteration 82     2014-08-30 11:55:46 
+## Iteration 82     2014-08-31 16:30:22 
 ##    Deviance = 3934.9592 | Deviance change = 0.067043
 ##     Maximum item intercept parameter change =  0.003475  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001365  
 ## ......................................................................
-## Iteration 83     2014-08-30 11:55:46 
+## Iteration 83     2014-08-31 16:30:22 
 ##    Deviance = 3934.8993 | Deviance change = 0.059876
 ##     Maximum item intercept parameter change =  0.00347  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001279  
 ## ......................................................................
-## Iteration 84     2014-08-30 11:55:46 
+## Iteration 84     2014-08-31 16:30:22 
 ##    Deviance = 3934.8459 | Deviance change = 0.053424
 ##     Maximum item intercept parameter change =  0.003449  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001194  
 ## ......................................................................
-## Iteration 85     2014-08-30 11:55:46 
+## Iteration 85     2014-08-31 16:30:22 
 ##    Deviance = 3934.7982 | Deviance change = 0.047623
 ##     Maximum item intercept parameter change =  0.003412  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001111  
 ## ......................................................................
-## Iteration 86     2014-08-30 11:55:46 
+## Iteration 86     2014-08-31 16:30:22 
 ##    Deviance = 3934.7558 | Deviance change = 0.04241
 ##     Maximum item intercept parameter change =  0.003362  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.001031  
 ## ......................................................................
-## Iteration 87     2014-08-30 11:55:46 
+## Iteration 87     2014-08-31 16:30:22 
 ##    Deviance = 3934.7181 | Deviance change = 0.03773
 ##     Maximum item intercept parameter change =  0.003298  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000954  
 ## ......................................................................
-## Iteration 88     2014-08-30 11:55:46 
+## Iteration 88     2014-08-31 16:30:22 
 ##    Deviance = 3934.6846 | Deviance change = 0.03353
 ##     Maximum item intercept parameter change =  0.003224  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000881  
 ## ......................................................................
-## Iteration 89     2014-08-30 11:55:46 
+## Iteration 89     2014-08-31 16:30:22 
 ##    Deviance = 3934.6548 | Deviance change = 0.029764
 ##     Maximum item intercept parameter change =  0.00314  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000812  
 ## ......................................................................
-## Iteration 90     2014-08-30 11:55:46 
+## Iteration 90     2014-08-31 16:30:22 
 ##    Deviance = 3934.6284 | Deviance change = 0.026389
 ##     Maximum item intercept parameter change =  0.003048  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000746  
 ## ......................................................................
-## Iteration 91     2014-08-30 11:55:46 
+## Iteration 91     2014-08-31 16:30:22 
 ##    Deviance = 3934.6051 | Deviance change = 0.023367
 ##     Maximum item intercept parameter change =  0.002949  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000684  
 ## ......................................................................
-## Iteration 92     2014-08-30 11:55:46 
+## Iteration 92     2014-08-31 16:30:22 
 ##    Deviance = 3934.5844 | Deviance change = 0.020663
 ##     Maximum item intercept parameter change =  0.002844  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000627  
 ## ......................................................................
-## Iteration 93     2014-08-30 11:55:46 
+## Iteration 93     2014-08-31 16:30:22 
 ##    Deviance = 3934.5661 | Deviance change = 0.018246
 ##     Maximum item intercept parameter change =  0.002736  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000573  
 ## ......................................................................
-## Iteration 94     2014-08-30 11:55:46 
+## Iteration 94     2014-08-31 16:30:22 
 ##    Deviance = 3934.5501 | Deviance change = 0.016089
 ##     Maximum item intercept parameter change =  0.002624  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000524  
 ## ......................................................................
-## Iteration 95     2014-08-30 11:55:46 
+## Iteration 95     2014-08-31 16:30:22 
 ##    Deviance = 3934.5359 | Deviance change = 0.014166
 ##     Maximum item intercept parameter change =  0.002511  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000477  
 ## ......................................................................
-## Iteration 96     2014-08-30 11:55:46 
+## Iteration 96     2014-08-31 16:30:22 
 ##    Deviance = 3934.5234 | Deviance change = 0.012454
 ##     Maximum item intercept parameter change =  0.002397  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000435  
 ## ......................................................................
-## Iteration 97     2014-08-30 11:55:46 
+## Iteration 97     2014-08-31 16:30:22 
 ##    Deviance = 3934.5125 | Deviance change = 0.010931
 ##     Maximum item intercept parameter change =  0.002283  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000396  
 ## ......................................................................
-## Iteration 98     2014-08-30 11:55:46 
+## Iteration 98     2014-08-31 16:30:22 
 ##    Deviance = 3934.5029 | Deviance change = 0.00958
 ##     Maximum item intercept parameter change =  0.00217  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.00036  
 ## ......................................................................
-## Iteration 99     2014-08-30 11:55:46 
+## Iteration 99     2014-08-31 16:30:22 
 ##    Deviance = 3934.4945 | Deviance change = 0.008383
 ##     Maximum item intercept parameter change =  0.002058  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000327  
 ## ......................................................................
-## Iteration 100     2014-08-30 11:55:46 
+## Iteration 100     2014-08-31 16:30:22 
 ##    Deviance = 3934.4872 | Deviance change = 0.007324
 ##     Maximum item intercept parameter change =  0.001948  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000296  
 ## ......................................................................
-## Iteration 101     2014-08-30 11:55:46 
+## Iteration 101     2014-08-31 16:30:22 
 ##    Deviance = 3934.4808 | Deviance change = 0.006389
 ##     Maximum item intercept parameter change =  0.001841  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000269  
 ## ......................................................................
-## Iteration 102     2014-08-30 11:55:46 
+## Iteration 102     2014-08-31 16:30:22 
 ##    Deviance = 3934.4753 | Deviance change = 0.005564
 ##     Maximum item intercept parameter change =  0.001737  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000244  
 ## ......................................................................
-## Iteration 103     2014-08-30 11:55:46 
+## Iteration 103     2014-08-31 16:30:22 
 ##    Deviance = 3934.4704 | Deviance change = 0.004839
 ##     Maximum item intercept parameter change =  0.001636  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000221  
 ## ......................................................................
-## Iteration 104     2014-08-30 11:55:46 
+## Iteration 104     2014-08-31 16:30:22 
 ##    Deviance = 3934.4662 | Deviance change = 0.004202
 ##     Maximum item intercept parameter change =  0.001539  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2e-04  
 ## ......................................................................
-## Iteration 105     2014-08-30 11:55:46 
+## Iteration 105     2014-08-31 16:30:22 
 ##    Deviance = 3934.4626 | Deviance change = 0.003644
 ##     Maximum item intercept parameter change =  0.001445  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000181  
 ## ......................................................................
-## Iteration 106     2014-08-30 11:55:46 
+## Iteration 106     2014-08-31 16:30:22 
 ##    Deviance = 3934.4594 | Deviance change = 0.003155
 ##     Maximum item intercept parameter change =  0.001355  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000163  
 ## ......................................................................
-## Iteration 107     2014-08-30 11:55:46 
+## Iteration 107     2014-08-31 16:30:22 
 ##    Deviance = 3934.4567 | Deviance change = 0.002728
 ##     Maximum item intercept parameter change =  0.00127  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000148  
 ## ......................................................................
-## Iteration 108     2014-08-30 11:55:46 
+## Iteration 108     2014-08-31 16:30:22 
 ##    Deviance = 3934.4543 | Deviance change = 0.002356
 ##     Maximum item intercept parameter change =  0.001188  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000133  
 ## ......................................................................
-## Iteration 109     2014-08-30 11:55:46 
+## Iteration 109     2014-08-31 16:30:22 
 ##    Deviance = 3934.4523 | Deviance change = 0.002031
 ##     Maximum item intercept parameter change =  0.00111  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000121  
 ## ......................................................................
-## Iteration 110     2014-08-30 11:55:46 
+## Iteration 110     2014-08-31 16:30:22 
 ##    Deviance = 3934.4506 | Deviance change = 0.00175
 ##     Maximum item intercept parameter change =  0.001037  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0.000109  
 ## ......................................................................
-## Iteration 111     2014-08-30 11:55:46 
+## Iteration 111     2014-08-31 16:30:22 
 ##    Deviance = 3934.4491 | Deviance change = 0.001505
 ##     Maximum item intercept parameter change =  0.000967  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  9.8e-05  
 ## ......................................................................
-## Iteration 112     2014-08-30 11:55:46 
+## Iteration 112     2014-08-31 16:30:22 
 ##    Deviance = 3934.4478 | Deviance change = 0.001293
 ##     Maximum item intercept parameter change =  0.000901  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  8.9e-05  
 ## ......................................................................
-## Iteration 113     2014-08-30 11:55:46 
+## Iteration 113     2014-08-31 16:30:22 
 ##    Deviance = 3934.4467 | Deviance change = 0.00111
 ##     Maximum item intercept parameter change =  0.000839  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  8e-05  
 ## ......................................................................
-## Iteration 114     2014-08-30 11:55:46 
+## Iteration 114     2014-08-31 16:30:22 
 ##    Deviance = 3934.4457 | Deviance change = 0.000951
 ##     Maximum item intercept parameter change =  0.00078  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  7.2e-05  
 ## ......................................................................
-## Iteration 115     2014-08-30 11:55:46 
+## Iteration 115     2014-08-31 16:30:22 
 ##    Deviance = 3934.4449 | Deviance change = 0.000814
 ##     Maximum item intercept parameter change =  0.000725  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  6.5e-05  
 ## ......................................................................
-## Iteration 116     2014-08-30 11:55:46 
+## Iteration 116     2014-08-31 16:30:22 
 ##    Deviance = 3934.4442 | Deviance change = 0.000697
 ##     Maximum item intercept parameter change =  0.000673  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  5.9e-05  
 ## ......................................................................
-## Iteration 117     2014-08-30 11:55:46 
+## Iteration 117     2014-08-31 16:30:22 
 ##    Deviance = 3934.4436 | Deviance change = 0.000595
 ##     Maximum item intercept parameter change =  0.000625  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  5.3e-05  
 ## ......................................................................
-## Iteration 118     2014-08-30 11:55:46 
+## Iteration 118     2014-08-31 16:30:22 
 ##    Deviance = 3934.4431 | Deviance change = 0.000508
 ##     Maximum item intercept parameter change =  0.000579  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  4.8e-05  
 ## ......................................................................
-## Iteration 119     2014-08-30 11:55:46 
+## Iteration 119     2014-08-31 16:30:22 
 ##    Deviance = 3934.4427 | Deviance change = 0.000433
 ##     Maximum item intercept parameter change =  0.000537  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  4.3e-05  
 ## ......................................................................
-## Iteration 120     2014-08-30 11:55:46 
+## Iteration 120     2014-08-31 16:30:22 
 ##    Deviance = 3934.4423 | Deviance change = 0.000369
 ##     Maximum item intercept parameter change =  0.000497  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  3.9e-05  
 ## ......................................................................
-## Iteration 121     2014-08-30 11:55:46 
+## Iteration 121     2014-08-31 16:30:22 
 ##    Deviance = 3934.442 | Deviance change = 0.000314
 ##     Maximum item intercept parameter change =  0.00046  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  3.5e-05  
 ## ......................................................................
-## Iteration 122     2014-08-30 11:55:46 
+## Iteration 122     2014-08-31 16:30:22 
 ##    Deviance = 3934.4417 | Deviance change = 0.000267
 ##     Maximum item intercept parameter change =  0.000425  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  3.2e-05  
 ## ......................................................................
-## Iteration 123     2014-08-30 11:55:46 
+## Iteration 123     2014-08-31 16:30:22 
 ##    Deviance = 3934.4415 | Deviance change = 0.000227
 ##     Maximum item intercept parameter change =  0.000393  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2.9e-05  
 ## ......................................................................
-## Iteration 124     2014-08-30 11:55:46 
+## Iteration 124     2014-08-31 16:30:22 
 ##    Deviance = 3934.4413 | Deviance change = 0.000193
 ##     Maximum item intercept parameter change =  0.000363  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2.6e-05  
 ## ......................................................................
-## Iteration 125     2014-08-30 11:55:46 
+## Iteration 125     2014-08-31 16:30:22 
 ##    Deviance = 3934.4411 | Deviance change = 0.000164
 ##     Maximum item intercept parameter change =  0.000336  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2.3e-05  
 ## ......................................................................
-## Iteration 126     2014-08-30 11:55:46 
+## Iteration 126     2014-08-31 16:30:22 
 ##    Deviance = 3934.441 | Deviance change = 0.000139
 ##     Maximum item intercept parameter change =  0.00031  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2.1e-05  
 ## ......................................................................
-## Iteration 127     2014-08-30 11:55:46 
+## Iteration 127     2014-08-31 16:30:22 
 ##    Deviance = 3934.4409 | Deviance change = 0.000118
 ##     Maximum item intercept parameter change =  0.000286  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1.9e-05  
 ## ......................................................................
-## Iteration 128     2014-08-30 11:55:46 
+## Iteration 128     2014-08-31 16:30:22 
 ##    Deviance = 3934.4408 | Deviance change = 1e-04
 ##     Maximum item intercept parameter change =  0.000263  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1.7e-05  
 ## ......................................................................
-## Iteration 129     2014-08-30 11:55:46 
+## Iteration 129     2014-08-31 16:30:22 
 ##    Deviance = 3934.4407 | Deviance change = 8.4e-05
 ##     Maximum item intercept parameter change =  0.000243  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1.5e-05  
 ## ......................................................................
-## Iteration 130     2014-08-30 11:55:46 
+## Iteration 130     2014-08-31 16:30:22 
 ##    Deviance = 3934.4406 | Deviance change = 7.1e-05
 ##     Maximum item intercept parameter change =  0.000224  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1.4e-05  
 ## ......................................................................
-## Iteration 131     2014-08-30 11:55:46 
+## Iteration 131     2014-08-31 16:30:22 
 ##    Deviance = 3934.4405 | Deviance change = 6e-05
 ##     Maximum item intercept parameter change =  0.000206  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1.2e-05  
 ## ......................................................................
-## Iteration 132     2014-08-30 11:55:46 
+## Iteration 132     2014-08-31 16:30:22 
 ##    Deviance = 3934.4405 | Deviance change = 5.1e-05
 ##     Maximum item intercept parameter change =  0.00019  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1.1e-05  
 ## ......................................................................
-## Iteration 133     2014-08-30 11:55:46 
+## Iteration 133     2014-08-31 16:30:22 
 ##    Deviance = 3934.4404 | Deviance change = 4.3e-05
 ##     Maximum item intercept parameter change =  0.000175  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-05  
 ## ......................................................................
-## Iteration 134     2014-08-30 11:55:46 
+## Iteration 134     2014-08-31 16:30:22 
 ##    Deviance = 3934.4404 | Deviance change = 3.6e-05
 ##     Maximum item intercept parameter change =  0.000161  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  9e-06  
 ## ......................................................................
-## Iteration 135     2014-08-30 11:55:46 
+## Iteration 135     2014-08-31 16:30:22 
 ##    Deviance = 3934.4404 | Deviance change = 3.1e-05
 ##     Maximum item intercept parameter change =  0.000148  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  8e-06  
 ## ......................................................................
-## Iteration 136     2014-08-30 11:55:46 
+## Iteration 136     2014-08-31 16:30:22 
 ##    Deviance = 3934.4404 | Deviance change = 2.6e-05
 ##     Maximum item intercept parameter change =  0.000136  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  7e-06  
 ## ......................................................................
-## Iteration 137     2014-08-30 11:55:46 
+## Iteration 137     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 2.2e-05
 ##     Maximum item intercept parameter change =  0.000125  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  7e-06  
 ## ......................................................................
-## Iteration 138     2014-08-30 11:55:46 
+## Iteration 138     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 1.8e-05
 ##     Maximum item intercept parameter change =  0.000115  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  6e-06  
 ## ......................................................................
-## Iteration 139     2014-08-30 11:55:46 
+## Iteration 139     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 1.5e-05
 ##     Maximum item intercept parameter change =  0.000105  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  5e-06  
 ## ......................................................................
-## Iteration 140     2014-08-30 11:55:46 
+## Iteration 140     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 1.3e-05
 ##     Maximum item intercept parameter change =  9.7e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  5e-06  
 ## ......................................................................
-## Iteration 141     2014-08-30 11:55:46 
+## Iteration 141     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 1.1e-05
 ##     Maximum item intercept parameter change =  8.9e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  4e-06  
 ## ......................................................................
-## Iteration 142     2014-08-30 11:55:46 
+## Iteration 142     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 9e-06
 ##     Maximum item intercept parameter change =  8.2e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  4e-06  
 ## ......................................................................
-## Iteration 143     2014-08-30 11:55:46 
+## Iteration 143     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 8e-06
 ##     Maximum item intercept parameter change =  7.5e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  4e-06  
 ## ......................................................................
-## Iteration 144     2014-08-30 11:55:46 
+## Iteration 144     2014-08-31 16:30:22 
 ##    Deviance = 3934.4403 | Deviance change = 6e-06
 ##     Maximum item intercept parameter change =  6.9e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  3e-06  
 ## ......................................................................
-## Iteration 145     2014-08-30 11:55:46 
+## Iteration 145     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 5e-06
 ##     Maximum item intercept parameter change =  6.3e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  3e-06  
 ## ......................................................................
-## Iteration 146     2014-08-30 11:55:46 
+## Iteration 146     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 5e-06
 ##     Maximum item intercept parameter change =  5.8e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  3e-06  
 ## ......................................................................
-## Iteration 147     2014-08-30 11:55:46 
+## Iteration 147     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 4e-06
 ##     Maximum item intercept parameter change =  5.3e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2e-06  
 ## ......................................................................
-## Iteration 148     2014-08-30 11:55:46 
+## Iteration 148     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 3e-06
 ##     Maximum item intercept parameter change =  4.8e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2e-06  
 ## ......................................................................
-## Iteration 149     2014-08-30 11:55:46 
+## Iteration 149     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 3e-06
 ##     Maximum item intercept parameter change =  4.4e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2e-06  
 ## ......................................................................
-## Iteration 150     2014-08-30 11:55:46 
+## Iteration 150     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 2e-06
 ##     Maximum item intercept parameter change =  4.1e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2e-06  
 ## ......................................................................
-## Iteration 151     2014-08-30 11:55:46 
+## Iteration 151     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 2e-06
 ##     Maximum item intercept parameter change =  3.7e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  2e-06  
 ## ......................................................................
-## Iteration 152     2014-08-30 11:55:46 
+## Iteration 152     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 2e-06
 ##     Maximum item intercept parameter change =  3.4e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 153     2014-08-30 11:55:46 
+## Iteration 153     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 1e-06
 ##     Maximum item intercept parameter change =  3.1e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 154     2014-08-30 11:55:46 
+## Iteration 154     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 1e-06
 ##     Maximum item intercept parameter change =  2.9e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 155     2014-08-30 11:55:46 
+## Iteration 155     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 1e-06
 ##     Maximum item intercept parameter change =  2.6e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 156     2014-08-30 11:55:46 
+## Iteration 156     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 1e-06
 ##     Maximum item intercept parameter change =  2.4e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 157     2014-08-30 11:55:46 
+## Iteration 157     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 1e-06
 ##     Maximum item intercept parameter change =  2.2e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 158     2014-08-30 11:55:46 
+## Iteration 158     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 1e-06
 ##     Maximum item intercept parameter change =  2e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 159     2014-08-30 11:55:46 
+## Iteration 159     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.8e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 160     2014-08-30 11:55:46 
+## Iteration 160     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.7e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 161     2014-08-30 11:55:46 
+## Iteration 161     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.5e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 162     2014-08-30 11:55:46 
+## Iteration 162     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.4e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  1e-06  
 ## ......................................................................
-## Iteration 163     2014-08-30 11:55:46 
+## Iteration 163     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.3e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0  
 ## ......................................................................
-## Iteration 164     2014-08-30 11:55:46 
+## Iteration 164     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.2e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0  
 ## ......................................................................
-## Iteration 165     2014-08-30 11:55:46 
+## Iteration 165     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1.1e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0  
 ## ......................................................................
-## Iteration 166     2014-08-30 11:55:46 
+## Iteration 166     2014-08-31 16:30:22 
 ##    Deviance = 3934.4402 | Deviance change = 0
 ##     Maximum item intercept parameter change =  1e-05  
 ##     Maximum item slope parameter change =  0  
 ##     Maximum distribution parameter change =  0  
 ## ----------------------------------- 
-## Start: 2014-08-30 11:55:46 
-## End: 2014-08-30 11:55:46 
-## Time difference of 0.3156 secs
-## Difference: 0.3156 
+## Start: 2014-08-31 16:30:22 
+## End: 2014-08-31 16:30:22 
+## Time difference of 0.2878 secs
+## Difference: 0.2878 
 ## -----------------------------------</code></pre>
 <pre class="r"><code>summary(mod12b)</code></pre>
 <pre><code>## -----------------------------------------------------------------------------
-## CDM 3.3-24 (2014-05-25) 
+## CDM 3.4-21 (2014-08-31) 
 ## 
-## Date of Analysis: 2014-08-30 11:55:46 
-## Time difference of 0.3156 secs
-## Computation Time: 0.3156 
+## Date of Analysis: 2014-08-31 16:30:22 
+## Time difference of 0.2878 secs
+## Computation Time: 0.2878 
 ## 
 ## General Diagnostic Model 
 ## 
@@ -2427,118 +1690,15 @@ lca_prior &lt;- function(Theta,Etable){
 #* estimate model
 mod12c &lt;- mirt(dat, mirtmodel , technical = list(
 customTheta=Theta , customPriorFun = lca_prior) ,
-pars = mod.pars , verbose=TRUE )</code></pre>
-<pre><code>## 
-Iteration: 1, Log-Lik: -2013.384, Max-Change: 1.13942
-Iteration: 2, Log-Lik: -1974.328, Max-Change: 0.06348
-Iteration: 3, Log-Lik: -1973.879, Max-Change: 0.01014
-Iteration: 4, Log-Lik: -1973.809, Max-Change: 0.01563
-Iteration: 5, Log-Lik: -1973.727, Max-Change: 0.01012
-Iteration: 6, Log-Lik: -1973.667, Max-Change: 0.02662
-Iteration: 7, Log-Lik: -1973.584, Max-Change: 0.00535
-Iteration: 8, Log-Lik: -1973.509, Max-Change: 0.00831
-Iteration: 9, Log-Lik: -1973.456, Max-Change: 0.00791
-Iteration: 10, Log-Lik: -1973.398, Max-Change: 0.00667
-Iteration: 11, Log-Lik: -1973.345, Max-Change: 0.00791
-Iteration: 12, Log-Lik: -1973.293, Max-Change: 0.04907
-Iteration: 13, Log-Lik: -1973.247, Max-Change: 0.01418
-Iteration: 14, Log-Lik: -1973.067, Max-Change: 0.00583
-Iteration: 15, Log-Lik: -1973.010, Max-Change: 0.01867
-Iteration: 16, Log-Lik: -1972.925, Max-Change: 0.00703
-Iteration: 17, Log-Lik: -1972.850, Max-Change: 0.00948
-Iteration: 18, Log-Lik: -1972.789, Max-Change: 0.01094
-Iteration: 19, Log-Lik: -1972.714, Max-Change: 0.00999
-Iteration: 20, Log-Lik: -1972.649, Max-Change: 0.00958
-Iteration: 21, Log-Lik: -1972.584, Max-Change: 0.05660
-Iteration: 22, Log-Lik: -1972.511, Max-Change: 0.01171
-Iteration: 23, Log-Lik: -1972.286, Max-Change: 0.00984
-Iteration: 24, Log-Lik: -1972.209, Max-Change: 0.02988
-Iteration: 25, Log-Lik: -1972.085, Max-Change: 0.00511
-Iteration: 26, Log-Lik: -1971.971, Max-Change: 0.01294
-Iteration: 27, Log-Lik: -1971.885, Max-Change: 0.05437
-Iteration: 28, Log-Lik: -1971.740, Max-Change: 0.00463
-Iteration: 29, Log-Lik: -1971.554, Max-Change: 0.01488
-Iteration: 30, Log-Lik: -1971.452, Max-Change: 0.09917
-Iteration: 31, Log-Lik: -1971.332, Max-Change: 0.01929
-Iteration: 32, Log-Lik: -1970.956, Max-Change: 0.01583
-Iteration: 33, Log-Lik: -1970.828, Max-Change: 0.07430
-Iteration: 34, Log-Lik: -1970.610, Max-Change: 0.00379
-Iteration: 35, Log-Lik: -1970.391, Max-Change: 0.02297
-Iteration: 36, Log-Lik: -1970.245, Max-Change: 0.15301
-Iteration: 37, Log-Lik: -1970.063, Max-Change: 0.01817
-Iteration: 38, Log-Lik: -1969.518, Max-Change: 0.02743
-Iteration: 39, Log-Lik: -1969.351, Max-Change: 0.16781
-Iteration: 40, Log-Lik: -1969.081, Max-Change: 0.01612
-Iteration: 41, Log-Lik: -1968.661, Max-Change: 0.03223
-Iteration: 42, Log-Lik: -1968.509, Max-Change: 0.21685
-Iteration: 43, Log-Lik: -1968.304, Max-Change: 0.02201
-Iteration: 44, Log-Lik: -1967.876, Max-Change: 0.02768
-Iteration: 45, Log-Lik: -1967.782, Max-Change: 0.19580
-Iteration: 46, Log-Lik: -1967.672, Max-Change: 0.02816
-Iteration: 47, Log-Lik: -1967.443, Max-Change: 0.01919
-Iteration: 48, Log-Lik: -1967.405, Max-Change: 0.09058
-Iteration: 49, Log-Lik: -1967.356, Max-Change: 0.01461
-Iteration: 50, Log-Lik: -1967.298, Max-Change: 0.01247
-Iteration: 51, Log-Lik: -1967.284, Max-Change: 0.08133
-Iteration: 52, Log-Lik: -1967.278, Max-Change: 0.01228
-Iteration: 53, Log-Lik: -1967.238, Max-Change: 0.00442
-Iteration: 54, Log-Lik: -1967.235, Max-Change: 0.01501
-Iteration: 55, Log-Lik: -1967.230, Max-Change: 0.00088
-Iteration: 56, Log-Lik: -1967.228, Max-Change: 0.00453
-Iteration: 57, Log-Lik: -1967.227, Max-Change: 0.03165
-Iteration: 58, Log-Lik: -1967.226, Max-Change: 0.00775
-Iteration: 59, Log-Lik: -1967.222, Max-Change: 0.00090
-Iteration: 60, Log-Lik: -1967.221, Max-Change: 0.00039
-Iteration: 61, Log-Lik: -1967.221, Max-Change: 0.00038
-Iteration: 62, Log-Lik: -1967.221, Max-Change: 0.00041
-Iteration: 63, Log-Lik: -1967.221, Max-Change: 0.00259
-Iteration: 64, Log-Lik: -1967.221, Max-Change: 0.00017
-Iteration: 65, Log-Lik: -1967.220, Max-Change: 0.00038
-Iteration: 66, Log-Lik: -1967.220, Max-Change: 0.00029
-Iteration: 67, Log-Lik: -1967.220, Max-Change: 0.00034
-Iteration: 68, Log-Lik: -1967.220, Max-Change: 0.00035
-Iteration: 69, Log-Lik: -1967.220, Max-Change: 0.00037
-Iteration: 70, Log-Lik: -1967.220, Max-Change: 0.00033
-Iteration: 71, Log-Lik: -1967.220, Max-Change: 0.00032
-Iteration: 72, Log-Lik: -1967.220, Max-Change: 0.00023
-Iteration: 73, Log-Lik: -1967.220, Max-Change: 0.00030
-Iteration: 74, Log-Lik: -1967.220, Max-Change: 0.00030
-Iteration: 75, Log-Lik: -1967.220, Max-Change: 0.00028
-Iteration: 76, Log-Lik: -1967.220, Max-Change: 0.00028
-Iteration: 77, Log-Lik: -1967.220, Max-Change: 0.00026
-Iteration: 78, Log-Lik: -1967.220, Max-Change: 0.00021
-Iteration: 79, Log-Lik: -1967.220, Max-Change: 0.00025
-Iteration: 80, Log-Lik: -1967.220, Max-Change: 0.00025
-Iteration: 81, Log-Lik: -1967.220, Max-Change: 0.00023
-Iteration: 82, Log-Lik: -1967.220, Max-Change: 0.00023
-Iteration: 83, Log-Lik: -1967.220, Max-Change: 0.00022
-Iteration: 84, Log-Lik: -1967.220, Max-Change: 0.00018
-Iteration: 85, Log-Lik: -1967.220, Max-Change: 0.00021
-Iteration: 86, Log-Lik: -1967.220, Max-Change: 0.00021
-Iteration: 87, Log-Lik: -1967.220, Max-Change: 0.00019
-Iteration: 88, Log-Lik: -1967.220, Max-Change: 0.00019
-Iteration: 89, Log-Lik: -1967.220, Max-Change: 0.00018
-Iteration: 90, Log-Lik: -1967.220, Max-Change: 0.00015
-Iteration: 91, Log-Lik: -1967.220, Max-Change: 0.00017
-Iteration: 92, Log-Lik: -1967.220, Max-Change: 0.00017
-Iteration: 93, Log-Lik: -1967.220, Max-Change: 0.00016
-Iteration: 94, Log-Lik: -1967.220, Max-Change: 0.00016
-Iteration: 95, Log-Lik: -1967.220, Max-Change: 0.00015
-Iteration: 96, Log-Lik: -1967.220, Max-Change: 0.00012
-Iteration: 97, Log-Lik: -1967.220, Max-Change: 0.00014
-Iteration: 98, Log-Lik: -1967.220, Max-Change: 0.00014
-Iteration: 99, Log-Lik: -1967.220, Max-Change: 0.00014
-Iteration: 100, Log-Lik: -1967.220, Max-Change: 0.00013
-Iteration: 101, Log-Lik: -1967.220, Max-Change: 0.00013
-Iteration: 102, Log-Lik: -1967.220, Max-Change: 0.00010</code></pre>
-<pre class="r"><code># estimated parameters from the user customized prior distribution.
+pars = mod.pars , verbose=FALSE )
+
+# estimated parameters from the user customized prior distribution.
 mod12c@nest &lt;- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
-coef1 &lt;- mirt.wrapper.coef(mod12c)</code></pre>
-<pre><code>## 
-## Rotation:  oblimin</code></pre>
-<pre class="r"><code>#* inspect estimated distribution
+coef1 &lt;- mirt.wrapper.coef(mod12c)
+
+#* inspect estimated distribution
 mod12c@Theta</code></pre>
 <pre><code>##      [,1] [,2] [,3]
 ## [1,]    1    0    0
@@ -2550,7 +1710,7 @@ mod12c@Theta</code></pre>
 <pre class="r"><code>mod12c@Prior[[1]]</code></pre>
 <pre><code>## [1] 0.02896 0.46234 0.50870</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.1.1 (2014-07-10)
+<pre><code>## R version 3.1.0 (2014-04-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## 
 ## locale:
@@ -2566,32 +1726,32 @@ mod12c@Theta</code></pre>
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] mvtnorm_1.0-0   sirt_0.47-27    mirt_1.5.3      lattice_0.20-29
+## [1] mvtnorm_1.0-0   sirt_0.47-36    mirt_1.5.3      lattice_0.20-29
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] boot_1.3-11          car_2.0-21           CDM_3.3-24          
+##  [1] boot_1.3-11          car_2.0-21           CDM_3.4-21          
 ##  [4] cluster_1.15.2       coda_0.16-1          colorspace_1.2-4    
 ##  [7] combinat_0.0-8       corpcor_1.6.6        digest_0.6.4        
 ## [10] ellipse_0.3-8        evaluate_0.5.5       formatR_1.0         
 ## [13] Formula_1.1-2        ggplot2_1.0.0        glasso_1.8          
-## [16] GPArotation_2012.3-1 grid_3.1.1           gtable_0.1.2        
+## [16] GPArotation_2012.3-1 grid_3.1.0           gtable_0.1.2        
 ## [19] gtools_3.4.1         Hmisc_3.14-4         htmltools_0.2.4     
 ## [22] huge_1.2.6           ic.infer_1.1-5       igraph_0.7.1        
 ## [25] jpeg_0.1-8           kappalab_0.4-6       kernlab_0.9-19      
 ## [28] knitr_1.6            latticeExtra_0.6-26  lavaan_0.5-16       
-## [31] lisrelToR_0.1.4      lme4_1.1-7           lpSolve_5.6.7       
-## [34] MASS_7.3-33          Matrix_1.1-4         matrixcalc_1.0-3    
+## [31] lisrelToR_0.1.4      lme4_1.1-7           lpSolve_5.6.10      
+## [34] MASS_7.3-34          Matrix_1.1-4         matrixcalc_1.0-3    
 ## [37] minqa_1.2.3          mnormt_1.5-1         munsell_0.4.2       
 ## [40] nlme_3.1-117         nloptr_1.0.4         nnet_7.3-8          
 ## [43] pbivnorm_0.5-1       plyr_1.8.1           png_0.1-7           
 ## [46] polycor_0.7-8        proto_0.3-10         psych_1.4.8.11      
 ## [49] qgraph_1.2.5         quadprog_1.5-5       RColorBrewer_1.0-5  
 ## [52] Rcpp_0.11.2          RCurl_1.95-4.3       reshape2_1.4        
-## [55] rmarkdown_0.2.46     rockchalk_1.8.86     scales_0.2.4        
+## [55] rmarkdown_0.2.49     rockchalk_1.8.86     scales_0.2.4        
 ## [58] sem_3.1-5            semPlot_1.0.1        sfsmisc_1.0-26      
-## [61] sm_2.2-5.4           sna_2.3-2            splines_3.1.1       
+## [61] sm_2.2-5.4           sna_2.3-2            splines_3.1.0       
 ## [64] stringr_0.6.2        survival_2.37-7      TAM_1.0-3           
-## [67] tensor_1.5           tools_3.1.1          XML_3.98-1.1</code></pre>
+## [67] tensor_1.5           tools_3.1.0          XML_3.98-1.1</code></pre>
 </div>
 
 

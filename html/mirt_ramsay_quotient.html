@@ -53,15 +53,15 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-<div id="mirt-example-for-latent-class-analysis" class="section level1">
-<h1>mirt example for latent class analysis</h1>
+<div id="mirt-example-for-the-ramsay-quotient-model" class="section level1">
+<h1>mirt example for the Ramsay Quotient Model</h1>
 <p>Adapted from the <code>sirt</code> package examples (<code>sim.qm.ramsay</code>).</p>
 <pre class="r"><code>library(mirt)</code></pre>
 <pre><code>## Loading required package: stats4
 ## Loading required package: lattice</code></pre>
 <pre class="r"><code>library(sirt)</code></pre>
 <pre><code>## |-----------------------------------------------------------------|
-## | sirt 0.47-27 (2014-08-29)                                       |
+## | sirt 0.47-36 (2014-08-30)                                       |
 ## | Supplementary Item Response Theory                              |
 ## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at &gt;      |
 ## | https://sites.google.com/site/alexanderrobitzsch/software       |
@@ -88,129 +88,15 @@ I &lt;- ncol(dat)
 fixed.K &lt;- rep( 3 , I )
 
 # Ramsay QM with fixed K parameter (K=3 in fixed.K specification)
-mod1 &lt;- rasch.mml2( dat , mmliter = mmliter , irtmodel = &quot;ramsay.qm&quot;,
-fixed.K = fixed.K )</code></pre>
+mod1 &lt;- rasch.mml2( dat , mmliter = mmliter , irtmodel = &quot;ramsay.qm&quot;,progress = FALSE,
+fixed.K = fixed.K )
+summary(mod1)</code></pre>
 <pre><code>## ------------------------------------------------------------
-## Semiparametric Marginal Maximum Likelihood Estimation 
-## Quotient Model (Ramsay, 1989) 
-## ------------------------------------------------------------
-## ...........................................................
-## Iteration 1     2014-08-30 11:52:38 
-##    Deviance = 11906.8339
-##     Maximum b parameter change =  0.439097  
-## ...........................................................
-## Iteration 2     2014-08-30 11:52:38 
-##    Deviance = 11797.3633 | Deviance change = 109.470624
-##     Maximum b parameter change =  0.173556  
-## ...........................................................
-## Iteration 3     2014-08-30 11:52:38 
-##    Deviance = 11772.4611 | Deviance change = 24.902259
-##     Maximum b parameter change =  0.08181  
-## ...........................................................
-## Iteration 4     2014-08-30 11:52:38 
-##    Deviance = 11761.1996 | Deviance change = 11.261436
-##     Maximum b parameter change =  0.046442  
-## ...........................................................
-## Iteration 5     2014-08-30 11:52:38 
-##    Deviance = 11754.9093 | Deviance change = 6.290337
-##     Maximum b parameter change =  0.030363  
-## ...........................................................
-## Iteration 6     2014-08-30 11:52:38 
-##    Deviance = 11751.2677 | Deviance change = 3.641563
-##     Maximum b parameter change =  0.021566  
-## ...........................................................
-## Iteration 7     2014-08-30 11:52:38 
-##    Deviance = 11749.1522 | Deviance change = 2.115501
-##     Maximum b parameter change =  0.015963  
-## ...........................................................
-## Iteration 8     2014-08-30 11:52:38 
-##    Deviance = 11747.9246 | Deviance change = 1.227647
-##     Maximum b parameter change =  0.011994  
-## ...........................................................
-## Iteration 9     2014-08-30 11:52:38 
-##    Deviance = 11747.2131 | Deviance change = 0.711484
-##     Maximum b parameter change =  0.009069  
-## ...........................................................
-## Iteration 10     2014-08-30 11:52:38 
-##    Deviance = 11746.8011 | Deviance change = 0.41195
-##     Maximum b parameter change =  0.006877  
-## ...........................................................
-## Iteration 11     2014-08-30 11:52:38 
-##    Deviance = 11746.5628 | Deviance change = 0.238389
-##     Maximum b parameter change =  0.00522  
-## ...........................................................
-## Iteration 12     2014-08-30 11:52:38 
-##    Deviance = 11746.4248 | Deviance change = 0.137928
-##     Maximum b parameter change =  0.003964  
-## ...........................................................
-## Iteration 13     2014-08-30 11:52:38 
-##    Deviance = 11746.345 | Deviance change = 0.079819
-##     Maximum b parameter change =  0.00301  
-## ...........................................................
-## Iteration 14     2014-08-30 11:52:38 
-##    Deviance = 11746.2988 | Deviance change = 0.046217
-##     Maximum b parameter change =  0.002286  
-## ...........................................................
-## Iteration 15     2014-08-30 11:52:38 
-##    Deviance = 11746.272 | Deviance change = 0.026787
-##     Maximum b parameter change =  0.001735  
-## ...........................................................
-## Iteration 16     2014-08-30 11:52:38 
-##    Deviance = 11746.2565 | Deviance change = 0.015549
-##     Maximum b parameter change =  0.001318  
-## ...........................................................
-## Iteration 17     2014-08-30 11:52:38 
-##    Deviance = 11746.2474 | Deviance change = 0.009044
-##     Maximum b parameter change =  0.001  
-## ...........................................................
-## Iteration 18     2014-08-30 11:52:38 
-##    Deviance = 11746.2421 | Deviance change = 0.005275
-##     Maximum b parameter change =  0.000759  
-## ...........................................................
-## Iteration 19     2014-08-30 11:52:38 
-##    Deviance = 11746.2391 | Deviance change = 0.003088
-##     Maximum b parameter change =  0.000576  
-## ...........................................................
-## Iteration 20     2014-08-30 11:52:38 
-##    Deviance = 11746.2372 | Deviance change = 0.001816
-##     Maximum b parameter change =  0.000437  
-## ...........................................................
-## Iteration 21     2014-08-30 11:52:38 
-##    Deviance = 11746.2362 | Deviance change = 0.001074
-##     Maximum b parameter change =  0.000332  
-## ...........................................................
-## Iteration 22     2014-08-30 11:52:38 
-##    Deviance = 11746.2355 | Deviance change = 0.00064
-##     Maximum b parameter change =  0.000252  
-## ...........................................................
-## Iteration 23     2014-08-30 11:52:38 
-##    Deviance = 11746.2351 | Deviance change = 0.000385
-##     Maximum b parameter change =  0.000191  
-## ...........................................................
-## Iteration 24     2014-08-30 11:52:38 
-##    Deviance = 11746.2349 | Deviance change = 0.000234
-##     Maximum b parameter change =  0.000145  
-## ...........................................................
-## Iteration 25     2014-08-30 11:52:38 
-##    Deviance = 11746.2348 | Deviance change = 0.000145
-##     Maximum b parameter change =  0.00011  
-## ...........................................................
-## Iteration 26     2014-08-30 11:52:38 
-##    Deviance = 11746.2347 | Deviance change = 9.1e-05
-##     Maximum b parameter change =  8.3e-05  
-## ------------------------------------------------------------
-## Start: 2014-08-30 11:52:38 
-## End: 2014-08-30 11:52:38 
-## Time difference of 0.1707 secs
-## Difference: 0.1707 
-## ------------------------------------------------------------</code></pre>
-<pre class="r"><code>summary(mod1)</code></pre>
-<pre><code>## ------------------------------------------------------------
-## sirt 0.47-27 (2014-08-29) 
+## sirt 0.47-36 (2014-08-30) 
 ## 
-## Date of Analysis: 2014-08-30 11:52:38 
-## Time difference of 0.1707 secs
-## Computation time: 0.1707 
+## Date of Analysis: 2014-08-31 16:32:29 
+## Time difference of 0.1668 secs
+## Computation time: 0.1668 
 ## 
 ## Semiparametric Marginal Maximum Likelihood Estimation 
 ## Function 'rasch.mml2' 
@@ -279,30 +165,14 @@ Theta &lt;- matrix( seq(-3,3,len=10) , ncol=1)
 
 # estimate model
 mod1m &lt;- mirt::mirt(dat, 1, rep( &quot;ramsayqm&quot;,I) , customItems=list(&quot;ramsayqm&quot;=ramsayqm ),
-pars = mod1m.pars , verbose=TRUE ,
+pars = mod1m.pars , verbose=FALSE ,
 technical = list( customTheta=Theta , NCYCLES=50)
-)</code></pre>
-<pre><code>## 
-Iteration: 1, Log-Lik: -7539.792, Max-Change: 2.15217
-Iteration: 2, Log-Lik: -5942.563, Max-Change: 1.61171
-Iteration: 3, Log-Lik: -5891.570, Max-Change: 0.67649
-Iteration: 4, Log-Lik: -5883.005, Max-Change: 0.23688
-Iteration: 5, Log-Lik: -5881.087, Max-Change: 0.07071
-Iteration: 6, Log-Lik: -5880.512, Max-Change: 0.00158
-Iteration: 7, Log-Lik: -5880.466, Max-Change: 0.00609
-Iteration: 8, Log-Lik: -5880.266, Max-Change: 0.01418
-Iteration: 9, Log-Lik: -5880.171, Max-Change: 0.08124
-Iteration: 10, Log-Lik: -5880.079, Max-Change: 0.00087
-Iteration: 11, Log-Lik: -5880.072, Max-Change: 0.00054
-Iteration: 12, Log-Lik: -5880.069, Max-Change: 0.00025
-Iteration: 13, Log-Lik: -5880.068, Max-Change: 0.00024
-Iteration: 14, Log-Lik: -5880.068, Max-Change: 0.00063
-Iteration: 15, Log-Lik: -5880.067, Max-Change: 0.00001</code></pre>
-<pre class="r"><code>print(mod1m)</code></pre>
+)
+print(mod1m)</code></pre>
 <pre><code>## 
 ## Call:
 ## mirt::mirt(data = dat, model = 1, itemtype = rep(&quot;ramsayqm&quot;, 
-##     I), pars = mod1m.pars, verbose = TRUE, technical = list(customTheta = Theta, 
+##     I), pars = mod1m.pars, verbose = FALSE, technical = list(customTheta = Theta, 
 ##     NCYCLES = 50), customItems = list(ramsayqm = ramsayqm))
 ## 
 ## Full-information item factor analysis with 1 factor(s).
@@ -353,7 +223,7 @@ round( dfr , 2 )</code></pre>
 ## [10,]      4.95 5.24            5.09
 ## [11,]      7.39 5.65            5.51</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.1.1 (2014-07-10)
+<pre><code>## R version 3.1.0 (2014-04-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## 
 ## locale:
@@ -369,33 +239,33 @@ round( dfr , 2 )</code></pre>
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] sirt_0.47-27    mirt_1.5.3      lattice_0.20-29
+## [1] sirt_0.47-36    mirt_1.5.3      lattice_0.20-29
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] boot_1.3-11          car_2.0-21           CDM_3.3-24          
+##  [1] boot_1.3-11          car_2.0-21           CDM_3.4-21          
 ##  [4] cluster_1.15.2       coda_0.16-1          colorspace_1.2-4    
 ##  [7] combinat_0.0-8       corpcor_1.6.6        digest_0.6.4        
 ## [10] ellipse_0.3-8        evaluate_0.5.5       formatR_1.0         
 ## [13] Formula_1.1-2        ggplot2_1.0.0        glasso_1.8          
-## [16] GPArotation_2012.3-1 grid_3.1.1           gtable_0.1.2        
+## [16] GPArotation_2012.3-1 grid_3.1.0           gtable_0.1.2        
 ## [19] gtools_3.4.1         Hmisc_3.14-4         htmltools_0.2.4     
 ## [22] huge_1.2.6           ic.infer_1.1-5       igraph_0.7.1        
 ## [25] jpeg_0.1-8           kappalab_0.4-6       kernlab_0.9-19      
 ## [28] knitr_1.6            latticeExtra_0.6-26  lavaan_0.5-16       
-## [31] lisrelToR_0.1.4      lme4_1.1-7           lpSolve_5.6.7       
-## [34] MASS_7.3-33          Matrix_1.1-4         matrixcalc_1.0-3    
+## [31] lisrelToR_0.1.4      lme4_1.1-7           lpSolve_5.6.10      
+## [34] MASS_7.3-34          Matrix_1.1-4         matrixcalc_1.0-3    
 ## [37] minqa_1.2.3          mnormt_1.5-1         munsell_0.4.2       
 ## [40] mvtnorm_1.0-0        nlme_3.1-117         nloptr_1.0.4        
 ## [43] nnet_7.3-8           numDeriv_2012.9-1    pbivnorm_0.5-1      
 ## [46] plyr_1.8.1           png_0.1-7            polycor_0.7-8       
 ## [49] proto_0.3-10         psych_1.4.8.11       qgraph_1.2.5        
 ## [52] quadprog_1.5-5       RColorBrewer_1.0-5   Rcpp_0.11.2         
-## [55] RCurl_1.95-4.3       reshape2_1.4         rmarkdown_0.2.46    
+## [55] RCurl_1.95-4.3       reshape2_1.4         rmarkdown_0.2.49    
 ## [58] rockchalk_1.8.86     scales_0.2.4         sem_3.1-5           
 ## [61] semPlot_1.0.1        sfsmisc_1.0-26       sm_2.2-5.4          
-## [64] sna_2.3-2            splines_3.1.1        stringr_0.6.2       
+## [64] sna_2.3-2            splines_3.1.0        stringr_0.6.2       
 ## [67] survival_2.37-7      TAM_1.0-3            tensor_1.5          
-## [70] tools_3.1.1          XML_3.98-1.1</code></pre>
+## [70] tools_3.1.0          XML_3.98-1.1</code></pre>
 </div>
 
 

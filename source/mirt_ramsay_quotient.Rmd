@@ -28,7 +28,7 @@ I <- ncol(dat)
 fixed.K <- rep( 3 , I )
 
 # Ramsay QM with fixed K parameter (K=3 in fixed.K specification)
-mod1 <- rasch.mml2( dat , mmliter = mmliter , irtmodel = "ramsay.qm",
+mod1 <- rasch.mml2( dat , mmliter = mmliter , irtmodel = "ramsay.qm",progress = FALSE,
 fixed.K = fixed.K )
 summary(mod1)
 
@@ -61,7 +61,7 @@ Theta <- matrix( seq(-3,3,len=10) , ncol=1)
 
 # estimate model
 mod1m <- mirt::mirt(dat, 1, rep( "ramsayqm",I) , customItems=list("ramsayqm"=ramsayqm ),
-pars = mod1m.pars , verbose=TRUE ,
+pars = mod1m.pars , verbose=FALSE ,
 technical = list( customTheta=Theta , NCYCLES=50)
 )
 print(mod1m)

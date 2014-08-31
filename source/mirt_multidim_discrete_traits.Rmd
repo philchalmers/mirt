@@ -20,7 +20,7 @@ Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1), ncol=
 Theta
 
 #-- Model 13a: din (in CDM)
-mod13a <- CDM::din( dat , q.matrix=Q , rule="DINA")
+mod13a <- CDM::din( dat , q.matrix=Q , rule="DINA", progress = FALSE)
 summary(mod13a)
 
 # compare used Theta distributions
@@ -66,7 +66,7 @@ lca_prior <- function(Theta,Etable){
 #* estimate model
 mod13c <- mirt(dat, mirtmodel , technical = list(
 customTheta=Theta , customPriorFun = lca_prior) ,
-pars = mod.pars , verbose=TRUE )
+pars = mod.pars , verbose=FALSE)
 
 # estimated parameters from the user customized prior distribution.
 mod13c@nest <- as.integer(sum(mod.pars$est) + 2)

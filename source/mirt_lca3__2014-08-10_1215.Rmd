@@ -56,7 +56,7 @@ lca_prior <- function(Theta,Etable){
 #*** estimate model
 mod1 <- mirt(dat, mirtmodel , technical = list(
             customTheta=Theta , customPriorFun = lca_prior) ,
-            pars = mod.pars )
+            pars = mod.pars, verbose=FALSE )
 
 #*** extract item parameters
 pars1 <- mod1@pars
