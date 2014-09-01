@@ -164,6 +164,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     p  <- colMeans(dat)
     cross <- crossprod(dat, dat)
     p <- c(p, cross[lower.tri(cross)]/N)
+    prodlist <- attr(obj@pars, 'prodlist')
     K <- obj@K
     pars <- obj@pars
     if(is.null(quadpts)) 
@@ -181,6 +182,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         Prior <- Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
                                            gstructgrouppars$gcov)
         Prior <- Prior/sum(Prior)
+        if(length(prodlist) > 0L)
+            Theta <- prodterms(Theta, prodlist)
     } else {
         Theta <- obj@Theta        
         prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
