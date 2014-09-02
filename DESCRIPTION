@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.5.3
+Version: 1.5.4
 Date: 2014-04-23
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -34,7 +34,9 @@ Suggests:
     shiny,
     knitr,
     parallel,
-    sirt
+    sirt,
+    KernSmoothIRT,
+    poLCA
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes

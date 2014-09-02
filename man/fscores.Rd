@@ -11,7 +11,7 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
 }
 \arguments{
 \item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
-or \code{MultipleGroupClass}}
+\code{MultipleGroupClass}, or \code{DiscreteClass}}
 
 \item{full.scores}{if \code{FALSE} (default) then a summary table with
 factor scores for each unique pattern is displayed. Otherwise the original
@@ -79,6 +79,10 @@ the original data matrix with scores appended to the rightmost column, or the sc
 default the latent means and covariances are determined from the estimated object,
 though these can be overwritten. Iterative estimation methods can be estimated
 in parallel to decrease estimation times if a \code{\link{mirtCluster}} object is available.
+
+If the input object is a discrete latent class object estimated from \code{\link{mdirt}}
+then the returned results will be with respect to the posterior classification for each
+individual.
 }
 \examples{
 \dontrun{

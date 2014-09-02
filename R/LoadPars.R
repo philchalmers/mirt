@@ -6,7 +6,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
                     'grsm', 'gpcm', 'nominal', 'PC2PL','PC3PL', #'rsm,
-                    '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM', 'ideal')
+                    '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM', 'ideal', 'lca', 'nlca')
     invalid.items <- is.na(match(itemtype, valid.items))
     if (any(invalid.items & !(itemtype %in% customItemNames))) {
       stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
@@ -71,6 +71,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if(itemtype[i] == 'ideal'){
             val <- c(lambdas[i,]/2, -0.5)
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')
+        } else if (itemtype[i] %in% c('lca', 'nlca')){
+            val <- rep(lambdas[i,], K[i]-1L)
+            names(val) <- paste('a', 1L:length(val), sep='')
         }
         if(all(itemtype[i] != valid.items)) next
         startvalues[[i]] <- val
@@ -122,6 +125,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if(itemtype[i] == 'ideal'){
             if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
             freepars[[i]] <- c(estLambdas[i, ], TRUE)
+        } else if(itemtype[i] %in% c('lca', 'nlca')){
+            freepars[[i]] <- rep(TRUE, length(startvalues[[i]]))
         }
         if(all(itemtype[i] != valid.items)) next
         names(freepars[[i]]) <- names(startvalues[[i]])
@@ -383,6 +388,26 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              fixed.design=fixed.design.list[[i]],
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=c(rep(Inf, length(startvalues[[i]])-1L), 0),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+        
+        if(any(itemtype[i] %in% c('lca', 'nlca'))){
+            pars[[i]] <- new('lca', par=startvalues[[i]], est=freepars[[i]],
+                             nfact=nfact,
+                             ncat=K[i],
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             score=if(itemtype[i] == 'lca') 0:(K[i]-1) else rep(1, K[i]),
+                             itemclass=10L,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)

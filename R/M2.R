@@ -66,6 +66,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
+    if(is(obj, 'DiscreteClass'))
+        stop('Discrete latent structures not yet supported')
     if(any(is.na(obj@Data$data))){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable

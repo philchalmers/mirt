@@ -1288,6 +1288,18 @@ mirt_dmvnorm <- function(x, mean, sigma, log = FALSE)
     exp(logretval)
 }
 
+# prior for latent class analysis
+lca_prior <- function(Theta, Etable){
+    TP <- nrow(Theta)  
+    if ( is.null(Etable) ){
+        prior <- rep( 1/TP , TP )
+    } else {  
+        prior <- rowSums(Etable)
+    }
+    prior <- prior / sum(prior) 
+    return(prior)
+}
+
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 

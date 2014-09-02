@@ -22,7 +22,7 @@
 #'
 #' }
 mod2values <- function(x){
-    if(is(x, 'MultipleGroupClass')){
+    if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         PrepList <- x@pars
         names(PrepList) <- x@Data$groupNames
         MG <- TRUE

@@ -226,6 +226,49 @@ void P_comp(vector<double> &P, const vector<double> &par,
     }
 }
 
+void P_lca(vector<double> &P, const vector<double> &par, const vector<double> &score,
+    const NumericMatrix &Theta, const int &N, const int &ncat, const int &nfact,
+    const int &returnNum)
+{
+    NumericMatrix Num(N, ncat);
+    vector<double> Den(N, 0.0);
+    
+    for(int i = 0; i < N; ++i){
+        vector<double> z(ncat);
+        int which_par = 0;        
+        for(int j = 1; j < ncat; ++j){
+            double innerprod = 0.0;
+            for(int p = 0; p < nfact; ++p)
+                innerprod += par[p + which_par] * Theta(i, p);
+            which_par += nfact;
+            z[j] = score[j] * innerprod;
+        }
+        double maxz = *std::max_element(z.begin(), z.end());
+        for(int j = 0; j < ncat; ++j){
+            z[j] = z[j] - maxz;
+            if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+            Num(i,j) = exp(z[j]);
+            Den[i] += Num(i,j);
+        }
+    }
+    int which = 0;
+    if(returnNum){
+        for(int j = 0; j < ncat; ++j){
+            for(int i = 0; i < N; ++i){
+                P[which] = Num(i,j);
+                ++which;
+            }
+        }
+    } else {    
+        for(int j = 0; j < ncat; ++j){
+            for(int i = 0; i < N; ++i){
+                P[which] = Num(i,j) / Den[i];
+                ++which;
+            }
+        }
+    }
+}
+
 
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot)
 {
@@ -340,6 +383,25 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta)
     END_RCPP
 }
 
+RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rscore, SEXP RreturnNum)
+{
+    BEGIN_RCPP
+
+    const vector<double> par = as< vector<double> >(Rpar);
+    const vector<double> score = as< vector<double> >(Rscore);
+    const int ncat = score.size();
+    const NumericMatrix Theta(RTheta);
+    const int nfact = Theta.ncol();
+    const int N = Theta.nrow();
+    const int returnNum = as<int>(RreturnNum);
+    vector<double> P(N*ncat);
+    P_lca(P, par, score, Theta, N, ncat, nfact, returnNum);
+    NumericMatrix ret = vec2mat(P, N, ncat);
+    return(ret);
+
+    END_RCPP
+}
+
 void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     const List &pars, const NumericVector &ot, const vector<int> &itemloc, const int &which,
     const int &nfact, const int &N, const int &USEFIXED)
@@ -354,6 +416,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     int correct = 0;
     if(itemclass == 8)
         correct = as<int>(item.slot("correctcat"));
+    vector<double> score;
+    if(itemclass == 10)
+        score = as<vector <double> >(item.slot("score"));
 
     /*
         1 = dich
@@ -365,6 +430,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         7 = partcomp
         8 = nestlogit
         9 = custom....have to do in R for now
+        10 = lca
     */
 
     if(USEFIXED){
@@ -403,6 +469,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_nested(P, par, theta, N, nfact2, ncat, correct);
             break;
         case 9 :
+            break;
+        case 10 :
+            P_lca(P, par, score, Theta, N, ncat, nfact, 0);
             break;
         default :
             Rprintf("How in the heck did you get here from a switch statement?\n");

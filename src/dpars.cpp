@@ -424,6 +424,54 @@ RcppExport SEXP dparsPoly(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP Rnze
 	END_RCPP
 }
 
+void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
+    const NumericMatrix &Theta, const vector<double> &score, const NumericVector &ot, const NumericMatrix &dat,
+    const int &N, const int &nfact, const int &estHess)
+{
+    const int ncat = score.size();
+    vector<double> p(N*ncat);
+    P_lca(p, par, score, Theta, N, ncat, nfact, 0);
+    const NumericMatrix P = vec2mat(p, N, ncat);
+    
+    for (int i = 0; i < N; ++i){
+        int ind = 0;
+        for (int k = 1; k < ncat; ++k){
+            for (int j = 0; j < nfact; ++j){
+                double val = dat(i, k) * ( P(i, k) * (1.0-P(i, k)) ) / P(i, k);
+                for (int kk = 0; kk < ncat; ++kk)
+                    if (kk != k)
+                        val -= dat(i, kk) * P(i, k);
+                val *= score[k] * Theta(i, j);
+                grad[ind] += val;
+                ind++;
+            }
+        }
+    }
+}
+
+RcppExport SEXP dparslca(SEXP Rx, SEXP RTheta, SEXP Rscore, SEXP RestHess, SEXP Rdat, SEXP Rot)
+{
+    BEGIN_RCPP
+
+    const vector<double> par = as< vector<double> >(Rx);
+    const vector<double> score = as< vector<double> >(Rscore);
+    const NumericMatrix Theta(RTheta);
+    const NumericMatrix dat(Rdat);
+    const NumericVector ot(Rot);
+    const int estHess = as<int>(RestHess);
+    const int nfact = Theta.ncol();
+    const int N = Theta.nrow();
+    NumericMatrix hess (par.size(), par.size());
+    vector<double> grad (par.size());
+    d_lca(grad, hess, par, Theta, score, ot, dat, N, nfact, estHess);
+    List ret;
+    ret["grad"] = wrap(grad);
+    ret["hess"] = hess;
+    return(ret);
+
+    END_RCPP
+}
+
 void d_dich(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
     const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
     const int &N, const int &nfact, const int &estHess)

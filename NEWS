@@ -14,6 +14,14 @@ MAJOR CHANGES
   - exploratory IRT models are no longer rotated by default in `coef()`,
   and now requires an explicit `rotate` argument
 
+NEW FEATURES
+
+  - `mdirt` function added to model discrete latent variables such as latent
+  class analysis for dichotomous and polytomous items. Cand be used to model
+  several other dicrete IRT models as well, such as the located latent class
+  model, multidimensional IRT with discrete traits, DINA models, etc. See
+  the examples and documentation for details
+
 
 Changes in mirt 1.5
 

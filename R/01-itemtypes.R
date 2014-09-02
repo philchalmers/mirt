@@ -80,6 +80,9 @@ setClass("nestlogit", contains = 'AllItemsClass',
 
 setClass("ideal", contains = 'AllItemsClass')
 
+setClass("lca", contains = 'AllItemsClass',
+         representation = representation(score='numeric'))
+
 setClass('custom', contains = 'AllItemsClass',
          representation = representation(name='character',
                                          P='function',

@@ -9,7 +9,7 @@
 \title{Extract raw coefs from model object}
 \usage{
 \S4method{coef}{ExploratoryClass}(object, CI = 0.95, printSE = FALSE,
-  rotate = "", Target = NULL, digits = 3, IRTpars = FALSE,
+  rotate = "none", Target = NULL, digits = 3, IRTpars = FALSE,
   rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...)
 }
 \arguments{

@@ -384,8 +384,8 @@
 #'       and return a numeric vector with the same length as number of rows in \code{Theta}. The 
 #'       \code{Etable} input contains the aggregated table generated from the current E-step 
 #'       computations. For proper integration, the returned vector should sum to 
-#'       1 (i.e., normalized)}. Note that if using the \code{Etable} it will be NULL 
-#'       on the first call, therefore the prior will have to deal with this issue accordingly
+#'       1 (i.e., normalized). Note that if using the \code{Etable} it will be NULL 
+#'       on the first call, therefore the prior will have to deal with this issue accordingly}
 #'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
 #'     \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will

@@ -14,11 +14,15 @@
 #' default the latent means and covariances are determined from the estimated object,
 #' though these can be overwritten. Iterative estimation methods can be estimated
 #' in parallel to decrease estimation times if a \code{\link{mirtCluster}} object is available.
+#' 
+#' If the input object is a discrete latent class object estimated from \code{\link{mdirt}}
+#' then the returned results will be with respect to the posterior classification for each 
+#' individual. 
 #'
 #'
 #' @aliases fscores
 #' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
-#'   or \code{MultipleGroupClass}
+#'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
 #'   factor scores for each unique pattern is displayed. Otherwise the original
 #'   data matrix is returned with the computed factor scores appended to the
@@ -107,8 +111,9 @@ fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, ...)
 {
-    if(is.null(quadpts))
+    if(is.null(quadpts) && !is(object, 'DiscreteClass')){
         quadpts <- switch(as.character(object@nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
+    } else quadpts <- 1
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,

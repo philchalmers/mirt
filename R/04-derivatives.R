@@ -450,6 +450,20 @@ setMethod(
 
 setMethod(
     f = "Deriv",
+    signature = signature(x = 'lca', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        ret <- .Call('dparslca', x@par, Theta, x@score, estHess, x@dat, offterm)
+        if(estHess){
+            ret$hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                         Theta=Theta)
+        }
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        return(ret)
+    }
+)
+
+setMethod(
+    f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
                           tabdata = NULL, estHess=FALSE, prior = NULL){

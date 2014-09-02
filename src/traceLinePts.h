@@ -22,6 +22,9 @@ void P_nested(vector<double> &, const vector<double> &,
 void P_comp(vector<double> &, const vector<double> &,
     const NumericMatrix &, const int &, const int &);
 
+void P_lca(vector<double> &, const vector<double> &, const vector<double> &, 
+	const NumericMatrix &, const int &, const int &, const int &, const int &);
+
 void _computeItemTrace(vector<double> &, const NumericMatrix &,
     const List &, const NumericVector &, const vector<int> &, const int &,
     const int &, const int &, const int &);

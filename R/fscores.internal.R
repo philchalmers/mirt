@@ -140,6 +140,11 @@ setMethod(
             return(ret)
         }
         dots <- list(...)
+        discrete <- FALSE
+        if(method == 'Discrete'){
+            discrete <- TRUE
+            method <- 'EAP'
+        }
         mirtCAT <- FALSE
         if(!is.null(dots$mirtCAT)) mirtCAT <- TRUE
         pars <- object@pars
@@ -196,10 +201,15 @@ setMethod(
                 }
             }
             if(nfact < 3 || method == 'EAP' && !mirtCAT){
-                ThetaShort <- Theta <- thetaComb(theta,nfact)
-                if(length(prodlist) > 0L)
-                    Theta <- prodterms(Theta,prodlist)
-                W <- mirt_dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
+                if(discrete){
+                    ThetaShort <- Theta <- object@Theta
+                    W <- object@Prior[[1L]]
+                } else {
+                    ThetaShort <- Theta <- thetaComb(theta,nfact)
+                    if(length(prodlist) > 0L)
+                        Theta <- prodterms(Theta,prodlist)
+                    W <- mirt_dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
+                }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
                                               CUSTOM.IND=CUSTOM.IND)
                 log_itemtrace <- log(itemtrace)
@@ -312,7 +322,7 @@ setMethod(
             reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
             names(reliability) <- colnames(scores)
             if(returnER) return(reliability)
-			if(verbose){
+			if(verbose && !discrete){
                 cat("\nMethod: ", method)
                 cat("\n\nEmpirical Reliability:\n")
                 print(round(reliability, 4L))
@@ -341,6 +351,29 @@ setMethod(
                        full.scores.SE=full.scores.SE, return.acov = return.acov, ...)
         return(ret)
 	}
+)
+
+#------------------------------------------------------------------------------
+setMethod(
+    f = "fscores.internal",
+    signature = 'DiscreteClass',
+    definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
+                          quadpts = NULL, response.pattern = NULL, theta_lim, MI,
+                          returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
+                          full.scores.SE, return.acov = FALSE, ...)
+    {
+        class(object) <- 'MultipleGroupClass'
+        for(g in 1:length(object@pars)){
+            object@pars[[g]]@Theta <- object@Theta
+            object@pars[[g]]@Prior <- list(object@Prior[[g]])
+        }
+        ret <- fscores(object, full.scores=full.scores, method='Discrete', quadpts=quadpts,
+                       response.pattern=response.pattern, returnER=returnER, verbose=verbose,
+                       mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
+                       full.scores.SE=full.scores.SE, return.acov = return.acov, ...)
+        if(length(ret) == 1L) ret <- ret[[1L]]
+        return(ret)
+    }
 )
 
 #------------------------------------------------------------------------------

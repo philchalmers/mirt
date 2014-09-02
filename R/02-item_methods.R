@@ -81,6 +81,14 @@ setMethod(
 
 setMethod(
     f = "print",
+    signature = signature(x = 'lca'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "print",
     signature = signature(x = 'GroupPars'),
     definition = function(x, ...){
         cat('Object of class:', class(x))
@@ -162,6 +170,14 @@ setMethod(
 setMethod(
     f = "show",
     signature = signature(object = 'ideal'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'lca'),
     definition = function(object){
         print(object)
     }
@@ -253,6 +269,14 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'ideal'),
+    definition = function(x){
+        x@par[1L:x@nfact]
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'lca'),
     definition = function(x){
         x@par[1L:x@nfact]
     }
@@ -457,6 +481,16 @@ setMethod(
 
 setMethod(
     f = "GenRandomPars",
+    signature = signature(x = 'lca'),
+    definition = function(x){
+        par <- rnorm(length(x@par))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
     signature = signature(x = 'GroupPars'),
     definition = function(x){
         x
@@ -617,6 +651,19 @@ P.ideal <- function(par, Theta, ot = 0)
     P <- ifelse(P < 1e-20, 1e-20, P)
     P <- ifelse(P > (1 - 1e-20), (1 - 1e-20), P)
     return(P)
+}
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'lca', Theta = 'matrix'),
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
+        P <- P.lca(x@par, Theta=Theta, score=x@score)
+        return(P)
+    }
+)
+
+P.lca <- function(par, Theta, score, returnNum = FALSE){
+    return(.Call('lcaTraceLinePts', par, Theta, score, returnNum))
 }
 
 #----------------------------------------------------------------------------
