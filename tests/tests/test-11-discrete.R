@@ -51,7 +51,7 @@ test_that('discrete', {
     mod_gom <- mdirt(dat, 2, technical = list(customTheta = Theta), verbose=FALSE)
     so <- summary(mod_gom)
     expect_equal(mod_gom@logLik, -5541.09, tolerance = 1e-4)
-    expect_equal(as.numeric(sort(so$Class.Proportions)), c(0.1744980, 0.3188351, 0.5066669), tolerance = 1e-4)    
+    expect_equal(as.numeric(sort(so$Class.Proportions)), c(0.1744980, 0.3188351, 0.5066669), tolerance = 1e-2)    
     expect_equal(as.numeric(sort(so[[1]])), c(0.104286,0.1185069,0.482028,0.517972,0.8814931,0.895714), 
                  tolerance = 1e-4)
         
@@ -125,10 +125,10 @@ test_that('discrete', {
     so <- summary(mod_llca)
     expect_equal(mod_llca@logLik, -1967.22, tolerance = 1e-4)
     expect_equal(as.numeric(sort(so$Class.Proportions)), 
-                 c(0.02909875, 0.46250363, 0.50839762), tolerance = 1e-4) 
+                 c(0.02909875, 0.46250363, 0.50839762), tolerance = 1e-2) 
     expect_equal(as.numeric(sort(so[[1]])), 
                  c(0.0472525,0.2285291,0.3232925,0.6767075,0.7714709,0.9527475), 
-                 tolerance = 1e-4)
+                 tolerance = 1e-3)
 
 })
 

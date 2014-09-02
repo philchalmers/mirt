@@ -111,8 +111,10 @@ fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, ...)
 {
-    if(is.null(quadpts) && !is(object, 'DiscreteClass')){
-        quadpts <- switch(as.character(object@nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
+    if(!is(object, 'DiscreteClass')){
+        if(is.null(quadpts))
+            quadpts <- switch(as.character(object@nfact), 
+                              '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
     } else quadpts <- 1
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern,
