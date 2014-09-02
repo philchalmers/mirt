@@ -76,7 +76,7 @@ probs
 print(mod1)
 
 #-----   compare estimated LCA in sirt
-mod2 <- sirt::rasch.mirtlc( dat , Nclasses = 3 ,seed= -30 ,  nstarts=2 )   
+mod2 <- sirt::rasch.mirtlc( dat , Nclasses = 3 ,seed= -30 ,  nstarts=2, progress = FALSE )   
 summary(mod2)
 
 par( mfrow=c(2,1))

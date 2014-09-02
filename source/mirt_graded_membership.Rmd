@@ -27,11 +27,11 @@ dat[,ii] <- 1 * ( runif(N) < dat[,ii] )
 colnames(dat) <- paste0( "I" , 1:I)
 
 #** Model 1: estimate latent class model
-mod1 <- gom.em(dat, K=2, problevels= c(0,1) , model="GOM" )
+mod1 <- gom.em(dat, K=2, problevels= c(0,1) , model="GOM", progress = FALSE )
 summary(mod1)
 
 #** Model 2: estimate GOM
-mod2 <- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model="GOM" )
+mod2 <- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model="GOM", progress = FALSE )
 summary(mod2)
 
 # inspect distribution

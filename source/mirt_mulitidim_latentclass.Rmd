@@ -64,7 +64,7 @@ colnames(theta.k) <- c("Dim1","Dim2","Dim3")
 # estimate model in CDM
 b.constraint <- cbind( c(5,14,23) , 1 , 0 )
 mod2 <- CDM::gdm( dat , theta.k = theta.k , b.constraint=b.constraint, skillspace="est",
-irtmodel="1PL", Qmatrix=Qmatrix)
+progress=FALSE, irtmodel="1PL", Qmatrix=Qmatrix)
 summary(mod2)
 
 #------

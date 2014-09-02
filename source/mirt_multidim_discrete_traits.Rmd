@@ -27,7 +27,7 @@ summary(mod13a)
 cbind( Theta , mod13a$attribute.patt.splitted)
 
 #-- Model 13b: gdm (in CDM)
-mod13b <- CDM::gdm( dat , Qmatrix=Q , theta.k=Theta , skillspace="full")
+mod13b <- CDM::gdm( dat , Qmatrix=Q , theta.k=Theta , skillspace="full", progress=FALSE)
 summary(mod13b)
 
 #-- Model 13c: mirt (in mirt)

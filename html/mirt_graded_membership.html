@@ -61,7 +61,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 ## Loading required package: lattice</code></pre>
 <pre class="r"><code>library(sirt)</code></pre>
 <pre><code>## |-----------------------------------------------------------------|
-## | sirt 0.47-36 (2014-08-30)                                       |
+## | sirt 0.99-5 (2014-09-01)                                       |
 ## | Supplementary Item Response Theory                              |
 ## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at &gt;      |
 ## | https://sites.google.com/site/alexanderrobitzsch/software       |
@@ -87,81 +87,14 @@ dat[,ii] &lt;- 1 * ( runif(N) &lt; dat[,ii] )
 colnames(dat) &lt;- paste0( &quot;I&quot; , 1:I)
 
 #** Model 1: estimate latent class model
-mod1 &lt;- gom.em(dat, K=2, problevels= c(0,1) , model=&quot;GOM&quot;)</code></pre>
-<pre><code>## ...........................................................
-## Iteration 1     2014-08-31 16:32:45 
-##   M steps lambda parameter |----  4 Step(s) 
-##    Deviance = 12367.4449
-##     Maximum lambda parameter change = 0.320951
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 2     2014-08-31 16:32:45 
-##   M steps lambda parameter |----  4 Step(s) 
-##    Deviance = 11287.8887 | Deviance change = 1079.556199
-##     Maximum lambda parameter change = 0.032695
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 3     2014-08-31 16:32:45 
-##   M steps lambda parameter |----  4 Step(s) 
-##    Deviance = 11180.9401 | Deviance change = 106.948561
-##     Maximum lambda parameter change = 0.022494
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 4     2014-08-31 16:32:45 
-##   M steps lambda parameter |---  3 Step(s) 
-##    Deviance = 11156.5604 | Deviance change = 24.379685
-##     Maximum lambda parameter change = 0.009603
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 5     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11149.5769 | Deviance change = 6.983521
-##     Maximum lambda parameter change = 0.006168
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 6     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11147.3195 | Deviance change = 2.257434
-##     Maximum lambda parameter change = 0.003617
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 7     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11146.5865 | Deviance change = 0.732917
-##     Maximum lambda parameter change = 0.002037
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 8     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11146.35 | Deviance change = 0.23654
-##     Maximum lambda parameter change = 0.001138
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 9     2014-08-31 16:32:45 
-##   M steps lambda parameter |-  1 Step(s) 
-##    Deviance = 11146.2739 | Deviance change = 0.076056
-##     Maximum lambda parameter change = 0.000635
-##     Maximum distribution parameter change = 0
-## *********************************
-## Item Parameters
-##    item    N     p lam.Cl1 lam.Cl2
-## 1    I1 1000 0.564   0.171   0.848
-## 2    I2 1000 0.513   0.123   0.795
-## 3    I3 1000 0.503   0.133   0.770
-## 4    I4 1000 0.482   0.080   0.772
-## 5    I5 1000 0.471   0.170   0.689
-## 6    I6 1000 0.536   0.278   0.723
-## 7    I7 1000 0.521   0.221   0.738
-## 8    I8 1000 0.545   0.246   0.761
-## 9    I9 1000 0.441   0.074   0.706
-## 10  I10 1000 0.657   0.317   0.903</code></pre>
-<pre class="r"><code>summary(mod1)</code></pre>
+mod1 &lt;- gom.em(dat, K=2, problevels= c(0,1) , model=&quot;GOM&quot;, progress = FALSE )
+summary(mod1)</code></pre>
 <pre><code>## ----------------------------------------------------------------------------------
-## sirt 0.47-36 (2014-08-30) 
+## sirt 0.99-5 (2014-09-01) 
 ## 
-## Date of Analysis: 2014-08-31 16:32:45 
-## Time difference of 0.0363 secs
-## Computation Time: 0.0363 
+## Date of Analysis: 2014-09-02 13:08:23 
+## Time difference of 0.02959 secs
+## Computation Time: 0.02959 
 ## 
 ##   Function 'gom.em' 
 ##    Discrete Grade of Membership Model
@@ -201,81 +134,14 @@ mod1 &lt;- gom.em(dat, K=2, problevels= c(0,1) , model=&quot;GOM&quot;)</code></
 ## 9    I9 1000 0.441   0.074   0.706
 ## 10  I10 1000 0.657   0.317   0.903</code></pre>
 <pre class="r"><code>#** Model 2: estimate GOM
-mod2 &lt;- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model=&quot;GOM&quot; )</code></pre>
-<pre><code>## ...........................................................
-## Iteration 1     2014-08-31 16:32:45 
-##   M steps lambda parameter |----  4 Step(s) 
-##    Deviance = 12533.408
-##     Maximum lambda parameter change = 0.385803
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 2     2014-08-31 16:32:45 
-##   M steps lambda parameter |----  4 Step(s) 
-##    Deviance = 11151.4715 | Deviance change = 1381.936462
-##     Maximum lambda parameter change = 0.042211
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 3     2014-08-31 16:32:45 
-##   M steps lambda parameter |----  4 Step(s) 
-##    Deviance = 11100.2439 | Deviance change = 51.227574
-##     Maximum lambda parameter change = 0.01251
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 4     2014-08-31 16:32:45 
-##   M steps lambda parameter |---  3 Step(s) 
-##    Deviance = 11085.809 | Deviance change = 14.434965
-##     Maximum lambda parameter change = 0.007843
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 5     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11080.6819 | Deviance change = 5.127028
-##     Maximum lambda parameter change = 0.005399
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 6     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11078.8764 | Deviance change = 1.805563
-##     Maximum lambda parameter change = 0.003277
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 7     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11078.2086 | Deviance change = 0.667722
-##     Maximum lambda parameter change = 0.001918
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 8     2014-08-31 16:32:45 
-##   M steps lambda parameter |--  2 Step(s) 
-##    Deviance = 11077.953 | Deviance change = 0.255663
-##     Maximum lambda parameter change = 0.001297
-##     Maximum distribution parameter change = 0
-## ...........................................................
-## Iteration 9     2014-08-31 16:32:45 
-##   M steps lambda parameter |-  1 Step(s) 
-##    Deviance = 11077.8517 | Deviance change = 0.101285
-##     Maximum lambda parameter change = 0.000872
-##     Maximum distribution parameter change = 0
-## *********************************
-## Item Parameters
-##    item    N     p lam.Cl1 lam.Cl2
-## 1    I1 1000 0.564   0.116   0.894
-## 2    I2 1000 0.513   0.079   0.836
-## 3    I3 1000 0.503   0.074   0.816
-## 4    I4 1000 0.482   0.040   0.809
-## 5    I5 1000 0.471   0.127   0.724
-## 6    I6 1000 0.536   0.232   0.757
-## 7    I7 1000 0.521   0.189   0.765
-## 8    I8 1000 0.545   0.198   0.798
-## 9    I9 1000 0.441   0.036   0.745
-## 10  I10 1000 0.657   0.279   0.938</code></pre>
-<pre class="r"><code>summary(mod2)</code></pre>
+mod2 &lt;- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model=&quot;GOM&quot;, progress = FALSE )
+summary(mod2)</code></pre>
 <pre><code>## ----------------------------------------------------------------------------------
-## sirt 0.47-36 (2014-08-30) 
+## sirt 0.99-5 (2014-09-01) 
 ## 
-## Date of Analysis: 2014-08-31 16:32:45 
-## Time difference of 0.03046 secs
-## Computation Time: 0.03046 
+## Date of Analysis: 2014-09-02 13:08:23 
+## Time difference of 0.02866 secs
+## Computation Time: 0.02866 
 ## 
 ##   Function 'gom.em' 
 ##    Discrete Grade of Membership Model
@@ -419,10 +285,10 @@ round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]]
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] sirt_0.47-36    mirt_1.5.3      lattice_0.20-29
+## [1] sirt_0.99-5     mirt_1.5.4      lattice_0.20-29
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] boot_1.3-11          car_2.0-21           CDM_3.4-21          
+##  [1] boot_1.3-11          car_2.0-21           CDM_3.99-2          
 ##  [4] cluster_1.15.2       coda_0.16-1          colorspace_1.2-4    
 ##  [7] combinat_0.0-8       corpcor_1.6.6        digest_0.6.4        
 ## [10] ellipse_0.3-8        evaluate_0.5.5       formatR_1.0         
@@ -438,14 +304,14 @@ round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]]
 ## [40] mvtnorm_1.0-0        nlme_3.1-117         nloptr_1.0.4        
 ## [43] nnet_7.3-8           numDeriv_2012.9-1    pbivnorm_0.5-1      
 ## [46] plyr_1.8.1           png_0.1-7            polycor_0.7-8       
-## [49] proto_0.3-10         psych_1.4.8.11       qgraph_1.2.5        
-## [52] quadprog_1.5-5       RColorBrewer_1.0-5   Rcpp_0.11.2         
-## [55] RCurl_1.95-4.3       reshape2_1.4         rmarkdown_0.2.49    
-## [58] rockchalk_1.8.86     scales_0.2.4         sem_3.1-5           
-## [61] semPlot_1.0.1        sfsmisc_1.0-26       sm_2.2-5.4          
-## [64] sna_2.3-2            splines_3.1.0        stringr_0.6.2       
-## [67] survival_2.37-7      TAM_1.0-3            tensor_1.5          
-## [70] tools_3.1.0          XML_3.98-1.1</code></pre>
+## [49] PP_0.5               proto_0.3-10         psych_1.4.8.11      
+## [52] qgraph_1.2.5         quadprog_1.5-5       RColorBrewer_1.0-5  
+## [55] Rcpp_0.11.2          RCurl_1.95-4.3       reshape2_1.4        
+## [58] rmarkdown_0.2.49     rockchalk_1.8.86     scales_0.2.4        
+## [61] sem_3.1-5            semPlot_1.0.1        sfsmisc_1.0-26      
+## [64] sm_2.2-5.4           sna_2.3-2            splines_3.1.0       
+## [67] stringr_0.6.2        survival_2.37-7      TAM_1.0-3           
+## [70] tensor_1.5           tools_3.1.0          XML_3.98-1.1</code></pre>
 </div>
 
 
