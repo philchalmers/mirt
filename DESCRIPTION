@@ -36,7 +36,7 @@ Suggests:
     parallel,
     sirt,
     KernSmoothIRT,
-    poLCA
+    mirtCAT
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
