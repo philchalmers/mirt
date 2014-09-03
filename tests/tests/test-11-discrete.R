@@ -13,7 +13,8 @@ test_that('discrete', {
                  tolerance = 1e-4)
     
     fs <- fscores(mod)
-    expect_equal(as.numeric(fs[1:5,'F1']), c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
+    pick <- apply(fs[1:5, c('F1', 'F2')], 1, max)
+    expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
                  tolerance = 1e-4)
     
     #----------
