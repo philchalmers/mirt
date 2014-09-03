@@ -115,7 +115,8 @@ setMethod(
                                    tabdatalong=large$tabdata, Freq=large$Freq)
                 ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
-                               response.pattern=NULL, return.acov=return.acov, ...)
+                               response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
+                               MI=MI, mean=gmean, cov=gcov, ...)
             } else {
                 pick <- which(!is.na(response.pattern))
                 rp <- response.pattern[,pick,drop=FALSE]
@@ -128,7 +129,8 @@ setMethod(
                 newmod@K <- object@K[pick]
                 ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
-                               response.pattern=NULL, return.acov=return.acov, ...)
+                               response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
+                               MI=MI, mean=gmean, cov=gcov, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret[,c(paste0('F', 1L:nfact), 
                                                       paste0('SE_F', 1L:nfact)), drop=FALSE])
