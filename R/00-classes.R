@@ -346,8 +346,7 @@ setClass(
 #------------------------------------------------------------------------------
 #' Class "DiscreteClass"
 #'
-#' Defines the object returned from 
-# \code{\link{mdirt}}.
+#' Defines the object returned from \code{\link{mdirt}}.
 #'
 #' @section Slots:
 #'
@@ -380,7 +379,6 @@ setClass(
 #'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
-#'    \item{\code{invariance}:}{Object of class \code{"character"}, invariance input}
 #'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}

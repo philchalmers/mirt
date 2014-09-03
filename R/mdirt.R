@@ -23,8 +23,6 @@
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model number of classes to fit, or alternatively a \code{\link{mirt.model}} definition
-#' @param Theta a matrix indicating the integration grid for the discrete structure. The default
-#'   defines a traditional latent class model
 #' @param itemtype item types to use. Can be the \code{'lca'} model for defining ordinal
 #'   item response models (dichotomous items are a special case), \code{'nlca'} for the 
 #'   unordered latent class model, and the items types described in \code{\link{mirt}} 

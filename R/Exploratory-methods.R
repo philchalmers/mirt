@@ -7,7 +7,7 @@
 #'
 #' @name print-method
 #' @aliases print,ExploratoryClass-method print,ConfirmatoryClass-method
-#'   print,MultipleGroupClass-method print,MixedClass-method
+#'   print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
 #' @docType methods
 #' @rdname print-method
 #' @examples
@@ -67,7 +67,7 @@ setMethod(
 #'
 #' @name show-method
 #' @aliases show,ExploratoryClass-method show,ConfirmatoryClass-method
-#'   show,MultipleGroupClass-method show,MixedClass-method
+#'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
 #' @docType methods
 #' @rdname show-method
 #' @examples
@@ -112,7 +112,7 @@ setMethod(
 #'
 #' @name summary-method
 #' @aliases summary,ExploratoryClass-method summary,ConfirmatoryClass-method
-#'   summary,MultipleGroupClass-method summary,MixedClass-method
+#'   summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
 #' @docType methods
 #' @rdname summary-method
 #' @seealso \code{\link{coef-method}}
@@ -209,7 +209,7 @@ setMethod(
 #'
 #' @name coef-method
 #' @aliases coef,ExploratoryClass-method coef,ConfirmatoryClass-method
-#'   coef,MultipleGroupClass-method coef,MixedClass-method
+#'   coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
 #' @docType methods
 #' @rdname coef-method
 #' @seealso \code{\link{summary-method}}
@@ -318,7 +318,7 @@ setMethod(
 #'
 #' @name anova-method
 #' @aliases anova,ExploratoryClass-method anova,ConfirmatoryClass-method
-#'   anova,MultipleGroupClass-method anova,MixedClass-method
+#'   anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
 #' @docType methods
 #' @rdname anova-method
 #' @examples
@@ -386,7 +386,7 @@ setMethod(
 #'
 #' @name residuals-method
 #' @aliases residuals,ExploratoryClass-method residuals,ConfirmatoryClass-method
-#'   residuals,MultipleGroupClass-method
+#'   residuals,MultipleGroupClass-method residuals,DiscreteClass-method
 #' @docType methods
 #' @rdname residuals-method
 #' @references
