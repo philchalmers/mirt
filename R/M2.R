@@ -168,8 +168,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     dots <- list(...)
     discrete <- FALSE
     if(!is.null(dots$discrete)){
-        discrete <- TRUE
-        calcNull <- FALSE
+        discrete <- dots$discrete
+        calcNull <- ifelse(discrete, FALSE, calcNull)
     }
     ret <- list()
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
