@@ -17,6 +17,11 @@ test_that('discrete', {
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
                  tolerance = 1e-4)
     
+    resid <- residuals(mod, type = 'exp')
+    expect_equal(resid$res[1:3], c(1.050, 0.145, -0.345), tolerance = 1e-2)
+    residLD <- residuals(mod, type = 'LD')
+    expect_equal(as.numeric(residLD[2:4, 1]), c(0.111, 0.418, -0.129))
+    
     #----------
     # polytomous LCA
     mod2 <- mdirt(Science, 2, verbose=FALSE) 

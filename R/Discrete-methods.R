@@ -99,10 +99,14 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'DiscreteClass'),
-    definition = function(object, type = 'exp', ...)
+    definition = function(object, ...)
     {
         class(object) <- 'MultipleGroupClass'
-        ret <- residuals(object, type=type, ...)
+        for(g in 1L:length(object@pars)){
+            object@pars[[g]]@Prior <- list(object@Prior[[g]])
+            object@pars[[g]]@Theta <- object@Theta
+        }
+        ret <- residuals(object, discrete = TRUE, ...)
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
     }

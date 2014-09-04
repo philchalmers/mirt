@@ -58,6 +58,7 @@
 #' (mod3 <- mdirt(dat, 3))
 #' summary(mod2)
 #' residuals(mod2)
+#' residuals(mod2, type = 'exp')
 #' anova(mod2, mod3)
 #' 
 #' #classification based on response patterns

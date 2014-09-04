@@ -417,6 +417,9 @@ setMethod(
     definition = function(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)
     {
+        dots <- list(...)
+        discrete <- FALSE
+        if(!is.null(dots$discrete)) discrete <- TRUE
         K <- object@K
         data <- object@Data$data
         N <- nrow(data)
@@ -426,38 +429,48 @@ setMethod(
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
-        quadpts <- object@quadpts
-        if(is.nan(quadpts))
-            quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
-        bfactorlist <- object@bfactor
-        theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
-        if(type != 'Q3'){
-            if(is.null(bfactorlist$Priorbetween[[1L]])){
-                Theta <- thetaComb(theta, nfact)
-            } else {
-                Theta <- object@Theta
+        if(!discrete){
+            quadpts <- object@quadpts
+            if(is.nan(quadpts))
+                quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+            bfactorlist <- object@bfactor
+            theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+            if(type != 'Q3'){
+                if(is.null(bfactorlist$Priorbetween[[1L]])){
+                    Theta <- thetaComb(theta, nfact)
+                } else {
+                    Theta <- object@Theta
+                }
+            } else if(is.null(Theta)){
+                Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
             }
-        } else if(is.null(Theta)){
-            Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
+        } else {
+            Theta <- object@Theta
+            if(!any(type %in% c('exp', 'LD', 'LDG2')))
+                stop('residual type not supported for discrete latent variables')
         }
         itemnames <- colnames(data)
         listtabs <- list()
         calcG2 <- ifelse(type == 'LDG2', TRUE, FALSE)
         if(type %in% c('LD', 'LDG2')){
-            groupPars <- ExtractGroupPars(object@pars[[length(object@pars)]])
-            prior <- mirt_dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
-            prior <- prior/sum(prior)
+            if(!discrete){
+                groupPars <- ExtractGroupPars(object@pars[[length(object@pars)]])
+                prior <- mirt_dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
+                prior <- prior/sum(prior)
+            } else {
+                prior <- object@Prior[[1L]]
+            }
             df <- (object@K - 1) %o% (object@K - 1)
             diag(df) <- NA
             colnames(df) <- rownames(df) <- colnames(res)
-            for(i in 1:J){
-                for(j in 1:J){
+            for(i in 1L:J){
+                for(j in 1L:J){
                     if(i < j){
                         P1 <- ProbTrace(x=object@pars[[i]], Theta=Theta)
                         P2 <- ProbTrace(x=object@pars[[j]], Theta=Theta)
                         tab <- table(data[,i],data[,j])
                         Etab <- matrix(0,K[i],K[j])
-                        for(k in 1:K[i])
+                        for(k in 1L:K[i])
                             for(m in 1:K[j])
                                 Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)
                         s <- gamma.cor(tab) - gamma.cor(Etab)
