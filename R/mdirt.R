@@ -44,7 +44,7 @@
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #'   
-#' @seealso \code{\link{fscores}}, \code{\link{mirt.model}}, 
+#' @seealso \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}}
 #' @keywords models
 #' @export mdirt
 #' @examples

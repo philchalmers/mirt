@@ -24,6 +24,7 @@
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for 
 #'   RMSEA. Default returns the 90\% interval
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
+#' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
@@ -49,7 +50,7 @@
 #'
 #' }
 M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
-               residmat = FALSE){
+               residmat = FALSE, ...){
     
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -66,8 +67,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
-    if(is(obj, 'DiscreteClass'))
-        stop('Discrete latent structures not yet supported')
+    discrete <- FALSE
+    if(is(obj, 'DiscreteClass')){
+        discrete <- TRUE
+        class(obj) <- 'MultipleGroupClass'
+    }   
     if(any(is.na(obj@Data$data))){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
@@ -96,9 +100,14 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         for(g in 1L:ngroups){
             attr(pars[[g]], 'MG') <- g
             pars[[g]]@bfactor <- obj@bfactor
+            if(discrete){
+                pars[[g]]@Prior <- list(obj@Prior[[g]])
+                pars[[g]]@Theta <- obj@Theta
+            }
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
                                    mins=obj@Data$mins)
-            ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts, residmat=residmat)
+            ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts, residmat=residmat,
+                           discrete=discrete)
         }
         if(residmat){
             names(ret) <- obj@Data$groupNames
@@ -152,9 +161,15 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     }
     
     if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 
-                                           'ideal', 'GroupPars')))
+                                           'ideal', 'GroupPars'))) #'lca', TODO
        stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\', 
             \'gpcm\', and \'nominal\' objects')
+    dots <- list(...)
+    discrete <- FALSE
+    if(!is.null(dots$discrete)){
+        discrete <- TRUE
+        calcNull <- FALSE
+    }
     ret <- list()
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
     nitems <- ncol(obj@Data$data)
@@ -176,21 +191,26 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         estpars <- c(estpars, pars[[i]]@est)
     itemloc <- obj@itemloc
     bfactorlist <- obj@bfactor
-    theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
-    if(is.null(bfactorlist$Priorbetween[[1L]])){
-        Theta <- thetaComb(theta, obj@nfact)
-        prior <- Priorbetween <- sitems <- specific <- NULL
-        gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-        Prior <- Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
-                                           gstructgrouppars$gcov)
-        Prior <- Prior/sum(Prior)
-        if(length(prodlist) > 0L)
-            Theta <- prodterms(Theta, prodlist)
+    if(!discrete){
+        theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+        if(is.null(bfactorlist$Priorbetween[[1L]])){
+            Theta <- thetaComb(theta, obj@nfact)
+            prior <- Priorbetween <- sitems <- specific <- NULL
+            gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
+            Prior <- Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
+                                               gstructgrouppars$gcov)
+            Prior <- Prior/sum(Prior)
+            if(length(prodlist) > 0L)
+                Theta <- prodterms(Theta, prodlist)
+        } else {
+            Theta <- obj@Theta        
+            prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
+            sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; 
+            Prior <- bfactorlist$Prior[[group]]
+        }
     } else {
-        Theta <- obj@Theta        
-        prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
-        sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; 
-        Prior <- bfactorlist$Prior[[group]]
+        Theta <- obj@Theta
+        Prior <- obj@Prior[[1L]]
     }
     E1 <- E11 <- numeric(nitems)
     E2 <- matrix(NA, nitems, nitems)

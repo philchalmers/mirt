@@ -4,7 +4,7 @@
 \title{Compute M2 statistic}
 \usage{
 M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0,
-  CI = 0.9, residmat = FALSE)
+  CI = 0.9, residmat = FALSE, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -27,6 +27,8 @@ of the stats and their imputed standard deviations}
 RMSEA. Default returns the 90\% interval}
 
 \item{residmat}{logical; return the residual matrix used to compute the SRMSR statistic?}
+
+\item{...}{additional arguments to pass}
 }
 \value{
 Returns a data.frame object with the M2 statistic, along with the degrees of freedom,

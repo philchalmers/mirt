@@ -98,7 +98,7 @@ mod <- mdirt(dat, 2, nruns=10)
 }
 }
 \seealso{
-\code{\link{fscores}}, \code{\link{mirt.model}},
+\code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}}
 }
 \keyword{models}
 

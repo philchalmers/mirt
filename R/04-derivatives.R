@@ -979,3 +979,15 @@ setMethod(
         dp
     }
 )
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'lca', Theta = 'matrix'),
+    definition = function(x, Theta){
+        P <- ProbTrace(x, Theta)
+        PQ <- P * (1-P)
+        browser()
+        ret <- cbind()
+        ret
+    }
+)
