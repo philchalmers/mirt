@@ -71,6 +71,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     if(is(obj, 'DiscreteClass')){
         discrete <- TRUE
         class(obj) <- 'MultipleGroupClass'
+        calcNull <- FALSE
     }   
     if(any(is.na(obj@Data$data))){
         if(impute == 0 || is.null(Theta))
@@ -161,7 +162,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     }
     
     if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 
-                                           'ideal', 'GroupPars'))) #'lca', TODO
+                                           'ideal', 'lca', 'GroupPars')))
        stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\', 
             \'gpcm\', and \'nominal\' objects')
     dots <- list(...)

@@ -985,9 +985,16 @@ setMethod(
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta){
         P <- ProbTrace(x, Theta)
-        PQ <- P * (1-P)
-        browser()
-        ret <- cbind()
-        ret
+        dp <- matrix(0, nrow(Theta), length(x@par))
+        ind <- 1L
+        s2 <- x@score^2
+        for(j in 2L:x@ncat){
+            for(i in 1:ncol(Theta)){
+                dp[,ind] <- Theta[,i] * s2[j] * (P[,j] - 
+                        rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
+                ind <- ind + 1L
+            }
+        }
+        dp
     }
 )
