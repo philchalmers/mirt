@@ -1,9 +1,10 @@
 #' Item fit statistics
 #'
 #' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985),
-#' \eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional models
-#' (Kang & Chen, 2007; Orlando & Thissen, 2000). For Rasch, partial credit, and rating scale models
-#' infit and outfit statistics are also produced.
+#' \eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional and 
+#' multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000). 
+#' For Rasch, partial credit, and rating scale models infit and outfit statistics are 
+#' also produced.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
@@ -421,7 +422,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         }
         return(list(O=O, E=E))
     }
-    if(x@nfact == 1L){
+    if(TRUE){
         dat <- x@Data$data
         adj <- x@Data$mins
         if(any(adj > 0))
@@ -433,9 +434,10 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         dots <- list(...)
         quadpts <- dots$quadpts
         theta_lim <- dots$theta_lim
-        if(is.null(quadpts)) quadpts <- 61
+        if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
-        E <- EAPsum(x, S_X2 = TRUE, gp = list(gmeans=0, gcov=matrix(1)), CUSTOM.IND=x@CUSTOM.IND,
+        gp <- ExtractGroupPars(pars[[length(pars)]])
+        E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@CUSTOM.IND,
                     quadpts=quadpts, theta_lim=theta_lim)
         for(i in 1L:J)
             E[[i]] <- E[[i]] * Nk

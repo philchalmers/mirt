@@ -338,7 +338,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             opts$customPriorFun <- lca_prior
         } else {
             if(is.null(opts$quadpts))
-                opts$quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+                opts$quadpts <- select_quadpts2(nfact)
             if(opts$quadpts < 3) stop('Must use more than 2 quadpts')
             Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                             length.out = opts$quadpts))

@@ -18,6 +18,9 @@
   dichotomous and polytomous items. Cand be used to model several other dicrete IRT models as well,
   such as the located latent class model, multidimensional IRT with discrete traits, DINA models,
   etc. See the examples and documentation for details
+  
+- the S-X2 statistic available in `itemfit()` has been generalized to include multidimensional
+  models
 
 ## BUG FIXES
 

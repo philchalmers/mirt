@@ -1253,6 +1253,12 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
     LL
 }
 
+select_quadpts <- function(nfact) switch(as.character(nfact), 
+                                         '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
+
+select_quadpts2 <- function(nfact) switch(as.character(nfact), 
+                                          '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+
 mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
                          check = FALSE)
 {    

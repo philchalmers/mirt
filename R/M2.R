@@ -186,7 +186,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     K <- obj@K
     pars <- obj@pars
     if(is.null(quadpts)) 
-        quadpts <- switch(as.character(obj@nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
+        quadpts <- select_quadpts(obj@nfact)
     estpars <- c()
     for(i in 1L:(nitems+1L))
         estpars <- c(estpars, pars[[i]]@est)

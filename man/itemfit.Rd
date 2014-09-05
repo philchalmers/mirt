@@ -49,9 +49,10 @@ of the stats and their imputed standard deviations}
 }
 \description{
 \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985),
-\eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional models
-(Kang & Chen, 2007; Orlando & Thissen, 2000). For Rasch, partial credit, and rating scale models
-infit and outfit statistics are also produced.
+\eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional and
+multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
+For Rasch, partial credit, and rating scale models infit and outfit statistics are
+also produced.
 }
 \examples{
 \dontrun{

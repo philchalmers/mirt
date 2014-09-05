@@ -432,7 +432,7 @@ setMethod(
         if(!discrete){
             quadpts <- object@quadpts
             if(is.nan(quadpts))
-                quadpts <- switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
+                quadpts <- select_quadpts2(nfact)
             bfactorlist <- object@bfactor
             theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
             if(type != 'Q3'){
