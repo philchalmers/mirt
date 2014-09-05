@@ -18,7 +18,10 @@
   dichotomous and polytomous items. Cand be used to model several other dicrete IRT models as well,
   such as the located latent class model, multidimensional IRT with discrete traits, DINA models,
   etc. See the examples and documentation for details
-  
+
+## BUG FIXES
+
+- fixed bug in `bfactor()` starting values when NAs were specified in the `model` argument
 
 # Changes in mirt 1.5
 

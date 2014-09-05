@@ -167,17 +167,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$BFACTOR){
         #better start values
         if((PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec')) == 1L){
-            Rpoly <- cormod(Data$data, PrepList[[1L]]$K, guess, use=opts$use)
-            loads <- abs(eigen(Rpoly)$vector[,1L, drop = FALSE])
-            u <- 1 - rowSums(loads^2)
-            u[u < .001] <- .2
-            cs <- sqrt(u)
-            astart <- loads/cs
-            astart <- cbind(astart,astart/2L) * 1.702
-            nfact <- PrepList[[1L]]$pars[[1L]]@nfact
-            for(g in 1L:Data$ngroups)
-                for(i in 1L:Data$nitems)
-                    PrepList[[g]]$pars[[i]]@par[PrepList[[g]]$pars[[i]]@est][1L:2L] <- astart[i, ]
+            nfact <- PrepListFull$nfact
+            for(g in 1L:Data$ngroups){
+                for(i in 1L:Data$nitems){
+                    tmp <- PrepList[[g]]$pars[[i]]@par[1L:nfact]
+                    tmp2 <- tmp[1L]
+                    tmp[PrepList[[g]]$pars[[i]]@est[1L:nfact]] <- 
+                        tmp[PrepList[[g]]$pars[[i]]@est[1L:nfact]]/2
+                    tmp[1L] <- tmp2
+                    PrepList[[g]]$pars[[i]]@par[1L:nfact] <- tmp
+                }
+            }
         }
     }
     PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames)

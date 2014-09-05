@@ -19,8 +19,8 @@ test_that('dich data', {
     sum <- summary(mod1, verbose = FALSE)
     expect_is(sum, 'list')
     fs <- fscores(mod1, method = 'EAPsum', verbose = FALSE)
-    expect_equal(fs[1:3,'Theta.1'], c(-3.082745, -3.024984, -2.952605), tolerance = 1e-4)
-    expect_equal(fs[1:3,'Theta.2'], c(-1.3812452, -1.1018778, -0.8074491), tolerance = 1e-4)
+    expect_equal(fs[1:3,'Theta.1'], c(-3.083753, -3.026068, -2.954776), tolerance = 1e-4)
+    expect_equal(fs[1:3,'Theta.2'], c(-1.3740075, -1.0941978, -0.7995006), tolerance = 1e-4)
     fit <- M2(mod1)
     expect_equal(fit$M2, 712.5701, tolerance = 1e-2)
     expect_equal(fit$df, 432, tolerance = 1e-2)
@@ -103,7 +103,7 @@ test_that('dich data', {
 
     res <- residuals(simmod, verbose = FALSE)
     expect_is(res, 'matrix')
-    expect_equal(res[2,1], 1.636, tolerance = 1e-2)
+    expect_equal(res[2,1], 1.739, tolerance = 1e-2)
     sum <- summary(simmod, verbose = FALSE)
     expect_is(sum, 'list')
 
