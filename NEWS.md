@@ -19,6 +19,9 @@
   such as the located latent class model, multidimensional IRT with discrete traits, DINA models,
   etc. See the examples and documentation for details
   
+- axillary support for `DiscreteClass` objects added to `itemfit()`, `M2()`, `fscores()`,
+  `wald()`, and `boot.mirt()`
+  
 - the S-X2 statistic available in `itemfit()` has been generalized to include multidimensional
   models
 

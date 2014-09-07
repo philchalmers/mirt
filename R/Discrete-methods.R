@@ -102,10 +102,6 @@ setMethod(
     definition = function(object, ...)
     {
         class(object) <- 'MultipleGroupClass'
-        for(g in 1L:length(object@pars)){
-            object@pars[[g]]@Prior <- list(object@Prior[[g]])
-            object@pars[[g]]@Theta <- object@Theta
-        }
         ret <- residuals(object, discrete = TRUE, ...)
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret

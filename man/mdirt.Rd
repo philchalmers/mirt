@@ -76,6 +76,8 @@ summary(mod2)
 residuals(mod2)
 residuals(mod2, type = 'exp')
 anova(mod2, mod3)
+M2(mod2)
+itemfit(mod2)
 
 #classification based on response patterns
 fscores(mod2)
@@ -98,7 +100,10 @@ mod <- mdirt(dat, 2, nruns=10)
 }
 }
 \seealso{
-\code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}}
+\code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}},
+  \code{\link{itemfit}}, \code{\link{boot.mirt}}, \code{\link{mirtCluster}},
+  \code{\link{wald}}, \code{\link{coef-method}}, \code{\link{summary-method}},
+  \code{\link{anova-method}}, \code{\link{residuals-method}}
 }
 \keyword{models}
 

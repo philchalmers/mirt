@@ -8,8 +8,8 @@ itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1,
   method = "EAP", Theta = NULL, impute = 0, ...)
 }
 \arguments{
-\item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-\code{MultipleGroupClass}}
+\item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+\code{MultipleGroupClass}, or \code{DiscreteClass}}
 
 \item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
 only interested in computing the S-X2 quickly}

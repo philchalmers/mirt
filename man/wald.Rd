@@ -7,7 +7,7 @@ wald(object, L, C = 0)
 }
 \arguments{
 \item{object}{estimated object from \code{mirt}, \code{bfactor},
-\code{multipleGroup}, or \code{mixedmirt}}
+\code{multipleGroup}, \code{mixedmirt}, or \code{mdirt}}
 
 \item{L}{a coefficient matrix with dimensions nconstrasts x npars.
 Omitting this value will return the column names of the

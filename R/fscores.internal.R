@@ -143,9 +143,9 @@ setMethod(
         }
         dots <- list(...)
         discrete <- FALSE
-        if(method == 'Discrete'){
+        if(method == 'Discrete' || method == 'DiscreteSum'){
             discrete <- TRUE
-            method <- 'EAP'
+            method <- ifelse(method == 'Discrete', 'EAP', 'EAPsum')
         }
         mirtCAT <- FALSE
         if(!is.null(dots$mirtCAT)) mirtCAT <- TRUE
@@ -170,7 +170,8 @@ setMethod(
         if(!is.null(gcov)) gp$gcov <- gcov
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
                                              quadpts=quadpts, gp=gp, verbose=verbose, 
-                                             CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim))
+                                             CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
+                                             discrete=discrete))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		fulldata <- object@Data$data
 		tabdata <- object@Data$tabdatalong
@@ -365,11 +366,10 @@ setMethod(
                           full.scores.SE, return.acov = FALSE, ...)
     {
         class(object) <- 'MultipleGroupClass'
-        for(g in 1:length(object@pars)){
-            object@pars[[g]]@Theta <- object@Theta
-            object@pars[[g]]@Prior <- list(object@Prior[[g]])
-        }
-        ret <- fscores(object, full.scores=full.scores, method='Discrete', quadpts=quadpts,
+        if(!any(method %in% c('EAP', 'EAPsum')))
+            stop('Only EAP and EAPsum methods are supported for DiscreteClass objects')
+        method <- ifelse(method == 'EAP', 'Discrete', 'DiscreteSum')
+        ret <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=returnER, verbose=verbose,
                        mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
                        full.scores.SE=full.scores.SE, return.acov = return.acov, ...)
@@ -492,7 +492,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 }
 
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim){
+                   theta_lim, discrete){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -516,10 +516,15 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         }
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
-    theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
-    Theta <- thetaComb(theta, x@nfact)
-    prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
-    prior <- prior/sum(prior)
+    if(discrete){
+        Theta <- x@Theta
+        prior <- x@Prior[[1L]]
+    } else {
+        theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
+        Theta <- thetaComb(theta, x@nfact)
+        prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
+        prior <- prior/sum(prior)
+    }
     pars <- x@pars
     K <- x@K
     J <- length(K)

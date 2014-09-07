@@ -608,6 +608,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           factorNames=PrepList[[g]]$factorNames, random=ESTIMATE$random, 
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                           itemtype=PrepList[[g]]$itemtype, K=Data$K)
+        if(discrete){
+            cmods[[g]]@Theta <- Theta
+            cmods[[g]]@Prior <- list(ESTIMATE$Prior[[g]])
+        }
     }
     #missing stats for MHRM
     if(opts$method =='MHRM' || opts$method == 'MIXED'){

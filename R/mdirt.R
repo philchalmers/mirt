@@ -44,7 +44,10 @@
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #'   
-#' @seealso \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}}
+#' @seealso \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}}, 
+#'   \code{\link{itemfit}}, \code{\link{boot.mirt}}, \code{\link{mirtCluster}}, 
+#'   \code{\link{wald}}, \code{\link{coef-method}}, \code{\link{summary-method}}, 
+#'   \code{\link{anova-method}}, \code{\link{residuals-method}}
 #' @keywords models
 #' @export mdirt
 #' @examples
@@ -60,6 +63,8 @@
 #' residuals(mod2)
 #' residuals(mod2, type = 'exp')
 #' anova(mod2, mod3)
+#' M2(mod2)
+#' itemfit(mod2)
 #' 
 #' #classification based on response patterns
 #' fscores(mod2)

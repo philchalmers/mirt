@@ -6,7 +6,8 @@
 boot.mirt(x, R = 100, ...)
 }
 \arguments{
-\item{x}{an estimated object from \code{mirt}, \code{bfactor}, or \code{multipleGroup}}
+\item{x}{an estimated object from \code{mirt}, \code{bfactor}, \code{multipleGroup},
+or \code{mdirt}}
 
 \item{R}{number of draws to use (passed to the \code{boot()} function)}
 

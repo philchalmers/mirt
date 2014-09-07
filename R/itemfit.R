@@ -7,8 +7,8 @@
 #' also produced.
 #'
 #' @aliases itemfit
-#' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-#'   \code{MultipleGroupClass}
+#' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are 
 #'   only interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
@@ -124,8 +124,14 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     
     if(is(x, 'MixedClass'))
         stop('mixedmirt objects not supported')
-    if(is(x, 'DiscreteClass'))
-        stop('Discrete variable models not supported')
+#     if(is(x, 'DiscreteClass'))
+#         stop('Discrete variable models not supported')
+    discrete <- FALSE
+    if(is(x, 'DiscreteClass')){
+        class(x) <- 'MultipleGroupClass'
+        discrete <- TRUE
+    }
+        
     
     if(any(is.na(x@Data$data)) && !is(x, 'MultipleGroupClass')){
         if(impute == 0 || is.null(Theta))
@@ -138,7 +144,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         collect <- myLapply(collect, fn, obj=x, Theta=Theta, vals=vals, 
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                            empirical.CI=empirical.CI, method=method, impute=0, ...)
+                            empirical.CI=empirical.CI, method=method, impute=0, 
+                            discrete=discrete, ...)
         ave <- SD <- collect[[1L]]
         pick1 <- 1:nrow(ave)
         pick2 <- sapply(ave, is.numeric)
@@ -165,12 +172,14 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
             ret[[g]] <- itemfit(tmp, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot, 
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method, 
-                                impute=impute, ...)
+                                impute=impute, discrete=discrete, ...)
         }
         names(ret) <- x@Data$groupNames
         return(ret)
     }
-    if(S_X2.tables) Zh <- X2 <- FALSE
+    dots <- list(...)
+    discrete <- dots$discrete
+    if(S_X2.tables || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data))
     J <- ncol(x@Data$data)
     itemloc <- x@itemloc
@@ -438,7 +447,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@CUSTOM.IND,
-                    quadpts=quadpts, theta_lim=theta_lim)
+                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete)
         for(i in 1L:J)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)

@@ -5,7 +5,7 @@ test_that('discrete', {
     #----------
     # dichotomous LCA
     dat <- expand.table(LSAT6)
-    mod <- mdirt(dat, 2, verbose=FALSE)
+    mod <- mdirt(dat, 2, verbose=FALSE, SE=TRUE, SE.type = 'BL')
     so <- summary(mod)
     expect_equal(mod@logLik, -2467.407, tolerance = 1e-4)
     expect_equal(as.numeric(sort(so$Class.Proportions)[1L]), 0.3317701, tolerance = 1e-2)
@@ -16,11 +16,19 @@ test_that('discrete', {
     pick <- apply(fs[1:5, c('F1', 'F2')], 1, max)
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
                  tolerance = 1e-4)
+    fs2 <- fscores(mod, method = 'EAPsum', verbose=FALSE)
+    expect_equal(as.numeric(fs2$expected), c(1.651072,20.13484,91.50683,225.4041,366.828,294.4752),
+                 tolerance=1e-4)
     
     resid <- residuals(mod, type = 'exp')
     expect_equal(resid$res[1:3], c(1.050, 0.145, -0.345), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
     expect_equal(as.numeric(residLD[2:4, 1]), c(0.111, 0.418, -0.129))
+    ifit <- itemfit(mod)[[1L]]
+    expect_equal(ifit$S_X2, c(0.4345781,1.699502,0.7657108,0.183002,0.1429284), tolerance=1e-4)
+    
+    W <- wald(mod, L = matrix(c(1,numeric(9)), nrow=1))
+    expect_equal(W$W, 111.7255, tolerance=1e-4)
     
     #----------
     # polytomous LCA

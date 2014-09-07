@@ -5,7 +5,8 @@
 #' package).
 #'
 #' @aliases boot.mirt
-#' @param x an estimated object from \code{mirt}, \code{bfactor}, or \code{multipleGroup}
+#' @param x an estimated object from \code{mirt}, \code{bfactor}, \code{multipleGroup},
+#'   or \code{mdirt}
 #' @param R number of draws to use (passed to the \code{boot()} function)
 #' @param ... additional arguments to be passed on to \code{boot(...)}
 #' @keywords bootstrapped standard errors
@@ -30,20 +31,28 @@
 #'
 #' }
 boot.mirt <- function(x, R = 100, ...){
-    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group, ...) {
+    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group, 
+                           discrete, ...) {
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
         g <- group[ind]
         if(length(unique(g)) != ngroup) return(rep(NA, npars))
-        if(!is.null(group)){
-            mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
-                                 constrain=constrain, parprior=parprior, method='EM',
-                                 calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE), 
-                                 ...))
+        if(discrete){
+            mod <- try(mdirt(data=dat, model=model, itemtype=itemtype, group=g,
+                                     constrain=constrain, parprior=parprior, 
+                                     verbose=FALSE, technical=list(parallel=FALSE), 
+                                     ...))
         } else {
-            mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
-                        parprior=parprior, calcNull=FALSE, verbose=FALSE, 
-                        technical=list(parallel=FALSE), ...))
+            if(!is.null(group)){
+                mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
+                                     constrain=constrain, parprior=parprior, method='EM',
+                                     calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE), 
+                                     ...))
+            } else {
+                mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
+                            parprior=parprior, calcNull=FALSE, verbose=FALSE, 
+                            technical=list(parallel=FALSE), ...))
+            }
         }
         if(is(mod, 'try-error')) return(rep(NA, npars))
         structure <- mod2values(mod)
@@ -60,6 +69,7 @@ boot.mirt <- function(x, R = 100, ...){
     itemtype <- x@itemtype
     MG <- is(x, 'MultipleGroupClass')
     explor <- is(x, 'ExploratoryClass')
+    discrete <- is(x, 'DiscreteClass')
     group <- if(MG) x@Data$group else NULL
     model <- x@model[[1L]]
     parprior <- x@parprior
@@ -72,7 +82,7 @@ boot.mirt <- function(x, R = 100, ...){
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- length(longpars)
-    boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain,
+    boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, discrete=discrete,
                   parprior=parprior, model=model, itemtype=itemtype, group=group, ...)
     if(explor) message('Note: bootstrapped standard errors for slope parameters for exploratory
                        models are not meaningful.')

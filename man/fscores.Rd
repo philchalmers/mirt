@@ -82,7 +82,9 @@ in parallel to decrease estimation times if a \code{\link{mirtCluster}} object i
 
 If the input object is a discrete latent class object estimated from \code{\link{mdirt}}
 then the returned results will be with respect to the posterior classification for each
-individual.
+individual. The method inputs for \code{'DiscreteClass'} objects may only be \code{'EAP'},
+for posterior classification of each response pattern, or \code{'EAPsum'} for posterior
+classification based on the raw sum-score.
 }
 \examples{
 \dontrun{
