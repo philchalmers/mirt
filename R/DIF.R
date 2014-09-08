@@ -170,6 +170,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         return(aov)
     }
 
+    bfactorlist <- MGmodel@bfactor
+    if(!is.null(bfactorlist$Priorbetween[[1L]]))
+        stop('bifactor models are currently not supported in this function')
     itemnames <- colnames(MGmodel@Data$data)
     if(!any(scheme %in% c('add', 'drop', 'add_sequential', 'drop_sequential')))
         stop('scheme input is not valid')

@@ -124,14 +124,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     
     if(is(x, 'MixedClass'))
         stop('mixedmirt objects not supported')
-#     if(is(x, 'DiscreteClass'))
-#         stop('Discrete variable models not supported')
     discrete <- FALSE
     if(is(x, 'DiscreteClass')){
         class(x) <- 'MultipleGroupClass'
         discrete <- TRUE
-    }
-        
+    }   
     
     if(any(is.na(x@Data$data)) && !is(x, 'MultipleGroupClass')){
         if(impute == 0 || is.null(Theta))
