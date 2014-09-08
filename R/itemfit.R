@@ -176,6 +176,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
     }
     dots <- list(...)
     discrete <- dots$discrete
+    discrete <- ifelse(is.null(discrete), FALSE, discrete)
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data))
     J <- ncol(x@Data$data)
