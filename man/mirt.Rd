@@ -713,6 +713,7 @@ model.combo <- mirt.model('
   (F1*F2) = 1-8')
 
 (mod.quad <- mirt(data, model.quad))
+summary(mod.quad)
 (mod.combo <- mirt(data, model.combo))
 anova(mod.quad, mod.combo)
 

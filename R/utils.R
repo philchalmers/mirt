@@ -233,15 +233,22 @@ Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
     J <- length(pars) - 1L
     lambdas <- lowerlambdas <- upperlambdas <- 
         matrix(NA, J, length(ExtractLambdas(pars[[1L]])))
+    gcov <- ExtractGroupPars(pars[[J+1L]])$gcov
+    if(ncol(gcov) < ncol(lambdas)){
+        tmpcov <- diag(ncol(lambdas))
+        tmpcov[1L:ncol(gcov), 1L:ncol(gcov)] <- gcov
+        gcov <- tmpcov
+    }
+    chl <- chol(gcov)
     z <- qnorm(1 - alpha/2)
     rownames(lambdas) <- rownames(upperlambdas) <- rownames(lowerlambdas) <- Names
     for(i in 1L:J){
         tmp <- pars[[i]]
-        lambdas[i,] <- ExtractLambdas(tmp)/1.702
+        lambdas[i,] <- ExtractLambdas(tmp) %*% chl /1.702
         tmp@par <- pars[[i]]@par - z * pars[[i]]@SEpar
-        lowerlambdas[i,] <- ExtractLambdas(tmp)/1.702
+        lowerlambdas[i,] <- ExtractLambdas(tmp) %*% chl/1.702
         tmp@par <- pars[[i]]@par + z * pars[[i]]@SEpar
-        upperlambdas[i,] <- ExtractLambdas(tmp)/1.702
+        upperlambdas[i,] <- ExtractLambdas(tmp) %*% chl/1.702
     }
     norm <- sqrt(1 + rowSums(lambdas^2))
     F <- as.matrix(lambdas/norm)

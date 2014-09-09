@@ -593,13 +593,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else {
             Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
             colnames(Flist$F) <- PrepList[[g]]$factorNames
-            tmpcov <- ExtractGroupPars(pars[[g]][[Data$nitems+1L]])$gcov
-            if(ncol(tmpcov) < ncol(Flist$F)){
-                tmpcov2 <- diag(ncol(Flist$F))
-                tmpcov2[1L:ncol(tmpcov), 1L:ncol(tmpcov)] <- tmpcov
-                tmpcov <- tmpcov2
-            }
-            h2 <- rowSums((Flist$F %*% t(chol(tmpcov)))^2)
+            h2 <- rowSums(Flist$F^2)
             F <- Flist$F
         }
         cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc,
