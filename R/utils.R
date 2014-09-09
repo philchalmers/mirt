@@ -929,6 +929,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
 {
     opts <- list()
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
+    if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
+        stop('method argument not supported')
     D <- 1
     opts$method = method
     opts$draws = draws
@@ -947,7 +949,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$customPriorFun = technical$customPriorFun
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
-    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM') 1e-4 else 
+    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else 
         if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- FALSE
@@ -962,7 +964,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
-    if(opts$method == 'EM')
+    if(opts$method %in% c('EM', 'QMCEM'))
         opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
@@ -975,6 +977,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(opts$quadpts)) opts$quadpts <- 199L
         if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
     }
+    if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 2000L
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
         set.seed(12345L)
@@ -989,7 +992,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
     if(is.null(optimizer)){
-        opts$Moptim <- if(method == 'EM' || method == 'BL') 'BFGS' else 'NR'
+        opts$Moptim <- if(method %in% c('EM','BL','QMCEM')) 'BFGS' else 'NR'
     } else {
         opts$Moptim <- optimizer
     }

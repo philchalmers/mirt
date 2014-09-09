@@ -7,7 +7,7 @@ fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, returnER = FALSE,
   return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
   scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6, 6),
-  MI = 0, ...)
+  MI = 0, QMC = FALSE, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -60,6 +60,9 @@ standard errors associated with each respondent? Default is \code{FALSE}}
 
 \item{MI}{a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed}
+
+\item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
+default number of nodes is 1500}
 
 \item{...}{additional arguments}
 }

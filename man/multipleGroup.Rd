@@ -33,9 +33,8 @@ the factor model is to be estimated. See \code{\link{mirt.model}} for more detai
   useful for selecting 'anchor' items for vertical and horizontal scaling, and for detecting
   differential item functioning (DIF) across groups}
 
-\item{method}{a character object specifying the estimation algorithm to be used. The default is
-\code{'EM'}, for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may
-also be passed to use the MH-RM algorithm}
+\item{method}{a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'}
+(default is \code{'EM'}). See \code{\link{mirt}} for details}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}

@@ -26,6 +26,12 @@
   
 - the S-X2 statistic available in `itemfit()` has been generalized to include multidimensional
   models
+  
+- the method `'QMCEM'` has been added for quasi-Monte Carlo integration in `mirt()` 
+  and `multipleGroup()` for estimating higher dimensional models with greater accuracy 
+  (suggested by Alexander Robitzsch). Several auxillary function such as `fscores()`, 
+  `itemfit()`, and `M2()` also now contain an `QMC` argument (or will accept one through the ... 
+  argument) to use the same integration scheme for better accuracy in higher dimensional models
 
 ## BUG FIXES
 

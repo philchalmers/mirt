@@ -59,6 +59,8 @@
 #' @param verbose logical; print verbose output messages?
 #' @param scores.only logical; return only the factor scores (only applicable when 
 #'   \code{full.scores = TRUE})
+#' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the 
+#'   default number of nodes is 1500
 #' @param ... additional arguments
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
@@ -111,15 +113,17 @@
 fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, ...)
+                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, 
+                    QMC = FALSE, ...)
 {
     if(!is(object, 'DiscreteClass')){
+        if(QMC && is.null(quadpts)) quadpts <- 2000
         if(is.null(quadpts))
             quadpts <- switch(as.character(object@nfact), 
                               '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
     } else quadpts <- 1
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
-                            quadpts=quadpts, response.pattern=response.pattern,
+                            quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             scores.only=scores.only, theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE, return.acov=return.acov, ...)

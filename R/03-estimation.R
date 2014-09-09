@@ -326,7 +326,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
 
     #EM estimation
     opts$times$start.time.Estimate <- proc.time()[3L]
-    if(opts$method == 'EM' || opts$method == 'BL'){
+    if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
         temp <- matrix(0L,nrow=nitems,ncol=nspec)
         sitems <- matrix(0L, nrow=sum(PrepList[[1L]]$K), ncol=nspec)
@@ -377,10 +377,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 Theta <- cbind(Theta[,1L:(tmp-1L),drop=FALSE],
                                matrix(Theta[,tmp], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
-                if(opts$quadpts^nfact <= opts$MAXQUAD){
-                    if(is.null(opts$technical$customTheta))
-                        Theta <- thetaComb(theta, nfact)
-                } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.')
+                if(opts$method == 'QMCEM'){
+                    Theta <- qnorm(sfsmisc::QUnif(opts$quadpts, min=0, max=1, p=nfact, leap=409))
+                } else {
+                    if(opts$quadpts^nfact <= opts$MAXQUAD){
+                        if(is.null(opts$technical$customTheta))
+                            Theta <- thetaComb(theta, nfact)
+                    } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.')
+                }
             }
             if(!is.null(opts$technical$customTheta)){
                 Theta <- opts$technical$customTheta

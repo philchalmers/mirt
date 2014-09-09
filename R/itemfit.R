@@ -344,13 +344,14 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         O <- makeObstables(dat, x@K)
         Nk <- rowSums(O[[1L]])
         dots <- list(...)
+        QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
         quadpts <- dots$quadpts
         theta_lim <- dots$theta_lim
         if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@CUSTOM.IND,
-                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete)
+                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC)
         for(i in 1L:J)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)

@@ -61,6 +61,16 @@ test_that('dich', {
     modideal <- mirt(data, 1, verbose=FALSE, itemtype='ideal')
     cfs <- as.numeric(do.call(c, coef(modideal)))
     expect_equal(cfs, c(0.288, -0.568, 0.422, -0.891, 0.57, -0.564, 0.292, -1, 0.207, -0.559, 0, 1), tolerance = 1e-2)
+    
+    #QMCEM
+    mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
+    expect_equal(mod@logLik, -2466.654, tolerance=1e-4)
+    fs <- fscores(mod, QMC=TRUE, verbose=FALSE)
+    expect_equal(fs[1:3,'F1'], c(-1.97292663, -1.52515703, -1.50407457), tolerance=1e-4)
+    m2 <- M2(mod)
+    expect_equal(m2$M2, 4.472589, tolerance=1e-5)
+    ifit <- itemfit(mod, QMC=TRUE)
+    expect_equal(ifit$p.S_X2[1], .7985, tolerance = 1e-2)
 
     fm1 <- fscores(modm1, verbose = FALSE)
     expect_is(fm1, 'matrix')

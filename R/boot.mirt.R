@@ -45,7 +45,7 @@ boot.mirt <- function(x, R = 100, ...){
         } else {
             if(!is.null(group)){
                 mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
-                                     constrain=constrain, parprior=parprior, method='EM',
+                                     constrain=constrain, parprior=parprior, 
                                      calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE), 
                                      ...))
             } else {

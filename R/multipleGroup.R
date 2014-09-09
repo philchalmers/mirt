@@ -42,9 +42,8 @@
 #'   constrain all freely estimated parameters in each item to be equal across groups. This is 
 #'   useful for selecting 'anchor' items for vertical and horizontal scaling, and for detecting 
 #'   differential item functioning (DIF) across groups
-#' @param method a character object specifying the estimation algorithm to be used. The default is
-#'   \code{'EM'}, for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may
-#'   also be passed to use the MH-RM algorithm
+#' @param method a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'} 
+#'   (default is \code{'EM'}). See \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for details and examples
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

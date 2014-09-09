@@ -24,6 +24,8 @@
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for 
 #'   RMSEA. Default returns the 90\% interval
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
+#' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
+#'   If \code{quadpts} not specified, 2000 nodes are used by default
 #' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -50,7 +52,7 @@
 #'
 #' }
 M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
-               residmat = FALSE, ...){
+               residmat = FALSE, QMC=FALSE, ...){
     
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -67,6 +69,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
+    if(QMC && is.null(quadpts)) quadpts <- 2000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
         discrete <- TRUE
@@ -108,7 +111,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
                                    mins=obj@Data$mins)
             ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts, residmat=residmat,
-                           discrete=discrete)
+                           discrete=discrete, QMC=QMC)
         }
         if(residmat){
             names(ret) <- obj@Data$groupNames
@@ -142,7 +145,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
             null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, 
                                           TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
-            null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
+            null.fit <- M2(null.mod, calcNull=FALSE)
             newret$TLI <- (null.fit$Total.M2 / null.fit$df - newret$Total.M2/newret$df) /
                 (null.fit$Total.M2 / null.fit$df - 1)
             newret$CFI <- 1 - (newret$Total.M2 - newret$df) / 
@@ -195,11 +198,12 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     if(!discrete){
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
         if(is.null(bfactorlist$Priorbetween[[1L]])){
-            Theta <- thetaComb(theta, obj@nfact)
             prior <- Priorbetween <- sitems <- specific <- NULL
+            Theta <- if(QMC) qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=obj@nfact, leap=409))
+                else thetaComb(theta, obj@nfact)
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-            Prior <- Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
-                                               gstructgrouppars$gcov)
+            Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
+                                           gstructgrouppars$gcov)
             Prior <- Prior/sum(Prior)
             if(length(prodlist) > 0L)
                 Theta <- prodterms(Theta, prodlist)

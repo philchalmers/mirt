@@ -4,7 +4,7 @@ setMethod(
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI, 
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-	                      full.scores.SE, return.acov = FALSE, ...)
+	                      full.scores.SE, return.acov = FALSE, QMC, ...)
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
@@ -171,7 +171,7 @@ setMethod(
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
                                              quadpts=quadpts, gp=gp, verbose=verbose, 
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
-                                             discrete=discrete))
+                                             discrete=discrete, QMC=QMC))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		fulldata <- object@Data$data
 		tabdata <- object@Data$tabdatalong
@@ -208,7 +208,9 @@ setMethod(
                     ThetaShort <- Theta <- object@Theta
                     W <- object@Prior[[1L]]
                 } else {
-                    ThetaShort <- Theta <- thetaComb(theta,nfact)
+                    ThetaShort <- Theta <- if(QMC){
+                        qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409))*7
+                    } else thetaComb(theta,nfact)
                     if(length(prodlist) > 0L)
                         Theta <- prodterms(Theta,prodlist)
                     W <- mirt_dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
@@ -385,7 +387,7 @@ setMethod(
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-                          full.scores.SE, return.acov = FALSE, ...)
+                          full.scores.SE, return.acov = FALSE, QMC, ...)
     {
         pars <- object@pars
         ngroups <- length(pars)
@@ -404,7 +406,7 @@ setMethod(
             ret[[g]] <- fscores(tmp, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
-                           full.scores.SE=full.scores.SE, return.acov=return.acov)
+                           full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC)
         }
         names(ret) <- object@Data$groupNames
         if(full.scores){
@@ -492,7 +494,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 }
 
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim, discrete){
+                   theta_lim, discrete, QMC){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -521,8 +523,11 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         Theta <- ThetaShort <- x@Theta
         prior <- x@Prior[[1L]]
     } else {
+        nfact <- x@nfact
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
-        Theta <- ThetaShort <- thetaComb(theta, x@nfact)
+        ThetaShort <- Theta <- if(QMC){
+            qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409))
+        } else thetaComb(theta,nfact)
         prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
         prior <- prior/sum(prior)
         if(length(prodlist) > 0L)

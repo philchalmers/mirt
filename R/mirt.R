@@ -245,9 +245,13 @@
 #'   logistic models, respectively. User defined item classes can also be defined using the 
 #'   \code{\link{createItem}} function
 #' @param method a character object specifying the estimation algorithm to be used. The default is 
-#'   \code{'EM'}, for the standard EM algorithm with fixed quadrature. The option \code{'MHRM'} may 
+#'   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for 
+#'   quasi-Monte Carlo EM estimation. The option \code{'MHRM'} may 
 #'   also be passed to use the MH-RM algorithm, as well as \code{'BL'} for the Bock and Lieberman 
-#'   approach (generally not recommended for serious use)
+#'   approach (generally not recommended for serious use).
+#'   
+#'   The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'}
+#'   or \code{'MHRM'} should be used when the dimensions are 3 or more 
 #' @param optimizer a character indicating which numerical optimizer to use. By default, the EM 
 #'   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds, and 
 #'   \code{'L-BFGS-B'} when there are. Other options include the Newton-Raphson (\code{'NR'}), 
@@ -303,7 +307,9 @@
 #'   into the estimation with \code{pars = mymodifiedpars}
 #' @param quadpts number of quadrature points per dimension (must be larger than 2).
 #'   By default the number of quadrature uses the following scheme:
-#'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}
+#'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}. 
+#'   However, if the method input is set to \code{'QMCEM'} and this argument is left blank then
+#'   the default number of quasi-Monte Carlo integration nodes will be set to 2000
 #' @param TOL convergence threshold for EM or MH-RM; defaults are .0001 and .001. If 
 #'   \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}. 
 #'   If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5} 
@@ -603,6 +609,10 @@
 #' mod3 <- mirt(data, 3, TOL = .001, optimizer = 'NR')
 #' anova(mod1,mod2)
 #' anova(mod2, mod3) #negative AIC, 2 factors probably best
+#' 
+#' #same as above, but using the QMCEM method for generally better accuracy in mod3
+#' mod3 <- mirt(data, 3, method = 'QMCEM', TOL = .001, optimizer = 'NR')
+#' anova(mod2, mod3)
 #'
 #' #with fixed guessing parameters
 #' mod1g <- mirt(data, 1, guess = .1)
