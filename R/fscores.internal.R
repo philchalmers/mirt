@@ -516,14 +516,17 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         }
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
+    prodlist <- attr(x@pars, 'prodlist')
     if(discrete){
-        Theta <- x@Theta
+        Theta <- ThetaShort <- x@Theta
         prior <- x@Prior[[1L]]
     } else {
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
-        Theta <- thetaComb(theta, x@nfact)
+        Theta <- ThetaShort <- thetaComb(theta, x@nfact)
         prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
         prior <- prior/sum(prior)
+        if(length(prodlist) > 0L)
+            Theta <- prodterms(Theta, prodlist)
     }
     pars <- x@pars
     K <- x@K
@@ -557,8 +560,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     }
     thetas <- SEthetas <- matrix(0, nrow(L1), x@nfact)
     for(i in 1L:nrow(thetas)){
-        thetas[i,] <- colSums(Theta * L1[i, ] * prior / sum(L1[i,] * prior))
-        SEthetas[i,] <- sqrt(colSums((t(t(Theta) - thetas[i,]))^2 * L1[i, ] * prior / 
+        thetas[i,] <- colSums(ThetaShort * L1[i, ] * prior / sum(L1[i,] * prior))
+        SEthetas[i,] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * L1[i, ] * prior / 
                                          sum(L1[i,] * prior)))
     }
     ret <- data.frame(Sum.Scores=Sum.Scores, Theta=thetas, SE.Theta=SEthetas)
