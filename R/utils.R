@@ -1313,6 +1313,130 @@ lca_prior <- function(Theta, Etable){
     return(prior)
 }
 
+makeObstables <- function(dat, K){
+    ret <- vector('list', ncol(dat))
+    sumscore <- rowSums(dat)
+    for(i in 1L:length(ret)){
+        ret[[i]] <- matrix(0, sum(K-1L)+1L, K[i])
+        colnames(ret[[i]]) <- paste0(1L:K[i]-1L)
+        rownames(ret[[i]]) <- paste0(1L:nrow(ret[[i]])-1L)
+        split <- by(sumscore, dat[,i], table)
+        for(j in 1L:K[i]){
+            m <- match(names(split[[j]]), rownames(ret[[i]]))
+            ret[[i]][m,j] <- split[[j]]
+        }
+        ret[[i]] <- ret[[i]][-c(1L, nrow(ret[[i]])), ]
+    }
+    ret
+}
+
+collapseCells <- function(O, E, mincell = 1){
+    for(i in 1L:length(O)){
+        On <- O[[i]]
+        En <- E[[i]]
+        drop <- which(rowSums(is.na(En)) > 0)
+        En[is.na(En)] <- 0
+        
+        #collapse known upper and lower sparce cells
+        if(length(drop) > 0L){
+            up <- drop[1L]:drop[length(drop)/2]
+            low <- drop[length(drop)/2 + 1L]:drop[length(drop)]
+            En[max(up)+1, ] <- colSums(En[c(up, max(up)+1), , drop = FALSE])
+            On[max(up)+1, ] <- colSums(On[c(up, max(up)+1), , drop = FALSE])
+            En[min(low)-1, ] <- colSums(En[c(low, min(low)-1), , drop = FALSE])
+            On[min(low)-1, ] <- colSums(On[c(low, min(low)-1), , drop = FALSE])
+            En[c(up, low), ] <- On[c(up, low), ] <- NA
+            En <- na.omit(En)
+            On <- na.omit(On)
+        }
+        
+        #drop 0's and 1's
+        drop <- rowSums(On) == 0L
+        On <- On[!drop,]
+        En <- En[!drop,]
+        L <- En < mincell
+        drop <- c()
+        for(j in 1L:(nrow(On)-1L)){
+            ss <- sum(On[j,])
+            if(ss == 1L){
+                drop <- c(drop, j)
+                On[j+1L, ] <- On[j+1L, ] + On[j, ]
+                En[j+1L, ] <- En[j+1L, ] + En[j, ]
+            }
+        }
+        if(length(drop)){
+            On <- On[-drop,]
+            En <- En[-drop,]
+        }
+        ss <- sum(On[nrow(On),])
+        if(ss == 1L){
+            On[nrow(On)-1L, ] <- On[nrow(On)-1L, ] + On[nrow(On), ]
+            En[nrow(On)-1L, ] <- En[nrow(On)-1L, ] + En[nrow(On), ]
+            On <- On[-nrow(On),]; En <- En[-nrow(En),]
+        }
+        
+        #collapse accross as much as possible
+        if(ncol(En) > 2L){
+            for(j in 1L:nrow(En)){
+                if(!any(L[j,])) next
+                tmp <- En[j, ]
+                tmp2 <- On[j, ]
+                while(length(tmp) > 2L){
+                    m <- min(tmp)
+                    whc <- which(m == tmp)
+                    if(whc == 1L){
+                        tmp[2L] <- tmp[2L] + tmp[1L]
+                        tmp2[2L] <- tmp2[2L] + tmp2[1L]
+                    } else if(whc == length(tmp)){
+                        tmp[length(tmp)-1L] <- tmp[length(tmp)-1L] + tmp[length(tmp)]
+                        tmp2[length(tmp2)-1L] <- tmp2[length(tmp2)-1L] + tmp2[length(tmp2)]
+                    } else {
+                        left <- min(tmp[whc-1L], tmp[whc+1L]) == c(tmp[whc-1L], tmp[whc+1L])[1L]
+                        pick <- if(left) whc-1L else whc+1L
+                        tmp[pick] <- tmp[pick] + tmp[whc]
+                        tmp2[pick] <- tmp2[pick] + tmp2[whc]
+                    }
+                    tmp[whc] <- tmp2[whc] <- NA
+                    tmp <- na.omit(tmp); tmp2 <- na.omit(tmp2)
+                    if(all(tmp >= mincell)) break
+                }
+                tmp <- c(tmp, rep(NA, ncol(En)-length(tmp)))
+                tmp2 <- c(tmp2, numeric(ncol(En)-length(tmp2)))
+                En[j, ] <- tmp
+                On[j, ] <- tmp2
+            }
+        }
+        
+        #merge across
+        En[is.na(En)] <- 0
+        L <- En < mincell & En != 0
+        while(any(L, na.rm = TRUE)){
+            whc <- min(which(rowSums(L) > 0L))
+            if(whc == 1L){
+                En[2L,] <- En[2L, ] + En[1L,]
+                On[2L,] <- On[2L, ] + On[1L,]
+                En <- En[-1L,]; On <- On[-1L,]
+            } else if(whc == nrow(En)){
+                En[nrow(En)-1L,] <- En[nrow(En)-1L, ] + En[nrow(En),]
+                On[nrow(En)-1L,] <- On[nrow(En)-1L, ] + On[nrow(En),]
+                En <- En[-nrow(En),]; On <- On[-nrow(En),]
+            } else {
+                ss <- c(sum(On[whc-1L,]), sum(On[whc+1L,]))
+                up <- (min(ss) == ss)[1L]
+                pick <- if(up) whc-1L else whc+1L
+                En[pick,] <- En[pick, ] + En[whc,]
+                On[pick,] <- On[pick, ] + On[whc,]
+                En <- En[-whc,]; On <- On[-whc,]
+            }
+            L <- En < mincell & En != 0
+        }
+        En[En == 0] <- NA
+        E[[i]] <- En
+        O[[i]] <- On
+    }
+    return(list(O=O, E=E))
+}
+
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 

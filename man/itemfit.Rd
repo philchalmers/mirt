@@ -3,9 +3,9 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1,
-  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
-  method = "EAP", Theta = NULL, impute = 0, ...)
+itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
+  mincell = 1, S_X2.tables = FALSE, empirical.plot = NULL,
+  empirical.CI = 0, method = "EAP", Theta = NULL, impute = 0, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -15,6 +15,8 @@ itemfit(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1,
 only interested in computing the S-X2 quickly}
 
 \item{X2}{logical; calculate the X2 statistic for unidimensional models?}
+
+\item{S_X2}{logical; calculate the S_X2 statistic?}
 
 \item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
 statistic}

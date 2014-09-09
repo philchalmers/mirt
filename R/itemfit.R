@@ -12,6 +12,7 @@
 #' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are 
 #'   only interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
+#' @param S_X2 logical; calculate the S_X2 statistic?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
@@ -111,7 +112,7 @@
 #' 
 #'   }
 #'
-itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
+itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL, 
                     impute = 0, ...){
     
@@ -333,103 +334,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         ret$df <- df
         ret$p.X2 <- round(1 - pchisq(X2, df), 4)
     }
-    makeObstables <- function(dat, K){
-        ret <- vector('list', ncol(dat))
-        sumscore <- rowSums(dat)
-        for(i in 1L:length(ret)){
-            ret[[i]] <- matrix(0, sum(K-1L)+1L, K[i])
-            colnames(ret[[i]]) <- paste0(1L:K[i]-1L)
-            rownames(ret[[i]]) <- paste0(1L:nrow(ret[[i]])-1L)
-            split <- by(sumscore, dat[,i], table)
-            for(j in 1L:K[i]){
-                m <- match(names(split[[j]]), rownames(ret[[i]]))
-                ret[[i]][m,j] <- split[[j]]
-            }
-            ret[[i]] <- ret[[i]][-c(1L, nrow(ret[[i]])), ]
-        }
-        ret
-    }
-    collapseCells <- function(O, E, mincell = 1){
-        for(i in 1L:length(O)){
-            On <- O[[i]]
-            En <- E[[i]]
-            drop <- which(rowSums(is.na(En)) > 0)
-            En[is.na(En)] <- 0
-            #collapse known upper and lower sparce cells
-            if(length(drop) > 0L){
-                up <- drop[1L]:drop[length(drop)/2]
-                low <- drop[length(drop)/2 + 1L]:drop[length(drop)]
-                En[max(up)+1, ] <- colSums(En[c(up, max(up)+1), , drop = FALSE])
-                On[max(up)+1, ] <- colSums(On[c(up, max(up)+1), , drop = FALSE])
-                En[min(low)-1, ] <- colSums(En[c(low, min(low)-1), , drop = FALSE])
-                On[min(low)-1, ] <- colSums(On[c(low, min(low)-1), , drop = FALSE])
-                En[c(up, low), ] <- On[c(up, low), ] <- NA
-                En <- na.omit(En)
-                On <- na.omit(On)
-            }
-            #collapse accross
-            if(ncol(En) > 2L){
-                for(j in 1L:(ncol(On)-1L)){
-                    L <- En < mincell
-                    sel <- L[,j]
-                    if(!any(sel)) next
-                    On[sel, j+1L]  <- On[sel, j] + On[sel, j+1L]
-                    En[sel, j+1L]  <- En[sel, j] + En[sel, j+1L]
-                    On[sel, j] <- En[sel, j] <- NA
-                }
-                sel <- L[,j+1L]
-                sel[rowSums(is.na(En[, 1L:j])) == (ncol(En)-1L)] <- FALSE
-                put <- apply(En[sel, 1L:j, drop=FALSE], 1, function(x) max(which(!is.na(x))))
-                put2 <- which(sel)
-                for(k in 1L:length(put)){
-                    En[put2[k], put[k]] <- En[put2[k], put[k]] + En[put2[k], j+1L]
-                    En[put2[k], j+1L] <- On[put2[k], j+1L] <- NA
-                }
-            }
-            L <- En < mincell
-            L[is.na(L)] <- FALSE
-            while(any(L)){
-                drop <- c()
-                for(j in 1L:(nrow(On)-1L)){
-                    if(any(L[j,])) {
-                        On[j+1L, L[j,]] <- On[j+1L, L[j,]] + On[j, L[j,]]
-                        En[j+1L, L[j,]] <- En[j+1L, L[j,]] + En[j, L[j,]]
-                        drop <- c(drop, j)
-                        break
-                    }
-                }
-                for(j in nrow(On):2L){
-                    if(any(L[j,])) {
-                        On[j-1L, L[j,]] <- On[j-1L, L[j,]] + On[j, L[j,]]
-                        En[j-1L, L[j,]] <- En[j-1L, L[j,]] + En[j, L[j,]]
-                        drop <- c(drop, j)
-                        break
-                    }
-                }
-                if(nrow(On) > 4L){
-                    for(j in 2L:(nrow(On)-1L)){
-                        if(any(L[j,])){
-                            On[j+1L, L[j,]] <- On[j+1L, L[j,]] + On[j, L[j,]]
-                            En[j+1L, L[j,]] <- En[j+1L, L[j,]] + En[j, L[j,]]
-                            drop <- c(drop, j)
-                            break
-                        }
-                    }
-                }
-                #drop
-                if(!is.null(drop)){
-                    En <- En[-drop, ]
-                    On <- On[-drop, ]
-                }
-                L <- En < mincell
-                L[is.na(L)] <- FALSE
-            }
-            E[[i]] <- En
-            O[[i]] <- On
-        }
-        return(list(O=O, E=E))
-    }
-    if(TRUE){
+    if(S_X2){
         dat <- x@Data$data
         adj <- x@Data$mins
         if(any(adj > 0))
@@ -455,7 +360,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, group.size = 150, mincell = 1, S_X
         for(i in 1L:J){
             if (is.null(dim(O[[i]]))) next
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
-            df.S_X2[i] <- (ncol(O[[i]])-1L) * nrow(O[[i]]) - sum(pars[[i]]@est) - sum(is.na(E[[i]]))
+            df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est) 
         }
         S_X2[df.S_X2 <= 0] <- NaN
         ret$S_X2 <- S_X2

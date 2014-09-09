@@ -12,6 +12,8 @@
 - exploratory IRT models are no longer rotated by default in `coef()`, and now requires an 
   explicit `rotate` argument
   
+- computation of `S_X2` statistic in `itemfit` now much more stable for polytomous item types
+  
 ## NEW FEATURES
 
 - `mdirt` function added to model discrete latent variables such as latent class analysis for

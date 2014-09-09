@@ -113,7 +113,7 @@ test_that('poly', {
     expect_is(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2))
     expect_equal(fit$Zh, c(-11.53358, -54.51315, -33.71653, -21.35045), tolerance=1e-4)
-    expect_equal(fit$S_X2, c(4.579512, 10.798866,  6.919670, 10.342091), tolerance=1e-4)
+    expect_equal(fit$S_X2, c(3.969648, 10.670880, 6.791541, 10.062416), tolerance=1e-4)
 
     ##rating scale test
     set.seed(1234)
