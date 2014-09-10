@@ -33,6 +33,7 @@ setMethod(
         else
             cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ', 
                 x@iter, ' ', method, " iterations.\n", sep="")
+        cat('mirt version:', as.character(packageVersion('mirt')), '\n')
         cat('M-step optimizer used:', x@Moptim, '\n')
         if(method == 'EM' || method == 'BL')
             cat('Number of rectangular quadrature used:', x@quadpts)
