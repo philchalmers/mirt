@@ -4,7 +4,7 @@ setMethod(
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI, 
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-	                      full.scores.SE, return.acov = FALSE, QMC, ...)
+	                      full.scores.SE, return.acov = FALSE, QMC, digits=4, ...)
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
@@ -330,12 +330,12 @@ setMethod(
 			if(verbose && !discrete){
                 cat("\nMethod: ", method)
                 cat("\n\nEmpirical Reliability:\n")
-                print(round(reliability, 4L))
+                print(round(reliability, digits))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
             ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
             if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
-			return(ret)
+			return(round(ret, digits))
 		}
 	}
 )
@@ -372,9 +372,18 @@ setMethod(
             stop('Only EAP and EAPsum methods are supported for DiscreteClass objects')
         method <- ifelse(method == 'EAP', 'Discrete', 'DiscreteSum')
         ret <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts,
-                       response.pattern=response.pattern, returnER=returnER, verbose=verbose,
+                       response.pattern=response.pattern, returnER=FALSE, verbose=verbose,
                        mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
-                       full.scores.SE=full.scores.SE, return.acov = return.acov, ...)
+                       full.scores.SE=FALSE, return.acov = FALSE, ...)
+        if(!full.scores){
+            nclass <- ncol(object@Theta)
+            ret <- lapply(ret, function(x, nclass){
+              nx <- x[,1L:(ncol(x)-nclass)]
+              names <- colnames(x)
+              colnames(nx) <- c(names[1:(ncol(nx)-nclass)], paste0('Class_', 1L:nclass))
+              nx
+            }, nclass=nclass)
+        }
         if(length(ret) == 1L) ret <- ret[[1L]]
         return(ret)
     }

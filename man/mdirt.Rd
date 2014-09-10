@@ -69,7 +69,7 @@ first category slope parameters (\eqn{a1} and \eqn{a2}) are never freely estimat
 #LSAT6 dataset
 dat <- expand.table(LSAT6)
 
-#fit with 2-3 latent classes
+# fit with 2-3 latent classes
 (mod2 <- mdirt(dat, 2))
 (mod3 <- mdirt(dat, 3))
 summary(mod2)
@@ -79,23 +79,47 @@ anova(mod2, mod3)
 M2(mod2)
 itemfit(mod2)
 
-#classification based on response patterns
+# available for polytomous data
+mod <- mdirt(Science, 2)
+summary(mod)
+
+# classification based on response patterns
 fscores(mod2)
 
-#classify individuals either with the largest posterior probability.....
+# classify individuals either with the largest posterior probability.....
 fs <- fscores(mod2, full.scores=TRUE)
 head(fs)
 classes <- matrix(1:2, nrow(fs), 2, byrow=TRUE)
 class_max <- classes[t(apply(fs, 1, max) == fs)]
 table(class_max)
 
-#... or by probability sampling (closer to estimated class proportions)
+# ... or by probability sampling (closer to estimated class proportions)
 class_prob <- apply(fs, 1, function(x) sample(1:2, 1, prob=x))
 table(class_prob)
 
-#fit with random starting points (run in parallel to save time)
+# fit with random starting points (run in parallel to save time)
 mirtCluster()
 mod <- mdirt(dat, 2, nruns=10)
+
+#--------------------------
+# Grade of measurement model
+
+# define a custom Theta grid for including a 'fuzzy' class membership
+(Theta <- matrix(c(1, 0, .5, .5, 0, 1), nrow=3 , ncol=2, byrow=TRUE))
+(mod_gom <- mdirt(dat, 2, technical = list(customTheta = Theta)))
+summary(mod_gom)
+
+#-----------------
+# Multidimensional discrete model
+
+dat <- key2binary(SAT12,
+     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+
+# define Theta grid for three latent classes
+(Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1),
+   ncol=3, byrow=TRUE))
+(mod_discrete <- mdirt(dat, 3, technical = list(customTheta = Theta)))
+summary(mod_discrete)
 
 }
 }

@@ -50,7 +50,7 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'DiscreteClass',
-    definition = function(object, printSE=FALSE, ...)
+    definition = function(object, printSE=FALSE, digits = 3, ...)
     {
         ngroups <- length(object@pars)
         Theta <- object@Theta
@@ -62,12 +62,12 @@ setMethod(
             pars <- object@pars[[g]]
             for(i in 1L:object@Data$nitems){
                 item <- extract.item(pars, i)
-                P <- probtrace(item, Theta)
+                P <- round(probtrace(item, Theta), digits)
                 colnames(P) <- paste0('category_', 1L:ncol(P))
                 rownames(P) <- paste0('Class_', 1L:nrow(P))
                 ret[[g]][[i]] <- P
             }
-            ret[[g]][[i+1L]] <- object@Prior[[g]]
+            ret[[g]][[i+1L]] <- round(object@Prior[[g]], digits)
         }
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
