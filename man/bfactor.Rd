@@ -173,6 +173,8 @@ model <- mirt.model('
 simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
 coef(simmod)
 summary(simmod)
+itemfit(simmod, QMC=TRUE)
+M2(simmod)
 
     }
 }

@@ -4,7 +4,8 @@
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to any mixture of dichotomous and polytomous data under the item response theory paradigm 
 #' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with 
-#' an EM algorithm approach outlined by Bock and Aiken (1981). 
+#' an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or 
+#' quasi-Monte Carlo integration grids. 
 #' Models containing 'explanatory' person or item level predictors 
 #' can only be included by using the \code{\link{mixedmirt}} function. Tests that form a 
 #' two-tier or bi-factor structure should be estimated with the \code{\link{bfactor}} function, 
@@ -63,7 +64,8 @@
 #' treated with prior parameter distributions. The same type of reasoning is
 #' applicable when including upper bound parameters as well. For polytomous items, if categories
 #' are rarely endoresed then this will cause similar issues. Also, increasing the
-#' number of quadrature points per dimension may help to stabilize the estimation process
+#' number of quadrature points per dimension, or using the 
+#' quasi-Monte Carlo integration method, may help to stabilize the estimation process
 #' in higher dimensions. Finally, solutions that are not well defined also will have difficulty
 #' converging, and can indicate that the model has been misspecified (e.g., extracting too many
 #' dimensions).

@@ -346,8 +346,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         dots <- list(...)
         QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
         quadpts <- dots$quadpts
-        theta_lim <- dots$theta_lim
+        if(is.null(quadpts) && QMC) quadpts <- 2000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
+        theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@CUSTOM.IND,
