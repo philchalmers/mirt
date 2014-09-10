@@ -199,7 +199,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
         if(is.null(bfactorlist$Priorbetween[[1L]])){
             prior <- Priorbetween <- sitems <- specific <- NULL
-            Theta <- if(QMC) qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=obj@nfact, leap=409))
+            Theta <- if(QMC) qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=obj@nfact, leap=409), sd=10)
                 else thetaComb(theta, obj@nfact)
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
             Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,

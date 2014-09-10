@@ -60,7 +60,7 @@
 #' @param scores.only logical; return only the factor scores (only applicable when 
 #'   \code{full.scores = TRUE})
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the 
-#'   default number of nodes is 1500
+#'   default number of nodes is 2000
 #' @param ... additional arguments
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores

@@ -378,12 +378,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                matrix(Theta[,tmp], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
                 if(opts$method == 'QMCEM'){
-                    Theta <- qnorm(sfsmisc::QUnif(opts$quadpts, min=0, max=1, p=nfact, leap=409))
+                    Theta <- qnorm(sfsmisc::QUnif(opts$quadpts, min=0, max=1, p=nfact, leap=409), sd=2)
                 } else {
                     if(opts$quadpts^nfact <= opts$MAXQUAD){
                         if(is.null(opts$technical$customTheta))
                             Theta <- thetaComb(theta, nfact)
                     } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.')
+                    if(opts$message && nfact > 3L)
+                        message('EM quadrature for high dimensional models are better handled 
+                                 \twith the \"QMCEM\" method')
                 }
             }
             if(!is.null(opts$technical$customTheta)){

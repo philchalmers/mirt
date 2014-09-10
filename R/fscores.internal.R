@@ -209,7 +209,7 @@ setMethod(
                     W <- object@Prior[[1L]]
                 } else {
                     ThetaShort <- Theta <- if(QMC){
-                        qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409))*7
+                        qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409), sd=15)
                     } else thetaComb(theta,nfact)
                     if(length(prodlist) > 0L)
                         Theta <- prodterms(Theta,prodlist)
@@ -526,7 +526,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         nfact <- x@nfact
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
         ThetaShort <- Theta <- if(QMC){
-            qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409))
+            qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409), sd=10)
         } else thetaComb(theta,nfact)
         prior <- mirt_dmvnorm(Theta,gp$gmeans,gp$gcov)
         prior <- prior/sum(prior)

@@ -62,7 +62,7 @@ standard errors associated with each respondent? Default is \code{FALSE}}
 indicating that no MI draws will be performed}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
-default number of nodes is 1500}
+default number of nodes is 2000}
 
 \item{...}{additional arguments}
 }
