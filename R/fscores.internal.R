@@ -376,13 +376,23 @@ setMethod(
                        mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
                        full.scores.SE=FALSE, return.acov = FALSE, ...)
         if(!full.scores){
-            nclass <- ncol(object@Theta)
-            ret <- lapply(ret, function(x, nclass){
-              nx <- x[,1L:(ncol(x)-nclass)]
-              names <- colnames(x)
-              colnames(nx) <- c(names[1:(ncol(nx)-nclass)], paste0('Class_', 1L:nclass))
-              nx
-            }, nclass=nclass)
+            if(method == 'Discrete'){
+                nclass <- ncol(object@Theta)
+                ret <- lapply(ret, function(x, nclass){
+                  nx <- x[,1L:(ncol(x)-nclass)]
+                  names <- colnames(x)
+                  colnames(nx) <- c(names[1:(ncol(nx)-nclass)], paste0('Class_', 1L:nclass))
+                  nx
+                }, nclass=nclass)
+            } else if(method == 'DiscreteSum'){
+                names <- paste0('Class_', 1L:object@nfact)
+                names2 <- paste0('SE.Theta.', 1L:object@nfact)
+                ret <- lapply(ret, function(x, names, names2){
+                    nx <- x[,!(colnames(x) %in% names2)]
+                    colnames(nx) <- c('Sum.Scores', names, 'observed', 'expected')
+                    nx
+                }, names=names, names2=names2)
+            }
         }
         if(length(ret) == 1L) ret <- ret[[1L]]
         return(ret)
@@ -615,7 +625,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         attr(ret, 'fit') <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE),
                                        G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE),
                                        rxx=as.list(rxx))
-        if(verbose){
+        if(verbose && !discrete){
             print(attr(ret, 'fit'))
             cat('\n')
         }
