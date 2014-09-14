@@ -997,7 +997,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$Moptim <- optimizer
     }
     if(opts$Moptim %in% c('nloptr', 'nloptr_no_grad')){
+        if(!require('nloptr')) require('nloptr')
         if(!length(nloptr_args)) nloptr_args$opts <- list()
+        if(method != 'EM') stop('nloptr only supported for optimization with EM algorithm')
         opts$nloptr_args <- nloptr_args
     }
     if(!is.null(large)){

@@ -261,7 +261,15 @@
 #'   models (such as the nominal or nested logit models) and does not support 
 #'   upper and lower bound constraints. As well, the \code{'Nelder-Mead'} and \code{'SANN'} 
 #'   estimators are also available, but their routine use generally is not required or recommended. 
-#'   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed
+#'   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
+#'   
+#'   Additionally, estimation subroutines from the \code{nloptr} package are available by passing
+#'   the arguments \code{'nloptr'} or \code{'nloptr_no_grad'} (the latter treats the gradient vector
+#'   function as NULL, for use in optimizers such as 'NLOPT_LN_NELDERMEAD'). This is to be used in
+#'   conjunction with the \code{nloptr_args} input specificed below. If equality constraints were 
+#'   specified in the model definition only the parameter with the lowest \code{parnum} 
+#'   in the \code{pars = 'values'} data.frame is used in the estimation vector passed 
+#'   to the objective and gradient function 
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
 #'    See \code{SE.type} for the type of estimates available 
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix 
