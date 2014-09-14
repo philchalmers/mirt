@@ -1,4 +1,4 @@
-EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
+EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, nloptr_args)
 {
     verbose <- list$verbose
     nfact <- list$nfact
@@ -197,7 +197,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV)
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
                               BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
-                              TOL=list$MSTEPTOL)
+                              TOL=list$MSTEPTOL, nloptr_args=nloptr_args)
             if(list$accelerate && Mrate > .01 && cycles %% 3 == 0L){
                 dX2 <- preMstep.longpars - preMstep.longpars2
                 dX <- longpars - preMstep.longpars
@@ -301,15 +301,14 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
-                  UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, 
+                  UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, nloptr_args,
                   SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL){
     p <- longpars[est]
-    #Moptim <- 'NR'
     if(length(p)){
         if(Moptim == 'BFGS'){
             maxit <- max(ceiling(Mrate * 50), 15)
             opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
-                             control=list(maxit=maxit, fnscale = -1L),
+                             control=list(maxit=maxit),
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
@@ -318,7 +317,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         } else if(Moptim == 'L-BFGS-B'){
             maxit <- max(ceiling(Mrate * 50), 15)
             opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
-                             control=list(maxit=maxit, fnscale = -1L),
+                             control=list(maxit=maxit),
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
@@ -326,14 +325,14 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                              upper=UBOUND[est]),
                        silent=TRUE)
         } else if(Moptim == 'Nelder-Mead'){
-            opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=list(fnscale = -1L),
+            opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', 
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                        silent=TRUE)
         } else if(Moptim == 'SANN'){
-            opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=list(fnscale = -1L),
+            opt <- try(optim(p, fn=Mstep.LL, method='SANN', 
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
@@ -344,8 +343,21 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
                                 itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL))
+        } else if(Moptim %in% c('nloptr', 'nloptr_no_grad')){
+            if(Moptim == 'nloptr_no_grad') eval_grad_f <- NULL
+            else eval_grad_f <- Mstep.grad
+            opt <- try(nloptr(p, eval_f=Mstep.LL, eval_grad_f=eval_grad_f,
+                          lb=nloptr_args$lb, ub=nloptr_args$ub, eval_g_ineq=nloptr_args$eval_g_ineq,
+                          eval_jac_g_ineq=nloptr_args$eval_jac_g_ineq, 
+                          eval_g_eq=nloptr_args$eval_g_eq, eval_jac_g_eq=nloptr_args$eval_jac_g_eq,
+                          opts = nloptr_args$opts, CUSTOM.IND=CUSTOM.IND, 
+                          est=est, longpars=longpars, pars=pars, ngroups=ngroups, 
+                          J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
+                          constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
+                          itemloc=itemloc, DERIV=DERIV, rlist=rlist), silent=TRUE)
+            if(!is(opt, 'try-error')) opt$par <- opt$solution
         } else {
-            stop('M-step optimzer not supported')
+            stop('M-step optimizer not supported')
         }
         if(is(opt, 'try-error'))
             stop(opt)
@@ -378,7 +390,7 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
     for(g in 1L:ngroups)
         LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
-    return(sum(LLs))
+    return(-sum(LLs))
 }
 
 Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist,
@@ -453,7 +465,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     } else {
         grad <- g
     }
-    return(grad[est])
+    return(-grad[est])
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,

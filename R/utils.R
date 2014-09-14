@@ -925,7 +925,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'crossprod', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
-                     optimizer = NULL, ...)
+                     optimizer = NULL, nloptr_args = list(), ...)
 {
     opts <- list()
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
@@ -995,6 +995,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$Moptim <- if(method %in% c('EM','BL','QMCEM')) 'BFGS' else 'NR'
     } else {
         opts$Moptim <- optimizer
+    }
+    if(opts$Moptim %in% c('nloptr', 'nloptr_no_grad')){
+        if(!length(nloptr_args)) nloptr_args$opts <- list()
+        opts$nloptr_args <- nloptr_args
     }
     if(!is.null(large)){
         if(is.logical(large))

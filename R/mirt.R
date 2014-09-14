@@ -364,6 +364,11 @@
 #' }
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM 
 #'   algorithm. Default is 5000
+#' @param nloptr_args a list containing the relavent terms to use if the selected optimizer 
+#'   is \code{nloptr} or \code{nloptr_no_grad}. From the \code{help('nloptr')} documentation,
+#'   only three argumets are reserved internally: \code{x0}, \code{eval_f}, and 
+#'   \code{evalu_grad_f}. The remaning arguments are set to the package defaults, and are over
+#'   written by passing this list argument
 #' @param verbose logical; print observed- (EM) or complete-data (MHRM) log-likelihood 
 #'   after each iteration cycle? Default is TRUE
 #' @param technical a list containing lower level technical parameters for estimation. May be:
@@ -796,7 +801,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  survey.weights = NULL, rotate = 'oblimin', Target = NaN, quadpts = NULL, 
                  TOL = NULL, grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE, 
                  GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, 
-                 technical = list(), ...)
+                 nloptr_args = list(), technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
@@ -807,7 +812,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars, 
-                      optimizer=optimizer, ...)
+                      optimizer=optimizer, nloptr_args=nloptr_args, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)

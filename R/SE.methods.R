@@ -33,7 +33,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
 }
 
 SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
-                   collectLL, from, to, is.latent, Data){
+                   collectLL, from, to, is.latent, Data, nloptr_args){
     TOL <- list$TOL
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -113,7 +113,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact, 
                           rlist=rlist, constrain=constrain, DERIV=DERIV, groupest=ESTIMATE$groupest,
                           CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, BFACTOR=list$BFACTOR,
-                          Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL)
+                          Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, nloptr_args=nloptr_args)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
