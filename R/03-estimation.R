@@ -897,17 +897,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     mod@Moptim <- opts$Moptim
     mod@shortpars <- as.numeric(ESTIMATE$shortpars)
+    mod@condnum <- NaN
     if(length(mod@information) > 1L && !ESTIMATE$fail_invert_info){
         isna <- is.na(diag(mod@information))
         info <- mod@information[!isna, !isna]
-        mod@condnum <- norm(info, type='2') * norm(solve(info), type='2')
-        ev <- eigen(info)$values
-        if(is.complex(ev)){
-            mod@secondordertest <- FALSE
-        } else {
-            mod@secondordertest <- all(ev > 0) || all(ev < 0)
-        }
-    } else mod@condnum <- NaN
+        inv_info <- try(solve(info), silent=TRUE)
+        if(!is(inv_info, 'try-error')){
+            mod@condnum <- norm(info, type='2') * norm(solve(info), type='2')
+            mod@secondordertest <- TRUE
+        } else mod@secondordertest <- FALSE
+    } 
     time <- opts$time
     mod@time <- c(TOTAL = as.numeric(proc.time()[3L] - time$start.time),
                   DATA = as.numeric(time$end.time.Data - time$start.time.Data),
