@@ -684,6 +684,9 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
 
 UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
     currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random, MG = TRUE)
+    if(nrow(currentDesign) != nrow(pars))
+        stop('Rows in supplied and starting value data.frame objects do not match. Were the 
+             data or itemtype input arguments modified?')
     if(!all(as.matrix(currentDesign[,c('group', 'item', 'class', 'name', 'parnum')]) ==
                 as.matrix(pars[,c('group', 'item', 'class', 'name', 'parnum')])))
         stop('Critical internal parameter labels do not match those returned from pars = \'values\'')
