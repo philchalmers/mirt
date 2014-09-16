@@ -345,16 +345,17 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                 itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL))
         } else if(Moptim %in% c('nloptr', 'nloptr_no_grad')){
             if(Moptim == 'nloptr_no_grad') eval_grad_f <- NULL
-            else eval_grad_f <- Mstep.grad
-            opt <- try(nloptr(p, eval_f=Mstep.LL, eval_grad_f=eval_grad_f,
+            else eval_grad_f <- Mstep.grad_alt
+            optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
+                               ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
+                               ANY.PRIOR=ANY.PRIOR, constrain=constrain, LBOUND=LBOUND,
+                               UBOUND=UBOUND, SLOW.IND=SLOW.IND, itemloc=itemloc, DERIV=DERIV, 
+                               rlist=rlist)
+            opt <- try(nloptr(p, eval_f=Mstep.LL_alt, eval_grad_f=eval_grad_f,
                           lb=nloptr_args$lb, ub=nloptr_args$ub, eval_g_ineq=nloptr_args$eval_g_ineq,
                           eval_jac_g_ineq=nloptr_args$eval_jac_g_ineq, 
                           eval_g_eq=nloptr_args$eval_g_eq, eval_jac_g_eq=nloptr_args$eval_jac_g_eq,
-                          opts = nloptr_args$opts, CUSTOM.IND=CUSTOM.IND, 
-                          est=est, longpars=longpars, pars=pars, ngroups=ngroups, 
-                          J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
-                          constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
-                          itemloc=itemloc, DERIV=DERIV, rlist=rlist), silent=TRUE)
+                          opts = nloptr_args$opts, optim_args=optim_args), silent=TRUE)
             if(!is(opt, 'try-error')) opt$par <- opt$solution
         } else {
             stop('M-step optimizer not supported')
@@ -391,6 +392,16 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
         LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
     return(-sum(LLs))
+}
+
+Mstep.LL_alt <- function(x0, optim_args){
+    return(Mstep.LL(p=x0, est=optim_args$est, longpars=optim_args$longpars, pars=optim_args$pars, 
+                    ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta, 
+                    PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND, 
+                    SLOW.IND=optim_args$SLOW.IND, 
+                    constrain=optim_args$constrain, LBOUND=optim_args$LBOUND, 
+                    UBOUND=optim_args$UBOUND, itemloc=optim_args$itemloc,
+                    DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
 Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist,
@@ -466,6 +477,16 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         grad <- g
     }
     return(-grad[est])
+}
+
+Mstep.grad_alt <- function(x0, optim_args){
+    return(Mstep.grad(p=x0, est=optim_args$est, longpars=optim_args$longpars, pars=optim_args$pars, 
+                    ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta, 
+                    PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND, 
+                    SLOW.IND=optim_args$SLOW.IND, 
+                    constrain=optim_args$constrain, LBOUND=optim_args$LBOUND, 
+                    UBOUND=optim_args$UBOUND, itemloc=optim_args$itemloc,
+                    DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,
