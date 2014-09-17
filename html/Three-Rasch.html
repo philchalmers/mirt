@@ -398,6 +398,97 @@ Iteration: 68, Log-Lik: -2466.938, Max-Change: 0.00009</code></pre>
 ##  1.255 -0.476 -1.235 -0.168  0.624</code></pre>
 <pre class="r"><code>sum(ds)</code></pre>
 <pre><code>## [1] -1.943e-16</code></pre>
+<pre class="r"><code>### same as above, but using alabama package optimizers (make use of gradient information, 
+## though appears to be more sensitive to starting values)
+heq &lt;- function(p, optim_args) sum(p[1:5]) #must sum to 0 for constraint
+
+#start with better starting values
+mod3b &lt;- mirt(dat, model2, itemtype = 'Rasch', optimizer = 'alabama', alabama_args=list(heq=heq),
+              pars = mod2values(mod3), TOL=1e-5)</code></pre>
+<pre><code>## Loading required package: alabama
+## Loading required package: numDeriv</code></pre>
+<pre><code>## 
+Iteration: 1, Log-Lik: -2466.938, Max-Change: 0.00008
+Iteration: 2, Log-Lik: -2466.938, Max-Change: 0.00008
+Iteration: 3, Log-Lik: -2466.938, Max-Change: 0.00007
+Iteration: 4, Log-Lik: -2466.938, Max-Change: 0.00007
+Iteration: 5, Log-Lik: -2466.938, Max-Change: 0.00006
+Iteration: 6, Log-Lik: -2466.938, Max-Change: 0.00006
+Iteration: 7, Log-Lik: -2466.938, Max-Change: 0.00006
+Iteration: 8, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 9, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 10, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 11, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 13, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 14, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 15, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 16, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 17, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 18, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 19, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 20, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 21, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 22, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 23, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 24, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 25, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 26, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 27, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 28, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 29, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 30, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 31, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 32, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 33, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 34, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 35, Log-Lik: -2466.938, Max-Change: 0.00001</code></pre>
+<pre class="r"><code>print(mod3b)</code></pre>
+<pre><code>## 
+## Call:
+## mirt(data = dat, model = model2, itemtype = &quot;Rasch&quot;, optimizer = &quot;alabama&quot;, 
+##     pars = mod2values(mod3), TOL = 1e-05, alabama_args = list(heq = heq))
+## 
+## Full-information item factor analysis with 1 factor(s).
+## Converged within 1e-05 tolerance after 35 EM iterations.
+## mirt version: 1.5.7 
+## M-step optimizer used: alabama 
+## Number of rectangular quadrature used: 41
+## 
+## Log-likelihood = -2467
+## AIC = 4948; AICc = 4948
+## BIC = 4982; SABIC = 4960
+## G2 (24) = 21.8, p = 0.5913
+## RMSEA = 0, CFI = 1, TLI = 1.046</code></pre>
+<pre class="r"><code>coef(mod3b)</code></pre>
+<pre><code>## $Item_1
+##     a1     d g u
+## par  1 1.255 0 1
+## 
+## $Item_2
+##     a1      d g u
+## par  1 -0.476 0 1
+## 
+## $Item_3
+##     a1      d g u
+## par  1 -1.235 0 1
+## 
+## $Item_4
+##     a1      d g u
+## par  1 -0.168 0 1
+## 
+## $Item_5
+##     a1     d g u
+## par  1 0.624 0 1
+## 
+## $GroupPars
+##     MEAN_1 COV_11
+## par  1.475   0.57</code></pre>
+<pre class="r"><code>(ds &lt;- sapply(coef(mod3b)[1:5], function(x) x[,'d']))</code></pre>
+<pre><code>## Item_1 Item_2 Item_3 Item_4 Item_5 
+##  1.255 -0.476 -1.235 -0.168  0.624</code></pre>
+<pre class="r"><code>sum(ds)</code></pre>
+<pre><code>## [1] -1.943e-16</code></pre>
 </div>
 </div>
 
