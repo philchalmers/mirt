@@ -1001,7 +1001,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     }
     if(opts$Moptim == 'solnp'){
         if(!require('Rsolnp')) require('Rsolnp')
-        if(!length(solnp_args)) solnp_args$control <- list(trace = 0)
+        if(is.null(solnp_args$control)) solnp_args$control <- list()
+        if(is.null(solnp_args$control$trace)) solnp_args$control$trace <- 0
         if(method != 'EM') stop('solnp only supported for optimization with EM algorithm')
         opts$solnp_args <- solnp_args
     }
