@@ -263,13 +263,14 @@
 #'   estimators are also available, but their routine use generally is not required or recommended. 
 #'   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
 #'   
-#'   Additionally, estimation subroutines from the \code{nloptr} package are available by passing
-#'   the arguments \code{'nloptr'} or \code{'nloptr_no_grad'} (the latter treats the gradient vector
-#'   function as NULL, for use in optimizers such as 'NLOPT_LN_NELDERMEAD'). This is to be used in
-#'   conjunction with the \code{nloptr_args} input specificed below. If equality constraints were 
+#'   Additionally, estimation subroutines from the \code{Rsolnp} package are available by passing
+#'   the arguments \code{'solnp'}. This should be used in
+#'   conjunction with the \code{solnp_args} input specificed below. If equality constraints were 
 #'   specified in the model definition only the parameter with the lowest \code{parnum} 
 #'   in the \code{pars = 'values'} data.frame is used in the estimation vector passed 
-#'   to the objective and gradient function 
+#'   to the objective function. Equality an inequality functions should be of the form 
+#'   \code{function(p, optim_args)}, where \code{optim_args} is a list of internally parameters
+#'   that largely can be ignored when defining constraints
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
 #'    See \code{SE.type} for the type of estimates available 
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix 
@@ -809,7 +810,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  survey.weights = NULL, rotate = 'oblimin', Target = NaN, quadpts = NULL, 
                  TOL = NULL, grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE, 
                  GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, 
-                 nloptr_args = list(), technical = list(), ...)
+                 solnp_args = list(), technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
@@ -820,7 +821,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars, 
-                      optimizer=optimizer, nloptr_args=nloptr_args, ...)
+                      optimizer=optimizer, solnp_args=solnp_args, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)

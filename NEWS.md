@@ -33,9 +33,9 @@
   `itemfit()`, and `M2()` also now contain an `QMC` argument (or will accept one through the ... 
   argument) to use the same integration scheme for better accuracy in higher dimensional models
   
-- nonlinear parameter constraints for EM estimation can be specifed by using the `nloptr` 
-  package by passing `optimizer = 'nloptr'` or `optimizer = 'nloptr_no_grad'`, as well as the 
-  relavent package arguments through the `nloptr_ags` list input
+- nonlinear parameter constraints for EM estimation can be specifed by using the `Rsolnp` 
+  package by passing `optimizer = 'solnp'`, as well as the 
+  relavent package arguments through the `solnp_ags` list input
   
   
 

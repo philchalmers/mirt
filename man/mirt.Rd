@@ -11,7 +11,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   quadpts = NULL, TOL = NULL, grsm.block = NULL, key = NULL,
   nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
   accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE,
-  nloptr_args = list(), technical = list(), ...)
+  solnp_args = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -78,13 +78,14 @@ See \code{SE.type} for the type of estimates available}
   estimators are also available, but their routine use generally is not required or recommended.
   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
 
-  Additionally, estimation subroutines from the \code{nloptr} package are available by passing
-  the arguments \code{'nloptr'} or \code{'nloptr_no_grad'} (the latter treats the gradient vector
-  function as NULL, for use in optimizers such as 'NLOPT_LN_NELDERMEAD'). This is to be used in
-  conjunction with the \code{nloptr_args} input specificed below. If equality constraints were
+  Additionally, estimation subroutines from the \code{Rsolnp} package are available by passing
+  the arguments \code{'solnp'}. This should be used in
+  conjunction with the \code{solnp_args} input specificed below. If equality constraints were
   specified in the model definition only the parameter with the lowest \code{parnum}
   in the \code{pars = 'values'} data.frame is used in the estimation vector passed
-  to the objective and gradient function}
+  to the objective function. Equality an inequality functions should be of the form
+  \code{function(p, optim_args)}, where \code{optim_args} is a list of internally parameters
+  that largely can be ignored when defining constraints}
 
 \item{pars}{a data.frame with the structure of how the starting values, parameter numbers,
 estimation logical values, etc, are defined. The user may observe how the model defines the
@@ -184,12 +185,6 @@ accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, qua
 \item{verbose}{logical; print observed- (EM) or complete-data (MHRM) log-likelihood
 after each iteration cycle? Default is TRUE}
 
-\item{nloptr_args}{a list containing the relavent terms to use if the selected optimizer
-is \code{nloptr} or \code{nloptr_no_grad}. From the \code{help('nloptr')} documentation,
-only three argumets are reserved internally: \code{x0}, \code{eval_f}, and
-\code{evalu_grad_f}. The remaning arguments are set to the package defaults, and are over
-written by passing this list argument}
-
 \item{technical}{a list containing lower level technical parameters for estimation. May be:
 \describe{
   \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
@@ -230,6 +225,12 @@ written by passing this list argument}
 }}
 
 \item{...}{additional arguments to be passed}
+
+\item{nloptr_args}{a list containing the relavent terms to use if the selected optimizer
+is \code{nloptr} or \code{nloptr_no_grad}. From the \code{help('nloptr')} documentation,
+only three argumets are reserved internally: \code{x0}, \code{eval_f}, and
+\code{evalu_grad_f}. The remaning arguments are set to the package defaults, and are over
+written by passing this list argument}
 }
 \value{
 function returns an object of class \code{ExploratoryClass}

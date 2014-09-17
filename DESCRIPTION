@@ -35,7 +35,7 @@ Suggests:
     shiny,
     knitr,
     parallel,
-    nloptr,
+    Rsolnp,
     sirt,
     KernSmoothIRT,
     mirtCAT

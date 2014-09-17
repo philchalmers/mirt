@@ -928,7 +928,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'crossprod', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
-                     optimizer = NULL, nloptr_args = list(), ...)
+                     optimizer = NULL, solnp_args = list(), ...)
 {
     opts <- list()
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
@@ -999,11 +999,11 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     } else {
         opts$Moptim <- optimizer
     }
-    if(opts$Moptim %in% c('nloptr', 'nloptr_no_grad')){
-        if(!require('nloptr')) require('nloptr')
-        if(!length(nloptr_args)) nloptr_args$opts <- list()
-        if(method != 'EM') stop('nloptr only supported for optimization with EM algorithm')
-        opts$nloptr_args <- nloptr_args
+    if(opts$Moptim == 'solnp'){
+        if(!require('Rsolnp')) require('Rsolnp')
+        if(!length(solnp_args)) solnp_args$control <- list(trace = 0)
+        if(method != 'EM') stop('solnp only supported for optimization with EM algorithm')
+        opts$solnp_args <- solnp_args
     }
     if(!is.null(large)){
         if(is.logical(large))
