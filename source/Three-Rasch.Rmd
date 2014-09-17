@@ -1,0 +1,56 @@
+Three Parameterizations of Rasch model
+======================================
+
+Here we demonstrate three alternative ways to represent the simple Rasch model for dichotomous
+data. 
+
+## Approach 1
+
+Use fixed slope parameters set to 1, freely estimate all intercepts, and freely estimate the 
+variance of the latent trait.
+
+```{r}
+library(mirt)
+dat <- expand.table(LSAT6)
+mod <- mirt(dat, 1, itemtype = 'Rasch')
+print(mod)
+coef(mod)
+```
+
+## Approach 2
+
+Use freely estimate slope parameters but constrain them to be equal across all items, freely 
+estimate all intercepts.
+
+```{r}
+model <- mirt.model('Theta = 1-5
+                    CONSTRAIN = (1-5, a1)')
+mod2 <- mirt(dat, model)
+print(mod2)
+coef(mod2)
+```
+
+## Approach 3
+
+Fix slopes to 1, freely estimate intercepts subject to the constraint that $\sum_j d_j = 0$,
+and freely estimate the latent mean and variance.
+
+```{r}
+model2 <- mirt.model('Theta = 1-5
+                     MEAN = Theta
+                     COV = Theta*Theta')
+
+#view how vector of parameters is organized internally
+sv <- mirt(dat, model2, itemtype = 'Rasch', pars = 'values')
+sv[sv$est, ]
+
+#constraint: create function for solnp to compute constraint, and declare value in eqB
+eqfun <- function(p, optim_args) sum(p[1:5]) #could use browser() here, if it helps
+solnp_args <- list(eqfun=eqfun, eqB=0)
+
+mod3 <- mirt(dat, model2, itemtype = 'Rasch', optimizer = 'solnp', solnp_args=solnp_args)
+print(mod3)
+coef(mod3)
+(ds <- sapply(coef(mod3)[1:5], function(x) x[,'d']))
+sum(ds)
+```

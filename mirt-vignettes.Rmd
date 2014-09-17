@@ -77,6 +77,7 @@ generated using R markdown via the `knitr` package and hosted on Github.
 - [Latent Class Analysis](http://philchalmers.github.io/mirt/html/mirt_lca3__2014-08-10_1215.html) 
   (contributed by Alexander Robitzsch)
 - [ltm models with mirt](http://philchalmers.github.io/mirt/html/ltm_models_with_mirt.html)
+- [Nonlinear parameter constraint example with Rasch model](http://philchalmers.github.io/mirt/html/Three-Rasch.html)
 
 ### mirt examples adapted from the sirt package
 
