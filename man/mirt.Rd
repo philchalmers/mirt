@@ -784,6 +784,8 @@ histogram(ThetaSkew, breaks=30)
 # non-linear parameter constraints with Rsolnp package (alabama supported as well):
 # Find Rasch model subject to the constraint that the intercepts sum to 0
 
+dat <- expand.table(LSAT6)
+
 #free latent mean and variance terms
 model <- mirt.model('Theta = 1-5
                     MEAN = Theta

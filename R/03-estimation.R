@@ -641,6 +641,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
 
     ####post estimation stats
+    if(opts$Moptim %in% c('solnp', 'alabama')){
+        if(!is.null(opts$solnp_args$eqfun))
+            df <- df + length(opts$solnp_args$eqfun(ESTIMATE$shortpars, list()))
+        if(!is.null(opts$solnp_args$heq))
+            df <- df + length(opts$solnp_args$heq(ESTIMATE$shortpars, list()))
+    }
     r <- rr
     N <- sum(r)
     tmp <- dfsubtr
