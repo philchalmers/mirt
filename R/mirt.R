@@ -63,7 +63,7 @@
 #' guessing parameter, should be considered for removal from the analysis or
 #' treated with prior parameter distributions. The same type of reasoning is
 #' applicable when including upper bound parameters as well. For polytomous items, if categories
-#' are rarely endoresed then this will cause similar issues. Also, increasing the
+#' are rarely endorsed then this will cause similar issues. Also, increasing the
 #' number of quadrature points per dimension, or using the 
 #' quasi-Monte Carlo integration method, may help to stabilize the estimation process
 #' in higher dimensions. Finally, solutions that are not well defined also will have difficulty
@@ -263,12 +263,17 @@
 #'   estimators are also available, but their routine use generally is not required or recommended. 
 #'   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
 #'   
-#'   Additionally, estimation subroutines from the \code{Rsolnp} package are available by passing
-#'   the arguments \code{'solnp'}. This should be used in
-#'   conjunction with the \code{solnp_args} input specificed below. If equality constraints were 
+#'   Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama} 
+#'   packages are available by passing the arguments \code{'solnp'} and \code{'alabama'}. 
+#'   This should be used in
+#'   conjunction with the \code{solnp_args} and \code{alabama_args} specified below. 
+#'   If equality constraints were 
 #'   specified in the model definition only the parameter with the lowest \code{parnum} 
 #'   in the \code{pars = 'values'} data.frame is used in the estimation vector passed 
-#'   to the objective function. Equality an inequality functions should be of the form 
+#'   to the objective function, and group hyper-parameters are omitted. 
+#'   Equality an inequality functions should be of the form. Note that the \code{alabama}
+#'   estimation may perform faster than the \code{Rsolnp} package since information about the 
+#'   function gradient vector is utilized 
 #'   \code{function(p, optim_args)}, where \code{optim_args} is a list of internally parameters
 #'   that largely can be ignored when defining constraints
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
@@ -357,7 +362,7 @@
 #'   is used instead. See \code{\link{summary-method}} for a list of supported rotation options.
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param calcNull logical; calculate the Null model for additional fit statistics (e.g., TLI)? 
-#'   Only applicable if the data contains no NA's and the data is not overaly sparse
+#'   Only applicable if the data contains no NA's and the data is not overly sparse
 #' @param large either a \code{logical}, indicating whether the internal collapsed data should
 #'   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
 #'   a list containing  the organized tables is returned. This list object can then be passed back 
@@ -373,11 +378,6 @@
 #' }
 #' @param draws the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM 
 #'   algorithm. Default is 5000
-#' @param nloptr_args a list containing the relavent terms to use if the selected optimizer 
-#'   is \code{nloptr} or \code{nloptr_no_grad}. From the \code{help('nloptr')} documentation,
-#'   only three argumets are reserved internally: \code{x0}, \code{eval_f}, and 
-#'   \code{evalu_grad_f}. The remaning arguments are set to the package defaults, and are over
-#'   written by passing this list argument
 #' @param verbose logical; print observed- (EM) or complete-data (MHRM) log-likelihood 
 #'   after each iteration cycle? Default is TRUE
 #' @param technical a list containing lower level technical parameters for estimation. May be:
@@ -418,6 +418,10 @@
 #'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
 #'       Default is TRUE}
 #'   }
+#' @param solnp_args a list of arguments to be passed to the \code{solnp::solnp()} function for 
+#'   equality constraints, inequality constriants, etc
+#' @param alabama_args a list of arguments to be passed to the \code{alabama::constrOptim.nl()} 
+#'   function for equality constraints, inequality constriants, etc
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso  \code{\link{bfactor}},  \code{\link{multipleGroup}},  \code{\link{mixedmirt}},
@@ -802,6 +806,31 @@
 #' skew <- mirt(datSkew, 1, empiricalhist = TRUE)
 #' plot(skew, type = 'empiricalhist')
 #' histogram(ThetaSkew, breaks=30)
+#' 
+#' #####
+#' # non-linear parameter constraints with Rsolnp package (alabama supported as well): 
+#' # Find Rasch model subject to the constraint that the intercepts sum to 0
+#' 
+#' #free latent mean and variance terms
+#' model <- mirt.model('Theta = 1-5
+#'                     MEAN = Theta
+#'                     COV = Theta*Theta')
+#' 
+#' #view how vector of parameters is organized internally
+#' sv <- mirt(dat, model, itemtype = 'Rasch', pars = 'values')
+#' sv[sv$est, ]
+#' 
+#' #constraint: create function for solnp to compute constraint, and declare value in eqB
+#' eqfun <- function(p, optim_args) sum(p[1:5]) #could use browser() here, if it helps
+#' solnp_args <- list(eqfun=eqfun, eqB=0)
+#' 
+#' mod <- mirt(dat, model, itemtype = 'Rasch', optimizer = 'solnp', solnp_args=solnp_args)
+#' print(mod)
+#' coef(mod)
+#' (ds <- sapply(coef(mod)[1:5], function(x) x[,'d']))
+#' sum(ds)
+#' 
+#' # same likelihood location as: mirt(dat, 1, itemtype = 'Rasch')
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE, 
@@ -810,7 +839,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  survey.weights = NULL, rotate = 'oblimin', Target = NaN, quadpts = NULL, 
                  TOL = NULL, grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE, 
                  GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, 
-                 solnp_args = list(), technical = list(), ...)
+                 solnp_args = list(), alabama_args = list(), technical = list(), ...)
 {
     Call <- match.call()
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
@@ -821,7 +850,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars, 
-                      optimizer=optimizer, solnp_args=solnp_args, ...)
+                      optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
         mod@Call <- Call
     return(mod)

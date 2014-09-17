@@ -928,7 +928,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
                      SE.type = 'crossprod', large = NULL, accelerate = TRUE, empiricalhist = FALSE,
-                     optimizer = NULL, solnp_args = list(), ...)
+                     optimizer = NULL, solnp_args = list(), alabama_args = list(), ...)
 {
     opts <- list()
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
@@ -1005,6 +1005,13 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(solnp_args$control$trace)) solnp_args$control$trace <- 0
         if(method != 'EM') stop('solnp only supported for optimization with EM algorithm')
         opts$solnp_args <- solnp_args
+    } else if(opts$Moptim == 'alabama'){
+        if(!require('alabama')) require('alabama')
+        if(method != 'EM') stop('alabama only supported for optimization with EM algorithm')
+        if(is.null(alabama_args$control.outer)) alabama_args$control.outer <- list()
+        if(is.null(alabama_args$control.optim)) alabama_args$control.optim <- list()
+        if(is.null(alabama_args$control.outer$trace)) alabama_args$control.outer$trace <- FALSE
+        opts$solnp_args <- alabama_args
     }
     if(!is.null(large)){
         if(is.logical(large))

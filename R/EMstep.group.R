@@ -343,17 +343,26 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
                                 itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL))
-        } else if(Moptim == 'solnp'){
+        } else if(Moptim %in% c('solnp', 'alabama')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
                                ANY.PRIOR=ANY.PRIOR, constrain=constrain, LBOUND=LBOUND,
                                UBOUND=UBOUND, SLOW.IND=SLOW.IND, itemloc=itemloc, DERIV=DERIV, 
                                rlist=rlist)
-            opt <- try(solnp(p, Mstep.LL_alt, eqfun = solnp_args$eqfun, eqB = solnp_args$eqB, 
-                             ineqfun = solnp_args$ineqfun, ineqLB = solnp_args$ineqLB, 
-                             ineqUB = solnp_args$ineqUB, LB = solnp_args$LB, UB = solnp_args$UB,
-                             control=solnp_args$control, optim_args=optim_args), silent=TRUE)
-            if(!is(opt, 'try-error')) opt$par <- opt$pars
+            if(Moptim == 'solnp'){
+                opt <- try(solnp(p, Mstep.LL_alt, eqfun = solnp_args$eqfun, eqB = solnp_args$eqB, 
+                                 ineqfun = solnp_args$ineqfun, ineqLB = solnp_args$ineqLB, 
+                                 ineqUB = solnp_args$ineqUB, LB = solnp_args$LB, UB = solnp_args$UB,
+                                 control=solnp_args$control, optim_args=optim_args), silent=TRUE)
+                if(!is(opt, 'try-error')) opt$par <- opt$pars
+            } else {
+                opt <- try(constrOptim.nl(p, Mstep.LL_alt, Mstep.grad_alt, 
+                                          hin = solnp_args$hin, hin.jac = solnp_args$hin.jac, 
+                                          heq = solnp_args$heq, heq.jac = solnp_args$heq.jac, 
+                                          control.outer = solnp_args$control.outer, 
+                                          control.optim = solnp_args$control.optim, optim_args=optim_args),
+                           silent=TRUE)
+            }
         } else {
             stop('M-step optimizer not supported')
         }
@@ -474,6 +483,16 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         grad <- g
     }
     return(-grad[est])
+}
+
+Mstep.grad_alt <- function(x0, optim_args){
+    return(Mstep.grad(p=x0, est=optim_args$est, longpars=optim_args$longpars, pars=optim_args$pars, 
+                    ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta, 
+                    PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND, 
+                    SLOW.IND=optim_args$SLOW.IND, 
+                    constrain=optim_args$constrain, LBOUND=optim_args$LBOUND, 
+                    UBOUND=optim_args$UBOUND, itemloc=optim_args$itemloc,
+                    DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,

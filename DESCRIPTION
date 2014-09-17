@@ -36,6 +36,7 @@ Suggests:
     knitr,
     parallel,
     Rsolnp,
+    alabama,
     sirt,
     KernSmoothIRT,
     mirtCAT

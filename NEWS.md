@@ -17,7 +17,7 @@
 ## NEW FEATURES
 
 - `mdirt` function added to model discrete latent variables such as latent class analysis for
-  dichotomous and polytomous items. Cand be used to model several other dicrete IRT models as well,
+  dichotomous and polytomous items. Can be used to model several other discrete IRT models as well,
   such as the located latent class model, multidimensional IRT with discrete traits, DINA models,
   etc. See the examples and documentation for details
   
@@ -29,15 +29,13 @@
   
 - the method `'QMCEM'` has been added for quasi-Monte Carlo integration in `mirt()` 
   and `multipleGroup()` for estimating higher dimensional models with greater accuracy 
-  (suggested by Alexander Robitzsch). Several auxillary function such as `fscores()`, 
+  (suggested by Alexander Robitzsch). Several axillary function such as `fscores()`, 
   `itemfit()`, and `M2()` also now contain an `QMC` argument (or will accept one through the ... 
   argument) to use the same integration scheme for better accuracy in higher dimensional models
   
-- nonlinear parameter constraints for EM estimation can be specifed by using the `Rsolnp` 
-  package by passing `optimizer = 'solnp'`, as well as the 
-  relavent package arguments through the `solnp_ags` list input
-  
-  
+- nonlinear parameter constraints for EM estimation can be specified by using the `Rsolnp` 
+  and `alabama` packages by passing `optimizer = 'solnp'` and `optimizer = 'alabama'`, 
+  as well as the relevant package arguments through the `solnp_ags` and `alabama_ags` list inputs
 
 ## BUG FIXES
 
