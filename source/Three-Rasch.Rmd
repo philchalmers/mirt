@@ -53,4 +53,16 @@ print(mod3)
 coef(mod3)
 (ds <- sapply(coef(mod3)[1:5], function(x) x[,'d']))
 sum(ds)
+
+### same as above, but using alabama package optimizers (make use of gradient information, 
+## though appears to be more sensitive to starting values)
+heq <- function(p, optim_args) sum(p[1:5]) #must sum to 0 for constraint
+
+#start with better starting values
+mod3b <- mirt(dat, model2, itemtype = 'Rasch', optimizer = 'alabama', alabama_args=list(heq=heq),
+              pars = mod2values(mod3), TOL=1e-5)
+print(mod3b)
+coef(mod3b)
+(ds <- sapply(coef(mod3b)[1:5], function(x) x[,'d']))
+sum(ds)
 ```
