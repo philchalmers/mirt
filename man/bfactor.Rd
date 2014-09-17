@@ -32,7 +32,7 @@ for more details and examples}
 }
 \value{
 function returns an object of class \code{ConfirmatoryClass}
-  (\link{ConfirmatoryClass-class}).
+  (\link{ConfirmatoryClass-class}) or \code{MultipleGroupClass}(\link{MultipleGroupClass-class}).
 }
 \description{
 \code{bfactor} fits a confirmatory maximum likelihood two-tier/bifactor model to

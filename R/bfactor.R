@@ -23,7 +23,7 @@
 #' dimension reduction technique.
 #' 
 #' @return function returns an object of class \code{ConfirmatoryClass} 
-#'   (\link{ConfirmatoryClass-class}).
+#'   (\link{ConfirmatoryClass-class}) or \code{MultipleGroupClass}(\link{MultipleGroupClass-class}).
 #'
 #' @aliases bfactor
 #' @param data a \code{matrix} or \code{data.frame} that consists of
