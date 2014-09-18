@@ -12,6 +12,13 @@ for modeling item testlets. Multiple group analysis and mixed effects designs al
 are available for detecting differential item functioning and modelling item and
 person covariates.
 
+## Examples and Evaluated Help Files
+
+Various examples and worked help files have been compiled using the `knitr` package to generate
+HTML output, and are available [here](http://philchalmers.github.io/mirt/mirt-vignettes.html). 
+User contributions are also welcome, where the source code examples are demonstrated on the 
+`gh-pages` branch of this repository in the `source` directory.
+
 ## Installing from source
 
 It's recommended to use the development version of this package since it is more likely to be up to date
