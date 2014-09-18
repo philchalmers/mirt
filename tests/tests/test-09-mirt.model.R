@@ -43,6 +43,28 @@ test_that('syntax', {
                  tolerance = 1e-2)
     expect_equal(mod2values(mod6)$value, c(1.0903077932694, 0, 1.91140861863278, 0, 1, 1.0903077932694, 0, 0.810348254879057, 0, 1, 0, 1.0101813883046, 1.46075728200956, 0, 1, 0, 1.0101813883046, 0.521336672537102, 0, 1, 0, 1.0101813883046, 1.99270549803447, 0, 1, 0, 0, 1, 0.911175950866077, 1),
                  tolerance = 1e-2)
-
+    
+    data(data.read, package = 'sirt')
+    dat <- data.read
+     
+    # syntax with variable names
+    mirtsyn2 <- "
+            F1 = A1,B2,B3,C4
+            F2 = A1-A4,C2,C4
+            MEAN = F1 
+            COV = F1*F1, F1*F2
+            CONSTRAIN=(A2-A4,a2),(A3,C2,d)
+            PRIOR = (C3,A2-A4,a2,lnorm, .2, .2),(B3,d,norm,0,.0001)"
+    # create a mirt model            
+    mirtmodel <- mirt.model(mirtsyn2, itemnames=dat)
+    # or equivelently: 
+    mirtmodel2 <- mirt.model(mirtsyn2, itemnames=colnames(dat))
+    
+    expect_true(all(mirtmodel$x == mirtmodel2$x))
+    got <- matrix(c(c('F1', 'F2', "MEAN", 'COV', 'CONSTRAIN', 'PRIOR'), 
+                    c("1,6,7,12", "1-4,10,12","F1","F1*F1,F1*F2","(2-4,a2),(3,10,d)",
+                      "(11,2-4,a2,lnorm,.2,.2),(7,d,norm,0,.0001)")), nrow = 6)
+    expect_true(all(mirtmodel$x == got))
+    
 })
 

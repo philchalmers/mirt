@@ -1,7 +1,8 @@
 #' Specify model loadings
 #'
 #' The \code{mirt.model} function scans/reads user input to specify the
-#' confirmatory model.
+#' confirmatory model. Item locations must be used in the specifications if no 
+#' \code{itemnames} argument is supplied.
 #'
 #' Factors are first named and then specify which numerical items they affect
 #' (i.e., where the slope is not equal to 0), separated either by commas or by
@@ -43,13 +44,17 @@
 #'   For example, in a single group 10-item dichotomous tests, using the default 2PL model, 
 #'   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by 
 #'   \code{PRIOR = (1-5, d, norm, 0, 2)}}
-#' \item{MEAN}{A comma seperated list specifying which latent factor means to freely estimate.
+#' \item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
 #'   E.g., \code{MEAN = F1, F2} will free the latent means for factors F1 and F2}
 #' }
 #' @param input input for writing out the model syntax. Can either be a string declaration of
 #'   class character or the so-called Q-matrix or class \code{matrix} that specifies the model
 #'   either with integer or logical values. If the Q-matrix method
 #'   is chosen covariances terms can be specified with the \code{COV} input
+#' @param itemnames a character vector or factor indicating the item names. If a data.frame or
+#'   matrix object is supplied the names will be extracted using \code{colnames(itemnames)}. 
+#'   Supplying this input allows the syntax to be specified with the raw item names rather than
+#'   item locations
 #' @param file a input specifying an external file that declares the input.
 #' @param COV a symmetric, logical matrix used to declare which covariance terms are estimated
 #' @param quiet logical argument passed to \code{scan()} to suppress console read message
@@ -57,7 +62,7 @@
 #' @return Returns a model specification object to be used in
 #'   \code{\link{mirt}}, \code{\link{bfactor}}, \code{\link{multipleGroup}}, or 
 #'   \code{\link{mixedmirt}}
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com} and Alexander Robitzsch
 #' @export mirt.model
 #' @examples
 #'
@@ -97,55 +102,155 @@
 #'       CONSTRAIN = (1-2, a1)
 #'       CONSTRAINB = (1-3, 5, 6, a1), (1-10, d)'
 #' model <- mirt.model(s)
+#' 
+#' 
+#' ## specify model using raw item names
+#' data(data.read, package = 'sirt')
+#' dat <- data.read
+#' 
+#' # syntax with variable names
+#' mirtsyn2 <- "
+#'        F1 = A1,B2,B3,C4
+#'        F2 = A1-A4,C2,C4
+#'        MEAN = F1 
+#'        COV = F1*F1, F1*F2
+#'        CONSTRAIN=(A2-A4,a2),(A3,C2,d)
+#'        PRIOR = (C3,A2-A4,a2,lnorm, .2, .2),(B3,d,norm,0,.0001)"
+#' # create a mirt model            
+#' mirtmodel <- mirt.model(mirtsyn2, itemnames=dat)
+#' # or equivelently: 
+#' # mirtmodel <- mirt.model(mirtsyn2, itemnames=colnames(dat))
+#' 
+#' # mod <- mirt(dat , mirtmodel)
 #'
 #'     }
-mirt.model <- function(input = NULL, file = "", COV = NULL, quiet = TRUE, ...)
+mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, quiet = TRUE, ...)
 {
-    if(is.matrix(input)){
-        fnames <- colnames(input)
-        if(is.null(fnames)) fnames <- paste0('F', 1:ncol(input))
-        string <- c()
-        vals <- 1:nrow(input)
-        input <- matrix(as.logical(input), nrow(input), ncol(input))
-        for(i in 1L:ncol(input)){
-            tmp <- vals[input[,i]]
-            if(length(tmp) > 1L){
-                string <- c(string, paste(c(fnames[i], ' = ', paste0(tmp[-length(tmp)], ','),
-                                            tmp[length(tmp)], '\n'), collapse=''))
-            } else {
-                string <- c(string, paste(c(fnames[i], ' = ', tmp[length(tmp)], '\n'), collapse=''))
-            }
+    # split_syn_string vectorized input
+    split_syn_string_vec <- function( syn, vecstr ){
+        for (vv in vecstr){
+            syn <- split_syn_string( syn , vv  )    
         }
-        if(!is.null(COV)){
-            tmp <- outer(fnames, fnames, FUN=function(x, y) paste0(x, paste0('*', y)))
-            sel <- upper.tri(COV,TRUE) & COV
-            tmp <- tmp[sel]
-            if(length(tmp) > 1L){
-                string <- c(string, paste(c('COV = ', paste0(tmp[-length(tmp)], ','),
-                                                      tmp[length(tmp)], '\n'), collapse=''))
-            } else {
-                string <- c(string, paste(c('COV = ', tmp[length(tmp)], '\n'), collapse=''))
-            }
-        }
-        input <- paste(string, collapse='')
+        return(syn)
     }
-    if(!is.null(input)){
-        minput <- strsplit(input, '\\n')
-        for(j in length(minput[[1L]]):1L){
-            if(!grepl(pattern='=', minput[[1L]][j])){
-                minput[[1L]][j-1L] <- paste(minput[[1L]][j-1L], minput[[1L]][j])
-                minput[[1L]] <- minput[[1L]][-j]
+    
+    # cleans syntax in a vector from strings vv
+    split_syn_string <- function( syn , vv ){
+        syn <- as.list(syn )
+        syn.vv <- grep( vv , syn )
+        LL <- length(syn.vv)
+        if (LL>0){
+            for (ii in 1:LL){
+                ll <- syn.vv[ii]
+                syn.ll <- syn[[ll]]    	
+                syn[[ll]] <- split_conc( syn.ll , vv )
             }
         }
-        file <- tempfile()
-        write.table(minput, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+        syn <- unlist(syn)
+        return(syn)
     }
-    mod <- scan(file = file, what = list(type = "", pars = ""),
-		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, quiet=quiet, ...)
-	mod <- cbind(mod$type, mod$pars)
-	colnames(mod) <- c("Type","Parameters")
-	mod <- list(x = mod)
-	class(mod) <- 'mirt.model'
-	mod
+    
+    # splits a string syn.ll and concatanates it with string vv
+    split_conc <- function( syn.ll , vv ){
+        g1 <- strsplit( syn.ll , vv , perl=FALSE )[[1]] 
+        Lg1 <- length(g1)
+        vec <- NULL
+        if (Lg1 == 1 ){ vec <- c( g1 , vv ) }
+        if (Lg1 > 1 ){
+            vec <- rep("" , Lg1 + (Lg1-1) )
+            vec[ seq( 1 , 2*Lg1 , 2 ) ] <- g1
+            vec[ seq( 2 , 2*Lg1 - 1 , 2 ) ] <- vv	
+            Ls1 <- nchar(syn.ll)
+            if ( substring( syn.ll , Ls1 , Ls1 ) == vv ){
+                vec <- c( vec , vv )
+            }
+        }	
+        return(vec)
+    }
+    
+    if(!is.null(itemnames)){
+        # the following block of code and above functions were largely contributed by Alexander
+        
+        # mirt syntax splitted
+        inputsyntax <- input
+        mirtsyn2 <- gsub( ";" , "\n" , input )
+        msyn0 <- strsplit( mirtsyn2 , c(" ") )[[1]]
+        syn <- msyn0
+        if (is.matrix(itemnames) || is.data.frame(itemnames)){
+            items <- colnames(itemnames)
+        } else items <- as.character(itemnames)
+        
+        # admissible strings
+        vecstr <- c( "\n" , "\\(" , "=" , "-" , "," , "\\)" )        
+        # process syntax
+        for (vv in vecstr){
+            syn <- split_syn_string( syn , vv  )    
+        }        
+        # postprocess syntax                                    
+        syn <- syn[ syn != "" ]
+        syn[ syn == "\\(" ] <- "("
+        syn[ syn == "\\)" ] <- ")"   
+        
+        # substitute variables by numbers
+        VV <- length(items)
+        useditems <- NULL
+        for (vv in 1:VV){
+            ind <- which( syn == items[vv] )
+            if (length(ind) > 0 ){
+                syn[ ind ] <- vv 
+                useditems <- c( useditems , items[vv] )   
+            }               
+        }
+        syn <- paste0( syn , collapse="")
+        mirtmodel <- mirt.model(syn)
+        attr(mirtmodel, 'item_syntax') <- inputsyntax
+        return(mirtmodel)
+    } else {
+        if(is.matrix(input)){
+            fnames <- colnames(input)
+            if(is.null(fnames)) fnames <- paste0('F', 1:ncol(input))
+            string <- c()
+            vals <- 1:nrow(input)
+            input <- matrix(as.logical(input), nrow(input), ncol(input))
+            for(i in 1L:ncol(input)){
+                tmp <- vals[input[,i]]
+                if(length(tmp) > 1L){
+                    string <- c(string, paste(c(fnames[i], ' = ', paste0(tmp[-length(tmp)], ','),
+                                                tmp[length(tmp)], '\n'), collapse=''))
+                } else {
+                    string <- c(string, paste(c(fnames[i], ' = ', tmp[length(tmp)], '\n'), collapse=''))
+                }
+            }
+            if(!is.null(COV)){
+                tmp <- outer(fnames, fnames, FUN=function(x, y) paste0(x, paste0('*', y)))
+                sel <- upper.tri(COV,TRUE) & COV
+                tmp <- tmp[sel]
+                if(length(tmp) > 1L){
+                    string <- c(string, paste(c('COV = ', paste0(tmp[-length(tmp)], ','),
+                                                          tmp[length(tmp)], '\n'), collapse=''))
+                } else {
+                    string <- c(string, paste(c('COV = ', tmp[length(tmp)], '\n'), collapse=''))
+                }
+            }
+            input <- paste(string, collapse='')
+        }
+        if(!is.null(input)){
+            minput <- strsplit(input, '\\n')
+            for(j in length(minput[[1L]]):1L){
+                if(!grepl(pattern='=', minput[[1L]][j])){
+                    minput[[1L]][j-1L] <- paste(minput[[1L]][j-1L], minput[[1L]][j])
+                    minput[[1L]] <- minput[[1L]][-j]
+                }
+            }
+            file <- tempfile()
+            write.table(minput, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+        }
+        mod <- scan(file = file, what = list(type = "", pars = ""),
+    		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, quiet=quiet, ...)
+    	mod <- cbind(mod$type, mod$pars)
+    	colnames(mod) <- c("Type","Parameters")
+    	mod <- list(x = mod)
+    	class(mod) <- 'mirt.model'
+    	return(mod)
+    }
 }
-

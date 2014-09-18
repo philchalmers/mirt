@@ -3,13 +3,19 @@
 \alias{mirt.model}
 \title{Specify model loadings}
 \usage{
-mirt.model(input = NULL, file = "", COV = NULL, quiet = TRUE, ...)
+mirt.model(input = NULL, itemnames = NULL, file = "", COV = NULL,
+  quiet = TRUE, ...)
 }
 \arguments{
 \item{input}{input for writing out the model syntax. Can either be a string declaration of
 class character or the so-called Q-matrix or class \code{matrix} that specifies the model
 either with integer or logical values. If the Q-matrix method
 is chosen covariances terms can be specified with the \code{COV} input}
+
+\item{itemnames}{a character vector or factor indicating the item names. If a data.frame or
+matrix object is supplied the names will be extracted using \code{colnames(itemnames)}.
+Supplying this input allows the syntax to be specified with the raw item names rather than
+item locations}
 
 \item{file}{a input specifying an external file that declares the input.}
 
@@ -26,7 +32,8 @@ Returns a model specification object to be used in
 }
 \description{
 The \code{mirt.model} function scans/reads user input to specify the
-confirmatory model.
+confirmatory model. Item locations must be used in the specifications if no
+\code{itemnames} argument is supplied.
 }
 \details{
 Factors are first named and then specify which numerical items they affect
@@ -69,7 +76,7 @@ quadratic factor for \code{F1}).
   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
   \code{PRIOR = (1-5, d, norm, 0, 2)}}
-\item{MEAN}{A comma seperated list specifying which latent factor means to freely estimate.
+\item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
   E.g., \code{MEAN = F1, F2} will free the latent means for factors F1 and F2}
 }
 }
@@ -111,9 +118,29 @@ s <- 'F = 1-10
       CONSTRAINB = (1-3, 5, 6, a1), (1-10, d)'
 model <- mirt.model(s)
 
+
+## specify model using raw item names
+data(data.read, package = 'sirt')
+dat <- data.read
+
+# syntax with variable names
+mirtsyn2 <- "
+       F1 = A1,B2,B3,C4
+       F2 = A1-A4,C2,C4
+       MEAN = F1
+       COV = F1*F1, F1*F2
+       CONSTRAIN=(A2-A4,a2),(A3,C2,d)
+       PRIOR = (C3,A2-A4,a2,lnorm, .2, .2),(B3,d,norm,0,.0001)"
+# create a mirt model
+mirtmodel <- mirt.model(mirtsyn2, itemnames=dat)
+# or equivelently:
+# mirtmodel <- mirt.model(mirtsyn2, itemnames=colnames(dat))
+
+# mod <- mirt(dat , mirtmodel)
+
     }
 }
 \author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
+Phil Chalmers \email{rphilip.chalmers@gmail.com} and Alexander Robitzsch
 }
 

@@ -36,6 +36,9 @@
 - nonlinear parameter constraints for EM estimation can be specified by using the `Rsolnp` 
   and `alabama` packages by passing `optimizer = 'solnp'` and `optimizer = 'alabama'`, 
   as well as the relevant package arguments through the `solnp_ags` and `alabama_ags` list inputs
+  
+- added `itemnames` argument added to `mirt.model()` to allow model specifications using raw 
+  item names rather than location indicators
 
 ## BUG FIXES
 
