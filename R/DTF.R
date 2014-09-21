@@ -120,7 +120,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
         }
         T1 <- expected.test(mod, Theta, group=1L)
         T2 <- expected.test(mod, Theta, group=2L)
-        if(plot) return(c(T1, T2) + sum(mod@Data$mins))
+        if(plot) return(c(T1, T2))
         D <- T1 - T2
         uDTF <- mean(abs(D))
         uDTF_percent <- uDTF/max_score * 100
