@@ -850,7 +850,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
                       technical=technical, verbose=verbose, survey.weights=survey.weights,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
-                      nominal.highlow=nominal.highlow, accellerate=accelerate, draws=draws,
+                      nominal.highlow=nominal.highlow, accelerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars, 
                       optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args, ...)
     if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
