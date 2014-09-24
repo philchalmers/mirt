@@ -299,8 +299,8 @@
 #' @param upper fixed upper bound parameters for 4-PL model. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
 #'   vector corresponding to each item
-#' @param accelerate logical; use a general acceleration algorithm described by Ramsey (1975)? 
-#'   Default is \code{TRUE}
+#' @param accelerate a character vector indicating the type of acceleration to use. Default
+#'   is \code{'Ramsay'}. To disable the acceleration, pass \code{'none'}
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are 
 #'   labeled. To constrain parameters to be equal create a list with separate concatenated 
@@ -840,7 +840,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000, 
                  survey.weights = NULL, rotate = 'oblimin', Target = NaN, quadpts = NULL, 
                  TOL = NULL, grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE, 
-                 GenRandomPars = FALSE, accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE, 
+                 GenRandomPars = FALSE, accelerate = 'Ramsay', empiricalhist = FALSE, verbose = TRUE, 
                  solnp_args = list(), alabama_args = list(), technical = list(), ...)
 {
     Call <- match.call()

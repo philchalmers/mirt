@@ -198,9 +198,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
                               TOL=list$MSTEPTOL, solnp_args=solnp_args)
-            if(list$accelerate && Mrate > .01 && cycles %% 3 == 0L){
+            if(list$accelerate == 'Ramsay' && Mrate > .01 && cycles %% 3 == 0L){
                 dX2 <- preMstep.longpars - preMstep.longpars2
                 dX <- longpars - preMstep.longpars
+                dX <- dX[est]; dX2 <- dX2[est]
                 d2X2 <- dX - dX2
                 accel <- 1 - sqrt((dX %*% dX) / (d2X2 %*% d2X2))
                 if(accel < -5) accel <- -5
@@ -213,7 +214,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL, max(abs(preMstep.longpars - longpars))))
             if(all(abs(preMstep.longpars - longpars) < TOL)){
-                if(!list$accelerate) break
+                if(list$accelerate == 'none') break
                 else if(cycles %% 3 != 1L) break
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start

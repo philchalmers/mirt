@@ -10,7 +10,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   survey.weights = NULL, rotate = "oblimin", Target = NaN,
   quadpts = NULL, TOL = NULL, grsm.block = NULL, key = NULL,
   nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
-  accelerate = TRUE, empiricalhist = FALSE, verbose = TRUE,
+  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
   solnp_args = list(), alabama_args = list(), technical = list(), ...)
 }
 \arguments{
@@ -179,8 +179,8 @@ c(1,2,3,4). Viewing the starting values will help to identify the categories)}
 \item{GenRandomPars}{logical; generate random starting values prior to optimization instead of
 using the fixed internal starting values?}
 
-\item{accelerate}{logical; use a general acceleration algorithm described by Ramsey (1975)?
-Default is \code{TRUE}}
+\item{accelerate}{a character vector indicating the type of acceleration to use. Default
+is \code{'Ramsay'}. To disable the acceleration, pass \code{'none'}}
 
 \item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
 Only applicable for unidimensional models estimated with the EM algorithm.
