@@ -16,8 +16,8 @@ test_that('exploratory mods', {
     L2[1, 7] <- L2[2, 9] <- -1
     W1 <- wald(onefact, L)
     W2 <- wald(onefact, L2)
-    expect_true(mirt:::closeEnough(W1$W - 245.7788, -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(W2$W - 3.206113, -1e-2, 1e-2))    
+    expect_true(mirt:::closeEnough(W1$W - 242.3017, -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(W2$W - 3.170487, -1e-2, 1e-2))    
     
     fitonefact <- M2(onefact)
     expect_is(fitonefact, 'data.frame')

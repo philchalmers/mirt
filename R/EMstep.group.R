@@ -154,21 +154,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                                J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-            #Estep
-            LL <- 0
-            for(g in 1L:ngroups){
-                if(BFACTOR){
-                    rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                                Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
-                                                Priorbetween=Priorbetween[[g]], specific=specific, 
-                                                sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-                } else {
-                    rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                             CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
-                                             prior=Prior[[g]], itemloc=itemloc)
-                }
-                LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected), na.rm = TRUE)
-            }
+            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior, 
+                           Priorbetween=Priorbetween, specific=specific, sitems=sitems, 
+                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, 
+                           BFACTOR=BFACTOR, rlist=rlist)
+            rlist <- Elist$rlist; LL <- Elist$LL
             collectLL[cycles] <- LL
             if(is.nan(LL))
                 stop('Optimization error: Could not compute observed log-likelihood. Try
@@ -198,25 +188,49 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
                               TOL=list$MSTEPTOL, solnp_args=solnp_args)
-            if(list$accelerate == 'Ramsay' && Mrate > .01 && cycles %% 3 == 0L){
-                dX2 <- preMstep.longpars - preMstep.longpars2
-                dX <- longpars - preMstep.longpars
-                dX <- dX[est]; dX2 <- dX2[est]
-                d2X2 <- dX - dX2
-                accel <- 1 - sqrt((dX %*% dX) / (d2X2 %*% d2X2))
-                if(accel < -5) accel <- -5
-                tmp <- (1 - accel) * longpars + accel * preMstep.longpars
-                longpars[!latent_longpars] <- tmp[!latent_longpars]
+            if(list$accelerate != 'none' && cycles %% 3 == 0L){
+                if(list$accelerate == 'Ramsay'){
+                    if(Mrate > .01){
+                        dX2 <- preMstep.longpars - preMstep.longpars2
+                        dX <- longpars - preMstep.longpars
+                        d2X2 <- dX - dX2
+                        ratio <- sqrt((dX %*% dX) / (d2X2 %*% d2X2))
+                        accel <- 1 - ratio
+                        if(accel < -5) accel <- -5
+                        tmp <- (1 - accel) * longpars + accel * preMstep.longpars
+                        longpars[!latent_longpars] <- tmp[!latent_longpars]
+                    }
+                } else if(list$accelerate == 'squarem'){
+                    r <- preMstep.longpars - preMstep.longpars2
+                    v <- (longpars - preMstep.longpars) - r
+                    ratio <- sqrt((r %*% r) / (v %*% v))
+                    accel <- -ratio
+                    if(accel > -1){
+                        accel <- -1
+                    } else {
+                        while(TRUE){
+                            tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
+                            longpars[!latent_longpars] <- tmp[!latent_longpars]
+                            pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+                            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior, 
+                                           Priorbetween=Priorbetween, specific=specific, sitems=sitems, 
+                                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, 
+                                           BFACTOR=BFACTOR, rlist=rlist)
+                            if(Elist$LL <= collectLL[cycles]){
+                                accel <- (accel - 1) / 2
+                            } else break
+                        }
+                    }
+                    tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
+                    longpars[!latent_longpars] <- tmp[!latent_longpars]
+                } else stop('acceleration option not defined')
             }
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL, max(abs(preMstep.longpars - longpars))))
-            if(all(abs(preMstep.longpars - longpars) < TOL)){
-                if(list$accelerate == 'none') break
-                else if(cycles %% 3 != 1L) break
-            }
+            if(all(abs(preMstep.longpars - longpars) < TOL)) break
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
         if(cycles == NCYCLES){

@@ -39,6 +39,10 @@
   
 - added `itemnames` argument added to `mirt.model()` to allow model specifications using raw 
   item names rather than location indicators
+  
+- `accelerate` argument changed from logical to character vector, now allowing three 
+  potential options: 'Ramsay' (default), 'squarem', and 'none' for modifying the 
+  EM acceleration approach
 
 ## BUG FIXES
 

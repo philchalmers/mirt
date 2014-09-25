@@ -180,7 +180,9 @@ c(1,2,3,4). Viewing the starting values will help to identify the categories)}
 using the fixed internal starting values?}
 
 \item{accelerate}{a character vector indicating the type of acceleration to use. Default
-is \code{'Ramsay'}. To disable the acceleration, pass \code{'none'}}
+is \code{'Ramsay'}, but may also be \code{'squarem'} for the SQUAREM procedure (specifically,
+the gSqS3 approach) described in Varadhan and Roldand (2008).
+To disable the acceleration, pass \code{'none'}}
 
 \item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
 Only applicable for unidimensional models estimated with the EM algorithm.
@@ -872,6 +874,9 @@ Proceedings of the 1977 Computerized Adaptive Testing Conference.
 
 Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 \emph{Psychometrika, 47}, 175-186.
+
+Varadhan, R. & Roland, C. (2008). Simple and Globally Convergent Methods for Accelerating
+the Convergence of Any EM Algorithm. \emph{Scandinavian Journal of Statistics, 35}, 335-353.
 
 Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
 Bock, R. D. (2003). \emph{TESTFACT 4 for Windows: Test Scoring, Item Statistics,

@@ -300,7 +300,9 @@
 #'   value to assign a global guessing parameter or may be entered as a numeric
 #'   vector corresponding to each item
 #' @param accelerate a character vector indicating the type of acceleration to use. Default
-#'   is \code{'Ramsay'}. To disable the acceleration, pass \code{'none'}
+#'   is \code{'Ramsay'}, but may also be \code{'squarem'} for the SQUAREM procedure (specifically,
+#'   the gSqS3 approach) described in Varadhan and Roldand (2008). 
+#'   To disable the acceleration, pass \code{'none'}
 #' @param constrain a list of user declared equality constraints. To see how to define the
 #'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are 
 #'   labeled. To constrain parameters to be equal create a list with separate concatenated 
@@ -490,6 +492,9 @@
 #'
 #' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 #' \emph{Psychometrika, 47}, 175-186.
+#' 
+#' Varadhan, R. & Roland, C. (2008). Simple and Globally Convergent Methods for Accelerating 
+#' the Convergence of Any EM Algorithm. \emph{Scandinavian Journal of Statistics, 35}, 335-353.
 #'
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
 #' Bock, R. D. (2003). \emph{TESTFACT 4 for Windows: Test Scoring, Item Statistics,

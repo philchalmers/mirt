@@ -1,3 +1,22 @@
+Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitems, 
+                  itemloc, CUSTOM.IND, BFACTOR, ngroups, rlist){
+    LL <- 0
+    for(g in 1L:ngroups){
+        if(BFACTOR){
+            rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                        Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
+                                        Priorbetween=Priorbetween[[g]], specific=specific, 
+                                        sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+        } else {
+            rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                     CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
+                                     prior=Prior[[g]], itemloc=itemloc)
+        }
+        LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected), na.rm = TRUE)
+    }
+    return(list(rlist=rlist, LL=LL))
+}
+
 # Estep for mirt
 Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND,
                        itemtrace=NULL, deriv = FALSE)

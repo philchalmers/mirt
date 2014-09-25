@@ -137,7 +137,7 @@ test_that('poly', {
     expect_equal(grsm@df, 9765601)
     graded <- mirt(data, 1, verbose = FALSE)
     gM2 <- M2(graded, calcNull=TRUE)
-    expect_equal(gM2$M2, 6.518739, tolerance = 1e-4)
+    expect_equal(gM2$M2, 6.51666745, tolerance = 1e-4)
     expect_equal(gM2$df, 5)
     expect_equal(gM2$CFI, .9961693, tolerance = 1e-4)
     expect_equal(gM2$SRMSR, 0.01691436, tolerance = 1e-4)
