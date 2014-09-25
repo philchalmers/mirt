@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.5.8
+Version: 1.5.9
 Date: 2014-04-23
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -30,7 +30,6 @@ Imports:
     numDeriv
 Suggests:
     testthat,
-    plink,
     boot,
     latticeExtra,
     shiny,

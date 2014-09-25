@@ -13,6 +13,8 @@
   explicit `rotate` argument
   
 - computation of `S_X2` statistic in `itemfit` now much more stable for polytomous item types
+
+- support for the `plink` package now unofficially dropped because it was removed from CRAN
   
 ## NEW FEATURES
 
@@ -47,6 +49,8 @@
 ## BUG FIXES
 
 - fixed bug in `bfactor()` starting values when NAs were specified in the `model` argument
+
+- adjust overly optimistic termination criteria in EM algorithm
 
 # Changes in mirt 1.5
 

@@ -67,7 +67,7 @@ test_that('discrete', {
     so <- summary(mod_gom, digits=10)
     expect_equal(mod_gom@logLik, -5541.09, tolerance = 1e-4)
     expect_equal(as.numeric(sort(so$Class.Proportions)), c(0.1744980, 0.3188351, 0.5066669), tolerance = 1e-2)    
-    expect_equal(as.numeric(sort(so[[1]])), c(0.104286,0.1185069,0.482028,0.517972,0.8814931,0.895714), 
+    expect_equal(as.numeric(sort(so[[1]])), c(0.1042220, 0.1185074, 0.4819419, 0.5180581, 0.8814926, 0.8957780), 
                  tolerance = 1e-4)
         
     #-----------------
@@ -101,9 +101,9 @@ test_that('discrete', {
     so <- summary(mod_mdiscrete, digits=10)
     expect_equal(mod_mdiscrete@logLik, -1923.518, tolerance = 1e-4)
     expect_equal(as.numeric(sort(so$Class.Proportions)), 
-                 c(0.00784787,0.008598509,0.0107872, 0.01614415,0.03704634,0.04026666,
-                   0.4121596,0.4671497), tolerance = 1e-4)   
-    expect_equal(sd(as.numeric(sort(so[[1]]))), 0.3896931, tolerance = 1e-4)
+                 c(0.007497902, 0.008688461, 0.009559938, 0.010802275, 0.040517211, 
+                   0.041186267, 0.415900556, 0.465847391), tolerance = 1e-4)   
+    expect_equal(sd(as.numeric(sort(so[[1]]))), 0.3891998, tolerance = 1e-4)
 
     #-----------------
     #located latent class model

@@ -12,13 +12,13 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modLouis, digits = 5, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.18838, 4.86544, 0.49088, 2.64044, 0.22267, -1.46621, 0.15868, 1.22569, 0.18189, 2.924, 0.23928, 0.90115, 0.14289, -2.26661, 0.20308, 2.29058, 0.48269, 5.22988, 0.72817, 2.21201, 0.3564, -1.96222, 0.32209, 1.09557, 0.18336, 3.34845, 0.27659, 0.9919, 0.14053, -1.68846, 0.16864, 0, NA, 1, NA),
                  tolerance = 1e-3)
-    expect_equal(modLouis@condnum, 97.04485, tolerance = 1e-2)
+    expect_equal(modLouis@condnum, 98.26492, tolerance = 1e-2)
     modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modsandwich, digits = 5, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
                  tolerance = 1e-3)
-    expect_equal(modsandwich@condnum, 140.0871, tolerance = 1e-2)
+    expect_equal(modsandwich@condnum, 142.2682, tolerance = 1e-2)
     modp1 <- mirt(Science, 1, verbose=FALSE)
     expect_is(modp1, 'ConfirmatoryClass')
     expect_equal(modp1@df, 239)
@@ -69,10 +69,10 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
     expect_equal(cfs, c(1.057, 0.676, 1.438, 4.876, 3.912, 5.84, 2.65, 2.21, 3.09, -1.472, -1.786, -1.159, 1.219, 0.839, 1.599, 2.918, 2.425, 3.41, 0.9, 0.615, 1.185, -2.263, -2.679, -1.848, 2.254, 1.322, 3.187, 5.177, 3.765, 6.588, 2.19, 1.49, 2.89, -1.942, -2.567, -1.318, 0.771, 0.464, 1.077, 0, NA, NA, 1, NA, NA, 2, NA, NA, 3, NA, NA, 0, NA, NA, 2.16, 1.552, 2.767, 2.973, 2.29, 3.657, 1.767, 1.137, 2.397, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
-    modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE)
+    modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE, TOL=1e-3)
     expect_is(modp6, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modp6, verbose = FALSE)))
-    expect_equal(cfs, c(0.789, 5.158, 2.624, -1.344, 1.047, 2.943, 0.962, -2.184, 2.681, 5.726, 2.782, -1.808, 0.931, 3.423, 1.047, -1.592, 0, 1),
+    expect_equal(cfs, c(0.821,5.105,2.613,-1.372,1.077,2.929,0.941,-2.224,2.435,5.383,2.482,-1.802,0.957,3.412,1.028,-1.624,0,1),
                  tolerance = 1e-2)
     
     fm0 <- fscores(modp1, method='EAP', response.pattern = c(1,2,3,4))
@@ -85,8 +85,8 @@ test_that('poly', {
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
-                                       abs(c(2.6215942, 1.8525867, 0.6209020, 1.1175021, 2.4442223, 0.7433109, 2.3733280, 0.7154136, 0.2434079,
-                                             0.4614485, 2.3085583, 1.5700213)),
+                                       abs(c(2.6173, 1.8555, 0.6233, 1.1259, 2.4407, 0.7309, 2.3772,
+                                             0.7359, 0.2130, 0.4330, 2.3111, 1.5571)),
                                    -1e-2, 1e-2))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
@@ -112,8 +112,8 @@ test_that('poly', {
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2))
-    expect_equal(fit$Zh, c(-11.53358, -54.51315, -33.71653, -21.35045), tolerance=1e-4)
-    expect_equal(fit$S_X2, c(3.969648, 10.670880, 6.791541, 10.062416), tolerance=1e-4)
+    expect_equal(fit$Zh, c(-17.010742, -7.894184, -22.225939, -35.471355), tolerance=1e-4)
+    expect_equal(fit$S_X2, c(3.965848, 10.659664, 6.804478, 10.071994), tolerance=1e-4)
 
     ##rating scale test
     set.seed(1234)
@@ -153,7 +153,7 @@ test_that('poly', {
     expect_is(tinfo, 'matrix')
 
     ER <- fscores(modp2, returnER = TRUE)
-    expect_equal(as.numeric(ER), c(0.4929508, 0.5251592), tolerance=1e-4)
+    expect_equal(as.numeric(ER), c(0.4925406, 0.5222600), tolerance=1e-4)
     ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2))
-    expect_equal(as.numeric(ER2), c(0.4137409, 0.5025562), tolerance=1e-4)
+    expect_equal(as.numeric(ER2), c(0.5507136, 0.6058926), tolerance=1e-4)
 })

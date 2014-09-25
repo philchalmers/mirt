@@ -188,6 +188,14 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
                               TOL=list$MSTEPTOL, solnp_args=solnp_args)
+            EMhistory[cycles+1L,] <- longpars
+            if(verbose)
+                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
+                            cycles, LL, max(abs(preMstep.longpars - longpars))))
+            if(all(abs(preMstep.longpars - longpars) < TOL)){
+                pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+                break
+            }
             if(list$accelerate != 'none' && cycles %% 3 == 0L){
                 if(list$accelerate == 'Ramsay'){
                     if(Mrate > .01){
@@ -226,11 +234,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 } else stop('acceleration option not defined')
             }
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-            EMhistory[cycles+1L,] <- longpars
-            if(verbose)
-                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
-                            cycles, LL, max(abs(preMstep.longpars - longpars))))
-            if(all(abs(preMstep.longpars - longpars) < TOL)) break
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
         if(cycles == NCYCLES){

@@ -51,7 +51,7 @@ test_that('dich', {
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(4.306, 6.273, 0.132, 0.896, 12.361, 2.656, 0.33, 0.89, 4.917, 3.025, 0.343, 0.938, 4.562, 4.874, 0.122, 0.7, 1.781, 3.429, 0.151, 0.907, 0, 1), tolerance = 1e-2)
+    expect_equal(cfs, c(4.533,6.56,0.132,0.896,12.687,2.657,0.332,0.89,5.357,3.213,0.35,0.937,4.539,4.836,0.123,0.7,1.766,3.402,0.152,0.908,0,1), tolerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 21)
@@ -133,7 +133,7 @@ test_that('dich', {
         F2 = 3-5', quiet = TRUE)
     modm1 <- mirt(data, model, verbose=FALSE)
     expect_equal(modm1@df, 20)
-    modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), verbose=FALSE)
+    modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), TOL=1e-3, verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2, digits = 4)))
     expect_equal(cfs, c(0.6514, 0, 1.7031, 0, 1, 1.4872, 0, 0.9174, 0, 1, 2.5151, 3.4949, 3.1337, 5.2577, 0, 1, 0, 0.7058, 0.4789, 0, 1, 0, 0.8524, 1.9092, 0, 1, 0, 0, 1, 0, 1),
                  tolerance = 1e-2)

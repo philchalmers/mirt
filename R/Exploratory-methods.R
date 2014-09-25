@@ -34,10 +34,12 @@ setMethod(
             cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ', 
                 x@iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(packageVersion('mirt')), '\n')
-        cat('M-step optimizer used:', x@Moptim, '\n')
-        if(method == 'EM' || method == 'BL')
-            cat('Number of rectangular quadrature used:', x@quadpts)
-        cat('\n')
+        cat('M-step optimizer:', x@Moptim, '\n')
+        if(method == 'EM' || method == 'BL'){
+            cat('EM acceleration:', x@accelerate)
+            cat('\nNumber of rectangular quadrature:', x@quadpts)
+            cat('\n')
+        }
         if(!is.nan(x@condnum)){
             cat("\nInformation matrix estimated with method:", x@infomethod)
             cat("\nCondition number of information matrix = ", x@condnum,
