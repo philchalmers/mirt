@@ -381,8 +381,6 @@ These are:
   \item{\code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}}{
     Compute estimated parameter confidence intervals via the bootstrap and profiled-likelihood
     methods}
-  \item{\code{\link{read.mirt}}}{
-    Translates mirt objects into objects suitable for use with the \code{plink} package}
   \item{\code{\link{mirtCluster}}}{
     Define a cluster for the package functions to use for capitalizing on multi-core architecture
     to utilize available CPUs when possible. Will help to decrease estimation times for tasks
