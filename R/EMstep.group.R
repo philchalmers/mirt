@@ -216,6 +216,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     if(accel > -1){
                         accel <- -1
                     } else {
+                        count <- 1L
                         while(TRUE){
                             tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
                             longpars[!latent_longpars] <- tmp[!latent_longpars]
@@ -226,7 +227,12 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                            BFACTOR=BFACTOR, rlist=rlist)
                             if(Elist$LL <= collectLL[cycles]){
                                 accel <- (accel - 1) / 2
+                                count <- count + 1L
                             } else break
+                            if(count == 5L){
+                                accel <- -1
+                                break
+                            }
                         }
                     }
                     tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
