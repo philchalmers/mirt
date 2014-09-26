@@ -418,6 +418,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),
                 estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr],
-                fail_invert_info=fail_invert_info, Prior=vector('list', ngroups))
+                fail_invert_info=fail_invert_info, Prior=vector('list', ngroups), collectLL=NaN)
     ret
 }

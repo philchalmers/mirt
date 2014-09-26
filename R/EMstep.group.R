@@ -284,7 +284,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
-                    prior=prior, Priorbetween=Priorbetween, sitems=sitems,
+                    prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=na.omit(collectLL),
                     shortpars=longpars[estpars & !redun_constr], groupest=groupest)
     }
     for(g in 1L:ngroups)

@@ -715,6 +715,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    Theta=Theta,
                    Pl=Pl,
                    K=Data$K,
+                   collectLL=ESTIMATE$collectLL,
                    bfactor=list(),
                    accelerate=opts$accelerate,
                    CUSTOM.IND=CUSTOM.IND,
@@ -801,6 +802,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            converge=ESTIMATE$converge,
                            nfact=nfact,
                            K=Data$K,
+                           collectLL=ESTIMATE$collectLL,
                            quadpts=opts$quadpts,
                            rotate=opts$rotate,
                            null.mod=null.mod,
@@ -850,6 +852,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            constrain=constrain,
                            parprior=parprior,
                            K=Data$K,
+                           collectLL=ESTIMATE$collectLL,
                            bfactor=if(opts$method == 'EM') 
                                list(prior=ESTIMATE$prior, Priorbetween=ESTIMATE$Priorbetween,
                                     sitems=ESTIMATE$sitems, specific=specific, 
@@ -895,6 +898,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        accelerate=opts$accelerate,
                        CUSTOM.IND=CUSTOM.IND,
                        SLOW.IND=SLOW.IND,
+                       collectLL=ESTIMATE$collectLL,
                        bfactor=if(opts$method == 'EM') 
                            list(prior=ESTIMATE$prior, Priorbetween=ESTIMATE$Priorbetween,
                                 sitems=ESTIMATE$sitems, specific=specific) else list(),

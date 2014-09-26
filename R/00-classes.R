@@ -45,6 +45,7 @@ setClass("AllModelClass",
                         CFI='numeric',
                         CUSTOM.IND='integer',
                         SLOW.IND='integer',
+                        collectLL='numeric',
                         TOL='numeric',
                         'VIRTUAL'),
              validity = function(object) return(TRUE)
