@@ -340,6 +340,12 @@ setMethod(
             temp <- object
             object <- object2
             object2 <- temp
+        } else if(df == 0){
+            if((2*object2@logLik - 2*object@logLik) < 0){
+                temp <- object
+                object <- object2
+                object2 <- temp
+            }
         }
         X2 <- round(2*object2@logLik - 2*object@logLik, 3)
         if(verbose){
