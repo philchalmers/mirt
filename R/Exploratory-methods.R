@@ -28,10 +28,10 @@ setMethod(
         method <- x@method
         if(method == 'MIXED') method <- 'MHRM'
         if(x@converge == 1)
-            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ', 
+            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ',
                 method, " iterations.\n", sep = "")
         else
-            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ', 
+            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ',
                 x@iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Moptim, '\n')
@@ -94,13 +94,13 @@ setMethod(
 #'
 #' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
-#' @param rotate a string indicating which rotation to use for exploratory models, primarily 
+#' @param rotate a string indicating which rotation to use for exploratory models, primarily
 #'   from the \code{GPArotation} package (see documentation therein).
-#'   
-#'   Rotations currently supported are: \code{'promax'}, \code{'oblimin'}, \code{'varimax'}, 
-#'   \code{'quartimin'}, \code{'targetT'}, \code{'targetQ'}, \code{'pstT'}, \code{'pstQ'}, 
-#'   \code{'oblimax'}, \code{'entropy'}, \code{'quartimax'}, \code{'simplimax'}, 
-#'   \code{'bentlerT'}, \code{'bentlerQ'}, \code{'tandemI'}, \code{'tandemII'}, 
+#'
+#'   Rotations currently supported are: \code{'promax'}, \code{'oblimin'}, \code{'varimax'},
+#'   \code{'quartimin'}, \code{'targetT'}, \code{'targetQ'}, \code{'pstT'}, \code{'pstQ'},
+#'   \code{'oblimax'}, \code{'entropy'}, \code{'quartimax'}, \code{'simplimax'},
+#'   \code{'bentlerT'}, \code{'bentlerQ'}, \code{'tandemI'}, \code{'tandemII'},
 #'   \code{'geominT'}, \code{'geominQ'}, \code{'cfT'}, \code{'cfQ'}, \code{'infomaxT'},
 #'   \code{'infomaxQ'}, \code{'mccammon'}, \code{'bifactorT'}, \code{'bifactorQ'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
@@ -125,7 +125,7 @@ setMethod(
 #' x <- mirt(Science, 2)
 #' summary(x)
 #' summary(x, rotate = 'varimax')
-#' 
+#'
 #' #print confidence interval (requires computed information matrix)
 #' x2 <- mirt(Science, 1, SE=TRUE)
 #' summary(x2, printCI=.95)
@@ -573,8 +573,8 @@ setMethod(
 #'
 #' Plot various test implied response functions from models estimated in the mirt package.
 #'
-#' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
-#'   \code{MultipleGroupClass}
+#' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param y an arbitrary missing argument required for \code{R CMD check}
 #' @param type type of plot to view; can be \code{'info'} to show the test
 #'   information function, \code{'infocontour'} for the test information contours,
@@ -587,15 +587,15 @@ setMethod(
 #' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
 #'   (e.g., \code{theta_angle = seq(0, 90, by=10)})
-#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
+#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
 #'   Larger values make plots look smoother
 #' @param MI a single number indicating how many imputations to draw to form bootstrapped confidence
 #'   intervals for the selected test statistic. If greater than 0 a plot will be drawn with a shaded
 #'   region for the interval
-#' @param CI a number from 0 to 1 indicating the confidence interval to select when MI input is 
-#'   used. Default uses the 95\% confidence (CI = .95) 
+#' @param CI a number from 0 to 1 indicating the confidence interval to select when MI input is
+#'   used. Default uses the 95\% confidence (CI = .95)
 #' @param rot allows rotation of the 3D graphics
 #' @param which.items numeric vector indicating which items to be used when plotting. Default is
 #'   to use all available items
@@ -614,6 +614,7 @@ setMethod(
 #' @name plot-method
 #' @aliases plot,ExploratoryClass-method plot,ConfirmatoryClass-method
 #'   plot,MultipleGroupClass-method plot,ExploratoryClass,missing-method
+#'   plot,DiscreteClass,missing-method
 #' @docType methods
 #' @rdname plot-method
 #' @examples
@@ -625,7 +626,7 @@ setMethod(
 #' plot(x, type = 'infotrace')
 #' plot(x, type = 'infotrace', facet_items = FALSE)
 #' plot(x, type = 'infoSE')
-#' 
+#'
 #' # confidence interval plots when information matrix computed
 #' plot(x, type='score')
 #' plot(x, type='score', MI=100)
@@ -708,10 +709,10 @@ setMethod(
             }, split='\\.')
             imputenums <- do.call(c, tmp)
             CIscore <- CIinfo <- matrix(0, MI, length(plt$score))
-            for(i in 1L:MI){                
+            for(i in 1L:MI){
                 while(TRUE){
                     tmp <- try(imputePars(pars=x@pars, covB=covB,
-                                          imputenums=imputenums, constrain=x@constrain), 
+                                          imputenums=imputenums, constrain=x@constrain),
                                silent=TRUE)
                     if(!is(tmp, 'try-error')) break
                 }
@@ -771,17 +772,17 @@ setMethod(
                 bs_range <- function(x, CI){
                     ss <- sort(x)
                     N <- length(ss)
-                    ret <- c(upper = ss[ceiling(N * (1 - (1-CI)/2))],                
+                    ret <- c(upper = ss[ceiling(N * (1 - (1-CI)/2))],
                              middle = median(x),
                              lower = ss[floor(N * (1-CI)/2)])
                     ret
                 }
                 tmp <- apply(CIscore, 2, bs_range, CI=CI)
                 plt$CIscoreupper <- tmp['upper', ]
-                plt$CIscorelower <- tmp['lower', ]                
+                plt$CIscorelower <- tmp['lower', ]
                 tmp <- apply(CIinfo, 2, bs_range, CI=CI)
                 plt$CIinfoupper <- tmp['upper', ]
-                plt$CIinfolower <- tmp['lower', ]      
+                plt$CIinfolower <- tmp['lower', ]
                 plt$CISElower <- 1/sqrt(tmp['upper', ])
                 plt$CISEupper <- 1/sqrt(tmp['lower', ])
             }
@@ -789,10 +790,10 @@ setMethod(
                 if(is.null(main))
                     main <- 'Test Information'
                 if(MI > 0){
-                    return(xyplot(info ~ Theta, data=plt, 
-                                  upper=plt$CIinfoupper, lower=plt$CIinfolower, 
+                    return(xyplot(info ~ Theta, data=plt,
+                                  upper=plt$CIinfoupper, lower=plt$CIinfolower,
                                   panel = function(x, y, lower, upper, ...){
-                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                     col=grey(.9), border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
@@ -806,10 +807,10 @@ setMethod(
                 if(is.null(main))
                     main <- 'Test Standard Errors'
                 if(MI > 0){
-                    return(xyplot(SE ~ Theta, data=plt, 
-                                  upper=plt$CISEupper, lower=plt$CISElower, 
+                    return(xyplot(SE ~ Theta, data=plt,
+                                  upper=plt$CISEupper, lower=plt$CISElower,
                                   panel = function(x, y, lower, upper, ...){
-                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                     col=grey(.9), border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
@@ -876,14 +877,14 @@ setMethod(
                 if(is.null(main))
                     main <- 'Expected Total Score'
                 if(MI > 0){
-                    return(xyplot(score ~ Theta, data=plt, 
-                                  upper=plt$CIscoreupper, lower=plt$CIscorelower, 
+                    return(xyplot(score ~ Theta, data=plt,
+                                  upper=plt$CIscoreupper, lower=plt$CIscorelower,
                                   panel = function(x, y, lower, upper, ...){
-                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                     col=grey(.9), border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
-                                  main = main, 
+                                  main = main,
                                   ylab = expression(T(theta)), xlab = expression(theta), ...))
                 } else {
                     return(xyplot(score ~ Theta, plt,

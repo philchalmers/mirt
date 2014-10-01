@@ -79,9 +79,14 @@ anova(mod2, mod3)
 M2(mod2)
 itemfit(mod2)
 
+#generate classification plots
+plot(mod2)
+plot(mod2, facet_items = FALSE)
+
 # available for polytomous data
 mod <- mdirt(Science, 2)
 summary(mod)
+plot(mod)
 
 # classification based on response patterns
 fscores(mod2)

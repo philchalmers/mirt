@@ -12,10 +12,10 @@ setMethod(
         method <- x@method
         if(method == 'MIXED') method <- 'MHRM'
         if(x@converge == 1)
-            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ', 
+            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ',
                 method, " iterations.\n", sep = "")
         else
-            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ', 
+            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ',
                 x@iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Moptim, '\n')
@@ -109,5 +109,34 @@ setMethod(
         ret <- residuals(object, discrete = TRUE, ...)
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
+    }
+)
+
+setMethod(
+    f = "plot",
+    signature = signature(x = 'DiscreteClass', y = 'missing'),
+    definition = function(x, which.items = 1:ncol(x@Data$data),
+                          facet_items = TRUE, auto.key = TRUE, type = 'b', ...)
+    {
+        so <- summary(x)
+        index <- which.items
+        names <- colnames(x@Data$data)
+        mlt <- lapply(index, function(x, so, names){
+            pick <- so[[x]]
+            colnames(pick) <- paste0('cat', 1:ncol(pick))
+            ret <- data.frame(item=names[x],
+                              class=rep(rownames(pick), ncol(pick)),
+                              cat=rep(colnames(pick), each=nrow(pick)),
+                              prob=as.numeric(pick))
+            ret
+        }, so=so, names=names)
+        mlt <- do.call(rbind, mlt)
+        if(facet_items){
+            return(xyplot(prob ~ cat|item, data=mlt, groups = class, type = type,
+                          auto.key = auto.key, ylab = 'Probability', ...))
+        } else {
+            return(xyplot(prob ~ cat|class, data=mlt, groups = item, type = type,
+                          auto.key = auto.key, ylab = 'Probability', ...))
+        }
     }
 )

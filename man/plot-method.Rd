@@ -2,6 +2,7 @@
 \docType{methods}
 \name{plot-method}
 \alias{plot,ConfirmatoryClass-method}
+\alias{plot,DiscreteClass,missing-method}
 \alias{plot,ExploratoryClass,missing-method}
 \alias{plot,ExploratoryClass-method}
 \alias{plot,MultipleGroupClass-method}
@@ -16,8 +17,8 @@
   add.ylab2 = TRUE, ...)
 }
 \arguments{
-\item{x}{an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
-\code{MultipleGroupClass}}
+\item{x}{an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+\code{MultipleGroupClass}, or \code{DiscreteClass}}
 
 \item{y}{an arbitrary missing argument required for \code{R CMD check}}
 
