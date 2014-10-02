@@ -133,10 +133,12 @@ setMethod(
         mlt <- do.call(rbind, mlt)
         if(facet_items){
             return(xyplot(prob ~ cat|item, data=mlt, groups = class, type = type,
-                          auto.key = auto.key, ylab = 'Probability', ...))
+                          auto.key = auto.key, ylab = 'Probability', ylim = c(-.1, 1.1),
+                          ...))
         } else {
             return(xyplot(prob ~ cat|class, data=mlt, groups = item, type = type,
-                          auto.key = auto.key, ylab = 'Probability', ...))
+                          auto.key = auto.key, ylab = 'Probability', , ylim = c(-.1, 1.1),
+                          ...))
         }
     }
 )

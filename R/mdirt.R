@@ -3,7 +3,8 @@
 #' \code{mdirt} fits a variety of item response models with discrete latent variables.
 #' Posterior classification accuracy for each response pattern may be obtained
 #' via the \code{\link{fscores}} function. The \code{summary()} function will display
-#' the category probability values given the class membership, while \code{coef()}
+#' the category probability values given the class membership, which can also
+#' be displayed graphically with \code{plot()}, while \code{coef()}
 #' displays the raw coefficient values (and their standard errors, if estimated). Finally,
 #' \code{anova()} is used to compare nested models.
 #'
