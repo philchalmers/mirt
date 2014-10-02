@@ -37,6 +37,8 @@
 #'
 #' }
 PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
+    
+    #silently accepts print_debug = TRUE for printing the minimization criteria
 
     compute.LL <- function(dat, model, sv, large, parprior, ...){
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
@@ -46,7 +48,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
         ret
     }
 
-    f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns, ...){
+    f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns, 
+                      print_debug = FALSE, ...){
         sv$est[which] <- FALSE
         sv$value[which] <- value
         if(sv$class[which] == 'graded'){
@@ -74,6 +77,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
         if(sum(asigns * sign(as)) < 0L) return(1e8)
         if(is(got.LL, 'try-error')) return(1e8)
         ret <- (got.LL - get.LL)^2
+        if(print_debug) cat('parnum = ', which, '; value = ', round(value, 3),
+                            '; min = ', round(ret, 3), '\n')
         attr(ret, 'value') <- value
         ret
     }
