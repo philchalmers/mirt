@@ -39,7 +39,7 @@
   and `alabama` packages by passing `optimizer = 'solnp'` and `optimizer = 'alabama'`, 
   as well as the relevant package arguments through the `solnp_ags` and `alabama_ags` list inputs
   
-- added `itemnames` argument added to `mirt.model()` to allow model specifications using raw 
+- `itemnames` argument added to `mirt.model()` to allow model specifications using raw 
   item names rather than location indicators
   
 - `accelerate` argument changed from logical to character vector, now allowing three 

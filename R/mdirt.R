@@ -10,7 +10,7 @@
 #'
 #' @section 'lca' model definition:
 #'
-#' The lantent class IRT model with two latent classes has the form
+#' The latent class IRT model with two latent classes has the form
 #'
 #' \deqn{P(x = k|\theta_1, \theta_2, a1, a2) = \frac{exp(s_k (a1 \theta_1 + a2 \theta_2))}{
 #'   \sum_j^K exp(s_j (a1 \theta_1 + a2 \theta_2))}}
@@ -38,7 +38,7 @@
 #' @param nruns a numeric value indicating how many times the model should be fit to the data
 #'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
 #'   by default
-#' @param return_max logitcal; when \code{nruns > 1}, return the model that has the most optimal
+#' @param return_max logical; when \code{nruns > 1}, return the model that has the most optimal
 #'   maximum likelihood criteria? If FALSE, returns a list of all the estimated objects
 #' @param pars used for modifying starting values; see \code{\link{mirt}} for details
 #' @param verbose logical; turn on messages to the R console

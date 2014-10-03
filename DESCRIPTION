@@ -38,7 +38,6 @@ Suggests:
     Rsolnp,
     alabama,
     sirt,
-    KernSmoothIRT,
     mirtCAT
 ByteCompile: yes
 LazyLoad: yes
