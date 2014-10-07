@@ -136,6 +136,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         for(i in 1L:length(which.par))
             parnum[[i]] <- values$parnum[values$name == which.par[i] &
                                              values$item == itemnames[item]]
+        for(i in length(parnum):1L)
+            if(!length(parnum[[i]])) parnum[[i]] <- NULL
         if(!length(parnum))
             stop('Item ', item, ' does not contain any of the parameters defined in which.par.
                  Consider removing it from the item2test input or adding relevant parameters 
@@ -178,7 +180,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         stop('scheme input is not valid')
     if(Wald){
         if(scheme != 'add')
-            stop('Wald test are only appropriate when add scheme is used')
+            stop('Wald tests are only appropriate when add scheme is used')
         if(length(MGmodel@information) == 1)
             stop('Information matrix was not calculated')
     }
@@ -222,12 +224,16 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
             if(verbose)
                 cat(sprintf('\rChecking for DIF in %d more items', 
                             ifelse(drop, sum(keep), sum(!keep))))
+            if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
             constrain <- updatedModel@constrain
             for(j in 1L:length(keep)){
                 parnum <- list()
                 for(i in 1L:length(which.par))
                     parnum[[i]] <- values$parnum[values$name == which.par[i] &
                                                      values$item == itemnames[j]]
+                for(i in length(parnum):1L)
+                    if(!length(parnum[[i]])) parnum[[i]] <- NULL
+                if(!length(parnum)) break
                 if(keep[j] && !drop){
                     for(i in 1L:length(parnum))
                         constrain[[length(constrain) + 1L]] <- parnum[[i]]
