@@ -81,10 +81,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(!all(apply(data, 2L, class) %in% c('integer', 'numeric')))
             stop('Input data must be integer or numeric values only')
         if(is.numeric(data))
-            data <- matrix(as.integer(data), nrow(data), dimnames=list(rownames(data), colnames(data)))
+            data <- matrix(as.integer(data), nrow(data), 
+                           dimnames=list(rownames(data), colnames(data)))
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
+        tmp <- apply(data, 2L, function(x){
+            good <- seq(from=min(x, na.rm=TRUE), to=max(x, na.rm=TRUE), by = 1L)
+            if(!all(good %in% na.omit(unique(x)))) 
+                stop('Items contain category scoring spaces greater than 1. 
+                    Use apply(data, 2, table) to inspect and fix')
+            invisible()
+        })
         Data$data <- data
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
         if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
