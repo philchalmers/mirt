@@ -663,8 +663,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     BIC <- (-2) * logLik + tmp*log(N)
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     p.G2 <- 1 - pchisq(G2,df)
-    RMSEA.G2 <- ifelse((G2 - df) > 0,
-                    sqrt(G2 - df) / sqrt(df * (N-1)), 0)
+    RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
     null.mod <- unclass(new('ConfirmatoryClass'))
     TLI.G2 <- CFI.G2 <- NaN
     if(length(r) * 3L < prod(Data$K)){

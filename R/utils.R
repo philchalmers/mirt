@@ -1457,6 +1457,12 @@ collapseCells <- function(O, E, mincell = 1){
     return(list(O=O, E=E))
 }
 
+rmsea <- function(X2, df, N){
+    ret <- ifelse((X2 - df) > 0,
+                  sqrt(X2 - df) / sqrt(df * (N-1)), 0)
+    ret
+}
+
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 

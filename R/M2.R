@@ -127,9 +127,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         for(g in 1L:ngroups) Tsum <- Tsum + ret[[g]]$nrowT
         newret$df <- Tsum - obj@nest
         newret$p <- 1 - pchisq(newret$Total.M2, newret$df)
-        newret$RMSEA <- ifelse((newret$Total.M2 - newret$df) > 0,
-                                  sqrt(newret$Total.M2 - newret$df) / 
-                                      sqrt(newret$df * (obj@Data$N-1)), 0)
+        newret$RMSEA <- rmsea(X2=newret$Total.M2, df=newret$df, N=obj@Data$N)
         RMSEA.90_CI <- RMSEA.CI(newret$Total.M2, newret$df, obj@Data$N, 
                                 ci.lower=alpha, ci.upper=1-alpha)
         newret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
@@ -296,8 +294,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         df <- length(p) - obj@nest
         ret$df <- df
         ret$p <- 1 - pchisq(M2, ret$df)
-        ret$RMSEA <- ifelse((M2 - ret$df) > 0,
-                               sqrt(M2 - ret$df) / sqrt(ret$df * (N-1)), 0)
+        ret$RMSEA <- rmsea(X2=M2, df=ret$df, N=N)
         RMSEA.90_CI <- RMSEA.CI(M2, df, N, ci.lower=alpha, ci.upper=1-alpha)
         ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
