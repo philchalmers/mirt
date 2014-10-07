@@ -632,7 +632,7 @@ itemplot(mod2, 10)
 ###########
 # 2PL nominal response model example (Suh and Bolt, 2010)
 data(SAT12)
-SAT12[SAT12 == 8] <- NA
+SAT12[SAT12 == 8] <- NA #set 8 as a missing value
 head(SAT12)
 
 #correct answer key

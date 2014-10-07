@@ -15,6 +15,10 @@
 - computation of `S_X2` statistic in `itemfit` now much more stable for polytomous item types
 
 - support for the `plink` package now unofficially dropped because it was removed from CRAN
+
+- data inputs are now required to have category spacing codings exactly equal to 1 
+  (e.g., [0, 1, 2, ...]; patterns such as [0, 2, 3] which are implicitly missing spaces 
+  are now invalid)
   
 ## NEW FEATURES
 
