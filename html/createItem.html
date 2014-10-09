@@ -5,6 +5,18 @@
 
 <title>Name: createItem</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -225,47 +239,21 @@ tail(sv) #looks good
 ## 20       none     NaN     NaN
 </code></pre>
 
-<pre><code class="r">mod &lt;- mirt(dat, 1, c(rep(&#39;2PL&#39;,4), &#39;old2PL&#39;), customItems=list(old2PL=x), verbose = TRUE)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -2714.230, Max-Change: 0.97035
-Iteration: 2, Log-Lik: -2664.170, Max-Change: 0.24166
-Iteration: 3, Log-Lik: -2661.520, Max-Change: 0.16801
-Iteration: 4, Log-Lik: -2660.018, Max-Change: 0.06932
-Iteration: 5, Log-Lik: -2659.575, Max-Change: 0.05422
-Iteration: 6, Log-Lik: -2659.316, Max-Change: 0.12935
-Iteration: 7, Log-Lik: -2658.940, Max-Change: 0.01964
-Iteration: 8, Log-Lik: -2658.901, Max-Change: 0.01592
-Iteration: 9, Log-Lik: -2658.875, Max-Change: 0.06684
-Iteration: 10, Log-Lik: -2658.812, Max-Change: 0.00522
-Iteration: 11, Log-Lik: -2658.810, Max-Change: 0.00444
-Iteration: 12, Log-Lik: -2658.809, Max-Change: 0.01130
-Iteration: 13, Log-Lik: -2658.806, Max-Change: 0.00142
-Iteration: 14, Log-Lik: -2658.806, Max-Change: 0.00016
-Iteration: 15, Log-Lik: -2658.806, Max-Change: 0.00140
-Iteration: 16, Log-Lik: -2658.806, Max-Change: 0.00107
-Iteration: 17, Log-Lik: -2658.806, Max-Change: 0.00015
-Iteration: 18, Log-Lik: -2658.806, Max-Change: 0.00108
-Iteration: 19, Log-Lik: -2658.806, Max-Change: 0.00017
-Iteration: 20, Log-Lik: -2658.806, Max-Change: 0.00102
-Iteration: 21, Log-Lik: -2658.806, Max-Change: 0.00002
-</code></pre>
-
-<pre><code class="r">coef(mod)
+<pre><code class="r">mod &lt;- mirt(dat, 1, c(rep(&#39;2PL&#39;,4), &#39;old2PL&#39;), customItems=list(old2PL=x))
+coef(mod)
 </code></pre>
 
 <pre><code>## $Item.1
-##       a1     d g u
-## par 0.99 1.857 0 1
+##        a1     d g u
+## par 0.989 1.856 0 1
 ## 
 ## $Item.2
 ##        a1     d g u
 ## par 1.081 0.808 0 1
 ## 
 ## $Item.3
-##        a1   d g u
-## par 1.699 1.8 0 1
+##        a1     d g u
+## par 1.703 1.803 0 1
 ## 
 ## $Item.4
 ##        a1     d g u
@@ -273,520 +261,15 @@ Iteration: 21, Log-Lik: -2658.806, Max-Change: 0.00002
 ## 
 ## $Item.5
 ##         a      b
-## par 0.737 -2.517
+## par 0.737 -2.518
 ## 
 ## $GroupPars
 ##     MEAN_1 COV_11
 ## par      0      1
 </code></pre>
 
-<pre><code class="r">mod2 &lt;- mirt(dat, 1, c(rep(&#39;2PL&#39;,4), &#39;old2PL&#39;), customItems=list(old2PL=x),
-   verbose = TRUE, method = &#39;MHRM&#39;)
-</code></pre>
-
-<pre><code>## 
-Stage 1 = 1, LL = -3949.4, AR(6.00) = [0.36], Max-Change = 0.2500
-Stage 1 = 2, LL = -3917.3, AR(6.00) = [0.39], Max-Change = 0.1490
-Stage 1 = 3, LL = -3920.3, AR(6.00) = [0.36], Max-Change = 0.1137
-Stage 1 = 4, LL = -3874.9, AR(6.00) = [0.36], Max-Change = 0.0509
-Stage 1 = 5, LL = -3864.4, AR(6.00) = [0.37], Max-Change = 0.0494
-Stage 1 = 6, LL = -3872.6, AR(6.00) = [0.36], Max-Change = 0.0279
-Stage 1 = 7, LL = -3819.2, AR(6.00) = [0.37], Max-Change = 0.0530
-Stage 1 = 8, LL = -3818.2, AR(6.00) = [0.33], Max-Change = 0.0452
-Stage 1 = 9, LL = -3841.3, AR(6.00) = [0.34], Max-Change = 0.0278
-Stage 1 = 10, LL = -3805.9, AR(6.00) = [0.37], Max-Change = 0.0594
-Stage 1 = 11, LL = -3806.3, AR(6.00) = [0.36], Max-Change = 0.0411
-Stage 1 = 12, LL = -3815.2, AR(6.00) = [0.34], Max-Change = 0.0383
-Stage 1 = 13, LL = -3833.5, AR(6.00) = [0.38], Max-Change = 0.0760
-Stage 1 = 14, LL = -3820.2, AR(6.00) = [0.34], Max-Change = 0.0313
-Stage 1 = 15, LL = -3818.6, AR(6.00) = [0.35], Max-Change = 0.0446
-Stage 1 = 16, LL = -3806.7, AR(6.00) = [0.37], Max-Change = 0.0379
-Stage 1 = 17, LL = -3806.3, AR(6.00) = [0.35], Max-Change = 0.0400
-Stage 1 = 18, LL = -3806.4, AR(6.00) = [0.36], Max-Change = 0.0382
-Stage 1 = 19, LL = -3814.6, AR(6.00) = [0.36], Max-Change = 0.0957
-Stage 1 = 20, LL = -3794.1, AR(6.00) = [0.34], Max-Change = 0.1111
-Stage 1 = 21, LL = -3801.7, AR(6.00) = [0.33], Max-Change = 0.0298
-Stage 1 = 22, LL = -3737.7, AR(6.00) = [0.36], Max-Change = 0.0537
-Stage 1 = 23, LL = -3784.7, AR(6.00) = [0.34], Max-Change = 0.0568
-Stage 1 = 24, LL = -3815.2, AR(6.00) = [0.37], Max-Change = 0.0392
-Stage 1 = 25, LL = -3783.6, AR(6.00) = [0.34], Max-Change = 0.0226
-Stage 1 = 26, LL = -3824.1, AR(6.00) = [0.34], Max-Change = 0.0294
-Stage 1 = 27, LL = -3832.4, AR(6.00) = [0.36], Max-Change = 0.0257
-Stage 1 = 28, LL = -3773.1, AR(6.00) = [0.35], Max-Change = 0.0970
-Stage 1 = 29, LL = -3766.0, AR(6.00) = [0.35], Max-Change = 0.0338
-Stage 1 = 30, LL = -3825.5, AR(6.00) = [0.34], Max-Change = 0.0543
-Stage 1 = 31, LL = -3781.3, AR(6.00) = [0.35], Max-Change = 0.0845
-Stage 1 = 32, LL = -3793.5, AR(6.00) = [0.33], Max-Change = 0.0646
-Stage 1 = 33, LL = -3814.3, AR(6.00) = [0.35], Max-Change = 0.0937
-Stage 1 = 34, LL = -3792.8, AR(6.00) = [0.35], Max-Change = 0.0298
-Stage 1 = 35, LL = -3798.9, AR(6.00) = [0.36], Max-Change = 0.0288
-Stage 1 = 36, LL = -3819.9, AR(6.00) = [0.33], Max-Change = 0.0249
-Stage 1 = 37, LL = -3823.5, AR(6.00) = [0.36], Max-Change = 0.0660
-Stage 1 = 38, LL = -3750.5, AR(6.00) = [0.35], Max-Change = 0.0556
-Stage 1 = 39, LL = -3780.1, AR(6.00) = [0.36], Max-Change = 0.0289
-Stage 1 = 40, LL = -3758.2, AR(6.00) = [0.35], Max-Change = 0.0512
-Stage 1 = 41, LL = -3817.5, AR(6.00) = [0.35], Max-Change = 0.0624
-Stage 1 = 42, LL = -3787.3, AR(6.00) = [0.35], Max-Change = 0.0335
-Stage 1 = 43, LL = -3802.0, AR(6.00) = [0.33], Max-Change = 0.0583
-Stage 1 = 44, LL = -3822.9, AR(6.00) = [0.35], Max-Change = 0.0295
-Stage 1 = 45, LL = -3781.7, AR(6.00) = [0.34], Max-Change = 0.0419
-Stage 1 = 46, LL = -3780.0, AR(6.00) = [0.34], Max-Change = 0.0534
-Stage 1 = 47, LL = -3819.1, AR(6.00) = [0.33], Max-Change = 0.0526
-Stage 1 = 48, LL = -3760.5, AR(6.00) = [0.34], Max-Change = 0.0297
-Stage 1 = 49, LL = -3789.7, AR(6.00) = [0.33], Max-Change = 0.0500
-Stage 1 = 50, LL = -3781.0, AR(6.00) = [0.33], Max-Change = 0.0294
-Stage 1 = 51, LL = -3821.4, AR(6.00) = [0.35], Max-Change = 0.0327
-Stage 1 = 52, LL = -3789.7, AR(6.00) = [0.33], Max-Change = 0.0720
-Stage 1 = 53, LL = -3788.5, AR(6.00) = [0.33], Max-Change = 0.0511
-Stage 1 = 54, LL = -3798.7, AR(6.00) = [0.37], Max-Change = 0.0814
-Stage 1 = 55, LL = -3799.9, AR(6.00) = [0.37], Max-Change = 0.0603
-Stage 1 = 56, LL = -3772.6, AR(6.00) = [0.37], Max-Change = 0.0464
-Stage 1 = 57, LL = -3757.4, AR(6.00) = [0.34], Max-Change = 0.0352
-Stage 1 = 58, LL = -3757.5, AR(6.00) = [0.35], Max-Change = 0.2163
-Stage 1 = 59, LL = -3775.5, AR(6.00) = [0.33], Max-Change = 0.0782
-Stage 1 = 60, LL = -3771.7, AR(6.00) = [0.33], Max-Change = 0.0275
-Stage 1 = 61, LL = -3816.5, AR(6.00) = [0.38], Max-Change = 0.0345
-Stage 1 = 62, LL = -3742.7, AR(6.00) = [0.32], Max-Change = 0.0712
-Stage 1 = 63, LL = -3740.2, AR(6.00) = [0.34], Max-Change = 0.1435
-Stage 1 = 64, LL = -3743.1, AR(6.00) = [0.35], Max-Change = 0.0241
-Stage 1 = 65, LL = -3716.6, AR(6.00) = [0.34], Max-Change = 0.0496
-Stage 1 = 66, LL = -3746.3, AR(6.00) = [0.34], Max-Change = 0.0544
-Stage 1 = 67, LL = -3776.6, AR(6.00) = [0.36], Max-Change = 0.0682
-Stage 1 = 68, LL = -3795.8, AR(6.00) = [0.36], Max-Change = 0.0806
-Stage 1 = 69, LL = -3762.5, AR(6.00) = [0.34], Max-Change = 0.0408
-Stage 1 = 70, LL = -3769.1, AR(6.00) = [0.34], Max-Change = 0.0619
-Stage 1 = 71, LL = -3769.5, AR(6.00) = [0.35], Max-Change = 0.0248
-Stage 1 = 72, LL = -3777.2, AR(6.00) = [0.35], Max-Change = 0.1350
-Stage 1 = 73, LL = -3770.9, AR(6.00) = [0.35], Max-Change = 0.1189
-Stage 1 = 74, LL = -3751.2, AR(6.00) = [0.35], Max-Change = 0.1195
-Stage 1 = 75, LL = -3768.8, AR(6.00) = [0.34], Max-Change = 0.0551
-Stage 1 = 76, LL = -3745.8, AR(6.00) = [0.36], Max-Change = 0.0413
-Stage 1 = 77, LL = -3727.5, AR(6.00) = [0.35], Max-Change = 0.0345
-Stage 1 = 78, LL = -3768.9, AR(6.00) = [0.34], Max-Change = 0.0576
-Stage 1 = 79, LL = -3721.7, AR(6.00) = [0.32], Max-Change = 0.0488
-Stage 1 = 80, LL = -3770.3, AR(6.00) = [0.29], Max-Change = 0.0699
-Stage 1 = 81, LL = -3739.9, AR(6.00) = [0.35], Max-Change = 0.0608
-Stage 1 = 82, LL = -3734.3, AR(6.00) = [0.36], Max-Change = 0.0260
-Stage 1 = 83, LL = -3752.7, AR(6.00) = [0.33], Max-Change = 0.0439
-Stage 1 = 84, LL = -3744.4, AR(6.00) = [0.35], Max-Change = 0.0873
-Stage 1 = 85, LL = -3767.5, AR(6.00) = [0.36], Max-Change = 0.0166
-Stage 1 = 86, LL = -3712.6, AR(6.00) = [0.33], Max-Change = 0.0557
-Stage 1 = 87, LL = -3783.8, AR(6.00) = [0.34], Max-Change = 0.0255
-Stage 1 = 88, LL = -3767.2, AR(6.00) = [0.34], Max-Change = 0.0337
-Stage 1 = 89, LL = -3757.8, AR(6.00) = [0.34], Max-Change = 0.0248
-Stage 1 = 90, LL = -3778.8, AR(6.00) = [0.35], Max-Change = 0.0576
-Stage 1 = 91, LL = -3801.0, AR(6.00) = [0.34], Max-Change = 0.0534
-Stage 1 = 92, LL = -3830.7, AR(6.00) = [0.36], Max-Change = 0.0592
-Stage 1 = 93, LL = -3799.5, AR(6.00) = [0.36], Max-Change = 0.0219
-Stage 1 = 94, LL = -3796.7, AR(6.00) = [0.33], Max-Change = 0.0207
-Stage 1 = 95, LL = -3759.7, AR(6.00) = [0.35], Max-Change = 0.0665
-Stage 1 = 96, LL = -3770.0, AR(6.00) = [0.32], Max-Change = 0.0389
-Stage 1 = 97, LL = -3766.1, AR(6.00) = [0.35], Max-Change = 0.0265
-Stage 1 = 98, LL = -3754.4, AR(6.00) = [0.34], Max-Change = 0.0717
-Stage 1 = 99, LL = -3784.8, AR(6.00) = [0.34], Max-Change = 0.0484
-Stage 1 = 100, LL = -3768.7, AR(6.00) = [0.34], Max-Change = 0.0479
-Stage 1 = 101, LL = -3756.3, AR(6.00) = [0.36], Max-Change = 0.0974
-Stage 1 = 102, LL = -3785.1, AR(6.00) = [0.36], Max-Change = 0.0537
-Stage 1 = 103, LL = -3760.8, AR(6.00) = [0.33], Max-Change = 0.0499
-Stage 1 = 104, LL = -3774.9, AR(6.00) = [0.34], Max-Change = 0.0317
-Stage 1 = 105, LL = -3782.0, AR(6.00) = [0.34], Max-Change = 0.0596
-Stage 1 = 106, LL = -3755.1, AR(6.00) = [0.34], Max-Change = 0.0475
-Stage 1 = 107, LL = -3750.0, AR(6.00) = [0.34], Max-Change = 0.0414
-Stage 1 = 108, LL = -3761.4, AR(6.00) = [0.34], Max-Change = 0.0584
-Stage 1 = 109, LL = -3748.7, AR(6.00) = [0.35], Max-Change = 0.0507
-Stage 1 = 110, LL = -3740.4, AR(6.00) = [0.36], Max-Change = 0.0469
-Stage 1 = 111, LL = -3716.6, AR(6.00) = [0.33], Max-Change = 0.0428
-Stage 1 = 112, LL = -3749.3, AR(6.00) = [0.34], Max-Change = 0.0395
-Stage 1 = 113, LL = -3742.8, AR(6.00) = [0.35], Max-Change = 0.0324
-Stage 1 = 114, LL = -3755.4, AR(6.00) = [0.33], Max-Change = 0.0427
-Stage 1 = 115, LL = -3775.6, AR(6.00) = [0.35], Max-Change = 0.1225
-Stage 1 = 116, LL = -3805.6, AR(6.00) = [0.34], Max-Change = 0.0724
-Stage 1 = 117, LL = -3769.3, AR(6.00) = [0.36], Max-Change = 0.0256
-Stage 1 = 118, LL = -3798.0, AR(6.00) = [0.34], Max-Change = 0.0389
-Stage 1 = 119, LL = -3818.7, AR(6.00) = [0.38], Max-Change = 0.0398
-Stage 1 = 120, LL = -3800.9, AR(6.00) = [0.35], Max-Change = 0.0354
-Stage 1 = 121, LL = -3809.5, AR(6.00) = [0.34], Max-Change = 0.0549
-Stage 1 = 122, LL = -3795.6, AR(6.00) = [0.31], Max-Change = 0.0562
-Stage 1 = 123, LL = -3751.8, AR(6.00) = [0.35], Max-Change = 0.0774
-Stage 1 = 124, LL = -3742.8, AR(6.00) = [0.34], Max-Change = 0.0496
-Stage 1 = 125, LL = -3754.3, AR(6.00) = [0.37], Max-Change = 0.0815
-Stage 1 = 126, LL = -3766.2, AR(6.00) = [0.35], Max-Change = 0.0295
-Stage 1 = 127, LL = -3773.2, AR(6.00) = [0.35], Max-Change = 0.0990
-Stage 1 = 128, LL = -3739.8, AR(6.00) = [0.34], Max-Change = 0.1482
-Stage 1 = 129, LL = -3746.5, AR(6.00) = [0.35], Max-Change = 0.0946
-Stage 1 = 130, LL = -3724.4, AR(6.00) = [0.32], Max-Change = 0.1174
-Stage 1 = 131, LL = -3729.7, AR(6.00) = [0.34], Max-Change = 0.0279
-Stage 1 = 132, LL = -3757.2, AR(6.00) = [0.34], Max-Change = 0.0531
-Stage 1 = 133, LL = -3724.9, AR(6.00) = [0.35], Max-Change = 0.0876
-Stage 1 = 134, LL = -3711.5, AR(6.00) = [0.35], Max-Change = 0.0441
-Stage 1 = 135, LL = -3757.7, AR(6.00) = [0.33], Max-Change = 0.0302
-Stage 1 = 136, LL = -3783.0, AR(6.00) = [0.33], Max-Change = 0.0459
-Stage 1 = 137, LL = -3744.1, AR(6.00) = [0.36], Max-Change = 0.0454
-Stage 1 = 138, LL = -3736.6, AR(6.00) = [0.34], Max-Change = 0.0436
-Stage 1 = 139, LL = -3728.9, AR(6.00) = [0.35], Max-Change = 0.0463
-Stage 1 = 140, LL = -3699.0, AR(6.00) = [0.35], Max-Change = 0.0417
-Stage 1 = 141, LL = -3755.4, AR(6.00) = [0.36], Max-Change = 0.0351
-Stage 1 = 142, LL = -3763.4, AR(6.00) = [0.30], Max-Change = 0.0546
-Stage 1 = 143, LL = -3754.2, AR(6.00) = [0.34], Max-Change = 0.0568
-Stage 1 = 144, LL = -3760.4, AR(6.00) = [0.38], Max-Change = 0.0284
-Stage 1 = 145, LL = -3765.0, AR(6.00) = [0.33], Max-Change = 0.0498
-Stage 1 = 146, LL = -3784.8, AR(6.00) = [0.36], Max-Change = 0.0318
-Stage 1 = 147, LL = -3764.4, AR(6.00) = [0.35], Max-Change = 0.0298
-Stage 1 = 148, LL = -3786.2, AR(6.00) = [0.32], Max-Change = 0.0262
-Stage 1 = 149, LL = -3801.5, AR(6.00) = [0.32], Max-Change = 0.0256
-Stage 1 = 150, LL = -3779.4, AR(6.00) = [0.34], Max-Change = 0.0420
-Stage 2 = 1, LL = -3812.8, AR(6.00) = [0.35], Max-Change = 0.0769
-Stage 2 = 2, LL = -3787.9, AR(6.00) = [0.30], Max-Change = 0.0138
-Stage 2 = 3, LL = -3765.9, AR(6.00) = [0.37], Max-Change = 0.0867
-Stage 2 = 4, LL = -3761.8, AR(6.00) = [0.29], Max-Change = 0.0640
-Stage 2 = 5, LL = -3789.8, AR(6.00) = [0.34], Max-Change = 0.0511
-Stage 2 = 6, LL = -3781.3, AR(6.00) = [0.37], Max-Change = 0.0501
-Stage 2 = 7, LL = -3779.4, AR(6.00) = [0.33], Max-Change = 0.0388
-Stage 2 = 8, LL = -3730.6, AR(6.00) = [0.35], Max-Change = 0.0583
-Stage 2 = 9, LL = -3798.8, AR(6.00) = [0.36], Max-Change = 0.0592
-Stage 2 = 10, LL = -3761.0, AR(6.00) = [0.34], Max-Change = 0.0556
-Stage 2 = 11, LL = -3750.0, AR(6.00) = [0.33], Max-Change = 0.0645
-Stage 2 = 12, LL = -3771.5, AR(6.00) = [0.33], Max-Change = 0.0672
-Stage 2 = 13, LL = -3750.8, AR(6.00) = [0.34], Max-Change = 0.0819
-Stage 2 = 14, LL = -3777.9, AR(6.00) = [0.37], Max-Change = 0.0191
-Stage 2 = 15, LL = -3781.7, AR(6.00) = [0.35], Max-Change = 0.0221
-Stage 2 = 16, LL = -3754.5, AR(6.00) = [0.34], Max-Change = 0.0249
-Stage 2 = 17, LL = -3775.0, AR(6.00) = [0.33], Max-Change = 0.0503
-Stage 2 = 18, LL = -3754.4, AR(6.00) = [0.35], Max-Change = 0.0709
-Stage 2 = 19, LL = -3739.1, AR(6.00) = [0.32], Max-Change = 0.0801
-Stage 2 = 20, LL = -3764.0, AR(6.00) = [0.34], Max-Change = 0.0327
-Stage 2 = 21, LL = -3784.5, AR(6.00) = [0.33], Max-Change = 0.0388
-Stage 2 = 22, LL = -3740.1, AR(6.00) = [0.37], Max-Change = 0.0290
-Stage 2 = 23, LL = -3776.3, AR(6.00) = [0.37], Max-Change = 0.0344
-Stage 2 = 24, LL = -3738.0, AR(6.00) = [0.34], Max-Change = 0.0492
-Stage 2 = 25, LL = -3716.2, AR(6.00) = [0.33], Max-Change = 0.0259
-Stage 2 = 26, LL = -3757.7, AR(6.00) = [0.35], Max-Change = 0.0997
-Stage 2 = 27, LL = -3725.5, AR(6.00) = [0.32], Max-Change = 0.0414
-Stage 2 = 28, LL = -3730.1, AR(6.00) = [0.33], Max-Change = 0.0299
-Stage 2 = 29, LL = -3733.8, AR(6.00) = [0.34], Max-Change = 0.0418
-Stage 2 = 30, LL = -3767.5, AR(6.00) = [0.34], Max-Change = 0.1102
-Stage 2 = 31, LL = -3784.1, AR(6.00) = [0.37], Max-Change = 0.0589
-Stage 2 = 32, LL = -3769.3, AR(6.00) = [0.36], Max-Change = 0.0206
-Stage 2 = 33, LL = -3756.8, AR(6.00) = [0.37], Max-Change = 0.0677
-Stage 2 = 34, LL = -3784.9, AR(6.00) = [0.31], Max-Change = 0.0517
-Stage 2 = 35, LL = -3783.9, AR(6.00) = [0.36], Max-Change = 0.0195
-Stage 2 = 36, LL = -3763.8, AR(6.00) = [0.34], Max-Change = 0.0362
-Stage 2 = 37, LL = -3789.5, AR(6.00) = [0.35], Max-Change = 0.0759
-Stage 2 = 38, LL = -3759.7, AR(6.00) = [0.37], Max-Change = 0.0737
-Stage 2 = 39, LL = -3765.1, AR(6.00) = [0.34], Max-Change = 0.0297
-Stage 2 = 40, LL = -3800.1, AR(6.00) = [0.35], Max-Change = 0.0322
-Stage 2 = 41, LL = -3765.4, AR(6.00) = [0.33], Max-Change = 0.0396
-Stage 2 = 42, LL = -3793.8, AR(6.00) = [0.36], Max-Change = 0.0758
-Stage 2 = 43, LL = -3713.6, AR(6.00) = [0.32], Max-Change = 0.0338
-Stage 2 = 44, LL = -3745.5, AR(6.00) = [0.32], Max-Change = 0.0288
-Stage 2 = 45, LL = -3770.3, AR(6.00) = [0.35], Max-Change = 0.0841
-Stage 2 = 46, LL = -3771.8, AR(6.00) = [0.36], Max-Change = 0.0425
-Stage 2 = 47, LL = -3757.8, AR(6.00) = [0.33], Max-Change = 0.0235
-Stage 2 = 48, LL = -3778.8, AR(6.00) = [0.34], Max-Change = 0.0801
-Stage 2 = 49, LL = -3763.1, AR(6.00) = [0.35], Max-Change = 0.0619
-Stage 2 = 50, LL = -3774.5, AR(6.00) = [0.35], Max-Change = 0.0427
-Stage 3 = 1, LL = -3752.7, AR(6.00) = [0.34], gam = 0.2500, Max-Change = 0.0446
-Stage 3 = 2, LL = -3761.4, AR(6.00) = [0.33], gam = 0.2914, Max-Change = 0.0799
-Stage 3 = 3, LL = -3756.6, AR(6.00) = [0.34], gam = 0.1857, Max-Change = 0.0421
-Stage 3 = 4, LL = -3781.6, AR(6.00) = [0.36], gam = 0.1427, Max-Change = 0.0334
-Stage 3 = 5, LL = -3756.9, AR(6.00) = [0.35], gam = 0.1183, Max-Change = 0.0164
-Stage 3 = 6, LL = -3789.5, AR(6.00) = [0.33], gam = 0.1024, Max-Change = 0.0410
-Stage 3 = 7, LL = -3781.1, AR(6.00) = [0.35], gam = 0.0909, Max-Change = 0.0185
-Stage 3 = 8, LL = -3745.7, AR(6.00) = [0.36], gam = 0.0823, Max-Change = 0.0084
-Stage 3 = 9, LL = -3760.7, AR(6.00) = [0.36], gam = 0.0754, Max-Change = 0.0134
-Stage 3 = 10, LL = -3784.4, AR(6.00) = [0.33], gam = 0.0699, Max-Change = 0.0183
-Stage 3 = 11, LL = -3785.9, AR(6.00) = [0.35], gam = 0.0652, Max-Change = 0.0167
-Stage 3 = 12, LL = -3754.4, AR(6.00) = [0.35], gam = 0.0613, Max-Change = 0.0122
-Stage 3 = 13, LL = -3804.0, AR(6.00) = [0.33], gam = 0.0579, Max-Change = 0.0064
-Stage 3 = 14, LL = -3806.5, AR(6.00) = [0.33], gam = 0.0550, Max-Change = 0.0132
-Stage 3 = 15, LL = -3810.9, AR(6.00) = [0.35], gam = 0.0524, Max-Change = 0.0073
-Stage 3 = 16, LL = -3801.8, AR(6.00) = [0.33], gam = 0.0501, Max-Change = 0.0177
-Stage 3 = 17, LL = -3755.2, AR(6.00) = [0.31], gam = 0.0481, Max-Change = 0.0158
-Stage 3 = 18, LL = -3791.0, AR(6.00) = [0.33], gam = 0.0462, Max-Change = 0.0068
-Stage 3 = 19, LL = -3807.1, AR(6.00) = [0.34], gam = 0.0445, Max-Change = 0.0131
-Stage 3 = 20, LL = -3804.4, AR(6.00) = [0.33], gam = 0.0430, Max-Change = 0.0040
-Stage 3 = 21, LL = -3795.5, AR(6.00) = [0.37], gam = 0.0416, Max-Change = 0.0052
-Stage 3 = 22, LL = -3790.5, AR(6.00) = [0.34], gam = 0.0403, Max-Change = 0.0037
-Stage 3 = 23, LL = -3791.1, AR(6.00) = [0.35], gam = 0.0391, Max-Change = 0.0082
-Stage 3 = 24, LL = -3843.2, AR(6.00) = [0.35], gam = 0.0380, Max-Change = 0.0128
-Stage 3 = 25, LL = -3764.5, AR(6.00) = [0.34], gam = 0.0369, Max-Change = 0.0079
-Stage 3 = 26, LL = -3749.1, AR(6.00) = [0.35], gam = 0.0360, Max-Change = 0.0039
-Stage 3 = 27, LL = -3767.6, AR(6.00) = [0.36], gam = 0.0351, Max-Change = 0.0094
-Stage 3 = 28, LL = -3765.1, AR(6.00) = [0.34], gam = 0.0342, Max-Change = 0.0052
-Stage 3 = 29, LL = -3740.7, AR(6.00) = [0.35], gam = 0.0334, Max-Change = 0.0069
-Stage 3 = 30, LL = -3770.8, AR(6.00) = [0.35], gam = 0.0327, Max-Change = 0.0093
-Stage 3 = 31, LL = -3777.7, AR(6.00) = [0.34], gam = 0.0319, Max-Change = 0.0088
-Stage 3 = 32, LL = -3749.0, AR(6.00) = [0.35], gam = 0.0313, Max-Change = 0.0056
-Stage 3 = 33, LL = -3764.0, AR(6.00) = [0.34], gam = 0.0306, Max-Change = 0.0048
-Stage 3 = 34, LL = -3793.3, AR(6.00) = [0.35], gam = 0.0300, Max-Change = 0.0033
-Stage 3 = 35, LL = -3766.6, AR(6.00) = [0.36], gam = 0.0294, Max-Change = 0.0069
-Stage 3 = 36, LL = -3828.2, AR(6.00) = [0.35], gam = 0.0289, Max-Change = 0.0058
-Stage 3 = 37, LL = -3779.0, AR(6.00) = [0.33], gam = 0.0284, Max-Change = 0.0069
-Stage 3 = 38, LL = -3761.9, AR(6.00) = [0.34], gam = 0.0279, Max-Change = 0.0042
-Stage 3 = 39, LL = -3785.5, AR(6.00) = [0.37], gam = 0.0274, Max-Change = 0.0037
-Stage 3 = 40, LL = -3764.5, AR(6.00) = [0.36], gam = 0.0269, Max-Change = 0.0024
-Stage 3 = 41, LL = -3789.4, AR(6.00) = [0.37], gam = 0.0265, Max-Change = 0.0026
-Stage 3 = 42, LL = -3793.9, AR(6.00) = [0.33], gam = 0.0261, Max-Change = 0.0020
-Stage 3 = 43, LL = -3798.9, AR(6.00) = [0.36], gam = 0.0257, Max-Change = 0.0036
-Stage 3 = 44, LL = -3816.8, AR(6.00) = [0.37], gam = 0.0253, Max-Change = 0.0056
-Stage 3 = 45, LL = -3797.3, AR(6.00) = [0.35], gam = 0.0249, Max-Change = 0.0019
-Stage 3 = 46, LL = -3781.1, AR(6.00) = [0.34], gam = 0.0245, Max-Change = 0.0027
-Stage 3 = 47, LL = -3767.8, AR(6.00) = [0.34], gam = 0.0242, Max-Change = 0.0032
-Stage 3 = 48, LL = -3735.9, AR(6.00) = [0.34], gam = 0.0239, Max-Change = 0.0044
-Stage 3 = 49, LL = -3761.1, AR(6.00) = [0.33], gam = 0.0235, Max-Change = 0.0033
-Stage 3 = 50, LL = -3748.2, AR(6.00) = [0.34], gam = 0.0232, Max-Change = 0.0058
-Stage 3 = 51, LL = -3762.3, AR(6.00) = [0.35], gam = 0.0229, Max-Change = 0.0113
-Stage 3 = 52, LL = -3750.0, AR(6.00) = [0.35], gam = 0.0226, Max-Change = 0.0034
-Stage 3 = 53, LL = -3722.5, AR(6.00) = [0.33], gam = 0.0223, Max-Change = 0.0104
-Stage 3 = 54, LL = -3770.4, AR(6.00) = [0.36], gam = 0.0221, Max-Change = 0.0048
-Stage 3 = 55, LL = -3780.2, AR(6.00) = [0.33], gam = 0.0218, Max-Change = 0.0049
-Stage 3 = 56, LL = -3756.8, AR(6.00) = [0.37], gam = 0.0215, Max-Change = 0.0035
-Stage 3 = 57, LL = -3784.7, AR(6.00) = [0.36], gam = 0.0213, Max-Change = 0.0045
-Stage 3 = 58, LL = -3732.8, AR(6.00) = [0.34], gam = 0.0210, Max-Change = 0.0054
-Stage 3 = 59, LL = -3793.5, AR(6.00) = [0.34], gam = 0.0208, Max-Change = 0.0046
-Stage 3 = 60, LL = -3762.8, AR(6.00) = [0.34], gam = 0.0206, Max-Change = 0.0032
-Stage 3 = 61, LL = -3795.8, AR(6.00) = [0.32], gam = 0.0204, Max-Change = 0.0070
-Stage 3 = 62, LL = -3779.1, AR(6.00) = [0.37], gam = 0.0201, Max-Change = 0.0036
-Stage 3 = 63, LL = -3776.8, AR(6.00) = [0.35], gam = 0.0199, Max-Change = 0.0037
-Stage 3 = 64, LL = -3804.5, AR(6.00) = [0.33], gam = 0.0197, Max-Change = 0.0080
-Stage 3 = 65, LL = -3778.7, AR(6.00) = [0.35], gam = 0.0195, Max-Change = 0.0043
-Stage 3 = 66, LL = -3753.4, AR(6.00) = [0.38], gam = 0.0193, Max-Change = 0.0007
-Stage 3 = 67, LL = -3790.3, AR(6.00) = [0.37], gam = 0.0191, Max-Change = 0.0083
-Stage 3 = 68, LL = -3750.3, AR(6.00) = [0.36], gam = 0.0189, Max-Change = 0.0063
-Stage 3 = 69, LL = -3805.0, AR(6.00) = [0.34], gam = 0.0188, Max-Change = 0.0045
-Stage 3 = 70, LL = -3796.6, AR(6.00) = [0.36], gam = 0.0186, Max-Change = 0.0028
-Stage 3 = 71, LL = -3757.8, AR(6.00) = [0.35], gam = 0.0184, Max-Change = 0.0036
-Stage 3 = 72, LL = -3746.0, AR(6.00) = [0.31], gam = 0.0182, Max-Change = 0.0071
-Stage 3 = 73, LL = -3798.5, AR(6.00) = [0.37], gam = 0.0181, Max-Change = 0.0028
-Stage 3 = 74, LL = -3745.3, AR(6.00) = [0.32], gam = 0.0179, Max-Change = 0.0033
-Stage 3 = 75, LL = -3739.2, AR(6.00) = [0.35], gam = 0.0178, Max-Change = 0.0017
-Stage 3 = 76, LL = -3785.0, AR(6.00) = [0.33], gam = 0.0176, Max-Change = 0.0014
-Stage 3 = 77, LL = -3747.3, AR(6.00) = [0.35], gam = 0.0175, Max-Change = 0.0016
-Stage 3 = 78, LL = -3775.3, AR(6.00) = [0.34], gam = 0.0173, Max-Change = 0.0016
-Stage 3 = 79, LL = -3806.4, AR(6.00) = [0.35], gam = 0.0172, Max-Change = 0.0041
-Stage 3 = 80, LL = -3722.6, AR(6.00) = [0.36], gam = 0.0170, Max-Change = 0.0038
-Stage 3 = 81, LL = -3776.0, AR(6.00) = [0.35], gam = 0.0169, Max-Change = 0.0028
-Stage 3 = 82, LL = -3767.7, AR(6.00) = [0.32], gam = 0.0167, Max-Change = 0.0024
-Stage 3 = 83, LL = -3781.4, AR(6.00) = [0.38], gam = 0.0166, Max-Change = 0.0015
-Stage 3 = 84, LL = -3789.8, AR(6.00) = [0.34], gam = 0.0165, Max-Change = 0.0019
-Stage 3 = 85, LL = -3790.0, AR(6.00) = [0.34], gam = 0.0164, Max-Change = 0.0040
-Stage 3 = 86, LL = -3764.5, AR(6.00) = [0.34], gam = 0.0162, Max-Change = 0.0044
-Stage 3 = 87, LL = -3767.5, AR(6.00) = [0.36], gam = 0.0161, Max-Change = 0.0018
-Stage 3 = 88, LL = -3764.3, AR(6.00) = [0.36], gam = 0.0160, Max-Change = 0.0032
-Stage 3 = 89, LL = -3771.7, AR(6.00) = [0.36], gam = 0.0159, Max-Change = 0.0035
-Stage 3 = 90, LL = -3723.6, AR(6.00) = [0.36], gam = 0.0158, Max-Change = 0.0033
-Stage 3 = 91, LL = -3787.9, AR(6.00) = [0.33], gam = 0.0156, Max-Change = 0.0011
-Stage 3 = 92, LL = -3774.1, AR(6.00) = [0.35], gam = 0.0155, Max-Change = 0.0027
-Stage 3 = 93, LL = -3749.6, AR(6.00) = [0.34], gam = 0.0154, Max-Change = 0.0019
-Stage 3 = 94, LL = -3790.8, AR(6.00) = [0.33], gam = 0.0153, Max-Change = 0.0029
-Stage 3 = 95, LL = -3753.0, AR(6.00) = [0.36], gam = 0.0152, Max-Change = 0.0026
-Stage 3 = 96, LL = -3761.0, AR(6.00) = [0.37], gam = 0.0151, Max-Change = 0.0024
-Stage 3 = 97, LL = -3746.7, AR(6.00) = [0.35], gam = 0.0150, Max-Change = 0.0023
-Stage 3 = 98, LL = -3742.4, AR(6.00) = [0.33], gam = 0.0149, Max-Change = 0.0017
-Stage 3 = 99, LL = -3785.3, AR(6.00) = [0.34], gam = 0.0148, Max-Change = 0.0015
-Stage 3 = 100, LL = -3776.1, AR(6.00) = [0.34], gam = 0.0147, Max-Change = 0.0024
-Stage 3 = 101, LL = -3784.6, AR(6.00) = [0.33], gam = 0.0146, Max-Change = 0.0030
-Stage 3 = 102, LL = -3768.9, AR(6.00) = [0.36], gam = 0.0145, Max-Change = 0.0018
-Stage 3 = 103, LL = -3744.8, AR(6.00) = [0.30], gam = 0.0144, Max-Change = 0.0052
-Stage 3 = 104, LL = -3801.4, AR(6.00) = [0.33], gam = 0.0143, Max-Change = 0.0034
-Stage 3 = 105, LL = -3820.3, AR(6.00) = [0.34], gam = 0.0142, Max-Change = 0.0032
-Stage 3 = 106, LL = -3774.8, AR(6.00) = [0.37], gam = 0.0141, Max-Change = 0.0015
-Stage 3 = 107, LL = -3765.3, AR(6.00) = [0.33], gam = 0.0141, Max-Change = 0.0016
-Stage 3 = 108, LL = -3742.2, AR(6.00) = [0.34], gam = 0.0140, Max-Change = 0.0017
-Stage 3 = 109, LL = -3747.8, AR(6.00) = [0.36], gam = 0.0139, Max-Change = 0.0026
-Stage 3 = 110, LL = -3758.0, AR(6.00) = [0.33], gam = 0.0138, Max-Change = 0.0010
-Stage 3 = 111, LL = -3728.9, AR(6.00) = [0.32], gam = 0.0137, Max-Change = 0.0027
-Stage 3 = 112, LL = -3736.3, AR(6.00) = [0.32], gam = 0.0136, Max-Change = 0.0027
-Stage 3 = 113, LL = -3773.3, AR(6.00) = [0.36], gam = 0.0136, Max-Change = 0.0059
-Stage 3 = 114, LL = -3755.1, AR(6.00) = [0.33], gam = 0.0135, Max-Change = 0.0011
-Stage 3 = 115, LL = -3777.8, AR(6.00) = [0.35], gam = 0.0134, Max-Change = 0.0048
-Stage 3 = 116, LL = -3748.2, AR(6.00) = [0.33], gam = 0.0133, Max-Change = 0.0015
-Stage 3 = 117, LL = -3758.5, AR(6.00) = [0.33], gam = 0.0133, Max-Change = 0.0010
-Stage 3 = 118, LL = -3755.3, AR(6.00) = [0.35], gam = 0.0132, Max-Change = 0.0027
-Stage 3 = 119, LL = -3790.5, AR(6.00) = [0.37], gam = 0.0131, Max-Change = 0.0017
-Stage 3 = 120, LL = -3771.7, AR(6.00) = [0.36], gam = 0.0130, Max-Change = 0.0058
-Stage 3 = 121, LL = -3742.1, AR(6.00) = [0.32], gam = 0.0130, Max-Change = 0.0019
-Stage 3 = 122, LL = -3759.7, AR(6.00) = [0.37], gam = 0.0129, Max-Change = 0.0004
-Stage 3 = 123, LL = -3780.9, AR(6.00) = [0.34], gam = 0.0128, Max-Change = 0.0026
-Stage 3 = 124, LL = -3753.6, AR(6.00) = [0.33], gam = 0.0128, Max-Change = 0.0021
-Stage 3 = 125, LL = -3765.4, AR(6.00) = [0.33], gam = 0.0127, Max-Change = 0.0009
-Stage 3 = 126, LL = -3781.0, AR(6.00) = [0.35], gam = 0.0126, Max-Change = 0.0027
-Stage 3 = 127, LL = -3747.5, AR(6.00) = [0.36], gam = 0.0126, Max-Change = 0.0019
-Stage 3 = 128, LL = -3737.3, AR(6.00) = [0.36], gam = 0.0125, Max-Change = 0.0040
-Stage 3 = 129, LL = -3735.7, AR(6.00) = [0.34], gam = 0.0124, Max-Change = 0.0014
-Stage 3 = 130, LL = -3769.2, AR(6.00) = [0.33], gam = 0.0124, Max-Change = 0.0012
-Stage 3 = 131, LL = -3758.4, AR(6.00) = [0.33], gam = 0.0123, Max-Change = 0.0023
-Stage 3 = 132, LL = -3774.9, AR(6.00) = [0.36], gam = 0.0123, Max-Change = 0.0019
-Stage 3 = 133, LL = -3780.7, AR(6.00) = [0.34], gam = 0.0122, Max-Change = 0.0022
-Stage 3 = 134, LL = -3809.6, AR(6.00) = [0.33], gam = 0.0121, Max-Change = 0.0012
-Stage 3 = 135, LL = -3750.2, AR(6.00) = [0.34], gam = 0.0121, Max-Change = 0.0036
-Stage 3 = 136, LL = -3788.5, AR(6.00) = [0.34], gam = 0.0120, Max-Change = 0.0023
-Stage 3 = 137, LL = -3764.9, AR(6.00) = [0.33], gam = 0.0120, Max-Change = 0.0018
-Stage 3 = 138, LL = -3791.9, AR(6.00) = [0.36], gam = 0.0119, Max-Change = 0.0018
-Stage 3 = 139, LL = -3762.4, AR(6.00) = [0.34], gam = 0.0118, Max-Change = 0.0042
-Stage 3 = 140, LL = -3753.2, AR(6.00) = [0.37], gam = 0.0118, Max-Change = 0.0028
-Stage 3 = 141, LL = -3732.5, AR(6.00) = [0.34], gam = 0.0117, Max-Change = 0.0032
-Stage 3 = 142, LL = -3760.4, AR(6.00) = [0.36], gam = 0.0117, Max-Change = 0.0033
-Stage 3 = 143, LL = -3776.3, AR(6.00) = [0.33], gam = 0.0116, Max-Change = 0.0008
-Stage 3 = 144, LL = -3783.0, AR(6.00) = [0.36], gam = 0.0116, Max-Change = 0.0011
-Stage 3 = 145, LL = -3750.8, AR(6.00) = [0.35], gam = 0.0115, Max-Change = 0.0047
-Stage 3 = 146, LL = -3771.3, AR(6.00) = [0.35], gam = 0.0115, Max-Change = 0.0047
-Stage 3 = 147, LL = -3755.8, AR(6.00) = [0.35], gam = 0.0114, Max-Change = 0.0028
-Stage 3 = 148, LL = -3767.6, AR(6.00) = [0.34], gam = 0.0114, Max-Change = 0.0013
-Stage 3 = 149, LL = -3758.6, AR(6.00) = [0.37], gam = 0.0113, Max-Change = 0.0017
-Stage 3 = 150, LL = -3765.4, AR(6.00) = [0.37], gam = 0.0113, Max-Change = 0.0010
-Stage 3 = 151, LL = -3806.8, AR(6.00) = [0.34], gam = 0.0112, Max-Change = 0.0032
-Stage 3 = 152, LL = -3751.7, AR(6.00) = [0.33], gam = 0.0112, Max-Change = 0.0010
-Stage 3 = 153, LL = -3758.6, AR(6.00) = [0.31], gam = 0.0111, Max-Change = 0.0016
-Stage 3 = 154, LL = -3753.9, AR(6.00) = [0.35], gam = 0.0111, Max-Change = 0.0009
-Stage 3 = 155, LL = -3770.8, AR(6.00) = [0.35], gam = 0.0110, Max-Change = 0.0011
-Stage 3 = 156, LL = -3768.1, AR(6.00) = [0.34], gam = 0.0110, Max-Change = 0.0007
-Stage 3 = 157, LL = -3783.1, AR(6.00) = [0.33], gam = 0.0109, Max-Change = 0.0010
-Stage 3 = 158, LL = -3786.9, AR(6.00) = [0.35], gam = 0.0109, Max-Change = 0.0034
-Stage 3 = 159, LL = -3770.1, AR(6.00) = [0.36], gam = 0.0108, Max-Change = 0.0020
-Stage 3 = 160, LL = -3734.0, AR(6.00) = [0.35], gam = 0.0108, Max-Change = 0.0015
-Stage 3 = 161, LL = -3761.5, AR(6.00) = [0.35], gam = 0.0108, Max-Change = 0.0034
-Stage 3 = 162, LL = -3796.1, AR(6.00) = [0.35], gam = 0.0107, Max-Change = 0.0022
-Stage 3 = 163, LL = -3759.1, AR(6.00) = [0.34], gam = 0.0107, Max-Change = 0.0016
-Stage 3 = 164, LL = -3762.3, AR(6.00) = [0.38], gam = 0.0106, Max-Change = 0.0012
-Stage 3 = 165, LL = -3773.2, AR(6.00) = [0.37], gam = 0.0106, Max-Change = 0.0026
-Stage 3 = 166, LL = -3777.7, AR(6.00) = [0.33], gam = 0.0105, Max-Change = 0.0023
-Stage 3 = 167, LL = -3748.9, AR(6.00) = [0.32], gam = 0.0105, Max-Change = 0.0013
-Stage 3 = 168, LL = -3771.6, AR(6.00) = [0.33], gam = 0.0105, Max-Change = 0.0025
-Stage 3 = 169, LL = -3748.3, AR(6.00) = [0.36], gam = 0.0104, Max-Change = 0.0020
-Stage 3 = 170, LL = -3772.8, AR(6.00) = [0.35], gam = 0.0104, Max-Change = 0.0012
-Stage 3 = 171, LL = -3749.5, AR(6.00) = [0.33], gam = 0.0103, Max-Change = 0.0024
-Stage 3 = 172, LL = -3777.5, AR(6.00) = [0.34], gam = 0.0103, Max-Change = 0.0004
-Stage 3 = 173, LL = -3805.1, AR(6.00) = [0.37], gam = 0.0103, Max-Change = 0.0024
-Stage 3 = 174, LL = -3793.8, AR(6.00) = [0.34], gam = 0.0102, Max-Change = 0.0028
-Stage 3 = 175, LL = -3782.7, AR(6.00) = [0.32], gam = 0.0102, Max-Change = 0.0010
-Stage 3 = 176, LL = -3774.6, AR(6.00) = [0.37], gam = 0.0102, Max-Change = 0.0013
-Stage 3 = 177, LL = -3750.3, AR(6.00) = [0.35], gam = 0.0101, Max-Change = 0.0027
-Stage 3 = 178, LL = -3776.0, AR(6.00) = [0.33], gam = 0.0101, Max-Change = 0.0023
-Stage 3 = 179, LL = -3759.3, AR(6.00) = [0.33], gam = 0.0100, Max-Change = 0.0014
-Stage 3 = 180, LL = -3794.6, AR(6.00) = [0.34], gam = 0.0100, Max-Change = 0.0010
-Stage 3 = 181, LL = -3773.1, AR(6.00) = [0.35], gam = 0.0100, Max-Change = 0.0031
-Stage 3 = 182, LL = -3770.0, AR(6.00) = [0.34], gam = 0.0099, Max-Change = 0.0017
-Stage 3 = 183, LL = -3786.8, AR(6.00) = [0.33], gam = 0.0099, Max-Change = 0.0028
-Stage 3 = 184, LL = -3766.5, AR(6.00) = [0.35], gam = 0.0099, Max-Change = 0.0023
-Stage 3 = 185, LL = -3754.0, AR(6.00) = [0.34], gam = 0.0098, Max-Change = 0.0012
-Stage 3 = 186, LL = -3710.3, AR(6.00) = [0.34], gam = 0.0098, Max-Change = 0.0024
-Stage 3 = 187, LL = -3714.8, AR(6.00) = [0.35], gam = 0.0098, Max-Change = 0.0024
-Stage 3 = 188, LL = -3798.7, AR(6.00) = [0.36], gam = 0.0097, Max-Change = 0.0024
-Stage 3 = 189, LL = -3779.5, AR(6.00) = [0.33], gam = 0.0097, Max-Change = 0.0011
-Stage 3 = 190, LL = -3803.7, AR(6.00) = [0.33], gam = 0.0097, Max-Change = 0.0030
-Stage 3 = 191, LL = -3762.5, AR(6.00) = [0.34], gam = 0.0096, Max-Change = 0.0032
-Stage 3 = 192, LL = -3782.0, AR(6.00) = [0.35], gam = 0.0096, Max-Change = 0.0014
-Stage 3 = 193, LL = -3768.6, AR(6.00) = [0.36], gam = 0.0096, Max-Change = 0.0031
-Stage 3 = 194, LL = -3786.0, AR(6.00) = [0.34], gam = 0.0095, Max-Change = 0.0012
-Stage 3 = 195, LL = -3797.3, AR(6.00) = [0.32], gam = 0.0095, Max-Change = 0.0008
-Stage 3 = 196, LL = -3828.4, AR(6.00) = [0.36], gam = 0.0095, Max-Change = 0.0020
-Stage 3 = 197, LL = -3785.9, AR(6.00) = [0.32], gam = 0.0094, Max-Change = 0.0012
-Stage 3 = 198, LL = -3804.5, AR(6.00) = [0.34], gam = 0.0094, Max-Change = 0.0020
-Stage 3 = 199, LL = -3776.5, AR(6.00) = [0.31], gam = 0.0094, Max-Change = 0.0034
-Stage 3 = 200, LL = -3743.4, AR(6.00) = [0.33], gam = 0.0093, Max-Change = 0.0021
-Stage 3 = 201, LL = -3787.0, AR(6.00) = [0.32], gam = 0.0093, Max-Change = 0.0009
-Stage 3 = 202, LL = -3777.4, AR(6.00) = [0.33], gam = 0.0093, Max-Change = 0.0010
-Stage 3 = 203, LL = -3779.9, AR(6.00) = [0.32], gam = 0.0092, Max-Change = 0.0014
-Stage 3 = 204, LL = -3817.3, AR(6.00) = [0.36], gam = 0.0092, Max-Change = 0.0015
-Stage 3 = 205, LL = -3784.2, AR(6.00) = [0.35], gam = 0.0092, Max-Change = 0.0013
-Stage 3 = 206, LL = -3728.4, AR(6.00) = [0.33], gam = 0.0092, Max-Change = 0.0019
-Stage 3 = 207, LL = -3772.3, AR(6.00) = [0.35], gam = 0.0091, Max-Change = 0.0008
-Stage 3 = 208, LL = -3742.6, AR(6.00) = [0.33], gam = 0.0091, Max-Change = 0.0024
-Stage 3 = 209, LL = -3785.8, AR(6.00) = [0.36], gam = 0.0091, Max-Change = 0.0015
-Stage 3 = 210, LL = -3765.9, AR(6.00) = [0.37], gam = 0.0090, Max-Change = 0.0021
-Stage 3 = 211, LL = -3777.1, AR(6.00) = [0.34], gam = 0.0090, Max-Change = 0.0011
-Stage 3 = 212, LL = -3776.4, AR(6.00) = [0.36], gam = 0.0090, Max-Change = 0.0017
-Stage 3 = 213, LL = -3775.5, AR(6.00) = [0.35], gam = 0.0090, Max-Change = 0.0026
-Stage 3 = 214, LL = -3779.7, AR(6.00) = [0.33], gam = 0.0089, Max-Change = 0.0017
-Stage 3 = 215, LL = -3778.0, AR(6.00) = [0.35], gam = 0.0089, Max-Change = 0.0008
-Stage 3 = 216, LL = -3758.7, AR(6.00) = [0.36], gam = 0.0089, Max-Change = 0.0012
-Stage 3 = 217, LL = -3756.4, AR(6.00) = [0.35], gam = 0.0089, Max-Change = 0.0004
-Stage 3 = 218, LL = -3766.1, AR(6.00) = [0.34], gam = 0.0088, Max-Change = 0.0010
-Stage 3 = 219, LL = -3769.8, AR(6.00) = [0.32], gam = 0.0088, Max-Change = 0.0011
-Stage 3 = 220, LL = -3816.4, AR(6.00) = [0.36], gam = 0.0088, Max-Change = 0.0029
-Stage 3 = 221, LL = -3783.6, AR(6.00) = [0.34], gam = 0.0087, Max-Change = 0.0042
-Stage 3 = 222, LL = -3782.2, AR(6.00) = [0.35], gam = 0.0087, Max-Change = 0.0015
-Stage 3 = 223, LL = -3820.4, AR(6.00) = [0.36], gam = 0.0087, Max-Change = 0.0021
-Stage 3 = 224, LL = -3786.8, AR(6.00) = [0.35], gam = 0.0087, Max-Change = 0.0015
-Stage 3 = 225, LL = -3785.0, AR(6.00) = [0.35], gam = 0.0086, Max-Change = 0.0011
-Stage 3 = 226, LL = -3776.5, AR(6.00) = [0.36], gam = 0.0086, Max-Change = 0.0014
-Stage 3 = 227, LL = -3790.9, AR(6.00) = [0.33], gam = 0.0086, Max-Change = 0.0012
-Stage 3 = 228, LL = -3746.1, AR(6.00) = [0.35], gam = 0.0086, Max-Change = 0.0010
-Stage 3 = 229, LL = -3764.7, AR(6.00) = [0.32], gam = 0.0085, Max-Change = 0.0007
-Stage 3 = 230, LL = -3778.3, AR(6.00) = [0.34], gam = 0.0085, Max-Change = 0.0015
-Stage 3 = 231, LL = -3838.2, AR(6.00) = [0.32], gam = 0.0085, Max-Change = 0.0035
-Stage 3 = 232, LL = -3763.5, AR(6.00) = [0.37], gam = 0.0085, Max-Change = 0.0013
-Stage 3 = 233, LL = -3760.3, AR(6.00) = [0.35], gam = 0.0085, Max-Change = 0.0009
-Stage 3 = 234, LL = -3763.9, AR(6.00) = [0.36], gam = 0.0084, Max-Change = 0.0022
-Stage 3 = 235, LL = -3783.1, AR(6.00) = [0.36], gam = 0.0084, Max-Change = 0.0020
-Stage 3 = 236, LL = -3806.6, AR(6.00) = [0.32], gam = 0.0084, Max-Change = 0.0014
-Stage 3 = 237, LL = -3774.4, AR(6.00) = [0.34], gam = 0.0084, Max-Change = 0.0007
-Stage 3 = 238, LL = -3783.4, AR(6.00) = [0.34], gam = 0.0083, Max-Change = 0.0012
-Stage 3 = 239, LL = -3811.6, AR(6.00) = [0.36], gam = 0.0083, Max-Change = 0.0025
-Stage 3 = 240, LL = -3782.1, AR(6.00) = [0.35], gam = 0.0083, Max-Change = 0.0010
-Stage 3 = 241, LL = -3755.8, AR(6.00) = [0.35], gam = 0.0083, Max-Change = 0.0016
-Stage 3 = 242, LL = -3769.6, AR(6.00) = [0.35], gam = 0.0082, Max-Change = 0.0009
-Stage 3 = 243, LL = -3740.8, AR(6.00) = [0.36], gam = 0.0082, Max-Change = 0.0015
-Stage 3 = 244, LL = -3720.9, AR(6.00) = [0.33], gam = 0.0082, Max-Change = 0.0022
-Stage 3 = 245, LL = -3737.4, AR(6.00) = [0.36], gam = 0.0082, Max-Change = 0.0009
-Stage 3 = 246, LL = -3826.7, AR(6.00) = [0.33], gam = 0.0082, Max-Change = 0.0017
-Stage 3 = 247, LL = -3793.2, AR(6.00) = [0.33], gam = 0.0081, Max-Change = 0.0011
-Stage 3 = 248, LL = -3783.3, AR(6.00) = [0.34], gam = 0.0081, Max-Change = 0.0023
-Stage 3 = 249, LL = -3749.3, AR(6.00) = [0.33], gam = 0.0081, Max-Change = 0.0015
-Stage 3 = 250, LL = -3788.9, AR(6.00) = [0.35], gam = 0.0081, Max-Change = 0.0024
-Stage 3 = 251, LL = -3803.0, AR(6.00) = [0.35], gam = 0.0081, Max-Change = 0.0026
-Stage 3 = 252, LL = -3771.0, AR(6.00) = [0.36], gam = 0.0080, Max-Change = 0.0019
-Stage 3 = 253, LL = -3735.4, AR(6.00) = [0.33], gam = 0.0080, Max-Change = 0.0013
-Stage 3 = 254, LL = -3774.4, AR(6.00) = [0.35], gam = 0.0080, Max-Change = 0.0019
-Stage 3 = 255, LL = -3761.6, AR(6.00) = [0.33], gam = 0.0080, Max-Change = 0.0012
-Stage 3 = 256, LL = -3763.2, AR(6.00) = [0.34], gam = 0.0079, Max-Change = 0.0010
-Stage 3 = 257, LL = -3748.1, AR(6.00) = [0.34], gam = 0.0079, Max-Change = 0.0011
-Stage 3 = 258, LL = -3764.6, AR(6.00) = [0.34], gam = 0.0079, Max-Change = 0.0020
-Stage 3 = 259, LL = -3720.4, AR(6.00) = [0.36], gam = 0.0079, Max-Change = 0.0026
-Stage 3 = 260, LL = -3810.4, AR(6.00) = [0.36], gam = 0.0079, Max-Change = 0.0015
-Stage 3 = 261, LL = -3743.7, AR(6.00) = [0.34], gam = 0.0078, Max-Change = 0.0011
-Stage 3 = 262, LL = -3759.0, AR(6.00) = [0.32], gam = 0.0078, Max-Change = 0.0009
-Stage 3 = 263, LL = -3764.8, AR(6.00) = [0.33], gam = 0.0078, Max-Change = 0.0023
-Stage 3 = 264, LL = -3758.9, AR(6.00) = [0.35], gam = 0.0078, Max-Change = 0.0017
-Stage 3 = 265, LL = -3730.7, AR(6.00) = [0.35], gam = 0.0078, Max-Change = 0.0021
-Stage 3 = 266, LL = -3764.4, AR(6.00) = [0.34], gam = 0.0078, Max-Change = 0.0009
-Stage 3 = 267, LL = -3761.5, AR(6.00) = [0.35], gam = 0.0077, Max-Change = 0.0015
-Stage 3 = 268, LL = -3722.3, AR(6.00) = [0.34], gam = 0.0077, Max-Change = 0.0018
-Stage 3 = 269, LL = -3782.5, AR(6.00) = [0.34], gam = 0.0077, Max-Change = 0.0014
-Stage 3 = 270, LL = -3755.0, AR(6.00) = [0.33], gam = 0.0077, Max-Change = 0.0012
-Stage 3 = 271, LL = -3744.3, AR(6.00) = [0.34], gam = 0.0077, Max-Change = 0.0010
-Stage 3 = 272, LL = -3749.3, AR(6.00) = [0.34], gam = 0.0076, Max-Change = 0.0022
-Stage 3 = 273, LL = -3729.1, AR(6.00) = [0.33], gam = 0.0076, Max-Change = 0.0012
-Stage 3 = 274, LL = -3782.3, AR(6.00) = [0.34], gam = 0.0076, Max-Change = 0.0009
-Stage 3 = 275, LL = -3733.1, AR(6.00) = [0.34], gam = 0.0076, Max-Change = 0.0007
-Stage 3 = 276, LL = -3753.2, AR(6.00) = [0.34], gam = 0.0076, Max-Change = 0.0012
-Stage 3 = 277, LL = -3765.0, AR(6.00) = [0.35], gam = 0.0075, Max-Change = 0.0010
-Stage 3 = 278, LL = -3760.0, AR(6.00) = [0.33], gam = 0.0075, Max-Change = 0.0033
-Stage 3 = 279, LL = -3770.2, AR(6.00) = [0.34], gam = 0.0075, Max-Change = 0.0007
-Stage 3 = 280, LL = -3794.4, AR(6.00) = [0.36], gam = 0.0075, Max-Change = 0.0027
-Stage 3 = 281, LL = -3792.4, AR(6.00) = [0.34], gam = 0.0075, Max-Change = 0.0018
-Stage 3 = 282, LL = -3757.0, AR(6.00) = [0.34], gam = 0.0075, Max-Change = 0.0011
-Stage 3 = 283, LL = -3785.2, AR(6.00) = [0.34], gam = 0.0074, Max-Change = 0.0006
-Stage 3 = 284, LL = -3763.9, AR(6.00) = [0.35], gam = 0.0074, Max-Change = 0.0009
-Stage 3 = 285, LL = -3770.1, AR(6.00) = [0.34], gam = 0.0074, Max-Change = 0.0020
-Stage 3 = 286, LL = -3804.3, AR(6.00) = [0.34], gam = 0.0074, Max-Change = 0.0014
-Stage 3 = 287, LL = -3765.4, AR(6.00) = [0.32], gam = 0.0074, Max-Change = 0.0005
-Stage 3 = 288, LL = -3784.8, AR(6.00) = [0.32], gam = 0.0074, Max-Change = 0.0010
-Stage 3 = 289, LL = -3770.9, AR(6.00) = [0.33], gam = 0.0073, Max-Change = 0.0012
-Stage 3 = 290, LL = -3740.8, AR(6.00) = [0.34], gam = 0.0073, Max-Change = 0.0014
-Stage 3 = 291, LL = -3776.0, AR(6.00) = [0.30], gam = 0.0073, Max-Change = 0.0027
-Stage 3 = 292, LL = -3767.0, AR(6.00) = [0.35], gam = 0.0073, Max-Change = 0.0010
-Stage 3 = 293, LL = -3785.5, AR(6.00) = [0.31], gam = 0.0073, Max-Change = 0.0012
-Stage 3 = 294, LL = -3774.6, AR(6.00) = [0.34], gam = 0.0073, Max-Change = 0.0011
-Stage 3 = 295, LL = -3788.0, AR(6.00) = [0.36], gam = 0.0072, Max-Change = 0.0006
-Stage 3 = 296, LL = -3749.0, AR(6.00) = [0.30], gam = 0.0072, Max-Change = 0.0009
-Stage 3 = 297, LL = -3746.5, AR(6.00) = [0.35], gam = 0.0072, Max-Change = 0.0009
-## 
-## Calculating log-likelihood...
-</code></pre>
-
-<pre><code class="r">coef(mod2)
+<pre><code class="r">mod2 &lt;- mirt(dat, 1, c(rep(&#39;2PL&#39;,4), &#39;old2PL&#39;), customItems=list(old2PL=x), method = &#39;MHRM&#39;)
+coef(mod2)
 </code></pre>
 
 <pre><code>## $Item.1
@@ -828,34 +311,8 @@ P.nonlin &lt;- function(par,Theta, ncat=2){
 
 x2 &lt;- createItem(name, par=par, est=est, P=P.nonlin)
 
-mod &lt;- mirt(dat, 1, c(rep(&#39;2PL&#39;,4), &#39;nonlin&#39;), customItems=list(nonlin=x2), verbose = TRUE)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -2907.097, Max-Change: 1.67307
-Iteration: 2, Log-Lik: -2666.187, Max-Change: 0.14366
-Iteration: 3, Log-Lik: -2662.030, Max-Change: 0.17959
-Iteration: 4, Log-Lik: -2659.792, Max-Change: 0.06287
-Iteration: 5, Log-Lik: -2659.422, Max-Change: 0.04936
-Iteration: 6, Log-Lik: -2659.205, Max-Change: 0.14274
-Iteration: 7, Log-Lik: -2658.849, Max-Change: 0.01415
-Iteration: 8, Log-Lik: -2658.824, Max-Change: 0.01269
-Iteration: 9, Log-Lik: -2658.806, Max-Change: 0.05349
-Iteration: 10, Log-Lik: -2658.767, Max-Change: 0.00282
-Iteration: 11, Log-Lik: -2658.766, Max-Change: 0.00376
-Iteration: 12, Log-Lik: -2658.765, Max-Change: 0.00643
-Iteration: 13, Log-Lik: -2658.764, Max-Change: 0.00171
-Iteration: 14, Log-Lik: -2658.763, Max-Change: 0.00148
-Iteration: 15, Log-Lik: -2658.763, Max-Change: 0.00167
-Iteration: 16, Log-Lik: -2658.763, Max-Change: 0.00070
-Iteration: 17, Log-Lik: -2658.763, Max-Change: 0.00015
-Iteration: 18, Log-Lik: -2658.763, Max-Change: 0.00177
-Iteration: 19, Log-Lik: -2658.762, Max-Change: 0.00093
-Iteration: 20, Log-Lik: -2658.762, Max-Change: 0.00046
-Iteration: 21, Log-Lik: -2658.762, Max-Change: 0.00002
-</code></pre>
-
-<pre><code class="r">coef(mod)
+mod &lt;- mirt(dat, 1, c(rep(&#39;2PL&#39;,4), &#39;nonlin&#39;), customItems=list(nonlin=x2))
+coef(mod)
 </code></pre>
 
 <pre><code>## $Item.1
@@ -907,62 +364,24 @@ P.nom &lt;- function(par, Theta, ncat){
 
 nom1 &lt;- createItem(name, par=par, est=est, P=P.nom)
 nommod &lt;- mirt(Science, 1, &#39;nom1&#39;, customItems=list(nom1=nom1))
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -2533.494, Max-Change: 4.23629
-Iteration: 2, Log-Lik: -1708.534, Max-Change: 0.89061
-Iteration: 3, Log-Lik: -1654.582, Max-Change: 0.67637
-Iteration: 4, Log-Lik: -1630.775, Max-Change: 0.43661
-Iteration: 5, Log-Lik: -1621.460, Max-Change: 0.25677
-Iteration: 6, Log-Lik: -1617.426, Max-Change: 0.57088
-Iteration: 7, Log-Lik: -1613.558, Max-Change: 0.27073
-Iteration: 8, Log-Lik: -1612.491, Max-Change: 0.28576
-Iteration: 9, Log-Lik: -1611.458, Max-Change: 1.19466
-Iteration: 10, Log-Lik: -1609.204, Max-Change: 0.14828
-Iteration: 11, Log-Lik: -1608.871, Max-Change: 0.12023
-Iteration: 12, Log-Lik: -1608.762, Max-Change: 0.05787
-Iteration: 13, Log-Lik: -1608.719, Max-Change: 0.07809
-Iteration: 14, Log-Lik: -1608.675, Max-Change: 0.07222
-Iteration: 15, Log-Lik: -1608.641, Max-Change: 0.37531
-Iteration: 16, Log-Lik: -1608.525, Max-Change: 0.04777
-Iteration: 17, Log-Lik: -1608.514, Max-Change: 0.04076
-Iteration: 18, Log-Lik: -1608.506, Max-Change: 0.12469
-Iteration: 19, Log-Lik: -1608.488, Max-Change: 0.03305
-Iteration: 20, Log-Lik: -1608.483, Max-Change: 0.02303
-Iteration: 21, Log-Lik: -1608.480, Max-Change: 0.13447
-Iteration: 22, Log-Lik: -1608.466, Max-Change: 0.01337
-Iteration: 23, Log-Lik: -1608.464, Max-Change: 0.00825
-Iteration: 24, Log-Lik: -1608.464, Max-Change: 0.02568
-Iteration: 25, Log-Lik: -1608.462, Max-Change: 0.00469
-Iteration: 26, Log-Lik: -1608.462, Max-Change: 0.00512
-Iteration: 27, Log-Lik: -1608.461, Max-Change: 0.03401
-Iteration: 28, Log-Lik: -1608.460, Max-Change: 0.00503
-Iteration: 29, Log-Lik: -1608.460, Max-Change: 0.00182
-Iteration: 30, Log-Lik: -1608.459, Max-Change: 0.00745
-Iteration: 31, Log-Lik: -1608.459, Max-Change: 0.00120
-Iteration: 32, Log-Lik: -1608.459, Max-Change: 0.00595
-Iteration: 33, Log-Lik: -1608.459, Max-Change: 0.00001
-</code></pre>
-
-<pre><code class="r">coef(nommod)
+coef(nommod)
 </code></pre>
 
 <pre><code>## $Comfort
-##       alp1   alp2   alp3   gam1   gam2   gam3
-## par -1.554 -2.017 -3.032 -3.644 -5.911 -4.536
+##       alp1   alp2   alp3  gam1   gam2   gam3
+## par -1.553 -2.015 -3.025 -3.64 -5.906 -4.533
 ## 
 ## $Work
 ##       alp1   alp2   alp3   gam1   gam2   gam3
-## par -0.576 -1.259 -2.522 -1.461 -2.324 -0.322
+## par -0.579 -1.261 -2.523 -1.464 -2.326 -0.325
 ## 
 ## $Future
 ##       alp1   alp2   alp3   gam1   gam2   gam3
-## par -1.528 -3.727 -6.025 -3.626 -5.798 -3.896
+## par -1.553 -3.788 -6.105 -3.667 -5.861 -3.948
 ## 
 ## $Benefit
-##       alp1   alp2   alp3  gam1   gam2   gam3
-## par -0.811 -1.365 -2.349 -2.15 -2.918 -1.625
+##       alp1   alp2   alp3   gam1   gam2   gam3
+## par -0.808 -1.358 -2.339 -2.145 -2.912 -1.622
 ## 
 ## $GroupPars
 ##     MEAN_1 COV_11
@@ -973,20 +392,20 @@ Iteration: 33, Log-Lik: -1608.459, Max-Change: 0.00001
 </code></pre>
 
 <pre><code>##          [,1]
-## [1,] -1.65075
-## [2,] -0.09675
-## [3,]  0.36625
-## [4,]  1.38125
+## [1,] -1.64825
+## [2,] -0.09525
+## [3,]  0.36675
+## [4,]  1.37675
 </code></pre>
 
 <pre><code class="r">Tnom.dev(4) %*% coef(nommod)[[1]][4:6] #d
 </code></pre>
 
 <pre><code>##         [,1]
-## [1,] -3.5227
-## [2,]  0.1213
-## [3,]  2.3882
-## [4,]  1.0132
+## [1,] -3.5198
+## [2,]  0.1202
+## [3,]  2.3862
+## [4,]  1.0133
 </code></pre>
 
 </body>

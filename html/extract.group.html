@@ -5,6 +5,18 @@
 
 <title>Name: extract.group</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -203,38 +217,7 @@ group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
 models &lt;- mirt.model(&#39;F1 = 1-15&#39;)
 
 mod_configural &lt;- multipleGroup(dat, models, group = group)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -18671.032, Max-Change: 0.62234
-Iteration: 2, Log-Lik: -18410.892, Max-Change: 0.19771
-Iteration: 3, Log-Lik: -18376.501, Max-Change: 0.09812
-Iteration: 4, Log-Lik: -18368.174, Max-Change: 0.05294
-Iteration: 5, Log-Lik: -18365.724, Max-Change: 0.03035
-Iteration: 6, Log-Lik: -18364.803, Max-Change: 0.02636
-Iteration: 7, Log-Lik: -18364.320, Max-Change: 0.00692
-Iteration: 8, Log-Lik: -18364.235, Max-Change: 0.00438
-Iteration: 9, Log-Lik: -18364.190, Max-Change: 0.00588
-Iteration: 10, Log-Lik: -18364.159, Max-Change: 0.00206
-Iteration: 11, Log-Lik: -18364.152, Max-Change: 0.00120
-Iteration: 12, Log-Lik: -18364.148, Max-Change: 0.00241
-Iteration: 13, Log-Lik: -18364.144, Max-Change: 0.00186
-Iteration: 14, Log-Lik: -18364.141, Max-Change: 0.00073
-Iteration: 15, Log-Lik: -18364.141, Max-Change: 0.00073
-Iteration: 16, Log-Lik: -18364.140, Max-Change: 0.00096
-Iteration: 17, Log-Lik: -18364.139, Max-Change: 0.00071
-Iteration: 18, Log-Lik: -18364.139, Max-Change: 0.00035
-Iteration: 19, Log-Lik: -18364.139, Max-Change: 0.00025
-Iteration: 20, Log-Lik: -18364.139, Max-Change: 0.00017
-Iteration: 21, Log-Lik: -18364.139, Max-Change: 0.00019
-Iteration: 22, Log-Lik: -18364.139, Max-Change: 0.00021
-Iteration: 23, Log-Lik: -18364.139, Max-Change: 0.00021
-Iteration: 24, Log-Lik: -18364.139, Max-Change: 0.00012
-Iteration: 25, Log-Lik: -18364.139, Max-Change: 0.00004
-Iteration: 26, Log-Lik: -18364.139, Max-Change: 0.00004
-</code></pre>
-
-<pre><code class="r">group.1 &lt;- extract.group(mod_configural, 1) #extract first group
+group.1 &lt;- extract.group(mod_configural, 1) #extract first group
 summary(group.1)
 </code></pre>
 
@@ -245,16 +228,16 @@ summary(group.1)
 ## Item_2  -0.0115 0.000133
 ## Item_3   0.4189 0.175458
 ## Item_4   0.5278 0.278536
-## Item_5   0.4153 0.172442
-## Item_6   0.5114 0.261525
-## Item_7   0.7061 0.498524
-## Item_8   0.6498 0.422270
+## Item_5   0.4153 0.172441
+## Item_6   0.5114 0.261526
+## Item_7   0.7061 0.498528
+## Item_8   0.6498 0.422269
 ## Item_9   0.5103 0.260425
-## Item_10  0.5350 0.286202
-## Item_11  0.6320 0.399424
+## Item_10  0.5350 0.286201
+## Item_11  0.6320 0.399422
 ## Item_12  0.5687 0.323389
-## Item_13  0.5367 0.288036
-## Item_14  0.5007 0.250710
+## Item_13  0.5367 0.288037
+## Item_14  0.5007 0.250711
 ## Item_15  0.5742 0.329738
 ## 
 ## SS loadings:  4.143 

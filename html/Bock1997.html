@@ -5,6 +5,18 @@
 
 <title>Name: Bock1997</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -205,39 +219,8 @@ head(dat)
 </code></pre>
 
 <pre><code class="r">mod &lt;- mirt(dat, 1, &#39;nominal&#39;)
-</code></pre>
 
-<pre><code>## &#39;nominal.highlow&#39; matrix not specified, highest and lowest categories are used by default
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -8398.179, Max-Change: 1.35680
-Iteration: 2, Log-Lik: -7888.489, Max-Change: 0.33597
-Iteration: 3, Log-Lik: -7834.277, Max-Change: 0.30577
-Iteration: 4, Log-Lik: -7809.008, Max-Change: 0.21947
-Iteration: 5, Log-Lik: -7797.240, Max-Change: 0.12673
-Iteration: 6, Log-Lik: -7791.733, Max-Change: 0.09512
-Iteration: 7, Log-Lik: -7788.907, Max-Change: 0.05676
-Iteration: 8, Log-Lik: -7787.842, Max-Change: 0.04026
-Iteration: 9, Log-Lik: -7787.313, Max-Change: 0.02914
-Iteration: 10, Log-Lik: -7787.092, Max-Change: 0.01304
-Iteration: 11, Log-Lik: -7787.030, Max-Change: 0.00874
-Iteration: 12, Log-Lik: -7787.001, Max-Change: 0.01294
-Iteration: 13, Log-Lik: -7786.978, Max-Change: 0.00185
-Iteration: 14, Log-Lik: -7786.975, Max-Change: 0.00129
-Iteration: 15, Log-Lik: -7786.973, Max-Change: 0.00046
-Iteration: 16, Log-Lik: -7786.973, Max-Change: 0.00068
-Iteration: 17, Log-Lik: -7786.973, Max-Change: 0.00043
-Iteration: 18, Log-Lik: -7786.973, Max-Change: 0.00132
-Iteration: 19, Log-Lik: -7786.972, Max-Change: 0.00034
-Iteration: 20, Log-Lik: -7786.972, Max-Change: 0.00076
-Iteration: 21, Log-Lik: -7786.972, Max-Change: 0.00013
-Iteration: 22, Log-Lik: -7786.972, Max-Change: 0.00025
-Iteration: 23, Log-Lik: -7786.972, Max-Change: 0.00059
-Iteration: 24, Log-Lik: -7786.972, Max-Change: 0.00009
-</code></pre>
-
-<pre><code class="r">#reproduce table 3 in Bock (1997)
+#reproduce table 3 in Bock (1997)
 fs &lt;- round(fscores(mod, verbose = FALSE)[,c(&#39;F1&#39;,&#39;SE_F1&#39;)],2)
 fttd &lt;- residuals(mod, type = &#39;exp&#39;)
 table &lt;- data.frame(fttd[,-ncol(fttd)], fs)
@@ -245,125 +228,96 @@ table
 </code></pre>
 
 <pre><code>##    Item.1 Item.2 Item.3 freq     exp    F1 SE_F1
-## 1       1      1      1   50  46.445 -1.72  0.68
-## 2       1      1      2   32  37.197 -1.22  0.64
-## 3       1      1      3   15  18.064 -0.95  0.62
-## 4       1      1      4   10   8.691 -0.61  0.61
-## 5       1      2      1   54  59.969 -1.38  0.65
-## 6       1      2      2   80  69.986 -0.91  0.62
-## 7       1      2      3   40  41.671 -0.65  0.61
-## 8       1      2      4   24  25.836 -0.33  0.61
-## 9       1      3      1   27  28.072 -1.07  0.63
-## 10      1      3      2   52  46.704 -0.62  0.61
-## 11      1      3      3   33  33.860 -0.37  0.61
-## 12      1      3      4   27  26.953 -0.04  0.61
+## 1       1      1      1   50  46.444 -1.72  0.68
+## 2       1      1      2   32  37.211 -1.22  0.64
+## 3       1      1      3   15  18.067 -0.95  0.62
+## 4       1      1      4   10   8.692 -0.62  0.61
+## 5       1      2      1   54  59.970 -1.38  0.65
+## 6       1      2      2   80  69.998 -0.91  0.62
+## 7       1      2      3   40  41.672 -0.65  0.61
+## 8       1      2      4   24  25.832 -0.33  0.61
+## 9       1      3      1   27  28.070 -1.07  0.63
+## 10      1      3      2   52  46.693 -0.62  0.61
+## 11      1      3      3   33  33.849 -0.37  0.61
+## 12      1      3      4   27  26.938 -0.04  0.61
 ## 13      1      4      1    4   3.941 -0.63  0.61
-## 14      1      4      2   13  10.903 -0.19  0.61
-## 15      1      4      3   10  10.577  0.06  0.61
-## 16      1      4      4   10  12.294  0.40  0.63
-## 17      2      1      1   27  20.199 -1.29  0.64
-## 18      2      1      2   19  26.271 -0.82  0.62
-## 19      2      1      3   11  16.604 -0.57  0.61
-## 20      2      1      4   11  11.098 -0.24  0.61
-## 21      2      2      1   30  36.068 -0.98  0.63
-## 22      2      2      2   78  66.600 -0.53  0.61
-## 23      2      2      3   69  51.212 -0.28  0.61
-## 24      2      2      4   48  43.968  0.05  0.61
-## 25      2      3      1   24  22.897 -0.68  0.61
-## 26      2      3      2   48  59.351 -0.25  0.61
-## 27      2      3      3   52  55.431  0.01  0.61
-## 28      2      3      4   53  61.294  0.34  0.62
-## 29      2      4      1    3   4.970 -0.25  0.61
-## 30      2      4      2   21  21.297  0.19  0.62
-## 31      2      4      3   20  26.758  0.45  0.63
-## 32      2      4      4   54  43.947  0.81  0.65
-## 33      3      1      1    9   7.041 -0.96  0.62
-## 34      3      1      2   12  13.278 -0.51  0.61
-## 35      3      1      3   13  10.333 -0.26  0.61
-## 36      3      1      4    7   9.009  0.06  0.61
-## 37      3      2      1   11  16.093 -0.66  0.61
+## 14      1      4      2   13  10.898 -0.19  0.61
+## 15      1      4      3   10  10.571  0.06  0.61
+## 16      1      4      4   10  12.283  0.40  0.63
+## 17      2      1      1   27  20.192 -1.29  0.64
+## 18      2      1      2   19  26.269 -0.82  0.62
+## 19      2      1      3   11  16.603 -0.57  0.61
+## 20      2      1      4   11  11.097 -0.24  0.61
+## 21      2      2      1   30  36.070 -0.98  0.63
+## 22      2      2      2   78  66.603 -0.53  0.61
+## 23      2      2      3   69  51.215 -0.28  0.61
+## 24      2      2      4   48  43.966  0.05  0.61
+## 25      2      3      1   24  22.902 -0.68  0.61
+## 26      2      3      2   48  59.348 -0.25  0.61
+## 27      2      3      3   52  55.430  0.01  0.61
+## 28      2      3      4   53  61.282  0.34  0.62
+## 29      2      4      1    3   4.974 -0.25  0.61
+## 30      2      4      2   21  21.299  0.19  0.62
+## 31      2      4      3   20  26.763  0.45  0.63
+## 32      2      4      4   54  43.944  0.81  0.65
+## 33      3      1      1    9   7.040 -0.96  0.62
+## 34      3      1      2   12  13.275 -0.51  0.61
+## 35      3      1      3   13  10.330 -0.26  0.61
+## 36      3      1      4    7   9.005  0.06  0.61
+## 37      3      2      1   11  16.098 -0.66  0.61
 ## 38      3      2      2   29  42.609 -0.23  0.61
 ## 39      3      2      3   37  40.288  0.03  0.61
-## 40      3      2      4   44  45.276  0.36  0.62
-## 41      3      3      1   15  12.959 -0.38  0.61
-## 42      3      3      2   62  47.987  0.06  0.61
-## 43      3      3      3   60  55.257  0.32  0.62
-## 44      3      3      4   88  80.689  0.67  0.64
-## 45      3      4      1    4   3.993  0.05  0.61
-## 46      3      4      2   27  24.629  0.50  0.63
-## 47      3      4      3   43  38.610  0.78  0.65
-## 48      3      4      4   73  85.856  1.17  0.68
-## 49      4      1      1    4   2.537 -0.75  0.62
+## 40      3      2      4   44  45.267  0.36  0.62
+## 41      3      3      1   15  12.967 -0.38  0.61
+## 42      3      3      2   62  47.986  0.06  0.61
+## 43      3      3      3   60  55.258  0.32  0.62
+## 44      3      3      4   88  80.668  0.67  0.64
+## 45      3      4      1    4   3.999  0.05  0.61
+## 46      3      4      2   27  24.637  0.50  0.63
+## 47      3      4      3   43  38.626  0.78  0.65
+## 48      3      4      4   73  85.858  1.17  0.68
+## 49      4      1      1    4   2.538 -0.75  0.62
 ## 50      4      1      2    8   6.101 -0.31  0.61
-## 51      4      1      3    7   5.456 -0.06  0.61
-## 52      4      1      4    9   5.698  0.27  0.62
-## 53      4      2      1    7   6.810 -0.46  0.61
-## 54      4      2      2   21  22.922 -0.02  0.61
-## 55      4      2      3   25  24.943  0.23  0.62
-## 56      4      2      4   31  33.768  0.58  0.64
-## 57      4      3      1    8   6.420 -0.17  0.61
-## 58      4      3      2   23  30.272  0.27  0.62
-## 59      4      3      3   35  40.289  0.54  0.63
-## 60      4      3      4   73  71.552  0.90  0.66
-## 61      4      4      1    4   2.508  0.26  0.62
-## 62      4      4      2   21  19.927  0.73  0.65
-## 63      4      4      3   36  36.555  1.02  0.67
-## 64      4      4      4  105 101.205  1.43  0.71
+## 51      4      1      3    7   5.455 -0.06  0.61
+## 52      4      1      4    9   5.696  0.27  0.62
+## 53      4      2      1    7   6.816 -0.46  0.61
+## 54      4      2      2   21  22.926 -0.02  0.61
+## 55      4      2      3   25  24.946  0.23  0.62
+## 56      4      2      4   31  33.761  0.58  0.64
+## 57      4      3      1    8   6.427 -0.17  0.61
+## 58      4      3      2   23  30.278  0.27  0.62
+## 59      4      3      3   35  40.296  0.54  0.63
+## 60      4      3      4   73  71.533  0.90  0.66
+## 61      4      4      1    4   2.513  0.26  0.62
+## 62      4      4      2   21  19.938  0.73  0.65
+## 63      4      4      3   36  36.575  1.02  0.67
+## 64      4      4      4  105 101.207  1.43  0.71
 </code></pre>
 
 <pre><code class="r">#using nominal.highlow matrix to specify lowest and highest categories
-(nominal.highlow &lt;- matrix(c(4,4,4,4,1,1,1,1), 2, byrow = TRUE))
+(nominal.highlow &lt;- matrix(c(4,4,4,1,1,1), 2, byrow = TRUE))
 </code></pre>
 
-<pre><code>##      [,1] [,2] [,3] [,4]
-## [1,]    4    4    4    4
-## [2,]    1    1    1    1
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    4    4    4
+## [2,]    1    1    1
 </code></pre>
 
 <pre><code class="r">mod &lt;- mirt(dat, 1, &#39;nominal&#39;, nominal.highlow=nominal.highlow)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -8398.179, Max-Change: 1.35680
-Iteration: 2, Log-Lik: -7888.489, Max-Change: 0.33597
-Iteration: 3, Log-Lik: -7834.277, Max-Change: 0.30577
-Iteration: 4, Log-Lik: -7809.008, Max-Change: 0.21947
-Iteration: 5, Log-Lik: -7797.240, Max-Change: 0.12673
-Iteration: 6, Log-Lik: -7791.733, Max-Change: 0.09512
-Iteration: 7, Log-Lik: -7788.907, Max-Change: 0.05676
-Iteration: 8, Log-Lik: -7787.842, Max-Change: 0.04026
-Iteration: 9, Log-Lik: -7787.313, Max-Change: 0.02914
-Iteration: 10, Log-Lik: -7787.092, Max-Change: 0.01304
-Iteration: 11, Log-Lik: -7787.030, Max-Change: 0.00874
-Iteration: 12, Log-Lik: -7787.001, Max-Change: 0.01294
-Iteration: 13, Log-Lik: -7786.978, Max-Change: 0.00185
-Iteration: 14, Log-Lik: -7786.975, Max-Change: 0.00129
-Iteration: 15, Log-Lik: -7786.973, Max-Change: 0.00046
-Iteration: 16, Log-Lik: -7786.973, Max-Change: 0.00068
-Iteration: 17, Log-Lik: -7786.973, Max-Change: 0.00043
-Iteration: 18, Log-Lik: -7786.973, Max-Change: 0.00132
-Iteration: 19, Log-Lik: -7786.972, Max-Change: 0.00034
-Iteration: 20, Log-Lik: -7786.972, Max-Change: 0.00076
-Iteration: 21, Log-Lik: -7786.972, Max-Change: 0.00013
-Iteration: 22, Log-Lik: -7786.972, Max-Change: 0.00025
-Iteration: 23, Log-Lik: -7786.972, Max-Change: 0.00059
-Iteration: 24, Log-Lik: -7786.972, Max-Change: 0.00009
-</code></pre>
-
-<pre><code class="r">coef(mod)
+coef(mod)
 </code></pre>
 
 <pre><code>## $Item.1
 ##       a1 ak0   ak1   ak2 ak3 d0    d1    d2     d3
-## par 0.79   0 1.268 2.303   3  0 0.673 0.537 -0.014
+## par 0.79   0 1.269 2.304   3  0 0.673 0.538 -0.013
 ## 
 ## $Item.2
 ##        a1 ak0   ak1   ak2 ak3 d0    d1    d2    d3
-## par 0.897   0 0.859 1.717   3  0 1.452 1.636 0.647
+## par 0.898   0 0.859 1.717   3  0 1.452 1.636 0.647
 ## 
 ## $Item.3
-##        a1 ak0  ak1   ak2 ak3 d0    d1    d2    d3
-## par 0.908   0 1.29 2.038   3  0 1.496 1.509 1.459
+##        a1 ak0   ak1   ak2 ak3 d0    d1    d2    d3
+## par 0.908   0 1.289 2.038   3  0 1.495 1.508 1.457
 ## 
 ## $GroupPars
 ##     MEAN_1 COV_11

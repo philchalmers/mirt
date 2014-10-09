@@ -12,6 +12,7 @@ generated using R markdown via the `knitr` package and hosted on Github.
 - [mirt](http://philchalmers.github.io/mirt/html/mirt.html)
 - [mixedmirt](http://philchalmers.github.io/mirt/html/mixedmirt.html)
 - [multipleGroup](http://philchalmers.github.io/mirt/html/multipleGroup.html)
+- [mdirt](http://philchalmers.github.io/mirt/html/mdirt.html)
 
 ### S4 generic methods
 

@@ -5,6 +5,18 @@
 
 <title>Name: SAT12</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -227,14 +241,78 @@ head(SAT12)
 
 <pre><code class="r">data &lt;- key2binary(SAT12,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+head(data)
+</code></pre>
 
-#score the data, missing treated as NA
+<pre><code>##      Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9
+## [1,]      1      1      1      1      1      1      1      1      1
+## [2,]      0      1      0      0      1      0      1      0      1
+## [3,]      1      1      1      0      1      0      1      0      1
+## [4,]      0      1      0      1      1      0      1      0      1
+## [5,]      0      1      1      1      1      0      1      1      0
+## [6,]      1      1      0      0      1      0      1      0      1
+##      Item.10 Item.11 Item.12 Item.13 Item.14 Item.15 Item.16 Item.17
+## [1,]       1       1       1       1       1       1       1       1
+## [2,]       1       1       0       1       1       1       0       1
+## [3,]       0       1       0       0       1       1       0       1
+## [4,]       0       1       1       1       1       1       0       1
+## [5,]       0       1       1       1       1       1       0       1
+## [6,]       1       1       0       1       1       1       0       1
+##      Item.18 Item.19 Item.20 Item.21 Item.22 Item.23 Item.24 Item.25
+## [1,]       1       1       1       1       1       1       1       1
+## [2,]       0       1       1       1       1       0       1       0
+## [3,]       0       0       1       1       1       0       1       1
+## [4,]       0       0       1       1       0       0       0       0
+## [5,]       0       1       1       1       1       0       1       0
+## [6,]       1       1       1       1       1       1       1       0
+##      Item.26 Item.27 Item.28 Item.29 Item.30 Item.31 Item.32
+## [1,]       1       1       1       1       1       1       1
+## [2,]       0       1       0       0       0       1       0
+## [3,]       0       1       1       0       0       1       0
+## [4,]       0       1       1       0       0       1       0
+## [5,]       1       1       1       1       0       1       0
+## [6,]       0       1       0       0       0       1       0
+</code></pre>
+
+<pre><code class="r">#score the data, missing (value of 8) treated as NA
 SAT12missing &lt;- SAT12
-SAT12missing[SAT12missing == &#39;8&#39;] &lt;- NA
+SAT12missing[SAT12missing == 8] &lt;- NA
 data &lt;- key2binary(SAT12missing,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+head(data)
+</code></pre>
 
-#potentially better scoring for item 32
+<pre><code>##      Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9
+## [1,]      1      1      1      1      1      1      1      1      1
+## [2,]      0      1      0     NA      1      0      1     NA      1
+## [3,]      1      1      1      0      1      0      1      0      1
+## [4,]      0      1      0      1      1      0      1      0      1
+## [5,]      0      1      1      1      1      0      1      1      0
+## [6,]      1      1      0      0      1      0      1      0      1
+##      Item.10 Item.11 Item.12 Item.13 Item.14 Item.15 Item.16 Item.17
+## [1,]       1       1       1       1       1       1       1       1
+## [2,]       1       1      NA       1       1       1       0       1
+## [3,]       0       1       0       0       1       1       0       1
+## [4,]       0       1       1       1       1       1       0       1
+## [5,]       0       1       1       1       1       1       0       1
+## [6,]       1       1       0       1       1       1       0       1
+##      Item.18 Item.19 Item.20 Item.21 Item.22 Item.23 Item.24 Item.25
+## [1,]       1       1       1       1       1       1       1       1
+## [2,]       0       1       1       1       1      NA       1      NA
+## [3,]       0       0       1       1       1       0       1       1
+## [4,]       0       0       1       1       0       0       0       0
+## [5,]       0       1       1       1       1       0       1       0
+## [6,]       1       1       1       1       1       1       1       0
+##      Item.26 Item.27 Item.28 Item.29 Item.30 Item.31 Item.32
+## [1,]       1       1       1       1       1       1       1
+## [2,]       0       1       0       0      NA       1      NA
+## [3,]       0       1       1       0       0       1       0
+## [4,]       0       1       1       0       0       1       0
+## [5,]       1       1       1       1       0       1       0
+## [6,]       0       1       0       0       0       1       0
+</code></pre>
+
+<pre><code class="r">#potentially better scoring for item 32 (based on nominal model finding)
 data &lt;- key2binary(SAT12,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
 </code></pre>

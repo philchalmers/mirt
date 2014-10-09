@@ -5,6 +5,18 @@
 
 <title>Name: expected.item</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -192,36 +206,7 @@ hr {
 <h3>Title: Function to calculate expected value of item</h3>
 
 <pre><code class="r">mod &lt;- mirt(Science, 1)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.49668
-Iteration: 2, Log-Lik: -1617.364, Max-Change: 0.23978
-Iteration: 3, Log-Lik: -1612.859, Max-Change: 0.26730
-Iteration: 4, Log-Lik: -1610.414, Max-Change: 0.10183
-Iteration: 5, Log-Lik: -1609.894, Max-Change: 0.09358
-Iteration: 6, Log-Lik: -1609.586, Max-Change: 0.30160
-Iteration: 7, Log-Lik: -1609.022, Max-Change: 0.03547
-Iteration: 8, Log-Lik: -1608.980, Max-Change: 0.03002
-Iteration: 9, Log-Lik: -1608.952, Max-Change: 0.14930
-Iteration: 10, Log-Lik: -1608.881, Max-Change: 0.01373
-Iteration: 11, Log-Lik: -1608.877, Max-Change: 0.00734
-Iteration: 12, Log-Lik: -1608.875, Max-Change: 0.01466
-Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.01078
-Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00315
-Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00929
-Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00241
-Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00569
-Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00036
-Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00115
-Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00029
-Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00130
-Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00019
-Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00078
-Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00006
-</code></pre>
-
-<pre><code class="r">extr.2 &lt;- extract.item(mod, 2)
+extr.2 &lt;- extract.item(mod, 2)
 Theta &lt;- matrix(seq(-6,6, length.out=200))
 expected &lt;- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
 head(data.frame(expected, Theta=Theta))
@@ -230,7 +215,7 @@ head(data.frame(expected, Theta=Theta))
 <pre><code>##   expected  Theta
 ## 1    1.013 -6.000
 ## 2    1.014 -5.940
-## 3    1.015 -5.879
+## 3    1.016 -5.879
 ## 4    1.017 -5.819
 ## 5    1.018 -5.759
 ## 6    1.019 -5.698

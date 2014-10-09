@@ -207,41 +207,7 @@ hr {
 
 <pre><code class="r">dat &lt;- expand.table(LSAT7)
 x &lt;- mirt(dat, 1)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243
-Iteration: 2, Log-Lik: -2663.691, Max-Change: 0.13637
-Iteration: 3, Log-Lik: -2661.454, Max-Change: 0.25944
-Iteration: 4, Log-Lik: -2659.430, Max-Change: 0.04181
-Iteration: 5, Log-Lik: -2659.241, Max-Change: 0.03417
-Iteration: 6, Log-Lik: -2659.113, Max-Change: 0.17467
-Iteration: 7, Log-Lik: -2658.812, Max-Change: 0.00456
-Iteration: 8, Log-Lik: -2658.809, Max-Change: 0.00363
-Iteration: 9, Log-Lik: -2658.808, Max-Change: 0.00868
-Iteration: 10, Log-Lik: -2658.806, Max-Change: 0.00144
-Iteration: 11, Log-Lik: -2658.806, Max-Change: 0.00118
-Iteration: 12, Log-Lik: -2658.806, Max-Change: 0.00311
-Iteration: 13, Log-Lik: -2658.805, Max-Change: 0.00042
-Iteration: 14, Log-Lik: -2658.805, Max-Change: 0.00025
-Iteration: 15, Log-Lik: -2658.805, Max-Change: 0.00025
-Iteration: 16, Log-Lik: -2658.805, Max-Change: 0.00023
-Iteration: 17, Log-Lik: -2658.805, Max-Change: 0.00023
-Iteration: 18, Log-Lik: -2658.805, Max-Change: 0.00054
-Iteration: 19, Log-Lik: -2658.805, Max-Change: 0.00019
-Iteration: 20, Log-Lik: -2658.805, Max-Change: 0.00017
-Iteration: 21, Log-Lik: -2658.805, Max-Change: 0.00021
-Iteration: 22, Log-Lik: -2658.805, Max-Change: 0.00015
-Iteration: 23, Log-Lik: -2658.805, Max-Change: 0.00015
-Iteration: 24, Log-Lik: -2658.805, Max-Change: 0.00024
-Iteration: 25, Log-Lik: -2658.805, Max-Change: 0.00013
-Iteration: 26, Log-Lik: -2658.805, Max-Change: 0.00011
-Iteration: 27, Log-Lik: -2658.805, Max-Change: 0.00016
-Iteration: 28, Log-Lik: -2658.805, Max-Change: 0.00010
-Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
-</code></pre>
-
-<pre><code class="r">coef(x)
+coef(x)
 </code></pre>
 
 <pre><code>## $Item.1
@@ -299,43 +265,7 @@ Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
 
 <pre><code class="r">#with computed information matrix
 x &lt;- mirt(dat, 1, SE = TRUE)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243
-Iteration: 2, Log-Lik: -2663.691, Max-Change: 0.13637
-Iteration: 3, Log-Lik: -2661.454, Max-Change: 0.25944
-Iteration: 4, Log-Lik: -2659.430, Max-Change: 0.04181
-Iteration: 5, Log-Lik: -2659.241, Max-Change: 0.03417
-Iteration: 6, Log-Lik: -2659.113, Max-Change: 0.17467
-Iteration: 7, Log-Lik: -2658.812, Max-Change: 0.00456
-Iteration: 8, Log-Lik: -2658.809, Max-Change: 0.00363
-Iteration: 9, Log-Lik: -2658.808, Max-Change: 0.00868
-Iteration: 10, Log-Lik: -2658.806, Max-Change: 0.00144
-Iteration: 11, Log-Lik: -2658.806, Max-Change: 0.00118
-Iteration: 12, Log-Lik: -2658.806, Max-Change: 0.00311
-Iteration: 13, Log-Lik: -2658.805, Max-Change: 0.00042
-Iteration: 14, Log-Lik: -2658.805, Max-Change: 0.00025
-Iteration: 15, Log-Lik: -2658.805, Max-Change: 0.00025
-Iteration: 16, Log-Lik: -2658.805, Max-Change: 0.00023
-Iteration: 17, Log-Lik: -2658.805, Max-Change: 0.00023
-Iteration: 18, Log-Lik: -2658.805, Max-Change: 0.00054
-Iteration: 19, Log-Lik: -2658.805, Max-Change: 0.00019
-Iteration: 20, Log-Lik: -2658.805, Max-Change: 0.00017
-Iteration: 21, Log-Lik: -2658.805, Max-Change: 0.00021
-Iteration: 22, Log-Lik: -2658.805, Max-Change: 0.00015
-Iteration: 23, Log-Lik: -2658.805, Max-Change: 0.00015
-Iteration: 24, Log-Lik: -2658.805, Max-Change: 0.00024
-Iteration: 25, Log-Lik: -2658.805, Max-Change: 0.00013
-Iteration: 26, Log-Lik: -2658.805, Max-Change: 0.00011
-Iteration: 27, Log-Lik: -2658.805, Max-Change: 0.00016
-Iteration: 28, Log-Lik: -2658.805, Max-Change: 0.00010
-Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
-## 
-## Calculating information matrix...
-</code></pre>
-
-<pre><code class="r">coef(x)
+coef(x)
 </code></pre>
 
 <pre><code>## $Item.1
@@ -359,7 +289,7 @@ Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
 ## $Item.4
 ##            a1     d  g  u
 ## par     0.765 0.486  0  1
-## CI_2.5  0.500 0.340 NA NA
+## CI_2.5  0.500 0.339 NA NA
 ## CI_97.5 1.030 0.633 NA NA
 ## 
 ## $Item.5
@@ -426,7 +356,7 @@ Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
 ## Item.3.g         0.000     NA      NA
 ## Item.3.u         1.000     NA      NA
 ## Item.4.a1        0.765  0.500   1.030
-## Item.4.d         0.486  0.340   0.633
+## Item.4.d         0.486  0.339   0.633
 ## Item.4.g         0.000     NA      NA
 ## Item.4.u         1.000     NA      NA
 ## Item.5.a1        0.736  0.435   1.036
@@ -439,82 +369,28 @@ Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
 
 <pre><code class="r">#two factors
 x2 &lt;- mirt(Science, 2)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -1638.994, Max-Change: 0.55535
-Iteration: 2, Log-Lik: -1610.017, Max-Change: 0.15592
-Iteration: 3, Log-Lik: -1604.405, Max-Change: 0.08525
-Iteration: 4, Log-Lik: -1602.976, Max-Change: 0.06252
-Iteration: 5, Log-Lik: -1602.536, Max-Change: 0.03603
-Iteration: 6, Log-Lik: -1602.368, Max-Change: 0.08719
-Iteration: 7, Log-Lik: -1602.222, Max-Change: 0.01334
-Iteration: 8, Log-Lik: -1602.207, Max-Change: 0.01915
-Iteration: 9, Log-Lik: -1602.196, Max-Change: 0.02437
-Iteration: 10, Log-Lik: -1602.180, Max-Change: 0.00838
-Iteration: 11, Log-Lik: -1602.175, Max-Change: 0.00770
-Iteration: 12, Log-Lik: -1602.170, Max-Change: 0.04994
-Iteration: 13, Log-Lik: -1602.154, Max-Change: 0.01080
-Iteration: 14, Log-Lik: -1602.151, Max-Change: 0.00457
-Iteration: 15, Log-Lik: -1602.150, Max-Change: 0.00942
-Iteration: 16, Log-Lik: -1602.148, Max-Change: 0.00604
-Iteration: 17, Log-Lik: -1602.147, Max-Change: 0.00254
-Iteration: 18, Log-Lik: -1602.147, Max-Change: 0.00978
-Iteration: 19, Log-Lik: -1602.146, Max-Change: 0.00223
-Iteration: 20, Log-Lik: -1602.145, Max-Change: 0.00256
-Iteration: 21, Log-Lik: -1602.145, Max-Change: 0.00807
-Iteration: 22, Log-Lik: -1602.144, Max-Change: 0.00134
-Iteration: 23, Log-Lik: -1602.143, Max-Change: 0.00182
-Iteration: 24, Log-Lik: -1602.143, Max-Change: 0.00096
-Iteration: 25, Log-Lik: -1602.143, Max-Change: 0.00238
-Iteration: 26, Log-Lik: -1602.143, Max-Change: 0.00094
-Iteration: 27, Log-Lik: -1602.143, Max-Change: 0.00308
-Iteration: 28, Log-Lik: -1602.142, Max-Change: 0.00081
-Iteration: 29, Log-Lik: -1602.142, Max-Change: 0.00087
-Iteration: 30, Log-Lik: -1602.142, Max-Change: 0.00283
-Iteration: 31, Log-Lik: -1602.142, Max-Change: 0.00071
-Iteration: 32, Log-Lik: -1602.142, Max-Change: 0.00073
-Iteration: 33, Log-Lik: -1602.142, Max-Change: 0.00200
-Iteration: 34, Log-Lik: -1602.142, Max-Change: 0.00178
-Iteration: 35, Log-Lik: -1602.142, Max-Change: 0.00060
-Iteration: 36, Log-Lik: -1602.141, Max-Change: 0.00121
-Iteration: 37, Log-Lik: -1602.141, Max-Change: 0.00024
-Iteration: 38, Log-Lik: -1602.141, Max-Change: 0.00077
-Iteration: 39, Log-Lik: -1602.141, Max-Change: 0.00089
-Iteration: 40, Log-Lik: -1602.141, Max-Change: 0.00164
-Iteration: 41, Log-Lik: -1602.141, Max-Change: 0.00023
-Iteration: 42, Log-Lik: -1602.141, Max-Change: 0.00022
-Iteration: 43, Log-Lik: -1602.141, Max-Change: 0.00058
-Iteration: 44, Log-Lik: -1602.141, Max-Change: 0.00182
-Iteration: 45, Log-Lik: -1602.141, Max-Change: 0.00004
-</code></pre>
-
-<pre><code class="r">coef(x2)
-</code></pre>
-
-<pre><code>## 
-## Rotation:  oblimin
+coef(x2)
 </code></pre>
 
 <pre><code>## $Comfort
-##        a1     a2    d1    d2     d3
-## par 1.328 -0.035 5.208 2.868 -1.606
+##         a1     a2    d1    d2     d3
+## par -1.271 -0.428 5.202 2.865 -1.604
 ## 
 ## $Work
-##         a1     a2    d1    d2     d3
-## par -0.111 -2.406 4.027 1.258 -3.166
+##         a1    a2    d1    d2     d3
+## par -1.681 1.584 3.978 1.242 -3.127
 ## 
 ## $Future
-##       a1     a2    d1    d2     d3
-## par 0.94 -1.141 4.553 1.906 -1.694
+##         a1   a2    d1    d2     d3
+## par -1.749 0.44 4.564 1.911 -1.699
 ## 
 ## $Benefit
-##        a1    a2    d1   d2     d3
-## par 1.751 0.084 3.972 1.19 -2.037
+##         a1     a2    d1    d2     d3
+## par -1.589 -0.661 3.981 1.193 -2.042
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0      1 -0.482      1
+## par      0      0      1      0      1
 </code></pre>
 
 <pre><code class="r">coef(x2, rotate = &#39;varimax&#39;)
@@ -525,20 +401,20 @@ Iteration: 45, Log-Lik: -1602.141, Max-Change: 0.00004
 </code></pre>
 
 <pre><code>## $Comfort
-##        a1    a2    d1    d2     d3
-## par 0.438 1.272 5.208 2.868 -1.606
+##        a1     a2    d1    d2     d3
+## par 0.443 -1.266 5.202 2.865 -1.604
 ## 
 ## $Work
-##        a1    a2    d1    d2     d3
-## par 2.327 0.359 4.027 1.258 -3.166
+##        a1     a2    d1    d2     d3
+## par 2.282 -0.354 3.978 1.242 -3.127
 ## 
 ## $Future
-##        a1    a2    d1    d2     d3
-## par 1.406 1.115 4.553 1.906 -1.694
+##        a1     a2    d1    d2     d3
+## par 1.421 -1.111 4.564 1.911 -1.699
 ## 
 ## $Benefit
-##       a1    a2    d1   d2     d3
-## par 0.45 1.651 3.972 1.19 -2.037
+##        a1     a2    d1    d2     d3
+## par 0.454 -1.659 3.981 1.193 -2.042
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22

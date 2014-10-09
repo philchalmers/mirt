@@ -5,6 +5,18 @@
 
 <title>Exercise 4</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -211,19 +225,23 @@ Iteration: 2, Log-Lik: -13199.798, Max-Change: 0.14130
 Iteration: 3, Log-Lik: -13165.327, Max-Change: 0.08254
 Iteration: 4, Log-Lik: -13157.418, Max-Change: 0.04898
 Iteration: 5, Log-Lik: -13154.654, Max-Change: 0.02861
-Iteration: 6, Log-Lik: -13153.803, Max-Change: 0.02380
+Iteration: 6, Log-Lik: -13153.803, Max-Change: 0.01642
 Iteration: 7, Log-Lik: -13153.413, Max-Change: 0.00823
 Iteration: 8, Log-Lik: -13153.356, Max-Change: 0.00682
-Iteration: 9, Log-Lik: -13153.330, Max-Change: 0.01223
+Iteration: 9, Log-Lik: -13153.330, Max-Change: 0.00590
 Iteration: 10, Log-Lik: -13153.309, Max-Change: 0.00290
 Iteration: 11, Log-Lik: -13153.305, Max-Change: 0.00211
-Iteration: 12, Log-Lik: -13153.304, Max-Change: 0.00494
+Iteration: 12, Log-Lik: -13153.304, Max-Change: 0.00305
 Iteration: 13, Log-Lik: -13153.301, Max-Change: 0.00344
 Iteration: 14, Log-Lik: -13153.300, Max-Change: 0.00167
-Iteration: 15, Log-Lik: -13153.299, Max-Change: 0.00105
+Iteration: 15, Log-Lik: -13153.299, Max-Change: 0.00137
 Iteration: 16, Log-Lik: -13153.299, Max-Change: 0.00099
 Iteration: 17, Log-Lik: -13153.299, Max-Change: 0.00106
-Iteration: 18, Log-Lik: -13153.299, Max-Change: 0.00004
+Iteration: 18, Log-Lik: -13153.299, Max-Change: 0.00021
+Iteration: 19, Log-Lik: -13153.299, Max-Change: 0.00019
+Iteration: 20, Log-Lik: -13153.299, Max-Change: 0.00064
+Iteration: 21, Log-Lik: -13153.299, Max-Change: 0.00076
+Iteration: 22, Log-Lik: -13153.298, Max-Change: 0.00009
 </code></pre>
 
 <pre><code class="r">summary(mod, suppress = .2)
@@ -243,13 +261,13 @@ Iteration: 18, Log-Lik: -13153.299, Max-Change: 0.00004
 ## Item_6     NA 0.548 0.309
 ## Item_7     NA 0.509 0.287
 ## Item_8  0.436    NA 0.235
-## Item_9  0.638    NA 0.364
+## Item_9  0.639    NA 0.364
 ## Item_10 0.454    NA 0.228
 ## Item_11 0.373    NA 0.194
 ## Item_12 0.376    NA 0.181
 ## Item_13 0.465    NA 0.308
 ## Item_14 0.337    NA 0.154
-## Item_15 0.565    NA 0.287
+## Item_15 0.564    NA 0.286
 ## 
 ## Rotated SS loadings:  1.792 1.686 
 ## 
@@ -284,9 +302,9 @@ anova(cmod.2PL, cmod.rasch)
 ## Model 2: mirt(data = data, model = model, method = &quot;MHRM&quot;, verbose = FALSE)
 </code></pre>
 
-<pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 26394 26394 26432 26489 -13179   NaN NaN    NaN
-## 2 26388 26390 26455 26553 -13163 31.26  13 0.0031
+<pre><code>##     AIC  AICc SABIC   BIC logLik   X2  df      p
+## 1 26391 26391 26429 26487 -13178  NaN NaN    NaN
+## 2 26390 26391 26456 26555 -13164 26.9  13 0.0128
 </code></pre>
 
 <h3>3) Using either the 2PL or Rasch model, estimate whether the expected response probabilities could be predicted by <code>Gender</code>, <code>midterm_Math</code>, and <code>midterm_Science</code>. Use <code>Gender</code> only in fitting one model, and all three covariates when fitting another. Inspect the coefficients using <code>summary()</code> and <code>coef()</code>.</h3>
@@ -458,8 +476,8 @@ summary(mod1)
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 26394 26394 26432 26489 -13179   NaN NaN NaN
-## 2 25801 25802 25842 25902 -12882 594.1   1   0
+## 1 26391 26391 26429 26487 -13178   NaN NaN NaN
+## 2 25804 25804 25844 25905 -12883 589.2   1   0
 </code></pre>
 
 <pre><code class="r">mod3 &lt;- mixedmirt(data, covdata, model=model, 
@@ -600,8 +618,8 @@ summary(mod3)
 </code></pre>
 
 <pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 25801 25802 25842 25902 -12882   NaN NaN NaN
-## 2 25399 25399 25443 25510 -12678 406.9   2   0
+## 1 25804 25804 25844 25905 -12883   NaN NaN NaN
+## 2 25399 25400 25444 25511 -12679 408.4   2   0
 </code></pre>
 
 <h3>4) Finally, include the <code>school</code> predictor variable in the model containing the other three covariates. Given that <code>school</code> has 50 unique values, it may be beneficial to treat the variable as a &#39;random&#39; so that instead of estimating 49 fixed effect coefficients we can estimate only one variance effect. This can add better stability to the model, while still determining if there is any variability in the responses due to which school the subjects are from. Is there any substantial variability due to <code>school</code>?</h3>

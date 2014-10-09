@@ -5,6 +5,18 @@
 
 <title>Name: mod2values</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -193,55 +207,21 @@ hr {
 
 <pre><code class="r">dat &lt;- expand.table(LSAT7)
 mod &lt;- mirt(dat, 1)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243
-Iteration: 2, Log-Lik: -2663.691, Max-Change: 0.13637
-Iteration: 3, Log-Lik: -2661.454, Max-Change: 0.25944
-Iteration: 4, Log-Lik: -2659.430, Max-Change: 0.04181
-Iteration: 5, Log-Lik: -2659.241, Max-Change: 0.03417
-Iteration: 6, Log-Lik: -2659.113, Max-Change: 0.17467
-Iteration: 7, Log-Lik: -2658.812, Max-Change: 0.00456
-Iteration: 8, Log-Lik: -2658.809, Max-Change: 0.00363
-Iteration: 9, Log-Lik: -2658.808, Max-Change: 0.00868
-Iteration: 10, Log-Lik: -2658.806, Max-Change: 0.00144
-Iteration: 11, Log-Lik: -2658.806, Max-Change: 0.00118
-Iteration: 12, Log-Lik: -2658.806, Max-Change: 0.00311
-Iteration: 13, Log-Lik: -2658.805, Max-Change: 0.00042
-Iteration: 14, Log-Lik: -2658.805, Max-Change: 0.00025
-Iteration: 15, Log-Lik: -2658.805, Max-Change: 0.00025
-Iteration: 16, Log-Lik: -2658.805, Max-Change: 0.00023
-Iteration: 17, Log-Lik: -2658.805, Max-Change: 0.00023
-Iteration: 18, Log-Lik: -2658.805, Max-Change: 0.00054
-Iteration: 19, Log-Lik: -2658.805, Max-Change: 0.00019
-Iteration: 20, Log-Lik: -2658.805, Max-Change: 0.00017
-Iteration: 21, Log-Lik: -2658.805, Max-Change: 0.00021
-Iteration: 22, Log-Lik: -2658.805, Max-Change: 0.00015
-Iteration: 23, Log-Lik: -2658.805, Max-Change: 0.00015
-Iteration: 24, Log-Lik: -2658.805, Max-Change: 0.00024
-Iteration: 25, Log-Lik: -2658.805, Max-Change: 0.00013
-Iteration: 26, Log-Lik: -2658.805, Max-Change: 0.00011
-Iteration: 27, Log-Lik: -2658.805, Max-Change: 0.00016
-Iteration: 28, Log-Lik: -2658.805, Max-Change: 0.00010
-Iteration: 29, Log-Lik: -2658.805, Max-Change: 0.00010
-</code></pre>
-
-<pre><code class="r">values &lt;- mod2values(mod)
+values &lt;- mod2values(mod)
 values
 </code></pre>
 
 <pre><code>##    group   item     class   name parnum  value lbound ubound   est
 ## 1    all Item.1      dich     a1      1 0.9879   -Inf    Inf  TRUE
-## 2    all Item.1      dich      d      2 1.8560   -Inf    Inf  TRUE
+## 2    all Item.1      dich      d      2 1.8561   -Inf    Inf  TRUE
 ## 3    all Item.1      dich      g      3 0.0000   -Inf    Inf FALSE
 ## 4    all Item.1      dich      u      4 1.0000   -Inf    Inf FALSE
 ## 5    all Item.2      dich     a1      5 1.0809   -Inf    Inf  TRUE
 ## 6    all Item.2      dich      d      6 0.8080   -Inf    Inf  TRUE
 ## 7    all Item.2      dich      g      7 0.0000   -Inf    Inf FALSE
 ## 8    all Item.2      dich      u      8 1.0000   -Inf    Inf FALSE
-## 9    all Item.3      dich     a1      9 1.7059   -Inf    Inf  TRUE
-## 10   all Item.3      dich      d     10 1.8043   -Inf    Inf  TRUE
+## 9    all Item.3      dich     a1      9 1.7058   -Inf    Inf  TRUE
+## 10   all Item.3      dich      d     10 1.8042   -Inf    Inf  TRUE
 ## 11   all Item.3      dich      g     11 0.0000   -Inf    Inf FALSE
 ## 12   all Item.3      dich      u     12 1.0000   -Inf    Inf FALSE
 ## 13   all Item.4      dich     a1     13 0.7652   -Inf    Inf  TRUE
@@ -283,9 +263,8 @@ values
 mod2 &lt;- mirt(dat, 1, pars = values)
 </code></pre>
 
-<pre><code>## 
-Iteration: 1, Log-Lik: -2658.805, Max-Change: 0.00009
-Iteration: 2, Log-Lik: -2658.805, Max-Change: 0.00008
+<pre><code>## Warning: M-step optimimizer converged immediately. Solution is either at the ML or
+##                      starting values are causing issues and should be adjusted.
 </code></pre>
 
 </body>

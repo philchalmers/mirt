@@ -5,6 +5,18 @@
 
 <title>Name: LSAT6</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -96,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -210,31 +224,15 @@ head(dat)
 </code></pre>
 
 <pre><code>## 
-Iteration: 1, Log-Lik: -2468.601, Max-Change: 0.07078
-Iteration: 2, Log-Lik: -2467.371, Max-Change: 0.02297
-Iteration: 3, Log-Lik: -2467.099, Max-Change: 0.01715
-Iteration: 4, Log-Lik: -2466.986, Max-Change: 0.00735
-Iteration: 5, Log-Lik: -2466.959, Max-Change: 0.00482
-Iteration: 6, Log-Lik: -2466.947, Max-Change: 0.00604
-Iteration: 7, Log-Lik: -2466.939, Max-Change: 0.00109
-Iteration: 8, Log-Lik: -2466.938, Max-Change: 0.00073
-Iteration: 9, Log-Lik: -2466.938, Max-Change: 0.00073
-Iteration: 10, Log-Lik: -2466.938, Max-Change: 0.00028
-Iteration: 11, Log-Lik: -2466.938, Max-Change: 0.00016
-Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00013
-Iteration: 13, Log-Lik: -2466.938, Max-Change: 0.00004
-Iteration: 14, Log-Lik: -2466.938, Max-Change: 0.00016
-Iteration: 15, Log-Lik: -2466.938, Max-Change: 0.00006
-</code></pre>
-
-<pre><code>## 
 ## Call:
 ## mirt(data = dat, model = model)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 15 EM iterations.
-## M-step optimizer used: BFGS 
-## Number of rectangular quadrature used: 41
+## Converged within 1e-04 tolerance after 12 EM iterations.
+## mirt version: 1.6 
+## M-step optimizer: BFGS 
+## EM acceleration: Ramsay
+## Number of rectangular quadrature: 41
 ## 
 ## Log-likelihood = -2467
 ## AIC = 4946; AICc = 4946
@@ -269,6 +267,55 @@ Iteration: 15, Log-Lik: -2466.938, Max-Change: 0.00006
 ## $GroupPars
 ##     MEAN_1 COV_11
 ## par      0      1
+</code></pre>
+
+<pre><code class="r">#equivalentely, but with a different parameterization
+mod2 &lt;- mirt(dat, 1, itemtype = &#39;Rasch&#39;)
+anova(mod, mod2) #equal
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = dat, model = 1, itemtype = &quot;Rasch&quot;)
+## Model 2: mirt(data = dat, model = model)
+</code></pre>
+
+<pre><code>##    AIC AICc SABIC  BIC logLik  X2  df   p
+## 1 4946 4946  4956 4975  -2467 NaN NaN NaN
+## 2 4946 4946  4956 4975  -2467   0   0   1
+</code></pre>
+
+<pre><code class="r">coef(mod2)
+</code></pre>
+
+<pre><code>## $Item_1
+##     a1     d g u
+## par  1 2.731 0 1
+## 
+## $Item_2
+##     a1     d g u
+## par  1 0.999 0 1
+## 
+## $Item_3
+##     a1    d g u
+## par  1 0.24 0 1
+## 
+## $Item_4
+##     a1     d g u
+## par  1 1.307 0 1
+## 
+## $Item_5
+##     a1   d g u
+## par  1 2.1 0 1
+## 
+## $GroupPars
+##     MEAN_1 COV_11
+## par      0  0.572
+</code></pre>
+
+<pre><code class="r">sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
+</code></pre>
+
+<pre><code>## [1] 0.7563
 </code></pre>
 
 </body>
