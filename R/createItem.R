@@ -51,10 +51,9 @@
 #' dat <- expand.table(LSAT7)
 #' sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars = 'values')
 #' tail(sv) #looks good
-#' mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = TRUE)
+#' mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x))
 #' coef(mod)
-#' mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x),
-#'    verbose = TRUE, method = 'MHRM')
+#' mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), method = 'MHRM')
 #' coef(mod2)
 #' 
 #' ###non-linear
@@ -71,7 +70,7 @@
 #'
 #' x2 <- createItem(name, par=par, est=est, P=P.nonlin)
 #'
-#' mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose = TRUE)
+#' mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2))
 #' coef(mod)
 #'
 #' ###nominal response model (Bock 1972 version)

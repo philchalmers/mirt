@@ -244,13 +244,13 @@ Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
     rownames(lambdas) <- rownames(upperlambdas) <- rownames(lowerlambdas) <- Names
     for(i in 1L:J){
         tmp <- pars[[i]]
-        lambdas[i,] <- ExtractLambdas(tmp) %*% chl /1.702
+        lambdas[i,] <- ExtractLambdas(tmp) /1.702
         tmp@par <- pars[[i]]@par - z * pars[[i]]@SEpar
-        lowerlambdas[i,] <- ExtractLambdas(tmp) %*% chl/1.702
+        lowerlambdas[i,] <- ExtractLambdas(tmp) /1.702
         tmp@par <- pars[[i]]@par + z * pars[[i]]@SEpar
-        upperlambdas[i,] <- ExtractLambdas(tmp) %*% chl/1.702
+        upperlambdas[i,] <- ExtractLambdas(tmp) /1.702
     }
-    norm <- sqrt(1 + rowSums(lambdas^2))
+    norm <- sqrt(1 + rowSums((lambdas%*%chl)^2))
     F <- as.matrix(lambdas/norm)
     if(!explor){
         norml <- sqrt(1 + rowSums(lowerlambdas^2, na.rm=TRUE))
