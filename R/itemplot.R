@@ -9,22 +9,22 @@
 #'   or \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types
 #'   (e.g., 1PL vs 2PL)
 #' @param item a single numeric value, or the item name, indicating which item to plot
-#' @param type plot type to use, information (\code{'info'}), standard errors (\code{'SE'}), 
-#'   item trace lines (\code{'trace'}), information and standard errors (\code{'infoSE'}) or 
-#'   information and trace lines (\code{'infotrace'}), relative efficiency lines (\code{'RE'}), 
-#'   expected score \code{'score'}, or information and trace line contours (\code{'infocontour'} and 
+#' @param type plot type to use, information (\code{'info'}), standard errors (\code{'SE'}),
+#'   item trace lines (\code{'trace'}), information and standard errors (\code{'infoSE'}) or
+#'   information and trace lines (\code{'infotrace'}), relative efficiency lines (\code{'RE'}),
+#'   expected score \code{'score'}, or information and trace line contours (\code{'infocontour'} and
 #'   \code{'tracecontour'}; not supported for \code{MultipleGroupClass} objects)
-#' @param degrees the degrees argument to be used if there are exactly two factors. 
+#' @param degrees the degrees argument to be used if there are exactly two factors.
 #'   See \code{\link{iteminfo}} for more detail
 #' @param CE logical; plot confidence envelope?
 #' @param CEalpha area remaining in the tail for confidence envelope. Default gives 95\% confidence
 #'   region
 #' @param CEdraws draws number of draws to use for confidence envelope
 #' @param rot a list of rotation coordinates to be used for 3 dimensional plots
-#' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce 
+#' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
-#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
+#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
 #'   This primarily is an instructive tool for demonstrating how item response curves
@@ -67,12 +67,12 @@
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE, 
+                     CEdraws = 1000, drop.zeros = FALSE,
                      rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      theta_lim = c(-6,6), shiny = FALSE, ...){
     if(shiny){
-        require(shiny)
-        runApp(shinyItemplot())
+        if(requireNamespace("shiny", quietly = TRUE))
+            shiny::runApp(shinyItemplot())
     }
     if(is(object, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported')
@@ -82,7 +82,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     if(!is.numeric(item)) item <- ind[inames == item]
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
-                             CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot, 
+                             CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, ...)
     if(is.null(ret)) return(invisible(ret))
     else return(ret)

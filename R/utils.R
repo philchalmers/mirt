@@ -44,7 +44,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
                                    offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
     itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
                                    offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
-    totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0, 
+    totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0,
                     log_den1, mirtClusterEnv$ncores)
     total_0 <- totals[[1L]]
     total_1 <- totals[[2L]]
@@ -65,7 +65,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
 imputePars <- function(pars, covB, imputenums, constrain){
     shift <- mirt_rmvnorm(1L, sigma=covB)
     for(i in 1L:length(pars)){
-        pn <- pars[[i]]@parnum 
+        pn <- pars[[i]]@parnum
         pick2 <- imputenums %in% pn
         pick1 <- pn %in% imputenums
         pars[[i]]@par[pick1] <- pars[[i]]@par[pick1] + shift[pick2]
@@ -231,7 +231,7 @@ test_info <- function(pars, Theta, Alist, K){
 
 Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
     J <- length(pars) - 1L
-    lambdas <- lowerlambdas <- upperlambdas <- 
+    lambdas <- lowerlambdas <- upperlambdas <-
         matrix(NA, J, length(ExtractLambdas(pars[[1L]])))
     gcov <- ExtractGroupPars(pars[[J+1L]])$gcov
     if(ncol(gcov) < ncol(lambdas)){
@@ -255,7 +255,7 @@ Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
     if(!explor){
         norml <- sqrt(1 + rowSums(lowerlambdas^2, na.rm=TRUE))
         normh <- sqrt(1 + rowSums(upperlambdas^2, na.rm=TRUE))
-        ret <- list(F=F, lower=as.matrix(lowerlambdas/norml), 
+        ret <- list(F=F, lower=as.matrix(lowerlambdas/norml),
                     upper=as.matrix(upperlambdas/normh))
     } else {
         ret <- list(F=F, lower=list(), upper=list())
@@ -310,7 +310,7 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, 
+updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
                         BFACTOR, sitems, cycles, rlist, prior){
     Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
@@ -649,7 +649,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             est <- c(est, tmpgroup[[i]]@est)
             lbound <- c(lbound, tmpgroup[[i]]@lbound)
             ubound <- c(ubound, tmpgroup[[i]]@ubound)
-            tmp <- sapply(as.character(tmpgroup[[i]]@prior.type), 
+            tmp <- sapply(as.character(tmpgroup[[i]]@prior.type),
                                  function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
             prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
@@ -665,7 +665,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             est <- c(est, random[[i]]@est)
             lbound <- c(lbound, random[[i]]@lbound)
             ubound <- c(ubound, random[[i]]@ubound)
-            tmp <- sapply(as.character(random[[i]]@prior.type), 
+            tmp <- sapply(as.character(random[[i]]@prior.type),
                           function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
             prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, random[[i]]@prior_1)
@@ -685,7 +685,7 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
 UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
     currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random, MG = TRUE)
     if(nrow(currentDesign) != nrow(pars))
-        stop('Rows in supplied and starting value data.frame objects do not match. Were the 
+        stop('Rows in supplied and starting value data.frame objects do not match. Were the
              data or itemtype input arguments modified?')
     if(!all(as.matrix(currentDesign[,c('group', 'item', 'class', 'name', 'parnum')]) ==
                 as.matrix(pars[,c('group', 'item', 'class', 'name', 'parnum')])))
@@ -708,8 +708,8 @@ UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
                 PrepList[[g]]$pars[[i]]@est[j] <- as.logical(pars[ind,'est'])
                 PrepList[[g]]$pars[[i]]@lbound[j] <- pars[ind,'lbound']
                 PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']
-                tmp <- as.character(pars[ind,'prior.type'])                
-                PrepList[[g]]$pars[[i]]@prior.type[j] <- 
+                tmp <- as.character(pars[ind,'prior.type'])
+                PrepList[[g]]$pars[[i]]@prior.type[j] <-
                     switch(tmp, norm=1L, lnorm=2L, beta=3L, 0L)
                 PrepList[[g]]$pars[[i]]@prior_1[j] <- pars[ind,'prior_1']
                 PrepList[[g]]$pars[[i]]@prior_2[j] <- pars[ind,'prior_2']
@@ -884,7 +884,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
         if(!is.null(survey.weights)){
             mtc <- match(tmpstringdata, stringtabdata)
             Freq <- mySapply(1L:nrow(tabdata), function(x, std, tstd, w)
-                sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata, 
+                sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata,
                 w=survey.weights)
         } else {
             Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
@@ -952,7 +952,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$customPriorFun = technical$customPriorFun
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
-    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else 
+    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else
         if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- 'none'
@@ -1000,13 +1000,11 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$Moptim <- optimizer
     }
     if(opts$Moptim == 'solnp'){
-        if(!require('Rsolnp')) require('Rsolnp')
         if(is.null(solnp_args$control)) solnp_args$control <- list()
         if(is.null(solnp_args$control$trace)) solnp_args$control$trace <- 0
         if(method != 'EM') stop('solnp only supported for optimization with EM algorithm')
         opts$solnp_args <- solnp_args
     } else if(opts$Moptim == 'alabama'){
-        if(!require('alabama')) require('alabama')
         if(method != 'EM') stop('alabama only supported for optimization with EM algorithm')
         if(is.null(alabama_args$control.outer)) alabama_args$control.outer <- list()
         if(is.null(alabama_args$control.optim)) alabama_args$control.optim <- list()
@@ -1022,7 +1020,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     return(opts)
 }
 
-reloadPars <- function(longpars, pars, ngroups, J){    
+reloadPars <- function(longpars, pars, ngroups, J){
     if(FALSE){
         pars <- .Call('reloadPars', longpars, pars, ngroups, J)
     } else {
@@ -1199,10 +1197,10 @@ smooth.cor <- function(x){
 }
 
 RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
-    
+
     lower.lambda <- function(lambda) pchisq(X2, df=df, ncp=lambda) - ci.upper
     upper.lambda <- function(lambda) pchisq(X2, df=df, ncp=lambda) - ci.lower
-    
+
     lambda.l <- try(uniroot(f=lower.lambda, lower=0, upper=X2)$root, silent=TRUE)
     lambda.u <- try(uniroot(f=upper.lambda, lower=0, upper=max(N, X2*5))$root, silent=TRUE)
     if(!is(lambda.l, 'try-error')){
@@ -1215,7 +1213,7 @@ RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
     } else {
         RMSEA.upper <- 0
     }
-    
+
     return(c(RMSEA.lower, RMSEA.upper))
 }
 
@@ -1224,7 +1222,7 @@ assignInformationMG <- function(object){
     names <- colnames(object@information)
     spl_names <- strsplit(names, split="\\.")
     spl_names_par <- sapply(spl_names, function(x) x[1L])
-    spl_names <- lapply(spl_names, 
+    spl_names <- lapply(spl_names,
                         function(x) as.numeric(x[-1L]))
     spl_names <- do.call(rbind, spl_names)
     for(g in 1L:length(object@pars)){
@@ -1233,7 +1231,7 @@ assignInformationMG <- function(object){
             object@pars[[g]]@pars[[J+1L]]@parnum)]
         pick <- spl_names[,g] >= from & spl_names[,g] <= to
         tmp <- object@information[pick,pick]
-        colnames(tmp) <- rownames(tmp) <- 
+        colnames(tmp) <- rownames(tmp) <-
             paste(spl_names_par[pick], spl_names[pick,g], sep='.')
         object@pars[[g]]@information <- tmp
     }
@@ -1264,13 +1262,13 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
     LL <- 0
     for(g in 1L:ngroups){
         if(BFACTOR){
-            expected <- Estep.bfactor(pars=pars2[[g]], 
+            expected <- Estep.bfactor(pars=pars2[[g]],
                                       tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                       Theta=Theta, prior=prior[[g]],
                                       specific=specific, sitems=sitems,
                                       itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)$expected
         } else {
-            expected <- Estep.mirt(pars=pars2[[g]], 
+            expected <- Estep.mirt(pars=pars2[[g]],
                                    tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                    Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
                                    CUSTOM.IND=CUSTOM.IND)$expected
@@ -1280,20 +1278,20 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
     LL
 }
 
-select_quadpts <- function(nfact) switch(as.character(nfact), 
+select_quadpts <- function(nfact) switch(as.character(nfact),
                                          '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
 
-select_quadpts2 <- function(nfact) switch(as.character(nfact), 
+select_quadpts2 <- function(nfact) switch(as.character(nfact),
                                           '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
 
 mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
                          check = FALSE)
-{    
-    # Version modified from mvtnorm::rmvnorm, version 0.9-9996, 19-April, 2014. 
+{
+    # Version modified from mvtnorm::rmvnorm, version 0.9-9996, 19-April, 2014.
     if(check){
-        if (!isSymmetric(sigma, tol = sqrt(.Machine$double.eps), check.attributes = FALSE)) 
+        if (!isSymmetric(sigma, tol = sqrt(.Machine$double.eps), check.attributes = FALSE))
             stop("sigma must be a symmetric matrix")
-        if (length(mean) != nrow(sigma)) 
+        if (length(mean) != nrow(sigma))
             stop("mean and sigma have non-conforming size")
     }
     ev <- eigen(sigma, symmetric = TRUE)
@@ -1309,7 +1307,7 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
 
 mirt_dmvnorm <- function(x, mean, sigma, log = FALSE)
 {
-    # Version modified from mvtnorm::dmvnorm, version 0.9-9996, 19-April, 2014. 
+    # Version modified from mvtnorm::dmvnorm, version 0.9-9996, 19-April, 2014.
     if(is.vector(x)) x <- matrix(x, nrow=1L)
     if (missing(mean)) mean <- rep(0, length = ncol(x))
     if (missing(sigma)) sigma <- diag(ncol(x))
@@ -1323,13 +1321,13 @@ mirt_dmvnorm <- function(x, mean, sigma, log = FALSE)
 
 # prior for latent class analysis
 lca_prior <- function(Theta, Etable){
-    TP <- nrow(Theta)  
+    TP <- nrow(Theta)
     if ( is.null(Etable) ){
         prior <- rep( 1/TP , TP )
-    } else {  
+    } else {
         prior <- rowSums(Etable)
     }
-    prior <- prior / sum(prior) 
+    prior <- prior / sum(prior)
     return(prior)
 }
 
@@ -1356,7 +1354,7 @@ collapseCells <- function(O, E, mincell = 1){
         En <- E[[i]]
         drop <- which(rowSums(is.na(En)) > 0)
         En[is.na(En)] <- 0
-        
+
         #collapse known upper and lower sparce cells
         if(length(drop) > 0L){
             up <- drop[1L]:drop[length(drop)/2]
@@ -1369,7 +1367,7 @@ collapseCells <- function(O, E, mincell = 1){
             En <- na.omit(En)
             On <- na.omit(On)
         }
-        
+
         #drop 0's and 1's
         drop <- rowSums(On) == 0L
         On <- On[!drop,]
@@ -1394,7 +1392,7 @@ collapseCells <- function(O, E, mincell = 1){
             En[nrow(On)-1L, ] <- En[nrow(On)-1L, ] + En[nrow(On), ]
             On <- On[-nrow(On),]; En <- En[-nrow(En),]
         }
-        
+
         #collapse accross as much as possible
         if(ncol(En) > 2L){
             for(j in 1L:nrow(En)){
@@ -1426,7 +1424,7 @@ collapseCells <- function(O, E, mincell = 1){
                 On[j, ] <- tmp2
             }
         }
-        
+
         #merge across
         En[is.na(En)] <- 0
         L <- En < mincell & En != 0

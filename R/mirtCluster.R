@@ -3,10 +3,10 @@
 #' This function defines a object that is placed in a relevant internal environment defined in mirt.
 #' Internal functions such as \code{calcLogLik}, \code{fscores}, etc, will utilize this object
 #' automatically to capitalize on parallel
-#' processing architecture. The object defined is a call from \code{parallel::makeCluster()}. 
-#' Note that if you are defining other parallel objects (for simulation desings, for example) 
-#' it is not recommended to define a mirtCluster. 
-#' 
+#' processing architecture. The object defined is a call from \code{parallel::makeCluster()}.
+#' Note that if you are defining other parallel objects (for simulation desings, for example)
+#' it is not recommended to define a mirtCluster.
+#'
 #' @aliases mirtCluster
 #' @param ncores number of cores to be used in the returned object which is
 #'   passed to \code{parallel::makeCluster()}. If no input is given the maximum number of available
@@ -30,26 +30,27 @@
 #'
 #' }
 mirtCluster <- function(ncores, remove = FALSE){
-    if(!require(parallel)) require(parallel)
-    if(remove){
-        if(is.null(mirtClusterEnv$MIRTCLUSTER)){
-            message('There is no visible mirtCluster() definition')
+    if(requireNamespace("parallel", quietly = TRUE)){
+        if(remove){
+            if(is.null(mirtClusterEnv$MIRTCLUSTER)){
+                message('There is no visible mirtCluster() definition')
+                return(invisible())
+            }
+            parallel::stopCluster(mirtClusterEnv$MIRTCLUSTER)
+            mirtClusterEnv$MIRTCLUSTER <- NULL
+            mirtClusterEnv$ncores <- 1L
             return(invisible())
         }
-        stopCluster(mirtClusterEnv$MIRTCLUSTER)
-        mirtClusterEnv$MIRTCLUSTER <- NULL
-        mirtClusterEnv$ncores <- 1L
-        return(invisible())
+        if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+            message('mirtCluster() has already been defined')
+            return(invisible())
+        }
+        if(missing(ncores))
+            ncores <- parallel::detectCores()
+        if(!is.numeric(ncores))
+            stop('ncores must be numeric')
+        mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(ncores)
+        mirtClusterEnv$ncores <- as.integer(ncores)
     }
-    if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
-        message('mirtCluster() has already been defined')
-        return(invisible())
-    }
-    if(missing(ncores))
-        ncores <- detectCores()
-    if(!is.numeric(ncores))
-        stop('ncores must be numeric')
-    mirtClusterEnv$MIRTCLUSTER <- makeCluster(ncores)
-    mirtClusterEnv$ncores <- as.integer(ncores)
     return(invisible())
 }

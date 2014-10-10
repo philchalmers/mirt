@@ -247,12 +247,12 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste('Trace lines for item', item)
             if(CE){
-                return(xyplot(P ~ Theta|time, data=plt2, 
-                       upper=plt2$upper, lower=plt2$lower, 
+                return(xyplot(P ~ Theta|time, data=plt2,
+                       upper=plt2$upper, lower=plt2$lower,
                        panel = function(x, y, lower, upper, subscripts, ...){
                            upper <- upper[subscripts]
                            lower <- lower[subscripts]
-                           panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                           panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                          col=grey(.9), border = FALSE, ...)
                            panel.xyplot(x, y, type='l', lty=1,...)
                        },
@@ -267,10 +267,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste('Information for item', item)
             if(CE){
-                return(xyplot(info ~ Theta, data=plt, 
-                              upper=plt$CEinfoupper, lower=plt$CEinfolower, 
+                return(xyplot(info ~ Theta, data=plt,
+                              upper=plt$CEinfoupper, lower=plt$CEinfolower,
                               panel = function(x, y, lower, upper, ...){
-                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                 col=grey(.9), border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
                               },
@@ -285,10 +285,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste('Expected score for item', item)
             if(CE){
-                return(xyplot(score ~ Theta, data=plt, 
-                              upper=plt$CEscoreupper, lower=plt$CEscorelower, 
+                return(xyplot(score ~ Theta, data=plt,
+                              upper=plt$CEscoreupper, lower=plt$CEscorelower,
                               panel = function(x, y, lower, upper, ...){
-                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                 col=grey(.9), border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
                               },
@@ -305,10 +305,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(CE){
                 plt$CESEupper <- 1/sqrt(CEinfolower)
                 plt$CESElower <- 1/sqrt(CEinfoupper)
-                return(xyplot(SE ~ Theta, data=plt, 
-                              upper=plt$CESEupper, lower=plt$CESElower, 
+                return(xyplot(SE ~ Theta, data=plt,
+                              upper=plt$CESEupper, lower=plt$CESElower,
                               panel = function(x, y, lower, upper, ...){
-                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)), 
+                                  panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                 col=grey(.9), border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
                               },
@@ -325,8 +325,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             obj1 <- xyplot(info~Theta, plt, type='l',
                            main = main, xlab = expression(theta), ylab=expression(I(theta)))
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
-            if(!require(latticeExtra)) require(latticeExtra)
-            return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
+            if(requireNamespace("latticeExtra", quietly = TRUE))
+                return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
         } else if(type == 'infotrace'){
             if(is.null(main))
                 main <- paste('Trace lines and information for item', item)
@@ -334,8 +334,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
             obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
                            ylim = c(-0.1,max(plt$info) + .5))
-            if(!require(latticeExtra)) require(latticeExtra)
-            return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
+            if(requireNamespace("latticeExtra", quietly = TRUE))
+                return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
         } else {
             stop('Plot type not supported for unidimensional model')
         }
