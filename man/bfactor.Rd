@@ -54,6 +54,19 @@ IRT estimation approach used in this package. The default is to use 21 quadratur
 for each dimensions, but this can be over-written by passing a \code{quadpts = #}
 argument.
 
+The two-tier model has a specific block diagonal covariance structure between the primary and
+secondary latent traits. Namely, the secondary latent traits are assumed to be orthogonal to
+all traits and have a fixed variance of 1, while the primary traits can be organized to vary
+and covary with other primary traits in the model.
+
+\deqn{\Sigma_{two-tier} = \left(\begin{array}{cc} G & 0 \\ 0 & diag(S) \end{array} \right)}
+
+The bifactor model is a special case of the two-tier model when \eqn{G} above is a 1x1 matrix,
+and therefore only 1 primary factor is being modeled. Evaluation of the numerical integrals
+for the two-tier model requires only \eqn{ncol(G) + 1} dimensions for integration since the
+\eqn{S} second order (or 'specific') factors require only 1 integration grid due to the
+dimension reduction technique.
+
 Note: for multiple group two-tier analyses only the second-tier means and variances
 should be freed since the specific factors are not treated independently due to the
 dimension reduction technique.
