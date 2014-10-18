@@ -922,13 +922,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     mod@Moptim <- opts$Moptim
     mod@shortpars <- as.numeric(ESTIMATE$shortpars)
     mod@condnum <- NaN
-    if(length(mod@information) > 1L && !ESTIMATE$fail_invert_info){
-        isna <- is.na(diag(mod@information))
-        info <- mod@information[!isna, !isna]
-        inv_info <- try(solve(info), silent=TRUE)
-        if(!is(inv_info, 'try-error')){
-            mod@condnum <- norm(info, type='2') * norm(solve(info), type='2')
-            mod@secondordertest <- TRUE
+    if(length(mod@information) > 1L){
+        if(!ESTIMATE$fail_invert_info){
+            isna <- is.na(diag(mod@information))
+            info <- mod@information[!isna, !isna]
+            inv_info <- try(solve(info), silent=TRUE)
+            if(!is(inv_info, 'try-error')){
+                mod@condnum <- norm(info, type='2') * norm(solve(info), type='2')
+                mod@secondordertest <- TRUE
+            } else mod@secondordertest <- FALSE
         } else mod@secondordertest <- FALSE
     }
     time <- opts$time
