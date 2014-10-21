@@ -8,15 +8,17 @@ void itemTrace(vector<double> &P, vector<double> &Pstar, const vector<double> &a
     const int nfact = Theta.ncol();
     const int USEOT = ot.size() > 1;
 
-    for (int i = 0; i < N; ++i){
-        double z = *d;
-        for (int j = 0; j < nfact; ++j)
-            z += a[j] * Theta(i,j);
-        if(USEOT) z += ot[i];
-        if(z > ABS_MAX_Z) z = ABS_MAX_Z;
-        else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
-        Pstar[i] = 1.0 / (1.0 + exp(-z));
-        P[i] = *g + (*u - *g) * Pstar[i];
+    if((*u - *g) > 0){
+        for (int i = 0; i < N; ++i){
+            double z = *d;
+            for (int j = 0; j < nfact; ++j)
+                z += a[j] * Theta(i,j);
+            if(USEOT) z += ot[i];
+            if(z > ABS_MAX_Z) z = ABS_MAX_Z;
+            else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
+            Pstar[i] = 1.0 / (1.0 + exp(-z));
+            P[i] = *g + (*u - *g) * Pstar[i];
+        }
     }
 }
 
@@ -31,15 +33,17 @@ void P_dich(vector<double> &P, const vector<double> &par, const NumericMatrix &T
     const double d = par[len-3];
     const int USEOT = ot.size() > 1;
 
-    for (int i = 0; i < N; ++i){
-        double z = d;
-        for (int j = 0; j < nfact; ++j)
-            z += par[j] * Theta(i,j);
-        if(USEOT) z += ot[i];
-        if(z > ABS_MAX_Z) z = ABS_MAX_Z;
-        else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
-        P[i+N] = g + (u - g) /(1.0 + exp(-z));
-        P[i] = 1.0 - P[i + N];
+    if((u - g) > 0){
+        for (int i = 0; i < N; ++i){
+            double z = d;
+            for (int j = 0; j < nfact; ++j)
+                z += par[j] * Theta(i,j);
+            if(USEOT) z += ot[i];
+            if(z > ABS_MAX_Z) z = ABS_MAX_Z;
+            else if(z < -ABS_MAX_Z) z = -ABS_MAX_Z;
+            P[i+N] = g + (u - g) /(1.0 + exp(-z));
+            P[i] = 1.0 - P[i + N];
+        }
     }
 }
 
@@ -61,15 +65,15 @@ void P_graded(vector<double> &P, const vector<double> &par,
     }
     int notordered = 0;
     for(int i = 1; i < nint; ++i)
-        notordered += d[i-1] <= d[i]; 
+        notordered += d[i-1] <= d[i];
     if(notordered){
         int P_size = P.size();
         for(int i = 0; i < P_size; ++i)
             P[i] = 0.0;
-    } else {        
+    } else {
         const double nullzero = 0.0, nullone = 1.0;
         NumericMatrix Pk(N, nint + 2);
-    
+
         for(int i = 0; i < N; ++i)
             Pk(i,0) = 1.0;
         for(int i = 0; i < nint; ++i){
@@ -232,10 +236,10 @@ void P_lca(vector<double> &P, const vector<double> &par, const vector<double> &s
 {
     NumericMatrix Num(N, ncat);
     vector<double> Den(N, 0.0);
-    
+
     for(int i = 0; i < N; ++i){
         vector<double> z(ncat);
-        int which_par = 0;        
+        int which_par = 0;
         for(int j = 1; j < ncat; ++j){
             double innerprod = 0.0;
             for(int p = 0; p < nfact; ++p)
@@ -259,7 +263,7 @@ void P_lca(vector<double> &P, const vector<double> &par, const vector<double> &s
                 ++which;
             }
         }
-    } else {    
+    } else {
         for(int j = 0; j < ncat; ++j){
             for(int i = 0; i < N; ++i){
                 P[which] = Num(i,j) / Den[i];

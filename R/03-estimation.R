@@ -134,7 +134,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
         for(g in 1L:Data$ngroups){
             if(g != 1L){
-                PrepList[[g]] <- PrepList[[1L]]
+                PrepList[[g]] <- list(pars=PrepList[[1L]]$pars)
                 for(i in 1L:length(PrepList[[g]]$pars)){
                     PrepList[[g]]$pars[[i]]@parnum <- parnumber:(parnumber + length(PrepList[[g]]$pars[[i]]@parnum) - 1L)
                     parnumber <- max(PrepList[[g]]$pars[[i]]@parnum) + 1L
@@ -615,12 +615,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             h2 <- rowSums(Flist$F^2)
             F <- Flist$F
         }
-        cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[g]]$itemloc,
-                          converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[g]]$prodlist,
+        cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[1L]]$itemloc,
+                          converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[1L]]$prodlist,
                           nfact=nfact, constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
-                          factorNames=PrepList[[g]]$factorNames, random=ESTIMATE$random,
+                          factorNames=PrepList[[1L]]$factorNames, random=ESTIMATE$random,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                          itemtype=PrepList[[g]]$itemtype, K=Data$K)
+                          itemtype=PrepList[[1L]]$itemtype, K=Data$K)
         if(discrete){
             cmods[[g]]@Theta <- Theta
             cmods[[g]]@Prior <- list(ESTIMATE$Prior[[g]])
