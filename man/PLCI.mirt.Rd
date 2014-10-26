@@ -3,7 +3,8 @@
 \alias{PLCI.mirt}
 \title{Compute profiled-likelihood confidence intervals}
 \usage{
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
+PLCI.mirt(mod, alpha = 0.05, parnum = NULL, plot = FALSE, npts = 24,
+  ...)
 }
 \arguments{
 \item{mod}{a converged mirt model}
@@ -13,6 +14,10 @@ PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
 \item{parnum}{a numeric vector indicating which parameters to estimate.
 Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 parameters are used}
+
+\item{plot}{logical; plot the parameter relationship in the likelihood space for two parameters?}
+
+\item{npts}{number of points to evaluate and plot if \code{plot = TRUE}}
 
 \item{...}{additional arguments to pass to the estimation functions}
 }

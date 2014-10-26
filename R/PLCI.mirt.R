@@ -1,14 +1,16 @@
 #' Compute profiled-likelihood confidence intervals
 #'
-#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior 
-#' parameter distributions as well as equality constraints. 
+#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
+#' parameter distributions as well as equality constraints.
 #'
 #' @aliases PLCI.mirt
 #' @param mod a converged mirt model
 #' @param alpha two-tailed alpha critical level
-#' @param parnum a numeric vector indicating which parameters to estimate. 
+#' @param parnum a numeric vector indicating which parameters to estimate.
 #'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 #'   parameters are used
+#' @param plot logical; plot the parameter relationship in the likelihood space for two parameters?
+#' @param npts number of points to evaluate and plot if \code{plot = TRUE}
 #' @param ... additional arguments to pass to the estimation functions
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
@@ -36,8 +38,8 @@
 #' result3
 #'
 #' }
-PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
-    
+PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, ...){
+
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
     compute.LL <- function(dat, model, sv, large, parprior, ...){
@@ -48,7 +50,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
         ret
     }
 
-    f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns, 
+    f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns,
                       print_debug = FALSE, ...){
         sv$est[which] <- FALSE
         sv$value[which] <- value
@@ -69,7 +71,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
                 sv$value[itemsv$parnum] <- ds
             }
         }
-        got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior, ...), 
+        got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior, ...),
                       silent=TRUE)
         sv2 <- got.LL$vals
         got.LL <- got.LL$LL
@@ -83,8 +85,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
         ret
     }
 
-    LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, 
-                      sv, get.LL, parprior, asigns, ...){
+    LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
+                      sv, get.LL, parprior, asigns, single=FALSE, force = TRUE, ...){
         lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
         mid <- pars[parnum]
@@ -94,16 +96,46 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
         } else if(parnames[parnum] %in% paste0('COV_', 1:30, 1:30)){
             lower <- 0
         }
+        if(single){
+            return(optimize(f.min, lower = lower, upper = upper, dat=dat, model=model,
+                            large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                            parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)$minimum)
+        }
         if(mid > lower){
-            opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model, 
-                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL, 
+            opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model,
+                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                   parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
         } else opt.lower <- list(minimum = lower)
         if(mid < upper){
-            opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model, 
-                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL, 
+            opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model,
+                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                   parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
         } else opt.upper <- list(minimum = upper)
+        if(force){ #TODO this is pretty hacky, but it works for the most part
+            if(opt.upper$objective > .01){
+                opt.upper <- optimize(f.min, lower = (opt.lower$minimum + mid)/2, upper = mid, dat=dat, model=model,
+                                      large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                      parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
+                if(opt.upper$objective > .01){
+                    opt.upper <- optimize(f.min, upper = opt.lower$minimum, lower = lbound[2], dat=dat, model=model,
+                                          large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                          parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
+                }
+            } else if(opt.lower$objective > .01){
+                opt.lower <- optimize(f.min, lower = mid, upper = (opt.upper$minimum + mid)/2, dat=dat, model=model,
+                                      large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                      parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
+                if(opt.lower$objective > .01){
+                    opt.lower <- optimize(f.min, lower = opt.upper$minimum, upper = ubound[2L], dat=dat, model=model,
+                                          large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                          parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
+                }
+            }
+        }
+        if(opt.lower$objective > .01)
+            warning('Lower-bound objective likelihood not met for parameter ', parnums[parnum])
+        if(opt.upper$objective > .01)
+            warning('Upper-bound objective likelihood not met for parameter ', parnums[parnum])
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }
 
@@ -133,13 +165,52 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
         lbound <- sv$lbound[sv$est]
         ubound <- sv$ubound[sv$est]
     }
+    if(plot){
+        if(length(parnum) != 2L)
+            stop('parnum input must contain exactly two parameter numbers')
+    }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, asigns=asigns,
-                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat, 
+                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior, ...)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100))
-    ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums], 
+    ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],
                       parnum=parnums, value=pars, result, row.names=NULL)
+    if(plot){
+        xrange <- seq(from=ret[1L, 6L], to=ret[1L, 7L], length.out = floor(npts/2)+2L)
+        xrange <- xrange[-c(1, length(xrange))]
+        lbound[2L] <- ret[2L, 6]
+        ubound[2L] <- ret[2L, 7]
+        sv2 <- sv
+        sv2$est[sv2$parnum == parnums[1L]] <- FALSE
+        collect <- matrix(NA, length(xrange), 2L)
+        for(i in 1L:length(xrange)){
+            sv2$value[sv2$parnum == parnums[1L]] <- xrange[i]
+            result <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
+                               parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
+                               model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
+                               force = TRUE, ...)
+            collect[i, ] <- result
+        }
+        sv2$value[sv2$parnum == parnums[1L]] <- ret[1L, 6L]
+        lp <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
+                           parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
+                           model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
+                           force = TRUE, single=TRUE, ...)
+        sv2$value[sv2$parnum == parnums[1L]] <- ret[1L, 7L]
+        up <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
+                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
+                       model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
+                       force = TRUE, single=TRUE, ...)
+        dat <- data.frame(x=xrange, y=as.numeric(collect))
+        dat <- rbind(dat, c(ret[1L, 6L], lp), c(ret[1L, 7L], up))
+        dat <- rbind(dat, ret[,'value'])
+        dat$group <- factor(c(rep('pts', nrow(dat)-1), 'est'))
+        return(xyplot(y ~ x, dat, type = 'p', group=group, col=c('black', 'blue'),
+               main = 'Likelihood Confidence Envelope',
+               xlab = paste0(ret[1,'parnam'], ' (#', ret[1,'parnum'], ')'),
+               ylab = paste0(ret[2,'parnam'], ' (#', ret[2,'parnum'], ')')))
+    }
     ret
 }
