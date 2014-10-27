@@ -75,11 +75,11 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         }
         got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior, ...),
                       silent=TRUE)
+        if(is(got.LL, 'try-error')) return(1e10)
         sv2 <- got.LL$vals
         got.LL <- got.LL$LL
         as <- matrix(sv2$value[sv2$name %in% paste0('a', 1L:30L)], ncol(dat))
-        if(sum(asigns * sign(as)) < 0L) return(1e8)
-        if(is(got.LL, 'try-error')) return(1e8)
+        if(sum(asigns * sign(as)) < 0L) return(1e10)
         ret <- (got.LL - get.LL)^2
         ret <- ifelse(is.finite(ret), ret, 1e10)
         if(print_debug) cat('parnum = ', which, '; value = ', round(value, 3),
@@ -135,10 +135,14 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
                 }
             }
         }
-        if(opt.lower$objective > .01)
+        if(opt.lower$objective > .01){
             warning('Lower-bound objective likelihood not met for parameter ', parnums[parnum])
-        if(opt.upper$objective > .01)
+            if(force) opt.lower$minimum <- NA
+        }
+        if(opt.upper$objective > .01){
             warning('Upper-bound objective likelihood not met for parameter ', parnums[parnum])
+            if(force) opt.upper$minimum <- NA
+        }
         c(lower=opt.lower$minimum, upper=opt.upper$minimum)
     }
 
@@ -173,7 +177,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
             stop('parnum input must contain exactly two parameter numbers')
     }
     LL <- mod@logLik
-    get.LL <- LL - qchisq(1-alpha, 1)/2
+    get.LL <- LL - qchisq(1-alpha, 1 + plot)/2
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior, ...)
@@ -181,8 +185,9 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],
                       parnum=parnums, value=pars, result, row.names=NULL)
     if(plot){
-        xrange <- seq(from=ret[1L, 6L], to=ret[1L, 7L], length.out = floor(npts/2)+2L)
-        xrange <- xrange[-c(1, length(xrange))]
+        xrange <- seq(from=ret[1L, 6L], to=ret[1L, 7L], length.out = floor((npts-2)/2))
+        xrange[1L] <- mean(xrange[1:2])
+        xrange[length(xrange)] <- mean(xrange[length(xrange):(length(xrange)-1)])
         lbound[2L] <- ret[2L, 6]
         ubound[2L] <- ret[2L, 7]
         sv2 <- sv
