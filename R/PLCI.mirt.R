@@ -86,7 +86,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     }
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
-                      sv, get.LL, parprior, asigns, single=FALSE, force = TRUE, ...){
+                      sv, get.LL, parprior, asigns, single=FALSE, force = FALSE, ...){
         lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
         mid <- pars[parnum]
@@ -105,12 +105,12 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
             opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model,
                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                   parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
-        } else opt.lower <- list(minimum = lower)
+        } else opt.lower <- list(minimum = lower, objective=0)
         if(mid < upper){
             opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model,
                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                   parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
-        } else opt.upper <- list(minimum = upper)
+        } else opt.upper <- list(minimum = upper, objective=0)
         if(force){ #TODO this is pretty hacky, but it works for the most part
             if(opt.upper$objective > .01){
                 opt.upper <- optimize(f.min, lower = (opt.lower$minimum + mid)/2, upper = mid, dat=dat, model=model,
