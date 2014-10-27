@@ -43,6 +43,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
     compute.LL <- function(dat, model, sv, large, parprior, ...){
+#         if(all(!sv$est[2:3])) browser()
+        # print(sv$value[2:3])
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
                                         large=large, calcNull=FALSE, technical=list(message=FALSE,
                                                                                     parallel=FALSE), ...)
@@ -59,16 +61,16 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
                 itemname <- sv$item[which]
                 itemnum <- sv$parnum[which]
                 itemsv <- sv[sv$item == itemname & !(sv$name %in% paste0('a', 1L:30L)), ]
-                if(min(itemsv$parnum) == itemnum){
-                    ds <- c(value, seq(from = value-.1, to=value-1, length.out=nrow(itemsv)-1L))
-                } else if(max(itemsv$parnum) == itemnum){
-                    ds <- c(seq(from = value+1, to=value+.1, length.out=nrow(itemsv)-1L), value)
-                } else {
-                    ds <- c(seq(from = value+1, to=value+.1, length.out=itemnum-itemsv$parnum[1L]),
-                            value, seq(from = value-.1, to=value-1,
-                                       length.out=itemsv$parnum[nrow(itemsv)]-itemnum))
+                ds <- dsnew <- itemsv$value
+                srtds <- sort(ds, decreasing = TRUE)
+                if(!all(ds == srtds)){
+                    est <- itemsv$est
+                    if(est[1]) dsnew[1L] <- max(ds) + 1
+                    if(est[length(est)]) dsnew[length(est)] <- min(ds) - 1
+                    seqd <- seq(from=dsnew[1L], to=dsnew[length(est)], length.out = length(ds))
+                    ds[est] <- seqd[est]
+                    sv$value[itemsv$parnum] <- ds
                 }
-                sv$value[itemsv$parnum] <- ds
             }
         }
         got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior, ...),
@@ -79,6 +81,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         if(sum(asigns * sign(as)) < 0L) return(1e8)
         if(is(got.LL, 'try-error')) return(1e8)
         ret <- (got.LL - get.LL)^2
+        ret <- ifelse(is.finite(ret), ret, 1e10)
         if(print_debug) cat('parnum = ', which, '; value = ', round(value, 3),
                             '; min = ', round(ret, 3), '\n')
         attr(ret, 'value') <- value
