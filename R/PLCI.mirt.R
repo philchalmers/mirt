@@ -43,8 +43,6 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
     compute.LL <- function(dat, model, sv, large, parprior, ...){
-#         if(all(!sv$est[2:3])) browser()
-        # print(sv$value[2:3])
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
                                         large=large, calcNull=FALSE, technical=list(message=FALSE,
                                                                                     parallel=FALSE), ...)
@@ -185,6 +183,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],
                       parnum=parnums, value=pars, result, row.names=NULL)
     if(plot){
+        ret <- rbind(ret[ret$parnum == parnum[1],], ret[ret$parnum != parnum[1],])
+        parnames <- ret$parnam; parnums <- ret$parnum
         xrange <- seq(from=ret[1L, 6L], to=ret[1L, 7L], length.out = floor((npts-2)/2))
         xrange[1L] <- mean(xrange[1:2])
         xrange[length(xrange)] <- mean(xrange[length(xrange):(length(xrange)-1)])
