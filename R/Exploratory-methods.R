@@ -205,6 +205,9 @@ setMethod(
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded
 #' @param as.data.frame logical; convert list output to a data.frame instead?
+#' @param simplify logical; if all items have the same parameter names (indicating they are
+#'   of the same class) then they are collapsed to a matrix, and a list of length 2 is returned
+#'   containing a matrix of item parameters and group-level estimates
 #' @param verbose logical; allow information to be printed to the console?
 #' @param rawug logical; return the untransformed internal g and u parameters?
 #'   If \code{FALSE}, g and u's are converted with the original format along with delta standard errors
@@ -240,7 +243,8 @@ setMethod(
     f = "coef",
     signature = 'ExploratoryClass',
     definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
-                          IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...){
+                          IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
+                          simplify=FALSE, verbose = TRUE, ...){
         if(printSE) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
@@ -306,6 +310,16 @@ setMethod(
         names(allPars) <- c(colnames(object@Data$data), 'GroupPars')
         if(as.data.frame)
             allPars <- t(as.data.frame(allPars))
+        if(simplify && !as.data.frame){
+            nms <- lapply(allPars, colnames)[1:(length(allPars)-1)]
+            isTRUE <- all(sapply(nms[2:length(nms)], function(x, first) all(x %in% first),
+                                 first=nms[[1L]]))
+            if(isTRUE){
+                items <- do.call(rbind, allPars[1L:(length(allPars)-1)])
+                rownames(items) <- colnames(object@Data$data)
+                allPars <- list(items=items, groupPars=allPars[length(allPars)][[1L]])
+            }
+        }
         return(allPars)
     }
 )

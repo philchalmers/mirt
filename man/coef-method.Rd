@@ -11,7 +11,8 @@
 \usage{
 \S4method{coef}{ExploratoryClass}(object, CI = 0.95, printSE = FALSE,
   rotate = "none", Target = NULL, digits = 3, IRTpars = FALSE,
-  rawug = FALSE, as.data.frame = FALSE, verbose = TRUE, ...)
+  rawug = FALSE, as.data.frame = FALSE, simplify = FALSE,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -35,6 +36,10 @@ Only applicable to unidimensional models}
 If \code{FALSE}, g and u's are converted with the original format along with delta standard errors}
 
 \item{as.data.frame}{logical; convert list output to a data.frame instead?}
+
+\item{simplify}{logical; if all items have the same parameter names (indicating they are
+of the same class) then they are collapsed to a matrix, and a list of length 2 is returned
+containing a matrix of item parameters and group-level estimates}
 
 \item{verbose}{logical; allow information to be printed to the console?}
 
