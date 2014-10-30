@@ -1,31 +1,34 @@
 Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitems,
-                  itemloc, CUSTOM.IND, BFACTOR, ngroups, rlist){
+                  itemloc, CUSTOM.IND, BFACTOR, ngroups, rlist, full){
     LL <- 0
+    tabdata <- if(full) Data$fulldata[[1L]] else Data$tabdatalong
     for(g in 1L:ngroups){
+        freq <- if(full) 1 else Data$Freq[[g]]
         if(BFACTOR){
-            rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+            rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
                                         Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
                                         Priorbetween=Priorbetween[[g]], specific=specific,
                                         sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
         } else {
-            rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+            rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
                                      CUSTOM.IND=CUSTOM.IND, Theta=Theta,
-                                     prior=Prior[[g]], itemloc=itemloc)
+                                     prior=Prior[[g]], itemloc=itemloc, full=full)
         }
-        LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected), na.rm = TRUE)
+        LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
     }
     return(list(rlist=rlist, LL=LL))
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND,
+Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full,
                        itemtrace=NULL, deriv = FALSE)
 {
     nquad <- nrow(Theta)
     J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estep", itemtrace, prior, tabdata, freq, mirtClusterEnv$ncores)
+    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata, mirtClusterEnv$ncores)
+        else .Call("Estep", itemtrace, prior, tabdata, freq, mirtClusterEnv$ncores)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
@@ -44,7 +47,7 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, solnp_args,
-                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL){
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL, full){
     p <- longpars[est]
     if(length(p)){
         if(Moptim == 'BFGS'){
@@ -116,15 +119,22 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             stop(opt)
         longpars[est] <- opt$par
     }
-    if(any(groupest)){
-        p <- longpars[groupest]
-        maxit <- max(ceiling(Mrate * 100), 35)
-        res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
-                       constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist,
-                       Thetabetween=Thetabetween, iterlim=maxit),
-                   silent=TRUE)
-        if(is(res, 'try-error')) stop(res)
-        longpars[groupest] <- res$estimate
+    if(!full){
+        if(any(groupest)){
+            p <- longpars[groupest]
+            maxit <- max(ceiling(Mrate * 100), 35)
+            res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
+                           constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist,
+                           Thetabetween=Thetabetween, iterlim=maxit),
+                       silent=TRUE)
+            if(is(res, 'try-error')) stop(res)
+            longpars[groupest] <- res$estimate
+        }
+    } else {
+        res <- Mstep.LR(Theta=gTheta[[1L]], CUSTOM.IND=CUSTOM.IND, pars=pars[[1L]],
+                        itemloc=itemloc, fulldata=PrepList[[1L]]$fulldata, prior=Prior[[1L]])
+        attr(longpars, 'beta') <- res$beta
+        longpars[groupest] <- res$siglong
     }
     if(length(constrain))
         for(i in 1L:length(constrain))
@@ -298,3 +308,22 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
 }
 
 BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)
+
+Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior){
+    x <- pars[[length(pars)]]
+    X <- x@X
+    J <- length(pars) - 1L
+    N <- nrow(fulldata)
+    nfact <- ncol(Theta)
+    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+                                  CUSTOM.IND=CUSTOM.IND)
+    mu <- X %*% x@betas
+    ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu, mirtClusterEnv$ncores)
+    scores <- ret[[1L]]; vars <- ret[[2L]]
+    beta <- rep(0, length(x@betas))
+    for(i in 1:length(beta))
+        beta[i] <- solve(X[,i] %*% X[,i]) %*% X[,i] %*% scores
+    siglong <- colMeans(vars)
+    siglong <- siglong[x@est[-(1L:nfact)]]
+    return(list(beta=beta, siglong=siglong))
+}

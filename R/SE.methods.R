@@ -34,6 +34,7 @@ SE.BL <- function(pars, Theta, theta, prior, BFACTOR, itemloc, PrepList, ESTIMAT
 
 SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
                    collectLL, from, to, is.latent, Data, solnp_args){
+    full <- list$full
     TOL <- list$TOL
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
@@ -97,9 +98,9 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
                                             itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND)
             } else {
-                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]], 
-                                         CUSTOM.IND=list$CUSTOM.IND, Theta=Theta, 
-                                         prior=Prior[[g]], itemloc=itemloc)
+                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                                         CUSTOM.IND=list$CUSTOM.IND, Theta=Theta,
+                                         prior=Prior[[g]], itemloc=itemloc, full=full)
             }
         }
         for(g in 1L:ngroups){
@@ -110,10 +111,10 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         }
         longpars <- Mstep(pars=pars, est=estpars & !ESTIMATE$groupest, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
-                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact, 
+                          PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact,
                           rlist=rlist, constrain=constrain, DERIV=DERIV, groupest=ESTIMATE$groupest,
                           CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, BFACTOR=list$BFACTOR,
-                          Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, solnp_args=solnp_args)
+                          Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
@@ -123,14 +124,14 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         rijfull[which] <- rij[which]
         if(all(!is.na(rijfull))) break
     } #END EM
-    
+
     rijfull[is.na(rijfull)] <- rij[is.na(rijfull)]
     return(rijfull)
 }
 
-SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type, 
+SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                       CUSTOM.IND, SLOW.IND, warn, message, Data){
-    
+
     fn <- function(which, PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, Igrad2, Ihess,
                    CUSTOM.IND, SLOW.IND, whichitems, iscross, npars, Data){
         Igrad <- matrix(0, npars, npars)
@@ -187,7 +188,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         }
         return(list(Igrad=Igrad, Ihess=Ihess, IgradP=IgradP))
     }
-    
+
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc
     ngroups <- length(pars)
@@ -204,22 +205,22 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     iscross <- ifelse(type == 'crossprod', TRUE, FALSE)
     gitemtrace <- rs <- vector('list', ngroups)
     for(g in 1L:ngroups)
-        gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta, 
+        gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta,
                                             itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     npars <- ncol(L)
     gPrior <- t(do.call(rbind, Prior))
     rs <- do.call(rbind, Data$Freq)
-    infolist <- .Call("computeInfo", pars, Theta, gPrior, prior[[1L]], Priorbetween[[1L]], 
+    infolist <- .Call("computeInfo", pars, Theta, gPrior, prior[[1L]], Priorbetween[[1L]],
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
     if(length(whichitems)){
-        message('Model contains items that have not been optimized. Information matrix 
+        message('Model contains items that have not been optimized. Information matrix
                 calculation may take longer than expected')
         for(i in 1L:nrow(Data$tabdata)){
             tmp <- fn(i, PrepList=PrepList, ngroups=ngroups, pars=pars, npars=ncol(L),
-                      Theta=Theta, Prior=Prior, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, 
-                      SLOW.IND=SLOW.IND, whichitems=whichitems, iscross=iscross, 
+                      Theta=Theta, Prior=Prior, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                      SLOW.IND=SLOW.IND, whichitems=whichitems, iscross=iscross,
                       Data=Data)
             Igrad <- Igrad + tmp$Igrad
             if(!iscross){
@@ -261,7 +262,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     return(ESTIMATE)
 }
 
-SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND, 
+SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND,
                       warn, Data){
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc

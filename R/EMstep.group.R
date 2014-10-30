@@ -13,7 +13,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     specific <- list$specific
     sitems <- list$sitems
     theta <- list$theta
+    full <- list$full
     J <- length(itemloc) - 1L
+    N <- nrow(Data$data)
     nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
@@ -85,9 +87,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
            est[constrain[[i]][-1L]] <- groupest[constrain[[i]][-1L]] <- FALSE
     names(longpars) <- names(est)
     if(list$Moptim != 'BFGS') {
-        Moptim <- list$Moptim    
+        Moptim <- list$Moptim
     } else {
-        Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'    
+        Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'
     }
     if(Moptim == 'L-BFGS-B'){
         LBOUND[LBOUND == -Inf] <- -1e10
@@ -120,8 +122,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                          Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, theta=Thetabetween,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                         EH=list$EH, EHPrior=NULL, Data=Data, method=Moptim, 
-                         control=list(fnscale=-1, reltol=TOL)), silent=TRUE)    
+                         EH=list$EH, EHPrior=NULL, Data=Data, method=Moptim,
+                         control=list(fnscale=-1, reltol=TOL)), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par
         converge <- as.numeric(opt$convergence == 0)
@@ -135,11 +137,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(BFACTOR){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
-                                            Priorbetween=Priorbetween[[g]], specific=specific, 
+                                            Priorbetween=Priorbetween[[g]], specific=specific,
                                             sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                         CUSTOM.IND=CUSTOM.IND, Theta=Theta, 
+                                         CUSTOM.IND=CUSTOM.IND, Theta=Theta,
                                          prior=Prior[[g]], itemloc=itemloc)
             }
             LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
@@ -152,12 +154,13 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             start <- proc.time()[3L]
             tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                                list=list, ngroups=ngroups, nfact=nfact, prior=prior,
-                               J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
+                               J=J, N=N, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
+                               rlist=rlist, full=full)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior, 
-                           Priorbetween=Priorbetween, specific=specific, sitems=sitems, 
-                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, 
-                           BFACTOR=BFACTOR, rlist=rlist)
+            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+                           Priorbetween=Priorbetween, specific=specific, sitems=sitems,
+                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                           BFACTOR=BFACTOR, rlist=rlist, full=full)
             rlist <- Elist$rlist; LL <- Elist$LL
             collectLL[cycles] <- LL
             if(is.nan(LL))
@@ -173,7 +176,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             for(g in 1L:ngroups)
                 for(i in 1L:J)
-                    pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L)), 
+                    pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L)),
                                                         drop=FALSE]
             Estep.time <- Estep.time + proc.time()[3L] - start
             start <- proc.time()[3L]
@@ -183,11 +186,12 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(is.nan(TOL)) break
             longpars <- Mstep(pars=pars, est=est, longpars=longpars, ngroups=ngroups, J=J,
                               gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
-                              CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest, 
+                              CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND, groupest=groupest,
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                              BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween, 
-                              rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate, 
-                              TOL=list$MSTEPTOL, solnp_args=solnp_args)
+                              BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
+                              rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
+                              TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full)
+            if(full) pars[[1L]][[length(pars[[1L]])]]@betas <- attr(longpars, 'beta')
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
@@ -221,9 +225,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                             tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
                             longpars[!latent_longpars] <- tmp[!latent_longpars]
                             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-                            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior, 
-                                           Priorbetween=Priorbetween, specific=specific, sitems=sitems, 
-                                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, 
+                            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+                                           Priorbetween=Priorbetween, specific=specific, sitems=sitems,
+                                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                            BFACTOR=BFACTOR, rlist=rlist)
                             if(Elist$LL <= collectLL[cycles]){
                                 accel <- (accel - 1) / 2
@@ -250,7 +254,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(list$warn && !is.nan(TOL))
                 warning('M-step optimimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ')
-        } 
+        }
     }
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
@@ -282,7 +286,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
-                    time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)), 
+                    time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr],
                     groupest=groupest)
     } else {

@@ -310,8 +310,8 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
-                        BFACTOR, sitems, cycles, rlist, prior){
+updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, N,
+                        BFACTOR, sitems, cycles, rlist, prior, full=FALSE){
     Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
         Prior[[1L]] <- list$EHPrior[[1L]]
@@ -328,8 +328,19 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
                 next
             }
-            Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+            if(full){
+                beta <- pars[[1L]][[length(pars[[1L]])]]@betas
+                X <- pars[[1L]][[length(pars[[1L]])]]@X
+                mus <- X %*% beta
+                Prior[[g]] <- t(apply(mus, 1L,
+                             function(mu, Theta, gcov){
+                                 mirt_dmvnorm(Theta, mu, gcov)
+                            }, Theta=Theta[ ,1L:nfact,drop=FALSE], gcov=gp$gcov))
+                Prior[[g]] <- Prior[[g]]/rowSums(Prior[[g]])
+            } else {
+                Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+            }
         }
     }
     if(list$EH){
@@ -1271,7 +1282,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
             expected <- Estep.mirt(pars=pars2[[g]],
                                    tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                    Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
-                                   CUSTOM.IND=CUSTOM.IND)$expected
+                                   CUSTOM.IND=CUSTOM.IND, full=FALSE)$expected
         }
         LL <- LL + sum(Data$Freq[[g]] * log(expected), na.rm = TRUE)
     }
@@ -1458,6 +1469,7 @@ collapseCells <- function(O, E, mincell = 1){
 rmsea <- function(X2, df, N){
     ret <- ifelse((X2 - df) > 0,
                   sqrt(X2 - df) / sqrt(df * (N-1)), 0)
+    ret <- ifelse(is.na(ret), NaN, ret)
     ret
 }
 

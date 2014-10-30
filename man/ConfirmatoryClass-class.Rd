@@ -49,6 +49,8 @@ when the estimated model is confirmatory.
     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
+    \item{\code{l.regress}:}{Object of class \code{"list"}, list containing information for
+      latent regression models}
     \item{\code{Call}:}{Object of class \code{"call"}, call }
   }
 }

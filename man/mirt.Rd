@@ -5,13 +5,14 @@
 Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  SE.type = "crossprod", method = "EM", optimizer = NULL, pars = NULL,
-  constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000,
-  survey.weights = NULL, rotate = "oblimin", Target = NaN,
-  quadpts = NULL, TOL = NULL, grsm.block = NULL, key = NULL,
-  nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
-  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), alabama_args = list(), technical = list(), ...)
+  covdata = NULL, formula = NULL, SE.type = "crossprod", method = "EM",
+  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
+  calcNull = TRUE, draws = 5000, survey.weights = NULL,
+  rotate = "oblimin", Target = NaN, quadpts = NULL, TOL = NULL,
+  grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
+  GenRandomPars = FALSE, accelerate = "Ramsay", empiricalhist = FALSE,
+  verbose = TRUE, solnp_args = list(), alabama_args = list(),
+  technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -43,6 +44,11 @@ vector corresponding to each item}
 
 \item{SE}{logical; estimate the standard errors by computing the parameter information matrix?
 See \code{SE.type} for the type of estimates available}
+
+\item{covdata}{a data.frame of data used for latent regression models}
+
+\item{formula}{an R formula indicating how the latent traits can be regressed using external
+covariates in \code{covdata}}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
@@ -252,7 +258,8 @@ using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm or 
 an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
 quasi-Monte Carlo integration grids.
 Models containing 'explanatory' person or item level predictors
-can only be included by using the \code{\link{mixedmirt}} function. Tests that form a
+can only be included by using the \code{\link{mixedmirt}} function, though latent
+regression models can be fit using the \code{formula} input below. Tests that form a
 two-tier or bi-factor structure should be estimated with the \code{\link{bfactor}} function,
 which uses a dimension reduction EM algorithm for modeling item parcels.
 Multiple group analyses (useful for DIF testing) are

@@ -2,7 +2,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
                        nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE,
-                       survey.weights = NULL, discrete=FALSE, ...)
+                       survey.weights = NULL, discrete=FALSE, latent.regression = NULL, ...)
 {
     start.time=proc.time()[3L]
     if(is.logical(large) && large){
@@ -292,6 +292,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
     dfsubtr <- nestpars - nconstr
     if(PrepList[[1L]]$exploratory) dfsubtr <- dfsubtr - nfact*(nfact - 1L)/2L
+    if(!is.null(latent.regression)) dfsubtr <- dfsubtr - length(latent.regression$beta)
     if(df <= dfsubtr)
         stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ',
              dfsubtr, ' parameters were freely estimated.')
@@ -338,6 +339,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     #EM estimation
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
+        if(!is.null(latent.regression)){
+            if(nfact != 1L)
+                stop('Latent regression currently only supported for unidimensional models')
+            pars[[1L]][[length(pars[[1L]])]]@X <- as.matrix(latent.regression$X)
+            pars[[1L]][[length(pars[[1L]])]]@betas <- latent.regression$beta
+            opts$full <- TRUE
+            if(any(pars[[1L]][[length(pars[[1L]])]]@est))
+                stop('Latent parameter estimation not supported. E.g., to create latent regression
+                      Rasch models constrain the slopes to be equal instead')
+        } else opts$full <- FALSE
         nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
         temp <- matrix(0L,nrow=nitems,ncol=nspec)
         sitems <- matrix(0L, nrow=sum(PrepList[[1L]]$K), ncol=nspec)
@@ -415,18 +426,25 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          SEM=any(opts$SE.type %in% c('SEM', 'complete')) && opts$SE,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
-                                         message=opts$message, BL=opts$method == 'BL'),
+                                         message=opts$message, BL=opts$method == 'BL', full=opts$full),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args)
+        if(opts$full)
+            names(ESTIMATE$pars[[1]][[ncol(Data$data)+1]]@betas) <- colnames(latent.regression$X)
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0
         for(g in 1L:Data$ngroups){
             Pl <- rlist[[g]]$expected
-            rg <- Data$Freq[[g]]
-            Pl <- Pl[rg != 0]
-            rg <- rg[rg != 0]
-            Ng <- sum(rg)
-            G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pl)))
+            if(length(Pl) == nrow(Data$fulldata[[g]])){
+                rg <- 1
+                G2group[g] <- NaN
+            } else {
+                rg <- Data$Freq[[g]]
+                Pl <- Pl[rg != 0]
+                rg <- rg[rg != 0]
+                Ng <- sum(rg)
+                G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pl)))
+            }
             G2 <- G2 + G2group[g]
             logLik <- logLik + sum(rg*log(Pl))
         }
@@ -553,7 +571,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, Moptim=ESTIMATE$Moptim,
                                           EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior, warn=opts$warn,
-                                          message=opts$message),
+                                          message=opts$message, full=opts$full),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
                               solnp_args=opts$solnp_args)
@@ -871,6 +889,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            itemtype=PrepList[[1L]]$itemtype,
                            information=ESTIMATE$info,
                            infomethod=opts$SE.type,
+                           l.regress = if(is.null(latent.regression)) list() else latent.regression,
                            TOL=opts$TOL)
             }
         } else {

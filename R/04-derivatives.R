@@ -333,7 +333,7 @@ setMethod(
             Theta <- cbind(x@fixed.design, Theta)
         P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
         oldpar <- x@par
-        tmp <- .Call("dparsNominal", x, Theta, offterm, TRUE, estHess)        
+        tmp <- .Call("dparsNominal", x, Theta, offterm, TRUE, estHess)
         num <- P.nominal(c(a, ak, dshift), ncat=length(ak), Theta=Theta, returnNum=TRUE, ot=offterm)
         grad <- tmp$grad
         hess <- tmp$hess
@@ -437,9 +437,9 @@ setMethod(
         Q <- ifelse(Q < 1e-7, 1e-7, Q)
         int <- as.numeric(Theta %*% a + d)
         for(i in 1L:ncol(Theta))
-            grad[i] <- -sum( x@dat[,1] * int * Theta[,i] * -P / Q + 
+            grad[i] <- -sum( x@dat[,1] * int * Theta[,i] * -P / Q +
                                x@dat[,2] * int * Theta[,i])
-        grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q + 
+        grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q +
                            2 * x@dat[,2] * int)/2
         if(estHess)
             hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
@@ -484,7 +484,7 @@ setMethod(
             r <- tabdata[ ,ncol(tabdata)]
             N <- sum(r)
             tabdata <- tabdata[ ,-ncol(tabdata)]
-            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, 
+            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                           CUSTOM.IND=CUSTOM.IND)
             mu <- x@par[1L:nfact]
             siglong <- x@par[-(1L:nfact)]
@@ -494,7 +494,8 @@ setMethod(
             if(nfact != 1L)
                 sig <- sig + t(sig) - diag(diag(sig))
             prior <- mirt_dmvnorm(Theta, mu, sig)
-            ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu, 
+            stop('Function not supported')
+            ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu,
                          mirtClusterEnv$ncores)
             tmp <- cbind(ret$scores, ret$scores2) * r
             newpars <- apply(tmp, 2, sum) / N
@@ -628,7 +629,7 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     freq <- tabdata[,ncol(tabdata)]
     rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata)], freq=freq,
                         Theta=Theta, prior=prior, itemloc=itemloc,
-                        CUSTOM.IND=CUSTOM.IND)
+                        CUSTOM.IND=CUSTOM.IND, full=FALSE)
     tmp <- log(rlist$expected)
     pick <- is.finite(tmp)
     LL <- sum(freq[pick]*tmp[pick])
@@ -909,7 +910,7 @@ setMethod(
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta){
         P <- ProbTrace(x, Theta)
-        PQ <- apply(P, 1L, prod) 
+        PQ <- apply(P, 1L, prod)
         ret <- cbind(Theta * PQ, PQ, P)
         ret
     }
@@ -922,7 +923,7 @@ setMethod(
         P <- ProbTrace(x, Theta, itemexp=FALSE)
         P <- P[,-c(1, ncol(P)), drop=FALSE]
         PQ <- P * (1 - P)
-        ret <- cbind(Theta * rowSums(PQ), PQ) 
+        ret <- cbind(Theta * rowSums(PQ), PQ)
         ret
     }
 )
@@ -944,7 +945,7 @@ setMethod(
         den <- rowSums(num)
         P <- num/den
         a <- x@par[1L:ncol(Theta)]
-        ak <- x@par[(ncol(Theta)+1L):(ncol(Theta)+x@ncat)]        
+        ak <- x@par[(ncol(Theta)+1L):(ncol(Theta)+x@ncat)]
         dp <- matrix(0, nrow(Theta), length(x@par))
         aknum <- t(ak * t(num))
         aTheta <- as.numeric(a %*% t(Theta))
@@ -990,7 +991,7 @@ setMethod(
         s2 <- x@score^2
         for(j in 2L:x@ncat){
             for(i in 1:ncol(Theta)){
-                dp[,ind] <- Theta[,i] * s2[j] * (P[,j] - 
+                dp[,ind] <- Theta[,i] * s2[j] * (P[,j] -
                         rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
                 ind <- ind + 1L
             }

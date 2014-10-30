@@ -320,6 +320,9 @@ setMethod(
                 allPars <- list(items=items, groupPars=allPars[length(allPars)][[1L]])
             }
         }
+        betas <- object@pars[[length(object@pars)]]@betas
+        if(length(betas))
+            allPars$betas <- betas
         return(allPars)
     }
 )

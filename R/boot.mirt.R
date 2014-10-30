@@ -31,36 +31,41 @@
 #'
 #' }
 boot.mirt <- function(x, R = 100, ...){
-    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group, 
-                           discrete, ...) {
+    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group,
+                           discrete, LR, ...) {
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
         g <- group[ind]
         if(length(unique(g)) != ngroup) return(rep(NA, npars))
         if(discrete){
             mod <- try(mdirt(data=dat, model=model, itemtype=itemtype, group=g,
-                                     constrain=constrain, parprior=parprior, 
-                                     verbose=FALSE, technical=list(parallel=FALSE), 
+                                     constrain=constrain, parprior=parprior,
+                                     verbose=FALSE, technical=list(parallel=FALSE),
                                      ...))
         } else {
             if(!is.null(group)){
                 mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
-                                     constrain=constrain, parprior=parprior, 
-                                     calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE), 
+                                     constrain=constrain, parprior=parprior,
+                                     calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE),
                                      ...))
             } else {
                 mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
-                            parprior=parprior, calcNull=FALSE, verbose=FALSE, 
-                            technical=list(parallel=FALSE), ...))
+                            parprior=parprior, calcNull=FALSE, verbose=FALSE,
+                            technical=list(parallel=FALSE), formula=LR$formula,
+                            covdata=LR$X, ...))
             }
         }
         if(is(mod, 'try-error')) return(rep(NA, npars))
         structure <- mod2values(mod)
         longpars <- structure$value
         if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
+        if(length(LR)){
+            betas <- mod@pars[[length(mod@pars)]]@betas
+            longpars <- c(longpars, betas)
+        }
         return(longpars)
     }
-    
+
     if(is(x, 'MixedClass'))
         stop('Bootstapped standard errors not supported for MixedClass objects')
     return.boot <- TRUE
@@ -74,6 +79,7 @@ boot.mirt <- function(x, R = 100, ...){
     model <- x@model[[1L]]
     parprior <- x@parprior
     constrain <- x@constrain
+    LR <- if(is(x, 'ConfirmatoryClass')) x@l.regress else list()
     if(length(parprior) == 0L) parprior <- NULL
     if(length(constrain) == 0L) constrain <- NULL
     prodlist <- x@prodlist
@@ -83,7 +89,7 @@ boot.mirt <- function(x, R = 100, ...){
     longpars <- structure$value
     npars <- length(longpars)
     boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, discrete=discrete,
-                  parprior=parprior, model=model, itemtype=itemtype, group=group, ...)
+                  parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR, ...)
     if(explor) message('Note: bootstrapped standard errors for slope parameters for exploratory
                        models are not meaningful.')
     return(boots)

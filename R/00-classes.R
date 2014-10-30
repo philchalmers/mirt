@@ -88,7 +88,7 @@ setClass("AllModelClass",
 #'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'     \item{\code{Target}:}{Object of class \code{"numeric"}, dummy rotation matrix}
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
-#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
 #'       second-order test}
 #'     \item{\code{bfactor}:}{Object of class \code{"list"}, an empty list}
 #'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
@@ -165,12 +165,14 @@ setClass(
 #'     \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
-#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
 #'       second-order test}
 #'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
 #'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
 #'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
+#'     \item{\code{l.regress}:}{Object of class \code{"list"}, list containing information for
+#'       latent regression models}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'   }
 #' @section Methods:
@@ -196,7 +198,8 @@ setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     random='list',
-                                    bfactor='list'),
+                                    bfactor='list',
+                                    l.regress='list'),
     validity = function(object) return(TRUE)
 )
 
@@ -240,7 +243,7 @@ setClass(
 #'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
-#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
 #'       second-order test}
 #'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
 #'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
@@ -310,7 +313,7 @@ setClass(
 #'    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
 #'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
-#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
 #'       second-order test}
 #'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
 #'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
@@ -384,7 +387,7 @@ setClass(
 #'    \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
 #'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
-#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes 
+#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
 #'       second-order test}
 #'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
 #'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}

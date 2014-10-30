@@ -68,11 +68,74 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP Rncor
     END_RCPP
 }
 
+void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatrix &prior,
+    const IntegerMatrix &data, const NumericMatrix &itemtrace,
+    const int &ncores)
+{
+    const int nquad = prior.ncol();
+    const int nitems = data.ncol();
+    const int npat = data.nrow();
+    #ifdef SUPPORT_OPENMP
+    if(npat > 1)
+        omp_set_num_threads(ncores);
+    #endif
+
+     #pragma omp parallel for
+     for (int pat = 0; pat < npat; ++pat){
+         vector<double> posterior(nquad,1.0);
+         for(int q = 0; q < nquad; ++q)
+             posterior[q] = posterior[q] * prior(pat,q);
+         for (int item = 0; item < nitems; ++item)
+             if(data(pat,item))
+                 for(int q = 0; q < nquad; ++q)
+                     posterior[q] *= itemtrace(q,item);
+         double expd = 0.0;
+         for(int i = 0; i < nquad; ++i)
+             expd += posterior[i];
+         if(expd > ABSMIN){
+             for(int q = 0; q < nquad; ++q)
+                 posterior[q] = posterior[q] / expd;
+         } else expd = ABSMIN;
+         expected[pat] = expd;
+         for (int item = 0; item < nitems; ++item)
+             if (data(pat,item))
+                 for(int q = 0; q < nquad; ++q)
+                     #pragma omp atomic
+                     r1vec[q + item*nquad] += posterior[q];
+     } //end main
+
+}
+
+//Estep for mirt
+RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rncores)
+{
+    BEGIN_RCPP
+
+    const NumericMatrix prior(Rprior);
+    const IntegerMatrix data(RX);
+    const NumericMatrix itemtrace(Ritemtrace);
+    const int ncores = as<int>(Rncores);
+    const int nquad = prior.ncol();
+    const int nitems = data.ncol();
+    const int npat = data.nrow();
+    vector<double> expected(npat, 0.0);
+    vector<double> r1vec(nquad*nitems, 0.0);
+    List ret;
+
+    _Estep2(expected, r1vec, prior, data, itemtrace, ncores);
+    NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
+    ret["r1"] = r1;
+    ret["expected"] = wrap(expected);
+    return(ret);
+
+    END_RCPP
+}
+
 void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> &ri,
-    const NumericMatrix &itemtrace, const vector<double> &prior, const vector<double> &Priorbetween, 
+    const NumericMatrix &itemtrace, const vector<double> &prior, const vector<double> &Priorbetween,
     const vector<double> &r, const int &ncores, const IntegerMatrix &data, const IntegerMatrix &sitems,
     const vector<double> &Prior)
-{    
+{
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
     const int npquad = prior.size();
@@ -132,11 +195,11 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
         for (int item = 0; item < nitems; ++item)
             if (data(pat,item))
                 for (int fact = 0; fact < sfact; ++fact)
-                    for(int q = 0; q < nquad; ++q)                    
+                    for(int q = 0; q < nquad; ++q)
                         #pragma omp atomic
                         r1vec[q + fact*nquad*nitems + nquad*item] += posterior[q + fact*nquad];
     }   //end main
-    
+
     for (int item = 0; item < nitems; ++item)
         for (int fact = 0; fact < sfact; ++fact)
             if(sitems(item, fact))
@@ -179,24 +242,21 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     END_RCPP
 }
 
-//EAP estimates used in multipleGroup
-RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu,
-    SEXP Rfull, SEXP Rr, SEXP Rncores)
+RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprior, SEXP Rmu,
+    SEXP Rncores)
 {
     BEGIN_RCPP
 
     const int ncores = as<int>(Rncores);
-    const int full = as<int>(Rfull);
-    const vector<int> r = as< vector<int> >(Rr);
     #ifdef SUPPORT_OPENMP
     omp_set_num_threads(ncores);
     #endif
-    const NumericMatrix logitemtrace(Rlogitemtrace);
+    const NumericMatrix itemtrace(Ritemtrace);
     const IntegerMatrix tabdata(Rtabdata);
     const NumericMatrix Theta(RTheta);
-    const vector<double> prior = as< vector<double> >(Rprior);
-    const vector<double> mu = as< vector<double> >(Rmu);
-    const int n = prior.size(); //nquad
+    const NumericMatrix prior(Rprior);
+    const NumericMatrix mu(Rmu);
+    const int n = prior.ncol(); //nquad
     const int N = tabdata.nrow();
     const int nitems = tabdata.ncol();
     const int nfact = Theta.ncol();
@@ -206,19 +266,19 @@ RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rp
 #pragma omp parallel for
     for(int pat = 0; pat < N; ++pat){
 
-        vector<double> L(n, 0.0);
+        vector<double> L(n);
+        for(int j = 0; j < n; ++j)
+            L[j] = prior[j];
         for(int j = 0; j < n; ++j){
             for(int i = 0; i < nitems; ++i)
                 if(tabdata(pat, i))
-                    L[j] = L[j] + logitemtrace(j, i);
+                    L[j] *= itemtrace(j, i);
         }
 
         vector<double> thetas(nfact, 0.0);
         double denom = 0.0;
-        for(int j = 0; j < n; ++j){
-            L[j] = exp(L[j] + log(prior[j]));
+        for(int j = 0; j < n; ++j)
             denom += L[j];
-        }
 
         for(int k = 0; k < nfact; ++k){
             for(int j = 0; j < n; ++j)
@@ -234,7 +294,7 @@ RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rp
                     for(int j = 0; j < n; ++j)
                         thetas2[ind] += (Theta(j, i) - thetas[i]) * (Theta(j, k) - thetas[k]) *
                             L[j] / denom;
-                    thetas2[ind] += (thetas[i] - mu[i]) * (thetas[k] - mu[k]);
+                    thetas2[ind] += (thetas[i] - mu(pat,i)) * (thetas[k] - mu(pat,k));
                     scores2[pat + ind*N] = thetas2[ind];
                     ind += 1;
                 }
@@ -242,20 +302,6 @@ RcppExport SEXP EAPgroup(SEXP Rlogitemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rp
         }
     }
 
-    if(full){
-        const int NN = std::accumulate(r.begin(), r.end(), 0);
-        NumericMatrix fullscores(NN, nfact);
-        NumericMatrix scoresmat = vec2mat(scores, N, nfact);
-        int ind = 0;
-        for(int pat = 0; pat < N; ++pat){
-            for(int j = 0; j < r[pat]; ++j){
-                for(int i = 0; i < nfact; ++i)
-                    fullscores(ind, i) = scoresmat(pat, i);
-            ++ind;
-            }
-        }
-        return(fullscores);
-    }
     List ret;
     ret["scores"] = vec2mat(scores, N, nfact);
     ret["scores2"] = vec2mat(scores2, N, nfact*(nfact + 1)/2);
