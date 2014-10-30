@@ -317,12 +317,15 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior){
     nfact <- ncol(Theta)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
-    mu <- X %*% x@betas
+    betas <- x@betas
+    mu <- X %*% betas
     ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu, mirtClusterEnv$ncores)
     scores <- ret[[1L]]; vars <- ret[[2L]]
-    beta <- rep(0, length(x@betas))
-    for(i in 1:length(beta))
-        beta[i] <- solve(X[,i] %*% X[,i]) %*% X[,i] %*% scores
+    mod <- lm(scores ~ 0 + X)
+    beta <- coef(mod)
+    if(!is.matrix(beta)) beta <- matrix(beta, ncol=1L)
+    rownames(beta) <- colnames(X)
+    colnames(beta) <- paste0('Theta_', 1:ncol(beta))
     siglong <- colMeans(vars)
     siglong <- siglong[x@est[-(1L:nfact)]]
     return(list(beta=beta, siglong=siglong))

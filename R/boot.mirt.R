@@ -61,7 +61,7 @@ boot.mirt <- function(x, R = 100, ...){
         if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
         if(length(LR)){
             betas <- mod@pars[[length(mod@pars)]]@betas
-            longpars <- c(longpars, betas)
+            longpars <- c(longpars, as.numeric(betas))
         }
         return(longpars)
     }

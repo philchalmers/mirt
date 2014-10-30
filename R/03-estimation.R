@@ -340,10 +340,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(!is.null(latent.regression)){
-            if(nfact != 1L)
-                stop('Latent regression currently only supported for unidimensional models')
             pars[[1L]][[length(pars[[1L]])]]@X <- as.matrix(latent.regression$X)
-            pars[[1L]][[length(pars[[1L]])]]@betas <- latent.regression$beta
+            pars[[1L]][[length(pars[[1L]])]]@betas <- matrix(0, ncol(latent.regression$X), nfact)
             opts$full <- TRUE
             if(any(pars[[1L]][[length(pars[[1L]])]]@est))
                 stop('Latent parameter estimation not supported. E.g., to create latent regression
