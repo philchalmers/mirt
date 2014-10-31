@@ -857,7 +857,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     if(!is.null(covdata) && !is.null(formula)){
         covdata <- as.data.frame(covdata)
         X <- model.frame(formula, covdata)
-        latent.regression <- list(X=X, beta=rep(0, ncol(X)), formula=formula)
+        latent.regression <- list(X=X, formula=formula)
     } else latent.regression <- NULL
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
