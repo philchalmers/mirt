@@ -292,7 +292,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
     dfsubtr <- nestpars - nconstr
     if(PrepList[[1L]]$exploratory) dfsubtr <- dfsubtr - nfact*(nfact - 1L)/2L
-    if(!is.null(latent.regression)) dfsubtr <- dfsubtr - length(latent.regression$beta)
+    if(!is.null(latent.regression)) dfsubtr <- dfsubtr + length(latent.regression$beta)
     if(df <= dfsubtr)
         stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ',
              dfsubtr, ' parameters were freely estimated.')
@@ -340,8 +340,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(!is.null(latent.regression)){
-            pars[[1L]][[length(pars[[1L]])]]@X <- as.matrix(latent.regression$X)
-            pars[[1L]][[length(pars[[1L]])]]@betas <- matrix(0, ncol(latent.regression$X), nfact)
+            pars[[1L]][[length(pars[[1L]])]]@X <- model.matrix(latent.regression$formula,
+                latent.regression$X)[,-1L, drop=FALSE]
+            pars[[1L]][[length(pars[[1L]])]]@betas <-
+                matrix(0, ncol(pars[[1L]][[length(pars[[1L]])]]@X), nfact)
             opts$full <- TRUE
             if(any(pars[[1L]][[length(pars[[1L]])]]@est))
                 stop('Latent parameter estimation not supported. E.g., to create latent regression
