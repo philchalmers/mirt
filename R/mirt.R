@@ -355,9 +355,9 @@
 #'   the last item: \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed
 #'   to be within the same group and therefore have the same number of item categories
 # @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
-#' @param covdata a data.frame of data used for latent regression models
-#' @param formula an R formula indicating how the latent traits can be regressed using external
-#'   covariates in \code{covdata}
+# @param covdata a data.frame of data used for latent regression models
+# @param formula an R formula indicating how the latent traits can be regressed using external
+#   covariates in \code{covdata}
 #' @param key a numeric vector of the response scoring key. Required when using nested logit item
 #'   types, and must be the same length as the number of items used. Items that are not nested logit
 #'   will ignore this vector, so use \code{NA} in item locations that are not applicable
@@ -845,7 +845,6 @@
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-                 covdata = NULL, formula = NULL,
                  SE.type = 'crossprod', method = 'EM', optimizer = NULL, pars = NULL,
                  constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000,
                  survey.weights = NULL, rotate = 'oblimin', Target = NaN, quadpts = NULL,
@@ -854,6 +853,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  solnp_args = list(), alabama_args = list(), technical = list(), ...)
 {
     Call <- match.call()
+    formula <- NULL; covdata <- NULL
     if(!is.null(covdata) && !is.null(formula)){
         covdata <- as.data.frame(covdata)
         X <- model.frame(formula, covdata)

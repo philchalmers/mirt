@@ -1,7 +1,5 @@
 # Changes in mirt 1.7
 
-- preliminary support added for latent regression models using the EM algorithm in `mirt()`
-
 - document theory of bifactor/two-tier models better
 
 - added confidence envelope plots to `PLCI.mirt`, and throw warnings when intervals could not be

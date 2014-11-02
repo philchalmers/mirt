@@ -5,14 +5,13 @@
 Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  covdata = NULL, formula = NULL, SE.type = "crossprod", method = "EM",
-  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
-  calcNull = TRUE, draws = 5000, survey.weights = NULL,
-  rotate = "oblimin", Target = NaN, quadpts = NULL, TOL = NULL,
-  grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
-  GenRandomPars = FALSE, accelerate = "Ramsay", empiricalhist = FALSE,
-  verbose = TRUE, solnp_args = list(), alabama_args = list(),
-  technical = list(), ...)
+  SE.type = "crossprod", method = "EM", optimizer = NULL, pars = NULL,
+  constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000,
+  survey.weights = NULL, rotate = "oblimin", Target = NaN,
+  quadpts = NULL, TOL = NULL, grsm.block = NULL, key = NULL,
+  nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
+  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
+  solnp_args = list(), alabama_args = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -44,11 +43,6 @@ vector corresponding to each item}
 
 \item{SE}{logical; estimate the standard errors by computing the parameter information matrix?
 See \code{SE.type} for the type of estimates available}
-
-\item{covdata}{a data.frame of data used for latent regression models}
-
-\item{formula}{an R formula indicating how the latent traits can be regressed using external
-covariates in \code{covdata}}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic

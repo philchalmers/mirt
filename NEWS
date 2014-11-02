@@ -1,3 +1,14 @@
+Changes in mirt 1.7
+
+  - document theory of bifactor/two-tier models better
+
+  - added confidence envelope plots to `PLCI.mirt`, and throw warnings when
+  intervals could not be located
+
+  - `coef()` now accepts a `simplify` logical, indicating whether the
+  items should be collapsed to a matrix and returned as a list of length 2
+  (suggested by Michael Friendly)
+
 Changes in mirt 1.6.1
 
 MAJOR CHANGES
