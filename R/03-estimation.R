@@ -340,14 +340,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(!is.null(latent.regression)){
             pars[[1L]][[length(pars[[1L]])]]@X <- model.matrix(latent.regression$formula,
-                latent.regression$X)[,-1L, drop=FALSE]
+                latent.regression$X)
             pars[[1L]][[length(pars[[1L]])]]@betas <-
                 matrix(0, ncol(pars[[1L]][[length(pars[[1L]])]]@X), nfact)
-            df <- df - length(pars[[1L]][[length(pars[[1L]])]]@betas)
+            df <- df - length(pars[[1L]][[length(pars[[1L]])]]@betas[-1L,])
             opts$full <- TRUE
-            if(any(pars[[1L]][[length(pars[[1L]])]]@est))
-                stop('Latent parameter estimation not supported. E.g., to create latent regression
-                      Rasch models constrain the slopes to be equal instead')
         } else opts$full <- FALSE
         nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
         temp <- matrix(0L,nrow=nitems,ncol=nspec)

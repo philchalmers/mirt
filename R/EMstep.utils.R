@@ -324,5 +324,6 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior){
     beta <- solve(t(X) %*% X) %*% t(X) %*% scores
     siglong <- colMeans(vars)
     siglong <- siglong[x@est[-(1L:nfact)]]
+    beta[1,] <- 0 #fix intercepts to 0
     return(list(beta=beta, siglong=siglong))
 }

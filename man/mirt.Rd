@@ -5,13 +5,14 @@
 Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  SE.type = "crossprod", method = "EM", optimizer = NULL, pars = NULL,
-  constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000,
-  survey.weights = NULL, rotate = "oblimin", Target = NaN,
-  quadpts = NULL, TOL = NULL, grsm.block = NULL, key = NULL,
-  nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
-  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), alabama_args = list(), technical = list(), ...)
+  covdata = NULL, formula = NULL, SE.type = "crossprod", method = "EM",
+  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
+  calcNull = TRUE, draws = 5000, survey.weights = NULL,
+  rotate = "oblimin", Target = NaN, quadpts = NULL, TOL = NULL,
+  grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
+  GenRandomPars = FALSE, accelerate = "Ramsay", empiricalhist = FALSE,
+  verbose = TRUE, solnp_args = list(), alabama_args = list(),
+  technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -43,6 +44,11 @@ vector corresponding to each item}
 
 \item{SE}{logical; estimate the standard errors by computing the parameter information matrix?
 See \code{SE.type} for the type of estimates available}
+
+\item{covdata}{a data.frame of data used for latent regression models}
+
+\item{formula}{an R formula indicating how the latent traits can be regressed using external
+covariates in \code{covdata}}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
@@ -807,6 +813,31 @@ coef(mod)
 sum(ds)
 
 # same likelihood location as: mirt(dat, 1, itemtype = 'Rasch')
+
+
+#######
+# latent regression Rasch model
+
+#simulate data
+set.seed(1234)
+N <- 1000
+
+# covariates
+X1 <- rnorm(N); X2 <- rnorm(N)
+covdata <- data.frame(X1, X2)
+Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+
+#items and response data
+a <- matrix(1, 20); d <- matrix(rnorm(20))
+dat <- simdata(a, d, 1000, itemtype = 'dich', Theta=Theta)
+
+#unconditional Rasch model
+mod0 <- mirt(dat, 1, 'Rasch')
+
+#conditional model using X1 and X2 as predictors of Theta
+mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+coef(mod1, simplify=TRUE)
+anova(mod0, mod1)
 
 }
 }

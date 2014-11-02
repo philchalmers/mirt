@@ -321,8 +321,11 @@ setMethod(
             }
         }
         betas <- object@pars[[length(object@pars)]]@betas
-        if(length(betas))
+        if(length(betas)){
+            names(betas) <- NULL
+            colnames(betas) <- object@factorNames
             allPars$betas <- betas
+        }
         return(allPars)
     }
 )

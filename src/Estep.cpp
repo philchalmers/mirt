@@ -268,7 +268,7 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
 
         vector<double> L(n);
         for(int j = 0; j < n; ++j)
-            L[j] = prior[j];
+            L[j] = prior(pat, j);
         for(int j = 0; j < n; ++j){
             for(int i = 0; i < nitems; ++i)
                 if(tabdata(pat, i))

@@ -1,5 +1,8 @@
 # Changes in mirt 1.7
 
+- latent regression models added to `mirt()` function by using the new `covdata` and `formula` 
+  inputs
+
 - document theory of bifactor/two-tier models better
 
 - added confidence envelope plots to `PLCI.mirt`, and throw warnings when intervals could not be
