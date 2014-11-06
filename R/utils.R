@@ -396,10 +396,13 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                     for(g in 1L:ngroups){
                         constr <- c()
                         p <- pars[[g]]
-                        sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-2L)])
+                        sel <- suppressWarnings(
+                            as.numeric(esplit[[i]][1L:(length(esplit[[i]])-1L)]))
+                        picknames <- c(is.na(sel), FALSE)
+                        sel <- na.omit(sel)
                         for(j in 1L:length(sel)){
-                            pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) ==
-                                                           esplit[[i]][length(esplit[[i]])-1L]]
+                            pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) %in%
+                                                           esplit[[i]][picknames]]
                             if(!length(pick))
                                 stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j])
                             constr <- c(constr, pick)

@@ -55,13 +55,18 @@ quadratic factor for \code{F1}).
   to estimate all the possible correlations (e.g., F1*F2*F3)}
 \item{CONSTRAIN}{A bracketed, comma separated list specifying equality constrains between items.
   The input format is
-  \code{CONSTRAIN = (items, ..., parameterName, OptionalGroup),
+  \code{CONSTRAIN = (items, ..., parameterName(s), OptionalGroup),
   (items, ..., parameterName, OptionalGroup)}.
   If \code{OptionalGroup} is omitted then the constraints are applied within all groups.
   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
   the first and last 5 item slopes (a1) can be constrained to be equal by using
   \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some combination
-  such as \code{CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)}}
+  such as \code{CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)}.
+
+When constraining parameters to be equal within an item (e.g., for factor loading
+  'doubles') declare the respective item and use multiple parameter names. For
+  instance, to constrain two slopes to be equal within the first item, use
+  \code{CONSTRAIN = (1, a1, a2)}}
 \item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
   The input format is \code{CONSTRAINB = (items, ..., parameterName),
   (items, ..., parameterName)}.

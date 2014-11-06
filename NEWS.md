@@ -1,5 +1,9 @@
 # Changes in mirt 1.7
 
+- `mirt.model()` syntax can now define within individual item equality constraints
+  (e.g., for use with factor-loading 'doublets') by using more than 1 parameter 
+  specification name in the syntax
+
 - latent regression models added to `mirt()` function by using the new `covdata` and `formula` 
   inputs
 
