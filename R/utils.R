@@ -239,7 +239,6 @@ Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
         tmpcov[1L:ncol(gcov), 1L:ncol(gcov)] <- gcov
         gcov <- tmpcov
     }
-    chl <- chol(gcov)
     z <- qnorm(1 - alpha/2)
     rownames(lambdas) <- rownames(upperlambdas) <- rownames(lowerlambdas) <- Names
     for(i in 1L:J){
@@ -250,7 +249,7 @@ Lambdas <- function(pars, Names, explor = FALSE, alpha = .05){
         tmp@par <- pars[[i]]@par + z * pars[[i]]@SEpar
         upperlambdas[i,] <- ExtractLambdas(tmp) /1.702
     }
-    norm <- sqrt(1 + rowSums((lambdas%*%chl)^2))
+    norm <- sqrt(1 + rowSums(lambdas^2))
     F <- as.matrix(lambdas/norm)
     if(!explor){
         norml <- sqrt(1 + rowSums(lowerlambdas^2, na.rm=TRUE))
