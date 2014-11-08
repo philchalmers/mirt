@@ -1,27 +1,27 @@
 #' Compute M2 statistic
 #'
-#' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the 
+#' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
 #' M2* statistic for polytomous data (collapsing over response categories for better stability;
-#' see Cai and Hansen, 2013), as well as associated fit indices that are based on 
+#' see Cai and Hansen, 2013), as well as associated fit indices that are based on
 #' fitting the null model.
-#' 
+#'
 #' @return Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
-#'   p-value, RMSEA (with 90\% confidence interval), SRMSR if all items were ordinal, 
+#'   p-value, RMSEA (with 90\% confidence interval), SRMSR if all items were ordinal,
 #'   and optionally the TLI and CFI model fit statistics
 #'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package
-#' @param quadpts number of quadrature points to use during estimation. If \code{NULL}, 
+#' @param quadpts number of quadrature points to use during estimation. If \code{NULL},
 #'   a suitable value will be chosen based
 #'   on the rubric found in \code{\link{fscores}}
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
 #' @param Theta a matrix of factor scores for each person used for imputation
-#' @param impute a number indicating how many imputations to perform 
-#'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires 
-#'   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates 
+#' @param impute a number indicating how many imputations to perform
+#'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
+#'   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
 #'   of the stats and their imputed standard deviations
-#' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for 
+#' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for
 #'   RMSEA. Default returns the 90\% interval
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
@@ -29,10 +29,10 @@
 #' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of 
-#' hierarchical item factor models. British Journal of Mathematical and Statistical 
+#' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of
+#' hierarchical item factor models. British Journal of Mathematical and Statistical
 #' Psychology, 66, 245-276.
-#' 
+#'
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
 #' multidimensional contingency tables Psychometrika, 71, 713-732.
 #' @keywords model fit
@@ -42,7 +42,7 @@
 #' dat <- expand.table(LSAT7)
 #' (mod1 <- mirt(dat, 1))
 #' M2(mod1)
-#' 
+#'
 #' #M2 imputed with missing data present (run in parallel)
 #' dat[sample(1:prod(dim(dat)), 250)] <- NA
 #' mod2 <- mirt(dat, 1)
@@ -53,19 +53,19 @@
 #' }
 M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
                residmat = FALSE, QMC=FALSE, ...){
-    
+
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
         tmpobj <- obj
         tmpobj@Data$data <- dat
         if(is(obj, 'MultipleGroupClass')){
             for(g in 1L:length(obj@Data$groupNames))
-                tmpobj@pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group, 
+                tmpobj@pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
                                                   , drop=FALSE]
         }
         return(M2(tmpobj, ...))
     }
-    
+
     #if MG loop
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
@@ -75,11 +75,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         discrete <- TRUE
         class(obj) <- 'MultipleGroupClass'
         calcNull <- FALSE
-    }   
+    }
     if(any(is.na(obj@Data$data))){
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
-                 Theta and impute arguments to compute statistics following multiple 
+                 Theta and impute arguments to compute statistics following multiple
                  data inputations')
         collect <- vector('list', impute)
         collect <- myLapply(collect, fn, obj=obj, Theta=Theta, calcNull=calcNull,
@@ -128,25 +128,25 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         newret$df <- Tsum - obj@nest
         newret$p <- 1 - pchisq(newret$Total.M2, newret$df)
         newret$RMSEA <- rmsea(X2=newret$Total.M2, df=newret$df, N=obj@Data$N)
-        RMSEA.90_CI <- RMSEA.CI(newret$Total.M2, newret$df, obj@Data$N, 
+        RMSEA.90_CI <- RMSEA.CI(newret$Total.M2, newret$df, obj@Data$N,
                                 ci.lower=alpha, ci.upper=1-alpha)
         newret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         newret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
         if(!is.null(ret[[1L]]$SRMSR)){
             SRMSR <- numeric(ngroups)
             for(g in 1L:ngroups)
-                SRMSR[g] <- ret[[g]]$SRMSR  
+                SRMSR[g] <- ret[[g]]$SRMSR
             names(SRMSR) <- paste0(obj@Data$groupNames, '.SRMSR')
             SRMSR <- as.list(SRMSR)
         } else SRMSR <- numeric(0)
         if(calcNull){
-            null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group, 
+            null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group,
                                           TOL=1e-3, technical=list(NULL.MODEL=TRUE),
                                           verbose=FALSE))
             null.fit <- M2(null.mod, calcNull=FALSE)
             newret$TLI <- (null.fit$Total.M2 / null.fit$df - newret$Total.M2/newret$df) /
                 (null.fit$Total.M2 / null.fit$df - 1)
-            newret$CFI <- 1 - (newret$Total.M2 - newret$df) / 
+            newret$CFI <- 1 - (newret$Total.M2 - newret$df) /
                 (null.fit$Total.M2 - null.fit$df)
             if(newret$CFI > 1) newret$CFI <- 1
             if(newret$CFI < 0 ) newret$CFI <- 0
@@ -161,10 +161,10 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
         rownames(newret) <- 'stats'
         return(newret)
     }
-    
-    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal', 
+
+    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal',
                                            'ideal', 'lca', 'GroupPars')))
-       stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\', 
+       stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\',
             \'gpcm\', and \'nominal\' objects')
     dots <- list(...)
     discrete <- FALSE
@@ -186,7 +186,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     prodlist <- attr(obj@pars, 'prodlist')
     K <- obj@K
     pars <- obj@pars
-    if(is.null(quadpts)) 
+    if(is.null(quadpts))
         quadpts <- select_quadpts(obj@nfact)
     estpars <- c()
     for(i in 1L:(nitems+1L))
@@ -195,7 +195,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     bfactorlist <- obj@bfactor
     if(!discrete){
         theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
-        if(is.null(bfactorlist$Priorbetween[[1L]])){
+#         if(is.null(bfactorlist$Priorbetween[[1L]])){
+        if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
             prior <- Priorbetween <- sitems <- specific <- NULL
             Theta <- if(QMC) qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=obj@nfact, leap=409), sd=2)
                 else thetaComb(theta, obj@nfact)
@@ -206,9 +207,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
             if(length(prodlist) > 0L)
                 Theta <- prodterms(Theta, prodlist)
         } else {
-            Theta <- obj@Theta        
+            Theta <- obj@Theta
             prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
-            sitems <- bfactorlist$sitems; specific <- bfactorlist$specific; 
+            sitems <- bfactorlist$sitems; specific <- bfactorlist$specific;
             Prior <- bfactorlist$Prior[[group]]
         }
     } else {
@@ -250,7 +251,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     e <- c(E1, E2[lower.tri(E2)])
     if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
         E2[is.na(E2)] <- 0
-        E2 <- E2 + t(E2) 
+        E2 <- E2 + t(E2)
         diag(E2) <- E11
         R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
         Kr <- cov2cor(E2 - outer(E1, E1))
@@ -282,7 +283,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     delta <- rbind(delta1, delta2)
     delta <- delta[, estpars, drop=FALSE]
     Xi2els <- .Call('buildXi2els', nrow(delta1), nrow(delta2), nitems, EIs, EIs2, Prior)
-    Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))    
+    Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
         stop('M2 cannot be calulated since df is too low')

@@ -22,13 +22,13 @@ test_that('dich data', {
     expect_equal(fs[1:3,'Theta.1'], c(-3.086056, -3.028396, -2.959453), tolerance = 1e-4)
     expect_equal(fs[1:3,'Theta.2'], c(-1.3570073, -1.0763397, -0.7812878), tolerance = 1e-4)
     fit <- M2(mod1)
-    expect_equal(fit$M2, 712.5701, tolerance = 1e-2)
+    expect_equal(fit$M2, 560.4704, tolerance = 1e-2)
     expect_equal(fit$df, 432, tolerance = 1e-2)
     pfit1 <- personfit(mod1)
     expect_is(pfit1, 'data.frame')
     ifit <- itemfit(mod1)
     expect_is(ifit, 'data.frame')
-    
+
     #nestlogit
     scoredSAT12 <- data
     scoredSAT12[,1:5] <- as.matrix(SAT12[,1:5])
@@ -127,20 +127,20 @@ test_that('dich data', {
         1,0,NA,NA,0.5,
         1,0,NA,NA,0.5,
         1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
-    
+
     d <- matrix(rnorm(16))
     items <- rep('dich', 16)
-    
+
     sigma <- diag(5)
     sigma[1,2] <- sigma[2,1] <- .7
     dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
-    
+
     specific <- c(rep(1,5),rep(2,6),rep(3,5))
     model <- mirt.model('
         G1 = 1-8
         G2 = 9-16
         COV = G1*G2')
-    
+
     simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 5e-3, verbose=FALSE)
     expect_is(simmod, 'ConfirmatoryClass')
     expect_equal(simmod@df, 65486)

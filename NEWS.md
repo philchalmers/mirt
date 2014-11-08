@@ -1,5 +1,7 @@
 # Changes in mirt 1.7
 
+## NEW FEATURES
+
 - `mirt.model()` syntax can now define within individual item equality constraints
   (e.g., for use with factor-loading 'doublets') by using more than 1 parameter 
   specification name in the syntax
@@ -14,6 +16,10 @@
 
 - `coef()` now accepts a `simplify` logical, indicating whether the items should be collapsed
   to a matrix and returned as a list of length 2 (suggested by Michael Friendly)
+  
+## BUG FIXES
+
+- M2 statistic for bifactor/two-tier models was overly conservative
 
 # Changes in mirt 1.6.1
 
