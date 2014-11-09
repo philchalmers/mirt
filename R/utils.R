@@ -33,7 +33,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     J <- length(pars) - 1L
     unif <- runif(N)
     sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
-    theta1 <- theta0 + mirt_rmvnorm(N,prior.mu, sigma)
+    theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
     log_den0 <- mirt_dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
     log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
     if(length(prodlist) > 0L){
@@ -310,7 +310,7 @@ bfactor2mod <- function(model, J){
 }
 
 updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, N,
-                        BFACTOR, sitems, cycles, rlist, prior, full=FALSE){
+                        BFACTOR, sitems, cycles, rlist, prior, lrPars = list(), full=FALSE){
     Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
         Prior[[1L]] <- list$EHPrior[[1L]]
@@ -328,13 +328,8 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, N,
                 next
             }
             if(full){
-                beta <- pars[[1L]][[length(pars[[1L]])]]@betas
-                X <- pars[[1L]][[length(pars[[1L]])]]@X
-                mus <- X %*% beta
-                Prior[[g]] <- t(apply(mus, 1L,
-                             function(mu, Theta, gcov){
-                                 mirt_dmvnorm(Theta, mu, gcov)
-                            }, Theta=Theta[ ,1L:nfact,drop=FALSE], gcov=gp$gcov))
+                Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], lrPars@mus, gp$gcov,
+                                           quad=TRUE)
                 Prior[[g]] <- Prior[[g]]/rowSums(Prior[[g]])
             } else {
                 Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
@@ -646,7 +641,7 @@ UpdatePrior <- function(PrepList, model, groupNames){
     return(PrepList)
 }
 
-ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
+ReturnPars <- function(PrepList, itemnames, random, lrPars, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
@@ -687,6 +682,21 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
             item <- c(item, rep('RANDOM', length(random[[i]]@parnum)))
         }
     }
+    if(length(lrPars) > 0L){
+        parname <- c(parname, names(lrPars@est))
+        parnum <- c(parnum, lrPars@parnum)
+        par <- c(par, lrPars@par)
+        est <- c(est, lrPars@est)
+        lbound <- c(lbound, lrPars@lbound)
+        ubound <- c(ubound, lrPars@ubound)
+        tmp <- sapply(as.character(lrPars@prior.type),
+                      function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+        prior.type <- c(prior.type, tmp)
+        prior_1 <- c(prior_1, lrPars@prior_1)
+        prior_2 <- c(prior_2, lrPars@prior_2)
+        class <- c(class, rep('lrPars', length(lrPars@parnum)))
+        item <- c(item, rep('BETA', length(lrPars@parnum)))
+    }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
     par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
@@ -695,8 +705,9 @@ ReturnPars <- function(PrepList, itemnames, random, MG = FALSE){
     ret
 }
 
-UpdatePrepList <- function(PrepList, pars, random, MG = FALSE){
-    currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random, MG = TRUE)
+UpdatePrepList <- function(PrepList, pars, random, lrPars = list(), MG = FALSE){
+    currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random,
+                                lrPars=lrPars, MG = TRUE)
     if(nrow(currentDesign) != nrow(pars))
         stop('Rows in supplied and starting value data.frame objects do not match. Were the
              data or itemtype input arguments modified?')
@@ -909,7 +920,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     ret
 }
 
-makeLmats <- function(pars, constrain, random = NULL){
+makeLmats <- function(pars, constrain, random = list(), lrPars = list()){
     f <- function(k) (k+1) / (k*2)
     ngroups <- length(pars)
     J <- length(pars[[1L]]) - 1L
@@ -920,6 +931,8 @@ makeLmats <- function(pars, constrain, random = NULL){
     if(length(random))
         for(i in 1L:length(random))
             L <- c(L, random[[i]]@est)
+    if(length(lrPars))
+        L <- c(L, lrPars@est)
     L <- diag(as.numeric(L))
     redun_constr <- rep(FALSE, ncol(L))
     if(length(constrain) > 0L){
@@ -1170,6 +1183,46 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
     ret
 }
 
+make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
+    nfact <- length(factorNames)
+    X <- model.matrix(formula, df)
+    tXX <- t(X) %*% X
+    if(ncol(X) > 1) inv_tXX <- solve(tXX)
+    else inv_tXX <- matrix(0)
+    beta <- matrix(0, ncol(X), nfact)
+    sigma <- matrix(0, nfact, nfact)
+    diag(sigma) <- 1
+    est <- matrix(TRUE, nrow(beta), ncol(beta))
+    est[1L, ] <- FALSE
+    est <- as.logical(est)
+    names(est) <- paste(factorNames, colnames(X), sep='_')
+    colnames(beta) <- factorNames
+    rownames(beta) <- colnames(X)
+    par <- as.numeric(beta)
+    ret <- new('lrPars',
+               par=par,
+               SEpar=rep(NaN,length(par)),
+               est=est,
+               beta=beta,
+               sigma=sigma,
+               nfact=nfact,
+               nfixed=ncol(X),
+               df=df,
+               X=X,
+               tXX=tXX,
+               inv_tXX=inv_tXX,
+               lbound=rep(-Inf,length(par)),
+               ubound=rep(Inf,length(par)),
+               any.prior=FALSE,
+               prior.type=rep(0L, length(par)),
+               prior_1=rep(NaN,length(par)),
+               prior_2=rep(NaN,length(par)),
+               formula=formula,
+               EM=EM)
+    ret
+}
+
+
 OffTerm <- function(random, J, N){
     ret <- matrix(0, N, J)
     for(i in 1L:length(random)){
@@ -1318,18 +1371,29 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
     retval
 }
 
-mirt_dmvnorm <- function(x, mean, sigma, log = FALSE)
+mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE)
 {
-    # Version modified from mvtnorm::dmvnorm, version 0.9-9996, 19-April, 2014.
-    if(is.vector(x)) x <- matrix(x, nrow=1L)
-    if (missing(mean)) mean <- rep(0, length = ncol(x))
-    if (missing(sigma)) sigma <- diag(ncol(x))
-    distval <- mahalanobis(x, center = mean, cov = sigma)
+    if(quad && is.matrix(mean)){
+        isigma <- solve(sigma)
+        distval <- matrix(0, nrow(mean), nrow(x))
+        for(i in 1L:nrow(mean)){
+            centered <- t(t(x) - mean[i,])
+            distval[i, ] <- (centered %*% isigma) * centered
+        }
+    } else {
+        if(is.matrix(mean)){
+            centered <- x - mean
+            distval <- rowSums((centered %*% solve(sigma)) * centered)
+        } else {
+            distval <- mahalanobis(x, center = mean, cov = sigma)
+        }
+    }
     logdet <- sum(log(eigen(sigma, symmetric=TRUE,
                             only.values=TRUE)$values))
     logretval <- -(ncol(x)*log(2*pi) + logdet + distval)/2
     if(log) return(logretval)
     exp(logretval)
+
 }
 
 # prior for latent class analysis

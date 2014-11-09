@@ -215,7 +215,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         dat <- rbind(dat, c(ret[1L, 6L], lp), c(ret[1L, 7L], up))
         dat <- rbind(dat, ret[,'value'])
         dat$group <- factor(c(rep('pts', nrow(dat)-1), 'est'))
-        return(xyplot(y ~ x, dat, type = 'p', group=group, col=c('black', 'blue'),
+        return(xyplot(y ~ x, dat, type = 'p', group=dat$group, col=c('black', 'blue'),
                main = 'Likelihood Confidence Envelope',
                xlab = paste0(ret[1,'parnam'], ' (#', ret[1,'parnum'], ')'),
                ylab = paste0(ret[2,'parnam'], ' (#', ret[2,'parnum'], ')')))

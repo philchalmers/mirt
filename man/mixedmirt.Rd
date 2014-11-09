@@ -4,7 +4,8 @@
 \title{Mixed effects modeling for MIRT models}
 \usage{
 mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
-  itemtype = "Rasch", itemdesign = NULL, constrain = NULL, pars = NULL,
+  itemtype = "Rasch", lr.fixed = ~1, lr.random = NULL,
+  itemdesign = NULL, constrain = NULL, pars = NULL,
   return.design = FALSE, SE = TRUE, internal_constraints = TRUE, ...)
 }
 \arguments{
@@ -34,6 +35,15 @@ including the \code{~ -1 + ...} constant}
 
 \item{itemtype}{same as itemtype in \code{\link{mirt}}, expect does not support the following
 item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}}
+
+\item{lr.fixed}{an R forumala to specificy regression
+effects in the latent variables from the variables in \code{covdata}. This is used to construct models such as the so-called
+'latent regression model' to expalin person-level ability/trait differences}
+
+\item{lr.random}{(CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
+latent trait scores, where the syntax uses the same style as in the \code{random} argument.
+Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
+models do not require these, and can be built using the \code{fixed} and \code{random} inputs alone)}
 
 \item{itemdesign}{a \code{data.frame} object used to create a design matrix for the items, where
 each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of
@@ -232,6 +242,37 @@ mod3 <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group,
                  itemtype = 'graded')
 coef(mod3)
 
+
+###################################################
+# latent regression with Rasch and 2PL models
+
+set.seed(1)
+n <- 300
+a <- matrix(1, 10)
+d <- matrix(rnorm(10))
+Theta <- matrix(c(rnorm(n, 0), rnorm(n, 1), rnorm(n, 2)))
+covdata <- data.frame(group=rep(c('g1','g2','g3'), each=n))
+dat <- simdata(a, d, N=n*3, Theta=Theta, itemtype = 'dich')
+
+#had we known the latent abilities, we could have computed the regression coefs
+summary(lm(Theta ~ covdata$group))
+
+#but all we have is observed test data. Latent regression helps to recover these coefs
+#Rasch model approach (and mirt equivalent)
+rmod0 <- mirt(dat, 1, 'Rasch') # unconditional
+rmod1a <- mirt(dat, 1, 'Rasch', covdata = covdata, formula = ~ group)
+rmod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group)
+anova(rmod0, rmod1b)
+coef(rmod1a, simplify=TRUE)
+summary(rmod1b)
+
+# 2PL, requires different input to allow Theta variance to remain fixed
+mod0 <- mirt(dat, 1) # unconditional
+mod1a <- mirt(dat, 1, covdata = covdata, formula = ~ group, itemtype = '2PL')
+mod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.fixed = ~group, itemtype = '2PL')
+anova(mod0, mod1b)
+coef(mod1a)$lr.betas
+summary(mod1b)
 }
 }
 \author{

@@ -19,15 +19,15 @@
 #'  To observe how the design matrices are structured prior to reassignment and estimation pass
 #'  the argument \code{return.design = TRUE}.
 #'
-#'  Polytomous IRT models follow a similar format except the item intercepts are automatically 
-#'  estimated internally, rendering the \code{items} argument in the fixed formula redundant and 
-#'  therefore must be omitted from the specification. If there are a mixture of dichotomous and 
+#'  Polytomous IRT models follow a similar format except the item intercepts are automatically
+#'  estimated internally, rendering the \code{items} argument in the fixed formula redundant and
+#'  therefore must be omitted from the specification. If there are a mixture of dichotomous and
 #'  polytomous items the intercepts for the dichotomous models are also estimated for consistency.
 #'
 #'  To simulate maximum a posteriori estimates for the random effects use the \code{\link{randef}}
 #'  function.
-#'  
-#' @return function returns an object of class \code{MixedClass} 
+#'
+#' @return function returns an object of class \code{MixedClass}
 #'   (\link{MixedClass-class}).
 #'
 #' @aliases mixedmirt
@@ -41,30 +41,37 @@
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory')
 #'   predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for
 #'   each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign}
-#'   input. If any polytomous items are being model the \code{items} are argument is not valid 
-#'   since all intercept parameters are freely estimated and identified with the parameterizations 
-#'   found in \code{\link{mirt}}, and the first column in the fixed design matrix 
+#'   input. If any polytomous items are being model the \code{items} are argument is not valid
+#'   since all intercept parameters are freely estimated and identified with the parameterizations
+#'   found in \code{\link{mirt}}, and the first column in the fixed design matrix
 #'   (commonly the intercept or a reference group) is omitted
 #' @param random a right sided formula or list of formulas containing crossed random effects
 #'   of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are
 #'   random numeric predictors within each group. If no intercept value is specified then by default
-#'   the correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by 
+#'   the correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by
 #'   including the \code{~ -1 + ...} constant
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect does not support the following
 #'   item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where
-#'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of 
-#'   fixed effect predictors (i.e., item intercepts). By default an \code{items} variable is 
+#'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of
+#'   fixed effect predictors (i.e., item intercepts). By default an \code{items} variable is
 #'   reserved for modeling the item intercept parameters
+#' @param lr.fixed an R forumala to specificy regression
+#'   effects in the latent variables from the variables in \code{covdata}. This is used to construct models such as the so-called
+#'   'latent regression model' to expalin person-level ability/trait differences
+#' @param lr.random (CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
+#'   latent trait scores, where the syntax uses the same style as in the \code{random} argument.
+#'   Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
+#'   models do not require these, and can be built using the \code{fixed} and \code{random} inputs alone)
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for
 #'   more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
 #' @param return.design logical; return the design matrices before they have (potentially)
 #'   been reassigned?
-#' @param SE logical; compute the standard errors by approximating the information matrix 
+#' @param SE logical; compute the standard errors by approximating the information matrix
 #'   using the MHRM algorithm? Default is TRUE
 #' @param internal_constraints logical; use the internally defined constraints for constraining
-#'   effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of 
+#'   effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
 #'   underidentification
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
 #'   \code{\link{mirt}} for more details and examples
@@ -156,8 +163,8 @@
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' model <- mirt.model('Theta = 1-32')
 #'
-#' # Suppose that the first 16 items were suspected to be easier than the last 16 items, 
-#' #   and we wish to test this item structure hypothesis (more intercept designs are possible 
+#' # Suppose that the first 16 items were suspected to be easier than the last 16 items,
+#' #   and we wish to test this item structure hypothesis (more intercept designs are possible
 #' #   by including more columns).
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 #'
@@ -214,9 +221,41 @@
 #'                  itemtype = 'graded')
 #' coef(mod3)
 #'
+#'
+#' ###################################################
+#' # latent regression with Rasch and 2PL models
+#'
+#' set.seed(1)
+#' n <- 300
+#' a <- matrix(1, 10)
+#' d <- matrix(rnorm(10))
+#' Theta <- matrix(c(rnorm(n, 0), rnorm(n, 1), rnorm(n, 2)))
+#' covdata <- data.frame(group=rep(c('g1','g2','g3'), each=n))
+#' dat <- simdata(a, d, N=n*3, Theta=Theta, itemtype = 'dich')
+#'
+#' #had we known the latent abilities, we could have computed the regression coefs
+#' summary(lm(Theta ~ covdata$group))
+#'
+#' #but all we have is observed test data. Latent regression helps to recover these coefs
+#' #Rasch model approach (and mirt equivalent)
+#' rmod0 <- mirt(dat, 1, 'Rasch') # unconditional
+#' rmod1a <- mirt(dat, 1, 'Rasch', covdata = covdata, formula = ~ group)
+#' rmod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group)
+#' anova(rmod0, rmod1b)
+#' coef(rmod1a, simplify=TRUE)
+#' summary(rmod1b)
+#'
+#' # 2PL, requires different input to allow Theta variance to remain fixed
+#' mod0 <- mirt(dat, 1) # unconditional
+#' mod1a <- mirt(dat, 1, covdata = covdata, formula = ~ group, itemtype = '2PL')
+#' mod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.fixed = ~group, itemtype = '2PL')
+#' anova(mod0, mod1b)
+#' coef(mod1a)$lr.betas
+#' summary(mod1b)
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
-                      itemdesign = NULL, constrain = NULL, pars = NULL, return.design = FALSE,
+                      lr.fixed = ~ 1, lr.random = NULL, itemdesign = NULL, constrain = NULL,
+                      pars = NULL, return.design = FALSE,
                       SE = TRUE, internal_constraints = TRUE, ...)
 {
     Call <- match.call()
@@ -234,7 +273,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is.null(itemdesign)){
         itemdesign <- data.frame(items = factor(1L:ncol(data)))
     } else {
-        if(!is.null(itemdesign$items)) 
+        if(!is.null(itemdesign$items))
             stop('itemdesign internally reserves the predictor name \'items\'. Please Change ')
         itemdesign$items <- factor(1L:ncol(data))
     }
@@ -248,7 +287,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     pick <- sapply(covdata, is.numeric)
     if(any(pick)){
         if(any(covdata[,pick] > 10 || covdata[,pick] < -10))
-            warning('continuous variables in covdata should be rescaled to fall 
+            warning('continuous variables in covdata should be rescaled to fall
                      between -10 and 10 for better numerical stability')
     }
     longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID',
@@ -275,9 +314,14 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     } else mr <- list()
     mixed.design <- list(fixed=mm, random=mr)
     if(is.null(constrain)) constrain <- list()
-    sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype, 
-                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values', 
-                     ...)
+    if(class(lr.random) == 'formula') lr.random <- list(lr.random)
+    if((lr.fixed != ~ 1) || !is.null(lr.random)){
+        latent.regression <- list(df=model.frame(formula=lr.fixed, covdata), formula=lr.fixed,
+                                  EM=FALSE, lr.random=lr.random)
+    } else latent.regression <- NULL
+    sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
+                     D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values',
+                     latent.regression=latent.regression, ...)
     mmnames <- colnames(mm)
     N <- nrow(data)
     if(ncol(mm) > 0L){
@@ -311,7 +355,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(!internal_constraints) constrain <- iconstrain
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
-                      SE=SE, ...)
+                      SE=SE, latent.regression=latent.regression, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)

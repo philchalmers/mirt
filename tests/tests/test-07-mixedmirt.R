@@ -13,6 +13,16 @@ test_that('mixed dich', {
     mixedmirt1 <- 'Theta = 1-10'
     model <- mirt.model(mixedmirt1, quiet = TRUE)
 
+    #simple latent regression
+    mod0 <- mirt(data, 1, 'Rasch', covdata=covdata, formula = ~ group + pseudoIQ, verbose=FALSE)
+    expect_equal(mod0@logLik, -4058.968, tolerance = 1e-2)
+    cfs <- coef(mod0, digits = 10)
+    expect_equal(as.numeric(cfs$lr.betas), c(0.0000000, 0.9548921, 1.9383165, 0.1877870), tolerance=1e-4)
+    require(boot, quietly=TRUE, warn.conflicts=FALSE)
+    set.seed(1)
+    bs <- boot.mirt(mod0, R = 3)
+    expect_is(bs, 'boot')
+
     #group as a fixed effect predictor (aka, uniform dif)
     mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
                                        verbose = FALSE, draws = 10)
@@ -24,7 +34,7 @@ test_that('mixed dich', {
     L <- matrix(c(1, numeric(ncol(names) - 1L)), 1L)
     wld <- wald(mod1, L, C=as.numeric(L))
     expect_equal(wld$W[1], 2.262686, tolerance = 1e-4)
-    
+
     mod1a <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, SE=FALSE,
                       verbose = FALSE, draws = 10, internal_constraints = FALSE)
     cfs <- as.numeric(do.call(c, coef(mod1a, digits=4)))
@@ -89,5 +99,22 @@ test_that('polytomous', {
     re <- randef(rmod1, ndraws=100)
     expect_is(re, 'list')
     expect_equal(length(re), 2)
+
+    ## latent regression
+    set.seed(1234)
+    n <- 250
+    Theta <- matrix(c(rnorm(n, -1, sd = sqrt(1/3)),
+                      rnorm(n,0, sd = sqrt(1/3)),
+                      rnorm(n, 1, sd = sqrt(1/3))))
+    dat <- simdata(matrix(rlnorm(10)), matrix(rnorm(10)), N=n*3, Theta=Theta, itemtype = 'dich')
+    covdata <- data.frame(group=rep(c('g1', 'g2', 'g3'), each=n))
+
+    mod <- mixedmirt(dat, covdata = covdata, 1, itemtype = '2PL', fixed = ~ 0 + items,
+                     lr.fixed = ~ group, verbose=FALSE)
+    cfs <- coef(mod, digits=10, printSE=TRUE)
+    expect_equal(as.numeric(cfs$lr.betas)[-c(1:2)], c(1.36699167, 0.09689971, 2.86660204, 0.11157517),
+                 tolerance=1e-4)
+    expect_equal(mod@logLik, -4360.583, tolerance = 1e-2)
+    expect_equal(mod@df, 1001)
 
 })

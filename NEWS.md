@@ -2,6 +2,9 @@
 
 ## NEW FEATURES
 
+- latent regression models added to `mixedmirt()` for non-Rasch models using the 
+  new `lr.formula` input
+
 - `mirt.model()` syntax can now define within individual item equality constraints
   (e.g., for use with factor-loading 'doublets') by using more than 1 parameter 
   specification name in the syntax

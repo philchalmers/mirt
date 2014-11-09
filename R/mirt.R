@@ -867,6 +867,8 @@
 #' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 #' coef(mod1, simplify=TRUE)
 #' anova(mod0, mod1)
+#' #bootstrapped confidence intervals
+#' boot.mirt(mod1, R=5)
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
@@ -882,7 +884,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     if(!is.null(covdata) && !is.null(formula)){
         covdata <- as.data.frame(covdata)
         X <- model.frame(formula, covdata)
-        latent.regression <- list(X=X, formula=formula)
+        latent.regression <- list(df=X, formula=formula, EM=TRUE)
     } else latent.regression <- NULL
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,

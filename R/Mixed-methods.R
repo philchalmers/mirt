@@ -68,7 +68,17 @@ setMethod(
         names(rand) <- listnames
         cat('\n')
         print(rand, digits)
-        return(invisible(list(random=rand, fixed=out)))
+        if(length(object@lrPars)){
+            cat('--------------\nLATENT REGRESSION FIXED EFFECTS:\n')
+            betas <- object@lrPars@beta
+            SE.betas <- matrix(object@lrPars@SEpar, nrow(betas), ncol(betas),
+                               dimnames = list(rownames(betas), paste0('Std.Error_', colnames(betas))))
+            z <- betas/SE.betas
+            colnames(z) <- paste0('z_', colnames(betas))
+            lr.out <- round(data.frame(betas, SE.betas, z), digits)
+            print(lr.out)
+        } else lr.out <- NULL
+        return(invisible(list(random=rand, fixed=out, lr.out=lr.out)))
     }
 )
 
@@ -142,6 +152,22 @@ setMethod(
                     listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
                 }
             }
+        }
+        if(length(object@lrPars)){
+            listnames <- c(listnames, 'lr.betas')
+            if(!printSE){
+                allPars[[length(allPars)+1L]] <- round(matrix(c(object@lrPars@par,
+                                                                object@lrPars@par - z*object@lrPars@SEpar,
+                                                                object@lrPars@par + z*object@lrPars@SEpar),
+                                                              3, byrow = TRUE), digits)
+                rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
+            } else {
+                allPars[[length(allPars)+1L]] <- round(matrix(c(object@lrPars@par,
+                                                                object@lrPars@SEpar),
+                                                              2, byrow = TRUE), digits)
+                rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
+            }
+            colnames(allPars[[length(allPars)]]) <- names(object@lrPars@est)
         }
         names(allPars) <- listnames
         return(allPars)

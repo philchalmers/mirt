@@ -47,6 +47,7 @@ setClass("AllModelClass",
                         SLOW.IND='integer',
                         collectLL='numeric',
                         TOL='numeric',
+                        lrPars='S4',
                         'VIRTUAL'),
              validity = function(object) return(TRUE)
 )
@@ -171,8 +172,6 @@ setClass(
 #'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
 #'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{l.regress}:}{Object of class \code{"list"}, list containing information for
-#'       latent regression models}
 #'     \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'   }
 #' @section Methods:
@@ -198,8 +197,7 @@ setClass(
     Class = 'ConfirmatoryClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     random='list',
-                                    bfactor='list',
-                                    l.regress='list'),
+                                    bfactor='list'),
     validity = function(object) return(TRUE)
 )
 

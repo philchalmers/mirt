@@ -33,6 +33,13 @@
 boot.mirt <- function(x, R = 100, ...){
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group,
                            discrete, LR, ...) {
+        if(.hasSlot(LR, 'beta')){
+            formula <- LR@formula
+            df <- LR@df
+        } else {
+            formula = ~ 1
+            df <- NULL
+        }
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
         g <- group[ind]
@@ -51,16 +58,16 @@ boot.mirt <- function(x, R = 100, ...){
             } else {
                 mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
                             parprior=parprior, calcNull=FALSE, verbose=FALSE,
-                            technical=list(parallel=FALSE), formula=LR$formula,
-                            covdata=LR$X, ...))
+                            technical=list(parallel=FALSE), formula=formula,
+                            covdata=df, ...))
             }
         }
         if(is(mod, 'try-error')) return(rep(NA, npars))
         structure <- mod2values(mod)
         longpars <- structure$value
         if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
-        if(length(LR)){
-            betas <- mod@pars[[length(mod@pars)]]@betas
+        if(.hasSlot(LR, 'beta')){
+            betas <- mod@lrPars@par
             longpars <- c(longpars, as.numeric(betas))
         }
         return(longpars)
@@ -79,7 +86,7 @@ boot.mirt <- function(x, R = 100, ...){
     model <- x@model[[1L]]
     parprior <- x@parprior
     constrain <- x@constrain
-    LR <- if(is(x, 'ConfirmatoryClass')) x@l.regress else list()
+    LR <- x@lrPars
     if(length(parprior) == 0L) parprior <- NULL
     if(length(constrain) == 0L) constrain <- NULL
     prodlist <- x@prodlist
@@ -94,8 +101,3 @@ boot.mirt <- function(x, R = 100, ...){
                        models are not meaningful.')
     return(boots)
 }
-
-
-
-
-

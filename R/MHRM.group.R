@@ -1,7 +1,10 @@
-MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(), DERIV)
+MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(),
+                       lrPars = list(), DERIV)
 {
     if(is.null(random)) random <- list()
-    RAND <- length(random) > 0L
+    lr.random <- list() #FIXME overwrite later
+    RAND <- length(random) > 0L; LR.RAND <- length(lr.random) > 0L
+    LRPARS <- length(lrPars) > 0L
     verbose <- list$verbose
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES
@@ -33,6 +36,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             nfullpars <- nfullpars + length(random[[i]]@par)
             estpars <- c(estpars, random[[i]]@est)
         }
+    }
+    if(LRPARS){
+        nfullpars <- nfullpars + length(lrPars@par)
+        estpars <- c(estpars, lrPars@est)
     }
     index <- 1L:nfullpars
     N <- nrow(gtheta0[[1L]])
@@ -78,6 +85,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             for(i in 1L:length(random))
                 longpars[random[[i]]@parnum] <- random[[i]]@par
         }
+        if(LRPARS)
+            longpars[lrPars@parnum] <- lrPars@par
     }
     names(longpars) <- names(estpars)
     stagecycle <- 1L
@@ -111,6 +120,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             UBOUND <- c(UBOUND, random[[i]]@ubound)
         }
     }
+    if(LRPARS){
+        LBOUND <- c(LBOUND, lrPars@lbound)
+        UBOUND <- c(UBOUND, lrPars@ubound)
+    }
     for(g in 1L:ngroups)
         for(i in 1L:J)
             pars[[g]][[i]]@dat <- Data$fulldata[[g]][, c(itemloc[i]:(itemloc[i+1L] - 1L))]
@@ -140,6 +153,15 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+        if(LRPARS){
+            lrPars@par <- lrPars@beta[] <- longpars[lrPars@parnum]
+            lrPars@mus <- lrPars@X %*% lrPars@beta
+            if(!list$USEEM){
+                tmp <- gtheta0[[1L]] - lrPars@mus
+                lrPars@sigma <- lrPars@sigma + gamma*((t(tmp) %*% tmp)/ nrow(tmp) - lrPars@sigma)
+            }
+            gstructgrouppars[[g]]$gmeans <- lrPars@mus
+        }
         if(RAND && cycles > 100L) random <- reloadRandom(random=random, longpars=longpars,
                                         parstart=max(pars[[1L]][[J+1L]]@parnum) + 1L)
 
@@ -208,6 +230,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 tmp2[pars[[1L]][[length(pars[[1L]])]]@est]
         }
 
+        # deal with latent regression random effects TODO
+        if(LR.RAND){
+            browser()
+        }
+
         #Step 1. Generate m_k datasets of theta
         LL <- 0
         for(g in 1L:ngroups){
@@ -236,13 +263,13 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(length(prodlist) > 0L)
             gthetatmp <- lapply(gtheta0, function(x, prodlist) prodterms(x, prodlist),
                               prodlist=prodlist)
-        tmp <- .Call('computeDPars', pars, gthetatmp, OffTerm, length(longpars), TRUE, 
+        tmp <- .Call('computeDPars', pars, gthetatmp, OffTerm, length(longpars), TRUE,
                      USE.FIXED)
         g <- tmp$grad; h <- tmp$hess
         if(length(list$SLOW.IND)){
             for(group in 1L:ngroups){
                 for (i in list$SLOW.IND){
-                    deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gthetatmp[[group]], 
+                    deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gthetatmp[[group]],
                                                  estHess=TRUE)
                     g[pars[[group]][[i]]@parnum] <- deriv$grad
                     h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
@@ -269,6 +296,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 }
             }
         }
+        if(LRPARS){
+            inv_sigma <- solve(lrPars@sigma)
+            g[lrPars@parnum] <-  inv_sigma %*% t(gtheta0[[1L]] - lrPars@mus) %*% lrPars@X
+            h[lrPars@parnum, lrPars@parnum] <- -det(inv_sigma) * lrPars@tXX
+        }
         if(length(constrain)){
             grad <- as.numeric(updateGrad(g, L))
             ave.h <- updateHess(-h, L)
@@ -286,21 +318,21 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             AR <- do.call(c, lapply(gtheta0, function(x) attr(x, "Proportion Accepted")))
             CTV <- cand.t.var
             if(RAND && cycles > 100L){
-                AR <- c(AR, do.call(c, lapply(random, 
+                AR <- c(AR, do.call(c, lapply(random,
                                         function(x) attr(x@drawvals, "Proportion Accepted"))))
-                CTV <- c(CTV, do.call(c, lapply(random, 
+                CTV <- c(CTV, do.call(c, lapply(random,
                                                 function(x) x@cand.t.var)))
             }
             AR <- paste0(sapply(AR, function(x) sprintf('%.2f', x)), collapse='; ')
             CTV <- paste0(sapply(CTV, function(x) sprintf('%.2f', x)), collapse='; ')
             if(cycles <= BURNIN)
-                printmsg <- sprintf("\rStage 1 = %i, LL = %.1f, AR(%s) = [%s]", 
+                printmsg <- sprintf("\rStage 1 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles, LL, CTV, AR)
             if(cycles > BURNIN && cycles <= BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 2 = %i, LL = %.1f, AR(%s) = [%s]", 
+                printmsg <- sprintf("\rStage 2 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles-BURNIN, LL, CTV, AR)
             if(cycles > BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 3 = %i, LL = %.1f, AR(%s) = [%s]", 
+                printmsg <- sprintf("\rStage 3 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles-BURNIN-SEMCYCLES, LL, CTV, AR)
         }
         if(stagecycle < 3L){
@@ -404,10 +436,13 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             for(g in 1L:ngroups){
                 for(i in 1L:(J+1L))
                     pars[[g]][[i]]@SEpar <- SE[pars[[g]][[i]]@parnum]
-            } 
+            }
             if(RAND){
                 for(i in 1L:length(random))
                     random[[i]]@SEpar <- SE[random[[i]]@parnum]
+            }
+            if(LRPARS){
+                lrPars@SEpar <- SE[lrPars@parnum]
             }
         }
     }
@@ -416,7 +451,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     if(!list$SE) info <- matrix(0, 1, 1)
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
-                random=random, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),
+                random=random, lrPars=lrPars, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),
                 estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr],
                 fail_invert_info=fail_invert_info, Prior=vector('list', ngroups), collectLL=NaN)
     ret

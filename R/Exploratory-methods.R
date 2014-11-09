@@ -320,12 +320,8 @@ setMethod(
                 allPars <- list(items=items, groupPars=allPars[length(allPars)][[1L]])
             }
         }
-        betas <- object@pars[[length(object@pars)]]@betas
-        if(length(betas)){
-            names(betas) <- NULL
-            colnames(betas) <- object@factorNames
-            allPars$betas <- betas
-        }
+        if(.hasSlot(object@lrPars, 'beta'))
+            allPars$lr.betas <- round(object@lrPars@beta, digits)
         return(allPars)
     }
 )

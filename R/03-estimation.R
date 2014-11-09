@@ -148,6 +148,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 parnumber <- max(mixed.design$random[[i]]@parnum) + 1L
             }
         }
+        if(!is.null(latent.regression)){
+            lrPars <- make.lrdesign(df=latent.regression$df, formula=latent.regression$formula,
+                                    factorNames=PrepListFull$factorNames, EM=latent.regression$EM)
+            lrPars@parnum <- parnumber:(parnumber - 1L + length(lrPars@par))
+            parnumber <- max(lrPars@parnum) + 1L
+        } else lrPars <- list()
+        if(length(latent.regression$lr.random) > 0L){
+            stop('lr.random input not yet supported')
+        }
     }
     if(!is.null(opts$PrepList)){
         PrepList <- opts$PrepList
@@ -205,7 +214,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     RETURNVALUES <- FALSE
     if(!is.null(pars)){
         if(is(pars, 'data.frame')){
-            PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random, MG = TRUE)
+            PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
+                                       lrPars=lrPars, MG = TRUE)
             mixed.design$random <- attr(PrepList, 'random')
             attr(PrepList, 'random') <- NULL
         }
@@ -251,7 +261,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             PrepList[[g]]$pars <- pars[[g]]
         return(ReturnPars(PrepList, PrepList[[1L]]$itemnames,
-                          random=mixed.design$random, MG = TRUE))
+                          random=mixed.design$random, lrPars=lrPars, MG = TRUE))
 
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
@@ -285,6 +295,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:length(mixed.design$random))
             nestpars <- nestpars + sum(mixed.design$random[[i]]@est)
     }
+    if(length(lrPars))
+        nestpars <- nestpars + sum(lrPars@est)
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
@@ -307,7 +319,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:Data$nitems)
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }
-    Ls <- makeLmats(pars, constrain, random = mixed.design$random)
+    Ls <- makeLmats(pars, constrain, random = mixed.design$random, lrPars=lrPars)
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% c('custom', 'ideal', 'lca'))
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% c('custom', 'rating', 'rsm', 'partcomp',
                                                       'nestlogit', 'ideal', 'lca')) #lca later TODO
@@ -338,12 +350,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     #EM estimation
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
-        if(!is.null(latent.regression)){
-            pars[[1L]][[length(pars[[1L]])]]@X <- model.matrix(latent.regression$formula,
-                latent.regression$X)
-            pars[[1L]][[length(pars[[1L]])]]@betas <-
-                matrix(0, ncol(pars[[1L]][[length(pars[[1L]])]]@X), nfact)
-            df <- df - length(pars[[1L]][[length(pars[[1L]])]]@betas[-1L,])
+        if(length(lrPars)){
             opts$full <- TRUE
         } else opts$full <- FALSE
         nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
@@ -423,10 +430,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          SEM=any(opts$SE.type %in% c('SEM', 'complete')) && opts$SE,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
-                                         message=opts$message, BL=opts$method == 'BL', full=opts$full),
+                                         message=opts$message, BL=opts$method == 'BL', full=opts$full,
+                                         lrPars=lrPars),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args)
-        if(opts$full)
-            names(ESTIMATE$pars[[1]][[ncol(Data$data)+1]]@betas) <- colnames(latent.regression$X)
+        lrPars <- ESTIMATE$lrPars
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0
@@ -486,6 +493,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     } else if(opts$method == 'MIXED'){
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls,
                                     PrepList=PrepList, random=mixed.design$random, Data=Data,
+                                    lrPars=lrPars,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                            KDRAWS=opts$KDRAWS, TOL=opts$TOL, USEEM=FALSE,
@@ -502,6 +510,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
                               PrepList=PrepList, random=mixed.design$random, Data=Data,
+                              lrPars=ESTIMATE$lrPars,
                               list = list(NCYCLES=1000L, BURNIN=1L,
                                           SEMCYCLES=2L, gain=opts$gain,
                                           KDRAWS=opts$KDRAWS, TOL=opts$SEtol, USEEM=TRUE,
@@ -515,6 +524,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               DERIV=DERIV)
             ESTIMATE$pars <- tmp$pars
             ESTIMATE$random <- tmp$random
+            ESTIMATE$lrPars <- tmp$lrPars
             ESTIMATE$info <- tmp$info
             ESTIMATE$fail_invert_info <- tmp$fail_invert_info
             ESTIMATE$time <- c(ESTIMATE$time, SE=sum(tmp$time))
@@ -568,7 +578,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, Moptim=ESTIMATE$Moptim,
                                           EH=opts$empiricalhist, EHPrior=ESTIMATE$Prior, warn=opts$warn,
-                                          message=opts$message, full=opts$full),
+                                          message=opts$message, full=opts$full, lrPars=lrPars),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
                               solnp_args=opts$solnp_args)
@@ -655,7 +665,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupName[g], ],
                                    fulldata=Data$fulldata[[g]], tabdata=Data$tabdata,
                                    Freq=list(Data$Freq[[g]]))
-            cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return')
+            cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return',
+                                     lrPars=ESTIMATE$lrPars)
             cmods[[g]]@Data <- list()
             logLik <- logLik + cmods[[g]]@logLik
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
@@ -708,6 +719,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         p.G2 <- RMSEA.G2 <- G2 <- TLI.G2 <- CFI.G2 <-  NaN
     if(is.null(parprior)) parprior <- list()
     if(is.null(opts$quadpts)) opts$quadpts <- NaN
+    lrPars <- ESTIMATE$lrPars
+    class(lrPars) <- 'S4'
     opts$times$end.time.post <- proc.time()[3L]
     if(discrete){
         mod <- new('DiscreteClass',
@@ -785,6 +798,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            random=ESTIMATE$random,
                            cand.t.var=ESTIMATE$cand.t.var,
                            information=ESTIMATE$info,
+                           lrPars=lrPars,
                            TOL=opts$TOL)
             } else if(PrepList[[1L]]$exploratory){
                 FF <- F %*% t(F)
@@ -839,6 +853,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            itemtype=PrepList[[1L]]$itemtype,
                            information=ESTIMATE$info,
                            infomethod=opts$SE.type,
+                           lrPars=lrPars,
                            TOL=opts$TOL)
             } else {
                 mod <- new('ConfirmatoryClass',
@@ -877,6 +892,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            constrain=constrain,
                            parprior=parprior,
                            K=Data$K,
+                           lrPars=lrPars,
                            collectLL=ESTIMATE$collectLL,
                            bfactor=if(opts$method == 'EM')
                                list(prior=ESTIMATE$prior, Priorbetween=ESTIMATE$Priorbetween,
@@ -886,7 +902,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            itemtype=PrepList[[1L]]$itemtype,
                            information=ESTIMATE$info,
                            infomethod=opts$SE.type,
-                           l.regress = if(is.null(latent.regression)) list() else latent.regression,
                            TOL=opts$TOL)
             }
         } else {
@@ -922,6 +937,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        Pl=Pl,
                        K=Data$K,
                        accelerate=opts$accelerate,
+                       lrPars=lrPars,
                        CUSTOM.IND=CUSTOM.IND,
                        SLOW.IND=SLOW.IND,
                        collectLL=ESTIMATE$collectLL,

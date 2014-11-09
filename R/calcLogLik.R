@@ -50,17 +50,18 @@
 setMethod(
 	f = "calcLogLik",
 	signature = signature(object = 'ExploratoryClass'),
-	definition = function(object, draws = 5000, G2 = TRUE)
+	definition = function(object, draws = 5000, G2 = TRUE, lrPars=NULL)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
-                            CUSTOM.IND){
+                            CUSTOM.IND, lrPars){
             theta <- mirt_rmvnorm(N,grp$gmeans, grp$gcov)
+            if(length(lrPars)) theta <- theta + lrPars@mus
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
             if(length(random) > 0L){
                 for(i in 1L:length(random)){
                     random[[i]]@drawvals <- DrawValues(x=random[[i]], Theta=theta, pars=pars,
-                                                       fulldata=fulldata, itemloc=itemloc, 
+                                                       fulldata=fulldata, itemloc=itemloc,
                                                        offterm0=ot, CUSTOM.IND=CUSTOM.IND)
                 }
                 ot <- OffTerm(random, J=J, N=N)
@@ -81,7 +82,7 @@ setMethod(
         if(length(object@random) == 0L){
             ot <- matrix(0, 1L, J)
         } else ot <- OffTerm(object@random, J=J, N=N)
-        LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact,
+        LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact, lrPars=lrPars,
                         N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
                         random=object@random, ot=ot, CUSTOM.IND=object@CUSTOM.IND))
         LL <- exp(LL)
@@ -135,10 +136,10 @@ setMethod(
 setMethod(
     f = "calcLogLik",
     signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, draws = 5000, G2 = TRUE)
+    definition = function(object, draws = 5000, G2 = TRUE, lrPars=NULL)
     {
         class(object) <- 'ExploratoryClass'
-        ret <- calcLogLik(object, draws=draws, G2=G2)
+        ret <- calcLogLik(object, draws=draws, G2=G2, lrPars=lrPars)
         class(ret) <- 'ConfirmatoryClass'
         return(ret)
     }
@@ -150,7 +151,7 @@ setMethod(
     definition = function(object, draws = 5000)
     {
         class(object) <- 'ExploratoryClass'
-        ret <- calcLogLik(object, draws=draws, G2=FALSE)
+        ret <- calcLogLik(object, draws=draws, G2=FALSE, lrPars=object@lrPars)
         class(ret) <- 'MixedClass'
         return(ret)
 

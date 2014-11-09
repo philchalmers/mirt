@@ -1,6 +1,7 @@
 EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, solnp_args)
 {
     verbose <- list$verbose
+    lrPars <- list$lrPars
     nfact <- list$nfact
     if(list$EH && nfact != 1L)
         stop('empirical histogram only available for unidimensional models')
@@ -24,6 +25,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
             estpars <- c(estpars, pars[[g]][[i]]@est)
         }
+        if(length(lrPars)){
+            nfullpars <- nfullpars + length(lrPars@par)
+            estpars <- c(estpars, lrPars@est)
+        }
     }
     listpars <- vector('list', ngroups)
     for(g in 1L:ngroups){
@@ -31,6 +36,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         for(i in 1L:(J + 1L)){
             listpars[[g]][[i]] <- pars[[g]][[i]]@par
         }
+        if(length(lrPars))
+            listpars[[g]][[i+1L]] <- lrPars@par
     }
     lastpars2 <- lastpars1 <- listpars
     index <- 1L:nfullpars
@@ -42,6 +49,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             ind2 <- ind1 + length(pars[[g]][[i]]@par) - 1L
             longpars[ind1:ind2] <- pars[[g]][[i]]@par
             if(i == (J+1L)) latent_longpars[ind1:ind2] <- TRUE
+            ind1 <- ind2 + 1L
+        }
+        if(length(lrPars)){
+            ind2 <- ind1 + length(lrPars@par) - 1L
+            longpars[ind1:ind2] <- lrPars@par
             ind1 <- ind2 + 1L
         }
     }
@@ -69,6 +81,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             LBOUND <- c(LBOUND, pars[[g]][[i]]@lbound)
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
+        if(length(lrPars)){
+            LBOUND <- c(LBOUND, lrPars@lbound)
+            UBOUND <- c(UBOUND, lrPars@ubound)
+        }
     }
     est <- groupest <- c()
     for(g in 1L:ngroups){
@@ -80,6 +96,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                est <- c(est, rep(FALSE, length(pars[[g]][[j]]@est)))
                groupest <- c(groupest, pars[[g]][[j]]@est)
            }
+       }
+       if(length(lrPars)){
+           est <- c(est, rep(FALSE, length(lrPars@est)))
+           groupest <- c(groupest, rep(FALSE, length(lrPars@est)))
        }
     }
     if(length(constrain))
@@ -152,10 +172,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         for (cycles in 1L:NCYCLES){
             #priors
             start <- proc.time()[3L]
+            if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                                list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                                J=J, N=N, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
-                               rlist=rlist, full=full)
+                               rlist=rlist, full=full, lrPars=lrPars)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
@@ -190,14 +211,18 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
                               BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
-                              TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full)
-            if(full) pars[[1L]][[length(pars[[1L]])]]@betas <- attr(longpars, 'beta')
+                              TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars)
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL, max(abs(preMstep.longpars - longpars))))
             if(all(abs(preMstep.longpars - longpars) < TOL)){
-                pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+                pars <- reloadPars(longpars=longpars, pars=pars,
+                                   ngroups=ngroups, J=J)
+                if(length(lrPars)){
+                    lrPars@par <- longpars[lrPars@parnum]
+                    lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
+                }
                 break
             }
             if(list$accelerate != 'none' && cycles %% 3 == 0L){
@@ -244,6 +269,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 } else stop('acceleration option not defined')
             }
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+            if(length(lrPars)){
+                lrPars@par <- longpars[lrPars@parnum]
+                lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
+            }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
         if(cycles == NCYCLES){
@@ -288,14 +317,14 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr],
-                    groupest=groupest)
+                    groupest=groupest, lrPars=lrPars)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=na.omit(collectLL),
-                    shortpars=longpars[estpars & !redun_constr], groupest=groupest)
+                    shortpars=longpars[estpars & !redun_constr], groupest=groupest, lrPars=lrPars)
     }
     for(g in 1L:ngroups)
         for(i in 1L:J)

@@ -838,6 +838,8 @@ mod0 <- mirt(dat, 1, 'Rasch')
 mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 coef(mod1, simplify=TRUE)
 anova(mod0, mod1)
+#bootstrapped confidence intervals
+boot.mirt(mod1, R=5)
 
 }
 }

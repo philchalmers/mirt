@@ -47,7 +47,8 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, solnp_args,
-                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL, full){
+                  SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL, full,
+                  lrPars){
     p <- longpars[est]
     if(length(p)){
         if(Moptim == 'BFGS'){
@@ -131,10 +132,10 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             longpars[groupest] <- res$estimate
         }
     } else {
-        res <- Mstep.LR(Theta=gTheta[[1L]], CUSTOM.IND=CUSTOM.IND, pars=pars[[1L]],
+        res <- Mstep.LR(Theta=gTheta[[1L]], CUSTOM.IND=CUSTOM.IND, pars=pars[[1L]], lrPars=lrPars,
                         itemloc=itemloc, fulldata=PrepList[[1L]]$fulldata, prior=Prior[[1L]])
-        attr(longpars, 'beta') <- res$beta
-        longpars[groupest] <- res$siglong
+        longpars[lrPars@parnum] <- res$beta
+        longpars[groupest] <- res$siglong[pars[[1L]][[J+1L]]@est]
     }
     if(length(constrain))
         for(i in 1L:length(constrain))
@@ -309,21 +310,18 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
 
 BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)
 
-Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior){
-    x <- pars[[length(pars)]]
-    X <- x@X
+Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
     J <- length(pars) - 1L
     N <- nrow(fulldata)
     nfact <- ncol(Theta)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
-    betas <- x@betas
-    mu <- X %*% betas
+    mu <- lrPars@mus
+    X <- lrPars@X
     ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu, mirtClusterEnv$ncores)
     scores <- ret[[1L]]; vars <- ret[[2L]]
     beta <- solve(t(X) %*% X) %*% t(X) %*% scores
     siglong <- colMeans(vars)
-    siglong <- siglong[x@est[-(1L:nfact)]]
     beta[1,] <- 0 #fix intercepts to 0
-    return(list(beta=beta, siglong=siglong))
+    return(list(beta=beta, siglong=c(rep(0, ncol(Theta)), siglong)))
 }
