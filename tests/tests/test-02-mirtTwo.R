@@ -74,7 +74,7 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp6, verbose = FALSE)))
     expect_equal(cfs, c(0.821,5.105,2.613,-1.372,1.077,2.929,0.941,-2.224,2.435,5.383,2.482,-1.802,0.957,3.412,1.028,-1.624,0,1),
                  tolerance = 1e-2)
-    
+
     fm0 <- fscores(modp1, method='EAP', response.pattern = c(1,2,3,4))
     expect_equal(as.numeric(fm0[,c('F1','SE_F1')]), c(-0.3494903, 0.6004922), tolerance=1e-4)
     fm1 <- fscores(modp1, verbose = FALSE)
@@ -112,7 +112,7 @@ test_that('poly', {
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2))
-    expect_equal(fit$Zh, c(-17.010742, -7.894184, -22.225939, -35.471355), tolerance=1e-4)
+    expect_equal(fit$Zh, c(-11.62093, -53.08285, -34.31287, -21.76970), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.965848, 10.659664, 6.804478, 10.071994), tolerance=1e-4)
 
     ##rating scale test
@@ -155,5 +155,5 @@ test_that('poly', {
     ER <- fscores(modp2, returnER = TRUE)
     expect_equal(as.numeric(ER), c(0.4925406, 0.5222600), tolerance=1e-4)
     ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2))
-    expect_equal(as.numeric(ER2), c(0.5507136, 0.6058926), tolerance=1e-4)
+    expect_equal(as.numeric(ER2), c(0.4124898, 0.4984668), tolerance=1e-4)
 })

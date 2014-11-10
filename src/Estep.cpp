@@ -25,9 +25,11 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
             if(data(pat,item))
                 for(int q = 0; q < nquad; ++q)
                     posterior[q] *= itemtrace(q,item);
+        const double maxp = *std::max_element(posterior.begin(), posterior.end());
         double expd = 0.0;
         for(int i = 0; i < nquad; ++i)
-            expd += posterior[i];
+            expd += posterior[i]/maxp;
+        expd *= maxp;
         if(expd > ABSMIN){
             for(int q = 0; q < nquad; ++q)
                 posterior[q] = r[pat] * posterior[q] / expd;
@@ -89,9 +91,11 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
              if(data(pat,item))
                  for(int q = 0; q < nquad; ++q)
                      posterior[q] *= itemtrace(q,item);
-         double expd = 0.0;
-         for(int i = 0; i < nquad; ++i)
-             expd += posterior[i];
+        const double maxp = *std::max_element(posterior.begin(), posterior.end());
+        double expd = 0.0;
+        for(int i = 0; i < nquad; ++i)
+            expd += posterior[i]/maxp;
+        expd *= maxp;
          if(expd > ABSMIN){
              for(int q = 0; q < nquad; ++q)
                  posterior[q] = posterior[q] / expd;
@@ -169,19 +173,26 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                     ++k;
                 }
             }
+            const double maxL = *std::max_element(L.begin(), L.end());
             vector<double> tempsum(nbquad, 0.0);
             for (int i = 0; i < npquad; ++i)
                 for (int q = 0; q < nbquad; ++q)
-                    tempsum[q] += L[q + i*nbquad];
+                    tempsum[q] += L[q + i*nbquad]/maxL;
             for (int i = 0; i < nbquad; ++i)
-                Plk[i + fact*nbquad] = tempsum[i];
+                Plk[i + fact*nbquad] = tempsum[i] * maxL;
         }
         vector<double> Pls(nbquad, 1.0);
+        vector<double> PlsPlk(nbquad, 1.0);
         for (int i = 0; i < nbquad; ++i){
             for(int fact = 0; fact < sfact; ++fact)
                 Pls[i] = Pls[i] * Plk[i + fact*nbquad];
-            expected[pat] += Pls[i] * Priorbetween[i];
+            PlsPlk[i] = Pls[i] * Priorbetween[i];
         }
+        double sumexp = 0.0;
+        const double maxPlsPlk = *std::max_element(PlsPlk.begin(), PlsPlk.end());
+        for (int i = 0; i < nbquad; ++i)
+            sumexp += PlsPlk[i] / maxPlsPlk;
+        expected[pat] = sumexp * maxPlsPlk;
         for (int fact = 0; fact < sfact; ++fact)
             for (int i = 0; i < nbquad; ++i)
                 Elk[i + fact*nbquad] = Pls[i] / Plk[i + fact*nbquad];
@@ -256,7 +267,7 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
     const NumericMatrix Theta(RTheta);
     const NumericMatrix prior(Rprior);
     const NumericMatrix mu(Rmu);
-    const int n = prior.ncol(); //nquad
+    const int n = prior.ncol();
     const int N = tabdata.nrow();
     const int nitems = tabdata.ncol();
     const int nfact = Theta.ncol();
@@ -277,8 +288,10 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
 
         vector<double> thetas(nfact, 0.0);
         double denom = 0.0;
+        const double maxL = *std::max_element(L.begin(), L.end());
         for(int j = 0; j < n; ++j)
-            denom += L[j];
+            denom += L[j]/maxL;
+        denom *= maxL;
 
         for(int k = 0; k < nfact; ++k){
             for(int j = 0; j < n; ++j)

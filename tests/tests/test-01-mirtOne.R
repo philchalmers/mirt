@@ -46,12 +46,13 @@ test_that('dich', {
     svalues[22, 'value'] <- 2
     modm5 <- mirt(data, 1, pars = svalues, verbose=FALSE)
     expect_is(modm5, 'ConfirmatoryClass')
-    modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
-                                                                 c(4,8,12,16,20,'norm', 1.7, 1)))
+    expect_message(modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, .1),
+                                                                 c(4,8,12,16,20,'norm', 1.7, .1))),
+                   "EM cycles terminated after 500 iterations.")
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'ConfirmatoryClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(4.533,6.56,0.132,0.896,12.687,2.657,0.332,0.89,5.357,3.213,0.35,0.937,4.539,4.836,0.123,0.7,1.766,3.402,0.152,0.908,0,1), tolerance = 1e-2)
+    expect_equal(cfs, c(5.077,8.486,0.154,0.859,5.863,3.665,0.16,0.843,10.021,10.732,0.155,0.862,1.282,0.854,0.153,0.845,4.634,8.911,0.154,0.859,0,1), tolerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 21)
@@ -61,7 +62,7 @@ test_that('dich', {
     modideal <- mirt(data, 1, verbose=FALSE, itemtype='ideal')
     cfs <- as.numeric(do.call(c, coef(modideal)))
     expect_equal(cfs, c(0.288, -0.568, 0.422, -0.891, 0.57, -0.564, 0.292, -1, 0.207, -0.559, 0, 1), tolerance = 1e-2)
-    
+
     #QMCEM
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
     expect_equal(mod@logLik, -2466.653, tolerance=1e-4)

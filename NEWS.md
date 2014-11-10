@@ -24,6 +24,8 @@
 
 - M2 statistic for bifactor/two-tier models was overly conservative
 
+- better checks for numerical underflow issues
+
 # Changes in mirt 1.6.1
 
 ## MAJOR CHANGES
