@@ -184,7 +184,7 @@ model <- mirt.model('
 
 #quadpts dropped for faster estimation, but not as precise
 simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
-coef(simmod)
+coef(simmod, simplify=TRUE)
 summary(simmod)
 itemfit(simmod, QMC=TRUE)
 M2(simmod, QMC=TRUE)

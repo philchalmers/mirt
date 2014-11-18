@@ -5,8 +5,8 @@
 \usage{
 DIF(MGmodel, which.par, scheme = "add",
   items2test = 1:ncol(MGmodel@Data$data), seq_stat = "SABIC",
-  Wald = FALSE, p.adjust = "none", max_run = Inf, plotdif = FALSE,
-  type = "trace", verbose = TRUE, ...)
+  Wald = FALSE, p.adjust = "none", return_models = FALSE, max_run = Inf,
+  plotdif = FALSE, type = "trace", verbose = TRUE, ...)
 }
 \arguments{
 \item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference
@@ -53,6 +53,9 @@ or p > .05 in the drop scheme), along with the specified \code{p.adjust} input}
 
 \item{p.adjust}{string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 Adjustments are located in the \code{adj_pvals} element in the returned list}
+
+\item{return_models}{logical; return estimated model objects for further analysis?
+Default is FALSE}
 
 \item{max_run}{a number indicating the maximum number of cycles to perform in sequential
 searches. The default is to perform search until no further DIF is found}
@@ -146,7 +149,7 @@ stepdown
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{multipleGroup}}
+\code{\link{multipleGroup}}, \code{\link{DTF}}
 }
 \keyword{DIF}
 

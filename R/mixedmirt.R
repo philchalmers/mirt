@@ -239,6 +239,8 @@
 #' #but all we have is observed test data. Latent regression helps to recover these coefs
 #' #Rasch model approach (and mirt equivalent)
 #' rmod0 <- mirt(dat, 1, 'Rasch') # unconditional
+#'
+#' # these two models are equivalent
 #' rmod1a <- mirt(dat, 1, 'Rasch', covdata = covdata, formula = ~ group)
 #' rmod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group)
 #' anova(rmod0, rmod1b)

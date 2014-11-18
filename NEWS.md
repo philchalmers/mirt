@@ -2,12 +2,14 @@
 
 ## NEW FEATURES
 
+- add `return.models` argument to `DIF()` to return estimated models with free/constrained 
+  parameters
+
 - latent regression models added to `mixedmirt()` for non-Rasch models using the 
   new `lr.formula` input
 
 - `mirt.model()` syntax can now define within individual item equality constraints
-  (e.g., for use with factor-loading 'doublets') by using more than 1 parameter 
-  specification name in the syntax
+  by using more than 1 parameter specification name in the syntax
 
 - latent regression models added to `mirt()` function by using the new `covdata` and `formula` 
   inputs

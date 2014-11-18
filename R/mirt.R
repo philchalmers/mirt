@@ -528,18 +528,14 @@
 #' #estimated 3PL model for item 5 only
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
+#'
 #' #internally g and u pars are stored as logits, so usually a good idea to include normal prior
 #' #  to help stabilize the parameters. For a value around .182 use a mean
 #' #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
-#' (mod1.3PL.norm <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'),
-#'     parprior = list(c(19, 'norm', -1.5, 3))))
-#' coef(mod1.3PL.norm)
-#'
-#' #could also define priors using mirt.model() syntax
 #' model <- mirt.model('F = 1-5
 #'                      PRIOR = (5, g, norm, -1.5, 3)')
-#' mod1.3PL.norm2 <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
-#' coef(mod1.3PL.norm2)
+#' mod1.3PL.norm <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
+#' coef(mod1.3PL.norm)
 #' #limited information fit statistics
 #' M2(mod1.3PL.norm)
 #'
