@@ -41,7 +41,7 @@ test_that('poly', {
     expect_is(modp2, 'ExploratoryClass')
     expect_equal(modp2@df, 236)
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
-    expect_equal(abs(cfs), abs(c(-1.2671,-0.4517,5.208,2.868,-1.6058,-1.7331,1.5939,4.0272,1.258,-3.1661,-1.749,0.4018,4.5529,1.906,-1.6941,-1.5709,-0.6795,3.9716,1.1899,-2.0373,0,0,1,0,1)),
+    expect_equal(abs(cfs), abs(c(-1.3278,0.1081,5.1934,2.8583,-1.5996,-0.8762,1.8783,3.7248,1.1598,-2.9225,-1.4614,1.1639,4.6495,1.951,-1.7322,-1.7397,0,4.0053,1.2008,-2.0548,0,0,1,0,1)),
                  tolerance = 1e-2)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'ConfirmatoryClass')
@@ -85,8 +85,7 @@ test_that('poly', {
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
-                                       abs(c(2.6173, 1.8555, 0.6233, 1.1259, 2.4407, 0.7309, 2.3772,
-                                             0.7359, 0.2130, 0.4330, 2.3111, 1.5571)),
+                                       c(2.5961,1.869,0.649,1.164,2.4211,0.6868,2.4088,0.8574,0.0412,0.2751,2.3348,1.4912),
                                    -1e-2, 1e-2))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
@@ -112,8 +111,8 @@ test_that('poly', {
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2))
-    expect_equal(fit$Zh, c(-11.62093, -53.08285, -34.31287, -21.76970), tolerance=1e-4)
-    expect_equal(fit$S_X2, c(3.965848, 10.659664, 6.804478, 10.071994), tolerance=1e-4)
+    expect_equal(fit$Zh, c(-13.6970843, 0.9010823, -11.3913447, -30.2001403), tolerance=1e-4)
+    expect_equal(fit$S_X2, c(3.929469, 10.587552, 6.897964, 10.108126), tolerance=1e-4)
 
     ##rating scale test
     set.seed(1234)
@@ -153,7 +152,7 @@ test_that('poly', {
     expect_is(tinfo, 'matrix')
 
     ER <- fscores(modp2, returnER = TRUE)
-    expect_equal(as.numeric(ER), c(0.4925406, 0.5222600), tolerance=1e-4)
+    expect_equal(as.numeric(ER), c(0.4892205, 0.5107592), tolerance=1e-4)
     ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2))
-    expect_equal(as.numeric(ER2), c(0.4124898, 0.4984668), tolerance=1e-4)
+    expect_equal(as.numeric(ER2), c(0.5448501, 0.5941995), tolerance=1e-4)
 })

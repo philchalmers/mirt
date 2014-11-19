@@ -17,14 +17,14 @@ test_that('exploratory mods', {
     W1 <- wald(onefact, L)
     W2 <- wald(onefact, L2)
     expect_true(mirt:::closeEnough(W1$W - 242.3017, -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(W2$W - 3.170487, -1e-2, 1e-2))    
-    
+    expect_true(mirt:::closeEnough(W2$W - 3.170487, -1e-2, 1e-2))
+
     fitonefact <- M2(onefact)
     expect_is(fitonefact, 'data.frame')
     expect_equal(fitonefact$M2, 11.92959, tolerance = 1e-2)
     twofact <- mirt(fulldata, 2, verbose = FALSE, draws = 10, method = 'MHRM')
     cfs <- as.numeric(do.call(c, coef(twofact, digits=4, verbose = FALSE)))
-    expect_equal(cfs, c(-1.3034,0.3002,2.0565,0,1,-1.2054,-1.3253,1.0121,0,1,-1.404,-0.6002,1.7122,0,1,-0.8326,0.0323,0.4962,0,1,-0.9138,0.2836,1.9631,0,1,0,0,1,0,1),
+    expect_equal(cfs, c(-1.2606,-0.1008,2.0168,0,1,-0.8958,-1.8419,1.0901,0,1,-1.1803,-0.8376,1.6718,0,1,-0.9111,-0.1027,0.5119,0,1,-0.897,0,1.936,0,1,0,0,1,0,1),
                  tolerance = 1e-2)
     expect_is(twofact, 'ExploratoryClass')
     expect_message(modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),

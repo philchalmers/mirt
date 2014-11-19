@@ -28,6 +28,9 @@
 
 - better checks for numerical underflow issues
 
+- use triangle 0's for identifying exploratory IFA models (reported by Joshua Pritikin).
+  As such, standard errors/condition numbers for exploratory models can be estimated again
+
 # Changes in mirt 1.6.1
 
 ## MAJOR CHANGES

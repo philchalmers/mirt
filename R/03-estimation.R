@@ -230,12 +230,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nfact <- PrepList[[1L]]$pars[[nitems+1L]]@nfact
     if(nfact != 1L && any(c('Rasch') %in% itemtype ) && PrepList[[1L]]$exploratory)
        stop('Rasch itemtypes are for confimatory models only.')
-    if(PrepList[[1L]]$exploratory && opts$SE){
-        warning('Calculating Parameter information matrix for exploratory item factor analysis models
-                gives meaningless results, and has been disabled. Use a confirmatory model
-                to obtain meaningful standard errors, or set SE = FALSE.')
-        opts$SE <- FALSE
-    }
     nLambdas <- PrepList[[1L]]$pars[[1L]]@nfact
     if(is.null(constrain)) constrain <- list()
     #default MG uses configural model (independent groups but each identified)
@@ -303,7 +297,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(discrete) nestpars <- nestpars + nrow(opts$technical$customTheta) - 1L
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
     dfsubtr <- nestpars - nconstr
-    if(PrepList[[1L]]$exploratory) dfsubtr <- dfsubtr - nfact*(nfact - 1L)/2L
     if(df <= dfsubtr)
         stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ',
              dfsubtr, ' parameters were freely estimated.')

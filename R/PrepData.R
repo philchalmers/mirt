@@ -14,7 +14,7 @@ PrepData <- function(data, model, itemtype, guess, upper,
     exploratory <- FALSE
     if(!is.null(nominal.highlow)){
         if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix')
-        if(!all(dim(nominal.highlow) == c(2,J))) 
+        if(!all(dim(nominal.highlow) == c(2,J)))
             stop('nominal.highlow does not have the correct dimensions')
         if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ]))
             stop('nominal.highlow low and high categories must differ')
@@ -22,7 +22,8 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(is(model, 'numeric') && length(model) == 1L){
         if(model != 1L) exploratory <- TRUE
         tmp <- tempfile('tempfile')
-        cat(paste('F',1L:model,' = 1-', J, "\n", sep=''), file=tmp)
+        for(i in 1L:model)
+            cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
         model <- mirt.model(file=tmp, quiet = TRUE)
         unlink(tmp)
     }
