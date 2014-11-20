@@ -15,9 +15,7 @@ numerically ordered data, with missing data coded as \code{NA}}
 
 \item{itemtype}{item types to use. Can be the \code{'lca'} model for defining ordinal
 item response models (dichotomous items are a special case), \code{'nlca'} for the
-unordered latent class model, and the items types described in \code{\link{mirt}}
-(WARNING: require special constraints for identification. Use the \code{\link{mirt}}
-item types with caution)}
+unordered latent class model}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
 when using random starting values. If greater than 1, \code{GenRandomPars} is set to true

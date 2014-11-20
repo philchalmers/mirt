@@ -26,9 +26,7 @@
 #' @param model number of classes to fit, or alternatively a \code{\link{mirt.model}} definition
 #' @param itemtype item types to use. Can be the \code{'lca'} model for defining ordinal
 #'   item response models (dichotomous items are a special case), \code{'nlca'} for the
-#'   unordered latent class model, and the items types described in \code{\link{mirt}}
-#'   (WARNING: require special constraints for identification. Use the \code{\link{mirt}}
-#'   item types with caution)
+#'   unordered latent class model
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param GenRandomPars logical; use random starting values
 #' @param technical technical input list, most interesting for discrete latent models
@@ -120,8 +118,8 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
-    if(!all(itemtype %in% c('lca', 'nlca', paste0(2:4, 'PL'), paste0(3:4, 'PLu'))))
-        stop('Selected itemtype not supported')
+    if(!all(itemtype %in% c('lca', 'nlca')))
+        stop('Selected itemtype not supported. Please use itemtype \'lca\' or \'nlca\'')
     if(nruns > 1) GenRandomPars <- TRUE
     if(is.null(group)) group <- rep('all', nrow(data))
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)),
