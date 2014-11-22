@@ -75,6 +75,8 @@ resulting in slower estimation and less precision if the \code{quadpts} are too 
 Therefore, MAP scores should be used instead of EAP scores for higher dimensional models.
 Multiple imputation variants are possible for each estimator if a parameter
 information matrix was computed, which are useful if the sample size/number of items were small.
+As well, if the model contained latent regression predictors this information will
+be used in computing MAP and EAP estimates.
 }
 \details{
 The function will return either a table with the computed scores and standard errors,

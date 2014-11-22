@@ -22,6 +22,10 @@ test_that('mixed dich', {
     set.seed(1)
     bs <- boot.mirt(mod0, R = 3)
     expect_is(bs, 'boot')
+    fs <- fscores(mod0, full.scores.SE=TRUE)
+    expect_equal(as.numeric(head(fs)), c(-0.2821604,-0.5666264,-0.4924516,-0.3397658,
+                                         -0.486331,-0.4766829,0.2692515,0.2709036,
+                                         0.2704817,0.2695925,0.2704465,0.270391), tolerance=1e-4)
 
     #group as a fixed effect predictor (aka, uniform dif)
     mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,

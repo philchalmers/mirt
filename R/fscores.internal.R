@@ -12,11 +12,11 @@ setMethod(
             if(mirtCAT){
                 estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
                                     itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
-                                    CUSTOM.IND=CUSTOM.IND, iterlim=1, stepmax=1e-20))
+                                    CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=1, stepmax=1e-20))
             } else {
     	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
     	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
-                                    CUSTOM.IND=CUSTOM.IND, iterlim=200))
+                                    CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=200))
             }
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
@@ -35,12 +35,12 @@ setMethod(
             if(mirtCAT){
                 estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
                                     itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
-                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, iterlim=1,
+                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=1,
                                     stepmax=1e-20))
             } else {
     	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
     	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
-                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, iterlim=200))
+                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=200))
             }
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
@@ -70,7 +70,7 @@ setMethod(
 	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, return.acov = FALSE){
             nfact <- ncol(ThetaShort)
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
-            expLW <- exp(L) * W
+            expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
             maxL <- max(expLW)
 	        thetas <- colSums(ThetaShort * expLW / (sum(expLW/maxL)*maxL))
             if(hessian){
@@ -176,10 +176,21 @@ setMethod(
                                              discrete=discrete, QMC=QMC))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		fulldata <- object@Data$data
-		tabdata <- object@Data$tabdatalong
-		keep <- object@Data$Freq[[1L]] > 0L
-		tabdata <- tabdata[keep, , drop=FALSE]
-        USETABDATA <- TRUE
+		LR <- .hasSlot(object@lrPars, 'beta')
+		USETABDATA <- TRUE
+		if(LR){
+            if(!(method %in% c('EAP', 'MAP')))
+                warning('Latent regression information only used in MAP and EAP estimates')
+            full.scores <- TRUE
+            USETABDATA <- FALSE
+		    gp$gmeans <- object@lrPars@X %*% object@lrPars@beta
+		    tabdata <- object@Data$fulldata[[1L]]
+            keep <- rep(TRUE, nrow(tabdata))
+		} else {
+    		tabdata <- object@Data$tabdatalong
+    		keep <- object@Data$Freq[[1L]] > 0L
+    		tabdata <- tabdata[keep, , drop=FALSE]
+		}
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
         list_SEscores <- list_scores <- vector('list', MI)
         if(MI == 0) MI <- 1
@@ -215,7 +226,7 @@ setMethod(
                     } else thetaComb(theta,nfact)
                     if(length(prodlist) > 0L)
                         Theta <- prodterms(Theta,prodlist)
-                    W <- mirt_dmvnorm(ThetaShort,gp$gmeans,gp$gcov)
+                    W <- mirt_dmvnorm(ThetaShort,gp$gmeans,gp$gcov, quad=LR)
                 }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                               CUSTOM.IND=CUSTOM.IND)
@@ -226,8 +237,8 @@ setMethod(
                 } else {
             	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, hessian=estHess && method == 'EAP')
-            	    scores <- tmp[ ,1:nfact, drop = FALSE]
-            	    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
+            	    scores <- tmp[ ,1L:nfact, drop = FALSE]
+            	    SEscores <- tmp[ ,-c(1L:nfact), drop = FALSE]
                 }
             }
     		if(method == "EAP"){
@@ -464,7 +475,8 @@ setMethod(
 )
 
 # MAP scoring for mirt
-MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ML=FALSE)
+MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID,
+                     ML=FALSE)
 {
     Theta <- matrix(Theta, nrow=1L)
     ThetaShort <- Theta
@@ -473,7 +485,8 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ML
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
     L <- sum(log(itemtrace)[as.logical(patdata)])
-    prior <- mirt_dmvnorm(ThetaShort, gp$gmeans, gp$gcov)
+    mu <- if(is.matrix(gp$gmeans)) gp$gmeans[ID, ] else gp$gmeans
+    prior <- mirt_dmvnorm(ThetaShort, mu, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L
 }
