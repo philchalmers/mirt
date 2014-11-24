@@ -2,6 +2,9 @@
 
 ## NEW FEATURES
 
+- plausible value imputation now available in `fscores()` using the new `plausible.draws` 
+  numeric input
+
 - add `return.models` argument to `DIF()` to return estimated models with free/constrained 
   parameters
 
@@ -13,8 +16,6 @@
 
 - latent regression models added to `mirt()` function by using the new `covdata` and `formula` 
   inputs
-
-- document theory of bifactor/two-tier models better
 
 - added confidence envelope plots to `PLCI.mirt`, and throw warnings when intervals could not be
   located
@@ -28,7 +29,7 @@
 
 - better checks for numerical underflow issues
 
-- use triangle 0's for identifying exploratory IFA models (reported by Joshua Pritikin).
+- use triangle 0's for identifying exploratory IFA models.
   As such, standard errors/condition numbers for exploratory models can be estimated again
 
 # Changes in mirt 1.6.1

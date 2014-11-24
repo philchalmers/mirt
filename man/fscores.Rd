@@ -4,10 +4,10 @@
 \title{Methods for Function fscores}
 \usage{
 fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
-  quadpts = NULL, response.pattern = NULL, returnER = FALSE,
-  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-  scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6, 6),
-  MI = 0, QMC = FALSE, ...)
+  quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
+  returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL,
+  verbose = TRUE, scores.only = TRUE, full.scores.SE = FALSE,
+  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -35,6 +35,12 @@ the switch statement
 
 \item{response.pattern}{an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame}
+
+\item{plausible.draws}{number of plausible values to draw for future researchers
+to perform secondary analyses of the latent trait scores. Typically used in conjunction
+with latent regression predictors (see \code{\link{mirt}} for details), but can
+also be generated when no predictor variables were modeled. If \code{plausible.draws}
+is greater than 0 a list of plausible values will be returned}
 
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}
@@ -76,7 +82,8 @@ Therefore, MAP scores should be used instead of EAP scores for higher dimensiona
 Multiple imputation variants are possible for each estimator if a parameter
 information matrix was computed, which are useful if the sample size/number of items were small.
 As well, if the model contained latent regression predictors this information will
-be used in computing MAP and EAP estimates.
+be used in computing MAP and EAP estimates (for these models, \code{full.scores=TRUE}
+by default).
 }
 \details{
 The function will return either a table with the computed scores and standard errors,
@@ -122,6 +129,10 @@ fscores(mod, method='WLE')
 #multiple imputation using 30 draws for EAP scores. Requires information matrix
 mod <- mirt(Science, 1, SE=TRUE)
 fscores(mod, MI = 30)
+
+# plausible values for future work
+pv <- fscores(mod, plausible.draws = 5)
+lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 
 }
 }

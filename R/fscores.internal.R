@@ -4,7 +4,8 @@ setMethod(
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-	                      full.scores.SE, return.acov = FALSE, QMC, digits=4, ...)
+	                      plausible.draws, full.scores.SE, return.acov = FALSE,
+                          QMC, digits=4, ...)
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
@@ -94,6 +95,22 @@ setMethod(
 	        return(c(thetas, SE))
 	    }
 
+        if(plausible.draws > 0){
+            fs <- fscores(object, rotate=rotate, full.scores = TRUE, method=method,
+                          quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
+                          return.acov = FALSE, QMC=QMC, ...)
+            fs_acov <- fscores(object, rotate = rotate, full.scores = TRUE, method=method,
+                          quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
+                          scores.only=TRUE, plausible.draws=0, full.scores.SE=FALSE,
+                          return.acov = TRUE, QMC=QMC, ...)
+            ret <- vector('list', plausible.draws)
+            for(i in 1L:plausible.draws){
+                jit <- lapply(fs_acov, function(x) mirt_rmvnorm(ncol(x), sigma = x))
+                jit <- do.call(rbind, jit)
+                ret[[i]] <- fs + jit
+            }
+            return(ret)
+        }
         if(return.acov && MI != 0)
             stop('simultaneous impute and return.acov option not supported')
 	    if(return.acov && returnER)
@@ -315,6 +332,13 @@ setMethod(
                 scoremat <- scores
                 SEscoremat <- SEscores
                 colnames(SEscoremat) <- paste0('SE_',colnames(scores))
+                if(return.acov){
+                    ret <- vector('list', nrow(scoremat))
+                    for(i in 1L:nrow(scoremat))
+                        ret[[i]] <- matrix(scoremat[i,], nfact, nfact)
+                    names(ret) <- 1:nrow(scoremat)
+                    return(ret)
+                }
             }
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)

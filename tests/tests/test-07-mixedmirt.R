@@ -18,6 +18,10 @@ test_that('mixed dich', {
     expect_equal(mod0@logLik, -4058.968, tolerance = 1e-2)
     cfs <- coef(mod0, digits = 10)
     expect_equal(as.numeric(cfs$lr.betas), c(0.0000000, 0.9548921, 1.9383165, 0.1877870), tolerance=1e-4)
+    set.seed(1234)
+    plaus <- fscores(mod0, plausible.draws = 2)
+    expect_equal(plaus[[1]][1:4], c(-0.6071646, -0.4914698, -0.1991302, -0.9721484),
+                 tolerance = 1e-4)
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     set.seed(1)
     bs <- boot.mirt(mod0, R = 3)
