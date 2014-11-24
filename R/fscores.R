@@ -72,6 +72,7 @@
 #' @param ... additional arguments
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
+#' @seealso \code{\link{averageMI}}
 #' @export fscores
 #' @references
 #'

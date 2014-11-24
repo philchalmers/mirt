@@ -301,16 +301,10 @@ setMethod(
     		}
         }
         if(impute){
-            scores <- list_scores[[1L]]/MI
-            Ubar <- list_SEscores[[1L]]^2 / MI
-            for(i in 2L:MI){
-                scores <- list_scores[[i]]/MI + scores
-                Ubar <- list_SEscores[[i]]^2 / MI + Ubar
-            }
-            B <- matrix(0, nrow(scores), ncol(scores))
-            for(i in 1L:MI)
-                B <- B + (1 / (MI-1L)) * ((list_scores[[i]] - scores)^2)
-            SEscores <- sqrt(Ubar + (1 + 1/MI) * B)
+            tmp <- averageMI(list_scores, list_SEscores, as.data.frame=FALSE,
+                             digits = 200)
+            scores <- tmp[[1L]]
+            SEscores <- tmp[[2L]]
         }
 		if (full.scores){
             if(USETABDATA){

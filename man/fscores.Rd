@@ -149,5 +149,8 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 Warm, T. A. (1989). Weighted likelihood estimation of ability in item response theory.
 \emph{Psychometrika, 54}, 427-450.
 }
+\seealso{
+\code{\link{averageMI}}
+}
 \keyword{factor.scores}
 

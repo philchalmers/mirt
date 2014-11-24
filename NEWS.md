@@ -2,6 +2,9 @@
 
 ## NEW FEATURES
 
+- added `averageMI()` function to compute multiple imputation averages for the plausible
+  values methodology using Rubin's 1987 method
+
 - plausible value imputation now available in `fscores()` using the new `plausible.draws` 
   numeric input
 

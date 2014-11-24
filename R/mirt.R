@@ -433,7 +433,7 @@
 #' @seealso  \code{\link{bfactor}},  \code{\link{multipleGroup}},  \code{\link{mixedmirt}},
 #'   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mod2values}},
 #'   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}},
-#'   \code{\link{probtrace}}, \code{\link{simdata}}
+#'   \code{\link{probtrace}}, \code{\link{simdata}}, \code{\link{averageMI}}
 #'
 #' @references
 #'
@@ -863,8 +863,22 @@
 #' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 #' coef(mod1, simplify=TRUE)
 #' anova(mod0, mod1)
+#'
 #' #bootstrapped confidence intervals
 #' boot.mirt(mod1, R=5)
+#'
+#' #draw plausible values for secondary analyses
+#' pv <- fscores(mod1, plausible.draws = 10)
+#' pvmods <- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
+#'                  covdata=covdata)
+#' #population characteristics recovered well, and can be averaged over
+#' so <- lapply(pvmods, summary)
+#' so
+#'
+#' # compute Rubin's multiple imputation average
+#' par <- lapply(so, function(x) x$coefficients[, 'Estimate'])
+#' SEpar <- lapply(so, function(x) x$coefficients[, 'Std. Error'])
+#' averageMI(par, SEpar)
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
