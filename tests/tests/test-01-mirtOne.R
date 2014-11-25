@@ -70,7 +70,7 @@ test_that('dich', {
     expect_equal(fs[1:3,'F1'], c(-1.697455, -1.319727, -1.301661), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
     expect_equal(m2$M2, 4.738382, tolerance=1e-5)
-    ifit <- itemfit(mod, QMC=TRUE)
+    ifit <- itemfit(mod, QMC=TRUE, digits = 20)
     expect_equal(ifit$p.S_X2[1], .7986, tolerance = 1e-2)
 
     fm1 <- fscores(modm1, verbose = FALSE)
@@ -110,7 +110,7 @@ test_that('dich', {
     TP2 <- plot(modm2)
     expect_is(TP1, 'trellis')
     expect_is(TP2, 'trellis')
-    ifit <- itemfit(modm1, X2 = TRUE)
+    ifit <- itemfit(modm1, X2 = TRUE, digits = 20)
     expect_is(ifit, 'data.frame')
     expect_true(mirt:::closeEnough(as.numeric(ifit$Zh) - c(1.431838, 6.354917, 5.310844, 5.804449,
                                                            0.696139), -1e-2, 1e-2))

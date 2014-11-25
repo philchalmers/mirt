@@ -34,6 +34,7 @@
 #'   \code{\link{imputeMissing}}) when there are missing data present. This requires a
 #'   precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
 #'   of the stats and their imputed standard deviations
+#' @param digits number of digits to round result to. Default is 4
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
@@ -114,13 +115,13 @@
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
-                    impute = 0, ...){
+                    impute = 0, digits = 4, ...){
 
-    fn <- function(collect, obj, Theta, ...){
+    fn <- function(collect, obj, Theta, digits, ...){
         tmpdat <- imputeMissing(obj, Theta)
         tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype)
         tmpmod@pars <- obj@pars
-        return(itemfit(tmpmod, Theta=Theta, ...))
+        return(itemfit(tmpmod, Theta=Theta, digits = 200, ...))
     }
 
     if(is(x, 'MixedClass'))
@@ -143,7 +144,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,
-                            discrete=discrete, ...)
+                            discrete=discrete, digits = 200, ...)
         ave <- SD <- collect[[1L]]
         pick1 <- 1:nrow(ave)
         pick2 <- sapply(ave, is.numeric)
@@ -156,7 +157,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         SD[pick1, pick2] <- sqrt(SD[pick1, pick2]/impute)
         SD$item <- paste0('SD_', SD$item)
         SD <- rbind(NA, SD)
-        return(rbind(ave, SD))
+        ret <- rbind(ave, SD)
+        ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
+        return(ret)
     }
     if(is(x, 'MultipleGroupClass')){
         ret <- vector('list', length(x@pars))
@@ -170,7 +173,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             ret[[g]] <- itemfit(tmp, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, ...)
+                                impute=impute, discrete=discrete, digits=digits, ...)
         }
         names(ret) <- x@Data$groupNames
         return(ret)
@@ -369,5 +372,6 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         ret$df.S_X2 <- df.S_X2
         ret$p.S_X2 <- round(1 - pchisq(S_X2, df.S_X2), 4)
     }
+    ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
     return(ret)
 }

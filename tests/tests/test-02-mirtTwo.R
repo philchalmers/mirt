@@ -110,7 +110,7 @@ test_that('poly', {
     IP2 <- itemplot(modp2, 1)
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
-    fit <- suppressMessages(itemfit(modp2))
+    fit <- suppressMessages(itemfit(modp2, digits = 20))
     expect_equal(fit$Zh, c(-13.6970843, 0.9010823, -11.3913447, -30.2001403), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.929469, 10.587552, 6.897964, 10.108126), tolerance=1e-4)
 

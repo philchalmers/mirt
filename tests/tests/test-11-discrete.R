@@ -25,7 +25,7 @@ test_that('discrete', {
     expect_equal(resid$res[1:3], c(1.050, 0.145, -0.345), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
     expect_equal(as.numeric(residLD[2:4, 1]), c(0.110, 0.415, -0.131))
-    ifit <- itemfit(mod)[[1L]]
+    ifit <- itemfit(mod, digits = 20)[[1L]]
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
     W <- wald(mod, L = matrix(c(1,numeric(9)), nrow=1))

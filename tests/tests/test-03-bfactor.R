@@ -26,7 +26,7 @@ test_that('dich data', {
     expect_equal(fit$df, 432, tolerance = 1e-2)
     pfit1 <- personfit(mod1)
     expect_is(pfit1, 'data.frame')
-    ifit <- itemfit(mod1)
+    ifit <- itemfit(mod1, digits = 20)
     expect_is(ifit, 'data.frame')
 
     #nestlogit

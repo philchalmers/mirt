@@ -5,7 +5,8 @@
 \usage{
 itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
   mincell = 1, S_X2.tables = FALSE, empirical.plot = NULL,
-  empirical.CI = 0, method = "EAP", Theta = NULL, impute = 0, ...)
+  empirical.CI = 0, method = "EAP", Theta = NULL, impute = 0,
+  digits = 4, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
@@ -46,6 +47,8 @@ with missing data via imputation}
 \code{\link{imputeMissing}}) when there are missing data present. This requires a
 precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
 of the stats and their imputed standard deviations}
+
+\item{digits}{number of digits to round result to. Default is 4}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }

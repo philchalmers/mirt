@@ -12,8 +12,8 @@ test_that('one factor', {
     group <- c(rep('D1', N), rep('D2', N))
     MGmodel1 <- 'F1 = 1-15'
     models <- mirt.model(MGmodel1, quiet = TRUE)
-    
-    mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', SE=TRUE, SE.type = 'crossprod', 
+
+    mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', SE=TRUE, SE.type = 'crossprod',
                                group = group, verbose = FALSE, method = 'EM')
     cfs <- as.numeric(na.omit(do.call(rbind, coef(mod_Rasch, digits=5, printSE=TRUE, as.data.frame=TRUE))))
     expect_equal(cfs, c(0.545, -0.63665, -0.14376, 0.80569, 0.30492, 0.55009, 1.03783, -0.40416, -1.08672, -1.15675, 1.20202, -0.10968, 0.58072, 0.40407, -0.08536, 0.60372, -0.4505, -0.19841, 1.02121, 0.41623, 0.66369, 1.19678, -0.4028, -1.0233, -1.11901, 1.38872, -0.11527, 0.50138, 0.50138, -0.09971, 0.07974, 0.07977, 0.07809, 0.08083, 0.07878, 0.07937, 0.08405, 0.0783, 0.0834, 0.08447, 0.08523, 0.07865, 0.07975, 0.07838, 0.07795, 0.08454, 0.08442, 0.08268, 0.0882, 0.08401, 0.08539, 0.09027, 0.08389, 0.08684, 0.0885, 0.09122, 0.08414, 0.08454, 0.08447, 0.08317),
@@ -24,7 +24,7 @@ test_that('one factor', {
     pffit <- c(as.numeric(as.matrix(head(pf))), as.numeric(as.matrix(tail(pf))))
     expect_equal(pffit, c(0.6388, 0.8582, 0.83267, 0.99725, 1.05999, 1.03414, -1.51153, -0.24137, -0.19464, 0.09861, 0.3459, 0.24062, 0.699, 0.89307, 0.84912, 1.08481, 0.98964, 1.05882, -1.48336, -0.26539, -0.31212, 0.40918, -0.00498, 0.40736, 1.39643, 0.34987, 0.38458, -0.21882, -0.05278, -0.30241, 1.15408, 1.54886, 0.69589, 1.64176, 1.054, 0.47791, 0.5427, 1.01894, -1.43216, 1.13883, 0.30973, -0.96363, 0.91257, 0.98546, 0.73961, 1.10462, 0.96747, 0.66029, -0.29309, 0.09788, -1.5242, 0.38551, -0.12126, -0.82876, 0.12927, -0.21665, 1.41519, -0.5449, 0.05218, 0.89503),
                  tolerance = 1e-3)
-    mod_QMCEM <- multipleGroup(dat, models, group=group, method = 'QMCEM', verbose=FALSE, 
+    mod_QMCEM <- multipleGroup(dat, models, group=group, method = 'QMCEM', verbose=FALSE,
                                optimizer='NR')
     expect_equal(mod_QMCEM@logLik, -17859.03, tolerance=1e-2)
     mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', optimizer='NR',
@@ -54,7 +54,7 @@ test_that('one factor', {
                             CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')
     expect_is(mod_scalar1, 'MultipleGroupClass')
-    mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM', 
+    mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                             empiricalhist=TRUE, optimizer = 'NR')
     expect_is(mod_EH, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_EH, digits=4)[[1L]]))
@@ -88,7 +88,7 @@ test_that('one factor', {
     expect_equal(fit1$D1.SRMSR, 0.03606703, tolerance = 1e-4)
     expect_equal(fit1$TLI, 1.014168, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
-    fit2 <- itemfit(mod_metric)
+    fit2 <- itemfit(mod_metric, digits = 20)
     expect_is(fit2, 'list')
 
     g1 <- extract.group(mod_metric, 1)
