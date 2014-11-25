@@ -28,6 +28,8 @@
   
 ## BUG FIXES
 
+- fix missing data imputation bug in `itemfit()` (reported by KK Sasa)
+
 - M2 statistic for bifactor/two-tier models was overly conservative
 
 - better checks for numerical underflow issues
