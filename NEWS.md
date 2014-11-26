@@ -28,6 +28,9 @@
   
 ## BUG FIXES
 
+- bias correction in variance estimates `mixedmirt` when random effects are 
+  included (reported by KK Sasa)
+
 - fix missing data imputation bug in `itemfit()` (reported by KK Sasa)
 
 - M2 statistic for bifactor/two-tier models was overly conservative

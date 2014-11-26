@@ -472,7 +472,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'ideal'),
     definition = function(x){
-        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5), 
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
                  -rlnorm(1, meanlog=0, sdlog=.5))
         x@par[x@est] <- par[x@est]
         x
@@ -728,10 +728,9 @@ setMethod(
             tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
             offterm1 <- matrix(tmp1, nrow(itemtrace0), J, byrow = TRUE)
         }
-        offterm1 <- offterm1 + offterm0
-        itemtrace0 <- computeItemtrace(pars, Theta=Theta, offterm=offterm0, 
+        itemtrace0 <- computeItemtrace(pars, Theta=Theta, offterm=offterm0,
                                        itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-        itemtrace1 <- computeItemtrace(pars, Theta=Theta, offterm=offterm1, 
+        itemtrace1 <- computeItemtrace(pars, Theta=Theta, offterm=offterm1,
                                        itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
         if(x@between){
             totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1,

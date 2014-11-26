@@ -254,6 +254,35 @@
 #' anova(mod0, mod1b)
 #' coef(mod1a)$lr.betas
 #' summary(mod1b)
+#'
+#' ####################################################
+#' ## Simulated Multilevel Rasch Model
+#'
+#' set.seed(1)
+#' N <- 2000
+#' a <- matrix(rep(1,10),10,1)
+#' d <- matrix(rnorm(10))
+#' cluster = 100
+#' random_intercept = rnorm(cluster,0,1)
+#' Theta = numeric()
+#' for (i in 1:cluster)
+#'     Theta <- c(Theta, rnorm(N/cluster,0,1) + random_intercept[i])
+#'
+#' group = factor(rep(paste0('G',1:cluster), each = N/cluster))
+#' covdata <- data.frame(group)
+#' dat <- simdata(a,d,N, itemtype = rep('dich',10), Theta=matrix(Theta))
+#'
+#' # null model
+#' mod1 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)
+#' summary(mod1)
+#'
+#' # include level 2 predictor for 'group' variance
+#' covdata$group_pred <- rep(random_intercept, each = N/cluster)
+#' mod2 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group_pred, random = ~ 1|group)
+#'
+#' # including group means predicts nearly all variability in 'group'
+#' summary(mod2)
+#' anova(mod1, mod2)
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       lr.fixed = ~ 1, lr.random = NULL, itemdesign = NULL, constrain = NULL,
