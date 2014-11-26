@@ -1,13 +1,13 @@
 #' Imputing plausible data for missing values
 #'
-#' Given an estimated model from any of mirt's model fitting functions and an estimate of the 
-#' latent trait, impute plausible missing data values. Returns the original data in a 
+#' Given an estimated model from any of mirt's model fitting functions and an estimate of the
+#' latent trait, impute plausible missing data values. Returns the original data in a
 #' \code{data.frame} without any NA values.
 #'
 #'
 #' @aliases imputeMissing
 #' @param x an estimated model x from the mirt package
-#' @param Theta a matrix containing the estimates of the latent trait scores 
+#' @param Theta a matrix containing the estimates of the latent trait scores
 #'   (e.g., via \code{\link{fscores}})
 #' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -55,6 +55,14 @@ imputeMissing <- function(x, Theta, ...){
     nfact <- pars[[1L]]@nfact
     if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
         stop('Theta must be a matrix of size N x nfact')
+    if(any(Theta %in% c(Inf, -Inf))){
+        for(i in 1L:ncol(Theta)){
+            tmp <- Theta[,i]
+            tmp[tmp %in% c(-Inf, Inf)] <- NA
+            Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
+            Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
+        }
+    }
     K <- x@K
     J <- length(K)
     data <- x@Data$data
