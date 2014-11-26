@@ -193,7 +193,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
         fulldata <- x@Data$fulldata[[1L]]
-        if(method %in% c('ML', 'WLE')){
+        if(any(Theta %in% c(Inf, -Inf))){
             for(i in 1L:ncol(Theta)){
                 tmp <- Theta[,i]
                 tmp[tmp %in% c(-Inf, Inf)] <- NA
@@ -205,11 +205,10 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
         for (i in 1L:J)
             itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-        LL <- itemtrace * fulldata
-        LL[LL < .Machine$double.eps] <- 1
-        Lmatrix <- matrix(log(LL[as.logical(fulldata)]), N, J)
-        mu <- sigma2 <- rep(0, J)
         log_itemtrace <- log(itemtrace)
+        LL <- log_itemtrace * fulldata
+        Lmatrix <- matrix(LL[as.logical(fulldata)], N, J)
+        mu <- sigma2 <- rep(0, J)
         for(item in 1L:J){
             P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
