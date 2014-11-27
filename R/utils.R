@@ -1502,8 +1502,21 @@ collapseCells <- function(O, E, mincell = 1){
             }
         }
 
-        #merge across
+        #drop columns if they are very rare
+
         En[is.na(En)] <- 0
+        dropcol <- logical(ncol(En))
+        for(j in ncol(En):2L){
+            tmp <- sum(En[,j] > 0) / nrow(En)
+            if(tmp < .05){
+                dropcol[j] <- TRUE
+                En[,j-1L] <- En[,j-1L] + En[,j]
+                On[,j-1L] <- On[,j-1L] + On[,j]
+            }
+        }
+        En <- En[,!dropcol]; On <- On[,!dropcol]
+
+        #merge across
         L <- En < mincell & En != 0
         while(any(L, na.rm = TRUE)){
             whc <- min(which(rowSums(L) > 0L))
