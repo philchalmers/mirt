@@ -48,7 +48,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
     for(g in 1L:ngroups){
-        for(i in 1L:30L){
+        for(i in 1L:31L){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
@@ -167,11 +167,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         start <- proc.time()[3L]
         if(RAND && cycles == 100L){
-            for(g in 1L:ngroups) gtheta0[[g]] <- matrix(0, nrow(Data$fulldata[[g]]), nfact)
             OffTerm <- OffTerm(random, J=J, N=N)
             for(j in 1L:length(random)){
                 tmp <- .1
-                for(i in 1L:30L){
+                for(i in 1L:31L){
                     random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
                                                        pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                                        offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
@@ -200,7 +199,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             }
             cand.t.var <- .5
             tmp <- .1
-            for(i in 1L:30L){
+            for(i in 1L:31L){
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                              itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                              prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,

@@ -33,32 +33,30 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     J <- length(pars) - 1L
     unif <- runif(N)
     sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
+    total_0 <- attr(theta0, 'log.lik_full')
     theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
-    log_den0 <- mirt_dmvnorm(theta0,prior.mu,prior.t.var,log=TRUE)
+    if(is.null(total_0)) theta1 <- theta0 #for intial draw
     log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
-    if(length(prodlist) > 0L){
-        theta0 <- prodterms(theta0,prodlist)
+    if(length(prodlist) > 0L)
         theta1 <- prodterms(theta1,prodlist)
-    }
-    itemtrace0 <- computeItemtrace(pars=pars, Theta=theta0, itemloc=itemloc,
-                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
     itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
                                    offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
-    totals <- .Call('denRowSums', fulldata, itemtrace0, itemtrace1, log_den0,
-                    log_den1, mirtClusterEnv$ncores)
-    total_0 <- totals[[1L]]
-    total_1 <- totals[[2L]]
+    total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
+    if(!is.null(prodlist))
+        theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
+                                   length(prodlist)), drop=FALSE]
+    if(is.null(total_0)){ #for intial draw
+        attr(theta1, 'log.lik_full') <- total_1
+        return(theta1)
+    }
     diff <- total_1 - total_0
-    accept <- diff > 0
-    accept[unif < exp(diff)] <- TRUE
+    accept <- unif < exp(diff)
     theta1[!accept, ] <- theta0[!accept, ]
     total_1[!accept] <- total_0[!accept]
     log.lik <- sum(total_1)
-    if(!is.null(prodlist))
-        theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
-                                  length(prodlist)), drop=FALSE]
     attr(theta1, "Proportion Accepted") <- sum(accept)/N
     attr(theta1, "log.lik") <- log.lik
+    attr(theta1, 'log.lik_full') <- total_1
     return(theta1)
 }
 

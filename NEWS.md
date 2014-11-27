@@ -1,5 +1,10 @@
 # Changes in mirt 1.7
 
+## MAJOR CHANGES
+
+- improved estimation efficiency when using MH-RM algorithm. As a result, the default seed 
+  was changed, therefore results from previous versions will be slightly different
+
 ## NEW FEATURES
 
 - added `averageMI()` function to compute multiple imputation averages for the plausible
