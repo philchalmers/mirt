@@ -960,6 +960,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         stop('method argument not supported')
     D <- 1
     opts$method = method
+    if(draws < 1) stop('draws must be greater than 0')
     opts$draws = draws
     opts$calcLL = calcLL
     opts$quadpts = quadpts
