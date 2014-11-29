@@ -735,7 +735,7 @@ setMethod(
             total_1 <- rowSums(fulldata * log(itemtrace1))
             total_1 <- tapply(total_1, x@mtch, sum) + log_den1
         } else {
-            tmp1 <- rowSums(fulldata * log(itemtrace1))
+            tmp1 <- colSums(fulldata * log(itemtrace1))
             LL1 <- numeric(J)
             for(i in 1L:J)
                 LL1[i] <- sum(tmp1[itemloc[i]:(itemloc[i+1L] - 1L)])

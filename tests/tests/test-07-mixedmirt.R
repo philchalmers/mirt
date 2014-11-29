@@ -49,6 +49,11 @@ test_that('mixed dich', {
     expect_equal(cfs, c(0.7945,1.6548,1,-1.3507,0,1,1.3901,2.7467,1,-2.4426,0,1,2.4551,4.3481,1,-3.137,0,1,0.3674,0.6741,1,-0.2854,0,1,1.5117,2.664,1,-0.5424,0,1,1.4113,3.148,1,-1.643,0,1,0.9827,1.9094,1,-1.5037,0,1,1.4213,2.5786,1,-2.3912,0,1,0.8462,1.9336,1,-1.7959,0,1,0.9109,2.0724,1,1.6948,0,1,0,0.1185),
                  tolerance = 1e-2)
 
+    mod_items <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items,
+                       verbose = FALSE, draws = 1)
+    cfs <- c(coef(mod_items)[['GroupPars']], coef(mod_items)[['items']])
+    expect_equal(cfs[1:3], c(0, 1.028, 1.245), tolerance = 1e-3)
+
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
     mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
