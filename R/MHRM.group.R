@@ -167,6 +167,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         start <- proc.time()[3L]
         if(RAND && cycles == 100L){
+            gtheta0[[1L]] <- matrix(0, nrow(gtheta0[[1L]]), ncol(gtheta0[[1L]]))
             OffTerm <- OffTerm(random, J=J, N=N)
             for(j in 1L:length(random)){
                 tmp <- .1

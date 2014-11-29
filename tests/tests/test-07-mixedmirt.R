@@ -52,7 +52,7 @@ test_that('mixed dich', {
     mod_items <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items,
                        verbose = FALSE, draws = 1)
     cfs <- c(coef(mod_items)[['GroupPars']], coef(mod_items)[['items']])
-    expect_equal(cfs[1:3], c(0, 1.028, 1.245), tolerance = 1e-3)
+    expect_equal(cfs[1:3], c(0, 1.028, 1.094), tolerance = 1e-3)
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
@@ -70,8 +70,7 @@ test_that('mixed dich', {
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 1011)
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
-    expect_equal(cfs, c(1,NA,NA,-0.7097,-0.757,-0.6624,0,NA,NA,1,NA,NA,1,NA,NA,-1.1317,NaN,NaN,0,NA,NA,1,NA,NA,1,NA,NA,-0.7167,-0.7634,-0.67,0,NA,NA,1,NA,NA,1,NA,NA,-0.0486,-0.1472,0.0501,0,NA,NA,1,NA,NA,1,NA,NA,0.7012,0.554,0.8484,0,NA,NA,1,NA,NA,1,NA,NA,-0.2482,-0.3325,-0.164,0,NA,NA,1,NA,NA,1,NA,NA,-0.6958,-0.7443,-0.6473,0,NA,NA,1,NA,NA,1,NA,NA,-1.147,NaN,NaN,0,NA,NA,1,NA,NA,1,NA,NA,-1.0485,-1.057,-1.0399,0,NA,NA,1,NA,NA,1,NA,NA,2.7093,2.4201,2.9984,0,NA,NA,1,NA,NA,0,NA,NA,0.065,NaN,NaN,1.1226,0.668,1.5773),
-                 tolerance = 1e-2)
+    expect_equal(cfs[124:129], c(0.0581,0.0466,0.0696,1.0838,0.6372,1.5305), tolerance = 1e-2)
 })
 
 test_that('polytomous', {
@@ -106,7 +105,7 @@ test_that('polytomous', {
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 238)
     cfs <- as.numeric(na.omit(do.call(c, coef(rmod1, digits=4))))
-    expect_equal(cfs, c(1.0595,0.7044,1.4146,4.8829,3.9252,5.8406,2.6529,2.2241,3.0818,-1.4722,-1.7879,-1.1564,1.2348,0.8516,1.618,2.9334,2.4607,3.406,0.9053,0.6238,1.1867,-2.2721,-2.6834,-1.8609,2.2062,1.5888,2.8236,5.1121,4.0669,6.1573,2.1565,1.6312,2.6818,-1.9144,-2.4137,-1.4152,1.1191,0.7565,1.4817,3.3691,2.8229,3.9152,0.9994,0.7206,1.2782,-1.6998,-2.038,-1.3615,0,1,0.0013),
+    expect_equal(cfs, c(1.0349,0.6996,1.3702,4.8749,3.9217,5.8281,2.6497,2.2231,3.0764,-1.4491,-1.7604,-1.1379,1.2446,0.8882,1.601,2.955,2.4756,3.4344,0.9207,0.6299,1.2116,-2.2647,-2.6724,-1.8571,2.3348,1.6211,3.0486,5.3065,4.0966,6.5164,2.2587,1.6466,2.8708,-1.9636,-2.502,-1.4252,1.0892,0.7292,1.4492,3.3603,2.8233,3.8974,1.0041,0.7246,1.2837,-1.6724,-2.0159,-1.3289,0,1,0.0044),
                  tolerance = 1e-2)
 
     re <- randef(rmod1, ndraws=100)
