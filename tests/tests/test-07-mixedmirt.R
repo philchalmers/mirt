@@ -52,7 +52,7 @@ test_that('mixed dich', {
     mod_items <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items,
                        verbose = FALSE, draws = 1)
     cfs <- c(coef(mod_items)[['GroupPars']], coef(mod_items)[['items']])
-    expect_equal(cfs[1:3], c(0, 1.028, 1.094), tolerance = 1e-3)
+    expect_equal(cfs[1:3], c(0, 1.008, 1.217), tolerance = 1e-3)
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA

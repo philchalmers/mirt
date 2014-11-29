@@ -18,7 +18,7 @@
 #' #partial credit model
 #' mod <- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
 #' summary(mod)
-#' 
+#'
 #' effects <- randef(mod, ndraws = 2000, thin = 20)
 #' head(effects$Theta)
 #' head(effects$group)
@@ -89,6 +89,7 @@ randef <- function(x, ndraws = 1000, thin = 10){
             retnames <- c(retnames, colnames(x@random[[j]]@gdesign)[1L])
         }
     }
+    ret <- lapply(ret, function(x){attr(x, 'log.lik_full') <- NULL; x} )
     names(ret) <- retnames
     ret
 }
