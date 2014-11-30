@@ -1130,34 +1130,24 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
         splt <- strsplit(f, '\\|')[[1L]]
         gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
         sframe <- model.frame(as.formula(paste0('~',splt[1L])), longdata)
-        if(colnames(gframe) %in% covnames){
-            between <- TRUE
-        } else if(colnames(gframe) %in% itemcovnames){
-            between <- FALSE
-        } else stop('grouping variable not in itemdesign or covdata')
-        if(between){
-            gframe <- gframe[1L:N, , drop=FALSE]
-            sframe <- sframe[1L:N, , drop=FALSE]
-        } else {
-            gframe <- itemdesign[, which(colnames(gframe) == itemcovnames), drop=FALSE]
-            sframe <- itemdesign[, which(colnames(sframe) == itemcovnames), drop=FALSE]
-        }
-        matpar <- diag(ncol(gframe) + ncol(sframe))
+        levels <- interaction(gframe)
+        uniq_levels <- unique(levels)
+        matpar <- diag(1L + ncol(sframe))
         estmat <- lower.tri(matpar, diag=TRUE)
         ndim <- ncol(matpar)
         if(strsplit(f, '+')[[1L]][[1L]] == '-')
             estmat[lower.tri(estmat)] <- FALSE
-        fn <- paste0('COV_', c(colnames(gframe), colnames(sframe)))
-        FNCOV <- outer(fn, c(colnames(gframe), colnames(sframe)), FUN=paste, sep='_')
+        fn <- paste0('COV_', c(splt[2L], colnames(sframe)))
+        FNCOV <- outer(fn, c(splt[2L], colnames(sframe)), FUN=paste, sep='_')
         par <- matpar[lower.tri(matpar, diag=TRUE)]
         est <- estmat[lower.tri(estmat, diag=TRUE)]
         names(par) <- names(est) <- FNCOV[lower.tri(FNCOV, diag=TRUE)]
-        drawvals <- matrix(0, length(unique(gframe)[[1L]]), ndim,
-                           dimnames=list(unique(gframe)[[1L]], NULL))
-        mtch <- match(gframe[[1L]], rownames(drawvals))
-        gdesign <- matrix(1, nrow(gframe), 1L, dimnames = list(NULL, colnames(gframe)))
+        drawvals <- matrix(0, length(uniq_levels), ndim,
+                           dimnames=list(uniq_levels, NULL))
+        mtch <- match(levels, rownames(drawvals))
+        gdesign <- matrix(1, length(levels), 1L, dimnames = list(NULL, splt[2L]))
         if(ncol(sframe) != 0L)
-            gdesign <- cbind(model.matrix(as.formula(paste0('~',splt[1L])), sframe), gdesign)
+            gdesign <- cbind(gdesign, as.matrix(sframe))
         tmp <- matrix(-Inf, ndim, ndim)
         diag(tmp) <- 1e-4
         lbound <- tmp[lower.tri(tmp, diag=TRUE)]
@@ -1170,7 +1160,6 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                         ubound=rep(Inf, length(par)),
                         gframe=gframe,
                         gdesign=gdesign,
-                        between=between,
                         cand.t.var=.5,
                         any.prior=FALSE,
                         prior.type=rep(0L, length(par)),
@@ -1223,19 +1212,12 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
 
 
 OffTerm <- function(random, J, N){
-    ret <- matrix(0, N, J)
+    ret <- numeric(N*J)
     for(i in 1L:length(random)){
-        if(random[[i]]@between){
-            tmp <- rowSums(random[[i]]@gdesign*random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE])
-            for(j in 1L:J) ret[,j] <- ret[,j] + tmp
-        } else {
-            tmp <- matrix(rowSums(random[[i]]@gdesign *
-                          random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE]), nrow(ret), J,
-                          byrow=TRUE)
-            ret <- ret + tmp
-        }
+        tmp <- rowSums(random[[i]]@gdesign*random[[i]]@drawvals[random[[i]]@mtch, ,drop=FALSE])
+        ret <- ret + tmp
     }
-    ret
+    return(matrix(ret, N, J))
 }
 
 reloadRandom <- function(random, longpars, parstart){

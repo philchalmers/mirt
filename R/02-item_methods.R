@@ -721,26 +721,15 @@ setMethod(
         if(is.null(total_0)) theta1 <- theta0 #for intial draw
         log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
         itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(fulldata))
-        if(x@between){
-            offterm1 <- matrix(0, nrow(itemtrace1), J)
-            tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
-            for(i in 1L:J) offterm1[,i] <- tmp1
-        } else {
-            tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
-            offterm1 <- matrix(tmp1, nrow(itemtrace1), J, byrow = TRUE)
-        }
+        tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
+        offterm1 <- matrix(tmp1, nrow(offterm0), ncol(offterm0))
         itemtrace1 <- computeItemtrace(pars, Theta=Theta, offterm=offterm1,
                                        itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-        if(x@between){
-            total_1 <- rowSums(fulldata * log(itemtrace1))
-            total_1 <- tapply(total_1, x@mtch, sum) + log_den1
-        } else {
-            tmp1 <- colSums(fulldata * log(itemtrace1))
-            LL1 <- numeric(J)
-            for(i in 1L:J)
-                LL1[i] <- sum(tmp1[itemloc[i]:(itemloc[i+1L] - 1L)])
-            total_1 <- LL1[x@mtch] + log_den1
-        }
+        LL <- fulldata * log(itemtrace1)
+        LL2 <- matrix(0, nrow(LL), J)
+        for(i in 1L:J)
+            LL2[,i] <- rowSums(LL[,itemloc[i]:(itemloc[i+1L] - 1L)])
+        total_1 <- tapply(LL2, x@mtch, sum) + log_den1
         if(is.null(total_0)){ #for intial draw
             attr(theta1, 'log.lik_full') <- total_1
             return(theta1)

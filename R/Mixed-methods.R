@@ -62,7 +62,7 @@ setMethod(
                 colnames(sigma) <- rownames(sigma) <-
                     paste0('COV_', colnames(object@random[[i]]@gdesign))
                 rand[[length(rand) + 1L]] <- sigma
-                listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+                listnames <- c(listnames, colnames(object@random[[i]]@gdesign)[1L])
             }
         }
         names(rand) <- listnames
@@ -138,7 +138,7 @@ setMethod(
                                      2, byrow = TRUE), digits)
                     rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
                     colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
-                    listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+                    listnames <- c(listnames, colnames(object@random[[i]]@gdesign)[1L])
                 }
             } else {
                 for(i in 1L:length(object@random)){
@@ -149,7 +149,7 @@ setMethod(
                                      3, byrow = TRUE), digits)
                     rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
                     colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
-                    listnames <- c(listnames, colnames(object@random[[i]]@gframe)[1L])
+                    listnames <- c(listnames, colnames(object@random[[i]]@gdesign)[1L])
                 }
             }
         }

@@ -7,6 +7,7 @@
 #' @param x an estimated model object from the \code{\link{mixedmirt}} function
 #' @param ndraws total number of draws to perform. Default is 1000
 #' @param thin amount of thinning to apply. Default is to use every 10th draw
+#' @param return.draws logical; return a list containing the thinned draws of the posterior?
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords random effects
 #' @export randef
@@ -24,7 +25,7 @@
 #' head(effects$group)
 #'
 #' }
-randef <- function(x, ndraws = 1000, thin = 10){
+randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(!is(x, 'MixedClass'))
         stop('Only applicable to MixedClass objects')
     div <- ndraws / thin
@@ -58,23 +59,39 @@ randef <- function(x, ndraws = 1000, thin = 10){
             OffTerm <- OffTerm(random, J=J, N=N)
         }
     }
+    if(return.draws){
+        DRAWS <- vector('list', 1 + length(random))
+        retnames <- "Theta"
+        if(length(random))
+            retnames <- c('Theta', sapply(random, function(x) colnames(x@gdesign)[1L]))
+        names(DRAWS) <- retnames
+    }
     for(i in 1L:ndraws){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@itemloc, cand.t.var=x@cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
                                 prior.mu=gstructgrouppars$gmeans, prodlist=list(),
                                 CUSTOM.IND=CUSTOM.IND)
-        if(i %% thin == 0) Theta <- Theta + tmpTheta
+        if(i %% thin == 0){
+            Theta <- Theta + tmpTheta
+            if(return.draws) DRAWS[[1L]][[length(DRAWS[[1L]]) + 1L]] <-
+                tmpTheta[,1L:ncol(Theta), drop=FALSE]
+        }
         if(length(random) > 0L){
             for(j in 1L:length(random)){
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
                                                    pars=x@pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
-                if(i %% thin == 0) Random[[j]] <- Random[[j]] + random[[j]]@drawvals
+                if(i %% thin == 0){
+                    Random[[j]] <- Random[[j]] + random[[j]]@drawvals
+                    if(return.draws) DRAWS[[j+1L]][[length(DRAWS[[j+1L]]) + 1L]] <-
+                        random[[j]]@drawvals[,1L:ncol(random[[j]]@drawvals), drop=FALSE]
+                }
             }
             OffTerm <- OffTerm(random, J=J, N=N)
         }
     }
+    if(return.draws) return(DRAWS)
     Theta <- Theta / (ndraws/thin)
     attr(Theta, 'Proportion Accepted') <- attr(Theta, 'log.lik') <- NULL
     colnames(Theta) <- x@factorNames

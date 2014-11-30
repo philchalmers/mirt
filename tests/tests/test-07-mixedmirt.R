@@ -52,7 +52,12 @@ test_that('mixed dich', {
     mod_items <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items,
                        verbose = FALSE, draws = 1)
     cfs <- c(coef(mod_items)[['GroupPars']], coef(mod_items)[['items']])
-    expect_equal(cfs[1:3], c(0, 1.008, 1.217), tolerance = 1e-3)
+    expect_equal(cfs[1:3], c(0, 1.028, 1.094), tolerance = 1e-3)
+
+    mod_items.group <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items:group,
+                           verbose = FALSE, draws = 1)
+    cfs <- c(coef(mod_items.group)[['GroupPars']], coef(mod_items.group)[['items:group']])
+    expect_equal(cfs[1:3], c(0, .127, 2.166), tolerance = 1e-3)
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
@@ -128,5 +133,12 @@ test_that('polytomous', {
                  tolerance=1e-4)
     expect_equal(mod@logLik, -4359.447, tolerance = 1e-2)
     expect_equal(mod@df, 1001)
+
+    #uncorrelated random slope
+    covdata$theta <- Theta
+    mod <- mixedmirt(dat, covdata = covdata, 1, fixed = ~ 0 + items,
+                     random = ~ -1 + theta|group, verbose=FALSE)
+    cfs <- coef(mod, digits=10)
+    expect_equal(as.numeric(cfs$group[1,]), c(0.06698951, 0.00000000, 0.42557580), tolerance = 1e-4)
 
 })

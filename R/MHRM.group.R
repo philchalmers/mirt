@@ -167,14 +167,13 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         start <- proc.time()[3L]
         if(RAND && cycles == 100L){
-            tmpmat <- gtheta0[[1L]]
             gtheta0[[1L]] <- matrix(0, nrow(gtheta0[[1L]]), ncol(gtheta0[[1L]]))
             OffTerm <- OffTerm(random, J=J, N=N)
             for(j in 1L:length(random)){
                 tmp <- .1
                 for(i in 1L:31L){
                     random[[j]]@drawvals <- DrawValues(random[[j]], itemloc=itemloc,
-                                                       Theta=if(random[[j]]@between) gtheta0[[1L]] else tmpmat,
+                                                       Theta=gtheta0[[1L]],
                                                        pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                                        offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                     OffTerm <- OffTerm(random, J=J, N=N)

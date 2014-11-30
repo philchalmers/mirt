@@ -7,6 +7,9 @@
 
 ## NEW FEATURES
 
+- `mixedmirt` now supports interaction effects in random intercepts, including cross-level
+  interactions
+
 - added `averageMI()` function to compute multiple imputation averages for the plausible
   values methodology using Rubin's 1987 method
 
