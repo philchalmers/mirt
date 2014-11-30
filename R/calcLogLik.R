@@ -60,9 +60,11 @@ setMethod(
                 theta <- prodterms(theta,prodlist)
             if(length(random) > 0L){
                 for(i in 1L:length(random)){
-                    random[[i]]@drawvals <- DrawValues(x=random[[i]], Theta=theta, pars=pars,
-                                                       fulldata=fulldata, itemloc=itemloc,
-                                                       offterm0=ot, CUSTOM.IND=CUSTOM.IND)
+                    mat <- matrix(0, random[[i]]@ndim, random[[i]]@ndim)
+                    mat[lower.tri(mat, TRUE)] <- random[[i]]@par
+                    if(ncol(mat) > 1L)
+                        mat <- mat + t(mat) - diag(diag(mat))
+                    random[[i]]@drawvals <- mirt_rmvnorm(nrow(random[[i]]@drawvals), sigma = mat)
                 }
                 ot <- OffTerm(random, J=J, N=N)
             }
