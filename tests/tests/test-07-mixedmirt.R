@@ -127,12 +127,19 @@ test_that('polytomous', {
     covdata <- data.frame(group=rep(c('g1', 'g2', 'g3'), each=n))
 
     mod <- mixedmirt(dat, covdata = covdata, 1, itemtype = '2PL', fixed = ~ 0 + items,
-                     lr.fixed = ~ group, verbose=FALSE)
+                     lr.fixed = ~ group, verbose=FALSE, SE=TRUE)
     cfs <- coef(mod, digits=10, printSE=TRUE)
     expect_equal(as.numeric(cfs$lr.betas)[-c(1:2)], c(1.4272120, 0.2088452, 2.9126819, 0.1428500),
                  tolerance=1e-4)
     expect_equal(mod@logLik, -4359.447, tolerance = 1e-2)
     expect_equal(mod@df, 1001)
+
+    mod2 <- mixedmirt(dat, covdata = covdata, 1, itemtype = 'Rasch', fixed = ~ 0 + items,
+                     lr.fixed = ~ group, verbose=FALSE, draws=1, SE=FALSE)
+    so <- summary(mod2, verbose=FALSE)
+    expect_equal(as.numeric(c(so$random$Theta, so$lr.out[,1])),
+                 c(0.1958198, 0.0000000, 0.7080000, 1.4870000), tolerance=1e-4)
+    expect_equal(mod2@logLik, -4685.077, tolerance = 1e-4)
 
     #uncorrelated random slope
     covdata$theta <- Theta

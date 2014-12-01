@@ -278,8 +278,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             }
         }
         for(group in 1L:ngroups){
+            tmptheta <- gtheta0[[group]]
+            if(is(gstructgrouppars[[1L]]$gmeans, 'matrix'))
+                tmptheta <- tmptheta - gstructgrouppars[[1L]]$gmeans
             i <- J + 1L
-            deriv <- Deriv(x=pars[[group]][[i]], Theta=gtheta0[[group]], CUSTOM.IND=CUSTOM.IND)
+            deriv <- Deriv(x=pars[[group]][[i]], Theta=tmptheta, CUSTOM.IND=CUSTOM.IND)
             g[pars[[group]][[i]]@parnum] <- deriv$grad
             h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
         }
