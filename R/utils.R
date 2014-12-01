@@ -1146,8 +1146,14 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
                            dimnames=list(uniq_levels, NULL))
         mtch <- match(levels, rownames(drawvals))
         gdesign <- matrix(1, length(levels), 1L, dimnames = list(NULL, splt[2L]))
-        if(ncol(sframe) != 0L)
-            gdesign <- cbind(gdesign, as.matrix(sframe))
+        if(ncol(sframe) != 0L){
+            if(grepl('-1+', splt[1L])){
+                splt[1L] <- strsplit(splt[1L], '-1\\+')[[1]][2]
+            } else if(grepl('0+', splt[1L]))
+                splt[1L] <- strsplit(splt[1L], '0\\+')[[1]][2]
+            gdesign <- cbind(gdesign,
+                             model.matrix(as.formula(paste0('~',splt[1L])), sframe)[,-1L,drop=FALSE])
+        }
         tmp <- matrix(-Inf, ndim, ndim)
         diag(tmp) <- 1e-4
         lbound <- tmp[lower.tri(tmp, diag=TRUE)]

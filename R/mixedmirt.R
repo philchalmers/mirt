@@ -49,7 +49,7 @@
 #'   of the form \code{v1 + ... v_n | G}, where \code{G} is the grouping variable and \code{v_n} are
 #'   random numeric predictors within each group. If no intercept value is specified then by default
 #'   the correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by
-#'   including the \code{~ -1 + ...} constant. \code{G} may contain interaction terms, such as
+#'   including the \code{~ -1 + ...} or 0 constant. \code{G} may contain interaction terms, such as
 #'   \code{group:items} to include cross or person-level interactions effects
 #' @param itemtype same as itemtype in \code{\link{mirt}}, expect does not support the following
 #'   item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}

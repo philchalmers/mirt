@@ -136,9 +136,10 @@ test_that('polytomous', {
 
     #uncorrelated random slope
     covdata$theta <- Theta
+    covdata$cut <- cut(Theta, breaks=2)
     mod <- mixedmirt(dat, covdata = covdata, 1, fixed = ~ 0 + items,
-                     random = ~ -1 + theta|group, verbose=FALSE)
-    cfs <- coef(mod, digits=10)
-    expect_equal(as.numeric(cfs$group[1,]), c(0.06698951, 0.00000000, 0.42557580), tolerance = 1e-4)
+                     random = ~ -1 + cut + theta|group, verbose=FALSE)
+    so <- summary(mod, verbose=FALSE)
+    expect_equal(as.numeric(diag(so$random$group)), c(0.04296188, 0.11064536, 0.63083277), tolerance = 1e-4)
 
 })

@@ -20,10 +20,11 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'MixedClass',
-    definition = function(object, digits = 3, ...)
+    definition = function(object, digits = 3, verbose = TRUE, ...)
     {
-        cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
-            "\n\n", sep = "")
+        if(verbose)
+            cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
+                "\n\n", sep = "")
         nbetas <- ncol(object@pars[[1L]]@fixed.design)
         out <- data.frame()
         if(nbetas > 0L){
@@ -32,12 +33,14 @@ setMethod(
                                     row.names=names(object@pars[[1L]]@est[1L:nbetas]))
             out$'z.value' <- out$Estimate / out$'Std.Error'
         }
-        if(all(dim(out) != 0L)){
-            cat('--------------\nFIXED EFFECTS:\n')
-            print(round(out, digits))
+        if(verbose){
+            if(all(dim(out) != 0L)){
+                cat('--------------\nFIXED EFFECTS:\n')
+                print(round(out, digits))
+            }
+            cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')
+            cat('Correlations on upper diagonal\n')
         }
-        cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')
-        cat('Correlations on upper diagonal\n')
         par <- object@pars[[length(object@pars)]]@par[-c(1L:object@nfact)]
         sigma <- matrix(0, object@nfact, object@nfact)
         sigma[lower.tri(sigma, TRUE)] <- par
@@ -66,17 +69,21 @@ setMethod(
             }
         }
         names(rand) <- listnames
-        cat('\n')
-        print(rand, digits)
+        if(verbose){
+            cat('\n')
+            print(rand, digits)
+        }
         if(length(object@lrPars)){
-            cat('--------------\nLATENT REGRESSION FIXED EFFECTS:\n')
             betas <- object@lrPars@beta
             SE.betas <- matrix(object@lrPars@SEpar, nrow(betas), ncol(betas),
                                dimnames = list(rownames(betas), paste0('Std.Error_', colnames(betas))))
             z <- betas/SE.betas
             colnames(z) <- paste0('z_', colnames(betas))
             lr.out <- round(data.frame(betas, SE.betas, z), digits)
-            print(lr.out)
+            if(verbose){
+                cat('--------------\nLATENT REGRESSION FIXED EFFECTS:\n')
+                print(lr.out)
+            }
         } else lr.out <- NULL
         return(invisible(list(random=rand, fixed=out, lr.out=lr.out)))
     }
