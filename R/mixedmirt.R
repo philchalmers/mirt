@@ -57,9 +57,12 @@
 #'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of
 #'   fixed effect predictors (i.e., item intercepts). By default an \code{items} variable is
 #'   reserved for modeling the item intercept parameters
-#' @param lr.fixed an R forumala to specificy regression
+#' @param lr.fixed an R forumala (or list of formulas) to specificy regression
 #'   effects in the latent variables from the variables in \code{covdata}. This is used to construct models such as the so-called
-#'   'latent regression model' to expalin person-level ability/trait differences
+#'   'latent regression model' to expalin person-level ability/trait differences. If a named list
+#'   of formulas is supplied (where the names correspond to the latent trait names in \code{model})
+#'   then specific regression effects can be estimated for each factor. Supplying a single formula
+#'   will estimate the regression parameters for all latent traits by default
 #' @param lr.random (CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
 #'   latent trait scores, where the syntax uses the same style as in the \code{random} argument.
 #'   Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
@@ -256,6 +259,17 @@
 #' coef(mod1a)$lr.betas
 #' summary(mod1b)
 #'
+#' # specifying specific regression effects is accomplished by passing a list of formula
+#' model <- mirt.model('F1 = 1-5
+#'                      F2 = 6-10')
+#' covdata$contvar <- rnorm(nrow(covdata))
+#' mod2 <- mirt(dat, model, itemtype = 'Rasch', covdata=covdata,
+#'         formula = list(F1 = ~ group + contvar, F2 = ~ group))
+#' coef(mod2)[11:12]
+#' mod2b <- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
+#'         lr.fixed = list(F1 = ~ group + contvar, F2 = ~ group))
+#' summary(mod2b)
+#'
 #' ####################################################
 #' ## Simulated Multilevel Rasch Model
 #'
@@ -348,7 +362,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(is.null(constrain)) constrain <- list()
     if(class(lr.random) == 'formula') lr.random <- list(lr.random)
     if((lr.fixed != ~ 1) || !is.null(lr.random)){
-        latent.regression <- list(df=model.frame(formula=lr.fixed, covdata), formula=lr.fixed,
+        latent.regression <- list(df=covdata, formula=lr.fixed,
                                   EM=FALSE, lr.random=lr.random)
     } else latent.regression <- NULL
     sv <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,

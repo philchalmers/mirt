@@ -1179,7 +1179,19 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
 
 make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
     nfact <- length(factorNames)
-    X <- model.matrix(formula, df)
+    if(is.list(formula)){
+        if(!all(names(formula) %in% factorNames))
+            stop('List of fixed effect names do not match factor names')
+        estnames <- X <- vector('list', length(formula))
+        for(i in 1L:length(formula)){
+            X[[i]] <- model.matrix(formula[[i]], df)
+            estnames[[i]] <- colnames(X[[i]])
+        }
+        X <- do.call(cbind, X)
+        X <- X[,unique(colnames(X))]
+    } else {
+        X <- model.matrix(formula, df)
+    }
     tXX <- t(X) %*% X
     if(ncol(X) > 1) inv_tXX <- solve(tXX)
     else inv_tXX <- matrix(0)
@@ -1187,9 +1199,17 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
     est <- matrix(TRUE, nrow(beta), ncol(beta))
-    est[1L, ] <- FALSE
+    est[1,] <- FALSE
+    if(is.list(formula)){
+        for(i in 1L:length(formula)){
+            name <- names(formula)[[i]]
+            pick <- which(name == factorNames)
+            est[!(colnames(X) %in% estnames[[i]]), pick] <- FALSE
+        }
+    }
     est <- as.logical(est)
-    names(est) <- paste(factorNames, colnames(X), sep='_')
+    names(est) <- as.character(t(outer(factorNames, colnames(X),
+                                     FUN = function(X, Y) paste(X,Y,sep="_"))))
     colnames(beta) <- factorNames
     rownames(beta) <- colnames(X)
     par <- as.numeric(beta)
@@ -1211,7 +1231,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
                prior.type=rep(0L, length(par)),
                prior_1=rep(NaN,length(par)),
                prior_2=rep(NaN,length(par)),
-               formula=formula,
+               formula=if(!is.list(formula)) list(formula) else formula,
                EM=EM)
     ret
 }
@@ -1365,7 +1385,7 @@ mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE)
         distval <- matrix(0, nrow(mean), nrow(x))
         for(i in 1L:nrow(mean)){
             centered <- t(t(x) - mean[i,])
-            distval[i, ] <- (centered %*% isigma) * centered
+            distval[i, ] <- rowSums((centered %*% isigma) * centered)
         }
     } else {
         if(is.matrix(mean)){

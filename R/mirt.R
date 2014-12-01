@@ -356,8 +356,11 @@
 #'   to be within the same group and therefore have the same number of item categories
 # @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
 #' @param covdata a data.frame of data used for latent regression models
-#' @param formula an R formula indicating how the latent traits can be regressed using external
-#'   covariates in \code{covdata}
+#' @param formula an R formula (or list of formulas) indicating how the latent traits
+#'   can be regressed using external covariates in \code{covdata}. If a named list
+#'   of formulas is supplied (where the names correspond to the latent trait names in \code{model})
+#'   then specific regression effects can be estimated for each factor. Supplying a single formula
+#'   will estimate the regression parameters for all latent traits by default
 #' @param key a numeric vector of the response scoring key. Required when using nested logit item
 #'   types, and must be the same length as the number of items used. Items that are not nested logit
 #'   will ignore this vector, so use \code{NA} in item locations that are not applicable
@@ -892,9 +895,9 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 {
     Call <- match.call()
     if(!is.null(covdata) && !is.null(formula)){
-        covdata <- as.data.frame(covdata)
-        X <- model.frame(formula, covdata)
-        latent.regression <- list(df=X, formula=formula, EM=TRUE)
+        if(!is.data.frame(covdata))
+            stop('covdata must be a data.frame object')
+        latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
     } else latent.regression <- NULL
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,

@@ -37,9 +37,12 @@ including the \code{~ -1 + ...} or 0 constant. \code{G} may contain interaction 
 \item{itemtype}{same as itemtype in \code{\link{mirt}}, expect does not support the following
 item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}}
 
-\item{lr.fixed}{an R forumala to specificy regression
+\item{lr.fixed}{an R forumala (or list of formulas) to specificy regression
 effects in the latent variables from the variables in \code{covdata}. This is used to construct models such as the so-called
-'latent regression model' to expalin person-level ability/trait differences}
+'latent regression model' to expalin person-level ability/trait differences. If a named list
+of formulas is supplied (where the names correspond to the latent trait names in \code{model})
+then specific regression effects can be estimated for each factor. Supplying a single formula
+will estimate the regression parameters for all latent traits by default}
 
 \item{lr.random}{(CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
 latent trait scores, where the syntax uses the same style as in the \code{random} argument.
@@ -276,6 +279,17 @@ mod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.fixed = ~group, item
 anova(mod0, mod1b)
 coef(mod1a)$lr.betas
 summary(mod1b)
+
+# specifying specific regression effects is accomplished by passing a list of formula
+model <- mirt.model('F1 = 1-5
+                     F2 = 6-10')
+covdata$contvar <- rnorm(nrow(covdata))
+mod2 <- mirt(dat, model, itemtype = 'Rasch', covdata=covdata,
+        formula = list(F1 = ~ group + contvar, F2 = ~ group))
+coef(mod2)[11:12]
+mod2b <- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
+        lr.fixed = list(F1 = ~ group + contvar, F2 = ~ group))
+summary(mod2b)
 
 ####################################################
 ## Simulated Multilevel Rasch Model

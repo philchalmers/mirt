@@ -322,6 +322,6 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
     scores <- ret[[1L]]; vars <- ret[[2L]]
     beta <- solve(t(X) %*% X) %*% t(X) %*% scores
     siglong <- colMeans(vars)
-    beta[1,] <- 0 #fix intercepts to 0
+    beta[!lrPars@est] <- lrPars@par[!lrPars@est]
     return(list(beta=beta, siglong=c(rep(0, ncol(Theta)), siglong)))
 }

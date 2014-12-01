@@ -57,7 +57,7 @@ setClass("lrPars",
                         prior.type='integer',
                         prior_1='numeric',
                         prior_2='numeric',
-                        formula='formula',
+                        formula='list',
                         EM='logical')
 )
 

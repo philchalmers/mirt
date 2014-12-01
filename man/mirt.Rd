@@ -47,8 +47,11 @@ See \code{SE.type} for the type of estimates available}
 
 \item{covdata}{a data.frame of data used for latent regression models}
 
-\item{formula}{an R formula indicating how the latent traits can be regressed using external
-covariates in \code{covdata}}
+\item{formula}{an R formula (or list of formulas) indicating how the latent traits
+can be regressed using external covariates in \code{covdata}. If a named list
+of formulas is supplied (where the names correspond to the latent trait names in \code{model})
+then specific regression effects can be estimated for each factor. Supplying a single formula
+will estimate the regression parameters for all latent traits by default}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
