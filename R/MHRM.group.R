@@ -256,6 +256,18 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 }
             }
         }
+        #adjust cand.t.var
+        PA <- sapply(gtheta0, function(x) attr(x, "Proportion Accepted"))
+        NS <- sapply(gtheta0, function(x) nrow(x))
+        cand.t.var <- controlCandVar(sum(PA * NS / sum(NS)), cand.t.var)
+        if(RAND && cycles > 101L){
+            for(j in 1:length(random)){
+                random[[j]]@cand.t.var <- controlCandVar(
+                               attr(random[[j]]@drawvals, "Proportion Accepted"),
+                               random[[j]]@cand.t.var, min = .01, max = .5)
+
+            }
+        }
         Draws.time <- Draws.time + proc.time()[3L] - start
 
         #Step 2. Find average of simulated data gradients and hessian

@@ -33,7 +33,7 @@ test_that('mixed dich', {
 
     #group as a fixed effect predictor (aka, uniform dif)
     mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
-                                       verbose = FALSE, draws = 10)
+                                       verbose = FALSE, draws = 1)
     expect_is(mod1, 'MixedClass')
     cfs <- as.numeric(do.call(c, coef(mod1, digits=4)))
     expect_equal(cfs, c(1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-1.704,-1.8948,-1.5132,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-2.1167,-2.3158,-1.9176,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-1.7108,-1.9018,-1.5199,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-1.0544,-1.238,-0.8709,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-0.319,-0.5036,-0.1344,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-1.2508,-1.4358,-1.0657,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-1.6903,-1.8809,-1.4997,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-2.1316,-2.3311,-1.9322,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,-2.0354,-2.2327,-1.8382,0,NA,NA,1,NA,NA,1.1102,0.9689,1.2515,2.2606,2.1118,2.4094,1,NA,NA,1.6107,1.3396,1.8818,0,NA,NA,1,NA,NA,0,NA,NA,0.1111,NaN,NaN),
@@ -44,7 +44,7 @@ test_that('mixed dich', {
     expect_equal(wld$W[1], 2.3378, tolerance = 1e-4)
 
     mod1a <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, SE=FALSE,
-                      verbose = FALSE, draws = 10, internal_constraints = FALSE)
+                      verbose = FALSE, draws = 1, internal_constraints = FALSE)
     cfs <- as.numeric(do.call(c, coef(mod1a, digits=4)))
     expect_equal(cfs, c(0.7945,1.6548,1,-1.3507,0,1,1.3901,2.7467,1,-2.4426,0,1,2.4551,4.3481,1,-3.137,0,1,0.3674,0.6741,1,-0.2854,0,1,1.5117,2.664,1,-0.5424,0,1,1.4113,3.148,1,-1.643,0,1,0.9827,1.9094,1,-1.5037,0,1,1.4213,2.5786,1,-2.3912,0,1,0.8462,1.9336,1,-1.7959,0,1,0.9109,2.0724,1,1.6948,0,1,0,0.1185),
                  tolerance = 1e-2)
@@ -52,17 +52,17 @@ test_that('mixed dich', {
     mod_items <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items,
                        verbose = FALSE, draws = 1)
     cfs <- c(coef(mod_items)[['GroupPars']], coef(mod_items)[['items']])
-    expect_equal(cfs[1:3], c(0, 1.028, 1.094), tolerance = 1e-3)
+    expect_equal(cfs[1:3], c(0, .981, 1.114), tolerance = 1e-3)
 
     mod_items.group <- mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items:group,
                            verbose = FALSE, draws = 1)
     cfs <- c(coef(mod_items.group)[['GroupPars']], coef(mod_items.group)[['items:group']])
-    expect_equal(cfs[1:3], c(0, .127, 2.166), tolerance = 1e-3)
+    expect_equal(cfs[1:3], c(0, .121, 2.198), tolerance = 1e-3)
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
     mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
-                                        itemtype = '2PL', verbose = FALSE, draws = 10)
+                                        itemtype = '2PL', verbose = FALSE, draws = 1)
     expect_is(mod1b, 'MixedClass')
     expect_equal(mod1b@df, 1001)
     cfs <- as.numeric(do.call(c, coef(mod1b, digits=4)))
@@ -71,7 +71,7 @@ test_that('mixed dich', {
 
     covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
     rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group,
-                                        draws = 10, verbose = FALSE)
+                                        draws = 1, verbose = FALSE)
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 1011)
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
@@ -82,13 +82,13 @@ test_that('polytomous', {
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
     model <- mirt.model('F1 = 1-4', quiet = TRUE)
     mod <- mixedmirt(Science, covdat, model=model, SE=FALSE,
-                     fixed = ~ 0 + group, verbose = FALSE, draws = 10)
+                     fixed = ~ 0 + group, verbose = FALSE, draws = 1)
     expect_is(mod, 'MixedClass')
     cfs <- as.numeric(na.omit(do.call(c, coef(mod, digits=4))))
     expect_equal(cfs, c(-0.0341,1,0,1,2,3,0,3.0959,5.707,4.3338,-0.0341,1,0,1,2,3,0,1.9118,2.8388,0.9956,-0.0341,1,0,1,2,3,0,2.6607,4.0983,2.9785,-0.0341,1,0,1,2,3,0,2.4637,3.3796,2.0369,0,1.0008),
                  tolerance = 1e-2)
 
-    mod2 <- mixedmirt(Science, covdat, model=model, draws = 10,
+    mod2 <- mixedmirt(Science, covdat, model=model, draws = 1,
                                        fixed = ~ 0 + group, itemtype = 'gpcm', verbose = FALSE)
     expect_is(mod2, 'MixedClass')
     expect_equal(mod@df - mod2@df, 3)
@@ -96,7 +96,7 @@ test_that('polytomous', {
     expect_equal(cfs, c(-0.1584,-0.3861,0.0693,0.8302,0.5955,1.0649,0,1,2,3,0,2.8404,1.7808,3.8999,5.3862,4.2391,6.5334,4.1557,2.9773,5.334,-0.1584,-0.3861,0.0693,0.8382,0.6411,1.0352,0,1,2,3,0,1.7847,1.271,2.2984,2.7302,2.1151,3.3453,1.0829,0.4113,1.7546,-0.1584,-0.3861,0.0693,2.5422,0,1,2,3,0,5.2397,7.6962,5.7294,-0.1584,-0.3861,0.0693,0.6934,0.4951,0.8918,0,1,2,3,0,2.1404,1.587,2.6938,3.0092,2.3793,3.6392,1.93,1.2478,2.6122,0,1),
                  tolerance = 1e-2)
 
-    mod3 <- mixedmirt(Science, covdat, model=model, draws = 10,
+    mod3 <- mixedmirt(Science, covdat, model=model, draws = 1,
                                        fixed = ~ 0 + group, itemtype = 'graded', verbose = FALSE)
     expect_is(mod3, 'MixedClass')
     expect_equal(mod3@df, 238)
@@ -110,7 +110,7 @@ test_that('polytomous', {
     expect_is(rmod1, 'MixedClass')
     expect_equal(rmod1@df, 238)
     cfs <- as.numeric(na.omit(do.call(c, coef(rmod1, digits=4))))
-    expect_equal(cfs, c(1.0349,0.6996,1.3702,4.8749,3.9217,5.8281,2.6497,2.2231,3.0764,-1.4491,-1.7604,-1.1379,1.2446,0.8882,1.601,2.955,2.4756,3.4344,0.9207,0.6299,1.2116,-2.2647,-2.6724,-1.8571,2.3348,1.6211,3.0486,5.3065,4.0966,6.5164,2.2587,1.6466,2.8708,-1.9636,-2.502,-1.4252,1.0892,0.7292,1.4492,3.3603,2.8233,3.8974,1.0041,0.7246,1.2837,-1.6724,-2.0159,-1.3289,0,1,0.0044),
+    expect_equal(cfs, c(1.0458,0.6874,1.4042,4.8686,3.9129,5.8243,2.6404,2.2136,3.0672,-1.4691,-1.7905,-1.1478,1.2377,0.8842,1.5911,2.9332,2.4629,3.4035,0.9035,0.6214,1.1857,-2.2763,-2.6813,-1.8713,2.2356,1.5405,2.9307,5.1481,3.9904,6.3058,2.1737,1.5786,2.7687,-1.9378,-2.4544,-1.4213,1.1222,0.7614,1.483,3.3691,2.8342,3.9039,0.9976,0.7227,1.2725,-1.7041,-2.0515,-1.3567,0,1,0.003),
                  tolerance = 1e-2)
 
     re <- randef(rmod1, ndraws=100)
@@ -147,6 +147,6 @@ test_that('polytomous', {
     mod <- mixedmirt(dat, covdata = covdata, 1, fixed = ~ 0 + items,
                      random = ~ -1 + cut + theta|group, verbose=FALSE)
     so <- summary(mod, verbose=FALSE)
-    expect_equal(as.numeric(diag(so$random$group)), c(0.04296188, 0.11064536, 0.63083277), tolerance = 1e-4)
+    expect_equal(as.numeric(diag(so$random$group)), c(0.04038883, 0.10988249, 0.57688499), tolerance = 1e-4)
 
 })

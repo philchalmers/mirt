@@ -1559,6 +1559,13 @@ rmsea <- function(X2, df, N){
     ret
 }
 
+controlCandVar <- function(PA, cand, min = .1, max = .6){
+    if(PA > max) cand <- cand * 1.05
+    else if(PA < min) cand <- cand * 0.9
+    if(cand < .001) cand <- .001
+    cand
+}
+
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 
