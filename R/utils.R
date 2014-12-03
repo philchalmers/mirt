@@ -1198,15 +1198,15 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
-    est <- matrix(TRUE, nrow(beta), ncol(beta))
-    est[1,] <- FALSE
     if(is.list(formula)){
+        est <- matrix(FALSE, nrow(beta), ncol(beta))
         for(i in 1L:length(formula)){
             name <- names(formula)[[i]]
             pick <- which(name == factorNames)
-            est[!(colnames(X) %in% estnames[[i]]), pick] <- FALSE
+            est[colnames(X) %in% estnames[[i]], pick] <- TRUE
         }
-    }
+    } else est <- matrix(TRUE, nrow(beta), ncol(beta))
+    est[1,] <- FALSE
     est <- as.logical(est)
     names(est) <- as.character(t(outer(factorNames, colnames(X),
                                      FUN = function(X, Y) paste(X,Y,sep="_"))))

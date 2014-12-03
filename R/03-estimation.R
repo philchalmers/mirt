@@ -344,6 +344,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(length(lrPars)){
+            if(opts$SE) ## TODO
+                message('Information matrix computation for latent regression estimates
+                        currently disabled. Use boot.mirt() instead for now.')
+            opts$SE <- FALSE
             opts$full <- TRUE
         } else opts$full <- FALSE
         nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)

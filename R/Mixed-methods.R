@@ -79,10 +79,13 @@ setMethod(
                                dimnames = list(rownames(betas), paste0('Std.Error_', colnames(betas))))
             z <- betas/SE.betas
             colnames(z) <- paste0('z_', colnames(betas))
-            lr.out <- round(data.frame(betas, SE.betas, z), digits)
+            keep <- colSums(is.na(SE.betas)) != nrow(betas)
+            lr.out <- data.frame(betas, SE.betas, z)
             if(verbose){
-                cat('--------------\nLATENT REGRESSION FIXED EFFECTS:\n')
-                print(lr.out)
+                cat('--------------\nLATENT REGRESSION FIXED EFFECTS:\n\n')
+                print(round(betas[, keep, drop=FALSE], digits))
+                cat("\n")
+                print(round(data.frame(SE.betas[, keep, drop=FALSE], z[, keep, drop=FALSE]), digits))
             }
         } else lr.out <- NULL
         return(invisible(list(random=rand, fixed=out, lr.out=lr.out)))
