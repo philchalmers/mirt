@@ -325,6 +325,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     }
     if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
         stop('Predictor variable inputs must be data.frame objects')
+    if(nrow(covdata) != nrow(data))
+        stop('number of rows in covdata do not match number of rows in data')
     dropcases <- which(rowSums(is.na(covdata)) != 0)
     if(length(dropcases) > 0L){
         data <- data[-dropcases, ]

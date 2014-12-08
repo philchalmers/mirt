@@ -897,6 +897,14 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     if(!is.null(covdata) && !is.null(formula)){
         if(!is.data.frame(covdata))
             stop('covdata must be a data.frame object')
+        if(nrow(covdata) != nrow(data))
+            stop('number of rows in covdata do not match number of rows in data')
+        tmp <- apply(covdata, 1, function(x) sum(is.na(x)) > 0)
+        if(any(tmp)){
+            message('removing rows with NAs in covdata')
+            covdata <- covdata[-tmp, ]
+            data <- data[-tmp, ]
+        }
         latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
     } else latent.regression <- NULL
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),

@@ -79,7 +79,7 @@ setMethod(
                                dimnames = list(rownames(betas), paste0('Std.Error_', colnames(betas))))
             z <- betas/SE.betas
             colnames(z) <- paste0('z_', colnames(betas))
-            keep <- colSums(is.na(SE.betas)) != nrow(betas)
+            keep <- colSums(betas != 0) > 0
             lr.out <- data.frame(betas, SE.betas, z)
             if(verbose){
                 cat('--------------\nLATENT REGRESSION FIXED EFFECTS:\n\n')
