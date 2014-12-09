@@ -35,15 +35,13 @@ variability}
 \item{...}{additional arguments to be passed to lattice}
 }
 \description{
-THIS FUNCTION IS CURRENTLY EXPERIMENTAL.
-}
-\details{
 Function performs various omnibus differential test functioning procedures on an object
 estimated with \code{multipleGroup()}. If the latent means/covariances are suspected to differ
 then the input object should contain a set of 'anchor' items to ensure that only differential
 test features are being detected rather than group differences. Returns signed (average area
 above and below) and unsigned (total area) statistics, with descriptives such as the percent
-average bias between group total scores for each statistic.
+average bias between group total scores for each statistic. If a grid of Theta values is passed,
+these can be equaluated as well to determine specific DTF location effects.
 }
 \examples{
 \dontrun{

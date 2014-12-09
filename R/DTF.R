@@ -1,14 +1,13 @@
 #' Differential test functioning
 #'
-#' THIS FUNCTION IS CURRENTLY EXPERIMENTAL. 
-#'
 #' Function performs various omnibus differential test functioning procedures on an object
 #' estimated with \code{multipleGroup()}. If the latent means/covariances are suspected to differ
 #' then the input object should contain a set of 'anchor' items to ensure that only differential
 #' test features are being detected rather than group differences. Returns signed (average area
 #' above and below) and unsigned (total area) statistics, with descriptives such as the percent
-#' average bias between group total scores for each statistic.
-#' 
+#' average bias between group total scores for each statistic. If a grid of Theta values is passed,
+#' these can be equaluated as well to determine specific DTF location effects.
+#'
 #' @aliases DTF
 #' @param mod a multipleGroup object which estimated only 2 groups
 #' @param MI a number indicating how many draws to take to form a suitable multiple imputation
@@ -17,17 +16,18 @@
 #'   test for the sDTF statistic
 #' @param CI range of confidence interval when using MI input
 #' @param npts number of points to use in the integration. Default is 1000
-#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is 
+#' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
-#' @param Theta_nodes an optional matrix of Theta values to be evaluated in the MI draws for the 
+#' @param Theta_nodes an optional matrix of Theta values to be evaluated in the MI draws for the
 #'   sDTF statistic. However, these values are not averaged across, and instead give the bootstrap
-#'   confidence intervals at the respective Theta nodes. Useful when following up a large 
-#'   uDTF/sDTF statistic to determine where the difference between the test curves are large 
+#'   confidence intervals at the respective Theta nodes. Useful when following up a large
+#'   uDTF/sDTF statistic to determine where the difference between the test curves are large
 #'   (while still accounting for sampling variability). Returns a matrix with observed
 #'   variability
 #' @param plot logical; plot the test score functions with imputed confidence envelopes?
 #' @param auto.key logical; automatically generate key in lattice plot?
 #' @param ... additional arguments to be passed to lattice
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 #' @keywords DTF
@@ -58,26 +58,26 @@
 #' DTF(mod)
 #' mirtCluster()
 #' DTF(mod, MI = 1000) #95% C.I. for sDTI containing 0. uDTF is very small
-#' 
+#'
 #' ## -------------
-#' ## random slopes and intercepts for 15 items, and latent mean difference 
+#' ## random slopes and intercepts for 15 items, and latent mean difference
 #' ##    (no systematic DTF should exist, but DIF will be present)
 #' dat1 <- simdata(a, d, N, itemtype = 'dich', mu=.50, sigma=matrix(1.5))
-#' dat2 <- simdata(a + c(numeric(15), sign(rnorm(n-15))*runif(n-15, .25, .5)),     
+#' dat2 <- simdata(a + c(numeric(15), sign(rnorm(n-15))*runif(n-15, .25, .5)),
 #'                 d + c(numeric(15), sign(rnorm(n-15))*runif(n-15, .5, 1)), N, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
 #' mod1 <- multipleGroup(dat, 1, group=group)
 #' plot(mod1, type = 'score') #does not account for group differences! Need anchors
-#' 
+#'
 #' mod2 <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type = 'crossprod',
 #'                       invariance=c('free_means', 'free_var'))
 #' plot(mod2, type = 'score')
-#' 
+#'
 #' #significant DIF in multiple items....
-#' DIF(mod2, which.par=c('a1', 'd'), items2test=16:30) 
+#' DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 #' DTF(mod2)
 #' DTF(mod2, MI=1000)
-#' 
+#'
 #' ## -------------
 #' ## systematic differing slopes and intercepts (clear DTF)
 #' dat1 <- simdata(a, d, N, itemtype = 'dich', mu=.50, sigma=matrix(1.5))
@@ -87,12 +87,12 @@
 #' mod3 <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type='crossprod',
 #'                       invariance=c('free_means', 'free_var'))
 #' plot(mod3, type = 'score') #visable DTF happening
-#' 
-#' DIF(mod3, c('a1', 'd'), items2test=16:30) 
+#'
+#' DIF(mod3, c('a1', 'd'), items2test=16:30)
 #' DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally lower
-#' DTF(mod3, MI=1000) 
-#' DTF(mod3, MI=1000, plot=TRUE) 
-#' 
+#' DTF(mod3, MI=1000)
+#' DTF(mod3, MI=1000, plot=TRUE)
+#'
 #' }
 DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_nodes = NULL,
                 plot = FALSE, auto.key = TRUE, ...){
@@ -104,7 +104,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
             for(g in 1L:2L){
                 while(TRUE){
                     tmp <- try(imputePars(pars=omod@pars[[g]]@pars, covB=covBs[[g]],
-                                          imputenums=imputenums[[g]], constrain=omod@constrain), 
+                                          imputenums=imputenums[[g]], constrain=omod@constrain),
                                silent=TRUE)
                     if(!is(tmp, 'try-error')) break
                 }
@@ -130,7 +130,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                     "unsigned.DTF" = uDTF, "unsigned.DTF(%)" = uDTF_percent)
         ret
     }
-    
+
     if(class(mod) != 'MultipleGroupClass')
         stop('mod input was not estimated by multipleGroup()')
     if(length(mod@pars) != 2L)
@@ -140,7 +140,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
             stop('Theta_nodes must be a matrix')
         if(ncol(Theta_nodes) != mod@nfact)
             stop('Theta_nodes input does not have the correct number of factors')
-        colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1) 
+        colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1)
             paste0('Theta.', 1:ncol(Theta_nodes)) else 'Theta'
     }
     if(plot){
@@ -148,7 +148,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
             stop('Must specificy number of imputations to generate plot')
         Theta_nodes <- NULL
     }
-    
+
     J <- length(mod@K)
     if(is.null(MI)){
         MI <- 1L
@@ -170,7 +170,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                 is_na <- is.na(diag(info))
                 return(solve(info[!is_na, !is_na]))
                 }), silent=TRUE)
-            if(is(covBs, 'try-error')) 
+            if(is(covBs, 'try-error'))
                 stop('Could not compute inverse of information matrix')
             imputenums <- vector('list', 2L)
             for(g in 1L:2L){
@@ -189,22 +189,22 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
     list_scores <- myLapply(1L, fn, omod=mod, impute=FALSE, covBs=NULL, Theta_nodes=Theta_nodes,
                             imputenums=NULL, max_score=max_score, Theta=Theta, plot=plot)
     if(impute){
-        
+
         bs_range <- function(x, CI){
             ss <- sort(x)
             N <- length(ss)
-            ret <- c(upper = ss[ceiling(N * (1 - (1-CI)/2))],                
+            ret <- c(upper = ss[ceiling(N * (1 - (1-CI)/2))],
                      middle = median(x),
                      lower = ss[floor(N * (1-CI)/2)])
             ret
         }
-        
+
         oCM <- list_scores[[1L]]
         list_scores <- myLapply(1L:MI, fn, omod=mod, impute=TRUE, covBs=covBs, max_score=max_score,
-                                imputenums=imputenums, Theta=Theta, Theta_nodes=Theta_nodes, 
+                                imputenums=imputenums, Theta=Theta, Theta_nodes=Theta_nodes,
                                 plot=plot)
         scores <- do.call(rbind, list_scores)
-        if(plot){            
+        if(plot){
             panel.bands <- function(x, y, upper, lower, fill, col,
                                        subscripts, ..., font, fontface){
                 upper <- upper[subscripts]
@@ -212,19 +212,19 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                 panel.polygon(c(x, rev(x)), c(upper, rev(lower)), col = fill, border = FALSE,
                               ...)
             }
-            #for some reason the plot is drawn backwords....use rev() for now 
+            #for some reason the plot is drawn backwords....use rev() for now
             group <- rev(factor(rep(mod@Data$groupNames, each=nrow(Theta))))
             CIs <- apply(scores, 2L, bs_range, CI=CI)
             CIs <- CIs[-2L, ]
             df <- data.frame(Theta=rbind(Theta, Theta), group, TS=oCM, t(CIs))
             return(xyplot(TS ~ Theta, data=df, groups=group, auto.key=auto.key,
-                   upper=df$upper, lower=df$lower, col=c('red', 'blue'), 
+                   upper=df$upper, lower=df$lower, col=c('red', 'blue'),
                    fill=c('red', 'blue'), alpha=0.2,
                    panel = function(x, y, alpha, ...){
                        panel.superpose(x, y, panel.groups = panel.bands, type='l', alpha=alpha, ...)
                        panel.xyplot(x, y, type='l', lty=1,...)
                    },
-                   xlab = expression(theta), ylab = expression(T(theta)), 
+                   xlab = expression(theta), ylab = expression(T(theta)),
                    main = 'Expected Total Score', ...))
         }
         if(!is.null(Theta_nodes)){
