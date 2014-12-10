@@ -1534,8 +1534,8 @@ collapseCells <- function(O, E, mincell = 1){
                 En <- En[-1L,]; On <- On[-1L,]
             } else if(whc == nrow(En)){
                 En[nrow(En)-1L,] <- En[nrow(En)-1L, ] + En[nrow(En),]
-                On[nrow(En)-1L,] <- On[nrow(En)-1L, ] + On[nrow(En),]
-                En <- En[-nrow(En),]; On <- On[-nrow(En),]
+                On[nrow(On)-1L,] <- On[nrow(On)-1L, ] + On[nrow(On),]
+                En <- En[-nrow(En),]; On <- On[-nrow(On),]
             } else {
                 ss <- c(sum(On[whc-1L,]), sum(On[whc+1L,]))
                 up <- (min(ss) == ss)[1L]
