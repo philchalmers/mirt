@@ -1526,6 +1526,7 @@ collapseCells <- function(O, E, mincell = 1){
         #merge across
         L <- En < mincell & En != 0
         while(any(L, na.rm = TRUE)){
+            if(!is.matrix(L)) break
             whc <- min(which(rowSums(L) > 0L))
             if(whc == 1L){
                 En[2L,] <- En[2L, ] + En[1L,]
