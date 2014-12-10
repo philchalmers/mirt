@@ -899,6 +899,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
             stop('covdata must be a data.frame object')
         if(nrow(covdata) != nrow(data))
             stop('number of rows in covdata do not match number of rows in data')
+        if(!(method %in% c('EM', 'QMCEM')))
+            stop('method must be from the EM estimation family')
         tmp <- apply(covdata, 1, function(x) sum(is.na(x)) > 0)
         if(any(tmp)){
             message('removing rows with NAs in covdata')
