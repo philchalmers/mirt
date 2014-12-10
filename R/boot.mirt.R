@@ -5,8 +5,7 @@
 #' package).
 #'
 #' @aliases boot.mirt
-#' @param x an estimated object from \code{mirt}, \code{bfactor}, \code{multipleGroup},
-#'   or \code{mdirt}
+#' @param x an estimated model object
 #' @param R number of draws to use (passed to the \code{boot()} function)
 #' @param ... additional arguments to be passed on to \code{boot(...)}
 #' @keywords bootstrapped standard errors
