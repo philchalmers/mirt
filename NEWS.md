@@ -7,6 +7,8 @@
 
 ## NEW FEATURES
 
+- `boot.mirt` now uses the optimizer used to estimate the model (default previously was EM)
+
 - `mixedmirt` now supports interaction effects in random intercepts, including cross-level
   interactions
 

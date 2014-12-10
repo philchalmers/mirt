@@ -317,6 +317,9 @@ setClass(
 #'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
 #'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
 #'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
+#'     \item{\code{formulas}:}{Object of class \code{"list"}, list of formula}
+#'     \item{\code{covdata}:}{Object of class \code{"data.frame"}, covariate data}
+#'     \item{\code{itemdesign}:}{Object of class \code{"data.frame"}, item design data}
 #'    \item{\code{Call}:}{Object of class \code{"call"}, call }
 #'  }
 #' @section Methods:
@@ -342,7 +345,10 @@ setClass(
     Class = 'MixedClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
                                     random='list',
-                                    cand.t.var='numeric'),
+                                    cand.t.var='numeric',
+                                    formulas='list',
+                                    covdata='data.frame',
+                                    itemdesign='data.frame'),
     validity = function(object) return(TRUE)
 )
 

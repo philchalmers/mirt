@@ -81,7 +81,7 @@
 #'   \code{\link{mirt}} for more details and examples
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{mirt}}, \code{\link{randef}}
+#' @seealso \code{\link{mirt}}, \code{\link{randef}}, \code{\link{boot.mirt}}
 #' @export mixedmirt
 #' @examples
 #'
@@ -307,6 +307,8 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     Call <- match.call()
     svinput <- pars
     iconstrain <- constrain
+    covdataold <- covdata
+    itemdesignold <- if(is.null(itemdesign)) data.frame() else itemdesign
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
         stop('itemtype contains unsupported classes of items')
@@ -401,6 +403,10 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     }
     if(is.data.frame(svinput)) pars <- svinput
     if(!internal_constraints) constrain <- iconstrain
+    attr(mixed.design, 'covdata') <- covdataold
+    attr(mixed.design, 'itemdesign') <- itemdesignold
+    attr(mixed.design, 'formula') <- list(fixed=fixed, random=random, lr.fixed=lr.fixed,
+                                          lr.random=lr.random)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
                       SE=SE, latent.regression=latent.regression, ...)

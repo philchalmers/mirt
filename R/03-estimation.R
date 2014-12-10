@@ -796,6 +796,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            cand.t.var=ESTIMATE$cand.t.var,
                            information=ESTIMATE$info,
                            lrPars=lrPars,
+                           formulas=attr(mixed.design, 'formula'),
+                           covdata=attr(mixed.design, 'covdata'),
+                           itemdesign=attr(mixed.design, 'itemdesign'),
                            TOL=opts$TOL)
             } else if(PrepList[[1L]]$exploratory){
                 FF <- F %*% t(F)

@@ -66,7 +66,7 @@ mod2values <- function(x){
                 prior.type <- c(prior.type, tmpgroup[[i]]@prior.type)
                 prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
                 prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
-                item <- c(item, names(tmpgroup[[i]]@est))
+                item <- c(item, rep('RANDOM', length(tmpgroup[[i]]@est)))
                 class <- c(class, rep('RandomPars', length(tmpgroup[[i]]@parnum)))
             }
         }

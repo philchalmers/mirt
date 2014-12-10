@@ -325,6 +325,6 @@ anova(mod1, mod2)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{mirt}}, \code{\link{randef}}
+\code{\link{mirt}}, \code{\link{randef}}, \code{\link{boot.mirt}}
 }
 

@@ -42,6 +42,9 @@ test_that('mixed dich', {
     L <- matrix(c(1, numeric(ncol(names) - 1L)), 1L)
     wld <- wald(mod1, L, C=as.numeric(L))
     expect_equal(wld$W[1], 2.3378, tolerance = 1e-4)
+    set.seed(1)
+    bs <- boot.mirt(mod1, R=2)
+    expect_is(bs, 'boot')
 
     mod1a <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, SE=FALSE,
                       verbose = FALSE, draws = 1, internal_constraints = FALSE)
@@ -58,6 +61,9 @@ test_that('mixed dich', {
                            verbose = FALSE, draws = 1)
     cfs <- c(coef(mod_items.group)[['GroupPars']], coef(mod_items.group)[['items:group']])
     expect_equal(cfs[1:3], c(0, .121, 2.198), tolerance = 1e-3)
+    set.seed(1)
+    bs <- boot.mirt(mod_items.group, R=2)
+    expect_is(bs, 'boot')
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
@@ -140,6 +146,9 @@ test_that('polytomous', {
     expect_equal(as.numeric(c(so$random$Theta, so$lr.out[,1])),
                  c(0.1958198, 0.0000000, 0.7081315, 1.4867710), tolerance=1e-4)
     expect_equal(mod2@logLik, -4685.077, tolerance = 1e-4)
+    set.seed(1)
+    bs <- boot.mirt(mod2, R = 3)
+    expect_is(bs, 'boot')
 
     #uncorrelated random slope
     covdata$theta <- Theta
