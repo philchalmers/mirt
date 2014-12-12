@@ -8,7 +8,7 @@ itemplot(object, item, type = "trace", degrees = 45, CE = FALSE,
   -70, yaxis = 30, zaxis = 10), theta_lim = c(-6, 6), shiny = FALSE, ...)
 }
 \arguments{
-\item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+\item{object}{a computed model object of class \code{SingleGroupClass}
 or \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types
 (e.g., 1PL vs 2PL)}
 

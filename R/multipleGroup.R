@@ -3,19 +3,19 @@
 #' \code{multipleGroup} performs a full-information
 #' maximum-likelihood multiple group analysis for any combination of dichotomous and polytomous
 #' data under the item response theory paradigm using either Cai's (2010)
-#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This 
-#' function may be used for detecting differential item functioning (DIF), thought the 
+#' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This
+#' function may be used for detecting differential item functioning (DIF), thought the
 #' \code{\link{DIF}} function may provide a more convenient approach.
 #'
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally
-#' independent, and therefore could initially be performed by sub-setting the data and running 
+#' independent, and therefore could initially be performed by sub-setting the data and running
 #' identical models with \code{mirt} and aggregating the results (e.g., log-likelihood).
-#' However, constrains may be automatically imposed across groups by invoking various 
-#' \code{invariance} keywords. Users may also supply a list of parameter equality constraints 
-#' to by \code{constrain} argument, of define equality constraints using the 
+#' However, constrains may be automatically imposed across groups by invoking various
+#' \code{invariance} keywords. Users may also supply a list of parameter equality constraints
+#' to by \code{constrain} argument, of define equality constraints using the
 #' \code{\link{mirt.model}} syntax (recommended).
-#' 
-#' @return function returns an object of class \code{MultipleGroupClass} 
+#'
+#' @return function returns an object of class \code{MultipleGroupClass}
 #'   (\link{MultipleGroupClass-class}).
 #'
 #' @aliases multipleGroup
@@ -24,25 +24,26 @@
 #' @param model a single model object returned from \code{mirt.model()} declaring how
 #'   the factor model is to be estimated. See \code{\link{mirt.model}} for more details
 #' @param group a character vector indicating group membership
+#' @param rotate rotation if models are exploratory (see \code{\link{mirt}} for details)
 #' @param invariance a character vector containing the following possible options:
 #'   \describe{
-#'     \item{\code{'free_means'}}{for freely estimating all latent means 
+#'     \item{\code{'free_means'}}{for freely estimating all latent means
 #'       (reference group constrained to 0)}
-#'     \item{\code{'free_var'}}{for freely estimating all latent variances 
+#'     \item{\code{'free_var'}}{for freely estimating all latent variances
 #'       (reference group constrained to 1's)}
-#'     \item{\code{'free_cov'}}{for freely estimating all latent covariances 
+#'     \item{\code{'free_cov'}}{for freely estimating all latent covariances
 #'       (reference group constrained to an Identity matrix)}
 #'     \item{\code{'free_varcov'}}{calls both \code{'free_var'} and \code{'free_cov'}}
 #'     \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
-#'     \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all 
+#'     \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all
 #'       groups, note for nominal models this also includes the category specific slope parameters}
 #'    }
 #'
 #'   Additionally, specifying specific item name bundles (from \code{colnames(data)}) will
-#'   constrain all freely estimated parameters in each item to be equal across groups. This is 
-#'   useful for selecting 'anchor' items for vertical and horizontal scaling, and for detecting 
+#'   constrain all freely estimated parameters in each item to be equal across groups. This is
+#'   useful for selecting 'anchor' items for vertical and horizontal scaling, and for detecting
 #'   differential item functioning (DIF) across groups
-#' @param method a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'} 
+#' @param method a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'}
 #'   (default is \code{'EM'}). See \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for details and examples
@@ -78,7 +79,7 @@
 #' mod_fullconstrain <- multipleGroup(dat, models, group = group,
 #'                              invariance=c('slopes', 'intercepts'))
 #' slot(mod_fullconstrain, 'time') #time of estimation components
-#'                              
+#'
 #' #optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 #' mod_fullconstrain <- multipleGroup(dat, models, group = group, optimizer = 'NR',
 #'                              invariance=c('slopes', 'intercepts'))
@@ -239,7 +240,8 @@
 #' anova(EH, EH1)
 #'
 #' }
-multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ...)
+multipleGroup <- function(data, model, group, invariance = '', method = 'EM', rotate = 'oblimin',
+                          ...)
 {
     Call <- match.call()
     dots <- list(...)
@@ -257,10 +259,11 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ..
                 warn <- FALSE
         }
         if(warn)
-            stop('Model is not identified without further constrains (may require additional 
+            stop('Model is not identified without further constrains (may require additional
                  anchoring items).')
     }
-    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method, ...)
+    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
+                      rotate=rotate, ...)
     if(is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

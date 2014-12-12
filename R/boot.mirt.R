@@ -105,7 +105,7 @@ boot.mirt <- function(x, R = 100, ...){
                              structure$name[structure$est], sep='.'),
                              structure$parnum[structure$est], sep='_')
     class(boots) <- c('boot.mirt', 'boot')
-    if(class == 'ExploratoryClass')
+    if(x@exploratory)
         message('Note: bootstrapped standard errors for slope parameters for exploratory
                        models are not meaningful.')
     return(boots)

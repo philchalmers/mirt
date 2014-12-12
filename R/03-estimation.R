@@ -637,12 +637,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             h2 <- rowSums(Flist$F^2)
             F <- Flist$F
         }
-        cmods[[g]] <- new('ConfirmatoryClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[1L]]$itemloc,
+        cmods[[g]] <- new('SingleGroupClass', pars=ESTIMATE$pars[[g]], itemloc=PrepList[[1L]]$itemloc,
                           converge=ESTIMATE$converge, esttype='MHRM', F=F, h2=h2, prodlist=PrepList[[1L]]$prodlist,
                           nfact=nfact, constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
                           factorNames=PrepList[[1L]]$factorNames, random=ESTIMATE$random,
-                          CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                          itemtype=PrepList[[1L]]$itemtype, K=Data$K)
+                          CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, exploratory=PrepList[[1L]]$exploratory,
+                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, rotate=opts$rotate)
         if(discrete){
             cmods[[g]]@Theta <- Theta
             cmods[[g]]@Prior <- list(ESTIMATE$Prior[[g]])
@@ -690,7 +690,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     p.G2 <- 1 - pchisq(G2,df)
     RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
-    null.mod <- unclass(new('ConfirmatoryClass'))
+    null.mod <- unclass(new('SingleGroupClass'))
     TLI.G2 <- CFI.G2 <- NaN
     if(length(r) * 3L < prod(Data$K)){
         G2 <- NaN; p.G2 <- NaN
@@ -704,7 +704,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(is(null.mod, 'try-error')){
             if(opts$message)
                 message('Null model calculation did not converge.')
-            null.mod <- unclass(new('ConfirmatoryClass'))
+            null.mod <- unclass(new('SingleGroupClass'))
         } else if(!is.nan(G2)) {
             TLI.G2 <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
             CFI.G2 <- 1 - (G2 - df) / (null.mod@G2 - null.mod@df)
@@ -799,6 +799,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            formulas=attr(mixed.design, 'formula'),
                            covdata=attr(mixed.design, 'covdata'),
                            itemdesign=attr(mixed.design, 'itemdesign'),
+                           exploratory=FALSE,
                            TOL=opts$TOL)
             } else if(PrepList[[1L]]$exploratory){
                 FF <- F %*% t(F)
@@ -809,7 +810,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if (sum(F[ ,1L] < 0)) F <- (-1) * F
                 colnames(F) <- paste("F_", 1:ncol(F),sep="")
                 h2 <- rowSums(F^2)
-                mod <- new('ExploratoryClass',
+                mod <- new('SingleGroupClass',
                            Data=Data,
                            iter=ESTIMATE$cycles,
                            pars=cmods[[1L]]@pars,
@@ -854,13 +855,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            information=ESTIMATE$info,
                            infomethod=opts$SE.type,
                            lrPars=lrPars,
+                           exploratory=TRUE,
                            TOL=opts$TOL)
             } else {
-                mod <- new('ConfirmatoryClass',
+                mod <- new('SingleGroupClass',
                            Data=Data,
                            iter=ESTIMATE$cycles,
                            pars=cmods[[1L]]@pars,
                            model=list(oldmodel),
+                           rotate='none',
                            G2=G2,
                            p=p.G2,
                            TLI=TLI.G2,
@@ -902,6 +905,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            itemtype=PrepList[[1L]]$itemtype,
                            information=ESTIMATE$info,
                            infomethod=opts$SE.type,
+                           exploratory=FALSE,
                            TOL=opts$TOL)
             }
         } else {
@@ -948,6 +952,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        itemtype=PrepList[[1L]]$itemtype,
                        information=ESTIMATE$info,
                        infomethod=opts$SE.type,
+                       exploratory=PrepList[[1L]]$exploratory,
                        TOL=opts$TOL)
         }
     }

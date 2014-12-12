@@ -39,7 +39,7 @@ Defines the object returned from \code{\link{multipleGroup}}.
    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
    \item{\code{invariance}:}{Object of class \code{"character"}, invariance input}
-   \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
+   \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes

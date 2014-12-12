@@ -4,6 +4,9 @@
 
 - improved estimation efficiency when using MH-RM algorithm. As a result, the default seed 
   was changed, therefore results from previous versions will be slightly different
+  
+- objects of class 'ExploratoryClass' and 'ConfirmatoryClass' have been merged into a single class
+  'SingleGroupClass' with an `exploratory` logical slot
 
 ## NEW FEATURES
 

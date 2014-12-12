@@ -4,7 +4,7 @@ setMethod(
     signature = signature(x = 'MixedClass'),
     definition = function(x)
     {
-        class(x) <- 'ExploratoryClass'
+        class(x) <- 'SingleGroupClass'
         print(x)
     }
 )
@@ -189,7 +189,7 @@ setMethod(
     signature = signature(object = 'MixedClass'),
     definition = function(object, object2, verbose = TRUE)
     {
-        class(object) <- 'ExploratoryClass'
+        class(object) <- 'SingleGroupClass'
         anova(object, object2, verbose=verbose)
     }
 )

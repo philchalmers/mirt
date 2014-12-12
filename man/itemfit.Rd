@@ -9,7 +9,7 @@ itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
   digits = 4, ...)
 }
 \arguments{
-\item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+\item{x}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
 
 \item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are

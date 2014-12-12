@@ -35,8 +35,8 @@
 #' should be freed since the specific factors are not treated independently due to the
 #' dimension reduction technique.
 #'
-#' @return function returns an object of class \code{ConfirmatoryClass}
-#'   (\link{ConfirmatoryClass-class}) or \code{MultipleGroupClass}(\link{MultipleGroupClass-class}).
+#' @return function returns an object of class \code{SingleGroupClass}
+#'   (\link{SingleGroupClass-class}) or \code{MultipleGroupClass}(\link{MultipleGroupClass-class}).
 #'
 #' @aliases bfactor
 #' @param data a \code{matrix} or \code{data.frame} that consists of
@@ -219,7 +219,7 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
     mod <- ESTIMATION(data=data, model=model, group=group,
                       method = 'EM', quadpts=quadpts,
                       BFACTOR = TRUE, ...)
-    if(is(mod, 'ConfirmatoryClass') || is(mod, 'MultipleGroupClass'))
+    if(is(mod, 'SingleGroupClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)
 }

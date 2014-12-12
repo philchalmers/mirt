@@ -21,17 +21,14 @@
 #' variances of the latent factors are automatically fixed to 1 to help
 #' facilitate model identification. All parameters may be fixed to constant
 #' values or set equal to other parameters using the appropriate declarations.
-#' If the model is confirmatory then the returned class will be a 'ConfirmatoryClass'. Confirmatory
-#' models may also contain 'explanatory' person or item level predictors, though including
-#' predictors is currently limited to the \code{\link{mixedmirt}} function.
+#' Confirmatory models may also contain 'explanatory' person or item level predictors, though
+#' including predictors is currently limited to the \code{\link{mixedmirt}} function.
 #'
 #' When specifying a single number greater than 1 as the \code{model} input to mirt
 #' an exploratory IRT model will be estimated. Rotation and target matrix options will be
 #' used in this subroutine and will be
 #' passed to the returned object for use in generic functions such as \code{summary()} and
 #' \code{fscores()}. Again, factor means and variances are fixed to ensure proper identification.
-#' If the model is exploratory then the returned class will be \code{'ExploratoryClass'},
-#' otherwise it will be of class \code{'ConfirmatoryClass'}.
 #'
 #' If the model is an exploratory item factor analysis estimation will begin
 #' by computing a matrix of quasi-polychoric correlations. A
@@ -82,10 +79,8 @@
 #' \code{SE = TRUE}, to perform an addition MH-RM stage but treating the maximum-likelihood
 #' estimates as fixed points.
 #'
-#' @return function returns an object of class \code{ExploratoryClass}
-#'   (\link{ExploratoryClass-class}) if the estimated model
-#'   was exploratory, or \code{ConfirmatoryClass} (\link{ConfirmatoryClass-class})
-#'   if the model has unique axes that do not require rotation.
+#' @return function returns an object of class \code{SingleGroupClass}
+#'   (\link{SingleGroupClass-class})
 #'
 #' @section Additional helper functions:
 #'
@@ -919,7 +914,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars,
                       optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args,
                       latent.regression=latent.regression, ...)
-    if(is(mod, 'ExploratoryClass') || is(mod, 'ConfirmatoryClass'))
+    if(is(mod, 'SingleGroupClass'))
         mod@Call <- Call
     return(mod)
 }

@@ -1,21 +1,10 @@
 setMethod(
 	f = "itemplot.internal",
-	signature = signature(object = 'ExploratoryClass'),
+	signature = signature(object = 'SingleGroupClass'),
 	definition = function(object, ...)
 	{
 		x <- itemplot.main(object, ...)
 		return(invisible(x))
-	}
-)
-
-#------------------------------------------------------------------------------
-setMethod(
-	f = "itemplot.internal",
-	signature = signature(object = 'ConfirmatoryClass'),
-	definition = function(object, ...)
-	{
-	    x <- itemplot.main(object, ...)
-	    return(invisible(x))
 	}
 )
 
@@ -149,9 +138,9 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         Theta <- thetaComb(theta, x@nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
-    if(is(x, 'ExploratoryClass')){
+    if(is(x, 'SingleGroupClass')){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
-        x@pars[[item]]@par <- as.numeric(cfs[[item]])
+        x@pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
     }
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat

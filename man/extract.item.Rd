@@ -6,7 +6,7 @@
 extract.item(x, item, group = NULL, drop.zeros = FALSE)
 }
 \arguments{
-\item{x}{mirt model of class 'ExploratoryClass', 'ConfirmatoryClass', or 'MultipleGroupClass'}
+\item{x}{mirt model of class 'SingleGroupClass' or 'MultipleGroupClass'}
 
 \item{item}{a number or character signifying which item to extract}
 

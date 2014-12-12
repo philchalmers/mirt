@@ -1,6 +1,6 @@
 setMethod(
 	f = "fscores.internal",
-	signature = 'ExploratoryClass',
+	signature = 'SingleGroupClass',
 	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
@@ -177,7 +177,7 @@ setMethod(
         nLambdas <- object@nfact
         itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
-        if(rotate != 'CONFIRMATORY'){
+        if(object@exploratory){
             so <- summary(object, rotate = rotate, verbose = FALSE)
             a <- rotateLambdas(so)
             for(i in 1L:J)
@@ -373,24 +373,6 @@ setMethod(
 
 #------------------------------------------------------------------------------
 setMethod(
-	f = "fscores.internal",
-	signature = 'ConfirmatoryClass',
-	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
-	                      quadpts = NULL, response.pattern = NULL, theta_lim, MI,
-	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
-	                      full.scores.SE, return.acov = FALSE, ...)
-	{
-        class(object) <- 'ExploratoryClass'
-        ret <- fscores(object, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method, quadpts=quadpts,
-                       response.pattern=response.pattern, returnER=returnER, verbose=verbose,
-                       mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
-                       full.scores.SE=full.scores.SE, return.acov = return.acov, ...)
-        return(ret)
-	}
-)
-
-#------------------------------------------------------------------------------
-setMethod(
     f = "fscores.internal",
     signature = 'DiscreteClass',
     definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
@@ -442,7 +424,7 @@ setMethod(
         pars <- object@pars
         ngroups <- length(pars)
         for(g in 1L:ngroups)
-            class(pars[[g]]) <- 'ConfirmatoryClass'
+            class(pars[[g]]) <- 'SingleGroupClass'
         if(MI > 0){
             object <- assignInformationMG(object)
             pars <- object@pars

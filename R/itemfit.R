@@ -7,7 +7,7 @@
 #' also produced.
 #'
 #' @aliases itemfit
-#' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param x a computed model object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
 #'   only interested in computing the S-X2 quickly

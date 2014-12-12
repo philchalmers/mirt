@@ -1,55 +1,6 @@
-# Monte Carlo Log-Likelihood Calculation
-#
-# Calculates a new object that contain the Monte Carlo estimated observed
-# log-likelihood values for mirt objects estimated with the MH-RM algorithm.
-# Can be estimated in parallel automatically by defining a parallel object with
-# \code{\link{mirtCluster}}.
-#
-# @name calcLogLik
-# @usage
-# calcLogLik(object, ...)
-#
-# \S4method{calcLogLik}{ExploratoryClass}(object,
-#    draws = 5000, G2 = TRUE)
-# \S4method{calcLogLik}{ConfirmatoryClass}(object,
-#    draws = 5000, G2 = TRUE)
-# \S4method{calcLogLik}{MixedClass}(object,
-#    draws = 5000)
-# @aliases calcLogLik-method calcLogLik,ExploratoryClass-method
-#   calcLogLik,ConfirmatoryClass-method calcLogLik,MixedClass-method
-# @param object a model of class \code{ConfirmatoryClass} or \code{ExploratoryClass}
-# @param draws the number of Monte Carlo draws
-# @param G2 logical; estimate the G2 model fit statistic?
-# @param ... parameters that are passed
-# @section Methods:
-# \describe{ \item{calcLogLik}{\code{signature(object = "ConfirmatoryClass")},
-#           \code{signature(object = "ExploratoryClass")}, \code{signature(object = "MixedClass")} }
-# }
-# @return Returns an object with the log-likelihood and Monte Carlo standard errors,
-#   and (possibly) the G^2 and other model fit statistic if there is no missing data.
-# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-# @docType methods
-# @rdname calcLogLik-method
-# @export calcLogLik
-# @seealso \code{\link{mirt}}, \code{\link{multipleGroup}}, \code{\link{mixedmirt}}
-# @keywords calcLogLik
-# @examples
-#
-# \dontrun{
-#
-# # no parallel
-# mod1withLogLik <- calcLogLik(mod1, draws=5000)
-#
-# #with parallel using detected number of cores
-# library(parallel)
-# mirtCluster(detectCores())
-# mod1withLogLik <- calcLogLik(mod1, draws=5000)
-#
-#   }
-#
 setMethod(
 	f = "calcLogLik",
-	signature = signature(object = 'ExploratoryClass'),
+	signature = signature(object = 'SingleGroupClass'),
 	definition = function(object, draws = 5000, G2 = TRUE, lrPars=NULL)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
@@ -137,22 +88,10 @@ setMethod(
 
 setMethod(
     f = "calcLogLik",
-    signature = signature(object = 'ConfirmatoryClass'),
-    definition = function(object, draws = 5000, G2 = TRUE, lrPars=NULL)
-    {
-        class(object) <- 'ExploratoryClass'
-        ret <- calcLogLik(object, draws=draws, G2=G2, lrPars=lrPars)
-        class(ret) <- 'ConfirmatoryClass'
-        return(ret)
-    }
-)
-
-setMethod(
-    f = "calcLogLik",
     signature = signature(object = 'MixedClass'),
     definition = function(object, draws = 5000)
     {
-        class(object) <- 'ExploratoryClass'
+        class(object) <- 'SingleGroupClass'
         ret <- calcLogLik(object, draws=draws, G2=FALSE, lrPars=object@lrPars)
         class(ret) <- 'MixedClass'
         return(ret)

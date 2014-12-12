@@ -4,7 +4,7 @@ setMethod(
     signature = signature(x = 'MultipleGroupClass'),
     definition = function(x)
     {
-        class(x) <- 'ExploratoryClass'
+        class(x) <- 'SingleGroupClass'
         print(x)
     }
 )
@@ -37,7 +37,7 @@ setMethod(
 setMethod(
     f = "summary",
     signature = signature(object = 'MultipleGroupClass'),
-    definition = function(object, digits = 3, verbose = TRUE, ...) {
+    definition = function(object, digits = 3, rotate = NULL, verbose = TRUE, ...) {
         ngroups <- length(object@pars)
         groupind <- length(object@pars[[1]]@pars)
         nfact <- object@nfact
@@ -45,7 +45,8 @@ setMethod(
         coeflist <- coef(object)
         for(g in 1:ngroups){
             if(verbose) cat('\n----------\nGROUP:', as.character(object@Data$groupNames[g]), '\n')
-            ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, ...)
+            ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, rotate =
+                                    if(is.null(rotate)) object@pars[[1L]]@rotate else 'none', ...)
             if(is(coeflist[[g]][[groupind]], 'matrix'))
                 ret[[g]]$mean <- coeflist[[g]][[groupind]][1, 1:nfact]
             else ret[[g]]$mean <- coeflist[[g]][[groupind]][1:nfact]
@@ -64,7 +65,7 @@ setMethod(
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, object2, ...)
     {
-        class(object) <- 'ExploratoryClass'
+        class(object) <- 'SingleGroupClass'
         anova(object, object2, ...)
     }
 )
@@ -111,7 +112,7 @@ setMethod(
         adj <- x@Data$mins
         gscore <- c()
         for(g in 1:ngroups){
-            itemtrace <- computeItemtrace(x@pars[[g]]@pars, ThetaFull, x@itemloc, 
+            itemtrace <- computeItemtrace(x@pars[[g]]@pars, ThetaFull, x@itemloc,
                                           CUSTOM.IND=x@CUSTOM.IND)
             score <- c()
             for(i in 1:J)
@@ -227,7 +228,7 @@ setMethod(
                         I[,i] <- iteminfo(extract.item(x, i, group=x@Data$groupNames[g]), ThetaFull)
                     I <- t(na.omit(t(I)))
                     items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
-                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items) 
+                    plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items)
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
@@ -260,7 +261,7 @@ setMethod(
             cmod@Data$Freq[[1L]] <- cmod@Data$Freq[[g]]
             cmod@quadpts <- object@quadpts
             cmod@bfactor <- object@bfactor
-            ret[[g]] <- residuals(cmod, verbose = FALSE, ...)            
+            ret[[g]] <- residuals(cmod, verbose = FALSE, ...)
         }
         ret
     }

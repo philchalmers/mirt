@@ -5,7 +5,7 @@
 #'
 #'
 #' @aliases itemplot
-#' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object a computed model object of class \code{SingleGroupClass}
 #'   or \code{MultipleGroupClass}. Input may also be a \code{list} for comparing similar item types
 #'   (e.g., 1PL vs 2PL)
 #' @param item a single numeric value, or the item name, indicating which item to plot

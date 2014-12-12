@@ -6,8 +6,7 @@
 personfit(x, method = "EAP", Theta = NULL, stats.only = TRUE, ...)
 }
 \arguments{
-\item{x}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-\code{MultipleGroupClass}}
+\item{x}{a computed model object of class \code{SingleGroupClass} or \code{MultipleGroupClass}}
 
 \item{method}{type of factor score estimation method. See \code{\link{fscores}} for more detail}
 

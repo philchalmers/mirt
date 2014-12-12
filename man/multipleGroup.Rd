@@ -3,7 +3,8 @@
 \alias{multipleGroup}
 \title{Multiple Group Estimation}
 \usage{
-multipleGroup(data, model, group, invariance = "", method = "EM", ...)
+multipleGroup(data, model, group, invariance = "", method = "EM",
+  rotate = "oblimin", ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -35,6 +36,8 @@ the factor model is to be estimated. See \code{\link{mirt.model}} for more detai
 
 \item{method}{a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'}
 (default is \code{'EM'}). See \code{\link{mirt}} for details}
+
+\item{rotate}{rotation if models are exploratory (see \code{\link{mirt}} for details)}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}

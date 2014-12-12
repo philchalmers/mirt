@@ -2,49 +2,49 @@ context('mirtTwo')
 
 test_that('poly', {
     modp1 <- mirt(Science, 1, verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')
+    expect_is(modp1, 'SingleGroupClass')
     expect_equal(modp1@df, 239)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
     modLouis <- mirt(Science, 1, SE=T, SE.type='Louis', verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')
+    expect_is(modp1, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modLouis, digits = 5, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.18838, 4.86544, 0.49088, 2.64044, 0.22267, -1.46621, 0.15868, 1.22569, 0.18189, 2.924, 0.23928, 0.90115, 0.14289, -2.26661, 0.20308, 2.29058, 0.48269, 5.22988, 0.72817, 2.21201, 0.3564, -1.96222, 0.32209, 1.09557, 0.18336, 3.34845, 0.27659, 0.9919, 0.14053, -1.68846, 0.16864, 0, NA, 1, NA),
                  tolerance = 1e-3)
     expect_equal(modLouis@condnum, 98.26492, tolerance = 1e-2)
     modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')
+    expect_is(modp1, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modsandwich, digits = 5, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
                  tolerance = 1e-3)
     expect_equal(modsandwich@condnum, 142.2682, tolerance = 1e-2)
     modp1 <- mirt(Science, 1, verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')
+    expect_is(modp1, 'SingleGroupClass')
     expect_equal(modp1@df, 239)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
     vals <- mirt(Science, 1, large = TRUE, verbose=FALSE)
     modp1 <- mirt(Science, 1, large = vals, verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')
+    expect_is(modp1, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
     modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
-    expect_is(modp1, 'ConfirmatoryClass')
+    expect_is(modp1, 'SingleGroupClass')
     expect_equal(modp1@condnum, 102.5529, tolerance = 1e-2)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 0.656, 1.425, 4.863, 3.849, 5.876, 2.639, 2.196, 3.083, -1.466, -1.782, -1.149, 1.226, 0.887, 1.565, 2.924, 2.45, 3.398, 0.901, 0.614, 1.188, -2.266, -2.639, -1.894, 2.3, 1.325, 3.275, 5.244, 3.804, 6.685, 2.218, 1.488, 2.949, -1.967, -2.605, -1.329, 1.094, 0.727, 1.461, 3.347, 2.801, 3.893, 0.991, 0.717, 1.266, -1.688, -2.018, -1.357, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     modp2 <- mirt(Science, 2, verbose=FALSE)
-    expect_is(modp2, 'ExploratoryClass')
+    expect_is(modp2, 'SingleGroupClass')
     expect_equal(modp2@df, 236)
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
     expect_equal(abs(cfs), abs(c(-1.3278,0.1081,5.1934,2.8583,-1.5996,-0.8762,1.8783,3.7248,1.1598,-2.9225,-1.4614,1.1639,4.6495,1.951,-1.7322,-1.7397,0,4.0053,1.2008,-2.0548,0,0,1,0,1)),
                  tolerance = 1e-2)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
-    expect_is(modp3, 'ConfirmatoryClass')
+    expect_is(modp3, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp3, verbose = FALSE)))
     expect_true(mirt:::closeEnough(cfs - c(1.090,  4.248,  2.550, -1.507,  1.090,  2.817,  0.853, -2.198,  2.269,
                         5.176,  2.173, -1.978,  1.121,  3.357,  0.987, -1.714,  0.000,  1.000),
@@ -53,24 +53,24 @@ test_that('poly', {
                            CONSTRAIN = (1-2,a1)
                            PRIOR = (1, d1, norm, 0, 1)')
     modp3 <- mirt(Science, newmodel, verbose=FALSE)
-    expect_is(modp3, 'ConfirmatoryClass')
+    expect_is(modp3, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp3, verbose = FALSE)))
     expect_true(mirt:::closeEnough(cfs - c(1.090,  4.248,  2.550, -1.507,  1.090,  2.817,  0.853, -2.198,  2.269,
                                            5.176,  2.173, -1.978,  1.121,  3.357,  0.987, -1.714,  0.000,  1.000),
                                    -1e-2, 1e-2))
 
     modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
-    expect_is(modp4, 'ConfirmatoryClass')
+    expect_is(modp4, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp4, verbose = FALSE, digits=4)))
     expect_equal(cfs, c(1.0408, 4.862, 2.6387, -1.4664, 1.2063, 2.9083, 0.8958, -2.254, 2.3376, 5.2972, 2.2404, -1.9886, 0.7986, 0, 1.0782, 1.7756, 3, 0, 2.1964, 2.9637, 1.6742, 0, 1),
                  tolerance = 1e-2)
     modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, SE.type = 'SEM', verbose=FALSE)
-    expect_is(modp5, 'ConfirmatoryClass')
+    expect_is(modp5, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
     expect_equal(cfs, c(1.057, 0.676, 1.438, 4.876, 3.912, 5.84, 2.65, 2.21, 3.09, -1.472, -1.786, -1.159, 1.219, 0.839, 1.599, 2.918, 2.425, 3.41, 0.9, 0.615, 1.185, -2.263, -2.679, -1.848, 2.254, 1.322, 3.187, 5.177, 3.765, 6.588, 2.19, 1.49, 2.89, -1.942, -2.567, -1.318, 0.771, 0.464, 1.077, 0, NA, NA, 1, NA, NA, 2, NA, NA, 3, NA, NA, 0, NA, NA, 2.16, 1.552, 2.767, 2.973, 2.29, 3.657, 1.767, 1.137, 2.397, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE, TOL=1e-3)
-    expect_is(modp6, 'ConfirmatoryClass')
+    expect_is(modp6, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp6, verbose = FALSE)))
     expect_equal(cfs, c(0.821,5.105,2.613,-1.372,1.077,2.929,0.941,-2.224,2.435,5.383,2.482,-1.802,0.957,3.412,1.028,-1.624,0,1),
                  tolerance = 1e-2)
@@ -124,8 +124,8 @@ test_that('poly', {
     sv[,'value'] <- c(as.vector(t(cbind(a,d,cc))),0,1)
     grsm <- mirt(data, 1, itemtype = 'grsm', pars = sv, calcNull= FALSE, verbose=FALSE, TOL=1e-5)
 #     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE, verbose=FALSE, TOL = 1e-3)
-    expect_is(grsm, 'ConfirmatoryClass')
-#     expect_is(rsm, 'ConfirmatoryClass')
+    expect_is(grsm, 'SingleGroupClass')
+#     expect_is(rsm, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(grsm, verbose = FALSE, digits=4)))
     expect_equal(cfs, c(0.997, 1.008, 0.5031, -0.5092, -1.0034, -1, 0.8616, 1.008, 0.5031, -0.5092, -1.0034, -0.7723, 1.0369, 1.008, 0.5031, -0.5092, -1.0034, -0.5635, 0.9486, 1.008, 0.5031, -0.5092, -1.0034, -0.2613, 0.9941, 1.008, 0.5031, -0.5092, -1.0034, -0.0998, 0.9047, 1.008, 0.5031, -0.5092, -1.0034, 0.1646, 0.9475, 1.008, 0.5031, -0.5092, -1.0034, 0.3439, 1.09, 1.008, 0.5031, -0.5092, -1.0034, 0.4608, 0.8921, 1.008, 0.5031, -0.5092, -1.0034, 0.7628, 0.966, 1.008, 0.5031, -0.5092, -1.0034, 0.9779, 0, 1),
                  tolerance = 1e-2)

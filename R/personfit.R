@@ -3,19 +3,18 @@
 #' \code{personfit} calculates the Zh values from Drasgow, Levine and Williams (1985) for
 #' unidimensional and multidimensional models. For Rasch models infit and outfit statistics are
 #' also produced. The returned object is a \code{data.frame}
-#' consisting either of the tabulated data or full data with the statistics appended to the 
+#' consisting either of the tabulated data or full data with the statistics appended to the
 #' rightmost columns.
 #'
 #'
 #' @aliases personfit
-#' @param x a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass}, or
-#' \code{MultipleGroupClass}
+#' @param x a computed model object of class \code{SingleGroupClass} or \code{MultipleGroupClass}
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
-#' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If 
+#' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If
 #'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
 #' @param stats.only logical; return only the person fit statistics without their associated
-#'   response pattern?  
+#'   response pattern?
 #' @param ... additional arguments to be passed to \code{fscores()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit
@@ -32,9 +31,9 @@
 #'
 #' Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit
 #' in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
-#' 
+#'
 #' Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
-#' 
+#'
 #'
 #' @examples
 #'
@@ -50,11 +49,11 @@
 #' x <- mirt(data, 1)
 #' fit <- personfit(x)
 #' head(fit)
-#' 
+#'
 #' #using precomputed Theta
 #' Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 #' personfit(x, Theta=Theta)
-#' 
+#'
 #' #muliple group Rasch model example
 #' set.seed(12345)
 #' a <- matrix(rep(1, 15), ncol=1)
@@ -83,13 +82,13 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         ret <- vector('list', length(x@pars))
         if(is.null(Theta))
             Theta <- fscores(x, method=method, scores.only=TRUE, full.scores=TRUE, ...)
-        for(g in 1L:length(x@pars)){          
+        for(g in 1L:length(x@pars)){
             pick <- x@Data$groupNames[g] == x@Data$group
             x@pars[[g]]@Data$data <- x@Data$data[pick, , drop=FALSE]
             x@pars[[g]]@Data$fulldata[[1L]] <- x@Data$fulldata[[g]]
             ret[[g]] <- personfit(x@pars[[g]], method=method, stats.only=stats.only,
                                   Theta=Theta[pick, , drop=FALSE], ...)
-        }   
+        }
         ret2 <- matrix(0, nrow(x@Data$data), ncol(ret[[1L]]))
         for(g in 1L:length(x@pars)){
             pick <- x@Data$groupNames[g] == x@Data$group
@@ -100,7 +99,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         return(as.data.frame(ret2))
     }
     if(is.null(Theta))
-        Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, 
+        Theta <- fscores(x, verbose=FALSE, full.scores=TRUE,
                          scores.only=TRUE, method=method, ...)
     J <- ncol(x@Data$data)
     itemloc <- x@itemloc

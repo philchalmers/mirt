@@ -26,7 +26,7 @@
 #'
 #'
 #' @aliases fscores
-#' @param object a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object a computed model object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
 #'   factor scores for each unique pattern is displayed. Otherwise the original
@@ -34,7 +34,7 @@
 #'   rightmost column
 #' @param rotate rotation declaration to be used when estimating the factor scores. If \code{""}
 #'   then the \code{object@@rotate} default value is used (only applicable to
-#'   \code{ExploratoryClass} objects)
+#'   \code{SingleGroupClass} objects which have non-unique slopes)
 #' @param plausible.draws number of plausible values to draw for future researchers
 #'   to perform secondary analyses of the latent trait scores. Typically used in conjunction
 #'   with latent regression predictors (see \code{\link{mirt}} for details), but can
@@ -123,7 +123,7 @@
 #' lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 #'
 #'}
-fscores <- function(object, rotate = '', full.scores = FALSE, method = "EAP",
+fscores <- function(object, rotate = NULL, full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,

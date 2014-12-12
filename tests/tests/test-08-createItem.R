@@ -19,10 +19,10 @@ test_that('old2PL', {
     sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars = 'values', verbose=FALSE)
     expect_is(sv, 'data.frame')
     mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose=FALSE)
-    expect_is(mod, 'ConfirmatoryClass')
+    expect_is(mod, 'SingleGroupClass')
     expect_is(coef(mod), 'list')
     mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE, draws = 10, method = 'MHRM')
-    expect_is(mod2, 'ConfirmatoryClass')
+    expect_is(mod2, 'SingleGroupClass')
     expect_is(coef(mod2), 'list')
 
     #' #nonlinear
@@ -39,7 +39,7 @@ test_that('old2PL', {
 
     x2 <- createItem(name, par=par, est=est, P=P.nonlin)
     mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose=FALSE)
-    expect_is(mod, 'ConfirmatoryClass')
+    expect_is(mod, 'SingleGroupClass')
     expect_is(coef(mod), 'list')
 })
 

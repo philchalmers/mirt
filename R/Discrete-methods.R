@@ -95,7 +95,7 @@ setMethod(
     signature = signature(object = 'DiscreteClass'),
     definition = function(object, object2, ...)
     {
-        class(object) <- 'ExploratoryClass'
+        class(object) <- 'SingleGroupClass'
         anova(object, object2, ...)
     }
 )

@@ -2,11 +2,11 @@
 #'
 #' Print model object summaries to the console.
 #'
-#' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param x an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
 #' @name print-method
-#' @aliases print,ExploratoryClass-method print,ConfirmatoryClass-method
+#' @aliases print,SingleGroupClass-method
 #'   print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
 #' @docType methods
 #' @rdname print-method
@@ -18,7 +18,7 @@
 #' }
 setMethod(
     f = "print",
-    signature = signature(x = 'ExploratoryClass'),
+    signature = signature(x = 'SingleGroupClass'),
     definition = function(x){
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
@@ -65,11 +65,11 @@ setMethod(
 #'
 #' Print model object summaries to the console.
 #'
-#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
 #' @name show-method
-#' @aliases show,ExploratoryClass-method show,ConfirmatoryClass-method
+#' @aliases show,SingleGroupClass-method
 #'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
 #' @docType methods
 #' @rdname show-method
@@ -81,7 +81,7 @@ setMethod(
 #' }
 setMethod(
     f = "show",
-    signature = signature(object = 'ExploratoryClass'),
+    signature = signature(object = 'SingleGroupClass'),
     definition = function(object){
         print(object)
     }
@@ -92,7 +92,7 @@ setMethod(
 #' Transforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
 #' the fixed and random coefficients are printed.
 #'
-#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param rotate a string indicating which rotation to use for exploratory models, primarily
 #'   from the \code{GPArotation} package (see documentation therein).
@@ -114,7 +114,7 @@ setMethod(
 #' @param ... additional arguments to be passed
 #'
 #' @name summary-method
-#' @aliases summary,ExploratoryClass-method summary,ConfirmatoryClass-method
+#' @aliases summary,SingleGroupClass-method
 #'   summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
 #' @docType methods
 #' @rdname summary-method
@@ -132,11 +132,12 @@ setMethod(
 #' }
 setMethod(
     f = "summary",
-    signature = 'ExploratoryClass',
-    definition = function(object, rotate = '', Target = NULL, suppress = 0, digits = 3,
+    signature = 'SingleGroupClass',
+    definition = function(object, rotate = NULL, Target = NULL, suppress = 0, digits = 3,
                           printCI = FALSE, verbose = TRUE, ...){
+        if(is.null(rotate)) rotate <- object@rotate
         nfact <- ncol(object@F)
-        if (rotate == 'none' || nfact == 1) {
+        if (!object@exploratory && rotate != 'none') {
             F <- object@F
             F[abs(F) < suppress] <- NA
             h2 <- as.matrix(object@h2)
@@ -194,7 +195,7 @@ setMethod(
 #'
 #' Return a list (or data.frame) of raw item and group level coefficients.
 #'
-#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param CI the amount of converged used to compute confidence intervals; default is
 #'   95 percent confidence intervals
@@ -214,7 +215,7 @@ setMethod(
 #' @param ... additional arguments to be passed
 #'
 #' @name coef-method
-#' @aliases coef,ExploratoryClass-method coef,ConfirmatoryClass-method
+#' @aliases coef,SingleGroupClass-method
 #'   coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
 #' @docType methods
 #' @rdname coef-method
@@ -241,7 +242,7 @@ setMethod(
 #' }
 setMethod(
     f = "coef",
-    signature = 'ExploratoryClass',
+    signature = 'SingleGroupClass',
     definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
                           simplify=FALSE, verbose = TRUE, ...){
@@ -257,15 +258,14 @@ setMethod(
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@pars[[i]])
 
-        if (ncol(a) > 1 && rotate != 'none'){
+        if (object@exploratory && rotate != 'none'){
             rotname <- ifelse(rotate == '', object@rotate, rotate)
             if(verbose) cat("\nRotation: ", rotname, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
             a <- rotateLambdas(so) * 1.702
             for(i in 1:J)
                 object@pars[[i]]@par[1:nfact] <- a[i, ]
-            if(rotname != 'none')
-                object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
+            object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         allPars <- list()
         if(IRTpars){
@@ -330,13 +330,13 @@ setMethod(
 #'
 #' Compare nested models using likelihood ratio, AIC, BIC, etc.
 #'
-#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param object2 a second model estimated from any of the mirt package estimation methods
 #' @param verbose logical; print additional information to console?
 #'
 #' @name anova-method
-#' @aliases anova,ExploratoryClass-method anova,ConfirmatoryClass-method
+#' @aliases anova,SingleGroupClass-method
 #'   anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
 #' @docType methods
 #' @rdname anova-method
@@ -349,7 +349,7 @@ setMethod(
 #' }
 setMethod(
     f = "anova",
-    signature = signature(object = 'ExploratoryClass'),
+    signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, verbose = TRUE){
         df <- object@df - object2@df
         if(df < 0){
@@ -387,7 +387,7 @@ setMethod(
 #'
 #' Return model implied residuals for linear dependencies between items or at the person level.
 #'
-#' @param object an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass} or
+#' @param object an object of class \code{SingleGroupClass} or
 #'   \code{MultipleGroupClass}. Bifactor models are automatically detected and utilized for
 #'   better accuracy
 #' @param type type of residuals to be displayed.
@@ -410,7 +410,7 @@ setMethod(
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @name residuals-method
-#' @aliases residuals,ExploratoryClass-method residuals,ConfirmatoryClass-method
+#' @aliases residuals,SingleGroupClass-method
 #'   residuals,MultipleGroupClass-method residuals,DiscreteClass-method
 #' @docType methods
 #' @rdname residuals-method
@@ -438,7 +438,7 @@ setMethod(
 #' }
 setMethod(
     f = "residuals",
-    signature = signature(object = 'ExploratoryClass'),
+    signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)
     {
@@ -589,7 +589,7 @@ setMethod(
 #'
 #' Plot various test implied response functions from models estimated in the mirt package.
 #'
-#' @param x an object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+#' @param x an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param y an arbitrary missing argument required for \code{R CMD check}
 #' @param type type of plot to view; can be \code{'info'} to show the test
@@ -628,8 +628,8 @@ setMethod(
 #' @param ... additional arguments to be passed to lattice
 #'
 #' @name plot-method
-#' @aliases plot,ExploratoryClass-method plot,ConfirmatoryClass-method
-#'   plot,MultipleGroupClass-method plot,ExploratoryClass,missing-method
+#' @aliases plot,SingleGroupClass-method
+#'   plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
 #'   plot,DiscreteClass,missing-method
 #' @docType methods
 #' @rdname plot-method
@@ -665,7 +665,7 @@ setMethod(
 #' }
 setMethod(
     f = "plot",
-    signature = signature(x = 'ExploratoryClass', y = 'missing'),
+    signature = signature(x = 'SingleGroupClass', y = 'missing'),
     definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
                           theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
@@ -699,8 +699,7 @@ setMethod(
             }
         }
         adj <- x@Data$mins
-        tmp <- try(x@rotate, silent = TRUE)
-        if (x@nfact > 1 && !is(tmp,'try-error')){
+        if (x@exploratory && x@rotate != 'none'){
             rotname <- x@rotate
             so <- summary(x, rotate=x@rotate, Target=NULL, verbose=FALSE, digits=5, ...)
             a <- rotateLambdas(so) * 1.702
@@ -931,3 +930,87 @@ setMethod(
         }
     }
 )
+
+mirt2traditional <- function(x){
+    cls <- class(x)
+    par <- x@par
+    if(cls != 'GroupPars')
+        ncat <- x@ncat
+    if(cls == 'dich'){
+        par[2] <- -par[2]/par[1]
+        names(par) <- c('a', 'b', 'g', 'u')
+    } else if(cls == 'graded'){
+        for(i in 2:ncat)
+            par[i] <- -par[i]/par[1]
+        names(par) <- c('a', paste0('b', 1:(length(par)-1)))
+    } else if(cls == 'gpcm'){
+        ds <- par[-1]/par[1]
+        ds <- ds[-c(1L:ncat)]
+        newd <- numeric(length(ds)-1L)
+        for(i in 2:length(ds))
+            newd[i-1L] <- -(ds[i] - ds[i-1L])
+        par <- c(par[1], newd)
+        names(par) <- c('a', paste0('b', 1:length(newd)))
+    } else if(cls == 'nominal'){
+        as <- par[2:(ncat+1)] * par[1]
+        as <- as - mean(as)
+        ds <- par[(ncat+2):length(par)]
+        ds <- ds - mean(ds)
+        par <- c(as, ds)
+        names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
+    } else if(cls == 'nestlogit'){
+        par1 <- par[1:4]
+        par1[2] <- -par1[2]/par1[1]
+        names(par1) <- c('a', 'b', 'g', 'u')
+        par2 <- par[5:length(par)]
+        as <- par2[1:(ncat-1)]
+        as <- as - mean(as)
+        ds <- par2[-c(1:(ncat-1))]
+        ds <- ds - mean(ds)
+        names(as) <- paste0('a', 1:(ncat-1))
+        names(ds) <- paste0('c', 1:(ncat-1))
+        par <- c(par1, as, ds)
+    } else {
+        names(par) <- names(x@est)
+    }
+    ret <- matrix(par, 1L, dimnames=list('par', names(par)))
+    ret
+}
+
+traditional2mirt <- function(x, cls, ncat, digits = 3){
+    if(cls == 'dich'){
+        par <- x
+        par[2L] <- -par[2L]*par[1L]
+        names(par) <- c('a1', 'd', 'g', 'u')
+    } else if(cls == 'graded'){
+        par <- x
+        for(i in 2L:ncat)
+            par[i] <- -par[i]*par[1L]
+        names(par) <- c('a1', paste0('d', 1:(length(par)-1)))
+    } else if(cls == 'gpcm'){
+        par <- c(x[1L], 0L:(ncat-1L), 0, x[-1L])
+        ds <- -par[-c(1:(ncat+1))]*par[1]
+        newd <- numeric(length(ds))
+        for(i in length(ds):2L)
+            newd[i] <- (ds[i] + ds[i-1L])
+        for(i in length(newd):3L)
+            newd[i] <- newd[i] + newd[i-2L]
+        par <- c(par[1:(ncat+1)], newd)
+        names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
+    } else if(cls == 'nominal'){
+        as <- x[1L:(length(x)/2)]
+        ds <- x[-c(1L:(length(x)/2))]
+        a1 <- (as[ncat] - as[1L]) / (ncat-1L)
+        ak <- 1:ncat - 1
+        for(i in 2:(ncat-1))
+            ak[i] <- -(as[1L] - as[i]) / a1
+        dk <- ak
+        for(i in 2:ncat)
+            dk[i] <- ds[i] - ds[1L]
+        par <- c(a1, ak, dk)
+        names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
+    } else {
+        stop('traditional2mirt item class not supported')
+    }
+    par
+}

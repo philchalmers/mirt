@@ -3,19 +3,19 @@
 \alias{fscores}
 \title{Methods for Function fscores}
 \usage{
-fscores(object, rotate = "", full.scores = FALSE, method = "EAP",
+fscores(object, rotate = NULL, full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
   returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL,
   verbose = TRUE, scores.only = TRUE, full.scores.SE = FALSE,
   theta_lim = c(-6, 6), MI = 0, QMC = FALSE, ...)
 }
 \arguments{
-\item{object}{a computed model object of class \code{ExploratoryClass}, \code{ConfirmatoryClass},
+\item{object}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
 
 \item{rotate}{rotation declaration to be used when estimating the factor scores. If \code{""}
 then the \code{object@rotate} default value is used (only applicable to
-\code{ExploratoryClass} objects)}
+\code{SingleGroupClass} objects which have non-unique slopes)}
 
 \item{full.scores}{if \code{FALSE} (default) then a summary table with
 factor scores for each unique pattern is displayed. Otherwise the original

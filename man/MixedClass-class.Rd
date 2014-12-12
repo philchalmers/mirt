@@ -38,7 +38,7 @@ Defines the object returned from \code{\link{mixedmirt}}.
    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
    \item{\code{cand.t.var}:}{Object of class \code{"numeric"}, parameter used to control the MH sampler for Theta}
    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
-   \item{\code{null.mod}:}{Object of class \code{"ExploratoryClass"}, null model}
+   \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
       second-order test}
