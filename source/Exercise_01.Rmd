@@ -41,7 +41,7 @@ print(unidim)
 ### 3) Try inspecting the converged model by using `coef()`, `summary()`, `plot()`, and `itemplot()`. Understand the output of the functions by referring to the `?mirt` and `?itemplot` documentation.
 
 ```{r Q3, include=showcode, eval=showcode}
-coef(unidim)
+coef(unidim, simplify=TRUE)
 summary(unidim)
 plot(unidim)
 plot(unidim, type = 'score')

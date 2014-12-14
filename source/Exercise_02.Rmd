@@ -31,7 +31,7 @@ load('Exercise_02.Rdata')
 psych::describe(data)
 mod <- mirt(data, 1)
 mod
-coef(mod)
+coef(mod, simplify=TRUE)
 ```
 
 ### 2) Test the dimensionality of the data by extracting 2 and 3 exploratory factors. Use `anova()` to perform a likelihood ratio tests and to compare information statistics, such as AIC and BIC. Note that for the 3-factor solution it may be beneficial to set `TOL = .001` to drop the EM convergence criteria.
@@ -42,10 +42,12 @@ mod2
 # much better fit with 2 dimensions, with all criteria
 anova(mod, mod2)
 
-# solution has a fairly flat surface at the ML...a good sign of a mis-specified model
 mod3 <- mirt(data, 3, TOL = .001, verbose = FALSE)
-# not significantly diff from 2 dimensional model, and all information stats suggest 2 dims
+# BIC information stats suggest 2 dims
 anova(mod2, mod3)
+
+# third factor not well defined. Two probably best
+summary(mod3, suppress=.1)
 ```
 
 ### 3) Using the 2-factor model, attempt to rotate the solution to an interpretable orientation using the `summary()` function with a `rotate = ` argument. Try using the `varimax` and `oblimin` criteria, and suppress coefficients with the `suppress = ` argument (takes a number and replaces values below with NA's). Do you notice any discernable pattern in the loadings?

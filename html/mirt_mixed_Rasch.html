@@ -229,22 +229,22 @@ mod8a &lt;- psychomix::raschmix(data= as.matrix(dat) , k = 2, scores = &quot;sat
 ## Comp.2 0.104   27    258 0.105
 ## 
 ## Item Parameters:
-##      Comp.1   Comp.2
-## A1 -0.41736 -2.62738
-## A2  0.30915 -0.82207
-## A3  1.26713 -0.09529
-## A4  1.82568  0.30521
-## B1  0.49612 -1.09587
-## B2  1.58216  0.17166
-## B3 -1.22290 -1.66305
-## B4  0.63737 -0.56676
-## C1 -3.25216  0.77059
-## C2  0.23978  1.40760
-## C3 -1.41822  1.54170
-## C4 -0.04676  2.67367
+##         Comp.1      Comp.2
+## A1 -0.41736248 -2.62737792
+## A2  0.30914749 -0.82206812
+## A3  1.26713219 -0.09529249
+## A4  1.82568332  0.30520756
+## B1  0.49612341 -1.09587243
+## B2  1.58215975  0.17165531
+## B3 -1.22289749 -1.66305156
+## B4  0.63737283 -0.56676320
+## C1 -3.25215846  0.77059100
+## C2  0.23978355  1.40759780
+## C3 -1.41822060  1.54170195
+## C4 -0.04676352  2.67367209
 ## 
-## &#39;log Lik.&#39; -1913 (df=43)
-## AIC: 3911   BIC: 4070
+## &#39;log Lik.&#39; -1912.703 (df=43)
+## AIC: 3911.406   BIC: 4069.506
 </code></pre>
 
 <pre><code class="r"># mrm (in mRm)
@@ -266,8 +266,8 @@ mod8b$conv.to.bound
 <pre><code>## 
 ## Results - mRm: 
 ## 
-## Conditional log-likelihood: -1819 
-## BIC: 3899 
+## Conditional log-likelihood: -1819.232 
+## BIC: 3899.15 
 ## Number of iterations: 1000 
 ## Number of parameters: 45 
 ## Convergence to Boundary: FALSE 
@@ -275,40 +275,40 @@ mod8b$conv.to.bound
 ## Estimated Item Easiness Parameters:
 ## 
 ##             Class Nr. 1 Class Nr. 2
-## Item Nr. 1      0.47357      4.6984
-## Item Nr. 2     -0.24597      2.7077
-## Item Nr. 3     -1.23454      2.7512
-## Item Nr. 4     -1.75359      1.7802
-## Item Nr. 5     -0.45929      3.5774
-## Item Nr. 6     -1.49252      1.3689
-## Item Nr. 7      1.30236      3.2916
-## Item Nr. 8     -0.56849      2.4245
-## Item Nr. 9      2.90776     -0.6628
-## Item Nr. 10    -0.20406     -7.6380
-## Item Nr. 11     1.25798     -4.6204
-## Item Nr. 12     0.01679     -9.6788
+## Item Nr. 1   0.47357246   4.6984471
+## Item Nr. 2  -0.24597425   2.7077495
+## Item Nr. 3  -1.23453627   2.7511746
+## Item Nr. 4  -1.75359077   1.7801617
+## Item Nr. 5  -0.45928617   3.5773706
+## Item Nr. 6  -1.49251941   1.3689304
+## Item Nr. 7   1.30236348   3.2915713
+## Item Nr. 8  -0.56849149   2.4245074
+## Item Nr. 9   2.90775653  -0.6627869
+## Item Nr. 10 -0.20406154  -7.6379604
+## Item Nr. 11  1.25797615  -4.6204038
+## Item Nr. 12  0.01679127  -9.6787613
 ## 
 ## 
 ## Estimated Class Sizes:
 ## 
 ##  Class Nr. 1 Class Nr. 2
-##       0.9242     0.07576
+##    0.9242434  0.07575655
 ## 
 ## 
 ## Estimated Latent Score Probabilities:
 ## 
-##    Class Nr. 1 Class Nr. 2
-## 1    0.000e+00     0.00000
-## 2    4.000e-03     0.13202
-## 3   2.492e-119     0.13562
-## 4    1.810e-02     0.18602
-## 5    3.712e-02     0.13478
-## 6    1.149e-01     0.04482
-## 7    1.630e-01     0.00000
-## 8    1.075e-01     0.13561
-## 9    1.742e-01     0.00000
-## 10   2.126e-01     0.02858
-## 11   1.687e-01     0.20256
+##      Class Nr. 1 Class Nr. 2
+## 1   0.000000e+00  0.00000000
+## 2   4.000150e-03  0.13202182
+## 3  2.491859e-119  0.13561827
+## 4   1.810124e-02  0.18601650
+## 5   3.712249e-02  0.13477816
+## 6   1.148980e-01  0.04481928
+## 7   1.630360e-01  0.00000000
+## 8   1.074563e-01  0.13560846
+## 9   1.741521e-01  0.00000000
+## 10  2.125689e-01  0.02857518
+## 11  1.686649e-01  0.20256232
 </code></pre>
 
 <pre><code class="r"># mirt
@@ -481,8 +481,19 @@ technical = list( customTheta=Theta , customPriorFun = mixed_prior ) )
 ##  Class proportions: 0.086 0.914 
 ##  Class proportions: 0.086 0.914 
 ##  Class proportions: 0.086 0.914 
+##  Class proportions: 0.086 0.914 
 ##  Class proportions: 0.085 0.915 
 ##  Class proportions: 0.085 0.915 
+##  Class proportions: 0.085 0.915 
+##  Class proportions: 0.085 0.915 
+##  Class proportions: 0.085 0.915 
+##  Class proportions: 0.084 0.916 
+##  Class proportions: 0.084 0.916 
+##  Class proportions: 0.084 0.916 
+##  Class proportions: 0.084 0.916 
+##  Class proportions: 0.084 0.916 
+##  Class proportions: 0.084 0.916 
+##  Class proportions: 0.084 0.916 
 ##  Class proportions: 0.084 0.916 
 ##  Class proportions: 0.084 0.916 
 ##  Class proportions: 0.084 0.916 
@@ -494,30 +505,51 @@ technical = list( customTheta=Theta , customPriorFun = mixed_prior ) )
 ##  Class proportions: 0.084 0.916 
 ##  Class proportions: 0.084 0.916 
 ##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
+##  Class proportions: 0.083 0.917 
 ##  Class proportions: 0.082 0.918 
 ##  Class proportions: 0.082 0.918 
+##  Class proportions: 0.082 0.918 
 ##  Class proportions: 0.081 0.919 
-##  Class proportions: 0.081 0.919 
-##  Class proportions: 0.081 0.919 
+##  Class proportions: 0.08 0.92 
 ##  Class proportions: 0.079 0.921 
-##  Class proportions: 0.079 0.921 
-##  Class proportions: 0.078 0.922 
-##  Class proportions: 0.077 0.923 
 ##  Class proportions: 0.076 0.924 
-##  Class proportions: 0.076 0.924 
+##  Class proportions: 0.075 0.925 
 ##  Class proportions: 0.074 0.926 
-##  Class proportions: 0.074 0.926 
-##  Class proportions: 0.073 0.927 
-##  Class proportions: 0.071 0.929 
-##  Class proportions: 0.071 0.929 
 ##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
-##  Class proportions: 0.07 0.93 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
+##  Class proportions: 0.069 0.931 
 ##  Class proportions: 0.069 0.931 
 ##  Class proportions: 0.069 0.931 
 ##  Class proportions: 0.069 0.931 
@@ -541,19 +573,19 @@ sirt::mirt.wrapper.coef(mod8c)
 </code></pre>
 
 <pre><code>## $coef
-##    item   a1      a2    a3       a4 d g u
-## 1    A1 12.9  17.930 0.982  2.04598 0 0 1
-## 2    A2 12.9  16.000 0.982  1.29116 0 0 1
-## 3    A3 12.9  16.037 0.982  0.31088 0 0 1
-## 4    A4 12.9  14.974 0.982 -0.19883 0 0 1
-## 5    B1 12.9  16.592 0.982  1.10109 0 0 1
-## 6    B2 12.9  14.421 0.982  0.05651 0 0 1
-## 7    B3 12.9  16.566 0.982  2.84804 0 0 1
-## 8    B4 12.9  15.659 0.982  0.96941 0 0 1
-## 9    C1 12.9  -7.089 0.982  4.43235 0 0 1
-## 10   C2 12.9 -14.352 0.982  1.32368 0 0 1
-## 11   C3 12.9  -7.876 0.982  2.77914 0 0 1
-## 12   C4 12.9 -16.913 0.982  1.53879 0 0 1
+##    item       a1        a2        a3          a4 d g u
+## 1    A1 16.05217  21.86494 0.9825114  2.04655513 0 0 1
+## 2    A2 16.05217  19.93436 0.9825114  1.29171844 0 0 1
+## 3    A3 16.05217  19.97178 0.9825114  0.31147845 0 0 1
+## 4    A4 16.05217  18.90927 0.9825114 -0.19837682 0 0 1
+## 5    B1 16.05217  20.52675 0.9825114  1.10162782 0 0 1
+## 6    B2 16.05217  18.35564 0.9825114  0.05709977 0 0 1
+## 7    B3 16.05217  20.50024 0.9825114  2.84878929 0 0 1
+## 8    B4 16.05217  19.59397 0.9825114  0.97001222 0 0 1
+## 9    C1 16.05217 -11.41566 0.9825114  4.43202211 0 0 1
+## 10   C2 16.05217 -18.25626 0.9825114  1.32384657 0 0 1
+## 11   C3 16.05217 -11.42096 0.9825114  2.77977609 0 0 1
+## 12   C4 16.05217 -20.91185 0.9825114  1.54003662 0 0 1
 ## 
 ## $GroupPars
 ## MEAN_1 MEAN_2 MEAN_3 MEAN_4 COV_11 COV_21 COV_31 COV_41 COV_22 COV_32 
@@ -565,7 +597,7 @@ sirt::mirt.wrapper.coef(mod8c)
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.1.1 (2014-07-10)
+<pre><code>## R version 3.1.2 (2014-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## 
 ## locale:
@@ -577,41 +609,44 @@ sirt::mirt.wrapper.coef(mod8c)
 ## [11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] parallel  methods   stats4    stats     graphics  grDevices utils    
-## [8] datasets  base     
+## [1] methods   stats4    stats     graphics  grDevices utils     datasets 
+## [8] base     
 ## 
 ## other attached packages:
-##  [1] sirt_0.99-20    ltm_1.0-0       polycor_0.7-8   sfsmisc_1.0-26 
-##  [5] mvtnorm_1.0-0   msm_1.4         MASS_7.3-34     mirt_1.6       
-##  [9] lattice_0.20-29 knitr_1.6      
+##  [1] sirt_1.2        ltm_1.0-0       polycor_0.7-8   sfsmisc_1.0-26 
+##  [5] mvtnorm_1.0-1   msm_1.4         MASS_7.3-35     mirt_1.7       
+##  [9] lattice_0.20-29 knitr_1.8      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] acepack_1.3-3.3      boot_1.3-11          car_2.0-21          
-##  [4] CDM_3.4-21           cluster_1.15.3       coda_0.16-1         
-##  [7] colorspace_1.2-4     combinat_0.0-8       corpcor_1.6.7       
-## [10] digest_0.6.4         ellipse_0.3-8        evaluate_0.5.5      
-## [13] expm_0.99-1.1        flexmix_2.3-12       foreign_0.8-61      
-## [16] formatR_1.0          Formula_1.1-2        ggplot2_1.0.0       
-## [19] glasso_1.8           GPArotation_2012.3-1 grid_3.1.1          
-## [22] gtable_0.1.2         gtools_3.4.1         Hmisc_3.14-5        
-## [25] huge_1.2.6           ic.infer_1.1-5       igraph_0.7.1        
-## [28] jpeg_0.1-8           kappalab_0.4-6       kernlab_0.9-19      
-## [31] latticeExtra_0.6-26  lavaan_0.5-17.726    lisrelToR_0.1.4     
-## [34] lme4_1.1-7           lpSolve_5.6.7        markdown_0.7.4      
-## [37] Matrix_1.1-4         matrixcalc_1.0-3     mime_0.2            
-## [40] minqa_1.2.3          mnormt_1.5-1         modeltools_0.2-21   
-## [43] mRm_1.1.5            munsell_0.4.2        nlme_3.1-117        
-## [46] nloptr_1.0.4         nnet_7.3-8           numDeriv_2012.9-1   
-## [49] pbivnorm_0.5-1       plyr_1.8.1           png_0.1-7           
-## [52] PP_0.5.3             proto_0.3-10         psych_1.4.8.11      
-## [55] psychomix_1.1-1      psychotools_0.3-0    qgraph_1.2.5        
-## [58] quadprog_1.5-5       RColorBrewer_1.0-5   Rcpp_0.11.3         
-## [61] RCurl_1.95-4.3       reshape2_1.4         rockchalk_1.8.86    
-## [64] rpart_4.1-8          scales_0.2.4         sem_3.1-5           
-## [67] semPlot_1.0.1        sm_2.2-5.4           sna_2.3-2           
-## [70] splines_3.1.1        stringr_0.6.2        survival_2.37-7     
-## [73] TAM_1.0-3.18-1       tensor_1.5           tools_3.1.1         
-## [76] XML_3.98-1.1
+##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
+##  [4] car_2.0-22            CDM_4.0               cluster_1.15.3       
+##  [7] coda_0.16-1           colorspace_1.2-4      combinat_0.0-8       
+## [10] corpcor_1.6.7         d3Network_0.5.1       digest_0.6.6         
+## [13] ellipse_0.3-8         evaluate_0.5.5        expm_0.99-1.1        
+## [16] fdrtool_1.2.13        flexmix_2.3-12        foreign_0.8-61       
+## [19] formatR_1.0           Formula_1.1-2         ggm_2.2              
+## [22] ggplot2_1.0.0         glasso_1.8            GPArotation_2014.11-1
+## [25] grid_3.1.2            gtable_0.1.2          gtools_3.4.1         
+## [28] Hmisc_3.14-6          huge_1.2.6            ic.infer_1.1-5       
+## [31] igraph_0.7.1          jpeg_0.1-8            kappalab_0.4-6       
+## [34] kernlab_0.9-19        latticeExtra_0.6-26   lavaan_0.5-17        
+## [37] lisrelToR_0.1.4       lme4_1.1-7            lpSolve_5.6.7        
+## [40] markdown_0.7.4        Matrix_1.1-4          matrixcalc_1.0-3     
+## [43] mime_0.2              minqa_1.2.4           mnormt_1.5-1         
+## [46] modeltools_0.2-21     mRm_1.1.5             munsell_0.4.2        
+## [49] nlme_3.1-118          nloptr_1.0.4          nnet_7.3-8           
+## [52] numDeriv_2012.9-1     parallel_3.1.2        pbivnorm_0.5-1       
+## [55] pixmap_0.4-11         plyr_1.8.1            png_0.1-7            
+## [58] proto_0.3-10          psych_1.4.8.11        psychomix_1.1-1      
+## [61] psychotools_0.3-0     qgraph_1.3            quadprog_1.5-5       
+## [64] RColorBrewer_1.1-2    Rcpp_0.11.3           RCurl_1.95-4.5       
+## [67] reshape2_1.4.1        rjson_0.2.15          rockchalk_1.8.86     
+## [70] rpart_4.1-8           rtiff_1.4.4           scales_0.2.4         
+## [73] sem_3.1-5             semPlot_1.0.1         sendplot_4.0.0       
+## [76] sm_2.2-5.4            sna_2.3-2             splines_3.1.2        
+## [79] stringr_0.6.2         survival_2.37-7       TAM_1.2              
+## [82] tensor_1.5            tools_3.1.2           whisker_0.3-2        
+## [85] XML_3.98-1.1
 </code></pre>
 
 </body>

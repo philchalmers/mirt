@@ -210,9 +210,9 @@ library(sirt)
 </code></pre>
 
 <pre><code>## |-----------------------------------------------------------------|
-## | sirt 0.99-20 (2014-09-16)                                       |
+## | sirt 1.2 (2014-12-12)                                           |
 ## | Supplementary Item Response Theory                              |
-## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at &gt;      |
+## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at&gt;       |
 ## | https://sites.google.com/site/alexanderrobitzsch/software       |
 ## |-----------------------------------------------------------------|
 </code></pre>
@@ -247,26 +247,26 @@ mod14a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;, progress = FALS
 summary(mod14a)
 </code></pre>
 
-<pre><code>## Warning: There are at most 4 different skill classes. Returning all skill classes.
+<pre><code>## Warning in summary.din(mod14a): There are at most 4 different skill classes. Returning all skill classes.
 </code></pre>
 
-<pre><code>## CDM 3.4-21 (Built 2014-08-31)
+<pre><code>## CDM 4.0 (Built 2014-11-21)
 </code></pre>
 
 <pre><code>## Call:
 ##  DINA MODEL on 12 items for 2 attributes 
-## Date of Analysis: 2014-10-09 12:40:32 
-## Time difference of 0.02978 secs
-## Computation Time: 0.02978 
+## Date of Analysis: 2014-12-14 13:03:56 
+## Time difference of 0.03113842 secs
+## Computation Time: 0.03113842 
 ## 
 ## 
-## Deviance =  3915  |   Log-Likelihood = -1958 
+## Deviance =  3915.31  |   Log-Likelihood = -1957.655 
 ## Number of item parameters: 24 
 ## Number of skill class parameters: 3 
 ## 
 ## Information criteria: 
-##   AIC =  3969 
-##   BIC =  4072 
+##   AIC =  3969.31 
+##   BIC =  4071.722 
 ## 
 ## Mean of RMSEA item fit: 0.028 
 ## 
@@ -335,84 +335,84 @@ mod.pars[ind,&quot;value&quot;] &lt;- qlogis(.8) - qlogis(.2)
 mod.pars
 </code></pre>
 
-<pre><code>##    group  item     class   name parnum  value lbound ubound   est
-## 1    all    A1      dich     a1      1  2.773   -Inf    Inf  TRUE
-## 2    all    A1      dich     a2      2  0.000   -Inf    Inf FALSE
-## 3    all    A1      dich     a3      3  0.000   -Inf    Inf FALSE
-## 4    all    A1      dich      d      4 -1.386   -Inf    Inf  TRUE
-## 5    all    A1      dich      g      5  0.000   -Inf    Inf FALSE
-## 6    all    A1      dich      u      6  1.000   -Inf    Inf FALSE
-## 7    all    A2      dich     a1      7  2.773   -Inf    Inf  TRUE
-## 8    all    A2      dich     a2      8  0.000   -Inf    Inf FALSE
-## 9    all    A2      dich     a3      9  0.000   -Inf    Inf FALSE
-## 10   all    A2      dich      d     10 -1.386   -Inf    Inf  TRUE
-## 11   all    A2      dich      g     11  0.000   -Inf    Inf FALSE
-## 12   all    A2      dich      u     12  1.000   -Inf    Inf FALSE
-## 13   all    A3      dich     a1     13  2.773   -Inf    Inf  TRUE
-## 14   all    A3      dich     a2     14  0.000   -Inf    Inf FALSE
-## 15   all    A3      dich     a3     15  0.000   -Inf    Inf FALSE
-## 16   all    A3      dich      d     16 -1.386   -Inf    Inf  TRUE
-## 17   all    A3      dich      g     17  0.000   -Inf    Inf FALSE
-## 18   all    A3      dich      u     18  1.000   -Inf    Inf FALSE
-## 19   all    A4      dich     a1     19  2.773   -Inf    Inf  TRUE
-## 20   all    A4      dich     a2     20  0.000   -Inf    Inf FALSE
-## 21   all    A4      dich     a3     21  0.000   -Inf    Inf FALSE
-## 22   all    A4      dich      d     22 -1.386   -Inf    Inf  TRUE
-## 23   all    A4      dich      g     23  0.000   -Inf    Inf FALSE
-## 24   all    A4      dich      u     24  1.000   -Inf    Inf FALSE
-## 25   all    B1      dich     a1     25  0.000   -Inf    Inf FALSE
-## 26   all    B1      dich     a2     26  2.773   -Inf    Inf  TRUE
-## 27   all    B1      dich     a3     27  0.000   -Inf    Inf FALSE
-## 28   all    B1      dich      d     28 -1.386   -Inf    Inf  TRUE
-## 29   all    B1      dich      g     29  0.000   -Inf    Inf FALSE
-## 30   all    B1      dich      u     30  1.000   -Inf    Inf FALSE
-## 31   all    B2      dich     a1     31  0.000   -Inf    Inf FALSE
-## 32   all    B2      dich     a2     32  2.773   -Inf    Inf  TRUE
-## 33   all    B2      dich     a3     33  0.000   -Inf    Inf FALSE
-## 34   all    B2      dich      d     34 -1.386   -Inf    Inf  TRUE
-## 35   all    B2      dich      g     35  0.000   -Inf    Inf FALSE
-## 36   all    B2      dich      u     36  1.000   -Inf    Inf FALSE
-## 37   all    B3      dich     a1     37  0.000   -Inf    Inf FALSE
-## 38   all    B3      dich     a2     38  2.773   -Inf    Inf  TRUE
-## 39   all    B3      dich     a3     39  0.000   -Inf    Inf FALSE
-## 40   all    B3      dich      d     40 -1.386   -Inf    Inf  TRUE
-## 41   all    B3      dich      g     41  0.000   -Inf    Inf FALSE
-## 42   all    B3      dich      u     42  1.000   -Inf    Inf FALSE
-## 43   all    B4      dich     a1     43  0.000   -Inf    Inf FALSE
-## 44   all    B4      dich     a2     44  2.773   -Inf    Inf  TRUE
-## 45   all    B4      dich     a3     45  0.000   -Inf    Inf FALSE
-## 46   all    B4      dich      d     46 -1.386   -Inf    Inf  TRUE
-## 47   all    B4      dich      g     47  0.000   -Inf    Inf FALSE
-## 48   all    B4      dich      u     48  1.000   -Inf    Inf FALSE
-## 49   all    C1      dich     a1     49  0.000   -Inf    Inf FALSE
-## 50   all    C1      dich     a2     50  0.000   -Inf    Inf FALSE
-## 51   all    C1      dich     a3     51  2.773   -Inf    Inf  TRUE
-## 52   all    C1      dich      d     52 -1.386   -Inf    Inf  TRUE
-## 53   all    C1      dich      g     53  0.000   -Inf    Inf FALSE
-## 54   all    C1      dich      u     54  1.000   -Inf    Inf FALSE
-## 55   all    C2      dich     a1     55  0.000   -Inf    Inf FALSE
-## 56   all    C2      dich     a2     56  0.000   -Inf    Inf FALSE
-## 57   all    C2      dich     a3     57  2.773   -Inf    Inf  TRUE
-## 58   all    C2      dich      d     58 -1.386   -Inf    Inf  TRUE
-## 59   all    C2      dich      g     59  0.000   -Inf    Inf FALSE
-## 60   all    C2      dich      u     60  1.000   -Inf    Inf FALSE
-## 61   all    C3      dich     a1     61  0.000   -Inf    Inf FALSE
-## 62   all    C3      dich     a2     62  0.000   -Inf    Inf FALSE
-## 63   all    C3      dich     a3     63  2.773   -Inf    Inf  TRUE
-## 64   all    C3      dich      d     64 -1.386   -Inf    Inf  TRUE
-## 65   all    C3      dich      g     65  0.000   -Inf    Inf FALSE
-## 66   all    C3      dich      u     66  1.000   -Inf    Inf FALSE
-## 67   all    C4      dich     a1     67  0.000   -Inf    Inf FALSE
-## 68   all    C4      dich     a2     68  0.000   -Inf    Inf FALSE
-## 69   all    C4      dich     a3     69  2.773   -Inf    Inf  TRUE
-## 70   all    C4      dich      d     70 -1.386   -Inf    Inf  TRUE
-## 71   all    C4      dich      g     71  0.000   -Inf    Inf FALSE
-## 72   all    C4      dich      u     72  1.000   -Inf    Inf FALSE
-## 73   all GROUP GroupPars MEAN_1     73  0.000   -Inf    Inf FALSE
-## 74   all GROUP GroupPars MEAN_2     74  0.000   -Inf    Inf FALSE
-## 75   all GROUP GroupPars COV_11     75  1.000  1e-04    Inf FALSE
-## 76   all GROUP GroupPars COV_21     76  0.000   -Inf    Inf FALSE
-## 77   all GROUP GroupPars COV_22     77  1.000  1e-04    Inf FALSE
+<pre><code>##    group  item     class   name parnum     value lbound ubound   est
+## 1    all    A1      dich     a1      1  2.772589   -Inf    Inf  TRUE
+## 2    all    A1      dich     a2      2  0.000000   -Inf    Inf FALSE
+## 3    all    A1      dich     a3      3  0.000000   -Inf    Inf FALSE
+## 4    all    A1      dich      d      4 -1.386294   -Inf    Inf  TRUE
+## 5    all    A1      dich      g      5  0.000000   -Inf    Inf FALSE
+## 6    all    A1      dich      u      6  1.000000   -Inf    Inf FALSE
+## 7    all    A2      dich     a1      7  2.772589   -Inf    Inf  TRUE
+## 8    all    A2      dich     a2      8  0.000000   -Inf    Inf FALSE
+## 9    all    A2      dich     a3      9  0.000000   -Inf    Inf FALSE
+## 10   all    A2      dich      d     10 -1.386294   -Inf    Inf  TRUE
+## 11   all    A2      dich      g     11  0.000000   -Inf    Inf FALSE
+## 12   all    A2      dich      u     12  1.000000   -Inf    Inf FALSE
+## 13   all    A3      dich     a1     13  2.772589   -Inf    Inf  TRUE
+## 14   all    A3      dich     a2     14  0.000000   -Inf    Inf FALSE
+## 15   all    A3      dich     a3     15  0.000000   -Inf    Inf FALSE
+## 16   all    A3      dich      d     16 -1.386294   -Inf    Inf  TRUE
+## 17   all    A3      dich      g     17  0.000000   -Inf    Inf FALSE
+## 18   all    A3      dich      u     18  1.000000   -Inf    Inf FALSE
+## 19   all    A4      dich     a1     19  2.772589   -Inf    Inf  TRUE
+## 20   all    A4      dich     a2     20  0.000000   -Inf    Inf FALSE
+## 21   all    A4      dich     a3     21  0.000000   -Inf    Inf FALSE
+## 22   all    A4      dich      d     22 -1.386294   -Inf    Inf  TRUE
+## 23   all    A4      dich      g     23  0.000000   -Inf    Inf FALSE
+## 24   all    A4      dich      u     24  1.000000   -Inf    Inf FALSE
+## 25   all    B1      dich     a1     25  0.000000   -Inf    Inf FALSE
+## 26   all    B1      dich     a2     26  2.772589   -Inf    Inf  TRUE
+## 27   all    B1      dich     a3     27  0.000000   -Inf    Inf FALSE
+## 28   all    B1      dich      d     28 -1.386294   -Inf    Inf  TRUE
+## 29   all    B1      dich      g     29  0.000000   -Inf    Inf FALSE
+## 30   all    B1      dich      u     30  1.000000   -Inf    Inf FALSE
+## 31   all    B2      dich     a1     31  0.000000   -Inf    Inf FALSE
+## 32   all    B2      dich     a2     32  2.772589   -Inf    Inf  TRUE
+## 33   all    B2      dich     a3     33  0.000000   -Inf    Inf FALSE
+## 34   all    B2      dich      d     34 -1.386294   -Inf    Inf  TRUE
+## 35   all    B2      dich      g     35  0.000000   -Inf    Inf FALSE
+## 36   all    B2      dich      u     36  1.000000   -Inf    Inf FALSE
+## 37   all    B3      dich     a1     37  0.000000   -Inf    Inf FALSE
+## 38   all    B3      dich     a2     38  2.772589   -Inf    Inf  TRUE
+## 39   all    B3      dich     a3     39  0.000000   -Inf    Inf FALSE
+## 40   all    B3      dich      d     40 -1.386294   -Inf    Inf  TRUE
+## 41   all    B3      dich      g     41  0.000000   -Inf    Inf FALSE
+## 42   all    B3      dich      u     42  1.000000   -Inf    Inf FALSE
+## 43   all    B4      dich     a1     43  0.000000   -Inf    Inf FALSE
+## 44   all    B4      dich     a2     44  2.772589   -Inf    Inf  TRUE
+## 45   all    B4      dich     a3     45  0.000000   -Inf    Inf FALSE
+## 46   all    B4      dich      d     46 -1.386294   -Inf    Inf  TRUE
+## 47   all    B4      dich      g     47  0.000000   -Inf    Inf FALSE
+## 48   all    B4      dich      u     48  1.000000   -Inf    Inf FALSE
+## 49   all    C1      dich     a1     49  0.000000   -Inf    Inf FALSE
+## 50   all    C1      dich     a2     50  0.000000   -Inf    Inf FALSE
+## 51   all    C1      dich     a3     51  2.772589   -Inf    Inf  TRUE
+## 52   all    C1      dich      d     52 -1.386294   -Inf    Inf  TRUE
+## 53   all    C1      dich      g     53  0.000000   -Inf    Inf FALSE
+## 54   all    C1      dich      u     54  1.000000   -Inf    Inf FALSE
+## 55   all    C2      dich     a1     55  0.000000   -Inf    Inf FALSE
+## 56   all    C2      dich     a2     56  0.000000   -Inf    Inf FALSE
+## 57   all    C2      dich     a3     57  2.772589   -Inf    Inf  TRUE
+## 58   all    C2      dich      d     58 -1.386294   -Inf    Inf  TRUE
+## 59   all    C2      dich      g     59  0.000000   -Inf    Inf FALSE
+## 60   all    C2      dich      u     60  1.000000   -Inf    Inf FALSE
+## 61   all    C3      dich     a1     61  0.000000   -Inf    Inf FALSE
+## 62   all    C3      dich     a2     62  0.000000   -Inf    Inf FALSE
+## 63   all    C3      dich     a3     63  2.772589   -Inf    Inf  TRUE
+## 64   all    C3      dich      d     64 -1.386294   -Inf    Inf  TRUE
+## 65   all    C3      dich      g     65  0.000000   -Inf    Inf FALSE
+## 66   all    C3      dich      u     66  1.000000   -Inf    Inf FALSE
+## 67   all    C4      dich     a1     67  0.000000   -Inf    Inf FALSE
+## 68   all    C4      dich     a2     68  0.000000   -Inf    Inf FALSE
+## 69   all    C4      dich     a3     69  2.772589   -Inf    Inf  TRUE
+## 70   all    C4      dich      d     70 -1.386294   -Inf    Inf  TRUE
+## 71   all    C4      dich      g     71  0.000000   -Inf    Inf FALSE
+## 72   all    C4      dich      u     72  1.000000   -Inf    Inf FALSE
+## 73   all GROUP GroupPars MEAN_1     73  0.000000   -Inf    Inf FALSE
+## 74   all GROUP GroupPars MEAN_2     74  0.000000   -Inf    Inf FALSE
+## 75   all GROUP GroupPars COV_11     75  1.000000  1e-04    Inf FALSE
+## 76   all GROUP GroupPars COV_21     76  0.000000   -Inf    Inf FALSE
+## 77   all GROUP GroupPars COV_22     77  1.000000  1e-04    Inf FALSE
 ##    prior.type prior_1 prior_2
 ## 1        none     NaN     NaN
 ## 2        none     NaN     NaN
@@ -522,29 +522,35 @@ coef14b &lt;- mirt.wrapper.coef(mod14b)$coef
 #-* comparisons of estimated parameters
 # extract guessing and slipping parameters from din
 dfr &lt;- coef(mod14a)[ , c(&quot;guess&quot;,&quot;slip&quot;) ]
-colnames(dfr) &lt;- paste0(&quot;din.&quot;,c(&quot;guess&quot;,&quot;slip&quot;) )
+</code></pre>
 
-# estimated parameters from mirt
+<pre><code>## Error in coef(mod14a)[, c(&quot;guess&quot;, &quot;slip&quot;)]: incorrect number of dimensions
+</code></pre>
+
+<pre><code class="r">colnames(dfr) &lt;- paste0(&quot;din.&quot;,c(&quot;guess&quot;,&quot;slip&quot;) )
+</code></pre>
+
+<pre><code>## Error in colnames(dfr) &lt;- paste0(&quot;din.&quot;, c(&quot;guess&quot;, &quot;slip&quot;)): object &#39;dfr&#39; not found
+</code></pre>
+
+<pre><code class="r"># estimated parameters from mirt
 dfr$mirt.guess &lt;- plogis( coef14b$d )
-dfr$mirt.slip &lt;- 1 - plogis( rowSums(coef14b[,c(&quot;d&quot;,&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;)]) )
+</code></pre>
 
-# comparison
+<pre><code>## Error in dfr$mirt.guess &lt;- plogis(coef14b$d): object &#39;dfr&#39; not found
+</code></pre>
+
+<pre><code class="r">dfr$mirt.slip &lt;- 1 - plogis( rowSums(coef14b[,c(&quot;d&quot;,&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;)]) )
+</code></pre>
+
+<pre><code>## Error in dfr$mirt.slip &lt;- 1 - plogis(rowSums(coef14b[, c(&quot;d&quot;, &quot;a1&quot;, &quot;a2&quot;, : object &#39;dfr&#39; not found
+</code></pre>
+
+<pre><code class="r"># comparison
 round(dfr[, c(1,3,2,4)],3)
 </code></pre>
 
-<pre><code>##    din.guess mirt.guess din.slip mirt.slip
-## A1     0.674      0.671    0.030     0.030
-## A2     0.423      0.420    0.049     0.050
-## A3     0.258      0.254    0.224     0.225
-## A4     0.245      0.243    0.394     0.395
-## B1     0.534      0.543    0.166     0.164
-## B2     0.338      0.348    0.382     0.380
-## B3     0.796      0.803    0.016     0.015
-## B4     0.421      0.437    0.142     0.140
-## C1     0.850      0.851    0.000     0.000
-## C2     0.480      0.480    0.097     0.097
-## C3     0.746      0.746    0.026     0.026
-## C4     0.575      0.577    0.136     0.137
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;dfr&#39; not found
 </code></pre>
 
 <pre><code class="r">dfr &lt;- data.frame( &quot;Theta&quot; = Theta , &quot;din&quot;=mod14a$attribute.patt$class.prob ,
@@ -564,7 +570,7 @@ round(dfr,3)
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.1.1 (2014-07-10)
+<pre><code>## R version 3.1.2 (2014-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## 
 ## locale:
@@ -576,39 +582,42 @@ round(dfr,3)
 ## [11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] parallel  methods   stats4    stats     graphics  grDevices utils    
-## [8] datasets  base     
+## [1] methods   stats4    stats     graphics  grDevices utils     datasets 
+## [8] base     
 ## 
 ## other attached packages:
-##  [1] sirt_0.99-20    ltm_1.0-0       polycor_0.7-8   sfsmisc_1.0-26 
-##  [5] mvtnorm_1.0-0   msm_1.4         MASS_7.3-34     mirt_1.6       
-##  [9] lattice_0.20-29 knitr_1.6      
+##  [1] sirt_1.2        ltm_1.0-0       polycor_0.7-8   sfsmisc_1.0-26 
+##  [5] mvtnorm_1.0-1   msm_1.4         MASS_7.3-35     mirt_1.7       
+##  [9] lattice_0.20-29 knitr_1.8      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] acepack_1.3-3.3      boot_1.3-11          car_2.0-21          
-##  [4] CDM_3.4-21           cluster_1.15.3       coda_0.16-1         
-##  [7] colorspace_1.2-4     combinat_0.0-8       corpcor_1.6.7       
-## [10] digest_0.6.4         ellipse_0.3-8        evaluate_0.5.5      
-## [13] expm_0.99-1.1        foreign_0.8-61       formatR_1.0         
-## [16] Formula_1.1-2        ggplot2_1.0.0        glasso_1.8          
-## [19] GPArotation_2012.3-1 grid_3.1.1           gtable_0.1.2        
-## [22] gtools_3.4.1         Hmisc_3.14-5         huge_1.2.6          
-## [25] ic.infer_1.1-5       igraph_0.7.1         jpeg_0.1-8          
-## [28] kappalab_0.4-6       kernlab_0.9-19       latticeExtra_0.6-26 
-## [31] lavaan_0.5-17.726    lisrelToR_0.1.4      lme4_1.1-7          
-## [34] lpSolve_5.6.7        markdown_0.7.4       Matrix_1.1-4        
-## [37] matrixcalc_1.0-3     mime_0.2             minqa_1.2.3         
-## [40] mnormt_1.5-1         munsell_0.4.2        nlme_3.1-117        
-## [43] nloptr_1.0.4         nnet_7.3-8           pbivnorm_0.5-1      
-## [46] plyr_1.8.1           png_0.1-7            PP_0.5.3            
-## [49] proto_0.3-10         psych_1.4.8.11       qgraph_1.2.5        
-## [52] quadprog_1.5-5       RColorBrewer_1.0-5   Rcpp_0.11.3         
-## [55] RCurl_1.95-4.3       reshape2_1.4         rockchalk_1.8.86    
-## [58] rpart_4.1-8          scales_0.2.4         sem_3.1-5           
-## [61] semPlot_1.0.1        sm_2.2-5.4           sna_2.3-2           
-## [64] splines_3.1.1        stringr_0.6.2        survival_2.37-7     
-## [67] TAM_1.0-3.18-1       tensor_1.5           tools_3.1.1         
-## [70] XML_3.98-1.1
+##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
+##  [4] car_2.0-22            CDM_4.0               cluster_1.15.3       
+##  [7] coda_0.16-1           colorspace_1.2-4      combinat_0.0-8       
+## [10] corpcor_1.6.7         d3Network_0.5.1       digest_0.6.6         
+## [13] ellipse_0.3-8         evaluate_0.5.5        expm_0.99-1.1        
+## [16] fdrtool_1.2.13        foreign_0.8-61        formatR_1.0          
+## [19] Formula_1.1-2         ggm_2.2               ggplot2_1.0.0        
+## [22] glasso_1.8            GPArotation_2014.11-1 grid_3.1.2           
+## [25] gtable_0.1.2          gtools_3.4.1          Hmisc_3.14-6         
+## [28] huge_1.2.6            ic.infer_1.1-5        igraph_0.7.1         
+## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-19       
+## [34] latticeExtra_0.6-26   lavaan_0.5-17         lisrelToR_0.1.4      
+## [37] lme4_1.1-7            lpSolve_5.6.7         markdown_0.7.4       
+## [40] Matrix_1.1-4          matrixcalc_1.0-3      mime_0.2             
+## [43] minqa_1.2.4           mnormt_1.5-1          munsell_0.4.2        
+## [46] nlme_3.1-118          nloptr_1.0.4          nnet_7.3-8           
+## [49] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
+## [52] plyr_1.8.1            png_0.1-7             proto_0.3-10         
+## [55] psych_1.4.8.11        qgraph_1.3            quadprog_1.5-5       
+## [58] RColorBrewer_1.1-2    Rcpp_0.11.3           RCurl_1.95-4.5       
+## [61] reshape2_1.4.1        rjson_0.2.15          rockchalk_1.8.86     
+## [64] rpart_4.1-8           rtiff_1.4.4           scales_0.2.4         
+## [67] sem_3.1-5             semPlot_1.0.1         sendplot_4.0.0       
+## [70] sm_2.2-5.4            sna_2.3-2             splines_3.1.2        
+## [73] stringr_0.6.2         survival_2.37-7       TAM_1.2              
+## [76] tensor_1.5            tools_3.1.2           whisker_0.3-2        
+## [79] XML_3.98-1.1
 </code></pre>
 
 </body>

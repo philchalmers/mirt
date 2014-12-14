@@ -28,11 +28,11 @@ summary(lmod1)
 model <- mirt.model('Theta = 1-32
               CONSTRAIN = (1-32, a1)')
 (mmod1 <- mirt::mirt(dat, model))
-coef(mmod1)
+coef(mmod1, simplify=TRUE)
 
 # an equivalent parameterization, constraining the slopes to be 1 and freeing the latent variance
 (mmod1b <- mirt::mirt(dat, 1, itemtype = 'Rasch'))
-coef(mmod1b)
+coef(mmod1b, simplify=TRUE)
 sqrt(coef(mmod1b)[[33]][2]) #SD of latent variable equivalent to constrained slopes
 ```
 
@@ -45,7 +45,7 @@ summary(lmod2)
 
 #mirt
 (mmod2 <- mirt::mirt(dat, 1))
-coef(mmod2)
+coef(mmod2, simplify=TRUE)
 ```
 
 (Exploratory) Multidimensional 2PL model
@@ -59,7 +59,7 @@ summary(lmod3)
 #mirt
 mmod3 <- mirt::mirt(dat, 2)
 mmod3
-coef(mmod3)
+coef(mmod3, simplify=TRUE)
 summary(mmod3)
 ```
 
@@ -74,7 +74,7 @@ summary(lmod4)
 model <- mirt.model('Theta = 1-32
                     (Theta*Theta) = 1-32')
 (mmod4 <- mirt::mirt(dat, model))
-coef(mmod4)
+coef(mmod4, simplify=TRUE)
 ```
 
 3PL model
@@ -85,7 +85,7 @@ summary(lmod5)
 
 # mirt can also include prior distributions to help stabalize the model
 (mmod5 <- mirt(dat, 1, '3PL'))
-coef(mmod5)
+coef(mmod5, simplify=TRUE)
 ```
 
 ## Polytomous data
@@ -100,7 +100,7 @@ See this (crossvalidated post)[http://stats.stackexchange.com/questions/63891/is
 summary(lmod6)
 
 (mmod6 <- mirt(Science, 1))
-coef(mmod6)
+coef(mmod6, simplify=TRUE)
 ```
 
 ### generalized partial credit
@@ -110,7 +110,7 @@ coef(mmod6)
 summary(lmod7)
 
 (mmod7 <- mirt(Science, 1, 'gpcm'))
-coef(mmod7)
+coef(mmod7, simplify=TRUE)
 ```
 
 ## Extra features (e.g., factor scores, residuals, ...)

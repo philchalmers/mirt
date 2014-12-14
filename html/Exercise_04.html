@@ -217,34 +217,7 @@ Science (midterm_Science), and which school number the subjects were sampled fro
 load(&#39;Exercise_04.Rdata&#39;)
 
 mod &lt;- mirt(data, 2)
-</code></pre>
-
-<pre><code>## 
-Iteration: 1, Log-Lik: -13497.751, Max-Change: 0.52809
-Iteration: 2, Log-Lik: -13199.798, Max-Change: 0.14130
-Iteration: 3, Log-Lik: -13165.327, Max-Change: 0.08254
-Iteration: 4, Log-Lik: -13157.418, Max-Change: 0.04898
-Iteration: 5, Log-Lik: -13154.654, Max-Change: 0.02861
-Iteration: 6, Log-Lik: -13153.803, Max-Change: 0.01642
-Iteration: 7, Log-Lik: -13153.413, Max-Change: 0.00823
-Iteration: 8, Log-Lik: -13153.356, Max-Change: 0.00682
-Iteration: 9, Log-Lik: -13153.330, Max-Change: 0.00590
-Iteration: 10, Log-Lik: -13153.309, Max-Change: 0.00290
-Iteration: 11, Log-Lik: -13153.305, Max-Change: 0.00211
-Iteration: 12, Log-Lik: -13153.304, Max-Change: 0.00305
-Iteration: 13, Log-Lik: -13153.301, Max-Change: 0.00344
-Iteration: 14, Log-Lik: -13153.300, Max-Change: 0.00167
-Iteration: 15, Log-Lik: -13153.299, Max-Change: 0.00137
-Iteration: 16, Log-Lik: -13153.299, Max-Change: 0.00099
-Iteration: 17, Log-Lik: -13153.299, Max-Change: 0.00106
-Iteration: 18, Log-Lik: -13153.299, Max-Change: 0.00021
-Iteration: 19, Log-Lik: -13153.299, Max-Change: 0.00019
-Iteration: 20, Log-Lik: -13153.299, Max-Change: 0.00064
-Iteration: 21, Log-Lik: -13153.299, Max-Change: 0.00076
-Iteration: 22, Log-Lik: -13153.298, Max-Change: 0.00009
-</code></pre>
-
-<pre><code class="r">summary(mod, suppress = .2)
+summary(mod, suppress = .2)
 </code></pre>
 
 <pre><code>## 
@@ -252,30 +225,30 @@ Iteration: 22, Log-Lik: -13153.298, Max-Change: 0.00009
 ## 
 ## Rotated factor loadings: 
 ## 
-##           F_1   F_2    h2
-## Item_1     NA 0.314 0.190
-## Item_2     NA 0.371 0.198
-## Item_3     NA 0.535 0.289
-## Item_4     NA 0.452 0.170
-## Item_5     NA 0.577 0.320
-## Item_6     NA 0.548 0.309
-## Item_7     NA 0.509 0.287
-## Item_8  0.436    NA 0.235
-## Item_9  0.639    NA 0.364
-## Item_10 0.454    NA 0.228
-## Item_11 0.373    NA 0.194
-## Item_12 0.376    NA 0.181
-## Item_13 0.465    NA 0.308
-## Item_14 0.337    NA 0.154
-## Item_15 0.564    NA 0.286
+##           F_1    F_2    h2
+## Item_1     NA -0.313 0.190
+## Item_2     NA -0.370 0.198
+## Item_3     NA -0.534 0.289
+## Item_4     NA -0.452 0.170
+## Item_5     NA -0.578 0.321
+## Item_6     NA -0.548 0.310
+## Item_7     NA -0.508 0.287
+## Item_8  0.436     NA 0.235
+## Item_9  0.641     NA 0.366
+## Item_10 0.454     NA 0.228
+## Item_11 0.373     NA 0.193
+## Item_12 0.377     NA 0.182
+## Item_13 0.465     NA 0.308
+## Item_14 0.337     NA 0.154
+## Item_15 0.561     NA 0.285
 ## 
-## Rotated SS loadings:  1.792 1.686 
+## Rotated SS loadings:  1.793 1.685 
 ## 
 ## Factor correlations: 
 ## 
-##       F_1   F_2
-## F_1 1.000 0.515
-## F_2 0.515 1.000
+##        F_1    F_2
+## F_1  1.000 -0.515
+## F_2 -0.515  1.000
 </code></pre>
 
 <pre><code class="r">model &lt;- mirt.model(&#39;F1 = 1-7
@@ -286,12 +259,7 @@ Iteration: 22, Log-Lik: -13153.298, Max-Change: 0.00009
 <h3>2) Determine if the model you obtained from 1) can be reasonably constrained to be fit by a confirmatory 2PL or Rasch model (i.e., all slopes equal to 1). For both models, use the MH-RM algorithm (<code>method = &#39;MHRM</code>). If possible, define an appropriate <code>mirtCluster()</code> to estimate the Monte Carlo log-likelihood faster.</h3>
 
 <pre><code class="r">mirtCluster()
-</code></pre>
-
-<pre><code>## Loading required package: parallel
-</code></pre>
-
-<pre><code class="r">cmod.2PL &lt;- mirt(data, model, method = &#39;MHRM&#39;, verbose = FALSE)
+cmod.2PL &lt;- mirt(data, model, method = &#39;MHRM&#39;, verbose = FALSE)
 cmod.rasch &lt;- mirt(data, model, itemtype = &#39;Rasch&#39;, method = &#39;MHRM&#39;, verbose = FALSE)
 anova(cmod.2PL, cmod.rasch)
 </code></pre>
@@ -302,9 +270,9 @@ anova(cmod.2PL, cmod.rasch)
 ## Model 2: mirt(data = data, model = model, method = &quot;MHRM&quot;, verbose = FALSE)
 </code></pre>
 
-<pre><code>##     AIC  AICc SABIC   BIC logLik   X2  df      p
-## 1 26391 26391 26429 26487 -13178  NaN NaN    NaN
-## 2 26390 26391 26456 26555 -13164 26.9  13 0.0128
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
+## 1 26394.23 26394.69 26432.69 26489.87 -13179.11    NaN NaN    NaN
+## 2 26392.57 26393.92 26458.80 26557.28 -13165.29 27.657  13 0.0101
 </code></pre>
 
 <h3>3) Using either the 2PL or Rasch model, estimate whether the expected response probabilities could be predicted by <code>Gender</code>, <code>midterm_Math</code>, and <code>midterm_Science</code>. Use <code>Gender</code> only in fitting one model, and all three covariates when fitting another. Inspect the coefficients using <code>summary()</code> and <code>coef()</code>.</h3>
@@ -326,14 +294,14 @@ anova(cmod.2PL, cmod.rasch)
 <pre><code class="r">summary(covdata)
 </code></pre>
 
-<pre><code>##     Gender     midterm_Math midterm_Science       school    
-##  Female:825   Min.   : 44   Min.   : 21.0   school_6 :  42  
-##  Male  :675   1st Qu.: 68   1st Qu.: 54.8   school_45:  40  
-##               Median : 75   Median : 65.0   school_4 :  39  
-##               Mean   : 75   Mean   : 65.0   school_11:  38  
-##               3rd Qu.: 82   3rd Qu.: 75.0   school_1 :  37  
-##               Max.   :100   Max.   :100.0   school_35:  37  
-##                                             (Other)  :1267
+<pre><code>##     Gender     midterm_Math    midterm_Science        school    
+##  Female:825   Min.   : 44.00   Min.   : 21.00   school_6 :  42  
+##  Male  :675   1st Qu.: 68.00   1st Qu.: 54.75   school_45:  40  
+##               Median : 75.00   Median : 65.00   school_4 :  39  
+##               Mean   : 74.99   Mean   : 64.98   school_11:  38  
+##               3rd Qu.: 82.00   3rd Qu.: 75.00   school_1 :  37  
+##               Max.   :100.00   Max.   :100.00   school_35:  37  
+##                                                 (Other)  :1267
 </code></pre>
 
 <pre><code class="r">#for numerical stability it&#39;s often better to rescale continuous variables to fall between 10 to -10
@@ -353,7 +321,7 @@ summary(mod1)
 ## --------------
 ## FIXED EFFECTS:
 ##            Estimate Std.Error z.value
-## GenderMale   -1.202     0.042  -28.49
+## GenderMale   -1.203     0.045 -26.574
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -361,8 +329,8 @@ summary(mod1)
 ## 
 ## $Theta
 ##       F1    F2
-## F1 0.528 0.362
-## F2 0.192 0.534
+## F1 0.550 0.377
+## F2 0.206 0.542
 </code></pre>
 
 <pre><code class="r">coef(mod1)
@@ -370,99 +338,99 @@ summary(mod1)
 
 <pre><code>## $Item_1
 ##         GenderMale a1 a2      d  g  u
-## par         -1.202  1  0  0.106  0  1
-## CI_2.5      -1.284 NA NA -0.017 NA NA
-## CI_97.5     -1.119 NA NA  0.229 NA NA
+## par         -1.203  1  0  0.109  0  1
+## CI_2.5      -1.291 NA NA -0.015 NA NA
+## CI_97.5     -1.114 NA NA  0.234 NA NA
 ## 
 ## $Item_2
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  1  0 1.063  0  1
-## CI_2.5      -1.284 NA NA 0.942 NA NA
-## CI_97.5     -1.119 NA NA 1.185 NA NA
+## par         -1.203  1  0 1.071  0  1
+## CI_2.5      -1.291 NA NA 0.941 NA NA
+## CI_97.5     -1.114 NA NA 1.200 NA NA
 ## 
 ## $Item_3
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  1  0 0.792  0  1
-## CI_2.5      -1.284 NA NA 0.671 NA NA
-## CI_97.5     -1.119 NA NA 0.913 NA NA
+## par         -1.203  1  0 0.799  0  1
+## CI_2.5      -1.291 NA NA 0.672 NA NA
+## CI_97.5     -1.114 NA NA 0.925 NA NA
 ## 
 ## $Item_4
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  1  0 2.500  0  1
-## CI_2.5      -1.284 NA NA 2.352 NA NA
-## CI_97.5     -1.119 NA NA 2.648 NA NA
+## par         -1.203  1  0 2.513  0  1
+## CI_2.5      -1.291 NA NA 2.345 NA NA
+## CI_97.5     -1.114 NA NA 2.680 NA NA
 ## 
 ## $Item_5
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  1  0 2.058  0  1
-## CI_2.5      -1.284 NA NA 1.923 NA NA
-## CI_97.5     -1.119 NA NA 2.193 NA NA
+## par         -1.203  1  0 2.070  0  1
+## CI_2.5      -1.291 NA NA 1.918 NA NA
+## CI_97.5     -1.114 NA NA 2.221 NA NA
 ## 
 ## $Item_6
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  1  0 0.168  0  1
-## CI_2.5      -1.284 NA NA 0.046 NA NA
-## CI_97.5     -1.119 NA NA 0.291 NA NA
+## par         -1.203  1  0 0.171  0  1
+## CI_2.5      -1.291 NA NA 0.047 NA NA
+## CI_97.5     -1.114 NA NA 0.296 NA NA
 ## 
 ## $Item_7
 ##         GenderMale a1 a2      d  g  u
-## par         -1.202  1  0 -0.534  0  1
-## CI_2.5      -1.284 NA NA -0.665 NA NA
-## CI_97.5     -1.119 NA NA -0.403 NA NA
+## par         -1.203  1  0 -0.534  0  1
+## CI_2.5      -1.291 NA NA -0.665 NA NA
+## CI_97.5     -1.114 NA NA -0.403 NA NA
 ## 
 ## $Item_8
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  0  1 0.975  0  1
-## CI_2.5      -1.284 NA NA 0.852 NA NA
-## CI_97.5     -1.119 NA NA 1.097 NA NA
+## par         -1.203  0  1 0.974  0  1
+## CI_2.5      -1.291 NA NA 0.845 NA NA
+## CI_97.5     -1.114 NA NA 1.103 NA NA
 ## 
 ## $Item_9
 ##         GenderMale a1 a2      d  g  u
-## par         -1.202  0  1 -0.836  0  1
-## CI_2.5      -1.284 NA NA -0.973 NA NA
-## CI_97.5     -1.119 NA NA -0.699 NA NA
+## par         -1.203  0  1 -0.838  0  1
+## CI_2.5      -1.291 NA NA -0.979 NA NA
+## CI_97.5     -1.114 NA NA -0.698 NA NA
 ## 
 ## $Item_10
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  0  1 1.124  0  1
-## CI_2.5      -1.284 NA NA 1.000 NA NA
-## CI_97.5     -1.119 NA NA 1.247 NA NA
+## par         -1.203  0  1 1.123  0  1
+## CI_2.5      -1.291 NA NA 0.992 NA NA
+## CI_97.5     -1.114 NA NA 1.254 NA NA
 ## 
 ## $Item_11
 ##         GenderMale a1 a2      d  g  u
-## par         -1.202  0  1  0.070  0  1
-## CI_2.5      -1.284 NA NA -0.052 NA NA
-## CI_97.5     -1.119 NA NA  0.193 NA NA
+## par         -1.203  0  1  0.069  0  1
+## CI_2.5      -1.291 NA NA -0.059 NA NA
+## CI_97.5     -1.114 NA NA  0.196 NA NA
 ## 
 ## $Item_12
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  0  1 1.744  0  1
-## CI_2.5      -1.284 NA NA 1.611 NA NA
-## CI_97.5     -1.119 NA NA 1.878 NA NA
+## par         -1.203  0  1 1.744  0  1
+## CI_2.5      -1.291 NA NA 1.603 NA NA
+## CI_97.5     -1.114 NA NA 1.886 NA NA
 ## 
 ## $Item_13
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  0  1 1.497  0  1
-## CI_2.5      -1.284 NA NA 1.369 NA NA
-## CI_97.5     -1.119 NA NA 1.626 NA NA
+## par         -1.203  0  1 1.497  0  1
+## CI_2.5      -1.291 NA NA 1.361 NA NA
+## CI_97.5     -1.114 NA NA 1.633 NA NA
 ## 
 ## $Item_14
 ##         GenderMale a1 a2     d  g  u
-## par         -1.202  0  1 2.263  0  1
-## CI_2.5      -1.284 NA NA 2.116 NA NA
-## CI_97.5     -1.119 NA NA 2.411 NA NA
+## par         -1.203  0  1 2.264  0  1
+## CI_2.5      -1.291 NA NA 2.108 NA NA
+## CI_97.5     -1.114 NA NA 2.420 NA NA
 ## 
 ## $Item_15
 ##         GenderMale a1 a2      d  g  u
-## par         -1.202  0  1  0.106  0  1
-## CI_2.5      -1.284 NA NA -0.016 NA NA
-## CI_97.5     -1.119 NA NA  0.228 NA NA
+## par         -1.203  0  1  0.105  0  1
+## CI_2.5      -1.291 NA NA -0.023 NA NA
+## CI_97.5     -1.114 NA NA  0.232 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par          0      0  0.528  0.192  0.534
-## CI_2.5      NA     NA    NaN  0.132  0.467
-## CI_97.5     NA     NA    NaN  0.252  0.600
+## par          0      0  0.550  0.206  0.542
+## CI_2.5      NA     NA  0.453  0.153  0.459
+## CI_97.5     NA     NA  0.648  0.259  0.624
 </code></pre>
 
 <pre><code class="r">anova(mod1, cmod.rasch)
@@ -475,9 +443,9 @@ summary(mod1)
 ##     items + Gender, verbose = FALSE)
 </code></pre>
 
-<pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 26391 26391 26429 26487 -13178   NaN NaN NaN
-## 2 25804 25804 25844 25905 -12883 589.2   1   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 26394.23 26394.69 26432.69 26489.87 -13179.11     NaN NaN NaN
+## 2 25802.83 25803.35 25843.43 25903.78 -12882.42 593.396   1   0
 </code></pre>
 
 <pre><code class="r">mod3 &lt;- mixedmirt(data, covdata, model=model, 
@@ -493,18 +461,18 @@ summary(mod3)
 ## --------------
 ## FIXED EFFECTS:
 ##                 Estimate Std.Error z.value
-## GenderMale        -0.640       NaN     NaN
-## midterm_Math       0.325       NaN     NaN
-## midterm_Science    0.204     0.007   27.85
+## GenderMale        -0.646     0.045 -14.272
+## midterm_Math       0.332     0.014  23.587
+## midterm_Science    0.199     0.015  13.589
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##        F1     F2
-## F1 0.4045 0.0487
-## F2 0.0183 0.3470
+##        F1    F2
+## F1 0.3371 0.129
+## F2 0.0438 0.345
 </code></pre>
 
 <pre><code class="r">coef(mod3)
@@ -512,99 +480,99 @@ summary(mod3)
 
 <pre><code>## $Item_1
 ##         GenderMale midterm_Math midterm_Science a1 a2      d  g  u
-## par          -0.64        0.325           0.204  1  0 -0.152  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA -0.275 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA -0.029 NA NA
+## par         -0.646        0.332           0.199  1  0 -0.142  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA -0.264 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA -0.020 NA NA
 ## 
 ## $Item_2
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  1  0 0.813  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 0.710 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 0.916 NA NA
+## par         -0.646        0.332           0.199  1  0 0.812  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 0.688 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 0.936 NA NA
 ## 
 ## $Item_3
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  1  0 0.540  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 0.425 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 0.654 NA NA
+## par         -0.646        0.332           0.199  1  0 0.542  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 0.420 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 0.664 NA NA
 ## 
 ## $Item_4
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  1  0 2.262  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA   NaN NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA   NaN NA NA
+## par         -0.646        0.332           0.199  1  0 2.247  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 2.090 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 2.403 NA NA
 ## 
 ## $Item_5
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  1  0 1.817  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA   NaN NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA   NaN NA NA
+## par         -0.646        0.332           0.199  1  0 1.805  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 1.663 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 1.947 NA NA
 ## 
 ## $Item_6
 ##         GenderMale midterm_Math midterm_Science a1 a2      d  g  u
-## par          -0.64        0.325           0.204  1  0 -0.090  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA -0.213 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA  0.033 NA NA
+## par         -0.646        0.332           0.199  1  0 -0.080  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA -0.202 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA  0.041 NA NA
 ## 
 ## $Item_7
 ##         GenderMale midterm_Math midterm_Science a1 a2      d  g  u
-## par          -0.64        0.325           0.204  1  0 -0.798  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA -0.911 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA -0.685 NA NA
+## par         -0.646        0.332           0.199  1  0 -0.780  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA -0.909 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA -0.651 NA NA
 ## 
 ## $Item_8
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 0.718  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 0.623 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 0.812 NA NA
+## par         -0.646        0.332           0.199  0  1 0.714  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 0.593 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 0.835 NA NA
 ## 
 ## $Item_9
-##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 -1.09  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA   NaN NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA   NaN NA NA
+##         GenderMale midterm_Math midterm_Science a1 a2      d  g  u
+## par         -0.646        0.332           0.199  0  1 -1.092  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA -1.227 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA -0.956 NA NA
 ## 
 ## $Item_10
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 0.867  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 0.766 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 0.967 NA NA
+## par         -0.646        0.332           0.199  0  1 0.863  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 0.741 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 0.985 NA NA
 ## 
 ## $Item_11
 ##         GenderMale midterm_Math midterm_Science a1 a2      d  g  u
-## par          -0.64        0.325           0.204  0  1 -0.186  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA -0.233 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA -0.139 NA NA
+## par         -0.646        0.332           0.199  0  1 -0.188  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA -0.311 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA -0.065 NA NA
 ## 
 ## $Item_12
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 1.488  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 1.365 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 1.611 NA NA
+## par         -0.646        0.332           0.199  0  1 1.483  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 1.355 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 1.611 NA NA
 ## 
 ## $Item_13
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 1.240  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 1.127 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 1.354 NA NA
+## par         -0.646        0.332           0.199  0  1 1.236  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 1.111 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 1.361 NA NA
 ## 
 ## $Item_14
 ##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 2.008  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA 1.865 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA 2.151 NA NA
+## par         -0.646        0.332           0.199  0  1 2.002  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA 1.863 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA 2.142 NA NA
 ## 
 ## $Item_15
-##         GenderMale midterm_Math midterm_Science a1 a2     d  g  u
-## par          -0.64        0.325           0.204  0  1 -0.15  0  1
-## CI_2.5         NaN          NaN           0.190 NA NA -0.20 NA NA
-## CI_97.5        NaN          NaN           0.219 NA NA -0.10 NA NA
+##         GenderMale midterm_Math midterm_Science a1 a2      d  g  u
+## par         -0.646        0.332           0.199  0  1 -0.152  0  1
+## CI_2.5      -0.734        0.305           0.170 NA NA -0.275 NA NA
+## CI_97.5     -0.557        0.360           0.227 NA NA -0.030 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par          0      0  0.404  0.018  0.347
-## CI_2.5      NA     NA    NaN    NaN    NaN
-## CI_97.5     NA     NA    NaN    NaN    NaN
+## par          0      0  0.337  0.044  0.345
+## CI_2.5      NA     NA    NaN  0.019    NaN
+## CI_97.5     NA     NA    NaN  0.069    NaN
 </code></pre>
 
 <pre><code class="r">anova(mod1, mod3)
@@ -617,9 +585,9 @@ summary(mod3)
 ##     items + Gender + midterm_Math + midterm_Science, verbose = FALSE)
 </code></pre>
 
-<pre><code>##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 25804 25804 25844 25905 -12883   NaN NaN NaN
-## 2 25399 25400 25444 25511 -12679 408.4   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 25802.83 25803.35 25843.43 25903.78 -12882.42     NaN NaN NaN
+## 2 25398.65 25399.27 25443.51 25510.23 -12678.32 408.185   2   0
 </code></pre>
 
 <h3>4) Finally, include the <code>school</code> predictor variable in the model containing the other three covariates. Given that <code>school</code> has 50 unique values, it may be beneficial to treat the variable as a &#39;random&#39; so that instead of estimating 49 fixed effect coefficients we can estimate only one variance effect. This can add better stability to the model, while still determining if there is any variability in the responses due to which school the subjects are from. Is there any substantial variability due to <code>school</code>?</h3>
@@ -638,9 +606,9 @@ summary(rmod3)
 ## --------------
 ## FIXED EFFECTS:
 ##                 Estimate Std.Error z.value
-## GenderMale        -0.641     0.046  -14.04
-## midterm_Math       0.318     0.022   14.31
-## midterm_Science    0.206     0.014   14.51
+## GenderMale        -0.641     0.047 -13.623
+## midterm_Math       0.323     0.023  14.126
+## midterm_Science    0.209     0.016  13.005
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -648,12 +616,12 @@ summary(rmod3)
 ## 
 ## $Theta
 ##        F1    F2
-## F1 0.3750 0.154
-## F2 0.0533 0.320
+## F1 0.3517 0.107
+## F2 0.0359 0.320
 ## 
 ## $school
 ##            COV_school
-## COV_school   0.000129
+## COV_school    0.00858
 </code></pre>
 
 </body>

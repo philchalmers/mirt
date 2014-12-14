@@ -236,11 +236,11 @@ summary(mod1)
 </code></pre>
 
 <pre><code>## ------------------------------------------------------------
-## sirt 0.99-20 (2014-09-16) 
+## sirt 1.2 (2014-12-12) 
 ## 
-## Date of Analysis: 2014-10-09 12:41:20 
-## Time difference of 0.1415 secs
-## Computation time: 0.1415 
+## Date of Analysis: 2014-12-14 13:04:43 
+## Time difference of 0.1392405 secs
+## Computation time: 0.1392405 
 ## 
 ## Semiparametric Marginal Maximum Likelihood Estimation 
 ## Function &#39;rasch.mml2&#39; 
@@ -248,13 +248,13 @@ summary(mod1)
 ## Quotient Model (Ramsay, 1989) 
 ## ------------------------------------------------------------
 ## Number of iterations = 26 
-## Deviance =  11746  | Log Likelihood =  -5873 
+## Deviance =  11746.23  | Log Likelihood =  -5873.12 
 ## Number of persons =  1000 
 ## Number of estimated parameters =  12 
-## AIC  =  11770  | penalty = 24    | AIC = -2*LL + 2*p  
-## AICc =  11771  | penalty = 24.32    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
-## BIC  =  11829  | penalty = 82.89    | BIC = -2*LL + log(n)*p  
-## CAIC =  11841  | penalty = 94.89   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
+## AIC  =  11770.23  | penalty = 24    | AIC = -2*LL + 2*p  
+## AICc =  11770.55  | penalty = 24.32    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
+## BIC  =  11829.13  | penalty = 82.89    | BIC = -2*LL + log(n)*p  
+## CAIC =  11841.13  | penalty = 94.89   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
 ## 
 ## Trait Distribution ( 21  Knots )
 ##  Mean= 0 
@@ -325,37 +325,41 @@ print(mod1m)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.6 
+## mirt version: 1.7 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 10
 ## 
-## Log-likelihood = -5880
-## AIC = 11782; AICc = 11782
-## BIC = 11836; SABIC = 11801
+## Log-likelihood = -5880.067
+## AIC = 11782.13; AICc = 11782.4
+## BIC = 11836.12; SABIC = 11801.18
 </code></pre>
 
 <pre><code class="r">summary(mod1m)
 </code></pre>
 
 <pre><code>## 
-## Factor loadings metric: 
-##           F1       h2
-## I01 0.000588 3.45e-07
-## I02 0.000588 3.45e-07
-## I03 0.000588 3.45e-07
-## I04 0.000588 3.45e-07
-## I05 0.000588 3.45e-07
-## I06 0.000588 3.45e-07
-## I07 0.000588 3.45e-07
-## I08 0.000588 3.45e-07
-## I09 0.000588 3.45e-07
-## I10 0.000588 3.45e-07
-## I11 0.000588 3.45e-07
+## Rotation:  none 
 ## 
-## SS loadings:  0 
+## Rotated factor loadings: 
 ## 
-## Factor covariance: 
+##        F1 h2
+## I01 0.001  0
+## I02 0.001  0
+## I03 0.001  0
+## I04 0.001  0
+## I05 0.001  0
+## I06 0.001  0
+## I07 0.001  0
+## I08 0.001  0
+## I09 0.001  0
+## I10 0.001  0
+## I11 0.001  0
+## 
+## Rotated SS loadings:  0 
+## 
+## Factor correlations: 
+## 
 ##    F1
 ## F1  1
 </code></pre>
@@ -385,7 +389,7 @@ round( dfr , 2 )
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.1.1 (2014-07-10)
+<pre><code>## R version 3.1.2 (2014-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## 
 ## locale:
@@ -397,41 +401,44 @@ round( dfr , 2 )
 ## [11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] parallel  methods   stats4    stats     graphics  grDevices utils    
-## [8] datasets  base     
+## [1] methods   stats4    stats     graphics  grDevices utils     datasets 
+## [8] base     
 ## 
 ## other attached packages:
-##  [1] MultiLCIRT_2.7  limSolve_1.5.5  CDM_3.4-21      sirt_0.99-20   
-##  [5] ltm_1.0-0       polycor_0.7-8   sfsmisc_1.0-26  mvtnorm_1.0-0  
-##  [9] msm_1.4         MASS_7.3-34     mirt_1.6        lattice_0.20-29
-## [13] knitr_1.6      
+##  [1] MultiLCIRT_2.7   limSolve_1.5.5.1 CDM_4.0          sirt_1.2        
+##  [5] ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-26   mvtnorm_1.0-1   
+##  [9] msm_1.4          MASS_7.3-35      mirt_1.7         lattice_0.20-29 
+## [13] knitr_1.8       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] acepack_1.3-3.3      boot_1.3-11          car_2.0-21          
-##  [4] cluster_1.15.3       coda_0.16-1          colorspace_1.2-4    
-##  [7] combinat_0.0-8       corpcor_1.6.7        digest_0.6.4        
-## [10] ellipse_0.3-8        evaluate_0.5.5       expm_0.99-1.1       
-## [13] flexmix_2.3-12       foreign_0.8-61       formatR_1.0         
-## [16] Formula_1.1-2        ggplot2_1.0.0        glasso_1.8          
-## [19] GPArotation_2012.3-1 grid_3.1.1           gtable_0.1.2        
-## [22] gtools_3.4.1         Hmisc_3.14-5         huge_1.2.6          
-## [25] ic.infer_1.1-5       igraph_0.7.1         jpeg_0.1-8          
-## [28] kappalab_0.4-6       kernlab_0.9-19       latticeExtra_0.6-26 
-## [31] lavaan_0.5-17.726    lisrelToR_0.1.4      lme4_1.1-7          
-## [34] lpSolve_5.6.7        markdown_0.7.4       Matrix_1.1-4        
-## [37] matrixcalc_1.0-3     mime_0.2             minqa_1.2.3         
-## [40] mnormt_1.5-1         modeltools_0.2-21    mRm_1.1.5           
-## [43] munsell_0.4.2        nlme_3.1-117         nloptr_1.0.4        
-## [46] nnet_7.3-8           numDeriv_2012.9-1    pbivnorm_0.5-1      
-## [49] plyr_1.8.1           png_0.1-7            PP_0.5.3            
-## [52] proto_0.3-10         psych_1.4.8.11       psychomix_1.1-1     
-## [55] psychotools_0.3-0    qgraph_1.2.5         quadprog_1.5-5      
-## [58] RColorBrewer_1.0-5   Rcpp_0.11.3          RCurl_1.95-4.3      
-## [61] reshape2_1.4         rockchalk_1.8.86     rpart_4.1-8         
-## [64] scales_0.2.4         sem_3.1-5            semPlot_1.0.1       
-## [67] sm_2.2-5.4           sna_2.3-2            splines_3.1.1       
-## [70] stringr_0.6.2        survival_2.37-7      TAM_1.0-3.18-1      
-## [73] tensor_1.5           tools_3.1.1          XML_3.98-1.1
+##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
+##  [4] car_2.0-22            cluster_1.15.3        coda_0.16-1          
+##  [7] colorspace_1.2-4      combinat_0.0-8        corpcor_1.6.7        
+## [10] d3Network_0.5.1       digest_0.6.6          ellipse_0.3-8        
+## [13] evaluate_0.5.5        expm_0.99-1.1         fdrtool_1.2.13       
+## [16] flexmix_2.3-12        foreign_0.8-61        formatR_1.0          
+## [19] Formula_1.1-2         ggm_2.2               ggplot2_1.0.0        
+## [22] glasso_1.8            GPArotation_2014.11-1 grid_3.1.2           
+## [25] gtable_0.1.2          gtools_3.4.1          Hmisc_3.14-6         
+## [28] huge_1.2.6            ic.infer_1.1-5        igraph_0.7.1         
+## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-19       
+## [34] latticeExtra_0.6-26   lavaan_0.5-17         lisrelToR_0.1.4      
+## [37] lme4_1.1-7            lpSolve_5.6.7         markdown_0.7.4       
+## [40] Matrix_1.1-4          matrixcalc_1.0-3      mime_0.2             
+## [43] minqa_1.2.4           mnormt_1.5-1          modeltools_0.2-21    
+## [46] mRm_1.1.5             munsell_0.4.2         nlme_3.1-118         
+## [49] nloptr_1.0.4          nnet_7.3-8            numDeriv_2012.9-1    
+## [52] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
+## [55] plyr_1.8.1            png_0.1-7             proto_0.3-10         
+## [58] psych_1.4.8.11        psychomix_1.1-1       psychotools_0.3-0    
+## [61] qgraph_1.3            quadprog_1.5-5        RColorBrewer_1.1-2   
+## [64] Rcpp_0.11.3           RCurl_1.95-4.5        reshape2_1.4.1       
+## [67] rjson_0.2.15          rockchalk_1.8.86      rpart_4.1-8          
+## [70] rtiff_1.4.4           scales_0.2.4          sem_3.1-5            
+## [73] semPlot_1.0.1         sendplot_4.0.0        sm_2.2-5.4           
+## [76] sna_2.3-2             splines_3.1.2         stringr_0.6.2        
+## [79] survival_2.37-7       TAM_1.2               tensor_1.5           
+## [82] tools_3.1.2           whisker_0.3-2         XML_3.98-1.1
 </code></pre>
 
 </body>
