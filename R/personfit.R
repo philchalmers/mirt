@@ -52,7 +52,7 @@
 #'
 #' #using precomputed Theta
 #' Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
-#' personfit(x, Theta=Theta)
+#' head(personfit(x, Theta=Theta))
 #'
 #' #muliple group Rasch model example
 #' set.seed(12345)

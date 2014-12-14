@@ -86,6 +86,8 @@
 #' @param internal_constraints logical; use the internally defined constraints for constraining
 #'   effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
 #'   underidentification
+#' @param technical the technical list passed to the MH-RM estimation engine, with the
+#'   SEtol default increased to .0001. See \code{\link{mirt}} for further details
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
 #'   \code{\link{mirt}} for more details and examples
 #'
@@ -167,7 +169,8 @@
 #' #random slopes with fixed intercepts (suppressed correlation)
 #' rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
 #' summary(rmod3)
-#' (eff <- randef(rmod3))
+#' eff <- randef(rmod3)
+#' str(eff)
 #'
 #' ###################################################
 #' ##LLTM, and 2PL version of LLTM
@@ -310,8 +313,8 @@
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       lr.fixed = ~ 1, lr.random = NULL, itemdesign = NULL, constrain = NULL,
-                      pars = NULL, return.design = FALSE,
-                      SE = TRUE, internal_constraints = TRUE, ...)
+                      pars = NULL, return.design = FALSE, SE = TRUE, internal_constraints = TRUE,
+                      technical = list(SEtol = 1e-4), ...)
 {
     Call <- match.call()
     svinput <- pars
@@ -412,13 +415,13 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     }
     if(is.data.frame(svinput)) pars <- svinput
     if(!internal_constraints) constrain <- iconstrain
-    attr(mixed.design, 'covdata') <- covdataold
+    attr(mixed.design, 'covdata') <- if(!is.null(covdataold)) covdataold else data.frame()
     attr(mixed.design, 'itemdesign') <- itemdesignold
     attr(mixed.design, 'formula') <- list(fixed=fixed, random=random, lr.fixed=lr.fixed,
                                           lr.random=lr.random)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
-                      SE=SE, latent.regression=latent.regression, ...)
+                      SE=SE, latent.regression=latent.regression, technical=technical, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
     return(mod)

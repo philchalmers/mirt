@@ -216,6 +216,8 @@ function for equality constraints, inequality constriants, etc}
   \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
   \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
   \item{set.seed}{seed number used during estimation. Default is 12345}
+  \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
+    information matrix. Default is 1e-3}
   \item{symmetric_SEM}{logical; force S-EM information matrix to be symmetric? Default is TRUE
     so that computation of standard errors are more stable. Setting this to FALSE can help
     to detect solutions that have not reached the ML estimate}

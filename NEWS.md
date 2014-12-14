@@ -7,6 +7,9 @@
   
 - objects of class 'ExploratoryClass' and 'ConfirmatoryClass' have been merged into a single class
   'SingleGroupClass' with an `exploratory` logical slot
+  
+- the `technical = list(SEtol)` criteria for approximating the information matrix 
+  was lowered to 1e-4 in `mixedmirt()` to provide better standard error estiamtes
 
 ## NEW FEATURES
 

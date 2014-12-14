@@ -17,8 +17,8 @@
 #' values <- mod2values(mod)
 #' values
 #'
-#' #use the converted values as starting values in a new model
-#' mod2 <- mirt(dat, 1, pars = values)
+#' #use the converted values as starting values in a new model, and reduce TOL
+#' mod2 <- mirt(dat, 1, pars = values, TOL=1e-5)
 #'
 #' }
 mod2values <- function(x){

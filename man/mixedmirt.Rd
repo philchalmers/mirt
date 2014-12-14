@@ -7,7 +7,8 @@
 mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
   itemtype = "Rasch", lr.fixed = ~1, lr.random = NULL,
   itemdesign = NULL, constrain = NULL, pars = NULL,
-  return.design = FALSE, SE = TRUE, internal_constraints = TRUE, ...)
+  return.design = FALSE, SE = TRUE, internal_constraints = TRUE,
+  technical = list(SEtol = 1e-04), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -69,6 +70,9 @@ using the MHRM algorithm? Default is TRUE}
 \item{internal_constraints}{logical; use the internally defined constraints for constraining
 effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
 underidentification}
+
+\item{technical}{the technical list passed to the MH-RM estimation engine, with the
+SEtol default increased to .0001. See \code{\link{mirt}} for further details}
 
 \item{...}{additional arguments to be passed to the MH-RM estimation engine. See
   \code{\link{mirt}} for more details and examples}
@@ -189,7 +193,8 @@ eff <- randef(rmod2) #estimate random effects
 #random slopes with fixed intercepts (suppressed correlation)
 rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
 summary(rmod3)
-(eff <- randef(rmod3))
+eff <- randef(rmod3)
+str(eff)
 
 ###################################################
 ##LLTM, and 2PL version of LLTM
