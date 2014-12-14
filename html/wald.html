@@ -263,17 +263,17 @@ coef(mod)
 index[index$est, ]
 </code></pre>
 
-<pre><code>##    group   item class name parnum  value lbound ubound  est prior.type
-## 1    all Item.1  dich   a1      1 0.9879   -Inf    Inf TRUE       none
-## 2    all Item.1  dich    d      2 1.8561   -Inf    Inf TRUE       none
-## 5    all Item.2  dich   a1      5 1.0809   -Inf    Inf TRUE       none
-## 6    all Item.2  dich    d      6 0.8080   -Inf    Inf TRUE       none
-## 9    all Item.3  dich   a1      9 1.7058   -Inf    Inf TRUE       none
-## 10   all Item.3  dich    d     10 1.8042   -Inf    Inf TRUE       none
-## 13   all Item.4  dich   a1     13 0.7652   -Inf    Inf TRUE       none
-## 14   all Item.4  dich    d     14 0.4860   -Inf    Inf TRUE       none
-## 17   all Item.5  dich   a1     17 0.7358   -Inf    Inf TRUE       none
-## 18   all Item.5  dich    d     18 1.8545   -Inf    Inf TRUE       none
+<pre><code>##    group   item class name parnum     value lbound ubound  est prior.type
+## 1    all Item.1  dich   a1      1 0.9879266   -Inf    Inf TRUE       none
+## 2    all Item.1  dich    d      2 1.8560607   -Inf    Inf TRUE       none
+## 5    all Item.2  dich   a1      5 1.0808853   -Inf    Inf TRUE       none
+## 6    all Item.2  dich    d      6 0.8079786   -Inf    Inf TRUE       none
+## 9    all Item.3  dich   a1      9 1.7058011   -Inf    Inf TRUE       none
+## 10   all Item.3  dich    d     10 1.8042187   -Inf    Inf TRUE       none
+## 13   all Item.4  dich   a1     13 0.7651859   -Inf    Inf TRUE       none
+## 14   all Item.4  dich    d     14 0.4859966   -Inf    Inf TRUE       none
+## 17   all Item.5  dich   a1     17 0.7357992   -Inf    Inf TRUE       none
+## 18   all Item.5  dich    d     18 1.8545129   -Inf    Inf TRUE       none
 ##    prior_1 prior_2
 ## 1      NaN     NaN
 ## 2      NaN     NaN
@@ -293,8 +293,8 @@ L[1,3] &lt;- 1
 wald(mod, L)
 </code></pre>
 
-<pre><code>##       W df         p
-## 1 40.73  1 1.751e-10
+<pre><code>##          W df            p
+## 1 40.72593  1 1.751475e-10
 </code></pre>
 
 <pre><code class="r">#simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
@@ -312,8 +312,8 @@ L
 <pre><code class="r">wald(mod, L)
 </code></pre>
 
-<pre><code>##        W df      p
-## 1 0.1797  2 0.9141
+<pre><code>##           W df         p
+## 1 0.1796712  2 0.9140815
 </code></pre>
 
 <pre><code class="r">#logLiklihood tests (requires estimating a new model)
@@ -330,9 +330,9 @@ anova(mod2, mod)
 ## Model 2: mirt(data = data, model = 1, SE = TRUE)
 </code></pre>
 
-<pre><code>##    AIC AICc SABIC  BIC logLik    X2  df      p
-## 1 5334 5334  5348 5373  -2659   NaN NaN    NaN
-## 2 5338 5338  5355 5387  -2659 0.152   2 0.9268
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 5333.763 5333.908 5347.616 5373.025 -2658.881   NaN NaN    NaN
+## 2 5337.610 5337.833 5354.927 5386.688 -2658.805 0.152   2 0.9268
 </code></pre>
 
 </body>

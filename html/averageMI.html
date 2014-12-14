@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Name: imputeMissing</title>
+<title>Name: averageMI</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -201,85 +201,77 @@ hr {
 </head>
 
 <body>
-<h3>Name: imputeMissing</h3>
+<h3>Name: averageMI</h3>
 
-<h3>Title: Imputing plausible data for missing values</h3>
+<h3>Title: Collapse values from multiple imputation draws</h3>
 
-<pre><code class="r">dat &lt;- expand.table(LSAT7)
-(original &lt;- mirt(dat, 1))
+<pre><code class="r">#simulate data
+set.seed(1234)
+N &lt;- 1000
+
+# covariates
+X1 &lt;- rnorm(N); X2 &lt;- rnorm(N)
+covdata &lt;- data.frame(X1, X2)
+Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+
+#items and response data
+a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
+dat &lt;- simdata(a, d, 1000, itemtype = &#39;dich&#39;, Theta=Theta)
+
+mod1 &lt;- mirt(dat, 1, &#39;Rasch&#39;, covdata=covdata, formula = ~ X1 + X2)
+coef(mod1, simplify=TRUE)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## mirt(data = dat, model = 1)
+<pre><code>## $items
+##         a1      d g u
+## Item_1   1 -0.420 0 1
+## Item_2   1  0.658 0 1
+## Item_3   1  0.294 0 1
+## Item_4   1  1.869 0 1
+## Item_5   1  1.498 0 1
+## Item_6   1 -0.253 0 1
+## Item_7   1 -1.153 0 1
+## Item_8   1  0.445 0 1
+## Item_9   1 -1.222 0 1
+## Item_10  1  0.578 0 1
+## Item_11  1 -0.410 0 1
+## Item_12  1  1.171 0 1
+## Item_13  1  0.936 0 1
+## Item_14  1  1.724 0 1
+## Item_15  1 -0.591 0 1
+## Item_16  1  2.042 0 1
+## Item_17  1 -0.789 0 1
+## Item_18  1 -1.190 0 1
+## Item_19  1  0.222 0 1
+## Item_20  1  0.419 0 1
 ## 
-## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.7 
-## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
+## $groupPars
+##     MEAN_1 COV_11
+## par      0  0.221
 ## 
-## Log-likelihood = -2658.805
-## AIC = 5337.61; AICc = 5337.833
-## BIC = 5386.688; SABIC = 5354.927
-## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## $lr.betas
+##                 F1
+## (Intercept)  0.000
+## X1           0.524
+## X2          -1.016
 </code></pre>
 
-<pre><code class="r">NAperson &lt;- sample(1:nrow(dat), 20, replace = TRUE)
-NAitem &lt;- sample(1:ncol(dat), 20, replace = TRUE)
-for(i in 1:20)
-    dat[NAperson[i], NAitem[i]] &lt;- NA
-(mod &lt;- mirt(dat, 1))
+<pre><code class="r">#draw plausible values for secondary analyses
+pv &lt;- fscores(mod1, plausible.draws = 10)
+pvmods &lt;- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
+                 covdata=covdata)
+
+# compute Rubin&#39;s multiple imputation average
+so &lt;- lapply(pvmods, summary)
+par &lt;- lapply(so, function(x) x$coefficients[, &#39;Estimate&#39;])
+SEpar &lt;- lapply(so, function(x) x$coefficients[, &#39;Std. Error&#39;])
+averageMI(par, SEpar)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## mirt(data = dat, model = 1)
-## 
-## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 25 EM iterations.
-## mirt version: 1.7 
-## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
-## 
-## Log-likelihood = -2650.463
-## AIC = 5320.926; AICc = 5321.148
-## BIC = 5370.003; SABIC = 5338.243
-</code></pre>
-
-<pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;, full.scores = TRUE)
-
-#re-estimate imputed dataset (good to do this multiple times and average over)
-fulldata &lt;- imputeMissing(mod, scores)
-(fullmod &lt;- mirt(fulldata, 1))
-</code></pre>
-
-<pre><code>## 
-## Call:
-## mirt(data = fulldata, model = 1)
-## 
-## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.7 
-## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
-## 
-## Log-likelihood = -2658.12
-## AIC = 5336.24; AICc = 5336.463
-## BIC = 5385.318; SABIC = 5353.557
-## G2 (21) = 30.96, p = 0.0744
-## RMSEA = 0.022, CFI = 0.943, TLI = 0.93
-</code></pre>
-
-<pre><code class="r">#with multipleGroup
-group &lt;- rep(c(&#39;group1&#39;, &#39;group2&#39;), each=500)
-mod2 &lt;- multipleGroup(dat, 1, group, TOL=1e-2)
-fs &lt;- fscores(mod2, full.scores=TRUE)
-fulldata2 &lt;- imputeMissing(mod2, fs)
+<pre><code>##                 par  SEpar        t       df      p
+## (Intercept) -0.0027 0.0184  -0.1480  75.9899 0.2207
+## covdata$X1   0.5273 0.0175  30.1064 120.5720 0.0000
+## covdata$X2  -1.0203 0.0229 -44.6359  28.7925 0.0000
 </code></pre>
 
 </body>

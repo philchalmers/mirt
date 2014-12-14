@@ -229,14 +229,14 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.6 
+## mirt version: 1.7 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
 ## 
-## Log-likelihood = -2467
-## AIC = 4946; AICc = 4946
-## BIC = 4975; SABIC = 4956
+## Log-likelihood = -2466.938
+## AIC = 4945.875; AICc = 4945.96
+## BIC = 4975.322; SABIC = 4956.265
 ## G2 (25) = 21.8, p = 0.6474
 ## RMSEA = 0, CFI = 1, TLI = 1.068
 </code></pre>
@@ -279,9 +279,9 @@ anova(mod, mod2) #equal
 ## Model 2: mirt(data = dat, model = model)
 </code></pre>
 
-<pre><code>##    AIC AICc SABIC  BIC logLik  X2  df   p
-## 1 4946 4946  4956 4975  -2467 NaN NaN NaN
-## 2 4946 4946  4956 4975  -2467   0   0   1
+<pre><code>##        AIC    AICc    SABIC      BIC    logLik  X2  df   p
+## 1 4945.875 4945.96 4956.266 4975.322 -2466.938 NaN NaN NaN
+## 2 4945.875 4945.96 4956.265 4975.322 -2466.938   0   0   1
 </code></pre>
 
 <pre><code class="r">coef(mod2)
@@ -315,7 +315,7 @@ anova(mod, mod2) #equal
 <pre><code class="r">sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 </code></pre>
 
-<pre><code>## [1] 0.7563
+<pre><code>## [1] 0.7563068
 </code></pre>
 
 </body>

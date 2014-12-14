@@ -40,6 +40,7 @@ generated using R markdown via the `knitr` package and hosted on Github.
 
 ### Additional helper functions
 
+- [averageMI](http://philchalmers.github.io/mirt/html/averageMI.html)
 - [createItem](http://philchalmers.github.io/mirt/html/createItem.html)
 - [expand.table](http://philchalmers.github.io/mirt/html/expand.table.html)
 - [extract.item](http://philchalmers.github.io/mirt/html/extract.item.html)

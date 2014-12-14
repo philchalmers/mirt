@@ -215,14 +215,14 @@ hr {
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.6 
+## mirt version: 1.7 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
 ## 
-## Log-likelihood = -2659
-## AIC = 5338; AICc = 5338
-## BIC = 5387; SABIC = 5355
+## Log-likelihood = -2658.805
+## AIC = 5337.61; AICc = 5337.833
+## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
 ## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
 </code></pre>
@@ -230,8 +230,10 @@ hr {
 <pre><code class="r">M2(mod1)
 </code></pre>
 
-<pre><code>##          M2 df       p   RMSEA  RMSEA_5 RMSEA_95    TLI    CFI   SRMSR
-## stats 11.94  5 0.03565 0.03727 0.008951  0.06497 0.9369 0.9685 0.03196
+<pre><code>##             M2 df          p     RMSEA     RMSEA_5   RMSEA_95       TLI
+## stats 11.93769  5 0.03565166 0.0372683 0.008950918 0.06496573 0.9369332
+##             CFI      SRMSR
+## stats 0.9684666 0.03195918
 </code></pre>
 
 <pre><code class="r">#M2 imputed with missing data present (run in parallel)
@@ -247,12 +249,12 @@ mirtCluster()
 M2(mod2, Theta=Theta, impute = 10)
 </code></pre>
 
-<pre><code>##               M2 df        p     RMSEA  RMSEA_5  RMSEA_95       TLI
-## stats    10.8492  5 0.079000 0.0333565 0.005531 0.0618887 0.9472610
-## SD_stats  0.1335  0 0.004744 0.0001247 0.001749 0.0001878 0.0007118
-##                CFI     SRMSR
-## stats    0.9736305 0.0313515
-## SD_stats 0.0003559 0.0002196
+<pre><code>##                  M2 df           p        RMSEA      RMSEA_5     RMSEA_95
+## stats    11.2160340  5 0.057376701 0.0349365842 0.0067601710 0.0630573329
+## SD_stats  0.1508317  0 0.005733668 0.0005276644 0.0002530059 0.0004220194
+##                  TLI          CFI        SRMSR
+## stats    0.944528120 0.9722640600 3.214583e-02
+## SD_stats 0.000715141 0.0003575705 8.348665e-05
 </code></pre>
 
 </body>

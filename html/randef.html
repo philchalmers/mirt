@@ -225,36 +225,36 @@ summary(mod)
 ## 
 ## $Theta
 ##       F1
-## F1 0.972
+## F1 0.993
 ## 
 ## $group
 ##           COV_group
-## COV_group    0.0948
+## COV_group    0.0227
 </code></pre>
 
 <pre><code class="r">effects &lt;- randef(mod, ndraws = 2000, thin = 20)
 head(effects$Theta)
 </code></pre>
 
-<pre><code>##            F1
-## [1,]  0.56968
-## [2,]  0.09737
-## [3,] -0.56549
-## [4,] -0.58491
-## [5,]  0.09330
-## [6,]  0.82465
+<pre><code>##                F1
+## [1,]  0.415420813
+## [2,]  0.138085110
+## [3,] -0.669966774
+## [4,] -0.467972466
+## [5,] -0.001146995
+## [6,]  1.062581011
 </code></pre>
 
 <pre><code class="r">head(effects$group)
 </code></pre>
 
-<pre><code>##            group
-## group1  0.017185
-## group2  0.020546
-## group3  0.084025
-## group4 -0.023929
-## group5 -0.006213
-## group6  0.003971
+<pre><code>##                group
+## group1 -0.0159046457
+## group2 -0.0003380027
+## group3  0.0256877337
+## group4  0.0176727547
+## group5  0.0175346737
+## group6 -0.0255315155
 </code></pre>
 
 </body>

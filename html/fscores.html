@@ -234,25 +234,25 @@ fullscores_with_SE &lt;- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
 head(fullscores)
 </code></pre>
 
-<pre><code>##            F1
-## [1,]  0.40132
-## [2,]  0.05199
-## [3,] -0.89089
-## [4,] -0.89089
-## [5,]  0.76580
-## [6,]  0.66916
+<pre><code>##               F1
+## [1,]  0.40132315
+## [2,]  0.05198892
+## [3,] -0.89089337
+## [4,] -0.89089337
+## [5,]  0.76579641
+## [6,]  0.66916315
 </code></pre>
 
 <pre><code class="r">head(fullscores_with_SE)
 </code></pre>
 
-<pre><code>##            F1  SE_F1
-## [1,]  0.40132 0.5978
-## [2,]  0.05199 0.5549
-## [3,] -0.89089 0.5421
-## [4,] -0.89089 0.5421
-## [5,]  0.76580 0.6385
-## [6,]  0.66916 0.5761
+<pre><code>##               F1     SE_F1
+## [1,]  0.40132315 0.5977583
+## [2,]  0.05198892 0.5548735
+## [3,] -0.89089337 0.5420682
+## [4,] -0.89089337 0.5420682
+## [5,]  0.76579641 0.6384553
+## [6,]  0.66916315 0.5760913
 </code></pre>
 
 <pre><code class="r">#chage method argument to use MAP estimates
@@ -260,30 +260,30 @@ fullscores &lt;- fscores(mod, full.scores = TRUE, method=&#39;MAP&#39;)
 head(fullscores)
 </code></pre>
 
-<pre><code>##            F1
-## [1,]  0.42121
-## [2,]  0.05863
-## [3,] -0.91959
-## [4,] -0.91959
-## [5,]  0.79046
-## [6,]  0.68267
+<pre><code>##               F1
+## [1,]  0.42120536
+## [2,]  0.05863428
+## [3,] -0.91959392
+## [4,] -0.91959392
+## [5,]  0.79046250
+## [6,]  0.68266912
 </code></pre>
 
 <pre><code class="r">#calculate MAP for a given response vector
 fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4))
 </code></pre>
 
-<pre><code>##      Comfort Work Future Benefit      F1  SE_F1
-## [1,]       1    2      3       4 -0.3703 0.6053
+<pre><code>##      Comfort Work Future Benefit         F1    SE_F1
+## [1,]       1    2      3       4 -0.3702802 0.605315
 </code></pre>
 
 <pre><code class="r">#or matrix
 fscores(mod, method=&#39;MAP&#39;, response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 </code></pre>
 
-<pre><code>##      Comfort Work Future Benefit      F1  SE_F1
-## [1,]       1    2      3       4 -0.3703 0.6053
-## [2,]       2    2      1       3 -1.6942 0.5772
+<pre><code>##      Comfort Work Future Benefit         F1     SE_F1
+## [1,]       1    2      3       4 -0.3702802 0.6053150
+## [2,]       2    2      1       3 -1.6942324 0.5772351
 </code></pre>
 
 <pre><code class="r">#use custom latent variable properties (diffuse prior for MAP is very close to ML)
@@ -299,7 +299,7 @@ fscores(mod, method=&#39;MAP&#39;, cov = matrix(1000))
 </code></pre>
 
 <pre><code>##       Comfort Work Future Benefit      F1   SE_F1
-##  [1,]       1    1      1       1 -9.3411  9.6359
+##  [1,]       1    1      1       1 -9.3411  9.6360
 ##  [2,]       1    3      2       1 -2.1031  0.6890
 ##  [3,]       1    4      2       3 -1.1509  0.7047
 ##  [4,]       1    4      3       1 -0.7801  0.8069
@@ -710,6 +710,32 @@ fscores(mod, MI = 30)
 ## [88,]       4    4      4       2  1.2026 0.6318
 ## [89,]       4    4      4       3  1.4239 0.6117
 ## [90,]       4    4      4       4  1.8311 0.6567
+</code></pre>
+
+<pre><code class="r"># plausible values for future work
+pv &lt;- fscores(mod, plausible.draws = 5)
+lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
+</code></pre>
+
+<pre><code>## [[1]]
+##        mean         var         min         max 
+## -0.03273497  1.08789536 -3.68784100  3.41576252 
+## 
+## [[2]]
+##        mean         var         min         max 
+## -0.04851421  1.03910668 -3.63636411  3.81304489 
+## 
+## [[3]]
+##        mean         var         min         max 
+##  0.02043142  0.98728756 -3.40465465  2.80333261 
+## 
+## [[4]]
+##        mean         var         min         max 
+## -0.02294772  0.99617021 -3.71196214  2.90521339 
+## 
+## [[5]]
+##        mean         var         min         max 
+##  0.07772376  1.03142275 -2.99269565  3.23892403
 </code></pre>
 
 </body>

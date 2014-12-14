@@ -218,17 +218,17 @@ result &lt;- PLCI.mirt(mod)
 result
 </code></pre>
 
-<pre><code>##      Item class parnam parnum  value lower_2.5 upper_97.5
-## 1  Item.1  dich     a1      1 0.9879    0.6705     1.3806
-## 2  Item.1  dich      d      2 1.8561    1.6198     2.1474
-## 3  Item.2  dich     a1      5 1.0809    0.7830     1.4614
-## 4  Item.2  dich      d      6 0.8080    0.6357     0.9988
-## 5  Item.3  dich     a1      9 1.7058    1.1949     2.6063
-## 6  Item.3  dich      d     10 1.8042    1.4770     2.3756
-## 7  Item.4  dich     a1     13 0.7652    0.5212     1.0539
-## 8  Item.4  dich      d     14 0.4860    0.3396     0.6381
-## 9  Item.5  dich     a1     17 0.7358    0.4551     1.0566
-## 10 Item.5  dich      d     18 1.8545    1.6454     2.0987
+<pre><code>##      Item class parnam parnum     value lower_2.5 upper_97.5
+## 1  Item.1  dich     a1      1 0.9879266 0.6705149  1.3806045
+## 2  Item.1  dich      d      2 1.8560607 1.6198236  2.1473734
+## 3  Item.2  dich     a1      5 1.0808853 0.7829707  1.4613673
+## 4  Item.2  dich      d      6 0.8079786 0.6356877  0.9987544
+## 5  Item.3  dich     a1      9 1.7058011 1.1949315  2.6062722
+## 6  Item.3  dich      d     10 1.8042187 1.4770176  2.3755982
+## 7  Item.4  dich     a1     13 0.7651859 0.5211663  1.0539014
+## 8  Item.4  dich      d     14 0.4859966 0.3396014  0.6381355
+## 9  Item.5  dich     a1     17 0.7357992 0.4551309  1.0566129
+## 10 Item.5  dich      d     18 1.8545129 1.6454021  2.0986698
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(Science, 1)
@@ -236,23 +236,23 @@ result2 &lt;- PLCI.mirt(mod2)
 result2
 </code></pre>
 
-<pre><code>##       Item  class parnam parnum   value lower_2.5 upper_97.5
-## 1  Comfort graded     a1      1  1.0415    0.6994      1.454
-## 2  Comfort graded     d1      2  4.8637    4.0112      5.968
-## 3  Comfort graded     d2      3  2.6398    2.2338      3.115
-## 4  Comfort graded     d3      4 -1.4659   -1.7997     -1.171
-## 5     Work graded     a1      5  1.2259    0.8959      1.621
-## 6     Work graded     d1      6  2.9241    2.4851      3.431
-## 7     Work graded     d2      7  0.9011    0.6315      1.197
-## 8     Work graded     d3      8 -2.2666   -2.6992     -1.893
-## 9   Future graded     a1      9  2.2951    1.5689      3.986
-## 10  Future graded     d1     10  5.2365    4.1280      7.822
-## 11  Future graded     d2     11  2.2148    1.6580      3.415
-## 12  Future graded     d3     12 -1.9645   -3.0253     -1.454
-## 13 Benefit graded     a1     13  1.0947    0.7659      1.500
-## 14 Benefit graded     d1     14  3.3477    2.8453      3.940
-## 15 Benefit graded     d2     15  0.9916    0.7261      1.283
-## 16 Benefit graded     d3     16 -1.6881   -2.0455     -1.377
+<pre><code>##       Item  class parnam parnum      value  lower_2.5 upper_97.5
+## 1  Comfort graded     a1      1  1.0414729  0.6993727   1.454282
+## 2  Comfort graded     d1      2  4.8637388  4.0112138   5.968288
+## 3  Comfort graded     d2      3  2.6397565  2.2337787   3.115183
+## 4  Comfort graded     d3      4 -1.4658946 -1.7996820  -1.171171
+## 5     Work graded     a1      5  1.2258714  0.8958606   1.621321
+## 6     Work graded     d1      6  2.9240567  2.4851038   3.431261
+## 7     Work graded     d2      7  0.9010791  0.6315233   1.196785
+## 8     Work graded     d3      8 -2.2665744 -2.6992118  -1.893484
+## 9   Future graded     a1      9  2.2950953  1.5688526   3.986465
+## 10  Future graded     d1     10  5.2365326  4.1279527   7.822383
+## 11  Future graded     d2     11  2.2148449  1.6581030   3.414952
+## 12  Future graded     d3     12 -1.9645374 -3.0252765  -1.454014
+## 13 Benefit graded     a1     13  1.0946895  0.7658947   1.500362
+## 14 Benefit graded     d1     14  3.3476577  2.8453393   3.940363
+## 15 Benefit graded     d2     15  0.9916032  0.7262126   1.282877
+## 16 Benefit graded     d3     16 -1.6880711 -2.0454654  -1.377499
 </code></pre>
 
 <pre><code class="r">#only estimate CI&#39;s slopes
@@ -262,11 +262,11 @@ result3 &lt;- PLCI.mirt(mod2, parnum=parnum)
 result3
 </code></pre>
 
-<pre><code>##      Item  class parnam parnum value lower_2.5 upper_97.5
-## 1 Comfort graded     a1      1 1.041    0.6994      1.454
-## 2    Work graded     a1      5 1.226    0.8959      1.621
-## 3  Future graded     a1      9 2.295    1.5689      3.986
-## 4 Benefit graded     a1     13 1.095    0.7659      1.500
+<pre><code>##      Item  class parnam parnum    value lower_2.5 upper_97.5
+## 1 Comfort graded     a1      1 1.041473 0.6993727   1.454282
+## 2    Work graded     a1      5 1.225871 0.8958606   1.621321
+## 3  Future graded     a1      9 2.295095 1.5688526   3.986465
+## 4 Benefit graded     a1     13 1.094690 0.7658947   1.500362
 </code></pre>
 
 </body>

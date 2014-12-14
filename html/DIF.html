@@ -214,13 +214,13 @@ d1[c(1,3), ] &lt;- d2[c(1,3), ]/4
 head(data.frame(a.group1 = a1, a.group2 = a2, d.group1 = d1, d.group2 = d2))
 </code></pre>
 
-<pre><code>##   a.group1 a.group2 d.group1 d.group2
-## 1   1.1757   0.3919  0.14296   0.5718
-## 2   1.2128   0.4043 -0.62045  -0.6205
-## 3   0.9672   0.9672 -0.05803  -0.2321
-## 4   0.8640   0.8640  0.78450   0.7845
-## 5   1.1818   1.1818  0.20911   0.2091
-## 6   0.4546   0.4546  0.54574   0.5457
+<pre><code>##    a.group1  a.group2    d.group1   d.group2
+## 1 1.1756586 0.3918862  0.14295747  0.5718299
+## 2 1.2128398 0.4042799 -0.62045026 -0.6204503
+## 3 0.9672090 0.9672090 -0.05802608 -0.2321043
+## 4 0.8639508 0.8639508  0.78449886  0.7844989
+## 5 1.1817662 1.1817662  0.20910659  0.2091066
+## 6 0.4546132 0.4546132  0.54573535  0.5457353
 </code></pre>
 
 <pre><code class="r">itemtype &lt;- rep(&#39;dich&#39;, nrow(a1))
@@ -233,12 +233,8 @@ group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
 #### no anchors, all items tested for DIF by adding item constrains one item at a time.
 # define a parallel cluster (optional) to help speed up internal functions
 mirtCluster()
-</code></pre>
 
-<pre><code>## Loading required package: parallel
-</code></pre>
-
-<pre><code class="r">#  Information matrix with crossprod
+#  Information matrix with crossprod
 model &lt;- multipleGroup(dat, 1, group, SE = TRUE)
 
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
@@ -251,79 +247,79 @@ resulta1d &lt;- DIF(model, c(&#39;a1&#39;, &#39;d&#39;), plotdif = TRUE)
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36231 36234 36371 36555 -18057   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 44.27   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36230.58 36234.10 36371.16 36555.43 -18057.29    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 44.271   2   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36213 36217 36354 36538 -18049   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 26.83   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36213.13 36216.66 36353.71 36537.98 -18048.57    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 26.827   2   0
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36201 36204 36341 36525 -18042   NaN NaN   NaN
-## 2 36190 36194 36336 36526 -18035 14.28   2 8e-04
+##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
+## 1 36200.59 36204.11 36341.17 36525.44 -18042.29    NaN NaN   NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 14.281   2 8e-04
 ## 
 ## $Item_4
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36188 36192 36329 36513 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 2.188   2 0.3349
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.49 36192.02 36329.08 36513.35 -18036.25   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 2.188   2 0.3349
 ## 
 ## $Item_5
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36187 36191 36328 36512 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.698   2 0.7054
+##       AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36187.0 36190.53 36327.59 36511.85 -18035.50   NaN NaN    NaN
+## 2 36190.3 36194.08 36335.74 36526.36 -18035.15 0.698   2 0.7054
 ## 
 ## $Item_6
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36187 36190 36327 36512 -18035   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.446   2 0.8001
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36186.75 36190.28 36327.33 36511.60 -18035.38   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.446   2 0.8001
 ## 
 ## $Item_7
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36192 36196 36333 36517 -18038   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 5.788   2 0.0554
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36192.09 36195.62 36332.68 36516.94 -18038.05   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 5.788   2 0.0554
 ## 
 ## $Item_8
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36190 36194 36331 36515 -18037   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 4.082   2 0.1299
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36190.39 36193.91 36330.97 36515.24 -18037.19   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 4.082   2 0.1299
 ## 
 ## $Item_9
-##     AIC  AICc SABIC   BIC logLik  X2  df     p
-## 1 36188 36191 36328 36512 -18036 NaN NaN   NaN
-## 2 36190 36194 36336 36526 -18035 1.3   2 0.522
+##       AIC     AICc    SABIC      BIC    logLik  X2  df     p
+## 1 36187.6 36191.13 36328.19 36512.46 -18035.80 NaN NaN   NaN
+## 2 36190.3 36194.08 36335.74 36526.36 -18035.15 1.3   2 0.522
 ## 
 ## $Item_10
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36188 36191 36328 36513 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 1.565   2 0.4573
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36187.87 36191.40 36328.45 36512.72 -18035.93   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 1.565   2 0.4573
 ## 
 ## $Item_11
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36190 36194 36331 36515 -18037   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 4.174   2 0.1241
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36190.48 36194.00 36331.06 36515.33 -18037.24   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 4.174   2 0.1241
 ## 
 ## $Item_12
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36189 36192 36329 36513 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 2.224   2 0.3289
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.53 36192.05 36329.11 36513.38 -18036.26   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 2.224   2 0.3289
 ## 
 ## $Item_13
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36188 36191 36328 36513 -18036   NaN NaN   NaN
-## 2 36190 36194 36336 36526 -18035 1.435   2 0.488
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 36187.74 36191.27 36328.32 36512.59 -18035.87   NaN NaN   NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 1.435   2 0.488
 ## 
 ## $Item_14
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36192 36196 36333 36517 -18038   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 6.052   2 0.0485
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36192.36 36195.88 36332.94 36517.21 -18038.18   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 6.052   2 0.0485
 ## 
 ## $Item_15
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36189 36193 36330 36514 -18037   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 2.768   2 0.2506
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36189.07 36192.60 36329.66 36513.92 -18036.54   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 2.768   2 0.2506
 </code></pre>
 
 <pre><code class="r">#same as above, but using Wald tests with Benjamini &amp; Hochberg adjustment
@@ -332,72 +328,72 @@ resulta1dWald
 </code></pre>
 
 <pre><code>## $Item_1
-##       W df         p
-## 1 39.92  2 2.146e-09
+##         W df            p
+## 1 39.9194  2 2.145919e-09
 ## 
 ## $Item_2
-##       W df         p
-## 1 22.76  2 1.142e-05
+##          W df            p
+## 1 22.75978  2 1.142288e-05
 ## 
 ## $Item_3
-##       W df        p
-## 1 13.63  2 0.001098
+##          W df           p
+## 1 13.62856  2 0.001097985
 ## 
 ## $Item_4
-##       W df      p
-## 1 2.141  2 0.3428
+##          W df        p
+## 1 2.141152  2 0.342811
 ## 
 ## $Item_5
-##        W df      p
-## 1 0.6836  2 0.7105
+##           W df         p
+## 1 0.6835958  2 0.7104918
 ## 
 ## $Item_6
-##        W df      p
-## 1 0.4352  2 0.8044
+##          W df         p
+## 1 0.435205  2 0.8044452
 ## 
 ## $Item_7
-##       W df      p
-## 1 5.539  2 0.0627
+##          W df          p
+## 1 5.538933  2 0.06269544
 ## 
 ## $Item_8
-##       W df      p
-## 1 3.966  2 0.1376
+##          W df         p
+## 1 3.966485  2 0.1376223
 ## 
 ## $Item_9
-##       W df      p
-## 1 1.264  2 0.5315
+##          W df         p
+## 1 1.264058  2 0.5315122
 ## 
 ## $Item_10
-##       W df      p
-## 1 1.538  2 0.4635
+##          W df         p
+## 1 1.537711  2 0.4635433
 ## 
 ## $Item_11
-##       W df      p
-## 1 4.002  2 0.1352
+##        W df         p
+## 1 4.0015  2 0.1352338
 ## 
 ## $Item_12
-##       W df      p
-## 1 2.151  2 0.3411
+##          W df         p
+## 1 2.151351  2 0.3410674
 ## 
 ## $Item_13
-##       W df    p
-## 1 1.427  2 0.49
+##          W df         p
+## 1 1.426669  2 0.4900076
 ## 
 ## $Item_14
-##       W df       p
-## 1 5.744  2 0.05659
+##          W df          p
+## 1 5.743868  2 0.05658937
 ## 
 ## $Item_15
-##       W df      p
-## 1 2.643  2 0.2668
+##          W df         p
+## 1 2.642624  2 0.2667851
 ## 
 ## $adj_pvals
-##    Item_1    Item_2    Item_3    Item_4    Item_5    Item_6    Item_7 
-## 3.219e-08 8.567e-05 5.490e-03 5.142e-01 7.612e-01 8.044e-01 1.881e-01 
-##    Item_8    Item_9   Item_10   Item_11   Item_12   Item_13   Item_14 
-## 2.949e-01 6.133e-01 6.125e-01 2.949e-01 5.142e-01 6.125e-01 1.881e-01 
-##   Item_15 
-## 5.002e-01
+##       Item_1       Item_2       Item_3       Item_4       Item_5 
+## 3.218878e-08 8.567159e-05 5.489926e-03 5.142166e-01 7.612412e-01 
+##       Item_6       Item_7       Item_8       Item_9      Item_10 
+## 8.044452e-01 1.880863e-01 2.949049e-01 6.132833e-01 6.125096e-01 
+##      Item_11      Item_12      Item_13      Item_14      Item_15 
+## 2.949049e-01 5.142166e-01 6.125096e-01 1.880863e-01 5.002221e-01
 </code></pre>
 
 <pre><code class="r">round(resulta1dWald$adj_pvals, 4)
@@ -415,79 +411,79 @@ resulta1
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36208 36212 36351 36539 -18045   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 20.12   1   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36208.43 36212.07 36351.43 36538.88 -18045.21    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 20.121   1   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36215 36219 36358 36546 -18049   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 26.83   1   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36215.13 36218.78 36358.14 36545.58 -18048.57    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 26.827   1   0
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36195 36198 36338 36525 -18038   NaN NaN   NaN
-## 2 36190 36194 36336 36526 -18035 6.306   1 0.012
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 36194.61 36198.26 36337.62 36525.06 -18038.31   NaN NaN   NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 6.306   1 0.012
 ## 
 ## $Item_4
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36189 36192 36332 36519 -18035   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.277   1 0.5987
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.58 36192.23 36331.59 36519.04 -18035.29   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.277   1 0.5987
 ## 
 ## $Item_5
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36188 36192 36331 36519 -18035   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.021   1 0.8848
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.33 36191.97 36331.33 36518.78 -18035.16   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.021   1 0.8848
 ## 
 ## $Item_6
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36188 36192 36331 36519 -18035   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.026   1 0.8719
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.33 36191.98 36331.34 36518.78 -18035.17   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.026   1 0.8719
 ## 
 ## $Item_7
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36193 36197 36336 36524 -18038   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 5.085   1 0.0241
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36193.39 36197.04 36336.40 36523.84 -18037.69   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 5.085   1 0.0241
 ## 
 ## $Item_8
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36192 36196 36335 36523 -18037   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 4.024   1 0.0449
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36192.33 36195.98 36335.34 36522.78 -18037.16   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 4.024   1 0.0449
 ## 
 ## $Item_9
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36188 36192 36331 36519 -18035   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.135   1 0.7133
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.44 36192.09 36331.45 36518.89 -18035.22   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.135   1 0.7133
 ## 
 ## $Item_10
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36189 36193 36332 36520 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.778   1 0.3778
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36189.08 36192.73 36332.09 36519.54 -18035.54   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.778   1 0.3778
 ## 
 ## $Item_11
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36192 36195 36335 36522 -18037   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 3.329   1 0.0681
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36191.63 36195.28 36334.64 36522.09 -18036.82   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 3.329   1 0.0681
 ## 
 ## $Item_12
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36191 36194 36334 36521 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 2.217   1 0.1365
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36190.52 36194.17 36333.53 36520.97 -18036.26   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 2.217   1 0.1365
 ## 
 ## $Item_13
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36189 36192 36332 36519 -18035   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 0.511   1 0.4747
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36188.82 36192.46 36331.82 36519.27 -18035.41   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 0.511   1 0.4747
 ## 
 ## $Item_14
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36194 36198 36337 36524 -18038   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 5.603   1 0.0179
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36193.91 36197.56 36336.91 36524.36 -18037.95   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 5.603   1 0.0179
 ## 
 ## $Item_15
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36191 36195 36334 36522 -18037   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 2.764   1 0.0964
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36191.07 36194.72 36334.08 36521.52 -18036.53   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 2.764   1 0.0964
 </code></pre>
 
 <pre><code class="r">#following up on resulta1d, to determine whether it&#39;s a1 or d parameter causing DIF
@@ -495,38 +491,38 @@ resulta1
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36208 36212 36351 36539 -18045   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 20.12   1   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36208.43 36212.07 36351.43 36538.88 -18045.21    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 20.121   1   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36215 36219 36358 36546 -18049   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 26.83   1   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36215.13 36218.78 36358.14 36545.58 -18048.57    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 26.827   1   0
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36195 36198 36338 36525 -18038   NaN NaN   NaN
-## 2 36190 36194 36336 36526 -18035 6.306   1 0.012
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 36194.61 36198.26 36337.62 36525.06 -18038.31   NaN NaN   NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 6.306   1 0.012
 </code></pre>
 
 <pre><code class="r">(ds &lt;- DIF(model, &#39;d&#39;, items2test = 1:3))
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36206 36210 36349 36537 -18044   NaN NaN NaN
-## 2 36190 36194 36336 36526 -18035 17.88   1   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36206.19 36209.83 36349.19 36536.64 -18044.09    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 17.881   1   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36190 36193 36333 36520 -18036   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 1.392   1 0.2381
+##       AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36189.7 36193.35 36332.70 36520.15 -18035.85   NaN NaN    NaN
+## 2 36190.3 36194.08 36335.74 36526.36 -18035.15 1.392   1 0.2381
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36196 36200 36339 36527 -18039   NaN NaN    NaN
-## 2 36190 36194 36336 36526 -18035 8.187   1 0.0042
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36196.49 36200.14 36339.50 36526.94 -18039.25   NaN NaN    NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 8.187   1 0.0042
 </code></pre>
 
 <pre><code class="r">#### using items 4 to 15 as anchors
@@ -538,19 +534,19 @@ anchor
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36212 36213 36299 36414 -18070   NaN NaN NaN
-## 2 36165 36167 36257 36378 -18045 50.77   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36211.97 36213.33 36299.23 36413.60 -18069.98    NaN NaN NaN
+## 2 36165.20 36166.71 36257.31 36378.04 -18044.60 50.767   2   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik   X2  df   p
-## 1 36198 36199 36285 36399 -18063  NaN NaN NaN
-## 2 36165 36167 36257 36378 -18045 36.3   2   0
+##       AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36197.5 36198.86 36284.76 36399.14 -18062.75    NaN NaN NaN
+## 2 36165.2 36166.71 36257.31 36378.04 -18044.60 36.303   2   0
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36177 36179 36265 36379 -18053   NaN NaN   NaN
-## 2 36165 36167 36257 36378 -18045 16.05   2 3e-04
+##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
+## 1 36177.25 36178.61 36264.51 36378.89 -18052.63    NaN NaN   NaN
+## 2 36165.20 36166.71 36257.31 36378.04 -18044.60 16.052   2 3e-04
 </code></pre>
 
 <pre><code class="r">### drop down approach (freely estimating parameters accross groups) when
@@ -562,79 +558,79 @@ dropdown
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36257 36258 36335 36437 -18097   NaN NaN NaN
-## 2 36234 36235 36314 36419 -18084 25.13   1   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66    NaN NaN NaN
+## 2 36234.19 36235.33 36314.18 36419.02 -18084.10 25.127   1   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18097 0.302   1 0.5826
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36259.02 36260.16 36339.00 36443.85 -18096.51 0.302   1 0.5826
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36257 36258 36335 36437 -18097   NaN NaN   NaN
-## 2 36244 36245 36324 36429 -18089 15.08   1 1e-04
+##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66    NaN NaN   NaN
+## 2 36244.24 36245.38 36324.23 36429.07 -18089.12 15.077   1 1e-04
 ## 
 ## $Item_4
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36258 36259 36338 36443 -18096 1.581   1 0.2086
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36257.74 36258.88 36337.73 36442.57 -18095.87 1.581   1 0.2086
 ## 
 ## $Item_5
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18097 0.213   1 0.6444
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36259.11 36260.25 36339.09 36443.94 -18096.55 0.213   1 0.6444
 ## 
 ## $Item_6
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36257 36258 36335 36437 -18097   NaN NaN   NaN
-## 2 36259 36260 36339 36444 -18097 0.211   1 0.646
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN   NaN
+## 2 36259.11 36260.25 36339.10 36443.94 -18096.55 0.211   1 0.646
 ## 
 ## $Item_7
-##     AIC  AICc SABIC   BIC logLik  X2  df      p
-## 1 36257 36258 36335 36437 -18097 NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18096 0.4   1 0.5271
+##        AIC     AICc    SABIC      BIC    logLik  X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66 NaN NaN    NaN
+## 2 36258.92 36260.06 36338.91 36443.75 -18096.46 0.4   1 0.5271
 ## 
 ## $Item_8
-##     AIC  AICc SABIC   BIC logLik   X2  df      p
-## 1 36257 36258 36335 36437 -18097  NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18097 0.08   1 0.7773
+##        AIC     AICc    SABIC      BIC    logLik   X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66  NaN NaN    NaN
+## 2 36259.24 36260.38 36339.23 36444.07 -18096.62 0.08   1 0.7773
 ## 
 ## $Item_9
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18096 0.371   1 0.5425
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36258.95 36260.09 36338.94 36443.78 -18096.47 0.371   1 0.5425
 ## 
 ## $Item_10
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18097 0.179   1 0.6722
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36259.14 36260.28 36339.13 36443.97 -18096.57 0.179   1 0.6722
 ## 
 ## $Item_11
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18096 0.573   1 0.4491
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36258.75 36259.89 36338.73 36443.58 -18096.37 0.573   1 0.4491
 ## 
 ## $Item_12
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18096 0.574   1 0.4487
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36258.75 36259.89 36338.73 36443.58 -18096.37 0.574   1 0.4487
 ## 
 ## $Item_13
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36257 36258 36337 36441 -18095 2.719   1 0.0992
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36256.60 36257.74 36336.59 36441.43 -18095.30 2.719   1 0.0992
 ## 
 ## $Item_14
-##     AIC  AICc SABIC   BIC logLik    X2  df      p
-## 1 36257 36258 36335 36437 -18097   NaN NaN    NaN
-## 2 36259 36260 36339 36444 -18097 0.076   1 0.7828
+##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN    NaN
+## 2 36259.24 36260.39 36339.23 36444.07 -18096.62 0.076   1 0.7828
 ## 
 ## $Item_15
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36257 36258 36335 36437 -18097   NaN NaN   NaN
-## 2 36259 36260 36339 36444 -18096 0.345   1 0.557
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 36257.32 36258.39 36334.88 36436.55 -18096.66   NaN NaN   NaN
+## 2 36258.97 36260.12 36338.96 36443.80 -18096.49 0.345   1 0.557
 </code></pre>
 
 <pre><code class="r">### sequential searches using SABIC as the selection criteria
@@ -652,19 +648,19 @@ Checking for DIF in 3 more items
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36214 36215 36297 36405 -18073   NaN NaN NaN
-## 2 36171 36172 36258 36373 -18050 47.21   2   0
+##        AIC     AICc    SABIC     BIC    logLik     X2  df   p
+## 1 36214.27 36215.48 36296.68 36404.7 -18073.14    NaN NaN NaN
+## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 47.208   2   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36198 36199 36280 36388 -18065   NaN NaN NaN
-## 2 36171 36172 36258 36373 -18050 30.48   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36197.55 36198.76 36279.96 36387.98 -18064.77    NaN NaN NaN
+## 2 36171.06 36172.42 36258.32 36372.70 -18049.53 30.484   2   0
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36184 36186 36267 36375 -18058   NaN NaN   NaN
-## 2 36171 36172 36258 36373 -18050 17.31   2 2e-04
+##        AIC     AICc    SABIC     BIC    logLik    X2  df     p
+## 1 36184.37 36185.58 36266.78 36374.8 -18058.19   NaN NaN   NaN
+## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 17.31   2 2e-04
 </code></pre>
 
 <pre><code class="r">#step down procedure for highly constrained model
@@ -681,19 +677,19 @@ Checking for DIF in 12 more items
 </code></pre>
 
 <pre><code>## $Item_1
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36214 36215 36297 36405 -18073   NaN NaN NaN
-## 2 36171 36172 36258 36373 -18050 47.21   2   0
+##        AIC     AICc    SABIC     BIC    logLik     X2  df   p
+## 1 36214.27 36215.48 36296.68 36404.7 -18073.14    NaN NaN NaN
+## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 47.208   2   0
 ## 
 ## $Item_2
-##     AIC  AICc SABIC   BIC logLik    X2  df   p
-## 1 36198 36199 36280 36388 -18065   NaN NaN NaN
-## 2 36171 36172 36258 36373 -18050 30.48   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36197.55 36198.76 36279.96 36387.98 -18064.77    NaN NaN NaN
+## 2 36171.06 36172.42 36258.32 36372.70 -18049.53 30.484   2   0
 ## 
 ## $Item_3
-##     AIC  AICc SABIC   BIC logLik    X2  df     p
-## 1 36184 36186 36267 36375 -18058   NaN NaN   NaN
-## 2 36171 36172 36258 36373 -18050 17.31   2 2e-04
+##        AIC     AICc    SABIC     BIC    logLik    X2  df     p
+## 1 36184.37 36185.58 36266.78 36374.8 -18058.19   NaN NaN   NaN
+## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 17.31   2 2e-04
 </code></pre>
 
 </body>

@@ -211,29 +211,29 @@ values &lt;- mod2values(mod)
 values
 </code></pre>
 
-<pre><code>##    group   item     class   name parnum  value lbound ubound   est
-## 1    all Item.1      dich     a1      1 0.9879   -Inf    Inf  TRUE
-## 2    all Item.1      dich      d      2 1.8561   -Inf    Inf  TRUE
-## 3    all Item.1      dich      g      3 0.0000   -Inf    Inf FALSE
-## 4    all Item.1      dich      u      4 1.0000   -Inf    Inf FALSE
-## 5    all Item.2      dich     a1      5 1.0809   -Inf    Inf  TRUE
-## 6    all Item.2      dich      d      6 0.8080   -Inf    Inf  TRUE
-## 7    all Item.2      dich      g      7 0.0000   -Inf    Inf FALSE
-## 8    all Item.2      dich      u      8 1.0000   -Inf    Inf FALSE
-## 9    all Item.3      dich     a1      9 1.7058   -Inf    Inf  TRUE
-## 10   all Item.3      dich      d     10 1.8042   -Inf    Inf  TRUE
-## 11   all Item.3      dich      g     11 0.0000   -Inf    Inf FALSE
-## 12   all Item.3      dich      u     12 1.0000   -Inf    Inf FALSE
-## 13   all Item.4      dich     a1     13 0.7652   -Inf    Inf  TRUE
-## 14   all Item.4      dich      d     14 0.4860   -Inf    Inf  TRUE
-## 15   all Item.4      dich      g     15 0.0000   -Inf    Inf FALSE
-## 16   all Item.4      dich      u     16 1.0000   -Inf    Inf FALSE
-## 17   all Item.5      dich     a1     17 0.7358   -Inf    Inf  TRUE
-## 18   all Item.5      dich      d     18 1.8545   -Inf    Inf  TRUE
-## 19   all Item.5      dich      g     19 0.0000   -Inf    Inf FALSE
-## 20   all Item.5      dich      u     20 1.0000   -Inf    Inf FALSE
-## 21   all  GROUP GroupPars MEAN_1     21 0.0000   -Inf    Inf FALSE
-## 22   all  GROUP GroupPars COV_11     22 1.0000  1e-04    Inf FALSE
+<pre><code>##    group   item     class   name parnum     value lbound ubound   est
+## 1    all Item.1      dich     a1      1 0.9879266   -Inf    Inf  TRUE
+## 2    all Item.1      dich      d      2 1.8560607   -Inf    Inf  TRUE
+## 3    all Item.1      dich      g      3 0.0000000   -Inf    Inf FALSE
+## 4    all Item.1      dich      u      4 1.0000000   -Inf    Inf FALSE
+## 5    all Item.2      dich     a1      5 1.0808853   -Inf    Inf  TRUE
+## 6    all Item.2      dich      d      6 0.8079786   -Inf    Inf  TRUE
+## 7    all Item.2      dich      g      7 0.0000000   -Inf    Inf FALSE
+## 8    all Item.2      dich      u      8 1.0000000   -Inf    Inf FALSE
+## 9    all Item.3      dich     a1      9 1.7058011   -Inf    Inf  TRUE
+## 10   all Item.3      dich      d     10 1.8042187   -Inf    Inf  TRUE
+## 11   all Item.3      dich      g     11 0.0000000   -Inf    Inf FALSE
+## 12   all Item.3      dich      u     12 1.0000000   -Inf    Inf FALSE
+## 13   all Item.4      dich     a1     13 0.7651859   -Inf    Inf  TRUE
+## 14   all Item.4      dich      d     14 0.4859966   -Inf    Inf  TRUE
+## 15   all Item.4      dich      g     15 0.0000000   -Inf    Inf FALSE
+## 16   all Item.4      dich      u     16 1.0000000   -Inf    Inf FALSE
+## 17   all Item.5      dich     a1     17 0.7357992   -Inf    Inf  TRUE
+## 18   all Item.5      dich      d     18 1.8545129   -Inf    Inf  TRUE
+## 19   all Item.5      dich      g     19 0.0000000   -Inf    Inf FALSE
+## 20   all Item.5      dich      u     20 1.0000000   -Inf    Inf FALSE
+## 21   all  GROUP GroupPars MEAN_1     21 0.0000000   -Inf    Inf FALSE
+## 22   all  GROUP GroupPars COV_11     22 1.0000000  1e-04    Inf FALSE
 ##    prior.type prior_1 prior_2
 ## 1        none     NaN     NaN
 ## 2        none     NaN     NaN
@@ -259,12 +259,8 @@ values
 ## 22       none     NaN     NaN
 </code></pre>
 
-<pre><code class="r">#use the converted values as starting values in a new model
-mod2 &lt;- mirt(dat, 1, pars = values)
-</code></pre>
-
-<pre><code>## Warning: M-step optimimizer converged immediately. Solution is either at the ML or
-##                      starting values are causing issues and should be adjusted.
+<pre><code class="r">#use the converted values as starting values in a new model, and reduce TOL
+mod2 &lt;- mirt(dat, 1, pars = values, TOL=1e-5)
 </code></pre>
 
 </body>
