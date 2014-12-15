@@ -315,9 +315,12 @@ setMethod(
             isTRUE <- all(sapply(nms[2:length(nms)], function(x, first) all(x %in% first),
                                  first=nms[[1L]]))
             if(isTRUE){
+                allPars <- lapply(allPars, function(x) x[1L, , drop=FALSE])
                 items <- do.call(rbind, allPars[1L:(length(allPars)-1)])
                 rownames(items) <- colnames(object@Data$data)
                 allPars <- list(items=items, groupPars=allPars[length(allPars)][[1L]])
+            } else {
+                message('Could not simplify. Returning default list')
             }
         }
         if(.hasSlot(object@lrPars, 'beta'))

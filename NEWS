@@ -1,6 +1,29 @@
 Changes in mirt 1.7
 
+MAJOR CHANGES
+
+  - improved estimation efficiency when using MH-RM algorithm. As a result,
+  the default seed was changed, therefore results from previous versions
+  will be slightly different
+
+  - objects of class 'ExploratoryClass' and 'ConfirmatoryClass' have been
+  merged into a single class 'SingleGroupClass' with an `exploratory`
+  logical slot
+
+  - the `technical = list(SEtol)` criteria for approximating the information
+  matrix was lowered to 1e-4 in `mixedmirt()` to provide better standard
+  error estiamtes
+
 NEW FEATURES
+
+  - `boot.mirt` now uses the optimizer used to estimate the model (default
+  previously was EM)
+
+  - `mixedmirt` now supports interaction effects in random intercepts,
+  including cross-level interactions
+
+  - added `averageMI()` function to compute multiple imputation averages
+  for the plausible values methodology using Rubin's 1987 method
 
   - plausible value imputation now available in `fscores()` using the new
   `plausible.draws` numeric input
@@ -25,6 +48,11 @@ NEW FEATURES
   (suggested by Michael Friendly)
 
 BUG FIXES
+
+  - bias correction in variance estimates `mixedmirt` when random effects
+  are included (reported by KK Sasa)
+
+  - fix missing data imputation bug in `itemfit()` (reported by KK Sasa)
 
   - M2 statistic for bifactor/two-tier models was overly conservative
 

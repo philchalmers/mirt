@@ -10,7 +10,8 @@
 #' information matrix was computed, which are useful if the sample size/number of items were small.
 #' As well, if the model contained latent regression predictors this information will
 #' be used in computing MAP and EAP estimates (for these models, \code{full.scores=TRUE}
-#' by default).
+#' by default). Finaly, plausible value imputation is also available, and will also account
+#' for latent regression predictor effects.
 #'
 #' The function will return either a table with the computed scores and standard errors,
 #' the original data matrix with scores appended to the rightmost column, or the scores only. By

@@ -6,7 +6,9 @@
 #' test features are being detected rather than group differences. Returns signed (average area
 #' above and below) and unsigned (total area) statistics, with descriptives such as the percent
 #' average bias between group total scores for each statistic. If a grid of Theta values is passed,
-#' these can be equaluated as well to determine specific DTF location effects.
+#' these can be equaluated as well to determine specific DTF location effects.  For best results,
+#' the baseline model should contain a set of 'anchor' items and have freely estimated
+#' hyper-parameters in the focal groups. See \code{\link{DIF}} for details.
 #'
 #' @aliases DTF
 #' @param mod a multipleGroup object which estimated only 2 groups

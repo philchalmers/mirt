@@ -77,7 +77,16 @@ This function runs the Wald and likelihood-ratio approaches for testing differen
 item functioning (DIF). This is primarily a convenience wrapper to the
 \code{\link{multipleGroup}} function for performing standard DIF procedures. Models can be
 estimated in parallel automatically by defining a parallel object with \code{\link{mirtCluster}},
-which will help to decrease the runtime.
+which will help to decrease the runtime. For best results, the baseline model should contain
+a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.
+}
+\details{
+Generally, the precomputed baseline model should have been
+configured with two estimation properties: 1) a set of 'anchor' items exist,
+where the anchor items have various parameters that have been constrainted to be equal
+across the groups, and 2) contain freely estimated latent mean and variance terms in
+all but one group. These two properties help to fix the metric of the groups so that
+item parameter estimates do not contain latent distribution characteristics.
 }
 \examples{
 \dontrun{
@@ -100,7 +109,7 @@ group <- c(rep('D1', N), rep('D2', N))
 # define a parallel cluster (optional) to help speed up internal functions
 mirtCluster()
 
-#  Information matrix with crossprod
+#  Information matrix with crossprod (not controlling for latent group differences)
 model <- multipleGroup(dat, 1, group, SE = TRUE)
 
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
