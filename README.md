@@ -66,6 +66,10 @@ R CMD INSTALL mirt
 
 # Presentations, Workshops, and Other Things
 
+##Upcoming IRT Workshops
+
+*Two day workshop at the* [University of Zurich, Switzerland](http://www.zhrcourses.uzh.ch/programm/datenanalyse/irt-analysis_en.html)
+
 Below are some presentation/workshop files for `mirt` that I have written and presented, and
 may be helpful in understanding the package.
 
