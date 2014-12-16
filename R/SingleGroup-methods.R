@@ -137,23 +137,25 @@ setMethod(
                           printCI = FALSE, verbose = TRUE, ...){
         if(is.null(rotate)) rotate <- object@rotate
         nfact <- ncol(object@F)
-        if (!object@exploratory && rotate != 'none') {
+        if (!object@exploratory || rotate == 'none') {
             F <- object@F
             F[abs(F) < suppress] <- NA
             h2 <- as.matrix(object@h2)
             SS <- apply(F^2,2,sum)
-            Phi <- diag(ncol(F))
+            gp <- ExtractGroupPars(object@pars[[length(object@pars)]])
+            Phi <- gp$gcov
             colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)
             loads <- round(cbind(F,h2),digits)
             rownames(loads) <- colnames(object@Data$data)
             if(verbose){
-                cat("\nUnrotated factor loadings: \n\n")
+                if(object@exploratory)
+                    cat("\nUnrotated factor loadings: \n\n")
                 print(loads)
                 cat("\nSS loadings: ",round(SS,digits), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
-                cat("\nFactor correlations: \n\n")
-                print(Phi)
+                cat("\nFactor covariances: \n\n")
+                print(round(Phi, digits))
             }
             invisible(list(rotF=F,h2=h2,fcor=matrix(1)))
         } else {
@@ -173,7 +175,6 @@ setMethod(
             Phi <- diag(ncol(F))
             if(!rotF$orthogonal){
                 Phi <- rotF$Phi
-                Phi <- round(Phi, digits)
             }
             colnames(Phi) <- rownames(Phi) <- colnames(F)
             if(verbose){
@@ -182,7 +183,7 @@ setMethod(
                 print(loads,digits)
                 cat("\nRotated SS loadings: ",round(SS,digits), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(Phi)
+                print(round(Phi, digits))
             }
             if(any(h2 > 1))
                 warning("Solution has Heywood cases. Interpret with caution.")
