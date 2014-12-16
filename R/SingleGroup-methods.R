@@ -143,7 +143,7 @@ setMethod(
             h2 <- as.matrix(object@h2)
             SS <- apply(F^2,2,sum)
             gp <- ExtractGroupPars(object@pars[[length(object@pars)]])
-            Phi <- gp$gcov
+            Phi <- cov2cor(gp$gcov)
             colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)
             loads <- round(cbind(F,h2),digits)
@@ -154,7 +154,7 @@ setMethod(
                 print(loads)
                 cat("\nSS loadings: ",round(SS,digits), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
-                cat("\nFactor covariances: \n\n")
+                cat("\nFactor correlations: \n\n")
                 print(round(Phi, digits))
             }
             invisible(list(rotF=F,h2=h2,fcor=matrix(1)))

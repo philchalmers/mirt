@@ -47,14 +47,6 @@ setMethod(
             if(verbose) cat('\n----------\nGROUP:', as.character(object@Data$groupNames[g]), '\n')
             ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, rotate =
                                     if(is.null(rotate)) object@pars[[1L]]@rotate else 'none', ...)
-            if(is(coeflist[[g]][[groupind]], 'matrix'))
-                ret[[g]]$mean <- coeflist[[g]][[groupind]][1, 1:nfact]
-            else ret[[g]]$mean <- coeflist[[g]][[groupind]][1:nfact]
-            names(ret[[g]]$mean) <- colnames(ret[[g]]$fcor)
-            if(verbose){
-                cat('\nFactor means:\n')
-                print(round(ret[[g]]$mean, digits))
-            }
         }
         invisible(ret)
     }

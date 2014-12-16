@@ -633,7 +633,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             h2 <- numeric(1)
         } else {
             Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
-            colnames(Flist$F) <- PrepList[[g]]$factorNames
+            colnames(Flist$F) <- PrepList[[1L]]$factorNames
             h2 <- rowSums(Flist$F^2)
             F <- Flist$F
         }

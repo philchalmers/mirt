@@ -98,7 +98,7 @@ mod_fullconstrain <- multipleGroup(dat, models, group = group, optimizer = 'NR',
 slot(mod_fullconstrain, 'time') #time of estimation componenets
 
 summary(mod_scalar2)
-coef(mod_scalar2)
+coef(mod_scalar2, simplify=TRUE)
 residuals(mod_scalar2)
 plot(mod_configural)
 plot(mod_configural, type = 'score')
@@ -125,7 +125,7 @@ newmodel <- mirt.model('
     F = 1-15
     CONSTRAINB = (1-6, a1)')
 equalslopes <- multipleGroup(dat, newmodel, group = group)
-coef(equalslopes)
+coef(equalslopes, simplify=TRUE)
 
 #############
 #DIF test for each item (using all other items as anchors)
@@ -163,7 +163,7 @@ DIF(mod_configural2, which.par = c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
 #multiple factors
 
 a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
-rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
+     rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
 d <- matrix(rnorm(15,0,.7),ncol=1)
 mu <- c(-.4, -.7, .1)
 sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
