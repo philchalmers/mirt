@@ -10,6 +10,9 @@
 #'   Only applicable when the input object is multidimensional
 #' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #'   information curves for each category are returned as a matrix
+#' @param use_degrees logical; use \code{degrees} argument for multidimensional information?
+#'   If \code{FALSE}, information will be calculated without reference to any angle
+#'
 #' @keywords information
 #' @seealso
 #' \code{\link{extract.item}}
@@ -45,7 +48,7 @@
 #' lines(Theta, T1/T1, col = 'red')
 #'
 #' }
-iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE){
+iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(is.null(degrees) && ncol(Theta) == 1L) degrees <- 0
@@ -54,6 +57,7 @@ iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE){
     if(ncol(Theta) != x@nfact)
         stop('Theta does not have the correct number of dimensions')
     cosangle <- cos(d2r(degrees))
-    info <- ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
+    info <- if(use_degrees) ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
+    else ItemInfo(x=x, Theta=Theta, total.info=total.info)
     info
 }
