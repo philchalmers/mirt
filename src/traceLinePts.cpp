@@ -87,8 +87,8 @@ void P_graded(vector<double> &P, const vector<double> &par,
             for(int i = (Pk.ncol()-2); i >= 0; --i){
                 for(int j = (N-1); j >= 0; --j){
                     P[which] = Pk(j,i) - Pk(j,i+1);
-                    if(P[which] < 1e-20) P[which] = 1e-20;
-                    else if((1.0 - P[which]) < 1e-20) P[which] = 1.0 - 1e-20;
+                    if(P[which] < 1e-50) P[which] = 1e-50;
+                    else if((1.0 - P[which]) < 1e-50) P[which] = 1.0 - 1e-50;
                     --which;
                 }
             }
@@ -224,8 +224,8 @@ void P_comp(vector<double> &P, const vector<double> &par,
             P[i+N] = P[i+N] * (1.0 / (1.0 + exp(-(a[j] * Theta(i,j) + d[j]))));
     for(int i = 0; i < N; ++i){
         P[i+N] = g + (1.0 - g) * P[i+N];
-        if(P[i+N] < 1e-20) P[i+N] = 1e-20;
-        else if (P[i+N] > 1.0 - 1e-20) P[i+N] = 1.0 - 1e-20;
+        if(P[i+N] < 1e-50) P[i+N] = 1e-50;
+        else if (P[i+N] > 1.0 - 1e-50) P[i+N] = 1.0 - 1e-50;
         P[i] = 1.0 - P[i+N];
     }
 }
