@@ -362,7 +362,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else {
             if(is.null(opts$quadpts))
                 opts$quadpts <- select_quadpts2(nfact)
-            if(opts$quadpts < 3) stop('Must use more than 2 quadpts')
+            if(opts$quadpts < 3 && opts$warn) warning('Should use more than 2 quadpts')
             Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
                                             length.out = opts$quadpts))
             if(opts$BFACTOR){
