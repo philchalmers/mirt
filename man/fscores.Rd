@@ -71,7 +71,7 @@ indicating that no MI draws will be performed}
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 default number of nodes is 2000}
 
-\item{...}{additional arguments}
+\item{...}{additional arguments to be passed to \code{nlm}}
 }
 \description{
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),

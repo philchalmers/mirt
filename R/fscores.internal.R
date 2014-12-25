@@ -9,15 +9,15 @@ setMethod(
 	{
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                    hessian, mirtCAT, return.acov = FALSE){
+	                    hessian, mirtCAT = FALSE, return.acov = FALSE, ...){
             if(mirtCAT){
                 estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
                                     itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
-                                    CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=1, stepmax=1e-20))
+                                    CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=1, stepmax=1e-20, ...))
             } else {
     	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ],
     	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
-                                    CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=200))
+                                    CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
             }
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
@@ -30,19 +30,12 @@ setMethod(
 	        return(c(estimate$estimate, SEest))
 	    }
 	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                   hessian, mirtCAT, return.acov = FALSE){
+	                   hessian, return.acov = FALSE, ...){
 	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
                 return(c(scores[ID, ], rep(NA, ncol(scores))))
-            if(mirtCAT){
-                estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-                                    itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
-                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=1,
-                                    stepmax=1e-20))
-            } else {
-    	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
-    	                            itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
-                                    hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=200))
-            }
+            estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ],
+    	                        itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
+                                hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
             if(hessian){
@@ -54,9 +47,9 @@ setMethod(
 	        return(c(estimate$estimate, SEest))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-                        hessian, return.acov = FALSE){
+                        hessian, return.acov = FALSE, ...){
 	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ], hessian=FALSE,
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, CUSTOM.IND=CUSTOM.IND))
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, CUSTOM.IND=CUSTOM.IND, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
             if(hessian){
@@ -263,7 +256,8 @@ setMethod(
     		} else if(method == "MAP"){
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, mirtCAT=mirtCAT, hessian=estHess)
+                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
+                               ...)
     		} else if(method == "ML"){
                 isna <- apply(object@Data$tabdata[,-ncol(object@Data$tabdata),drop=FALSE], 1L,
                               function(x) sum(is.na(x)))[keep]
@@ -275,7 +269,8 @@ setMethod(
                 SEscores[allzero,] <- NA
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, mirtCAT=mirtCAT, hessian=estHess)
+                               CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
+                               ...)
     		} else if(method == 'WLE'){
                 if(nfact > 1L)
                     stop('WLE method only supported for unidimensional models')
@@ -283,7 +278,7 @@ setMethod(
                                               CUSTOM.IND=CUSTOM.IND)
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               CUSTOM.IND=CUSTOM.IND, hessian=estHess)
+                               CUSTOM.IND=CUSTOM.IND, hessian=estHess, ...)
             } else {
                 stop('method not defined')
             }
@@ -438,7 +433,7 @@ setMethod(
             ret[[g]] <- fscores(tmp, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
-                           full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC)
+                           full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)
         }
         names(ret) <- object@Data$groupNames
         if(full.scores){

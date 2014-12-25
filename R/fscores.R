@@ -70,7 +70,7 @@
 #'   \code{full.scores = TRUE})
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 2000
-#' @param ... additional arguments
+#' @param ... additional arguments to be passed to \code{nlm}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
 #' @seealso \code{\link{averageMI}}
