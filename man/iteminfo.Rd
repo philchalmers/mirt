@@ -4,7 +4,8 @@
 \alias{iteminfo}
 \title{Function to calculate item information}
 \usage{
-iteminfo(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE)
+iteminfo(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE,
+  Fisher = FALSE)
 }
 \arguments{
 \item{x}{an extracted internal mirt object containing item information}
@@ -18,7 +19,10 @@ Only applicable when the input object is multidimensional}
 information curves for each category are returned as a matrix}
 
 \item{use_degrees}{logical; use \code{degrees} argument for multidimensional information?
-  If \code{FALSE}, information will be calculated without reference to any angle}
+If \code{FALSE}, information will be calculated without reference to any angle}
+
+\item{Fisher}{logical; compute Fisher information? Default is FALSE, producing observed
+  information functions}
 }
 \description{
 Given an internal mirt item object extracted by using \code{\link{extract.item}},

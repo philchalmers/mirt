@@ -841,7 +841,7 @@ LL.Priors <- function(x, LL){
     return(LL)
 }
 
-ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
+ItemInfo <- function(x, Theta, cosangle, total.info = TRUE, Fisher = FALSE){
     P <- ProbTrace(x, Theta)
     dx <- DerivTheta(x, Theta)
     info <- matrix(0, nrow(Theta), ncol(P))
@@ -853,18 +853,22 @@ ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
         dx$grad[[i]] <- matrix(rowSums(dx$grad[[i]] * cosanglefull))
         dx$hess[[i]] <- matrix(rowSums(dx$hess[[i]] * cosanglefull))
     }
-    for(i in 1L:x@ncat)
-        info[,i] <- (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]]
+    for(i in 1L:x@ncat){
+        if(Fisher) info[,i] <- (dx$grad[[i]])^2 / P[ ,i]
+        else info[,i] <- (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]]
+    }
     if(total.info) info <- matrix(rowSums(info))
     return(info)
 }
 
-ItemInfo2 <- function(x, Theta, total.info = TRUE){
+ItemInfo2 <- function(x, Theta, total.info = TRUE, Fisher = FALSE){
     P <- ProbTrace(x, Theta)
     dx <- DerivTheta(x, Theta)
     info <- matrix(0, nrow(Theta), ncol(P))
-    for(i in 1L:x@ncat)
-        info[,i] <- (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]]
+    for(i in 1L:x@ncat){
+        if(Fisher) info[,i] <- (dx$grad[[i]])^2 / P[ ,i]
+        else info[,i] <- (dx$grad[[i]])^2 / P[ ,i] - dx$hess[[i]]
+    }
     if(total.info) info <- rowSums(info)
     return(info)
 }
