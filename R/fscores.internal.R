@@ -47,18 +47,18 @@ setMethod(
 	        return(c(estimate$estimate, SEest))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-                        hessian, return.acov = FALSE, ...){
-	        estimate <- try(nlm(gradnorm.WLE,scores[ID, ],pars=pars,patdata=tabdata[ID, ], hessian=FALSE,
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, CUSTOM.IND=CUSTOM.IND, ...))
+	                    hessian, data, return.acov = FALSE, ...){
+	        estimate <- try(nlm(WLE.mirt, scores[ID, ], pars=pars, patdata=tabdata[ID, ],
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, data=data[ID, ],
+	                            hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
-            if(hessian){
-                TI <- 0
-                for(i in 1L:(length(itemloc)-1L))
-                    TI <- TI + iteminfo(pars[[i]], Theta=estimate$estimate)
-                if(return.acov) return(1/TI)
-    	        SEest <- 1 / sqrt(TI)
-            } else SEest <- rep(NA, ncol(scores))
+	        if(hessian){
+	            vcov <- try(solve(estimate$hessian))
+	            if(return.acov) return(vcov)
+	            SEest <- try(sqrt(diag(vcov)))
+	            if(is(SEest, 'try-error')) SEest <- rep(NA, ncol(scores))
+	        } else SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
 	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, return.acov = FALSE){
@@ -274,11 +274,9 @@ setMethod(
     		} else if(method == 'WLE'){
                 if(nfact > 1L)
                     stop('WLE method only supported for unidimensional models')
-                itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                              CUSTOM.IND=CUSTOM.IND)
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
-                               CUSTOM.IND=CUSTOM.IND, hessian=estHess, ...)
+                               CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
                 stop('method not defined')
             }
@@ -484,6 +482,23 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
     prior <- mirt_dmvnorm(ThetaShort, mu, gp$gcov)
     L <- ifelse(ML, -L, (-1)*(L + log(prior)))
     L
+}
+
+WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID, data)
+{
+    Theta <- matrix(Theta, nrow=1L)
+    ThetaShort <- Theta
+    if(length(prodlist) > 0L)
+        Theta <- prodterms(Theta,prodlist)
+    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+                                  CUSTOM.IND=CUSTOM.IND)
+    L <- sum(log(itemtrace)[as.logical(patdata)])
+    infos <- numeric(length(data))
+    for(i in 1L:length(infos)){
+        if(!is.na(data[i]))
+            infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, Fisher=TRUE)
+    }
+    return(-(log(sqrt(sum(infos))) + L))
 }
 
 gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND){

@@ -1,3 +1,11 @@
+# Changes in mirt 1.8
+
+- more optimized version of the 'WLE' estimator in `fscores()`
+
+## BUG FIX
+
+- fix carryover print-out error in `summary()` when confirmatory models were estimated
+
 # Changes in mirt 1.7
 
 ## MAJOR CHANGES

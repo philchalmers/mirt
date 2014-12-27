@@ -113,6 +113,9 @@ test_that('poly', {
     fit <- suppressMessages(itemfit(modp2, digits = 20))
     expect_equal(fit$Zh, c(-13.6970843, 0.9010823, -11.3913447, -30.2001403), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.929469, 10.587552, 6.897964, 10.108126), tolerance=1e-4)
+    fs <- fscores(modp1, method = 'WLE', verbose=FALSE, digits = 10)
+    expect_equal(as.numeric(fs[1:3, 5:6]), c(-5.7024116, -2.1162737, -1.1386969,  1.5797286,
+                                             0.6321478,  0.6544024), tolerance = 1e-4)
 
     ##rating scale test
     set.seed(1234)
