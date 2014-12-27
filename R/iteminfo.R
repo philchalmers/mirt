@@ -12,8 +12,6 @@
 #'   information curves for each category are returned as a matrix
 #' @param use_degrees logical; use \code{degrees} argument for multidimensional information?
 #'   If \code{FALSE}, information will be calculated without reference to any angle
-#' @param Fisher logical; compute Fisher information? Default is FALSE, producing observed
-#'   information functions
 #'
 #' @keywords information
 #' @seealso
@@ -50,8 +48,7 @@
 #' lines(Theta, T1/T1, col = 'red')
 #'
 #' }
-iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE,
-                     Fisher = FALSE){
+iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(is.null(degrees) && ncol(Theta) == 1L) degrees <- 0
@@ -60,8 +57,7 @@ iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = 
     if(ncol(Theta) != x@nfact)
         stop('Theta does not have the correct number of dimensions')
     cosangle <- cos(d2r(degrees))
-    info <- if(use_degrees) ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info,
-                                     Fisher=Fisher)
-    else ItemInfo(x=x, Theta=Theta, total.info=total.info, Fisher=Fisher)
+    info <- if(use_degrees) ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
+    else ItemInfo2(x=x, Theta=Theta, total.info=total.info)
     info
 }

@@ -496,7 +496,7 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
     infos <- numeric(length(data))
     for(i in 1L:length(infos)){
         if(!is.na(data[i]))
-            infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, Fisher=TRUE)
+            infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE)
     }
     return(-(log(sqrt(sum(infos))) + L))
 }
