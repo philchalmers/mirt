@@ -264,7 +264,6 @@ shinyItemplot <- function(){
                     par[names(par) == 'a1'] <- input$a1par
                     par[names(par) == 'a2'] <- input$a2par
                     par[names(par) == 'd'] <- input$dpar
-                    par[names(par) == 'd'] <- input$idpar
                     par[names(par) == 'g'] <- logit(input$gpar)
                     par[names(par) == 'u'] <- logit(input$upar)
                     par[names(par) == 'd0'] <- input$d0par
