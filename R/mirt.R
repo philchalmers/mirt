@@ -11,7 +11,7 @@
 #' regression models can be fit using the \code{formula} input below. Tests that form a
 #' two-tier or bi-factor structure should be estimated with the \code{\link{bfactor}} function,
 #' which uses a dimension reduction EM algorithm for modeling item parcels.
-#' Multiple group analyses (useful for DIF testing) are
+#' Multiple group analyses (useful for DIF and DTF testing) are
 #' also available using the \code{\link{multipleGroup}} function.
 #'
 #' @section Confirmatory and Exploratory IRT:
@@ -237,7 +237,7 @@
 #'   2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
 #'   '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
 #'   '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
-#'   3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response
+#'   3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
 #'   model, rating scale graded response model, generalized partial credit model,
 #'   nominal model, ideal-point model, 2-3PL partially compensatory model, and 2-4 parameter nested
 #'   logistic models, respectively. User defined item classes can also be defined using the
@@ -260,18 +260,15 @@
 #'   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
 #'
 #'   Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama}
-#'   packages are available by passing the arguments \code{'solnp'} and \code{'alabama'}.
-#'   This should be used in
-#'   conjunction with the \code{solnp_args} and \code{alabama_args} specified below.
-#'   If equality constraints were
-#'   specified in the model definition only the parameter with the lowest \code{parnum}
+#'   packages are available by passing the arguments \code{'solnp'} and \code{'alabama'},
+#'   respectively. This should be used in conjunction with the \code{solnp_args} and
+#'   \code{alabama_args} specified below. If equality constraints were specified in the
+#'   model definition only the parameter with the lowest \code{parnum}
 #'   in the \code{pars = 'values'} data.frame is used in the estimation vector passed
 #'   to the objective function, and group hyper-parameters are omitted.
-#'   Equality an inequality functions should be of the form. Note that the \code{alabama}
-#'   estimation may perform faster than the \code{Rsolnp} package since information about the
-#'   function gradient vector is utilized
-#'   \code{function(p, optim_args)}, where \code{optim_args} is a list of internally parameters
-#'   that largely can be ignored when defining constraints
+#'   Equality an inequality functions should be of the form \code{function(p, optim_args)},
+#'   where \code{optim_args} is a list of internally parameters that largely can be ignored
+#'   when defining constraints (though use of \code{browser()} here may be helpful)
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
 #'    See \code{SE.type} for the type of estimates available
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix
@@ -366,7 +363,8 @@
 #'   is used instead. See \code{\link{summary-method}} for a list of supported rotation options.
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param calcNull logical; calculate the Null model for additional fit statistics (e.g., TLI)?
-#'   Only applicable if the data contains no NA's and the data is not overly sparse
+#'   Only applicable if the data contains no NA's and the data is not overly sparse, otherwise
+#'   it is ignored
 #' @param large either a \code{logical}, indicating whether the internal collapsed data should
 #'   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
 #'   a list containing  the organized tables is returned. This list object can then be passed back

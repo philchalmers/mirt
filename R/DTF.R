@@ -31,6 +31,10 @@
 #' @param ... additional arguments to be passed to lattice
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Chalmers, R. P., Counsell, A., and Flora, D. B. (in press). It might not
+#'   make a big DIF: Improved Differential Test Functioning statistics that account for
+#'   sampling variability. \emph{Educational and Psychological Measurement}.
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 #' @keywords DTF
 #' @export DTF
@@ -59,7 +63,7 @@
 #'
 #' DTF(mod)
 #' mirtCluster()
-#' DTF(mod, MI = 1000) #95% C.I. for sDTI containing 0. uDTF is very small
+#' DTF(mod, MI = 1000) #95% C.I. for sDTF containing 0. uDTF is very small
 #'
 #' ## -------------
 #' ## random slopes and intercepts for 15 items, and latent mean difference
@@ -91,7 +95,7 @@
 #' plot(mod3, type = 'score') #visable DTF happening
 #'
 #' DIF(mod3, c('a1', 'd'), items2test=16:30)
-#' DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally lower
+#' DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally higher on average
 #' DTF(mod3, MI=1000)
 #' DTF(mod3, MI=1000, plot=TRUE)
 #'

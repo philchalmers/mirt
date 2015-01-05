@@ -29,7 +29,7 @@ which will be repeated globally. The NULL default assumes that the items follow 
 2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
 '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
 '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
-3 parameter logistic (lower or upper asymptote upper), 4 parameter logistic, graded response
+3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
 model, rating scale graded response model, generalized partial credit model,
 nominal model, ideal-point model, 2-3PL partially compensatory model, and 2-4 parameter nested
 logistic models, respectively. User defined item classes can also be defined using the
@@ -89,18 +89,15 @@ will estimate the regression parameters for all latent traits by default}
   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
 
   Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama}
-  packages are available by passing the arguments \code{'solnp'} and \code{'alabama'}.
-  This should be used in
-  conjunction with the \code{solnp_args} and \code{alabama_args} specified below.
-  If equality constraints were
-  specified in the model definition only the parameter with the lowest \code{parnum}
+  packages are available by passing the arguments \code{'solnp'} and \code{'alabama'},
+  respectively. This should be used in conjunction with the \code{solnp_args} and
+  \code{alabama_args} specified below. If equality constraints were specified in the
+  model definition only the parameter with the lowest \code{parnum}
   in the \code{pars = 'values'} data.frame is used in the estimation vector passed
   to the objective function, and group hyper-parameters are omitted.
-  Equality an inequality functions should be of the form. Note that the \code{alabama}
-  estimation may perform faster than the \code{Rsolnp} package since information about the
-  function gradient vector is utilized
-  \code{function(p, optim_args)}, where \code{optim_args} is a list of internally parameters
-  that largely can be ignored when defining constraints}
+  Equality an inequality functions should be of the form \code{function(p, optim_args)},
+  where \code{optim_args} is a list of internally parameters that largely can be ignored
+  when defining constraints (though use of \code{browser()} here may be helpful)}
 
 \item{pars}{a data.frame with the structure of how the starting values, parameter numbers,
 estimation logical values, etc, are defined. The user may observe how the model defines the
@@ -126,7 +123,8 @@ are \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
 specified using \code{\link{mirt.model}} syntax (recommended)}
 
 \item{calcNull}{logical; calculate the Null model for additional fit statistics (e.g., TLI)?
-Only applicable if the data contains no NA's and the data is not overly sparse}
+Only applicable if the data contains no NA's and the data is not overly sparse, otherwise
+it is ignored}
 
 \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM
 algorithm. Default is 5000}
@@ -266,7 +264,7 @@ can only be included by using the \code{\link{mixedmirt}} function, though laten
 regression models can be fit using the \code{formula} input below. Tests that form a
 two-tier or bi-factor structure should be estimated with the \code{\link{bfactor}} function,
 which uses a dimension reduction EM algorithm for modeling item parcels.
-Multiple group analyses (useful for DIF testing) are
+Multiple group analyses (useful for DIF and DTF testing) are
 also available using the \code{\link{multipleGroup}} function.
 }
 \section{Confirmatory and Exploratory IRT}{

@@ -75,17 +75,18 @@ mirt's \code{plot()} function is set to \code{TRUE}}
 \description{
 This function runs the Wald and likelihood-ratio approaches for testing differential
 item functioning (DIF). This is primarily a convenience wrapper to the
-\code{\link{multipleGroup}} function for performing standard DIF procedures. Models can be
-estimated in parallel automatically by defining a parallel object with \code{\link{mirtCluster}},
+\code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
+models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
 which will help to decrease the runtime. For best results, the baseline model should contain
 a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.
 }
 \details{
 Generally, the precomputed baseline model should have been
-configured with two estimation properties: 1) a set of 'anchor' items exist,
+configured with two estimation properties: 1) a set of 'anchor' items,
 where the anchor items have various parameters that have been constrainted to be equal
 across the groups, and 2) contain freely estimated latent mean and variance terms in
-all but one group. These two properties help to fix the metric of the groups so that
+all but one group (the so-called 'reference' group).
+These two properties help to fix the metric of the groups so that
 item parameter estimates do not contain latent distribution characteristics.
 }
 \examples{

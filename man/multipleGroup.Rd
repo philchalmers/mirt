@@ -258,6 +258,7 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
 \code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}
+  \code{\link{DTF}}
 }
 \keyword{models}
 
