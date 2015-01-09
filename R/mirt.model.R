@@ -226,7 +226,7 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
                     string <- c(string, paste(c(fnames[i], ' = ', tmp[length(tmp)], '\n'), collapse=''))
                 }
             }
-            if(!is.null(COV)){
+            if(!is.null(COV) && any(COV)){
                 tmp <- outer(fnames, fnames, FUN=function(x, y) paste0(x, paste0('*', y)))
                 sel <- upper.tri(COV,TRUE) & COV
                 tmp <- tmp[sel]
