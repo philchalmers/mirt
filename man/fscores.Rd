@@ -8,7 +8,7 @@ fscores(object, rotate = NULL, full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
   returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL,
   verbose = TRUE, scores.only = TRUE, full.scores.SE = FALSE,
-  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, ...)
+  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, custom_den = NULL, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -70,6 +70,17 @@ indicating that no MI draws will be performed}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 default number of nodes is 2000}
+
+\item{custom_den}{a function used to define the integration density (if required). The NULL default
+  assumes that the multivariate normal distribution with the 'GroupPars' hyper-parameters are
+  used. At the minimum must be of the form:
+
+  \code{function(Theta, ...)}
+
+  where Theta is a matrix of latent trait values (will be a grid of values
+  if \code{method == 'EAPsum'} or \code{method == 'EAP'}, otherwise Theta will have only 1 row).
+  Additional arguments may included and are caught through the \code{fscores(...)} input. The
+  function \emph{must} return a numeric vector of density weights (one for each row in Theta)}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
 }
@@ -135,6 +146,15 @@ fscores(mod, MI = 30)
 # plausible values for future work
 pv <- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
+
+## define a custom_den function. EAP with a uniform prior between -3 and 3
+fun <- function(Theta, ...) as.numeric(dunif(Theta, min = -3, max = 3))
+head(fscores(mod, custom_den = fun))
+
+# custom MAP prior: standard truncated normal between 5 and -2
+library(msm)
+fun <- function(Theta, ...) dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
+head(fscores(mod, custom_den = fun, method = 'MAP'))
 
 }
 }

@@ -6,6 +6,12 @@ test_that('extras', {
     data <- rbind(data, data)
     mod1 <- mirt(data, 1, verbose=FALSE, SE=TRUE)
 
+    fun <- function(Thetas, min, max, ...) as.numeric(dunif(Thetas, min=min, max=max))
+    fs1 <- fscores(mod1, custom_den = fun, min = -3, max = 3, verbose = FALSE)
+    fs2 <- suppressWarnings(fscores(mod1, custom_den = fun, min = -3, max = 3, verbose = FALSE, method = 'MAP'))
+    expect_equal(as.numeric(fs1[1,c('F1', 'SE_F1')]), c(-2.4766, .4988), tolerance = 1e-3)
+    expect_equal(as.numeric(fs2[5,c('F1', 'SE_F1')]), c(-1.9121, .9381), tolerance = 1e-3)
+
     set.seed(12345)
     a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
     d1 <- d2 <- matrix(rnorm(10,0,.7),ncol=1)
