@@ -139,7 +139,8 @@
 #'
 #' # custom MAP prior: standard truncated normal between 5 and -2
 #' library(msm)
-#' fun <- function(Theta, ...) dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
+#' # need the :: scope for parallel to see the function (not require if no mirtCluster() defined)
+#' fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
 #' head(fscores(mod, custom_den = fun, method = 'MAP'))
 #'
 #'}
