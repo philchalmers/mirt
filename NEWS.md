@@ -2,9 +2,13 @@
 
 - more optimized version of the 'WLE' estimator in `fscores()`
 
+- empirical reliability added when `method = 'EAPsum'` in `fscores()`
+
 ## BUG FIX
 
 - fix carryover print-out error in `summary()` when confirmatory models were estimated
+
+- bound contraints not were not included for group hyper-parameters (reported by KK Sasa)
 
 # Changes in mirt 1.7
 

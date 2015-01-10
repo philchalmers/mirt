@@ -126,7 +126,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             maxit <- max(ceiling(Mrate * 100), 35)
             res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
                            constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist,
-                           Thetabetween=Thetabetween, iterlim=maxit),
+                           Thetabetween=Thetabetween, ubound=UBOUND[groupest], lbound=LBOUND[groupest],
+                           iterlim=maxit),
                        silent=TRUE)
             if(is(res, 'try-error')) stop(res)
             longpars[groupest] <- res$estimate
@@ -168,7 +169,8 @@ Mstep.LL_alt <- function(x0, optim_args){
 }
 
 Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist,
-                      Thetabetween){
+                      Thetabetween, ubound, lbound){
+    if(any(p > ubound | p < lbound)) return(1e100)
     ngroups <- length(pars); J <- length(pars[[1L]]) - 1L
     longpars[groupest] <- p
     if(length(constrain))
