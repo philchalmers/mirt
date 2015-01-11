@@ -1386,7 +1386,7 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
     retval
 }
 
-mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE)
+mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE, ...)
 {
     if(quad && is.matrix(mean)){
         isigma <- solve(sigma)
