@@ -346,8 +346,10 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, N,
             }
         }
     } else if(!is.null(list$customPriorFun)){
-        for(g in 1L:ngroups)
+        for(g in 1L:ngroups){
             Prior[[g]] <- list$customPriorFun(Theta, Etable=rlist[[g]][[1L]])
+            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+        }
     }
     return(list(Prior=Prior, Priorbetween=Priorbetween))
 }
