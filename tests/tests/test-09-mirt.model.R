@@ -20,6 +20,9 @@ test_that('syntax', {
                          F2 = 3-5
                          CONSTRAIN = (3-5, a2), (1-2, a1)
                          COV = F1*F2')
+    model7 <- mirt.model('F1 = 1-2
+                         F2 = 3-5
+                         START = (2, a2, 1.5), (4,a1,-1)')
 
     set.seed(1234)
     group <- sample(c('male', 'female'), 1000, TRUE)
@@ -30,6 +33,7 @@ test_that('syntax', {
     mod6 <- mirt(data, model6, verbose=FALSE, calcNull=FALSE)
     mod4 <- multipleGroup(data, model4, group=group, verbose = FALSE)
     mod5 <- multipleGroup(data, model5, group=group, verbose = FALSE)
+    mod7 <- mirt(data, model7, verbose=FALSE, calcNull=FALSE)
 
     expect_equal(mod2values(mod1)$value, c(0.987973787231699, 1.85608912732841, 0, 1, 1.08103954211169, 0.808007534786952, 0, 1, 1.70595475896956, 1.80426768080187, 0, 1, 0.765076394253259, 0.486005938565521, 0, 1, 0.735771996169788, 1.85448564531374, 0, 1, 0, 1),
                  tolerance = 1e-2)
@@ -43,28 +47,30 @@ test_that('syntax', {
                  tolerance = 1e-2)
     expect_equal(mod2values(mod6)$value, c(1.0903077932694, 0, 1.91140861863278, 0, 1, 1.0903077932694, 0, 0.810348254879057, 0, 1, 0, 1.0101813883046, 1.46075728200956, 0, 1, 0, 1.0101813883046, 0.521336672537102, 0, 1, 0, 1.0101813883046, 1.99270549803447, 0, 1, 0, 0, 1, 0.911175950866077, 1),
                  tolerance = 1e-2)
-    
+    expect_equal(as.numeric(coef(mod7, simplify=TRUE, digits = 7)$items), c(-1.153815,-0.2728293,0,-1,0,0,1.5,1.740508,0.5660805,0.5774055,1.945502,0.9276134,1.818513,0.5439836,1.789067,0,0,0,0,0,1,1,1,1,1),
+                 tolerance = 1e-2)
+
     data(data.read, package = 'sirt')
     dat <- data.read
-     
+
     # syntax with variable names
     mirtsyn2 <- "
             F1 = A1,B2,B3,C4
             F2 = A1-A4,C2,C4
-            MEAN = F1 
+            MEAN = F1
             COV = F1*F1, F1*F2
             CONSTRAIN=(A2-A4,a2),(A3,C2,d)
             PRIOR = (C3,A2-A4,a2,lnorm, .2, .2),(B3,d,norm,0,.0001)"
-    # create a mirt model            
+    # create a mirt model
     mirtmodel <- mirt.model(mirtsyn2, itemnames=dat)
-    # or equivelently: 
+    # or equivelently:
     mirtmodel2 <- mirt.model(mirtsyn2, itemnames=colnames(dat))
-    
+
     expect_true(all(mirtmodel$x == mirtmodel2$x))
-    got <- matrix(c(c('F1', 'F2', "MEAN", 'COV', 'CONSTRAIN', 'PRIOR'), 
+    got <- matrix(c(c('F1', 'F2', "MEAN", 'COV', 'CONSTRAIN', 'PRIOR'),
                     c("1,6,7,12", "1-4,10,12","F1","F1*F1,F1*F2","(2-4,a2),(3,10,d)",
                       "(11,2-4,a2,lnorm,.2,.2),(7,d,norm,0,.0001)")), nrow = 6)
     expect_true(all(mirtmodel$x == got))
-    
+
 })
 

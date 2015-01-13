@@ -21,6 +21,10 @@
 #'   Estimating a correlation between factors is declared by joining the two
 #'   factors with an asterisk (e.g., F1*F2), or with an asterisk between three or more factors
 #'   to estimate all the possible correlations (e.g., F1*F2*F3)}
+#'
+#'  \item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
+#'   E.g., \code{MEAN = F1, F2} will free the latent means for factors F1 and F2}
+#'
 #' \item{CONSTRAIN}{A bracketed, comma separated list specifying equality constrains between items.
 #'   The input format is
 #'   \code{CONSTRAIN = (items, ..., parameterName(s), OptionalGroup),
@@ -35,12 +39,14 @@
 #'   'doubles') declare the respective item and use multiple parameter names. For
 #'   instance, to constrain two slopes to be equal within the first item, use
 #'   \code{CONSTRAIN = (1, a1, a2)}}
-#' \item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
+#'
+#'  \item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
 #'   The input format is \code{CONSTRAINB = (items, ..., parameterName),
 #'   (items, ..., parameterName)}.
 #'   For example, in a two group 10-item dichotomous tests, using the default 2PL model, the first
 #'   5 item slopes (a1) can be constrained to be equal across both groups by using
 #'   \code{CONSTRAINB = (1-5, a1)}, or some combination such as \code{CONSTRAINB = (1-3,4,5,a1)}}
+#'
 #' \item{PRIOR}{A bracketed, comma separate list specifying prior parameter distributions.
 #'   The input format is
 #'   \code{PRIOR = (items, ..., parameterName, priorType, val1, val2, OptionalGroup),
@@ -49,8 +55,13 @@
 #'   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 #'   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
 #'   \code{PRIOR = (1-5, d, norm, 0, 2)}}
-#' \item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
-#'   E.g., \code{MEAN = F1, F2} will free the latent means for factors F1 and F2}
+#'
+#'   \item{START}{A bracketed, comma separate list specifying the starting values for individual parameters.
+#'   The input is of the form \code{(item_number, parname, value)}. For instance, setting the 10th item
+#'   slope parameter (a1) to 1.0 is specified with \code{START = (1, a1, 1.0)}
+#'
+#'   For more hands on control of the starting values pass the argument \code{pars = 'values'} through
+#'   whatever estimation function is being used}
 #' }
 #' @param input input for writing out the model syntax. Can either be a string declaration of
 #'   class character or the so-called Q-matrix or class \code{matrix} that specifies the model

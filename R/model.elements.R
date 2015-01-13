@@ -111,6 +111,16 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, D=D,
                     mixed.design=mixed.design, customItems=customItems, key=key,
                     nominal.highlow=nominal.highlow)
+    if(any(model[,1L] == 'START')){
+        start <- gsub(" ","", model[model[,1] == 'START', ])
+        start <- strsplit(start[2], '),')[[1]]
+        start <- sapply(start, function(x) gsub("\\(","", x))
+        start <- sapply(start, function(x) gsub("\\)","", x))
+        for(i in 1L:length(start)){
+            tmp <- strsplit(start[i], ',')[[1L]]
+            ret[[as.integer(tmp[1L])]]@par[tmp[2L]] <- as.numeric(tmp[3L])
+        }
+    }
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')))

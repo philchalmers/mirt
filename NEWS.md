@@ -6,6 +6,9 @@
 
 - empirical reliability added when `method = 'EAPsum'` in `fscores()`
 
+- new `START` argument in `mirt.model()` for specifying simple starting values one parameter at 
+  a time
+
 ## BUG FIX
 
 - fix carryover print-out error in `summary()` when confirmatory models were estimated
