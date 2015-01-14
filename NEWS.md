@@ -1,5 +1,7 @@
 # Changes in mirt 1.8
 
+- `imputeMissing()` supports a list of plausible values to generate multiple complete datasets
+
 - new `custom_den` input to `fscores()` to use custom prior density functions for Bayesian estimates
 
 - more optimized version of the 'WLE' estimator in `fscores()`

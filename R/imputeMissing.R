@@ -2,13 +2,14 @@
 #'
 #' Given an estimated model from any of mirt's model fitting functions and an estimate of the
 #' latent trait, impute plausible missing data values. Returns the original data in a
-#' \code{data.frame} without any NA values.
-#'
+#' \code{data.frame} without any NA values. If a list of \code{Theta} values is supplied then a
+#' list of complete datasets is returned instead.
 #'
 #' @aliases imputeMissing
 #' @param x an estimated model x from the mirt package
 #' @param Theta a matrix containing the estimates of the latent trait scores
-#'   (e.g., via \code{\link{fscores}})
+#'   (e.g., via \code{\link{fscores}}). Can also be a \code{list} input containing different
+#'   estimates for Theta (e.g., plausible value draws)
 #' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords impute data
@@ -33,8 +34,21 @@
 #' mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
 #' fs <- fscores(mod2, full.scores=TRUE)
 #' fulldata2 <- imputeMissing(mod2, fs)
+#'
+#' #supply list of plausible value estimates (the best approach when Theta's are imprecise)
+#' pv <- fscores(mod, plausible.draws = 5)
+#' fulldata_list <- imputeMissing(mod, pv)
+#' str(fulldata_list)
+#'
 #' }
 imputeMissing <- function(x, Theta, ...){
+    if(missing(x)) stop('x input is missing')
+    if(missing(Theta)) stop('Theta input is missing')
+    if(is.list(Theta)){
+        ret <- lapply(Theta, function(Theta, x, ...) imputeMissing(x, Theta, ...),
+                      x=x, ...)
+        return(ret)
+    }
     if(is(x, 'MixedClass'))
         stop('mixedmirt xs not yet supported')
     if(is(x, 'MultipleGroupClass')){

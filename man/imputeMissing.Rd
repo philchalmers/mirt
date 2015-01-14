@@ -10,14 +10,16 @@ imputeMissing(x, Theta, ...)
 \item{x}{an estimated model x from the mirt package}
 
 \item{Theta}{a matrix containing the estimates of the latent trait scores
-(e.g., via \code{\link{fscores}})}
+(e.g., via \code{\link{fscores}}). Can also be a \code{list} input containing different
+estimates for Theta (e.g., plausible value draws)}
 
 \item{...}{additional arguments to pass}
 }
 \description{
 Given an estimated model from any of mirt's model fitting functions and an estimate of the
 latent trait, impute plausible missing data values. Returns the original data in a
-\code{data.frame} without any NA values.
+\code{data.frame} without any NA values. If a list of \code{Theta} values is supplied then a
+list of complete datasets is returned instead.
 }
 \examples{
 \dontrun{
@@ -39,6 +41,12 @@ group <- rep(c('group1', 'group2'), each=500)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
 fs <- fscores(mod2, full.scores=TRUE)
 fulldata2 <- imputeMissing(mod2, fs)
+
+#supply list of plausible value estimates (the best approach when Theta's are imprecise)
+pv <- fscores(mod, plausible.draws = 5)
+fulldata_list <- imputeMissing(mod, pv)
+str(fulldata_list)
+
 }
 }
 \author{
