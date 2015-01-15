@@ -852,12 +852,14 @@ setMethod(
                     main <- 'Item trace lines'
                 P <- vector('list', length(which.items))
                 names(P) <- colnames(x@Data$data)[which.items]
+                ind <- 1L
                 for(i in which.items){
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
                     if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
                                                            labels=paste0('cat', 1L:ncol(tmp))))
-                    P[[i]] <- tmp2
+                    P[[ind]] <- tmp2
+                    ind <- ind + 1L
                 }
                 nrs <- sapply(P, nrow)
                 Pstack <- do.call(rbind, P)
