@@ -808,7 +808,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if (nfact == 1L) F <- as.matrix(V * sqrt(L))
                 else F <- V %*% sqrt(diag(L))
                 if (sum(F[ ,1L] < 0)) F <- (-1) * F
-                colnames(F) <- paste("F_", 1:ncol(F),sep="")
+                colnames(F) <- paste("F", 1L:ncol(F), sep="")
                 h2 <- rowSums(F^2)
                 mod <- new('SingleGroupClass',
                            Data=Data,
