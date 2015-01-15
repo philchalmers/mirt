@@ -127,7 +127,10 @@ setMethod(
 itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot,
                           theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
                           add.ylab2 = TRUE, drape = TRUE, ...){
-    if(drop.zeros) x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
+    if(drop.zeros){
+        if(x@exploratory) stop('Cannot drop zeros in exploratory models')
+        x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
+    }
     nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 3) stop('Can not plot high dimensional models')
     if(nfact == 2 && is.null(degrees)) stop('Please specify a vector of angles that sum to 90')
@@ -138,7 +141,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         Theta <- thetaComb(theta, x@nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
-    if(is(x, 'SingleGroupClass')){
+    if(is(x, 'SingleGroupClass') && x@exploratory){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
         x@pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
     }
