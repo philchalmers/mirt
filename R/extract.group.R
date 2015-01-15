@@ -22,10 +22,10 @@
 #' group <- c(rep('D1', N), rep('D2', N))
 #' models <- mirt.model('F1 = 1-15')
 #'
-#' mod_configural <- multipleGroup(dat, models, group = group) 
+#' mod_configural <- multipleGroup(dat, models, group = group)
 #' group.1 <- extract.group(mod_configural, 1) #extract first group
 #' summary(group.1)
-#' plot(group.1, type = 'score')
+#' plot(group.1)
 #' }
 extract.group <- function(x, group){
     if(!is(x, 'MultipleGroupClass'))

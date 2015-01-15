@@ -59,7 +59,7 @@
 #' dat <- rbind(dat1, dat2)
 #' mod <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type='crossprod',
 #'                      invariance=c('free_means', 'free_var'))
-#' plot(mod, type = 'score')
+#' plot(mod)
 #'
 #' DTF(mod)
 #' mirtCluster()
@@ -73,11 +73,11 @@
 #'                 d + c(numeric(15), sign(rnorm(n-15))*runif(n-15, .5, 1)), N, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
 #' mod1 <- multipleGroup(dat, 1, group=group)
-#' plot(mod1, type = 'score') #does not account for group differences! Need anchors
+#' plot(mod1) #does not account for group differences! Need anchors
 #'
 #' mod2 <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type = 'crossprod',
 #'                       invariance=c('free_means', 'free_var'))
-#' plot(mod2, type = 'score')
+#' plot(mod2)
 #'
 #' #significant DIF in multiple items....
 #' DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
@@ -92,7 +92,7 @@
 #' dat <- rbind(dat1, dat2)
 #' mod3 <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type='crossprod',
 #'                       invariance=c('free_means', 'free_var'))
-#' plot(mod3, type = 'score') #visable DTF happening
+#' plot(mod3) #visable DTF happening
 #'
 #' DIF(mod3, c('a1', 'd'), items2test=16:30)
 #' DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally higher on average

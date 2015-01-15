@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.7.5
+Version: 1.7.6
 Date: 2014-04-23
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -46,6 +46,6 @@ LinkingTo: Rcpp
 License: GPL (>= 3)
 Repository: CRAN
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
-URL: https://github.com/philchalmers/mirt, 
+URL: https://github.com/philchalmers/mirt,
      https://github.com/philchalmers/mirt/wiki
 BugReports: https://github.com/philchalmers/mirt/issues?state=open

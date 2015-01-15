@@ -1,5 +1,8 @@
 # Changes in mirt 1.8
 
+- `plot()` default type is now `score`, and will accept rotation arguments for exploratory models 
+  (default rotation is `'none'`)
+
 - `imputeMissing()` supports a list of plausible values to generate multiple complete datasets
 
 - new `custom_den` input to `fscores()` to use custom prior density functions for Bayesian estimates

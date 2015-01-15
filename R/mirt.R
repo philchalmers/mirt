@@ -518,10 +518,10 @@
 #' coef(mod2)
 #' (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
 #' residuals(mod1)
-#' plot(mod1) #test information function
+#' plot(mod1) #test score function
 #' plot(mod1, type = 'trace') #trace lines
-#' plot(mod2, type = 'score') #expected total score
-#' plot(mod2, type = 'score', MI=200) #expected total score with 95% confidence intervals
+#' plot(mod2, type = 'info') #test information
+#' plot(mod2, MI=200) #expected total score with 95% confidence intervals
 #'
 #' #estimated 3PL model for item 5 only
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
@@ -548,6 +548,7 @@
 #' summary(mod2, rotate = 'oblimin') #oblimin rotation
 #' residuals(mod2)
 #' plot(mod2)
+#' plot(mod2, rotate = 'oblimin')
 #'
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table
@@ -589,8 +590,8 @@
 #'
 #' pmod2 <- mirt(Science, 2)
 #' summary(pmod2)
-#' plot(pmod2)
-#' itemplot(pmod2, 1)
+#' plot(pmod2, rotate = 'oblimin')
+#' itemplot(pmod2, 1, rotate = 'oblimin')
 #' anova(pmod1, pmod2)
 #'
 #' #unidimensional fit with a generalized partial credit and nominal model

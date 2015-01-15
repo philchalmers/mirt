@@ -9,7 +9,7 @@
 \alias{plot-method}
 \title{Plot various test implied functions from models}
 \usage{
-\S4method{plot}{SingleGroupClass,missing}(x, y, type = "info", npts = 50,
+\S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 50,
   theta_angle = 45, theta_lim = c(-6, 6),
   which.items = 1:ncol(x@Data$data), MI = 0, CI = 0.95, rot = list(xaxis
   = -70, yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key = TRUE,
@@ -79,14 +79,14 @@ Plot various test implied response functions from models estimated in the mirt p
 \dontrun{
 x <- mirt(Science, 1, SE=TRUE)
 plot(x)
-plot(x, type = 'trace')
+plot(x, type = 'info')
 plot(x, type = 'infotrace')
 plot(x, type = 'infotrace', facet_items = FALSE)
 plot(x, type = 'infoSE')
 
 # confidence interval plots when information matrix computed
-plot(x, type='score')
-plot(x, type='score', MI=100)
+plot(x)
+plot(x, MI=100)
 plot(x, type='info', MI=100)
 plot(x, type='SE', MI=100)
 
@@ -97,10 +97,10 @@ plot(x2)
 plot(x2, type = 'trace')
 plot(x2, type = 'trace', which.items = 1:2)
 plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
-plot(x2, type = 'score')
+plot(x2, type = 'info')
 
 x3 <- mirt(Science, 2)
-plot(x3)
+plot(x3, type = 'info')
 plot(x3, type = 'SE')
 
 }
