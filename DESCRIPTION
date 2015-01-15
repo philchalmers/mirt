@@ -46,5 +46,6 @@ LinkingTo: Rcpp
 License: GPL (>= 3)
 Repository: CRAN
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
-URL: https://github.com/philchalmers/mirt
+URL: https://github.com/philchalmers/mirt, 
+     https://github.com/philchalmers/mirt/wiki
 BugReports: https://github.com/philchalmers/mirt/issues?state=open

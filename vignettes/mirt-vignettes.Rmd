@@ -7,4 +7,4 @@
 =====================
 
 To access examples, vignettes, and exercise files that have been generated with `knitr` please
-visit [this link](http://philchalmers.github.io/mirt/mirt-vignettes.html).
+visit [this link](https://github.com/philchalmers/mirt/wiki).

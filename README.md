@@ -9,15 +9,14 @@ multidimensional latent trait models under the Item Response Theory paradigm.
 Exploratory and confirmatory models can be estimated with quadrature (EM) or
 stochastic (MHRM) methods. Confirmatory bi-factor and two-tier analyses are available
 for modeling item testlets. Multiple group analysis and mixed effects designs also
-are available for detecting differential item functioning and modelling item and
+are available for detecting differential item functioning and modeling item and
 person covariates.
 
-## Examples and Evaluated Help Files
+## Examples and evaluated help files are available on the wiki
 
 Various examples and worked help files have been compiled using the `knitr` package to generate
-HTML output, and are available [here](http://philchalmers.github.io/mirt/mirt-vignettes.html). 
-User contributions are also welcome, where the source code examples are demonstrated on the 
-`gh-pages` branch of this repository in the `source` directory.
+HTML output, and are available on the package [wiki](https://github.com/philchalmers/mirt/wiki). 
+User contributions are welcome!
 
 ## Installing from source
 
@@ -64,19 +63,9 @@ git clone https://github.com/philchalmers/mirt
 R CMD INSTALL mirt
 ```
 
-# Presentations, Workshops, and Other Things
-
-##Upcoming IRT Workshops
+# Upcoming IRT Workshops
 
 *Two day workshop at the* [University of Zurich, Switzerland](http://www.zhrcourses.uzh.ch/programm/datenanalyse/irt-analysis_en.html)
-
-Below are some presentation/workshop files for `mirt` that I have written and presented, and
-may be helpful in understanding the package.
-
-- [2013 workshop](https://dl.dropboxusercontent.com/u/10780530/mirt-pres-2013/mirt.pdf) in
-  Klagenfurt, Austria
-- [2012 presentation](https://dl.dropboxusercontent.com/u/10780530/mirt-pres-2012/mirt-presentation-2012.pdf) at
-  York University, Toronto
 
 # Bugs and Questions
 

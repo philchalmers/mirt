@@ -476,7 +476,7 @@ of categories.
 
 
 To access examples, vignettes, and exercise files that have been generated with knitr please
-visit \url{http://philchalmers.github.io/mirt/mirt-vignettes.html}.
+visit \url{https://github.com/philchalmers/mirt/wiki}.
 }
 \examples{
 \dontrun{
