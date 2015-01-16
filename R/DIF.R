@@ -177,7 +177,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         }
         newmodel <- multipleGroup(model@Data$data, model@model[[1L]], group=model@Data$group,
                                   invariance = invariance, constrain=constrain,
-                                  verbose = FALSE, ...)
+                                  itemtype = model@itemtype, verbose = FALSE, ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
         if(return_models) aov <- newmodel
@@ -264,7 +264,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                 }
             }
             updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@model[[1L]],
-                                          group=MGmodel@Data$group,
+                                          group=MGmodel@Data$group, itemtype=MGmodel@itemtype,
                                           invariance = invariance, constrain=constrain,
                                           verbose = FALSE, ...)
             pick <- !keep
