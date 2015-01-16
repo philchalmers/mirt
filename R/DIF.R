@@ -325,7 +325,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
             keep <- statdiff > pval
         }
         which.item <- which(!keep)
-        print(plot(MGmodel, type = type, which.items=which.item, facet_items=TRUE, ...))
+        if(length(which.item)){
+            print(plot(MGmodel, type = type, which.items=which.item, facet_items=TRUE, ...))
+        } else {
+            message('No DIF items were detected for plotting.')
+        }
     }
     return(res)
 }
