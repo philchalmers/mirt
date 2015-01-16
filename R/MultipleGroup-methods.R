@@ -65,7 +65,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'info', npts = 50, theta_angle = 45,
+    definition = function(x, y, type = 'score', npts = 50, theta_angle = 45,
                           which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE,
