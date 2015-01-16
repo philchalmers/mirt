@@ -272,19 +272,19 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
             tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
                             itemnames=itemnames, invariance=invariance, return_models=FALSE, ...)
-            names(tmp) <- itemnames[pick]
+            names(tmp) <- itemnames[items2test][pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
             if(run_number == max_run) break
             run_number <- run_number + 1L
         }
         if(verbose)
-            cat('\nComputing final DIF estimates...')
+            cat('\nComputing final DIF estimates...\n')
         res <- myLapply(X=items2test[!keep], FUN=loop_test, model=updatedModel,
                         which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                         itemnames=itemnames, invariance=invariance, return_models=return_models,
                         ...)
-        names(res) <- itemnames[!keep]
+        names(res) <- itemnames[items2test][!keep]
     }
 
     for(i in 1L:length(res))
