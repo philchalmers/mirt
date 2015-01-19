@@ -965,6 +965,13 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      optimizer = NULL, solnp_args = list(), alabama_args = list(), ...)
 {
     opts <- list()
+    tnames <- names(technical)
+    gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
+                'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
+                'parallel', 'NULL.MODEL')
+    if(!all(tnames %in% gnames))
+        stop('The following inputs to technical are invalid: ',
+             paste0(tnames[!(tnames %in% gnames)], ' '))
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
         stop('method argument not supported')

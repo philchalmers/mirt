@@ -697,8 +697,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         opts$calcNull <- FALSE
     }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
-        null.mod <- try(unclass(mirt(data, 1, itemtype=itemtype,
-                                     technical=list(NULL.MODEL=TRUE, TOL=opts$TOL,
+        null.mod <- try(unclass(mirt(data, 1L, itemtype=itemtype,
+                                     technical=list(NULL.MODEL=TRUE,
                                                     parallel=opts$technical$parallel),
                                      large=large, key=key, verbose=FALSE)))
         if(is(null.mod, 'try-error')){
