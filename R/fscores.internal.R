@@ -40,6 +40,7 @@ setMethod(
                                 hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2))
+	        est <- estimate$estimate
             if(hessian){
                 pick <- diag(estimate$hessian) > 0
                 if(!all(pick)){
@@ -49,8 +50,12 @@ setMethod(
                 } else vcov <- try(solve(estimate$hessian))
     	        if(return.acov) return(vcov)
     	        SEest <- try(sqrt(diag(vcov)))
+                if(any(SEest > 30)){
+                    est[SEest > 30] <- Inf * sign(est[SEest > 30])
+                    SEest[SEest > 30] <- NA
+                }
             } else SEest <- rep(NA, ncol(scores))
-	        return(c(estimate$estimate, SEest))
+	        return(c(est, SEest))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 	                    hessian, data, return.acov = FALSE, ...){
