@@ -112,7 +112,8 @@ setMethod(
                 jit <- do.call(rbind, jit)
                 ret[[i]] <- fs + jit
             }
-            return(ret)
+            if(plausible.draws == 1L) return(ret[[1L]])
+            else return(ret)
         }
         if(return.acov && MI != 0)
             stop('simultaneous impute and return.acov option not supported')

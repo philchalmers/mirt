@@ -26,7 +26,8 @@ rightmost column}
 \item{method}{type of factor score estimation method. Can be expected
 a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
-(\code{"EAPsum"})}
+(\code{"EAPsum"}). Can also be \code{"plausible"} for a single plausible value imputation for
+each case, and this is equivalent to setting \code{plausible.draws = 1}}
 
 \item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases

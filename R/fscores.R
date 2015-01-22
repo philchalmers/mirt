@@ -44,7 +44,8 @@
 #' @param method type of factor score estimation method. Can be expected
 #'   a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 #'   (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
-#'   (\code{"EAPsum"})
+#'   (\code{"EAPsum"}). Can also be \code{"plausible"} for a single plausible value imputation for
+#'   each case, and this is equivalent to setting \code{plausible.draws = 1}
 #' @param quadpts number of quadratures to use per dimension. If not specified, a suitable
 #'   one will be created which decreases as the number of dimensions increases
 #'   (and therefore for estimates such as EAP, will be less accurate). This is determined from
@@ -156,6 +157,10 @@ fscores <- function(object, rotate = NULL, full.scores = FALSE, method = "EAP",
             quadpts <- switch(as.character(object@nfact),
                               '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
     } else quadpts <- 1
+    if(method == 'plausible'){
+        plausible.draws <- 1
+        method <- 'EAP'
+    }
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,

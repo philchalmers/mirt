@@ -145,7 +145,7 @@ setMethod(
             gp <- ExtractGroupPars(object@pars[[length(object@pars)]])
             Phi <- cov2cor(gp$gcov)
             colnames(h2) <- "h2"
-            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)
+            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[1L:object@nfact]
             loads <- round(cbind(F,h2),digits)
             rownames(loads) <- colnames(object@Data$data)
             if(verbose){
@@ -321,8 +321,14 @@ setMethod(
                 rownames(items) <- colnames(object@Data$data)
                 allPars <- list(items=items, groupPars=allPars[length(allPars)][[1L]])
             } else {
-                message('Could not simplify. Returning default list')
+                message('Could not simplify items. Returning default list')
             }
+            means <- allPars[['groupPars']][1L:object@nfact]
+            names(means) <- colnames(allPars[['groupPars']])[1L:object@nfact]
+            covs <- matrix(NA, object@nfact, object@nfact)
+            covs[lower.tri(covs, TRUE)] <- allPars[['groupPars']][-c(1L:object@nfact)]
+            colnames(covs) <- rownames(covs) <- object@factorNames[1L:object@nfact]
+            allPars[['groupPars']] <- list(means=means, cov=covs)
         }
         if(.hasSlot(object@lrPars, 'beta'))
             allPars$lr.betas <- round(object@lrPars@beta, digits)

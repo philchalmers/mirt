@@ -98,7 +98,7 @@ boot.mirt <- function(x, R = 100, ...){
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- sum(structure$est)
-    if(requireNamespace("boot", quietly = TRUE)){
+    if(requireNamespace("boot")){
       boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, class=class,
                     parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
                     obj=x, ...)
@@ -107,7 +107,7 @@ boot.mirt <- function(x, R = 100, ...){
                              structure$name[structure$est], sep='.'),
                              structure$parnum[structure$est], sep='_')
     if(x@exploratory)
-        message('Note: bootstrapped standard errors for slope parameters for exploratory
+        message('Note: bootstrapped standard errors for slope parameters in exploratory
                        models are not meaningful.')
     return(boots)
 }
