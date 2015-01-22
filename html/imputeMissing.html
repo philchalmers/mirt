@@ -215,7 +215,7 @@ hr {
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.7 
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
@@ -239,15 +239,15 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 25 EM iterations.
-## mirt version: 1.7 
+## Converged within 1e-04 tolerance after 31 EM iterations.
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
 ## 
-## Log-likelihood = -2650.463
-## AIC = 5320.926; AICc = 5321.148
-## BIC = 5370.003; SABIC = 5338.243
+## Log-likelihood = -2645.331
+## AIC = 5310.663; AICc = 5310.885
+## BIC = 5359.74; SABIC = 5327.98
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;, full.scores = TRUE)
@@ -262,17 +262,17 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.7 
+## Converged within 1e-04 tolerance after 40 EM iterations.
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
 ## 
-## Log-likelihood = -2658.12
-## AIC = 5336.24; AICc = 5336.463
-## BIC = 5385.318; SABIC = 5353.557
-## G2 (21) = 30.96, p = 0.0744
-## RMSEA = 0.022, CFI = 0.943, TLI = 0.93
+## Log-likelihood = -2656.116
+## AIC = 5332.231; AICc = 5332.454
+## BIC = 5381.309; SABIC = 5349.548
+## G2 (21) = 32.74, p = 0.0492
+## RMSEA = 0.024, CFI = 0.936, TLI = 0.92
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
@@ -280,6 +280,34 @@ group &lt;- rep(c(&#39;group1&#39;, &#39;group2&#39;), each=500)
 mod2 &lt;- multipleGroup(dat, 1, group, TOL=1e-2)
 fs &lt;- fscores(mod2, full.scores=TRUE)
 fulldata2 &lt;- imputeMissing(mod2, fs)
+
+#supply list of plausible value estimates (the best approach when Theta&#39;s are imprecise)
+pv &lt;- fscores(mod, plausible.draws = 5)
+fulldata_list &lt;- imputeMissing(mod, pv)
+str(fulldata_list)
+</code></pre>
+
+<pre><code>## List of 5
+##  $ : int [1:1000, 1:5] 0 0 0 0 0 0 0 0 0 0 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:1000] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. ..$ : chr [1:5] &quot;Item.1&quot; &quot;Item.2&quot; &quot;Item.3&quot; &quot;Item.4&quot; ...
+##  $ : int [1:1000, 1:5] 0 0 0 0 0 0 0 0 0 0 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:1000] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. ..$ : chr [1:5] &quot;Item.1&quot; &quot;Item.2&quot; &quot;Item.3&quot; &quot;Item.4&quot; ...
+##  $ : int [1:1000, 1:5] 0 0 0 0 0 0 0 0 0 0 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:1000] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. ..$ : chr [1:5] &quot;Item.1&quot; &quot;Item.2&quot; &quot;Item.3&quot; &quot;Item.4&quot; ...
+##  $ : int [1:1000, 1:5] 0 0 0 0 0 0 0 0 0 0 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:1000] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. ..$ : chr [1:5] &quot;Item.1&quot; &quot;Item.2&quot; &quot;Item.3&quot; &quot;Item.4&quot; ...
+##  $ : int [1:1000, 1:5] 0 0 0 0 0 0 0 0 0 0 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:1000] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. ..$ : chr [1:5] &quot;Item.1&quot; &quot;Item.2&quot; &quot;Item.3&quot; &quot;Item.4&quot; ...
 </code></pre>
 
 </body>

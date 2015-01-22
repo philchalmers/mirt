@@ -209,19 +209,37 @@ hr {
 library(sirt)
 </code></pre>
 
-<pre><code>## |-----------------------------------------------------------------|
-## | sirt 1.2 (2014-12-12)                                           |
-## | Supplementary Item Response Theory                              |
-## | Maintainer: Alexander Robitzsch &lt;a.robitzsch at bifie.at&gt;       |
-## | https://sites.google.com/site/alexanderrobitzsch/software       |
-## |-----------------------------------------------------------------|
+<pre><code>## Loading required package: TAM
+## Loading required package: CDM
+## **********************************
+## ** CDM 4.1 (2014-12-17)         **
+## ** Cognitive Diagnostic Models  **
+## **********************************
+## 
+## ::...........................::
+## :: TAM 1.4-1 (2015-01-15)    ::
+## :: Test Analysis Modules     ::
+## ::...........................::
+</code></pre>
+
+<pre><code>## Error: package or namespace load failed for &#39;sirt&#39;
 </code></pre>
 
 <pre><code class="r">library(mvtnorm)
 
 data(data.read)
-dat &lt;- data.read
-I &lt;- ncol(dat)
+</code></pre>
+
+<pre><code>## Warning in data(data.read): data set &#39;data.read&#39; not found
+</code></pre>
+
+<pre><code class="r">dat &lt;- data.read
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;data.read&#39; not found
+</code></pre>
+
+<pre><code class="r">I &lt;- ncol(dat)
 
 
 # define some simple Q-Matrix (does not really make in this application)
@@ -244,72 +262,24 @@ Theta
 
 <pre><code class="r">#-- Model 14a: din (in CDM)
 mod14a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;, progress = FALSE)
-summary(mod14a)
 </code></pre>
 
-<pre><code>## Warning in summary.din(mod14a): There are at most 4 different skill classes. Returning all skill classes.
+<pre><code>## Warning in check.input(data, q.matrix, conv.crit, maxit, constraint.guess, : Check your Q-matrix! Number of assigned items (rows)
+##          must fit the number of items in the data (columns).
 </code></pre>
 
-<pre><code>## CDM 4.0 (Built 2014-11-21)
+<pre><code class="r">summary(mod14a)
 </code></pre>
 
-<pre><code>## Call:
-##  DINA MODEL on 12 items for 2 attributes 
-## Date of Analysis: 2014-12-14 13:03:56 
-## Time difference of 0.03113842 secs
-## Computation Time: 0.03113842 
-## 
-## 
-## Deviance =  3915.31  |   Log-Likelihood = -1957.655 
-## Number of item parameters: 24 
-## Number of skill class parameters: 3 
-## 
-## Information criteria: 
-##   AIC =  3969.31 
-##   BIC =  4071.722 
-## 
-## Mean of RMSEA item fit: 0.028 
-## 
-## Item parameters
-##    item guess  slip   IDI rmsea
-## A1   A1 0.674 0.030 0.295 0.011
-## A2   A2 0.423 0.049 0.527 0.017
-## A3   A3 0.258 0.224 0.519 0.012
-## A4   A4 0.245 0.394 0.361 0.018
-## B1   B1 0.534 0.166 0.300 0.026
-## B2   B2 0.338 0.382 0.280 0.025
-## B3   B3 0.796 0.016 0.188 0.019
-## B4   B4 0.421 0.142 0.436 0.033
-## C1   C1 0.850 0.000 0.150 0.043
-## C2   C2 0.480 0.097 0.423 0.037
-## C3   C3 0.746 0.026 0.228 0.054
-## C4   C4 0.575 0.136 0.289 0.038
-## 
-## Marginal skill probabilities:
-##        skill.prob
-## Skill1     0.5964
-## Skill2     0.5996
-## 
-## Tetrachoric correlations among skill dimensions
-##        Skill1 Skill2
-## Skill1 1.0000 0.9572
-## Skill2 0.9572 1.0000
-## 
-## Skill Pattern Probabilities 
-## 
-##      00      10      01      11 
-## 0.35663 0.04377 0.04693 0.55267
+<pre><code>##    Length     Class      Mode 
+##         1 character character
 </code></pre>
 
 <pre><code class="r"># compare used Theta distributions
 cbind( Theta , mod14a$attribute.patt.splitted)
 </code></pre>
 
-<pre><code>##      [,1] [,2] [,3] [,4]
-## [1,]    0    0    0    0
-## [2,]    1    0    1    0
-## [3,]    0    1    0    1
-## [4,]    1    1    1    1
+<pre><code>## Error in mod14a$attribute.patt.splitted: $ operator is invalid for atomic vectors
 </code></pre>
 
 <pre><code class="r">#-- Model 14b: mirt (in mirt)
@@ -335,162 +305,402 @@ mod.pars[ind,&quot;value&quot;] &lt;- qlogis(.8) - qlogis(.2)
 mod.pars
 </code></pre>
 
-<pre><code>##    group  item     class   name parnum     value lbound ubound   est
-## 1    all    A1      dich     a1      1  2.772589   -Inf    Inf  TRUE
-## 2    all    A1      dich     a2      2  0.000000   -Inf    Inf FALSE
-## 3    all    A1      dich     a3      3  0.000000   -Inf    Inf FALSE
-## 4    all    A1      dich      d      4 -1.386294   -Inf    Inf  TRUE
-## 5    all    A1      dich      g      5  0.000000   -Inf    Inf FALSE
-## 6    all    A1      dich      u      6  1.000000   -Inf    Inf FALSE
-## 7    all    A2      dich     a1      7  2.772589   -Inf    Inf  TRUE
-## 8    all    A2      dich     a2      8  0.000000   -Inf    Inf FALSE
-## 9    all    A2      dich     a3      9  0.000000   -Inf    Inf FALSE
-## 10   all    A2      dich      d     10 -1.386294   -Inf    Inf  TRUE
-## 11   all    A2      dich      g     11  0.000000   -Inf    Inf FALSE
-## 12   all    A2      dich      u     12  1.000000   -Inf    Inf FALSE
-## 13   all    A3      dich     a1     13  2.772589   -Inf    Inf  TRUE
-## 14   all    A3      dich     a2     14  0.000000   -Inf    Inf FALSE
-## 15   all    A3      dich     a3     15  0.000000   -Inf    Inf FALSE
-## 16   all    A3      dich      d     16 -1.386294   -Inf    Inf  TRUE
-## 17   all    A3      dich      g     17  0.000000   -Inf    Inf FALSE
-## 18   all    A3      dich      u     18  1.000000   -Inf    Inf FALSE
-## 19   all    A4      dich     a1     19  2.772589   -Inf    Inf  TRUE
-## 20   all    A4      dich     a2     20  0.000000   -Inf    Inf FALSE
-## 21   all    A4      dich     a3     21  0.000000   -Inf    Inf FALSE
-## 22   all    A4      dich      d     22 -1.386294   -Inf    Inf  TRUE
-## 23   all    A4      dich      g     23  0.000000   -Inf    Inf FALSE
-## 24   all    A4      dich      u     24  1.000000   -Inf    Inf FALSE
-## 25   all    B1      dich     a1     25  0.000000   -Inf    Inf FALSE
-## 26   all    B1      dich     a2     26  2.772589   -Inf    Inf  TRUE
-## 27   all    B1      dich     a3     27  0.000000   -Inf    Inf FALSE
-## 28   all    B1      dich      d     28 -1.386294   -Inf    Inf  TRUE
-## 29   all    B1      dich      g     29  0.000000   -Inf    Inf FALSE
-## 30   all    B1      dich      u     30  1.000000   -Inf    Inf FALSE
-## 31   all    B2      dich     a1     31  0.000000   -Inf    Inf FALSE
-## 32   all    B2      dich     a2     32  2.772589   -Inf    Inf  TRUE
-## 33   all    B2      dich     a3     33  0.000000   -Inf    Inf FALSE
-## 34   all    B2      dich      d     34 -1.386294   -Inf    Inf  TRUE
-## 35   all    B2      dich      g     35  0.000000   -Inf    Inf FALSE
-## 36   all    B2      dich      u     36  1.000000   -Inf    Inf FALSE
-## 37   all    B3      dich     a1     37  0.000000   -Inf    Inf FALSE
-## 38   all    B3      dich     a2     38  2.772589   -Inf    Inf  TRUE
-## 39   all    B3      dich     a3     39  0.000000   -Inf    Inf FALSE
-## 40   all    B3      dich      d     40 -1.386294   -Inf    Inf  TRUE
-## 41   all    B3      dich      g     41  0.000000   -Inf    Inf FALSE
-## 42   all    B3      dich      u     42  1.000000   -Inf    Inf FALSE
-## 43   all    B4      dich     a1     43  0.000000   -Inf    Inf FALSE
-## 44   all    B4      dich     a2     44  2.772589   -Inf    Inf  TRUE
-## 45   all    B4      dich     a3     45  0.000000   -Inf    Inf FALSE
-## 46   all    B4      dich      d     46 -1.386294   -Inf    Inf  TRUE
-## 47   all    B4      dich      g     47  0.000000   -Inf    Inf FALSE
-## 48   all    B4      dich      u     48  1.000000   -Inf    Inf FALSE
-## 49   all    C1      dich     a1     49  0.000000   -Inf    Inf FALSE
-## 50   all    C1      dich     a2     50  0.000000   -Inf    Inf FALSE
-## 51   all    C1      dich     a3     51  2.772589   -Inf    Inf  TRUE
-## 52   all    C1      dich      d     52 -1.386294   -Inf    Inf  TRUE
-## 53   all    C1      dich      g     53  0.000000   -Inf    Inf FALSE
-## 54   all    C1      dich      u     54  1.000000   -Inf    Inf FALSE
-## 55   all    C2      dich     a1     55  0.000000   -Inf    Inf FALSE
-## 56   all    C2      dich     a2     56  0.000000   -Inf    Inf FALSE
-## 57   all    C2      dich     a3     57  2.772589   -Inf    Inf  TRUE
-## 58   all    C2      dich      d     58 -1.386294   -Inf    Inf  TRUE
-## 59   all    C2      dich      g     59  0.000000   -Inf    Inf FALSE
-## 60   all    C2      dich      u     60  1.000000   -Inf    Inf FALSE
-## 61   all    C3      dich     a1     61  0.000000   -Inf    Inf FALSE
-## 62   all    C3      dich     a2     62  0.000000   -Inf    Inf FALSE
-## 63   all    C3      dich     a3     63  2.772589   -Inf    Inf  TRUE
-## 64   all    C3      dich      d     64 -1.386294   -Inf    Inf  TRUE
-## 65   all    C3      dich      g     65  0.000000   -Inf    Inf FALSE
-## 66   all    C3      dich      u     66  1.000000   -Inf    Inf FALSE
-## 67   all    C4      dich     a1     67  0.000000   -Inf    Inf FALSE
-## 68   all    C4      dich     a2     68  0.000000   -Inf    Inf FALSE
-## 69   all    C4      dich     a3     69  2.772589   -Inf    Inf  TRUE
-## 70   all    C4      dich      d     70 -1.386294   -Inf    Inf  TRUE
-## 71   all    C4      dich      g     71  0.000000   -Inf    Inf FALSE
-## 72   all    C4      dich      u     72  1.000000   -Inf    Inf FALSE
-## 73   all GROUP GroupPars MEAN_1     73  0.000000   -Inf    Inf FALSE
-## 74   all GROUP GroupPars MEAN_2     74  0.000000   -Inf    Inf FALSE
-## 75   all GROUP GroupPars COV_11     75  1.000000  1e-04    Inf FALSE
-## 76   all GROUP GroupPars COV_21     76  0.000000   -Inf    Inf FALSE
-## 77   all GROUP GroupPars COV_22     77  1.000000  1e-04    Inf FALSE
-##    prior.type prior_1 prior_2
-## 1        none     NaN     NaN
-## 2        none     NaN     NaN
-## 3        none     NaN     NaN
-## 4        none     NaN     NaN
-## 5        none     NaN     NaN
-## 6        none     NaN     NaN
-## 7        none     NaN     NaN
-## 8        none     NaN     NaN
-## 9        none     NaN     NaN
-## 10       none     NaN     NaN
-## 11       none     NaN     NaN
-## 12       none     NaN     NaN
-## 13       none     NaN     NaN
-## 14       none     NaN     NaN
-## 15       none     NaN     NaN
-## 16       none     NaN     NaN
-## 17       none     NaN     NaN
-## 18       none     NaN     NaN
-## 19       none     NaN     NaN
-## 20       none     NaN     NaN
-## 21       none     NaN     NaN
-## 22       none     NaN     NaN
-## 23       none     NaN     NaN
-## 24       none     NaN     NaN
-## 25       none     NaN     NaN
-## 26       none     NaN     NaN
-## 27       none     NaN     NaN
-## 28       none     NaN     NaN
-## 29       none     NaN     NaN
-## 30       none     NaN     NaN
-## 31       none     NaN     NaN
-## 32       none     NaN     NaN
-## 33       none     NaN     NaN
-## 34       none     NaN     NaN
-## 35       none     NaN     NaN
-## 36       none     NaN     NaN
-## 37       none     NaN     NaN
-## 38       none     NaN     NaN
-## 39       none     NaN     NaN
-## 40       none     NaN     NaN
-## 41       none     NaN     NaN
-## 42       none     NaN     NaN
-## 43       none     NaN     NaN
-## 44       none     NaN     NaN
-## 45       none     NaN     NaN
-## 46       none     NaN     NaN
-## 47       none     NaN     NaN
-## 48       none     NaN     NaN
-## 49       none     NaN     NaN
-## 50       none     NaN     NaN
-## 51       none     NaN     NaN
-## 52       none     NaN     NaN
-## 53       none     NaN     NaN
-## 54       none     NaN     NaN
-## 55       none     NaN     NaN
-## 56       none     NaN     NaN
-## 57       none     NaN     NaN
-## 58       none     NaN     NaN
-## 59       none     NaN     NaN
-## 60       none     NaN     NaN
-## 61       none     NaN     NaN
-## 62       none     NaN     NaN
-## 63       none     NaN     NaN
-## 64       none     NaN     NaN
-## 65       none     NaN     NaN
-## 66       none     NaN     NaN
-## 67       none     NaN     NaN
-## 68       none     NaN     NaN
-## 69       none     NaN     NaN
-## 70       none     NaN     NaN
-## 71       none     NaN     NaN
-## 72       none     NaN     NaN
-## 73       none     NaN     NaN
-## 74       none     NaN     NaN
-## 75       none     NaN     NaN
-## 76       none     NaN     NaN
-## 77       none     NaN     NaN
+<pre><code>##     group    item     class   name parnum     value lbound ubound   est
+## 1     all  Item.1      dich     a1      1  2.772589   -Inf    Inf  TRUE
+## 2     all  Item.1      dich     a2      2  0.000000   -Inf    Inf FALSE
+## 3     all  Item.1      dich     a3      3  0.000000   -Inf    Inf FALSE
+## 4     all  Item.1      dich      d      4 -1.386294   -Inf    Inf  TRUE
+## 5     all  Item.1      dich      g      5  0.000000   -Inf    Inf FALSE
+## 6     all  Item.1      dich      u      6  1.000000   -Inf    Inf FALSE
+## 7     all  Item.2      dich     a1      7  2.772589   -Inf    Inf  TRUE
+## 8     all  Item.2      dich     a2      8  0.000000   -Inf    Inf FALSE
+## 9     all  Item.2      dich     a3      9  0.000000   -Inf    Inf FALSE
+## 10    all  Item.2      dich      d     10 -1.386294   -Inf    Inf  TRUE
+## 11    all  Item.2      dich      g     11  0.000000   -Inf    Inf FALSE
+## 12    all  Item.2      dich      u     12  1.000000   -Inf    Inf FALSE
+## 13    all  Item.3      dich     a1     13  2.772589   -Inf    Inf  TRUE
+## 14    all  Item.3      dich     a2     14  0.000000   -Inf    Inf FALSE
+## 15    all  Item.3      dich     a3     15  0.000000   -Inf    Inf FALSE
+## 16    all  Item.3      dich      d     16 -1.386294   -Inf    Inf  TRUE
+## 17    all  Item.3      dich      g     17  0.000000   -Inf    Inf FALSE
+## 18    all  Item.3      dich      u     18  1.000000   -Inf    Inf FALSE
+## 19    all  Item.4      dich     a1     19  2.772589   -Inf    Inf  TRUE
+## 20    all  Item.4      dich     a2     20  0.000000   -Inf    Inf FALSE
+## 21    all  Item.4      dich     a3     21  0.000000   -Inf    Inf FALSE
+## 22    all  Item.4      dich      d     22 -1.386294   -Inf    Inf  TRUE
+## 23    all  Item.4      dich      g     23  0.000000   -Inf    Inf FALSE
+## 24    all  Item.4      dich      u     24  1.000000   -Inf    Inf FALSE
+## 25    all  Item.5      dich     a1     25  0.000000   -Inf    Inf FALSE
+## 26    all  Item.5      dich     a2     26  2.772589   -Inf    Inf  TRUE
+## 27    all  Item.5      dich     a3     27  0.000000   -Inf    Inf FALSE
+## 28    all  Item.5      dich      d     28 -1.386294   -Inf    Inf  TRUE
+## 29    all  Item.5      dich      g     29  0.000000   -Inf    Inf FALSE
+## 30    all  Item.5      dich      u     30  1.000000   -Inf    Inf FALSE
+## 31    all  Item.6      dich     a1     31  0.000000   -Inf    Inf FALSE
+## 32    all  Item.6      dich     a2     32  2.772589   -Inf    Inf  TRUE
+## 33    all  Item.6      dich     a3     33  0.000000   -Inf    Inf FALSE
+## 34    all  Item.6      dich      d     34 -1.386294   -Inf    Inf  TRUE
+## 35    all  Item.6      dich      g     35  0.000000   -Inf    Inf FALSE
+## 36    all  Item.6      dich      u     36  1.000000   -Inf    Inf FALSE
+## 37    all  Item.7      dich     a1     37  0.000000   -Inf    Inf FALSE
+## 38    all  Item.7      dich     a2     38  2.772589   -Inf    Inf  TRUE
+## 39    all  Item.7      dich     a3     39  0.000000   -Inf    Inf FALSE
+## 40    all  Item.7      dich      d     40 -1.386294   -Inf    Inf  TRUE
+## 41    all  Item.7      dich      g     41  0.000000   -Inf    Inf FALSE
+## 42    all  Item.7      dich      u     42  1.000000   -Inf    Inf FALSE
+## 43    all  Item.8      dich     a1     43  0.000000   -Inf    Inf FALSE
+## 44    all  Item.8      dich     a2     44  2.772589   -Inf    Inf  TRUE
+## 45    all  Item.8      dich     a3     45  0.000000   -Inf    Inf FALSE
+## 46    all  Item.8      dich      d     46 -1.386294   -Inf    Inf  TRUE
+## 47    all  Item.8      dich      g     47  0.000000   -Inf    Inf FALSE
+## 48    all  Item.8      dich      u     48  1.000000   -Inf    Inf FALSE
+## 49    all  Item.9      dich     a1     49  0.000000   -Inf    Inf FALSE
+## 50    all  Item.9      dich     a2     50  0.000000   -Inf    Inf FALSE
+## 51    all  Item.9      dich     a3     51  2.772589   -Inf    Inf  TRUE
+## 52    all  Item.9      dich      d     52 -1.386294   -Inf    Inf  TRUE
+## 53    all  Item.9      dich      g     53  0.000000   -Inf    Inf FALSE
+## 54    all  Item.9      dich      u     54  1.000000   -Inf    Inf FALSE
+## 55    all Item.10      dich     a1     55  0.000000   -Inf    Inf FALSE
+## 56    all Item.10      dich     a2     56  0.000000   -Inf    Inf FALSE
+## 57    all Item.10      dich     a3     57  2.772589   -Inf    Inf  TRUE
+## 58    all Item.10      dich      d     58 -1.386294   -Inf    Inf  TRUE
+## 59    all Item.10      dich      g     59  0.000000   -Inf    Inf FALSE
+## 60    all Item.10      dich      u     60  1.000000   -Inf    Inf FALSE
+## 61    all Item.11      dich     a1     61  0.000000   -Inf    Inf FALSE
+## 62    all Item.11      dich     a2     62  0.000000   -Inf    Inf FALSE
+## 63    all Item.11      dich     a3     63  2.772589   -Inf    Inf  TRUE
+## 64    all Item.11      dich      d     64 -1.386294   -Inf    Inf  TRUE
+## 65    all Item.11      dich      g     65  0.000000   -Inf    Inf FALSE
+## 66    all Item.11      dich      u     66  1.000000   -Inf    Inf FALSE
+## 67    all Item.12      dich     a1     67  0.000000   -Inf    Inf FALSE
+## 68    all Item.12      dich     a2     68  0.000000   -Inf    Inf FALSE
+## 69    all Item.12      dich     a3     69  2.772589   -Inf    Inf  TRUE
+## 70    all Item.12      dich      d     70 -1.386294   -Inf    Inf  TRUE
+## 71    all Item.12      dich      g     71  0.000000   -Inf    Inf FALSE
+## 72    all Item.12      dich      u     72  1.000000   -Inf    Inf FALSE
+## 73    all Item.13      dich     a1     73  0.000000   -Inf    Inf FALSE
+## 74    all Item.13      dich     a2     74  0.000000   -Inf    Inf FALSE
+## 75    all Item.13      dich     a3     75  0.000000   -Inf    Inf FALSE
+## 76    all Item.13      dich      d     76 -1.386294   -Inf    Inf  TRUE
+## 77    all Item.13      dich      g     77  0.000000   -Inf    Inf FALSE
+## 78    all Item.13      dich      u     78  1.000000   -Inf    Inf FALSE
+## 79    all Item.14      dich     a1     79  0.000000   -Inf    Inf FALSE
+## 80    all Item.14      dich     a2     80  0.000000   -Inf    Inf FALSE
+## 81    all Item.14      dich     a3     81  0.000000   -Inf    Inf FALSE
+## 82    all Item.14      dich      d     82 -1.386294   -Inf    Inf  TRUE
+## 83    all Item.14      dich      g     83  0.000000   -Inf    Inf FALSE
+## 84    all Item.14      dich      u     84  1.000000   -Inf    Inf FALSE
+## 85    all Item.15      dich     a1     85  0.000000   -Inf    Inf FALSE
+## 86    all Item.15      dich     a2     86  0.000000   -Inf    Inf FALSE
+## 87    all Item.15      dich     a3     87  0.000000   -Inf    Inf FALSE
+## 88    all Item.15      dich      d     88 -1.386294   -Inf    Inf  TRUE
+## 89    all Item.15      dich      g     89  0.000000   -Inf    Inf FALSE
+## 90    all Item.15      dich      u     90  1.000000   -Inf    Inf FALSE
+## 91    all Item.16      dich     a1     91  0.000000   -Inf    Inf FALSE
+## 92    all Item.16      dich     a2     92  0.000000   -Inf    Inf FALSE
+## 93    all Item.16      dich     a3     93  0.000000   -Inf    Inf FALSE
+## 94    all Item.16      dich      d     94 -1.386294   -Inf    Inf  TRUE
+## 95    all Item.16      dich      g     95  0.000000   -Inf    Inf FALSE
+## 96    all Item.16      dich      u     96  1.000000   -Inf    Inf FALSE
+## 97    all Item.17      dich     a1     97  0.000000   -Inf    Inf FALSE
+## 98    all Item.17      dich     a2     98  0.000000   -Inf    Inf FALSE
+## 99    all Item.17      dich     a3     99  0.000000   -Inf    Inf FALSE
+## 100   all Item.17      dich      d    100 -1.386294   -Inf    Inf  TRUE
+## 101   all Item.17      dich      g    101  0.000000   -Inf    Inf FALSE
+## 102   all Item.17      dich      u    102  1.000000   -Inf    Inf FALSE
+## 103   all Item.18      dich     a1    103  0.000000   -Inf    Inf FALSE
+## 104   all Item.18      dich     a2    104  0.000000   -Inf    Inf FALSE
+## 105   all Item.18      dich     a3    105  0.000000   -Inf    Inf FALSE
+## 106   all Item.18      dich      d    106 -1.386294   -Inf    Inf  TRUE
+## 107   all Item.18      dich      g    107  0.000000   -Inf    Inf FALSE
+## 108   all Item.18      dich      u    108  1.000000   -Inf    Inf FALSE
+## 109   all Item.19      dich     a1    109  0.000000   -Inf    Inf FALSE
+## 110   all Item.19      dich     a2    110  0.000000   -Inf    Inf FALSE
+## 111   all Item.19      dich     a3    111  0.000000   -Inf    Inf FALSE
+## 112   all Item.19      dich      d    112 -1.386294   -Inf    Inf  TRUE
+## 113   all Item.19      dich      g    113  0.000000   -Inf    Inf FALSE
+## 114   all Item.19      dich      u    114  1.000000   -Inf    Inf FALSE
+## 115   all Item.20      dich     a1    115  0.000000   -Inf    Inf FALSE
+## 116   all Item.20      dich     a2    116  0.000000   -Inf    Inf FALSE
+## 117   all Item.20      dich     a3    117  0.000000   -Inf    Inf FALSE
+## 118   all Item.20      dich      d    118 -1.386294   -Inf    Inf  TRUE
+## 119   all Item.20      dich      g    119  0.000000   -Inf    Inf FALSE
+## 120   all Item.20      dich      u    120  1.000000   -Inf    Inf FALSE
+## 121   all Item.21      dich     a1    121  0.000000   -Inf    Inf FALSE
+## 122   all Item.21      dich     a2    122  0.000000   -Inf    Inf FALSE
+## 123   all Item.21      dich     a3    123  0.000000   -Inf    Inf FALSE
+## 124   all Item.21      dich      d    124 -1.386294   -Inf    Inf  TRUE
+## 125   all Item.21      dich      g    125  0.000000   -Inf    Inf FALSE
+## 126   all Item.21      dich      u    126  1.000000   -Inf    Inf FALSE
+## 127   all Item.22      dich     a1    127  0.000000   -Inf    Inf FALSE
+## 128   all Item.22      dich     a2    128  0.000000   -Inf    Inf FALSE
+## 129   all Item.22      dich     a3    129  0.000000   -Inf    Inf FALSE
+## 130   all Item.22      dich      d    130 -1.386294   -Inf    Inf  TRUE
+## 131   all Item.22      dich      g    131  0.000000   -Inf    Inf FALSE
+## 132   all Item.22      dich      u    132  1.000000   -Inf    Inf FALSE
+## 133   all Item.23      dich     a1    133  0.000000   -Inf    Inf FALSE
+## 134   all Item.23      dich     a2    134  0.000000   -Inf    Inf FALSE
+## 135   all Item.23      dich     a3    135  0.000000   -Inf    Inf FALSE
+## 136   all Item.23      dich      d    136 -1.386294   -Inf    Inf  TRUE
+## 137   all Item.23      dich      g    137  0.000000   -Inf    Inf FALSE
+## 138   all Item.23      dich      u    138  1.000000   -Inf    Inf FALSE
+## 139   all Item.24      dich     a1    139  0.000000   -Inf    Inf FALSE
+## 140   all Item.24      dich     a2    140  0.000000   -Inf    Inf FALSE
+## 141   all Item.24      dich     a3    141  0.000000   -Inf    Inf FALSE
+## 142   all Item.24      dich      d    142 -1.386294   -Inf    Inf  TRUE
+## 143   all Item.24      dich      g    143  0.000000   -Inf    Inf FALSE
+## 144   all Item.24      dich      u    144  1.000000   -Inf    Inf FALSE
+## 145   all Item.25      dich     a1    145  0.000000   -Inf    Inf FALSE
+## 146   all Item.25      dich     a2    146  0.000000   -Inf    Inf FALSE
+## 147   all Item.25      dich     a3    147  0.000000   -Inf    Inf FALSE
+## 148   all Item.25      dich      d    148 -1.386294   -Inf    Inf  TRUE
+## 149   all Item.25      dich      g    149  0.000000   -Inf    Inf FALSE
+## 150   all Item.25      dich      u    150  1.000000   -Inf    Inf FALSE
+## 151   all Item.26      dich     a1    151  0.000000   -Inf    Inf FALSE
+## 152   all Item.26      dich     a2    152  0.000000   -Inf    Inf FALSE
+## 153   all Item.26      dich     a3    153  0.000000   -Inf    Inf FALSE
+## 154   all Item.26      dich      d    154 -1.386294   -Inf    Inf  TRUE
+## 155   all Item.26      dich      g    155  0.000000   -Inf    Inf FALSE
+## 156   all Item.26      dich      u    156  1.000000   -Inf    Inf FALSE
+## 157   all Item.27      dich     a1    157  0.000000   -Inf    Inf FALSE
+## 158   all Item.27      dich     a2    158  0.000000   -Inf    Inf FALSE
+## 159   all Item.27      dich     a3    159  0.000000   -Inf    Inf FALSE
+## 160   all Item.27      dich      d    160 -1.386294   -Inf    Inf  TRUE
+## 161   all Item.27      dich      g    161  0.000000   -Inf    Inf FALSE
+## 162   all Item.27      dich      u    162  1.000000   -Inf    Inf FALSE
+## 163   all Item.28      dich     a1    163  0.000000   -Inf    Inf FALSE
+## 164   all Item.28      dich     a2    164  0.000000   -Inf    Inf FALSE
+## 165   all Item.28      dich     a3    165  0.000000   -Inf    Inf FALSE
+## 166   all Item.28      dich      d    166 -1.386294   -Inf    Inf  TRUE
+## 167   all Item.28      dich      g    167  0.000000   -Inf    Inf FALSE
+## 168   all Item.28      dich      u    168  1.000000   -Inf    Inf FALSE
+## 169   all Item.29      dich     a1    169  0.000000   -Inf    Inf FALSE
+## 170   all Item.29      dich     a2    170  0.000000   -Inf    Inf FALSE
+## 171   all Item.29      dich     a3    171  0.000000   -Inf    Inf FALSE
+## 172   all Item.29      dich      d    172 -1.386294   -Inf    Inf  TRUE
+## 173   all Item.29      dich      g    173  0.000000   -Inf    Inf FALSE
+## 174   all Item.29      dich      u    174  1.000000   -Inf    Inf FALSE
+## 175   all Item.30      dich     a1    175  0.000000   -Inf    Inf FALSE
+## 176   all Item.30      dich     a2    176  0.000000   -Inf    Inf FALSE
+## 177   all Item.30      dich     a3    177  0.000000   -Inf    Inf FALSE
+## 178   all Item.30      dich      d    178 -1.386294   -Inf    Inf  TRUE
+## 179   all Item.30      dich      g    179  0.000000   -Inf    Inf FALSE
+## 180   all Item.30      dich      u    180  1.000000   -Inf    Inf FALSE
+## 181   all Item.31      dich     a1    181  0.000000   -Inf    Inf FALSE
+## 182   all Item.31      dich     a2    182  0.000000   -Inf    Inf FALSE
+## 183   all Item.31      dich     a3    183  0.000000   -Inf    Inf FALSE
+## 184   all Item.31      dich      d    184 -1.386294   -Inf    Inf  TRUE
+## 185   all Item.31      dich      g    185  0.000000   -Inf    Inf FALSE
+## 186   all Item.31      dich      u    186  1.000000   -Inf    Inf FALSE
+## 187   all Item.32      dich     a1    187  0.000000   -Inf    Inf FALSE
+## 188   all Item.32      dich     a2    188  0.000000   -Inf    Inf FALSE
+## 189   all Item.32      dich     a3    189  0.000000   -Inf    Inf FALSE
+## 190   all Item.32      dich      d    190 -1.386294   -Inf    Inf  TRUE
+## 191   all Item.32      dich      g    191  0.000000   -Inf    Inf FALSE
+## 192   all Item.32      dich      u    192  1.000000   -Inf    Inf FALSE
+## 193   all   GROUP GroupPars MEAN_1    193  0.000000   -Inf    Inf FALSE
+## 194   all   GROUP GroupPars MEAN_2    194  0.000000   -Inf    Inf FALSE
+## 195   all   GROUP GroupPars COV_11    195  1.000000  1e-04    Inf FALSE
+## 196   all   GROUP GroupPars COV_21    196  0.000000   -Inf    Inf FALSE
+## 197   all   GROUP GroupPars COV_22    197  1.000000  1e-04    Inf FALSE
+##     prior.type prior_1 prior_2
+## 1         none     NaN     NaN
+## 2         none     NaN     NaN
+## 3         none     NaN     NaN
+## 4         none     NaN     NaN
+## 5         none     NaN     NaN
+## 6         none     NaN     NaN
+## 7         none     NaN     NaN
+## 8         none     NaN     NaN
+## 9         none     NaN     NaN
+## 10        none     NaN     NaN
+## 11        none     NaN     NaN
+## 12        none     NaN     NaN
+## 13        none     NaN     NaN
+## 14        none     NaN     NaN
+## 15        none     NaN     NaN
+## 16        none     NaN     NaN
+## 17        none     NaN     NaN
+## 18        none     NaN     NaN
+## 19        none     NaN     NaN
+## 20        none     NaN     NaN
+## 21        none     NaN     NaN
+## 22        none     NaN     NaN
+## 23        none     NaN     NaN
+## 24        none     NaN     NaN
+## 25        none     NaN     NaN
+## 26        none     NaN     NaN
+## 27        none     NaN     NaN
+## 28        none     NaN     NaN
+## 29        none     NaN     NaN
+## 30        none     NaN     NaN
+## 31        none     NaN     NaN
+## 32        none     NaN     NaN
+## 33        none     NaN     NaN
+## 34        none     NaN     NaN
+## 35        none     NaN     NaN
+## 36        none     NaN     NaN
+## 37        none     NaN     NaN
+## 38        none     NaN     NaN
+## 39        none     NaN     NaN
+## 40        none     NaN     NaN
+## 41        none     NaN     NaN
+## 42        none     NaN     NaN
+## 43        none     NaN     NaN
+## 44        none     NaN     NaN
+## 45        none     NaN     NaN
+## 46        none     NaN     NaN
+## 47        none     NaN     NaN
+## 48        none     NaN     NaN
+## 49        none     NaN     NaN
+## 50        none     NaN     NaN
+## 51        none     NaN     NaN
+## 52        none     NaN     NaN
+## 53        none     NaN     NaN
+## 54        none     NaN     NaN
+## 55        none     NaN     NaN
+## 56        none     NaN     NaN
+## 57        none     NaN     NaN
+## 58        none     NaN     NaN
+## 59        none     NaN     NaN
+## 60        none     NaN     NaN
+## 61        none     NaN     NaN
+## 62        none     NaN     NaN
+## 63        none     NaN     NaN
+## 64        none     NaN     NaN
+## 65        none     NaN     NaN
+## 66        none     NaN     NaN
+## 67        none     NaN     NaN
+## 68        none     NaN     NaN
+## 69        none     NaN     NaN
+## 70        none     NaN     NaN
+## 71        none     NaN     NaN
+## 72        none     NaN     NaN
+## 73        none     NaN     NaN
+## 74        none     NaN     NaN
+## 75        none     NaN     NaN
+## 76        none     NaN     NaN
+## 77        none     NaN     NaN
+## 78        none     NaN     NaN
+## 79        none     NaN     NaN
+## 80        none     NaN     NaN
+## 81        none     NaN     NaN
+## 82        none     NaN     NaN
+## 83        none     NaN     NaN
+## 84        none     NaN     NaN
+## 85        none     NaN     NaN
+## 86        none     NaN     NaN
+## 87        none     NaN     NaN
+## 88        none     NaN     NaN
+## 89        none     NaN     NaN
+## 90        none     NaN     NaN
+## 91        none     NaN     NaN
+## 92        none     NaN     NaN
+## 93        none     NaN     NaN
+## 94        none     NaN     NaN
+## 95        none     NaN     NaN
+## 96        none     NaN     NaN
+## 97        none     NaN     NaN
+## 98        none     NaN     NaN
+## 99        none     NaN     NaN
+## 100       none     NaN     NaN
+## 101       none     NaN     NaN
+## 102       none     NaN     NaN
+## 103       none     NaN     NaN
+## 104       none     NaN     NaN
+## 105       none     NaN     NaN
+## 106       none     NaN     NaN
+## 107       none     NaN     NaN
+## 108       none     NaN     NaN
+## 109       none     NaN     NaN
+## 110       none     NaN     NaN
+## 111       none     NaN     NaN
+## 112       none     NaN     NaN
+## 113       none     NaN     NaN
+## 114       none     NaN     NaN
+## 115       none     NaN     NaN
+## 116       none     NaN     NaN
+## 117       none     NaN     NaN
+## 118       none     NaN     NaN
+## 119       none     NaN     NaN
+## 120       none     NaN     NaN
+## 121       none     NaN     NaN
+## 122       none     NaN     NaN
+## 123       none     NaN     NaN
+## 124       none     NaN     NaN
+## 125       none     NaN     NaN
+## 126       none     NaN     NaN
+## 127       none     NaN     NaN
+## 128       none     NaN     NaN
+## 129       none     NaN     NaN
+## 130       none     NaN     NaN
+## 131       none     NaN     NaN
+## 132       none     NaN     NaN
+## 133       none     NaN     NaN
+## 134       none     NaN     NaN
+## 135       none     NaN     NaN
+## 136       none     NaN     NaN
+## 137       none     NaN     NaN
+## 138       none     NaN     NaN
+## 139       none     NaN     NaN
+## 140       none     NaN     NaN
+## 141       none     NaN     NaN
+## 142       none     NaN     NaN
+## 143       none     NaN     NaN
+## 144       none     NaN     NaN
+## 145       none     NaN     NaN
+## 146       none     NaN     NaN
+## 147       none     NaN     NaN
+## 148       none     NaN     NaN
+## 149       none     NaN     NaN
+## 150       none     NaN     NaN
+## 151       none     NaN     NaN
+## 152       none     NaN     NaN
+## 153       none     NaN     NaN
+## 154       none     NaN     NaN
+## 155       none     NaN     NaN
+## 156       none     NaN     NaN
+## 157       none     NaN     NaN
+## 158       none     NaN     NaN
+## 159       none     NaN     NaN
+## 160       none     NaN     NaN
+## 161       none     NaN     NaN
+## 162       none     NaN     NaN
+## 163       none     NaN     NaN
+## 164       none     NaN     NaN
+## 165       none     NaN     NaN
+## 166       none     NaN     NaN
+## 167       none     NaN     NaN
+## 168       none     NaN     NaN
+## 169       none     NaN     NaN
+## 170       none     NaN     NaN
+## 171       none     NaN     NaN
+## 172       none     NaN     NaN
+## 173       none     NaN     NaN
+## 174       none     NaN     NaN
+## 175       none     NaN     NaN
+## 176       none     NaN     NaN
+## 177       none     NaN     NaN
+## 178       none     NaN     NaN
+## 179       none     NaN     NaN
+## 180       none     NaN     NaN
+## 181       none     NaN     NaN
+## 182       none     NaN     NaN
+## 183       none     NaN     NaN
+## 184       none     NaN     NaN
+## 185       none     NaN     NaN
+## 186       none     NaN     NaN
+## 187       none     NaN     NaN
+## 188       none     NaN     NaN
+## 189       none     NaN     NaN
+## 190       none     NaN     NaN
+## 191       none     NaN     NaN
+## 192       none     NaN     NaN
+## 193       none     NaN     NaN
+## 194       none     NaN     NaN
+## 195       none     NaN     NaN
+## 196       none     NaN     NaN
+## 197       none     NaN     NaN
 </code></pre>
 
 <pre><code class="r">lca_prior &lt;- function(Theta,Etable){
@@ -512,19 +722,27 @@ return(prior)
 mod14b &lt;- mirt(dat, mirtmodel , technical = list(
 customTheta=Theta , customPriorFun = lca_prior) ,
 pars = mod.pars , verbose=FALSE )
+</code></pre>
 
-# estimated parameters from the user customized prior distribution.
+<pre><code>## EM cycles terminated after 500 iterations.
+</code></pre>
+
+<pre><code class="r"># estimated parameters from the user customized prior distribution.
 mod14b@nest &lt;- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
 coef14b &lt;- mirt.wrapper.coef(mod14b)$coef
+</code></pre>
 
-#-* comparisons of estimated parameters
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;mirt.wrapper.coef&quot;
+</code></pre>
+
+<pre><code class="r">#-* comparisons of estimated parameters
 # extract guessing and slipping parameters from din
 dfr &lt;- coef(mod14a)[ , c(&quot;guess&quot;,&quot;slip&quot;) ]
 </code></pre>
 
-<pre><code>## Error in coef(mod14a)[, c(&quot;guess&quot;, &quot;slip&quot;)]: incorrect number of dimensions
+<pre><code>## Error: $ operator is invalid for atomic vectors
 </code></pre>
 
 <pre><code class="r">colnames(dfr) &lt;- paste0(&quot;din.&quot;,c(&quot;guess&quot;,&quot;slip&quot;) )
@@ -537,13 +755,13 @@ dfr &lt;- coef(mod14a)[ , c(&quot;guess&quot;,&quot;slip&quot;) ]
 dfr$mirt.guess &lt;- plogis( coef14b$d )
 </code></pre>
 
-<pre><code>## Error in dfr$mirt.guess &lt;- plogis(coef14b$d): object &#39;dfr&#39; not found
+<pre><code>## Error in plogis(coef14b$d): object &#39;coef14b&#39; not found
 </code></pre>
 
 <pre><code class="r">dfr$mirt.slip &lt;- 1 - plogis( rowSums(coef14b[,c(&quot;d&quot;,&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;)]) )
 </code></pre>
 
-<pre><code>## Error in dfr$mirt.slip &lt;- 1 - plogis(rowSums(coef14b[, c(&quot;d&quot;, &quot;a1&quot;, &quot;a2&quot;, : object &#39;dfr&#39; not found
+<pre><code>## Error in is.data.frame(x): object &#39;coef14b&#39; not found
 </code></pre>
 
 <pre><code class="r"># comparison
@@ -555,16 +773,16 @@ round(dfr[, c(1,3,2,4)],3)
 
 <pre><code class="r">dfr &lt;- data.frame( &quot;Theta&quot; = Theta , &quot;din&quot;=mod14a$attribute.patt$class.prob ,
 &quot;mirt&quot; = mod14b@Prior[[1]])
+</code></pre>
 
-# comparison
+<pre><code>## Error in mod14a$attribute.patt: $ operator is invalid for atomic vectors
+</code></pre>
+
+<pre><code class="r"># comparison
 round(dfr,3)
 </code></pre>
 
-<pre><code>##   Theta.1 Theta.2   din  mirt
-## 1       0       0 0.357 0.370
-## 2       1       0 0.044 0.049
-## 3       0       1 0.047 0.030
-## 4       1       1 0.553 0.551
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;dfr&#39; not found
 </code></pre>
 
 <pre><code class="r">sessionInfo()
@@ -586,38 +804,37 @@ round(dfr,3)
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] sirt_1.2        ltm_1.0-0       polycor_0.7-8   sfsmisc_1.0-26 
-##  [5] mvtnorm_1.0-1   msm_1.4         MASS_7.3-35     mirt_1.7       
-##  [9] lattice_0.20-29 knitr_1.8      
+##  [1] TAM_1.4-1       CDM_4.1         ltm_1.0-0       polycor_0.7-8  
+##  [5] sfsmisc_1.0-27  mvtnorm_1.0-2   msm_1.5         MASS_7.3-37    
+##  [9] mirt_1.8        lattice_0.20-29 knitr_1.9      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
-##  [4] car_2.0-22            CDM_4.0               cluster_1.15.3       
-##  [7] coda_0.16-1           colorspace_1.2-4      combinat_0.0-8       
-## [10] corpcor_1.6.7         d3Network_0.5.1       digest_0.6.6         
-## [13] ellipse_0.3-8         evaluate_0.5.5        expm_0.99-1.1        
-## [16] fdrtool_1.2.13        foreign_0.8-61        formatR_1.0          
-## [19] Formula_1.1-2         ggm_2.2               ggplot2_1.0.0        
-## [22] glasso_1.8            GPArotation_2014.11-1 grid_3.1.2           
-## [25] gtable_0.1.2          gtools_3.4.1          Hmisc_3.14-6         
-## [28] huge_1.2.6            ic.infer_1.1-5        igraph_0.7.1         
-## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-19       
-## [34] latticeExtra_0.6-26   lavaan_0.5-17         lisrelToR_0.1.4      
-## [37] lme4_1.1-7            lpSolve_5.6.7         markdown_0.7.4       
-## [40] Matrix_1.1-4          matrixcalc_1.0-3      mime_0.2             
-## [43] minqa_1.2.4           mnormt_1.5-1          munsell_0.4.2        
-## [46] nlme_3.1-118          nloptr_1.0.4          nnet_7.3-8           
-## [49] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
-## [52] plyr_1.8.1            png_0.1-7             proto_0.3-10         
-## [55] psych_1.4.8.11        qgraph_1.3            quadprog_1.5-5       
-## [58] RColorBrewer_1.1-2    Rcpp_0.11.3           RCurl_1.95-4.5       
-## [61] reshape2_1.4.1        rjson_0.2.15          rockchalk_1.8.86     
-## [64] rpart_4.1-8           rtiff_1.4.4           scales_0.2.4         
-## [67] sem_3.1-5             semPlot_1.0.1         sendplot_4.0.0       
-## [70] sm_2.2-5.4            sna_2.3-2             splines_3.1.2        
-## [73] stringr_0.6.2         survival_2.37-7       TAM_1.2              
-## [76] tensor_1.5            tools_3.1.2           whisker_0.3-2        
-## [79] XML_3.98-1.1
+##  [4] car_2.0-22            cluster_1.15.3        coda_0.16-1          
+##  [7] colorspace_1.2-4      combinat_0.0-8        corpcor_1.6.7        
+## [10] d3Network_0.5.1       digest_0.6.8          ellipse_0.3-8        
+## [13] evaluate_0.5.5        expm_0.99-1.1         fdrtool_1.2.13       
+## [16] foreign_0.8-62        formatR_1.0           Formula_1.2-0        
+## [19] ggm_2.3               ggplot2_1.0.0         glasso_1.8           
+## [22] GPArotation_2014.11-1 grid_3.1.2            gtable_0.1.2         
+## [25] gtools_3.4.1          Hmisc_3.14-6          huge_1.2.6           
+## [28] ic.infer_1.1-5        igraph_0.7.1          jpeg_0.1-8           
+## [31] kappalab_0.4-6        kernlab_0.9-20        latticeExtra_0.6-26  
+## [34] lavaan_0.5-17         lisrelToR_0.1.4       lme4_1.1-7           
+## [37] lpSolve_5.6.10        markdown_0.7.4        Matrix_1.1-4         
+## [40] matrixcalc_1.0-3      mime_0.2              minqa_1.2.4          
+## [43] mnormt_1.5-1          munsell_0.4.2         nlme_3.1-119         
+## [46] nloptr_1.0.4          nnet_7.3-8            parallel_3.1.2       
+## [49] pbivnorm_0.5-1        pixmap_0.4-11         plyr_1.8.1           
+## [52] png_0.1-7             proto_0.3-10          psych_1.5.1          
+## [55] qgraph_1.3            quadprog_1.5-5        RColorBrewer_1.1-2   
+## [58] Rcpp_0.11.3           RCurl_1.95-4.5        reshape2_1.4.1       
+## [61] rjson_0.2.15          rockchalk_1.8.86      rpart_4.1-8          
+## [64] rtiff_1.4.4           scales_0.2.4          sem_3.1-5            
+## [67] sendplot_4.0.0        sm_2.2-5.4            sna_2.3-2            
+## [70] splines_3.1.2         stringr_0.6.2         survival_2.37-7      
+## [73] tensor_1.5            tools_3.1.2           whisker_0.3-2        
+## [76] WrightMap_1.1
 </code></pre>
 
 </body>

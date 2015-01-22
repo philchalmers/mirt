@@ -234,7 +234,7 @@ group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
 # define a parallel cluster (optional) to help speed up internal functions
 mirtCluster()
 
-#  Information matrix with crossprod
+#  Information matrix with crossprod (not controlling for latent group differences)
 model &lt;- multipleGroup(dat, 1, group, SE = TRUE)
 
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF

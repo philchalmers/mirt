@@ -207,10 +207,20 @@ hr {
 
 <pre><code class="r">library(mirt)
 library(sirt)
-library(mvtnorm)
+</code></pre>
+
+<pre><code>## Error: package or namespace load failed for &#39;sirt&#39;
+</code></pre>
+
+<pre><code class="r">library(mvtnorm)
 
 data( data.read )
-dat &lt;- data.read
+</code></pre>
+
+<pre><code>## Warning in data(data.read): data set &#39;data.read&#39; not found
+</code></pre>
+
+<pre><code class="r">dat &lt;- data.read
 
 Q &lt;- matrix( 0 , nrow=12,ncol=3)
 Q[1:4,1] &lt;- 1
@@ -238,14 +248,14 @@ mod13a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;, progress = FALS
 summary(mod13a)
 </code></pre>
 
-<pre><code>## CDM 4.0 (Built 2014-11-21)
+<pre><code>## CDM 4.1 (Built 2014-12-17)
 </code></pre>
 
 <pre><code>## Call:
-##  DINA MODEL on 12 items for 3 attributes 
-## Date of Analysis: 2014-12-14 13:04:34 
-## Time difference of 0.03211546 secs
-## Computation Time: 0.03211546 
+##  
+## Date of Analysis: 2015-01-22 13:31:07 
+## Time difference of 0.03675365 secs
+## Computation Time: 0.03675365 
 ## 
 ## 
 ## Deviance =  3847.473  |   Log-Likelihood = -1923.737 
@@ -312,11 +322,11 @@ summary(mod13b)
 </code></pre>
 
 <pre><code>## -----------------------------------------------------------------------------
-## CDM 4.0 (2014-11-21) 
+## CDM 4.1 (2014-12-17) 
 ## 
-## Date of Analysis: 2014-12-14 13:04:40 
-## Time difference of 5.79695 secs
-## Computation Time: 5.79695 
+## Date of Analysis: 2015-01-22 13:31:13 
+## Time difference of 5.819641 secs
+## Computation Time: 5.819641 
 ## 
 ## General Diagnostic Model 
 ## 
@@ -591,8 +601,12 @@ mod13c@nest &lt;- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
 coef13c &lt;- mirt.wrapper.coef(mod13c)$coef
+</code></pre>
 
-#* inspect estimated distribution
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;mirt.wrapper.coef&quot;
+</code></pre>
+
+<pre><code class="r">#* inspect estimated distribution
 mod13c@Theta
 </code></pre>
 
@@ -623,37 +637,36 @@ dfr &lt;- coef(mod13a)[ , c(&quot;guess&quot;,&quot;slip&quot;) ]
 </code></pre>
 
 <pre><code class="r">colnames(dfr) &lt;- paste0(&quot;din.&quot;,c(&quot;guess&quot;,&quot;slip&quot;) )
+</code></pre>
 
-# estimated parameters from gdm
+<pre><code>## Error in `colnames&lt;-`(`*tmp*`, value = c(&quot;din.guess&quot;, &quot;din.slip&quot;)): length of &#39;dimnames&#39; [2] not equal to array extent
+</code></pre>
+
+<pre><code class="r"># estimated parameters from gdm
 dfr$gdm.guess &lt;- plogis(mod13b$item$b)
 </code></pre>
 
-<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;gdm.guess&quot;, value = c(0.684279863480952, : replacement has 12 rows, data has 27
+<pre><code>## Warning in dfr$gdm.guess &lt;- plogis(mod13b$item$b): Coercing LHS to a list
 </code></pre>
 
 <pre><code class="r">dfr$gdm.slip &lt;- 1 - plogis( rowSums(mod13b$item[,c(&quot;b.Cat1&quot;,&quot;a.F1&quot;,&quot;a.F2&quot;,&quot;a.F3&quot;)]))# estimated parameters from mirt
+dfr$mirt.guess &lt;- plogis( coef13c$d )
 </code></pre>
 
-<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;gdm.slip&quot;, value = structure(c(4.44089209850063e-16, : replacement has 12 rows, data has 27
-</code></pre>
-
-<pre><code class="r">dfr$mirt.guess &lt;- plogis( coef13c$d )
-</code></pre>
-
-<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;mirt.guess&quot;, value = c(0.684512002525522, : replacement has 12 rows, data has 27
+<pre><code>## Error in plogis(coef13c$d): object &#39;coef13c&#39; not found
 </code></pre>
 
 <pre><code class="r">dfr$mirt.slip &lt;- 1 - plogis( rowSums(coef13c[,c(&quot;d&quot;,&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;)]) )
 </code></pre>
 
-<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;mirt.slip&quot;, value = c(2.6341471875746e-05, : replacement has 12 rows, data has 27
+<pre><code>## Error in is.data.frame(x): object &#39;coef13c&#39; not found
 </code></pre>
 
 <pre><code class="r"># comparison
 round(dfr[, c(1,3,5,2,4,6)],3)
 </code></pre>
 
-<pre><code>## Error in `[.data.frame`(dfr, , c(1, 3, 5, 2, 4, 6)): undefined columns selected
+<pre><code>## Error in dfr[, c(1, 3, 5, 2, 4, 6)]: incorrect number of dimensions
 </code></pre>
 
 <pre><code class="r"># estimated class sizes
@@ -693,40 +706,40 @@ round(dfr,3)
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] MultiLCIRT_2.7   limSolve_1.5.5.1 CDM_4.0          sirt_1.2        
-##  [5] ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-26   mvtnorm_1.0-1   
-##  [9] msm_1.4          MASS_7.3-35      mirt_1.7         lattice_0.20-29 
-## [13] knitr_1.8       
+##  [1] MultiLCIRT_2.7   limSolve_1.5.5.1 TAM_1.4-1        CDM_4.1         
+##  [5] ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-27   mvtnorm_1.0-2   
+##  [9] msm_1.5          MASS_7.3-37      mirt_1.8         lattice_0.20-29 
+## [13] knitr_1.9       
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
 ##  [4] car_2.0-22            cluster_1.15.3        coda_0.16-1          
 ##  [7] colorspace_1.2-4      combinat_0.0-8        corpcor_1.6.7        
-## [10] d3Network_0.5.1       digest_0.6.6          ellipse_0.3-8        
+## [10] d3Network_0.5.1       digest_0.6.8          ellipse_0.3-8        
 ## [13] evaluate_0.5.5        expm_0.99-1.1         fdrtool_1.2.13       
-## [16] flexmix_2.3-12        foreign_0.8-61        formatR_1.0          
-## [19] Formula_1.1-2         ggm_2.2               ggplot2_1.0.0        
+## [16] flexmix_2.3-13        foreign_0.8-62        formatR_1.0          
+## [19] Formula_1.2-0         ggm_2.3               ggplot2_1.0.0        
 ## [22] glasso_1.8            GPArotation_2014.11-1 grid_3.1.2           
 ## [25] gtable_0.1.2          gtools_3.4.1          Hmisc_3.14-6         
 ## [28] huge_1.2.6            ic.infer_1.1-5        igraph_0.7.1         
-## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-19       
+## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-20       
 ## [34] latticeExtra_0.6-26   lavaan_0.5-17         lisrelToR_0.1.4      
-## [37] lme4_1.1-7            lpSolve_5.6.7         markdown_0.7.4       
+## [37] lme4_1.1-7            lpSolve_5.6.10        markdown_0.7.4       
 ## [40] Matrix_1.1-4          matrixcalc_1.0-3      mime_0.2             
 ## [43] minqa_1.2.4           mnormt_1.5-1          modeltools_0.2-21    
-## [46] mRm_1.1.5             munsell_0.4.2         nlme_3.1-118         
+## [46] mRm_1.1.5             munsell_0.4.2         nlme_3.1-119         
 ## [49] nloptr_1.0.4          nnet_7.3-8            numDeriv_2012.9-1    
 ## [52] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
 ## [55] plyr_1.8.1            png_0.1-7             proto_0.3-10         
-## [58] psych_1.4.8.11        psychomix_1.1-1       psychotools_0.3-0    
+## [58] psych_1.5.1           psychomix_1.1-1       psychotools_0.4-0    
 ## [61] qgraph_1.3            quadprog_1.5-5        RColorBrewer_1.1-2   
 ## [64] Rcpp_0.11.3           RCurl_1.95-4.5        reshape2_1.4.1       
 ## [67] rjson_0.2.15          rockchalk_1.8.86      rpart_4.1-8          
 ## [70] rtiff_1.4.4           scales_0.2.4          sem_3.1-5            
-## [73] semPlot_1.0.1         sendplot_4.0.0        sm_2.2-5.4           
-## [76] sna_2.3-2             splines_3.1.2         stringr_0.6.2        
-## [79] survival_2.37-7       TAM_1.2               tensor_1.5           
-## [82] tools_3.1.2           whisker_0.3-2         XML_3.98-1.1
+## [73] sendplot_4.0.0        sm_2.2-5.4            sna_2.3-2            
+## [76] splines_3.1.2         stringr_0.6.2         survival_2.37-7      
+## [79] tensor_1.5            tools_3.1.2           whisker_0.3-2        
+## [82] WrightMap_1.1
 </code></pre>
 
 </body>

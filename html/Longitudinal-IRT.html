@@ -318,60 +318,60 @@ for(i in 1:20){
 ##     constrain = constraints, TOL = 0.001)
 ## 
 ## Full-information item factor analysis with 23 factor(s).
-## Converged within 0.001 tolerance after 50 EM iterations.
-## mirt version: 1.7 
+## Converged within 0.001 tolerance after 55 EM iterations.
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 9
 ## 
-## Log-likelihood = -46876.22
-## AIC = 93926.44; AICc = 93943.22
-## BIC = 94353.41; SABIC = 94077.09
+## Log-likelihood = -46878.27
+## AIC = 93930.54; AICc = 93947.33
+## BIC = 94357.52; SABIC = 94081.2
 </code></pre>
 
 <pre><code class="r">coef(mod)[[1]]
 </code></pre>
 
-<pre><code>##       a1 a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par 0.95  0  0 0.045  0  0  0  0  0   0   0   0   0   0   0   0   0   0
+<pre><code>##        a1 a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
+## par 0.953  0  0 0.038  0  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23    d1     d2
-## par   0   0   0   0   0 0.209 -0.366
+## par   0   0   0   0   0 0.208 -0.367
 </code></pre>
 
 <pre><code class="r">coef(mod)[[21]]
 </code></pre>
 
-<pre><code>##     a1   a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par  0 0.95  0 0.045  0  0  0  0  0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1    a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
+## par  0 0.953  0 0.038  0  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23    d1     d2
-## par   0   0   0   0   0 0.209 -0.366
+## par   0   0   0   0   0 0.208 -0.367
 </code></pre>
 
 <pre><code class="r">coef(mod)[[41]]
 </code></pre>
 
-<pre><code>##     a1 a2   a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par  0  0 0.95 0.045  0  0  0  0  0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1 a2    a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
+## par  0  0 0.953 0.038  0  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23    d1     d2
-## par   0   0   0   0   0 0.209 -0.366
+## par   0   0   0   0   0 0.208 -0.367
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
 <pre><code>##        a1 a2 a3 a4    a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par 0.782  0  0  0 0.319  0  0  0  0   0   0   0   0   0   0   0   0   0
+## par 0.784  0  0  0 0.319  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23    d1     d2
-## par   0   0   0   0   0 -0.41 -0.691
+## par   0   0   0   0   0 -0.41 -0.692
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
 <pre><code>##        a1 a2 a3 a4    a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par 0.782  0  0  0 0.319  0  0  0  0   0   0   0   0   0   0   0   0   0
+## par 0.784  0  0  0 0.319  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23    d1     d2
-## par   0   0   0   0   0 -0.41 -0.691
+## par   0   0   0   0   0 -0.41 -0.692
 </code></pre>
 
 <pre><code class="r">coef(mod)$GroupPars[,c(&#39;MEAN_2&#39;, &#39;MEAN_3&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_31&#39;, &#39;COV_22&#39;, 
@@ -379,7 +379,7 @@ for(i in 1:20){
 </code></pre>
 
 <pre><code>## MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33 
-##  0.480  0.997  1.000  1.037  1.002  1.360  1.039  1.003
+##  0.488  0.997  1.000  1.041  1.002  1.372  1.044  1.003
 </code></pre>
 
 <p>When computing latent trait scores it&#39;s best to use a method that isn&#39;t as affected by higher dimensionality, such as the MAP approach. </p>
@@ -423,45 +423,45 @@ coef(mod)[[1]]
 </code></pre>
 
 <pre><code>##     a1 a2    a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  0 0.282  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## par  1  0 0.291  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 0.638 0.037
+## par   0   0   0 1.104 0.502
 </code></pre>
 
 <pre><code class="r">coef(mod)[[21]]
 </code></pre>
 
 <pre><code>##     a1 a2    a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  1 0.282  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## par  1  1 0.291  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 0.638 0.037
+## par   0   0   0 1.104 0.502
 </code></pre>
 
 <pre><code class="r">coef(mod)[[41]]
 </code></pre>
 
 <pre><code>##     a1 a2    a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  2 0.282  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## par  1  2 0.291  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 0.638 0.037
+## par   0   0   0 1.104 0.502
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
 <pre><code>##     a1 a2 a3   a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  0  0 0.65  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## par  1  0  0 0.66  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 -0.15 -0.46
+## par   0   0   0 0.314 0.003
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
 <pre><code>##     a1 a2 a3   a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  0  0 0.65  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+## par  1  0  0 0.66  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 -0.15 -0.46
+## par   0   0   0 0.314 0.003
 </code></pre>
 
 <pre><code class="r">coef(mod)$GroupPars[,c(&#39;MEAN_1&#39;, &#39;MEAN_2&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_22&#39;)]

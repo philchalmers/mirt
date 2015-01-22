@@ -218,7 +218,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 250 EM iterations.
-## mirt version: 1.7 
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 2
@@ -238,15 +238,15 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.7 
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 3
 ## 
-## Log-likelihood = -2465.248
-## AIC = 4964.496; AICc = 4965.12
-## BIC = 5047.928; SABIC = 4993.935
-## G2 (14) = 18.42, p = 0.1883, RMSEA = 0.018
+## Log-likelihood = -2465.246
+## AIC = 4964.491; AICc = 4965.114
+## BIC = 5047.923; SABIC = 4993.93
+## G2 (14) = 18.41, p = 0.1886, RMSEA = 0.018
 </code></pre>
 
 <pre><code class="r">summary(mod2)
@@ -338,7 +338,7 @@ dat &lt;- expand.table(LSAT6)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
 ## 1 4956.815 4957.082 4975.864 5010.800 -2467.408   NaN NaN    NaN
-## 2 4964.496 4965.120 4993.935 5047.928 -2465.248 4.319   6 0.6336
+## 2 4964.491 4965.114 4993.930 5047.923 -2465.246 4.324   6 0.6329
 </code></pre>
 
 <pre><code class="r">M2(mod2)
@@ -487,8 +487,8 @@ mirtCluster()
 </code></pre>
 
 <pre><code>## Model log-likelihoods:
-##  [1] -2467.408 -2467.408 -2467.407 -2467.408 -2467.407 -2467.408 -2467.407
-##  [8] -2467.408 -2467.408 -2467.408
+##  [1] -2467.407 -2467.407 -2467.408 -2467.408 -2467.408 -2467.408 -2467.407
+##  [8] -2467.408 -2467.407 -2467.407
 </code></pre>
 
 <pre><code class="r">#--------------------------
@@ -513,7 +513,7 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 341 EM iterations.
-## mirt version: 1.7 
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 3
@@ -591,13 +591,13 @@ dat &lt;- key2binary(SAT12,
 ## mdirt(data = dat, model = 3, technical = list(customTheta = Theta))
 ## 
 ## Latent class model with 3 classes.
-## Converged within 1e-04 tolerance after 413 EM iterations.
-## mirt version: 1.7 
+## Converged within 1e-04 tolerance after 397 EM iterations.
+## mirt version: 1.8 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 8
 ## 
-## Log-likelihood = -9422.169
+## Log-likelihood = -9422.17
 ## AIC = 19050.34; AICc = 19093.53
 ## BIC = 19503.22; SABIC = 19176.23
 </code></pre>
@@ -698,7 +698,7 @@ dat &lt;- key2binary(SAT12,
 ## Class_1      0.500      0.500
 ## Class_2      0.330      0.670
 ## Class_3      0.297      0.703
-## Class_4      0.203      0.797
+## Class_4      0.204      0.796
 ## Class_5      0.172      0.828
 ## Class_6      0.112      0.888
 ## Class_7      0.097      0.903
@@ -861,7 +861,7 @@ dat &lt;- key2binary(SAT12,
 ## $Item.24
 ##         category_1 category_2
 ## Class_1      0.500      0.500
-## Class_2      0.742      0.258
+## Class_2      0.743      0.257
 ## Class_3      0.304      0.696
 ## Class_4      0.098      0.902
 ## Class_5      0.557      0.443
