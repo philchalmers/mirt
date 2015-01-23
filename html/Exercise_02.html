@@ -272,7 +272,27 @@ psych::describe(data)
 </code></pre>
 
 <pre><code class="r">mod &lt;- mirt(data, 1)
-mod
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -50135.808, Max-Change: 0.53189
+Iteration: 2, Log-Lik: -50052.720, Max-Change: 0.35452
+Iteration: 3, Log-Lik: -50035.102, Max-Change: 0.09336
+Iteration: 4, Log-Lik: -50032.808, Max-Change: 0.04725
+Iteration: 5, Log-Lik: -50032.264, Max-Change: 0.01031
+Iteration: 6, Log-Lik: -50032.160, Max-Change: 0.00581
+Iteration: 7, Log-Lik: -50032.126, Max-Change: 0.00348
+Iteration: 8, Log-Lik: -50032.106, Max-Change: 0.00260
+Iteration: 9, Log-Lik: -50032.097, Max-Change: 0.00150
+Iteration: 10, Log-Lik: -50032.089, Max-Change: 0.00227
+Iteration: 11, Log-Lik: -50032.087, Max-Change: 0.00010
+Iteration: 12, Log-Lik: -50032.087, Max-Change: 0.00049
+Iteration: 13, Log-Lik: -50032.086, Max-Change: 0.00010
+Iteration: 14, Log-Lik: -50032.086, Max-Change: 0.00042
+Iteration: 15, Log-Lik: -50032.086, Max-Change: 0.00007
+</code></pre>
+
+<pre><code class="r">mod
 </code></pre>
 
 <pre><code>## 
@@ -330,7 +350,187 @@ mod
 <h3>2) Test the dimensionality of the data by extracting 2 and 3 exploratory factors. Use <code>anova()</code> to perform a likelihood ratio tests and to compare information statistics, such as AIC and BIC. Note that for the 3-factor solution it may be beneficial to set <code>TOL = .001</code> to drop the EM convergence criteria.</h3>
 
 <pre><code class="r">mod2 &lt;- mirt(data, 2)
-mod2
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -51624.565, Max-Change: 0.99889
+Iteration: 2, Log-Lik: -50098.167, Max-Change: 0.51871
+Iteration: 3, Log-Lik: -49883.688, Max-Change: 0.12674
+Iteration: 4, Log-Lik: -49866.185, Max-Change: 0.05192
+Iteration: 5, Log-Lik: -49860.949, Max-Change: 0.03784
+Iteration: 6, Log-Lik: -49858.701, Max-Change: 0.02261
+Iteration: 7, Log-Lik: -49856.771, Max-Change: 0.01548
+Iteration: 8, Log-Lik: -49856.062, Max-Change: 0.01023
+Iteration: 9, Log-Lik: -49855.734, Max-Change: 0.00995
+Iteration: 10, Log-Lik: -49854.675, Max-Change: 0.00863
+Iteration: 11, Log-Lik: -49854.425, Max-Change: 0.00895
+Iteration: 12, Log-Lik: -49854.179, Max-Change: 0.00909
+Iteration: 13, Log-Lik: -49852.809, Max-Change: 0.00748
+Iteration: 14, Log-Lik: -49852.555, Max-Change: 0.00807
+Iteration: 15, Log-Lik: -49852.356, Max-Change: 0.00773
+Iteration: 16, Log-Lik: -49851.230, Max-Change: 0.00761
+Iteration: 17, Log-Lik: -49851.059, Max-Change: 0.00733
+Iteration: 18, Log-Lik: -49850.895, Max-Change: 0.00705
+Iteration: 19, Log-Lik: -49850.271, Max-Change: 0.00490
+Iteration: 20, Log-Lik: -49850.112, Max-Change: 0.00545
+Iteration: 21, Log-Lik: -49849.989, Max-Change: 0.00586
+Iteration: 22, Log-Lik: -49849.197, Max-Change: 0.00688
+Iteration: 23, Log-Lik: -49849.075, Max-Change: 0.00637
+Iteration: 24, Log-Lik: -49848.962, Max-Change: 0.00564
+Iteration: 25, Log-Lik: -49848.388, Max-Change: 0.00510
+Iteration: 26, Log-Lik: -49848.248, Max-Change: 0.00543
+Iteration: 27, Log-Lik: -49848.160, Max-Change: 0.00476
+Iteration: 28, Log-Lik: -49847.772, Max-Change: 0.00499
+Iteration: 29, Log-Lik: -49847.671, Max-Change: 0.00517
+Iteration: 30, Log-Lik: -49847.596, Max-Change: 0.00426
+Iteration: 31, Log-Lik: -49847.276, Max-Change: 0.00400
+Iteration: 32, Log-Lik: -49847.189, Max-Change: 0.00332
+Iteration: 33, Log-Lik: -49847.135, Max-Change: 0.00469
+Iteration: 34, Log-Lik: -49846.874, Max-Change: 0.00351
+Iteration: 35, Log-Lik: -49846.816, Max-Change: 0.00348
+Iteration: 36, Log-Lik: -49846.765, Max-Change: 0.00361
+Iteration: 37, Log-Lik: -49846.493, Max-Change: 0.00329
+Iteration: 38, Log-Lik: -49846.432, Max-Change: 0.00285
+Iteration: 39, Log-Lik: -49846.396, Max-Change: 0.00385
+Iteration: 40, Log-Lik: -49846.201, Max-Change: 0.00222
+Iteration: 41, Log-Lik: -49846.166, Max-Change: 0.00282
+Iteration: 42, Log-Lik: -49846.131, Max-Change: 0.00254
+Iteration: 43, Log-Lik: -49845.964, Max-Change: 0.00289
+Iteration: 44, Log-Lik: -49845.920, Max-Change: 0.00243
+Iteration: 45, Log-Lik: -49845.896, Max-Change: 0.00321
+Iteration: 46, Log-Lik: -49845.762, Max-Change: 0.00209
+Iteration: 47, Log-Lik: -49845.736, Max-Change: 0.00159
+Iteration: 48, Log-Lik: -49845.716, Max-Change: 0.00172
+Iteration: 49, Log-Lik: -49845.607, Max-Change: 0.00279
+Iteration: 50, Log-Lik: -49845.588, Max-Change: 0.00214
+Iteration: 51, Log-Lik: -49845.572, Max-Change: 0.00269
+Iteration: 52, Log-Lik: -49845.482, Max-Change: 0.00175
+Iteration: 53, Log-Lik: -49845.463, Max-Change: 0.00132
+Iteration: 54, Log-Lik: -49845.450, Max-Change: 0.00133
+Iteration: 55, Log-Lik: -49845.379, Max-Change: 0.00231
+Iteration: 56, Log-Lik: -49845.367, Max-Change: 0.00176
+Iteration: 57, Log-Lik: -49845.357, Max-Change: 0.00171
+Iteration: 58, Log-Lik: -49845.298, Max-Change: 0.00135
+Iteration: 59, Log-Lik: -49845.289, Max-Change: 0.00134
+Iteration: 60, Log-Lik: -49845.281, Max-Change: 0.00136
+Iteration: 61, Log-Lik: -49845.234, Max-Change: 0.00135
+Iteration: 62, Log-Lik: -49845.227, Max-Change: 0.00131
+Iteration: 63, Log-Lik: -49845.221, Max-Change: 0.00128
+Iteration: 64, Log-Lik: -49845.183, Max-Change: 0.00111
+Iteration: 65, Log-Lik: -49845.178, Max-Change: 0.00111
+Iteration: 66, Log-Lik: -49845.173, Max-Change: 0.00110
+Iteration: 67, Log-Lik: -49845.144, Max-Change: 0.00102
+Iteration: 68, Log-Lik: -49845.139, Max-Change: 0.00100
+Iteration: 69, Log-Lik: -49845.135, Max-Change: 0.00099
+Iteration: 70, Log-Lik: -49845.112, Max-Change: 0.00089
+Iteration: 71, Log-Lik: -49845.109, Max-Change: 0.00088
+Iteration: 72, Log-Lik: -49845.106, Max-Change: 0.00087
+Iteration: 73, Log-Lik: -49845.088, Max-Change: 0.00079
+Iteration: 74, Log-Lik: -49845.085, Max-Change: 0.00078
+Iteration: 75, Log-Lik: -49845.083, Max-Change: 0.00077
+Iteration: 76, Log-Lik: -49845.068, Max-Change: 0.00070
+Iteration: 77, Log-Lik: -49845.066, Max-Change: 0.00069
+Iteration: 78, Log-Lik: -49845.064, Max-Change: 0.00068
+Iteration: 79, Log-Lik: -49845.053, Max-Change: 0.00062
+Iteration: 80, Log-Lik: -49845.052, Max-Change: 0.00061
+Iteration: 81, Log-Lik: -49845.050, Max-Change: 0.00060
+Iteration: 82, Log-Lik: -49845.041, Max-Change: 0.00045
+Iteration: 83, Log-Lik: -49845.040, Max-Change: 0.00055
+Iteration: 84, Log-Lik: -49845.039, Max-Change: 0.00028
+Iteration: 85, Log-Lik: -49845.039, Max-Change: 0.00022
+Iteration: 86, Log-Lik: -49845.039, Max-Change: 0.00045
+Iteration: 87, Log-Lik: -49845.038, Max-Change: 0.00081
+Iteration: 88, Log-Lik: -49845.038, Max-Change: 0.00056
+Iteration: 89, Log-Lik: -49845.036, Max-Change: 0.00045
+Iteration: 90, Log-Lik: -49845.035, Max-Change: 0.00023
+Iteration: 91, Log-Lik: -49845.035, Max-Change: 0.00018
+Iteration: 92, Log-Lik: -49845.034, Max-Change: 0.00043
+Iteration: 93, Log-Lik: -49845.034, Max-Change: 0.00067
+Iteration: 94, Log-Lik: -49845.033, Max-Change: 0.00052
+Iteration: 95, Log-Lik: -49845.031, Max-Change: 0.00043
+Iteration: 96, Log-Lik: -49845.031, Max-Change: 0.00022
+Iteration: 97, Log-Lik: -49845.031, Max-Change: 0.00017
+Iteration: 98, Log-Lik: -49845.030, Max-Change: 0.00041
+Iteration: 99, Log-Lik: -49845.030, Max-Change: 0.00064
+Iteration: 100, Log-Lik: -49845.029, Max-Change: 0.00050
+Iteration: 101, Log-Lik: -49845.028, Max-Change: 0.00040
+Iteration: 102, Log-Lik: -49845.027, Max-Change: 0.00020
+Iteration: 103, Log-Lik: -49845.027, Max-Change: 0.00016
+Iteration: 104, Log-Lik: -49845.027, Max-Change: 0.00038
+Iteration: 105, Log-Lik: -49845.026, Max-Change: 0.00060
+Iteration: 106, Log-Lik: -49845.026, Max-Change: 0.00038
+Iteration: 107, Log-Lik: -49845.025, Max-Change: 0.00057
+Iteration: 108, Log-Lik: -49845.025, Max-Change: 0.00029
+Iteration: 109, Log-Lik: -49845.025, Max-Change: 0.00022
+Iteration: 110, Log-Lik: -49845.024, Max-Change: 0.00037
+Iteration: 111, Log-Lik: -49845.024, Max-Change: 0.00017
+Iteration: 112, Log-Lik: -49845.024, Max-Change: 0.00067
+Iteration: 113, Log-Lik: -49845.023, Max-Change: 0.00034
+Iteration: 114, Log-Lik: -49845.023, Max-Change: 0.00050
+Iteration: 115, Log-Lik: -49845.023, Max-Change: 0.00041
+Iteration: 116, Log-Lik: -49845.022, Max-Change: 0.00060
+Iteration: 117, Log-Lik: -49845.022, Max-Change: 0.00030
+Iteration: 118, Log-Lik: -49845.021, Max-Change: 0.00024
+Iteration: 119, Log-Lik: -49845.021, Max-Change: 0.00035
+Iteration: 120, Log-Lik: -49845.021, Max-Change: 0.00018
+Iteration: 121, Log-Lik: -49845.020, Max-Change: 0.00014
+Iteration: 122, Log-Lik: -49845.020, Max-Change: 0.00034
+Iteration: 123, Log-Lik: -49845.020, Max-Change: 0.00053
+Iteration: 124, Log-Lik: -49845.020, Max-Change: 0.00034
+Iteration: 125, Log-Lik: -49845.019, Max-Change: 0.00050
+Iteration: 126, Log-Lik: -49845.019, Max-Change: 0.00025
+Iteration: 127, Log-Lik: -49845.019, Max-Change: 0.00020
+Iteration: 128, Log-Lik: -49845.018, Max-Change: 0.00032
+Iteration: 129, Log-Lik: -49845.018, Max-Change: 0.00015
+Iteration: 130, Log-Lik: -49845.018, Max-Change: 0.00058
+Iteration: 131, Log-Lik: -49845.018, Max-Change: 0.00030
+Iteration: 132, Log-Lik: -49845.017, Max-Change: 0.00044
+Iteration: 133, Log-Lik: -49845.017, Max-Change: 0.00036
+Iteration: 134, Log-Lik: -49845.017, Max-Change: 0.00053
+Iteration: 135, Log-Lik: -49845.016, Max-Change: 0.00027
+Iteration: 136, Log-Lik: -49845.016, Max-Change: 0.00021
+Iteration: 137, Log-Lik: -49845.016, Max-Change: 0.00031
+Iteration: 138, Log-Lik: -49845.016, Max-Change: 0.00016
+Iteration: 139, Log-Lik: -49845.015, Max-Change: 0.00012
+Iteration: 140, Log-Lik: -49845.015, Max-Change: 0.00029
+Iteration: 141, Log-Lik: -49845.015, Max-Change: 0.00046
+Iteration: 142, Log-Lik: -49845.015, Max-Change: 0.00029
+Iteration: 143, Log-Lik: -49845.014, Max-Change: 0.00044
+Iteration: 144, Log-Lik: -49845.014, Max-Change: 0.00022
+Iteration: 145, Log-Lik: -49845.014, Max-Change: 0.00017
+Iteration: 146, Log-Lik: -49845.014, Max-Change: 0.00028
+Iteration: 147, Log-Lik: -49845.014, Max-Change: 0.00013
+Iteration: 148, Log-Lik: -49845.013, Max-Change: 0.00051
+Iteration: 149, Log-Lik: -49845.013, Max-Change: 0.00026
+Iteration: 150, Log-Lik: -49845.013, Max-Change: 0.00038
+Iteration: 151, Log-Lik: -49845.013, Max-Change: 0.00031
+Iteration: 152, Log-Lik: -49845.012, Max-Change: 0.00046
+Iteration: 153, Log-Lik: -49845.012, Max-Change: 0.00023
+Iteration: 154, Log-Lik: -49845.012, Max-Change: 0.00018
+Iteration: 155, Log-Lik: -49845.012, Max-Change: 0.00027
+Iteration: 156, Log-Lik: -49845.012, Max-Change: 0.00014
+Iteration: 157, Log-Lik: -49845.012, Max-Change: 0.00011
+Iteration: 158, Log-Lik: -49845.012, Max-Change: 0.00026
+Iteration: 159, Log-Lik: -49845.011, Max-Change: 0.00040
+Iteration: 160, Log-Lik: -49845.011, Max-Change: 0.00026
+Iteration: 161, Log-Lik: -49845.011, Max-Change: 0.00038
+Iteration: 162, Log-Lik: -49845.011, Max-Change: 0.00019
+Iteration: 163, Log-Lik: -49845.011, Max-Change: 0.00015
+Iteration: 164, Log-Lik: -49845.010, Max-Change: 0.00025
+Iteration: 165, Log-Lik: -49845.010, Max-Change: 0.00011
+Iteration: 166, Log-Lik: -49845.010, Max-Change: 0.00045
+Iteration: 167, Log-Lik: -49845.010, Max-Change: 0.00023
+Iteration: 168, Log-Lik: -49845.010, Max-Change: 0.00033
+Iteration: 169, Log-Lik: -49845.010, Max-Change: 0.00027
+Iteration: 170, Log-Lik: -49845.009, Max-Change: 0.00041
+Iteration: 171, Log-Lik: -49845.009, Max-Change: 0.00021
+Iteration: 172, Log-Lik: -49845.009, Max-Change: 0.00016
+Iteration: 173, Log-Lik: -49845.009, Max-Change: 0.00024
+Iteration: 174, Log-Lik: -49845.009, Max-Change: 0.00012
+Iteration: 175, Log-Lik: -49845.009, Max-Change: 0.00009
+</code></pre>
+
+<pre><code class="r">mod2
 </code></pre>
 
 <pre><code>## 
@@ -544,7 +744,41 @@ summary(mod3, suppress=.1)
                      others = 2,3,5,6,8,11-14,17
                      COV = self*others&#39;)
 cmod &lt;- mirt(data, model)
-anova(mod2, cmod)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -50037.152, Max-Change: 0.16880
+Iteration: 2, Log-Lik: -49922.497, Max-Change: 0.08944
+Iteration: 3, Log-Lik: -49880.784, Max-Change: 0.05405
+Iteration: 4, Log-Lik: -49865.774, Max-Change: 0.03471
+Iteration: 5, Log-Lik: -49858.766, Max-Change: 0.02379
+Iteration: 6, Log-Lik: -49855.168, Max-Change: 0.01672
+Iteration: 7, Log-Lik: -49853.183, Max-Change: 0.01221
+Iteration: 8, Log-Lik: -49852.029, Max-Change: 0.00913
+Iteration: 9, Log-Lik: -49851.342, Max-Change: 0.00695
+Iteration: 10, Log-Lik: -49850.899, Max-Change: 0.00571
+Iteration: 11, Log-Lik: -49850.620, Max-Change: 0.00430
+Iteration: 12, Log-Lik: -49850.461, Max-Change: 0.00332
+Iteration: 13, Log-Lik: -49850.364, Max-Change: 0.00258
+Iteration: 14, Log-Lik: -49850.303, Max-Change: 0.00204
+Iteration: 15, Log-Lik: -49850.265, Max-Change: 0.00160
+Iteration: 16, Log-Lik: -49850.239, Max-Change: 0.00130
+Iteration: 17, Log-Lik: -49850.223, Max-Change: 0.00103
+Iteration: 18, Log-Lik: -49850.213, Max-Change: 0.00082
+Iteration: 19, Log-Lik: -49850.207, Max-Change: 0.00065
+Iteration: 20, Log-Lik: -49850.202, Max-Change: 0.00053
+Iteration: 21, Log-Lik: -49850.199, Max-Change: 0.00042
+Iteration: 22, Log-Lik: -49850.197, Max-Change: 0.00035
+Iteration: 23, Log-Lik: -49850.196, Max-Change: 0.00032
+Iteration: 24, Log-Lik: -49850.195, Max-Change: 0.00023
+Iteration: 25, Log-Lik: -49850.195, Max-Change: 0.00018
+Iteration: 26, Log-Lik: -49850.194, Max-Change: 0.00030
+Iteration: 27, Log-Lik: -49850.194, Max-Change: 0.00012
+Iteration: 28, Log-Lik: -49850.194, Max-Change: 0.00029
+Iteration: 29, Log-Lik: -49850.194, Max-Change: 0.00008
+</code></pre>
+
+<pre><code class="r">anova(mod2, cmod)
 </code></pre>
 
 <pre><code>## 
@@ -839,8 +1073,64 @@ head(full)
 <h3>6) You would like to know if the item categories can be simplified by forcing the spacing between each category in each item to be the same, and using only 1 intercept to represent the total rating &#39;easiness&#39; (these models are generally called rating scale models, and are useful for creating parsimonious models with more elegant interpretations). Fit a graded rating scale model (<code>itemtype = &#39;grsm&#39;</code>) to the data, test whether the model fit significantly worse than the confirmatory model above, and inspect/interpret the coefficients.</h3>
 
 <pre><code class="r">rating &lt;- mirt(data, model, itemtype = &#39;grsm&#39;)
+</code></pre>
 
-# save 57 degrees of freedom! Maybe more if slopes could also be constrained to be equal...
+<pre><code>## 
+Iteration: 1, Log-Lik: -55289.927, Max-Change: 2.47383
+Iteration: 2, Log-Lik: -52135.663, Max-Change: 0.57930
+Iteration: 3, Log-Lik: -50873.428, Max-Change: 0.46168
+Iteration: 4, Log-Lik: -50621.806, Max-Change: 0.57002
+Iteration: 5, Log-Lik: -50421.906, Max-Change: 0.34718
+Iteration: 6, Log-Lik: -50222.853, Max-Change: 0.29119
+Iteration: 7, Log-Lik: -50127.867, Max-Change: 0.22587
+Iteration: 8, Log-Lik: -50069.344, Max-Change: 0.19213
+Iteration: 9, Log-Lik: -50004.836, Max-Change: 0.19866
+Iteration: 10, Log-Lik: -49956.999, Max-Change: 0.08157
+Iteration: 11, Log-Lik: -49937.965, Max-Change: 0.06318
+Iteration: 12, Log-Lik: -49920.584, Max-Change: 0.06310
+Iteration: 13, Log-Lik: -49909.974, Max-Change: 0.08655
+Iteration: 14, Log-Lik: -49900.294, Max-Change: 0.07811
+Iteration: 15, Log-Lik: -49893.371, Max-Change: 0.06818
+Iteration: 16, Log-Lik: -49888.969, Max-Change: 0.04602
+Iteration: 17, Log-Lik: -49886.591, Max-Change: 0.02650
+Iteration: 18, Log-Lik: -49884.964, Max-Change: 0.02603
+Iteration: 19, Log-Lik: -49884.013, Max-Change: 0.00906
+Iteration: 20, Log-Lik: -49882.954, Max-Change: 0.00926
+Iteration: 21, Log-Lik: -49882.172, Max-Change: 0.00722
+Iteration: 22, Log-Lik: -49881.034, Max-Change: 0.00721
+Iteration: 23, Log-Lik: -49880.867, Max-Change: 0.00252
+Iteration: 24, Log-Lik: -49880.788, Max-Change: 0.00697
+Iteration: 25, Log-Lik: -49880.681, Max-Change: 0.00551
+Iteration: 26, Log-Lik: -49880.609, Max-Change: 0.00110
+Iteration: 27, Log-Lik: -49880.587, Max-Change: 0.00097
+Iteration: 28, Log-Lik: -49880.559, Max-Change: 0.00138
+Iteration: 29, Log-Lik: -49880.537, Max-Change: 0.00101
+Iteration: 30, Log-Lik: -49880.528, Max-Change: 0.00035
+Iteration: 31, Log-Lik: -49880.527, Max-Change: 0.00021
+Iteration: 32, Log-Lik: -49880.526, Max-Change: 0.00018
+Iteration: 33, Log-Lik: -49880.525, Max-Change: 0.00023
+Iteration: 34, Log-Lik: -49880.525, Max-Change: 0.00015
+Iteration: 35, Log-Lik: -49880.524, Max-Change: 0.00017
+Iteration: 36, Log-Lik: -49880.523, Max-Change: 0.00018
+Iteration: 37, Log-Lik: -49880.523, Max-Change: 0.00015
+Iteration: 38, Log-Lik: -49880.522, Max-Change: 0.00015
+Iteration: 39, Log-Lik: -49880.522, Max-Change: 0.00018
+Iteration: 40, Log-Lik: -49880.521, Max-Change: 0.00013
+Iteration: 41, Log-Lik: -49880.521, Max-Change: 0.00015
+Iteration: 42, Log-Lik: -49880.521, Max-Change: 0.00015
+Iteration: 43, Log-Lik: -49880.520, Max-Change: 0.00012
+Iteration: 44, Log-Lik: -49880.520, Max-Change: 0.00013
+Iteration: 45, Log-Lik: -49880.519, Max-Change: 0.00015
+Iteration: 46, Log-Lik: -49880.519, Max-Change: 0.00011
+Iteration: 47, Log-Lik: -49880.519, Max-Change: 0.00012
+Iteration: 48, Log-Lik: -49880.519, Max-Change: 0.00013
+Iteration: 49, Log-Lik: -49880.518, Max-Change: 0.00011
+Iteration: 50, Log-Lik: -49880.518, Max-Change: 0.00011
+Iteration: 51, Log-Lik: -49880.518, Max-Change: 0.00013
+Iteration: 52, Log-Lik: -49880.517, Max-Change: 0.00009
+</code></pre>
+
+<pre><code class="r"># save 57 degrees of freedom! Maybe more if slopes could also be constrained to be equal...
 anova(rating, cmod)
 </code></pre>
 

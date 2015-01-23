@@ -207,20 +207,10 @@ hr {
 
 <pre><code class="r">library(mirt)
 library(sirt)
-</code></pre>
-
-<pre><code>## Error: package or namespace load failed for &#39;sirt&#39;
-</code></pre>
-
-<pre><code class="r">library(mvtnorm)
+library(mvtnorm)
 
 data( data.read )
-</code></pre>
-
-<pre><code>## Warning in data(data.read): data set &#39;data.read&#39; not found
-</code></pre>
-
-<pre><code class="r">dat &lt;- data.read
+dat &lt;- data.read
 
 Q &lt;- matrix( 0 , nrow=12,ncol=3)
 Q[1:4,1] &lt;- 1
@@ -253,9 +243,9 @@ summary(mod13a)
 
 <pre><code>## Call:
 ##  
-## Date of Analysis: 2015-01-22 13:31:07 
-## Time difference of 0.03675365 secs
-## Computation Time: 0.03675365 
+## Date of Analysis: 2015-01-22 22:38:24 
+## Time difference of 0.03466868 secs
+## Computation Time: 0.03466868 
 ## 
 ## 
 ## Deviance =  3847.473  |   Log-Likelihood = -1923.737 
@@ -324,9 +314,9 @@ summary(mod13b)
 <pre><code>## -----------------------------------------------------------------------------
 ## CDM 4.1 (2014-12-17) 
 ## 
-## Date of Analysis: 2015-01-22 13:31:13 
-## Time difference of 5.819641 secs
-## Computation Time: 5.819641 
+## Date of Analysis: 2015-01-22 22:38:31 
+## Time difference of 6.56586 secs
+## Computation Time: 6.56586 
 ## 
 ## General Diagnostic Model 
 ## 
@@ -601,12 +591,8 @@ mod13c@nest &lt;- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
 coef13c &lt;- mirt.wrapper.coef(mod13c)$coef
-</code></pre>
 
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;mirt.wrapper.coef&quot;
-</code></pre>
-
-<pre><code class="r">#* inspect estimated distribution
+#* inspect estimated distribution
 mod13c@Theta
 </code></pre>
 
@@ -637,36 +623,37 @@ dfr &lt;- coef(mod13a)[ , c(&quot;guess&quot;,&quot;slip&quot;) ]
 </code></pre>
 
 <pre><code class="r">colnames(dfr) &lt;- paste0(&quot;din.&quot;,c(&quot;guess&quot;,&quot;slip&quot;) )
-</code></pre>
 
-<pre><code>## Error in `colnames&lt;-`(`*tmp*`, value = c(&quot;din.guess&quot;, &quot;din.slip&quot;)): length of &#39;dimnames&#39; [2] not equal to array extent
-</code></pre>
-
-<pre><code class="r"># estimated parameters from gdm
+# estimated parameters from gdm
 dfr$gdm.guess &lt;- plogis(mod13b$item$b)
 </code></pre>
 
-<pre><code>## Warning in dfr$gdm.guess &lt;- plogis(mod13b$item$b): Coercing LHS to a list
+<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;gdm.guess&quot;, value = c(0.684279863480952, : replacement has 12 rows, data has 27
 </code></pre>
 
 <pre><code class="r">dfr$gdm.slip &lt;- 1 - plogis( rowSums(mod13b$item[,c(&quot;b.Cat1&quot;,&quot;a.F1&quot;,&quot;a.F2&quot;,&quot;a.F3&quot;)]))# estimated parameters from mirt
-dfr$mirt.guess &lt;- plogis( coef13c$d )
 </code></pre>
 
-<pre><code>## Error in plogis(coef13c$d): object &#39;coef13c&#39; not found
+<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;gdm.slip&quot;, value = structure(c(4.44089209850063e-16, : replacement has 12 rows, data has 27
+</code></pre>
+
+<pre><code class="r">dfr$mirt.guess &lt;- plogis( coef13c$d )
+</code></pre>
+
+<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;mirt.guess&quot;, value = c(0.684512002522532, : replacement has 12 rows, data has 27
 </code></pre>
 
 <pre><code class="r">dfr$mirt.slip &lt;- 1 - plogis( rowSums(coef13c[,c(&quot;d&quot;,&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;)]) )
 </code></pre>
 
-<pre><code>## Error in is.data.frame(x): object &#39;coef13c&#39; not found
+<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, &quot;mirt.slip&quot;, value = c(2.63414718881805e-05, : replacement has 12 rows, data has 27
 </code></pre>
 
 <pre><code class="r"># comparison
 round(dfr[, c(1,3,5,2,4,6)],3)
 </code></pre>
 
-<pre><code>## Error in dfr[, c(1, 3, 5, 2, 4, 6)]: incorrect number of dimensions
+<pre><code>## Error in `[.data.frame`(dfr, , c(1, 3, 5, 2, 4, 6)): undefined columns selected
 </code></pre>
 
 <pre><code class="r"># estimated class sizes
@@ -706,10 +693,10 @@ round(dfr,3)
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] MultiLCIRT_2.7   limSolve_1.5.5.1 TAM_1.4-1        CDM_4.1         
-##  [5] ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-27   mvtnorm_1.0-2   
-##  [9] msm_1.5          MASS_7.3-37      mirt_1.8         lattice_0.20-29 
-## [13] knitr_1.9       
+##  [1] MultiLCIRT_2.7   limSolve_1.5.5.1 sirt_1.3         TAM_1.4-1       
+##  [5] CDM_4.1          ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-27  
+##  [9] mvtnorm_1.0-2    msm_1.5          MASS_7.3-37      mirt_1.8        
+## [13] lattice_0.20-29  knitr_1.9       
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
@@ -736,10 +723,10 @@ round(dfr,3)
 ## [64] Rcpp_0.11.3           RCurl_1.95-4.5        reshape2_1.4.1       
 ## [67] rjson_0.2.15          rockchalk_1.8.86      rpart_4.1-8          
 ## [70] rtiff_1.4.4           scales_0.2.4          sem_3.1-5            
-## [73] sendplot_4.0.0        sm_2.2-5.4            sna_2.3-2            
-## [76] splines_3.1.2         stringr_0.6.2         survival_2.37-7      
-## [79] tensor_1.5            tools_3.1.2           whisker_0.3-2        
-## [82] WrightMap_1.1
+## [73] semPlot_1.0.1         sendplot_4.0.0        sm_2.2-5.4           
+## [76] sna_2.3-2             splines_3.1.2         stringr_0.6.2        
+## [79] survival_2.37-7       tensor_1.5            tools_3.1.2          
+## [82] whisker_0.3-2         WrightMap_1.1         XML_3.98-1.1
 </code></pre>
 
 </body>

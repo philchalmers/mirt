@@ -207,12 +207,8 @@ hr {
 
 <pre><code class="r">library(mirt)
 library(sirt)
-</code></pre>
 
-<pre><code>## Error: package or namespace load failed for &#39;sirt&#39;
-</code></pre>
-
-<pre><code class="r"># define a 2-class model with graded membership
+# define a 2-class model with graded membership
 set.seed(8765)
 I &lt;- 10
 prob.class1 &lt;- runif( I , 0 , .35 )
@@ -234,85 +230,116 @@ colnames(dat) &lt;- paste0( &quot;I&quot; , 1:I)
 
 #** Model 1: estimate latent class model
 mod1 &lt;- gom.em(dat, K=2, problevels= c(0,1) , model=&quot;GOM&quot;, progress = FALSE )
+summary(mod1)
 </code></pre>
 
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;gom.em&quot;
-</code></pre>
-
-<pre><code class="r">summary(mod1)
-</code></pre>
-
-<pre><code>## 
-## Call:
-## mixedmirt(data = data, covdata = covdata, model = model, fixed = ~0 + 
-##     items + Gender, verbose = FALSE)
+<pre><code>## ----------------------------------------------------------------------------------
+## sirt 1.3 (2015-01-06) 
 ## 
-## --------------
-## FIXED EFFECTS:
-##            Estimate Std.Error z.value
-## GenderMale   -1.203     0.157  -7.644
+## Date of Analysis: 2015-01-22 22:37:47 
+## Time difference of 0.0284853 secs
+## Computation Time: 0.0284853 
 ## 
-## --------------
-## RANDOM EFFECT COVARIANCE(S):
-## Correlations on upper diagonal
+##   Function &#39;gom.em&#39; 
+##    Discrete Grade of Membership Model
 ## 
-## $Theta
-##       F1    F2
-## F1 0.550 0.377
-## F2 0.206 0.542
+##     1000 Cases,  10 Items,  2 Classes , 2 Discrete Integration Points
+## ----------------------------------------------------------------------------------
+## Number of iterations = 9 
+## Deviance =  11146.27  | Log Likelihood =  -5573.14 
+## Number of persons =  1000 
+## Number of estimated parameters =  21 
+##   Number of estimated item parameters =  20 
+##   Number of estimated distribution parameters =  1 
+## AIC  =  11188.27  | penalty = 42    | AIC = -2*LL + 2*p  
+## AICc =  11189.22  | penalty = 42.94    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
+## BIC  =  11291.34  | penalty = 145.06    | BIC = -2*LL + log(n)*p  
+## CAIC =  11312.34  | penalty = 166.06   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
+## 
+## ----------------------------------------------------------------------------------
+## Membership Function Descriptives 
+##                    Class1 Class2
+## p.Class             0.420  0.580
+## p.problevel0.class  0.580  0.420
+## p.problevel1.class  0.420  0.580
+## M.problevel0.class  0.770  0.181
+## M.problevel1.class  0.181  0.770
+## ----------------------------------------------------------------------------------
+## Item Parameters 
+##    item    N     p lam.Cl1 lam.Cl2
+## 1    I1 1000 0.564   0.171   0.848
+## 2    I2 1000 0.513   0.123   0.795
+## 3    I3 1000 0.503   0.133   0.770
+## 4    I4 1000 0.482   0.080   0.772
+## 5    I5 1000 0.471   0.170   0.689
+## 6    I6 1000 0.536   0.278   0.723
+## 7    I7 1000 0.521   0.221   0.738
+## 8    I8 1000 0.545   0.246   0.761
+## 9    I9 1000 0.441   0.074   0.706
+## 10  I10 1000 0.657   0.317   0.903
 </code></pre>
 
 <pre><code class="r">#** Model 2: estimate GOM
 mod2 &lt;- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model=&quot;GOM&quot;, progress = FALSE )
+summary(mod2)
 </code></pre>
 
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;gom.em&quot;
-</code></pre>
-
-<pre><code class="r">summary(mod2)
-</code></pre>
-
-<pre><code>## 
-## Rotation:  oblimin 
+<pre><code>## ----------------------------------------------------------------------------------
+## sirt 1.3 (2015-01-06) 
 ## 
-## Rotated factor loadings: 
+## Date of Analysis: 2015-01-22 22:37:47 
+## Time difference of 0.0255332 secs
+## Computation Time: 0.0255332 
 ## 
-##            F1     F2    h2
-## Item_1  0.521 -0.021 0.268
-## Item_2  0.517 -0.058 0.259
-## Item_3  0.643  0.091 0.444
-## Item_4  0.761 -0.102 0.560
-## Item_5  0.782  0.033 0.622
-## Item_6  0.530 -0.004 0.280
-## Item_7  0.777  0.034 0.616
-## Item_8  0.660 -0.013 0.433
-## Item_9  0.648 -0.106 0.404
-## Item_10 0.745  0.076 0.583
-## Item_11 0.820 -0.046 0.660
-## Item_12 0.866 -0.126 0.724
-## Item_13 0.564 -0.029 0.312
-## Item_14 0.606  0.175 0.439
-## Item_15 0.710 -0.023 0.498
-## Item_16 0.706  0.019 0.503
-## Item_17 0.612  0.094 0.406
-## Item_18 0.404  0.241 0.259
-## Item_19 0.679  0.090 0.494
-## Item_20 0.472  0.252 0.332
+##   Function &#39;gom.em&#39; 
+##    Discrete Grade of Membership Model
 ## 
-## Rotated SS loadings:  8.77 0.231 
+##     1000 Cases,  10 Items,  2 Classes , 3 Discrete Integration Points
+## ----------------------------------------------------------------------------------
+## Number of iterations = 9 
+## Deviance =  11077.85  | Log Likelihood =  -5538.93 
+## Number of persons =  1000 
+## Number of estimated parameters =  22 
+##   Number of estimated item parameters =  20 
+##   Number of estimated distribution parameters =  2 
+## AIC  =  11121.85  | penalty = 44    | AIC = -2*LL + 2*p  
+## AICc =  11122.89  | penalty = 45.04    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
+## BIC  =  11229.82  | penalty = 151.97    | BIC = -2*LL + log(n)*p  
+## CAIC =  11251.82  | penalty = 173.97   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
 ## 
-## Factor correlations: 
-## 
-##       F1    F2
-## F1 1.000 0.194
-## F2 0.194 1.000
+## ----------------------------------------------------------------------------------
+## Membership Function Descriptives 
+##                      Class1 Class2
+## p.Class               0.424  0.576
+## p.problevel0.class    0.485  0.334
+## p.problevel0.5.class  0.181  0.181
+## p.problevel1.class    0.334  0.485
+## M.problevel0.class    0.808  0.137
+## M.problevel0.5.class  0.471  0.471
+## M.problevel1.class    0.137  0.808
+## ----------------------------------------------------------------------------------
+## Item Parameters 
+##    item    N     p lam.Cl1 lam.Cl2
+## 1    I1 1000 0.564   0.116   0.894
+## 2    I2 1000 0.513   0.079   0.836
+## 3    I3 1000 0.503   0.074   0.816
+## 4    I4 1000 0.482   0.040   0.809
+## 5    I5 1000 0.471   0.127   0.724
+## 6    I6 1000 0.536   0.232   0.757
+## 7    I7 1000 0.521   0.189   0.765
+## 8    I8 1000 0.545   0.198   0.798
+## 9    I9 1000 0.441   0.036   0.745
+## 10  I10 1000 0.657   0.279   0.938
 </code></pre>
 
 <pre><code class="r"># inspect distribution
 cbind( mod2$theta.k , mod2$pi.k )
 </code></pre>
 
-<pre><code>## Error in mod2$theta.k: $ operator not defined for this S4 class
+<pre><code>##      [,1] [,2]      [,3]
+## [1,]  1.0  0.0 0.3335666
+## [2,]  0.5  0.5 0.1810114
+## [3,]  0.0  1.0 0.4854220
 </code></pre>
 
 <pre><code class="r">#***
@@ -387,14 +414,32 @@ mod2m@logLik
 ( cmod2m &lt;- mirt.wrapper.coef(mod2m) )
 </code></pre>
 
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;mirt.wrapper.coef&quot;
+<pre><code>## $coef
+##    item         a1        a2
+## 1    I1 -2.0157582 2.1259488
+## 2    I2 -2.4385394 1.6295050
+## 3    I3 -2.4995496 1.4922735
+## 4    I4 -3.1465547 1.4458247
+## 5    I5 -1.9124057 0.9662409
+## 6    I6 -1.1906872 1.1371916
+## 7    I7 -1.4496769 1.1827344
+## 8    I8 -1.3874215 1.3746965
+## 9    I9 -3.2677096 1.0726382
+## 10  I10 -0.9421034 2.7217024
+## 
+## $GroupPars
+## MEAN_1 COV_11 
+##      0      1
 </code></pre>
 
 <pre><code class="r"># compare estimated distributions
 round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]] ) , 5 )
 </code></pre>
 
-<pre><code>## Error in mod2$pi.k: $ operator not defined for this S4 class
+<pre><code>##         sirt    mirt
+## [1,] 0.33357 0.33603
+## [2,] 0.18101 0.17820
+## [3,] 0.48542 0.48577
 </code></pre>
 
 <pre><code class="r">sessionInfo()
@@ -416,9 +461,9 @@ round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]]
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] TAM_1.4-1       CDM_4.1         ltm_1.0-0       polycor_0.7-8  
-##  [5] sfsmisc_1.0-27  mvtnorm_1.0-2   msm_1.5         MASS_7.3-37    
-##  [9] mirt_1.8        lattice_0.20-29 knitr_1.9      
+##  [1] sirt_1.3        TAM_1.4-1       CDM_4.1         ltm_1.0-0      
+##  [5] polycor_0.7-8   sfsmisc_1.0-27  mvtnorm_1.0-2   msm_1.5        
+##  [9] MASS_7.3-37     mirt_1.8        lattice_0.20-29 knitr_1.9      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
@@ -443,10 +488,11 @@ round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]]
 ## [58] RColorBrewer_1.1-2    Rcpp_0.11.3           RCurl_1.95-4.5       
 ## [61] reshape2_1.4.1        rjson_0.2.15          rockchalk_1.8.86     
 ## [64] rpart_4.1-8           rtiff_1.4.4           scales_0.2.4         
-## [67] sem_3.1-5             sendplot_4.0.0        sm_2.2-5.4           
-## [70] sna_2.3-2             splines_3.1.2         stringr_0.6.2        
-## [73] survival_2.37-7       tensor_1.5            tools_3.1.2          
-## [76] whisker_0.3-2         WrightMap_1.1
+## [67] sem_3.1-5             semPlot_1.0.1         sendplot_4.0.0       
+## [70] sm_2.2-5.4            sna_2.3-2             splines_3.1.2        
+## [73] stringr_0.6.2         survival_2.37-7       tensor_1.5           
+## [76] tools_3.1.2           whisker_0.3-2         WrightMap_1.1        
+## [79] XML_3.98-1.1
 </code></pre>
 
 </body>

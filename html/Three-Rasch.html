@@ -217,7 +217,93 @@ variance of the latent trait.</p>
 <pre><code class="r">library(mirt)
 dat &lt;- expand.table(LSAT6)
 mod &lt;- mirt(dat, 1, itemtype = &#39;Rasch&#39;)
-print(mod)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -2473.219, Max-Change: 0.05796
+Iteration: 2, Log-Lik: -2471.904, Max-Change: 0.03951
+Iteration: 3, Log-Lik: -2471.041, Max-Change: 0.03364
+Iteration: 4, Log-Lik: -2470.477, Max-Change: 0.03894
+Iteration: 5, Log-Lik: -2469.694, Max-Change: 0.02586
+Iteration: 6, Log-Lik: -2469.241, Max-Change: 0.02211
+Iteration: 7, Log-Lik: -2468.877, Max-Change: 0.02006
+Iteration: 8, Log-Lik: -2468.573, Max-Change: 0.01720
+Iteration: 9, Log-Lik: -2468.330, Max-Change: 0.01528
+Iteration: 10, Log-Lik: -2468.159, Max-Change: 0.01713
+Iteration: 11, Log-Lik: -2467.932, Max-Change: 0.01257
+Iteration: 12, Log-Lik: -2467.788, Max-Change: 0.01111
+Iteration: 13, Log-Lik: -2467.668, Max-Change: 0.01026
+Iteration: 14, Log-Lik: -2467.566, Max-Change: 0.00910
+Iteration: 15, Log-Lik: -2467.481, Max-Change: 0.00826
+Iteration: 16, Log-Lik: -2467.417, Max-Change: 0.01032
+Iteration: 17, Log-Lik: -2467.339, Max-Change: 0.00703
+Iteration: 18, Log-Lik: -2467.285, Max-Change: 0.00634
+Iteration: 19, Log-Lik: -2467.241, Max-Change: 0.00604
+Iteration: 20, Log-Lik: -2467.200, Max-Change: 0.00534
+Iteration: 21, Log-Lik: -2467.166, Max-Change: 0.00491
+Iteration: 22, Log-Lik: -2467.139, Max-Change: 0.00488
+Iteration: 23, Log-Lik: -2467.110, Max-Change: 0.00424
+Iteration: 24, Log-Lik: -2467.088, Max-Change: 0.00388
+Iteration: 25, Log-Lik: -2467.070, Max-Change: 0.00375
+Iteration: 26, Log-Lik: -2467.053, Max-Change: 0.00333
+Iteration: 27, Log-Lik: -2467.038, Max-Change: 0.00308
+Iteration: 28, Log-Lik: -2467.027, Max-Change: 0.00362
+Iteration: 29, Log-Lik: -2467.014, Max-Change: 0.00268
+Iteration: 30, Log-Lik: -2467.005, Max-Change: 0.00247
+Iteration: 31, Log-Lik: -2466.997, Max-Change: 0.00236
+Iteration: 32, Log-Lik: -2466.990, Max-Change: 0.00215
+Iteration: 33, Log-Lik: -2466.983, Max-Change: 0.00200
+Iteration: 34, Log-Lik: -2466.978, Max-Change: 0.00223
+Iteration: 35, Log-Lik: -2466.973, Max-Change: 0.00176
+Iteration: 36, Log-Lik: -2466.969, Max-Change: 0.00162
+Iteration: 37, Log-Lik: -2466.965, Max-Change: 0.00153
+Iteration: 38, Log-Lik: -2466.962, Max-Change: 0.00141
+Iteration: 39, Log-Lik: -2466.959, Max-Change: 0.00132
+Iteration: 40, Log-Lik: -2466.956, Max-Change: 0.00129
+Iteration: 41, Log-Lik: -2466.954, Max-Change: 0.00117
+Iteration: 42, Log-Lik: -2466.952, Max-Change: 0.00108
+Iteration: 43, Log-Lik: -2466.951, Max-Change: 0.00117
+Iteration: 44, Log-Lik: -2466.949, Max-Change: 0.00096
+Iteration: 45, Log-Lik: -2466.948, Max-Change: 0.00089
+Iteration: 46, Log-Lik: -2466.946, Max-Change: 0.00085
+Iteration: 47, Log-Lik: -2466.945, Max-Change: 0.00078
+Iteration: 48, Log-Lik: -2466.944, Max-Change: 0.00073
+Iteration: 49, Log-Lik: -2466.944, Max-Change: 0.00072
+Iteration: 50, Log-Lik: -2466.943, Max-Change: 0.00065
+Iteration: 51, Log-Lik: -2466.942, Max-Change: 0.00061
+Iteration: 52, Log-Lik: -2466.942, Max-Change: 0.00057
+Iteration: 53, Log-Lik: -2466.941, Max-Change: 0.00053
+Iteration: 54, Log-Lik: -2466.941, Max-Change: 0.00050
+Iteration: 55, Log-Lik: -2466.941, Max-Change: 0.00049
+Iteration: 56, Log-Lik: -2466.940, Max-Change: 0.00045
+Iteration: 57, Log-Lik: -2466.940, Max-Change: 0.00042
+Iteration: 58, Log-Lik: -2466.940, Max-Change: 0.00039
+Iteration: 59, Log-Lik: -2466.939, Max-Change: 0.00037
+Iteration: 60, Log-Lik: -2466.939, Max-Change: 0.00035
+Iteration: 61, Log-Lik: -2466.939, Max-Change: 0.00034
+Iteration: 62, Log-Lik: -2466.939, Max-Change: 0.00031
+Iteration: 63, Log-Lik: -2466.939, Max-Change: 0.00029
+Iteration: 64, Log-Lik: -2466.939, Max-Change: 0.00027
+Iteration: 65, Log-Lik: -2466.938, Max-Change: 0.00026
+Iteration: 66, Log-Lik: -2466.938, Max-Change: 0.00024
+Iteration: 67, Log-Lik: -2466.938, Max-Change: 0.00023
+Iteration: 68, Log-Lik: -2466.938, Max-Change: 0.00021
+Iteration: 69, Log-Lik: -2466.938, Max-Change: 0.00020
+Iteration: 70, Log-Lik: -2466.938, Max-Change: 0.00019
+Iteration: 71, Log-Lik: -2466.938, Max-Change: 0.00018
+Iteration: 72, Log-Lik: -2466.938, Max-Change: 0.00017
+Iteration: 73, Log-Lik: -2466.938, Max-Change: 0.00016
+Iteration: 74, Log-Lik: -2466.938, Max-Change: 0.00015
+Iteration: 75, Log-Lik: -2466.938, Max-Change: 0.00014
+Iteration: 76, Log-Lik: -2466.938, Max-Change: 0.00013
+Iteration: 77, Log-Lik: -2466.938, Max-Change: 0.00012
+Iteration: 78, Log-Lik: -2466.938, Max-Change: 0.00012
+Iteration: 79, Log-Lik: -2466.938, Max-Change: 0.00011
+Iteration: 80, Log-Lik: -2466.938, Max-Change: 0.00010
+Iteration: 81, Log-Lik: -2466.938, Max-Change: 0.00010
+</code></pre>
+
+<pre><code class="r">print(mod)
 </code></pre>
 
 <pre><code>## 
@@ -274,7 +360,24 @@ estimate all intercepts.</p>
 <pre><code class="r">model &lt;- mirt.model(&#39;Theta = 1-5
                     CONSTRAIN = (1-5, a1)&#39;)
 mod2 &lt;- mirt(dat, model)
-print(mod2)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -2468.601, Max-Change: 0.07078
+Iteration: 2, Log-Lik: -2467.371, Max-Change: 0.02297
+Iteration: 3, Log-Lik: -2467.099, Max-Change: 0.01355
+Iteration: 4, Log-Lik: -2466.986, Max-Change: 0.00735
+Iteration: 5, Log-Lik: -2466.959, Max-Change: 0.00482
+Iteration: 6, Log-Lik: -2466.947, Max-Change: 0.00316
+Iteration: 7, Log-Lik: -2466.939, Max-Change: 0.00109
+Iteration: 8, Log-Lik: -2466.938, Max-Change: 0.00073
+Iteration: 9, Log-Lik: -2466.938, Max-Change: 0.00049
+Iteration: 10, Log-Lik: -2466.938, Max-Change: 0.00028
+Iteration: 11, Log-Lik: -2466.938, Max-Change: 0.00016
+Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00009
+</code></pre>
+
+<pre><code class="r">print(mod2)
 </code></pre>
 
 <pre><code>## 
@@ -360,7 +463,78 @@ eqfun &lt;- function(p, optim_args) sum(p[1:5]) #could use browser() here, if it
 solnp_args &lt;- list(eqfun=eqfun, eqB=0)
 
 mod3 &lt;- mirt(dat, model2, itemtype = &#39;Rasch&#39;, optimizer = &#39;solnp&#39;, solnp_args=solnp_args)
-print(mod3)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -2473.219, Max-Change: 2.01548
+Iteration: 2, Log-Lik: -2978.093, Max-Change: 0.64564
+Iteration: 3, Log-Lik: -2637.889, Max-Change: 0.30377
+Iteration: 4, Log-Lik: -2536.574, Max-Change: 0.16978
+Iteration: 5, Log-Lik: -2498.680, Max-Change: 0.10518
+Iteration: 6, Log-Lik: -2482.424, Max-Change: 0.06950
+Iteration: 7, Log-Lik: -2474.843, Max-Change: 0.04776
+Iteration: 8, Log-Lik: -2471.108, Max-Change: 0.03371
+Iteration: 9, Log-Lik: -2469.195, Max-Change: 0.02428
+Iteration: 10, Log-Lik: -2468.196, Max-Change: 0.01947
+Iteration: 11, Log-Lik: -2467.605, Max-Change: 0.01269
+Iteration: 12, Log-Lik: -2467.328, Max-Change: 0.00943
+Iteration: 13, Log-Lik: -2467.185, Max-Change: 0.01171
+Iteration: 14, Log-Lik: -2467.077, Max-Change: 0.00511
+Iteration: 15, Log-Lik: -2467.032, Max-Change: 0.00389
+Iteration: 16, Log-Lik: -2467.007, Max-Change: 0.00493
+Iteration: 17, Log-Lik: -2466.987, Max-Change: 0.00220
+Iteration: 18, Log-Lik: -2466.977, Max-Change: 0.00173
+Iteration: 19, Log-Lik: -2466.970, Max-Change: 0.00152
+Iteration: 20, Log-Lik: -2466.965, Max-Change: 0.00105
+Iteration: 21, Log-Lik: -2466.962, Max-Change: 0.00097
+Iteration: 22, Log-Lik: -2466.959, Max-Change: 0.00096
+Iteration: 23, Log-Lik: -2466.956, Max-Change: 0.00094
+Iteration: 24, Log-Lik: -2466.954, Max-Change: 0.00091
+Iteration: 25, Log-Lik: -2466.953, Max-Change: 0.00109
+Iteration: 26, Log-Lik: -2466.951, Max-Change: 0.00085
+Iteration: 27, Log-Lik: -2466.949, Max-Change: 0.00081
+Iteration: 28, Log-Lik: -2466.948, Max-Change: 0.00104
+Iteration: 29, Log-Lik: -2466.947, Max-Change: 0.00075
+Iteration: 30, Log-Lik: -2466.946, Max-Change: 0.00071
+Iteration: 31, Log-Lik: -2466.945, Max-Change: 0.00068
+Iteration: 32, Log-Lik: -2466.944, Max-Change: 0.00064
+Iteration: 33, Log-Lik: -2466.944, Max-Change: 0.00061
+Iteration: 34, Log-Lik: -2466.943, Max-Change: 0.00067
+Iteration: 35, Log-Lik: -2466.942, Max-Change: 0.00055
+Iteration: 36, Log-Lik: -2466.942, Max-Change: 0.00052
+Iteration: 37, Log-Lik: -2466.941, Max-Change: 0.00050
+Iteration: 38, Log-Lik: -2466.941, Max-Change: 0.00046
+Iteration: 39, Log-Lik: -2466.941, Max-Change: 0.00044
+Iteration: 40, Log-Lik: -2466.940, Max-Change: 0.00048
+Iteration: 41, Log-Lik: -2466.940, Max-Change: 0.00039
+Iteration: 42, Log-Lik: -2466.940, Max-Change: 0.00037
+Iteration: 43, Log-Lik: -2466.940, Max-Change: 0.00040
+Iteration: 44, Log-Lik: -2466.939, Max-Change: 0.00033
+Iteration: 45, Log-Lik: -2466.939, Max-Change: 0.00031
+Iteration: 46, Log-Lik: -2466.939, Max-Change: 0.00030
+Iteration: 47, Log-Lik: -2466.939, Max-Change: 0.00028
+Iteration: 48, Log-Lik: -2466.939, Max-Change: 0.00027
+Iteration: 49, Log-Lik: -2466.939, Max-Change: 0.00028
+Iteration: 50, Log-Lik: -2466.939, Max-Change: 0.00024
+Iteration: 51, Log-Lik: -2466.938, Max-Change: 0.00022
+Iteration: 52, Log-Lik: -2466.938, Max-Change: 0.00022
+Iteration: 53, Log-Lik: -2466.938, Max-Change: 0.00020
+Iteration: 54, Log-Lik: -2466.938, Max-Change: 0.00019
+Iteration: 55, Log-Lik: -2466.938, Max-Change: 0.00020
+Iteration: 56, Log-Lik: -2466.938, Max-Change: 0.00017
+Iteration: 57, Log-Lik: -2466.938, Max-Change: 0.00016
+Iteration: 58, Log-Lik: -2466.938, Max-Change: 0.00015
+Iteration: 59, Log-Lik: -2466.938, Max-Change: 0.00014
+Iteration: 60, Log-Lik: -2466.938, Max-Change: 0.00013
+Iteration: 61, Log-Lik: -2466.938, Max-Change: 0.00014
+Iteration: 62, Log-Lik: -2466.938, Max-Change: 0.00012
+Iteration: 63, Log-Lik: -2466.938, Max-Change: 0.00011
+Iteration: 64, Log-Lik: -2466.938, Max-Change: 0.00011
+Iteration: 65, Log-Lik: -2466.938, Max-Change: 0.00010
+Iteration: 66, Log-Lik: -2466.938, Max-Change: 0.00010
+</code></pre>
+
+<pre><code class="r">print(mod3)
 </code></pre>
 
 <pre><code>## 
@@ -430,7 +604,48 @@ heq &lt;- function(p, optim_args) sum(p[1:5]) #must sum to 0 for constraint
 #start with better starting values
 mod3b &lt;- mirt(dat, model2, itemtype = &#39;Rasch&#39;, optimizer = &#39;alabama&#39;, alabama_args=list(heq=heq),
               pars = mod2values(mod3), TOL=1e-5)
-print(mod3b)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -2466.938, Max-Change: 0.00009
+Iteration: 2, Log-Lik: -2466.938, Max-Change: 0.00009
+Iteration: 3, Log-Lik: -2466.938, Max-Change: 0.00008
+Iteration: 4, Log-Lik: -2466.938, Max-Change: 0.00008
+Iteration: 5, Log-Lik: -2466.938, Max-Change: 0.00007
+Iteration: 6, Log-Lik: -2466.938, Max-Change: 0.00007
+Iteration: 7, Log-Lik: -2466.938, Max-Change: 0.00006
+Iteration: 8, Log-Lik: -2466.938, Max-Change: 0.00006
+Iteration: 9, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 10, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 11, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 13, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 14, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 15, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 16, Log-Lik: -2466.938, Max-Change: 0.00004
+Iteration: 17, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 18, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 19, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 20, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 21, Log-Lik: -2466.938, Max-Change: 0.00003
+Iteration: 22, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 23, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 24, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 25, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 26, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 27, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 28, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 29, Log-Lik: -2466.938, Max-Change: 0.00002
+Iteration: 30, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 31, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 32, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 33, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 34, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 35, Log-Lik: -2466.938, Max-Change: 0.00001
+Iteration: 36, Log-Lik: -2466.938, Max-Change: 0.00001
+</code></pre>
+
+<pre><code class="r">print(mod3b)
 </code></pre>
 
 <pre><code>## 
