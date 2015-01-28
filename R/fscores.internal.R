@@ -284,8 +284,6 @@ setMethod(
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
     		} else if(method == 'WLE'){
-                if(nfact > 1L)
-                    stop('WLE method only supported for unidimensional models')
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
@@ -508,12 +506,22 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
     L <- sum(log(itemtrace)[as.logical(patdata)])
-    infos <- numeric(length(data))
-    for(i in 1L:length(infos)){
-        if(!is.na(data[i]))
-            infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE)
+    if(ncol(ThetaShort) == 1L){
+        infos <- numeric(length(data))
+        for(i in 1L:length(infos)){
+            if(!is.na(data[i]))
+                infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE)
+        }
+        infos <- sum(infos)
+    } else {
+        infos <- matrix(0, ncol(Theta), ncol(Theta))
+        for(i in 1L:length(data)){
+            if(!is.na(data[i]))
+                infos <- infos + ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, MD=TRUE)
+        }
+        infos <- det(infos)
     }
-    return(-(log(sqrt(sum(infos))) + L))
+    return(-(log(sqrt(infos)) + L))
 }
 
 gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND){

@@ -1,4 +1,6 @@
-# Changes in mirt 1.8
+# Changes in mirt 1.9
+
+- WLE support for mutlidimensional models added
 
 - added `'SEcontour'` argument to `plot()` generic
 
