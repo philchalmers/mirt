@@ -1,5 +1,9 @@
 # Changes in mirt 1.8
 
+- added `'SEcontour'` argument to `plot()` generic
+
+# Changes in mirt 1.8
+
 - `fscores()` nows accepts `method = "plausible"` to draw a single plausible value set
 
 - `plot()` default type is now `score`, and will accept rotation arguments for exploratory models 

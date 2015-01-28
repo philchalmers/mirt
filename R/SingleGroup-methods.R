@@ -758,25 +758,31 @@ setMethod(
                     main <- paste("Test Information Contour")
                 return(contourplot(info ~ Theta1 * Theta2, data = plt,
                                    main = main, xlab = expression(theta[1]),
-                                   ylab = expression(theta[2])))
+                                   ylab = expression(theta[2]), ...))
             } else if(type == 'scorecontour'){
                 if(is.null(main))
                     main <- paste("Expected Score Contour")
                     return(contourplot(score ~ Theta1 * Theta2, data = plt,
                                        main = main, xlab = expression(theta[1]),
-                                       ylab = expression(theta[2])))
+                                       ylab = expression(theta[2]), ...))
             } else if(type == 'info'){
                 if(is.null(main))
                     main <- "Test Information"
                 return(wireframe(info ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+            } else if(type == 'SEcontour'){
+                if(is.null(main))
+                    main <- "Test Standard Errors"
+                return(return(contourplot(score ~ Theta1 * Theta2, data = plt,
+                                          main = main, xlab = expression(theta[1]),
+                                          ylab = expression(theta[2]), ...)))
             } else if(type == 'score'){
                 if(is.null(main))
                     main <- "Expected Total Score"
                 return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
             } else if(type == 'infoangle'){
                 if(is.null(main))
                     main <- 'Information across different angles'
@@ -788,7 +794,7 @@ setMethod(
                     main <- "Test Standard Errors"
                 return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
             } else {
                 stop('plot type not supported for two dimensional model')
             }
@@ -845,7 +851,7 @@ setMethod(
                                   ylab = expression(I(theta)), xlab = expression(theta), ...))
                 } else {
                     return(xyplot(SE~Theta, plt, type='l', main = main,
-                           xlab = expression(theta), ylab=expression(SE(theta))))
+                           xlab = expression(theta), ylab=expression(SE(theta)), ...))
                 }
             } else if(type == 'infoSE'){
                 if(is.null(main))
@@ -854,7 +860,7 @@ setMethod(
                                xlab = expression(theta), ylab=expression(I(theta)))
                 obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
                 if(!require(latticeExtra)) require(latticeExtra)
-                return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
+                return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2, ...))
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- 'Item trace lines'
