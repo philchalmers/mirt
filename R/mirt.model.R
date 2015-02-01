@@ -35,10 +35,10 @@
 #'   \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some combination
 #'   such as \code{CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)}.
 #'
-#'   When constraining parameters to be equal within an item (e.g., for factor loading
-#'   'doubles') declare the respective item and use multiple parameter names. For
-#'   instance, to constrain two slopes to be equal within the first item, use
-#'   \code{CONSTRAIN = (1, a1, a2)}}
+#'   When constraining parameters to be equal across items with different parameter names, a
+#'   balanced bracketed vector must be supplied. E.g., setting the first slope for item 1 equal to
+#'   the second slope in item 3 would be \code{CONSTRAIN = (1, 3, a1, a2)}
+#'   }
 #'
 #'  \item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
 #'   The input format is \code{CONSTRAINB = (items, ..., parameterName),

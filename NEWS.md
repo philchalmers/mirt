@@ -1,6 +1,8 @@
 # Changes in mirt 1.9
 
-- WLE support for mutlidimensional models added
+- constraits for hetorogenous item names added to `mirt.model()` syntax
+
+- WLE support for multidimensional models added
 
 - added `'SEcontour'` argument to `plot()` generic
 
