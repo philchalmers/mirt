@@ -20,6 +20,8 @@
 #' extr.1 <- extract.item(mod, 1)
 #' }
 extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
+    if(is(x, 'MixedClass'))
+        stop('Lower-level functions do not support extracted items from MixedClass objects')
     inames <- colnames(x@Data$data)
     ind <- 1L:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
