@@ -72,7 +72,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                      theta_lim = c(-6,6), shiny = FALSE, ...){
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE))
-            shiny::runApp(shinyItemplot())
+            shiny::runApp(shinyItemplot(), ...)
     }
     if(is(object, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported')
