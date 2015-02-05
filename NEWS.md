@@ -8,6 +8,10 @@
 
 - use NA's in `fscores()` when response patterns contain all NA responses (suggested by Tomasz Zoltak)
 
+## BUG FIX
+
+- S-X2 in `itemfit()` now returns appropriate values for multiple-group models
+
 # Changes in mirt 1.8
 
 - `fscores()` nows accepts `method = "plausible"` to draw a single plausible value set
