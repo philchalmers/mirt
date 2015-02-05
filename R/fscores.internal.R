@@ -444,11 +444,8 @@ setMethod(
         }
         ret <- vector('list', length(pars))
         for(g in 1L:ngroups){
-            tmp <- pars[[g]]
-            tmp@Data <- object@Data
-            tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[g],,drop=FALSE]
-            tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[g]]
-            ret[[g]] <- fscores(tmp, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
+            tmp_obj <- MGC2SC(object, g)
+            ret[[g]] <- fscores(tmp_obj, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
                            full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)

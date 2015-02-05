@@ -1586,6 +1586,15 @@ collapseCells <- function(O, E, mincell = 1){
     return(list(O=O, E=E))
 }
 
+MGC2SC <- function(x, which){
+    tmp <- x@pars[[which]]
+    tmp@Data <- x@Data
+    tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
+    tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
+    tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
+    tmp
+}
+
 rmsea <- function(X2, df, N){
     ret <- ifelse((X2 - df) > 0,
                   sqrt(X2 - df) / sqrt(df * (N-1)), 0)

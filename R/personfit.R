@@ -84,9 +84,8 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
             Theta <- fscores(x, method=method, scores.only=TRUE, full.scores=TRUE, ...)
         for(g in 1L:length(x@pars)){
             pick <- x@Data$groupNames[g] == x@Data$group
-            x@pars[[g]]@Data$data <- x@Data$data[pick, , drop=FALSE]
-            x@pars[[g]]@Data$fulldata[[1L]] <- x@Data$fulldata[[g]]
-            ret[[g]] <- personfit(x@pars[[g]], method=method, stats.only=stats.only,
+            tmp_obj <- MGC2SC(x, g)
+            ret[[g]] <- personfit(tmp_obj, method=method, stats.only=stats.only,
                                   Theta=Theta[pick, , drop=FALSE], ...)
         }
         ret2 <- matrix(0, nrow(x@Data$data), ncol(ret[[1L]]))
