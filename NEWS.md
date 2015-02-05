@@ -6,6 +6,8 @@
 
 - added `'SEcontour'` argument to `plot()` generic
 
+- use NA's in `fscores()` when response patterns contain all NA responses (suggested by Tomasz Zoltak)
+
 # Changes in mirt 1.8
 
 - `fscores()` nows accepts `method = "plausible"` to draw a single plausible value set

@@ -13,6 +13,8 @@ setMethod(
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 	                    hessian, mirtCAT = FALSE, return.acov = FALSE, den_fun, ...){
+	        if(any(is.na(scores[ID, ])))
+	            return(c(scores[ID, ], rep(NA, ncol(scores))))
             if(mirtCAT){
                 estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ], den_fun=den_fun,
                                     itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
@@ -33,7 +35,7 @@ setMethod(
 	    }
 	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 	                   hessian, return.acov = FALSE, den_fun, ...){
-	        if(any(scores[ID, ] %in% c(-Inf, Inf)))
+            if(any(scores[ID, ] %in% c(-Inf, Inf, NA)))
                 return(c(scores[ID, ], rep(NA, ncol(scores))))
             estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ], den_fun=NULL,
     	                        itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
@@ -59,6 +61,8 @@ setMethod(
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 	                    hessian, data, return.acov = FALSE, ...){
+	        if(any(is.na(scores[ID, ])))
+	            return(c(scores[ID, ], rep(NA, ncol(scores))))
 	        estimate <- try(nlm(WLE.mirt, scores[ID, ], pars=pars, patdata=tabdata[ID, ],
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, data=data[ID, ],
 	                            hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
@@ -71,7 +75,9 @@ setMethod(
 	        } else SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest))
 	    }
-	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, return.acov = FALSE){
+	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores, return.acov = FALSE){
+	        if(any(is.na(scores[ID, ])))
+	            return(c(scores[ID, ], rep(NA, ncol(scores))))
             nfact <- ncol(ThetaShort)
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
             expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
@@ -213,6 +219,8 @@ setMethod(
     		tabdata <- tabdata[keep, , drop=FALSE]
 		}
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
+		drop <- rowSums(tabdata) == 0L
+		scores[drop, ] <- SEscores[drop, ] <- NA
         list_SEscores <- list_scores <- vector('list', MI)
         if(MI == 0) MI <- 1
         impute <- MI > 1
@@ -255,10 +263,12 @@ setMethod(
                 log_itemtrace <- log(itemtrace)
                 if(method == 'EAP' && return.acov){
                     tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
-                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE, hessian=TRUE)
+                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
+                                   scores=scores, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
-                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, hessian=estHess && method == 'EAP')
+                                   tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
+                                   hessian=estHess && method == 'EAP')
             	    scores <- tmp[ ,1L:nfact, drop = FALSE]
             	    SEscores <- tmp[ ,-c(1L:nfact), drop = FALSE]
                 }
@@ -296,7 +306,7 @@ setMethod(
     		} else {
     		    scores <- tmp[ ,1:nfact, drop = FALSE]
     		    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
-    		    colnames(scores) <- paste('F', 1:ncol(scores), sep='')
+    		    colnames(scores) <- paste('F', 1L:ncol(scores), sep='')
     		    if(impute){
     		        list_SEscores[[mi]] <- SEscores
     		        list_scores[[mi]] <- scores
