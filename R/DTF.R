@@ -141,6 +141,9 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
         stop('mod input was not estimated by multipleGroup()')
     if(length(mod@pars) != 2L)
         stop('DTF only supports two group models at a time')
+    if(!any(sapply(mod@pars, function(x) x@pars[[length(x@pars)]]@est)))
+        message('No hyper-parameters were estimated in the DIF model. For effective
+                \tDTF testing, freeing the focal group hyper-parameters is recommend.')
     if(!is.null(Theta_nodes)){
         if(!is.matrix(Theta_nodes))
             stop('Theta_nodes must be a matrix')
