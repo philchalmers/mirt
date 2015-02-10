@@ -1,5 +1,11 @@
 # Changes in mirt 1.9
 
+- add a `suppress` argument to `residuals()` to suppress local dependence values less
+  than a specific value
+  
+- print a message in `DIF()` and `DTF()` when hyper-parameters are not freely
+  estimated in focal groups
+
 - constraits for hetorogenous item names added to `mirt.model()` syntax
 
 - WLE support for multidimensional models added

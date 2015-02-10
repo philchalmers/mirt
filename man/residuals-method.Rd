@@ -10,7 +10,7 @@
 \usage{
 \S4method{residuals}{SingleGroupClass}(object, type = "LD", digits = 3,
   df.p = FALSE, full.scores = FALSE, printvalue = NULL, tables = FALSE,
-  verbose = TRUE, Theta = NULL, ...)
+  verbose = TRUE, Theta = NULL, suppress = 1, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass} or
@@ -42,6 +42,10 @@ tables for each item combination?}
 If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 be used instead}
 
+\item{suppress}{a numeric value indiciating which parameter local dependency combinations
+to flag as being too high. Absolute values for the standardized estimates greater than
+this value will be returned, while all values less than this value will be set to NA}
+
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
 \description{
@@ -54,6 +58,7 @@ x <- mirt(Science, 1)
 residuals(x)
 residuals(x, tables = TRUE)
 residuals(x, type = 'exp')
+residuals(x, suppress = .15)
 
 # with and without supplied factor scores
 Theta <- fscores(x, full.scores=TRUE, scores.only=TRUE)

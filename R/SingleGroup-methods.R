@@ -417,6 +417,9 @@ setMethod(
 #' @param Theta a matrix of factor scores used for statistics that require empirical estimates (i.e., Q3).
 #'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
+#' @param suppress a numeric value indiciating which parameter local dependency combinations
+#'   to flag as being too high. Absolute values for the standardized estimates greater than
+#'   this value will be returned, while all values less than this value will be set to NA
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @name residuals-method
@@ -439,6 +442,7 @@ setMethod(
 #' residuals(x)
 #' residuals(x, tables = TRUE)
 #' residuals(x, type = 'exp')
+#' residuals(x, suppress = .15)
 #'
 #' # with and without supplied factor scores
 #' Theta <- fscores(x, full.scores=TRUE, scores.only=TRUE)
@@ -450,7 +454,8 @@ setMethod(
     f = "residuals",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
-                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL, ...)
+                          printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
+                          suppress = 1, ...)
     {
         dots <- list(...)
         discrete <- FALSE
@@ -533,6 +538,10 @@ setMethod(
                 cat("\n")
             }
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
+            if(suppress < 1){
+                pick <- abs(res[upper.tri(res)]) < suppress
+                res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
+            }
             res <- round(res,digits)
             return(res)
         } else if(type == 'exp'){
@@ -586,6 +595,10 @@ setMethod(
                 }
             }
             if(verbose) cat("Q3 matrix:\n\n")
+            if(suppress < 1){
+                pick <- abs(res[upper.tri(res)]) < suppress
+                res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
+            }
             res <- round(res,digits)
             return(res)
         } else {
