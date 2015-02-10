@@ -1,7 +1,7 @@
 # Changes in mirt 1.9
 
-- add a `suppress` argument to `residuals()` to suppress local dependence values less
-  than a specific value
+- add a `suppress` argument to `residuals()` and `M2()` to suppress local dependence
+  values less than this specific value
   
 - print a message in `DIF()` and `DTF()` when hyper-parameters are not freely
   estimated in focal groups

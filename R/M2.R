@@ -26,6 +26,10 @@
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 #'   If \code{quadpts} not specified, 2000 nodes are used by default
+#' @param suppress a numeric value indiciating which parameter residual dependency combinations
+#'   to flag as being too high. Absolute values for the standardized residuals greater than
+#'   this value will be returned, while all values less than this value will be set to NA.
+#'   Must be used in conjunction with the arguement \code{residmat = TRUE}
 #' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -52,7 +56,7 @@
 #'
 #' }
 M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
-               residmat = FALSE, QMC=FALSE, ...){
+               residmat = FALSE, QMC=FALSE, suppress = 1, ...){
 
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -260,6 +264,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
             ret <- matrix(NA, nrow(R), nrow(R))
             ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
             colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
+            if(suppress < 1)
+                ret[lower.tri(ret)][abs(ret[lower.tri(ret)]) < suppress] <- NA
             return(ret)
         }
     } else SRMSR <- NULL

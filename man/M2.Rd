@@ -5,7 +5,7 @@
 \title{Compute M2 statistic}
 \usage{
 M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0,
-  CI = 0.9, residmat = FALSE, QMC = FALSE, ...)
+  CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -31,6 +31,11 @@ RMSEA. Default returns the 90\% interval}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 If \code{quadpts} not specified, 2000 nodes are used by default}
+
+\item{suppress}{a numeric value indiciating which parameter residual dependency combinations
+to flag as being too high. Absolute values for the standardized residuals greater than
+this value will be returned, while all values less than this value will be set to NA.
+Must be used in conjunction with the arguement \code{residmat = TRUE}}
 
 \item{...}{additional arguments to pass}
 }
