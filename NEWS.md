@@ -18,6 +18,8 @@
 
 - S-X2 in `itemfit()` now returns appropriate values for multiple-group models
 
+- multidimensional plausible value imputation fix (reported by KK Sasa)
+
 # Changes in mirt 1.8
 
 - `fscores()` nows accepts `method = "plausible"` to draw a single plausible value set

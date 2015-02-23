@@ -114,7 +114,7 @@ setMethod(
                           return.acov = TRUE, QMC=QMC, custom_den = NULL, ...)
             ret <- vector('list', plausible.draws)
             for(i in 1L:plausible.draws){
-                jit <- lapply(fs_acov, function(x) mirt_rmvnorm(ncol(x), sigma = x))
+                jit <- lapply(fs_acov, function(x) mirt_rmvnorm(1L, sigma = x))
                 jit <- do.call(rbind, jit)
                 ret[[i]] <- fs + jit
             }
