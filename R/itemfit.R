@@ -140,6 +140,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
+        if(sum(is.na(x@Data$data)) / (prod(dim(x@Data$data))) > 0.05)
+            warning('Imputation may not be effective for large amounts of missing data.')
         collect <- myLapply(collect, fn, obj=x, Theta=Theta, vals=vals,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
