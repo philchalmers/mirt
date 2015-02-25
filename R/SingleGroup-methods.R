@@ -312,22 +312,17 @@ setMethod(
         if(as.data.frame)
             allPars <- t(as.data.frame(allPars))
         if(simplify && !as.data.frame){
-            nms <- lapply(allPars, colnames)[1:(length(allPars)-1)]
-            isTRUE <- all(sapply(nms[2:length(nms)], function(x, first) all(x %in% first),
-                                 first=nms[[1L]]))
-            if(isTRUE){
-                allPars <- lapply(allPars, function(x) x[1L, , drop=FALSE])
-                items <- do.call(rbind, allPars[1L:(length(allPars)-1)])
-                rownames(items) <- colnames(object@Data$data)
-                allPars <- list(items=items, groupPars=allPars[length(allPars)][[1L]])
-            } else {
-                message('Could not simplify items. Returning default list')
-            }
+            vals <- mod2values(object)[,c('item', 'name', 'value')]
+            vals <- vals[vals$item != 'GROUP', ]
+            items <- reshape(vals, idvar = 'item', timevar = 'name', direction = 'wide')
+            rownames(items) <- items[,1L]
+            colnames(items) <- gsub('value\\.', '', colnames(items))
+            allPars <- lapply(allPars, function(x) x[1L, , drop=FALSE])
+            allPars <- list(items=as.matrix(items[,-1]), groupPars=allPars[[length(allPars)]])
             means <- allPars[['groupPars']][1L:object@nfact]
-            names(means) <- colnames(allPars[['groupPars']])[1L:object@nfact]
             covs <- matrix(NA, object@nfact, object@nfact)
             covs[lower.tri(covs, TRUE)] <- allPars[['groupPars']][-c(1L:object@nfact)]
-            colnames(covs) <- rownames(covs) <- object@factorNames[1L:object@nfact]
+            colnames(covs) <- rownames(covs) <- names(means) <- object@factorNames[1L:object@nfact]
             allPars[['groupPars']] <- list(means=means, cov=covs)
         }
         if(.hasSlot(object@lrPars, 'beta'))

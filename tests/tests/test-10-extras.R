@@ -50,18 +50,18 @@ test_that('extras', {
     PLCI <- PLCI.mirt(mod1, parnum=c(1,2))
     expect_equal(c(PLCI$lower_2.5, PLCI$upper_97.5), c(0.7580446, 1.6843469, 1.2564076, 2.0529152),
                  tolerance=1e-3)
-    DIFF <- DIF(model1a, which.par='d', items2test = 1:3)
+    DIFF <- suppressMessages(DIF(model1a, which.par='d', items2test = 1:3))
     expect_is(DIFF, 'list')
     expect_equal(DIFF[[1L]][2,'logLik'], -12508.15, tolerance = 1e-3)
-    DIFF2 <- DIF(model2, which.par=c('a1', 'd'), items2test = 1:3, scheme='drop')
+    DIFF2 <- suppressMessages(DIF(model2, which.par=c('a1', 'd'), items2test = 1:3, scheme='drop'))
     expect_is(DIFF2, 'list')
     expect_equal(DIFF2[[1L]][,'logLik'], c(-12534.13, -12528.83), tolerance = 1e-3)
 
-    WALD <- DIF(model1a, which.par='d', items2test = 1:3, Wald=TRUE)
+    WALD <- suppressMessages(DIF(model1a, which.par='d', items2test = 1:3, Wald=TRUE))
     expect_is(WALD, 'list')
     expect_equal(WALD[[1]]$W[1], 1.779187, tolerance = 1e-3)
     expect_equal(WALD[[1]]$p[1], .1822492, tolerance = 1e-3)
-    WALD2 <- DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
+    WALD2 <- suppressMessages(DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr'))
     expect_equal(as.numeric(WALD2$adj_pvals), c(0.0777, 0.0010, 0.0777, 0.1611, 0.1652, 0.1611,
                                                 0.2662, 0.0777, 0.2344, 0.1652), tolerance = 1e-3)
     extr.2 <- extract.item(mod1, 2)
