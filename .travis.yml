@@ -1,34 +1,22 @@
-# it is not really python, but there is no R support on Travis CI yet
-language: python
+language: r
+warnings_are_errors: true
 
-# environment variables
+r_packages:
+  - RUnit
+r_binary_packages:
+  - mirt
+  - knitr
+  - testthat
+  - devtools
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
 env:
-  - R_LIBS_USER=~/R
+  - global:
+    - _R_CHECK_FORCE_SUGGESTS_=0
 
-# specify which branchs to test
-branches:
-  only:
-    - dev
-
-# install dependencies
-install:
-  - echo "deb http://cran.rstudio.com/bin/linux/ubuntu `lsb_release -cs`/"
-      | sudo tee /etc/apt/sources.list.d/cran.list
-  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-  - sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/cran.list"
-      -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
-  - sudo apt-add-repository -y ppa:marutter/c2d4u
-  - sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/marutter-c2d4u-precise.list"
-      -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
-  - sudo apt-get install --no-install-recommends r-base-dev r-cran-xml r-cran-rcurl r-recommended
-      qpdf texinfo texlive-latex-recommended texlive-latex-extra lmodern texlive-fonts-recommended texlive-fonts-extra
-  - "[ ! -d ~/R ] && mkdir ~/R"
-  - R --version
-  - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages("mirt", dep = TRUE, repos = "http://cran.rstudio.org")'
-  - Rscript -e 'install.packages("devtools", repos = "http://cran.rstudio.org")'
-
-# run tests
 script:
   - make install
   - make check
