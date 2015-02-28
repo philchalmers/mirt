@@ -312,18 +312,19 @@ setMethod(
         if(as.data.frame)
             allPars <- t(as.data.frame(allPars))
         if(simplify && !as.data.frame){
-            vals <- mod2values(object)[,c('item', 'name', 'value')]
-            vals <- vals[vals$item != 'GROUP', ]
-            items <- reshape(vals, idvar = 'item', timevar = 'name', direction = 'wide')
-            rownames(items) <- items[,1L]
-            colnames(items) <- gsub('value\\.', '', colnames(items))
-            allPars <- lapply(allPars, function(x) x[1L, , drop=FALSE])
-            allPars <- list(items=as.matrix(items[,-1]), groupPars=allPars[[length(allPars)]])
-            means <- allPars[['groupPars']][1L:object@nfact]
+            items.old <- allPars[1L:(length(allPars)-1L)]
+            nms <- lapply(items.old, colnames)
+            unms <- unique(do.call(c, nms))
+            items <- matrix(NA, length(items.old), length(unms))
+            rownames(items) <- names(items.old)
+            colnames(items) <- unms
+            for(i in 1L:nrow(items))
+                items[i, nms[[i]]] <- items.old[[i]]
+            means <- allPars$GroupPars[1L:object@nfact]
             covs <- matrix(NA, object@nfact, object@nfact)
-            covs[lower.tri(covs, TRUE)] <- allPars[['groupPars']][-c(1L:object@nfact)]
+            covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(1L:object@nfact)]
             colnames(covs) <- rownames(covs) <- names(means) <- object@factorNames[1L:object@nfact]
-            allPars[['groupPars']] <- list(means=means, cov=covs)
+            allPars <- list(items=items, means=means, cov=covs)
         }
         if(.hasSlot(object@lrPars, 'beta'))
             allPars$lr.betas <- round(object@lrPars@beta, digits)
