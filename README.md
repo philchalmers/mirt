@@ -63,10 +63,6 @@ git clone https://github.com/philchalmers/mirt
 R CMD INSTALL mirt
 ```
 
-# Upcoming IRT Workshops
-
-*Two day workshop at the* [University of Zurich, Switzerland](http://www.zhrcourses.uzh.ch/programm/datenanalyse/irt-analysis_en.html)
-
 # Bugs and Questions
 
 Bug reports are always welcome and the preferred way to address these bugs is through
