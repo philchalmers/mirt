@@ -155,10 +155,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         if(has_graded){
             for(g in 1L:length(pars)){
-                pars[[g]] <- lapply(pars[[g]], function(x){
+                pars[[g]][1L:J] <- lapply(pars[[g]][1L:J], function(x){
                     if(class(x) == 'graded'){
                         ds <- x@par[-(1L:x@nfact)]
                         x@par[-(1L:x@nfact)] <- sort(ds, decreasing = TRUE)
+                        names(x@par) <- names(x@est)
                     }
                     return(x)
                 })
