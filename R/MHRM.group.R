@@ -2,6 +2,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                        lrPars = list(), DERIV)
 {
     if(is.null(random)) random <- list()
+    itemtype <- sapply(pars[[1]], class)
+    has_graded <- any(itemtype == 'graded')
     lr.random <- list() #FIXME overwrite later
     RAND <- length(random) > 0L; LR.RAND <- length(lr.random) > 0L
     LRPARS <- length(lrPars) > 0L
@@ -151,6 +153,17 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         #Reload pars list
         if(list$USEEM) longpars <- list$startlongpars
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+        if(has_graded){
+            for(g in 1L:length(pars)){
+                pars[[g]] <- lapply(pars[[g]], function(x){
+                    if(class(x) == 'graded'){
+                        ds <- x@par[-(1L:x@nfact)]
+                        x@par[-(1L:x@nfact)] <- sort(ds, decreasing = TRUE)
+                    }
+                    return(x)
+                })
+            }
+        }
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
         if(LRPARS){
