@@ -1,5 +1,7 @@
 # Changes in mirt 1.9
 
+- added `custom_theta` input to `fscores()` for including customized integration grids
+
 - add a `suppress` argument to `residuals()` and `M2()` to suppress local dependence
   values less than this specific value
   

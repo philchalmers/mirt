@@ -8,7 +8,8 @@ fscores(object, rotate = NULL, full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
   returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL,
   verbose = TRUE, scores.only = TRUE, full.scores.SE = FALSE,
-  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, custom_den = NULL, ...)
+  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, custom_den = NULL,
+  custom_theta = NULL, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -82,6 +83,9 @@ default number of nodes is 2000}
   if \code{method == 'EAPsum'} or \code{method == 'EAP'}, otherwise Theta will have only 1 row).
   Additional arguments may included and are caught through the \code{fscores(...)} input. The
   function \emph{must} return a numeric vector of density weights (one for each row in Theta)}
+
+\item{custom_theta}{a matrix of custom integration nodes to use instead of the default, where
+each column correspends to the respective dimension in the model}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
 }

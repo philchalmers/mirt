@@ -81,6 +81,8 @@
 #'   if \code{method == 'EAPsum'} or \code{method == 'EAP'}, otherwise Theta will have only 1 row).
 #'   Additional arguments may included and are caught through the \code{fscores(...)} input. The
 #'   function \emph{must} return a numeric vector of density weights (one for each row in Theta)
+#' @param custom_theta a matrix of custom integration nodes to use instead of the default, where
+#'   each column correspends to the respective dimension in the model
 #' @param ... additional arguments to be passed to \code{nlm}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
@@ -149,7 +151,7 @@ fscores <- function(object, rotate = NULL, full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
-                    QMC = FALSE, custom_den = NULL, ...)
+                    QMC = FALSE, custom_den = NULL, custom_theta = NULL, ...)
 {
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 2000
@@ -166,6 +168,7 @@ fscores <- function(object, rotate = NULL, full.scores = FALSE, method = "EAP",
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             scores.only=scores.only, theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
-                            plausible.draws = plausible.draws, custom_den=custom_den, ...)
+                            plausible.draws = plausible.draws, custom_den=custom_den,
+                            custom_theta=custom_theta, ...)
     ret
 }

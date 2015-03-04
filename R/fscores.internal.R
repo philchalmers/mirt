@@ -5,7 +5,7 @@ setMethod(
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
-                          QMC, custom_den = NULL, digits=4, ...)
+                          QMC, custom_den = NULL, custom_theta = NULL, digits=4, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(!is.null(custom_den)) den_fun <- custom_den
@@ -145,7 +145,8 @@ setMethod(
                 ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
-                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, ...)
+                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
+                               custom_theta=custom_theta, ...)
             } else {
                 pick <- which(!is.na(response.pattern))
                 rp <- response.pattern[,pick,drop=FALSE]
@@ -159,7 +160,8 @@ setMethod(
                 ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
-                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, ...)
+                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
+                               custom_theta=custom_theta, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret[,c(paste0('F', 1L:nfact),
                                                       paste0('SE_F', 1L:nfact)), drop=FALSE])
@@ -250,9 +252,15 @@ setMethod(
                     ThetaShort <- Theta <- object@Theta
                     W <- object@Prior[[1L]]
                 } else {
-                    ThetaShort <- Theta <- if(QMC){
-                        qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409), sd=2)
-                    } else thetaComb(theta,nfact)
+                    if(is.null(custom_theta)){
+                        ThetaShort <- Theta <- if(QMC){
+                            qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409), sd=2)
+                        } else thetaComb(theta,nfact)
+                    } else {
+                        if(ncol(custom_theta) != object@nfact)
+                            stop('ncol(custom_theta) does not match model')
+                        ThetaShort <- Theta <- custom_theta
+                    }
                     if(length(prodlist) > 0L)
                         Theta <- prodterms(Theta,prodlist)
                     W <- den_fun(ThetaShort, mean=gp$gmeans, sigma=gp$gcov, quad=LR, ...)
