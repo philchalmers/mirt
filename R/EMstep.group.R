@@ -253,7 +253,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                                           BFACTOR=BFACTOR, rlist=rlist)
+                                           BFACTOR=BFACTOR, rlist=rlist, full=full)
                             if(Elist$LL <= collectLL[cycles]){
                                 accel <- (accel - 1) / 2
                                 count <- count + 1L
