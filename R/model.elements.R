@@ -51,6 +51,11 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         } else if(itemtype[i] %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')){
             div <- ifelse(cs[i] > .25, cs[i], .25)
             zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i] + key[i]-1L]))/div * 1.702/D
+        } else if(itemtype[i] %in% c('gpcm', 'nominal', 'Rasch')){
+            temp <- qnorm(table(data[,i])[1L:(K[i])]/N)
+            div <- ifelse(cs[i] > .25, cs[i], .25)
+            temp <- (temp - temp[1L])/div * 1.702
+            zetas[[i]] <- temp[-1L]
         } else {
             temp <- table(data[,i])[1L:(K[i]-1L)]/N
             temp <- cumsum(temp)

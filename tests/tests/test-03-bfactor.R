@@ -104,7 +104,7 @@ test_that('dich data', {
 
     res <- residuals(simmod, verbose = FALSE)
     expect_is(res, 'matrix')
-    expect_equal(res[2,1], 1.739, tolerance = 1e-2)
+    expect_equal(res[2,1], 1.827, tolerance = 1e-2)
     sum <- summary(simmod, verbose = FALSE)
     expect_is(sum, 'list')
 
