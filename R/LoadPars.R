@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
-                     parprior, parnumber, D, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, nominal.highlow)
+                     parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
+                     key, nominal.highlow, gpcm_mats)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -8,9 +8,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                     'grsm', 'gpcm', 'nominal', 'PC2PL','PC3PL', #'rsm,
                     '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM', 'ideal', 'lca', 'nlca')
     invalid.items <- is.na(match(itemtype, valid.items))
-    if (any(invalid.items & !(itemtype %in% customItemNames))) {
-      stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
-    }
+    if (any(invalid.items & !(itemtype %in% customItemNames)))
+        stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
+    if(length(gpcm_mats)){
+        tmp <- sapply(gpcm_mats, ncol)
+        if(!all(tmp == nfact))
+            stop(paste0('Matricies in gpcm_mats should only have ', nfact, ' column(s)'))
+        use_gpcm_mats <- as.logical(sapply(gpcm_mats, length))
+    } else use_gpcm_mats <- rep(FALSE, length(itemtype))
     pars <- vector('list', J)
     guess <- logit(guess)
     upper <- logit(upper)
@@ -25,9 +30,16 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if(itemtype[i] == 'Rasch' && K[i] > 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
-            val <- c(tmpval, 0:(K[i]-1L), 0, zetas[[i]])
-            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
-                            paste('d', 0L:(K[i]-1L), sep=''))
+            if(use_gpcm_mats[i]){
+                val <- c(tmpval, as.vector(gpcm_mats[[i]]), 0, zetas[[i]])
+                names(val) <- c(paste('a', 1L:nfact, sep=''),
+                                outer(paste0('ak', 0L:(K[i]-1L)), paste0('_', 1L:nfact), FUN=paste0),
+                                paste('d', 0L:(K[i]-1L), sep=''))
+            } else {
+                val <- c(tmpval, 0:(K[i]-1L), 0, zetas[[i]])
+                names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                                paste('d', 0L:(K[i]-1L), sep=''))
+            }
         } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u')
@@ -45,15 +57,22 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,], tmp, ifelse(min(which(K[i] == K)) == i, 0, tmp[1L] + zetas[[i]][1L]))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'gpcm'){
-            val <- c(lambdas[i,], 0:(K[i]-1), 0, zetas[[i]])
-            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
-                            paste('d', 0L:(K[i]-1L), sep=''))
-        } else if(itemtype[i] == 'rsm'){
-            tmpval <- rep(0, nfact)
-            tmpval[lambdas[i,] != 0] <- 1
-            val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
-            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
-                            paste('d', 0L:(K[i]-1L), sep=''), 'c')
+            if(use_gpcm_mats[i]){
+                val <- c(lambdas[i,], as.vector(gpcm_mats[[i]]), 0, zetas[[i]])
+                names(val) <- c(paste('a', 1L:nfact, sep=''),
+                                outer(paste0('ak', 0L:(K[i]-1L)), paste0('_', 1:nfact), FUN=paste0),
+                                paste('d', 0L:(K[i]-1L), sep=''))
+            } else {
+                val <- c(lambdas[i,], 0:(K[i]-1), 0, zetas[[i]])
+                names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                                paste('d', 0L:(K[i]-1L), sep=''))
+            }
+#         } else if(itemtype[i] == 'rsm'){
+#             tmpval <- rep(0, nfact)
+#             tmpval[lambdas[i,] != 0] <- 1
+#             val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+#             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+#                             paste('d', 0L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
             if(is.null(nominal.highlow)){
@@ -96,16 +115,26 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             if(any(itemtype[i] == c('3PLuNRM', '4PLNRM'))) estpars[nfact+3] <- TRUE
             freepars[[i]] <- estpars
         } else if(itemtype[i] == 'Rasch' && K[i] > 2L){
-            freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]), 
-                               FALSE, rep(TRUE, K[i]-1L))
+            if(use_gpcm_mats[i]){
+                freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]*nfact),
+                                   FALSE, rep(TRUE, K[i]-1L))
+            } else {
+                freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]),
+                                   FALSE, rep(TRUE, K[i]-1L))
+            }
         } else if(itemtype[i] == 'grsm'){
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
         } else if(itemtype[i] == 'graded'){
             freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
         } else if(itemtype[i] == 'gpcm'){
-            freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]-1L))
-        } else if(itemtype[i] == 'rsm'){
-            freepars[[i]] <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
+            if(use_gpcm_mats[i]){
+                freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]*nfact),
+                                   FALSE, rep(TRUE, K[i]-1L))
+            } else {
+                freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]-1L))
+            }
+#         } else if(itemtype[i] == 'rsm'){
+#             freepars[[i]] <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
         } else if(itemtype[i] == 'nominal'){
             estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
             if(is.null(nominal.highlow)){
@@ -195,6 +224,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
+                             mat=use_gpcm_mats[i],
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
@@ -302,43 +332,44 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
+                             mat=use_gpcm_mats[i],
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
-            pars[[i]]@par[nfact+1L] <- 0
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
             next
         }
 
-        if(itemtype[i] == 'rsm'){
-            pars[[i]] <- new('rsm',
-                             par=startvalues[[i]],
-                             nfact=nfact,
-                             ncat=K[i],
-                             itemclass=6L,
-                             nfixedeffects=nfixedeffects,
-                             any.prior=FALSE,
-                             prior.type=rep(0L, length(startvalues[[i]])),
-                             fixed.design=fixed.design.list[[i]],
-                             est=freepars[[i]],
-                             lbound=rep(-Inf, length(startvalues[[i]])),
-                             ubound=rep(Inf, length(startvalues[[i]])),
-                             prior_1=rep(NaN,length(startvalues[[i]])),
-                             prior_2=rep(NaN,length(startvalues[[i]])))
-            pars[[i]]@par[nfact+1L] <- 0
-            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
-            pars[[i]]@parnum <- tmp2
-            parnumber <- parnumber + length(freepars[[i]])
-            next
-        }
+#         if(itemtype[i] == 'rsm'){
+#             pars[[i]] <- new('rsm',
+#                              par=startvalues[[i]],
+#                              nfact=nfact,
+#                              ncat=K[i],
+#                              itemclass=6L,
+#                              nfixedeffects=nfixedeffects,
+#                              any.prior=FALSE,
+#                              prior.type=rep(0L, length(startvalues[[i]])),
+#                              fixed.design=fixed.design.list[[i]],
+#                              est=freepars[[i]],
+#                              lbound=rep(-Inf, length(startvalues[[i]])),
+#                              ubound=rep(Inf, length(startvalues[[i]])),
+#                              prior_1=rep(NaN,length(startvalues[[i]])),
+#                              prior_2=rep(NaN,length(startvalues[[i]])))
+#             pars[[i]]@par[nfact+1L] <- 0
+#             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+#             pars[[i]]@parnum <- tmp2
+#             parnumber <- parnumber + length(freepars[[i]])
+#             next
+#         }
 
         if(itemtype[i] == 'nominal'){
             pars[[i]] <- new('nominal',
                              par=startvalues[[i]],
                              est=freepars[[i]],
+                             mat=FALSE,
                              nfact=nfact,
                              ncat=K[i],
                              itemclass=4L,
@@ -376,7 +407,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(freepars[[i]])
             next
         }
-        
+
         if(any(itemtype[i] == c('ideal'))){
             pars[[i]] <- new('ideal', par=startvalues[[i]], est=freepars[[i]],
                              nfact=nfact,
@@ -395,7 +426,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(freepars[[i]])
             next
         }
-        
+
         if(any(itemtype[i] %in% c('lca', 'nlca'))){
             pars[[i]] <- new('lca', par=startvalues[[i]], est=freepars[[i]],
                              nfact=nfact,

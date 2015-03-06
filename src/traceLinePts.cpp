@@ -173,6 +173,78 @@ void P_nominal(vector<double> &P, const vector<double> &par,
     }
 }
 
+void P_nominal2(vector<double> &P, const vector<double> &par,
+    const NumericMatrix &Theta, const NumericVector &ot, const int &N,
+    const int &nfact, const int &ncat, const int &returnNum,
+    const int &israting)
+{
+    vector<double> a(nfact), d(ncat);
+    NumericMatrix ak(ncat, nfact);
+    for(int i = 0; i < nfact; ++i)
+        a[i] = par[i];
+    int ind = nfact;
+    for(int j = 0; j < nfact; ++j){
+    	for(int i = 0; i < ncat; ++i){
+        	ak(i, j) = par[ind];
+        	++ind;
+    	}
+    }
+    for(int i = 0; i < ncat; ++i)
+        d[i] = par[i + nfact + ncat*nfact];
+    const int USEOT = ot.size() > 1;
+    NumericMatrix Num(N, ncat);
+    vector<double> z(ncat);
+    vector<double> Den(N, 0.0);
+
+    if(USEOT){
+        for(int i = 0; i < N; ++i){
+            for(int k = 0; k < ncat; ++k)
+        		z[k] = d[k] + ot[i];
+        	for(int k = 0; k < ncat; ++k)
+        		for(int j = 0; j < nfact; ++j)
+        			z[k] += ak(k,j) * a[j] * Theta(i,j);
+            double maxz = *std::max_element(z.begin(), z.end());
+            for(int j = 0; j < ncat; ++j){
+                z[j] = z[j] - maxz;
+                if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+                Num(i,j) = exp(z[j]);
+                Den[i] += Num(i,j);
+            }
+        }
+    } else {
+        for(int i = 0; i < N; ++i){        	
+        	for(int k = 0; k < ncat; ++k)
+        		z[k] = d[k];
+        	for(int k = 0; k < ncat; ++k)
+        		for(int j = 0; j < nfact; ++j)
+        			z[k] += ak(k,j) * a[j] * Theta(i,j);
+            double maxz = *std::max_element(z.begin(), z.end());
+            for(int j = 0; j < ncat; ++j){
+                z[j] = z[j] - maxz;
+                if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+                Num(i,j) = exp(z[j]);
+                Den[i] += Num(i,j);
+            }
+        }
+    }
+    int which = 0;
+    if(returnNum){
+        for(int j = 0; j < ncat; ++j){
+            for(int i = 0; i < N; ++i){
+                P[which] = Num(i,j);
+                ++which;
+            }
+        }
+    } else {
+        for(int j = 0; j < ncat; ++j){
+            for(int i = 0; i < N; ++i){
+                P[which] = Num(i,j) / Den[i];
+                ++which;
+            }
+        }
+    }
+}
+
 void P_nested(vector<double> &P, const vector<double> &par,
     const NumericMatrix &Theta, const int &N, const int &nfact, const int &ncat,
     const int &correct)
@@ -334,19 +406,25 @@ RcppExport SEXP nominalTraceLinePts(SEXP Rpar, SEXP Rncat, SEXP RTheta, SEXP Rre
 	END_RCPP
 }
 
-RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risrating)
+RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risrating, SEXP Rhas_mat)
 {
     BEGIN_RCPP
 
     const vector<double> par = as< vector<double> >(Rpar);
     const NumericMatrix Theta(RTheta);
     const int israting = as<int>(Risrating);
+    const int has_mat = as<int>(Rhas_mat);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    int ncat = (par.size() - nfact)/2;
+    int ncat;
+    if(has_mat)
+        ncat = (par.size() - nfact)/(nfact + 1);
+    else 
+    	ncat = (par.size() - nfact)/2;
     NumericVector ot(Rot);
     vector<double> P(N*ncat);
-    P_nominal(P, par, Theta, ot, N, nfact, ncat, 0, israting);
+    if(has_mat) P_nominal2(P, par, Theta, ot, N, nfact, ncat, 0, israting);
+    	else P_nominal(P, par, Theta, ot, N, nfact, ncat, 0, israting);
     NumericMatrix ret = vec2mat(P, N, ncat);
     return(ret);
 
@@ -418,6 +496,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     vector<double> P(N*ncat);
     int itemclass = as<int>(item.slot("itemclass"));
     int correct = 0;
+    int has_mat = 0;
     if(itemclass == 8)
         correct = as<int>(item.slot("correctcat"));
     vector<double> score;
@@ -455,7 +534,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 0);
             break;
         case 3 :
-            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);
+        	has_mat = as<int>(item.slot("mat"));
+        	if(has_mat) P_nominal2(P, par, theta, ot, N, nfact2, ncat, 0, 0);
+            	else P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);
             break;
         case 4 :
             P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);

@@ -2,7 +2,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
                        nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE,
-                       survey.weights = NULL, discrete=FALSE, latent.regression = NULL, ...)
+                       survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
+                       gpcm_mats=list(), ...)
 {
     start.time=proc.time()[3L]
     if(is.logical(large) && large){
@@ -98,7 +99,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         })
         Data$data <- data
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
-        if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
+        # if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
         Data$group <- factor(group)
         Data$groupNames <- unique(Data$group)
         if(any(grepl('-', Data$groupNames)))
@@ -125,8 +126,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                      upper=upper, parprior=parprior, verbose=opts$verbose,
                      technical=opts$technical, parnumber=1L, BFACTOR=opts$BFACTOR,
                      grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
-                     D=opts$D, mixed.design=mixed.design, customItems=customItems,
-                     fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow)
+                     mixed.design=mixed.design, customItems=customItems,
+                     fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow,
+                     gpcm_mats=gpcm_mats)
         if(any(PrepListFull$itemtype == 'nominal') && is.null(nominal.highlow) && !opts$NULL.MODEL
            && opts$verbose)
             if(opts$message)

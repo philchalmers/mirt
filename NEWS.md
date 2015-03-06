@@ -1,5 +1,8 @@
 # Changes in mirt 1.9
 
+- added `gpcm_mats` argument to estimation functions for specifying a customize scoring pattern
+  for multidimensional generalized partial credit models
+
 - added `custom_theta` input to `fscores()` for including customized integration grids
 
 - add a `suppress` argument to `residuals()` and `M2()` to suppress local dependence

@@ -13,21 +13,21 @@
 #' @param d a matrix of intercepts. The matrix should have as many columns as
 #'   the item with the largest number of categories, and filled empty locations
 #'   with \code{NA}
-#' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are 
+#' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
 #'   the same) specifying the type of items to simulate.
-#'   
+#'
 #'   Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
-#'   dichotomous, graded, generalized partial credit, nominal, nested logit, and partially 
-#'   compensatory models. Note that for the gpcm, nominal, and nested logit models there should 
-#'   be as many parameters as desired categories, however to parametrized them for meaningful 
+#'   dichotomous, graded, generalized partial credit, nominal, nested logit, and partially
+#'   compensatory models. Note that for the gpcm, nominal, and nested logit models there should
+#'   be as many parameters as desired categories, however to parametrized them for meaningful
 #'   interpretation the first category intercept should
 #'   equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
-#'   correct item traceline). For nested logit models the 'correct' category is always the lowest 
-#'   category (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that 
+#'   correct item traceline). For nested logit models the 'correct' category is always the lowest
+#'   category (i.e., == 1). It may be helpful to use \code{\link{mod2values}} on data-sets that
 #'   have already been estimated to understand the itemtypes more intimately
 #' @param nominal a matrix of specific item category slopes for nominal models.
 #'   Should be the dimensions as the intercept specification with one less column, with \code{NA}
-#'   in locations where not applicable. Note that during estimation the first slope will be 
+#'   in locations where not applicable. Note that during estimation the first slope will be
 #'   constrained to 0 and the last will be constrained to the number of categories minus 1,
 #'   so it is best to set these as the values for the first and last categories as well
 #' @param N sample size
@@ -35,17 +35,19 @@
 #'   for dichotomous items. Must be either a scalar value that will affect all of
 #'   the dichotomous items, or a vector with as many values as to be simulated items
 #' @param upper same as \code{guess}, but for upper bound parameters
+#' @param gpcm_mats a list of matricies specifying the scoring scheme for generalized partial
+#'   credit models (see \code{\link{mirt}} for details)
 #' @param sigma a covariance matrix of the underlying distribution. Default is
 #'   the identity matrix
 #' @param mu a mean vector of the underlying distribution. Default is a vector
 #'   of zeros
 #' @param Theta a user specified matrix of the underlying ability parameters,
 #'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}
-#' @param returnList logical; return a list containing the data, item objects defined 
-#'   by \code{mirt} containing the population parameters and item structure, and the 
+#' @param returnList logical; return a list containing the data, item objects defined
+#'   by \code{mirt} containing the population parameters and item structure, and the
 #'   latent trait matrix \code{Theta}? Default is FALSE
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @references 
+#' @references
 #' Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: Springer.
 #' @keywords data
 #' @export simdata
@@ -178,7 +180,7 @@
 #' #mod <- mirt(dataset, 1, itemtype = c('2PL', '2PL', '2PL', '2PLNRM'), key=c(NA,NA,NA,1))
 #' #coef(mod)
 #' #itemplot(mod,4)
-#' 
+#'
 #' #return list of simulation parameters
 #' listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 #' str(listobj)
@@ -187,7 +189,7 @@
 #'    }
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-	upper = 1, nominal = NULL, Theta = NULL, returnList = FALSE)
+	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE)
 {
     fn <- function(p, ns) sample(1L:ns, 1L, prob = p)
 	nfact <- ncol(a)
@@ -198,6 +200,10 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	if(length(upper) == 1L) upper <- rep(upper,nitems)
 	if(length(upper) != nitems) stop("Upper bound parameter is incorrect")
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, nitems)
+    if(length(gpcm_mats)){
+        stopifnot(length(gpcm_mats) == nitems)
+        use_gpcm_mats <- sapply(gpcm_mats, is.matrix)
+    } else use_gpcm_mats <- rep(FALSE, nitems)
     for(i in 1L:length(K)){
         K[i] <- length(na.omit(d[i, ])) + 1L
         if(itemtype[i] =='partcomp') K[i] <- 2L
@@ -229,7 +235,13 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	        obj <- new(itemtype[i], par=par, nfact=nfact, correctcat=1L)
 	    } else {
             if(itemtype[i] == 'gpcm'){
-                par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,],guess[i],upper[i]))
+                if(!use_gpcm_mats[i]){
+                    par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,]))
+                } else {
+                    stopifnot(nrow(gpcm_mats[[i]]) == K[i])
+                    stopifnot(ncol(gpcm_mats[[i]]) == nfact)
+                    par <- na.omit(c(a[i, ],as.vector(gpcm_mats[[i]]), d[i,]))
+                }
             } else if(itemtype[i] == 'ideal'){
                 if(K[i] > 2) stop('ideal point models for dichotomous items only')
                 if(d[i,1] > 0) stop('ideal point intercepts must be negative')
@@ -238,18 +250,20 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
             }
             obj <- new(itemtype[i], par=par, nfact=nfact)
+            if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
+            if(use_gpcm_mats[i]) obj@mat <- TRUE
 	    }
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit')))
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
         data[,i] <- apply(P, 1L, fn, ns = ncol(P))
-        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp', 'ideal'))) 
+        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp', 'ideal')))
             data[ ,i] <- data[ ,i] - 1L
         itemobjects[[i]] <- obj
 	}
 	colnames(data) <- paste("Item_", 1L:nitems, sep="")
     if(returnList){
-        return(list(itemobjects=itemobjects, data=data, Theta=Theta))        
+        return(list(itemobjects=itemobjects, data=data, Theta=Theta))
     } else {
 	    return(data)
     }

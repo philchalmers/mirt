@@ -91,11 +91,13 @@ setClass("graded", contains = 'AllItemsClass')
 
 setClass("rating", contains = 'AllItemsClass')
 
-setClass("gpcm", contains = 'AllItemsClass')
+setClass("gpcm", contains = 'AllItemsClass',
+         representation = representation(mat='logical'))
 
 setClass("rsm", contains = 'AllItemsClass')
 
-setClass("nominal", contains = 'AllItemsClass')
+setClass("nominal", contains = 'AllItemsClass',
+         representation = representation(mat='logical'))
 
 setClass("partcomp", contains = 'AllItemsClass')
 

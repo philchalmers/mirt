@@ -10,10 +10,10 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = TRUE, draws = 5000, survey.weights = NULL,
   rotate = "oblimin", Target = NaN, quadpts = NULL, TOL = NULL,
-  grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
-  GenRandomPars = FALSE, accelerate = "Ramsay", empiricalhist = FALSE,
-  verbose = TRUE, solnp_args = list(), alabama_args = list(),
-  technical = list(), ...)
+  gpcm_mats = list(), grsm.block = NULL, key = NULL,
+  nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
+  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
+  solnp_args = list(), alabama_args = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -152,6 +152,15 @@ the default number of quasi-Monte Carlo integration nodes will be set to 2000}
 \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
 If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
 will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}}
+
+\item{gpcm_mats}{a list of matricies specifying how the scoring coefficients in the (generalized)
+partial credit model should be constructed. If ommited, the standard gpcm format will be used
+(i.e., \code{seq(0, k, by = 1)} for each trait). This input should be used if traits
+should be scored different for each category (e.g., \code{matrix(c(0:3, 1,0,0,0), 4, 2)} for a
+two-dimensional model where the first trait is scored like a gpcm, but the second trait is only
+positively indicated when the first category is selected). Can be used when \code{itemtype}s
+are \code{'gpcm'} or \code{'Rasch'}, but only when the respective element in
+\code{gpcm_mats} is not \code{NULL}}
 
 \item{grsm.block}{an optional numeric vector indicating where the blocking should occur when
 using the grsm, NA represents items that do not belong to the grsm block (other items that may

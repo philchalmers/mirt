@@ -581,13 +581,13 @@ setMethod(
     definition = function(x, Theta, useDesign = TRUE, ot=0){
         if(nrow(x@fixed.design) > 1L && useDesign)
             Theta <- cbind(x@fixed.design, Theta)
-        return(P.gpcm(x@par, Theta=Theta, ot=ot))
+        return(P.gpcm(x@par, Theta=Theta, ot=ot, mat=x@mat))
     }
 )
 
-P.gpcm <- function(par, Theta, ot = 0)
+P.gpcm <- function(par, Theta, ot = 0, mat = FALSE)
 {
-    return(.Call("gpcmTraceLinePts", par, Theta, ot, FALSE))
+    return(.Call("gpcmTraceLinePts", par, Theta, ot, FALSE, mat))
 }
 
 setMethod(

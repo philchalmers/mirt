@@ -5,7 +5,8 @@
 \title{Simulate response patterns}
 \usage{
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-  upper = 1, nominal = NULL, Theta = NULL, returnList = FALSE)
+  upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
+  returnList = FALSE)
 }
 \arguments{
 \item{a}{a matrix of slope parameters. If slopes are to be constrained to
@@ -51,6 +52,9 @@ so it is best to set these as the values for the first and last categories as we
 
 \item{Theta}{a user specified matrix of the underlying ability parameters,
 where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}}
+
+\item{gpcm_mats}{a list of matricies specifying the scoring scheme for generalized partial
+credit models (see \code{\link{mirt}} for details)}
 
 \item{returnList}{logical; return a list containing the data, item objects defined
 by \code{mirt} containing the population parameters and item structure, and the

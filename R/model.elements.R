@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
-                           parnumber, BFACTOR = FALSE, D, mixed.design, customItems, key,
-                           nominal.highlow)
+                           parnumber, BFACTOR = FALSE, mixed.design, customItems, key,
+                           nominal.highlow, gpcm_mats)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -41,26 +41,23 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     lambdas <- ifelse(estlam, .5, 0)
     #INT
     cs <- sqrt(abs(1-rowSums(lambdas^2)))
-    lambdas <- lambdas * 1.702/D
+    lambdas <- lambdas * 1.702
     zetas <- list()
     loc <- 1L
     for(i in 1L:J){
+        div <- ifelse(cs[i] > .25, cs[i], .25) / 1.702
         if(K[i] == 2L){
-            div <- ifelse(cs[i] > .25, cs[i], .25)
-            zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div * 1.702/D
+            zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div
         } else if(itemtype[i] %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')){
-            div <- ifelse(cs[i] > .25, cs[i], .25)
-            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i] + key[i]-1L]))/div * 1.702/D
+            zetas[[i]] <- qnorm(mean(fulldata[,itemloc[i] + key[i]-1L]))/div
         } else if(itemtype[i] %in% c('gpcm', 'nominal', 'Rasch')){
             temp <- qnorm(table(data[,i])[1L:(K[i])]/N)
-            div <- ifelse(cs[i] > .25, cs[i], .25)
-            temp <- (temp - temp[1L])/div * 1.702
+            temp <- (temp - temp[1L])/div
             zetas[[i]] <- temp[-1L]
         } else {
             temp <- table(data[,i])[1L:(K[i]-1L)]/N
             temp <- cumsum(temp)
-            div <- ifelse(cs[i] > .25, cs[i], .25)
-            zetas[[i]] <- qnorm(1 - temp)/div * 1.702/D
+            zetas[[i]] <- qnorm(1 - temp)/div
         }
     }
     estzetas <- list()
@@ -104,7 +101,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         u <- 1 - rowSums(loads^2)
         u[u < .001 ] <- .2
         cs <- sqrt(u)
-        lambdas <- loads/cs * (1.702/D)
+        lambdas <- loads/cs * 1.702
         if(!all(itemtype %in% c('lca', 'nlca')))
             lambdas[!estlam] <- 0
     }
@@ -113,9 +110,9 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
                     nfact=nfact+length(prodlist), parprior=parprior,
-                    parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, D=D,
+                    parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR,
                     mixed.design=mixed.design, customItems=customItems, key=key,
-                    nominal.highlow=nominal.highlow)
+                    nominal.highlow=nominal.highlow, gpcm_mats=gpcm_mats)
     if(any(model[,1L] == 'START')){
         start <- gsub(" ","", model[model[,1] == 'START', ])
         start <- strsplit(start[2], '),')[[1]]

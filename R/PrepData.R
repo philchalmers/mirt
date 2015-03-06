@@ -1,10 +1,10 @@
-PrepData <- function(data, model, itemtype, guess, upper,
+PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
-                     grsm.block = NULL, rsm.block = NULL, D, mixed.design, customItems,
+                     grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
                      fulldata = NULL, key, nominal.highlow)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
-    if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
+    # if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV', 'CONSTRAIN', 'CONSTRAINB', 'PRIOR', 'MEAN', 'START')
     data <- as.matrix(data)
@@ -69,6 +69,20 @@ PrepData <- function(data, model, itemtype, guess, upper,
     if(length(itemtype) != J) stop('itemtype specification is not the correct length')
     guess[guess == 0 & itemtype %in% c('3PL', '4PL', 'PC3PL', '3PLNRM', '4PLNRM')] <- .15
     upper[upper == 1 & itemtype %in% c('4PL', '3PLu', '3PLuNRM', '4PLNRM')] <- .85
+    if(length(gpcm_mats)){
+        if(length(gpcm_mats) != ncol(data))
+            stop('gpcm_mats list does not correspond to columns in data')
+        pick <- !sapply(gpcm_mats, is.null) & itemtype %in% c('gpcm', 'Rasch')
+        tmp <- gpcm_mats[pick]
+        if(!all(sapply(tmp, is.matrix)))
+            stop('Matricies must be used in gpcm_mats')
+        if(!all(sapply(tmp, nrow) == K[pick])){
+            nrows <- sapply(tmp, nrow)
+            out <- !sapply(tmp, nrow) == K[pick]
+            stop(sprintf("Item %i should have %i rows in gpcm_mats, but instead has %i \n  ",
+                         seq(1L, J)[out], K[out], nrows[out]))
+        }
+    }
     itemloc <- cumsum(c(1L,K))
     model <- matrix(model$x,ncol=2)
     factorNames <- setdiff(model[,1L],keywords)
@@ -94,8 +108,9 @@ PrepData <- function(data, model, itemtype, guess, upper,
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
-                           parnumber=parnumber, BFACTOR=BFACTOR, D=D, mixed.design=mixed.design,
-                           customItems=customItems, key=key, nominal.highlow=nominal.highlow)
+                           parnumber=parnumber, BFACTOR=BFACTOR, mixed.design=mixed.design,
+                           customItems=customItems, key=key, nominal.highlow=nominal.highlow,
+                           gpcm_mats=gpcm_mats)
     prodlist <- attr(pars, 'prodlist')
     exploratory <- attr(pars, 'exploratory')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){
@@ -125,26 +140,26 @@ PrepData <- function(data, model, itemtype, guess, upper,
             }
         }
     }
-    if(any(itemtype == 'rsm')){
-        unique.rsmgroups <- unique(na.omit(rsm.block))
-        for(group in unique.rsmgroups){
-            Kk <- unique(K[rsm.block[rsm.block == unique.rsmgroups[group]]])
-            if(length(Kk) > 1L) stop('Rating scale models require that items to have the
-                                    same number of categories')
-            for(k in 1L:(Kk-1L)){
-                rsmConstraint <- c()
-                for(i in 1L:J){
-                    if(rsm.block[i] == unique.rsmgroups[group]){
-                        if(length(rsmConstraint) == 0L){
-                            pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
-                            rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
-                        } else rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
-                    }
-                }
-                constrain[[length(constrain) + 1L]] <- rsmConstraint
-            }
-        }
-    }
+#     if(any(itemtype == 'rsm')){
+#         unique.rsmgroups <- unique(na.omit(rsm.block))
+#         for(group in unique.rsmgroups){
+#             Kk <- unique(K[rsm.block[rsm.block == unique.rsmgroups[group]]])
+#             if(length(Kk) > 1L) stop('Rating scale models require that items to have the
+#                                     same number of categories')
+#             for(k in 1L:(Kk-1L)){
+#                 rsmConstraint <- c()
+#                 for(i in 1L:J){
+#                     if(rsm.block[i] == unique.rsmgroups[group]){
+#                         if(length(rsmConstraint) == 0L){
+#                             pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
+#                             rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
+#                         } else rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
+#                     }
+#                 }
+#                 constrain[[length(constrain) + 1L]] <- rsmConstraint
+#             }
+#         }
+#     }
     npars <- sum(sapply(pars, function(x) sum(x@est)))
     if(is.null(prodlist)) prodlist <- list()
     ret <- list(pars=pars, npars=npars, constrain=constrain, prodlist=prodlist, itemnames=itemnames,

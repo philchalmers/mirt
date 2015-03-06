@@ -248,6 +248,201 @@ static void d_nominal(vector<double> &grad, NumericMatrix &hess, const vector<do
     }
 }
 
+static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
+    const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
+    const int &N, const int &nfact, const int &ncat, const int &israting, const int &estHess)
+{
+    vector<double> p(N*ncat), pnum(N*ncat), Q(N);
+    P_nominal2(p, par, Theta, ot, N, nfact, ncat, 0, 0);
+    P_nominal2(pnum, par, Theta, ot, N, nfact, ncat, 1, 0);
+    const NumericMatrix P = vec2mat(p, N, ncat);
+    const NumericMatrix num = vec2mat(pnum, N, ncat);
+    // NumericMatrix P2(N, ncat);
+    for(int i = 0; i < N; ++i){
+        double tmp = 0.0;
+        for(int j = 0; j < ncat; ++j){
+            tmp += num(i, j); 
+            // P2(i,j) = P(i,j) * P(i,j);
+        }
+        Q[i] = 1.0 / tmp;
+    }
+    vector<double> a(nfact), d(ncat);
+    NumericMatrix ak(ncat, nfact);
+    for(int i = 0; i < nfact; ++i)
+        a[i] = par[i];
+    int ind = nfact;
+    for(int j = 0; j < nfact; ++j){
+        for(int i = 0; i < ncat; ++i){
+            ak(i, j) = par[ind];
+            ++ind;
+        }
+    }
+    for(int i = 0; i < ncat; ++i)
+        d[i] = par[i + nfact + ncat*nfact];
+
+    vector<double> offterm2(N), unitNvec(N, 1.0); 
+    NumericMatrix NumSum(N,nfact);
+    for(int i = 0; i < N; ++i){
+        for(int j = 0; j < nfact; ++j){
+            double tmp = 0.0;
+            for(int k = 0; k < ncat; ++k)
+                tmp += ak(k,j) * Theta(i,j) * num(i,k);
+            NumSum(i,j) = tmp;
+        }
+    }
+
+    //grad
+    ind = 0;
+    for(int j = 0; j < nfact; ++j){
+        double tmp = 0.0;
+        for(int k = 0; k < ncat; ++k){
+            for(int i = 0; i < N; ++i)        
+                tmp += dat(i,k) * (ak(k,j) * Theta(i,j) - Q[i] * NumSum(i,j));
+        }
+        grad[ind] = tmp;
+        ++ind;
+    }
+    ind = nfact*ncat + nfact;
+    for(int k = 0; k < ncat; ++k){
+        offterm2 = makeOffterm(dat, P(_,k), unitNvec, k);
+        double tmp = 0.0;
+        for (int i = 0; i < N; ++i)
+            tmp += dat(i,k) * (1.0 - P(i,k)) - offterm2[i];
+        grad[ind] = tmp;
+        ++ind;
+    }
+    
+
+    // //hess
+    // //a's
+    if(estHess){
+        Rprintf("Hessian not supported for gpcm_mat yet.\n"); //TODO
+    //     vector<double> numak2D2(N), aTheta2(N);
+    //     for(int i = 0; i < N; ++i){
+    //         for(int j = 0; j < ncat; ++j){
+    //             numak2D2[i] += num(i,j) * ak2[j];
+    //         }
+    //         aTheta2[i] = aTheta[i] * aTheta[i];
+    //     }
+
+    //     for(int j = 0; j < nfact; ++j){
+    //         for(int k = 0; k < nfact; ++k){
+    //             if(j <= k){
+    //                 std::fill(tmpvec.begin(), tmpvec.end(), 0.0);
+    //                 for(int i = 0; i < ncat; ++i){
+    //                     for(int n = 0; n < N; ++n){
+    //                         tmpvec[n]+= dat_num(n,i)*P(n,i)*(ak2[i]*Theta(n,j)*Theta(n,k) -
+    //                                 ak[i]*Theta(n,j)*numakDTheta_numsum(n,k) -
+    //                                 ak[i]*Theta(n,k)*numakDTheta_numsum(n,j) +
+    //                                 2*numakD[n]*Theta(n,j)*numakD[n]*Theta(n,k)/ (numsum[n]*numsum[n]) -
+    //                                 numak2D2[n]*Theta(n,j)*Theta(n,k)/numsum[n]) * numsum[n] -
+    //                             dat_num(n,i)*P(n,i)*(ak[i]*Theta(n,j) - numakDTheta_numsum(n,j)) *
+    //                             numsum[n]*ak[i]*Theta(n,k) +
+    //                             dat_num(n,i)*P(n,i)*(ak[i]*Theta(n,j) - numakDTheta_numsum(n,j)) *
+    //                             numakD[n]*Theta(n,k);
+    //                     }
+    //                 }
+    //                 hess(j,k) = vecsum(tmpvec);
+    //                 hess(k, j) = hess(j,k);
+    //             }
+    //         }
+    //     }
+    //     //a's with ak and d
+    //     for(int j = 0; j < nfact; ++j){
+    //         for(int k = 0; k < ncat; ++k){
+    //             std::fill(tmpvec.begin(), tmpvec.end(), 0.0);
+    //             std::fill(tmpvec2.begin(), tmpvec2.end(), 0.0);
+    //             for(int i = 0; i < ncat; ++i){
+    //                 for(int n = 0; n < N; ++n){
+    //                     if(i == k){
+    //                         tmpvec[n] += dat_num(n,i)*P(n,i)*(ak[i]*Theta(n,j)*aTheta[n] -
+    //                                     aTheta[n]*numakDTheta_numsum(n,j) +
+    //                                     Theta(n,j) - 2*ak[i]*Theta(n,j)*aTheta[n]*P(n,i) +
+    //                                     2*aTheta[n]*P(n,i)*numakDTheta_numsum(n,j) -
+    //                                     Theta(n,j)*P(n,i))*numsum[n] -
+    //                             dat_num(n,i)*P(n,i)*aTheta[n]*(1.0 - P(n,i))*numsum[n]*ak[i]*Theta(n,j) +
+    //                             dat_num(n,i)*P(n,i)*aTheta[n]*(1.0 - P(n,i))*(numakD[n]*Theta(n,j));
+    //                     tmpvec2[n] += dat_num(n,i)*P(n,i)*(ak[i]*Theta(n,j) -
+    //                                                         2*ak[i]*Theta(n,j)*P(n,i) -
+    //                                                         numakDTheta_numsum(n,j) +
+    //                                                         2*P(n,i)*numakDTheta_numsum(n,j))*numsum[n] -
+    //                         dat_num(n,i)*P(n,i)*(1.0 - P(n,i))*numsum[n]*ak[i]*Theta(n,j) +
+    //                         dat_num(n,i)*P(n,i)*(1.0 - P(n,i))*(numakD[n]*Theta(n,j));
+    //                     } else {
+    //                         tmpvec[n] += dat(n,i)*P(n,k)*(-ak[k]*aTheta[n]*Theta(n,j) +
+    //                             aTheta[n]*numakDTheta_numsum(n,j) - Theta(n,j));
+    //                         tmpvec2[n] += dat(n,i)*P(n,k)*(-ak[k]*Theta(n,j) +
+    //                             numakDTheta_numsum(n,j));
+    //                     }
+    //                 }
+    //                 hess(j, akind + k) = vecsum(tmpvec);
+    //                 hess(akind + k, j) = hess(j, akind + k);
+    //                 hess(j, dind + k) = vecsum(tmpvec2);
+    //                 hess(dind + k, j) = hess(j, dind + k);
+    //             }
+    //         }
+    //     }
+    //     // //ak's and d's
+    //     for(int j = 0; j < ncat; ++j){
+    //         tmpvec = makeOffterm2(dat, P(_,j), P(_,j), aTheta2, j);
+    //         tmpvec2 = makeOffterm(dat, P(_,j), aTheta2, j);
+    //         for(int n = 0; n < N; ++n)
+    //             offterm[n] = tmpvec[n] - tmpvec2[n];
+    //         tmpvec = makeOffterm2(dat, P(_,j), P(_,j), unitNvec, j);
+    //         tmpvec2 = makeOffterm(dat, P(_,j), unitNvec, j);
+    //         for(int n = 0; n < N; ++n)
+    //             offterm2[n] = tmpvec[n] - tmpvec2[n];
+    //         for(int n = 0; n < N; ++n){
+    //             tmpvec[n] = P(n,j)*(dat_num(n,j)*aTheta2[n]*(1.0 - 3*P(n,j) + 2*P(n,j)*P(n,j)) * numsum[n] -
+    //                                             dat_num(n,j)*aTheta2[n]*(1.0 - P(n,j))*numsum[n] +
+    //                                             dat(n,j)*aTheta2[n]*(1.0 - P(n,j))) + offterm[n];
+    //             tmpvec2[n] = P(n,j)*dat(n,j)*(1.0/num(n,j)*(1.0 - 3*P(n,j) + 2*P(n,j)*P(n,j)) * numsum[n] -
+    //                 1.0/num(n,j)*(1.0 - P(n,j))*numsum[n] +
+    //                 (1.0 - P(n,j))) + offterm2[n];
+    //         }
+    //         hess(akind + j, akind + j) = vecsum(tmpvec);
+    //         hess(dind + j, dind + j) = vecsum(tmpvec2);
+    //         for(int i = 0; i < ncat; ++i){
+    //             if(j < i){
+    //                 offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta2, i);
+    //                 offterm2 = makeOffterm2(dat, P(_,j), P(_,i), unitNvec, i);
+    //                 for(int n = 0; n < N; ++n){
+    //                     tmpvec[n] = dat_num(n,i) * (-aTheta2[n]*P(n,i)*P(n,j) + 2*P2(n,i) *aTheta2[n]*P(n,j))*numsum[n] +
+    //                                  dat_num(n,i) * (aTheta[n]*P(n,i) - P2(n,i) * aTheta[n])*aTheta[n]*num(n,j)+offterm[n];
+    //                     tmpvec2[n] = dat_num(n,i) * (-P(n,i)*P(n,j) + 2*P2(n,i) *P(n,j)) * numsum[n] +
+    //                         dat_num(n,i) * (P(n,i) - P2(n,i)) * num(n,j) + offterm2[n];
+    //                 }
+    //                 hess(akind + i, akind + j) = vecsum(tmpvec);
+    //                 hess(akind + j, akind + i) = hess(akind + i, akind + j);
+    //                 hess(dind + i, dind + j) = vecsum(tmpvec2);
+    //                 hess(dind + j, dind + i) = hess(dind + i, dind + j);
+    //             }
+    //             if(abs(j-i) == 0){
+    //                 tmpvec = makeOffterm2(dat, P(_,i), P(_,i), aTheta, i);
+    //                 tmpvec2 = makeOffterm(dat, P(_,i), aTheta, i);
+    //                 for(int n = 0; n < N; ++n){
+    //                     offterm[n] = tmpvec[n] - tmpvec2[n];
+    //                     tmpvec[n] = dat_num(n,i)*P(n,i)*aTheta[n]*(1.0 - 3*P(n,i) +
+    //                             2*P2(n,i))*numsum[n] - dat_num(n,i)*aTheta[n]*P(n,i)*(1.0 -
+    //                             P(n,i))*numsum[n] + dat(n,i)*P(n,i)*(1.0 -
+    //                             P(n,i))*aTheta[n] + offterm[n];
+    //                 }
+    //                 hess(dind + j, akind + i) = vecsum(tmpvec);
+    //                 hess(akind + i, dind + j) = hess(dind + j, akind + i);
+    //             } else {
+    //                 offterm = makeOffterm2(dat, P(_,j), P(_,i), aTheta, i);
+    //                 for(int n = 0; n < N; ++n){
+    //                     tmpvec[n] = dat_num(n,i) * (-aTheta[n]*P(n,i)*P(n,j) + 2*P2(n,i) *aTheta[n]*P(n,j)) * numsum[n] +
+    //                         dat_num(n,i) * P(n,i) * (1.0 - P(n,i)) * aTheta[n] * num(n,j) + offterm[n];
+    //                 }
+    //                 hess(akind + i, dind + j) = vecsum(tmpvec);
+    //                 hess(dind + j, akind + i) = hess(akind + i, dind + j);
+    //             }
+    //         }
+    //     }
+    }
+}
+
 RcppExport SEXP dparsNominal(SEXP Rx, SEXP RTheta, SEXP Roffterm,
     SEXP Risrating, SEXP RestHess)
 {
@@ -263,10 +458,15 @@ RcppExport SEXP dparsNominal(SEXP Rx, SEXP RTheta, SEXP Roffterm,
     const int N = Theta.nrow();
     const int nfact = Theta.ncol();
     const int estHess = as<int>(RestHess);
+    const int has_mat = as<int>(x.slot("mat"));
     int size = par.size();
     vector<double> grad(size);
     NumericMatrix hess(size, size);
-    d_nominal(grad, hess, par, Theta, ot, dat, N, nfact, ncat, israting, estHess);
+    if(has_mat){
+        d_nominal2(grad, hess, par, Theta, ot, dat, N, nfact, ncat, israting, estHess);
+    } else {
+        d_nominal(grad, hess, par, Theta, ot, dat, N, nfact, ncat, israting, estHess);
+    }
 
     List ret;
     ret["grad"] = wrap(grad);
@@ -629,6 +829,7 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
 {
     int nfact = Theta.ncol();
     int N = Theta.nrow();
+    int has_mat = 0;
     for(int i = 0; i < nitems; ++i){
         S4 item = pars[i];
         int nfact2 = nfact;
@@ -661,7 +862,12 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
                 d_poly(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat - 1, estHess);
                 break;
             case 3 :
-                d_nominal(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, 0, estHess);
+                has_mat = as<int>(item.slot("mat"));
+                if(has_mat){
+                    d_nominal2(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, 0, estHess);
+                } else {
+                    d_nominal(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, 0, estHess);
+                }
                 break;
             case 4 :
                 d_nominal(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, 0, estHess);

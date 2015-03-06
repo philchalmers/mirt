@@ -15,6 +15,10 @@ void P_nominal(vector<double> &, const vector<double> &,
     const NumericMatrix &, const NumericVector &, const int &,
     const int &, const int &, const int &, const int &);
 
+void P_nominal2(vector<double> &, const vector<double> &,
+    const NumericMatrix &, const NumericVector &, const int &,
+    const int &, const int &, const int &, const int &);
+
 void P_nested(vector<double> &, const vector<double> &,
     const NumericMatrix &, const int &, const int &, const int &,
     const int &);

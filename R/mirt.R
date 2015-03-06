@@ -341,6 +341,14 @@
 #'   weighting to be applied
 #' @param GenRandomPars logical; generate random starting values prior to optimization instead of
 #'   using the fixed internal starting values?
+#' @param gpcm_mats a list of matricies specifying how the scoring coefficients in the (generalized)
+#'   partial credit model should be constructed. If ommited, the standard gpcm format will be used
+#'   (i.e., \code{seq(0, k, by = 1)} for each trait). This input should be used if traits
+#'   should be scored different for each category (e.g., \code{matrix(c(0:3, 1,0,0,0), 4, 2)} for a
+#'   two-dimensional model where the first trait is scored like a gpcm, but the second trait is only
+#'   positively indicated when the first category is selected). Can be used when \code{itemtype}s
+#'   are \code{'gpcm'} or \code{'Rasch'}, but only when the respective element in
+#'   \code{gpcm_mats} is not \code{NULL}
 #' @param grsm.block an optional numeric vector indicating where the blocking should occur when
 #'   using the grsm, NA represents items that do not belong to the grsm block (other items that may
 #'   be estimated in the test data). For example, to specify two blocks of 3 with a 2PL item for
@@ -881,11 +889,12 @@
 #'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-                 covdata = NULL, formula = NULL,
-                 SE.type = 'crossprod', method = 'EM', optimizer = NULL, pars = NULL,
-                 constrain = NULL, parprior = NULL, calcNull = TRUE, draws = 5000,
-                 survey.weights = NULL, rotate = 'oblimin', Target = NaN, quadpts = NULL,
-                 TOL = NULL, grsm.block = NULL, key = NULL, nominal.highlow = NULL, large = FALSE,
+                 covdata = NULL, formula = NULL, SE.type = 'crossprod', method = 'EM',
+                 optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
+                 calcNull = TRUE, draws = 5000, survey.weights = NULL,
+                 rotate = 'oblimin', Target = NaN, quadpts = NULL,
+                 TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
+                 nominal.highlow = NULL, large = FALSE,
                  GenRandomPars = FALSE, accelerate = 'Ramsay', empiricalhist = FALSE, verbose = TRUE,
                  solnp_args = list(), alabama_args = list(), technical = list(), ...)
 {
@@ -914,7 +923,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       nominal.highlow=nominal.highlow, accelerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars,
                       optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args,
-                      latent.regression=latent.regression, ...)
+                      latent.regression=latent.regression, gpcm_mats=gpcm_mats, ...)
     if(is(mod, 'SingleGroupClass'))
         mod@Call <- Call
     return(mod)

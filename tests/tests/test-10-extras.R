@@ -82,5 +82,20 @@ test_that('extras', {
     fs <- fscores(mod1, MI=20, verbose=FALSE)
     expect_is(fs, 'matrix')
     expect_equal(fs[1:3,'F1'], c(-1.853914, -1.509722, -1.514913), tolerance=1e-3)
+
+    set.seed(1)
+    dat <- cbind(Science, Science + sample(c(-1,0,1), prod(dim(Science)), TRUE))
+    mats <- mats2 <- list()
+    mats[1:4] <- mats2[1:4] <- list(matrix(c(0:3, 0:3), 4))
+    mats[5:8] <- list(matrix(c(0:5, 1,1,0,0,0,0), 6))
+    mats2[5:8] <- list(matrix(c(0:5, 0:5), 6))
+    mod1 <- mirt(dat, 2, 'gpcm', TOL = 5e-2, verbose=FALSE)
+    mod2 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats2, TOL = 5e-2, verbose=FALSE)
+    s1 <- coef(mod1, simplify=TRUE)$items
+    s2 <- coef(mod2, simplify=TRUE)$items
+    pick <- c('a1', 'a2', 'd1', 'd2', 'd3')
+    expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-10)
+    mod3 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats, TOL = 1e-2, verbose=FALSE)
+    expect_equal(mod2values(mod3)$value, c(-0.8158204,0.2025502,0,1,2,3,0,1,2,3,0,2.795077,5.278498,3.958811,-0.827882,2.994309,0,1,2,3,0,1,2,3,0,4.781181,6.39139,2.522749,-0.7776257,0.8309647,0,1,2,3,0,1,2,3,0,2.882842,4.403226,3.176488,-5.718852,-0.3656946,0,1,2,3,0,1,2,3,0,9.564832,12.51259,7.53257,-0.266517,-0.4696018,0,1,2,3,4,5,1,1,0,0,0,0,0,2.366882,5.073178,5.333866,5.057924,3.734561,-0.2301817,-3.788106,0,1,2,3,4,5,1,1,0,0,0,0,0,2.5019,6.20009,6.441911,6.165128,4.129652,-0.3391893,-0.9902323,0,1,2,3,4,5,1,1,0,0,0,0,0,2.177612,4.038893,4.233308,3.905202,2.659554,-1.239488,0,0,1,2,3,4,5,1,1,0,0,0,0,0,3.291313,5.343707,5.969602,5.167208,2.056287,0,0,1,0,1), tolerance=1e-4)
 })
 
