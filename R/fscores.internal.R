@@ -212,7 +212,7 @@ setMethod(
                 warning('Latent regression information only used in MAP and EAP estimates')
             full.scores <- TRUE
             USETABDATA <- FALSE
-		    gp$gmeans <- object@lrPars@X %*% object@lrPars@beta
+		    gp$gmeans <- fixef(object)
 		    tabdata <- object@Data$fulldata[[1L]]
             keep <- rep(TRUE, nrow(tabdata))
 		} else {
