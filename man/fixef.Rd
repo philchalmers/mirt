@@ -44,6 +44,9 @@ fixef(mod1b)
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
+\seealso{
+\code{\link{mirt}}, \code{\link{mixedmirt}}
+}
 \keyword{effects}
 \keyword{fixed}
 

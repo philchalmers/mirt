@@ -92,7 +92,7 @@
 #'   \code{\link{mirt}} for more details and examples
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{mirt}}, \code{\link{randef}}, \code{\link{boot.mirt}}
+#' @seealso \code{\link{mirt}}, \code{\link{randef}}, \code{\link{fixef}}, \code{\link{boot.mirt}}
 #' @export mixedmirt
 #' @examples
 #'
