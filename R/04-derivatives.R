@@ -495,8 +495,7 @@ setMethod(
                 sig <- sig + t(sig) - diag(diag(sig))
             prior <- mirt_dmvnorm(Theta, mu, sig)
             stop('Function not supported')
-            ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu,
-                         mirtClusterEnv$ncores)
+            ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu)
             tmp <- cbind(ret$scores, ret$scores2) * r
             newpars <- apply(tmp, 2, sum) / N
             if(nfact > 1L){

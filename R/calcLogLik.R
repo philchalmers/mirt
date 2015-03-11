@@ -51,7 +51,7 @@ setMethod(
 		data <- object@Data$data
         tabdata <- cbind(object@Data$tabdata, object@Data$Freq[[1L]])
         r <- object@Data$Freq[[1L]]
-        expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J, mirtClusterEnv$ncores)
+        expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J)
 		tabdata <- cbind(tabdata,expected*N)
         object@Pl <- expected
         nestpars <- nconstr <- 0L

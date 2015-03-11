@@ -27,8 +27,8 @@ Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, f
     J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata, mirtClusterEnv$ncores)
-        else .Call("Estep", itemtrace, prior, tabdata, freq, mirtClusterEnv$ncores)
+    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata)
+        else .Call("Estep", itemtrace, prior, tabdata, freq)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
@@ -40,8 +40,7 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween
     J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior,
-                     mirtClusterEnv$ncores)
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior)
     return(retlist)
 }
 
@@ -320,7 +319,7 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
                                   CUSTOM.IND=CUSTOM.IND)
     mu <- lrPars@mus
     X <- lrPars@X
-    ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu, mirtClusterEnv$ncores)
+    ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu)
     scores <- ret[[1L]]; vars <- ret[[2L]]
     beta <- solve(t(X) %*% X) %*% t(X) %*% scores
     siglong <- colMeans(vars)

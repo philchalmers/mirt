@@ -20,7 +20,3 @@ SEXP vec2mat(vector<double> &, const int &, const int &);
 const double ABS_MAX_Z = 35;
 
 #endif
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif

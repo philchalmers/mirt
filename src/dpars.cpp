@@ -960,10 +960,10 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             vector<double> Prior = as< vector<double> >(tmpvec);
             vector<double> expected(1), r1vec(N*J), r2vec(N);
             if(isbifactor){
-               _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone, 1,
+               _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone, 
                     dat, sitems, Prior);
             } else {
-                _Estep(expected, r1vec, Prior, vone, dat, itemtrace, 1);
+                _Estep(expected, r1vec, Prior, vone, dat, itemtrace);
             }
             NumericMatrix r1 = vec2mat(r1vec, N, J);
             List pars = gpars[g];
