@@ -931,8 +931,36 @@ setMethod(
     f = "dP",
     signature = signature(x = 'gpcm', Theta = 'matrix'),
     definition = function(x, Theta){
-        class(x) <- 'nominal'
-        return(dP(x, Theta=Theta))
+        nfact <- ncol(Theta)
+        ncat <- x@ncat
+        num <- P.gpcm(x@par, Theta=Theta, returnNum = TRUE, mat = x@mat)
+        den <- rowSums(num)
+        P <- num/den
+        a <- x@par[1L:ncol(Theta)]
+        if(!x@mat){
+            ak <- matrix(x@par[(ncol(Theta)+1L):(ncol(Theta)+x@ncat)], nfact, ncat, byrow=TRUE)
+        } else {
+            ak <- matrix(x@par[(nfact+1L):(nfact+ncat*nfact)], nfact, ncat, byrow=TRUE)
+        }
+        dp <- matrix(0, nrow(Theta), length(x@par))
+        aknum <- eak <- vector('list', nfact)
+        e <- 0:(x@ncat-1)
+        for(i in 1L:nfact){
+            aknum[[i]] <- t(ak[i,] * t(num))
+            eak[[i]] <- e*ak[i,]
+        }
+        aTheta <- as.numeric(a %*% t(Theta))
+        for(i in 1L:nfact){
+            for(j in 2L:ncat)
+                dp[,i] <- dp[,i] + eak[[i]][j]*Theta[,i]*P[,j] -
+                    e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]])
+        }
+        for(j in 1L:x@ncat){
+            dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 -
+                as.numeric(e[-j] %*% t(P[,-j]*P[,j]))
+        }
+        return(dp)
+
     }
 )
 
@@ -956,7 +984,7 @@ setMethod(
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[j]*Theta[,i]*P[,j] - e[j]*P[,j]*rowSums(Theta[,i] * aknum)
         }
-        for(j in 2L:x@ncat){
+        for(j in 1L:x@ncat){
             dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 - as.numeric(e[-j] %*% t(P[,-j]*P[,j]))
             dp[,nfact + j] <- dp[,nfact + ncat + j] * aTheta
         }

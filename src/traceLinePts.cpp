@@ -212,7 +212,7 @@ void P_nominal2(vector<double> &P, const vector<double> &par,
             }
         }
     } else {
-        for(int i = 0; i < N; ++i){        	
+        for(int i = 0; i < N; ++i){
         	for(int k = 0; k < ncat; ++k)
         		z[k] = d[k];
         	for(int k = 0; k < ncat; ++k)
@@ -406,7 +406,8 @@ RcppExport SEXP nominalTraceLinePts(SEXP Rpar, SEXP Rncat, SEXP RTheta, SEXP Rre
 	END_RCPP
 }
 
-RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risrating, SEXP Rhas_mat)
+RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risrating, SEXP Rhas_mat,
+                                 SEXP RreturnNum)
 {
     BEGIN_RCPP
 
@@ -414,17 +415,18 @@ RcppExport SEXP gpcmTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Risratin
     const NumericMatrix Theta(RTheta);
     const int israting = as<int>(Risrating);
     const int has_mat = as<int>(Rhas_mat);
+    const int returnNum = as<int>(RreturnNum);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     int ncat;
     if(has_mat)
         ncat = (par.size() - nfact)/(nfact + 1);
-    else 
+    else
     	ncat = (par.size() - nfact)/2;
     NumericVector ot(Rot);
     vector<double> P(N*ncat);
-    if(has_mat) P_nominal2(P, par, Theta, ot, N, nfact, ncat, 0, israting);
-    	else P_nominal(P, par, Theta, ot, N, nfact, ncat, 0, israting);
+    if(has_mat) P_nominal2(P, par, Theta, ot, N, nfact, ncat, returnNum, israting);
+    	else P_nominal(P, par, Theta, ot, N, nfact, ncat, returnNum, israting);
     NumericMatrix ret = vec2mat(P, N, ncat);
     return(ret);
 

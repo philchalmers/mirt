@@ -585,9 +585,9 @@ setMethod(
     }
 )
 
-P.gpcm <- function(par, Theta, ot = 0, mat = FALSE)
+P.gpcm <- function(par, Theta, ot = 0, mat = FALSE, returnNum = FALSE)
 {
-    return(.Call("gpcmTraceLinePts", par, Theta, ot, FALSE, mat))
+    return(.Call("gpcmTraceLinePts", par, Theta, ot, FALSE, mat, returnNum))
 }
 
 setMethod(
