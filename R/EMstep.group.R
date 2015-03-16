@@ -115,6 +115,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         LBOUND[LBOUND == -Inf] <- -1e10
         UBOUND[UBOUND == Inf] <- 1e10
     }
+    if(Moptim == 'NR' && sum(est) > 300L && list$message)
+        message('NR optimizer should not be used for models with a large number of parameters.
+                Use the optimizer = \'BFGS\' instead.')
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
     ANY.PRIOR <- rep(FALSE, ngroups)
