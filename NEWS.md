@@ -1,5 +1,7 @@
 # Changes in mirt 1.9
 
+- support `optimizer = 'nlminb'`, and pass optimizer control arguments to a `contol` list
+
 - added `fixef()` function to extract fixed effect parameters in latent regression models
 
 - added `gpcm_mats` argument to estimation functions for specifying a customize scoring pattern

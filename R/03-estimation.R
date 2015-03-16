@@ -3,7 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
                        nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE,
                        survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
-                       gpcm_mats=list(), ...)
+                       gpcm_mats=list(), control = list(), ...)
 {
     start.time=proc.time()[3L]
     if(is.logical(large) && large){
@@ -431,7 +431,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
                                          message=opts$message, BL=opts$method == 'BL', full=opts$full,
                                          lrPars=lrPars),
-                             Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args)
+                             Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         lrPars <- ESTIMATE$lrPars
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
@@ -580,7 +580,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           message=opts$message, full=opts$full, lrPars=lrPars),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
-                              solnp_args=opts$solnp_args)
+                              solnp_args=opts$solnp_args, control=control)
                 if(!opts$technical$parallel)
                     mirtClusterEnv$ncores <- ncores
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,

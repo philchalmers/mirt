@@ -47,22 +47,22 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, solnp_args,
                   SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL, full,
-                  lrPars){
+                  lrPars, control){
     p <- longpars[est]
     if(length(p)){
         if(Moptim == 'BFGS'){
-            maxit <- max(ceiling(Mrate * 50), 15)
-            opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS',
-                             control=list(maxit=maxit),
+            if(is.null(control$maxit))
+                control$maxit <- max(ceiling(Mrate * 50), 15)
+            opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                        silent=TRUE)
         } else if(Moptim == 'L-BFGS-B'){
-            maxit <- max(ceiling(Mrate * 50), 15)
-            opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B',
-                             control=list(maxit=maxit),
+            if(is.null(control$maxit))
+                control$maxit <- max(ceiling(Mrate * 50), 15)
+            opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
@@ -70,14 +70,14 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                              upper=UBOUND[est]),
                        silent=TRUE)
         } else if(Moptim == 'Nelder-Mead'){
-            opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead',
+            opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
                        silent=TRUE)
         } else if(Moptim == 'SANN'){
-            opt <- try(optim(p, fn=Mstep.LL, method='SANN',
+            opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
@@ -87,7 +87,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             opt <- try(Mstep.NR(p=p, est=est, longpars=longpars, pars=pars, ngroups=ngroups,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
-                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL))
+                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL, control=control))
         } else if(Moptim %in% c('solnp', 'alabama')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
@@ -99,7 +99,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                     opt <- try(Rsolnp::solnp(p, Mstep.LL_alt, eqfun = solnp_args$eqfun, eqB = solnp_args$eqB,
                                      ineqfun = solnp_args$ineqfun, ineqLB = solnp_args$ineqLB,
                                      ineqUB = solnp_args$ineqUB, LB = solnp_args$LB, UB = solnp_args$UB,
-                                     control=solnp_args$control, optim_args=optim_args), silent=TRUE)
+                                     control = control, optim_args=optim_args), silent=TRUE)
                     if(!is(opt, 'try-error')) opt$par <- opt$pars
                 }
             } else {
@@ -112,6 +112,14 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                silent=TRUE)
                 }
             }
+        } else if(Moptim == 'nlminb'){
+            opt <- try(nlminb(p, Mstep.LL, Mstep.grad,
+                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
+                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
+                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
+                              upper=UBOUND[est], control=control),
+                       silent=TRUE)
         } else {
             stop('M-step optimizer not supported')
         }
@@ -255,10 +263,11 @@ Mstep.grad_alt <- function(x0, optim_args){
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,
                      constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, NO.CUSTOM, SLOW.IND,
-                     TOL)
+                     TOL, control)
 {
     plast2 <- plast <- p
-    for(iter in 1L:50L){
+    if(is.null(control$maxit)) control$maxit <- 50L
+    for(iter in 1L:control$maxit){
         longpars[est] <- p
         if(length(constrain) > 0L)
             for(i in 1L:length(constrain))
@@ -286,7 +295,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
         g <- grad[est]
         h <- hess[est, est]
         inv <- MPinv(h)
-        change <- as.numeric(g %*% inv)
+        change <- as.vector(g %*% inv)
         change <- ifelse(change > .25, .25, change)
         change <- ifelse(change < -.25, -.25, change)
         plast2 <- plast

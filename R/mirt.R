@@ -252,9 +252,10 @@
 #'   or \code{'MHRM'} should be used when the dimensions are 3 or more
 #' @param optimizer a character indicating which numerical optimizer to use. By default, the EM
 #'   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds, and
-#'   \code{'L-BFGS-B'} when there are. Other options include the Newton-Raphson (\code{'NR'}),
+#'   \code{'L-BFGS-B'} when there are. Another good option which supports bound constraints is
+#'   the \code{'nlminb'}. Other options include the Newton-Raphson (\code{'NR'}),
 #'   which often will be more efficient than the \code{'BFGS'} but not as stable for more complex
-#'   models (such as the nominal or nested logit models) and does not support
+#'   IRT models (such as the nominal or nested logit models) and does not support
 #'   upper and lower bound constraints. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
 #'   estimators are also available, but their routine use generally is not required or recommended.
 #'   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
@@ -434,6 +435,8 @@
 #'   equality constraints, inequality constriants, etc
 #' @param alabama_args a list of arguments to be passed to the \code{alabama::constrOptim.nl()}
 #'   function for equality constraints, inequality constriants, etc
+#' @param control a list passed to the respective optimizers (i.e., \code{optim()}, \code{nlminb()},
+#'   etc)
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso  \code{\link{bfactor}},  \code{\link{multipleGroup}},  \code{\link{mixedmirt}},
@@ -897,7 +900,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
                  nominal.highlow = NULL, large = FALSE,
                  GenRandomPars = FALSE, accelerate = 'Ramsay', empiricalhist = FALSE, verbose = TRUE,
-                 solnp_args = list(), alabama_args = list(), technical = list(), ...)
+                 solnp_args = list(), alabama_args = list(), control = list(), technical = list(), ...)
 {
     Call <- match.call()
     if(!is.null(covdata) && !is.null(formula)){
@@ -924,7 +927,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       nominal.highlow=nominal.highlow, accelerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars,
                       optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args,
-                      latent.regression=latent.regression, gpcm_mats=gpcm_mats, ...)
+                      latent.regression=latent.regression, gpcm_mats=gpcm_mats,
+                      control=control, ...)
     if(is(mod, 'SingleGroupClass'))
         mod@Call <- Call
     return(mod)

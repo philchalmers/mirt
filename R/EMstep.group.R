@@ -1,4 +1,4 @@
-EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, solnp_args)
+EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, solnp_args, control)
 {
     verbose <- list$verbose
     lrPars <- list$lrPars
@@ -117,7 +117,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     }
     if(Moptim == 'NR' && sum(est) > 300L && list$message)
         message('NR optimizer should not be used for models with a large number of parameters.
-                Use the optimizer = \'BFGS\' instead.')
+                Use the optimizer = \'BFGS\' or \'nlminb\' instead.')
     EMhistory <- matrix(NA, NCYCLES+1L, length(longpars))
     EMhistory[1L,] <- longpars
     ANY.PRIOR <- rep(FALSE, ngroups)
@@ -214,7 +214,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
                               BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
-                              TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars)
+                              TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars,
+                              control=control)
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
