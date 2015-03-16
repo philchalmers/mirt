@@ -285,14 +285,8 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
         }
         g <- grad[est]
         h <- hess[est, est]
-        trychol <- try(chol(h), silent=TRUE)
-        if(is(trychol, 'try-error')){
-            ev <- eigen(h)
-            ev$values[ev$values <= 0] <- .Machine$double.eps*100
-            h <- t(ev$vector) %*% diag(ev$values) %*% ev$vector
-            trychol <- chol(h)
-        }
-        change <- as.numeric(g %*% chol2inv(trychol))
+        inv <- MPinv(h)
+        change <- as.numeric(g %*% inv)
         change <- ifelse(change > .25, .25, change)
         change <- ifelse(change < -.25, -.25, change)
         plast2 <- plast
@@ -321,7 +315,7 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
     X <- lrPars@X
     ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu)
     scores <- ret[[1L]]; vars <- ret[[2L]]
-    beta <- solve(t(X) %*% X) %*% t(X) %*% scores
+    beta <- lrPars@inv_tXX %*% t(X) %*% scores
     siglong <- colMeans(vars)
     beta[!lrPars@est] <- lrPars@par[!lrPars@est]
     return(list(beta=beta, siglong=c(rep(0, ncol(Theta)), siglong)))

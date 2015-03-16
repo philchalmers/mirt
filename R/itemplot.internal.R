@@ -182,7 +182,9 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                     tmp[tmp %in% x@constrain[[i]]] <- x@constrain[[i]][1]
         tmp <- parnums %in% tmp
         mu <- tmpitem@par[x@pars[[item]]@est]
-        smallinfo <- solve(x@information[tmp, tmp])
+        smallinfo <- try(solve(x@information[tmp, tmp]), TRUE)
+        if(is(smallinfo, 'try-error'))
+            stop('Information matrix could not be inverted')
         #make symetric
         smallinfo <-(smallinfo + t(smallinfo))/2
         delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)

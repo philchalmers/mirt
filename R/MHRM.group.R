@@ -370,17 +370,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                                     cycles-BURNIN-SEMCYCLES, LL, CTV, AR)
         }
         if(stagecycle < 3L){
-            if(qr(ave.h)$rank != ncol(ave.h)){
-                ev <- eigen(ave.h)
-                eval <- ev$values
-                eval[eval < 0] <- 100*.Machine$double.eps
-                eval <- eval / sum(eval) * sum(ev$values)
-                ave.h <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
-                noninvcount <- noninvcount + 1L
-                if(noninvcount == 3L)
-                    stop('\nEstimation halted during burn in stages, solution is unstable')
+            correction <- try(solve(ave.h, grad), TRUE)
+            if(is(correction, 'try-error')){
+                ave.h.inv <- MPinv(ave.h)
+                correction <- as.vector(grad %*% ave.h.inv)
             }
-            correction <- solve(ave.h, grad)
             correction[correction > 1] <- 1
             correction[correction < -1] <- -1
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
@@ -401,17 +395,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         #Step 3. Update R-M step
         Tau <- Tau + gamma*(ave.h - Tau)
-        if(qr(Tau)$rank != ncol(Tau)){
-            ev <- eigen(Tau)
-            eval <- ev$values
-            eval[eval < 0] <- 100*.Machine$double.eps
-            eval <- eval / sum(eval) * sum(ev$values)
-            Tau <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
-            noninvcount <- noninvcount + 1L
-            if(noninvcount == 3L)
-                stop('\nEstimation halted during burn in stages, solution is unstable')
+        correction <- try(solve(Tau, grad), TRUE)
+        if(is(correction, 'try-error')){
+            Tau.inv <- MPinv(Tau)
+            correction <- as.vector(grad %*% Tau.inv)
         }
-        correction <- solve(Tau, grad)
         correction[gamma*correction > .25] <- .25/gamma
         correction[gamma*correction < -.25] <- -.25/gamma
         longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction

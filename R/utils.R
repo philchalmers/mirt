@@ -209,6 +209,18 @@ logit <- function(x){
 
 antilogit <- function(x) plogis(x)
 
+MPinv <- function(mat){
+    svd <- svd(mat)
+    d <- svd$d; v <- svd$v; u <- svd$u
+    P <- d > max(sqrt(.Machine$double.eps) * d[1L], 0)
+    if(all(P)){
+        mat <- v %*% (1/d * t(u))
+    } else {
+        mat <- v[ , P, drop=FALSE] %*% ((1/d[P]) * t(u[ , P, drop=FALSE]))
+    }
+    mat
+}
+
 test_info <- function(pars, Theta, Alist, K){
     infolist <- list()
     for(cut in 1L:length(Alist)){

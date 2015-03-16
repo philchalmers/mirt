@@ -967,7 +967,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             info <- mod@information[!isna, !isna]
             inv_info <- try(solve(info), silent=TRUE)
             if(!is(inv_info, 'try-error')){
-                mod@condnum <- norm(info, type='2') * norm(solve(info), type='2')
+                mod@condnum <- kappa(info, exact=TRUE)
                 mod@secondordertest <- TRUE
             } else mod@secondordertest <- FALSE
         } else mod@secondordertest <- FALSE
