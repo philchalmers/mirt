@@ -29,6 +29,8 @@
 
 - multidimensional plausible value imputation fix (reported by KK Sasa)
 
+- `plot(..., type = 'infotrace')` for multiple group objects fixed (reported by Danilo Pereira)
+
 # Changes in mirt 1.8
 
 - `fscores()` nows accepts `method = "plausible"` to draw a single plausible value set

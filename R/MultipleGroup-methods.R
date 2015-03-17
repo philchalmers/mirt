@@ -224,7 +224,7 @@ setMethod(
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
-                plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull))
+                plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull)*length(which.items))
                 if(facet_items){
                     return(xyplot(I ~ Theta | item, plt, group = group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
