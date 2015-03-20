@@ -193,6 +193,8 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
     }
 
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
+    if(mod@nfact != 1L)
+        stop('DTF only supports unidimensional tests for now.')
     Theta <- thetaComb(theta, mod@nfact)
     max_score <- sum(mod@Data$mins + mod@Data$K - 1L)
     list_scores <- myLapply(1L, fn, omod=mod, impute=FALSE, covBs=NULL, Theta_nodes=Theta_nodes,
