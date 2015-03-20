@@ -203,6 +203,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         if(length(MGmodel@information) == 1)
             stop('Information matrix was not calculated')
     }
+    if(plotdif && any(scheme %in% c('drop', 'drop_sequential')))
+        stop('plotdif not supported for dropping schemes')
     pval <- 0
     if(is.numeric(seq_stat)){
         pval <- seq_stat
