@@ -312,6 +312,7 @@ setMethod(
         if(as.data.frame)
             allPars <- t(as.data.frame(allPars))
         if(simplify && !as.data.frame){
+            allPars <- lapply(allPars, function(x) x[1L, , drop=FALSE])
             items.old <- allPars[1L:(length(allPars)-1L)]
             nms <- lapply(items.old, colnames)
             unms <- unique(do.call(c, nms))
