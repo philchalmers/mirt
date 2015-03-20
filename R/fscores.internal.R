@@ -669,8 +669,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         adj <- x@Data$min
         dat <- t(t(dat) - adj)
         Otmp <- matrix(table(sort(rowSums(dat))))
-        got <- as.numeric(names(table(sort(rowSums(dat)))))
-        if(min(got) == 0) got <- got + 1
+        got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
         O <- matrix(0, nrow(E), 1)
         O[got, 1] <- Otmp
         keep <- O != 0
