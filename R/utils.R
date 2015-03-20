@@ -1468,7 +1468,7 @@ makeObstables <- function(dat, K){
         colnames(ret[[i]]) <- paste0(1L:K[i]-1L)
         rownames(ret[[i]]) <- paste0(1L:nrow(ret[[i]])-1L)
         split <- by(sumscore, dat[,i], table)
-        for(j in 1L:K[i]){
+        for(j in 1L:length(split)){
             m <- match(names(split[[j]]), rownames(ret[[i]]))
             ret[[i]][m,j] <- split[[j]]
         }
