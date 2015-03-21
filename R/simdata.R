@@ -54,7 +54,7 @@
 #' @examples
 #'
 #' \dontrun{
-#' ###Parameters from Reckase (2009), p. 153
+#' ### Parameters from Reckase (2009), p. 153
 #'
 #' set.seed(1234)
 #'
@@ -104,7 +104,20 @@
 #' #mod <- mirt(dataset1, 3, method = 'MHRM')
 #' #coef(mod)
 #'
-#' ###An example of a mixed item, bifactor loadings pattern with correlated specific factors
+#' ### Unidimensional graded response model with 5 categories each
+#'
+#' a <- matrix(rlnorm(20,.2,.3))
+#'
+#' # for the graded model, ensure that there is enough space between the intercepts,
+#' # otherwise closer categories will not be selected often (minimum distance of 0.3 here)
+#' diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum));
+#' diffs <- -(diffs - rowMeans(diffs));
+#' d <- diffs + rnorm(20)
+#'
+#' dat <- simdata(a, d, 500, itemtype = 'graded')#'
+#' # mod <- mirt(dat, 1)
+#'
+#' ### An example of a mixed item, bifactor loadings pattern with correlated specific factors
 #'
 #' a <- matrix(c(
 #' .8,.4,NA,
@@ -135,7 +148,7 @@
 #' #mod <- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep('2PL', 3), 'nominal', 'gpcm','graded'))
 #' #coef(mod)
 #'
-#' ####Unidimensional nonlinear factor pattern
+#' #### Unidimensional nonlinear factor pattern
 #'
 #' theta <- rnorm(2000)
 #' Theta <- cbind(theta,theta^2)
@@ -158,7 +171,7 @@
 #' #mod <- mirt(nonlindata, model)
 #' #coef(mod)
 #'
-#' ####2PLNRM model for item 4 (with 4 categories), 2PL otherwise
+#' #### 2PLNRM model for item 4 (with 4 categories), 2PL otherwise
 #'
 #' a <- matrix(rlnorm(4,0,.2))
 #'
