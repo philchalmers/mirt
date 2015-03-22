@@ -110,11 +110,11 @@
 #'
 #' # for the graded model, ensure that there is enough space between the intercepts,
 #' # otherwise closer categories will not be selected often (minimum distance of 0.3 here)
-#' diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum));
-#' diffs <- -(diffs - rowMeans(diffs));
+#' diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+#' diffs <- -(diffs - rowMeans(diffs))
 #' d <- diffs + rnorm(20)
 #'
-#' dat <- simdata(a, d, 500, itemtype = 'graded')#'
+#' dat <- simdata(a, d, 500, itemtype = 'graded')
 #' # mod <- mirt(dat, 1)
 #'
 #' ### An example of a mixed item, bifactor loadings pattern with correlated specific factors
