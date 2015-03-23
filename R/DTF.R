@@ -136,7 +136,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                     "unsigned.DTF" = uDTF, "unsigned.DTF(%)" = uDTF_percent)
         ret
     }
-
+    if(missing(mod)) missingMsg('mod')
     if(class(mod) != 'MultipleGroupClass')
         stop('mod input was not estimated by multipleGroup()')
     if(length(mod@pars) != 2L)

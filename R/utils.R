@@ -1621,6 +1621,9 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
     cand
 }
 
+missingMsg <- function(string)
+    stop(paste0('\'', string, '\' argument is missing.'))
+
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L
 

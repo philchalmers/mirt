@@ -37,6 +37,8 @@
 #'
 #' }
 testinfo <- function(x, Theta, degrees = NULL, group = NULL){
+    if(missing(x)) missingMsg('x')
+    if(missing(Theta)) missingMsg('Theta')
     if(is(x, 'MultipleGroupClass'))
         J <- length(x@pars[[1]]@pars) - 1
     else J <- length(x@pars) - 1

@@ -74,6 +74,8 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
         if(requireNamespace("shiny", quietly = TRUE))
             shiny::runApp(shinyItemplot(), ...)
     }
+    if(missing(object)) missingMsg('object')
+    if(missing(item)) missingMsg('item')
     if(is(object, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported')
     if(is.list(object)) inames <- colnames(object[[1]]@Data$data)

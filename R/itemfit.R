@@ -124,6 +124,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         return(itemfit(tmpmod, Theta=Theta, digits = 200, ...))
     }
 
+    if(missing(x)) missingMsg('x')
     if(is(x, 'MixedClass'))
         stop('mixedmirt objects not supported')
     discrete <- FALSE

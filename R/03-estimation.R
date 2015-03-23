@@ -6,6 +6,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        gpcm_mats=list(), control = list(), ...)
 {
     start.time=proc.time()[3L]
+    if(missing(data)) missingMsg('data')
+    if(missing(model)) missingMsg('model')
+    if(missing(group)) missingMsg('group')
     if(is.logical(large) && large){
         Data <- opts <- list()
         data <- as.matrix(data)

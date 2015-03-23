@@ -26,6 +26,7 @@
 #'
 #' }
 randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
+    if(missing(x)) missingMsg('x')
     if(!is(x, 'MixedClass'))
         stop('Only applicable to MixedClass objects')
     div <- ndraws / thin

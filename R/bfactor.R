@@ -202,6 +202,7 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
                     group = NULL, quadpts = 21, ...)
 {
     Call <- match.call()
+    if(missing(model)) missingMsg('model')
     if(!is.numeric(model))
         stop('model must be a numeric vector')
     if(is.numeric(model))

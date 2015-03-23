@@ -74,6 +74,7 @@
 #'   }
 #'
 personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
+    if(missing(x)) missingMsg('x')
     if(is(x, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported')
     if(any(is.na(x@Data$data)))

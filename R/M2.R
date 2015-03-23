@@ -71,6 +71,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     }
 
     #if MG loop
+    if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
     if(QMC && is.null(quadpts)) quadpts <- 2000L

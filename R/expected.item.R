@@ -22,6 +22,8 @@
 #'
 #' }
 expected.item <- function(x, Theta, min = 0){
+    if(missing(x)) missingMsg('x')
+    if(missing(Theta)) missingMsg('Theta')
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(ncol(Theta) != x@nfact)

@@ -20,18 +20,19 @@
 #'    }
 #'
 expand.table <- function(tabdata) {
-  if (sum(tabdata[,ncol(tabdata)]) <= nrow(tabdata))
-    stop("Frequencies must be on the right of the data matrix.")
-  itemnames <- colnames(tabdata[,1L:(ncol(tabdata) - 1L)])
-  tabdata <- as.matrix(tabdata)
-  fulldata <- c()
-  for (i in 1L:nrow(tabdata)) {
-      tmp <- matrix(tabdata[i,1L:(ncol(tabdata) - 1L)],
+    if(missing(tabdata)) missingMsg('tabdata')
+    if (sum(tabdata[,ncol(tabdata)]) <= nrow(tabdata))
+        stop("Frequencies must be on the right of the data matrix.")
+    itemnames <- colnames(tabdata[,1L:(ncol(tabdata) - 1L)])
+    tabdata <- as.matrix(tabdata)
+    fulldata <- c()
+    for (i in 1L:nrow(tabdata)) {
+        tmp <- matrix(tabdata[i,1L:(ncol(tabdata) - 1L)],
                       tabdata[i,ncol(tabdata)],
                       length(tabdata[i,1L:(ncol(tabdata) - 1L)]), byrow = TRUE)
-      fulldata <- rbind(fulldata, tmp)
-  }
-  colnames(fulldata) <- itemnames
-  fulldata
+        fulldata <- rbind(fulldata, tmp)
+    }
+    colnames(fulldata) <- itemnames
+    fulldata
 }
 

@@ -246,9 +246,8 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
     Call <- match.call()
     dots <- list(...)
     constrain <- dots$constrain
-    if(length(model) > 1L)
-        stop('multipleGroup only supports single group inputs')
     invariance.check <- invariance %in% c('free_means', 'free_var', 'free_varcov')
+    if(missing(model)) missingMsg('model')
     if(!is.null(dots$empiricalhist))
         if(dots$empiricalhist && any(invariance.check))
             stop('freeing group parameters not meaningful when estimating empirical histograms')

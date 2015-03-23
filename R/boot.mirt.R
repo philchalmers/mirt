@@ -81,6 +81,7 @@ boot.mirt <- function(x, R = 100, ...){
         return(longpars)
     }
 
+    if(missing(x)) missingMsg('x')
     return.boot <- TRUE
     dat <- x@Data$data
     method <- x@method

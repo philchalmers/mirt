@@ -28,6 +28,8 @@
 #' plot(group.1)
 #' }
 extract.group <- function(x, group){
+    if(missing(x)) missingMsg('x')
+    if(missing(group)) missingMsg('group')
     if(!is(x, 'MultipleGroupClass'))
         stop('Model was not estimated with multipleGroup()')
     if(missing(group)) stop('Must specify group number')

@@ -5,7 +5,7 @@
 #'
 #' @aliases probtrace
 #' @param x an extracted internal mirt object containing item information
-#' @param Theta a vector (unidimensional) or matrix (unidimensional/multidimensional) of 
+#' @param Theta a vector (unidimensional) or matrix (unidimensional/multidimensional) of
 #'   latent trait values
 #' @keywords tracelines
 #' @export probtrace
@@ -23,6 +23,8 @@
 #'
 #' }
 probtrace <- function(x, Theta){
+    if(missing(x)) missingMsg('x')
+    if(missing(Theta)) missingMsg('Theta')
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) stop('Theta input must be a matrix')
     if(ncol(Theta) != x@nfact)

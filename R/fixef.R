@@ -37,6 +37,7 @@
 #'
 #' }
 fixef <- function(x){
+    if(missing(x)) missingMsg('x')
     if(!(is(x, 'MixedClass') || is(x, 'SingleGroupClass')))
         stop('Only applicable to MixedClass and SingleGroupClass objects')
     if(!length(x@lrPars))

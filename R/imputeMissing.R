@@ -42,8 +42,8 @@
 #'
 #' }
 imputeMissing <- function(x, Theta, ...){
-    if(missing(x)) stop('x input is missing')
-    if(missing(Theta)) stop('Theta input is missing')
+    if(missing(x)) missingMsg('x')
+    if(missing(Theta)) missingMsg('Theta')
     if(is.list(Theta)){
         ret <- lapply(Theta, function(Theta, x, ...) imputeMissing(x, Theta, ...),
                       x=x, ...)

@@ -204,6 +204,10 @@
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE)
 {
+    if(missing(a)) missingMsg('a')
+    if(missing(d)) missingMsg('d')
+    if(missing(N)) missingMsg('N')
+    if(missing(itemtype)) missingMsg('itemtype')
     fn <- function(p, ns) sample(1L:ns, 1L, prob = p)
 	nfact <- ncol(a)
 	nitems <- nrow(a)
