@@ -695,13 +695,17 @@ setMethod(
         dots <- list(...)
         if (any(theta_angle > 90 | theta_angle < 0))
             stop('Improper angle specified. Must be between 0 and 90.')
-        if(length(theta_angle) > 1) type = 'infoangle'
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@nfact
-        if(nfact > 2) stop("Can't plot high dimensional solutions.")
+        if(length(theta_angle) > nfact) type = 'infoangle'
+        if(nfact > 3) stop("Can't plot high dimensional solutions.")
+        if(nfact == 2 && length(theta_angle) == 1L)
+            theta_angle <- c(theta_angle, 90 - theta_angle)
+        if(nfact == 3 && length(theta_angle) == 1L) theta_angle <- rep(90/3, 3)
         if(nfact == 1) theta_angle <- 0
         J <- length(x@pars) - 1
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
+        if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@pars, 'prodlist')
         if(length(prodlist) > 0)
@@ -715,6 +719,7 @@ setMethod(
             for(l in 1:length(theta_angle)){
                 ta <- theta_angle[l]
                 if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
+                if(nfact == 3) ta <- theta_angle
                 for(i in 1:J)
                     info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
             }
@@ -760,7 +765,49 @@ setMethod(
                 CIinfo[i, ] <- testinfo(tmpx, ThetaFull)[,1L]
             }
         }
-        if(nfact == 2){
+        if(nfact == 3){
+            colnames(plt) <- c("info", "score", "Theta1", "Theta2", "Theta3")
+            plt$SE <- 1 / sqrt(plt$info)
+            if(type == 'infocontour'){
+                if(is.null(main))
+                    main <- paste("Test Information Contour")
+                return(contourplot(info ~ Theta1 * Theta2 | Theta3, data = plt,
+                                   main = main, xlab = expression(theta[1]),
+                                   ylab = expression(theta[2]), ...))
+            } else if(type == 'scorecontour'){
+                if(is.null(main))
+                    main <- paste("Expected Score Contour")
+                return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
+                                   main = main, xlab = expression(theta[1]),
+                                   ylab = expression(theta[2]), ...))
+            } else if(type == 'info'){
+                if(is.null(main))
+                    main <- "Test Information"
+                return(wireframe(info ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
+                                 zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+            } else if(type == 'SEcontour'){
+                if(is.null(main))
+                    main <- "Test Standard Errors"
+                return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
+                                          main = main, xlab = expression(theta[1]),
+                                          ylab = expression(theta[2]), ...))
+            } else if(type == 'score'){
+                if(is.null(main))
+                    main <- "Expected Total Score"
+                return(wireframe(score ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
+                                 zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+            } else if(type == 'SE'){
+                if(is.null(main))
+                    main <- "Test Standard Errors"
+                return(wireframe(SE ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
+                                 zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+            } else {
+                stop('plot type not supported for three dimensional model')
+            }
+        } else if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'infocontour'){
@@ -784,9 +831,9 @@ setMethod(
             } else if(type == 'SEcontour'){
                 if(is.null(main))
                     main <- "Test Standard Errors"
-                return(return(contourplot(score ~ Theta1 * Theta2, data = plt,
+                return(contourplot(score ~ Theta1 * Theta2, data = plt,
                                           main = main, xlab = expression(theta[1]),
-                                          ylab = expression(theta[2]), ...)))
+                                          ylab = expression(theta[2]), ...))
             } else if(type == 'score'){
                 if(is.null(main))
                     main <- "Expected Total Score"

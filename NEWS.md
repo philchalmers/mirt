@@ -1,5 +1,7 @@
 # Changes in mirt 1.9
 
+- added various facet plots for three dimensional models to `plot()` generic
+
 - support `optimizer = 'nlminb'`, and pass optimizer control arguments to a `contol` list
 
 - added `fixef()` function to extract fixed effect parameters in latent regression models
