@@ -79,6 +79,11 @@ itemplot(pmod, 3, CE = TRUE)
 itemplot(pmod, 3, type = 'score')
 itemplot(pmod, 3, type = 'infotrace')
 
+# use the directlabels package to put labels on tracelines
+library(directlabels)
+plt <- itemplot(pmod, 3)
+direct.label(plt, 'top.points')
+
 # uncomment to run interactive shiny applet
 # itemplot(shiny = TRUE)
     }

@@ -32,6 +32,7 @@ Suggests:
     testthat,
     boot,
     latticeExtra,
+    directlabels,
     shiny,
     knitr,
     parallel,

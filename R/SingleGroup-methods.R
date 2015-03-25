@@ -669,6 +669,11 @@ setMethod(
 #' plot(x, type='info', MI=100)
 #' plot(x, type='SE', MI=100)
 #'
+#' # use the directlabels package to put labels on tracelines
+#' library(directlabels)
+#' plt <- plot(x, type = 'trace')
+#' direct.label(plt, 'top.points')
+#'
 #' set.seed(1234)
 #' group <- sample(c('g1','g2'), nrow(Science), TRUE)
 #' x2 <- multipleGroup(Science, 1, group)
@@ -928,7 +933,7 @@ setMethod(
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
                     if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
-                                                           labels=paste0('cat', 1L:ncol(tmp))))
+                                                           labels=paste0('P', 1L:ncol(tmp))))
                     P[[ind]] <- tmp2
                     ind <- ind + 1L
                 }

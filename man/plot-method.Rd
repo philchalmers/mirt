@@ -90,6 +90,11 @@ plot(x, MI=100)
 plot(x, type='info', MI=100)
 plot(x, type='SE', MI=100)
 
+# use the directlabels package to put labels on tracelines
+library(directlabels)
+plt <- plot(x, type = 'trace')
+direct.label(plt, 'top.points')
+
 set.seed(1234)
 group <- sample(c('g1','g2'), nrow(Science), TRUE)
 x2 <- multipleGroup(Science, 1, group)
