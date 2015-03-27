@@ -100,14 +100,15 @@ For more hands on control of the starting values pass the argument \code{pars = 
 \examples{
 \dontrun{
 
-model <- mirt.model()
-  F1 = 1,2,3,4-10
-  F2 = 10-20
-  (F1*F2) = 1,2,3,4-10
-  COV = F1*F2
+# interactively through the console (not run)
+#model <- mirt.model()
+#  F1 = 1,2,3,4-10
+#  F2 = 10-20
+#  (F1*F2) = 1,2,3,4-10
+#  COV = F1*F2
 
 
-#Or alternatively
+#Or alternatively with a string input
 s <- 'F1 = 1,2,3,4-10
       F2 = 10-20
       (F1*F2) = 1,2,3,4-10

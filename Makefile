@@ -28,20 +28,22 @@ extratest:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_dir('tests/extratests')"
 
 knitdocs:
-	sed -i 's/# opts$verbose <- FALSE/opts$verbose <- FALSE/g' R/03-estimation.R
-	sed -i 's/dontrun/donttest/g' man/*.Rd
-	Rscript -e "devtools::install('mirt');library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
+	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R 
+	sed -i s/dontrun/donttest/g man/*.Rd
+	make install
+	Rscript -e "library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
 	mkdir html
 	mv *.html html/
 	rm R.css
-	rm -r figure/
 	git checkout -- .
-	make install
+	make install	
 
 clean:
 	$(RM) src/*.o
 	$(RM) src/*.so
 	$(RM) ../$(PKGNAME)_$(PKGVERS).tar.gz
 	$(RM) -r ../$(PKGNAME).Rcheck/
+	git checkout -- .
+	git clean -f
 
 
