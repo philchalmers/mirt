@@ -1,211 +1,151 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Item fit statistics</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
 
-<title>Name: itemfit</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
+<table width="100%" summary="page for itemfit {mirt}"><tr><td>itemfit {mirt}</td><td align="right">R Documentation</td></tr></table>
 
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
+<h2>Item fit statistics</h2>
 
-   pre .literal {
-     color: #990073
-   }
+<h3>Description</h3>
 
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
+<p><code>itemfit</code> calculates the Zh values from Drasgow, Levine and Williams (1985),
+<i>&chi;^2</i> values for unidimensional models, and S-X2 statistics for unidimensional and
+multidimensional models (Kang &amp; Chen, 2007; Orlando &amp; Thissen, 2000).
+For Rasch, partial credit, and rating scale models infit and outfit statistics are
+also produced.
+</p>
 
 
+<h3>Usage</h3>
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
-</style>
+<pre>
+itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
+  mincell = 1, S_X2.tables = FALSE, empirical.plot = NULL,
+  empirical.CI = 0, method = "EAP", Theta = NULL, impute = 0,
+  digits = 4, ...)
+</pre>
 
 
+<h3>Arguments</h3>
 
-</head>
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a computed model object of class <code>SingleGroupClass</code>,
+<code>MultipleGroupClass</code>, or <code>DiscreteClass</code></p>
+</td></tr>
+<tr valign="top"><td><code>Zh</code></td>
+<td>
+<p>logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
+only interested in computing the S-X2 quickly</p>
+</td></tr>
+<tr valign="top"><td><code>X2</code></td>
+<td>
+<p>logical; calculate the X2 statistic for unidimensional models?</p>
+</td></tr>
+<tr valign="top"><td><code>S_X2</code></td>
+<td>
+<p>logical; calculate the S_X2 statistic?</p>
+</td></tr>
+<tr valign="top"><td><code>group.size</code></td>
+<td>
+<p>approximate size of each group to be used in calculating the <i>&chi;^2</i>
+statistic</p>
+</td></tr>
+<tr valign="top"><td><code>mincell</code></td>
+<td>
+<p>the minimum expected cell size to be used in the S-X2 computations. Tables will be
+collapsed across items first if polytomous, and then across scores if necessary</p>
+</td></tr>
+<tr valign="top"><td><code>S_X2.tables</code></td>
+<td>
+<p>logical; return the tables in a list format used to compute the S-X2 stats?</p>
+</td></tr>
+<tr valign="top"><td><code>empirical.plot</code></td>
+<td>
+<p>a single numeric value or character of the item name  indicating which
+item to plot (via <code>itemplot</code>) and overlay with the empirical <i>&theta;</i> groupings.
+Only applicable when <code>type = 'X2'</code>. The default is <code>NULL</code>, therefore no plots
+are drawn</p>
+</td></tr>
+<tr valign="top"><td><code>empirical.CI</code></td>
+<td>
+<p>a numeric value indicating the width of the empirical confidence interval
+ranging between 0 and 1 (default of 0 plots not interval). For example, a 95
+interval would be plotted if <code>empirical.CI = .95</code>. Only applicable to dichotomous items</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>type of factor score estimation method. See <code><a href="fscores.html">fscores</a></code> for more detail</p>
+</td></tr>
+<tr valign="top"><td><code>Theta</code></td>
+<td>
+<p>a matrix of factor scores for each person used for statistics that require
+empirical estimates. If supplied, arguments typically passed to <code>fscores()</code> will be
+ignored and these values will be used instead. Also required when estimating statistics
+with missing data via imputation</p>
+</td></tr>
+<tr valign="top"><td><code>impute</code></td>
+<td>
+<p>a number indicating how many imputations to perform (passed to
+<code><a href="imputeMissing.html">imputeMissing</a></code>) when there are missing data present. This requires a
+precomputed <code>Theta</code> input. Will return a data.frame object with the mean estimates
+of the stats and their imputed standard deviations</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>number of digits to round result to. Default is 4</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to <code>fscores()</code></p>
+</td></tr>
+</table>
 
-<body>
-<h3>Name: itemfit</h3>
 
-<h3>Title: Item fit statistics</h3>
+<h3>Author(s)</h3>
 
-<pre><code class="r">#make some data
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Drasgow, F., Levine, M. V., &amp; Williams, E. A. (1985). Appropriateness measurement with
+polychotomous item response models and standardized indices.
+<EM>Journal of Mathematical and Statistical Psychology, 38</EM>, 67-86.
+</p>
+<p>Kang, T. &amp; Chen, Troy, T. (2007). An investigation of the performance of the generalized
+S-X2 item-fit index for polytomous IRT models. ACT
+</p>
+<p>Orlando, M. &amp; Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item
+response theory models. <EM>Applied Psychological Measurement, 24</EM>, 50-64.
+</p>
+<p>Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit
+in IRT. <EM>Applied Psychological Measurement, 14</EM>, 127-137.
+</p>
+<p>Wright B. D. &amp; Masters, G. N. (1982). <EM>Rating scale analysis</EM>. MESA Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../eRm/html/itemfit.ppar.html">personfit</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+#make some data
 set.seed(1234)
 a &lt;- matrix(rlnorm(20, meanlog=0, sdlog = .1),ncol=1)
 d &lt;- matrix(rnorm(20),ncol=1)
@@ -351,16 +291,16 @@ itemfit(mod2)
 </code></pre>
 
 <pre><code>##       item     Zh outfit z.outfit  infit z.infit     S_X2 df.S_X2 p.S_X2
-## 1   Item_1 4.5659 0.9062  -3.9974 0.9110 -3.9939  93.1205     104 0.7691
-## 2   Item_2 2.1289 0.9561  -1.6984 0.9643 -1.4669 126.5018     103 0.0579
-## 3   Item_3 3.5889 0.9225  -3.0151 0.9324 -2.7818  77.7262     103 0.9701
-## 4   Item_4 5.2810 0.8774  -4.8963 0.8867 -4.8071 116.2725     103 0.1752
-## 5   Item_5 1.2234 0.9779  -0.8170 0.9840 -0.6314 140.3793     104 0.0101
-## 6   Item_6 3.7257 0.9202  -3.1237 0.9300 -2.8980  96.5790     103 0.6592
-## 7   Item_7 5.9254 0.8738  -5.2624 0.8840 -5.1075 108.7546     102 0.3053
-## 8   Item_8 6.1276 0.8604  -5.8378 0.8750 -5.5171  91.4005     102 0.7650
-## 9   Item_9 6.1970 0.8705  -5.5160 0.8774 -5.5492 121.9156     102 0.0871
-## 10 Item_10 6.4380 0.8570  -5.9507 0.8667 -5.9111 110.4739     100 0.2227
+## 1   Item_1 4.5612 0.9064  -3.9897 0.9112 -3.9861  93.1351     104 0.7687
+## 2   Item_2 2.1237 0.9563  -1.6905 0.9645 -1.4588 126.5450     103 0.0576
+## 3   Item_3 3.5840 0.9227  -3.0078 0.9326 -2.7743  77.7354     103 0.9701
+## 4   Item_4 5.2770 0.8775  -4.8896 0.8868 -4.8003 116.2591     103 0.1754
+## 5   Item_5 1.2176 0.9782  -0.8088 0.9842 -0.6231 140.4351     104 0.0100
+## 6   Item_6 3.7210 0.9204  -3.1164 0.9302 -2.8906  96.5937     103 0.6588
+## 7   Item_7 5.9218 0.8739  -5.2557 0.8842 -5.1006 108.7401     102 0.3056
+## 8   Item_8 6.1239 0.8606  -5.8313 0.8751 -5.5104  91.3791     102 0.7655
+## 9   Item_9 6.1940 0.8706  -5.5093 0.8775 -5.5424 121.9004     102 0.0873
+## 10 Item_10 6.4353 0.8571  -5.9444 0.8668 -5.9047 110.4556     100 0.2231
 </code></pre>
 
 <pre><code class="r">#massive list of tables
@@ -460,91 +400,94 @@ itemfit(raschfit, impute = 10, Theta=Theta)
 </code></pre>
 
 <pre><code>##          item      Zh outfit z.outfit  infit z.infit    S_X2 df.S_X2
-## 1      Item_1 -1.1232 1.0065   0.2228 1.0270  1.4025 20.0598 16.0000
-## 2      Item_2  1.6844 0.9314  -2.0104 0.9685 -1.5461 10.8514 17.0000
-## 3      Item_3  2.2054 0.9360  -1.9665 0.9544 -2.3218 19.6138 16.5000
-## 4      Item_4 -3.5752 1.1436   4.1554 1.0667  3.2339 46.8225 16.0000
-## 5      Item_5  1.3251 0.9497  -1.3861 0.9723 -1.3116  8.5284 17.0000
-## 6      Item_6  0.9759 0.9566  -0.7450 0.9717 -0.9438 19.1143 16.0000
-## 7      Item_7  0.1397 1.0076   0.2295 0.9953 -0.2175  9.9586 16.0000
-## 8      Item_8 -0.2300 0.9873  -0.2536 1.0097  0.3867 15.2210 17.0000
-## 9      Item_9 -0.1881 1.0012   0.0511 1.0039  0.2099  7.9643 16.0000
-## 10    Item_10  0.9061 0.9460  -1.3047 0.9835 -0.7081 29.4200 17.0000
-## 11    Item_11  1.5645 0.9505  -1.0790 0.9595 -1.5970 20.5661 15.0000
-## 12    Item_12 -0.5645 1.0184   0.5303 1.0122  0.5966 16.3841 17.0000
-## 13    Item_13 -0.7612 1.0307   0.8272 1.0137  0.6408 20.2068 17.0000
-## 14    Item_14  2.6363 0.9313  -2.0796 0.9439 -2.8378 23.4613 16.5000
-## 15    Item_15  2.1243 0.8578  -2.3643 0.9366 -1.9990 23.8483 16.0000
-## 16    Item_16  0.9605 0.9578  -0.9010 0.9803 -0.7771 28.0001 17.0000
-## 17    Item_17 -0.7045 1.1157   1.3269 1.0173  0.4153 25.4323 16.8000
-## 18    Item_18  0.4868 0.9632  -0.6467 0.9869 -0.4390 13.0978 16.0000
-## 19    Item_19 -0.0855 1.0174   0.5439 0.9984 -0.0767 15.5143 16.0000
-## 20    Item_20  4.0063 0.8656  -4.2776 0.9240 -3.9324 22.5221 16.1000
+## 1      Item_1 -1.1373 1.0070   0.2390 1.0273  1.4166 19.4423 16.0000
+## 2      Item_2  1.7230 0.9307  -2.0332 0.9676 -1.5930 10.3646 16.7000
+## 3      Item_3  2.1903 0.9371  -1.9298 0.9545 -2.3145 18.7921 16.4000
+## 4      Item_4 -3.6214 1.1456   4.2090 1.0675  3.2722 45.5127 16.0000
+## 5      Item_5  1.3393 0.9496  -1.3889 0.9719 -1.3327  8.7729 17.0000
+## 6      Item_6  0.9696 0.9578  -0.7236 0.9717 -0.9429 17.7402 16.0000
+## 7      Item_7  0.1537 1.0062   0.1910 0.9952 -0.2251  8.8428 16.0000
+## 8      Item_8 -0.1398 0.9841  -0.3227 1.0073  0.2948 15.5287 17.0000
+## 9      Item_9 -0.1366 0.9995  -0.0080 1.0030  0.1659  7.8846 16.0000
+## 10    Item_10  0.8561 0.9470  -1.2808 0.9847 -0.6533 29.3533 17.0000
+## 11    Item_11  1.6004 0.9480  -1.1349 0.9587 -1.6289 20.5318 15.0000
+## 12    Item_12 -0.6283 1.0204   0.5874 1.0135  0.6570 17.0625 17.0000
+## 13    Item_13 -0.7186 1.0291   0.7847 1.0128  0.6030 18.0390 17.0000
+## 14    Item_14  2.6041 0.9328  -2.0329 0.9444 -2.8151 24.3461 16.4000
+## 15    Item_15  2.0295 0.8630  -2.2725 0.9393 -1.9099 23.0559 16.0000
+## 16    Item_16  1.0251 0.9543  -0.9773 0.9787 -0.8401 28.3351 17.0000
+## 17    Item_17 -0.6883 1.1133   1.3007 1.0171  0.4107 25.4310 16.9000
+## 18    Item_18  0.4955 0.9635  -0.6415 0.9864 -0.4574 13.3797 16.0000
+## 19    Item_19 -0.0913 1.0183   0.5703 0.9983 -0.0819 14.3547 16.0000
+## 20    Item_20  3.9394 0.8677  -4.2084 0.9252 -3.8649 23.0995 16.0000
 ## 21       &lt;NA&gt;      NA     NA       NA     NA      NA      NA      NA
-## 22  SD_Item_1  0.0570 0.0017   0.0554 0.0010  0.0526  0.2509  0.0000
-## 23  SD_Item_2  0.0625 0.0012   0.0365 0.0014  0.0722  0.3561  0.0000
-## 24  SD_Item_3  0.0180 0.0004   0.0117 0.0004  0.0207  0.2830  0.1581
-## 25  SD_Item_4  0.0564 0.0016   0.0451 0.0011  0.0534  0.2070  0.0000
-## 26  SD_Item_5  0.0288 0.0007   0.0190 0.0007  0.0325  0.1635  0.0000
-## 27  SD_Item_6  0.0053 0.0001   0.0024 0.0002  0.0071  0.2759  0.0000
-## 28  SD_Item_7  0.0353 0.0024   0.0690 0.0005  0.0242  0.6692  0.0000
-## 29  SD_Item_8  0.0124 0.0001   0.0028 0.0004  0.0159  1.0038  0.0000
-## 30  SD_Item_9  0.0094 0.0004   0.0118 0.0001  0.0073  0.1878  0.0000
-## 31 SD_Item_10  0.0256 0.0010   0.0255 0.0006  0.0249  1.2637  0.0000
-## 32 SD_Item_11  0.0374 0.0017   0.0381 0.0009  0.0367  0.5067  0.0000
-## 33 SD_Item_12  0.0011 0.0004   0.0120 0.0001  0.0039  0.9099  0.0000
-## 34 SD_Item_13  0.0182 0.0006   0.0149 0.0004  0.0180  0.0853  0.0000
-## 35 SD_Item_14  0.0703 0.0022   0.0681 0.0014  0.0708  0.3838  0.1581
-## 36 SD_Item_15  0.0366 0.0027   0.0478 0.0008  0.0267  0.0545  0.0000
-## 37 SD_Item_16  0.0075 0.0007   0.0151 0.0002  0.0061  0.0754  0.0000
-## 38 SD_Item_17  0.0324 0.0019   0.0202 0.0014  0.0322  0.4346  0.0632
-## 39 SD_Item_18  0.0116 0.0005   0.0085 0.0003  0.0094  0.0383  0.0000
-## 40 SD_Item_19  0.0903 0.0024   0.0717 0.0019  0.0945  0.8390  0.0000
-## 41 SD_Item_20  0.0478 0.0012   0.0402 0.0010  0.0528  0.1419  0.0316
+## 22  SD_Item_1  0.0372 0.0011   0.0342 0.0007  0.0344  0.0460  0.0000
+## 23  SD_Item_2  0.0670 0.0020   0.0608 0.0014  0.0679  0.6878  0.0949
+## 24  SD_Item_3  0.0194 0.0007   0.0230 0.0004  0.0182  0.7142  0.1897
+## 25  SD_Item_4  0.0149 0.0011   0.0307 0.0001  0.0052  0.5072  0.0000
+## 26  SD_Item_5  0.0095 0.0001   0.0041 0.0003  0.0122  0.2601  0.0000
+## 27  SD_Item_6  0.0207 0.0012   0.0208 0.0006  0.0189  0.0743  0.0000
+## 28  SD_Item_7  0.0190 0.0006   0.0163 0.0004  0.0189  0.2259  0.0000
+## 29  SD_Item_8  0.0051 0.0005   0.0114 0.0000  0.0004  0.1817  0.0000
+## 30  SD_Item_9  0.0238 0.0005   0.0149 0.0005  0.0267  0.7928  0.0000
+## 31 SD_Item_10  0.0188 0.0005   0.0122 0.0005  0.0202  0.2773  0.0000
+## 32 SD_Item_11  0.0062 0.0005   0.0120 0.0001  0.0031  0.2004  0.0000
+## 33 SD_Item_12  0.0539 0.0017   0.0477 0.0011  0.0515  0.1068  0.0000
+## 34 SD_Item_13  0.0317 0.0008   0.0211 0.0007  0.0339  0.1149  0.0000
+## 35 SD_Item_14  0.0043 0.0001   0.0019 0.0001  0.0042  0.8118  0.1897
+## 36 SD_Item_15  0.0100 0.0010   0.0169 0.0003  0.0088  0.5971  0.0000
+## 37 SD_Item_16  0.0271 0.0009   0.0193 0.0007  0.0294  0.4501  0.0000
+## 38 SD_Item_17  0.0007 0.0001   0.0006 0.0001  0.0013  0.6938  0.0316
+## 39 SD_Item_18  0.0109 0.0001   0.0019 0.0004  0.0139  0.4397  0.0000
+## 40 SD_Item_19  0.0170 0.0010   0.0319 0.0002  0.0084  0.0577  0.0000
+## 41 SD_Item_20  0.0452 0.0014   0.0460 0.0009  0.0459  0.6376  0.0000
 ##    p.S_X2
-## 1  0.2257
-## 2  0.8484
-## 3  0.2980
-## 4  0.0001
-## 5  0.9441
-## 6  0.2720
-## 7  0.8606
-## 8  0.5813
-## 9  0.9387
-## 10 0.0384
-## 11 0.1595
-## 12 0.5032
-## 13 0.2882
-## 14 0.1342
-## 15 0.1081
-## 16 0.0608
-## 17 0.0847
-## 18 0.6557
-## 19 0.4938
-## 20 0.1394
+## 1  0.2513
+## 2  0.8530
+## 3  0.3390
+## 4  0.0002
+## 5  0.9454
+## 6  0.3579
+## 7  0.9137
+## 8  0.5588
+## 9  0.9283
+## 10 0.0361
+## 11 0.1569
+## 12 0.4610
+## 13 0.4143
+## 14 0.1001
+## 15 0.1297
+## 16 0.0546
+## 17 0.0879
+## 18 0.6378
+## 19 0.5752
+## 20 0.1270
 ## 21     NA
-## 22 0.0131
-## 23 0.0210
-## 24 0.0148
+## 22 0.0038
+## 23 0.0346
+## 24 0.0364
 ## 25 0.0000
-## 26 0.0017
-## 27 0.0162
-## 28 0.0385
-## 29 0.0686
-## 30 0.0084
-## 31 0.0149
-## 32 0.0177
-## 33 0.0628
-## 34 0.0034
-## 35 0.0130
-## 36 0.0036
-## 37 0.0059
-## 38 0.0105
-## 39 0.0003
-## 40 0.0568
-## 41 0.0004
+## 26 0.0070
+## 27 0.0013
+## 28 0.0099
+## 29 0.0127
+## 30 0.0206
+## 31 0.0036
+## 32 0.0060
+## 33 0.0039
+## 34 0.0015
+## 35 0.0295
+## 36 0.0135
+## 37 0.0084
+## 38 0.0121
+## 39 0.0304
+## 40 0.0034
+## 41 0.0153
 </code></pre>
 
-</body>
+<pre><code class="r">## End(No test)
+</code></pre>
 
-</html>
+
+<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+</body></html>

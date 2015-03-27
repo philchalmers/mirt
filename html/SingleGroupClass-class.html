@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Class &quot;SingleGroupClass&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for SingleGroupClass-class {mirt}"><tr><td>SingleGroupClass-class {mirt}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Class &quot;SingleGroupClass&quot;</h2>
+
+<h3>Description</h3>
+
+<p>Defines the object returned from <code><a href="mirt.html">mirt</a></code> when model is exploratory.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>Data</code>:</dt><dd><p>Object of class <code>"list"</code>, contains various data matricies and properties </p>
+</dd>
+<dt><code>iter</code>:</dt><dd><p>Object of class <code>"numeric"</code>, number of iterations  </p>
+</dd>
+<dt><code>pars</code>:</dt><dd><p>Object of class <code>"list"</code>, estimated parameter objects list </p>
+</dd>
+<dt><code>shortpars</code>:</dt><dd><p>Object of class <code>"numeric"</code>, unique estimated parameters</p>
+</dd>
+<dt><code>model</code>:</dt><dd><p>Object of class <code>"list"</code>, list containing original model </p>
+</dd>
+<dt><code>K</code>:</dt><dd><p>Object of class <code>"numeric", number of item categories</code>  </p>
+</dd>
+<dt><code>itemloc</code>:</dt><dd><p>Object of class <code>"numeric", index for tabdata</code>  </p>
+</dd>
+<dt><code>AIC</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Akaike's information criteria </p>
+</dd>
+<dt><code>BIC</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Bayesian information criteria </p>
+</dd>
+<dt><code>G2</code>:</dt><dd><p>Object of class <code>"numeric"</code>, G squared stat </p>
+</dd>
+<dt><code>p</code>:</dt><dd><p>Object of class <code>"numeric"</code>, p-value for G2  </p>
+</dd>
+<dt><code>df</code>:</dt><dd><p>Object of class <code>"numeric"</code>, degrees of freedom </p>
+</dd>
+<dt><code>RMSEA</code>:</dt><dd><p>Object of class <code>"numeric"</code>, root mean-square error of approximation for G2</p>
+</dd>
+<dt><code>TLI</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Tucker-Lewis index for G2</p>
+</dd>
+<dt><code>CFI</code>:</dt><dd><p>Object of class <code>"numeric"</code>, CFI for G2</p>
+</dd>
+<dt><code>logLik</code>:</dt><dd><p>Object of class <code>"numeric"</code>, observed log-likelihood </p>
+</dd>
+<dt><code>SElogLik</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Monte Carlo standard error for log-likelihood </p>
+</dd>
+<dt><code>F</code>:</dt><dd><p>Object of class <code>"matrix"</code>, unrotated factor loadings </p>
+</dd>
+<dt><code>h2</code>:</dt><dd><p>Object of class <code>"numeric"</code>, commonalities </p>
+</dd>
+<dt><code>Theta</code>:</dt><dd><p>Object of class <code>"matrix"</code>, ability grid </p>
+</dd>
+<dt><code>Pl</code>:</dt><dd><p>Object of class <code>"numeric"</code>, normed likelihoods for tabulated response</p>
+</dd>
+<dt><code>prodlist</code>:</dt><dd><p>Object of class <code>"list"</code>, list containing product combination of factors </p>
+</dd>
+<dt><code>rotate</code>:</dt><dd><p>Object of class <code>"character"</code>, type of rotation to be used in <code>summary</code></p>
+</dd>
+<dt><code>converge</code>:</dt><dd><p>Object of class <code>"numeric"</code>, convergence diagnostic </p>
+</dd>
+<dt><code>quadpts</code>:</dt><dd><p>Object of class <code>"numeric"</code>, number of quadrature points </p>
+</dd>
+<dt><code>esttype</code>:</dt><dd><p>Object of class <code>"character"</code>, indicates whether estimation was 'EM' or 'MHRM'</p>
+</dd>
+<dt><code>null.mod</code>:</dt><dd><p>Object of class <code>"SingleGroupClass"</code>, null model</p>
+</dd>
+<dt><code>Target</code>:</dt><dd><p>Object of class <code>"numeric"</code>, dummy rotation matrix</p>
+</dd>
+<dt><code>condnum</code>:</dt><dd><p>Object of class <code>"numeric"</code>, condition number of information matrix</p>
+</dd>
+<dt><code>secondordertest</code>:</dt><dd><p>Object of class <code>"logical"</code>, indicate whether information matrix passes
+second-order test</p>
+</dd>
+<dt><code>bfactor</code>:</dt><dd><p>Object of class <code>"list"</code>, an empty list</p>
+</dd>
+<dt><code>infomethod</code>:</dt><dd><p>Object of class <code>"character"</code>, indiciates which information estimation method was used</p>
+</dd>
+<dt><code>TOL</code>:</dt><dd><p>Object of class <code>"numeric"</code>, tollerence stopping criteria</p>
+</dd>
+<dt><code>CUSTOM.IND</code>:</dt><dd><p>Object of class <code>"integer"</code>, an internal index</p>
+</dd>
+<dt><code>SLOW.IND</code>:</dt><dd><p>Object of class <code>"integer"</code>, an internal index</p>
+</dd>
+<dt><code>random</code>:</dt><dd><p>Object of class <code>"list"</code>, typicall null, except for internal mixed model usage</p>
+</dd>
+<dt><code>exploratory</code>:</dt><dd><p>Object of class <code>"logical"</code>, indicates whether model contains
+slopes that should be rotated</p>
+</dd>
+<dt><code>Call</code>:</dt><dd><p>Object of class <code>"call"</code>, call </p>
+</dd>
+</dl>
+
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>anova</dt><dd><p><code>signature(object = "SingleGroupClass")</code></p>
+</dd>
+<dt>coef</dt><dd><p><code>signature(object = "SingleGroupClass")</code></p>
+</dd>
+<dt>plot</dt><dd><p><code>signature(x = "SingleGroupClass", y = "missing")</code></p>
+</dd>
+<dt>print</dt><dd><p><code>signature(x = "SingleGroupClass")</code> </p>
+</dd>
+<dt>residuals</dt><dd><p><code>signature(object = "SingleGroupClass")</code></p>
+</dd>
+<dt>show</dt><dd><p><code>signature(object = "SingleGroupClass")</code> </p>
+</dd>
+<dt>summary</dt><dd><p><code>signature(object = "SingleGroupClass")</code></p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+</body></html>

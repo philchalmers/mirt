@@ -1,211 +1,208 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Mixed effects modeling for MIRT models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
 
-<title>Name: mixedmirt</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
+<table width="100%" summary="page for mixedmirt {mirt}"><tr><td>mixedmirt {mirt}</td><td align="right">R Documentation</td></tr></table>
 
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
+<h2>Mixed effects modeling for MIRT models</h2>
 
-   pre .literal {
-     color: #990073
-   }
+<h3>Description</h3>
 
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
+<p><code>mixedmirt</code> fits MIRT models using FIML estimation to dichotomous and polytomous
+IRT models conditional on fixed and random effect of person and item level covariates.
+This can also be understood as 'explanatory IRT' if only fixed effects are modeled, or
+multilevel/mixed IRT if random and fixed effects are included. The method uses the MH-RM
+algorithm exclusively. Additionally, computation of the log-likelihood can be sped up by
+using parallel estimation via <code><a href="mirtCluster.html">mirtCluster</a></code>.
+</p>
 
 
+<h3>Usage</h3>
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
-</style>
+<pre>
+mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
+  itemtype = "Rasch", lr.fixed = ~1, lr.random = NULL,
+  itemdesign = NULL, constrain = NULL, pars = NULL,
+  return.design = FALSE, SE = TRUE, internal_constraints = TRUE,
+  technical = list(SEtol = 1e-04), ...)
+</pre>
 
 
+<h3>Arguments</h3>
 
-</head>
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>a <code>matrix</code> or <code>data.frame</code> that consists of
+numerically ordered data, with missing data coded as <code>NA</code></p>
+</td></tr>
+<tr valign="top"><td><code>covdata</code></td>
+<td>
+<p>a <code>data.frame</code> that consists of the <code>nrow(data)</code> by <code>K</code>
+'person level' fixed and random predictors</p>
+</td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>an object returned from <code>mirt.model()</code> declaring how
+the factor model is to be estimated. See <code><a href="mirt.model.html">mirt.model</a></code> for
+more details</p>
+</td></tr>
+<tr valign="top"><td><code>fixed</code></td>
+<td>
+<p>a right sided R formula for specifying the fixed effect (aka 'explanatory')
+predictors from <code>covdata</code> and <code>itemdesign</code>. To estimate the intercepts for
+each item the keyword <code>items</code> is reserved and automatically added to the <code>itemdesign</code>
+input. If any polytomous items are being model the <code>items</code> are argument is not valid
+since all intercept parameters are freely estimated and identified with the parameterizations
+found in <code><a href="mirt.html">mirt</a></code>, and the first column in the fixed design matrix
+(commonly the intercept or a reference group) is omitted</p>
+</td></tr>
+<tr valign="top"><td><code>random</code></td>
+<td>
+<p>a right sided formula or list of formulas containing crossed random effects
+of the form <code>v1 + ... v_n | G</code>, where <code>G</code> is the grouping variable and <code>v_n</code> are
+random numeric predictors within each group. If no intercept value is specified then by default
+the correlations between the <code>v</code>'s and <code>G</code> are estimated, but can be suppressed by
+including the <code>~ -1 + ...</code> or 0 constant. <code>G</code> may contain interaction terms, such as
+<code>group:items</code> to include cross or person-level interactions effects</p>
+</td></tr>
+<tr valign="top"><td><code>itemtype</code></td>
+<td>
+<p>same as itemtype in <code><a href="mirt.html">mirt</a></code>, except does not support the following
+item types: <code>c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')</code></p>
+</td></tr>
+<tr valign="top"><td><code>lr.fixed</code></td>
+<td>
+<p>an R forumala (or list of formulas) to specificy regression
+effects in the latent variables from the variables in <code>covdata</code>. This is used to construct models such as the so-called
+'latent regression model' to expalin person-level ability/trait differences. If a named list
+of formulas is supplied (where the names correspond to the latent trait names in <code>model</code>)
+then specific regression effects can be estimated for each factor. Supplying a single formula
+will estimate the regression parameters for all latent traits by default</p>
+</td></tr>
+<tr valign="top"><td><code>lr.random</code></td>
+<td>
+<p>(CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
+latent trait scores, where the syntax uses the same style as in the <code>random</code> argument.
+Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
+models do not require these, and can be built using the <code>fixed</code> and <code>random</code> inputs alone)</p>
+</td></tr>
+<tr valign="top"><td><code>itemdesign</code></td>
+<td>
+<p>a <code>data.frame</code> object used to create a design matrix for the items, where
+each <code>nrow(itemdesign) == nitems</code> and the number of columns is equal to the number of
+fixed effect predictors (i.e., item intercepts). By default an <code>items</code> variable is
+reserved for modeling the item intercept parameters</p>
+</td></tr>
+<tr valign="top"><td><code>constrain</code></td>
+<td>
+<p>a list indicating parameter equality constrains. See <code><a href="mirt.html">mirt</a></code> for
+more detail</p>
+</td></tr>
+<tr valign="top"><td><code>pars</code></td>
+<td>
+<p>used for parameter starting values. See <code><a href="mirt.html">mirt</a></code> for more detail</p>
+</td></tr>
+<tr valign="top"><td><code>return.design</code></td>
+<td>
+<p>logical; return the design matrices before they have (potentially)
+been reassigned?</p>
+</td></tr>
+<tr valign="top"><td><code>SE</code></td>
+<td>
+<p>logical; compute the standard errors by approximating the information matrix
+using the MHRM algorithm? Default is TRUE</p>
+</td></tr>
+<tr valign="top"><td><code>internal_constraints</code></td>
+<td>
+<p>logical; use the internally defined constraints for constraining
+effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
+underidentification</p>
+</td></tr>
+<tr valign="top"><td><code>technical</code></td>
+<td>
+<p>the technical list passed to the MH-RM estimation engine, with the
+SEtol default increased to .0001. See <code><a href="mirt.html">mirt</a></code> for further details</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to the MH-RM estimation engine. See
+<code><a href="mirt.html">mirt</a></code> for more details and examples</p>
+</td></tr>
+</table>
 
-<body>
-<h3>Name: mixedmirt</h3>
 
-<h3>Title: Mixed effects modeling for MIRT models</h3>
+<h3>Details</h3>
 
-<pre><code class="r">#make some data
+<p>For dichotomous response models, <code>mixedmirt</code> follows the general form
+</p>
+<p align="center"><i>P(x = 1|&theta;, &psi;) = g + \frac{(u - g)}{1 + exp(-1 * [&theta; a +
+ X &beta; + Z &delta;])}</i></p>
+
+<p>where X is a design matrix with associated <i>&beta;</i> fixed effect intercept coefficients,
+and Z is a design matrix with associated <i>&delta;</i> random effects for the intercepts.
+For simplicity and easier interpretation, the unique item intercept values typically found in
+<i>X &beta;</i>
+are extracted and reassigned within mirt's 'intercept' parameters (e.g., <code>'d'</code>).
+To observe how the design matrices are structured prior to reassignment and estimation pass
+the argument <code>return.design = TRUE</code>.
+</p>
+<p>Polytomous IRT models follow a similar format except the item intercepts are automatically
+estimated internally, rendering the <code>items</code> argument in the fixed formula redundant and
+therefore must be omitted from the specification. If there are a mixture of dichotomous and
+polytomous items the intercepts for the dichotomous models are also estimated for consistency.
+</p>
+<p>The decomposition of the <i>&theta;</i> parameters is also possible to form
+latent regression and multilevel IRT models by using the <code>lr.fixed</code> and <code>lr.random</code>
+inputs. These effects decompose <i>&theta;</i> such that
+</p>
+<p align="center"><i>&theta; = V &Gamma; + W &zeta; + &epsilon;</i></p>
+
+<p>where V and W are fixed and random effects design matricies for the associated coefficients.
+</p>
+<p>To simulate maximum a posteriori estimates for the random effect terms
+use the <code><a href="randef.html">randef</a></code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>function returns an object of class <code>MixedClass</code>
+(<a href="MixedClass-class.html">MixedClass-class</a>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Chalmers, R. P. (2015, in press). Extended Mixed-Effects Item Response Models
+with the MH-RM Algorithm. <EM>Journal of Educational Measurement</EM>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mirt.html">mirt</a></code>, <code><a href="randef.html">randef</a></code>, <code><a href="../../nlme/html/fixed.effects.html">fixef</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+#make some data
 set.seed(1234)
 N &lt;- 750
 a &lt;- matrix(rlnorm(10,.3,1),10,1)
@@ -242,7 +239,7 @@ anova(mod0, mod1)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
-## 2 8118.155 8118.650 8136.936 8178.216 -4046.077 712.012   2   0
+## 2 8117.443 8117.938 8136.224 8177.504 -4045.722 712.724   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -347,6 +344,12 @@ library(lme4)
 
 <pre><code>## Loading required package: Matrix
 ## Loading required package: Rcpp
+## 
+## Attaching package: &#39;lme4&#39;
+## 
+## The following object is masked from &#39;package:mirt&#39;:
+## 
+##     fixef
 </code></pre>
 
 <pre><code class="r">lmod0 &lt;- glmer(value ~ 0 + variable + (1|id), long, family = binomial)
@@ -385,8 +388,8 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8118.155 8118.650 8136.936 8178.216 -4046.077     NaN NaN NaN
-## 2 7969.381 7970.773 8001.164 8071.023 -3962.691 166.774   9   0
+## 1 8117.443 8117.938 8136.224 8177.504 -4045.722     NaN NaN NaN
+## 2 7968.583 7969.975 8000.366 8070.224 -3962.291 166.861   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -427,8 +430,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8104.406 8104.977 8124.631 8169.087 -4038.203     NaN NaN NaN
-## 2 7969.381 7970.773 8001.164 8071.023 -3962.691 151.024   8   0
+## 1 8104.990 8105.561 8125.216 8169.671 -4038.495     NaN NaN NaN
+## 2 7968.583 7969.975 8000.366 8070.224 -3962.291 152.408   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -667,11 +670,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] 0.00405 0.03075 -0.0251 0.01071 -0.07207 ...
+##  $ Theta: num [1:750, 1] -0.1168 0.0209 -0.0544 0.0366 -0.0774 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -2.06 -1.2 -1.43 -1.23 -1.39 ...
+##  $ group: num [1:50, 1:2] -1.99 -1.13 -1.4 -1.17 -1.42 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -956,8 +959,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25465.14 25465.18 25468.81 25478.33 -12729.57      NaN NaN NaN
-## 2 20490.01 20494.22 20531.56 20639.51 -10211.00 5037.129  31   0
+## 1 25463.38 25463.42 25467.04 25476.57 -12728.69      NaN NaN NaN
+## 2 20480.44 20484.65 20522.00 20629.94 -10206.22 5044.935  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1470,33 +1473,33 @@ coef(mod)
 
 <pre><code>## $Comfort
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.034  1   0   1   2   3  0 3.096 5.707 4.334
-## CI_2.5  -0.285 NA  NA  NA  NA  NA NA 2.069 4.644 3.210
-## CI_97.5  0.217 NA  NA  NA  NA  NA NA 4.123 6.770 5.457
+## par     -0.032  1   0   1   2   3  0 3.039 5.620 4.260
+## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 2.012 4.548 3.121
+## CI_97.5  0.218 NA  NA  NA  NA  NA NA 4.066 6.692 5.399
 ## 
 ## $Work
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.034  1   0   1   2   3  0 1.912 2.839 0.996
-## CI_2.5  -0.285 NA  NA  NA  NA  NA NA 1.441 2.282 0.298
-## CI_97.5  0.217 NA  NA  NA  NA  NA NA 2.382 3.395 1.693
+## par     -0.032  1   0   1   2   3  0 1.870 2.783 0.965
+## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 1.393 2.209 0.249
+## CI_97.5  0.218 NA  NA  NA  NA  NA NA 2.348 3.357 1.682
 ## 
 ## $Future
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.034  1   0   1   2   3  0 2.661 4.098 2.978
-## CI_2.5  -0.285 NA  NA  NA  NA  NA NA 2.011 3.376 2.167
-## CI_97.5  0.217 NA  NA  NA  NA  NA NA 3.310 4.820 3.790
+## par     -0.032  1   0   1   2   3  0 2.612 4.027 2.922
+## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 1.958 3.289 2.089
+## CI_97.5  0.218 NA  NA  NA  NA  NA NA 3.266 4.764 3.755
 ## 
 ## $Benefit
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.034  1   0   1   2   3  0 2.464 3.380 2.037
-## CI_2.5  -0.285 NA  NA  NA  NA  NA NA 1.919 2.750 1.299
-## CI_97.5  0.217 NA  NA  NA  NA  NA NA 3.009 4.009 2.775
+## par     -0.032  1   0   1   2   3  0 2.419 3.317 1.995
+## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 1.869 2.672 1.236
+## CI_97.5  0.218 NA  NA  NA  NA  NA NA 2.970 3.963 2.754
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  1.001
-## CI_2.5      NA  0.678
-## CI_97.5     NA  1.324
+## par          0  0.934
+## CI_2.5      NA  0.633
+## CI_97.5     NA  1.235
 </code></pre>
 
 <pre><code class="r">#gpcm to estimate slopes
@@ -1513,7 +1516,7 @@ summary(mod2)
 ## --------------
 ## FIXED EFFECTS:
 ##        Estimate Std.Error z.value
-## groupm   -0.158     0.115   -1.38
+## groupm   -0.164     0.126  -1.305
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -1534,9 +1537,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
-## 1 3265.941 3267.055 3277.117 3321.538 -1618.970    NaN NaN    NaN
-## 2 3261.099 3262.735 3274.670 3328.610 -1613.549 10.842   3 0.0126
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 3268.627 3269.741 3279.803 3324.224 -1620.313   NaN NaN   NaN
+## 2 3257.107 3258.744 3270.678 3324.619 -1611.554 17.52   3 6e-04
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1630,7 +1633,7 @@ anova(rmod0, rmod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
 ## 1 9743.151 9743.448 9761.043 9795.977 -4860.576    NaN NaN NaN
-## 2 9494.401 9494.811 9515.546 9556.832 -4734.200 252.75   2   0
+## 2 9494.221 9494.632 9515.366 9556.652 -4734.111 252.93   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1649,15 +1652,13 @@ anova(rmod0, rmod1b)
 ## Item_9   1  0.674 0 1
 ## Item_10  1 -0.251 0 1
 ## 
-## $groupPars
-## $groupPars$means
-## MEAN_1 
-##      0 
+## $means
+## F1 
+##  0 
 ## 
-## $groupPars$cov
+## $cov
 ##       F1
 ## F1 0.981
-## 
 ## 
 ## $lr.betas
 ##                F1
@@ -1704,7 +1705,7 @@ anova(mod0, mod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
-## 2 9492.867 9494.021 9528.651 9598.520 -4724.434 254.906   2   0
+## 2 9492.185 9493.339 9527.969 9597.838 -4724.092 255.588   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1758,14 +1759,14 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0  0.893      0  0.702
+## par      0      0  0.891      0  0.703
 ## 
 ## $lr.betas
 ##                 F1    F2
 ## (Intercept)  0.000 0.000
-## groupg2      0.832 0.743
-## groupg3      1.623 1.745
-## contvar     -0.002 0.000
+## groupg2      0.820 0.721
+## groupg3      1.619 1.740
+## contvar     -0.063 0.000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1784,24 +1785,24 @@ summary(mod2b)
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##      F1   F2
-## F1 1.07 0.00
-## F2 0.00 0.76
+##      F1    F2
+## F1 1.07 0.000
+## F2 0.00 0.787
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
 ##                 F1    F2
 ## (Intercept)  0.000 0.000
-## groupg2      0.820 0.688
-## groupg3      1.664 1.742
-## contvar     -0.012 0.000
+## groupg2      0.855 0.678
+## groupg3      1.678 1.745
+## contvar     -0.049 0.000
 ## 
 ##             Std.Error_F1 Std.Error_F2   z_F1  z_F2
 ## (Intercept)           NA           NA     NA    NA
-## groupg2            0.066         0.09 12.485 7.657
-## groupg3            0.041          NaN 40.871   NaN
-## contvar            0.041           NA -0.293    NA
+## groupg2            0.089         0.13  9.613 5.205
+## groupg3              NaN          NaN    NaN   NaN
+## contvar            0.046           NA -1.070    NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1887,10 +1888,13 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23679.15 23679.31 23708.24 23746.36 -11827.58     NaN NaN NaN
-## 2 22907.81 22908.00 22939.32 22980.63 -11440.91 773.338   1   0
+## 1 23685.86 23686.02 23714.95 23753.07 -11830.93     NaN NaN NaN
+## 2 22909.54 22909.72 22941.05 22982.35 -11441.77 778.325   1   0
 </code></pre>
 
-</body>
+<pre><code class="r">## End(No test)
+</code></pre>
 
-</html>
+
+<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+</body></html>
