@@ -247,7 +247,7 @@ setMethod(
     definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
                           simplify=FALSE, verbose = TRUE, ...){
-        if(printSE) rawug <- TRUE
+        if(printSE && length(object@pars[[1L]]@SEpar)) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1')
         z <- abs(qnorm((1 - CI)/2))
@@ -275,17 +275,22 @@ setMethod(
             for(i in 1:(J+1))
                 allPars[[i]] <- round(mirt2traditional(object@pars[[i]]), digits)
         } else {
-            if(length(object@pars[[1]]@SEpar) > 0){
+            if(length(object@pars[[1L]]@SEpar)){
                 if(printSE){
-                    for(i in 1:(J+1)){
+                    for(i in 1L:(J+1L)){
                         allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
                                                        object@pars[[i]]@SEpar),
                                                      2, byrow = TRUE), digits)
                         rownames(allPars[[i]]) <- c('par', 'SE')
-                        colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                        nms <- names(object@pars[[i]]@est)
+                        if(i <= J && object@itemtype[i] != 'custom'){
+                            nms[nms == 'g'] <- 'logit(g)'
+                            nms[nms == 'u'] <- 'logit(u)'
+                        }
+                        colnames(allPars[[i]]) <- nms
                     }
                 } else {
-                    for(i in 1:(J+1)){
+                    for(i in 1L:(J+1L)){
                         allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
                                                        object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
                                                        object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
@@ -295,7 +300,7 @@ setMethod(
                     }
                 }
             } else {
-                for(i in 1:(J+1)){
+                for(i in 1L:(J+1L)){
                     allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
                     colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
                     rownames(allPars[[i]]) <- 'par'

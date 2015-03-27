@@ -229,8 +229,10 @@ setMethod(
         opars <- pars
         estHess <- !full.scores | return.acov | full.scores.SE
         if(impute){
+            if(length(object@information) == 1L)
+                stop('Stop an information matrix must be computed for imputations')
             if(is(try(chol(object@information), silent=TRUE), 'try-error')){
-                stop('Proper information matrix must be precomputed in model for MI estimation')
+                stop('Information matrix is not positive definite')
             } else {
                 names <- colnames(object@information)
                 imputenums <- as.numeric(sapply(names, function(x, split){

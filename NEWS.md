@@ -1,10 +1,14 @@
 # Changes in mirt 1.9
 
+- when using `coef(mod, printSE=TRUE)` the `g` and `u` parameters are relabeled to `logit(g)` and
+  `logit(u)` to represent the internal labels
+
 - added various facet plots for three dimensional models to `plot()` generic
 
 - support `optimizer = 'nlminb'`, and pass optimizer control arguments to a `contol` list
 
-- added `fixef()` function to extract fixed effect parameters in latent regression models
+- added `fixef()` function to extract expected values implied by the fixed effect parameters
+  in latent regression models
 
 - added `gpcm_mats` argument to estimation functions for specifying a customize scoring pattern
   for multidimensional generalized partial credit models
