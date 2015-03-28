@@ -24,7 +24,8 @@ parameters are used}
 }
 \description{
 Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
-parameter distributions as well as equality constraints.
+parameter distributions as well as equality constraints. Object returns the confidence intervals
+and whether the respective interval could be found.
 }
 \examples{
 \dontrun{
@@ -44,6 +45,9 @@ sv <- mod2values(mod2)
 parnum <- sv$parnum[sv$name == 'a1']
 result3 <- PLCI.mirt(mod2, parnum=parnum)
 result3
+
+# plot the confidence envelope for parameters 1 and 2
+PLCI.mirt(mod2, parnum=c(1,2), plot=TRUE)
 
 }
 }

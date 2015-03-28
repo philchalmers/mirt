@@ -1,7 +1,8 @@
 #' Compute profiled-likelihood confidence intervals
 #'
 #' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
-#' parameter distributions as well as equality constraints.
+#' parameter distributions as well as equality constraints. Object returns the confidence intervals
+#' and whether the respective interval could be found.
 #'
 #' @aliases PLCI.mirt
 #' @param mod a converged mirt model
@@ -36,6 +37,9 @@
 #' parnum <- sv$parnum[sv$name == 'a1']
 #' result3 <- PLCI.mirt(mod2, parnum=parnum)
 #' result3
+#'
+#' # plot the confidence envelope for parameters 1 and 2
+#' PLCI.mirt(mod2, parnum=c(1,2), plot=TRUE)
 #'
 #' }
 PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, ...){
@@ -133,15 +137,17 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
                 }
             }
         }
+        conv_upper <- conv_lower <- TRUE
         if(opt.lower$objective > .01){
-            warning('Lower-bound objective likelihood not met for parameter ', parnums[parnum])
+            conv_lower <- FALSE
             if(force) opt.lower$minimum <- NA
         }
         if(opt.upper$objective > .01){
-            warning('Upper-bound objective likelihood not met for parameter ', parnums[parnum])
+            conv_upper <- FALSE
             if(force) opt.upper$minimum <- NA
         }
-        c(lower=opt.lower$minimum, upper=opt.upper$minimum)
+        c(lower=opt.lower$minimum, upper=opt.upper$minimum,
+          conv_lower=conv_lower, conv_upper=conv_upper)
     }
 
     dat <- mod@Data$data
@@ -179,9 +185,12 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior, ...)
-    colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100))
+    colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
+                          'lower_conv', 'upper_conv')
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],
                       parnum=parnums, value=pars, result, row.names=NULL)
+    ret$lower_conv <- as.logical(ret$lower_conv)
+    ret$upper_conv <- as.logical(ret$upper_conv)
     if(plot){
         ret <- rbind(ret[ret$parnum == parnum[1],], ret[ret$parnum != parnum[1],])
         parnames <- ret$parnam; parnums <- ret$parnum
@@ -199,7 +208,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
                                parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                                model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
                                force = TRUE, ...)
-            collect[i, ] <- result
+            collect[i, ] <- result[1:2]
         }
         sv2$value[sv2$parnum == parnums[1L]] <- ret[1L, 6L]
         lp <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
