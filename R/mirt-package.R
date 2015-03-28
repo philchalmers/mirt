@@ -12,7 +12,9 @@
 #' \url{https://github.com/philchalmers/mirt} and follow the instructions
 #' for installing the package from source. Questions regarding the package can
 #' be sent to the mirt-package Google Group, located at
-#' \url{https://groups.google.com/forum/#!forum/mirt-package}.
+#' \url{https://groups.google.com/forum/#!forum/mirt-package}. User contributed files,
+#' workshop files, and evaluated help files are also available on the package wiki
+#' (\url{https://github.com/philchalmers/mirt/wiki}).
 #'
 #'
 #'
@@ -136,7 +138,7 @@ NULL
 #'                      CONSTRAIN = (1-5, a1)')
 #' (mod <- mirt(dat, model))
 #' coef(mod)
-#' 
+#'
 #' #equivalentely, but with a different parameterization
 #' mod2 <- mirt(dat, 1, itemtype = 'Rasch')
 #' anova(mod, mod2) #equal
