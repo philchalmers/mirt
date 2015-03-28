@@ -32,7 +32,6 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
         for (int item = 0; item < nitems; ++item)
             if (data(pat,item))
                 for(int q = 0; q < nquad; ++q)
-                    #pragma omp atomic
                     r1vec[q + item*nquad] += posterior[q];
     } //end main
 
@@ -91,7 +90,6 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
          for (int item = 0; item < nitems; ++item)
              if (data(pat,item))
                  for(int q = 0; q < nquad; ++q)
-                     #pragma omp atomic
                      r1vec[q + item*nquad] += posterior[q];
      } //end main
 
