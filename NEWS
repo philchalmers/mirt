@@ -1,3 +1,48 @@
+Changes in mirt 1.9
+
+  - when using `coef(mod, printSE=TRUE)` the `g` and `u` parameters are
+  relabeled to `logit(g)` and `logit(u)` to represent the internal labels
+
+  - added various facet plots for three dimensional models to `plot()` generic
+
+  - support `optimizer = 'nlminb'`, and pass optimizer control arguments to a
+  `contol` list
+
+  - added `fixef()` function to extract expected values implied by the fixed
+  effect parameters in latent regression models
+
+  - added `gpcm_mats` argument to estimation functions for specifying
+  a customize scoring pattern for multidimensional generalized partial
+  credit models
+
+  - added `custom_theta` input to `fscores()` for including customized
+  integration grids
+
+  - add a `suppress` argument to `residuals()` and `M2()` to suppress local
+  dependence values less than this specific value
+
+  - print a message in `DIF()` and `DTF()` when hyper-parameters are not
+  freely estimated in focal groups
+
+  - constraits for hetorogenous item names added to `mirt.model()` syntax
+
+  - WLE support for multidimensional models added
+
+  - added `'SEcontour'` argument to `plot()` generic
+
+  - use NA's in `fscores()` when response patterns contain all NA responses
+  (suggested by Tomasz Zoltak)
+
+BUG FIX
+
+  - S-X2 in `itemfit()` now returns appropriate values for multiple-group
+  models
+
+  - multidimensional plausible value imputation fix (reported by KK Sasa)
+
+  - `plot(..., type = 'infotrace')` for multiple group objects fixed (reported
+  by Danilo Pereira)
+
 Changes in mirt 1.8
 
   - `fscores()` nows accepts `method = "plausible"` to draw a single plausible
