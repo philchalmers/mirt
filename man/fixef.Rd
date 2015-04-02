@@ -2,7 +2,7 @@
 % Please edit documentation in R/fixef.R
 \name{fixef}
 \alias{fixef}
-\title{Compute latent regression fixed effects}
+\title{Compute latent regression fixed effect expected values}
 \usage{
 fixef(x)
 }

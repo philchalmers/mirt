@@ -1,4 +1,4 @@
-#' Compute M2 statistic
+#' Compute the M2 model fit statistic
 #'
 #' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
 #' M2* statistic for polytomous data (collapsing over response categories for better stability;

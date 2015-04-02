@@ -1,4 +1,4 @@
-#' Convert response patterns to binary data
+#' Score a test by converting response patterns to binary data
 #'
 #' The \code{key2binary} function will convert response pattern data to a
 #' dichotomous format, given a response key.

@@ -1,4 +1,4 @@
-#' Compute latent regression fixed effects
+#' Compute latent regression fixed effect expected values
 #'
 #' Create expected values for fixed effects parameters in latent regression models.
 #'

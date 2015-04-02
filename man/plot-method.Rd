@@ -7,7 +7,7 @@
 \alias{plot,SingleGroupClass,missing-method}
 \alias{plot,SingleGroupClass-method}
 \alias{plot-method}
-\title{Plot various test implied functions from models}
+\title{Plot various test-implied functions from models}
 \usage{
 \S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 50,
   theta_angle = 45, theta_lim = c(-6, 6),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fscores.R
 \name{fscores}
 \alias{fscores}
-\title{Methods for Function fscores}
+\title{Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)}
 \usage{
 fscores(object, rotate = NULL, full.scores = FALSE, method = "EAP",
   quadpts = NULL, response.pattern = NULL, plausible.draws = 0,

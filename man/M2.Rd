@@ -2,7 +2,7 @@
 % Please edit documentation in R/M2.R
 \name{M2}
 \alias{M2}
-\title{Compute M2 statistic}
+\title{Compute the M2 model fit statistic}
 \usage{
 M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0,
   CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1, ...)

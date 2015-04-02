@@ -2,7 +2,7 @@
 % Please edit documentation in R/wald.R
 \name{wald}
 \alias{wald}
-\title{Wald test for mirt models}
+\title{Wald statistics for mirt models}
 \usage{
 wald(object, L, C = 0)
 }

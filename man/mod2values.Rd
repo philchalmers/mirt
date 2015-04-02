@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod2values.R
 \name{mod2values}
 \alias{mod2values}
-\title{Convert an estimated mirt model to special data.frame}
+\title{Convert an estimated mirt model to a data.frame}
 \usage{
 mod2values(x)
 }

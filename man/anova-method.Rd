@@ -7,7 +7,7 @@
 \alias{anova,MultipleGroupClass-method}
 \alias{anova,SingleGroupClass-method}
 \alias{anova-method}
-\title{Compare nested models}
+\title{Compare nested models with likelihood-based statistics}
 \usage{
 \S4method{anova}{SingleGroupClass}(object, object2, verbose = TRUE)
 }

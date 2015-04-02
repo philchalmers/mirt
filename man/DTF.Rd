@@ -2,7 +2,7 @@
 % Please edit documentation in R/DTF.R
 \name{DTF}
 \alias{DTF}
-\title{Differential test functioning}
+\title{Differential test functioning statistics}
 \usage{
 DTF(mod, MI = NULL, CI = 0.95, npts = 1000, theta_lim = c(-6, 6),
   Theta_nodes = NULL, plot = FALSE, auto.key = TRUE, ...)

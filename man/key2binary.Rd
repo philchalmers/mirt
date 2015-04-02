@@ -2,7 +2,7 @@
 % Please edit documentation in R/key2binary.R
 \name{key2binary}
 \alias{key2binary}
-\title{Convert response patterns to binary data}
+\title{Score a test by converting response patterns to binary data}
 \usage{
 key2binary(fulldata, key)
 }

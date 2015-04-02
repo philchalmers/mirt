@@ -1,4 +1,4 @@
-#' Methods for Function fscores
+#' Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)
 #'
 #' Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),
 #' or WLE (Warm, 1989) factor scores with a multivariate normal

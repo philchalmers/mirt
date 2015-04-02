@@ -1,4 +1,4 @@
-#' Differential item functioning tests
+#' Differential item functioning statistics
 #'
 #' This function runs the Wald and likelihood-ratio approaches for testing differential
 #' item functioning (DIF). This is primarily a convenience wrapper to the

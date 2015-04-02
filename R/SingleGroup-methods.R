@@ -338,7 +338,7 @@ setMethod(
     }
 )
 
-#' Compare nested models
+#' Compare nested models with likelihood-based statistics
 #'
 #' Compare nested models using likelihood ratio, AIC, BIC, etc.
 #'
@@ -610,7 +610,7 @@ setMethod(
     }
 )
 
-#' Plot various test implied functions from models
+#' Plot various test-implied functions from models
 #'
 #' Plot various test implied response functions from models estimated in the mirt package.
 #'

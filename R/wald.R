@@ -1,4 +1,4 @@
-#' Wald test for mirt models
+#' Wald statistics for mirt models
 #'
 #' Compute a Wald test given an \code{L} vector or matrix of numeric contrasts. Requires that the
 #' model information matrix be computed (including \code{SE = TRUE} when using the EM method). Use

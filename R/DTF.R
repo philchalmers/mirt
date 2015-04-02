@@ -1,4 +1,4 @@
-#' Differential test functioning
+#' Differential test functioning statistics
 #'
 #' Function performs various omnibus differential test functioning procedures on an object
 #' estimated with \code{multipleGroup()}. If the latent means/covariances are suspected to differ

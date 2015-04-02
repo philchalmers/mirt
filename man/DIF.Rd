@@ -2,7 +2,7 @@
 % Please edit documentation in R/DIF.R
 \name{DIF}
 \alias{DIF}
-\title{Differential item functioning tests}
+\title{Differential item functioning statistics}
 \usage{
 DIF(MGmodel, which.par, scheme = "add",
   items2test = 1:ncol(MGmodel@Data$data), seq_stat = "SABIC",

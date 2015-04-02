@@ -2,7 +2,7 @@
 % Please edit documentation in R/randef.R
 \name{randef}
 \alias{randef}
-\title{Compute random effects}
+\title{Compute posterior estimates of random effect}
 \usage{
 randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 }
