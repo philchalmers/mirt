@@ -28,6 +28,7 @@ extratest:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_dir('tests/extratests')"
 
 knitdocs:
+	rm -rf html/
 	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R 
 	sed -i s/dontrun/donttest/g man/*.Rd
 	make install
