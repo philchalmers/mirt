@@ -165,7 +165,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    0.819    0.068    0.742    0.068    0.663    0.000    0.007
+##    0.822    0.065    0.748    0.065    0.671    0.000    0.007
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -175,7 +175,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation componenets
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    0.248    0.072    0.167    0.066    0.093    0.000    0.007
+##    0.247    0.074    0.163    0.066    0.090    0.000    0.007
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -1134,8 +1134,8 @@ anova(mod_metric, mod_configural)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
-## 1 37656.42 37658.54 37765.49 37908.46 -18783.21    NaN NaN   NaN
-## 2 37643.67 37647.45 37789.10 37979.72 -18761.84 42.751  15 2e-04
+## 1 37655.67 37657.78 37764.74 37907.71 -18782.83    NaN NaN   NaN
+## 2 37644.23 37648.00 37789.66 37980.28 -18762.11 41.439  15 3e-04
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1148,9 +1148,9 @@ anova(mod_metric, mod_configural)
 ##     method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 37815.31 37816.26 37888.03 37983.34 -18877.66    NaN NaN NaN
-## 2 37656.42 37658.54 37765.49 37908.46 -18783.21 188.89  15   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 37811.24 37812.19 37883.96 37979.27 -18875.62     NaN NaN NaN
+## 2 37655.67 37657.78 37764.74 37907.71 -18782.83 185.579  15   0
 </code></pre>
 
 <pre><code class="r">############

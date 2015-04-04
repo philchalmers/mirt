@@ -92,15 +92,15 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 36 EM iterations.
+## Converged within 1e-04 tolerance after 25 EM iterations.
 ## mirt version: 1.9 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
 ## 
-## Log-likelihood = -2648.141
-## AIC = 5316.281; AICc = 5316.504
-## BIC = 5365.359; SABIC = 5333.598
+## Log-likelihood = -2648.79
+## AIC = 5317.581; AICc = 5317.803
+## BIC = 5366.658; SABIC = 5334.898
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;, full.scores = TRUE)
@@ -115,17 +115,17 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 33 EM iterations.
+## Converged within 1e-04 tolerance after 32 EM iterations.
 ## mirt version: 1.9 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 41
 ## 
-## Log-likelihood = -2655.975
-## AIC = 5331.95; AICc = 5332.172
-## BIC = 5381.027; SABIC = 5349.267
-## G2 (21) = 32.82, p = 0.0482
-## RMSEA = 0.024, CFI = 0.933, TLI = 0.918
+## Log-likelihood = -2657.711
+## AIC = 5335.422; AICc = 5335.644
+## BIC = 5384.499; SABIC = 5352.739
+## G2 (21) = 33.12, p = 0.0449
+## RMSEA = 0.024, CFI = 0.929, TLI = 0.913
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
