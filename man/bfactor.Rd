@@ -26,7 +26,7 @@ the bifactor model}
 
 \item{group}{a factor variable indicating group membership used for multiple group analyses}
 
-\item{quadpts}{number of quadrature nodes to use. Default is 21 per dimensio}
+\item{quadpts}{number of quadrature nodes to use. Default is 21 per dimension}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for more details and examples}

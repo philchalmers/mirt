@@ -11,7 +11,7 @@
 #' @param as.data.frame logical; return a data.frame instead of a list? Default is TRUE
 #' @param digits number of digits to round result. Default is 4
 #' @return returns a list or data.frame containing the updated averaged parameter estimates,
-#'   standard errors, and t-values with the assiciated degrees of freedom and two tailed p-values
+#'   standard errors, and t-values with the associated degrees of freedom and two tailed p-values
 #' @keywords multiple imputation
 #' @references
 #' Rubin, D.B. (1987) Multiple Imputation for Nonresponse in Surveys. Wiley & Sons, New York.

@@ -422,7 +422,7 @@ setMethod(
 #' @param theta_lim range for the integration grid
 #' @param quadpts number of quadrature nodes to use. The default is extracted from model (if available)
 #'   or generated automatically if not available
-#' @param suppress a numeric value indiciating which parameter local dependency combinations
+#' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
 #' @param ... additional arguments to be passed to \code{fscores()}

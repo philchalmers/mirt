@@ -43,7 +43,7 @@ tables for each item combination?}
 If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 be used instead}
 
-\item{suppress}{a numeric value indiciating which parameter local dependency combinations
+\item{suppress}{a numeric value indicating which parameter local dependency combinations
 to flag as being too high. Absolute values for the standardized estimates greater than
 this value will be returned, while all values less than this value will be set to NA}
 

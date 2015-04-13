@@ -17,7 +17,7 @@ averageMI(par, SEpar, as.data.frame = TRUE, digits = 4)
 }
 \value{
 returns a list or data.frame containing the updated averaged parameter estimates,
-  standard errors, and t-values with the assiciated degrees of freedom and two tailed p-values
+  standard errors, and t-values with the associated degrees of freedom and two tailed p-values
 }
 \description{
 This function computes updated parameter and standard error estimates using multiple

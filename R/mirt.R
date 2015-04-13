@@ -342,8 +342,8 @@
 #'   weighting to be applied
 #' @param GenRandomPars logical; generate random starting values prior to optimization instead of
 #'   using the fixed internal starting values?
-#' @param gpcm_mats a list of matricies specifying how the scoring coefficients in the (generalized)
-#'   partial credit model should be constructed. If ommited, the standard gpcm format will be used
+#' @param gpcm_mats a list of matrices specifying how the scoring coefficients in the (generalized)
+#'   partial credit model should be constructed. If omitted, the standard gpcm format will be used
 #'   (i.e., \code{seq(0, k, by = 1)} for each trait). This input should be used if traits
 #'   should be scored different for each category (e.g., \code{matrix(c(0:3, 1,0,0,0), 4, 2)} for a
 #'   two-dimensional model where the first trait is scored like a gpcm, but the second trait is only
@@ -395,7 +395,7 @@
 #'   \describe{
 #'     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
 #'       4GB or RAM on your PC; default 10000}
-#'     \item{theta_lim}{range of integration grid for each dicumension; default is \code{c(-6, 6)}}
+#'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
 #'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
 #'     \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
 #'     \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
@@ -433,9 +433,9 @@
 #'       Default is TRUE}
 #'   }
 #' @param solnp_args a list of arguments to be passed to the \code{solnp::solnp()} function for
-#'   equality constraints, inequality constriants, etc
+#'   equality constraints, inequality constraints, etc
 #' @param alabama_args a list of arguments to be passed to the \code{alabama::constrOptim.nl()}
-#'   function for equality constraints, inequality constriants, etc
+#'   function for equality constraints, inequality constraints, etc
 #' @param control a list passed to the respective optimizers (i.e., \code{optim()}, \code{nlminb()},
 #'   etc)
 #' @param ... additional arguments to be passed
@@ -800,7 +800,7 @@
 #' itemplot(mod.combo, 2, type = 'score')
 #' itemplot(mod.combo, 2, type = 'infocontour')
 #'
-#' ## empical histogram examples (normal, skew and bimodality)
+#' ## empirical histogram examples (normal, skew and bimodality)
 #' #make some data
 #' set.seed(1234)
 #' a <- matrix(rlnorm(50, .2, .2))

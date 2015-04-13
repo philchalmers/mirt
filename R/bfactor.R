@@ -53,7 +53,7 @@
 #'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
 #'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
-#' @param quadpts number of quadrature nodes to use. Default is 21 per dimensio
+#' @param quadpts number of quadrature nodes to use. Default is 21 per dimension
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

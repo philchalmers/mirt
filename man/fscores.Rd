@@ -48,7 +48,7 @@ is greater than 0 a list of plausible values will be returned}
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}
 
-\item{return.acov}{logical; return a list containing covariance matricies instead of factors
+\item{return.acov}{logical; return a list containing covariance matrices instead of factors
 scores? \code{impute = TRUE} not supported with this option}
 
 \item{mean}{a vector for custom latent variable means. If NULL, the default for 'group' values
@@ -86,7 +86,7 @@ default number of nodes is 2000}
   function \emph{must} return a numeric vector of density weights (one for each row in Theta)}
 
 \item{custom_theta}{a matrix of custom integration nodes to use instead of the default, where
-each column correspends to the respective dimension in the model}
+each column corresponds to the respective dimension in the model}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
 }
@@ -101,7 +101,7 @@ Multiple imputation variants are possible for each estimator if a parameter
 information matrix was computed, which are useful if the sample size/number of items were small.
 As well, if the model contained latent regression predictors this information will
 be used in computing MAP and EAP estimates (for these models, \code{full.scores=TRUE}
-by default). Finaly, plausible value imputation is also available, and will also account
+by default). Finally, plausible value imputation is also available, and will also account
 for latent regression predictor effects.
 }
 \details{
@@ -128,7 +128,7 @@ fullscores_with_SE <- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
 head(fullscores)
 head(fullscores_with_SE)
 
-#chage method argument to use MAP estimates
+#change method argument to use MAP estimates
 fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
 head(fullscores)
 

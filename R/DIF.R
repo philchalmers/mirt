@@ -9,7 +9,7 @@
 #'
 #' Generally, the precomputed baseline model should have been
 #' configured with two estimation properties: 1) a set of 'anchor' items,
-#' where the anchor items have various parameters that have been constrainted to be equal
+#' where the anchor items have various parameters that have been constrained to be equal
 #' across the groups, and 2) contain freely estimated latent mean and variance terms in
 #' all but one group (the so-called 'reference' group).
 #' These two properties help to fix the metric of the groups so that
@@ -56,7 +56,7 @@
 #'   or p > .05 in the drop scheme), along with the specified \code{p.adjust} input
 #' @param max_run a number indicating the maximum number of cycles to perform in sequential
 #'   searches. The default is to perform search until no further DIF is found
-#' @param plotdif logical; create itemplots for items that are displaying DIF according to the
+#' @param plotdif logical; create item plots for items that are displaying DIF according to the
 #'   \code{seq_stat} criteria? Only available for 'add' type schemes
 #' @param type the \code{type} of plot argument passed to \code{plot()}. Default is 'trace', though
 #'   another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
