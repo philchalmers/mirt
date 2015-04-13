@@ -321,7 +321,7 @@
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}.
 #'   However, if the method input is set to \code{'QMCEM'} and this argument is left blank then
-#'   the default number of quasi-Monte Carlo integration nodes will be set to 2000 in total
+#'   the default number of quasi-Monte Carlo integration nodes will be set to 5000 in total
 #' @param TOL convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 #'   \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
 #'   If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
