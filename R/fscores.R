@@ -51,7 +51,8 @@
 #'   (and therefore for estimates such as EAP, will be less accurate). This is determined from
 #'   the switch statement
 #'   \code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}
-#' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
+#' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension. If
+#'   omitted, a range will be generated automatically based on the number of dimensions
 #' @param mean a vector for custom latent variable means. If NULL, the default for 'group' values
 #'   from the computed mirt object will be used
 #' @param cov a custom matrix of the latent variable covariance matrix. If NULL, the default for

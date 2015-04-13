@@ -256,7 +256,8 @@ setMethod(
                 } else {
                     if(is.null(custom_theta)){
                         ThetaShort <- Theta <- if(QMC){
-                            qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409), sd=2)
+                            sfsmisc::QUnif(quadpts, min=theta_lim[1L], max=theta_lim[2L],
+                                           p=nfact, leap=409)
                         } else thetaComb(theta,nfact)
                     } else {
                         if(ncol(custom_theta) != object@nfact)
@@ -610,7 +611,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         nfact <- x@nfact
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
         ThetaShort <- Theta <- if(QMC){
-            qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=nfact, leap = 409), sd=2)
+            sfsmisc::QUnif(quadpts, min=theta_lim[1L], max=theta_lim[2L],
+                           p=nfact, leap=409)
         } else thetaComb(theta,nfact)
         prior <- den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
         prior <- prior/sum(prior)

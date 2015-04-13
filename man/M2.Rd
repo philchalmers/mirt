@@ -4,8 +4,9 @@
 \alias{M2}
 \title{Compute the M2 model fit statistic}
 \usage{
-M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0,
-  CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1, ...)
+M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
+  Theta = NULL, impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE,
+  suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -16,6 +17,8 @@ Allows for statistics such as the limited information TLI and CFI}
 \item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
 a suitable value will be chosen based
 on the rubric found in \code{\link{fscores}}}
+
+\item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension}
 
 \item{Theta}{a matrix of factor scores for each person used for imputation}
 
@@ -30,7 +33,7 @@ RMSEA. Default returns the 90\% interval}
 \item{residmat}{logical; return the residual matrix used to compute the SRMSR statistic?}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-If \code{quadpts} not specified, 2000 nodes are used by default}
+If \code{quadpts} not specified, 5000 nodes are used by default}
 
 \item{suppress}{a numeric value indiciating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than

@@ -360,8 +360,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else {
             if(is.null(opts$quadpts))
                 opts$quadpts <- select_quadpts2(nfact)
+            if(is.null(opts$theta_lim))
+                opts$theta_lim <- c(-(.8 * sqrt(opts$quadpts)), (.8 * sqrt(opts$quadpts)))
             if(opts$quadpts < 3 && opts$warn) warning('Should use more than 2 quadpts')
-            Theta <- theta <- as.matrix(seq(-(.8 * sqrt(opts$quadpts)), .8 * sqrt(opts$quadpts),
+            Theta <- theta <- as.matrix(seq(opts$theta_lim[1L], opts$theta_lim[2L],
                                             length.out = opts$quadpts))
             if(opts$BFACTOR){
                 for(g in 1L:length(pars)){
@@ -392,14 +394,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         ind <- ind + 1L
                     }
                 }
-                theta <- seq(-4, 4, length.out = opts$quadpts)
                 tmp <- PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec') + 1L
-                Theta <- thetaComb(theta, tmp)
+                if(opts$method == 'QMCEM')
+                    Theta <- sfsmisc::QUnif(opts$quadpts, min=opts$theta_lim[1L], max=opts$theta_lim[2L],
+                                            p=tmp, leap=409)
+                else Theta <- thetaComb(theta, tmp)
                 Theta <- cbind(Theta[,1L:(tmp-1L),drop=FALSE],
                                matrix(Theta[,tmp], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
                 if(opts$method == 'QMCEM'){
-                    Theta <- qnorm(sfsmisc::QUnif(opts$quadpts, min=0, max=1, p=nfact, leap=409), sd=2)
+                    Theta <- sfsmisc::QUnif(opts$quadpts, min=opts$theta_lim[1L], max=opts$theta_lim[2L],
+                                            p=nfact, leap=409)
                 } else {
                     if(opts$quadpts^nfact <= opts$MAXQUAD){
                         if(is.null(opts$technical$customTheta))
@@ -625,6 +630,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$end.time.SE <- proc.time()[3L]
     opts$times$start.time.post <- proc.time()[3L]
     cmods <- vector('list', Data$ngroups)
+    if(is.null(opts$theta_lim))
+        opts$theta_lim <- numeric(1)
     for(g in 1L:Data$ngroups){
         if(opts$method == 'MIXED'){
             F <- matrix(NA)
@@ -640,7 +647,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           nfact=nfact, constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
                           factorNames=PrepList[[1L]]$factorNames, random=ESTIMATE$random,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, exploratory=PrepList[[1L]]$exploratory,
-                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, rotate=opts$rotate)
+                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, rotate=opts$rotate, theta_lim=opts$theta_lim)
         if(discrete){
             cmods[[g]]@Theta <- Theta
             cmods[[g]]@Prior <- list(ESTIMATE$Prior[[g]])
@@ -842,6 +849,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            K=Data$K,
                            collectLL=ESTIMATE$collectLL,
                            quadpts=opts$quadpts,
+                           theta_lim=opts$theta_lim,
                            rotate=opts$rotate,
                            null.mod=null.mod,
                            Target=opts$Target,
@@ -881,6 +889,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            CUSTOM.IND=CUSTOM.IND,
                            SLOW.IND=SLOW.IND,
                            Theta=Theta,
+                           theta_lim=opts$theta_lim,
                            method=opts$method,
                            Pl=Pl[[1L]],
                            empiricalhist=opts$empiricalhist,

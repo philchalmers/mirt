@@ -17,6 +17,7 @@
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
 #' @param Theta a matrix of factor scores for each person used for imputation
+#' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
 #' @param impute a number indicating how many imputations to perform
 #'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
 #'   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
@@ -25,7 +26,7 @@
 #'   RMSEA. Default returns the 90\% interval
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-#'   If \code{quadpts} not specified, 2000 nodes are used by default
+#'   If \code{quadpts} not specified, 5000 nodes are used by default
 #' @param suppress a numeric value indiciating which parameter residual dependency combinations
 #'   to flag as being too high. Absolute values for the standardized residuals greater than
 #'   this value will be returned, while all values less than this value will be set to NA.
@@ -55,8 +56,8 @@
 #' M2(mod2, Theta=Theta, impute = 10)
 #'
 #' }
-M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, CI = .9,
-               residmat = FALSE, QMC=FALSE, suppress = 1, ...){
+M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta = NULL,
+               impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
     fn <- function(collect, obj, Theta, ...){
         dat <- imputeMissing(obj, Theta)
@@ -74,7 +75,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
-    if(QMC && is.null(quadpts)) quadpts <- 2000L
+    if(QMC && is.null(quadpts)) quadpts <- 5000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
         discrete <- TRUE
@@ -199,11 +200,14 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0, C
     itemloc <- obj@itemloc
     bfactorlist <- obj@bfactor
     if(!discrete){
-        theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+        if(is.null(theta_lim))
+            theta_lim <- c(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts))
+        theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
 #         if(is.null(bfactorlist$Priorbetween[[1L]])){
         if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
             prior <- Priorbetween <- sitems <- specific <- NULL
-            Theta <- if(QMC) qnorm(sfsmisc::QUnif(quadpts, min=0, max=1, p=obj@nfact, leap=409), sd=2)
+            Theta <- if(QMC) sfsmisc::QUnif(quadpts, min=theta_lim[1L], max=theta_lim[2L],
+                                            p=obj@nfact, leap=409)
                 else thetaComb(theta, obj@nfact)
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
             Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,

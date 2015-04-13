@@ -1,3 +1,11 @@
+# Changes in mirt 
+
+- `method = 'QMCEM'` support in `bfactor()`
+
+- add theta_lim arguments to various functions 
+
+- better control of QMC grid, and more effective usage for higher dimensions
+
 # Changes in mirt 1.9
 
 - when using `coef(mod, printSE=TRUE)` the `g` and `u` parameters are relabeled to `logit(g)` and

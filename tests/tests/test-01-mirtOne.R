@@ -67,9 +67,9 @@ test_that('dich', {
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
     expect_equal(mod@logLik, -2466.653, tolerance=1e-4)
     fs <- fscores(mod, QMC=TRUE, verbose=FALSE)
-    expect_equal(fs[1:3,'F1'], c(-1.697455, -1.319727, -1.301661), tolerance=1e-4)
+    expect_equal(fs[1:3,'F1'], c(-1.8970, -1.4750, -1.4547), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
-    expect_equal(m2$M2, 4.738382, tolerance=1e-5)
+    expect_equal(m2$M2, 4.739117, tolerance=1e-5)
     ifit <- itemfit(mod, QMC=TRUE, digits = 20)
     expect_equal(ifit$p.S_X2[1], .7986, tolerance = 1e-2)
 

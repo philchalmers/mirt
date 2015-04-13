@@ -65,7 +65,8 @@ from the computed mirt object will be used}
 \item{full.scores.SE}{logical; when \code{full.scores == TRUE}, also return the
 standard errors associated with each respondent? Default is \code{FALSE}}
 
-\item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension}
+\item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension. If
+omitted, a range will be generated automatically based on the number of dimensions}
 
 \item{MI}{a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed}

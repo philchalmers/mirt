@@ -996,7 +996,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     tnames <- names(technical)
     gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
-                'parallel', 'NULL.MODEL')
+                'parallel', 'NULL.MODEL', 'theta_lim')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '))
@@ -1007,6 +1007,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0')
     opts$draws = draws
+    opts$theta_lim = technical$theta_lim
     opts$calcLL = calcLL
     opts$quadpts = quadpts
     opts$rotate = rotate
@@ -1051,6 +1052,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
     }
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 2000L
+    if(method == 'QMCEM' && is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
     if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
         set.seed(12345L)
