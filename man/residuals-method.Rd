@@ -10,7 +10,8 @@
 \usage{
 \S4method{residuals}{SingleGroupClass}(object, type = "LD", digits = 3,
   df.p = FALSE, full.scores = FALSE, printvalue = NULL, tables = FALSE,
-  verbose = TRUE, Theta = NULL, suppress = 1, ...)
+  verbose = TRUE, Theta = NULL, suppress = 1, theta_lim = c(-6, 6),
+  quadpts = NULL, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass} or
@@ -45,6 +46,11 @@ be used instead}
 \item{suppress}{a numeric value indiciating which parameter local dependency combinations
 to flag as being too high. Absolute values for the standardized estimates greater than
 this value will be returned, while all values less than this value will be set to NA}
+
+\item{theta_lim}{range for the integration grid}
+
+\item{quadpts}{number of quadrature nodes to use. The default is extracted from model (if available)
+or generated automatically if not available}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }

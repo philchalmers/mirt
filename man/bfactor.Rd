@@ -5,7 +5,7 @@
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
 bfactor(data, model, model2 = mirt.model(paste0("G = 1-", ncol(data))),
-  group = NULL, quadpts = NULL, method = "EM", ...)
+  group = NULL, quadpts = 21, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -26,11 +26,7 @@ the bifactor model}
 
 \item{group}{a factor variable indicating group membership used for multiple group analyses}
 
-\item{quadpts}{number of quadrature nodes to use. Default is 21 per dimension when
-\code{method == 'EM'}, and 2000 in total when \code{method == 'QMCEM'}}
-
-\item{method}{estimation method for dimesional reduction quadrature. Can be 'EM' or 'QMCEM' for
-generating recangular quadrature or Monte Carlo integration quadrature}
+\item{quadpts}{number of quadrature nodes to use. Default is 21 per dimensio}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for more details and examples}

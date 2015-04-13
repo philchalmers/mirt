@@ -1,6 +1,7 @@
 # Changes in mirt 
 
-- `method = 'QMCEM'` support in `bfactor()`
+- integration range (`theta_lim`) globally set to `c(-6, 6)`. This will slightly change some 
+  numerical results, but provides more consistence throughout the package
 
 - add theta_lim arguments to various functions 
 

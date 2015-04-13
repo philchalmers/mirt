@@ -148,8 +148,7 @@ is used instead. See \code{\link{summary-method}} for a list of supported rotati
 By default the number of quadrature uses the following scheme:
 \code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}.
 However, if the method input is set to \code{'QMCEM'} and this argument is left blank then
-the default number of quasi-Monte Carlo integration nodes will be set to 2000 in total, and the
-\code{theta_lim} will be set to \code{c(-6, 6)}}
+the default number of quasi-Monte Carlo integration nodes will be set to 2000 in total}
 
 \item{TOL}{convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
@@ -225,8 +224,7 @@ etc)}
 \describe{
   \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
     4GB or RAM on your PC; default 10000}
-  \item{theta_lim}{range of integratoin grid. If ommited, an internal grid range will be
-    generated which will gradually decrease as the number of dimensions grows}
+  \item{theta_lim}{range of integration grid for each dicumension; default is \code{c(-6, 6)}}
   \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
   \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
   \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}

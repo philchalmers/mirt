@@ -53,10 +53,7 @@
 #'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
 #'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
-#' @param method estimation method for dimesional reduction quadrature. Can be 'EM' or 'QMCEM' for
-#'   generating recangular quadrature or Monte Carlo integration quadrature
-#' @param quadpts number of quadrature nodes to use. Default is 21 per dimension when
-#'   \code{method == 'EM'}, and 2000 in total when \code{method == 'QMCEM'}
+#' @param quadpts number of quadrature nodes to use. Default is 21 per dimensio
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -202,7 +199,7 @@
 #'     }
 #'
 bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))),
-                    group = NULL, quadpts = NULL, method = 'EM', ...)
+                    group = NULL, quadpts = 21, ...)
 {
     Call <- match.call()
     if(missing(model)) missingMsg('model')
@@ -220,9 +217,8 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
     attr(model, 'nspec') <- nspec
     attr(model, 'specific') <- specific
     if(is.null(group)) group <- rep('all', nrow(data))
-    if(method == 'EM' && is.null(quadpts)) quadpts <- 21
     mod <- ESTIMATION(data=data, model=model, group=group,
-                      method=method, quadpts=quadpts,
+                      method='EM', quadpts=quadpts,
                       BFACTOR = TRUE, ...)
     if(is(mod, 'SingleGroupClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call

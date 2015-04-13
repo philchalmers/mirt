@@ -52,7 +52,7 @@ test_that('dich', {
     expect_equal(modm7@df, 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(5.077,8.486,0.154,0.859,5.863,3.665,0.16,0.843,10.021,10.732,0.155,0.862,1.282,0.854,0.153,0.845,4.634,8.911,0.154,0.859,0,1), tolerance = 1e-2)
+    expect_equal(cfs, c(5.143,8.598,0.154,0.859,5.86,3.667,0.16,0.843,10.273,11.019,0.155,0.861,1.281,0.854,0.153,0.845,4.686,9.008,0.154,0.859,0,1), tolerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
     expect_equal(modm6@df, 21)

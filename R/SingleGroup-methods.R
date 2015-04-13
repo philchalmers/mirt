@@ -419,6 +419,9 @@ setMethod(
 #' @param Theta a matrix of factor scores used for statistics that require empirical estimates (i.e., Q3).
 #'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
+#' @param theta_lim range for the integration grid
+#' @param quadpts number of quadrature nodes to use. The default is extracted from model (if available)
+#'   or generated automatically if not available
 #' @param suppress a numeric value indiciating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
@@ -457,7 +460,7 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, ...)
+                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
     {
         dots <- list(...)
         discrete <- FALSE
@@ -472,11 +475,12 @@ setMethod(
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
         if(!discrete){
-            quadpts <- object@quadpts
+            if(is.null(quadpts))
+                quadpts <- object@quadpts
             if(is.nan(quadpts))
                 quadpts <- select_quadpts2(nfact)
             bfactorlist <- object@bfactor
-            theta <- as.matrix(seq(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts), length.out = quadpts))
+            theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
             if(type != 'Q3'){
                 if(is.null(bfactorlist$Priorbetween[[1L]])){
                     Theta <- thetaComb(theta, nfact)
