@@ -892,6 +892,35 @@
 #' SEpar <- lapply(so, function(x) x$coefficients[, 'Std. Error'])
 #' averageMI(par, SEpar)
 #'
+#' ############
+#' # Example using Guass-Hermite quadrature with custom input functions
+#'
+#' library(fastGHQuad)
+#' data(SAT12)
+#' data <- key2binary(SAT12,
+#'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' GH <- gaussHermiteData(50)
+#' Theta <- matrix(GH$x)
+#'
+#' # This prior works for uni- and multi-dimensional models
+#' prior <- function(Theta, Etable){
+#'     P <- grid <- GH$w / sqrt(pi)
+#'     if(ncol(Theta) > 1)
+#'         for(i in 2:ncol(Theta))
+#'             P <- expand.grid(P, grid)
+#'      if(!is.vector(P)) P <- apply(P, 1, prod)
+#'      P
+#' }
+#'
+#' GHmod1 <- mirt(data, 1, optimizer = 'NR',
+#'               technical = list(customTheta = Theta, customPriorFun = prior))
+#' coef(GHmod1, simplify=TRUE)
+#'
+#' Theta2 <- as.matrix(expand.grid(Theta, Theta))
+#' GHmod2 <- mirt(data, 2, optimizer = 'NR', TOL = .0002,
+#'               technical = list(customTheta = Theta2, customPriorFun = prior))
+#' summary(GHmod2, suppress=.2)
+#'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, SE.type = 'crossprod', method = 'EM',
