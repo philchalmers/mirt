@@ -349,7 +349,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         dots <- list(...)
         QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
         quadpts <- dots$quadpts
-        if(is.null(quadpts) && QMC) quadpts <- 5000L
+        if(is.null(quadpts) && QMC) quadpts <- 15000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
         theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)

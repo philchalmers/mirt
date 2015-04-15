@@ -2,7 +2,8 @@
 #'
 #' The \code{mirt.model} function scans/reads user input to specify the
 #' confirmatory model. Item locations must be used in the specifications if no
-#' \code{itemnames} argument is supplied.
+#' \code{itemnames} argument is supplied. This is called implicitly by estimation functions
+#' when a string is passed to the \code{model} argument.
 #'
 #' Factors are first named and then specify which numerical items they affect
 #' (i.e., where the slope is not equal to 0), separated either by commas or by
@@ -98,6 +99,10 @@
 #'       (F1*F2) = 1,2,3,4-10
 #'       COV = F1*F2'
 #' model <- mirt.model(s)
+#'
+#' # strings can also be passed to the estimation functions directly,
+#' #   which silently calls mirt.model(). E.g., using the string above:
+#' # mod <- mirt(data, s)
 #'
 #'
 #' #Q-matrix specification

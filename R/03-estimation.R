@@ -29,8 +29,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     } else {
         if(missing(data) || is.null(nrow(data)))
             stop('data argument is required')
-        if(missing(model) || !is(model, 'numeric') && !is(model, 'mirt.model'))
-            stop('model argument (numeric or from mirt.model() function) is required')
+        if(missing(model) || !is(model, 'numeric') && !is(model, 'mirt.model') &&
+           !is(model, 'character'))
+            stop('model argument (numeric, character, or from mirt.model() function) is required')
         if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data))
             stop('group input provided is not valid')
         if(!is.null(itemtype))
@@ -104,6 +105,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$nitems <- ncol(Data$data)
         Data$N <- nrow(Data$data)
         Data$mins <- apply(data, 2L, min, na.rm=TRUE)
+        if(is.character(model)){
+            tmp <- any(sapply(colnames(data), grepl, x=model))
+            model <- mirt.model(model, itemnames = if(tmp) colnames(data) else NULL)
+        }
         oldmodel <- model
         if(length(model) == 1L){
             newmodel <- list()

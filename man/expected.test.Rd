@@ -24,8 +24,8 @@ same form as the data used to estimate the model.
 \examples{
 \dontrun{
 dat <- expand.table(deAyala)
-model <- mirt.model('F = 1-5
-                    CONSTRAIN = (1-5, a1)')
+model <- 'F = 1-5
+          CONSTRAIN = (1-5, a1)'
 mod <- mirt(dat, model)
 
 Theta <- matrix(seq(-6,6,.01))

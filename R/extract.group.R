@@ -20,7 +20,7 @@
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
-#' models <- mirt.model('F1 = 1-15')
+#' models <- 'F1 = 1-15'
 #'
 #' mod_configural <- multipleGroup(dat, models, group = group)
 #' group.1 <- extract.group(mod_configural, 1) #extract first group

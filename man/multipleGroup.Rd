@@ -11,8 +11,8 @@ multipleGroup(data, model, group, invariance = "", method = "EM",
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
 numerically ordered data, with missing data coded as \code{NA}}
 
-\item{model}{a single model object returned from \code{mirt.model()} declaring how
-the factor model is to be estimated. See \code{\link{mirt.model}} for more details}
+\item{model}{string to be passed to, or a model object returned from, \code{\link{mirt.model}}
+declaring how the global model is to be estimated (useful to apply constraints here)}
 
 \item{group}{a character vector indicating group membership}
 
@@ -76,7 +76,7 @@ dataset1 <- simdata(a, d, N, itemtype)
 dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
-models <- mirt.model('F1 = 1-15')
+models <- 'F1 = 1-15'
 
 mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
 #limited information fit statistics
@@ -121,9 +121,9 @@ equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain)
 anova(equalslopes, mod_configural)
 
 #same as above, but using mirt.model syntax
-newmodel <- mirt.model('
+newmodel <- '
     F = 1-15
-    CONSTRAINB = (1-6, a1)')
+    CONSTRAINB = (1-6, a1)'
 equalslopes <- multipleGroup(dat, newmodel, group = group)
 coef(equalslopes, simplify=TRUE)
 
@@ -175,10 +175,10 @@ dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 
 #group models
-model <- mirt.model('
+model <- '
    F1 = 1-5
    F2 = 6-10
-   F3 = 11-15')
+   F3 = 11-15'
 
 #define mirt cluster to use parallel architecture
 mirtCluster()
@@ -213,7 +213,7 @@ dataset1 <- simdata(a, d, N, itemtype)
 dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
-model <- mirt.model('F1 = 1-15')
+model <- 'F1 = 1-15'
 
 mod_configural <- multipleGroup(dat, model, group = group)
 plot(mod_configural)
@@ -225,8 +225,8 @@ head(fs[["D1"]])
 fscores(mod_configural, method = 'EAPsum')
 
 # constrain slopes within each group to be equal (but not across groups)
-model2 <- mirt.model('F1 = 1-15
-                      CONSTRAIN = (1-15, a1)')
+model2 <- 'F1 = 1-15
+           CONSTRAIN = (1-15, a1)'
 mod_configural2 <- multipleGroup(dat, model2, group = group)
 plot(mod_configural2, type = 'SE')
 plot(mod_configural2, type = 'RE')

@@ -1,5 +1,9 @@
 # Changes in mirt 
 
+- `model` based arguments now can be strings, which are passed to `mirt.model()`. This is now
+  the prefered method for defining models syntactically, though the previous methods 
+  will still work
+
 - integration range (`theta_lim`) globally set to `c(-6, 6)`. This will slightly change some 
   numerical results, but provides more consistence throughout the package
 

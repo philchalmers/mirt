@@ -182,9 +182,9 @@ itemtype <- rep('dich',6)
 
 nonlindata <- simdata(a,d,2000,itemtype,Theta=Theta)
 
-#model <- mirt.model('
+#model <- '
 #F1 = 1-6
-#(F1 * F1) = 1-3')
+#(F1 * F1) = 1-3'
 #mod <- mirt(nonlindata, model)
 #coef(mod)
 

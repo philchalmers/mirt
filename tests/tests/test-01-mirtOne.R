@@ -67,9 +67,9 @@ test_that('dich', {
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
     expect_equal(mod@logLik, -2466.653, tolerance=1e-4)
     fs <- fscores(mod, QMC=TRUE, verbose=FALSE)
-    expect_equal(fs[1:3,'F1'], c(-1.8969, -1.4747, -1.4544), tolerance=1e-4)
+    expect_equal(fs[1:3,'F1'], c(-1.8971, -1.4750, -1.4547), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
-    expect_equal(m2$M2, 4.7386, tolerance=1e-5)
+    expect_equal(m2$M2, 4.737918, tolerance=1e-5)
     ifit <- itemfit(mod, QMC=TRUE, digits = 20)
     expect_equal(ifit$p.S_X2[1], .7986, tolerance = 1e-2)
 
@@ -131,8 +131,8 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
 
     data <- expand.table(LSAT7)
-    model <- mirt.model('F1 = 1-3
-        F2 = 3-5', quiet = TRUE)
+    model <- 'F1 = 1-3
+              F2 = 3-5'
     modm1 <- mirt(data, model, verbose=FALSE)
     expect_equal(modm1@df, 20)
     modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), TOL=1e-3, verbose=FALSE)

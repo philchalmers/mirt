@@ -49,7 +49,8 @@
 #'   be used as place-holders. These numbers will be translated into a format suitable for
 #'   \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S'
 #'   added to the respective factor number
-#' @param model2 a two-tier model specification object defined by \code{mirt.model()}. By default
+#' @param model2 a two-tier model specification object defined by \code{mirt.model()} or
+#'   a string to be passed to \code{\link{mirt.model}}. By default
 #'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
 #'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
@@ -184,10 +185,10 @@
 #' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 #'
 #' specific <- c(rep(1,5),rep(2,6),rep(3,5))
-#' model <- mirt.model('
+#' model <- '
 #'     G1 = 1-8
 #'     G2 = 9-16
-#'     COV = G1*G2')
+#'     COV = G1*G2'
 #'
 #' #quadpts dropped for faster estimation, but not as precise
 #' simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
@@ -198,7 +199,7 @@
 #'
 #'     }
 #'
-bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data))),
+bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
                     group = NULL, quadpts = 21, ...)
 {
     Call <- match.call()
@@ -210,8 +211,12 @@ bfactor <- function(data, model, model2 = mirt.model(paste0('G = 1-', ncol(data)
             stop('length of model must equal the number of items')
     nspec <- length(na.omit(unique(model)))
     specific <- model
+    if(is.character(model2)){
+        tmp <- any(sapply(colnames(data), grepl, x=model2))
+        model2 <- mirt.model(model2, itemnames = if(tmp) colnames(data) else NULL)
+    }
     if(!is(model2, 'mirt.model'))
-        stop('model2 must be an appropriate second-tier model defined with mirt.model()')
+        stop('model2 must be an appropriate second-tier model')
     model <- bfactor2mod(model, ncol(data))
     model$x <- rbind(model2$x, model$x)
     attr(model, 'nspec') <- nspec

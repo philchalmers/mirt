@@ -44,8 +44,8 @@
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param covdata a \code{data.frame} that consists of the \code{nrow(data)} by \code{K}
 #'   'person level' fixed and random predictors
-#' @param model an object returned from \code{mirt.model()} declaring how
-#'   the factor model is to be estimated. See \code{\link{mirt.model}} for
+#' @param model an object returned from, or a string to be passed to, \code{mirt.model()}
+#'   to declare how the IRT model is to be estimated. See \code{\link{mirt.model}} for
 #'   more details
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory')
 #'   predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for
@@ -119,7 +119,7 @@
 #' mirtCluster()
 #'
 #' #specify IRT model
-#' model <- mirt.model('Theta = 1-10')
+#' model <- 'Theta = 1-10'
 #'
 #' #model with no person predictors
 #' mod0 <- mirt(data, model, itemtype = 'Rasch')
@@ -183,7 +183,7 @@
 #' data(SAT12)
 #' data <- key2binary(SAT12,
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-#' model <- mirt.model('Theta = 1-32')
+#' model <- 'Theta = 1-32'
 #'
 #' # Suppose that the first 16 items were suspected to be easier than the last 16 items,
 #' #   and we wish to test this item structure hypothesis (more intercept designs are possible
@@ -278,8 +278,8 @@
 #' summary(mod1b)
 #'
 #' # specifying specific regression effects is accomplished by passing a list of formula
-#' model <- mirt.model('F1 = 1-5
-#'                      F2 = 6-10')
+#' model <- 'F1 = 1-5
+#'          F2 = 6-10'
 #' covdata$contvar <- rnorm(nrow(covdata))
 #' mod2 <- mirt(dat, model, itemtype = 'Rasch', covdata=covdata,
 #'         formula = list(F1 = ~ group + contvar, F2 = ~ group))

@@ -53,8 +53,8 @@ n <- 30
 N <- 500
 
 # only first 5 items as anchors
-model <- mirt.model('F = 1-30
-                    CONSTRAINB = (1-5, a1), (1-5, d)')
+model <- 'F = 1-30
+          CONSTRAINB = (1-5, a1), (1-5, d)'
 
 a <- matrix(1, n)
 d <- matrix(rnorm(n), n)

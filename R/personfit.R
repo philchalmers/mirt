@@ -64,8 +64,7 @@
 #' dataset2 <- simdata(a, d, N, itemtype, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
-#' MGmodel1 <- 'F1 = 1-15'
-#' models <- mirt.model(MGmodel1, quiet = TRUE)
+#' models <- 'F1 = 1-15'
 #' mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
 #' coef(mod_Rasch)
 #' pf <- personfit(mod_Rasch, method='MAP')

@@ -228,10 +228,10 @@
 #' @aliases mirt
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #'   numerically ordered data, with missing data coded as \code{NA}
-#' @param model an object returned from \code{mirt.model()} declaring how
-#'   the factor model is to be estimated, or a single numeric value indicating the number
-#'   of exploratory factors to estimate. See \code{\link{mirt.model}} for
-#'   more details
+#' @param model a string to be passed (or an object returned from) \code{\link{mirt.model}},
+#'   declaring how the IRT model is to be estimated (loadings, constraints, priors, etc).
+#'   For exploratory IRT models, a single numeric value indicating the number
+#'   of factors to extract is also supported
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #'   which will be repeated globally. The NULL default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
@@ -543,8 +543,8 @@
 #' #internally g and u pars are stored as logits, so usually a good idea to include normal prior
 #' #  to help stabilize the parameters. For a value around .182 use a mean
 #' #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
-#' model <- mirt.model('F = 1-5
-#'                      PRIOR = (5, g, norm, -1.5, 3)')
+#' model <- 'F = 1-5
+#'          PRIOR = (5, g, norm, -1.5, 3)'
 #' mod1.3PL.norm <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
 #' coef(mod1.3PL.norm)
 #' #limited information fit statistics
@@ -568,11 +568,17 @@
 #' scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores
 #'
 #' #confirmatory (as an example, model is not identified since you need 3 items per factor)
+#' # Two ways to define a confirmatory model: with mirt.model, or with a string
+#'
+#' # these model definitions are equivalent
 #' cmodel <- mirt.model('
 #'    F1 = 1,4,5
 #'    F2 = 2,3')
+#' cmodel2 <- 'F1 = 1,4,5
+#'             F2 = 2,3'
 #'
 #' cmod <- mirt(data, cmodel)
+#' # cmod <- mirt(data, cmodel2) # same as above
 #' coef(cmod)
 #' anova(cmod, mod2)
 #' #check if identified by computing information matrix
@@ -592,9 +598,8 @@
 #' coef(pmod1_equalslopes)
 #'
 #' # using mirt.model syntax, constrain all item slopes to be equal
-#' model <- mirt.model('
-#'    F = 1-4
-#'    CONSTRAIN = (1-4, a1)')
+#' model <- 'F = 1-4
+#'           CONSTRAIN = (1-4, a1)'
 #' (pmod1_equalslopes <- mirt(Science, model))
 #' coef(pmod1_equalslopes)
 #'
@@ -747,10 +752,10 @@
 #' #analyses
 #' #CIFA for 2 factor crossed structure
 #'
-#' model.1 <- mirt.model('
+#' model.1 <- '
 #'   F1 = 1-4
 #'   F2 = 4-8
-#'   COV = F1*F2')
+#'   COV = F1*F2'
 #'
 #' #compute model, and use parallel computation of the log-likelihood
 #' mirtCluster()
@@ -761,10 +766,10 @@
 #'
 #' #####
 #' #bifactor
-#' model.3 <- mirt.model('
+#' model.3 <- '
 #'   G = 1-8
 #'   F1 = 1-4
-#'   F2 = 5-8')
+#'   F2 = 5-8'
 #'
 #' mod3 <- mirt(dataset,model.3, method = 'MHRM')
 #' coef(mod3)
@@ -778,15 +783,15 @@
 #' data <- key2binary(SAT12,
 #'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
-#' model.quad <- mirt.model('
+#' model.quad <- '
 #'        F1 = 1-32
-#'   (F1*F1) = 1-32')
+#'   (F1*F1) = 1-32'
 #'
 #'
-#' model.combo <- mirt.model('
+#' model.combo <- '
 #'        F1 = 1-16
 #'        F2 = 17-32
-#'   (F1*F2) = 1-8')
+#'   (F1*F2) = 1-8'
 #'
 #' (mod.quad <- mirt(data, model.quad))
 #' summary(mod.quad)
@@ -831,9 +836,9 @@
 #' dat <- expand.table(LSAT6)
 #'
 #' #free latent mean and variance terms
-#' model <- mirt.model('Theta = 1-5
-#'                     MEAN = Theta
-#'                     COV = Theta*Theta')
+#' model <- 'Theta = 1-5
+#'           MEAN = Theta
+#'           COV = Theta*Theta'
 #'
 #' #view how vector of parameters is organized internally
 #' sv <- mirt(dat, model, itemtype = 'Rasch', pars = 'values')

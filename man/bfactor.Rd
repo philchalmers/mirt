@@ -4,8 +4,8 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
-bfactor(data, model, model2 = mirt.model(paste0("G = 1-", ncol(data))),
-  group = NULL, quadpts = 21, ...)
+bfactor(data, model, model2 = paste0("G = 1-", ncol(data)), group = NULL,
+  quadpts = 21, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -20,7 +20,8 @@ be used as place-holders. These numbers will be translated into a format suitabl
 \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S'
 added to the respective factor number}
 
-\item{model2}{a two-tier model specification object defined by \code{mirt.model()}. By default
+\item{model2}{a two-tier model specification object defined by \code{mirt.model()} or
+a string to be passed to \code{\link{mirt.model}}. By default
 the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
 the bifactor model}
 
@@ -178,10 +179,10 @@ sigma[1,2] <- sigma[2,1] <- .4
 dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 
 specific <- c(rep(1,5),rep(2,6),rep(3,5))
-model <- mirt.model('
+model <- '
     G1 = 1-8
     G2 = 9-16
-    COV = G1*G2')
+    COV = G1*G2'
 
 #quadpts dropped for faster estimation, but not as precise
 simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)

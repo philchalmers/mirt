@@ -26,7 +26,7 @@
 #'   RMSEA. Default returns the 90\% interval
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-#'   If \code{quadpts} not specified, 5000 nodes are used by default
+#'   If \code{quadpts} not specified, 15000 nodes are used by default
 #' @param suppress a numeric value indicating which parameter residual dependency combinations
 #'   to flag as being too high. Absolute values for the standardized residuals greater than
 #'   this value will be returned, while all values less than this value will be set to NA.
@@ -75,7 +75,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported')
-    if(QMC && is.null(quadpts)) quadpts <- 5000L
+    if(QMC && is.null(quadpts)) quadpts <- 15000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
         discrete <- TRUE

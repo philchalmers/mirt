@@ -43,8 +43,8 @@
 #' wald(mod, L)
 #'
 #' #logLiklihood tests (requires estimating a new model)
-#' cmodel <- mirt.model('theta = 1-5
-#'                       CONSTRAIN = (1,2, a1), (4,5, a1)')
+#' cmodel <- 'theta = 1-5
+#'            CONSTRAIN = (1,2, a1), (4,5, a1)'
 #' mod2 <- mirt(data, cmodel)
 #' #or, eqivalently
 #' #mod2 <- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
