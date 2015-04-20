@@ -319,8 +319,11 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             obj1 <- xyplot(info~Theta, plt, type='l',
                            main = main, xlab = expression(theta), ylab=expression(I(theta)))
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
-            if(requireNamespace("latticeExtra", quietly = TRUE))
+            if(requireNamespace("latticeExtra", quietly = TRUE)){
                 return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
+            } else {
+                stop('latticeExtra package is not available. Please install.')
+            }
         } else if(type == 'infotrace'){
             if(is.null(main))
                 main <- paste('Trace lines and information for item', item)
@@ -328,8 +331,11 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
             obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
                            ylim = c(-0.1,max(plt$info) + .5))
-            if(requireNamespace("latticeExtra", quietly = TRUE))
+            if(requireNamespace("latticeExtra", quietly = TRUE)){
                 return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
+            } else {
+                stop('latticeExtra package is not available. Please install.')
+            }
         } else {
             stop('Plot type not supported for unidimensional model')
         }

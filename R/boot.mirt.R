@@ -99,7 +99,7 @@ boot.mirt <- function(x, R = 100, ...){
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- sum(structure$est)
-    if(requireNamespace("boot")){
+    if(requireNamespace("boot", quietly = TRUE)){
       boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, class=class,
                     parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
                     obj=x, ...)

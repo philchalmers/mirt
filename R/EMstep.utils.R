@@ -101,6 +101,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                      ineqUB = solnp_args$ineqUB, LB = solnp_args$LB, UB = solnp_args$UB,
                                      control = control, optim_args=optim_args), silent=TRUE)
                     if(!is(opt, 'try-error')) opt$par <- opt$pars
+                } else {
+                    stop('Rsolnp package is not available. Please install.')
                 }
             } else {
                 if(requireNamespace("alabama", quietly = TRUE)){
@@ -110,6 +112,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                               control.outer = solnp_args$control.outer,
                                               control.optim = solnp_args$control.optim, optim_args=optim_args),
                                silent=TRUE)
+                } else {
+                    stop('alabama package is not available. Please install.')
                 }
             }
         } else if(Moptim == 'nlminb'){

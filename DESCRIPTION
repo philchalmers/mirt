@@ -29,13 +29,11 @@ Imports:
     sfsmisc,
     numDeriv
 Suggests:
-    testthat,
     boot,
     latticeExtra,
     directlabels,
     shiny,
     knitr,
-    parallel,
     Rsolnp,
     alabama,
     sirt,
