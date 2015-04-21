@@ -366,8 +366,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is.null(opts$quadpts))
                 opts$quadpts <- select_quadpts2(nfact)
             if(opts$quadpts < 3 && opts$warn) warning('Should use more than 2 quadpts')
-            Theta <- theta <- as.matrix(seq(opts$theta_lim[1L], opts$theta_lim[2L],
-                                            length.out = opts$quadpts))
+            theta <- 1
+            if(opts$method != 'QMCEM')
+                theta <- as.matrix(seq(opts$theta_lim[1L], opts$theta_lim[2L],
+                                       length.out = opts$quadpts))
             if(opts$BFACTOR){
                 for(g in 1L:length(pars)){
                     tmp <- pars[[g]][[nitems+1L]]
@@ -403,8 +405,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                matrix(Theta[,tmp], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
                 if(opts$method == 'QMCEM'){
-                    Theta <- sfsmisc::QUnif(opts$quadpts, min=opts$theta_lim[1L], max=opts$theta_lim[2L],
-                                            p=nfact, leap=409)
+                    Theta <- QMC_quad(npts=opts$quadpts, nfact=nfact, lim=opts$theta_lim,
+                                      norm=TRUE)
                 } else {
                     if(opts$quadpts^nfact <= opts$MAXQUAD){
                         if(is.null(opts$technical$customTheta))

@@ -200,15 +200,15 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
     itemloc <- obj@itemloc
     bfactorlist <- obj@bfactor
     if(!discrete){
-        if(is.null(theta_lim))
-            theta_lim <- c(-(.8 * sqrt(quadpts)), .8 * sqrt(quadpts))
-        theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
 #         if(is.null(bfactorlist$Priorbetween[[1L]])){
         if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
             prior <- Priorbetween <- sitems <- specific <- NULL
-            Theta <- if(QMC) sfsmisc::QUnif(quadpts, min=theta_lim[1L], max=theta_lim[2L],
-                                            p=obj@nfact, leap=409)
-                else thetaComb(theta, obj@nfact)
+            if(QMC){
+                Theta <- QMC_quad(npts=quadpts, nfact=obj@nfact, lim=theta_lim)
+            } else {
+                theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
+                Theta <- thetaComb(theta, obj@nfact)
+            }
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
             Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
                                            gstructgrouppars$gcov)
