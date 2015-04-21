@@ -1602,6 +1602,11 @@ collapseCells <- function(O, E, mincell = 1){
 
 MGC2SC <- function(x, which){
     tmp <- x@pars[[which]]
+    ind <- 1L
+    for(i in 1L:length(tmp@pars)){
+        tmp@pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@pars[[i]]@parnum) - 1L)
+        ind <- ind + length(tmp@pars[[i]]@parnum)
+    }
     tmp@Data <- x@Data
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]

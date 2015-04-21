@@ -634,6 +634,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     cmods <- vector('list', Data$ngroups)
     if(is.null(opts$theta_lim))
         opts$theta_lim <- numeric(1)
+    lrPars <- ESTIMATE$lrPars
+    class(lrPars) <- 'S4'
     for(g in 1L:Data$ngroups){
         if(opts$method == 'MIXED'){
             F <- matrix(NA)
@@ -649,7 +651,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           nfact=nfact, constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
                           factorNames=PrepList[[1L]]$factorNames, random=ESTIMATE$random,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, exploratory=PrepList[[1L]]$exploratory,
-                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, rotate=opts$rotate, theta_lim=opts$theta_lim)
+                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, rotate=opts$rotate, theta_lim=opts$theta_lim,
+                          lrPars=lrPars)
         if(discrete){
             cmods[[g]]@Theta <- Theta
             cmods[[g]]@Prior <- list(ESTIMATE$Prior[[g]])
@@ -723,8 +726,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         p.G2 <- RMSEA.G2 <- G2 <- TLI.G2 <- CFI.G2 <-  NaN
     if(is.null(parprior)) parprior <- list()
     if(is.null(opts$quadpts)) opts$quadpts <- NaN
-    lrPars <- ESTIMATE$lrPars
-    class(lrPars) <- 'S4'
     opts$times$end.time.post <- proc.time()[3L]
     if(discrete){
         mod <- new('DiscreteClass',
