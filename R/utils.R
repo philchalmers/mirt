@@ -985,7 +985,7 @@ updateGrad <- function(g, L) L %*% g
 updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
-                     rotate = 'varimax', Target = NaN, SE = FALSE, verbose = TRUE,
+                     SE = FALSE, verbose = TRUE,
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
@@ -1010,8 +1010,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$theta_lim = technical$theta_lim
     opts$calcLL = calcLL
     opts$quadpts = quadpts
-    opts$rotate = rotate
-    opts$Target = Target
     opts$SE = SE
     opts$SE.type = SE.type
     opts$verbose = verbose

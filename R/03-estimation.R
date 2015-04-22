@@ -651,8 +651,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           nfact=nfact, constrain=constrain, G2=G2group[g], Pl = rlist[[g]]$expected,
                           factorNames=PrepList[[1L]]$factorNames, random=ESTIMATE$random,
                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, exploratory=PrepList[[1L]]$exploratory,
-                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, rotate=opts$rotate, theta_lim=opts$theta_lim,
-                          lrPars=lrPars)
+                          itemtype=PrepList[[1L]]$itemtype, K=Data$K, theta_lim=opts$theta_lim, lrPars=lrPars)
         if(discrete){
             cmods[[g]]@Theta <- Theta
             cmods[[g]]@Prior <- list(ESTIMATE$Prior[[g]])
@@ -853,9 +852,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            collectLL=ESTIMATE$collectLL,
                            quadpts=opts$quadpts,
                            theta_lim=opts$theta_lim,
-                           rotate=opts$rotate,
                            null.mod=null.mod,
-                           Target=opts$Target,
                            factorNames=PrepList[[1L]]$factorNames,
                            constrain=constrain,
                            parprior=parprior,
@@ -872,7 +869,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            iter=ESTIMATE$cycles,
                            pars=cmods[[1L]]@pars,
                            model=list(oldmodel),
-                           rotate='none',
                            G2=G2,
                            p=p.G2,
                            TLI=TLI.G2,

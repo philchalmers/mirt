@@ -33,9 +33,10 @@
 #'   factor scores for each unique pattern is displayed. Otherwise the original
 #'   data matrix is returned with the computed factor scores appended to the
 #'   rightmost column
-#' @param rotate rotation declaration to be used when estimating the factor scores. If \code{""}
-#'   then the \code{object@@rotate} default value is used (only applicable to
-#'   \code{SingleGroupClass} objects which have non-unique slopes)
+#' @param rotate prior rotation to be used when estimating the factor scores. See
+#'   \code{\link{summary-method}} for details. If the object is not an exploratory model
+#'   then this argument is ignored
+#' @param Target target rotation; see \code{\link{summary-method}} for details
 #' @param plausible.draws number of plausible values to draw for future researchers
 #'   to perform secondary analyses of the latent trait scores. Typically used in conjunction
 #'   with latent regression predictors (see \code{\link{mirt}} for details), but can
@@ -148,7 +149,7 @@
 #' head(fscores(mod, custom_den = fun, method = 'MAP'))
 #'
 #'}
-fscores <- function(object, rotate = NULL, full.scores = FALSE, method = "EAP",
+fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
@@ -170,6 +171,6 @@ fscores <- function(object, rotate = NULL, full.scores = FALSE, method = "EAP",
                             scores.only=scores.only, theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
-                            custom_theta=custom_theta, ...)
+                            custom_theta=custom_theta, Target=Target, ...)
     ret
 }

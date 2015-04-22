@@ -25,10 +25,9 @@
 #' including predictors is currently limited to the \code{\link{mixedmirt}} function.
 #'
 #' When specifying a single number greater than 1 as the \code{model} input to mirt
-#' an exploratory IRT model will be estimated. Rotation and target matrix options will be
-#' used in this subroutine and will be
-#' passed to the returned object for use in generic functions such as \code{summary()} and
-#' \code{fscores()}. Again, factor means and variances are fixed to ensure proper identification.
+#' an exploratory IRT model will be estimated. Rotation and target matrix options are available
+#' if they are passed to generic functions such as \code{\link{summary-method}} and
+#' \code{\link{fscores}}. Factor means and variances are fixed to ensure proper identification.
 #'
 #' If the model is an exploratory item factor analysis estimation will begin
 #' by computing a matrix of quasi-polychoric correlations. A
@@ -365,12 +364,6 @@
 #' @param key a numeric vector of the response scoring key. Required when using nested logit item
 #'   types, and must be the same length as the number of items used. Items that are not nested logit
 #'   will ignore this vector, so use \code{NA} in item locations that are not applicable
-#' @param rotate type of rotation to perform after the initial orthogonal
-#'   parameters have been extracted by using \code{summary}; default is \code{'oblimin'}.
-#'   If \code{rotate != ''} in the \code{summary}
-#'   input then the default from the object is ignored and the new rotation from the list
-#'   is used instead. See \code{\link{summary-method}} for a list of supported rotation options.
-#' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param calcNull logical; calculate the Null model for additional fit statistics (e.g., TLI)?
 #'   Only applicable if the data contains no NA's and the data is not overly sparse, otherwise
 #'   it is ignored
@@ -931,8 +924,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, SE.type = 'crossprod', method = 'EM',
                  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
                  calcNull = TRUE, draws = 5000, survey.weights = NULL,
-                 rotate = 'oblimin', Target = NaN, quadpts = NULL,
-                 TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
+                 quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
                  nominal.highlow = NULL, large = FALSE,
                  GenRandomPars = FALSE, accelerate = 'Ramsay', empiricalhist = FALSE, verbose = TRUE,
                  solnp_args = list(), alabama_args = list(), control = list(), technical = list(), ...)
@@ -956,7 +948,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,
-                      parprior=parprior, quadpts=quadpts, rotate=rotate, Target=Target,
+                      parprior=parprior, quadpts=quadpts,
                       technical=technical, verbose=verbose, survey.weights=survey.weights,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       nominal.highlow=nominal.highlow, accelerate=accelerate, draws=draws,

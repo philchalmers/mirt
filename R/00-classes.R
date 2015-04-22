@@ -84,12 +84,10 @@ setClass("AllModelClass",
 #'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
 #'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
 #'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'     \item{\code{rotate}:}{Object of class \code{"character"}, type of rotation to be used in \code{summary}}
 #'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
 #'     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
 #'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
 #'     \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
-#'     \item{\code{Target}:}{Object of class \code{"numeric"}, dummy rotation matrix}
 #'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
 #'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
 #'       second-order test}
@@ -124,8 +122,6 @@ setClass("AllModelClass",
 setClass(
     Class = 'SingleGroupClass', contains = 'AllModelClass',
     representation = representation(Pl='numeric',
-                                    Target='numeric',
-                                    rotate='character',
                                     bfactor='list',
                                     random='list'),
     validity = function(object) return(TRUE)

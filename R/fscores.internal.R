@@ -1,7 +1,7 @@
 setMethod(
 	f = "fscores.internal",
 	signature = 'SingleGroupClass',
-	definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
+	definition = function(object, rotate, Target, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
@@ -105,10 +105,10 @@ setMethod(
 	    }
 
         if(plausible.draws > 0){
-            fs <- fscores(object, rotate=rotate, full.scores = TRUE, method=method,
+            fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                           return.acov = FALSE, QMC=QMC, custom_den = NULL, ...)
-            fs_acov <- fscores(object, rotate = rotate, full.scores = TRUE, method=method,
+            fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                           scores.only=TRUE, plausible.draws=0, full.scores.SE=FALSE,
                           return.acov = TRUE, QMC=QMC, custom_den = NULL, ...)
@@ -142,7 +142,7 @@ setMethod(
                               large=TRUE))
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
                                    tabdatalong=large$tabdata, Freq=large$Freq)
-                ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
+                ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
@@ -157,7 +157,7 @@ setMethod(
                 newmod@pars <- newmod@pars[c(pick, length(newmod@pars))]
                 newmod@itemloc <- c(1L, 1L + cumsum(object@K[pick]))
                 newmod@K <- object@K[pick]
-                ret <- fscores(newmod, rotate=rotate, full.scores=TRUE, scores.only=FALSE,
+                ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, scores.only=FALSE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
@@ -190,7 +190,7 @@ setMethod(
         itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
         if(object@exploratory){
-            so <- summary(object, rotate = rotate, verbose = FALSE)
+            so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE)
             a <- rotateLambdas(so)
             for(i in 1L:J)
                 pars[[i]]@par[1L:nfact] <- a[i, ]
@@ -383,6 +383,7 @@ setMethod(
             if(returnER) return(reliability)
 			if(verbose && !discrete){
                 cat("\nMethod: ", method)
+			    if(object@exploratory) cat("\nRotate: ", rotate)
                 cat("\n\nEmpirical Reliability:\n")
                 print(round(reliability, digits))
 			}
@@ -398,7 +399,7 @@ setMethod(
 setMethod(
     f = "fscores.internal",
     signature = 'DiscreteClass',
-    definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
+    definition = function(object, rotate, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
                           full.scores.SE, return.acov = FALSE, ...)
@@ -410,7 +411,7 @@ setMethod(
         ret <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=FALSE, verbose=verbose,
                        mean=gmean, cov=gcov, scores.only=scores.only, theta_lim=theta_lim, MI=MI,
-                       full.scores.SE=FALSE, return.acov = FALSE, ...)
+                       full.scores.SE=FALSE, return.acov = FALSE, rotate='none', ...)
         if(!full.scores){
             if(method == 'Discrete'){
                 nclass <- ncol(object@Theta)
@@ -439,7 +440,7 @@ setMethod(
 setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
-    definition = function(object, rotate = '', full.scores = FALSE, method = "EAP",
+    definition = function(object, rotate, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov, scores.only,
                           full.scores.SE, return.acov = FALSE, QMC, ...)
@@ -455,7 +456,7 @@ setMethod(
         ret <- vector('list', length(pars))
         for(g in 1L:ngroups){
             tmp_obj <- MGC2SC(object, g)
-            ret[[g]] <- fscores(tmp_obj, rotate = 'CONFIRMATORY', full.scores=full.scores, method=method,
+            ret[[g]] <- fscores(tmp_obj, rotate = rotate, full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                                 mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
                            full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)

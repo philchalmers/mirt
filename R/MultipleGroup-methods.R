@@ -45,8 +45,7 @@ setMethod(
         coeflist <- coef(object)
         for(g in 1:ngroups){
             if(verbose) cat('\n----------\nGROUP:', as.character(object@Data$groupNames[g]), '\n')
-            ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, rotate =
-                                    if(is.null(rotate)) object@pars[[1L]]@rotate else 'none', ...)
+            ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, rotate = rotate, ...)
         }
         invisible(ret)
     }

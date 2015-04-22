@@ -1,5 +1,8 @@
 # Changes in mirt 
 
+- remove `rotate` and `Target` arguments from model objects, and pass these only through auxillary
+  functions such as `summary()`, `fscores()`, etc
+
 - `model` based arguments now can be strings, which are passed to `mirt.model()`. This is now
   the prefered method for defining models syntactically, though the previous methods 
   will still work

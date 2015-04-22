@@ -102,8 +102,11 @@ setMethod(
 #'   \code{'oblimax'}, \code{'entropy'}, \code{'quartimax'}, \code{'simplimax'},
 #'   \code{'bentlerT'}, \code{'bentlerQ'}, \code{'tandemI'}, \code{'tandemII'},
 #'   \code{'geominT'}, \code{'geominQ'}, \code{'cfT'}, \code{'cfQ'}, \code{'infomaxT'},
-#'   \code{'infomaxQ'}, \code{'mccammon'}, \code{'bifactorT'}, \code{'bifactorQ'}
-#' @param Target a dummy variable matrix indicting a target rotation pattern
+#'   \code{'infomaxQ'}, \code{'mccammon'}, \code{'bifactorT'}, \code{'bifactorQ'}.
+#'
+#'   For models that are not exploratory this input will automatically be set to \code{'none'}
+#' @param Target a dummy variable matrix indicting a target rotation pattern. This is required for
+#'   rotations such as \code{'targetT'}, \code{'targetQ'}, \code{'pstT'}, and \code{'pstQ'}
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
@@ -133,9 +136,8 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
-    definition = function(object, rotate = NULL, Target = NULL, suppress = 0, digits = 3,
+    definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0, digits = 3,
                           printCI = FALSE, verbose = TRUE, ...){
-        if(is.null(rotate)) rotate <- object@rotate
         nfact <- ncol(object@F)
         if (!object@exploratory || rotate == 'none') {
             F <- object@F
@@ -157,15 +159,11 @@ setMethod(
                 cat("\nFactor correlations: \n\n")
                 print(round(Phi, digits))
             }
-            invisible(list(rotF=F,h2=h2,fcor=matrix(1)))
+            invisible(list(rotF=F,h2=h2,fcor=Phi))
         } else {
             F <- object@F
             h2 <- as.matrix(object@h2)
             colnames(h2) <- "h2"
-            if(rotate == ''){
-                rotate <- object@rotate
-                Target <- object@Target
-            }
             rotF <- Rotate(F, rotate, Target = Target, ...)
             SS <- apply(rotF$loadings^2,2,sum)
             L <- rotF$loadings
@@ -202,7 +200,7 @@ setMethod(
 #'   95 percent confidence intervals
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
 #'   Only applicable to unidimensional models
-#' @param rotate see \code{\link{mirt}} for details
+#' @param rotate see \code{\link{mirt}} for details. The default rotation is \code{'none'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded
@@ -260,8 +258,7 @@ setMethod(
             a[i, ] <- ExtractLambdas(object@pars[[i]])
 
         if (object@exploratory && rotate != 'none'){
-            rotname <- ifelse(rotate == '', object@rotate, rotate)
-            if(verbose) cat("\nRotation: ", rotname, "\n\n")
+            if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
             a <- rotateLambdas(so) * 1.702
             for(i in 1:J)
