@@ -190,7 +190,7 @@ setMethod(
         itemloc <- object@itemloc
         gp <- ExtractGroupPars(object@pars[[length(itemloc)]])
         if(object@exploratory){
-            so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE)
+            so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE, digits = Inf)
             a <- rotateLambdas(so)
             for(i in 1L:J)
                 pars[[i]]@par[1L:nfact] <- a[i, ]
