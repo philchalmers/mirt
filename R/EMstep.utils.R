@@ -102,7 +102,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                      control = control, optim_args=optim_args), silent=TRUE)
                     if(!is(opt, 'try-error')) opt$par <- opt$pars
                 } else {
-                    stop('Rsolnp package is not available. Please install.')
+                    stop('Rsolnp package is not available. Please install.', call.=FALSE)
                 }
             } else {
                 if(requireNamespace("alabama", quietly = TRUE)){
@@ -113,7 +113,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                               control.optim = solnp_args$control.optim, optim_args=optim_args),
                                silent=TRUE)
                 } else {
-                    stop('alabama package is not available. Please install.')
+                    stop('alabama package is not available. Please install.', call.=FALSE)
                 }
             }
         } else if(Moptim == 'nlminb'){
@@ -125,10 +125,10 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                               upper=UBOUND[est], control=control),
                        silent=TRUE)
         } else {
-            stop('M-step optimizer not supported')
+            stop('M-step optimizer not supported', call.=FALSE)
         }
         if(is(opt, 'try-error'))
-            stop(opt)
+            stop(opt, call.=FALSE)
         longpars[est] <- opt$par
     }
     if(!full){
@@ -140,7 +140,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                            Thetabetween=Thetabetween, ubound=UBOUND[groupest], lbound=LBOUND[groupest],
                            iterlim=maxit),
                        silent=TRUE)
-            if(is(res, 'try-error')) stop(res)
+            if(is(res, 'try-error')) stop(res, call.=FALSE)
             longpars[groupest] <- res$estimate
         }
     } else {

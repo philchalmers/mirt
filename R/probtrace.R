@@ -26,9 +26,9 @@ probtrace <- function(x, Theta){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
-    if(!is.matrix(Theta)) stop('Theta input must be a matrix')
+    if(!is.matrix(Theta)) stop('Theta input must be a matrix', call.=FALSE)
     if(ncol(Theta) != x@nfact)
-        stop('Theta does not have the correct number of dimensions')
+        stop('Theta does not have the correct number of dimensions', call.=FALSE)
     P <- ProbTrace(x=x, Theta=Theta)
     cats <- 1:ncol(P)
     if(ncol(P) == 2) cats <- cats - 1

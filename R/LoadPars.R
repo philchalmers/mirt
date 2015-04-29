@@ -9,11 +9,11 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                     '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM', 'ideal', 'lca', 'nlca')
     invalid.items <- is.na(match(itemtype, valid.items))
     if (any(invalid.items & !(itemtype %in% customItemNames)))
-        stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")))
+        stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
     if(length(gpcm_mats)){
         tmp <- sapply(gpcm_mats, ncol)
         if(!all(tmp == nfact))
-            stop(paste0('Matricies in gpcm_mats should only have ', nfact, ' column(s)'))
+            stop(paste0('Matricies in gpcm_mats should only have ', nfact, ' column(s)'), call.=FALSE)
         use_gpcm_mats <- as.logical(sapply(gpcm_mats, length))
     } else use_gpcm_mats <- rep(FALSE, length(itemtype))
     pars <- vector('list', J)
@@ -103,7 +103,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         if(itemtype[i] == 'Rasch' && K[i] == 2L){
             freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)
         } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
-            if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
             if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1L] <- TRUE
             if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
@@ -147,12 +148,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             estpars[c(nfact + K[i] + 1L)] <- FALSE
             freepars[[i]] <- estpars
         } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
             if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1L] <- TRUE
             freepars[[i]] <- estpars
         } else if(itemtype[i] == 'ideal'){
-            if(K[i] != 2L) stop(paste0('Item ', i, ' requires exactly 2 unique categories'))
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             freepars[[i]] <- c(estLambdas[i, ], TRUE)
         } else if(itemtype[i] %in% c('lca', 'nlca')){
             freepars[[i]] <- rep(TRUE, length(startvalues[[i]]))

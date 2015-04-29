@@ -48,7 +48,7 @@ mirtCluster <- function(ncores, remove = FALSE){
         if(missing(ncores))
             ncores <- parallel::detectCores()
         if(!is.numeric(ncores))
-            stop('ncores must be numeric')
+            stop('ncores must be numeric', call.=FALSE)
         mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(ncores)
         mirtClusterEnv$ncores <- as.integer(ncores)
     }

@@ -23,12 +23,13 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     if(missing(x)) missingMsg('x')
     if(missing(item)) missingMsg('item')
     if(is(x, 'MixedClass'))
-        stop('Lower-level functions do not support extracted items from MixedClass objects')
+        stop('Lower-level functions do not support extracted items from MixedClass objects',
+             call.=FALSE)
     inames <- colnames(x@Data$data)
     ind <- 1L:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
     if(is(x, 'MultipleGroupClass')){
-        if(is.null(group)) stop('Which group are you trying to extract from?')
+        if(is.null(group)) stop('Which group are you trying to extract from?', call.=FALSE)
         ret <- x@pars[[group]]@pars[[item]]
     } else {
         ret <- x@pars[[item]]

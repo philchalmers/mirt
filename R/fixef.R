@@ -39,9 +39,9 @@
 fixef <- function(x){
     if(missing(x)) missingMsg('x')
     if(!(is(x, 'MixedClass') || is(x, 'SingleGroupClass')))
-        stop('Only applicable to MixedClass and SingleGroupClass objects')
+        stop('Only applicable to MixedClass and SingleGroupClass objects', call.=FALSE)
     if(!length(x@lrPars))
-        stop('No latent regression parameters were defined in the supplied model')
+        stop('No latent regression parameters were defined in the supplied model', call.=FALSE)
     ret <- x@lrPars@X %*% x@lrPars@beta
     ret
 }

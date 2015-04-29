@@ -213,9 +213,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	nitems <- nrow(a)
 	K <- rep(0L,nitems)
 	if(length(guess) == 1L) guess <- rep(guess,nitems)
-	if(length(guess) != nitems) stop("Guessing parameter is incorrect")
+	if(length(guess) != nitems) stop("Guessing parameter is incorrect", call.=FALSE)
 	if(length(upper) == 1L) upper <- rep(upper,nitems)
-	if(length(upper) != nitems) stop("Upper bound parameter is incorrect")
+	if(length(upper) != nitems) stop("Upper bound parameter is incorrect", call.=FALSE)
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, nitems)
     if(length(gpcm_mats)){
         stopifnot(length(gpcm_mats) == nitems)
@@ -227,8 +227,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
     }
     K <- as.integer(K)
-    if(any(guess > 1 | guess < 0)) stop('guess input must be between 0 and 1')
-    if(any(upper > 1 | upper < 0)) stop('upper input must be between 0 and 1')
+    if(any(guess > 1 | guess < 0)) stop('guess input must be between 0 and 1', call.=FALSE)
+    if(any(upper > 1 | upper < 0)) stop('upper input must be between 0 and 1', call.=FALSE)
     guess <- logit(guess)
     upper <- logit(upper)
     oldguess <- guess
@@ -240,7 +240,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	if(is.null(mu)) mu <- rep(0,nfact)
 	if(!is.null(Theta))
 		if(ncol(Theta) != nfact || nrow(Theta) != N)
-			stop("The input Theta matrix does not have the correct dimensions")
+			stop("The input Theta matrix does not have the correct dimensions", call.=FALSE)
 	if(is.null(Theta)) Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
     if(is.null(nominal)) nominal <- matrix(NA, nitems, max(K))
 	data <- matrix(0, N, nitems)
@@ -260,8 +260,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
                     par <- na.omit(c(a[i, ],as.vector(gpcm_mats[[i]]), d[i,]))
                 }
             } else if(itemtype[i] == 'ideal'){
-                if(K[i] > 2) stop('ideal point models for dichotomous items only')
-                if(d[i,1] > 0) stop('ideal point intercepts must be negative')
+                if(K[i] > 2) stop('ideal point models for dichotomous items only', call.=FALSE)
+                if(d[i,1] > 0) stop('ideal point intercepts must be negative', call.=FALSE)
                 par <- na.omit(c(a[i, ],d[i,]))
             } else {
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))

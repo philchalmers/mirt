@@ -138,23 +138,23 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
     }
     if(missing(mod)) missingMsg('mod')
     if(class(mod) != 'MultipleGroupClass')
-        stop('mod input was not estimated by multipleGroup()')
+        stop('mod input was not estimated by multipleGroup()', call.=FALSE)
     if(length(mod@pars) != 2L)
-        stop('DTF only supports two group models at a time')
+        stop('DTF only supports two group models at a time', call.=FALSE)
     if(!any(sapply(mod@pars, function(x) x@pars[[length(x@pars)]]@est)))
         message('No hyper-parameters were estimated in the DIF model. For effective
                 \tDTF testing, freeing the focal group hyper-parameters is recommend.')
     if(!is.null(Theta_nodes)){
         if(!is.matrix(Theta_nodes))
-            stop('Theta_nodes must be a matrix')
+            stop('Theta_nodes must be a matrix', call.=FALSE)
         if(ncol(Theta_nodes) != mod@nfact)
-            stop('Theta_nodes input does not have the correct number of factors')
+            stop('Theta_nodes input does not have the correct number of factors', call.=FALSE)
         colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1)
             paste0('Theta.', 1:ncol(Theta_nodes)) else 'Theta'
     }
     if(plot){
         if(is.null(MI))
-            stop('Must specificy number of imputations to generate plot')
+            stop('Must specificy number of imputations to generate plot', call.=FALSE)
         Theta_nodes <- NULL
     }
 
@@ -164,12 +164,12 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
         impute <- FALSE
     } else {
         if(length(mod@information) == 1L)
-            stop('Stop an information matrix must be computed')
+            stop('Stop an information matrix must be computed', call.=FALSE)
         info <- mod@information
         is_na <- is.na(diag(info))
         info <- info[!is_na, !is_na]
         if(is(try(chol(info), silent=TRUE), 'try-error')){
-            stop('Proper information matrix must be precomputed in model')
+            stop('Proper information matrix must be precomputed in model', call.=FALSE)
         } else {
             impute <- TRUE
             list_scores <- vector('list', MI)
@@ -180,7 +180,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
                 return(solve(info[!is_na, !is_na]))
                 }), silent=TRUE)
             if(is(covBs, 'try-error'))
-                stop('Could not compute inverse of information matrix')
+                stop('Could not compute inverse of information matrix', call.=FALSE)
             imputenums <- vector('list', 2L)
             for(g in 1L:2L){
                 names <- colnames(covBs[[g]])
@@ -194,7 +194,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
 
     theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
     if(mod@nfact != 1L)
-        stop('DTF only supports unidimensional tests for now.')
+        stop('DTF only supports unidimensional tests for now.', call.=FALSE)
     Theta <- thetaComb(theta, mod@nfact)
     max_score <- sum(mod@Data$mins + mod@Data$K - 1L)
     list_scores <- myLapply(1L, fn, omod=mod, impute=FALSE, covBs=NULL, Theta_nodes=Theta_nodes,
@@ -248,7 +248,7 @@ DTF <- function(mod, MI = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_
         t_sDTF <- oCM['signed.DTF'] / sd(scores[,'signed.DTF'])
         p_sDTF <- pt(abs(t_sDTF), df=MI-1L, lower.tail=FALSE) * 2
         CIs <- apply(scores, 2L, bs_range, CI=CI)
-        if(!is.matrix(CIs)) stop('Too few MI draws were specified')
+        if(!is.matrix(CIs)) stop('Too few MI draws were specified', call.=FALSE)
         tests <- c("P(sDTF = 0)" = as.numeric(p_sDTF))
         rownames(CIs) <- rownames(CIs) <-
             c(paste0('CI_', round(CI + (1-CI)/2, 3L)*100), paste0('CI_', 50),

@@ -25,9 +25,9 @@ expected.item <- function(x, Theta, min = 0){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
-    if(!is.matrix(Theta)) stop('Theta input must be a matrix')
+    if(!is.matrix(Theta)) stop('Theta input must be a matrix', call.=FALSE)
     if(ncol(Theta) != x@nfact)
-        stop('Theta does not have the correct number of dimensions')
+        stop('Theta does not have the correct number of dimensions', call.=FALSE)
     P <- ProbTrace(x=x, Theta=Theta)
     Emat <- matrix(0:(x@ncat-1), nrow(P), ncol(P), byrow = TRUE)
     E <- rowSums(P * Emat) + min

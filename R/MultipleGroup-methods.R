@@ -71,15 +71,15 @@ setMethod(
                           theta_lim = c(-6,6), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
-            stop(type, " is not a valid plot type.")
+            stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(theta_angle > 90 | theta_angle < 0))
-            stop('Improper angle specifed. Must be between 0 and 90.')
-        if(length(theta_angle) > 1) stop('No info-angle plot is available')
+            stop('Improper angle specifed. Must be between 0 and 90.', call.=FALSE)
+        if(length(theta_angle) > 1) stop('No info-angle plot is available', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         ngroups <- length(x@pars)
         J <- length(x@pars[[1]]@pars) - 1L
         nfact <- x@nfact
-        if(nfact > 2) stop("Can't plot high dimensional solutions.")
+        if(nfact > 2) stop("Can't plot high dimensional solutions.", call.=FALSE)
         if(nfact == 1) theta_angle <- 0
         pars <- x@pars
         theta <- seq(theta_lim[1],theta_lim[2],length.out=npts)
@@ -157,7 +157,7 @@ setMethod(
                 return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = TRUE, ...))
             if(type == 'empiricalhist'){
-                if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object')
+                if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object', call.=FALSE)
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
                     Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),

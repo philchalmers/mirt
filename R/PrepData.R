@@ -13,11 +13,11 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     N <- nrow(data)
     exploratory <- FALSE
     if(!is.null(nominal.highlow)){
-        if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix')
+        if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix', call.=FALSE)
         if(!all(dim(nominal.highlow) == c(2,J)))
-            stop('nominal.highlow does not have the correct dimensions')
+            stop('nominal.highlow does not have the correct dimensions', call.=FALSE)
         if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ]))
-            stop('nominal.highlow low and high categories must differ')
+            stop('nominal.highlow low and high categories must differ', call.=FALSE)
     }
     if(is(model, 'numeric') && length(model) == 1L){
         if(model != 1L) exploratory <- TRUE
@@ -31,15 +31,16 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         model <- bfactor2mod(model, J)
     if(length(guess) == 1L) guess <- rep(guess,J)
     if(length(guess) > J || length(guess) < J)
-        stop("The number of guessing parameters is incorrect.")
+        stop("The number of guessing parameters is incorrect.", call.=FALSE)
     if(length(upper) == 1L) upper <- rep(upper,J)
     if(length(upper) > J || length(upper) < J)
-        stop("The number of upper bound parameters is incorrect.")
+        stop("The number of upper bound parameters is incorrect.", call.=FALSE)
     if(is.null(key) && any(itemtype %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
-        stop('When using nested logit items a scoring key must be provided with key = c(...)')
+        stop('When using nested logit items a scoring key must be provided with key = c(...)',
+             call.=FALSE)
     if(is.null(key))  key <- rep(1L, J)
     if(length(key) != J)
-        stop("The number of elements in the key input is incorrect.")
+        stop("The number of elements in the key input is incorrect.", call.=FALSE)
     key[is.na(key) | is.nan(key)] <- 1
     key <- as.integer(key)
     uniques <- list()
@@ -57,7 +58,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     }
     if(any(K < 2L))
         stop('The following items have only one response category and cannot be estimated: ',
-             paste(itemnames[K < 2L], ''))
+             paste(itemnames[K < 2L], ''), call.=FALSE)
     if(is.null(itemtype)) {
         itemtype <- rep('', J)
         for(i in 1L:J){
@@ -66,21 +67,21 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         }
     }
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, J)
-    if(length(itemtype) != J) stop('itemtype specification is not the correct length')
+    if(length(itemtype) != J) stop('itemtype specification is not the correct length', call.=FALSE)
     guess[guess == 0 & itemtype %in% c('3PL', '4PL', 'PC3PL', '3PLNRM', '4PLNRM')] <- .15
     upper[upper == 1 & itemtype %in% c('4PL', '3PLu', '3PLuNRM', '4PLNRM')] <- .85
     if(length(gpcm_mats)){
         if(length(gpcm_mats) != ncol(data))
-            stop('gpcm_mats list does not correspond to columns in data')
+            stop('gpcm_mats list does not correspond to columns in data', call.=FALSE)
         pick <- !sapply(gpcm_mats, is.null) & itemtype %in% c('gpcm', 'Rasch')
         tmp <- gpcm_mats[pick]
         if(!all(sapply(tmp, is.matrix)))
-            stop('Matricies must be used in gpcm_mats')
+            stop('Matricies must be used in gpcm_mats', call.=FALSE)
         if(!all(sapply(tmp, nrow) == K[pick])){
             nrows <- sapply(tmp, nrow)
             out <- !sapply(tmp, nrow) == K[pick]
             stop(sprintf("Item %i should have %i rows in gpcm_mats, but instead has %i \n  ",
-                         seq(1L, J)[out], K[out], nrows[out]))
+                         seq(1L, J)[out], K[out], nrows[out]), call.=FALSE)
         }
     }
     itemloc <- cumsum(c(1L,K))
@@ -125,7 +126,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         for(group in unique.grsmgroups){
             Kk <- unique(K[grsm.block[grsm.block == unique.grsmgroups[group]]])
             if(length(Kk) > 1L) stop('Rating scale models require that items to have the
-                                       same number of categories')
+                                       same number of categories', call.=FALSE)
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){
@@ -145,7 +146,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
 #         for(group in unique.rsmgroups){
 #             Kk <- unique(K[rsm.block[rsm.block == unique.rsmgroups[group]]])
 #             if(length(Kk) > 1L) stop('Rating scale models require that items to have the
-#                                     same number of categories')
+#                                     same number of categories', call.=FALSE)
 #             for(k in 1L:(Kk-1L)){
 #                 rsmConstraint <- c()
 #                 for(i in 1L:J){

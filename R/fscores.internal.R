@@ -122,9 +122,9 @@ setMethod(
             else return(ret)
         }
         if(return.acov && MI != 0)
-            stop('simultaneous impute and return.acov option not supported')
+            stop('simultaneous impute and return.acov option not supported', call.=FALSE)
 	    if(return.acov && returnER)
-	        stop('simultaneous returnER and return.acov option not supported')
+	        stop('simultaneous returnER and return.acov option not supported', call.=FALSE)
         if(!is.null(response.pattern)){
             if(is.data.frame(response.pattern))
                 response.pattern <- as.matrix(response.pattern)
@@ -209,7 +209,8 @@ setMethod(
 		USETABDATA <- TRUE
 		if(LR){
             if(!(method %in% c('EAP', 'MAP')))
-                warning('Latent regression information only used in MAP and EAP estimates')
+                warning('Latent regression information only used in MAP and EAP estimates',
+                        call.=FALSE)
             full.scores <- TRUE
             USETABDATA <- FALSE
 		    gp$gmeans <- fixef(object)
@@ -230,9 +231,9 @@ setMethod(
         estHess <- !full.scores | return.acov | full.scores.SE
         if(impute){
             if(length(object@information) == 1L)
-                stop('Stop an information matrix must be computed for imputations')
+                stop('Stop an information matrix must be computed for imputations', call.=FALSE)
             if(is(try(chol(object@information), silent=TRUE), 'try-error')){
-                stop('Information matrix is not positive definite')
+                stop('Information matrix is not positive definite', call.=FALSE)
             } else {
                 names <- colnames(object@information)
                 imputenums <- as.numeric(sapply(names, function(x, split){
@@ -260,7 +261,7 @@ setMethod(
                         } else thetaComb(theta,nfact)
                     } else {
                         if(ncol(custom_theta) != object@nfact)
-                            stop('ncol(custom_theta) does not match model')
+                            stop('ncol(custom_theta) does not match model', call.=FALSE)
                         ThetaShort <- Theta <- custom_theta
                     }
                     if(length(prodlist) > 0L)
@@ -308,7 +309,7 @@ setMethod(
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
-                stop('method not defined')
+                stop('method not defined', call.=FALSE)
             }
     		if(return.acov){
     		    scores <- tmp
@@ -406,7 +407,7 @@ setMethod(
     {
         class(object) <- 'MultipleGroupClass'
         if(!any(method %in% c('EAP', 'EAPsum')))
-            stop('Only EAP and EAPsum methods are supported for DiscreteClass objects')
+            stop('Only EAP and EAPsum methods are supported for DiscreteClass objects', call.=FALSE)
         method <- ifelse(method == 'EAP', 'Discrete', 'DiscreteSum')
         ret <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=FALSE, verbose=verbose,
@@ -660,7 +661,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     ret <- data.frame(Sum.Scores=Sum.Scores, Theta=thetas, SE.Theta=SEthetas)
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
-        if(any(is.na(x@Data$data))) stop('Full scores requires a complete dataset (no N\'s)')
+        if(any(is.na(x@Data$data)))
+            stop('Full scores requires a complete dataset (no N\'s)', call.=FALSE)
         dat <- x@Data$data
         adj <- x@Data$min
         if(any(adj > 0L)) message('Data adjusted so that every item has a lowest score of 0')

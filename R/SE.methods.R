@@ -46,7 +46,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     specific <- list$specific
     ngroups <- ESTIMATE$ngroups
     NCYCLES <- ESTIMATE$cycles
-    if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history')
+    if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history', call.=FALSE)
     BFACTOR <- list$BFACTOR
     prior <- rlist <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars

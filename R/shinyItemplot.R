@@ -214,7 +214,7 @@ shinyItemplot <- function(){
                 model <- 1
                 if(input$nfact) model <- 2
                 if(model == 2 && input$plottype == 'infoSE')
-                    stop('infoSE only available for single dimensional models')
+                    stop('infoSE only available for single dimensional models', call.=FALSE)
                 a <- matrix(1,2)
                 d <- matrix(0,2)
                 if(input$itemclass == 'graded'){
@@ -228,9 +228,10 @@ shinyItemplot <- function(){
                     nominal <- matrix(c(0,1,2), 2, 3, byrow=TRUE)
                     d <- matrix(c(0,0,1,-1), 2, 4, byrow=TRUE)
                 } else if(input$itemclass == 'partcomp'){
-                    if(model != 2) stop('partcomp models require more than 1 dimension')
+                    if(model != 2) stop('partcomp models require more than 1 dimension', call.=FALSE)
                     if(input$plottype == 'info' || input$plottype == 'infocontour')
-                        stop('information based plots not currently supported for partcomp items')
+                        stop('information based plots not currently supported for partcomp items',
+                             call.=FALSE)
                     a <- matrix(c(1,1), 2, 2, byrow=TRUE)
                     d <- matrix(c(1,1,1,NA), 2, 2, byrow=TRUE)
                     itemtype[2] <- '2PL'
@@ -257,7 +258,8 @@ shinyItemplot <- function(){
                         par <- c(input$a1parf, input$a2parf, input$a3parf, input$a4parf,
                                  input$bpar1f, input$bpar2f, input$bpar3f, input$bpar4f)
                     } else {
-                        stop('Classical parameterization not available for selected item class')
+                        stop('Classical parameterization not available for selected item class',
+                             call.=FALSE)
                     }
                     par <- traditional2mirt(x=par, cls=itemclass[1L], ncat=mod@pars[[1]]@ncat)
                 } else {

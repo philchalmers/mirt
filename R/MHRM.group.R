@@ -102,7 +102,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
              paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
-                 estimated parameters. Please fix!')
+                 estimated parameters. Please fix!', call.=FALSE)
     }
     #make sure constrained pars are equal
     tmp <- rowSums(L)
@@ -345,9 +345,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         grad <- grad[estpars & !redun_constr]
         ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
         if(any(is.na(grad)))
-            stop('Model did not converge (unacceptable gradient caused by extreme parameter values)')
+            stop('Model did not converge (unacceptable gradient caused by extreme parameter values)',
+                 call.=FALSE)
         if(is.na(attr(gtheta0[[1L]],"log.lik")))
-            stop('Estimation halted. Model did not converge.')
+            stop('Estimation halted. Model did not converge.', call.=FALSE)
         if(verbose){
             AR <- do.call(c, lapply(gtheta0, function(x) attr(x, "Proportion Accepted")))
             CTV <- cand.t.var
@@ -443,7 +444,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         acov <- try(solve(info), TRUE)
         if(is(acov, 'try-error')){
             if(list$warn)
-                warning('Could not invert information matrix; model likely is not identified.')
+                warning('Could not invert information matrix; model likely is not identified.',
+                        call.=FALSE)
         } else {
             fail_invert_info <- FALSE
             SEtmp <- diag(acov)

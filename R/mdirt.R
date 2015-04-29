@@ -119,7 +119,7 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
 {
     Call <- match.call()
     if(!all(itemtype %in% c('lca', 'nlca')))
-        stop('Selected itemtype not supported. Please use itemtype \'lca\' or \'nlca\'')
+        stop('Selected itemtype not supported. Please use itemtype \'lca\' or \'nlca\'', call.=FALSE)
     if(nruns > 1) GenRandomPars <- TRUE
     if(is.null(group)) group <- rep('all', nrow(data))
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)),

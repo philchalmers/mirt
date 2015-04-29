@@ -184,7 +184,7 @@ setMethod(
                 print(round(Phi, digits))
             }
             if(any(h2 > 1))
-                warning("Solution has Heywood cases. Interpret with caution.")
+                warning("Solution has Heywood cases. Interpret with caution.", call.=FALSE)
             invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))
         }
     }
@@ -247,7 +247,7 @@ setMethod(
                           simplify=FALSE, verbose = TRUE, ...){
         if(printSE && length(object@pars[[1L]]@SEpar)) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
-            stop('CI must be between 0 and 1')
+            stop('CI must be between 0 and 1', call.=FALSE)
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         K <- object@K
@@ -268,7 +268,8 @@ setMethod(
         allPars <- list()
         if(IRTpars){
             if(object@nfact > 1L)
-                stop('traditional parameterization is only available for unidimensional models')
+                stop('traditional parameterization is only available for unidimensional models',
+                     call.=FALSE)
             for(i in 1:(J+1))
                 allPars[[i]] <- round(mirt2traditional(object@pars[[i]]), digits)
         } else {
@@ -490,7 +491,7 @@ setMethod(
         } else {
             Theta <- object@Theta
             if(!any(type %in% c('exp', 'LD', 'LDG2')))
-                stop('residual type not supported for discrete latent variables')
+                stop('residual type not supported for discrete latent variables', call.=FALSE)
         }
         itemnames <- colnames(data)
         listtabs <- list()
@@ -573,7 +574,7 @@ setMethod(
             } else {
                 tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]
                 if(!is.null(printvalue)){
-                    if(!is.numeric(printvalue)) stop('printvalue is not a number.')
+                    if(!is.numeric(printvalue)) stop('printvalue is not a number.', call.=FALSE)
                     tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
                 }
                 return(tabdata)
@@ -605,7 +606,7 @@ setMethod(
             res <- round(res,digits)
             return(res)
         } else {
-            stop('specified type does not exist')
+            stop('specified type does not exist', call.=FALSE)
         }
 
     }
@@ -705,11 +706,11 @@ setMethod(
     {
         dots <- list(...)
         if (any(theta_angle > 90 | theta_angle < 0))
-            stop('Improper angle specified. Must be between 0 and 90.')
+            stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@nfact
         if(length(theta_angle) > nfact) type = 'infoangle'
-        if(nfact > 3) stop("Can't plot high dimensional solutions.")
+        if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
         if(nfact == 2 && length(theta_angle) == 1L)
             theta_angle <- c(theta_angle, 90 - theta_angle)
         if(nfact == 3 && length(theta_angle) == 1L) theta_angle <- rep(90/3, 3)
@@ -723,9 +724,10 @@ setMethod(
             ThetaFull <- prodterms(Theta,prodlist)
         info <- 0
         if(any(sapply(x@pars, is , 'custom')) && type != 'trace' && type != 'score')
-            stop('Information function for custom classes not available')
-        if(any(sapply(x@pars, is , 'ideal')) && type != 'trace' && type != 'score')
-            warning('Information function for ideal point models are currently experimental')
+            stop('Information function for custom classes not available', call.=FALSE)
+        if(any(sapply(x@pars, is , 'ideal')) && type != 'trace' && type != 'score') ##TODO
+            warning('Information function for ideal point models are currently experimental',
+                    call.=FALSE)
         if(all(!sapply(x@pars, is , 'custom'))){
             for(l in 1:length(theta_angle)){
                 ta <- theta_angle[l]
@@ -753,7 +755,7 @@ setMethod(
         if(MI > 0L && nfact == 1L){
             tmpx <- x
             if(is(try(chol(x@information), silent=TRUE), 'try-error'))
-                stop('Proper information matrix must be precomputed in model')
+                stop('Proper information matrix must be precomputed in model', call.=FALSE)
             tmppars <- x@pars
             covB <- solve(x@information)
             names <- colnames(covB)
@@ -816,7 +818,7 @@ setMethod(
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
             } else {
-                stop('plot type not supported for three dimensional model')
+                stop('plot type not supported for three dimensional model', call.=FALSE)
             }
         } else if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2")
@@ -864,7 +866,7 @@ setMethod(
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
             } else {
-                stop('plot type not supported for two dimensional model')
+                stop('plot type not supported for two dimensional model', call.=FALSE)
             }
         } else {
             colnames(plt) <- c("info", "score", "Theta")
@@ -998,7 +1000,8 @@ setMethod(
                 if(is.null(main))
                     main <- 'Empirical Histogram'
                 Prior <- x@Prior[[1L]]
-                if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object')
+                if(!x@empiricalhist)
+                    stop('Empirical histogram was not estimated for this object', call.=FALSE)
                 Theta <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
                                     length.out = x@quadpts))
                 Prior <- Prior * nrow(x@Data$data)
@@ -1013,7 +1016,7 @@ setMethod(
                               xlab = expression(theta), ylab = 'Expected Frequency',
                               type = 'b', main = main, ...))
             } else {
-                stop('plot not supported for unidimensional models')
+                stop('plot not supported for unidimensional models', call.=FALSE)
             }
         }
     }
@@ -1098,7 +1101,7 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
         par <- c(a1, ak, dk)
         names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
     } else {
-        stop('traditional2mirt item class not supported')
+        stop('traditional2mirt item class not supported', call.=FALSE)
     }
     par
 }

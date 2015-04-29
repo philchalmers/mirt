@@ -55,7 +55,7 @@ wald <- function(object, L, C = 0){
     if(missing(object)) missingMsg('object')
     if(all(dim(object@information) == c(1,1)))
         if(object@information[1,1] == 0L)
-            stop('No information matrix has been calculated for the model')
+            stop('No information matrix has been calculated for the model', call.=FALSE)
     info <- object@information
     keep <- !is.na(diag(info))
     info <- info[keep, keep, drop=FALSE]
@@ -68,20 +68,21 @@ wald <- function(object, L, C = 0){
         return(ret)
     }
     if(!is.matrix(L)){
-        stop('L must be a matrix')
+        stop('L must be a matrix', call.=FALSE)
     } else if(ncol(L) != length(Names)){
-        stop('L does not have an appropriate number of columns')
+        stop('L does not have an appropriate number of columns', call.=FALSE)
     }
     if(!is.vector(C))
-        stop('C must be a vector of constant population parameters')
+        stop('C must be a vector of constant population parameters', call.=FALSE)
     if(length(C) == 1L){
         C <- numeric(ncol(L))
     } else if(length(C) != ncol(L)){
-        stop('length(C) must be the same as ncol(L)')
+        stop('length(C) must be the same as ncol(L)', call.=FALSE)
     }
     covB <- try(solve(info), silent=TRUE)
     if(is(covB, 'try-error'))
-        stop('Could not properly invert information matrix to obtain parameter covariance matrix')
+        stop('Could not properly invert information matrix to obtain parameter covariance matrix',
+             call.=FALSE)
     W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))

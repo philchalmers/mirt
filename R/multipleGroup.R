@@ -250,7 +250,8 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
     if(missing(model)) missingMsg('model')
     if(!is.null(dots$empiricalhist))
         if(dots$empiricalhist && any(invariance.check))
-            stop('freeing group parameters not meaningful when estimating empirical histograms')
+            stop('freeing group parameters not meaningful when estimating empirical histograms',
+                 call.=FALSE)
     if(sum(invariance.check == 2L) && length(constrain) == 0){
         warn <- TRUE
         if(is(model, 'mirt.model')){
@@ -259,7 +260,7 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
         }
         if(warn)
             stop('Model is not identified without further constrains (may require additional
-                 anchoring items).')
+                 anchoring items).', call.=FALSE)
     }
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
                       rotate=rotate, ...)

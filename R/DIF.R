@@ -152,7 +152,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         if(!length(parnum))
             stop('Item ', item, ' does not contain any of the parameters defined in which.par.
                  Consider removing it from the item2test input or adding relevant parameters
-                 to which.par')
+                 to which.par', call.=FALSE)
         if(Wald){
             wv <- wald(model)
             infoname <- wv[1L, ]
@@ -191,28 +191,28 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                 \tDIF testing, freeing the focal group hyper-parameters is recommend.')
     bfactorlist <- MGmodel@bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
-        stop('bifactor models are currently not supported in this function')
+        stop('bifactor models are currently not supported in this function', call.=FALSE)
     itemnames <- colnames(MGmodel@Data$data)
     if(!any(scheme %in% c('add', 'drop', 'add_sequential', 'drop_sequential')))
-        stop('scheme input is not valid')
+        stop('scheme input is not valid', call.=FALSE)
     if(return_models){
         if(Wald)
-            stop('return_models argument only valid for likelihood ratio tests')
+            stop('return_models argument only valid for likelihood ratio tests', call.=FALSE)
     }
     if(Wald){
         if(scheme != 'add')
-            stop('Wald tests are only appropriate when add scheme is used')
+            stop('Wald tests are only appropriate when add scheme is used', call.=FALSE)
         if(length(MGmodel@information) == 1)
-            stop('Information matrix was not calculated')
+            stop('Information matrix was not calculated', call.=FALSE)
     }
     if(plotdif && any(scheme %in% c('drop', 'drop_sequential')))
-        stop('plotdif not supported for dropping schemes')
+        stop('plotdif not supported for dropping schemes', call.=FALSE)
     pval <- 0
     if(is.numeric(seq_stat)){
         pval <- seq_stat
         seq_stat <- 'p'
     } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC'))){
-        stop('Invalid seq_stat input')
+        stop('Invalid seq_stat input', call.=FALSE)
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
     data <- MGmodel@Data$data
@@ -231,7 +231,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         updatedModel <- MGmodel
         run_number <- 2L
         if(run_number > max_run)
-            stop('max_run number must be greater than 1 for sequential searches')
+            stop('max_run number must be greater than 1 for sequential searches', call.=FALSE)
         while(TRUE){
             statdiff <- do.call(c, lapply(res, function(x, stat){
                 if(stat == 'p') return(x[2L, 'p'])

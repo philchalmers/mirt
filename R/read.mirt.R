@@ -67,7 +67,7 @@
 # dat <- expand.table(LSAT7)
 # group <- sample(c('g1', 'g2'), nrow(dat), TRUE)
 # mod <- multipleGroup(dat, 1, group)
-# 
+#
 # # convert, and combine pars
 # plinkMG <- read.mirt(mod)
 # combine <- matrix(1:5, 5, 2)
@@ -100,9 +100,9 @@
 #         return(pars)
 #     }
 #     if(class(x) == 'MixedClass')
-#         stop('Mixed effect models not supported.')
+#         stop('Mixed effect models not supported.', call.=FALSE)
 #     if(length(x@prodlist))
-#         stop('Polynomial factor models not supported in plink')
+#         stop('Polynomial factor models not supported in plink', call.=FALSE)
 #     #converts unidimensional parameters to classic IRT (if possible)
 #     nfact <- x@pars[[1]]@nfact
 #     listpars <- coef(x, IRTpars=ifelse(nfact == 1, TRUE, FALSE), rotate='none', verbose=FALSE, ...)
@@ -117,7 +117,7 @@
 #     theta <- -4:4
 #     Theta <- thetaComb(theta, nfact)
 #     for(i in 1:nitems){
-# 
+#
 #         if(mirt.items[i] == 'dich'){
 #             plink.items[i] <- 'drm'
 #             cat[i] <- 2
@@ -125,7 +125,7 @@
 #             pars[i, 1:length(abc)] <- abc
 #             next
 #         }
-# 
+#
 #         if(mirt.items[i] == 'graded'){
 #             plink.items[i] <- 'grm'
 #             ab <- listpars[[i]][1, ]
@@ -133,18 +133,18 @@
 #             pars[i, 1:length(ab)] <- ab
 #             next
 #         }
-# 
+#
 #         if(mirt.items[i] == 'rsm'){
-#             stop('Rasch rating scale models not supported for now')
+#             stop('Rasch rating scale models not supported for now', call.=FALSE)
 #         }
-# 
+#
 #         if(mirt.items[i] == 'nestlogit'){
-#             stop('nestlogit models not supported in plink')
+#             stop('nestlogit models not supported in plink', call.=FALSE)
 #         }
-# 
+#
 #         if(mirt.items[i] == 'rating'){
-#             stop('rating model not supported for now')
-# 
+#             stop('rating model not supported for now', call.=FALSE)
+#
 #             #not converted to classic IRT form for now
 #             plink.items[i] <- 'grm'
 #             ab <- listpars[[i]][1, ]
@@ -156,7 +156,7 @@
 #             pars[i, 1:length(ab)] <- ab
 #             next
 #         }
-# 
+#
 #         if(mirt.items[i] == 'gpcm'){
 #             ab <- listpars[[i]][1, ]
 #             a <- ab[1:nfact]
@@ -165,11 +165,11 @@
 #             if(nfact == 1L){
 #                 pars[i, 1:length(ab)] <- ab
 #             } else {
-#                 stop('Multidimensional gpcm not yet supported')
+#                 stop('Multidimensional gpcm not yet supported', call.=FALSE)
 #             }
 #             next
 #         }
-# 
+#
 #         if(mirt.items[i] == 'nominal'){
 #             plink.items[i] <- 'nrm'
 #             ab <- listpars[[i]][1, ]
@@ -177,19 +177,19 @@
 #             if(nfact == 1L){
 #                 pars[i, 1:length(ab)] <- ab
 #             } else {
-#                 stop('Multidimensional nrm not yet supported')
+#                 stop('Multidimensional nrm not yet supported', call.=FALSE)
 #             }
 #             next
 #         }
-# 
+#
 #         if(mirt.items[i] == 'partcomp'){
-#             stop('Partially compensatory models not supported in plink')
+#             stop('Partially compensatory models not supported in plink', call.=FALSE)
 #         }
-# 
+#
 #         if(mirt.items[i] == 'custom'){
-#             stop('User defined models not supported in plink')
+#             stop('User defined models not supported in plink', call.=FALSE)
 #         }
-# 
+#
 #     }
 #     model <- unique(plink.items)
 #     items <- vector('list', length(model))

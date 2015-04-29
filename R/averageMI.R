@@ -51,8 +51,8 @@
 averageMI <- function(par, SEpar, as.data.frame = TRUE, digits = 4){
     if(missing(par)) missingMsg('par')
     if(missing(SEpar)) missingMsg('SEpar')
-    if(!is.list(par)) stop('par must be a list')
-    if(!is.list(SEpar)) stop('SEpar must be a list')
+    if(!is.list(par)) stop('par must be a list', call.=FALSE)
+    if(!is.list(SEpar)) stop('SEpar must be a list', call.=FALSE)
     par <- lapply(par, as.matrix)
     SEpar <- lapply(SEpar, as.matrix)
     MI <- length(par)

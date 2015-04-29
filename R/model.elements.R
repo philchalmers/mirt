@@ -106,7 +106,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             lambdas[!estlam] <- 0
     }
     if(exploratory && any(itemtype %in% c('PC2PL', 'PC3PL')))
-        stop('Partially compensatory models can only be estimated within a confirmatory model')
+        stop('Partially compensatory models can only be estimated within a confirmatory model',
+             call.=FALSE)
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
                     nfact=nfact+length(prodlist), parprior=parprior,

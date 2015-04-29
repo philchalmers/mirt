@@ -70,11 +70,11 @@ imputePars <- function(pars, covB, imputenums, constrain){
         if(is(pars[[i]], 'graded')){
             where <- (length(pars[[i]]@par) - pars[[i]]@ncat + 2L):length(pars[[i]]@par)
             if(!(all(sort(pars[[i]]@par[where], decreasing=TRUE) == pars[[i]]@par[where])))
-                stop('Drawn values out of order')
+                stop('Drawn values out of order', call.=FALSE)
         } else if(is(pars[[i]], 'grsm')){
             where <- (length(pars[[i]]@par) - pars[[i]]@ncat + 1L):(length(pars[[i]]@par)-1L)
             if(!(all(sort(pars[[i]]@par[where], decreasing=TRUE) == pars[[i]]@par[where])))
-                stop('Drawn values out of order')
+                stop('Drawn values out of order', call.=FALSE)
         }
     }
     if(length(constrain)){
@@ -385,7 +385,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             esplit <- lapply(esplit, function(x){
                             newx <- c()
                             if(length(x) < 3L)
-                                stop('CONTRAIN = ... has not been supplied enough arguments')
+                                stop('CONTRAIN = ... has not been supplied enough arguments', call.=FALSE)
                             for(i in 1L:(length(x)-2L)){
                                 if(grepl('-', x[i])){
                                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -397,7 +397,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         })
             for(i in 1L:length(esplit)){
                 if(!(esplit[[i]][length(esplit[[i]])] %in% c(groupNames, 'all')))
-                    stop('Invalid group name passed to CONSTRAIN = ... syntax.')
+                    stop('Invalid group name passed to CONSTRAIN = ... syntax.', call.=FALSE)
                 if(esplit[[i]][length(esplit[[i]])] == 'all'){
                     for(g in 1L:ngroups){
                         constr <- c()
@@ -408,7 +408,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         sel <- na.omit(sel)
                         if(sum(picknames) > 1L){
                             if(sum(picknames) != length(sel))
-                                stop('Number of items selected not equal to number of parameter names')
+                                stop('Number of items selected not equal to number of parameter names',
+                                     call.=FALSE)
                             constr <- numeric(length(sel))
                             for(j in 1L:length(sel)){
                                 whc <- esplit[[i]][which(picknames)[j]]
@@ -419,7 +420,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                                 pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) %in%
                                                                esplit[[i]][picknames]]
                                 if(!length(pick))
-                                    stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j])
+                                    stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j],
+                                         call.=FALSE)
                                 constr <- c(constr, pick)
                             }
                         }
@@ -433,7 +435,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) ==
                                                        esplit[[i]][length(esplit[[i]])-1L]]
                         if(!length(pick))
-                            stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j])
+                            stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j],
+                                 call.=FALSE)
                         constr <- c(constr, pick)
                     }
                     constrain[[length(constrain) + 1L]] <- constr
@@ -442,7 +445,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         }
         if(any(model[[1L]]$x[,1L] == 'CONSTRAINB')){
             if(length(unique(groupNames)) == 1L)
-                stop('CONSTRAINB model argument not valid for single group models')
+                stop('CONSTRAINB model argument not valid for single group models', call.=FALSE)
             groupNames <- as.character(groupNames)
             names(pars) <- groupNames
             input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'CONSTRAINB', 2L]
@@ -457,7 +460,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             esplit <- lapply(esplit, function(x){
                 newx <- c()
                 if(length(x) < 3L)
-                    stop('PRIOR = ... has not been supplied enough arguments')
+                    stop('PRIOR = ... has not been supplied enough arguments', call.=FALSE)
                 for(i in 1L:(length(x)-2L)){
                     if(grepl('-', x[i])){
                         tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -476,7 +479,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) ==
                                                        esplit[[i]][length(esplit[[i]])-1L]]
                         if(!length(pick))
-                            stop('CONSTRAINB = ... indexed a parameter that was not relavent accross groups')
+                            stop('CONSTRAINB = ... indexed a parameter that was not relavent accross groups',
+                                 call.=FALSE)
                         constr <- c(constr, pick)
                     }
                     constrain[[length(constrain) + 1L]] <- constr
@@ -605,7 +609,7 @@ UpdatePrior <- function(PrepList, model, groupNames){
         esplit <- lapply(esplit, function(x){
             newx <- c()
             if(length(x) < 5L)
-                stop('PRIOR = ... has not been supplied enough arguments')
+                stop('PRIOR = ... has not been supplied enough arguments', call.=FALSE)
             for(i in 1L:(length(x)-5L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -617,20 +621,21 @@ UpdatePrior <- function(PrepList, model, groupNames){
         })
         for(i in 1L:length(esplit)){
             if(!(esplit[[i]][length(esplit[[i]])] %in% c(groupNames, 'all')))
-                stop('Invalid group name passed to PRIOR = ... syntax.')
+                stop('Invalid group name passed to PRIOR = ... syntax.', call.=FALSE)
             if(esplit[[i]][length(esplit[[i]])] == 'all'){
                 for(g in 1L:ngroups){
                     sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-5L)])
                     name <- esplit[[i]][length(esplit[[i]])-4L]
                     type <- esplit[[i]][length(esplit[[i]])-3L]
                     if(!(type %in% c('norm', 'beta', 'lnorm')))
-                        stop('Prior type specified in PRIOR = ... not available')
+                        stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
                     type <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
                     val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                     val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                     for(j in 1L:length(sel)){
                         which <- names(pars[[g]][[j]]@est) == name
-                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
+                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
+                                             call.=FALSE)
                         pars[[g]][[sel[j]]]@any.prior <- TRUE
                         pars[[g]][[sel[j]]]@prior.type[which] <- type
                         pars[[g]][[sel[j]]]@prior_1[which] <- val1
@@ -643,13 +648,14 @@ UpdatePrior <- function(PrepList, model, groupNames){
                 name <- esplit[[i]][length(esplit[[i]])-4L]
                 type <- esplit[[i]][length(esplit[[i]])-3L]
                 if(!(type %in% c('norm', 'beta', 'lnorm')))
-                    stop('Prior type specified in PRIOR = ... not available')
+                    stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
                 type <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
                 val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                 val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                 for(j in 1L:length(sel)){
                     which <- names(pars[[gname]][[j]]@est) == name
-                    if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j)
+                    if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
+                                         call.=FALSE)
                     pars[[gname]][[sel[j]]]@any.prior <- TRUE
                     pars[[gname]][[sel[j]]]@prior.type[which] <- type
                     pars[[gname]][[sel[j]]]@prior_1[which] <- val1
@@ -732,14 +738,16 @@ UpdatePrepList <- function(PrepList, pars, random, lrPars = list(), MG = FALSE){
                                 lrPars=lrPars, MG = TRUE)
     if(nrow(currentDesign) != nrow(pars))
         stop('Rows in supplied and starting value data.frame objects do not match. Were the
-             data or itemtype input arguments modified?')
+             data or itemtype input arguments modified?', call.=FALSE)
     if(!all(as.matrix(currentDesign[,c('group', 'item', 'class', 'name', 'parnum')]) ==
                 as.matrix(pars[,c('group', 'item', 'class', 'name', 'parnum')])))
-        stop('Critical internal parameter labels do not match those returned from pars = \'values\'')
+        stop('Critical internal parameter labels do not match those returned from pars = \'values\'',
+             call.=FALSE)
     if(!all(sapply(currentDesign, class) == sapply(pars, class)))
-        stop('pars input does not contain the appropriate classes, which should match pars = \'values\'')
+        stop('pars input does not contain the appropriate classes, which should match pars = \'values\'',
+             call.=FALSE)
     if(!all(unique(pars$prior.type) %in% c('none', 'norm', 'beta', 'lnorm')))
-        stop('prior.type input in pars contains invalid prior types')
+        stop('prior.type input in pars contains invalid prior types', call.=FALSE)
     if(!MG) PrepList <- list(PrepList)
     len <- length(PrepList[[length(PrepList)]]$pars)
     maxparnum <- max(PrepList[[length(PrepList)]]$pars[[len]]@parnum)
@@ -765,7 +773,7 @@ UpdatePrepList <- function(PrepList, pars, random, lrPars = list(), MG = FALSE){
                 tmp <- ExtractZetas(PrepList[[g]]$pars[[i]])
                 if(!all(tmp == sort(tmp, decreasing=TRUE)) || length(unique(tmp)) != length(tmp))
                     stop('Graded model intercepts for item ', i, ' in group ', g,
-                         ' do not descend from highest to lowest. Please fix')
+                         ' do not descend from highest to lowest. Please fix', call.=FALSE)
             }
             PrepList[[g]]$pars[[i]]@any.prior <- any(1L:3L %in%
                                                          PrepList[[g]]$pars[[i]]@prior.type)
@@ -999,13 +1007,13 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'parallel', 'NULL.MODEL', 'theta_lim')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
-             paste0(tnames[!(tnames %in% gnames)], ' '))
+             paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
-        stop('method argument not supported')
+        stop('method argument not supported', call.=FALSE)
     D <- 1
     opts$method = method
-    if(draws < 1) stop('draws must be greater than 0')
+    if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
     opts$draws = draws
     opts$theta_lim = technical$theta_lim
     opts$calcLL = calcLL
@@ -1044,7 +1052,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$empiricalhist <- empiricalhist
     if(empiricalhist){
         if(opts$method != 'EM')
-            stop('empirical histogram method only applicable when method = \'EM\' ')
+            stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
         if(opts$TOL == 1e-4) opts$TOL <- 3e-5
         if(is.null(opts$quadpts)) opts$quadpts <- 199L
         if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
@@ -1072,10 +1080,12 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(opts$Moptim == 'solnp'){
         if(is.null(solnp_args$control)) solnp_args$control <- list()
         if(is.null(solnp_args$control$trace)) solnp_args$control$trace <- 0
-        if(method != 'EM') stop('solnp only supported for optimization with EM algorithm')
+        if(method != 'EM') stop('solnp only supported for optimization with EM algorithm',
+                                call.=FALSE)
         opts$solnp_args <- solnp_args
     } else if(opts$Moptim == 'alabama'){
-        if(method != 'EM') stop('alabama only supported for optimization with EM algorithm')
+        if(method != 'EM') stop('alabama only supported for optimization with EM algorithm',
+                                call.=FALSE)
         if(is.null(alabama_args$control.outer)) alabama_args$control.outer <- list()
         if(is.null(alabama_args$control.optim)) alabama_args$control.optim <- list()
         if(is.null(alabama_args$control.outer$trace)) alabama_args$control.outer$trace <- FALSE
@@ -1137,14 +1147,15 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
         if(warn)
-            warning('Could not invert information matrix; model likely is not identified.')
+            warning('Could not invert information matrix; model likely is not identified.',
+                    call.=FALSE)
         ESTIMATE$fail_invert_info <- TRUE
         return(ESTIMATE)
     } else ESTIMATE$fail_invert_info <- FALSE
     SEtmp <- diag(solve(info))
     if(any(SEtmp < 0)){
         if(warn)
-            warning("Negative SEs set to NaN.\n")
+            warning("Negative SEs set to NaN.\n", call.=FALSE)
         SEtmp[SEtmp < 0 ] <- NaN
     }
     SEtmp <- sqrt(SEtmp)
@@ -1226,7 +1237,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
     nfact <- length(factorNames)
     if(is.list(formula)){
         if(!all(names(formula) %in% factorNames))
-            stop('List of fixed effect names do not match factor names')
+            stop('List of fixed effect names do not match factor names', call.=FALSE)
         estnames <- X <- vector('list', length(formula))
         for(i in 1L:length(formula)){
             X[[i]] <- model.matrix(formula[[i]], df)
@@ -1408,14 +1419,14 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
     # Version modified from mvtnorm::rmvnorm, version 0.9-9996, 19-April, 2014.
     if(check){
         if (!isSymmetric(sigma, tol = sqrt(.Machine$double.eps), check.attributes = FALSE))
-            stop("sigma must be a symmetric matrix")
+            stop("sigma must be a symmetric matrix", call.=FALSE)
         if (length(mean) != nrow(sigma))
-            stop("mean and sigma have non-conforming size")
+            stop("mean and sigma have non-conforming size", call.=FALSE)
     }
     ev <- eigen(sigma, symmetric = TRUE)
     if(check)
         if (!all(ev$values >= -sqrt(.Machine$double.eps) * abs(ev$values[1])))
-            warning("sigma is numerically not positive definite")
+            warning("sigma is numerically not positive definite", call.=FALSE)
     retval <- ev$vectors %*%  diag(sqrt(ev$values), length(ev$values)) %*% t(ev$vectors)
     retval <- matrix(rnorm(n * ncol(sigma)), nrow = n) %*%  retval
     retval <- sweep(retval, 2, mean, "+")
@@ -1637,7 +1648,7 @@ QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
 }
 
 missingMsg <- function(string)
-    stop(paste0('\'', string, '\' argument is missing.'))
+    stop(paste0('\'', string, '\' argument is missing.'), call.=FALSE)
 
 mirtClusterEnv <- new.env()
 mirtClusterEnv$ncores <- 1L

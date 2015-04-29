@@ -178,7 +178,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     }
     if(plot){
         if(length(parnum) != 2L)
-            stop('parnum input must contain exactly two parameter numbers')
+            stop('parnum input must contain exactly two parameter numbers', call.=FALSE)
     }
     LL <- mod@logLik
     get.LL <- LL - qchisq(1-alpha, 1 + plot)/2

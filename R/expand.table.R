@@ -22,7 +22,7 @@
 expand.table <- function(tabdata) {
     if(missing(tabdata)) missingMsg('tabdata')
     if (sum(tabdata[,ncol(tabdata)]) <= nrow(tabdata))
-        stop("Frequencies must be on the right of the data matrix.")
+        stop("Frequencies must be on the right of the data matrix.", call.=FALSE)
     itemnames <- colnames(tabdata[,1L:(ncol(tabdata) - 1L)])
     tabdata <- as.matrix(tabdata)
     fulldata <- c()

@@ -108,7 +108,7 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ub
     if(missing(est)) missingMsg('est')
     if(missing(P)) missingMsg('P')
     if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
-        stop('Parameter names cannot be \'g\' or \'u\', please change.')
+        stop('Parameter names cannot be \'g\' or \'u\', please change.', call.=FALSE)
     return(new('custom', name=name, par=par, est=est, lbound=lbound,
                ubound=ubound, P=P, gr=gr, hss=hss, userdata=NULL))
 }

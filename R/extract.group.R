@@ -31,8 +31,8 @@ extract.group <- function(x, group){
     if(missing(x)) missingMsg('x')
     if(missing(group)) missingMsg('group')
     if(!is(x, 'MultipleGroupClass'))
-        stop('Model was not estimated with multipleGroup()')
-    if(missing(group)) stop('Must specify group number')
+        stop('Model was not estimated with multipleGroup()', call.=FALSE)
+    if(missing(group)) stop('Must specify group number', call.=FALSE)
     vals <- mod2values(x)
     vals <- vals[vals$group == x@Data$groupNames[group], ]
     sv <- mirt(x@Data$data[x@Data$group == x@Data$groupNames[group], ], x@nfact,

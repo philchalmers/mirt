@@ -50,12 +50,13 @@
 #' }
 iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
-    if(!is.matrix(Theta)) stop('Theta input must be a matrix')
+    if(!is.matrix(Theta)) stop('Theta input must be a matrix', call.=FALSE)
     if(is.null(degrees) && ncol(Theta) == 1L) degrees <- 0
     if(is.null(degrees) && ncol(Theta) != 1L)
-        stop('Multidimensional information requires prespecified angles in degrees that sum to 90')
+        stop('Multidimensional information requires prespecified angles in degrees that sum to 90',
+             call.=FALSE)
     if(ncol(Theta) != x@nfact)
-        stop('Theta does not have the correct number of dimensions')
+        stop('Theta does not have the correct number of dimensions', call.=FALSE)
     cosangle <- cos(d2r(degrees))
     info <- if(use_degrees) ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
     else ItemInfo2(x=x, Theta=Theta, total.info=total.info)

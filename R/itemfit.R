@@ -126,7 +126,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
 
     if(missing(x)) missingMsg('x')
     if(is(x, 'MixedClass'))
-        stop('mixedmirt objects not supported')
+        stop('mixedmirt objects not supported', call.=FALSE)
     discrete <- FALSE
     if(is(x, 'DiscreteClass')){
         class(x) <- 'MultipleGroupClass'
@@ -137,12 +137,12 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
                  Theta and impute arguments to compute statistics following multiple data
-                 inputations')
+                 inputations', call.=FALSE)
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
         if(sum(is.na(x@Data$data)) / (prod(dim(x@Data$data))) > 0.05)
-            warning('Imputation may not be effective for large amounts of missing data.')
+            warning('Imputation may not be effective for large amounts of missing data.', call.=FALSE)
         collect <- myLapply(collect, fn, obj=x, Theta=Theta, vals=vals,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
@@ -260,7 +260,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         n.uniqueGroups <- length(unique(Groups))
         X2 <- df <- RMSEA <- rep(0, J)
         if(!is.null(empirical.plot)){
-            if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models')
+            if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
             ThetaFull <- thetaComb(theta, nfact)
             if(!is.numeric(empirical.plot)){

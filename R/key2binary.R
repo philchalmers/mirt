@@ -25,7 +25,7 @@
 key2binary <- function (fulldata, key){
     if(missing(fulldata)) missingMsg('fulldata')
     if(missing(key)) missingMsg('key')
-    if (ncol(fulldata) != length(key)) stop("Key is not the correct length.\n")
+    if (ncol(fulldata) != length(key)) stop("Key is not the correct length.\n", call.=FALSE)
     colname <- colnames(fulldata)
     X <- as.matrix(fulldata)
     colnames(X) <- colname

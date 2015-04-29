@@ -50,7 +50,7 @@ imputeMissing <- function(x, Theta, ...){
         return(ret)
     }
     if(is(x, 'MixedClass'))
-        stop('mixedmirt xs not yet supported')
+        stop('mixedmirt xs not yet supported', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
         pars <- x@pars
         group <- x@Data$group
@@ -68,7 +68,7 @@ imputeMissing <- function(x, Theta, ...){
     pars <- x@pars
     nfact <- pars[[1L]]@nfact
     if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
-        stop('Theta must be a matrix of size N x nfact')
+        stop('Theta must be a matrix of size N x nfact', call.=FALSE)
     if(any(Theta %in% c(Inf, -Inf))){
         for(i in 1L:ncol(Theta)){
             tmp <- Theta[,i]

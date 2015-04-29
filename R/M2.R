@@ -74,7 +74,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
     #if MG loop
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
-        stop('mixedmirt objects not yet supported')
+        stop('mixedmirt objects not yet supported', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 15000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
@@ -86,7 +86,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
         if(impute == 0 || is.null(Theta))
             stop('Fit statistics cannot be computed when there are missing data. Pass suitable
                  Theta and impute arguments to compute statistics following multiple
-                 data inputations')
+                 data inputations', call.=FALSE)
         collect <- vector('list', impute)
         collect <- myLapply(collect, fn, obj=obj, Theta=Theta, calcNull=calcNull,
                             quadpts=quadpts)
@@ -171,7 +171,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
     if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal',
                                            'ideal', 'lca', 'GroupPars')))
        stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\',
-            \'gpcm\', and \'nominal\' objects')
+            \'gpcm\', and \'nominal\' objects', call.=FALSE)
     dots <- list(...)
     discrete <- FALSE
     if(!is.null(dots$discrete)){
@@ -182,7 +182,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
     group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
     nitems <- ncol(obj@Data$data)
     if(any(is.na(obj@Data$data)))
-        stop('M2 can not be calulated for data with missing values.')
+        stop('M2 can not be calulated for data with missing values.', call.=FALSE)
     adj <- obj@Data$mins
     dat <- t(t(obj@Data$data) - adj)
     N <- nrow(dat)
@@ -297,7 +297,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
     Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
-        stop('M2 cannot be calulated since df is too low')
+        stop('M2 cannot be calulated since df is too low', call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
     M2 <- N * t(p - e) %*% C2 %*% (p - e)
