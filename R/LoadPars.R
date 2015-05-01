@@ -19,51 +19,72 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     pars <- vector('list', J)
     guess <- logit(guess)
     upper <- logit(upper)
-    #startvalues
-    startvalues <- vector('list', J)
+
+    #start values and free parameters
+    startvalues <- freepars <- vector('list', J)
     for(i in 1L:J){
         if(any(itemtype[i] == c('Rasch')) && K[i] == 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
             val <- c(tmpval, zetas[[i]], guess[i], upper[i])
+            fp <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u')
         } else if(itemtype[i] == 'Rasch' && K[i] > 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
             if(use_gpcm_mats[i]){
                 val <- c(tmpval, as.vector(gpcm_mats[[i]]), 0, zetas[[i]])
+                fp <- c(rep(FALSE,nfact), rep(FALSE, K[i]*nfact),
+                        FALSE, rep(TRUE, K[i]-1L))
                 names(val) <- c(paste('a', 1L:nfact, sep=''),
                                 outer(paste0('ak', 0L:(K[i]-1L)), paste0('_', 1L:nfact), FUN=paste0),
                                 paste('d', 0L:(K[i]-1L), sep=''))
             } else {
                 val <- c(tmpval, 0:(K[i]-1L), 0, zetas[[i]])
-                names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                fp <- c(rep(FALSE,nfact), rep(FALSE, K[i]),
+                        FALSE, rep(TRUE, K[i]-1L))
+                names(val) <- c(paste('a', 1L:nfact, sep=''),
+                                paste('ak', 0L:(K[i]-1L), sep=''),
                                 paste('d', 0L:(K[i]-1L), sep=''))
             }
         } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
+            fp <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
+            if(any(itemtype[i] == c('3PL', '4PL'))) fp[length(fp)-1L] <- TRUE
+            if(any(itemtype[i] == c('3PLu', '4PL'))) fp[length(fp)] <- TRUE
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u')
         } else if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i],
                      0, rep(.5, K[i] - 2L), rep(0, K[i]-1L))
+            fp <- c(estLambdas[i, ], TRUE, FALSE, FALSE, rep(TRUE, (K[i]-1L)*2))
+            fp[c(nfact+4L, length(fp)-(K[i]-2L) )] <- FALSE
+            if(any(itemtype[i] == c('3PLNRM', '4PLNRM'))) fp[nfact+2] <- TRUE
+            if(any(itemtype[i] == c('3PLuNRM', '4PLNRM'))) fp[nfact+3] <- TRUE
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd', 'g','u',
                             paste('ak', 0L:(K[i]-2L), sep=''),
                             paste('d', 0L:(K[i]-2L), sep=''))
         } else if(itemtype[i] == 'graded'){
             val <- c(lambdas[i,], zetas[[i]])
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
         } else if(itemtype[i] == 'grsm'){
             tmp <- zetas[[min(which(K[i] == K))]]
             val <- c(lambdas[i,], tmp, ifelse(min(which(K[i] == K)) == i, 0, tmp[1L] + zetas[[i]][1L]))
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'gpcm'){
             if(use_gpcm_mats[i]){
                 val <- c(lambdas[i,], as.vector(gpcm_mats[[i]]), 0, zetas[[i]])
+                fp <- c(estLambdas[i, ], rep(FALSE, K[i]*nfact),
+                        FALSE, rep(TRUE, K[i]-1L))
                 names(val) <- c(paste('a', 1L:nfact, sep=''),
                                 outer(paste0('ak', 0L:(K[i]-1L)), paste0('_', 1:nfact), FUN=paste0),
                                 paste('d', 0L:(K[i]-1L), sep=''))
             } else {
                 val <- c(lambdas[i,], 0:(K[i]-1), 0, zetas[[i]])
+                fp <- c(estLambdas[i, ], rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]-1L))
                 names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                                 paste('d', 0L:(K[i]-1L), sep=''))
             }
@@ -71,97 +92,48 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
 #             tmpval <- rep(0, nfact)
 #             tmpval[lambdas[i,] != 0] <- 1
 #             val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+#             fp <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
 #             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
 #                             paste('d', 0L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
             if(is.null(nominal.highlow)){
                 val[nfact + 1L] <- 0
                 val[nfact + K[i]] <- K[[i]] - 1
+                fp[nfact + 1L] <- FALSE
+                fp[nfact + K[i]] <- FALSE
             } else {
                 val[nfact + nominal.highlow[2L, i]] <- 0
                 val[nfact + nominal.highlow[1L, i]] <- K[i] - 1
+                fp[nfact + nominal.highlow[2L, i]] <- FALSE
+                fp[nfact + nominal.highlow[1L, i]] <- FALSE
             }
+            fp[c(nfact + K[i] + 1L)] <- FALSE
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))
         } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             val <- c(lambdas[i,], rep(1, nfact), guess[i], 999)
+            fp <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
+            if(itemtype[i] == 'PC3PL') fp[length(fp) - 1L] <- TRUE
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
         } else if(itemtype[i] == 'ideal'){
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             val <- c(lambdas[i,]/2, -0.5)
+            fp <- c(estLambdas[i, ], TRUE)
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')
         } else if (itemtype[i] %in% c('lca', 'nlca')){
             val <- rep(lambdas[i,], K[i]-1L)
+            fp <- rep(TRUE, length(startvalues[[i]]))
             names(val) <- paste('a', 1L:length(val), sep='')
         }
         if(all(itemtype[i] != valid.items)) next
+        names(fp) <- names(val)
         startvalues[[i]] <- val
-    }
-    #freepars
-    freepars <- vector('list', J)
-    for(i in 1L:J){
-        if(itemtype[i] == 'Rasch' && K[i] == 2L){
-            freepars[[i]] <- c(rep(FALSE,nfact),TRUE,FALSE,FALSE)
-        } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
-            if(K[i] != 2L)
-                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
-            estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
-            if(any(itemtype[i] == c('3PL', '4PL'))) estpars[length(estpars)-1L] <- TRUE
-            if(any(itemtype[i] == c('3PLu', '4PL'))) estpars[length(estpars)] <- TRUE
-            freepars[[i]] <- estpars
-        } else if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
-            estpars <- c(estLambdas[i, ], TRUE, FALSE, FALSE, rep(TRUE, (K[i]-1L)*2))
-            estpars[c(nfact+4L, length(estpars)-(K[i]-2L) )] <- FALSE
-            if(any(itemtype[i] == c('3PLNRM', '4PLNRM'))) estpars[nfact+2] <- TRUE
-            if(any(itemtype[i] == c('3PLuNRM', '4PLNRM'))) estpars[nfact+3] <- TRUE
-            freepars[[i]] <- estpars
-        } else if(itemtype[i] == 'Rasch' && K[i] > 2L){
-            if(use_gpcm_mats[i]){
-                freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]*nfact),
-                                   FALSE, rep(TRUE, K[i]-1L))
-            } else {
-                freepars[[i]] <- c(rep(FALSE,nfact), rep(FALSE, K[i]),
-                                   FALSE, rep(TRUE, K[i]-1L))
-            }
-        } else if(itemtype[i] == 'grsm'){
-            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]))
-        } else if(itemtype[i] == 'graded'){
-            freepars[[i]] <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
-        } else if(itemtype[i] == 'gpcm'){
-            if(use_gpcm_mats[i]){
-                freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]*nfact),
-                                   FALSE, rep(TRUE, K[i]-1L))
-            } else {
-                freepars[[i]] <- c(estLambdas[i, ], rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]-1L))
-            }
-#         } else if(itemtype[i] == 'rsm'){
-#             freepars[[i]] <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
-        } else if(itemtype[i] == 'nominal'){
-            estpars <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
-            if(is.null(nominal.highlow)){
-                estpars[nfact + 1L] <- FALSE
-                estpars[nfact + K[i]] <- FALSE
-            } else {
-                estpars[nfact + nominal.highlow[2L, i]] <- FALSE
-                estpars[nfact + nominal.highlow[1L, i]] <- FALSE
-            }
-            estpars[c(nfact + K[i] + 1L)] <- FALSE
-            freepars[[i]] <- estpars
-        } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            if(K[i] != 2L)
-                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
-            estpars <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
-            if(itemtype[i] == 'PC3PL') estpars[length(estpars) - 1L] <- TRUE
-            freepars[[i]] <- estpars
-        } else if(itemtype[i] == 'ideal'){
-            if(K[i] != 2L)
-                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
-            freepars[[i]] <- c(estLambdas[i, ], TRUE)
-        } else if(itemtype[i] %in% c('lca', 'nlca')){
-            freepars[[i]] <- rep(TRUE, length(startvalues[[i]]))
-        }
-        if(all(itemtype[i] != valid.items)) next
-        names(freepars[[i]]) <- names(startvalues[[i]])
+        freepars[[i]] <- fp
     }
 
     #augment startvalues and fixedpars for mixed effects
