@@ -150,6 +150,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
           conv_lower=conv_lower, conv_upper=conv_upper)
     }
 
+    if(.hasSlot(mod@lrPars, 'beta'))
+        stop('Latent regression models not yet supported')
     dat <- mod@Data$data
     model <- mod@model[[1L]]
     parprior <- mod@parprior

@@ -461,6 +461,8 @@ setMethod(
                           suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
     {
         dots <- list(...)
+        if(.hasSlot(object@lrPars, 'beta'))
+            stop('Latent regression models not yet supported')
         discrete <- FALSE
         if(!is.null(dots$discrete)) discrete <- TRUE
         K <- object@K

@@ -199,6 +199,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
         estpars <- c(estpars, pars[[i]]@est)
     itemloc <- obj@itemloc
     bfactorlist <- obj@bfactor
+    if(.hasSlot(obj@lrPars, 'beta'))
+        stop('Latent regression models not yet supported')
     if(!discrete){
 #         if(is.null(bfactorlist$Priorbetween[[1L]])){
         if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
