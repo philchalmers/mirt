@@ -349,14 +349,13 @@ setMethod(
             } else {
                 scoremat <- scores
                 SEscoremat <- SEscores
-                colnames(SEscoremat) <- paste0('SE_',colnames(scores))
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
                     for(i in 1L:nrow(scoremat))
                         ret[[i]] <- matrix(scoremat[i,], nfact, nfact)
                     names(ret) <- 1L:nrow(scoremat)
                     return(ret)
-                }
+                } else colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             }
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)

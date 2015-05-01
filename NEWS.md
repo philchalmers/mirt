@@ -14,6 +14,10 @@
 
 - better control of QMC grid, and more effective usage for higher dimensions
 
+## BUG FIXES
+
+- fixed plausible value draws for multidimensional latent regression models (reported by Tongyun Li)
+
 # Changes in mirt 1.9
 
 - when using `coef(mod, printSE=TRUE)` the `g` and `u` parameters are relabeled to `logit(g)` and
