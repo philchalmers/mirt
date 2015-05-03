@@ -236,18 +236,36 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
        stop('Rasch itemtypes are for confimatory models only.', call.=FALSE)
     nLambdas <- PrepList[[1L]]$pars[[1L]]@nfact
     if(is.null(constrain)) constrain <- list()
+    nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
     #default MG uses configural model (independent groups but each identified)
     if('free_means' %in% invariance ){ #Free factor means (means 0 for ref)
-        for(g in 2L:Data$ngroups)
-            pars[[g]][[nitems + 1L]]@est[1L:nfact] <- TRUE
+        if(opts$BFACTOR){
+            for(g in 2L:Data$ngroups)
+                pars[[g]][[nitems + 1L]]@est[1L:(nfact-nspec)] <- TRUE
+        } else {
+            for(g in 2L:Data$ngroups)
+                pars[[g]][[nitems + 1L]]@est[1L:nfact] <- TRUE
+        }
     }
     dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
     if(any(c('free_cov', 'free_varcov') %in% invariance)){ #Free factor covs (vars 1 for ref)
-        dummymat <- matrix(TRUE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
-        diag(dummymat) <- FALSE
+        if(opts$BFACTOR){
+            dummymat[1L:(nfact-nspec),1L:(nfact-nspec)] <- TRUE
+            diag(dummymat) <- FALSE
+        } else {
+            dummymat <- matrix(TRUE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
+            diag(dummymat) <- FALSE
+        }
     }
-    if(any(c('free_var', 'free_varcov') %in% invariance)) #Free factor vars (vars 1 for ref)
-        diag(dummymat) <- TRUE
+    if(any(c('free_var', 'free_varcov') %in% invariance)){ #Free factor vars (vars 1 for ref)
+        if(opts$BFACTOR){
+            tmp <- dummymat[1L:(nfact-nspec),1L:(nfact-nspec), drop=FALSE]
+            diag(tmp) <- TRUE
+            dummymat[1L:(nfact-nspec),1L:(nfact-nspec)] <- tmp
+        } else {
+            diag(dummymat) <- TRUE
+        }
+    }
     if(any(c('free_var', 'free_varcov', 'free_cov') %in% invariance)){
         tmp <- dummymat[lower.tri(dummymat, TRUE)]
         for(g in 2L:Data$ngroups){
@@ -354,7 +372,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             opts$SE <- FALSE
             opts$full <- TRUE
         } else opts$full <- FALSE
-        nspec <- ifelse(!is.null(attr(model[[1L]], 'nspec')), attr(model[[1L]], 'nspec'), 1L)
         temp <- matrix(0L,nrow=nitems,ncol=nspec)
         sitems <- matrix(0L, nrow=sum(PrepList[[1L]]$K), ncol=nspec)
         specific <- NULL

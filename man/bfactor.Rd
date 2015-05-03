@@ -5,7 +5,7 @@
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
 bfactor(data, model, model2 = paste0("G = 1-", ncol(data)), group = NULL,
-  quadpts = 21, ...)
+  quadpts = 21, invariance = "", ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -28,6 +28,9 @@ the bifactor model}
 \item{group}{a factor variable indicating group membership used for multiple group analyses}
 
 \item{quadpts}{number of quadrature nodes to use. Default is 21 per dimension}
+
+\item{invariance}{see \code{\link{multipleGroup}} for details, however, the specific factor variances
+and means will be constrained according to the dimensional reduction algorithm}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for more details and examples}

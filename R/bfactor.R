@@ -55,6 +55,8 @@
 #'   the bifactor model
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param quadpts number of quadrature nodes to use. Default is 21 per dimension
+#' @param invariance see \code{\link{multipleGroup}} for details, however, the specific factor variances
+#'   and means will be constrained according to the dimensional reduction algorithm
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -200,7 +202,7 @@
 #'     }
 #'
 bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
-                    group = NULL, quadpts = 21, ...)
+                    group = NULL, quadpts = 21, invariance = '', ...)
 {
     Call <- match.call()
     if(missing(model)) missingMsg('model')
@@ -224,7 +226,7 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
     if(is.null(group)) group <- rep('all', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group,
                       method='EM', quadpts=quadpts,
-                      BFACTOR = TRUE, ...)
+                      BFACTOR = TRUE, invariance=invariance, ...)
     if(is(mod, 'SingleGroupClass') || is(mod, 'MultipleGroupClass'))
         mod@Call <- Call
     return(mod)

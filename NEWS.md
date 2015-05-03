@@ -1,5 +1,8 @@
 # Changes in mirt 
 
+- `invariance` argument to `bfactor()` now automatically indexes the second-tier factors to make 
+  multiple-group testing with `bfactor()` easier
+
 - remove `rotate` and `Target` arguments from model objects, and pass these only through auxillary
   functions such as `summary()`, `fscores()`, etc
 
