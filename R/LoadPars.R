@@ -127,7 +127,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')
         } else if (itemtype[i] %in% c('lca', 'nlca')){
             val <- rep(lambdas[i,], K[i]-1L)
-            fp <- rep(TRUE, length(startvalues[[i]]))
+            fp <- rep(TRUE, length(val))
             names(val) <- paste('a', 1L:length(val), sep='')
         }
         if(all(itemtype[i] != valid.items)) next
