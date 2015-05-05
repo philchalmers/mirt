@@ -30,7 +30,9 @@ of the stats and their imputed standard deviations}
 \item{CI}{numeric value from 0 to 1 indicating the range of the confidence interval for
 RMSEA. Default returns the 90\% interval}
 
-\item{residmat}{logical; return the residual matrix used to compute the SRMSR statistic?}
+\item{residmat}{logical; return the residual matrix used to compute the SRMSR statistic?
+Only the lower triangle of the residual correlation matrix will be returned
+(the upper triangle is filled with NA's)}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 If \code{quadpts} not specified, 15000 nodes are used by default}
@@ -58,6 +60,7 @@ fitting the null model.
 dat <- expand.table(LSAT7)
 (mod1 <- mirt(dat, 1))
 M2(mod1)
+M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
 
 #M2 imputed with missing data present (run in parallel)
 dat[sample(1:prod(dim(dat)), 250)] <- NA
