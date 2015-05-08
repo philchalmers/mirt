@@ -136,6 +136,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(opts$message)
                 message('\'nominal.highlow\' matrix not specified, highest and lowest categories are used by default')
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
+        attr(PrepListFull$pars, 'nclasspars') <- attr(PrepList[[1L]]$pars, 'nclasspars') <-
+            sapply(PrepListFull$pars, function(y) length(y@parnum))
         for(g in 1L:Data$ngroups){
             if(g != 1L){
                 PrepList[[g]] <- list(pars=PrepList[[1L]]$pars)

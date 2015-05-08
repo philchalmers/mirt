@@ -23,25 +23,27 @@ NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,
 	return d2Louter;
 }
 
-RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ)
+RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ,
+                           SEXP Rnclasspars)
 {
     BEGIN_RCPP
 	const NumericVector longpars(Rlongpars);
     List pars(Rpars);
     const int ngroups = as<int>(Rngroups);
     const int J = as<int>(RJ);
+    const vector<int> nclasspars = as< vector<int> >(Rnclasspars);
     int ind = 0;
 
     for(int g = 0; g < ngroups; ++g){
         List glist = pars[g];
         for(int i = 0; i < (J+1); ++i){
             S4 item = glist[i];
-            NumericVector p = item.slot("par");
-            int len = p.length();
-            for(int j = 0; j < len; ++j)
-                p(j) = longpars(ind+j);
-            ind += len;
-            item.slot("par") = p;
+            NumericVector par(nclasspars[i]);
+            for(int j = 0; j < nclasspars[i]; ++j){
+                par(j) = longpars(ind);
+                ++ind;
+            }
+            item.slot("par") = par;
         }
     }
 
@@ -114,7 +116,7 @@ RcppExport SEXP sumExpected(SEXP Rtdata, SEXP Rtabdata, SEXP Rrwmeans, SEXP Rnit
     END_RCPP
 }
 
-RcppExport SEXP buildXi2els(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems, SEXP REIs, 
+RcppExport SEXP buildXi2els(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems, SEXP REIs,
     SEXP REIs2, SEXP RPrior)
 {
     BEGIN_RCPP
@@ -216,7 +218,7 @@ RcppExport SEXP buildXi2els(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems, SEXP REIs,
             }
         }
     }
-    
+
     List ret;
     ret["Xi11"] = Xi11;
     ret["Xi12"] = Xi12;
