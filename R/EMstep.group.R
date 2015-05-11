@@ -111,10 +111,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     } else {
         Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'
     }
-    if(Moptim == 'L-BFGS-B'){
-        LBOUND[LBOUND == -Inf] <- -1e10
-        UBOUND[UBOUND == Inf] <- 1e10
-    }
     if(Moptim == 'NR' && sum(est) > 300L && list$message)
         message('NR optimizer should not be used for models with a large number of parameters.
                 Use the optimizer = \'BFGS\' or \'nlminb\' instead.')
