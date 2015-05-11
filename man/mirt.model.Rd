@@ -96,11 +96,11 @@ For example, in a single group 10-item dichotomous tests, using the default 2PL 
 \item{LBOUND}{A bracketed, comma separate list specifying lower bounds for estimated
   parameters (used in optimizers such as \code{L-BFGS-B} and \code{nlminb}).
   The input format is \code{LBOUND = (items, ..., parameterName, value),
-  (items, ..., parameterName, value)}}.
+  (items, ..., parameterName, value)}.
 
 For example, in a single group 10-item dichotomous tests, using the 3PL model and
   setting lower bounds for the 'g' parameters for the first 5 items to 0.2 is accomplished with
-  \code{LBOUND = (1-5, g, 0.2)}
+  \code{LBOUND = (1-5, g, 0.2)}}
 
 \item{UBOUND}{same as LBOUND, but specifying upper bounds in estimated parameters}
 
