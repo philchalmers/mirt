@@ -146,7 +146,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x <- c(newx, x[length(x)-1L], x[length(x)])
             x
         })
-        picks <- sapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
+        picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
         for(i in 1L:length(picks)){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
@@ -177,7 +177,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x <- c(newx, x[length(x)-1L], x[length(x)])
             x
         })
-        picks <- sapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
+        picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
         for(i in 1L:length(picks)){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
