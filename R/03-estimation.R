@@ -456,6 +456,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          message=opts$message, BL=opts$method == 'BL', full=opts$full,
                                          lrPars=lrPars),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
+        opts$Moptim <- ESTIMATE$Moptim
         lrPars <- ESTIMATE$lrPars
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist

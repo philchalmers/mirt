@@ -33,8 +33,8 @@ test_that('extras', {
     modideal <- mirt(dataset1, model = mirt.model('F1 = 1-6
                                                   F2 = 5-10'), 'ideal', verbose = FALSE)
     cfs <- as.numeric(coef(modideal, digits=5, verbose=FALSE)[[5]])
-    expect_equal(modideal@logLik, -6435.657, tolerance = 1e-3)
-    expect_equal(cfs, c(0.73296, 1.25775, -1.41849), tolerance = 1e-3)
+    expect_equal(modideal@logLik, -6435.647, tolerance = 1e-3)
+    expect_equal(cfs, c(0.73123, 1.26069, -1.41785), tolerance = 1e-3)
 
     acov <- fscores(mod1, return.acov=TRUE)
     expect_equal(acov[[1]][1], 0.4799239, tolerance=1e-3)
