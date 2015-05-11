@@ -159,7 +159,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         }
     }
     if(any(model[,1L] == 'UBOUND')){
-        input <- gsub(" ","", model[model[,1L] == 'LBOUND', 2L])
+        input <- gsub(" ","", model[model[,1L] == 'UBOUND', 2L])
         elements <- strsplit(input, '\\),\\(')[[1L]]
         elements <- gsub('\\(', replacement='', x=elements)
         elements <- gsub('\\)', replacement='', x=elements)
@@ -183,7 +183,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             len <- length(esplit[[i]])
             tmp <- lapply(tmp, function(x, which, val){
                 if(which %in% c('g', 'u')) val <- qlogis(val)
-                x@lbound[names(x@parnum) == which] <- val
+                x@ubound[names(x@parnum) == which] <- val
                 x
             }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
             ret[picks[[i]]] <- tmp
