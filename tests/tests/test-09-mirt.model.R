@@ -27,6 +27,8 @@ test_that('syntax', {
     model8 <- mirt.model('F1 = 1-2
                          F2 = 3-5
                          CONSTRAIN = (1, 3, a1, a2), (5, 2, a2, a1), (1-3, d)')
+    model9 <- mirt.model('F1 = 1-5
+                         LBOUND = (1-3, g, 0.2), (4,5, g, 0.2)')
 
     set.seed(1234)
     group <- sample(c('male', 'female'), 1000, TRUE)
@@ -57,6 +59,9 @@ test_that('syntax', {
                  tolerance = 1e-2)
     mod8 <- mirt(data, model8, verbose=FALSE, calcNull=FALSE)
     expect_equal(as.numeric(coef(mod8, simplify=TRUE, digits = 7)$items), c(0.5501291,3.146379,0,0,0,0,0,0.5501291,0.4096282,3.146379,1.46666,1.46666,1.46666,0.4535099,3.685736,0,0,0,0,0,1,1,1,1,1),
+                 tolerance = 1e-2)
+    mod9 <- mirt(data, model9, '3PL', verbose=FALSE, calcNull=FALSE)
+    expect_equal(as.numeric(coef(mod9, simplify=TRUE, digits = 7)$items), c(1.092624,1.819784,2.095627,0.8938861,0.8182912,1.587376,0.1116729,1.542417,0.0396452,1.595973,0.2,0.2901783,0.2,0.2,0.2,1,1,1,1,1),
                  tolerance = 1e-2)
 
     data(data.read, package = 'sirt')

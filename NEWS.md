@@ -1,5 +1,9 @@
 # Changes in mirt 
 
+- added `LBOUND` and `UBOUND` syntax support in `mirt.model()`
+
+- report proper lower and upper bounds in starting values data frame and from `mod2values()`
+
 - `invariance` argument to `bfactor()` now automatically indexes the second-tier factors to make 
   multiple-group testing with `bfactor()` easier
 

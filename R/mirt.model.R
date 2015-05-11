@@ -31,6 +31,7 @@
 #'   \code{CONSTRAIN = (items, ..., parameterName(s), OptionalGroup),
 #'   (items, ..., parameterName, OptionalGroup)}.
 #'   If \code{OptionalGroup} is omitted then the constraints are applied within all groups.
+#'
 #'   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 #'   the first and last 5 item slopes (a1) can be constrained to be equal by using
 #'   \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some combination
@@ -44,6 +45,7 @@
 #'  \item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
 #'   The input format is \code{CONSTRAINB = (items, ..., parameterName),
 #'   (items, ..., parameterName)}.
+#'
 #'   For example, in a two group 10-item dichotomous tests, using the default 2PL model, the first
 #'   5 item slopes (a1) can be constrained to be equal across both groups by using
 #'   \code{CONSTRAINB = (1-5, a1)}, or some combination such as \code{CONSTRAINB = (1-3,4,5,a1)}}
@@ -53,11 +55,23 @@
 #'   \code{PRIOR = (items, ..., parameterName, priorType, val1, val2, OptionalGroup),
 #'   (items, ..., parameterName, priorType, val1, val2, OptionalGroup)}.
 #'   If \code{OptionalGroup} is omitted then the priors are defined for all groups.
+#'
 #'   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 #'   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
 #'   \code{PRIOR = (1-5, d, norm, 0, 2)}}
 #'
-#'   \item{START}{A bracketed, comma separate list specifying the starting values for individual parameters.
+#' \item{LBOUND}{A bracketed, comma separate list specifying lower bounds for estimated
+#'   parameters (used in optimizers such as \code{L-BFGS-B} and \code{nlminb}).
+#'   The input format is \code{LBOUND = (items, ..., parameterName, value),
+#'   (items, ..., parameterName, value)}}.
+#'
+#'   For example, in a single group 10-item dichotomous tests, using the 3PL model and
+#'   setting lower bounds for the 'g' parameters for the first 5 items to 0.2 is accomplished with
+#'   \code{LBOUND = (1-5, g, 0.2)}
+#'
+#' \item{UBOUND}{same as LBOUND, but specifying upper bounds in estimated parameters}
+#'
+#' \item{START}{A bracketed, comma separate list specifying the starting values for individual parameters.
 #'   The input is of the form \code{(item_number, parname, value)}. For instance, setting the 10th item
 #'   slope parameter (a1) to 1.0 is specified with \code{START = (1, a1, 1.0)}
 #'
