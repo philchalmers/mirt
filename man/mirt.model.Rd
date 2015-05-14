@@ -105,8 +105,8 @@ For example, in a single group 10-item dichotomous tests, using the 3PL model an
 \item{UBOUND}{same as LBOUND, but specifying upper bounds in estimated parameters}
 
 \item{START}{A bracketed, comma separate list specifying the starting values for individual parameters.
-  The input is of the form \code{(item_number, parname, value)}. For instance, setting the 10th item
-  slope parameter (a1) to 1.0 is specified with \code{START = (1, a1, 1.0)}
+  The input is of the form \code{(items, ..., parameterName, value)}. For instance, setting the 10th and
+  12th to 15th item slope parameters (a1) to 1.0 is specified with \code{START = (10, 12-15, a1, 1.0)}
 
 For more hands on control of the starting values pass the argument \code{pars = 'values'} through
   whatever estimation function is being used}
