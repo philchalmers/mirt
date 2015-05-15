@@ -110,6 +110,15 @@ For example, in a single group 10-item dichotomous tests, using the 3PL model an
 
 For more hands on control of the starting values pass the argument \code{pars = 'values'} through
   whatever estimation function is being used}
+
+\item{FIXED}{A bracketed, comma separate list specifying which parameters should be fixed at their
+  starting values (i.e., not freely estimated).
+  The input is of the form \code{(items, ..., parameterName)}. For instance, fixing the 10th and
+  12th to 15th item slope parameters (a1) is accomplished with \code{FIXED = (10, 12-15, a1)}
+
+For more hands on control of the estimated values pass the argument \code{pars = 'values'} through
+  whatever estimation function is being used}
+
 }
 }
 \examples{

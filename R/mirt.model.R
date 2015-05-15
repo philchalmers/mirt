@@ -77,6 +77,15 @@
 #'
 #'   For more hands on control of the starting values pass the argument \code{pars = 'values'} through
 #'   whatever estimation function is being used}
+#'
+#' \item{FIXED}{A bracketed, comma separate list specifying which parameters should be fixed at their
+#'   starting values (i.e., not freely estimated).
+#'   The input is of the form \code{(items, ..., parameterName)}. For instance, fixing the 10th and
+#'   12th to 15th item slope parameters (a1) is accomplished with \code{FIXED = (10, 12-15, a1)}
+#'
+#'   For more hands on control of the estimated values pass the argument \code{pars = 'values'} through
+#'   whatever estimation function is being used}
+#'
 #' }
 #' @param input input for writing out the model syntax. Can either be a string declaration of
 #'   class character or the so-called Q-matrix or class \code{matrix} that specifies the model

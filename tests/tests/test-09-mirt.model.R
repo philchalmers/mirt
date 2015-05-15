@@ -30,7 +30,8 @@ test_that('syntax', {
     model9 <- mirt.model('F1 = 1-5
                          LBOUND = (1-3, g, 0.2), (4,5, g, 0.2)')
     model10 <- mirt.model('F1 = 1-5
-                          START = (1,3-4, a1, 1)')
+                          START = (1,3-4, a1, 1)
+                          FIXED = (1-3, a1)')
 
     set.seed(1234)
     group <- sample(c('male', 'female'), 1000, TRUE)
@@ -67,6 +68,7 @@ test_that('syntax', {
                  tolerance = 1e-2)
     mod10 <- mirt(data, model10, '3PL', pars = 'values')
     expect_equal(mod10$value[mod10$name == 'a1'], c(1, 0.851, 1, 1, .851), tolerance = 1e-4)
+    expect_equal(mod10$est[mod10$name == 'a1'], c(FALSE, FALSE, FALSE, TRUE, TRUE))
 
     data(data.read, package = 'sirt')
     dat <- data.read

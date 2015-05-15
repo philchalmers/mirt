@@ -1,6 +1,7 @@
 # Changes in mirt 1.10
 
-- `START` syntax element in `mirt.model()` now supports multiple parameters
+- `START` syntax element in `mirt.model()` now supports multiple parameters, and `FIXED` 
+  argument added to declare parameters as 'fixed' at their staring values
 
 - added `LBOUND` and `UBOUND` syntax support in `mirt.model()`
 
