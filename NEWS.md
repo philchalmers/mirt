@@ -26,6 +26,8 @@
 
 ## BUG FIXES
 
+- fix conservative imputation standard errors in `itemfit()` and `M2()` (reported by Irshad Mujawar)
+
 - fixed plausible value draws for multidimensional latent regression models (reported by Tongyun Li)
 
 # Changes in mirt 1.9

@@ -98,9 +98,10 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
         for(i in 1L:impute)
             ave <- ave + collect[[i]]
         ave <- ave/impute
+        vars <- 0
         for(i in 1L:impute)
-            SD <- (ave - collect[[i]])^2
-        SD <- sqrt(SD/impute)
+            vars <- vars + (ave - collect[[i]])^2
+        SD <- sqrt(vars/impute)
         ret <- rbind(ave, SD)
         rownames(ret) <- c('stats', 'SD_stats')
         return(ret)

@@ -156,7 +156,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             ave[pick1, pick2] <- ave[pick1, pick2] + collect[[i]][pick1, pick2]
         ave[pick1, pick2] <- ave[pick1, pick2]/impute
         for(i in 1L:impute)
-            SD[pick1, pick2] <- (ave[pick1, pick2] - collect[[i]][pick1, pick2])^2
+            SD[pick1, pick2] <- SD[pick1, pick2] + (ave[pick1, pick2] - collect[[i]][pick1, pick2])^2
         SD[pick1, pick2] <- sqrt(SD[pick1, pick2]/impute)
         SD$item <- paste0('SD_', SD$item)
         SD <- rbind(NA, SD)
