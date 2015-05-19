@@ -1,5 +1,7 @@
 # Changes in mirt 1.10
 
+- `impute` argument in `itemfit()` and `M2()` now use plausible values instead of point estimates
+
 - `START` syntax element in `mirt.model()` now supports multiple parameters, and `FIXED` 
   argument added to declare parameters as 'fixed' at their staring values
 

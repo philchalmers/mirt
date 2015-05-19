@@ -45,8 +45,8 @@ ignored and these values will be used instead. Also required when estimating sta
 with missing data via imputation}
 
 \item{impute}{a number indicating how many imputations to perform (passed to
-\code{\link{imputeMissing}}) when there are missing data present. This requires a
-precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
+\code{\link{imputeMissing}}) when there are missing data present.
+Will return a data.frame object with the mean estimates
 of the stats and their imputed standard deviations}
 
 \item{digits}{number of digits to round result to. Default is 4}
@@ -106,9 +106,8 @@ tables$E[[1]]
 data[sample(1:prod(dim(data)), 500)] <- NA
 raschfit <- mirt(data, 1, itemtype='Rasch')
 
-mirtCluster()
-Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE)
-itemfit(raschfit, impute = 10, Theta=Theta)
+mirtCluster() # run in parallel
+itemfit(raschfit, impute = 10)
 
   }
 }

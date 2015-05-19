@@ -31,8 +31,8 @@
 #'   ignored and these values will be used instead. Also required when estimating statistics
 #'   with missing data via imputation
 #' @param impute a number indicating how many imputations to perform (passed to
-#'   \code{\link{imputeMissing}}) when there are missing data present. This requires a
-#'   precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
+#'   \code{\link{imputeMissing}}) when there are missing data present.
+#'   Will return a data.frame object with the mean estimates
 #'   of the stats and their imputed standard deviations
 #' @param digits number of digits to round result to. Default is 4
 #' @param ... additional arguments to be passed to \code{fscores()}
@@ -107,9 +107,8 @@
 #' data[sample(1:prod(dim(data)), 500)] <- NA
 #' raschfit <- mirt(data, 1, itemtype='Rasch')
 #'
-#' mirtCluster()
-#' Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE)
-#' itemfit(raschfit, impute = 10, Theta=Theta)
+#' mirtCluster() # run in parallel
+#' itemfit(raschfit, impute = 10)
 #'
 #'   }
 #'
@@ -117,7 +116,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
-    fn <- function(collect, obj, Theta, digits, ...){
+    fn <- function(Theta, obj, digits, ...){
         tmpdat <- imputeMissing(obj, Theta)
         tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype)
         tmpmod@pars <- obj@pars
@@ -133,15 +132,16 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         discrete <- TRUE
     }
 
-    if(any(is.na(x@Data$data)) && !is(x, 'MultipleGroupClass')){
-        if(impute == 0 || is.null(Theta))
-            stop('Fit statistics cannot be computed when there are missing data. Pass suitable
-                 Theta and impute arguments to compute statistics following multiple data
+    if((impute != 0 || any(is.na(x@Data$data))) && !is(x, 'MultipleGroupClass')){
+        if(impute == 0)
+            stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
+                 impute argument to compute statistics following multiple data
                  inputations', call.=FALSE)
+        Theta <- fscores(x, plausible.draws = impute)
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(collect, fn, obj=x, Theta=Theta, vals=vals,
+        collect <- myLapply(Theta, fn, obj=x, vals=vals,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,

@@ -16,7 +16,6 @@
 #'   on the rubric found in \code{\link{fscores}}
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI
-#' @param Theta a matrix of factor scores for each person used for imputation
 #' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
 #' @param impute a number indicating how many imputations to perform
 #'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
@@ -55,14 +54,13 @@
 #' dat[sample(1:prod(dim(dat)), 250)] <- NA
 #' mod2 <- mirt(dat, 1)
 #' mirtCluster()
-#' Theta <- fscores(mod2, full.scores=TRUE)
-#' M2(mod2, Theta=Theta, impute = 10)
+#' M2(mod2, impute = 10)
 #'
 #' }
-M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta = NULL,
+M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
                impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
-    fn <- function(collect, obj, Theta, ...){
+    fn <- function(Theta, obj, ...){
         dat <- imputeMissing(obj, Theta)
         tmpobj <- obj
         tmpobj@Data$data <- dat
@@ -86,12 +84,12 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6), Theta
         calcNull <- FALSE
     }
     if(any(is.na(obj@Data$data))){
-        if(impute == 0 || is.null(Theta))
-            stop('Fit statistics cannot be computed when there are missing data. Pass suitable
-                 Theta and impute arguments to compute statistics following multiple
+        if(impute == 0)
+            stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
+                 impute argument to compute statistics following multiple
                  data inputations', call.=FALSE)
-        collect <- vector('list', impute)
-        collect <- myLapply(collect, fn, obj=obj, Theta=Theta, calcNull=calcNull,
+        Theta <- fscores(obj, plausible.draws = impute)
+        collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts)
         ave <- SD <- collect[[1L]]
         ave[ave!= 0] <- SD[SD!=0] <- 0

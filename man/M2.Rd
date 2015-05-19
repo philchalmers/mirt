@@ -5,8 +5,8 @@
 \title{Compute the M2 model fit statistic}
 \usage{
 M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
-  Theta = NULL, impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE,
-  suppress = 1, ...)
+  impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1,
+  ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -19,8 +19,6 @@ a suitable value will be chosen based
 on the rubric found in \code{\link{fscores}}}
 
 \item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension}
-
-\item{Theta}{a matrix of factor scores for each person used for imputation}
 
 \item{impute}{a number indicating how many imputations to perform
 (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
@@ -66,8 +64,7 @@ M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
 dat[sample(1:prod(dim(dat)), 250)] <- NA
 mod2 <- mirt(dat, 1)
 mirtCluster()
-Theta <- fscores(mod2, full.scores=TRUE)
-M2(mod2, Theta=Theta, impute = 10)
+M2(mod2, impute = 10)
 
 }
 }
