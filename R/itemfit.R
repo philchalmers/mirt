@@ -78,8 +78,10 @@
 #'
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99% CI's
+#'
 #' #method='ML' agrees better with eRm package
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats
+#'
 #' #same as above, but inputting ML estimates instead
 #' Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE, scores.only=TRUE)
 #' itemfit(raschfit, Theta=Theta)
@@ -333,7 +335,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         }
         ret$X2 <- X2
         ret$df <- df
-        ret$p.X2 <- round(1 - pchisq(X2, df), 4)
+        ret$p.X2 <- 1 - pchisq(X2, df)
     }
     if(S_X2){
         dat <- x@Data$data
@@ -368,7 +370,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         S_X2[df.S_X2 <= 0] <- NaN
         ret$S_X2 <- S_X2
         ret$df.S_X2 <- df.S_X2
-        ret$p.S_X2 <- round(1 - pchisq(S_X2, df.S_X2), 4)
+        ret$p.S_X2 <- 1 - pchisq(S_X2, df.S_X2)
     }
     ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
     return(ret)
