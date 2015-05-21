@@ -268,7 +268,11 @@
 #'   to the objective function, and group hyper-parameters are omitted.
 #'   Equality an inequality functions should be of the form \code{function(p, optim_args)},
 #'   where \code{optim_args} is a list of internally parameters that largely can be ignored
-#'   when defining constraints (though use of \code{browser()} here may be helpful)
+#'   when defining constraints (though use of \code{browser()} here may be helpful). Note:
+#'   for the \code{'alabama'} optimizer, the starting values
+#'   should be adjusted such that all constraints are met prior to the first maximization-step.
+#'   The \code{'solnp'} optimizer is less sensative to this initial conditoin restriction, but it may also
+#'   if the model is unstable early in the EM cycles
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
 #'    See \code{SE.type} for the type of estimates available
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix

@@ -98,7 +98,11 @@ will estimate the regression parameters for all latent traits by default}
   to the objective function, and group hyper-parameters are omitted.
   Equality an inequality functions should be of the form \code{function(p, optim_args)},
   where \code{optim_args} is a list of internally parameters that largely can be ignored
-  when defining constraints (though use of \code{browser()} here may be helpful)}
+  when defining constraints (though use of \code{browser()} here may be helpful). Note:
+  for the \code{'alabama'} optimizer, the starting values
+  should be adjusted such that all constraints are met prior to the first maximization-step.
+  The \code{'solnp'} optimizer is less sensative to this initial conditoin restriction, but it may also
+  if the model is unstable early in the EM cycles}
 
 \item{pars}{a data.frame with the structure of how the starting values, parameter numbers,
 estimation logical values, etc, are defined. The user may observe how the model defines the
