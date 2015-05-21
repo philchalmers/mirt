@@ -461,6 +461,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0
+        logPrior <- ESTIMATE$logPrior
         for(g in 1L:Data$ngroups){
             Pl <- rlist[[g]]$expected
             if(length(Pl) == nrow(Data$fulldata[[g]])){
@@ -690,6 +691,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ncores <- mirtClusterEnv$ncores
             mirtClusterEnv$ncores <- 1L
         }
+        logPrior <- 0
         for(g in 1L:Data$ngroups){
             cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupName[g], ],
                                    fulldata=Data$fulldata[[g]], tabdata=Data$tabdata,
@@ -698,6 +700,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                      lrPars=ESTIMATE$lrPars)
             cmods[[g]]@Data <- list()
             logLik <- logLik + cmods[[g]]@logLik
+            logPrior <- logPrior + cmods[[g]]@logPrior
             SElogLik <- SElogLik + cmods[[g]]@SElogLik
             G2 <- G2 + cmods[[g]]@G2
             Pl[[g]] <- cmods[[g]]@Pl
@@ -715,11 +718,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     r <- rr
     N <- sum(r)
-    tmp <- dfsubtr
-    AIC <- (-2) * logLik + 2 * tmp
-    AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
-    BIC <- (-2) * logLik + tmp*log(N)
-    SABIC <- (-2) * logLik + tmp*log((N+2)/24)
+    if(logPrior < 0){
+        AIC <- AICc <- BIC <- SABIC <- NaN
+        DIC <- -2 * (logLik + logPrior) + 2 * tmp
+    } else {
+        tmp <- dfsubtr
+        AIC <- (-2) * logLik + 2 * tmp
+        AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
+        BIC <- (-2) * logLik + tmp*log(N)
+        SABIC <- (-2) * logLik + tmp*log((N+2)/24)
+        DIC <- AIC
+    }
     p.G2 <- 1 - pchisq(G2,df)
     RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
     null.mod <- unclass(new('SingleGroupClass'))
@@ -765,12 +774,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                    quadpts=opts$quadpts,
                    df=df,
                    logLik=logLik,
+                   logPrior=logPrior,
                    method=opts$method,
                    SElogLik=SElogLik,
                    AIC=AIC,
                    AICc=AICc,
                    BIC=BIC,
                    SABIC=SABIC,
+                   DIC=DIC,
                    nfact=nfact,
                    G2=G2,
                    p=p.G2,
@@ -806,7 +817,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            AICc=AICc,
                            BIC=BIC,
                            SABIC=SABIC,
+                           DIC=DIC,
                            logLik=logLik,
+                           logPrior=logPrior,
                            SElogLik=SElogLik,
                            F=F,
                            h2=h2,
@@ -857,7 +870,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            AICc=AICc,
                            BIC=BIC,
                            SABIC=SABIC,
+                           DIC=DIC,
                            logLik=logLik,
+                           logPrior=logPrior,
                            SElogLik=SElogLik,
                            F=F,
                            h2=h2,
@@ -903,7 +918,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            AICc=AICc,
                            BIC=BIC,
                            SABIC=SABIC,
+                           DIC=DIC,
                            logLik=logLik,
+                           logPrior=logPrior,
                            SElogLik=SElogLik,
                            F=F,
                            h2=h2,
@@ -954,12 +971,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        invariance=invariance,
                        df=df,
                        logLik=logLik,
+                       logPrior=logPrior,
                        method=opts$method,
                        SElogLik=SElogLik,
                        AIC=AIC,
                        AICc=AICc,
                        BIC=BIC,
                        SABIC=SABIC,
+                       DIC=DIC,
                        nfact=nfact,
                        G2=G2,
                        p=p.G2,

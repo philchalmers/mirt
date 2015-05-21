@@ -13,7 +13,7 @@ items obtained from the Law School Admissions Test, section 6.
 dat <- expand.table(LSAT6)
 head(dat)
 model <- 'F = 1-5
-         CONSTRAIN = (1-5, a1)')
+         CONSTRAIN = (1-5, a1)'
 (mod <- mirt(dat, model))
 coef(mod)
 

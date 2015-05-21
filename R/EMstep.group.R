@@ -289,6 +289,19 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
+    LP <- 0
+    if(any(ANY.PRIOR)){
+        if(length(lrPars)){
+            if(lrPars@any.prior)
+                LP <- LL.Priors(x=lrPars, LL=LP)
+        }
+        for(g in 1L:length(pars)){
+            for(i in 1L:length(pars[[1L]]))
+                if(pars[[g]][[i]]@any.prior)
+                    LP <- LL.Priors(x=pars[[g]][[i]], LL=LP)
+        }
+    }
+    LP <- unname(LP)
     hess <- matrix(0)
     if(list$SEM){
         h <- matrix(0, nfullpars, nfullpars)
@@ -318,14 +331,15 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr],
-                    groupest=groupest, lrPars=lrPars)
+                    groupest=groupest, lrPars=lrPars, logPrior=LP)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=na.omit(collectLL),
-                    shortpars=longpars[estpars & !redun_constr], groupest=groupest, lrPars=lrPars)
+                    shortpars=longpars[estpars & !redun_constr], groupest=groupest, lrPars=lrPars,
+                    logPrior=LP)
     }
     for(g in 1L:ngroups)
         for(i in 1L:J)

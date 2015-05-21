@@ -1,7 +1,8 @@
-#' Compute profiled-likelihood confidence intervals
+#' Compute profiled-likelihood (or posterior) confidence intervals
 #'
 #' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
-#' parameter distributions as well as equality constraints. Object returns the confidence intervals
+#' parameter distributions (and will use the posterior instead of the likelihood)
+#' as well as equality constraints. Object returns the confidence intervals
 #' and whether the respective interval could be found.
 #'
 #' @aliases PLCI.mirt
@@ -50,7 +51,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
                                         large=large, calcNull=FALSE, technical=list(message=FALSE,
                                                                                     parallel=FALSE), ...)
-        ret <- list(LL=tmpmod@logLik, vals=mod2values(tmpmod))
+        ret <- list(LL=tmpmod@logLik + tmpmod@logPrior, vals=mod2values(tmpmod))
         ret
     }
 

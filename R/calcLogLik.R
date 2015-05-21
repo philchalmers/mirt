@@ -82,6 +82,18 @@ setMethod(
         if(logLikpre < 0)
             object@logLik <- logLikpre
 		object@SElogLik <- SElogLik
+		LP <- 0
+		if(length(lrPars))
+		    if(lrPars@any.prior)
+		        LP <- LL.Priors(x=lrPars, LL=LP)
+		if(length(object@random))
+		    for(i in 1L:length(object@random))
+		        if(object@random[[i]]@any.prior)
+		            LP <- LL.Priors(x=object@random[[i]], LL=LP)
+		for(i in 1L:length(pars))
+		    if(pars[[i]]@any.prior)
+		        LP <- LL.Priors(x=pars[[i]], LL=LP)
+		object@logPrior <- unname(LP)
 		return(object)
 	}
 )

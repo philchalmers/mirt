@@ -1,5 +1,9 @@
 # Changes in mirt 1.10
 
+- the inclusion of prior parameter distributions will now report the log-posterior rather than
+  the log-likelihood. Functions such as `anova()` will also report Bayesian criteria rather than
+  the previous likelihood-based model comparison statistics
+
 - `impute` argument in `itemfit()` and `M2()` now use plausible values instead of point estimates
 
 - `START` syntax element in `mirt.model()` now supports multiple parameters, and `FIXED` 

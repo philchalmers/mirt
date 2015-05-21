@@ -48,10 +48,16 @@ setMethod(
                         'is a possible local maximum', '\n', sep = "")
         }
         if(length(x@logLik) > 0){
-            cat("\nLog-likelihood = ", x@logLik, if(method == 'MHRM')
-                paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
-            cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
-            cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
+            if(x@logPrior < 0){
+                cat("\nLog-posterior = ", x@logLik + x@logPrior, if(method == 'MHRM')
+                    paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
+                cat("DIC = ", x@DIC, "\n", sep='')
+            } else {
+                cat("\nLog-likelihood = ", x@logLik, if(method == 'MHRM')
+                    paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
+                cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
+                cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
+            }
             if(!is.nan(x@p)){
                 cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), sep='')
                 cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3),
@@ -373,7 +379,6 @@ setMethod(
                 object2 <- temp
             }
         }
-        X2 <- round(2*object2@logLik - 2*object@logLik, 3)
         if(verbose){
             cat('\nModel 1: ')
             print(object@Call)
@@ -381,14 +386,21 @@ setMethod(
             print(object2@Call)
             cat('\n')
         }
-        ret <- data.frame(AIC = c(object@AIC, object2@AIC),
-                          AICc = c(object@AICc, object2@AICc),
-                          SABIC = c(object@SABIC, object2@SABIC),
-                          BIC = c(object@BIC, object2@BIC),
-                          logLik = c(object@logLik, object2@logLik),
-                          X2 = c(NaN, X2),
-                          df = c(NaN, abs(df)),
-                          p = c(NaN, round(1 - pchisq(X2,abs(df)),4)))
+        if(any(object2@logPrior < 0 || object@logPrior < 0)){
+            BF <- (object@logLik + object@logPrior) - (object2@logLik + object2@logPrior)
+            ret <- data.frame(DIC = c(object@DIC, object2@DIC),
+                              Bayes_Factor = c(NA, exp(BF)))
+        } else {
+            X2 <- round(2*object2@logLik - 2*object@logLik, 3)
+            ret <- data.frame(AIC = c(object@AIC, object2@AIC),
+                              AICc = c(object@AICc, object2@AICc),
+                              SABIC = c(object@SABIC, object2@SABIC),
+                              BIC = c(object@BIC, object2@BIC),
+                              logLik = c(object@logLik, object2@logLik),
+                              X2 = c(NaN, X2),
+                              df = c(NaN, abs(df)),
+                              p = c(NaN, round(1 - pchisq(X2,abs(df)),4)))
+        }
         return(ret)
     }
 )

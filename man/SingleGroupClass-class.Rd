@@ -26,6 +26,7 @@ Defines the object returned from \code{\link{mirt}} when model is exploratory.
     \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation for G2}
     \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index for G2}
     \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
+    \item{\code{logPrior}:}{Object of class \code{"numeric"}, log-prior distribution values}
     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/PLCI.mirt.R
 \name{PLCI.mirt}
 \alias{PLCI.mirt}
-\title{Compute profiled-likelihood confidence intervals}
+\title{Compute profiled-likelihood (or posterior) confidence intervals}
 \usage{
 PLCI.mirt(mod, alpha = 0.05, parnum = NULL, plot = FALSE, npts = 24,
   ...)
@@ -24,7 +24,8 @@ parameters are used}
 }
 \description{
 Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
-parameter distributions as well as equality constraints. Object returns the confidence intervals
+parameter distributions (and will use the posterior instead of the likelihood)
+as well as equality constraints. Object returns the confidence intervals
 and whether the respective interval could be found.
 }
 \examples{
