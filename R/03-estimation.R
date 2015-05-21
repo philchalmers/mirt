@@ -640,12 +640,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                startlongpars=startlongpars, SE=opts$SE, warn=opts$warn),
                                    DERIV=DERIV)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) && opts$method != 'MIXED'){
+            if(logPrior != 0 && opts$warn)
+                warning('Information matrix with the crossprod, Louis, and sandwich method
+                        do not account for prior parameter distribution information')
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
                                   constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
                                   message=opts$message)
-
         } else if(opts$SE.type == 'Fisher' && opts$method != 'MIXED'){
+            if(logPrior != 0 && opts$warn)
+                warning('Information matrix with the Fisher method does not
+                        account for prior parameter distribution information')
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
                                   constrain=constrain, Ls=Ls, N=nrow(data),
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn)
@@ -718,11 +723,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     r <- rr
     N <- sum(r)
-    if(logPrior < 0){
+    tmp <- dfsubtr
+    if(logPrior != 0){
         AIC <- AICc <- BIC <- SABIC <- NaN
         DIC <- -2 * (logLik + logPrior) + 2 * tmp
     } else {
-        tmp <- dfsubtr
         AIC <- (-2) * logLik + 2 * tmp
         AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
         BIC <- (-2) * logLik + tmp*log(N)

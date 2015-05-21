@@ -48,7 +48,7 @@ setMethod(
                         'is a possible local maximum', '\n', sep = "")
         }
         if(length(x@logLik) > 0){
-            if(x@logPrior < 0){
+            if(x@logPrior != 0){
                 cat("\nLog-posterior = ", x@logLik + x@logPrior, if(method == 'MHRM')
                     paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
                 cat("DIC = ", x@DIC, "\n", sep='')
@@ -386,7 +386,7 @@ setMethod(
             print(object2@Call)
             cat('\n')
         }
-        if(any(object2@logPrior < 0 || object@logPrior < 0)){
+        if(any(object2@logPrior != 0 || object@logPrior != 0)){
             BF <- (object@logLik + object@logPrior) - (object2@logLik + object2@logPrior)
             ret <- data.frame(DIC = c(object@DIC, object2@DIC),
                               Bayes_Factor = c(NA, exp(BF)))
