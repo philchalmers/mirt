@@ -562,7 +562,7 @@
 #'
 #' anova(mod1, mod2) #compare the two models
 #' scores <- fscores(mod2) #save factor score table
-#' scoresfull <- fscores(mod2, full.scores = TRUE, scores.only = TRUE) #factor scores
+#' scoresfull <- fscores(mod2, full.scores = TRUE) #factor scores for each response pattern
 #'
 #' #confirmatory (as an example, model is not identified since you need 3 items per factor)
 #' # Two ways to define a confirmatory model: with mirt.model, or with a string

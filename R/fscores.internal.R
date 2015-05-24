@@ -458,7 +458,7 @@ setMethod(
             tmp_obj <- MGC2SC(object, g)
             ret[[g]] <- fscores(tmp_obj, rotate = rotate, full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
-                                mean=gmean[[g]], cov=gcov[[g]], scores.only=FALSE, MI=MI,
+                                mean=gmean[[g]], cov=gcov[[g]], scores.only=TRUE, MI=MI,
                            full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)
         }
         names(ret) <- object@Data$groupNames
@@ -476,18 +476,15 @@ setMethod(
                 names(out) <- 1L:length(out)
                 return(out)
             }
-            id <- c()
-            fulldata <- matrix(NA, 1, ncol(ret[[1]]))
-            for(g in 1L:ngroups){
-                id <- c(id, rownames(ret[[g]]))
-                fulldata <- rbind(fulldata, ret[[g]])
+            out <- matrix(NA, nrow(object@Data$data), ncol(ret[[1L]]))
+            colnames(out) <- colnames(ret[[1L]])
+            for(g in 1L:object@Data$ngroups){
+                wch <- which(object@Data$group == object@Data$groupNames[g])
+                for(j in 1L:ncol(ret[[1L]]))
+                    out[wch, j] <- ret[[g]][,j]
             }
-            fulldata <- fulldata[-1L, ]
-            fulldata <- data.frame(id=as.numeric(id), fulldata)
-            ret <- fulldata[order(fulldata$id), ]
-            ret <- ret[ ,-1L]
-            if(scores.only)
-                ret <- ret[ ,!(colnames(ret) %in% colnames(object@Data$data)), drop=FALSE]
+            ret <- out
+            rownames(ret) <- rownames(object@Data$data)
         }
         if(is.data.frame(ret))
             ret <- as.matrix(ret)
@@ -657,18 +654,18 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         SEthetas[i,] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * L1[i, ] * prior /
                                          sum(L1[i,] * prior)))
     }
-    ret <- data.frame(Sum.Scores=Sum.Scores, Theta=thetas, SE.Theta=SEthetas)
+    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), Theta=thetas, SE.Theta=SEthetas)
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
         if(any(is.na(x@Data$data)))
             stop('Full scores requires a complete dataset (no N\'s)', call.=FALSE)
         dat <- x@Data$data
         adj <- x@Data$min
-        if(any(adj > 0L)) message('Data adjusted so that every item has a lowest score of 0')
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
-        EAPscores <- ret[match(scores, ret$Sum.Scores), -1L, drop=FALSE]
+        EAPscores <- ret[match(scores, Sum.Scores), -1L, drop=FALSE]
         ret <- EAPscores[,1L:x@nfact, drop=FALSE]
+        rownames(ret) <- NULL
     } else {
         dat <- x@Data$data
         E <- L1 %*% prior * nrow(dat)
