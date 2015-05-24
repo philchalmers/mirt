@@ -30,9 +30,8 @@
 #' @param object a computed model object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param full.scores if \code{FALSE} (default) then a summary table with
-#'   factor scores for each unique pattern is displayed. Otherwise the original
-#'   data matrix is returned with the computed factor scores appended to the
-#'   rightmost column
+#'   factor scores for each unique pattern is displayed. Otherwise a matrix of factor scores
+#'   for each response pattern in the data is returned
 #' @param rotate prior rotation to be used when estimating the factor scores. See
 #'   \code{\link{summary-method}} for details. If the object is not an exploratory model
 #'   then this argument is ignored
@@ -69,8 +68,6 @@
 #' @param full.scores.SE logical; when \code{full.scores == TRUE}, also return the
 #'   standard errors associated with each respondent? Default is \code{FALSE}
 #' @param verbose logical; print verbose output messages?
-#' @param scores.only logical; return only the factor scores (only applicable when
-#'   \code{full.scores = TRUE})
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 15000
 #' @param custom_den a function used to define the integration density (if required). The NULL default
@@ -152,7 +149,7 @@
 fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = FALSE, method = "EAP",
                     quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    scores.only = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
+                    full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, ...)
 {
     if(!is(object, 'DiscreteClass')){
@@ -168,7 +165,7 @@ fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = FAL
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
-                            scores.only=scores.only, theta_lim=theta_lim, MI=MI,
+                            theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, ...)

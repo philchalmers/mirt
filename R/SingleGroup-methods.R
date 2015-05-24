@@ -500,7 +500,7 @@ setMethod(
                     Theta <- object@Theta
                 }
             } else if(is.null(Theta)){
-                Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, scores.only=TRUE, ...)
+                Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, ...)
             }
         } else {
             Theta <- object@Theta

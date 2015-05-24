@@ -167,7 +167,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     if(is(x, 'MultipleGroupClass')){
         ret <- vector('list', length(x@pars))
         if(is.null(Theta))
-            Theta <- fscores(x, method=method, scores.only=TRUE, full.scores=TRUE, ...)
+            Theta <- fscores(x, method=method, full.scores=TRUE, ...)
         for(g in 1L:length(x@pars)){
             tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
@@ -189,8 +189,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     pars <- x@pars
     if(Zh || X2){
         if(is.null(Theta))
-            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE,
-                             scores.only=TRUE, method=method, ...)
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@nfact + length(prodlist)
         fulldata <- x@Data$fulldata[[1L]]

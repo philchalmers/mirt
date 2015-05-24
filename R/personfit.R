@@ -81,7 +81,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(is(x, 'MultipleGroupClass')){
         ret <- vector('list', length(x@pars))
         if(is.null(Theta))
-            Theta <- fscores(x, method=method, scores.only=TRUE, full.scores=TRUE, ...)
+            Theta <- fscores(x, method=method, full.scores=TRUE, ...)
         for(g in 1L:length(x@pars)){
             pick <- x@Data$groupNames[g] == x@Data$group
             tmp_obj <- MGC2SC(x, g)
@@ -98,8 +98,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         return(as.data.frame(ret2))
     }
     if(is.null(Theta))
-        Theta <- fscores(x, verbose=FALSE, full.scores=TRUE,
-                         scores.only=TRUE, method=method, ...)
+        Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
     J <- ncol(x@Data$data)
     itemloc <- x@itemloc
     pars <- x@pars

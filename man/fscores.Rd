@@ -7,9 +7,9 @@
 fscores(object, rotate = "oblimin", Target = NULL, full.scores = FALSE,
   method = "EAP", quadpts = NULL, response.pattern = NULL,
   plausible.draws = 0, returnER = FALSE, return.acov = FALSE,
-  mean = NULL, cov = NULL, verbose = TRUE, scores.only = TRUE,
-  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
-  custom_den = NULL, custom_theta = NULL, ...)
+  mean = NULL, cov = NULL, verbose = TRUE, full.scores.SE = FALSE,
+  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, custom_den = NULL,
+  custom_theta = NULL, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -22,9 +22,8 @@ then this argument is ignored}
 \item{Target}{target rotation; see \code{\link{summary-method}} for details}
 
 \item{full.scores}{if \code{FALSE} (default) then a summary table with
-factor scores for each unique pattern is displayed. Otherwise the original
-data matrix is returned with the computed factor scores appended to the
-rightmost column}
+factor scores for each unique pattern is displayed. Otherwise a matrix of factor scores
+for each response pattern in the data is returned}
 
 \item{method}{type of factor score estimation method. Can be expected
 a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
@@ -60,9 +59,6 @@ from the computed mirt object will be used}
 'group' values from the computed mirt object will be used}
 
 \item{verbose}{logical; print verbose output messages?}
-
-\item{scores.only}{logical; return only the factor scores (only applicable when
-\code{full.scores = TRUE})}
 
 \item{full.scores.SE}{logical; when \code{full.scores == TRUE}, also return the
 standard errors associated with each respondent? Default is \code{FALSE}}
