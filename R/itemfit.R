@@ -339,8 +339,6 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     if(S_X2){
         dat <- x@Data$data
         adj <- x@Data$mins
-        if(any(adj > 0))
-            message('Data adjusted so that the lowest category score for every item is 0')
         dat <- t(t(dat) - adj)
         S_X2 <- df.S_X2 <- numeric(J)
         O <- makeObstables(dat, x@K)
