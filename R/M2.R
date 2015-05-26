@@ -148,16 +148,13 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             SRMSR <- as.list(SRMSR)
         } else SRMSR <- numeric(0)
         if(calcNull){
-            null.mod <- try(multipleGroup(obj@Data$data, 1, group=obj@Data$group,
-                                          TOL=1e-3, technical=list(NULL.MODEL=TRUE),
-                                          verbose=FALSE))
+            null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@itemtype, group=obj@Data$group))
+            if(is(null.mod, 'try-error')) stop('Null model did not converge', call.=FALSE)
             null.fit <- M2(null.mod, calcNull=FALSE)
-            newret$TLI <- (null.fit$Total.M2 / null.fit$df - newret$Total.M2/newret$df) /
-                (null.fit$Total.M2 / null.fit$df - 1)
-            newret$CFI <- 1 - (newret$Total.M2 - newret$df) /
-                (null.fit$Total.M2 - null.fit$df)
-            if(newret$CFI > 1) newret$CFI <- 1
-            if(newret$CFI < 0 ) newret$CFI <- 0
+            newret$TLI <- tli(X2=newret$Total.M2, X2.null=null.fit$Total.M2, df=newret$df,
+                              df.null=null.fit$df)
+            newret$CFI <- cfi(X2=newret$Total.M2, X2.null=null.fit$Total.M2, df=newret$df,
+                              df.null=null.fit$df)
         }
         M2s <- as.numeric(newret$M2)
         names(M2s) <- paste0(obj@Data$groupNames, '.M2')
@@ -315,14 +312,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
         if(calcNull){
-            null.mod <- try(mirt(obj@Data$data, 1, TOL=1e-3, technical=list(NULL.MODEL=TRUE),
-                                 verbose=FALSE))
+            null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@itemtype))
+            if(is(null.mod, 'try-error')) stop('Null model did not converge', call.=FALSE)
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
-            ret$TLI <- (null.fit$M2 / null.fit$df - ret$M2/ret$df) /
-                (null.fit$M2 / null.fit$df - 1)
-            ret$CFI <- 1 - (ret$M2 - ret$df) / (null.fit$M2 - null.fit$df)
-            if(ret$CFI > 1) ret$CFI <- 1
-            if(ret$CFI < 0) ret$CFI <- 0
+            ret$TLI <- tli(X2=ret$M2, X2.null=null.fit$M2, df=ret$df, df.null=null.fit$df)
+            ret$CFI <- cfi(X2=ret$M2, X2.null=null.fit$M2, df=ret$df, df.null=null.fit$df)
         }
     } else {
         ret$nrowT <- length(p)

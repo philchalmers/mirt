@@ -1615,6 +1615,29 @@ MGC2SC <- function(x, which){
     tmp
 }
 
+computeNullModel <- function(data, itemtype, group=NULL){
+    if(!is.null(group)){
+        null.mod <- multipleGroup(data, 1L, itemtype=itemtype, group=group, verbose=FALSE,
+                                  technical=list(NULL.MODEL=TRUE))
+    } else {
+        null.mod <- mirt(data, 1L, itemtype=itemtype, verbose=FALSE,
+                         technical=list(NULL.MODEL=TRUE))
+    }
+    null.mod
+}
+
+cfi <- function(X2, X2.null, df, df.null){
+    ret <- 1 - (X2 - df) / (X2.null - df.null)
+    if(ret > 1) ret <- 1
+    if(ret < 0) ret <- 0
+    ret
+}
+
+tli <- function(X2, X2.null, df, df.null)
+    (X2.null/df.null - X2/df) / (X2.null/df.null - 1)
+
+
+
 rmsea <- function(X2, df, N){
     ret <- ifelse((X2 - df) > 0,
                   sqrt(X2 - df) / sqrt(df * (N-1)), 0)

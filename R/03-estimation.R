@@ -289,13 +289,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()
-        for(i in 1L:nitems){
-            pars[[1L]][[i]]@par[1L] <- 0
-            pars[[1L]][[i]]@est[1L] <- FALSE
-            if(is(pars[[1L]][[i]], 'nominal'))
-                pars[[1L]][[i]]@est[(nfact+1L):(nfact + Data$K[i])] <- FALSE
-            if(is(pars[[1L]][[i]], 'nestlogit'))
-                pars[[1L]][[i]]@est[(nfact+5L):(nfact + Data$K[i] + 1L)] <- FALSE
+        for(g in 1L:length(pars)){
+            for(i in 1L:nitems){
+                pars[[g]][[i]]@par[1L] <- 0
+                pars[[g]][[i]]@est[1L] <- FALSE
+                if(is(pars[[g]][[i]], 'nominal'))
+                    pars[[g]][[i]]@est[(nfact+1L):(nfact + Data$K[i])] <- FALSE
+                if(is(pars[[g]][[i]], 'nestlogit'))
+                    pars[[g]][[i]]@est[(nfact+5L):(nfact + Data$K[i] + 1L)] <- FALSE
+            }
         }
     }
     rr <- 0L
@@ -743,19 +745,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         opts$calcNull <- FALSE
     }
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
-        null.mod <- try(unclass(mirt(data, 1L, itemtype=itemtype,
-                                     technical=list(NULL.MODEL=TRUE,
-                                                    parallel=opts$technical$parallel),
-                                     large=large, key=key, verbose=FALSE)))
+        null.mod <- try(unclass(computeNullModel(data=data, itemtype=itemtype,
+                                                 group=if(length(pars) > 1L) group else NULL)))
         if(is(null.mod, 'try-error')){
-            if(opts$message)
-                message('Null model calculation did not converge.')
+            if(opts$warn)
+                warning('Null model calculation did not converge.')
             null.mod <- unclass(new('SingleGroupClass'))
         } else if(!is.nan(G2)) {
-            TLI.G2 <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
-            CFI.G2 <- 1 - (G2 - df) / (null.mod@G2 - null.mod@df)
-            CFI.G2 <- ifelse(CFI.G2 > 1, 1, CFI.G2)
-            CFI.G2 <- ifelse(CFI.G2 < 0, 0, CFI.G2)
+            TLI.G2 <- tli(X2=G2, X2.null=null.mod@G2, df=df, df.null=null.mod@df)
+            CFI.G2 <- cfi(X2=G2, X2.null=null.mod@G2, df=df, df.null=null.mod@df)
         }
     }
     if(nmissingtabdata > 0L)
