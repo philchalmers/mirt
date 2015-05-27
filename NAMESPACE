@@ -3,6 +3,8 @@
 export(DIF)
 export(DTF)
 export(M2)
+export(MDIFF)
+export(MDISC)
 export(PLCI.mirt)
 export(averageMI)
 export(bfactor)

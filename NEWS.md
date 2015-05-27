@@ -1,5 +1,7 @@
 # Changes in mirt 1.10
 
+- added `MDISC()` and `MDIFF()` functions
+
 - the inclusion of prior parameter distributions will now report the log-posterior rather than
   the log-likelihood. Functions such as `anova()` will also report Bayesian criteria rather than
   the previous likelihood-based model comparison statistics
@@ -26,7 +28,7 @@
 - integration range (`theta_lim`) globally set to `c(-6, 6)`. This will slightly change some 
   numerical results, but provides more consistence throughout the package
 
-- add theta_lim arguments to various functions 
+- add `theta_lim` arguments to various functions 
 
 - better control of QMC grid, and more effective usage for higher dimensions
 
