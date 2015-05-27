@@ -5,7 +5,8 @@ setMethod(
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
-                          QMC, custom_den = NULL, custom_theta = NULL, digits=4, ...)
+                          QMC, custom_den = NULL, custom_theta = NULL, digits=4,
+	                      min_expected, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(!is.null(custom_den)) den_fun <- custom_den
@@ -203,7 +204,8 @@ setMethod(
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
                                              quadpts=quadpts, gp=gp, verbose=verbose,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
-                                             discrete=discrete, QMC=QMC, den_fun=den_fun, ...))
+                                             discrete=discrete, QMC=QMC, den_fun=den_fun,
+                                             min_expected=min_expected, ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		fulldata <- object@Data$data
 		LR <- .hasSlot(object@lrPars, 'beta')
@@ -576,7 +578,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 }
 
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim, discrete, QMC, den_fun, ...){
+                   theta_lim, discrete, QMC, den_fun, min_expected, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -600,6 +602,33 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         }
         list(L1=L1, Sum.Scores=Sum.Scores)
     }
+    collapseTotals <- function(table, min_expected){
+
+        E <- table$expected
+        O <- table$observed
+        while(TRUE){
+            small <- E < min_expected
+            if(!any(small)) break
+            for(i in 1L:(length(E)-1L)){
+                if(small[i]){
+                    E[i+1L] <- E[i+1L] + E[i]
+                    O[i+1L] <- O[i+1L] + O[i]
+                    O[i] <- E[i] <- NA
+                }
+            }
+            if(small[i+1L]){
+                E[i] <- E[i+1L] + E[i]
+                O[i] <- O[i+1L] + O[i]
+                O[i+1L] <- E[i+1L] <- NA
+            }
+            O <- na.omit(O)
+            E <- na.omit(E)
+        }
+        df <- length(O) - 1L
+        X2 <- sum((O - E)^2 / E)
+        list(X2=X2, df=df)
+    }
+
     prodlist <- attr(x@pars, 'prodlist')
     if(discrete){
         Theta <- ThetaShort <- x@Theta
@@ -678,20 +707,19 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         keep <- O != 0
         ret$observed <- O
         ret$expected <- E
-        O <- O[keep]
-        E <- E[keep]
-        df <- length(ret$observed) - 1
-        X2 <- sum((ret$observed - ret$expected)^2 / ret$expected)
-        G2 <- 2 * sum(O * log(O/E))
+        tmp <- collapseTotals(ret, min_expected)
+        df <- tmp$df
+        X2 <- tmp$X2
         tmp <- suppressWarnings(expand.table(cbind(ret[,2L:(ncol(ret)-1L)], ret$observed)))
         pick <- 1L:x@nfact
         rxx <- apply(tmp[,pick, drop=FALSE], 2L, var) /
             (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+x@nfact, drop=FALSE], 2L,
                                                             function(x) mean(x^2)))
-        names(rxx) <- paste0('rxx_Theta.', 1:x@nfact)
-        attr(ret, 'fit') <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE),
-                                       G2=G2, p.G2 = pchisq(G2, df, lower.tail=FALSE),
-                                       rxx=as.list(rxx))
+        names(rxx) <- paste0('rxx_Theta.', 1L:x@nfact)
+        fit <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE))
+        fit <- cbind(fit, t(as.data.frame(rxx)))
+        rownames(fit) <- 'stats'
+        attr(ret, 'fit') <- fit
         if(verbose && !discrete){
             print(attr(ret, 'fit'))
             cat('\n')

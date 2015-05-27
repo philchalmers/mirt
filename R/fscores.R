@@ -82,6 +82,9 @@
 #'   function \emph{must} return a numeric vector of density weights (one for each row in Theta)
 #' @param custom_theta a matrix of custom integration nodes to use instead of the default, where
 #'   each column corresponds to the respective dimension in the model
+#' @param min_expected when computing goodness of fit tests when \code{method = 'EAPsum'}, this value is used
+#'   to collapse across the conditioned total scores until the expected values are greater than this value. Note
+#'   that this only affect the goodness of fit tests and not the returned EAP for sum scores table
 #' @param ... additional arguments to be passed to \code{nlm}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
@@ -150,7 +153,7 @@ fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = FAL
                     quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
-                    QMC = FALSE, custom_den = NULL, custom_theta = NULL, ...)
+                    QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1, ...)
 {
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 15000
@@ -168,6 +171,6 @@ fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = FAL
                             theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
-                            custom_theta=custom_theta, Target=Target, ...)
+                            custom_theta=custom_theta, Target=Target, min_expected=min_expected, ...)
     ret
 }
