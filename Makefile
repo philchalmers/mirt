@@ -13,7 +13,7 @@ install:
 	R CMD INSTALL $(PKGSRC)
 
 check: 
-	Rscript -e "devtools::check(document = FALSE)"
+	Rscript -e "devtools::check(document = FALSE, args = '--as-cran')"
 
 news:
 	sed -e 's/^-/  -/' -e 's/^## *//' -e 's/^# //' <NEWS.md | fmt -80 >NEWS
