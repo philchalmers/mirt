@@ -1,5 +1,8 @@
 # Changes in mirt 1.10
 
+- category scores are now automatically recoded to have spaces of 1, and a message is printed if/when 
+  this occurs
+
 - added `MDISC()` and `MDIFF()` functions
 
 - the inclusion of prior parameter distributions will now report the log-posterior rather than

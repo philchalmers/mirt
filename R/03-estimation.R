@@ -5,7 +5,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
                        gpcm_mats=list(), control = list(), ...)
 {
-    start.time=proc.time()[3L]
+    start.time <- proc.time()[3L]
     if(missing(data)) missingMsg('data')
     if(missing(model)) missingMsg('model')
     if(missing(group)) missingMsg('group')
@@ -95,6 +95,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
+        data <- apply(data, 2L, function(x, message){
+            s <- sort(unique(x))
+            se <- min(s, na.rm = TRUE):max(x, na.rm = TRUE)
+            if(length(s) != length(se)){
+                if(message)
+                    message('Item re-scored so that all values are within a distance of 1')
+                for(i in 2L:length(s))
+                    x <- ifelse(x == s[i], se[i], x)
+            }
+            x
+        }, message = opts$message)
         Data$data <- data
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
         # if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))

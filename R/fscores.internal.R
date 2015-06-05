@@ -386,7 +386,7 @@ setMethod(
 			if(verbose && !discrete){
                 cat("\nMethod: ", method)
 			    if(object@exploratory) cat("\nRotate: ", rotate)
-                cat("\n\nEmpirical Reliability:\n")
+                cat("\n\nEmpirical/Marginal Reliability:\n\n")
                 print(round(reliability, digits))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
@@ -697,6 +697,8 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         rownames(ret) <- NULL
     } else {
         dat <- x@Data$data
+        if(any(is.na(dat)))
+            stop('EAPsum scores are not meaningful when data contains missing values')
         E <- L1 %*% prior * nrow(dat)
         adj <- x@Data$min
         dat <- t(t(dat) - adj)

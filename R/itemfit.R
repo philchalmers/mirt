@@ -138,7 +138,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple data
-                 inputations', call.=FALSE)
+                 imputations', call.=FALSE)
+        stopifnot(impute > 1L)
         Theta <- fscores(x, plausible.draws = impute)
         collect <- vector('list', impute)
         vals <- mod2values(x)
