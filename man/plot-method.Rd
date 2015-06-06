@@ -23,7 +23,8 @@
 \item{y}{an arbitrary missing argument required for \code{R CMD check}}
 
 \item{type}{type of plot to view; can be \code{'info'} to show the test
-information function, \code{'infocontour'} for the test information contours,
+information function, \code{'rxx'} for the reliability function,
+\code{'infocontour'} for the test information contours,
 \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
 for all item probability information or trace lines (only available when all items are dichotomous),
 \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and
@@ -83,12 +84,14 @@ plot(x, type = 'info')
 plot(x, type = 'infotrace')
 plot(x, type = 'infotrace', facet_items = FALSE)
 plot(x, type = 'infoSE')
+plot(x, type = 'rxx')
 
 # confidence interval plots when information matrix computed
 plot(x)
 plot(x, MI=100)
 plot(x, type='info', MI=100)
 plot(x, type='SE', MI=100)
+plot(x, type='rxx', MI=100)
 
 # use the directlabels package to put labels on tracelines
 library(directlabels)

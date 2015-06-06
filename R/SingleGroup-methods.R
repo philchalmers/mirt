@@ -634,7 +634,8 @@ setMethod(
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param y an arbitrary missing argument required for \code{R CMD check}
 #' @param type type of plot to view; can be \code{'info'} to show the test
-#'   information function, \code{'infocontour'} for the test information contours,
+#'   information function, \code{'rxx'} for the reliability function,
+#'   \code{'infocontour'} for the test information contours,
 #'   \code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
 #'   for all item probability information or trace lines (only available when all items are dichotomous),
 #'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and
@@ -683,12 +684,14 @@ setMethod(
 #' plot(x, type = 'infotrace')
 #' plot(x, type = 'infotrace', facet_items = FALSE)
 #' plot(x, type = 'infoSE')
+#' plot(x, type = 'rxx')
 #'
 #' # confidence interval plots when information matrix computed
 #' plot(x)
 #' plot(x, MI=100)
 #' plot(x, type='info', MI=100)
 #' plot(x, type='SE', MI=100)
+#' plot(x, type='rxx', MI=100)
 #'
 #' # use the directlabels package to put labels on tracelines
 #' library(directlabels)
@@ -719,6 +722,9 @@ setMethod(
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
     {
         dots <- list(...)
+        if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'infotrace',
+                       'infocontour', 'infotrace', 'scorecontour', 'empiricalhist')))
+            stop('type supplied is not supported')
         if (any(theta_angle > 90 | theta_angle < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
@@ -777,7 +783,7 @@ setMethod(
                 as.numeric(strsplit(x, split=split)[[1L]][-1L])
             }, split='\\.')
             imputenums <- do.call(c, tmp)
-            CIscore <- CIinfo <- matrix(0, MI, length(plt$score))
+            CIscore <- CIinfo <- rxx <- CIrxx <- matrix(0, MI, length(plt$score))
             for(i in 1L:MI){
                 while(TRUE){
                     tmp <- try(imputePars(pars=x@pars, covB=covB,
@@ -790,6 +796,7 @@ setMethod(
                 tmpscore <- rowSums(score * itemtrace)
                 CIscore[i, ] <- tmpscore
                 CIinfo[i, ] <- testinfo(tmpx, ThetaFull)[,1L]
+                CIrxx[i, ] <- CIinfo[i, ] / (CIinfo[i, ] + 1)
             }
         }
         if(nfact == 3){
@@ -885,6 +892,7 @@ setMethod(
         } else {
             colnames(plt) <- c("info", "score", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
+            plt$rxx <- plt$info / (plt$info + 1)
             if(MI > 0){
                 bs_range <- function(x, CI){
                     ss <- sort(x)
@@ -902,6 +910,9 @@ setMethod(
                 plt$CIinfolower <- tmp['lower', ]
                 plt$CISElower <- 1/sqrt(tmp['upper', ])
                 plt$CISEupper <- 1/sqrt(tmp['lower', ])
+                tmp <- apply(CIrxx, 2, bs_range, CI=CI)
+                plt$CIrxxupper <- tmp['upper', ]
+                plt$CIrxxlower <- tmp['lower', ]
             }
             if(type == 'info'){
                 if(is.null(main))
@@ -919,6 +930,23 @@ setMethod(
                 } else {
                     return(xyplot(info~Theta, plt, type='l', main = main,
                                   xlab = expression(theta), ylab=expression(I(theta)), ...))
+                }
+            } else if(type == 'rxx'){
+                if(is.null(main))
+                    main <- 'Reliability'
+                if(MI > 0){
+                    return(xyplot(rxx ~ Theta, data=plt,
+                                  upper=plt$CIrxxupper, lower=plt$CIrxxlower,
+                                  panel = function(x, y, lower, upper, ...){
+                                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
+                                                    col=grey(.9), border = FALSE, ...)
+                                      panel.xyplot(x, y, type='l', lty=1,...)
+                                  },
+                                  main = main, ylim=c(-0.1, 1.1),
+                                  ylab = expression(r[xx](theta)), xlab = expression(theta), ...))
+                } else {
+                    return(xyplot(rxx~Theta, plt, type='l', main = main, ylim=c(-0.1, 1.1),
+                                  xlab = expression(theta), ylab=expression(r[xx](theta)), ...))
                 }
             } else if(type == 'SE'){
                 if(is.null(main))
