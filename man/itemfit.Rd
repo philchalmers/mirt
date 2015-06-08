@@ -133,7 +133,7 @@ in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
 Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
 }
 \seealso{
-\code{\link{personfit}}
+\code{\link{personfit}}, \code{\link{itemGAM}}
 }
 \keyword{fit}
 \keyword{item}

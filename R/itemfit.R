@@ -41,7 +41,7 @@
 #' @export itemfit
 #'
 #' @seealso
-#' \code{\link{personfit}}
+#' \code{\link{personfit}}, \code{\link{itemGAM}}
 #'
 #' @references
 #'

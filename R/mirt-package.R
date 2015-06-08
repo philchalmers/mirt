@@ -25,7 +25,7 @@
 #' @useDynLib mirt
 #' @importFrom stats anova residuals
 # @importFrom MASS ginv
-#' @import lattice GPArotation Rcpp stats4 methods sfsmisc
+#' @import lattice GPArotation Rcpp stats4 methods sfsmisc mgcv
 #' @exportMethod anova
 #' @exportMethod residuals
 #' @exportMethod summary

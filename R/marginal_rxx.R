@@ -4,7 +4,7 @@
 #' available for unidimensional tests.
 #'
 #' @aliases mariginal_rxx
-#' @param x an object of class \code{'SingleGroupClass'}
+#' @param mod an object of class \code{'SingleGroupClass'}
 #' @param density a density function to use for integration. Default assumes the latent traits are from a
 #'   normal (Gaussian) distribution
 #' @param theta_lim a vector containing the range of integration

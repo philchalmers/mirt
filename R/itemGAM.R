@@ -1,0 +1,167 @@
+#' Parametric smoothed regression lines for item response probability functions
+#'
+#' This function uses a generalized additive model (GAM) to estimate response curves for items that do not
+#' seem to fit well in a given model. Using a stable axillary model, traceline functions for
+#' poorly fitting dichotomous or polytomous items can be inspected using point estimates
+#' (or plausible values) of the latent trait. Plots of the tracelines and their associated standard errors
+#' are available to help interpret the misfit.
+#'
+#' @aliases itemGAM
+#' @param item a single poorly fitting item to be investigated. Can be a vector or matrix
+#' @param Theta a list or matrix of latent trait estimates typically returned from \code{\link{fscores}}
+#' @param formula an R formula to be passed to the \code{gam} function. Default fits a spline model
+#'   with 10 nodes
+#' @param CI a number ranging from 0 to 1 indicating the confidence interval range. Default provides the
+#'   95 percent interval
+#' @param theta_lim range of latent trait scores to be evaluated
+#' @param ... additional arguments to be passed to \code{gam} or \code{lattice}
+#' @keywords item fit, traceline
+#' @seealso \code{\link{itemfit}}
+#' @export itemGAM
+#' @examples
+#'
+#' \dontrun{
+#' N <- 1000
+#' J <- 30
+#'
+#' a <- matrix(1, J)
+#' d <- matrix(rnorm(J))
+#' Theta <- matrix(rnorm(N, 0, 1.5))
+#' dat <- simdata(a, d, N, itemtype = 'dich', Theta=Theta)
+#'
+#' # make a bad item
+#' ps <- exp(Theta^2 + Theta) / (1 + exp(Theta^2 + Theta))
+#' item1 <- sapply(ps, function(x) sample(c(0,1), size = 1, prob = c(1-x, x)))
+#'
+#' ps2 <- exp(2 * Theta^2 + Theta + .5 * Theta^3) / (1 + exp(2 * Theta^2 + Theta + .5 * Theta^3))
+#' item2 <- sapply(ps2, function(x) sample(c(0,1), size = 1, prob = c(1-x, x)))
+#'
+#' #' # how the actual item looks in the population
+#' plot(Theta, ps, ylim = c(0,1))
+#' plot(Theta, ps2, ylim = c(0,1))
+#'
+#' baditems <- cbind(item1, item2)
+#' newdat <- cbind(dat, baditems)
+#'
+#' badmod <- mirt(newdat, 1)
+#' itemfit(badmod) #clearly a bad fit for the last two items
+#' mod <- mirt(dat, 1) #fit a model that does not contain the bad items
+#' itemfit(mod)
+#'
+#' #### Pure non-parametric way of investigating the items
+#' library(KernSmoothIRT)
+#' ks <- ksIRT(newdat, rep(1, ncol(newdat)), 1)
+#' plot(ks, item=c(1,31,32))
+#' par(ask=FALSE)
+#'
+#' # Using point estimates from the model
+#' Theta <- fscores(mod, full.scores=TRUE)
+#' IG0 <- itemGAM(dat[,1], Theta) #good item
+#' IG1 <- itemGAM(baditems[,1], Theta)
+#' IG2 <- itemGAM(baditems[,2], Theta)
+#' plot(IG0)
+#' plot(IG1)
+#' plot(IG2)
+#'
+#' # same as above, but with plausible values to obtain the standard errors
+#' Theta <- fscores(mod, plausible.draws=30)
+#' IG0 <- itemGAM(dat[,1], Theta) #good item
+#' IG1 <- itemGAM(baditems[,1], Theta)
+#' IG2 <- itemGAM(baditems[,2], Theta)
+#' plot(IG0)
+#' plot(IG1)
+#' plot(IG2)
+#'
+#' ## for polytomous test items
+#' SAT12[SAT12 == 8] <- NA
+#' dat <- key2binary(SAT12,
+#'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' dat <- dat[,-32]
+#' mod <- mirt(dat, 1)
+#'
+#' # Kernal smoothing is very sensitive to which category is selected as 'correct'
+#' # 5th category as correct
+#' ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 5), 1)
+#' plot(ks, items = c(1,2,32))
+#'
+#' # 3rd category as correct
+#' ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 3), 1)
+#' plot(ks, items = c(1,2,32))
+#'
+#' # splines approach
+#' Theta <- fscores(mod, full.scores=TRUE)
+#' IG <- itemGAM(SAT12[,32], Theta)
+#' plot(IG)
+#'
+#' Theta <- fscores(mod, plausible.draws=10)
+#' IG2 <- itemGAM(SAT12[,32], Theta)
+#' plot(IG2)
+#'
+#' }
+itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95, theta_lim = c(-3,3), ...){
+    stopifnot(ncol(Theta) == 1L)
+    Theta2 <- seq(theta_lim[1L], theta_lim[2L], length.out=1000)
+    z <- qnorm((1 - CI) / 2 + CI)
+    keep <- !is.na(item)
+    mm <- model.matrix(~ 0 + factor(item))
+    if(is.list(Theta)){
+        pvfit <- pvfit_se <- vector('list', length(Theta))
+        fit <- vector('list', ncol(mm))
+        for(j in 1L:ncol(mm)){
+            for(pv in 1L:length(Theta)){
+                tmpdat <- data.frame(mm[,j], Theta[[pv]][keep,])
+                colnames(tmpdat) <- c("resp", "Theta")
+                out <- gam(formula, tmpdat, family=binomial, ...)
+                fitlist <- predict(out, data.frame(Theta=Theta2), se.fit = TRUE) #from mgcv
+                pvfit[[pv]] <- fitlist$fit
+                pvfit_se[[pv]] <- fitlist$se.fit
+            }
+            MI <- averageMI(pvfit, pvfit_se)
+            fit_high <- MI$par + z * MI$SEpar
+            fit_low <- MI$par - z * MI$SEpar
+            fit[[j]] <- data.frame(Theta=Theta2, Prob=plogis(MI$par), Prob_low=plogis(fit_low),
+                              Prob_high=plogis(fit_high), stringsAsFactors=FALSE)
+        }
+        cat <- rep(paste0('cat_', 1:ncol(mm)), each=nrow(fit[[1L]]))
+        ret <- cbind(do.call(rbind, fit), cat)
+    } else {
+        fit <- vector('list', ncol(mm))
+        for(j in 1L:ncol(mm)){
+            tmpdat <- data.frame(mm[,j], Theta[keep,])
+            colnames(tmpdat) <- c("resp", "Theta")
+            out <- gam(formula, tmpdat, family=binomial, ...)
+            fit[[j]] <- predict(out, data.frame(Theta=Theta2))
+        }
+        cat <- rep(paste0('cat_', 1:ncol(mm)), each=length(fit[[1L]]))
+        fit <- do.call(c, fit)
+        ret <- data.frame(Theta=Theta2, cat=cat, Prob=plogis(fit), stringsAsFactors = FALSE)
+    }
+    class(ret) <- 'itemGAM'
+    ret
+}
+
+#' @rdname itemGAM
+#' @method plot itemGAM
+#' @param x an object of class 'itemGAM'
+#' @param y a \code{NULL} value ignored by the plotting function
+#' @export
+plot.itemGAM <- function(x, y = NULL, ...){
+    class(x) <- 'data.frame'
+    if(length(unique(x$cat)) == 2L) x <- subset(x, cat == 'cat_2')
+    if(ncol(x) == 3L){
+        return(xyplot(Prob ~ Theta, data=x, groups = cat, auto.key=TRUE,
+                      ylim = c(-0.1,1.1), type = 'l',
+                      ylab = expression(P(theta)), xlab = expression(theta),
+                      main = 'GAM item probability curves', ...))
+    } else {
+        return(xyplot(Prob ~ Theta | cat, data=x, ylim = c(-0.1,1.1), alpha = .2, fill = 'darkgrey',
+                      upper=x$Prob_high, lower=x$Prob_low,
+                      panel = function(x, y, lower, upper, fill, alpha, subscripts, ...){
+                          panel.polygon(c(x, rev(x)), c(upper[subscripts], rev(lower[subscripts])),
+                                        col = fill, border = FALSE, alpha=alpha, ...)
+                          panel.xyplot(x, y, type='l', lty=1, col = 'black', ...)
+                      },
+                      ylab = expression(P(theta)), xlab = expression(theta),
+                      main = 'GAM item probability curves', ...))
+    }
+}

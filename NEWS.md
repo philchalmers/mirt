@@ -1,5 +1,8 @@
 # Changes in mirt 1.10
 
+- add `itemGAM()` function to provide a non-linear smoother for better understanding misfunctioning 
+  items (and without loosing established precision by reverting to purely non-parametric IRT methods)
+
 - category scores are now automatically recoded to have spaces of 1, and a message is printed if/when 
   this occurs
 
