@@ -6,7 +6,7 @@
 \title{Parametric smoothed regression lines for item response probability functions}
 \usage{
 itemGAM(item, Theta, formula = resp ~ s(Theta, k = 10), CI = 0.95,
-  theta_lim = c(-3, 3), ...)
+  theta_lim = c(-3, 3), return.models = FALSE, ...)
 
 \method{plot}{itemGAM}(x, y = NULL, ...)
 }
@@ -16,7 +16,8 @@ itemGAM(item, Theta, formula = resp ~ s(Theta, k = 10), CI = 0.95,
 \item{Theta}{a list or matrix of latent trait estimates typically returned from \code{\link{fscores}}}
 
 \item{formula}{an R formula to be passed to the \code{gam} function. Default fits a spline model
-with 10 nodes}
+with 10 nodes. For multidimensional models, the traits are assigned the names 'Theta1', 'Theta2',
+..., 'ThetaN'}
 
 \item{CI}{a number ranging from 0 to 1 indicating the confidence interval range. Default provides the
 95 percent interval}
@@ -28,19 +29,23 @@ with 10 nodes}
 \item{x}{an object of class 'itemGAM'}
 
 \item{y}{a \code{NULL} value ignored by the plotting function}
+
+\item{return.model}{logical; return a list of GAM models for each category? Useful when the GAMs
+should be inspected directly, but also when fitting multidimensional models (this is set to
+TRUE automatically for multidimensional models)}
 }
 \description{
-This function uses a generalized additive model (GAM) to estimate unidimensional
-response curves for items that do not
-seem to fit well in a given model. Using a stable axillary model, traceline functions for
+This function uses a generalized additive model (GAM) to estimate response curves for items that
+do not seem to fit well in a given model. Using a stable axillary model, traceline functions for
 poorly fitting dichotomous or polytomous items can be inspected using point estimates
-(or plausible values) of the latent trait. Plots of the tracelines and their associated standard errors
-are available to help interpret the misfit. This function may also be useful when adding new
-items to an existing, well estiablished set of items, especially when the parametric form of the
-items under investigation are unknown.
+(or plausible values) of the latent trait. Plots of the tracelines and their associated standard
+errors are available to help interpret the misfit. This function may also be useful when adding
+new items to an existing, well estiablished set of items, especially when the parametric form of
+the items under investigation are unknown.
 }
 \examples{
 \dontrun{
+set.seed(10)
 N <- 1000
 J <- 30
 
@@ -84,7 +89,7 @@ plot(IG1)
 plot(IG2)
 
 # same as above, but with plausible values to obtain the standard errors
-ThetaPV <- fscores(mod, plausible.draws=30)
+ThetaPV <- fscores(mod, plausible.draws=10)
 IG0 <- itemGAM(dat[,1], ThetaPV) #good item
 IG1 <- itemGAM(baditems[,1], ThetaPV)
 IG2 <- itemGAM(baditems[,2], ThetaPV)
@@ -123,6 +128,15 @@ plot(IG3)
 IG3 <- itemGAM(SAT12[,32], ThetaPV, formula = resp ~ Theta)
 plot(IG3)
 
+### multidimensional example by returning the GAM objects
+mod2 <- mirt(dat, 2)
+Theta <- fscores(mod2, full.scores=TRUE)
+IG4 <- itemGAM(SAT12[,32], Theta, formula = resp ~ s(Theta1, k=10) + s(Theta2, k=10),
+   return.models=TRUE)
+names(IG4)
+plot(IG4[[1L]], main = 'Category 1')
+plot(IG4[[2L]], main = 'Category 2')
+plot(IG4[[3L]], main = 'Category 3')
 }
 }
 \seealso{

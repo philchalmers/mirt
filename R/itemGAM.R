@@ -1,22 +1,25 @@
 #' Parametric smoothed regression lines for item response probability functions
 #'
-#' This function uses a generalized additive model (GAM) to estimate unidimensional
-#' response curves for items that do not
-#' seem to fit well in a given model. Using a stable axillary model, traceline functions for
+#' This function uses a generalized additive model (GAM) to estimate response curves for items that
+#' do not seem to fit well in a given model. Using a stable axillary model, traceline functions for
 #' poorly fitting dichotomous or polytomous items can be inspected using point estimates
-#' (or plausible values) of the latent trait. Plots of the tracelines and their associated standard errors
-#' are available to help interpret the misfit. This function may also be useful when adding new
-#' items to an existing, well estiablished set of items, especially when the parametric form of the
-#' items under investigation are unknown.
+#' (or plausible values) of the latent trait. Plots of the tracelines and their associated standard
+#' errors are available to help interpret the misfit. This function may also be useful when adding
+#' new items to an existing, well estiablished set of items, especially when the parametric form of
+#' the items under investigation are unknown.
 #'
 #' @aliases itemGAM
 #' @param item a single poorly fitting item to be investigated. Can be a vector or matrix
 #' @param Theta a list or matrix of latent trait estimates typically returned from \code{\link{fscores}}
 #' @param formula an R formula to be passed to the \code{gam} function. Default fits a spline model
-#'   with 10 nodes
+#'   with 10 nodes. For multidimensional models, the traits are assigned the names 'Theta1', 'Theta2',
+#'   ..., 'ThetaN'
 #' @param CI a number ranging from 0 to 1 indicating the confidence interval range. Default provides the
 #'   95 percent interval
 #' @param theta_lim range of latent trait scores to be evaluated
+#' @param return.model logical; return a list of GAM models for each category? Useful when the GAMs
+#'   should be inspected directly, but also when fitting multidimensional models (this is set to
+#'   TRUE automatically for multidimensional models)
 #' @param ... additional arguments to be passed to \code{gam} or \code{lattice}
 #' @keywords item fit, traceline
 #' @seealso \code{\link{itemfit}}
@@ -24,6 +27,7 @@
 #' @examples
 #'
 #' \dontrun{
+#' set.seed(10)
 #' N <- 1000
 #' J <- 30
 #'
@@ -67,7 +71,7 @@
 #' plot(IG2)
 #'
 #' # same as above, but with plausible values to obtain the standard errors
-#' ThetaPV <- fscores(mod, plausible.draws=30)
+#' ThetaPV <- fscores(mod, plausible.draws=10)
 #' IG0 <- itemGAM(dat[,1], ThetaPV) #good item
 #' IG1 <- itemGAM(baditems[,1], ThetaPV)
 #' IG2 <- itemGAM(baditems[,2], ThetaPV)
@@ -106,10 +110,20 @@
 #' IG3 <- itemGAM(SAT12[,32], ThetaPV, formula = resp ~ Theta)
 #' plot(IG3)
 #'
+#' ### multidimensional example by returning the GAM objects
+#' mod2 <- mirt(dat, 2)
+#' Theta <- fscores(mod2, full.scores=TRUE)
+#' IG4 <- itemGAM(SAT12[,32], Theta, formula = resp ~ s(Theta1, k=10) + s(Theta2, k=10),
+#'    return.models=TRUE)
+#' names(IG4)
+#' plot(IG4[[1L]], main = 'Category 1')
+#' plot(IG4[[2L]], main = 'Category 2')
+#' plot(IG4[[3L]], main = 'Category 3')
 #' }
 itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
-                    theta_lim = c(-3,3), ...){
-    stopifnot(ncol(Theta) == 1L) ##TODO
+                    theta_lim = c(-3,3), return.models = FALSE, ...){
+    if(return.models && is.list(Theta))
+        stop('Models will only be returned when Theta is a matrix')
     Theta2 <- seq(theta_lim[1L], theta_lim[2L], length.out=1000)
     z <- qnorm((1 - CI) / 2 + CI)
     keep <- !is.na(item)
@@ -135,14 +149,29 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
         cat <- rep(paste0('cat_', 1:ncol(mm)), each=nrow(fit[[1L]]))
         ret <- cbind(do.call(rbind, fit), cat)
     } else {
+        nfact <- ncol(Theta)
+        if(nfact > 1L && !return.models){
+            return.models <- TRUE
+            message('return.models is always set to TRUE for multidimensional models')
+        }
         fit <- vector('list', ncol(mm))
+        names(fit) <- paste0('cat_', 1L:ncol(mm))
         for(j in 1L:ncol(mm)){
             tmpdat <- data.frame(mm[,j], Theta[keep,])
-            colnames(tmpdat) <- c("resp", "Theta")
+            if(nfact == 1L){
+                colnames(tmpdat) <- c("resp", "Theta")
+            } else {
+                colnames(tmpdat) <- c("resp", paste0("Theta", 1L:nfact))
+            }
             out <- gam(formula, tmpdat, family=binomial, ...)
-            fit[[j]] <- predict(out, data.frame(Theta=Theta2))
+            if(return.models){
+                fit[[j]] <- out
+            } else {
+                fit[[j]] <- predict(out, data.frame(Theta=Theta2))
+            }
         }
-        cat <- rep(paste0('cat_', 1:ncol(mm)), each=length(fit[[1L]]))
+        if(return.models) return(fit)
+        cat <- rep(names(fit), each=length(fit[[1L]]))
         fit <- do.call(c, fit)
         ret <- data.frame(Theta=Theta2, cat=cat, Prob=plogis(fit), stringsAsFactors = FALSE)
     }
