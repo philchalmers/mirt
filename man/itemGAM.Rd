@@ -30,11 +30,14 @@ with 10 nodes}
 \item{y}{a \code{NULL} value ignored by the plotting function}
 }
 \description{
-This function uses a generalized additive model (GAM) to estimate response curves for items that do not
+This function uses a generalized additive model (GAM) to estimate unidimensional
+response curves for items that do not
 seem to fit well in a given model. Using a stable axillary model, traceline functions for
 poorly fitting dichotomous or polytomous items can be inspected using point estimates
 (or plausible values) of the latent trait. Plots of the tracelines and their associated standard errors
-are available to help interpret the misfit.
+are available to help interpret the misfit. This function may also be useful when adding new
+items to an existing, well estiablished set of items, especially when the parametric form of the
+items under investigation are unknown.
 }
 \examples{
 \dontrun{
@@ -81,10 +84,10 @@ plot(IG1)
 plot(IG2)
 
 # same as above, but with plausible values to obtain the standard errors
-Theta <- fscores(mod, plausible.draws=30)
-IG0 <- itemGAM(dat[,1], Theta) #good item
-IG1 <- itemGAM(baditems[,1], Theta)
-IG2 <- itemGAM(baditems[,2], Theta)
+ThetaPV <- fscores(mod, plausible.draws=30)
+IG0 <- itemGAM(dat[,1], ThetaPV) #good item
+IG1 <- itemGAM(baditems[,1], ThetaPV)
+IG2 <- itemGAM(baditems[,2], ThetaPV)
 plot(IG0)
 plot(IG1)
 plot(IG2)
@@ -110,9 +113,15 @@ Theta <- fscores(mod, full.scores=TRUE)
 IG <- itemGAM(SAT12[,32], Theta)
 plot(IG)
 
-Theta <- fscores(mod, plausible.draws=10)
-IG2 <- itemGAM(SAT12[,32], Theta)
+ThetaPV <- fscores(mod, plausible.draws=10)
+IG2 <- itemGAM(SAT12[,32], ThetaPV)
 plot(IG2)
+
+# assuming a simple increasing parametric form (like in a standard IRT model)
+IG3 <- itemGAM(SAT12[,32], Theta, formula = resp ~ Theta)
+plot(IG3)
+IG3 <- itemGAM(SAT12[,32], ThetaPV, formula = resp ~ Theta)
+plot(IG3)
 
 }
 }

@@ -119,6 +119,11 @@ For more hands on control of the starting values pass the argument \code{pars = 
 For more hands on control of the estimated values pass the argument \code{pars = 'values'} through
   whatever estimation function is being used}
 
+\item{NEXPLORE}{Number of exploratory factors to extract. Usually this is not required
+    because passing a numeric value to the \code{model} argument in the estimation function
+    will generate an exploratory factor analysis model, however if different start values,
+    priors, lower and upper bounds, etc, are desired then this input can be used}
+
 }
 }
 \examples{

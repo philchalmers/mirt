@@ -7,7 +7,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     # if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV', 'CONSTRAIN', 'CONSTRAINB', 'PRIOR', 'MEAN', 'START', 'LBOUND', 'UBOUND',
-                  'FIXED')
+                  'FIXED', 'NEXPLORE')
     data <- as.matrix(data)
     colnames(data) <- itemnames
     J <- ncol(data)
@@ -20,7 +20,16 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ]))
             stop('nominal.highlow low and high categories must differ', call.=FALSE)
     }
-    if(is(model, 'numeric') && length(model) == 1L){
+    if(is(model, 'mirt.model') && any(model$x[,1L] == 'NEXPLORE')){
+        oldmodel <- model
+        model <- as.integer(model$x[model$x[,1L] == 'NEXPLORE', 2L])
+        if(model != 1L) exploratory <- TRUE
+        tmp <- tempfile('tempfile')
+        for(i in 1L:model)
+            cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
+        model <- mirt.model(file=tmp, quiet = TRUE)
+        model$x <- rbind(model$x, oldmodel$x[oldmodel$x[,1L] != 'NEXPLORE'])
+    } else if((is(model, 'numeric') && length(model) == 1L)){
         if(model != 1L) exploratory <- TRUE
         tmp <- tempfile('tempfile')
         for(i in 1L:model)

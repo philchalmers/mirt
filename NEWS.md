@@ -1,5 +1,7 @@
 # Changes in mirt 1.10
 
+- added `NEXPLORE` term to `mirt.model()` to specify exploratory models via the syntax
+
 - add `itemGAM()` function to provide a non-linear smoother for better understanding misfunctioning 
   items (and without loosing established precision by reverting to purely non-parametric IRT methods)
 
