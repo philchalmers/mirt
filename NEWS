@@ -1,3 +1,60 @@
+Changes in mirt 1.10
+
+  - added `NEXPLORE` term to `mirt.model()` to specify exploratory models
+  via the syntax
+
+  - add `itemGAM()` function to provide a non-linear smoother for better
+  understanding misfunctioning items (and without loosing established
+  precision by reverting to purely non-parametric IRT methods)
+
+  - category scores are now automatically recoded to have spaces of 1,
+  and a message is printed if/when this occurs
+
+  - added `MDISC()` and `MDIFF()` functions
+
+  - the inclusion of prior parameter distributions will now report the
+  log-posterior rather than the log-likelihood. Functions such as `anova()`
+  will also report Bayesian criteria rather than the previous likelihood-based
+  model comparison statistics
+
+  - `impute` argument in `itemfit()` and `M2()` now use plausible values
+  instead of point estimates
+
+  - `START` syntax element in `mirt.model()` now supports multiple parameters,
+  and `FIXED` argument added to declare parameters as 'fixed' at their
+  staring values
+
+  - added `LBOUND` and `UBOUND` syntax support in `mirt.model()`
+
+  - report proper lower and upper bounds in starting values data frame and
+  from `mod2values()`
+
+  - `invariance` argument to `bfactor()` now automatically indexes the
+  second-tier factors to make multiple-group testing with `bfactor()` easier
+
+  - remove `rotate` and `Target` arguments from model objects, and pass
+  these only through auxillary functions such as `summary()`, `fscores()`, etc
+
+  - `model` based arguments now can be strings, which are passed to
+  `mirt.model()`. This is now the prefered method for defining models
+  syntactically, though the previous methods will still work
+
+  - integration range (`theta_lim`) globally set to `c(-6, 6)`. This will
+  slightly change some numerical results, but provides more consistence
+  throughout the package
+
+  - add `theta_lim` arguments to various functions
+
+  - better control of QMC grid, and more effective usage for higher dimensions
+
+BUG FIXES
+
+  - fix conservative imputation standard errors in `itemfit()` and `M2()`
+  (reported by Irshad Mujawar)
+
+  - fixed plausible value draws for multidimensional latent regression models
+  (reported by Tongyun Li)
+
 Changes in mirt 1.9
 
   - when using `coef(mod, printSE=TRUE)` the `g` and `u` parameters are
