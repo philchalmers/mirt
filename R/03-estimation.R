@@ -350,9 +350,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }
     Ls <- makeLmats(pars, constrain, random = mixed.design$random, lrPars=lrPars)
-    CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% c('custom', 'ideal', 'lca'))
-    SLOW.IND <- which(sapply(pars[[1L]], class) %in% c('custom', 'rating', 'rsm', 'partcomp',
-                                                      'nestlogit', 'ideal', 'lca')) #lca later TODO
+    CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% Use_R_ProbTrace())
+    SLOW.IND <- which(sapply(pars[[1L]], class) %in% Use_R_Deriv())
     #warnings
     wmsg <- 'Lower and upper bound parameters (g and u) should use \'norm\' (i.e., logit) prior'
     for(g in 1L:length(pars)){

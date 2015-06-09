@@ -560,9 +560,6 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         case 10 :
             P_lca(P, par, score, Theta, N, ncat, nfact, 0);
             break;
-        default :
-            Rprintf("How in the heck did you get here from a switch statement?\n");
-            break;
     }
     int where = (itemloc[which]-1) * N;
     for(int i = 0; i < N*ncat; ++i)

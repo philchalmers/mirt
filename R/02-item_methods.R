@@ -1,4 +1,5 @@
 # ----------------------------------------------------------------
+# helper functions
 
 EML <- function(par, obj, Theta){
     obj@par[obj@est] <- par
@@ -64,6 +65,15 @@ numDeriv_dP <- function(item, Theta){
 }
 
 # ----------------------------------------------------------------
+# Indicate which functions should use the R function instead of those written in C++
+
+Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca')
+
+Use_R_Deriv <- function() c('custom', 'rating', 'rsm', 'partcomp', 'nestlogit',
+                            'ideal', 'lca')
+
+# ----------------------------------------------------------------
+# Begin class and method definitions
 
 setClass("GroupPars",
          representation(par='numeric',
@@ -455,7 +465,6 @@ setMethod(
     }
 )
 
-
 # ----------------------------------------------------------------
 
 setClass("graded", contains = 'AllItemsClass')
@@ -532,7 +541,6 @@ setMethod(
         return(ret)
     }
 )
-
 
 setMethod(
     f = "DerivTheta",
@@ -730,8 +738,6 @@ setMethod(
         numDeriv_dP(x, Theta)
     }
 )
-
-
 
 # ----------------------------------------------------------------
 
@@ -1643,7 +1649,6 @@ setMethod(
     }
 )
 
-
 # ----------------------------------------------------------------
 
 setClass("ideal", contains = 'AllItemsClass')
@@ -1876,8 +1881,6 @@ setMethod(
         dp
     }
 )
-
-
 
 # ----------------------------------------------------------------
 
