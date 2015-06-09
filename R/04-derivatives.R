@@ -644,6 +644,21 @@ dif2exp <- function(x) 2 * (x * (1 - x)^2)
 # Derivatives wrt Theta, returns list with number of categories, and
 #    inside a matrix with the number of factors
 
+numDeriv_DerivTheta <- function(item, Theta){
+    P <- function(Theta, item, cat) probtrace(item, Theta)[cat]
+    grad <- hess <- vector('list', item@ncat)
+    tmp <- tmp2 <- matrix(0, nrow(Theta), ncol(Theta))
+    for(j in 1L:item@ncat){
+        for(i in 1L:nrow(Theta)){
+            tmp[i, ] <- numDeriv::grad(P, x=Theta[i, , drop=FALSE], item=item, cat=j)
+            tmp2[i, ] <- diag(numDeriv::hessian(P, x=Theta[i, , drop=FALSE], item=item, cat=j))
+        }
+        grad[[j]] <- tmp
+        hess[[j]] <- tmp2
+    }
+    return(list(grad=grad, hess=hess))
+}
+
 setMethod(
     f = "DerivTheta",
     signature = signature(x = 'dich', Theta = 'matrix'),
@@ -884,25 +899,51 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'ideal', Theta = 'matrix'),
     definition = function(x, Theta){
-        N <- nrow(Theta)
-        nfact <- ncol(Theta)
-        P <- ProbTrace(x, Theta=Theta)[,2L]
-        d <- x@par[length(x@par)]
-        a <- x@par[-length(x@par)]
-        int <- as.numeric(t(a %*% t(Theta)) + d)
-        grad <- hess <- vector('list', 2L)
-        grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
-        for(i in 1L:nfact){
-            grad[[2L]][ ,i] <- 2 * a[i] * int * P
-            grad[[1L]][ ,i] <- -1 * grad[[2L]][ ,i]
-            hess[[2L]][ ,i] <- 2 * a[i]^2 * int * P + 4 * int^2 * a[i]^2 * P
-            hess[[1L]][ ,i] <- -1 * hess[[2L]][ ,i]
-        }
-        return(list(grad=grad, hess=hess))
+        numDeriv_DerivTheta(x, Theta)
+#         N <- nrow(Theta)
+#         nfact <- ncol(Theta)
+#         P <- ProbTrace(x, Theta=Theta)[,2L]
+#         d <- x@par[length(x@par)]
+#         a <- x@par[-length(x@par)]
+#         int <- as.numeric(t(a %*% t(Theta)) + d)
+#         grad <- hess <- vector('list', 2L)
+#         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
+#         for(i in 1L:nfact){
+#             grad[[2L]][ ,i] <- 2 * a[i] * int * P
+#             grad[[1L]][ ,i] <- -1 * grad[[2L]][ ,i]
+#             hess[[2L]][ ,i] <- 2 * a[i]^2 * int * P + 4 * int^2 * a[i]^2 * P
+#             hess[[1L]][ ,i] <- -1 * hess[[2L]][ ,i]
+#         }
+#         return(list(grad=grad, hess=hess))
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'custom', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta)
     }
 )
 
 ###
+
+numDeriv_dP <- function(item, Theta){
+    P <- function(par, Theta, item, cat){
+        item@par <- par
+        sum(ProbTrace(item, Theta)[cat:item@ncat])
+    }
+    par <- item@par
+    ret <- matrix(0, nrow(Theta), length(item@par))
+    for(i in 1L:nrow(Theta)){
+        tmp <- numeric(length(par))
+        for(j in 1L:item@ncat)
+            tmp <- tmp + numDeriv::grad(P, x=par, Theta=Theta[i, , drop=FALSE],
+                              item=item, cat=j)
+        ret[i, ] <- tmp
+    }
+    ret
+}
 
 setMethod(
     f = "dP",
@@ -994,6 +1035,24 @@ setMethod(
 
 setMethod(
     f = "dP",
+    signature = signature(x = 'partcomp', Theta = 'matrix'),
+    definition = function(x, Theta){
+        message('partcomp derivatives not optimized') ##TODO
+        numDeriv_dP(x, Theta)
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'nestlogit', Theta = 'matrix'),
+    definition = function(x, Theta){
+        message('nestlogit derivatives not optimized') ##TODO
+        numDeriv_dP(x, Theta)
+    }
+)
+
+setMethod(
+    f = "dP",
     signature = signature(x = 'ideal', Theta = 'matrix'),
     definition = function(x, Theta){
         P <- ProbTrace(x, Theta=Theta)[,2L]
@@ -1024,5 +1083,13 @@ setMethod(
             }
         }
         dp
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'custom', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta)
     }
 )

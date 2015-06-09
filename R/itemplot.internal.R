@@ -148,12 +148,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     }
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat
-    info <- 0
-    if(is(x@pars[[item]], 'custom') && any(type %in% c('info', 'infocontour')))
-        stop('Unable to compute information for custom items', call.=FALSE)
-    if(is(x@pars[[item]], 'ideal') && any(type %in% c('info', 'infocontour')))
-        warning('Information function for ideal point models are currently experimental', call.=FALSE)
-    if(!class(x@pars[[item]]) %in% c('custom')){
+    info <- numeric(nrow(ThetaFull))
+    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour')){
         if(nfact == 3){
             if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
                 warning('Information plots require the degrees input to be of length 3', call.=FALSE)
@@ -168,7 +164,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         } else {
             info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
         }
-    } else message('Information functions could not be computed')
+    }
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE && nfact != 3){

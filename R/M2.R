@@ -167,10 +167,6 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         return(newret)
     }
 
-    if(!all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'nominal',
-                                           'ideal', 'lca', 'GroupPars')))
-       stop('M2 currently only supported for \'dich\', \'ideal\', \'graded\',
-            \'gpcm\', and \'nominal\' objects', call.=FALSE)
     dots <- list(...)
     discrete <- FALSE
     if(!is.null(dots$discrete)){

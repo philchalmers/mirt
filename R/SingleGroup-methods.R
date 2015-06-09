@@ -722,7 +722,7 @@ setMethod(
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
     {
         dots <- list(...)
-        if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'infotrace',
+        if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist')))
             stop('type supplied is not supported')
         if (any(theta_angle > 90 | theta_angle < 0))
@@ -742,13 +742,8 @@ setMethod(
         prodlist <- attr(x@pars, 'prodlist')
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
-        info <- 0
-        if(any(sapply(x@pars, is , 'custom')) && type != 'trace' && type != 'score')
-            stop('Information function for custom classes not available', call.=FALSE)
-        if(any(sapply(x@pars, is , 'ideal')) && type != 'trace' && type != 'score') ##TODO
-            warning('Information function for ideal point models are currently experimental',
-                    call.=FALSE)
-        if(all(!sapply(x@pars, is , 'custom'))){
+        info <- numeric(nrow(ThetaFull))
+        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
             for(l in 1:length(theta_angle)){
                 ta <- theta_angle[l]
                 if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
