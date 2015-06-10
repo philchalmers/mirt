@@ -17,7 +17,7 @@
 #' @param CI a number ranging from 0 to 1 indicating the confidence interval range. Default provides the
 #'   95 percent interval
 #' @param theta_lim range of latent trait scores to be evaluated
-#' @param return.model logical; return a list of GAM models for each category? Useful when the GAMs
+#' @param return.models logical; return a list of GAM models for each category? Useful when the GAMs
 #'   should be inspected directly, but also when fitting multidimensional models (this is set to
 #'   TRUE automatically for multidimensional models)
 #' @param ... additional arguments to be passed to \code{gam} or \code{lattice}

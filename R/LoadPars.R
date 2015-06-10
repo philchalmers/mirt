@@ -4,9 +4,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
-    valid.items <- c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
-                    'grsm', 'gpcm', 'nominal', 'PC2PL','PC3PL', #'rsm,
-                    '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM', 'ideal', 'lca', 'nlca')
+    valid.items <- Valid_itemtypes()
     invalid.items <- is.na(match(itemtype, valid.items))
     if (any(invalid.items & !(itemtype %in% customItemNames)))
         stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
@@ -130,7 +128,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             fp <- rep(TRUE, length(val))
             names(val) <- paste('a', 1L:length(val), sep='')
         }
-        if(all(itemtype[i] != valid.items)) next
+        if(all(itemtype[i] != valid.items) || itemtype[i] %in% Experimental_itemtypes()) next
         names(fp) <- names(val)
         startvalues[[i]] <- val
         freepars[[i]] <- fp
@@ -419,6 +417,24 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(all(itemtype[i] %in% Experimental_itemtypes())){
+            pars[[i]] <- new(itemtype[i], nfact=nfact, ncat=K[i])
+            names(pars[[i]]@est) <- names(pars[[i]]@par)
+            pars[[i]]@nfact <- nfact
+            pars[[i]]@ncat <- K[i]
+            pars[[i]]@nfixedeffects <- nfixedeffects
+            pars[[i]]@any.prior <- FALSE
+            pars[[i]]@itemclass <- 9L
+            pars[[i]]@prior.type <- rep(0L, length(pars[[i]]@par))
+            pars[[i]]@prior_1 <- rep(NaN,length(pars[[i]]@par))
+            pars[[i]]@prior_2 <- rep(NaN,length(pars[[i]]@par))
+            tmp2 <- parnumber:(parnumber + length(pars[[i]]@est) - 1L)
+            pars[[i]]@parnum <- tmp2
+            pars[[i]]@fixed.design <- fixed.design.list[[i]]
+            parnumber <- parnumber + length(pars[[i]]@est)
             next
         }
 

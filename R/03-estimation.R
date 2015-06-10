@@ -59,7 +59,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             data <- data[!is.na(group), ]
             group <- group[!is.na(group)]
         }
-        if(!is.null(customItems)) opts$calcNull <- FALSE
+        if(!is.null(customItems) || any(itemtype %in% Experimental_itemtypes()))
+            opts$calcNull <- FALSE
         opts$times <- list(start.time=start.time)
         # on exit, reset the seed to override internal
         if(opts$method == 'MHRM' || opts$method == 'MIXED')

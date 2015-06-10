@@ -65,12 +65,20 @@ numDeriv_dP <- function(item, Theta){
 }
 
 # ----------------------------------------------------------------
-# Indicate which functions should use the R function instead of those written in C++
+# valid itemtype inputs
 
-Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca')
+# flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
+Experimental_itemtypes <- function() c('experimental')
+
+Valid_itemtypes <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
+                                'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
+                                'ideal', 'lca', 'nlca', Experimental_itemtypes())
+
+# Indicate which functions should use the R function instead of those written in C++
+Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca', Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'rsm', 'partcomp', 'nestlogit',
-                            'ideal', 'lca')
+                            'ideal', 'lca', Experimental_itemtypes())
 
 # ----------------------------------------------------------------
 # Begin class and method definitions
@@ -2007,4 +2015,111 @@ setMethod(
     definition = function(x, Theta){
         numDeriv_dP(x, Theta)
     }
+)
+
+# ----------------------------------------------------------------
+
+# experimental itemtype (used as a template to create custom IRT models)
+
+setClass("experimental", contains = 'AllItemsClass',
+         representation = representation(score='numeric'))
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'experimental'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'experimental'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'experimental'),
+    definition = function(x){
+        x@par[1L:x@nfact] #slopes
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'experimental'),
+    definition = function(x){
+        x@par[length(x@par)] #intercepts
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'experimental'),
+    definition = function(x){
+        par <- c(rlnorm(1, .2, .2), rnorm(1))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'experimental', Theta = 'matrix'),
+    definition = function(x, Theta){
+        a <- x@par[1L]
+        b <- x@par[2L]
+        p <- exp(a * (Theta - b)) / (1 + exp(a * (Theta - b)))
+        p <- ifelse(p < 1e-10, 1e-10, p) #numerical constraints to avoid log() problems
+        p <- ifelse(p > 1 - 1e-10, 1 - 1e-10, p)
+        P <- cbind(1-p, p)
+        return(P)
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'experimental', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+        if(estHess){
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                        Theta=Theta)
+        }
+        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'experimental', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'experimental', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+setMethod("initialize",
+          'experimental',
+          function(.Object, nfact, ncat){
+              stopifnot(nfact == 1L)
+              stopifnot(ncat == 2L)
+              .Object@par <- c(a=1, b=0)
+              .Object@est <- c(TRUE, TRUE)
+              .Object@lbound <- rep(-Inf, 2L)
+              .Object@ubound <- rep(Inf, 2L)
+              .Object
+          }
 )

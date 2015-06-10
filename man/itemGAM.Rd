@@ -24,15 +24,15 @@ with 10 nodes. For multidimensional models, the traits are assigned the names 'T
 
 \item{theta_lim}{range of latent trait scores to be evaluated}
 
+\item{return.models}{logical; return a list of GAM models for each category? Useful when the GAMs
+should be inspected directly, but also when fitting multidimensional models (this is set to
+TRUE automatically for multidimensional models)}
+
 \item{...}{additional arguments to be passed to \code{gam} or \code{lattice}}
 
 \item{x}{an object of class 'itemGAM'}
 
 \item{y}{a \code{NULL} value ignored by the plotting function}
-
-\item{return.model}{logical; return a list of GAM models for each category? Useful when the GAMs
-should be inspected directly, but also when fitting multidimensional models (this is set to
-TRUE automatically for multidimensional models)}
 }
 \description{
 This function uses a generalized additive model (GAM) to estimate response curves for items that

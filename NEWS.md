@@ -40,6 +40,9 @@
 
 - better control of QMC grid, and more effective usage for higher dimensions
 
+- internal code organization now makes it easier to add user defined `itemtype`s (which can be natively 
+  added into the package, if requested)
+
 ## BUG FIXES
 
 - fix conservative imputation standard errors in `itemfit()` and `M2()` (reported by Irshad Mujawar)
