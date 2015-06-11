@@ -665,7 +665,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 warning('Information matrix with the Fisher method does not
                         account for prior parameter distribution information')
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
-                                  constrain=constrain, Ls=Ls, N=nrow(data),
+                                  constrain=constrain, Ls=Ls, N=nrow(data), full=opts$full,
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn)
         }
         ESTIMATE$cycles <- tmp$cycles

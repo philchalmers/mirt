@@ -49,6 +49,9 @@
 
 - fixed plausible value draws for multidimensional latent regression models (reported by Tongyun Li)
 
+- don't allow crossprod, Louis, or sandwich information matricies when using custom item types (reported by
+  Charlie Rutgers)
+
 # Changes in mirt 1.9
 
 - when using `coef(mod, printSE=TRUE)` the `g` and `u` parameters are relabeled to `logit(g)` and
