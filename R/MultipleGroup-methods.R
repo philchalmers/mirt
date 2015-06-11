@@ -37,7 +37,7 @@ setMethod(
 setMethod(
     f = "summary",
     signature = signature(object = 'MultipleGroupClass'),
-    definition = function(object, digits = 3, rotate = NULL, verbose = TRUE, ...) {
+    definition = function(object, digits = 3, rotate = 'oblimin', verbose = TRUE, ...) {
         ngroups <- length(object@pars)
         groupind <- length(object@pars[[1]]@pars)
         nfact <- object@nfact
