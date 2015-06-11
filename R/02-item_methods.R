@@ -70,9 +70,12 @@ numDeriv_dP <- function(item, Theta){
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
 Experimental_itemtypes <- function() c('experimental')
 
-Valid_itemtypes <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
+Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                 'ideal', 'lca', 'nlca', Experimental_itemtypes())
+
+Valid_itemtypes <- function() c('dich', 'graded', 'ideal', 'rating', 'rsm', 'nominal', 'gpcm', 'partcomp',
+                                'nestlogit')
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca', Experimental_itemtypes())

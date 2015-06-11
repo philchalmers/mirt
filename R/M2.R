@@ -76,6 +76,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported', call.=FALSE)
+    if(!all(obj@itemtype %in% Valid_itemtypes()))
+        calcNull <- FALSE
     if(QMC && is.null(quadpts)) quadpts <- 15000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
