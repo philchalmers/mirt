@@ -412,6 +412,16 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'dich'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x
+    }
+)
+
 P.mirt <- function(par, Theta, asMatrix = FALSE, ot = 0)
 {
     return(.Call("traceLinePts", par, Theta, ot))
@@ -521,6 +531,16 @@ setMethod(
         par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
         x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'graded'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
         x
     }
 )
@@ -635,6 +655,16 @@ setMethod(
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE),
                  rnorm(1L))
         x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'rating'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
         x
     }
 )
@@ -800,6 +830,16 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'gpcm'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x
+    }
+)
+
 P.gpcm <- function(par, Theta, ot = 0, mat = FALSE, returnNum = FALSE)
 {
     return(.Call("gpcmTraceLinePts", par, Theta, ot, FALSE, mat, returnNum))
@@ -936,6 +976,16 @@ setMethod(
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE),
                  rnorm(1L))
         x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'rsm'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
         x
     }
 )
@@ -1115,6 +1165,17 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'nominal'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x@est[(x@nfact+1L):(x@nfact + x@ncat)] <- FALSE
+        x
+    }
+)
+
 P.nominal <- function(par, ncat, Theta, returnNum = FALSE, ot = 0){
     return(.Call("nominalTraceLinePts", par, ncat, Theta, returnNum, ot))
 }
@@ -1264,6 +1325,16 @@ setMethod(
                  rnorm(1L, -2, .5),
                  rnorm(1L, 2, .5))
         x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'partcomp'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
         x
     }
 )
@@ -1531,6 +1602,17 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'nestlogit'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x@est[(x@nfact+5L):(x@nfact + x@ncat + 1L)] <- FALSE
+        x
+    }
+)
+
 P.nestlogit <- function(par, Theta, correct, ncat)
 {
     return(.Call("nestlogitTraceLinePts", par, Theta, correct, ncat))
@@ -1708,6 +1790,16 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'ideal'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x
+    }
+)
+
 P.ideal <- function(par, Theta, ot = 0)
 {
     alpha <- par[length(par)]
@@ -1839,6 +1931,16 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'lca'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x
+    }
+)
+
 P.lca <- function(par, Theta, score, returnNum = FALSE){
     return(.Call('lcaTraceLinePts', par, Theta, score, returnNum))
 }
@@ -1943,6 +2045,14 @@ setMethod(
     signature = signature(x = 'custom'),
     definition = function(x){
         x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'custom'),
+    definition = function(x){
+        stop('calculating null models for custom item types is ambiguous.', call. = FALSE)
     }
 )
 
@@ -2065,6 +2175,16 @@ setMethod(
     definition = function(x){
         par <- c(rlnorm(1, .2, .2), rnorm(1))
         x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'experimental'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
         x
     }
 )

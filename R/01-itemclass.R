@@ -42,6 +42,8 @@ setGeneric('dP', function(x, Theta) standardGeneric("dP"))
 
 setGeneric('calcLogLik', function(object, ...) standardGeneric("calcLogLik"))
 
+setGeneric('set_null_model', function(x) standardGeneric('set_null_model'))
+
 setGeneric("itemplot.internal",  function(object, ...) standardGeneric("itemplot.internal"))
 
 setGeneric("fscores.internal", function(object, ...) standardGeneric("fscores.internal"))

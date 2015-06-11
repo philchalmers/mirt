@@ -76,8 +76,6 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('mixedmirt objects not yet supported', call.=FALSE)
-    if(!all(obj@itemtype %in% Valid_itemtypes()))
-        calcNull <- FALSE
     if(QMC && is.null(quadpts)) quadpts <- 15000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
@@ -151,7 +149,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         } else SRMSR <- numeric(0)
         if(calcNull){
             null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@itemtype, group=obj@Data$group))
-            if(is(null.mod, 'try-error')) stop('Null model did not converge', call.=FALSE)
+            if(is(null.mod, 'try-error'))
+                stop('Null model did not converge or is not supported', call.=FALSE)
             null.fit <- M2(null.mod, calcNull=FALSE)
             newret$TLI <- tli(X2=newret$Total.M2, X2.null=null.fit$Total.M2, df=newret$df,
                               df.null=null.fit$df)

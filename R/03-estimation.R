@@ -303,12 +303,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         constrain <- list()
         for(g in 1L:length(pars)){
             for(i in 1L:nitems){
-                pars[[g]][[i]]@par[1L] <- 0
-                pars[[g]][[i]]@est[1L] <- FALSE
-                if(is(pars[[g]][[i]], 'nominal'))
-                    pars[[g]][[i]]@est[(nfact+1L):(nfact + Data$K[i])] <- FALSE
-                if(is(pars[[g]][[i]], 'nestlogit'))
-                    pars[[g]][[i]]@est[(nfact+5L):(nfact + Data$K[i] + 1L)] <- FALSE
+                pars[[g]][[i]] <- set_null_model(pars[[g]][[i]])
             }
         }
     }
