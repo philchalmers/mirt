@@ -74,9 +74,6 @@ Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                 'ideal', 'lca', 'nlca', Experimental_itemtypes())
 
-Valid_itemtypes <- function() c('dich', 'graded', 'ideal', 'rating', 'rsm', 'nominal', 'gpcm', 'partcomp',
-                                'nestlogit')
-
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca', Experimental_itemtypes())
 
@@ -2132,10 +2129,11 @@ setMethod(
 
 # ----------------------------------------------------------------
 
-# experimental itemtype (used as a template to create custom IRT models)
+# experimental itemtype (used as a template to create custom IRT models). Edit this if you want
+#  to experiment with your own customized IRT models
 
 setClass("experimental", contains = 'AllItemsClass',
-         representation = representation(score='numeric'))
+         representation = representation())
 
 setMethod(
     f = "print",
@@ -2153,6 +2151,7 @@ setMethod(
     }
 )
 
+#extract the slopes (should be a vector of length nfact)
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'experimental'),
@@ -2161,6 +2160,7 @@ setMethod(
     }
 )
 
+#extract the intercepts
 setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'experimental'),
@@ -2169,6 +2169,7 @@ setMethod(
     }
 )
 
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
 setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'experimental'),
@@ -2179,6 +2180,7 @@ setMethod(
     }
 )
 
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
 setMethod(
     f = "set_null_model",
     signature = signature(x = 'experimental'),
@@ -2189,6 +2191,7 @@ setMethod(
     }
 )
 
+# probability trace line function. Must return a matrix with a trace line for each category
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'experimental', Theta = 'matrix'),
@@ -2203,6 +2206,7 @@ setMethod(
     }
 )
 
+# complete-data derivative used in parameter estimation (here it is done numerically)
 setMethod(
     f = "Deriv",
     signature = signature(x = 'experimental', Theta = 'matrix'),
@@ -2218,6 +2222,7 @@ setMethod(
     }
 )
 
+# derivative of the model wft to the Theta values (done numerically here)
 setMethod(
     f = "DerivTheta",
     signature = signature(x = 'experimental', Theta = 'matrix'),
@@ -2226,6 +2231,7 @@ setMethod(
     }
 )
 
+# derivative of the probability trace line function wrt Theta (done numerically here)
 setMethod(
     f = "dP",
     signature = signature(x = 'experimental', Theta = 'matrix'),
@@ -2234,6 +2240,9 @@ setMethod(
     }
 )
 
+# defines how the item should be initiallized with the S4 function new()
+#   before the parameter estimates are updated
+#   (set starting values, lower/upper bounds, logicals indicating estimation, etc)
 setMethod("initialize",
           'experimental',
           function(.Object, nfact, ncat){
