@@ -472,7 +472,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         logPrior <- ESTIMATE$logPrior
         for(g in 1L:Data$ngroups){
             Pl <- rlist[[g]]$expected
-            if(length(Pl) == nrow(Data$fulldata[[g]])){
+            if(opts$full){
                 rg <- 1
                 G2group[g] <- NaN
             } else {
