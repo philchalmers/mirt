@@ -216,8 +216,11 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
-    if(length(whichitems))
-        stop('Information matrix computation not supported')
+    if(length(whichitems)){
+        warning('Internal information matrix computations currently not supported for at
+        least one of the supplied items. Information matrix/standard errors not computed', call.=FALSE)
+        return(ESTIMATE)
+    }
     Igrad <- updateHess(Igrad, L=Ls$L)
     IgradP <- updateHess(IgradP, L=Ls$L)
     Ihess <- updateHess(Ihess, L=Ls$L)
