@@ -5,7 +5,7 @@
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
 bfactor(data, model, model2 = paste0("G = 1-", ncol(data)), group = NULL,
-  quadpts = 21, invariance = "", ...)
+  quadpts = NULL, invariance = "", ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -27,7 +27,9 @@ the bifactor model}
 
 \item{group}{a factor variable indicating group membership used for multiple group analyses}
 
-\item{quadpts}{number of quadrature nodes to use. Default is 21 per dimension}
+\item{quadpts}{number of quadrature nodes to use after accounting for the reduced number of dimensions.
+Scheme is the same as the one used in \code{\link{mirt}}, however it is in regardes to the reduced
+dimensions (e.g., a bifactor model has 2 dimensions to be integrated)}
 
 \item{invariance}{see \code{\link{multipleGroup}} for details, however, the specific factor variances
 and means will be constrained according to the dimensional reduction algorithm}
@@ -55,9 +57,7 @@ Gibbons and Hedeker (1992), Gibbons et al. (2007), and Cai (2010).
 Nested models may be compared via an approximate
 chi-squared difference test or by a reduction in AIC or BIC (accessible via
 \code{\link{anova}}). See \code{\link{mirt}} for more details regarding the
-IRT estimation approach used in this package. The default is to use 21 quadrature
-for each dimensions, but this can be over-written by passing a \code{quadpts = #}
-argument.
+IRT estimation approach used in this package.
 
 The two-tier model has a specific block diagonal covariance structure between the primary and
 secondary latent traits. Namely, the secondary latent traits are assumed to be orthogonal to

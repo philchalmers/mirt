@@ -141,7 +141,7 @@ weighting to be applied}
 
 \item{quadpts}{number of quadrature points per dimension (must be larger than 2).
 By default the number of quadrature uses the following scheme:
-\code{switch(as.character(nfact), '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)}.
+\code{switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}.
 However, if the method input is set to \code{'QMCEM'} and this argument is left blank then
 the default number of quasi-Monte Carlo integration nodes will be set to 5000 in total}
 
@@ -218,7 +218,7 @@ etc)}
 \item{technical}{a list containing lower level technical parameters for estimation. May be:
 \describe{
   \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
-    4GB or RAM on your PC; default 10000}
+    4GB or RAM on your PC; default 20000}
   \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
   \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
   \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}

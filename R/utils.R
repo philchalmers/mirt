@@ -1046,7 +1046,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$technical <- technical
     opts$use <- use
     opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
-    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 10000L, technical$MAXQUAD)
+    opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 20000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
     if(opts$method %in% c('EM', 'QMCEM'))
         opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
@@ -1401,9 +1401,6 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
 
 select_quadpts <- function(nfact) switch(as.character(nfact),
                                          '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
-
-select_quadpts2 <- function(nfact) switch(as.character(nfact),
-                                          '1'=41, '2'=21, '3'=11, '4'=7, '5'=5, 3)
 
 mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
                          check = FALSE)

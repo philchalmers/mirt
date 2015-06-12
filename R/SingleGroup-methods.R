@@ -490,7 +490,7 @@ setMethod(
             if(is.null(quadpts))
                 quadpts <- object@quadpts
             if(is.nan(quadpts))
-                quadpts <- select_quadpts2(nfact)
+                quadpts <- select_quadpts(nfact)
             bfactorlist <- object@bfactor
             theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
             if(type != 'Q3'){

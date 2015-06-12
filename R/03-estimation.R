@@ -391,8 +391,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             opts$quadpts <- nrow(Theta)
             opts$customPriorFun <- lca_prior
         } else {
-            if(is.null(opts$quadpts))
-                opts$quadpts <- select_quadpts2(nfact)
+            if(is.null(opts$quadpts)){
+                tmp <- if(opts$BFACTOR) PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec') + 1L
+                    else nfact
+                opts$quadpts <- select_quadpts(tmp)
+            }
             if(opts$quadpts < 3 && opts$warn) warning('Should use more than 2 quadpts', call.=FALSE)
             theta <- 1
             if(opts$method != 'QMCEM')
@@ -428,10 +431,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         ind <- ind + 1L
                     }
                 }
-                tmp <- PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec') + 1L
-                Theta <- thetaComb(theta, tmp)
-                Theta <- cbind(Theta[,1L:(tmp-1L),drop=FALSE],
-                               matrix(Theta[,tmp], nrow=nrow(Theta), ncol=ncol(sitems)))
+                nfact2 <- PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec') + 1L
+                Theta <- thetaComb(theta, nfact2)
+                Theta <- cbind(Theta[,1L:(nfact2-1L),drop=FALSE],
+                               matrix(Theta[,nfact2], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
                 if(opts$method == 'QMCEM'){
                     Theta <- QMC_quad(npts=opts$quadpts, nfact=nfact, lim=opts$theta_lim,

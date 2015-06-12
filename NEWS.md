@@ -33,7 +33,8 @@
   the preferred method for defining models syntactically, though the previous methods 
   will still work
 
-- integration range (`theta_lim`) globally set to `c(-6, 6)`. This will slightly change some 
+- integration range (`theta_lim`) globally set to `c(-6, 6)`, and number of default quadrature nodes
+  have systematically increased in parameter estimation functions. This will slightly change some 
   numerical results, but provides more consistence throughout the package
 
 - add `theta_lim` arguments to various functions 
