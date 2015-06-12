@@ -10,13 +10,13 @@ test_that('wide1dim', {
     for(i in 1:100000)
         dat[sample(one2N, 1), sample(one2n, 1)] <- NA
     mod <- mirt(dat, 1, verbose = FALSE)
-    expect_equal(mod@logLik, -492030.2, tolerance = .01)
+    expect_equal(mod@logLik, -492047, tolerance = .01)
     vals <- mod2values(mod)$value
     vals <- vals[vals != 0 & vals != 1]
-    expect_equal(fivenum(vals), c(-3.2911582, 0.2112903, 0.8786638, 0.9858656, 3.6639469),
+    expect_equal(fivenum(vals), c(-3.4079643, 0.1270154, 0.8914533, 1.0007773, 3.5769222),
                  tolerance = 1e-4)
     EAP <- fscores(mod, verbose=FALSE)
-    expect_equal(head(EAP[,'F1']), c(-1.633319, -2.799962, -1.797049, -2.146386, -2.826118, -1.409135),
+    expect_equal(head(EAP[,'F1']), c(-1.5404, -2.6672, -1.6762, -2.0182, -2.6940, -1.3094),
                  tolerance=1e-4)
 })
 
