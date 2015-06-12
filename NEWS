@@ -4,7 +4,7 @@ Changes in mirt 1.10
   via the syntax
 
   - add `itemGAM()` function to provide a non-linear smoother for better
-  understanding misfunctioning items (and without loosing established
+  understanding mis-functioning items (and without loosing established
   precision by reverting to purely non-parametric IRT methods)
 
   - category scores are now automatically recoded to have spaces of 1,
@@ -33,10 +33,10 @@ Changes in mirt 1.10
   second-tier factors to make multiple-group testing with `bfactor()` easier
 
   - remove `rotate` and `Target` arguments from model objects, and pass
-  these only through auxillary functions such as `summary()`, `fscores()`, etc
+  these only through axillary functions such as `summary()`, `fscores()`, etc
 
   - `model` based arguments now can be strings, which are passed to
-  `mirt.model()`. This is now the prefered method for defining models
+  `mirt.model()`. This is now the preferred method for defining models
   syntactically, though the previous methods will still work
 
   - integration range (`theta_lim`) globally set to `c(-6, 6)`. This will
@@ -47,6 +47,9 @@ Changes in mirt 1.10
 
   - better control of QMC grid, and more effective usage for higher dimensions
 
+  - internal code organization now makes it easier to add user defined
+  `itemtype`s (which can be natively added into the package, if requested)
+
 BUG FIXES
 
   - fix conservative imputation standard errors in `itemfit()` and `M2()`
@@ -54,6 +57,9 @@ BUG FIXES
 
   - fixed plausible value draws for multidimensional latent regression models
   (reported by Tongyun Li)
+
+  - don't allow crossprod, Louis, or sandwich information matrices when
+  using custom item types (reported by Charlie Rutgers)
 
 Changes in mirt 1.9
 

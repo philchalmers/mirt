@@ -4,7 +4,8 @@
 #' \eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional and
 #' multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 #' For Rasch, partial credit, and rating scale models infit and outfit statistics are
-#' also produced.
+#' also produced. Poorly fitting items should be inspected with \code{\link{itemGAM}} to diagnose
+#' whether the functional form of the IRT model was misspecified or could be improved.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},

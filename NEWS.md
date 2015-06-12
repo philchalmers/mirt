@@ -2,7 +2,7 @@
 
 - added `NEXPLORE` term to `mirt.model()` to specify exploratory models via the syntax
 
-- add `itemGAM()` function to provide a non-linear smoother for better understanding misfunctioning 
+- add `itemGAM()` function to provide a non-linear smoother for better understanding mis-functioning 
   items (and without loosing established precision by reverting to purely non-parametric IRT methods)
 
 - category scores are now automatically recoded to have spaces of 1, and a message is printed if/when 
@@ -26,11 +26,11 @@
 - `invariance` argument to `bfactor()` now automatically indexes the second-tier factors to make 
   multiple-group testing with `bfactor()` easier
 
-- remove `rotate` and `Target` arguments from model objects, and pass these only through auxillary
+- remove `rotate` and `Target` arguments from model objects, and pass these only through axillary
   functions such as `summary()`, `fscores()`, etc
 
 - `model` based arguments now can be strings, which are passed to `mirt.model()`. This is now
-  the prefered method for defining models syntactically, though the previous methods 
+  the preferred method for defining models syntactically, though the previous methods 
   will still work
 
 - integration range (`theta_lim`) globally set to `c(-6, 6)`. This will slightly change some 
@@ -49,7 +49,7 @@
 
 - fixed plausible value draws for multidimensional latent regression models (reported by Tongyun Li)
 
-- don't allow crossprod, Louis, or sandwich information matricies when using custom item types (reported by
+- don't allow crossprod, Louis, or sandwich information matrices when using custom item types (reported by
   Charlie Rutgers)
 
 # Changes in mirt 1.9
