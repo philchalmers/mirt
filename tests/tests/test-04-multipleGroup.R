@@ -43,7 +43,7 @@ test_that('one factor', {
     expect_is(mod_metric, 'MultipleGroupClass')
     expect_equal(mod_metric@df, 32722)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
-                                 invariance=c('slopes', 'intercepts', 'free_varcov','free_means'))
+                                 invariance=c('slopes', 'intercepts', 'free_var','free_means'))
     cfs <- as.numeric(do.call(c, coef(mod_scalar2, digits=4)[[1L]]))
     cfs <- cfs[cfs != 0 & cfs != 1]
     expect_equal(cfs, c(1.1424, 0.5623, 1.3257, -0.6508, 0.9936, -0.2008, 1.0489, 0.8867, 1.1449, 0.3383, 0.4314, 0.4965, 1.2256, 1.158, 0.916, -0.4197, 0.8163, -1.0164, 0.8011, -1.0888, 0.9486, 1.2348, 1.5887, -0.1893, 1.1991, 0.5387, 1.1291, 0.4329, 0.8934, -0.117),
@@ -63,7 +63,7 @@ test_that('one factor', {
 
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
-                                 invariance=c('slopes', 'intercepts', 'free_varcov'))
+                                 invariance=c('slopes', 'intercepts', 'free_var'))
     expect_is(mod_missing, 'MultipleGroupClass')
     expect_equal(mod_missing@df, 32736)
 
