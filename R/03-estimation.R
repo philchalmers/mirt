@@ -262,16 +262,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
-    if(any(c('free_cov', 'free_varcov') %in% invariance)){ #Free factor covs (vars 1 for ref)
-        if(opts$BFACTOR){
-            dummymat[1L:(nfact-nspec),1L:(nfact-nspec)] <- TRUE
-            diag(dummymat) <- FALSE
-        } else {
-            dummymat <- matrix(TRUE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
-            diag(dummymat) <- FALSE
-        }
-    }
-    if(any(c('free_var', 'free_varcov') %in% invariance)){ #Free factor vars (vars 1 for ref)
+    if(any('free_var' %in% invariance)){ #Free factor vars (vars 1 for ref)
         if(opts$BFACTOR){
             tmp <- dummymat[1L:(nfact-nspec),1L:(nfact-nspec), drop=FALSE]
             diag(tmp) <- TRUE
@@ -279,8 +270,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else {
             diag(dummymat) <- TRUE
         }
-    }
-    if(any(c('free_var', 'free_varcov', 'free_cov') %in% invariance)){
         tmp <- dummymat[lower.tri(dummymat, TRUE)]
         for(g in 2L:Data$ngroups){
             pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)

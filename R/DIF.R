@@ -221,7 +221,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
     values <- mod2values(MGmodel)
     drop <- scheme == 'drop' || scheme == 'drop_sequential'
     invariance <- MGmodel@invariance[MGmodel@invariance %in%
-                                         c('free_means', 'free_var', 'free_varcov', 'free_cov')]
+                                         c('free_means', 'free_var')]
     if(!length(invariance)) invariance <- ''
     res <- myLapply(X=items2test, FUN=loop_test, model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
