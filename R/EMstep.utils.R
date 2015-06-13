@@ -270,6 +270,8 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
                      TOL, control)
 {
     plast2 <- plast <- p
+    ubound <- UBOUND[est]
+    lbound <- LBOUND[est]
     if(is.null(control$maxit)) control$maxit <- 50L
     for(iter in 1L:control$maxit){
         longpars[est] <- p
@@ -298,7 +300,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
         }
         g <- grad[est]
         h <- hess[est, est]
-        inv <- MPinv(h)
+        inv <- MPinv(h) #TODO this could be avoided if no constrains present
         change <- as.vector(g %*% inv)
         change <- ifelse(change > .25, .25, change)
         change <- ifelse(change < -.25, -.25, change)
@@ -309,6 +311,8 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
             flip <- (sign(lastchange) * sign(change)) == -1L
             p[flip] <- (plast[flip] + p[flip]) / 2
         }
+        p[p > ubound] <- ubound[p > ubound]
+        p[p < lbound] <- lbound[p < lbound]
         dif <- plast - p
         if(all(abs(dif) < TOL)) break
         lastchange <- change

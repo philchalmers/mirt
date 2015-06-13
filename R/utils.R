@@ -640,6 +640,10 @@ UpdatePrior <- function(PrepList, model, groupNames){
                         pars[[g]][[sel[j]]]@prior.type[which] <- type
                         pars[[g]][[sel[j]]]@prior_1[which] <- val1
                         pars[[g]][[sel[j]]]@prior_2[which] <- val2
+                        if(type %in% c(2L, 3L))
+                            pars[[g]][[sel[j]]]@lbound[which] <- 0
+                        if(type == 3L)
+                            pars[[g]][[sel[j]]]@lbound[which] <- 1
                     }
                 }
             } else {
@@ -660,6 +664,10 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     pars[[gname]][[sel[j]]]@prior.type[which] <- type
                     pars[[gname]][[sel[j]]]@prior_1[which] <- val1
                     pars[[gname]][[sel[j]]]@prior_2[which] <- val2
+                    if(type %in% c(2L, 3L))
+                        pars[[g]][[sel[j]]]@lbound[which] <- 0
+                    if(type == 3L)
+                        pars[[g]][[sel[j]]]@lbound[which] <- 1
                 }
             }
         }
