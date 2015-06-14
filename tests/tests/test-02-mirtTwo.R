@@ -51,12 +51,11 @@ test_that('poly', {
                  -1e-2, 1e-2))
     newmodel <- mirt.model('F = 1-4
                            CONSTRAIN = (1-2,a1)
-                           PRIOR = (1, d1, norm, 0, 1)')
+                           PRIOR = (1, d1, norm, 4, 1)')
     modp3 <- mirt(Science, newmodel, verbose=FALSE)
     expect_is(modp3, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp3, verbose = FALSE)))
-    expect_true(mirt:::closeEnough(cfs - c(1.090,  4.248,  2.550, -1.507,  1.090,  2.817,  0.853, -2.198,  2.269,
-                                           5.176,  2.173, -1.978,  1.121,  3.357,  0.987, -1.714,  0.000,  1.000),
+    expect_true(mirt:::closeEnough(cfs - c(1.132,4.795,2.677,-1.507,1.132,2.856,0.874,-2.211,2.216,5.127,2.16,-1.927,1.128,3.374,0.999,-1.707,0,1),
                                    -1e-2, 1e-2))
 
     modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
@@ -97,11 +96,11 @@ test_that('poly', {
     expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.7249561, -1.4446593, -0.7364399, -0.5627047, -2.5174376, -1.1732461), -1e-2, 1e-2))
 
     resmat <- residuals(modp3, type = 'Q3', Theta = fm3[,'F1'], verbose = FALSE)
-    expect_equal(as.numeric(resmat), c(1, -0.167, -0.144, 0.084, -0.167, 1, -0.055, -0.218, -0.144, -0.055, 1, -0.446, 0.084, -0.218, -0.446, 1), tolerance=1e-2)
+    expect_equal(as.numeric(resmat), c(1,-0.17,-0.134,0.084,-0.17,1,-0.069,-0.232,-0.134,-0.069,1,-0.429,0.084,-0.232,-0.429,1), tolerance=1e-2)
     resmatLD <- residuals(modp3, type = 'LD', verbose = FALSE)
-    expect_equal(as.numeric(resmatLD), c(NA, -20.136, -13.296, 19.57, -0.131, NA, 10.902, -21.596, -0.106, 0.096, NA, -17.522, 0.129, -0.136, -0.122, NA), tolerance=1e-2)
+    expect_equal(as.numeric(resmatLD), c(NA,-23.885,-12.788,22.164,-0.143,NA,10.449,-22.306,-0.104,0.094,NA,-17.526,0.137,-0.138,-0.122,NA), tolerance=1e-2)
     resmatG2 <- residuals(modp3, type = 'LDG2', verbose = FALSE)
-    expect_equal(as.numeric(resmatG2), c(NA, -22.905, -12.604, 23.204, -0.14, NA, 10.759, -17.256, -0.104, 0.096, NA, -18.507, 0.14, -0.121, -0.125, NA), tolerance=1e-2)
+    expect_equal(as.numeric(resmatG2), c(NA,-21.112,-10.523,19.915,-0.134,NA,10.257,-17.554,-0.095,0.093,NA,-18.397,0.13,-0.122,-0.125,NA), tolerance=1e-2)
     cof1 <- coef(modp1)
     expect_is(cof1, 'list')
     cof2 <- coef(modp2, verbose = FALSE)

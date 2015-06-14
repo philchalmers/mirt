@@ -640,6 +640,10 @@ UpdatePrior <- function(PrepList, model, groupNames){
                         pars[[g]][[sel[j]]]@prior.type[which] <- type
                         pars[[g]][[sel[j]]]@prior_1[which] <- val1
                         pars[[g]][[sel[j]]]@prior_2[which] <- val2
+                        pars[[g]][[sel[j]]]@par[which] <- switch(type,
+                                                                 '1'=val1,
+                                                                 '2'=exp(val1),
+                                                                 '3'=(val1-1)/(val1 + val2 - 2))
                         if(type %in% c(2L, 3L))
                             pars[[g]][[sel[j]]]@lbound[which] <- 0
                         if(type == 3L)

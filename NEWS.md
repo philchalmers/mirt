@@ -1,5 +1,8 @@
 # Changes in mirt 1.10
 
+- when using prior distributions, starting values now automatically set equal to the mode of 
+  the prior distribution, and appropriate lower and upper parameter bounds are supplied
+
 - added `NEXPLORE` term to `mirt.model()` to specify exploratory models via the syntax
 
 - add `itemGAM()` function to provide a non-linear smoother for better understanding mis-functioning 
