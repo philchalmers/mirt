@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Convert an estimated mirt model to a data.frame</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert an estimated mirt model to a data.frame</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for mod2values {mirt}"><tr><td>mod2values {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for mod2values {mirt}"><tr><td>mod2values {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Convert an estimated mirt model to a data.frame</h2>
 
@@ -54,26 +53,26 @@ values
 </code></pre>
 
 <pre><code>##    group   item     class   name parnum     value lbound ubound   est
-## 1    all Item.1      dich     a1      1 0.9879266   -Inf    Inf  TRUE
-## 2    all Item.1      dich      d      2 1.8560607   -Inf    Inf  TRUE
-## 3    all Item.1      dich      g      3 0.0000000   -Inf    Inf FALSE
-## 4    all Item.1      dich      u      4 1.0000000   -Inf    Inf FALSE
-## 5    all Item.2      dich     a1      5 1.0808853   -Inf    Inf  TRUE
+## 1    all Item.1      dich     a1      1 0.9879254   -Inf    Inf  TRUE
+## 2    all Item.1      dich      d      2 1.8560605   -Inf    Inf  TRUE
+## 3    all Item.1      dich      g      3 0.0000000  0e+00      1 FALSE
+## 4    all Item.1      dich      u      4 1.0000000  0e+00      1 FALSE
+## 5    all Item.2      dich     a1      5 1.0808847   -Inf    Inf  TRUE
 ## 6    all Item.2      dich      d      6 0.8079786   -Inf    Inf  TRUE
-## 7    all Item.2      dich      g      7 0.0000000   -Inf    Inf FALSE
-## 8    all Item.2      dich      u      8 1.0000000   -Inf    Inf FALSE
-## 9    all Item.3      dich     a1      9 1.7058011   -Inf    Inf  TRUE
+## 7    all Item.2      dich      g      7 0.0000000  0e+00      1 FALSE
+## 8    all Item.2      dich      u      8 1.0000000  0e+00      1 FALSE
+## 9    all Item.3      dich     a1      9 1.7058006   -Inf    Inf  TRUE
 ## 10   all Item.3      dich      d     10 1.8042187   -Inf    Inf  TRUE
-## 11   all Item.3      dich      g     11 0.0000000   -Inf    Inf FALSE
-## 12   all Item.3      dich      u     12 1.0000000   -Inf    Inf FALSE
-## 13   all Item.4      dich     a1     13 0.7651859   -Inf    Inf  TRUE
+## 11   all Item.3      dich      g     11 0.0000000  0e+00      1 FALSE
+## 12   all Item.3      dich      u     12 1.0000000  0e+00      1 FALSE
+## 13   all Item.4      dich     a1     13 0.7651853   -Inf    Inf  TRUE
 ## 14   all Item.4      dich      d     14 0.4859966   -Inf    Inf  TRUE
-## 15   all Item.4      dich      g     15 0.0000000   -Inf    Inf FALSE
-## 16   all Item.4      dich      u     16 1.0000000   -Inf    Inf FALSE
-## 17   all Item.5      dich     a1     17 0.7357992   -Inf    Inf  TRUE
-## 18   all Item.5      dich      d     18 1.8545129   -Inf    Inf  TRUE
-## 19   all Item.5      dich      g     19 0.0000000   -Inf    Inf FALSE
-## 20   all Item.5      dich      u     20 1.0000000   -Inf    Inf FALSE
+## 15   all Item.4      dich      g     15 0.0000000  0e+00      1 FALSE
+## 16   all Item.4      dich      u     16 1.0000000  0e+00      1 FALSE
+## 17   all Item.5      dich     a1     17 0.7357980   -Inf    Inf  TRUE
+## 18   all Item.5      dich      d     18 1.8545127   -Inf    Inf  TRUE
+## 19   all Item.5      dich      g     19 0.0000000  0e+00      1 FALSE
+## 20   all Item.5      dich      u     20 1.0000000  0e+00      1 FALSE
 ## 21   all  GROUP GroupPars MEAN_1     21 0.0000000   -Inf    Inf FALSE
 ## 22   all  GROUP GroupPars COV_11     22 1.0000000  1e-04    Inf FALSE
 ##    prior.type prior_1 prior_2
@@ -108,5 +107,5 @@ mod2 &lt;- mirt(dat, 1, pars = values, TOL=1e-5)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

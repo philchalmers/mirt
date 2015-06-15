@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Compute the M2 model fit statistic</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute the M2 model fit statistic</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for M2 {mirt}"><tr><td>M2 {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for M2 {mirt}"><tr><td>M2 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compute the M2 model fit statistic</h2>
 
@@ -25,8 +24,9 @@ fitting the null model.
 <h3>Usage</h3>
 
 <pre>
-M2(obj, calcNull = TRUE, quadpts = NULL, Theta = NULL, impute = 0,
-  CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1, ...)
+M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
+  impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1,
+  ...)
 </pre>
 
 
@@ -48,9 +48,9 @@ Allows for statistics such as the limited information TLI and CFI</p>
 a suitable value will be chosen based
 on the rubric found in <code><a href="fscores.html">fscores</a></code></p>
 </td></tr>
-<tr valign="top"><td><code>Theta</code></td>
+<tr valign="top"><td><code>theta_lim</code></td>
 <td>
-<p>a matrix of factor scores for each person used for imputation</p>
+<p>lower and upper range to evaluate latent trait integral for each dimension</p>
 </td></tr>
 <tr valign="top"><td><code>impute</code></td>
 <td>
@@ -66,19 +66,21 @@ RMSEA. Default returns the 90% interval</p>
 </td></tr>
 <tr valign="top"><td><code>residmat</code></td>
 <td>
-<p>logical; return the residual matrix used to compute the SRMSR statistic?</p>
+<p>logical; return the residual matrix used to compute the SRMSR statistic?
+Only the lower triangle of the residual correlation matrix will be returned
+(the upper triangle is filled with NA's)</p>
 </td></tr>
 <tr valign="top"><td><code>QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-If <code>quadpts</code> not specified, 2000 nodes are used by default</p>
+If <code>quadpts</code> not specified, 15000 nodes are used by default</p>
 </td></tr>
 <tr valign="top"><td><code>suppress</code></td>
 <td>
-<p>a numeric value indiciating which parameter residual dependency combinations
+<p>a numeric value indicating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than
 this value will be returned, while all values less than this value will be set to NA.
-Must be used in conjunction with the arguement <code>residmat = TRUE</code></p>
+Must be used in conjunction with the argument <code>residmat = TRUE</code></p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
@@ -125,10 +127,10 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.9 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
+## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2658.805
 ## AIC = 5337.61; AICc = 5337.833
@@ -141,9 +143,20 @@ dat &lt;- expand.table(LSAT7)
 </code></pre>
 
 <pre><code>##             M2 df          p     RMSEA     RMSEA_5   RMSEA_95       TLI
-## stats 11.93769  5 0.03565166 0.0372683 0.008950918 0.06496573 0.9369332
+## stats 11.93769  5 0.03565165 0.0372683 0.008950922 0.06496573 0.9369332
 ##             CFI      SRMSR
-## stats 0.9684666 0.03195918
+## stats 0.9684666 0.03195919
+</code></pre>
+
+<pre><code class="r">M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+</code></pre>
+
+<pre><code>##             Item.1      Item.2       Item.3       Item.4 Item.5
+## Item.1          NA          NA           NA           NA     NA
+## Item.2 -0.02212010          NA           NA           NA     NA
+## Item.3 -0.03265942  0.03335601           NA           NA     NA
+## Item.4  0.05155184 -0.01642572 -0.012476892           NA     NA
+## Item.5  0.05443241 -0.03867705 -0.001860395 7.235426e-05     NA
 </code></pre>
 
 <pre><code class="r">#M2 imputed with missing data present (run in parallel)
@@ -155,21 +168,20 @@ mirtCluster()
 <pre><code>## mirtCluster() has already been defined
 </code></pre>
 
-<pre><code class="r">Theta &lt;- fscores(mod2, full.scores=TRUE)
-M2(mod2, Theta=Theta, impute = 10)
+<pre><code class="r">M2(mod2, impute = 10)
 </code></pre>
 
-<pre><code>##                 M2 df          p       RMSEA RMSEA_5    RMSEA_95
-## stats    8.3228389  5 0.14945506 0.025399417       0 0.055400171
-## SD_stats 0.4383264  0 0.02401228 0.001805175       0 0.001324377
-##                  TLI         CFI        SRMSR
-## stats    0.969873098 0.984936549 0.0275849143
-## SD_stats 0.004088471 0.002044235 0.0005940991
+<pre><code>##                M2 df          p       RMSEA     RMSEA_5   RMSEA_95
+## stats    9.574611  5 0.11290279 0.029394130 0.002356477 0.05860189
+## SD_stats 2.516901  0 0.05612749 0.007198836 0.007069431 0.00603010
+##                 TLI        CFI       SRMSR
+## stats    0.95459681 0.97729840 0.028917316
+## SD_stats 0.02452819 0.01226409 0.003213708
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate the marginal reliability</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for marginal_rxx {mirt}"><tr><td>marginal_rxx {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to calculate the marginal reliability</h2>
+
+<h3>Description</h3>
+
+<p>Given an estimated model and a prior density function, compute the marginal reliability. This is only
+available for unidimensional tests.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+marginal_rxx(mod, density = dnorm, theta_lim = c(-6, 6), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>mod</code></td>
+<td>
+<p>an object of class <code>'SingleGroupClass'</code></p>
+</td></tr>
+<tr valign="top"><td><code>density</code></td>
+<td>
+<p>a density function to use for integration. Default assumes the latent traits are from a
+normal (Gaussian) distribution</p>
+</td></tr>
+<tr valign="top"><td><code>theta_lim</code></td>
+<td>
+<p>a vector containing the range of integration</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to the density function</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="extract.group.html">extract.group</a></code>, <code><a href="testinfo.html">testinfo</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+dat &lt;- expand.table(deAyala)
+mod &lt;- mirt(dat, 1)
+
+# marginal estimate
+marginal_rxx(mod)
+</code></pre>
+
+<pre><code>## [1] 0.6092894
+</code></pre>
+
+<pre><code class="r"># empirical estimate (assuming the same prior)
+fscores(mod, returnER = TRUE)
+</code></pre>
+
+<pre><code>##        F1 
+## 0.6200703
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+</body></html>

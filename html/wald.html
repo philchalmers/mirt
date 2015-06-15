@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Wald statistics for mirt models</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Wald statistics for mirt models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for wald {mirt}"><tr><td>wald {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for wald {mirt}"><tr><td>wald {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Wald statistics for mirt models</h2>
 
@@ -113,16 +112,16 @@ index[index$est, ]
 </code></pre>
 
 <pre><code>##    group   item class name parnum     value lbound ubound  est prior.type
-## 1    all Item.1  dich   a1      1 0.9879266   -Inf    Inf TRUE       none
-## 2    all Item.1  dich    d      2 1.8560607   -Inf    Inf TRUE       none
-## 5    all Item.2  dich   a1      5 1.0808853   -Inf    Inf TRUE       none
+## 1    all Item.1  dich   a1      1 0.9879254   -Inf    Inf TRUE       none
+## 2    all Item.1  dich    d      2 1.8560605   -Inf    Inf TRUE       none
+## 5    all Item.2  dich   a1      5 1.0808847   -Inf    Inf TRUE       none
 ## 6    all Item.2  dich    d      6 0.8079786   -Inf    Inf TRUE       none
-## 9    all Item.3  dich   a1      9 1.7058011   -Inf    Inf TRUE       none
+## 9    all Item.3  dich   a1      9 1.7058006   -Inf    Inf TRUE       none
 ## 10   all Item.3  dich    d     10 1.8042187   -Inf    Inf TRUE       none
-## 13   all Item.4  dich   a1     13 0.7651859   -Inf    Inf TRUE       none
+## 13   all Item.4  dich   a1     13 0.7651853   -Inf    Inf TRUE       none
 ## 14   all Item.4  dich    d     14 0.4859966   -Inf    Inf TRUE       none
-## 17   all Item.5  dich   a1     17 0.7357992   -Inf    Inf TRUE       none
-## 18   all Item.5  dich    d     18 1.8545129   -Inf    Inf TRUE       none
+## 17   all Item.5  dich   a1     17 0.7357980   -Inf    Inf TRUE       none
+## 18   all Item.5  dich    d     18 1.8545127   -Inf    Inf TRUE       none
 ##    prior_1 prior_2
 ## 1      NaN     NaN
 ## 2      NaN     NaN
@@ -143,7 +142,7 @@ wald(mod, L)
 </code></pre>
 
 <pre><code>##          W df            p
-## 1 40.72593  1 1.751475e-10
+## 1 40.72587  1 1.751531e-10
 </code></pre>
 
 <pre><code class="r">#simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
@@ -162,12 +161,12 @@ L
 </code></pre>
 
 <pre><code>##           W df         p
-## 1 0.1796712  2 0.9140815
+## 1 0.1796746  2 0.9140799
 </code></pre>
 
 <pre><code class="r">#logLiklihood tests (requires estimating a new model)
-cmodel &lt;- mirt.model(&#39;theta = 1-5
-                      CONSTRAIN = (1,2, a1), (4,5, a1)&#39;)
+cmodel &lt;- &#39;theta = 1-5
+           CONSTRAIN = (1,2, a1), (4,5, a1)&#39;
 mod2 &lt;- mirt(data, cmodel)
 #or, eqivalently
 #mod2 &lt;- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
@@ -188,5 +187,5 @@ anova(mod2, mod)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

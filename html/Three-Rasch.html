@@ -237,7 +237,7 @@ Iteration: 14, Log-Lik: -2467.566, Max-Change: 0.00910
 Iteration: 15, Log-Lik: -2467.481, Max-Change: 0.00826
 Iteration: 16, Log-Lik: -2467.417, Max-Change: 0.01032
 Iteration: 17, Log-Lik: -2467.339, Max-Change: 0.00703
-Iteration: 18, Log-Lik: -2467.285, Max-Change: 0.00634
+Iteration: 18, Log-Lik: -2467.286, Max-Change: 0.00634
 Iteration: 19, Log-Lik: -2467.241, Max-Change: 0.00604
 Iteration: 20, Log-Lik: -2467.200, Max-Change: 0.00534
 Iteration: 21, Log-Lik: -2467.166, Max-Change: 0.00491
@@ -312,10 +312,10 @@ Iteration: 81, Log-Lik: -2466.938, Max-Change: 0.00010
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 81 EM iterations.
-## mirt version: 1.8 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
+## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2466.938
 ## AIC = 4945.875; AICc = 4945.96
@@ -363,7 +363,7 @@ mod2 &lt;- mirt(dat, model)
 </code></pre>
 
 <pre><code>## 
-Iteration: 1, Log-Lik: -2468.601, Max-Change: 0.07078
+Iteration: 1, Log-Lik: -2468.601, Max-Change: 0.07077
 Iteration: 2, Log-Lik: -2467.371, Max-Change: 0.02297
 Iteration: 3, Log-Lik: -2467.099, Max-Change: 0.01355
 Iteration: 4, Log-Lik: -2466.986, Max-Change: 0.00735
@@ -386,10 +386,10 @@ Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00009
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.8 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
+## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2466.938
 ## AIC = 4945.875; AICc = 4945.96
@@ -466,71 +466,296 @@ mod3 &lt;- mirt(dat, model2, itemtype = &#39;Rasch&#39;, optimizer = &#39;solnp&
 </code></pre>
 
 <pre><code>## 
+## Iter: 1 fn: 3184.1888     Pars:   0.799815 -0.258179 -1.066601  0.002142  0.522823
+## Iter: 2 fn: 3184.1888     Pars:   0.799815 -0.258179 -1.066601  0.002142  0.522823
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 1, Log-Lik: -2473.219, Max-Change: 2.01548
+## Iter: 1 fn: 2536.3404     Pars:   0.86237 -0.30555 -1.03804 -0.04414  0.52536
+## Iter: 2 fn: 2536.3404     Pars:   0.86237 -0.30555 -1.03804 -0.04414  0.52536
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 2, Log-Lik: -2978.093, Max-Change: 0.64564
-Iteration: 3, Log-Lik: -2637.889, Max-Change: 0.30377
-Iteration: 4, Log-Lik: -2536.574, Max-Change: 0.16978
-Iteration: 5, Log-Lik: -2498.680, Max-Change: 0.10518
+## Iter: 1 fn: 2378.1550     Pars:   0.94806 -0.34703 -1.07573 -0.07473  0.54943
+## Iter: 2 fn: 2378.1550     Pars:   0.94806 -0.34703 -1.07573 -0.07473  0.54943
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 3, Log-Lik: -2637.888, Max-Change: 0.30377
+## Iter: 1 fn: 2327.5183     Pars:   1.02020 -0.37925 -1.11231 -0.09790  0.56926
+## Iter: 2 fn: 2327.5183     Pars:   1.02020 -0.37925 -1.11231 -0.09790  0.56926
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 4, Log-Lik: -2536.573, Max-Change: 0.16978
+## Iter: 1 fn: 2308.9050     Pars:   1.07849 -0.40486 -1.14124 -0.11617  0.58378
+## Iter: 2 fn: 2308.9050     Pars:   1.07816 -0.40489 -1.14125 -0.11626  0.58424
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 5, Log-Lik: -2498.680, Max-Change: 0.10519
+## Iter: 1 fn: 2301.6113     Pars:   1.12068 -0.42229 -1.16329 -0.12909  0.59398
+## Iter: 2 fn: 2301.6113     Pars:   1.12049 -0.42229 -1.16329 -0.12917  0.59426
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 6, Log-Lik: -2482.424, Max-Change: 0.06950
+## Iter: 1 fn: 2298.7496     Pars:   1.15215 -0.43527 -1.17929 -0.13878  0.60119
+## Iter: 2 fn: 2298.7496     Pars:   1.15199 -0.43525 -1.17929 -0.13885  0.60141
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 7, Log-Lik: -2474.843, Max-Change: 0.04776
+## Iter: 1 fn: 2297.6936     Pars:   1.17609 -0.44503 -1.19152 -0.14605  0.60651
+## Iter: 2 fn: 2297.6936     Pars:   1.17616 -0.44501 -1.19152 -0.14596  0.60634
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 8, Log-Lik: -2471.108, Max-Change: 0.03371
+## Iter: 1 fn: 2297.3617     Pars:   1.19418 -0.45231 -1.20075 -0.15148  0.61035
+## Iter: 2 fn: 2297.3617     Pars:   1.19424 -0.45230 -1.20075 -0.15142  0.61024
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 9, Log-Lik: -2469.195, Max-Change: 0.02428
-Iteration: 10, Log-Lik: -2468.196, Max-Change: 0.01947
+## Iter: 1 fn: 2297.1713     Pars:   1.20901 -0.45786 -1.20906 -0.15557  0.61348
+## Iter: 2 fn: 2297.1713     Pars:   1.20892 -0.45785 -1.20904 -0.15565  0.61362
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 10, Log-Lik: -2468.195, Max-Change: 0.01947
+## Iter: 1 fn: 2297.1961     Pars:   1.21888 -0.46212 -1.21317 -0.15895  0.61536
+## Iter: 2 fn: 2297.1961     Pars:   1.21902 -0.46213 -1.21321 -0.15885  0.61517
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 11, Log-Lik: -2467.605, Max-Change: 0.01269
+## Iter: 1 fn: 2297.1940     Pars:   1.22695 -0.46535 -1.21758 -0.16116  0.61714
+## Iter: 2 fn: 2297.1940     Pars:   1.22698 -0.46535 -1.21757 -0.16113  0.61708
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 12, Log-Lik: -2467.328, Max-Change: 0.00943
-Iteration: 13, Log-Lik: -2467.185, Max-Change: 0.01171
+## Iter: 1 fn: 2297.0983     Pars:   1.23319 -0.46749 -1.22107 -0.16293  0.61829
+## Iter: 2 fn: 2297.0983     Pars:   1.23315 -0.46749 -1.22106 -0.16297  0.61837
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 13, Log-Lik: -2467.184, Max-Change: 0.01171
+## Iter: 1 fn: 2297.0182     Pars:   1.23749 -0.46949 -1.22297 -0.16437  0.61935
+## Iter: 2 fn: 2297.0182     Pars:   1.23759 -0.46947 -1.22298 -0.16434  0.61921
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 14, Log-Lik: -2467.077, Max-Change: 0.00511
-Iteration: 15, Log-Lik: -2467.032, Max-Change: 0.00389
+## Iter: 1 fn: 2296.8939     Pars:   1.24097 -0.47078 -1.22497 -0.16530  0.62009
+## Iter: 2 fn: 2296.8939     Pars:   1.24097 -0.47082 -1.22496 -0.16524  0.62005
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 15, Log-Lik: -2467.032, Max-Change: 0.00390
+## Iter: 1 fn: 2296.7219     Pars:   1.24352 -0.47180 -1.22637 -0.16583  0.62047
+## Iter: 2 fn: 2296.7219     Pars:   1.24351 -0.47174 -1.22637 -0.16592  0.62053
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 16, Log-Lik: -2467.007, Max-Change: 0.00493
+## Iter: 1 fn: 2296.5508     Pars:   1.24551 -0.47263 -1.22746 -0.16654  0.62111
+## Iter: 2 fn: 2296.5508     Pars:   1.24557 -0.47261 -1.22747 -0.16653  0.62104
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 17, Log-Lik: -2466.987, Max-Change: 0.00220
+## Iter: 1 fn: 2296.3633     Pars:   1.24691 -0.47325 -1.22835 -0.16683  0.62152
+## Iter: 2 fn: 2296.3633     Pars:   1.24694 -0.47314 -1.22837 -0.16688  0.62146
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 18, Log-Lik: -2466.977, Max-Change: 0.00173
+## Iter: 1 fn: 2296.1626     Pars:   1.24816 -0.47352 -1.22895 -0.16725  0.62156
+## Iter: 2 fn: 2296.1626     Pars:   1.24813 -0.47361 -1.22893 -0.16720  0.62161
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 19, Log-Lik: -2466.970, Max-Change: 0.00152
+## Iter: 1 fn: 2295.9668     Pars:   1.24903 -0.47403 -1.22967 -0.16738  0.62205
+## Iter: 2 fn: 2295.9668     Pars:   1.24905 -0.47396 -1.22968 -0.16741  0.62201
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 20, Log-Lik: -2466.965, Max-Change: 0.00105
+## Iter: 1 fn: 2295.7698     Pars:   1.24950 -0.47412 -1.23015 -0.16743  0.62220
+## Iter: 2 fn: 2295.7698     Pars:   1.24960 -0.47421 -1.23001 -0.16756  0.62218
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 21, Log-Lik: -2466.962, Max-Change: 0.00097
-Iteration: 22, Log-Lik: -2466.959, Max-Change: 0.00096
+## Iter: 1 fn: 2295.5750     Pars:   1.25030 -0.47445 -1.23048 -0.16773  0.62236
+## solnp--&gt; Completed in 1 iterations
+## 
+Iteration: 22, Log-Lik: -2466.959, Max-Change: 0.00097
+## Iter: 1 fn: 2295.3866     Pars:   1.25063 -0.47454 -1.23088 -0.16773  0.62252
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 23, Log-Lik: -2466.956, Max-Change: 0.00094
+## Iter: 1 fn: 2295.2035     Pars:   1.25095 -0.47470 -1.23113 -0.16775  0.62264
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 24, Log-Lik: -2466.954, Max-Change: 0.00091
+## Iter: 1 fn: 2295.0225     Pars:   1.25152 -0.47488 -1.23126 -0.16800  0.62262
+## Iter: 2 fn: 2295.0225     Pars:   1.25144 -0.47489 -1.23126 -0.16798  0.62269
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 25, Log-Lik: -2466.953, Max-Change: 0.00109
+## Iter: 1 fn: 2294.8542     Pars:   1.25165 -0.47492 -1.23159 -0.16797  0.62283
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 26, Log-Lik: -2466.951, Max-Change: 0.00085
+## Iter: 1 fn: 2294.6920     Pars:   1.25189 -0.47503 -1.23186 -0.16797  0.62297
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 27, Log-Lik: -2466.949, Max-Change: 0.00081
+## Iter: 1 fn: 2294.5319     Pars:   1.25241 -0.47523 -1.23215 -0.16811  0.62307
+## Iter: 2 fn: 2294.5319     Pars:   1.25234 -0.47521 -1.23215 -0.16809  0.62311
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 28, Log-Lik: -2466.948, Max-Change: 0.00104
+## Iter: 1 fn: 2294.3845     Pars:   1.25242 -0.47525 -1.23222 -0.16809  0.62315
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 29, Log-Lik: -2466.947, Max-Change: 0.00075
+## Iter: 1 fn: 2294.2440     Pars:   1.25255 -0.47529 -1.23240 -0.16810  0.62323
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 30, Log-Lik: -2466.946, Max-Change: 0.00071
-Iteration: 31, Log-Lik: -2466.945, Max-Change: 0.00068
+## Iter: 1 fn: 2294.1076     Pars:   1.25283 -0.47540 -1.23255 -0.16817  0.62330
+## Iter: 2 fn: 2294.1076     Pars:   1.25281 -0.47539 -1.23255 -0.16817  0.62330
+## solnp--&gt; Completed in 2 iterations
+## 
+Iteration: 31, Log-Lik: -2466.945, Max-Change: 0.00069
+## Iter: 1 fn: 2293.9813     Pars:   1.25287 -0.47540 -1.23266 -0.16817  0.62335
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 32, Log-Lik: -2466.944, Max-Change: 0.00064
+## Iter: 1 fn: 2293.8613     Pars:   1.25299 -0.47545 -1.23282 -0.16816  0.62344
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 33, Log-Lik: -2466.944, Max-Change: 0.00061
+## Iter: 1 fn: 2293.7444     Pars:   1.25323 -0.47555 -1.23296 -0.16822  0.62350
+## Iter: 2 fn: 2293.7444     Pars:   1.25321 -0.47554 -1.23296 -0.16822  0.62350
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 34, Log-Lik: -2466.943, Max-Change: 0.00067
+## Iter: 1 fn: 2293.6369     Pars:   1.25327 -0.47556 -1.23306 -0.16821  0.62355
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 35, Log-Lik: -2466.942, Max-Change: 0.00055
+## Iter: 1 fn: 2293.5348     Pars:   1.25335 -0.47559 -1.23316 -0.16821  0.62361
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 36, Log-Lik: -2466.942, Max-Change: 0.00052
+## Iter: 1 fn: 2293.4363     Pars:   1.25356 -0.47575 -1.23327 -0.16824  0.62369
+## Iter: 2 fn: 2293.4363     Pars:   1.25352 -0.47566 -1.23326 -0.16826  0.62366
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 37, Log-Lik: -2466.941, Max-Change: 0.00050
+## Iter: 1 fn: 2293.3451     Pars:   1.25356 -0.47566 -1.23334 -0.16826  0.62370
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 38, Log-Lik: -2466.941, Max-Change: 0.00046
+## Iter: 1 fn: 2293.2587     Pars:   1.25364 -0.47569 -1.23345 -0.16825  0.62375
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 39, Log-Lik: -2466.941, Max-Change: 0.00044
+## Iter: 1 fn: 2293.1748     Pars:   1.25381 -0.47585 -1.23354 -0.16826  0.62383
+## Iter: 2 fn: 2293.1748     Pars:   1.25378 -0.47575 -1.23354 -0.16829  0.62380
+## solnp--&gt; Completed in 2 iterations
+## 
 Iteration: 40, Log-Lik: -2466.940, Max-Change: 0.00048
+## Iter: 1 fn: 2293.0977     Pars:   1.25381 -0.47576 -1.23360 -0.16828  0.62383
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 41, Log-Lik: -2466.940, Max-Change: 0.00039
+## Iter: 1 fn: 2293.0246     Pars:   1.25388 -0.47578 -1.23370 -0.16828  0.62388
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 42, Log-Lik: -2466.940, Max-Change: 0.00037
+## Iter: 1 fn: 2292.9536     Pars:   1.25402 -0.47591 -1.23377 -0.16828  0.62394
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 43, Log-Lik: -2466.940, Max-Change: 0.00040
+## Iter: 1 fn: 2292.8883     Pars:   1.25403 -0.47586 -1.23383 -0.16829  0.62395
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 44, Log-Lik: -2466.939, Max-Change: 0.00033
-Iteration: 45, Log-Lik: -2466.939, Max-Change: 0.00031
+## Iter: 1 fn: 2292.8265     Pars:   1.25406 -0.47586 -1.23389 -0.16829  0.62397
+## solnp--&gt; Completed in 1 iterations
+## 
+Iteration: 45, Log-Lik: -2466.939, Max-Change: 0.00032
+## Iter: 1 fn: 2292.7671     Pars:   1.25416 -0.47591 -1.23395 -0.16831  0.62401
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 46, Log-Lik: -2466.939, Max-Change: 0.00030
+## Iter: 1 fn: 2292.7121     Pars:   1.25418 -0.47590 -1.23401 -0.16831  0.62403
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 47, Log-Lik: -2466.939, Max-Change: 0.00028
+## Iter: 1 fn: 2292.6600     Pars:   1.25423 -0.47592 -1.23407 -0.16831  0.62407
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 48, Log-Lik: -2466.939, Max-Change: 0.00027
+## Iter: 1 fn: 2292.6094     Pars:   1.25435 -0.47601 -1.23413 -0.16833  0.62411
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 49, Log-Lik: -2466.939, Max-Change: 0.00028
-Iteration: 50, Log-Lik: -2466.939, Max-Change: 0.00024
-Iteration: 51, Log-Lik: -2466.938, Max-Change: 0.00022
+## Iter: 1 fn: 2292.5629     Pars:   1.25435 -0.47597 -1.23417 -0.16833  0.62412
+## solnp--&gt; Completed in 1 iterations
+## 
+Iteration: 50, Log-Lik: -2466.938, Max-Change: 0.00024
+## Iter: 1 fn: 2292.5189     Pars:   1.25438 -0.47597 -1.23421 -0.16833  0.62413
+## solnp--&gt; Completed in 1 iterations
+## 
+Iteration: 51, Log-Lik: -2466.938, Max-Change: 0.00023
+## Iter: 1 fn: 2292.4765     Pars:   1.25444 -0.47601 -1.23426 -0.16834  0.62417
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 52, Log-Lik: -2466.938, Max-Change: 0.00022
+## Iter: 1 fn: 2292.4373     Pars:   1.25446 -0.47601 -1.23430 -0.16834  0.62418
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 53, Log-Lik: -2466.938, Max-Change: 0.00020
+## Iter: 1 fn: 2292.4002     Pars:   1.25449 -0.47601 -1.23434 -0.16834  0.62420
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 54, Log-Lik: -2466.938, Max-Change: 0.00019
+## Iter: 1 fn: 2292.3642     Pars:   1.25458 -0.47608 -1.23438 -0.16835  0.62423
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 55, Log-Lik: -2466.938, Max-Change: 0.00020
+## Iter: 1 fn: 2292.3311     Pars:   1.25458 -0.47606 -1.23441 -0.16835  0.62424
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 56, Log-Lik: -2466.938, Max-Change: 0.00017
+## Iter: 1 fn: 2292.2998     Pars:   1.25460 -0.47606 -1.23444 -0.16835  0.62425
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 57, Log-Lik: -2466.938, Max-Change: 0.00016
+## Iter: 1 fn: 2292.2696     Pars:   1.25464 -0.47608 -1.23447 -0.16836  0.62427
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 58, Log-Lik: -2466.938, Max-Change: 0.00015
+## Iter: 1 fn: 2292.2417     Pars:   1.25466 -0.47608 -1.23450 -0.16836  0.62428
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 59, Log-Lik: -2466.938, Max-Change: 0.00014
-Iteration: 60, Log-Lik: -2466.938, Max-Change: 0.00013
+## Iter: 1 fn: 2292.2153     Pars:   1.25468 -0.47609 -1.23454 -0.16836  0.62430
+## solnp--&gt; Completed in 1 iterations
+## 
+Iteration: 60, Log-Lik: -2466.938, Max-Change: 0.00014
+## Iter: 1 fn: 2292.1897     Pars:   1.25474 -0.47613 -1.23456 -0.16837  0.62432
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 61, Log-Lik: -2466.938, Max-Change: 0.00014
+## Iter: 1 fn: 2292.1662     Pars:   1.25475 -0.47611 -1.23458 -0.16837  0.62432
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 62, Log-Lik: -2466.938, Max-Change: 0.00012
+## Iter: 1 fn: 2292.1439     Pars:   1.25476 -0.47611 -1.23460 -0.16837  0.62433
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 63, Log-Lik: -2466.938, Max-Change: 0.00011
+## Iter: 1 fn: 2292.1225     Pars:   1.25479 -0.47613 -1.23463 -0.16838  0.62435
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 64, Log-Lik: -2466.938, Max-Change: 0.00011
+## Iter: 1 fn: 2292.1026     Pars:   1.25480 -0.47613 -1.23465 -0.16838  0.62436
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 65, Log-Lik: -2466.938, Max-Change: 0.00010
+## Iter: 1 fn: 2292.0838     Pars:   1.25481 -0.47614 -1.23467 -0.16838  0.62437
+## solnp--&gt; Completed in 1 iterations
+## 
 Iteration: 66, Log-Lik: -2466.938, Max-Change: 0.00010
 </code></pre>
 
@@ -544,13 +769,13 @@ Iteration: 66, Log-Lik: -2466.938, Max-Change: 0.00010
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 66 EM iterations.
-## mirt version: 1.8 
+## mirt version: 1.10 
 ## M-step optimizer: solnp 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
+## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2466.938
-## AIC = 4947.876; AICc = 4947.988
+## AIC = 4947.875; AICc = 4947.988
 ## BIC = 4982.23; SABIC = 4959.997
 ## G2 (25) = 21.8, p = 0.6474
 ## RMSEA = 0, CFI = 1, TLI = 1.064
@@ -615,7 +840,7 @@ Iteration: 5, Log-Lik: -2466.938, Max-Change: 0.00007
 Iteration: 6, Log-Lik: -2466.938, Max-Change: 0.00007
 Iteration: 7, Log-Lik: -2466.938, Max-Change: 0.00006
 Iteration: 8, Log-Lik: -2466.938, Max-Change: 0.00006
-Iteration: 9, Log-Lik: -2466.938, Max-Change: 0.00005
+Iteration: 9, Log-Lik: -2466.938, Max-Change: 0.00006
 Iteration: 10, Log-Lik: -2466.938, Max-Change: 0.00005
 Iteration: 11, Log-Lik: -2466.938, Max-Change: 0.00005
 Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00005
@@ -655,10 +880,10 @@ Iteration: 36, Log-Lik: -2466.938, Max-Change: 0.00001
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-05 tolerance after 36 EM iterations.
-## mirt version: 1.8 
+## mirt version: 1.10 
 ## M-step optimizer: alabama 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 41
+## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2466.938
 ## AIC = 4947.875; AICc = 4947.988

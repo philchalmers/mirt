@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute multidimensional difficulty index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for MDIFF {mirt}"><tr><td>MDIFF {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute multidimensional difficulty index</h2>
+
+<h3>Description</h3>
+
+<p>Returns a matrix containing the MDIFF values (Reckase, 2009).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+MDIFF(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class 'SingleGroupClass'</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Reckase, M. D. (2009). Multidimensional Item Response Theory. Springer.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="extract.group.html">extract.group</a></code>, <code><a href="MDISC.html">MDISC</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+mod &lt;- mirt(Science, 2)
+MDIFF(mod)
+</code></pre>
+
+<pre><code>##            MDIFF_1    MDIFF_2   MDIFF_3
+## Comfort -2.9082859 -1.5993792 0.8946023
+## Work    -0.8809265 -0.2742757 0.6907591
+## Future  -1.3261155 -0.5563912 0.4935955
+## Benefit -1.3450947 -0.4030597 0.6892745
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+</body></html>

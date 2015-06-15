@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Extract raw coefs from model object</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract raw coefs from model object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for coef-method {mirt}"><tr><td>coef-method {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for coef-method {mirt}"><tr><td>coef-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Extract raw coefs from model object</h2>
 
@@ -49,7 +48,7 @@ coef(object, CI = 0.95, printSE = FALSE,
 </td></tr>
 <tr valign="top"><td><code>rotate</code></td>
 <td>
-<p>see <code><a href="mirt.html">mirt</a></code> for details</p>
+<p>see <code><a href="mirt.html">mirt</a></code> for details. The default rotation is <code>'none'</code></p>
 </td></tr>
 <tr valign="top"><td><code>Target</code></td>
 <td>
@@ -155,6 +154,26 @@ coef(x)
 ## $GroupPars
 ##     MEAN_1 COV_11
 ## par      0      1
+</code></pre>
+
+<pre><code class="r">coef(x, simplify = TRUE)
+</code></pre>
+
+<pre><code>## $items
+##           a1     d g u
+## Item.1 0.988 1.856 0 1
+## Item.2 1.081 0.808 0 1
+## Item.3 1.706 1.804 0 1
+## Item.4 0.765 0.486 0 1
+## Item.5 0.736 1.855 0 1
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
 </code></pre>
 
 <pre><code class="r">#with computed information matrix
@@ -267,20 +286,20 @@ coef(x2)
 </code></pre>
 
 <pre><code>## $Comfort
-##         a1    a2    d1    d2   d3
-## par -1.328 0.108 5.193 2.858 -1.6
+##         a1    a2    d1    d2     d3
+## par -1.335 0.097 5.211 2.866 -1.603
 ## 
 ## $Work
-##         a1    a2    d1   d2     d3
-## par -0.876 1.878 3.725 1.16 -2.923
+##         a1    a2    d1    d2     d3
+## par -0.879 1.853 3.704 1.153 -2.904
 ## 
 ## $Future
-##         a1    a2   d1    d2     d3
-## par -1.461 1.164 4.65 1.951 -1.732
+##        a1    a2    d1    d2     d3
+## par -1.47 1.165 4.663 1.957 -1.736
 ## 
 ## $Benefit
-##        a1 a2    d1    d2     d3
-## par -1.74  0 4.005 1.201 -2.055
+##         a1 a2    d1    d2     d3
+## par -1.722  0 3.989 1.195 -2.044
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
@@ -295,20 +314,20 @@ coef(x2)
 </code></pre>
 
 <pre><code>## $Comfort
-##       a1     a2    d1    d2   d3
-## par 0.47 -1.247 5.193 2.858 -1.6
+##        a1    a2    d1    d2     d3
+## par 0.468 1.254 5.211 2.866 -1.603
 ## 
 ## $Work
-##        a1     a2    d1   d2     d3
-## par 2.047 -0.325 3.725 1.16 -2.923
+##        a1    a2    d1    d2     d3
+## par 2.025 0.323 3.704 1.153 -2.904
 ## 
 ## $Future
-##        a1     a2   d1    d2     d3
-## par 1.521 -1.084 4.65 1.951 -1.732
+##        a1    a2    d1    d2     d3
+## par 1.531 1.083 4.663 1.957 -1.736
 ## 
 ## $Benefit
-##        a1     a2    d1    d2     d3
-## par 0.479 -1.672 4.005 1.201 -2.055
+##        a1    a2    d1    d2     d3
+## par 0.484 1.653 3.989 1.195 -2.044
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
@@ -319,5 +338,5 @@ coef(x2)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

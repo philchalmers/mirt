@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Multidimensional discrete item response theory</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Multidimensional discrete item response theory</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for mdirt {mirt}"><tr><td>mdirt {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for mdirt {mirt}"><tr><td>mdirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Multidimensional discrete item response theory</h2>
 
@@ -98,7 +97,7 @@ for more details and examples</p>
 
 <p>The latent class IRT model with two latent classes has the form
 </p>
-<p align="center"><i>P(x = k|&theta;_1, &theta;_2, a1, a2) = \frac{exp(s_k (a1 &theta;_1 + a2 &theta;_2))}{
+<p style="text-align: center;"><i>P(x = k|&theta;_1, &theta;_2, a1, a2) = \frac{exp(s_k (a1 &theta;_1 + a2 &theta;_2))}{
   &sum;_j^K exp(s_j (a1 &theta;_1 + a2 &theta;_2))}</i></p>
 
 <p>where the <i>&theta;</i> values generally take on discrete points (such as 0 or 1), and
@@ -112,7 +111,7 @@ first category slope parameters (<i>a1</i> and <i>a2</i>) are never freely estim
 <h3>See Also</h3>
 
 <p><code><a href="fscores.html">fscores</a></code>, <code><a href="mirt.model.html">mirt.model</a></code>, <code><a href="M2.html">M2</a></code>,
-<code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>, <code><a href="mirtCluster.html">mirtCluster</a></code>,
+<code><a href="itemfit.html">itemfit</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>, <code><a href="mirtCluster.html">mirtCluster</a></code>,
 <code><a href="../../lavaan/html/lavTestWald.html">wald</a></code>, <code><a href="coef-method.html">coef-method</a></code>, <code><a href="summary-method.html">summary-method</a></code>,
 <code><a href="anova-method.html">anova-method</a></code>, <code><a href="residuals-method.html">residuals-method</a></code>
 </p>
@@ -134,7 +133,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 250 EM iterations.
-## mirt version: 1.9 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 2
@@ -154,7 +153,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.9 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 3
@@ -389,7 +388,7 @@ table(class_prob)
 
 <pre><code>## class_prob
 ##   1   2 
-## 677 323
+## 657 343
 </code></pre>
 
 <pre><code class="r"># fit with random starting points (run in parallel to save time)
@@ -403,8 +402,8 @@ mirtCluster()
 </code></pre>
 
 <pre><code>## Model log-likelihoods:
-##  [1] -2467.408 -2467.408 -2467.407 -2467.406 -2467.407 -2467.408 -2467.407
-##  [8] -2467.407 -2467.407 -2467.408
+##  [1] -2467.407 -2467.408 -2467.407 -2467.407 -2467.408 -2467.408 -2467.408
+##  [8] -2467.408 -2467.408 -2467.408
 </code></pre>
 
 <pre><code class="r">#--------------------------
@@ -429,7 +428,7 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 341 EM iterations.
-## mirt version: 1.9 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 3
@@ -508,7 +507,7 @@ dat &lt;- key2binary(SAT12,
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 397 EM iterations.
-## mirt version: 1.9 
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 8
@@ -881,5 +880,5 @@ dat &lt;- key2binary(SAT12,
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

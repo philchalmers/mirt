@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Score a test by converting response patterns to binary data</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Score a test by converting response patterns to binary data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for key2binary {mirt}"><tr><td>key2binary {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for key2binary {mirt}"><tr><td>key2binary {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Score a test by converting response patterns to binary data</h2>
 
@@ -96,10 +95,42 @@ head(SAT12)
 <pre><code class="r">key &lt;- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 
 dicho.SAT12 &lt;- key2binary(SAT12,key)
+head(dicho.SAT12)
+</code></pre>
 
-## End(No test)
+<pre><code>##      Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9
+## [1,]      1      1      1      1      1      1      1      1      1
+## [2,]      0      1      0      0      1      0      1      0      1
+## [3,]      1      1      1      0      1      0      1      0      1
+## [4,]      0      1      0      1      1      0      1      0      1
+## [5,]      0      1      1      1      1      0      1      1      0
+## [6,]      1      1      0      0      1      0      1      0      1
+##      Item.10 Item.11 Item.12 Item.13 Item.14 Item.15 Item.16 Item.17
+## [1,]       1       1       1       1       1       1       1       1
+## [2,]       1       1       0       1       1       1       0       1
+## [3,]       0       1       0       0       1       1       0       1
+## [4,]       0       1       1       1       1       1       0       1
+## [5,]       0       1       1       1       1       1       0       1
+## [6,]       1       1       0       1       1       1       0       1
+##      Item.18 Item.19 Item.20 Item.21 Item.22 Item.23 Item.24 Item.25
+## [1,]       1       1       1       1       1       1       1       1
+## [2,]       0       1       1       1       1       0       1       0
+## [3,]       0       0       1       1       1       0       1       1
+## [4,]       0       0       1       1       0       0       0       0
+## [5,]       0       1       1       1       1       0       1       0
+## [6,]       1       1       1       1       1       1       1       0
+##      Item.26 Item.27 Item.28 Item.29 Item.30 Item.31 Item.32
+## [1,]       1       1       1       1       1       1       1
+## [2,]       0       1       0       0       0       1       0
+## [3,]       0       1       1       0       0       1       0
+## [4,]       0       1       1       0       0       1       0
+## [5,]       1       1       1       1       0       1       0
+## [6,]       0       1       0       0       0       1       0
+</code></pre>
+
+<pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

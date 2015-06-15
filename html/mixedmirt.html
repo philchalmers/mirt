@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Mixed effects modeling for MIRT models</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Mixed effects modeling for MIRT models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for mixedmirt {mirt}"><tr><td>mixedmirt {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for mixedmirt {mirt}"><tr><td>mixedmirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Mixed effects modeling for MIRT models</h2>
 
@@ -50,8 +49,8 @@ numerically ordered data, with missing data coded as <code>NA</code></p>
 </td></tr>
 <tr valign="top"><td><code>model</code></td>
 <td>
-<p>an object returned from <code>mirt.model()</code> declaring how
-the factor model is to be estimated. See <code><a href="mirt.model.html">mirt.model</a></code> for
+<p>an object returned from, or a string to be passed to, <code>mirt.model()</code>
+to declare how the IRT model is to be estimated. See <code><a href="mirt.model.html">mirt.model</a></code> for
 more details</p>
 </td></tr>
 <tr valign="top"><td><code>fixed</code></td>
@@ -143,7 +142,7 @@ SEtol default increased to .0001. See <code><a href="mirt.html">mirt</a></code> 
 
 <p>For dichotomous response models, <code>mixedmirt</code> follows the general form
 </p>
-<p align="center"><i>P(x = 1|&theta;, &psi;) = g + \frac{(u - g)}{1 + exp(-1 * [&theta; a +
+<p style="text-align: center;"><i>P(x = 1|&theta;, &psi;) = g + \frac{(u - g)}{1 + exp(-1 * [&theta; a +
  X &beta; + Z &delta;])}</i></p>
 
 <p>where X is a design matrix with associated <i>&beta;</i> fixed effect intercept coefficients,
@@ -163,7 +162,7 @@ polytomous items the intercepts for the dichotomous models are also estimated fo
 latent regression and multilevel IRT models by using the <code>lr.fixed</code> and <code>lr.random</code>
 inputs. These effects decompose <i>&theta;</i> such that
 </p>
-<p align="center"><i>&theta; = V &Gamma; + W &zeta; + &epsilon;</i></p>
+<p style="text-align: center;"><i>&theta; = V &Gamma; + W &zeta; + &epsilon;</i></p>
 
 <p>where V and W are fixed and random effects design matricies for the associated coefficients.
 </p>
@@ -188,7 +187,7 @@ use the <code><a href="randef.html">randef</a></code> function.
 <h3>References</h3>
 
 <p>Chalmers, R. P. (2015, in press). Extended Mixed-Effects Item Response Models
-with the MH-RM Algorithm. <EM>Journal of Educational Measurement</EM>.
+with the MH-RM Algorithm. <em>Journal of Educational Measurement</em>.
 </p>
 
 
@@ -221,7 +220,7 @@ mirtCluster()
 </code></pre>
 
 <pre><code class="r">#specify IRT model
-model &lt;- mirt.model(&#39;Theta = 1-10&#39;)
+model &lt;- &#39;Theta = 1-10&#39;
 
 #model with no person predictors
 mod0 &lt;- mirt(data, model, itemtype = &#39;Rasch&#39;)
@@ -239,7 +238,7 @@ anova(mod0, mod1)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
-## 2 8117.669 8118.163 8136.450 8177.730 -4045.834 712.498   2   0
+## 2 8118.215 8118.709 8136.996 8178.276 -4046.107 711.952   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -343,7 +342,13 @@ library(lme4)
 </code></pre>
 
 <pre><code>## Loading required package: Matrix
-## Loading required package: Rcpp
+## 
+## Attaching package: &#39;Matrix&#39;
+## 
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     crossprod, tcrossprod
+## 
 ## 
 ## Attaching package: &#39;lme4&#39;
 ## 
@@ -387,9 +392,9 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 8117.669 8118.163 8136.450 8177.730 -4045.834    NaN NaN NaN
-## 2 7968.209 7969.601 7999.992 8069.851 -3962.105 167.46   9   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 8118.215 8118.709 8136.996 8178.276 -4046.107     NaN NaN NaN
+## 2 7967.193 7968.585 7998.976 8068.834 -3961.596 169.022   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -430,8 +435,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8105.371 8105.943 8125.597 8170.053 -4038.686     NaN NaN NaN
-## 2 7968.209 7969.601 7999.992 8069.851 -3962.105 153.162   8   0
+## 1 8105.358 8105.930 8125.584 8170.039 -4038.679     NaN NaN NaN
+## 2 7967.193 7968.585 7998.976 8068.834 -3961.596 154.166   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -670,11 +675,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] 0.00131 0.09045 0.00294 0.06529 -0.10512 ...
+##  $ Theta: num [1:750, 1] -0.0571 0.0555 -0.0381 0.0426 -0.1089 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -1.91 -1.2 -1.43 -1.22 -1.5 ...
+##  $ group: num [1:50, 1:2] -1.99 -1.28 -1.36 -1.19 -1.48 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -685,7 +690,7 @@ str(eff)
 data(SAT12)
 data &lt;- key2binary(SAT12,
                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-model &lt;- mirt.model(&#39;Theta = 1-32&#39;)
+model &lt;- &#39;Theta = 1-32&#39;
 
 # Suppose that the first 16 items were suspected to be easier than the last 16 items,
 #   and we wish to test this item structure hypothesis (more intercept designs are possible
@@ -959,8 +964,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25463.29 25463.33 25466.96 25476.49 -12728.65      NaN NaN NaN
-## 2 20485.18 20489.39 20526.74 20634.68 -10208.59 5040.113  31   0
+## 1 25468.53 25468.57 25472.19 25481.72 -12731.26      NaN NaN NaN
+## 2 20483.06 20487.27 20524.62 20632.56 -10207.53 5047.465  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1537,9 +1542,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
-## 1 3264.195 3265.309 3275.372 3319.793 -1618.098    NaN NaN    NaN
-## 2 3257.501 3259.137 3271.072 3325.012 -1611.750 12.695   3 0.0053
+<pre><code>##       AIC     AICc    SABIC      BIC    logLik     X2  df      p
+## 1 3264.55 3265.664 3275.727 3320.148 -1618.275    NaN NaN    NaN
+## 2 3255.89 3257.526 3269.461 3323.401 -1610.945 14.661   3 0.0021
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1632,8 +1637,8 @@ anova(rmod0, rmod1b)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9743.151 9743.448 9761.043 9795.977 -4860.576     NaN NaN NaN
-## 2 9496.592 9497.003 9517.738 9559.024 -4735.296 250.559   2   0
+## 1 9743.156 9743.453 9761.048 9795.982 -4860.578     NaN NaN NaN
+## 2 9495.025 9495.436 9516.171 9557.457 -4734.513 252.131   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1641,16 +1646,16 @@ anova(rmod0, rmod1b)
 
 <pre><code>## $items
 ##         a1      d g u
-## Item_1   1 -0.437 0 1
+## Item_1   1 -0.438 0 1
 ## Item_2   1  0.257 0 1
 ## Item_3   1 -0.555 0 1
 ## Item_4   1  1.758 0 1
 ## Item_5   1  0.416 0 1
 ## Item_6   1 -0.736 0 1
-## Item_7   1  0.690 0 1
-## Item_8   1  0.793 0 1
+## Item_7   1  0.689 0 1
+## Item_8   1  0.792 0 1
 ## Item_9   1  0.674 0 1
-## Item_10  1 -0.251 0 1
+## Item_10  1 -0.252 0 1
 ## 
 ## $means
 ## F1 
@@ -1658,13 +1663,13 @@ anova(rmod0, rmod1b)
 ## 
 ## $cov
 ##       F1
-## F1 0.981
+## F1 0.985
 ## 
 ## $lr.betas
 ##                F1
 ## (Intercept) 0.000
 ## groupg2     0.810
-## groupg3     1.776
+## groupg3     1.778
 </code></pre>
 
 <pre><code class="r">summary(rmod1b)
@@ -1703,9 +1708,9 @@ anova(mod0, mod1b)
 ##     items, itemtype = &quot;2PL&quot;, lr.fixed = ~group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 9743.773 9744.729 9776.304 9839.821 -4851.887    NaN NaN NaN
-## 2 9495.293 9496.447 9531.077 9600.946 -4725.647 252.48   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
+## 2 9497.204 9498.358 9532.988 9602.857 -4726.602 250.569   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1714,7 +1719,7 @@ anova(mod0, mod1b)
 <pre><code>##                F1
 ## (Intercept) 0.000
 ## groupg2     0.815
-## groupg3     1.800
+## groupg3     1.802
 </code></pre>
 
 <pre><code class="r">summary(mod1b)
@@ -1749,8 +1754,8 @@ anova(mod0, mod1b)
 </code></pre>
 
 <pre><code class="r"># specifying specific regression effects is accomplished by passing a list of formula
-model &lt;- mirt.model(&#39;F1 = 1-5
-                     F2 = 6-10&#39;)
+model &lt;- &#39;F1 = 1-5
+         F2 = 6-10&#39;
 covdata$contvar &lt;- rnorm(nrow(covdata))
 mod2 &lt;- mirt(dat, model, itemtype = &#39;Rasch&#39;, covdata=covdata,
         formula = list(F1 = ~ group + contvar, F2 = ~ group))
@@ -1759,14 +1764,14 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0   0.89      0  0.702
+## par      0      0  1.097      0  0.833
 ## 
 ## $lr.betas
 ##                F1    F2
 ## (Intercept) 0.000 0.000
-## groupg2     0.831 0.738
-## groupg3     1.622 1.744
-## contvar     0.055 0.000
+## groupg2     0.857 0.753
+## groupg3     1.716 1.816
+## contvar     0.070 0.000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1786,23 +1791,23 @@ summary(mod2b)
 ## 
 ## $Theta
 ##      F1    F2
-## F1 1.04 0.000
-## F2 0.00 0.754
+## F1 1.06 0.000
+## F2 0.00 0.757
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
 ##                F1    F2
 ## (Intercept) 0.000 0.000
-## groupg2     0.836 0.676
-## groupg3     1.676 1.732
-## contvar     0.050 0.000
+## groupg2     0.833 0.701
+## groupg3     1.665 1.729
+## contvar     0.074 0.000
 ## 
 ##             Std.Error_F1 Std.Error_F2   z_F1   z_F2
 ## (Intercept)           NA           NA     NA     NA
-## groupg2            0.038        0.057 21.903 11.878
-## groupg3            0.083        0.132 20.121 13.160
-## contvar            0.041           NA  1.211     NA
+## groupg2            0.062        0.067 13.512 10.470
+## groupg3            0.066        0.088 25.281 19.593
+## contvar            0.043           NA  1.721     NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1887,14 +1892,14 @@ summary(mod2)
 ##     items + group_pred, random = ~1 | group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23679.16 23679.31 23708.24 23746.37 -11827.58     NaN NaN NaN
-## 2 22909.68 22909.86 22941.19 22982.49 -11441.84 771.476   1   0
+<pre><code>##        AIC     AICc    SABIC     BIC    logLik      X2  df   p
+## 1 23683.99 23684.15 23713.08 23751.2 -11830.00     NaN NaN NaN
+## 2 22907.19 22907.37 22938.70 22980.0 -11440.59 778.807   1   0
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

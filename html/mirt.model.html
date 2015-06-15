@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Specify model loadings</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Specify model loadings</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for mirt.model {mirt}"><tr><td>mirt.model {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for mirt.model {mirt}"><tr><td>mirt.model {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Specify model loadings</h2>
 
@@ -17,7 +16,8 @@
 
 <p>The <code>mirt.model</code> function scans/reads user input to specify the
 confirmatory model. Item locations must be used in the specifications if no
-<code>itemnames</code> argument is supplied.
+<code>itemnames</code> argument is supplied. This is called implicitly by estimation functions
+when a string is passed to the <code>model</code> argument.
 </p>
 
 
@@ -94,7 +94,8 @@ The input format is
 <code>CONSTRAIN = (items, ..., parameterName(s), OptionalGroup),
   (items, ..., parameterName, OptionalGroup)</code>.
 If <code>OptionalGroup</code> is omitted then the constraints are applied within all groups.
-For example, in a single group 10-item dichotomous tests, using the default 2PL model,
+</p>
+<p>For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 the first and last 5 item slopes (a1) can be constrained to be equal by using
 <code>CONSTRAIN = (1-5, a1), (6-10, a1)</code>, or some combination
 such as <code>CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)</code>.
@@ -107,7 +108,8 @@ the second slope in item 3 would be <code>CONSTRAIN = (1, 3, a1, a2)</code>
 <dt>CONSTRAINB</dt><dd><p>A bracketed, comma separate list specifying equality constrains between groups.
 The input format is <code>CONSTRAINB = (items, ..., parameterName),
   (items, ..., parameterName)</code>.
-For example, in a two group 10-item dichotomous tests, using the default 2PL model, the first
+</p>
+<p>For example, in a two group 10-item dichotomous tests, using the default 2PL model, the first
 5 item slopes (a1) can be constrained to be equal across both groups by using
 <code>CONSTRAINB = (1-5, a1)</code>, or some combination such as <code>CONSTRAINB = (1-3,4,5,a1)</code></p>
 </dd>
@@ -116,16 +118,41 @@ The input format is
 <code>PRIOR = (items, ..., parameterName, priorType, val1, val2, OptionalGroup),
   (items, ..., parameterName, priorType, val1, val2, OptionalGroup)</code>.
 If <code>OptionalGroup</code> is omitted then the priors are defined for all groups.
-For example, in a single group 10-item dichotomous tests, using the default 2PL model,
+</p>
+<p>For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
 <code>PRIOR = (1-5, d, norm, 0, 2)</code></p>
 </dd>
+<dt>LBOUND</dt><dd><p>A bracketed, comma separate list specifying lower bounds for estimated
+parameters (used in optimizers such as <code>L-BFGS-B</code> and <code>nlminb</code>).
+The input format is <code>LBOUND = (items, ..., parameterName, value),
+  (items, ..., parameterName, value)</code>.
+</p>
+<p>For example, in a single group 10-item dichotomous tests, using the 3PL model and
+setting lower bounds for the 'g' parameters for the first 5 items to 0.2 is accomplished with
+<code>LBOUND = (1-5, g, 0.2)</code></p>
+</dd>
+<dt>UBOUND</dt><dd><p>same as LBOUND, but specifying upper bounds in estimated parameters</p>
+</dd>
 <dt>START</dt><dd><p>A bracketed, comma separate list specifying the starting values for individual parameters.
-The input is of the form <code>(item_number, parname, value)</code>. For instance, setting the 10th item
-slope parameter (a1) to 1.0 is specified with <code>START = (1, a1, 1.0)</code>
+The input is of the form <code>(items, ..., parameterName, value)</code>. For instance, setting the 10th and
+12th to 15th item slope parameters (a1) to 1.0 is specified with <code>START = (10, 12-15, a1, 1.0)</code>
 </p>
 <p>For more hands on control of the starting values pass the argument <code>pars = 'values'</code> through
 whatever estimation function is being used</p>
+</dd>
+<dt>FIXED</dt><dd><p>A bracketed, comma separate list specifying which parameters should be fixed at their
+starting values (i.e., not freely estimated).
+The input is of the form <code>(items, ..., parameterName)</code>. For instance, fixing the 10th and
+12th to 15th item slope parameters (a1) is accomplished with <code>FIXED = (10, 12-15, a1)</code>
+</p>
+<p>For more hands on control of the estimated values pass the argument <code>pars = 'values'</code> through
+whatever estimation function is being used</p>
+</dd>
+<dt>NEXPLORE</dt><dd><p>Number of exploratory factors to extract. Usually this is not required
+because passing a numeric value to the <code>model</code> argument in the estimation function
+will generate an exploratory factor analysis model, however if different start values,
+priors, lower and upper bounds, etc, are desired then this input can be used</p>
 </dd>
 </dl>
 
@@ -163,6 +190,10 @@ s &lt;- &#39;F1 = 1,2,3,4-10
       (F1*F2) = 1,2,3,4-10
       COV = F1*F2&#39;
 model &lt;- mirt.model(s)
+
+# strings can also be passed to the estimation functions directly,
+#   which silently calls mirt.model(). E.g., using the string above:
+# mod &lt;- mirt(data, s)
 
 
 #Q-matrix specification
@@ -210,5 +241,5 @@ mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

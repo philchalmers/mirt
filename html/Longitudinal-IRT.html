@@ -215,7 +215,14 @@ as the time points increase.</p>
 of integration (1 for each time point + residual item factor)</p>
 
 <pre><code class="r">library(mirt)
-load(&#39;longitudinal-IRT.Rdata&#39;)
+</code></pre>
+
+<pre><code>## Loading required package: stats4
+## Loading required package: lattice
+## Loading required package: methods
+</code></pre>
+
+<pre><code class="r">load(&#39;longitudinal-IRT.Rdata&#39;)
 head(dat)
 </code></pre>
 
@@ -313,58 +320,45 @@ for(i in 1:20){
 </code></pre>
 
 <pre><code>## 
-Iteration: 1, Log-Lik: -48342.337, Max-Change: 0.66164
-Iteration: 2, Log-Lik: -48195.416, Max-Change: 0.79201
-Iteration: 3, Log-Lik: -47352.094, Max-Change: 0.27608
-Iteration: 4, Log-Lik: -47127.821, Max-Change: 0.11043
-Iteration: 5, Log-Lik: -47029.439, Max-Change: 0.06586
-Iteration: 6, Log-Lik: -46956.202, Max-Change: 0.04815
-Iteration: 7, Log-Lik: -46917.478, Max-Change: 0.06323
-Iteration: 8, Log-Lik: -46881.628, Max-Change: 0.05171
-Iteration: 9, Log-Lik: -46856.412, Max-Change: 0.03974
-Iteration: 10, Log-Lik: -46842.286, Max-Change: 0.04834
-Iteration: 11, Log-Lik: -46832.672, Max-Change: 0.07753
-Iteration: 12, Log-Lik: -46841.113, Max-Change: 0.09948
-Iteration: 13, Log-Lik: -46838.151, Max-Change: 0.09795
-Iteration: 14, Log-Lik: -46937.464, Max-Change: 0.05178
-Iteration: 15, Log-Lik: -46902.180, Max-Change: 0.04524
-Iteration: 16, Log-Lik: -46955.211, Max-Change: 0.02693
-Iteration: 17, Log-Lik: -46903.463, Max-Change: 0.02021
-Iteration: 18, Log-Lik: -46897.876, Max-Change: 0.02133
-Iteration: 19, Log-Lik: -46944.243, Max-Change: 0.05231
-Iteration: 20, Log-Lik: -46952.083, Max-Change: 0.04808
-Iteration: 21, Log-Lik: -46945.684, Max-Change: 0.06494
-Iteration: 22, Log-Lik: -46932.776, Max-Change: 0.05126
-Iteration: 23, Log-Lik: -46926.868, Max-Change: 0.05465
-Iteration: 24, Log-Lik: -46919.281, Max-Change: 0.03304
-Iteration: 25, Log-Lik: -46918.065, Max-Change: 0.03886
-Iteration: 26, Log-Lik: -46941.648, Max-Change: 0.03555
-Iteration: 27, Log-Lik: -46933.631, Max-Change: 0.05223
-Iteration: 28, Log-Lik: -46922.320, Max-Change: 0.04394
-Iteration: 29, Log-Lik: -46913.827, Max-Change: 0.03499
-Iteration: 30, Log-Lik: -46907.588, Max-Change: 0.03713
-Iteration: 31, Log-Lik: -46902.232, Max-Change: 0.02274
-Iteration: 32, Log-Lik: -46898.958, Max-Change: 0.02715
-Iteration: 33, Log-Lik: -46896.099, Max-Change: 0.01828
-Iteration: 34, Log-Lik: -46891.504, Max-Change: 0.01916
-Iteration: 35, Log-Lik: -46889.623, Max-Change: 0.01720
-Iteration: 36, Log-Lik: -46888.086, Max-Change: 0.01319
-Iteration: 37, Log-Lik: -46885.489, Max-Change: 0.01199
-Iteration: 38, Log-Lik: -46884.086, Max-Change: 0.00833
-Iteration: 39, Log-Lik: -46883.588, Max-Change: 0.00979
-Iteration: 40, Log-Lik: -46881.852, Max-Change: 0.00612
-Iteration: 41, Log-Lik: -46881.525, Max-Change: 0.00400
-Iteration: 42, Log-Lik: -46881.402, Max-Change: 0.00397
-Iteration: 43, Log-Lik: -46880.927, Max-Change: 0.00208
-Iteration: 44, Log-Lik: -46880.895, Max-Change: 0.00176
-Iteration: 45, Log-Lik: -46880.884, Max-Change: 0.00268
-Iteration: 46, Log-Lik: -46880.843, Max-Change: 0.00163
-Iteration: 47, Log-Lik: -46880.824, Max-Change: 0.00118
-Iteration: 48, Log-Lik: -46880.816, Max-Change: 0.00207
-Iteration: 49, Log-Lik: -46880.792, Max-Change: 0.00191
-Iteration: 50, Log-Lik: -46880.780, Max-Change: 0.00154
-Iteration: 51, Log-Lik: -46880.773, Max-Change: 0.00164
-Iteration: 52, Log-Lik: -46880.761, Max-Change: 0.00096
+Iteration: 1, Log-Lik: -48355.382, Max-Change: 0.66106
+Iteration: 2, Log-Lik: -48279.135, Max-Change: 0.77608
+Iteration: 3, Log-Lik: -47521.674, Max-Change: 0.31148
+Iteration: 4, Log-Lik: -47325.568, Max-Change: 0.15015
+Iteration: 5, Log-Lik: -47249.454, Max-Change: 0.08786
+Iteration: 6, Log-Lik: -47213.620, Max-Change: 0.06207
+Iteration: 7, Log-Lik: -47185.354, Max-Change: 0.08914
+Iteration: 8, Log-Lik: -47174.816, Max-Change: 0.15832
+Iteration: 9, Log-Lik: -47183.589, Max-Change: 0.17857
+Iteration: 10, Log-Lik: -47145.711, Max-Change: 0.04727
+Iteration: 11, Log-Lik: -47420.567, Max-Change: 0.14029
+Iteration: 12, Log-Lik: -47350.787, Max-Change: 0.09976
+Iteration: 13, Log-Lik: -47314.683, Max-Change: 0.05215
+Iteration: 14, Log-Lik: -47322.719, Max-Change: 0.04262
+Iteration: 15, Log-Lik: -47309.410, Max-Change: 0.04117
+Iteration: 16, Log-Lik: -47297.966, Max-Change: 0.05278
+Iteration: 17, Log-Lik: -47288.928, Max-Change: 0.06830
+Iteration: 18, Log-Lik: -47275.923, Max-Change: 0.03599
+Iteration: 19, Log-Lik: -47271.014, Max-Change: 0.03780
+Iteration: 20, Log-Lik: -47303.103, Max-Change: 0.03087
+Iteration: 21, Log-Lik: -47298.492, Max-Change: 0.02196
+Iteration: 22, Log-Lik: -47294.942, Max-Change: 0.03447
+Iteration: 23, Log-Lik: -47290.770, Max-Change: 0.02703
+Iteration: 24, Log-Lik: -47287.575, Max-Change: 0.01993
+Iteration: 25, Log-Lik: -47283.550, Max-Change: 0.01960
+Iteration: 26, Log-Lik: -47282.071, Max-Change: 0.01287
+Iteration: 27, Log-Lik: -47280.863, Max-Change: 0.01394
+Iteration: 28, Log-Lik: -47278.505, Max-Change: 0.01032
+Iteration: 29, Log-Lik: -47277.353, Max-Change: 0.00364
+Iteration: 30, Log-Lik: -47277.251, Max-Change: 0.00399
+Iteration: 31, Log-Lik: -47276.998, Max-Change: 0.00312
+Iteration: 32, Log-Lik: -47276.961, Max-Change: 0.00317
+Iteration: 33, Log-Lik: -47276.942, Max-Change: 0.00296
+Iteration: 34, Log-Lik: -47276.871, Max-Change: 0.00215
+Iteration: 35, Log-Lik: -47276.858, Max-Change: 0.00240
+Iteration: 36, Log-Lik: -47276.849, Max-Change: 0.00177
+Iteration: 37, Log-Lik: -47276.841, Max-Change: 0.00165
+Iteration: 38, Log-Lik: -47276.835, Max-Change: 0.00153
+Iteration: 39, Log-Lik: -47276.829, Max-Change: 0.00048
 </code></pre>
 
 <pre><code>## 
@@ -373,60 +367,60 @@ Iteration: 52, Log-Lik: -46880.761, Max-Change: 0.00096
 ##     constrain = constraints, TOL = 0.001)
 ## 
 ## Full-information item factor analysis with 23 factor(s).
-## Converged within 0.001 tolerance after 52 EM iterations.
-## mirt version: 1.8 
+## Converged within 0.001 tolerance after 39 EM iterations.
+## mirt version: 1.10 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 9
 ## 
-## Log-likelihood = -46880.76
-## AIC = 93935.52; AICc = 93952.31
-## BIC = 94362.5; SABIC = 94086.18
+## Log-likelihood = -47276.83
+## AIC = 94727.66; AICc = 94744.45
+## BIC = 95154.63; SABIC = 94878.32
 </code></pre>
 
 <pre><code class="r">coef(mod)[[1]]
 </code></pre>
 
 <pre><code>##        a1 a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par 0.968  0  0 0.047  0  0  0  0  0   0   0   0   0   0   0   0   0   0
-##     a19 a20 a21 a22 a23   d1     d2
-## par   0   0   0   0   0 0.26 -0.315
+## par 0.735  0  0 0.075  0  0  0  0  0   0   0   0   0   0   0   0   0   0
+##     a19 a20 a21 a22 a23    d1     d2
+## par   0   0   0   0   0 0.199 -0.374
 </code></pre>
 
 <pre><code class="r">coef(mod)[[21]]
 </code></pre>
 
 <pre><code>##     a1    a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par  0 0.968  0 0.047  0  0  0  0  0   0   0   0   0   0   0   0   0   0
-##     a19 a20 a21 a22 a23   d1     d2
-## par   0   0   0   0   0 0.26 -0.315
+## par  0 0.735  0 0.075  0  0  0  0  0   0   0   0   0   0   0   0   0   0
+##     a19 a20 a21 a22 a23    d1     d2
+## par   0   0   0   0   0 0.199 -0.374
 </code></pre>
 
 <pre><code class="r">coef(mod)[[41]]
 </code></pre>
 
 <pre><code>##     a1 a2    a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par  0  0 0.968 0.047  0  0  0  0  0   0   0   0   0   0   0   0   0   0
-##     a19 a20 a21 a22 a23   d1     d2
-## par   0   0   0   0   0 0.26 -0.315
+## par  0  0 0.735 0.075  0  0  0  0  0   0   0   0   0   0   0   0   0   0
+##     a19 a20 a21 a22 a23    d1     d2
+## par   0   0   0   0   0 0.199 -0.374
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
 <pre><code>##        a1 a2 a3 a4    a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par 0.799  0  0  0 0.328  0  0  0  0   0   0   0   0   0   0   0   0   0
+## par 0.611  0  0  0 0.335  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23     d1     d2
-## par   0   0   0   0   0 -0.369 -0.651
+## par   0   0   0   0   0 -0.421 -0.703
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
 <pre><code>##        a1 a2 a3 a4    a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18
-## par 0.799  0  0  0 0.328  0  0  0  0   0   0   0   0   0   0   0   0   0
+## par 0.611  0  0  0 0.335  0  0  0  0   0   0   0   0   0   0   0   0   0
 ##     a19 a20 a21 a22 a23     d1     d2
-## par   0   0   0   0   0 -0.369 -0.651
+## par   0   0   0   0   0 -0.421 -0.703
 </code></pre>
 
 <pre><code class="r">coef(mod)$GroupPars[,c(&#39;MEAN_2&#39;, &#39;MEAN_3&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_31&#39;, &#39;COV_22&#39;, 
@@ -434,7 +428,7 @@ Iteration: 52, Log-Lik: -46880.761, Max-Change: 0.00096
 </code></pre>
 
 <pre><code>## MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33 
-##  0.513  0.998  1.000  1.053  1.002  1.399  1.056  1.004
+##  0.642  1.499  1.000  1.020  1.001  1.620  1.022  1.003
 </code></pre>
 
 <p>When computing latent trait scores it&#39;s best to use a method that isn&#39;t as affected by higher dimensionality, such as the MAP approach. </p>
@@ -477,100 +471,100 @@ mod &lt;- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=15, p
 </code></pre>
 
 <pre><code>## 
-Iteration: 1, Log-Lik: -49188.314, Max-Change: 1.23608
-Iteration: 2, Log-Lik: -48337.367, Max-Change: 0.51070
-Iteration: 3, Log-Lik: -47278.828, Max-Change: 0.15642
-Iteration: 4, Log-Lik: -47031.950, Max-Change: 0.07714
-Iteration: 5, Log-Lik: -46930.911, Max-Change: 0.08224
-Iteration: 6, Log-Lik: -46882.760, Max-Change: 0.08262
-Iteration: 7, Log-Lik: -46873.034, Max-Change: 0.03932
-Iteration: 8, Log-Lik: -46862.905, Max-Change: 0.03098
-Iteration: 9, Log-Lik: -46856.114, Max-Change: 0.02702
-Iteration: 10, Log-Lik: -46850.862, Max-Change: 0.01886
-Iteration: 11, Log-Lik: -46848.050, Max-Change: 0.02559
-Iteration: 12, Log-Lik: -46845.013, Max-Change: 0.01833
-Iteration: 13, Log-Lik: -46842.372, Max-Change: 0.01719
-Iteration: 14, Log-Lik: -46840.911, Max-Change: 0.01303
-Iteration: 15, Log-Lik: -46839.732, Max-Change: 0.01215
-Iteration: 16, Log-Lik: -46836.953, Max-Change: 0.00858
-Iteration: 17, Log-Lik: -46836.545, Max-Change: 0.00740
-Iteration: 18, Log-Lik: -46836.264, Max-Change: 0.00801
-Iteration: 19, Log-Lik: -46835.390, Max-Change: 0.00517
-Iteration: 20, Log-Lik: -46835.234, Max-Change: 0.00545
-Iteration: 21, Log-Lik: -46835.124, Max-Change: 0.00461
-Iteration: 22, Log-Lik: -46834.755, Max-Change: 0.00385
-Iteration: 23, Log-Lik: -46834.694, Max-Change: 0.00346
-Iteration: 24, Log-Lik: -46834.650, Max-Change: 0.00274
-Iteration: 25, Log-Lik: -46834.571, Max-Change: 0.00292
-Iteration: 26, Log-Lik: -46834.539, Max-Change: 0.00314
-Iteration: 27, Log-Lik: -46834.509, Max-Change: 0.00324
-Iteration: 28, Log-Lik: -46834.350, Max-Change: 0.00222
-Iteration: 29, Log-Lik: -46834.331, Max-Change: 0.00217
-Iteration: 30, Log-Lik: -46834.318, Max-Change: 0.00236
-Iteration: 31, Log-Lik: -46834.280, Max-Change: 0.00155
-Iteration: 32, Log-Lik: -46834.238, Max-Change: 0.00115
-Iteration: 33, Log-Lik: -46834.233, Max-Change: 0.00172
-Iteration: 34, Log-Lik: -46834.215, Max-Change: 0.00064
-Iteration: 35, Log-Lik: -46834.213, Max-Change: 0.00148
-Iteration: 36, Log-Lik: -46834.207, Max-Change: 0.00046
-Iteration: 37, Log-Lik: -46834.207, Max-Change: 0.00167
-Iteration: 38, Log-Lik: -46834.201, Max-Change: 0.00031
-Iteration: 39, Log-Lik: -46834.201, Max-Change: 0.00016
-Iteration: 40, Log-Lik: -46834.201, Max-Change: 0.00012
-Iteration: 41, Log-Lik: -46834.200, Max-Change: 0.00026
-Iteration: 42, Log-Lik: -46834.200, Max-Change: 0.00007
+Iteration: 1, Log-Lik: -49193.914, Max-Change: 1.11475
+Iteration: 2, Log-Lik: -48443.214, Max-Change: 0.50989
+Iteration: 3, Log-Lik: -47345.521, Max-Change: 0.20169
+Iteration: 4, Log-Lik: -47094.710, Max-Change: 0.09681
+Iteration: 5, Log-Lik: -47028.623, Max-Change: 0.05856
+Iteration: 6, Log-Lik: -47016.492, Max-Change: 0.05468
+Iteration: 7, Log-Lik: -47048.171, Max-Change: 0.06020
+Iteration: 8, Log-Lik: -47055.969, Max-Change: 0.34936
+Iteration: 9, Log-Lik: -47082.404, Max-Change: 0.02965
+Iteration: 10, Log-Lik: -47078.588, Max-Change: 0.06007
+Iteration: 11, Log-Lik: -47072.987, Max-Change: 0.02444
+Iteration: 12, Log-Lik: -47068.621, Max-Change: 0.02450
+Iteration: 13, Log-Lik: -47063.385, Max-Change: 0.01971
+Iteration: 14, Log-Lik: -47060.534, Max-Change: 0.01775
+Iteration: 15, Log-Lik: -47058.429, Max-Change: 0.01362
+Iteration: 16, Log-Lik: -47052.041, Max-Change: 0.01835
+Iteration: 17, Log-Lik: -47050.517, Max-Change: 0.00987
+Iteration: 18, Log-Lik: -47049.840, Max-Change: 0.00779
+Iteration: 19, Log-Lik: -47049.272, Max-Change: 0.01134
+Iteration: 20, Log-Lik: -47048.585, Max-Change: 0.00509
+Iteration: 21, Log-Lik: -47048.319, Max-Change: 0.00479
+Iteration: 22, Log-Lik: -47047.315, Max-Change: 0.00593
+Iteration: 23, Log-Lik: -47047.119, Max-Change: 0.00346
+Iteration: 24, Log-Lik: -47047.050, Max-Change: 0.00290
+Iteration: 25, Log-Lik: -47046.882, Max-Change: 0.00214
+Iteration: 26, Log-Lik: -47046.850, Max-Change: 0.00191
+Iteration: 27, Log-Lik: -47046.823, Max-Change: 0.00292
+Iteration: 28, Log-Lik: -47046.760, Max-Change: 0.00219
+Iteration: 29, Log-Lik: -47046.733, Max-Change: 0.00295
+Iteration: 30, Log-Lik: -47046.718, Max-Change: 0.00214
+Iteration: 31, Log-Lik: -47046.679, Max-Change: 0.00221
+Iteration: 32, Log-Lik: -47046.663, Max-Change: 0.00347
+Iteration: 33, Log-Lik: -47046.651, Max-Change: 0.00154
+Iteration: 34, Log-Lik: -47046.647, Max-Change: 0.00214
+Iteration: 35, Log-Lik: -47046.640, Max-Change: 0.00209
+Iteration: 36, Log-Lik: -47046.634, Max-Change: 0.00183
+Iteration: 37, Log-Lik: -47046.611, Max-Change: 0.00076
+Iteration: 38, Log-Lik: -47046.602, Max-Change: 0.00030
+Iteration: 39, Log-Lik: -47046.602, Max-Change: 0.00014
+Iteration: 40, Log-Lik: -47046.602, Max-Change: 0.00011
+Iteration: 41, Log-Lik: -47046.602, Max-Change: 0.00030
+Iteration: 42, Log-Lik: -47046.601, Max-Change: 0.00007
 </code></pre>
 
 <pre><code class="r">coef(mod)[[1]]
 </code></pre>
 
-<pre><code>##     a1 a2   a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  0 0.29  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1 a2    a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
+## par  1  0 0.461  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 1.103 0.501
+## par   0   0   0 1.433 0.807
 </code></pre>
 
 <pre><code class="r">coef(mod)[[21]]
 </code></pre>
 
-<pre><code>##     a1 a2   a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  1 0.29  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1 a2    a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
+## par  1  1 0.461  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 1.103 0.501
+## par   0   0   0 1.433 0.807
 </code></pre>
 
 <pre><code class="r">coef(mod)[[41]]
 </code></pre>
 
-<pre><code>##     a1 a2   a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  2 0.29  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1 a2    a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
+## par  1  2 0.461  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 1.103 0.501
+## par   0   0   0 1.433 0.807
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
-<pre><code>##     a1 a2 a3   a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  0  0 0.66  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1 a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
+## par  1  0  0 0.769  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 0.313 0.002
+## par   0   0   0 0.596 0.275
 </code></pre>
 
 <pre><code class="r">coef(mod)[[2]]
 </code></pre>
 
-<pre><code>##     a1 a2 a3   a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
-## par  1  0  0 0.66  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
+<pre><code>##     a1 a2 a3    a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19
+## par  1  0  0 0.769  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
 ##     a20 a21 a22    d1    d2
-## par   0   0   0 0.313 0.002
+## par   0   0   0 0.596 0.275
 </code></pre>
 
 <pre><code class="r">coef(mod)$GroupPars[,c(&#39;MEAN_1&#39;, &#39;MEAN_2&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_22&#39;)]
 </code></pre>
 
 <pre><code>## MEAN_1 MEAN_2 COV_11 COV_21 COV_22 
-## -0.712  0.573  1.686 -0.001  0.000
+## -1.334  0.846  1.663  0.000  0.000
 </code></pre>
 
 </body>

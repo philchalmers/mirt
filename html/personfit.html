@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Person fit statistics</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Person fit statistics</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for personfit {mirt}"><tr><td>personfit {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for personfit {mirt}"><tr><td>personfit {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Person fit statistics</h2>
 
@@ -69,18 +68,18 @@ response pattern?</p>
 
 <p>Drasgow, F., Levine, M. V., &amp; Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
-<EM>Journal of Mathematical and Statistical Psychology, 38</EM>, 67-86.
+<em>Journal of Mathematical and Statistical Psychology, 38</em>, 67-86.
 </p>
 <p>Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit
-in IRT. <EM>Applied Psychological Measurement, 14</EM>, 127-137.
+in IRT. <em>Applied Psychological Measurement, 14</em>, 127-137.
 </p>
-<p>Wright B. D. &amp; Masters, G. N. (1982). <EM>Rating scale analysis</EM>. MESA Press.
+<p>Wright B. D. &amp; Masters, G. N. (1982). <em>Rating scale analysis</em>. MESA Press.
 </p>
 
 
 <h3>See Also</h3>
 
-<p><code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code>
+<p><code><a href="itemfit.html">itemfit</a></code>
 </p>
 
 
@@ -101,12 +100,12 @@ head(fit)
 </code></pre>
 
 <pre><code>##            Zh
-## 1  1.51087273
-## 2  0.44215437
-## 3  0.05453604
-## 4 -0.90757350
-## 5  1.51465857
-## 6  0.57818740
+## 1  1.51087634
+## 2  0.44216054
+## 3  0.05453194
+## 4 -0.90749083
+## 5  1.51465724
+## 6  0.57819040
 </code></pre>
 
 <pre><code class="r">#using precomputed Theta
@@ -115,12 +114,12 @@ head(personfit(x, Theta=Theta))
 </code></pre>
 
 <pre><code>##           Zh
-## 1  1.5855639
-## 2  0.6214433
-## 3  0.1307544
-## 4 -0.8525517
-## 5  1.5582679
-## 6  0.7044303
+## 1  1.5855678
+## 2  0.6214417
+## 3  0.1307468
+## 4 -0.8524306
+## 5  1.5582646
+## 6  0.7044259
 </code></pre>
 
 <pre><code class="r">#muliple group Rasch model example
@@ -133,8 +132,7 @@ dataset1 &lt;- simdata(a, d, N, itemtype)
 dataset2 &lt;- simdata(a, d, N, itemtype, sigma = matrix(1.5))
 dat &lt;- rbind(dataset1, dataset2)
 group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
-MGmodel1 &lt;- &#39;F1 = 1-15&#39;
-models &lt;- mirt.model(MGmodel1, quiet = TRUE)
+models &lt;- &#39;F1 = 1-15&#39;
 mod_Rasch &lt;- multipleGroup(dat, models, itemtype = &#39;Rasch&#39;, group = group)
 coef(mod_Rasch)
 </code></pre>
@@ -268,7 +266,7 @@ coef(mod_Rasch)
 ## 
 ## $D2$GroupPars
 ##     MEAN_1 COV_11
-## par      0  1.539
+## par      0   1.54
 </code></pre>
 
 <pre><code class="r">pf &lt;- personfit(mod_Rasch, method=&#39;MAP&#39;)
@@ -276,17 +274,17 @@ head(pf)
 </code></pre>
 
 <pre><code>##      outfit   z.outfit     infit     z.infit         Zh
-## 1 0.8450952 -0.3388483 0.8358307 -0.51210933  0.5245212
-## 2 0.8798787 -0.3516864 0.9021641 -0.38578487  0.4332935
-## 3 0.6691853 -1.5934085 0.7162439 -1.70722087  1.5619132
-## 4 0.9450736 -0.1678044 0.9758103 -0.06481209  0.1611778
-## 5 0.8033549 -1.0882891 0.8394031 -1.08648011  1.0780438
-## 6 1.0291300  0.2182953 1.0277270  0.23347740 -0.1819133
+## 1 0.8450963 -0.3388431 0.8358315 -0.51210441  0.5245168
+## 2 0.8798792 -0.3516826 0.9021646 -0.38578126  0.4332901
+## 3 0.6691851 -1.5934053 0.7162439 -1.70721711  1.5619102
+## 4 0.9450739 -0.1678023 0.9758107 -0.06480943  0.1611754
+## 5 0.8033548 -1.0882873 0.8394031 -1.08647818  1.0780421
+## 6 1.0291303  0.2182970 1.0277272  0.23347882 -0.1819148
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>

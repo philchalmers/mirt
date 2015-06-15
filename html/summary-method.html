@@ -1,7 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Summary of model object</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Summary of model object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
@@ -9,7 +8,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for summary-method {mirt}"><tr><td>summary-method {mirt}</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for summary-method {mirt}"><tr><td>summary-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Summary of model object</h2>
 
@@ -24,8 +23,9 @@ the fixed and random coefficients are printed.
 
 <pre>
 ## S4 method for signature 'SingleGroupClass'
-summary(object, rotate = NULL, Target = NULL,
-  suppress = 0, digits = 3, printCI = FALSE, verbose = TRUE, ...)
+summary(object, rotate = "oblimin",
+  Target = NULL, suppress = 0, digits = 3, printCI = FALSE,
+  verbose = TRUE, ...)
 </pre>
 
 
@@ -47,11 +47,14 @@ from the <code>GPArotation</code> package (see documentation therein).
 <code>'oblimax'</code>, <code>'entropy'</code>, <code>'quartimax'</code>, <code>'simplimax'</code>,
 <code>'bentlerT'</code>, <code>'bentlerQ'</code>, <code>'tandemI'</code>, <code>'tandemII'</code>,
 <code>'geominT'</code>, <code>'geominQ'</code>, <code>'cfT'</code>, <code>'cfQ'</code>, <code>'infomaxT'</code>,
-<code>'infomaxQ'</code>, <code>'mccammon'</code>, <code>'bifactorT'</code>, <code>'bifactorQ'</code></p>
+<code>'infomaxQ'</code>, <code>'mccammon'</code>, <code>'bifactorT'</code>, <code>'bifactorQ'</code>.
+</p>
+<p>For models that are not exploratory this input will automatically be set to <code>'none'</code></p>
 </td></tr>
 <tr valign="top"><td><code>Target</code></td>
 <td>
-<p>a dummy variable matrix indicting a target rotation pattern</p>
+<p>a dummy variable matrix indicting a target rotation pattern. This is required for
+rotations such as <code>'targetT'</code>, <code>'targetQ'</code>, <code>'pstT'</code>, and <code>'pstQ'</code></p>
 </td></tr>
 <tr valign="top"><td><code>suppress</code></td>
 <td>
@@ -98,18 +101,18 @@ summary(x)
 ## Rotated factor loadings: 
 ## 
 ##             F1     F2    h2
-## Comfort  0.598  0.035 0.380
-## Work    -0.056  0.800 0.597
-## Future   0.333  0.512 0.546
-## Benefit  0.728 -0.026 0.511
+## Comfort  0.602 -0.031 0.382
+## Work    -0.057 -0.797 0.592
+## Future   0.330 -0.515 0.548
+## Benefit  0.723  0.024 0.506
 ## 
-## Rotated SS loadings:  1.001 0.904 
+## Rotated SS loadings:  0.997 0.902 
 ## 
 ## Factor correlations: 
 ## 
-##       F1    F2
-## F1 1.000 0.506
-## F2 0.506 1.000
+##        F1     F2
+## F1  1.000 -0.511
+## F2 -0.511  1.000
 </code></pre>
 
 <pre><code class="r">summary(x, rotate = &#39;varimax&#39;)
@@ -120,13 +123,13 @@ summary(x)
 ## 
 ## Rotated factor loadings: 
 ## 
-##            F1     F2    h2
-## Comfort 0.217 -0.577 0.380
-## Work    0.763 -0.121 0.597
-## Future  0.602 -0.429 0.546
-## Benefit 0.197 -0.687 0.511
+##            F1    F2    h2
+## Comfort 0.216 0.579 0.382
+## Work    0.760 0.121 0.592
+## Future  0.605 0.428 0.548
+## Benefit 0.200 0.683 0.506
 ## 
-## Rotated SS loadings:  1.031 1.004 
+## Rotated SS loadings:  1.03 0.999 
 ## 
 ## Factor correlations: 
 ## 
@@ -141,7 +144,7 @@ summary(x2, printCI=.95)
 </code></pre>
 
 <pre><code>##            F1    h2
-## Comfort 0.522 0.272
+## Comfort 0.522 0.273
 ## Work    0.584 0.342
 ## Future  0.803 0.645
 ## Benefit 0.541 0.293
@@ -159,5 +162,5 @@ summary(x2, printCI=.95)
 </code></pre>
 
 
-<hr><div align="center">[Package <em>mirt</em> version 1.9 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
 </body></html>
