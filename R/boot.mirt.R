@@ -32,7 +32,7 @@
 #' }
 boot.mirt <- function(x, R = 100, ...){
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group,
-                           class, LR, obj, DTF, ...) {
+                           class, LR, obj, DTF = NULL, ...) {
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
         rownames(dat) <- NULL
