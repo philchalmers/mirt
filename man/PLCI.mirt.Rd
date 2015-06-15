@@ -23,9 +23,8 @@ parameters are used}
 \item{...}{additional arguments to pass to the estimation functions}
 }
 \description{
-Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
-parameter distributions (and will use the posterior instead of the likelihood)
-as well as equality constraints. Object returns the confidence intervals
+Computes profiled-likelihood based confidence intervals. Supports the inclusion of
+equality constraints. Object returns the confidence intervals
 and whether the respective interval could be found.
 }
 \examples{

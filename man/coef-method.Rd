@@ -54,6 +54,7 @@ dat <- expand.table(LSAT7)
 x <- mirt(dat, 1)
 coef(x)
 coef(x, IRTpars = TRUE)
+coef(x, simplify = TRUE)
 
 #with computed information matrix
 x <- mirt(dat, 1, SE = TRUE)

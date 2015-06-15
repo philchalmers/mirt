@@ -33,11 +33,13 @@ dat <- simdata(a, d, 1000, itemtype = 'dich', Theta=Theta)
 mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 
 #latent regression fixed effects (i.e., expected values)
-fixef(mod1)
+fe <- fixef(mod1)
+head(fe)
 
 # with mixedmirt()
 mod1b <- mixedmirt(dat, covdata, 1, lr.fixed = ~ X1 + X2, fixed = ~ 0 + items)
-fixef(mod1b)
+fe2 <- fixef(mod1b)
+head(fe2)
 
 }
 }

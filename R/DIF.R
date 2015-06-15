@@ -189,7 +189,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
     if(missing(which.par)) missingMsg('which.par')
     if(!any(sapply(MGmodel@pars, function(x) x@pars[[length(x@pars)]]@est)))
         message('No hyper-parameters were estimated in the DIF model. For effective
-                \tDIF testing, freeing the focal group hyper-parameters is recommend.')
+                \tDIF testing, freeing the focal group hyper-parameters is recommended.')
     bfactorlist <- MGmodel@bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
         stop('bifactor models are currently not supported in this function', call.=FALSE)

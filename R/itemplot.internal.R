@@ -149,7 +149,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat
     info <- numeric(nrow(ThetaFull))
-    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour')){
+    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
         if(nfact == 3){
             if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
                 warning('Information plots require the degrees input to be of length 3', call.=FALSE)

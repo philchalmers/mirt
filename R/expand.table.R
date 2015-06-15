@@ -16,7 +16,9 @@
 #'
 #' \dontrun{
 #' data(LSAT7)
+#' head(LSAT7)
 #' LSAT7full <- expand.table(LSAT7)
+#' head(LSAT7full)
 #'    }
 #'
 expand.table <- function(tabdata) {

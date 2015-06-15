@@ -1,8 +1,7 @@
 #' Compute profiled-likelihood (or posterior) confidence intervals
 #'
-#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of prior
-#' parameter distributions (and will use the posterior instead of the likelihood)
-#' as well as equality constraints. Object returns the confidence intervals
+#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of
+#' equality constraints. Object returns the confidence intervals
 #' and whether the respective interval could be found.
 #'
 #' @aliases PLCI.mirt
@@ -49,7 +48,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
 
     compute.LL <- function(dat, model, sv, large, parprior, ...){
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
-                                        large=large, calcNull=FALSE, technical=list(message=FALSE,
+                                        large=large, calcNull=FALSE, technical=list(message=FALSE, warn=FALSE,
                                                                                     parallel=FALSE), ...)
         ret <- list(LL=tmpmod@logLik + tmpmod@logPrior, vals=mod2values(tmpmod))
         ret
@@ -111,11 +110,27 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
             opt.lower <- optimize(f.min, lower = lower, upper = mid, dat=dat, model=model,
                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                   parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
+            if(opt.lower$objective > .01){
+                tmp <- optim(mid - abs((mid - lower) * .01), f.min, dat=dat, model=model,
+                             large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                             parprior=parprior, parnames=parnames, asigns=asigns, ...,
+                             method = 'L-BFGS-B', lower = lbound[parnum], upper = mid,
+                             control = list(factr=1e10))
+                opt.lower$minimum <- tmp$par; opt.lower$objective <- tmp$value
+            }
         } else opt.lower <- list(minimum = lower, objective=0)
         if(mid < upper){
             opt.upper <- optimize(f.min, lower = mid, upper = upper, dat=dat, model=model,
                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                   parprior=parprior, parnames=parnames, asigns=asigns, ..., tol = .01)
+            if(opt.upper$objective > .01){
+                tmp <- optim(mid + abs((upper - mid) * .01), f.min, dat=dat, model=model,
+                             large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                             parprior=parprior, parnames=parnames, asigns=asigns, ...,
+                             method = 'L-BFGS-B', lower = mid, upper = ubound[parnum],
+                             control = list(factr=1e10))
+                opt.upper$minimum <- tmp$par; opt.upper$objective <- tmp$value
+            }
         } else opt.upper <- list(minimum = upper, objective=0)
         if(force){ #TODO this is pretty hacky, but it works for the most part
             if(opt.upper$objective > .01){
@@ -156,6 +171,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     dat <- mod@Data$data
     model <- mod@model[[1L]]
     parprior <- mod@parprior
+    if(length(parprior))
+        stop('Confidence intervals cannot be computed for models that include priors')
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
     large <- mirt(mod@Data$data, mod@model[[1L]], large = TRUE)

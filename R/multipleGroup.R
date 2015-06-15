@@ -229,7 +229,7 @@
 #' group <- rep(c('G1', 'G2'), each=2000)
 #'
 #' EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
-#' coef(EH)
+#' coef(EH, simplify=TRUE)
 #' plot(EH, type = 'empiricalhist', npts = 60)
 #'
 #' #dif test for item 1
