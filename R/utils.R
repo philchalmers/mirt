@@ -60,8 +60,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     return(theta1)
 }
 
-imputePars <- function(pars, covB, imputenums, constrain){
-    shift <- mirt_rmvnorm(1L, sigma=covB)
+imputePars <- function(pars, imputenums, constrain, pre.ev){
+    shift <- mirt_rmvnorm(1L, mean=numeric(length(pre.ev$values)), pre.ev=pre.ev)
     for(i in 1L:length(pars)){
         pn <- pars[[i]]@parnum
         pick2 <- imputenums %in% pn
@@ -89,6 +89,28 @@ imputePars <- function(pars, covB, imputenums, constrain){
         }
     }
     return(pars)
+}
+
+imputePars2 <- function(MGmod, shortpars, longpars, imputenums, pre.ev){
+    while(TRUE){
+        shift <- mirt_rmvnorm(1L, mean=shortpars, pre.ev=pre.ev)
+        longpars[imputenums] <- shift[1L,]
+        constrain <- MGmod@constrain
+        if(length(constrain) > 0L)
+            for(i in 1L:length(constrain))
+                longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+        pars <- list(MGmod@pars[[1L]]@pars, MGmod@pars[[2L]]@pars)
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
+        if(any(MGmod@itemtype %in% c('graded', 'grsm'))){
+            pick <- c(MGmod@itemtype %in% c('graded', 'grsm'), FALSE)
+            if(!all(sapply(pars[[1L]][pick], CheckIntercepts) &
+                    sapply(pars[[2L]][pick], CheckIntercepts))) next
+        }
+        break
+    }
+    MGmod@pars[[1L]]@pars <- pars[[1L]]
+    MGmod@pars[[2L]]@pars <- pars[[2L]]
+    MGmod
 }
 
 # Rotation function
@@ -1415,22 +1437,28 @@ select_quadpts <- function(nfact) switch(as.character(nfact),
                                          '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
 
 mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
-                         check = FALSE)
+                         check = FALSE, pre.ev=list())
 {
-    # Version modified from mvtnorm::rmvnorm, version 0.9-9996, 19-April, 2014.
-    if(check){
-        if (!isSymmetric(sigma, tol = sqrt(.Machine$double.eps), check.attributes = FALSE))
-            stop("sigma must be a symmetric matrix", call.=FALSE)
-        if (length(mean) != nrow(sigma))
-            stop("mean and sigma have non-conforming size", call.=FALSE)
+    if(!length(pre.ev)){
+        # Version modified from mvtnorm::rmvnorm, version 0.9-9996, 19-April, 2014.
+        if(check){
+            if (!isSymmetric(sigma, tol = sqrt(.Machine$double.eps), check.attributes = FALSE))
+                stop("sigma must be a symmetric matrix", call.=FALSE)
+            if (length(mean) != nrow(sigma))
+                stop("mean and sigma have non-conforming size", call.=FALSE)
+        }
+        ev <- eigen(sigma, symmetric = TRUE)
+        NCOL <- ncol(sigma)
+        if(check)
+            if (!all(ev$values >= -sqrt(.Machine$double.eps) * abs(ev$values[1])))
+                warning("sigma is numerically not positive definite", call.=FALSE)
+    } else {
+        ev <- pre.ev
+        NCOL <- length(ev$values)
     }
-    ev <- eigen(sigma, symmetric = TRUE)
-    if(check)
-        if (!all(ev$values >= -sqrt(.Machine$double.eps) * abs(ev$values[1])))
-            warning("sigma is numerically not positive definite", call.=FALSE)
-    retval <- ev$vectors %*%  diag(sqrt(ev$values), length(ev$values)) %*% t(ev$vectors)
-    retval <- matrix(rnorm(n * ncol(sigma)), nrow = n) %*%  retval
-    retval <- sweep(retval, 2, mean, "+")
+    retval <- ev$vectors %*% diag(sqrt(ev$values), NCOL) %*% t(ev$vectors)
+    retval <- matrix(rnorm(n * NCOL), nrow = n) %*%  retval
+    retval <- sweep(retval, 2L, mean, "+")
     colnames(retval) <- names(mean)
     retval
 }
@@ -1670,6 +1698,9 @@ QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
     }
     ret
 }
+
+MC_quad <- function(npts, nfact, lim)
+    matrix(runif(n=npts * nfact, min = lim[1L], max = lim[2]), npts, nfact)
 
 missingMsg <- function(string)
     stop(paste0('\'', string, '\' argument is missing.'), call.=FALSE)

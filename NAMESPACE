@@ -2,6 +2,7 @@
 
 S3method(plot,itemGAM)
 export(DIF)
+export(DTF)
 export(M2)
 export(MDIFF)
 export(MDISC)

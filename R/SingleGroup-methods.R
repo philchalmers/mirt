@@ -774,6 +774,7 @@ setMethod(
                 stop('Proper information matrix must be precomputed in model', call.=FALSE)
             tmppars <- x@pars
             covB <- solve(x@information)
+            pre.ev <- eigen(covB)
             names <- colnames(covB)
             tmp <- lapply(names, function(x, split){
                 as.numeric(strsplit(x, split=split)[[1L]][-1L])
@@ -782,7 +783,7 @@ setMethod(
             CIscore <- CIinfo <- rxx <- CIrxx <- matrix(0, MI, length(plt$score))
             for(i in 1L:MI){
                 while(TRUE){
-                    tmp <- try(imputePars(pars=x@pars, covB=covB,
+                    tmp <- try(imputePars(pars=x@pars, pre.ev=pre.ev,
                                           imputenums=imputenums, constrain=x@constrain),
                                silent=TRUE)
                     if(!is(tmp, 'try-error')) break

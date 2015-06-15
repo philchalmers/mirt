@@ -8,7 +8,7 @@ setClass("AllItemsClass",
                         itemclass='integer',
                         parnum='numeric',
                         nfact='integer',
-                        nfixedeffects='numeric', #number of fixed effect predictors
+                        nfixedeffects='numeric',
                         fixed.design='matrix',
                         dat='matrix',
                         ncat='integer',
@@ -55,3 +55,5 @@ setGeneric('DrawValues', function(x, Theta, ...) standardGeneric("DrawValues"))
 setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))
 
 setGeneric('GenRandomPars', function(x) standardGeneric("GenRandomPars"))
+
+setGeneric('CheckIntercepts', function(x) standardGeneric("CheckIntercepts"))

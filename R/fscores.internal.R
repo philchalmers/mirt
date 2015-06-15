@@ -244,12 +244,13 @@ setMethod(
                 }, split='\\.'))
                 covB <- solve(object@information)
             }
+            pre.ev <- eigen(covB)
         }
         for(mi in 1L:MI){
             if(impute){
                 while(TRUE){
-                    pars <- try(imputePars(pars=opars, covB=covB, imputenums=imputenums,
-                                       constrain=object@constrain), silent=TRUE)
+                    pars <- try(imputePars(pars=opars, imputenums=imputenums,
+                                       constrain=object@constrain, pre.ev=pre.ev), silent=TRUE)
                     if(!is(pars, 'try-error')) break
                 }
             }

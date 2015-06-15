@@ -522,6 +522,15 @@ setMethod(
 )
 
 setMethod(
+    f = "CheckIntercepts",
+    signature = signature(x = 'graded'),
+    definition = function(x){
+        z <- ExtractZetas(x)
+        return(all(sort(z, decreasing = TRUE) == z))
+    }
+)
+
+setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'graded'),
     definition = function(x){
