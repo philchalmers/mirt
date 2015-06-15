@@ -115,8 +115,11 @@ setMethod(
                           return.acov = TRUE, QMC=QMC, custom_den = NULL, ...)
             ret <- vector('list', plausible.draws)
             for(i in 1L:plausible.draws){
-                jit <- lapply(fs_acov, function(x) mirt_rmvnorm(1L, sigma = x))
+                suppressWarnings(jit <- lapply(fs_acov, function(x) mirt_rmvnorm(1L, sigma = x)))
                 jit <- do.call(rbind, jit)
+                if(any(is.nan(jit)))
+                    stop('Could not draw unique plausible values. Response pattern ACOVs may
+                         not be positive definite')
                 ret[[i]] <- fs + jit
             }
             if(plausible.draws == 1L) return(ret[[1L]])
