@@ -2,7 +2,6 @@
 % Please edit documentation in R/marginal_rxx.R
 \name{marginal_rxx}
 \alias{marginal_rxx}
-\alias{mariginal_rxx}
 \title{Function to calculate the marginal reliability}
 \usage{
 marginal_rxx(mod, density = dnorm, theta_lim = c(-6, 6), ...)
