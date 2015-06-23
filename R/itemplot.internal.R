@@ -134,7 +134,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     nfact <- min(x@pars[[item]]@nfact, x@nfact)
     if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
     if(nfact == 2 && is.null(degrees))
-        stop('Please specify a vector of angles that sum to 90', call.=FALSE)
+        stop('Please specify a vector of angles', call.=FALSE)
     theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
     if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
     prodlist <- attr(x@pars, 'prodlist')
@@ -149,20 +149,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
     K <- x@pars[[item]]@ncat
     info <- numeric(nrow(ThetaFull))
-    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
-        if(nfact == 3){
-            if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
-                warning('Information plots require the degrees input to be of length 3', call.=FALSE)
-            } else {
-                info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
-            }
-        }
-        if(nfact == 2){
-            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
-        } else {
-            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
-        }
-    }
+    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN'))
+        info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE && nfact != 3){

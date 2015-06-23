@@ -643,10 +643,9 @@ setMethod(
 #'   \code{'scorecontour'} for the expected total score surface and contour plots.
 #'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
-#' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
-#'   for information-based plots with respect to the first dimension.
-#'   If a vector is used then a bubble plot is created with the summed information across the angles specified
-#'   (e.g., \code{degrees = seq(0, 90, by=10)})
+#' @param degrees numeric vector with elements ranging from 0 to 90 used in \code{plot} to compute angle
+#'   for information-based plots (see \code{\link{iteminfo}}). If the input is a matrix, then each row
+#'   will be used to compute the respective angle to create a 'bubble' plot of information
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
@@ -717,7 +716,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 50, degrees = 45,
+    definition = function(x, y, type = 'score', npts = 50, degrees = c(45, 45),
                           theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE, main = NULL,
@@ -731,12 +730,8 @@ setMethod(
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@nfact
-        if(length(degrees) > nfact) type = 'infoangle'
-        if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
-        if(nfact == 2 && length(degrees) == 1L)
-            degrees <- c(degrees, 90 - degrees)
-        if(nfact == 3 && length(degrees) == 1L) degrees <- rep(90/3, 3)
         if(nfact == 1) degrees <- 0
+        if(is.matrix(degrees)) type <- 'infoangle'
         J <- length(x@pars) - 1
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
@@ -745,13 +740,14 @@ setMethod(
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
         info <- numeric(nrow(ThetaFull))
-        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
-            for(l in 1:length(degrees)){
-                ta <- degrees[l]
-                if(nfact == 2) ta <- c(degrees[l], 90 - degrees[l])
-                if(nfact == 3) ta <- degrees
-                for(i in 1:J)
-                    info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
+        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace', 'infoangle')){
+            if(type == 'infoangle'){
+                for(j in 1L:nrow(degrees))
+                    for(i in 1L:J)
+                        info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=degrees[j,])
+            } else {
+                for(i in 1L:J)
+                    info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=degrees)
             }
         }
         adj <- x@Data$mins
