@@ -4,7 +4,7 @@
 \alias{itemplot}
 \title{Displays item surface and information plots}
 \usage{
-itemplot(object, item, type = "trace", degrees = 45, CE = FALSE,
+itemplot(object, item, type = "trace", degrees = c(45, 45), CE = FALSE,
   CEalpha = 0.05, CEdraws = 1000, drop.zeros = FALSE, rot = list(xaxis =
   -70, yaxis = 30, zaxis = 10), theta_lim = c(-6, 6), shiny = FALSE, ...)
 }

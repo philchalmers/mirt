@@ -64,7 +64,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 50, theta_angle = 45,
+    definition = function(x, y, type = 'score', npts = 50, degrees = 45,
                           which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE,
@@ -72,15 +72,15 @@ setMethod(
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
             stop(type, " is not a valid plot type.", call.=FALSE)
-        if (any(theta_angle > 90 | theta_angle < 0))
+        if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specifed. Must be between 0 and 90.', call.=FALSE)
-        if(length(theta_angle) > 1) stop('No info-angle plot is available', call.=FALSE)
+        if(length(degrees) > 1) stop('No info-angle plot is available', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         ngroups <- length(x@pars)
         J <- length(x@pars[[1]]@pars) - 1L
         nfact <- x@nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.", call.=FALSE)
-        if(nfact == 1) theta_angle <- 0
+        if(nfact == 1) degrees <- 0
         pars <- x@pars
         theta <- seq(theta_lim[1],theta_lim[2],length.out=npts)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
@@ -92,7 +92,7 @@ setMethod(
             info <- 0
             for(i in 1:J){
                 tmp <- extract.item(x, i, g)
-                info <- info + iteminfo(tmp, Theta=ThetaFull, degrees=theta_angle)
+                info <- info + iteminfo(tmp, Theta=ThetaFull, degrees=degrees)
             }
             infolist[[g]] <- info
         }

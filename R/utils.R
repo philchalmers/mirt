@@ -916,9 +916,6 @@ ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
     dx <- DerivTheta(x, Theta)
     info <- matrix(0, nrow(Theta), ncol(P))
     cosanglefull <- matrix(cosangle, nrow(P), length(cosangle), byrow = TRUE)
-    if(ncol(cosanglefull) < ncol(dx$grad[[1L]]))
-        cosanglefull <- cbind(cosanglefull, matrix(1, nrow(cosanglefull),
-                                                   ncol(dx$grad[[1L]]) - ncol(cosanglefull)))
     for(i in 1L:x@ncat)
         dx$grad[[i]] <- matrix(rowSums(dx$grad[[i]] * cosanglefull))
     for(i in 1L:x@ncat)

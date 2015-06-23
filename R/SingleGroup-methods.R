@@ -643,9 +643,9 @@ setMethod(
 #'   \code{'scorecontour'} for the expected total score surface and contour plots.
 #'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
-#' @param theta_angle numeric values ranging from 0 to 90 used in \code{plot}.
+#' @param degrees numeric values ranging from 0 to 90 used in \code{plot}.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
-#'   (e.g., \code{theta_angle = seq(0, 90, by=10)})
+#'   (e.g., \code{degrees = seq(0, 90, by=10)})
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
@@ -716,7 +716,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 50, theta_angle = 45,
+    definition = function(x, y, type = 'score', npts = 50, degrees = 45,
                           theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, auto.key = TRUE, main = NULL,
@@ -726,16 +726,16 @@ setMethod(
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist')))
             stop('type supplied is not supported')
-        if (any(theta_angle > 90 | theta_angle < 0))
+        if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@nfact
-        if(length(theta_angle) > nfact) type = 'infoangle'
+        if(length(degrees) > nfact) type = 'infoangle'
         if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
-        if(nfact == 2 && length(theta_angle) == 1L)
-            theta_angle <- c(theta_angle, 90 - theta_angle)
-        if(nfact == 3 && length(theta_angle) == 1L) theta_angle <- rep(90/3, 3)
-        if(nfact == 1) theta_angle <- 0
+        if(nfact == 2 && length(degrees) == 1L)
+            degrees <- c(degrees, 90 - degrees)
+        if(nfact == 3 && length(degrees) == 1L) degrees <- rep(90/3, 3)
+        if(nfact == 1) degrees <- 0
         J <- length(x@pars) - 1
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
@@ -745,10 +745,10 @@ setMethod(
             ThetaFull <- prodterms(Theta,prodlist)
         info <- numeric(nrow(ThetaFull))
         if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
-            for(l in 1:length(theta_angle)){
-                ta <- theta_angle[l]
-                if(nfact == 2) ta <- c(theta_angle[l], 90 - theta_angle[l])
-                if(nfact == 3) ta <- theta_angle
+            for(l in 1:length(degrees)){
+                ta <- degrees[l]
+                if(nfact == 2) ta <- c(degrees[l], 90 - degrees[l])
+                if(nfact == 3) ta <- degrees
                 for(i in 1:J)
                     info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
             }

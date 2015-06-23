@@ -158,9 +158,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         }
         if(nfact == 2){
-            for(i in 1:length(degrees))
-                info <- info + iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=c(degrees[i],
-                                                                                 90 - degrees[i]))
+            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
         } else {
             info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
         }
@@ -191,7 +189,6 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         upper <- sorttmp[ceiling(length(tmp) * (1-CEalpha/2))]
         delta <- delta[tmp < upper & tmp > lower, , drop=FALSE]
         tmpitem@par[tmpitem@est] <- delta[1, ]
-        degrees <- if(nfact == 2) c(degrees[i], 90 - degrees[i]) else 0
         CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFull, degrees=degrees)
         CEprobupper <- CEproblower <- ProbTrace(tmpitem, ThetaFull)
         CEscoreupper <- CEscorelower <- expected.item(tmpitem, ThetaFull, min = x@Data$mins[item])

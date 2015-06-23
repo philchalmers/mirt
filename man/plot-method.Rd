@@ -10,11 +10,10 @@
 \title{Plot various test-implied functions from models}
 \usage{
 \S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 50,
-  theta_angle = 45, theta_lim = c(-6, 6),
-  which.items = 1:ncol(x@Data$data), MI = 0, CI = 0.95, rot = list(xaxis
-  = -70, yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key = TRUE,
-  main = NULL, drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10,
-  add.ylab2 = TRUE, ...)
+  degrees = 45, theta_lim = c(-6, 6), which.items = 1:ncol(x@Data$data),
+  MI = 0, CI = 0.95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+  facet_items = TRUE, auto.key = TRUE, main = NULL, drape = TRUE,
+  colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{SingleGroupClass},
@@ -35,9 +34,9 @@ also will be available to generate the empirical histogram plot}
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}
 
-\item{theta_angle}{numeric values ranging from 0 to 90 used in \code{plot}.
+\item{degrees}{numeric values ranging from 0 to 90 used in \code{plot}.
 If a vector is used then a bubble plot is created with the summed information across the angles specified
-(e.g., \code{theta_angle = seq(0, 90, by=10)})}
+(e.g., \code{degrees = seq(0, 90, by=10)})}
 
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}}
