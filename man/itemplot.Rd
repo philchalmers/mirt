@@ -21,8 +21,9 @@ information and trace lines (\code{'infotrace'}), relative efficiency lines (\co
 expected score \code{'score'}, or information and trace line contours (\code{'infocontour'} and
 \code{'tracecontour'}; not supported for \code{MultipleGroupClass} objects)}
 
-\item{degrees}{the degrees argument to be used if there are exactly two factors.
-See \code{\link{iteminfo}} for more detail}
+\item{degrees}{the degrees argument to be used if there are two or three factors.
+See \code{\link{iteminfo}} for more detail. A new vector will be required for three dimensional
+models to override the default}
 
 \item{CE}{logical; plot confidence envelope?}
 

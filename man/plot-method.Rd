@@ -34,7 +34,8 @@ also will be available to generate the empirical histogram plot}
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}
 
-\item{degrees}{numeric values ranging from 0 to 90 used in \code{plot}.
+\item{degrees}{numeric value ranging from 0 to 90 used in \code{plot} to compute angle
+for information-based plots with respect to the first dimension.
 If a vector is used then a bubble plot is created with the summed information across the angles specified
 (e.g., \code{degrees = seq(0, 90, by=10)})}
 

@@ -59,7 +59,8 @@ iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = 
         stop('Theta does not have the correct number of dimensions', call.=FALSE)
     cosangle <- cos(d2r(degrees))
     info <- if(use_degrees){
-        stopifnot(closeEnough(sum(cosangle^2), 1-1e-10, 1+1e-10))
+        if(!closeEnough(sum(cosangle^2), 1-1e-10, 1+1e-10))
+            stop('The squared cosines of the degrees vector do not sum to 1')
         ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
     } else ItemInfo2(x=x, Theta=Theta, total.info=total.info)
     info

@@ -643,7 +643,8 @@ setMethod(
 #'   \code{'scorecontour'} for the expected total score surface and contour plots.
 #'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
-#' @param degrees numeric values ranging from 0 to 90 used in \code{plot}.
+#' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
+#'   for information-based plots with respect to the first dimension.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
 #'   (e.g., \code{degrees = seq(0, 90, by=10)})
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
