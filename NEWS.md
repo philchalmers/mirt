@@ -1,3 +1,8 @@
+# Changes in mirt 1.11
+
+- panel theme for lattice plots changed from default to a lighter blue colour, and legend now
+  automatically placed on the right hand side rather than the top
+
 # Changes in mirt 1.10
 
 - when using prior distributions, starting values now automatically set equal to the mode of 

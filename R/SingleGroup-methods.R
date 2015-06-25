@@ -643,9 +643,10 @@ setMethod(
 #'   \code{'scorecontour'} for the expected total score surface and contour plots.
 #'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
-#' @param degrees numeric vector with elements ranging from 0 to 90 used in \code{plot} to compute angle
-#'   for information-based plots (see \code{\link{iteminfo}}). If the input is a matrix, then each row
-#'   will be used to compute the respective angle to create a 'bubble' plot of information
+#' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
+#'   for information-based plots with respect to the first dimension.
+#'   If a vector is used then a bubble plot is created with the summed information across the angles specified
+#'   (e.g., \code{degrees = seq(0, 90, by=10)})
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
@@ -660,7 +661,9 @@ setMethod(
 #'   to use all available items
 #' @param facet_items logical; apply grid of plots across items? If \code{FALSE}, items will be
 #'   placed in one plot for each group
-#' @param auto.key logical parameter passed to the \code{lattice} package
+#' @param auto.key plotting argument passed to \code{\link{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
+#' @param par.settings plotting argument passed to \code{\link{lattice}}
 #' @param ehist.cut a probability value indicating a threshold for excluding cases in empirical
 #'   histogram plots. Values larger than the default will include more points in the tails of the
 #'   plot, potentially squishing the 'meat' of the plot to take up less area than visually desired
@@ -710,17 +713,21 @@ setMethod(
 #'
 #' x3 <- mirt(Science, 2)
 #' plot(x3, type = 'info')
-#' plot(x3, type = 'SE')
+#' plot(x3, type = 'SE', theta_lim = c(-3,3))
 #'
 #' }
 setMethod(
     f = "plot",
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 50, degrees = c(45, 45),
+    definition = function(x, y, type = 'score', npts = 50, degrees = 45,
                           theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          facet_items = TRUE, auto.key = TRUE, main = NULL,
-                          drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE, ...)
+                          facet_items = TRUE, main = NULL,
+                          drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE,
+                          par.strip.text = list(cex = 0.7),
+                          par.settings = list(strip.background = list(col = '#9ECAE1'),
+                                              strip.border = list(col = "black")),
+                          auto.key = list(space = 'right'), ...)
     {
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score',
@@ -730,24 +737,28 @@ setMethod(
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@nfact
+        if(length(degrees) > nfact) type = 'infoangle'
+        if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
+        if(nfact == 2 && length(degrees) == 1L)
+            degrees <- c(degrees, 90 - degrees)
+        if(nfact == 3 && length(degrees) == 1L) degrees <- rep(90/3, 3)
         if(nfact == 1) degrees <- 0
-        if(is.matrix(degrees)) type <- 'infoangle'
         J <- length(x@pars) - 1
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@pars, 'prodlist')
+        if(all(x@Data$K[which.items] == 2L)) auto.key <- FALSE
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
         info <- numeric(nrow(ThetaFull))
-        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace', 'infoangle')){
-            if(type == 'infoangle'){
-                for(j in 1L:nrow(degrees))
-                    for(i in 1L:J)
-                        info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=degrees[j,])
-            } else {
-                for(i in 1L:J)
-                    info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=degrees)
+        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
+            for(l in 1:length(degrees)){
+                ta <- degrees[l]
+                if(nfact == 2) ta <- c(degrees[l], 90 - degrees[l])
+                if(nfact == 3) ta <- degrees
+                for(i in 1:J)
+                    info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
             }
         }
         adj <- x@Data$mins
@@ -801,37 +812,43 @@ setMethod(
                     main <- paste("Test Information Contour")
                 return(contourplot(info ~ Theta1 * Theta2 | Theta3, data = plt,
                                    main = main, xlab = expression(theta[1]),
-                                   ylab = expression(theta[2]), ...))
+                                   ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'scorecontour'){
                 if(is.null(main))
                     main <- paste("Expected Score Contour")
                 return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
                                    main = main, xlab = expression(theta[1]),
-                                   ylab = expression(theta[2]), ...))
+                                   ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'info'){
                 if(is.null(main))
                     main <- "Test Information"
                 return(wireframe(info ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SEcontour'){
                 if(is.null(main))
                     main <- "Test Standard Errors"
                 return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
                                           main = main, xlab = expression(theta[1]),
-                                          ylab = expression(theta[2]), ...))
+                                          ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'score'){
                 if(is.null(main))
                     main <- "Expected Total Score"
                 return(wireframe(score ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SE'){
                 if(is.null(main))
                     main <- "Test Standard Errors"
                 return(wireframe(SE ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {
                 stop('plot type not supported for three dimensional model', call.=FALSE)
             }
@@ -843,31 +860,36 @@ setMethod(
                     main <- paste("Test Information Contour")
                 return(contourplot(info ~ Theta1 * Theta2, data = plt,
                                    main = main, xlab = expression(theta[1]),
-                                   ylab = expression(theta[2]), ...))
+                                   ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'scorecontour'){
                 if(is.null(main))
                     main <- paste("Expected Score Contour")
                     return(contourplot(score ~ Theta1 * Theta2, data = plt,
                                        main = main, xlab = expression(theta[1]),
-                                       ylab = expression(theta[2]), ...))
+                                       ylab = expression(theta[2]),
+                                       par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'info'){
                 if(is.null(main))
                     main <- "Test Information"
                 return(wireframe(info ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SEcontour'){
                 if(is.null(main))
                     main <- "Test Standard Errors"
                 return(contourplot(score ~ Theta1 * Theta2, data = plt,
                                           main = main, xlab = expression(theta[1]),
-                                          ylab = expression(theta[2]), ...))
+                                          ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'score'){
                 if(is.null(main))
                     main <- "Expected Total Score"
                 return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'infoangle'){
                 if(is.null(main))
                     main <- 'Information across different angles'
@@ -879,7 +901,8 @@ setMethod(
                     main <- "Test Standard Errors"
                 return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape, ...))
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {
                 stop('plot type not supported for two dimensional model', call.=FALSE)
             }
@@ -920,10 +943,12 @@ setMethod(
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main, ylim=c(min(plt$CIinfolower), max(plt$CIinfoupper)),
-                                  ylab = expression(I(theta)), xlab = expression(theta), ...))
+                                  ylab = expression(I(theta)), xlab = expression(theta),
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(info~Theta, plt, type='l', main = main,
-                                  xlab = expression(theta), ylab=expression(I(theta)), ...))
+                                  xlab = expression(theta), ylab=expression(I(theta)),
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'rxx'){
                 if(is.null(main))
@@ -937,10 +962,12 @@ setMethod(
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main, ylim=c(-0.1, 1.1),
-                                  ylab = expression(r[xx](theta)), xlab = expression(theta), ...))
+                                  ylab = expression(r[xx](theta)), xlab = expression(theta),
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(rxx~Theta, plt, type='l', main = main, ylim=c(-0.1, 1.1),
-                                  xlab = expression(theta), ylab=expression(r[xx](theta)), ...))
+                                  xlab = expression(theta), ylab=expression(r[xx](theta)),
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'SE'){
                 if(is.null(main))
@@ -954,17 +981,21 @@ setMethod(
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main, ylim=c(min(plt$CISElower), max(plt$CISEupper)),
-                                  ylab = expression(I(theta)), xlab = expression(theta), ...))
+                                  ylab = expression(I(theta)), xlab = expression(theta),
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(SE~Theta, plt, type='l', main = main,
-                           xlab = expression(theta), ylab=expression(SE(theta)), ...))
+                           xlab = expression(theta), ylab=expression(SE(theta)),
+                           par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'infoSE'){
                 if(is.null(main))
                     main <- 'Test Information and Standard Errors'
                 obj1 <- xyplot(info~Theta, plt, type='l', main = main,
-                               xlab = expression(theta), ylab=expression(I(theta)))
-                obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)))
+                               xlab = expression(theta), ylab=expression(I(theta)),
+                               par.strip.text=par.strip.text, par.settings=par.settings)
+                obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)),
+                               par.strip.text=par.strip.text, par.settings=par.settings)
                 if(!require(latticeExtra)) require(latticeExtra)
                 return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2, ...))
             } else if(type == 'trace'){
@@ -990,11 +1021,13 @@ setMethod(
                 if(facet_items){
                     return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
                                   xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = main, ...))
+                                  auto.key = auto.key, type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(P ~ Theta, plotobj, group=item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = main, ...))
+                                  auto.key = auto.key, type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'infotrace'){
                 if(is.null(main))
@@ -1008,11 +1041,13 @@ setMethod(
                 if(facet_items){
                     return(xyplot(I ~ Theta|item, plotobj,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = main, ...))
+                                  auto.key = auto.key, type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(I ~ Theta, plotobj, group = item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = main, ...))
+                                  auto.key = auto.key, type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'score'){
                 if(is.null(main))
@@ -1026,11 +1061,13 @@ setMethod(
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main,
-                                  ylab = expression(T(theta)), xlab = expression(theta), ...))
+                                  ylab = expression(T(theta)), xlab = expression(theta),
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(score ~ Theta, plt,
                                   xlab = expression(theta), ylab = expression(T(theta)),
-                                  type = 'l', main = main, ...))
+                                  type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'empiricalhist'){
                 if(is.null(main))
@@ -1050,7 +1087,8 @@ setMethod(
                 plt <- plt[keep1:keep2, , drop=FALSE]
                 return(xyplot(Prior ~ Theta, plt,
                               xlab = expression(theta), ylab = 'Expected Frequency',
-                              type = 'b', main = main, ...))
+                              type = 'b', main = main,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {
                 stop('plot not supported for unidimensional models', call.=FALSE)
             }

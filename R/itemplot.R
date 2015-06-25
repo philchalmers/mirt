@@ -30,7 +30,10 @@
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
 #'   This primarily is an instructive tool for demonstrating how item response curves
 #'   behave when adjusting their parameters
-#' @param ... additional arguments to be passed to \code{lattice} and \code{coef()}
+#' @param auto.key plotting argument passed to \code{\link{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
+#' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param ... additional arguments to be passed to \code{\link{lattice}} and \code{coef()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords plot
 #' @export itemplot
@@ -52,9 +55,9 @@
 #' itemplot(mods, 1, type = 'RE')
 #'
 #' #multidimensional
-#' itemplot(mod3, 3, type = 'info')
-#' itemplot(mod3, 3, type = 'infocontour')
-#' itemplot(mod3, 3, type = 'tracecontour')
+#' itemplot(mod3, 4, type = 'info')
+#' itemplot(mod3, 4, type = 'infocontour')
+#' itemplot(mod3, 4, type = 'tracecontour')
 #'
 #' #polytomous items
 #' pmod <- mirt(Science, 1, SE=TRUE)
@@ -73,9 +76,12 @@
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = c(45, 45), CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE,
+                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
                      rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                     theta_lim = c(-6,6), shiny = FALSE, ...){
+                     par.strip.text = list(cex = 0.7),
+                     par.settings = list(strip.background = list(col = '#9ECAE1'),
+                                         strip.border = list(col = "black")),
+                     auto.key = list(space = 'right'), ...){
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)
@@ -92,9 +98,14 @@ itemplot <- function(object, item, type = 'trace', degrees = c(45, 45), CE = FAL
     ind <- 1:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
+    if(is.list(object)){
+        if(object[[1]]@nfact == 1L) degrees <- 0
+    } else if(object@nfact == 1L) degrees <- 0
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
-                             theta_lim=theta_lim, ...)
+                             theta_lim=theta_lim, par.strip.text=par.strip.text,
+                             par.settings=par.settings, auto.key=auto.key,
+                             ...)
     if(is.null(ret)) return(invisible(ret))
     else return(ret)
 }

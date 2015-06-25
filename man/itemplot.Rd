@@ -5,8 +5,11 @@
 \title{Displays item surface and information plots}
 \usage{
 itemplot(object, item, type = "trace", degrees = c(45, 45), CE = FALSE,
-  CEalpha = 0.05, CEdraws = 1000, drop.zeros = FALSE, rot = list(xaxis =
-  -70, yaxis = 30, zaxis = 10), theta_lim = c(-6, 6), shiny = FALSE, ...)
+  CEalpha = 0.05, CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,
+  6), shiny = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+  par.strip.text = list(cex = 0.7), par.settings = list(strip.background =
+  list(col = "#9ECAE1"), strip.border = list(col = "black")),
+  auto.key = list(space = "right"), ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass}
@@ -36,8 +39,6 @@ region}
 dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 models that contain several zero slopes}
 
-\item{rot}{a list of rotation coordinates to be used for 3 dimensional plots}
-
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}}
 
@@ -45,7 +46,15 @@ used in conjunction with \code{npts}}
 This primarily is an instructive tool for demonstrating how item response curves
 behave when adjusting their parameters}
 
-\item{...}{additional arguments to be passed to \code{lattice} and \code{coef()}}
+\item{rot}{a list of rotation coordinates to be used for 3 dimensional plots}
+
+\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+
+\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+
+\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+
+\item{...}{additional arguments to be passed to \code{\link{lattice}} and \code{coef()}}
 }
 \description{
 \code{itemplot} displays various item based IRT plots, with special options for plotting items
@@ -69,9 +78,9 @@ mods <- list(twoPL = mod1, onePL = mod2)
 itemplot(mods, 1, type = 'RE')
 
 #multidimensional
-itemplot(mod3, 3, type = 'info')
-itemplot(mod3, 3, type = 'infocontour')
-itemplot(mod3, 3, type = 'tracecontour')
+itemplot(mod3, 4, type = 'info')
+itemplot(mod3, 4, type = 'infocontour')
+itemplot(mod3, 4, type = 'tracecontour')
 
 #polytomous items
 pmod <- mirt(Science, 1, SE=TRUE)

@@ -67,8 +67,12 @@ setMethod(
     definition = function(x, y, type = 'score', npts = 50, degrees = 45,
                           which.items = 1:ncol(x@Data$data),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                          facet_items = TRUE, auto.key = TRUE,
-                          theta_lim = c(-6,6), ...)
+                          facet_items = TRUE,
+                          theta_lim = c(-6,6),
+                          par.strip.text = list(cex = 0.7),
+                          par.settings = list(strip.background = list(col = '#9ECAE1'),
+                                              strip.border = list(col = "black")),
+                          auto.key = list(space = 'right'), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
             stop(type, " is not a valid plot type.", call.=FALSE)
@@ -118,44 +122,53 @@ setMethod(
             if(type == 'infocontour')
                 return(contourplot(info ~ Theta1 * Theta2|group, data = plt,
                                    main = paste("Test Information Contour"), xlab = expression(theta[1]),
-                                   ylab = expression(theta[2]), ...))
+                                   ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'info')
                 return(wireframe(info ~ Theta1 + Theta2|group, data = plt, main = "Test Information",
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
-                                 auto.key = TRUE, ...))
+                                 auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
+                                 ...))
             if(type == 'RE')
                 return(wireframe(info ~ Theta1 + Theta2|group, data = plt, main = "Relative Efficiency",
                                  zlab=expression(RE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
-                                 auto.key = TRUE, ...))
+                                 auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
+                                 ...))
             if(type == 'SE')
                 return(wireframe(SE ~ Theta1 + Theta2|group, data = plt, main = "Test Standard Errors",
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
-                                 auto.key = TRUE, ...))
+                                 auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
+                                 ...))
             if(type == 'score')
                 return(wireframe(score ~ Theta1 + Theta2|group, data = plt, main = "Expected Total Score",
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
-                                 auto.key = TRUE, ...))
+                                 auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
+                                 ...))
         } else {
             colnames(plt) <- c("info", "score", "Theta", "group")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
                 return(xyplot(info~Theta, plt, type='l', group=group, main = 'Test Information',
-                              xlab = expression(theta), ylab=expression(I(theta)), auto.key = TRUE, ...))
+                              xlab = expression(theta), ylab=expression(I(theta)), auto.key = auto.key,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'RE')
                 return(xyplot(info~Theta, plt, type='l', group=group, main = 'Relative Efficiency',
-                              xlab = expression(theta), ylab=expression(RE(theta)), auto.key = TRUE, ...))
+                              xlab = expression(theta), ylab=expression(RE(theta)), auto.key = auto.key,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'infocontour')
                 cat('No \'contour\' plots for 1-dimensional models\n')
             if(type == 'SE')
                 return(xyplot(SE~Theta, plt, type='l', group=group, main = 'Test Standard Errors',
-                              xlab = expression(theta), ylab=expression(SE(theta)), auto.key = TRUE, ...))
+                              xlab = expression(theta), ylab=expression(SE(theta)), auto.key = auto.key,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'score')
                 return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
-                              xlab = expression(theta), ylab=expression(Total(theta)), auto.key = TRUE, ...))
+                              xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'empiricalhist'){
                 if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object', call.=FALSE)
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
@@ -173,9 +186,10 @@ setMethod(
                     pltfull[[g]] <- plt
                 }
                 plt <- do.call(rbind, pltfull)
-                return(xyplot(Prior ~ Theta, plt, group=group, auto.key = TRUE,
+                return(xyplot(Prior ~ Theta, plt, group=group, auto.key = auto.key,
                               xlab = expression(theta), ylab = 'Expected Frequency',
-                              type = 'b', main = 'Empirical Histogram', ...))
+                              type = 'b', main = 'Empirical Histogram',
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
             }
             if(type == 'trace'){
                 plt <- vector('list', ngroups)
@@ -204,11 +218,13 @@ setMethod(
                 if(facet_items){
                     return(xyplot(P ~ Theta|item, plt, group = cat:group, ylim = c(-0.1,1.1),
                            xlab = expression(theta), ylab = expression(P(theta)),
-                           auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                           auto.key = auto.key, type = 'l', main = 'Item trace lines',
+                           par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(P ~ Theta|group, plt, group = cat:item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item trace lines', ...))
+                                  auto.key = auto.key, type = 'l', main = 'Item trace lines',
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }
             if(type == 'infotrace'){
@@ -227,11 +243,13 @@ setMethod(
                 if(facet_items){
                     return(xyplot(I ~ Theta | item, plt, group = group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines',
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(I ~ Theta | group, plt, group = item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines', ...))
+                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines',
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }
         }

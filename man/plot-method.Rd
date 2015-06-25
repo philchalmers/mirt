@@ -10,11 +10,12 @@
 \title{Plot various test-implied functions from models}
 \usage{
 \S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 50,
-  degrees = c(45, 45), theta_lim = c(-6, 6),
-  which.items = 1:ncol(x@Data$data), MI = 0, CI = 0.95, rot = list(xaxis
-  = -70, yaxis = 30, zaxis = 10), facet_items = TRUE, auto.key = TRUE,
-  main = NULL, drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10,
-  add.ylab2 = TRUE, ...)
+  degrees = 45, theta_lim = c(-6, 6), which.items = 1:ncol(x@Data$data),
+  MI = 0, CI = 0.95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+  facet_items = TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
+  ehist.cut = 1e-10, add.ylab2 = TRUE, par.strip.text = list(cex = 0.7),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
+  list(col = "black")), auto.key = list(space = "right"), ...)
 }
 \arguments{
 \item{x}{an object of class \code{SingleGroupClass},
@@ -35,9 +36,10 @@ also will be available to generate the empirical histogram plot}
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}
 
-\item{degrees}{numeric vector with elements ranging from 0 to 90 used in \code{plot} to compute angle
-for information-based plots (see \code{\link{iteminfo}}). If the input is a matrix, then each row
-will be used to compute the respective angle to create a 'bubble' plot of information}
+\item{degrees}{numeric value ranging from 0 to 90 used in \code{plot} to compute angle
+for information-based plots with respect to the first dimension.
+If a vector is used then a bubble plot is created with the summed information across the angles specified
+(e.g., \code{degrees = seq(0, 90, by=10)})}
 
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}}
@@ -57,8 +59,6 @@ used. Default uses the 95\% confidence (CI = .95)}
 \item{facet_items}{logical; apply grid of plots across items? If \code{FALSE}, items will be
 placed in one plot for each group}
 
-\item{auto.key}{logical parameter passed to the \code{lattice} package}
-
 \item{main}{argument passed to lattice. Default generated automatically}
 
 \item{drape}{logical argument passed to lattice. Default generated automatically}
@@ -70,6 +70,12 @@ histogram plots. Values larger than the default will include more points in the 
 plot, potentially squishing the 'meat' of the plot to take up less area than visually desired}
 
 \item{add.ylab2}{logical argument passed to lattice. Default generated automatically}
+
+\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+
+\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+
+\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
 
 \item{...}{additional arguments to be passed to lattice}
 }
@@ -109,7 +115,7 @@ plot(x2, type = 'info')
 
 x3 <- mirt(Science, 2)
 plot(x3, type = 'info')
-plot(x3, type = 'SE')
+plot(x3, type = 'SE', theta_lim = c(-3,3))
 
 }
 }
