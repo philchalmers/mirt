@@ -29,7 +29,7 @@
 marginal_rxx <- function(mod, density = dnorm, theta_lim = c(-6,6), ...){
     stopifnot(mod@nfact == 1L)
     stopifnot(is(mod, 'SingleGroupClass'))
-    Theta <- seq(theta_lim[1L], theta_lim[2L], length.out = 1000L)
+    Theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out = 1000L))
     TI <- testinfo(mod, Theta)
     den <- density(Theta, ...)
     den <- den / sum(den)
