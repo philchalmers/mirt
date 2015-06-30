@@ -350,6 +350,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         quadpts <- dots$quadpts
         if(is.null(quadpts) && QMC) quadpts <- 15000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
+        if(x@nfact > 3L && !QMC)
+            warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
+                    call.=FALSE)
         theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- ExtractGroupPars(pars[[length(pars)]])

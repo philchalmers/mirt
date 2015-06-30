@@ -190,6 +190,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     pars <- obj@pars
     if(is.null(quadpts))
         quadpts <- select_quadpts(obj@nfact)
+    if(obj@nfact > 3L && !QMC)
+        warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
+                call.=FALSE)
     estpars <- c()
     for(i in 1L:(nitems+1L))
         estpars <- c(estpars, pars[[i]]@est)
