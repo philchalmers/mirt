@@ -19,6 +19,7 @@ Description: Analysis of dichotomous and polytomous response data using
 Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
+    stats,
     R (>= 3.1.0),
     stats4,
     lattice,

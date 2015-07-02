@@ -23,9 +23,8 @@
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
-#' @importFrom stats anova residuals
-# @importFrom MASS ginv
-#' @import lattice GPArotation Rcpp stats4 methods sfsmisc mgcv
+#' @import stats lattice GPArotation Rcpp stats4 methods sfsmisc mgcv
+#' @importFrom utils write.table flush.console
 #' @exportMethod anova
 #' @exportMethod residuals
 #' @exportMethod summary

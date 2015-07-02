@@ -242,7 +242,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                            upper <- upper[subscripts]
                            lower <- lower[subscripts]
                            panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                         col=grey(.9), border = FALSE, ...)
+                                         col="#E6E6E6", border = FALSE, ...)
                            panel.xyplot(x, y, type='l', lty=1,...)
                        },
                        main = main, ylim = c(-0.1,1.1), auto.key = auto.key,
@@ -260,7 +260,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                               upper=plt$CEinfoupper, lower=plt$CEinfolower,
                               panel = function(x, y, lower, upper, ...){
                                   panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                col=grey(.9), border = FALSE, ...)
+                                                col="#E6E6E6", border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
                               },
                               main = main, ylim=c(min(plt$CEinfolower), max(plt$CEinfoupper)),
@@ -278,7 +278,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                               upper=plt$CEscoreupper, lower=plt$CEscorelower,
                               panel = function(x, y, lower, upper, ...){
                                   panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                col=grey(.9), border = FALSE, ...)
+                                                col="#E6E6E6", border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
                               },
                               main = main, ylim=c(min(plt$CEscorelower), max(plt$CEscoreupper)),
@@ -298,7 +298,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                               upper=plt$CESEupper, lower=plt$CESElower,
                               panel = function(x, y, lower, upper, ...){
                                   panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                col=grey(.9), border = FALSE, ...)
+                                                col="#E6E6E6", border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
                               },
                               main = main, ylim=c(min(plt$CESElower), max(plt$CESEupper)),

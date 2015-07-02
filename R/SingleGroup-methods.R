@@ -939,7 +939,7 @@ setMethod(
                                   upper=plt$CIinfoupper, lower=plt$CIinfolower,
                                   panel = function(x, y, lower, upper, ...){
                                       panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                    col=grey(.9), border = FALSE, ...)
+                                                    col="#E6E6E6", border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main, ylim=c(min(plt$CIinfolower), max(plt$CIinfoupper)),
@@ -958,7 +958,7 @@ setMethod(
                                   upper=plt$CIrxxupper, lower=plt$CIrxxlower,
                                   panel = function(x, y, lower, upper, ...){
                                       panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                    col=grey(.9), border = FALSE, ...)
+                                                    col="#E6E6E6", border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main, ylim=c(-0.1, 1.1),
@@ -977,7 +977,7 @@ setMethod(
                                   upper=plt$CISEupper, lower=plt$CISElower,
                                   panel = function(x, y, lower, upper, ...){
                                       panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                    col=grey(.9), border = FALSE, ...)
+                                                    col="#E6E6E6", border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main, ylim=c(min(plt$CISElower), max(plt$CISEupper)),
@@ -1057,7 +1057,7 @@ setMethod(
                                   upper=plt$CIscoreupper, lower=plt$CIscorelower,
                                   panel = function(x, y, lower, upper, ...){
                                       panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
-                                                    col=grey(.9), border = FALSE, ...)
+                                                    col="#E6E6E6", border = FALSE, ...)
                                       panel.xyplot(x, y, type='l', lty=1,...)
                                   },
                                   main = main,
