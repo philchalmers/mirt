@@ -235,6 +235,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
                                        lrPars=lrPars, MG = TRUE)
             mixed.design$random <- attr(PrepList, 'random')
+            if(any(pars$class == 'lrPars')) lrPars <- update.lrPars(pars, lrPars)
             attr(PrepList, 'random') <- NULL
         }
         if(!is.null(attr(pars, 'values')) || (is.character(pars) && pars == 'values'))

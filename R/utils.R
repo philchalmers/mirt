@@ -1315,6 +1315,21 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
     ret
 }
 
+update.lrPars <- function(df, lrPars){
+    pick <- df$class == 'lrPars'
+    df2 <- df[pick, , drop=FALSE]
+    lrPars@est[] <- df2$est
+    lrPars@par <- df2$value
+    if(!all(df2$lbound == -Inf))
+        warning('latent regression parameters cannot be bounded. Ignoring constraint', call.=FALSE)
+    if(!all(df2$ubound == Inf))
+        warning('latent regression parameters cannot be bounded. Ignoring constraint', call.=FALSE)
+    if(!all(df2$prior.type == 'none'))
+        warning('latent regression parameters do not support prior distribution. Ignoring input.',
+                call.=FALSE)
+    lrPars
+}
+
 
 OffTerm <- function(random, J, N){
     ret <- numeric(N*J)
