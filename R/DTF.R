@@ -33,9 +33,11 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R. P., Counsell, A., and Flora, D. B. (in press). It might not
+#'
+#' Chalmers, R. P., Counsell, A., and Flora, D. B. (2015). It might not
 #'   make a big DIF: Improved Differential Test Functioning statistics that account for
-#'   sampling variability. \emph{Educational and Psychological Measurement}.
+#'   sampling variability. \emph{Educational and Psychological Measurement}, 1-27.
+#'
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 #' @keywords DTF
 #' @export DTF

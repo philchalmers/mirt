@@ -340,8 +340,8 @@ anova(mod1, mod2)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
-Chalmers, R. P. (2015, in press). Extended Mixed-Effects Item Response Models
-with the MH-RM Algorithm. \emph{Journal of Educational Measurement}.
+Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
+\emph{Journal of Educational Measurement, 52}, 200-222.
 }
 \seealso{
 \code{\link{mirt}}, \code{\link{randef}}, \code{\link{fixef}}, \code{\link{boot.mirt}}
