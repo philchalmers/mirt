@@ -43,7 +43,7 @@ Suggests:
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 3)
 Repository: CRAN
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>

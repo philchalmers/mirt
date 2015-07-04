@@ -47,6 +47,276 @@ static void add2hess(NumericMatrix &out, const NumericMatrix &in, const double &
             out(i,j) = out(i,j) + in(i,j) * r;
 }
 
+static void matrixMult(vector<double> &c, const vector<double> &a, const vector<double> &b,
+                       const int *dim)
+{
+    double A[*dim][*dim], B[*dim][*dim], C[*dim][*dim];
+    int k = 0;
+
+    for (int j = 0; j < *dim; ++j){
+        for (int i = 0; i < *dim; ++i){
+            A[i][j] = a[k];
+            ++k;
+        }
+    }
+    k = 0;
+    for (int j = 0; j < *dim; ++j){
+        for (int i = 0; i < *dim; ++i){
+            B[i][j] = b[k];
+            ++k;
+        }
+    }
+    for (int i = 0; i < *dim; ++i){
+        for (int j = 0; j < *dim; ++j) {
+            C[i][j] = 0;
+            for (k = 0; k < *dim; ++k)
+                C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+    k = 0;
+    for (int j = 0; j < *dim; ++j) {
+        for (int i = 0; i < *dim; ++i){
+            c[k] = C[i][j];
+            ++k;
+        }
+    }
+}
+
+static void matrixMult4(vector<double> &e, const vector<double> &a, const vector<double> &b,
+                        const vector<double> &c, const vector<double> &d, const int *dim)
+{
+    vector<double> tmp1(*dim * (*dim)), tmp2(*dim * (*dim));
+    matrixMult(tmp1, a, b, dim);
+    matrixMult(tmp2, tmp1, c, dim);
+    matrixMult(e, tmp2, d, dim);
+}
+
+
+static double tr(vector<double> &a, const int *dim)
+{
+    double trace = 0.0;
+    int k = 0;
+
+    for(int j = 0; j < *dim; ++j){
+        for(int i = 0; i < *dim; ++i){
+            if(i == j)
+                trace += a[k];
+            ++k;
+        }
+    }
+    return trace;
+}
+
+static void matrixSub(vector<double> &c, const vector<double> &a, const vector<double> &b,
+                      const int *dim)
+{
+    for(int i = 0; i < *dim*(*dim); ++i)
+        c[i] = a[i] - b[i];
+}
+
+static void outer(vector<double> &c, const vector<double> &a, const vector<double> &b,
+                  const int *dim)
+{
+    int k = 0;
+    for(int i = 0; i < *dim; ++i){
+        for(int j = 0; j < *dim; ++j){
+            c[k] = a[j] * b[i];
+            ++k;
+        }
+    }
+}
+
+static double inner(vector<double> &a, const vector<double> &b, const vector<double> &c,
+                    const int *dim)
+{
+    int k = 0;
+    double tmp[*dim], B[*dim][*dim], ret = 0.0;
+
+    for(int i = 0; i < *dim; ++i){
+        tmp[i] = 0.0;
+        for(int j = 0; j < *dim; ++j){
+            B[j][i] = b[k];
+            ++k;
+        }
+    }
+    for(int i = 0; i < *dim; ++i){
+        for(int j = 0; j < *dim; ++j){
+            tmp[i] += a[j] * B[j][i];
+            ++k;
+        }
+    }
+    for(int i = 0; i < *dim; ++i)
+        ret += tmp[i] * c[i];
+    return ret;
+}
+
+static void symMat(vector<double> &dsig, const int *nfact)
+{
+    int k = 0;
+    double tmp[*nfact][*nfact];
+
+    for(int i = 0; i < *nfact; ++i){
+        for(int j = 0; j < *nfact; ++j){
+            tmp[i][j] = dsig[k];
+            ++k;
+        }
+    }
+    for(int i = 0; i < *nfact; ++i)
+        for(int j = 0; j < *nfact; ++j)
+            if(i < j)
+                tmp[j][i] = tmp[i][j];
+    k = 0;
+    for(int i = 0; i < *nfact; ++i){
+        for(int j = 0; j < *nfact; ++j){
+            dsig[k] = tmp[i][j];
+            ++k;
+        }
+    }
+}
+
+RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP RestHess, SEXP Rrandeff)
+{
+    S4 obj(Robj);
+    NumericMatrix Theta(RTheta);
+    bool estHess = as<bool>(RestHess);
+    bool randeff = as<bool>(Rrandeff);
+    const int nfact = Theta.ncol();
+    const int N = Theta.nrow();
+    NumericVector par = obj.slot("par");
+    arma::vec mu(nfact);
+    arma::mat Sig(nfact, nfact);
+    int ind;
+    if(randeff){
+        ind = 0;
+        for (int i = 0; i < nfact; ++i){ 
+            for (int j = 0; j < nfact; ++j){
+                if(i <= j){
+                    Sig(i,j) = par(ind);
+                    Sig(j,i) = Sig(i,j);
+                    ++ind;
+                }
+            }
+        }
+    } else {
+        for (int i = 0; i < nfact; ++i) mu(i) = par(i);
+        ind = nfact;
+        for (int i = 0; i < nfact; ++i){ 
+            for (int j = 0; j < nfact; ++j){
+                if(i <= j){
+                    Sig(i,j) = par(ind);
+                    Sig(j,i) = Sig(i,j);
+                    ++ind;
+                }
+            }
+        }
+    }
+    const int npars = nfact + nfact * (nfact + 1);
+    const int npars2 = nfact + nfact * (nfact + 1) / 2;
+    const int nsig = npars - nfact;
+    arma::mat invSig = inv(Sig);
+    arma::mat Dif(N, nfact);
+    arma::vec meanTheta(nfact);
+    for (int j = 0; j < nfact; ++j){
+        double tmp = 0.0;
+        for (int i = 0; i < N; ++i){
+            Dif(i,j) = Theta(i,j) - mu(j);
+            tmp += Theta(i,j) / N;
+        }
+        meanTheta(j) = tmp;
+    }
+    arma::mat Z = trans(Dif) * Dif;
+    arma::vec cMeans = N * (meanTheta - mu);
+    arma::vec g1 = invSig * cMeans;
+    arma::mat Zdif = Z - (N * Sig);
+    arma::mat tmp = invSig * Zdif * invSig;
+    for (int j = 0; j < nfact; ++j) tmp(j,j) = tmp(j,j)/2;
+    NumericVector grad(npars2);
+    ind = nfact;
+    for (int i = 0; i < nfact; ++i){
+        grad(i) = g1(i);
+        for (int j = 0; j < nfact; ++j){
+            if(i <= j){
+                grad(ind) = tmp(i,j);
+                ++ind;
+            }
+        }
+    }
+    List ret;
+    ret["grad"] = grad;
+    if(estHess){
+        arma::mat h(npars, npars);
+        vector<double> invSig2(invSig.begin(), invSig.end());
+        const vector<double> cMeans2(cMeans.begin(), cMeans.end());
+        const vector<double> Zdif2(Zdif.begin(), Zdif.end());
+        vector<double> derv1(npars), derv2(npars), du1(nfact), du2(nfact), dsig1(nsig),
+            dsig2(nsig), dZ(nsig), dinvSig2(nsig), tmpmat(nsig), dZdif(nsig), Ndsig2(nsig);
+        double s1, s2, s3, s4, s5;
+
+        for(int j = 0; j < npars; ++j){
+            for(int i = 0; i < npars; ++i){
+                if(i <= j){
+                    for(int k = 0; k < npars; ++k){
+                        derv1[k] = 0.0;
+                        derv2[k] = 0.0;
+                    }
+                    derv1[i] = 1.0;
+                    derv2[j] = 1.0;
+                    for(int k = 0; k < nfact; ++k){
+                        du1[k] = derv1[k];
+                        du2[k] = derv2[k];
+                    }
+                    for(int k = nfact; k < npars; ++k){
+                        dsig1[k-nfact] = derv1[k];
+                        dsig2[k-nfact] = derv2[k];
+                    }
+                    symMat(dsig1, &nfact);
+                    symMat(dsig2, &nfact);
+                    matrixMult(tmpmat, invSig2, dsig2, &nfact);
+                    matrixMult(dinvSig2, tmpmat, invSig2, &nfact);
+                    for(int k = 0; k < nsig; ++k)
+                        dinvSig2[k] = -1.0 * dinvSig2[k];
+                    outer(dZ, cMeans2, du2, &nfact);
+                    for(int k = 0; k < nsig; ++k)
+                        Ndsig2[k] = N * dsig2[k];
+                    matrixSub(dZdif, dZ, Ndsig2, &nfact);
+                    matrixMult4(tmpmat, dsig1, dinvSig2, Zdif2, invSig2, &nfact);
+                    s1 = 0.5 * tr(tmpmat, &nfact);
+                    matrixMult4(tmpmat, dsig1, invSig2, Zdif2, dinvSig2, &nfact);
+                    s2 = 0.5 * tr(tmpmat, &nfact);
+                    matrixMult4(tmpmat, dsig1, invSig2, dZdif, invSig2, &nfact);
+                    s3 = 0.5 * tr(tmpmat, &nfact);
+                    s4 = inner(du1, dinvSig2, cMeans2, &nfact);
+                    s5 = N * inner(du1, invSig2, du2, &nfact);
+                    h(i,j) = s1 + s2 + s3 + s4 - s5;
+                    h(j,i) = h(i,j);
+                }
+            }
+        }
+        arma::uvec pick(nfact + nfact * (nfact + 1) / 2);
+        ind = 0;
+        int whichrow = nfact;
+        for(int  i = 0; i < nfact; ++i){
+            pick(i) = ind;
+            ++ind;
+        }
+        for(int  i = 0; i < nfact; ++i){
+            for(int  j = 0; j < nfact; ++j){
+                if(i <= j){
+                    pick(ind) = whichrow;
+                    ++ind;
+                }
+                ++whichrow;
+            }
+        }
+        arma::mat newh = h.submat(pick, pick);
+        ret["hess"] = wrap(newh);
+    } else {
+        ret["hess"] = NumericMatrix(npars2, npars2);
+    }
+
+    return(ret);
+}
+
 static void d_nominal(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
     const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
     const int &N, const int &nfact, const int &ncat, const int &israting, const int &estHess)
@@ -261,7 +531,7 @@ static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<d
     for(int i = 0; i < N; ++i){
         double tmp = 0.0;
         for(int j = 0; j < ncat; ++j){
-            tmp += num(i, j); 
+            tmp += num(i, j);
             // P2(i,j) = P(i,j) * P(i,j);
         }
         Q[i] = 1.0 / tmp;
@@ -280,7 +550,7 @@ static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<d
     for(int i = 0; i < ncat; ++i)
         d[i] = par[i + nfact + ncat*nfact];
 
-    vector<double> offterm2(N), unitNvec(N, 1.0); 
+    vector<double> offterm2(N), unitNvec(N, 1.0);
     NumericMatrix NumSum(N,nfact);
     for(int i = 0; i < N; ++i){
         for(int j = 0; j < nfact; ++j){
@@ -296,7 +566,7 @@ static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<d
     for(int j = 0; j < nfact; ++j){
         double tmp = 0.0;
         for(int k = 0; k < ncat; ++k){
-            for(int i = 0; i < N; ++i)        
+            for(int i = 0; i < N; ++i)
                 tmp += dat(i,k) * (ak(k,j) * Theta(i,j) - Q[i] * NumSum(i,j));
         }
         grad[ind] = tmp;
@@ -311,7 +581,7 @@ static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<d
         grad[ind] = tmp;
         ++ind;
     }
-    
+
 
     // //hess
     // //a's
@@ -632,7 +902,7 @@ void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
     vector<double> p(N*ncat);
     P_lca(p, par, score, Theta, N, ncat, nfact, 0);
     const NumericMatrix P = vec2mat(p, N, ncat);
-    
+
     for (int i = 0; i < N; ++i){
         int ind = 0;
         for (int k = 1; k < ncat; ++k){
@@ -960,7 +1230,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             vector<double> Prior = as< vector<double> >(tmpvec);
             vector<double> expected(1), r1vec(N*J), r2vec(N);
             if(isbifactor){
-               _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone, 
+               _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone,
                     dat, sitems, Prior);
             } else {
                 _Estep(expected, r1vec, Prior, vone, dat, itemtrace);

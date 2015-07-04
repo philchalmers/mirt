@@ -1,7 +1,7 @@
 #ifndef _MISC_H
 #define _MISC_H
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 using namespace Rcpp;
 using std::vector;
 

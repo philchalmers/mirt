@@ -218,6 +218,46 @@ Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, group
     return(ifelse(is.nan(LL), 1e100, -LL))
 }
 
+Mstep.grad2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, groupest, rlist,
+                      Thetabetween, ubound, lbound){
+    if(any(p > ubound | p < lbound)) return(rep(NA, length(p)))
+    ngroups <- length(pars); J <- length(pars[[1L]]) - 1L
+    longpars[groupest] <- p
+    if(length(constrain))
+        for(i in 1L:length(constrain))
+            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+    LL <- 0
+    ind <- 1L
+    for(g in 1L:ngroups){
+        if(BFACTOR){
+            theta <- Thetabetween
+            rr <- rlist[[g]]$r2
+        } else {
+            theta <- Theta[ ,1L:nfact,drop=FALSE]
+            rr <- rlist[[g]]$r1
+        }
+        est <- pars[[g]][[J+1L]]@est
+        nest <- sum(est)
+        if(nest){
+            pars[[g]][[J+1L]]@par[est] <- p[ind:(nest + ind - 1L)]
+            ind <- ind + nest
+        } else next
+        gp <- ExtractGroupPars(pars[[g]][[J+1L]])
+        chl <- try(chol(gp$gcov), silent=TRUE)
+        if(is(chl, 'try-error')) return(rep(NA, length(p)))
+        tmp <- outer(diag(gp$gcov), diag(gp$gcov))
+        if(any(gp$gcov[lower.tri(tmp)] >= tmp[lower.tri(tmp)]))
+            return(rep(NA, length(p)))
+        grads <- matrix(0, nrow(theta), 2L)
+        for(i in 1:nrow(theta))
+            grads[i,] <- Deriv(pars[[g]][[J+1L]], Theta = matrix(theta[i,]))$grad
+        out <- sapply(1L:ncol(grads), function(ind, grads, rr)
+            sum(grads[,ind] * rr), grads=grads, rr=rr)
+        return(-out[est])
+    }
+}
+
 LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
     log_itemtrace <- log(computeItemtrace(pars=x, Theta=Theta,
                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND))

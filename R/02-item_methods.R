@@ -174,38 +174,7 @@ setMethod(
             }
             return(newpars[x@est])
         }
-        tr <- function(y) sum(diag(y))
-        nfact <- x@nfact
-        N <- nrow(Theta)
-        u <- x@par[1L:nfact]
-        MU <- matrix(rep(u, N), N, byrow = TRUE)
-        siglong <- x@par[-(1L:nfact)]
-        sig <- matrix(0,nfact,nfact)
-        selcov <- lower.tri(sig, diag=TRUE)
-        sig[selcov] <- siglong
-        if(nfact != 1L)
-            sig <- sig + t(sig) - diag(diag(sig))
-        npars <- length(sig) + nfact
-        invSig <- solve(sig)
-        Z <- t(Theta-MU) %*% (Theta-MU)
-        g1 <- N * invSig %*% (colMeans(Theta) - u)
-        tmp <- invSig %*% (Z - N * sig) %*% invSig
-        diag(tmp) <- diag(tmp)/2 #correct for symmetry
-        g2 <- tmp[selcov]
-        grad <- c(g1, g2)
-        sel <- 1L:npars
-        cMeans <- N*(colMeans(Theta) - u)
-        Zdif <- (Z - N * sig)
-        hess <- .Call("dgroup",
-                   as.numeric(invSig),
-                   as.numeric(cMeans),
-                   as.numeric(Zdif),
-                   as.integer(N),
-                   as.integer(nfact),
-                   as.integer(npars))
-        sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]
-        hess <- hess[sel,sel]
-        return(list(hess=hess,grad=grad))
+        return(.Call("dgroup", x, Theta, estHess, FALSE))
     }
 )
 
@@ -285,42 +254,14 @@ setMethod(
     f = "RandomDeriv",
     signature = signature(x = 'RandomPars'),
     definition = function(x){
-        tr <- function(y) sum(diag(y))
-        nfact <- x@ndim
         Theta <- x@drawvals
-        N <- nrow(Theta)
-        u <- rep(0, nfact)
-        MU <- matrix(rep(u, N), N, byrow = TRUE)
-        siglong <- x@par
-        sig <- matrix(0,nfact,nfact)
-        selcov <- lower.tri(sig, diag=TRUE)
-        sig[selcov] <- siglong
-        if(nfact != 1L)
-            sig <- sig + t(sig) - diag(diag(sig))
-        npars <- length(sig) + nfact
-        invSig <- solve(sig)
-        Z <- t(Theta-MU) %*% (Theta-MU)
-        g1 <- N * invSig %*% (colMeans(Theta) - u)
-        tmp <- invSig %*% (Z - N * sig) %*% invSig
-        diag(tmp) <- diag(tmp)/2 #correct for symmetry
-        g2 <- tmp[selcov]
-        grad <- c(g1, g2)
-        sel <- 1L:npars
-        cMeans <- N*(colMeans(Theta) - u)
-        Zdif <- (Z - N * sig)
-        hess <- .Call("dgroup",
-                      as.numeric(invSig),
-                      as.numeric(cMeans),
-                      as.numeric(Zdif),
-                      as.integer(N),
-                      as.integer(nfact),
-                      as.integer(npars))
-        sel <- sel[c(rep(TRUE,nfact),as.logical(selcov))]
-        hess <- hess[sel,sel]
-        hess <- hess[(nfact+1L):length(grad), (nfact+1L):length(grad), drop=FALSE]
-        diag(hess) <- -abs(diag(hess))
-        grad <- grad[(nfact+1L):length(grad)]
-        return(list(hess=hess,grad=grad))
+        estHess <- TRUE
+        pick <- -c(1L:ncol(Theta))
+        out <- .Call("dgroup", x, Theta, estHess, TRUE)
+        out$grad <- out$grad[pick]
+        out$hess <- out$hess[pick, pick, drop=FALSE]
+        diag(out$hess) <- -abs(diag(out$hess)) #hack for very small clusters
+        out
     }
 )
 
