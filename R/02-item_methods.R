@@ -88,6 +88,8 @@ setClass("GroupPars",
                         SEpar='numeric',
                         est='logical',
                         parnum='numeric',
+                        itemclass='integer',
+                        dat='matrix',
                         nfact='integer',
                         gradient='numeric',
                         hessian='matrix',
@@ -97,7 +99,11 @@ setClass("GroupPars",
                         any.prior='logical',
                         prior.type='integer',
                         prior_1='numeric',
-                        prior_2='numeric')
+                        prior_2='numeric',
+                        sig='matrix',
+                        invsig='matrix',
+                        mu='numeric',
+                        meanTheta='numeric')
 )
 
 setMethod(

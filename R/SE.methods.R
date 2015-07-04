@@ -138,13 +138,14 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                    CUSTOM.IND, SLOW.IND, whichitems, iscross, npars, Data){
         Igrad <- matrix(0, npars, npars)
         gtabdatafull <- Data$tabdatalong
+        J <- Data$nitems
         if(iscross){
             for(pat in which){
                 for(g in 1L:ngroups){
                     gtabdata <- gtabdatafull[pat, , drop=FALSE]
                     r <- Data$Freq[[g]][pat]
-                    rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND,
-                                        freq=r, Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
+                    rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND, full=FALSE,
+                                        freq=1L, Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
                     for(i in whichitems){
                         tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                         pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
@@ -152,10 +153,30 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                         tmp <- Deriv(pars[[g]][[i]], Theta=Theta, estHess=FALSE)
                         DX[pars[[g]][[i]]@parnum] <- tmp$grad
                     }
+#                     if(any(pars[[g]][[J+1L]]@est)){
+#                         ret <- .Call('EAPgroup', rlist$itemtrace, gtabdata, Theta,
+#                                      prior=matrix(Prior[[g]], 1L),
+#                                      mu=matrix(pars[[g]][[J+1L]]@par[1L:ncol(Theta)], 1L))
+#                         out <- Deriv(pars[[g]][[J+1L]], Theta = ret$scores)$grad
+#                         DX[pars[[g]][[J+1L]]@parnum] <- out
+#                     }
+#                    if(any(pars[[g]][[J+1L]]@est)){
+#                         Deriv(pars[[g]][[J+1L]], Theta=Theta, CUSTOM.IND=list(), EM = TRUE,
+#                               pars = pars[[g]], itemloc = itemloc, tabdata = gtabdata,
+#                               estHess=FALSE, prior = Prior[[g]])
+#
+#                         grads <- matrix(0, nrow(Theta), length(pars[[g]][[J+1L]]@par))
+#                         for(i in 1L:nrow(Theta))
+#                             grads[i,] <- Deriv(pars[[g]][[J+1L]], Theta = matrix(Theta[i,]))$grad
+#                         out <- sapply(1L:ncol(grads), function(ind, grads, rr, prior)
+#                             sum(grads[,ind] * rr * prior), grads=grads, rr=rlist[[1L]], prior=Prior[[g]])
+#                         DX[pars[[g]][[J+1L]]@parnum] <- out
+#                     }
                 }
                 Igrad <- Igrad + outer(DX, DX) * r
             }
-            return(list(Igrad=Igrad))
+            return(list(Igrad=Igrad, Ihess=matrix(0, ncol(Igrad), ncol(Igrad)),
+                        IgradP=matrix(0, ncol(Igrad), ncol(Igrad))))
         } else {
             IgradP <- Ihess <- matrix(0, npars, npars)
             for(pat in 1L:nrow(gtabdatafull)){
@@ -163,8 +184,8 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                     gtabdata <- gtabdatafull[pat, , drop=FALSE]
                     r <- Data$Freq[[g]][pat]
                     pick <- min(which(gtabdata == 1L))
-                    rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND,
-                                        freq=r, Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
+                    rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, CUSTOM.IND=CUSTOM.IND, full=FALSE,
+                                        freq=1L, Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
                     w <- rlist$r1[,pick]
                     tmpderiv <- matrix(0, nrow(Theta), length(DX))
                     tmphess <- matrix(0, nrow(Ihess), ncol(Ihess))
@@ -206,15 +227,23 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     sitems <- ESTIMATE$sitems
     iscross <- ifelse(type == 'crossprod', TRUE, FALSE)
     gitemtrace <- rs <- vector('list', ngroups)
-    for(g in 1L:ngroups)
+    for(g in 1L:ngroups){
         gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta,
                                             itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+        gp <- ExtractGroupPars(pars[[g]][[nitems+1L]])
+        pars[[g]][[nitems+1L]]@mu <- gp$gmeans
+        pars[[g]][[nitems+1L]]@sig <- gp$gcov
+        pars[[g]][[nitems+1L]]@invsig <- solve(gp$gcov)
+        pars[[g]][[nitems+1L]]@meanTheta <- colMeans(Theta)
+    }
     npars <- ncol(L)
     gPrior <- t(do.call(rbind, Prior))
     rs <- do.call(rbind, Data$Freq)
+    # infolist <- fn(1L:ncol(rs), PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, Igrad2, Ihess,
+                    # CUSTOM.IND, SLOW.IND, whichitems=1:length(Data$K), iscross, npars, Data)
+    whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior[[1L]], Priorbetween[[1L]],
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
-    whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
     if(length(whichitems)){
         warning('Internal information matrix computations currently not supported for at
@@ -229,9 +258,11 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    is.latent <- lengthsplit > 2L
-    Ihess <- Ihess[!is.latent, !is.latent]; Igrad <- Igrad[!is.latent, !is.latent]
-    IgradP <- IgradP[!is.latent, !is.latent]
+    # if(!iscross){
+        is.latent <- lengthsplit > 2L
+        Ihess <- Ihess[!is.latent, !is.latent]; Igrad <- Igrad[!is.latent, !is.latent]
+        IgradP <- IgradP[!is.latent, !is.latent]
+    # } else is.latent <- logical(length(lengthsplit))
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){
