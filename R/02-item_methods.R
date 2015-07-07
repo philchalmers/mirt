@@ -58,7 +58,7 @@ numDeriv_dP <- function(item, Theta){
         tmp <- numeric(length(par))
         for(j in 1L:item@ncat)
             tmp <- tmp + numDeriv::grad(P, x=par, Theta=Theta[i, , drop=FALSE],
-                              item=item, cat=j)
+                                        item=item, cat=j)
         ret[i, ] <- tmp
     }
     ret
@@ -68,11 +68,11 @@ numDeriv_dP <- function(item, Theta){
 # valid itemtype inputs
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
-Experimental_itemtypes <- function() c('experimental')
+Experimental_itemtypes <- function() c('egrm', 'egrm1', 'egrm10')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
-                                'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                'ideal', 'lca', 'nlca', Experimental_itemtypes())
+                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
+                                 'ideal', 'lca', 'nlca', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca', Experimental_itemtypes())
@@ -520,7 +520,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         ret <- .Call("dparsPoly", x@par, Theta, offterm, x@dat,
-            length(x@par) - ncol(Theta), estHess)
+                     length(x@par) - ncol(Theta), estHess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
@@ -675,22 +675,22 @@ setMethod(
             dda <- matrix(0, nrow(P), nfact)
             for(i in 1L:ncol(rs))
                 ddc <- ddc + rs[,i]/P[,i]  * (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
-                    Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                    rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L])^2
+                                                  Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L])^2
             hess[cind, cind] <- sum(ddc)
             for(i in 1L:nzetas)
                 hess[cind, nfact + i] <- hess[nfact + i, cind] <-
-                    sum((rs[,i]/P[,i] * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                    rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
-                    rs[,i+1L]/P[,i+1L] * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
-                    rs[,i+1L]/P[,i+1L]^2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L])))
+                sum((rs[,i]/P[,i] * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                         rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
+                         rs[,i+1L]/P[,i+1L] * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
+                         rs[,i+1L]/P[,i+1L]^2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L])))
             for(j in 1L:nfact){
                 tmp <- 0
                 for(i in 1L:ncol(rs))
-                        tmp <- tmp + (rs[,i]/P[,i] * Theta[,j] *
-                                          (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
-                                               Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
-                                 rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * Theta[,j] *
+                    tmp <- tmp + (rs[,i]/P[,i] * Theta[,j] *
+                                      (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
+                                           Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
+                                      rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * Theta[,j] *
                                       (PQfull[,i] - PQfull[,i+1L]))
                 hess[cind, j] <- hess[j, cind] <- sum(tmp)
             }
@@ -872,7 +872,7 @@ setMethod(
         for(i in 1L:nfact){
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[[i]][j]*Theta[,i]*P[,j] -
-                    e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]])
+                e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]])
         }
         for(j in 1L:x@ncat){
             dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 -
@@ -1015,7 +1015,7 @@ setMethod(
                 tmp <- 0
                 for(i in 1L:nzetas)
                     tmp <- tmp + dat[,i]*numD*numakThetaD[,j]/numsum^2 -
-                        dat[,i]* (num %*% ak0*Theta[,j])/numsum
+                    dat[,i]* (num %*% ak0*Theta[,j])/numsum
                 hess[cind, j] <- hess[j, cind] <- sum(tmp)
             }
         }
@@ -1374,16 +1374,16 @@ setMethod(
                             }
                             if(i == j && d1[1L] == 'a'){
                                 hess[i,i] <- sum(r/P * ((1-g)*thetas[,k]^2*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) -
-                                        r/P^2 * ((1-g)*thetas[,k] * (Pstar - Pstar*Pk))^2 +
-                                        (f-r)/Q * ((1-g)*thetas[,k]^2*(-Pstar + 3*Pstar*Pk - 2*Pstar*Pk^2)) -
-                                        (f-r)/Q^2 * ((1-g)*thetas[,k] * (-Pstar + Pstar*Pk))^2)
+                                                     r/P^2 * ((1-g)*thetas[,k] * (Pstar - Pstar*Pk))^2 +
+                                                     (f-r)/Q * ((1-g)*thetas[,k]^2*(-Pstar + 3*Pstar*Pk - 2*Pstar*Pk^2)) -
+                                                     (f-r)/Q^2 * ((1-g)*thetas[,k] * (-Pstar + Pstar*Pk))^2)
                                 next
                             }
                             if(i == j && d1[1L] == 'c'){
                                 hess[i,i] <- sum(r/P * (g_1g * (2.0*(1-g) - 1.0 - 2.0*(1-g)*Pstar + Pstar)) -
-                                        r/P^2 * (g_1g * (1.0 - Pstar)) * (g_1g * (1.0 - Pstar)) +
-                                        (f-r)/Q * (g_1g * (-2.0*(1-g) + 1.0 + 2.0*(1-g)*Pstar - Pstar)) -
-                                        (f-r)/Q^2 * (g_1g * (-1.0 + Pstar)) * (g_1g * (-1.0 + Pstar)))
+                                                     r/P^2 * (g_1g * (1.0 - Pstar)) * (g_1g * (1.0 - Pstar)) +
+                                                     (f-r)/Q * (g_1g * (-2.0*(1-g) + 1.0 + 2.0*(1-g)*Pstar - Pstar)) -
+                                                     (f-r)/Q^2 * (g_1g * (-1.0 + Pstar)) * (g_1g * (-1.0 + Pstar)))
                                 next
                             }
                             if(d1[1L] == 'a' && d2[1L] == 'a'){
@@ -1398,7 +1398,7 @@ setMethod(
                             if(d1[1L] == 'a' && d2[1L] == 'c'){
                                 hess[i,j] <- hess[j,i] <- sum(r/P*(g_1g*thetas[,k]*(-Pstar + Pstar*Pk)) -
                                                                   r/P^2*((1-g)*thetas[,k]*(Pstar - Pstar*Pk)*(g_1g*(1 - Pstar))) +
-                                                                 (f-r)/Q * (g_1g*thetas[,k]*(Pstar - Pstar*Pk))-
+                                                                  (f-r)/Q * (g_1g*thetas[,k]*(Pstar - Pstar*Pk))-
                                                                   (f-r)/Q^2 * ((1-g)*thetas[,k]*(-Pstar + Pstar*Pk)*(g_1g*(-1 + Pstar))))
                                 next
                             }
@@ -1411,7 +1411,7 @@ setMethod(
                             }
                             if(d1[1L] == 'd' && d2[1L] == 'a' && d1[2] == d2[2]){
                                 hess[i,j] <- hess[j,i] <- sum(
-                                        r/P * ((1-g)*thetas[,k]*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) -
+                                    r/P * ((1-g)*thetas[,k]*(Pstar - 3*Pstar*Pk + 2*Pstar*Pk^2) ) -
                                         r/P^2 * ((1-g)*thetas[,k] * (Pstar - Pstar*Pk) * (1-g)*(Pstar - Pstar*Pk)) +
                                         (f-r)/Q * ((1-g)*thetas[,k]*(-Pstar + 3*Pstar*Pk - 2*Pstar*Pk^2)) -
                                         (f-r)/Q^2 * ((1-g)*thetas[,k] * (-Pstar + Pstar*Pk) * (1-g)*(-Pstar + Pstar*Pk)))
@@ -1419,9 +1419,9 @@ setMethod(
                             }
                             if(d1[1L] == 'd' && d2[1L] == 'a' && d1[2] != d2[2]){
                                 hess[i,j] <- hess[j,i] <- sum(r/P * ((1-g)*thetas[,m]*(Pstar - Pstar*Pk - Pstar*Pm + Pstar^2)) -
-                                            r/P^2 * ((1-g)*thetas[,m] * (Pstar - Pstar*Pm) * (1-g)*(Pstar - Pstar*Pk))  +
-                                            (f-r)/Q * ((1-g)*thetas[,m]*(-Pstar + Pstar*Pk + Pstar*Pm - Pstar^2)) -
-                                            (f-r)/Q^2 * ((1-g)*thetas[,m] * (-Pstar + Pstar*Pm) * (1-g)*(-Pstar + Pstar*Pk)))
+                                                                  r/P^2 * ((1-g)*thetas[,m] * (Pstar - Pstar*Pm) * (1-g)*(Pstar - Pstar*Pk))  +
+                                                                  (f-r)/Q * ((1-g)*thetas[,m]*(-Pstar + Pstar*Pk + Pstar*Pm - Pstar^2)) -
+                                                                  (f-r)/Q^2 * ((1-g)*thetas[,m] * (-Pstar + Pstar*Pm) * (1-g)*(-Pstar + Pstar*Pk)))
                                 next
                             }
                         }
@@ -1536,7 +1536,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'nestlogit'),
     definition = function(x){
-    	stop('not written')
+        stop('not written')
     }
 )
 
@@ -1615,7 +1615,7 @@ setMethod(
             grad[i] <- sum( (u-g) * Theta[,i] * Qstar * Pstar * (
                 cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+1L] <- sum( (u-g) * Qstar * Pstar * (
-                cdat / Pd - rowSums(idat/Qd)) )
+            cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+2L] <- sum( ((cdat * g_1g * (1-Pstar)/Pd) + rowSums(idat * g_1g * (Pstar - 1)/Qd)) )
         grad[nfact+3L] <- sum( (cdat * u_1u * Pstar / Pd - rowSums(idat * u_1u * Pstar / Qd) ))
         for(j in 1L:nd){
@@ -1788,12 +1788,12 @@ setMethod(
         int <- as.numeric(Theta %*% a + d)
         for(i in 1L:ncol(Theta))
             grad[i] <- -sum( x@dat[,1] * int * Theta[,i] * -P / Q +
-                               x@dat[,2] * int * Theta[,i])
+                                 x@dat[,2] * int * Theta[,i])
         grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q +
-                           2 * x@dat[,2] * int)/2
+                               2 * x@dat[,2] * int)/2
         if(estHess)
             hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                         Theta=Theta)
+                                                    Theta=Theta)
         return(list(grad = grad, hess=hess))
     }
 )
@@ -1803,21 +1803,21 @@ setMethod(
     signature = signature(x = 'ideal', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_DerivTheta(x, Theta)
-#         N <- nrow(Theta)
-#         nfact <- ncol(Theta)
-#         P <- ProbTrace(x, Theta=Theta)[,2L]
-#         d <- x@par[length(x@par)]
-#         a <- x@par[-length(x@par)]
-#         int <- as.numeric(t(a %*% t(Theta)) + d)
-#         grad <- hess <- vector('list', 2L)
-#         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
-#         for(i in 1L:nfact){
-#             grad[[2L]][ ,i] <- 2 * a[i] * int * P
-#             grad[[1L]][ ,i] <- -1 * grad[[2L]][ ,i]
-#             hess[[2L]][ ,i] <- 2 * a[i]^2 * int * P + 4 * int^2 * a[i]^2 * P
-#             hess[[1L]][ ,i] <- -1 * hess[[2L]][ ,i]
-#         }
-#         return(list(grad=grad, hess=hess))
+        #         N <- nrow(Theta)
+        #         nfact <- ncol(Theta)
+        #         P <- ProbTrace(x, Theta=Theta)[,2L]
+        #         d <- x@par[length(x@par)]
+        #         a <- x@par[-length(x@par)]
+        #         int <- as.numeric(t(a %*% t(Theta)) + d)
+        #         grad <- hess <- vector('list', 2L)
+        #         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
+        #         for(i in 1L:nfact){
+        #             grad[[2L]][ ,i] <- 2 * a[i] * int * P
+        #             grad[[1L]][ ,i] <- -1 * grad[[2L]][ ,i]
+        #             hess[[2L]][ ,i] <- 2 * a[i]^2 * int * P + 4 * int^2 * a[i]^2 * P
+        #             hess[[1L]][ ,i] <- -1 * hess[[2L]][ ,i]
+        #         }
+        #         return(list(grad=grad, hess=hess))
     }
 )
 
@@ -1870,7 +1870,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'lca'),
     definition = function(x){
-    	stop('not written')
+        stop('not written')
     }
 )
 
@@ -1914,7 +1914,7 @@ setMethod(
         ret <- .Call('dparslca', x@par, Theta, x@score, estHess, x@dat, offterm)
         if(estHess){
             ret$hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                         Theta=Theta)
+                                                        Theta=Theta)
         }
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
@@ -1940,7 +1940,7 @@ setMethod(
         for(j in 2L:x@ncat){
             for(i in 1:ncol(Theta)){
                 dp[,ind] <- Theta[,i] * s2[j] * (P[,j] -
-                        rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
+                                                     rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
                 ind <- ind + 1L
             }
         }
@@ -1989,7 +1989,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'custom'),
     definition = function(x){
-    	stop('not written')
+        stop('not written')
     }
 )
 
@@ -2088,12 +2088,14 @@ setMethod(
 # experimental itemtype (used as a template to create custom IRT models). Edit this if you want
 #  to experiment with your own customized IRT models
 
-setClass("experimental", contains = 'AllItemsClass',
+# ExtractZetas, GenRandomPar, ProbTrace, initialize MODIFIED
+
+setClass("egrm", contains = 'AllItemsClass',
          representation = representation())
 
 setMethod(
     f = "print",
-    signature = signature(x = 'experimental'),
+    signature = signature(x = 'egrm'),
     definition = function(x, ...){
         cat('Item object of class:', class(x))
     }
@@ -2101,7 +2103,7 @@ setMethod(
 
 setMethod(
     f = "show",
-    signature = signature(object = 'experimental'),
+    signature = signature(object = 'egrm'),
     definition = function(object){
         print(object)
     }
@@ -2110,7 +2112,7 @@ setMethod(
 #extract the slopes (should be a vector of length nfact)
 setMethod(
     f = "ExtractLambdas",
-    signature = signature(x = 'experimental'),
+    signature = signature(x = 'egrm'),
     definition = function(x){
         x@par[1L:x@nfact] #slopes
     }
@@ -2119,18 +2121,19 @@ setMethod(
 #extract the intercepts
 setMethod(
     f = "ExtractZetas",
-    signature = signature(x = 'experimental'),
+    signature = signature(x = 'egrm'),
     definition = function(x){
-        x@par[length(x@par)] #intercepts
+        x@par[(x@nfact+1):(length(x@par))] #intercepts
     }
 )
 
 # generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
 setMethod(
     f = "GenRandomPars",
-    signature = signature(x = 'experimental'),
+    signature = signature(x = 'egrm'),
     definition = function(x){
-        par <- c(rlnorm(1, .2, .2), rnorm(1))
+        #par <- c(rep(1, x@nfact), rep(0, x@ncat-1))
+        par <- c(rep(1, x@nfact), seq(-2, 2, length.out=x@ncat-1))
         x@par[x@est] <- par[x@est]
         x
     }
@@ -2139,7 +2142,7 @@ setMethod(
 # how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
 setMethod(
     f = "set_null_model",
-    signature = signature(x = 'experimental'),
+    signature = signature(x = 'egrm'),
     definition = function(x){
         x@par[1L:x@nfact] <- 0
         x@est[1L:x@nfact] <- FALSE
@@ -2150,29 +2153,54 @@ setMethod(
 # probability trace line function. Must return a matrix with a trace line for each category
 setMethod(
     f = "ProbTrace",
-    signature = signature(x = 'experimental', Theta = 'matrix'),
+    signature = signature(x = 'egrm', Theta = 'matrix'),
     definition = function(x, Theta){
-        a <- x@par[1L]
-        b <- x@par[2L]
-        p <- exp(a * (Theta - b)) / (1 + exp(a * (Theta - b)))
-        p <- ifelse(p < 1e-10, 1e-10, p) #numerical constraints to avoid log() problems
-        p <- ifelse(p > 1 - 1e-10, 1 - 1e-10, p)
-        P <- cbind(1-p, p)
-        return(P)
+        nfact = ncol(Theta)
+        nsubj = nrow(Theta)
+        ncat = length(x@par) - nfact + 1
+        th = Theta[,1:(nfact-1), drop=F]; xi = Theta[,nfact];
+
+        # this is only for 1 item, so a and d should be vectors...
+        a = x@par[1:(nfact-1)]
+        a.xi= x@par[nfact]
+        d = x@par[(nfact+1):(nfact+ncat-1)]
+        d.mean=mean(d);
+
+        D.star = matrix(a.xi*exp(xi), nrow=nsubj, ncol=ncat-1) *
+            matrix((d - d.mean) + d.mean, nrow=nsubj, ncol=ncat-1, byrow=T)
+        #D.star = array(exp(xi), c(nsubj, ncat-1, nfact-1)) *
+        #    array(c(matrix((d - d.mean) + d.mean, nrow=nsubj, ncol=ncat-1, byrow=T)), c(nsubj, ncat-1, nfact-1))
+
+        TH = array(th, c(nsubj, nfact-1, ncat-1))
+        TH = aperm(TH, c(1,3,2))
+
+        A = array(a, c(nfact-1, nsubj, ncat-1))
+        A = aperm(A, c(2, 3, 1))
+
+        P_ = apply(A*TH, c(1,2), sum)-D.star
+        P = 1/(1+exp(-1*(P_)))
+        P.star=cbind(1, P)-cbind(P, 0)
+
+        # Is this correct or justifiable?
+        P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
+        P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
+        #
+
+        return(P.star)
     }
 )
 
 # complete-data derivative used in parameter estimation (here it is done numerically)
 setMethod(
     f = "Deriv",
-    signature = signature(x = 'experimental', Theta = 'matrix'),
+    signature = signature(x = 'egrm', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
         if(estHess){
             hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                        Theta=Theta)
+                                                    Theta=Theta)
         }
         return(list(grad=grad, hess=hess)) #replace with analytical derivatives
     }
@@ -2181,7 +2209,7 @@ setMethod(
 # derivative of the model wft to the Theta values (done numerically here)
 setMethod(
     f = "DerivTheta",
-    signature = signature(x = 'experimental', Theta = 'matrix'),
+    signature = signature(x = 'egrm', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
     }
@@ -2190,7 +2218,7 @@ setMethod(
 # derivative of the probability trace line function wrt Theta (done numerically here)
 setMethod(
     f = "dP",
-    signature = signature(x = 'experimental', Theta = 'matrix'),
+    signature = signature(x = 'egrm', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }
@@ -2200,14 +2228,333 @@ setMethod(
 #   before the parameter estimates are updated
 #   (set starting values, lower/upper bounds, logicals indicating estimation, etc)
 setMethod("initialize",
-          'experimental',
+          'egrm',
           function(.Object, nfact, ncat){
-              stopifnot(nfact == 1L)
-              stopifnot(ncat == 2L)
-              .Object@par <- c(a=1, b=0)
-              .Object@est <- c(TRUE, TRUE)
-              .Object@lbound <- rep(-Inf, 2L)
-              .Object@ubound <- rep(Inf, 2L)
+              stopifnot(nfact >= 2L)
+              stopifnot(ncat >= 3L)
+              .Object@par <- c(rep(1, nfact),  seq(-1, 1, length.out=ncat-1))
+              #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1))
+              # -3 ~ 3 seems to be too far away
+              names(.Object@par) = c(paste("a",1:(nfact-1), sep=""), "a.xi",
+                                     paste("d", 1:(ncat-1), sep=""))
+              .Object@est <- c(rep(T, nfact-1), F, rep(T, ncat-1))
+              .Object@lbound <- rep(-Inf, nfact+ncat-1)
+              .Object@ubound <- rep(Inf, nfact+ncat-1)
+              .Object
+          }
+)
+
+# How to initialize new class
+#x <- new("egrm",nfact=2, ncat=5)
+
+
+# ----------------------------------------------------------------
+
+# itemtype='egrm1', 1-dim extreme response GRM
+# ExtractZetas, GenRandomPar, ProbTrace, initialize MODIFIED
+
+setClass("egrm1", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'egrm1'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'egrm1'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'egrm1'),
+    definition = function(x){
+        x@par[1L] #slopes
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'egrm1'),
+    definition = function(x){
+        x@par[(x@nfact):(x@ncat-1)] #intercepts
+        # if we set :(length(x@par)), when collapsed, may produce error?
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'egrm1'),
+    definition = function(x){
+        #par <- c(rep(1, x@nfact), rep(0, x@ncat-1))
+        par <- c(rlnorm(1,0,1), rnorm(x@ncat-1, 0, 1))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'egrm1'),
+    definition = function(x){
+        x@par[1L:length(x@par)] <- 0
+        x@est[1L:length(x@par)] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'egrm1', Theta = 'matrix'),
+    definition = function(x, Theta){
+
+        # Same as P.egrm
+
+        th1 = Theta[,1]; xi1 = Theta[,2];
+
+        # Differ from P.egrm
+        ncat = x@ncat
+        a = x@par[1]
+        d = x@par[2:ncat]
+        #
+        d.mean=mean(d);  # this might produce error when categories are collapsed!?
+        D.star = matrix(exp(Theta[,2]), nrow=nrow(Theta), ncol=ncat-1) *
+            matrix((d - d.mean) + d.mean, nrow=nrow(Theta), ncol=ncat-1, byrow=T)
+        TH1 = matrix(th1, nrow=nrow(Theta), ncol=ncat-1)
+        A = matrix(a, nrow=nrow(Theta), ncol=ncat-1)
+        P = 1/(1+exp(-1*(A*(TH1-D.star))))
+        P.star=cbind(1, P)-cbind(P, 0)
+
+        # Is this correct or justifiable?
+        P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
+        P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
+        #
+
+        return(P.star)
+
+    }
+)
+
+# complete-data derivative used in parameter estimation (here it is done numerically)
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'egrm1', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+        if(estHess){
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                    Theta=Theta)
+        }
+        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'egrm1', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'egrm1', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# defines how the item should be initiallized with the S4 function new()
+#   before the parameter estimates are updated
+#   (set starting values, lower/upper bounds, logicals indicating estimation, etc)
+setMethod("initialize",
+          'egrm1',
+          function(.Object, nfact, ncat){
+              stopifnot(nfact == 2L)
+              stopifnot(ncat >= 1L)
+              .Object@par <- c(rep(1, nfact-1),  seq(-1, 1, length.out=ncat-1))
+              #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1))
+              # -3 ~ 3 seems to be too far away
+              names(.Object@par) = c("a",
+                                     paste("d", 1:(ncat-1), sep=""))
+              .Object@est <- c(rep(T, nfact-1), rep(T, ncat-1))
+              .Object@lbound <- rep(-Inf, nfact+ncat-2)
+              .Object@ubound <- rep(Inf, nfact+ncat-2)
+              .Object
+          }
+)
+
+
+# ----------------------------------------------------------------
+
+# itemtype='egrm10', 1-dim extreme response GRM
+# MAY xi needs LAMBDA!!!
+# ExtractZetas, GenRandomPar, ProbTrace, initialize MODIFIED
+
+
+setClass("egrm10", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'egrm10'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'egrm10'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'egrm10'),
+    definition = function(x){
+        x@par[1L:x@nfact] #slopes
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'egrm10'),
+    definition = function(x){
+        #x@par[(x@nfact+1):(length(x@par))] #intercepts
+        x@par[(x@nfact):(x@ncat-1)] #intercepts
+        # if we set :(length(x@par)), when collapsed, may produce error?
+        # MAYBE DOESNT MATTER?
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'egrm10'),
+    definition = function(x){
+        #par <- c(rep(1, x@nfact), rep(0, x@ncat-1))
+        par <- c(rlnorm(1,0,1),1, rnorm(x@ncat-1, 0, 1))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'egrm10'),
+    definition = function(x){
+        x@par[1L:(x@nfact+x@ncat-1)] <- 0
+        x@est[1L:(x@nfact+x@ncat-1)] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'egrm10', Theta = 'matrix'),
+    definition = function(x, Theta){
+
+        # Same as P.egrm
+
+        th1 = Theta[,1]; xi1 = Theta[,2];
+
+        # Differ from P.egrm
+        ncat = x@ncat
+        a = x@par[1]
+        d = x@par[3:(ncat+1)]
+        #
+        d.mean=mean(d);  # this might produce error when categories are collapsed!?
+        D.star = matrix(exp(Theta[,2]), nrow=nrow(Theta), ncol=ncat-1) *
+            matrix((d - d.mean) + d.mean, nrow=nrow(Theta), ncol=ncat-1, byrow=T)
+        TH1 = matrix(th1, nrow=nrow(Theta), ncol=ncat-1)
+        A = matrix(a, nrow=nrow(Theta), ncol=ncat-1)
+        P = 1/(1+exp(-1*(A*(TH1-D.star))))
+        P.star=cbind(1, P)-cbind(P, 0)
+
+        # Is this correct or justifiable?
+        P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
+        P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
+        #
+
+        return(P.star)
+
+    }
+)
+
+# complete-data derivative used in parameter estimation (here it is done numerically)
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'egrm10', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+        if(estHess){
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                    Theta=Theta)
+        }
+        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'egrm10', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'egrm10', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# defines how the item should be initiallized with the S4 function new()
+#   before the parameter estimates are updated
+#   (set starting values, lower/upper bounds, logicals indicating estimation, etc)
+setMethod("initialize",
+          'egrm10',
+          function(.Object, nfact, ncat){
+              stopifnot(nfact == 2L)
+              stopifnot(ncat >= 3L)
+              .Object@par <- c(rep(1, nfact),  seq(-1, 1, length.out=ncat-1))
+              #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1))
+              # -3 ~ 3 seems to be too far away
+              names(.Object@par) = c(paste("a",1:(nfact-1), sep=""), "a.xi",
+                                     paste("d", 1:(ncat-1), sep=""))
+              .Object@est <- c(rep(T, nfact-1), F, rep(T, ncat-1))
+              .Object@lbound <- rep(-Inf, nfact+ncat-1)
+              .Object@ubound <- rep(Inf, nfact+ncat-1)
               .Object
           }
 )
