@@ -1018,6 +1018,7 @@ setMethod(
                 for(i in 1L:length(nrs))
                     names <- c(names, rep(names(P)[i], nrs[i]))
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
+                plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
                     return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
                                   xlab = expression(theta), ylab = expression(P(theta)),
@@ -1038,6 +1039,7 @@ setMethod(
                 I <- t(na.omit(t(I)))
                 items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
+                plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
                     return(xyplot(I ~ Theta|item, plotobj,
                                   xlab = expression(theta), ylab = expression(I(theta)),

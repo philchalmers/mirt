@@ -215,6 +215,7 @@ setMethod(
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
+                plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
                     return(xyplot(P ~ Theta|item, plt, group = cat:group, ylim = c(-0.1,1.1),
                            xlab = expression(theta), ylab = expression(P(theta)),
@@ -239,6 +240,7 @@ setMethod(
                     plt[[g]] <- plotobj
                 }
                 plt <- do.call(rbind, plt)
+                plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull)*length(which.items))
                 if(facet_items){
                     return(xyplot(I ~ Theta | item, plt, group = group,
