@@ -57,21 +57,57 @@ createR=function(n.subj, n.item, ncat, Theta) {
         R2[, i.item]=apply(U-P <=0, 1, sum)  # in this case, all categories should be number 1,2,3,4,...
     }
 
-    return(R)
+    return(list(R,a,d))
 }
 
 # Data(R) Generation
 n.subj = 100; n.item = 10; ncat=4; # we need this for following scripts
 Theta = matrix(rnorm(n.subj*2), ncol=2)
-R <- createR(n.subj = n.subj, n.item = n.item, ncat=ncat, Theta=Theta)
+list.RespData <- createR(n.subj = n.subj, n.item = n.item, ncat=ncat, Theta=Theta)
 
-#save(R, file= "test_egrm.RData")
-load("test_egrm.RData")
+R <- list.RespData[[1]]
+a <- list.RespData[[2]]
+d <- list.RespData[[3]]
+
+#save(list.RespData, n.subj, n.item, ncat, file= "test_egrm.RData")
+#load("test_egrm.RData")
+
+apply(R, 2, function(x) length(unique(x)))
 
 #USING customItems EsTIMATE egrm model
 name <- "c.egrm"
 par <- c(a=1, d1=-1, d2=0, d3=1)
 est <- c(T, T, T, T)
+# P.egrm for creating Items
+P.egrm <- function(par, Theta, ncat) {
+    th1 = Theta[,1]; xi1 = Theta[,2];
+    a = par[1]
+    d = par[2:ncat]
+    if (all(d == sort(d))) {
+
+    d.mean=mean(d);
+    D.star = matrix(exp(Theta[,2]), nrow=nrow(Theta), ncol=ncat-1) *
+        matrix((d - d.mean) + d.mean, nrow=nrow(Theta), ncol=ncat-1, byrow=T)
+    TH1 = matrix(th1, nrow=nrow(Theta), ncol=ncat-1)
+    A = matrix(a, nrow=nrow(Theta), ncol=ncat-1)
+    P = 1/(1+exp(-1*(A*(TH1-D.star))))
+    P.star=cbind(1, P)-cbind(P, 0)
+
+    # Is this correct or justifiable?
+    P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
+    P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
+     } else {
+
+    P.star <- matrix(0, nrow=nrow(Theta), ncol=ncat)}
+
+    return(P.star)
+}
+item.egrm <- createItem(name, par=par, est=est, P=P.egrm)
+
+#USING customItems EsTIMATE egrm model
+name <- "c.egrm.cat3"
+par <- c(a=1, d1=-1, d2=1)
+est <- c(T, T, T)
 # P.egrm for creating Items
 P.egrm <- function(par, Theta, ncat) {
     th1 = Theta[,1]; xi1 = Theta[,2];
@@ -92,14 +128,84 @@ P.egrm <- function(par, Theta, ncat) {
 
     return(P.star)
 }
-item.egrm <- createItem(name, par=par, est=est, P=P.egrm)
+item.egrm.cat3 <- createItem(name, par=par, est=est, P=P.egrm)
 
 #mirt(R, 2, rep('egrm', n.item), customItems=list(egrm=item.egrm), pars='values')
-system.time(mod1 <- mirt(R, 2, rep('c.egrm', n.item), customItems=list(c.egrm=item.egrm)))
+#system.time(mod10 <- mirt(R, 2, rep('c.egrm', n.item), customItems=list(c.egrm=item.egrm)))
+system.time(mod1 <- mirt(R, 2, c('c.egrm','c.egrm.cat3','c.egrm','c.egrm',
+                                   'c.egrm.cat3',rep('c.egrm',5)), customItems=list(c.egrm=item.egrm, c.egrm.cat3=item.egrm.cat3)))
+system.time(mod1 <- mirt(R, 2, c('c.egrm.cat3',rep('c.egrm',9)), customItems=list(c.egrm=item.egrm, c.egrm.cat3=item.egrm.cat3)))
+system.time(mod1 <- mirt(R, 2, c(rep('c.egrm',4),'c.egrm.cat3',rep('c.egrm',5)), customItems=list(c.egrm=item.egrm, c.egrm.cat3=item.egrm.cat3)))
 
 #Are the estimates accurate?
 cor(fscores(mod1, full.scores=T)[,1], Theta[,1])
 cor(fscores(mod1, full.scores=T)[,2], Theta[,2])
+
+cor(fscores(mod10, full.scores=T)[,1], Theta[,1])
+cor(fscores(mod10, full.scores=T)[,2], Theta[,2])
+
+cor(fscores(mod10, full.scores=T)[,1], fscores(mod1, full.scores=T)[,1])
+cor(fscores(mod10, full.scores=T)[,2], fscores(mod1, full.scores=T)[,2])
+
+
+mod = mod2
+a.est=c()
+for (i in 1:n.item)
+    a.est[i] = coef(mod)[[i]]["par","a1"]
+plot(a.est,a); abline(a=0, b=1)
+cor(a.est,a)
+
+#d1.est=c()
+#for (i in 1:n.item)
+#    d1.est[i] = coef(mod)[[i]]["par","d1"]
+
+#d2.est=c()
+#for (i in 1:n.item)
+#    d2.est[i] = coef(mod)[[i]]["par","d2"]
+
+d.est = list()
+for (i in 1:n.item)
+    d.est[[i]] = coef(mod)[[i]]["par", -1, drop=T]
+
+d.new = paramDiff(d, R)
+
+d.est.unlist <- unlist(d.est); d.new.unlist <- unlist(d.new)
+cor(unlist(d.est), unlist(d.new))
+
+d1.est <- d.est.unlist[names(d.est.unlist)=="d1"]
+d2.est <- d.est.unlist[names(d.est.unlist)=="d2"]
+d3.est <- d.est.unlist[names(d.est.unlist)=="d3"]
+
+d1.new <- d.new.unlist[names(d.new.unlist)=="d1"]
+d2.new <- d.new.unlist[names(d.new.unlist)=="d2"]
+d3.new <- d.new.unlist[names(d.new.unlist)=="d3"]
+
+cor(d1.est, d1.new)
+cor(d2.est, d2.new)
+cor(d3.est, d3.new)
+
+
+
+coef(mod10)
+coef(mod1)
+
+# what if some NA's exist?
+R2 <- R
+# set to NA 80% of all data
+n.NA <- n.item*n.subj*.2
+
+pos.i <- sample(n.subj, n.NA, replace=T)
+pos.j <- sample(n.item, n.NA, replace=T)
+
+for (i in 1:n.NA)
+    R2[pos.i[i], pos.j[i]] <- NA
+
+system.time(mod101 <- mirt(R2, 2, rep('c.egrm', n.item), customItems=list(c.egrm=item.egrm)))
+
+cor(fscores(mod101, full.scores=T)[,1], Theta[,1])
+cor(fscores(mod101, full.scores=T)[,2], Theta[,2])
+
+
 
 #Checking built-in itemtype "egrm10" : which 1-dimensional factor model, with slope for factor 1 and xi
 system.time(mod2 <- mirt(R, 2, itemtype=rep("egrm10",n.item)))
@@ -108,6 +214,41 @@ system.time(mod2 <- mirt(R, 2, itemtype=rep("egrm10",n.item)))
 cor(fscores(mod2, full.scores=T)[,1], Theta[,1])
 cor(fscores(mod2, full.scores=T)[,2], Theta[,2])
 
+mod = mod2
+a.est=c()
+for (i in 1:n.item)
+    a.est[i] = coef(mod)[[i]]["par","a1"]
+plot(a.est,a); abline(a=0, b=1)
+cor(a.est,a)
+
+#d1.est=c()
+#for (i in 1:n.item)
+#    d1.est[i] = coef(mod)[[i]]["par","d1"]
+
+#d2.est=c()
+#for (i in 1:n.item)
+#    d2.est[i] = coef(mod)[[i]]["par","d2"]
+
+d.est = list()
+for (i in 1:n.item)
+    d.est[[i]] = coef(mod)[[i]]["par", c(-1,-2), drop=T]
+
+d.new = paramDiff(d, R)
+
+d.est.unlist <- unlist(d.est); d.new.unlist <- unlist(d.new)
+cor(unlist(d.est), unlist(d.new))
+
+d1.est <- d.est.unlist[names(d.est.unlist)=="d1"]
+d2.est <- d.est.unlist[names(d.est.unlist)=="d2"]
+d3.est <- d.est.unlist[names(d.est.unlist)=="d3"]
+
+d1.new <- d.new.unlist[names(d.new.unlist)=="d1"]
+d2.new <- d.new.unlist[names(d.new.unlist)=="d2"]
+d3.new <- d.new.unlist[names(d.new.unlist)=="d3"]
+
+cor(d1.est, d1.new)
+cor(d2.est, d2.new)
+cor(d3.est, d3.new)
 
 
 # Estimating with PRIORS
@@ -135,6 +276,10 @@ coef(mod1.prior)
 cor(fscores(mod1.prior, full.scores=T)[,1], Theta[,1])
 cor(fscores(mod1.prior, full.scores=T)[,2], Theta[,2])
 #And estimates are poor
+
+
+
+
 
 s.mirt.model11 <- "F1 = 1-10
 F2 = 1-10
@@ -185,6 +330,13 @@ cor(fscores(mod23.prior, full.scores=T)[,2], Theta[,2])
 #Not so good, .16, .10
 # maybe parameter d3 of item1 should be deleted?
 
+
+system.time(mod.egrm10 <- mirt(R, 2, rep('egrm10', n.item)))
+
+cor(fscores(mod.egrm10, full.scores=T)[,1], Theta[,1])
+cor(fscores(mod.egrm10, full.scores=T)[,2], Theta[,2])
+
+cor(exp(fscores(mod.egrm10, full.scores=T)[,2]), exp(Theta[,2]))
 
 
 

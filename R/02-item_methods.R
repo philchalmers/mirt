@@ -68,7 +68,7 @@ numDeriv_dP <- function(item, Theta){
 # valid itemtype inputs
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
-Experimental_itemtypes <- function() c('egrm', 'egrm1', 'egrm10')
+Experimental_itemtypes <- function() c('egrm', 'egrm1', 'egrm10','egrm10a')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
                                  'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
@@ -2487,18 +2487,22 @@ setMethod(
         a = x@par[1]
         d = x@par[3:(ncat+1)]
         #
-        d.mean=mean(d);  # this might produce error when categories are collapsed!?
-        D.star = matrix(exp(Theta[,2]), nrow=nrow(Theta), ncol=ncat-1) *
-            matrix((d - d.mean) + d.mean, nrow=nrow(Theta), ncol=ncat-1, byrow=T)
-        TH1 = matrix(th1, nrow=nrow(Theta), ncol=ncat-1)
-        A = matrix(a, nrow=nrow(Theta), ncol=ncat-1)
-        P = 1/(1+exp(-1*(A*(TH1-D.star))))
-        P.star=cbind(1, P)-cbind(P, 0)
+        if (all(d == sort(d))) {
 
-        # Is this correct or justifiable?
-        P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
-        P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
-        #
+            d.mean=mean(d);
+            D.star = matrix(exp(Theta[,2]), nrow=nrow(Theta), ncol=ncat-1) *
+                matrix((d - d.mean) + d.mean, nrow=nrow(Theta), ncol=ncat-1, byrow=T)
+            TH1 = matrix(th1, nrow=nrow(Theta), ncol=ncat-1)
+            A = matrix(a, nrow=nrow(Theta), ncol=ncat-1)
+            P = 1/(1+exp(-1*(A*(TH1-D.star))))
+            P.star=cbind(1, P)-cbind(P, 0)
+
+            # Is this correct or justifiable?
+            P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
+            P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
+        } else {
+
+            P.star <- matrix(0, nrow=nrow(Theta), ncol=ncat)}
 
         return(P.star)
 
@@ -2553,6 +2557,169 @@ setMethod("initialize",
               names(.Object@par) = c(paste("a",1:(nfact-1), sep=""), "a.xi",
                                      paste("d", 1:(ncat-1), sep=""))
               .Object@est <- c(rep(T, nfact-1), F, rep(T, ncat-1))
+              .Object@lbound <- rep(-Inf, nfact+ncat-1)
+              .Object@ubound <- rep(Inf, nfact+ncat-1)
+              .Object
+          }
+)
+
+# ----------------------------------------------------------------
+
+# itemtype='egrm10a', 1-dim extreme response GRM
+# a.xi to be estimated
+# ExtractZetas, GenRandomPar, ProbTrace, initialize MODIFIED
+
+
+setClass("egrm10a", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'egrm10a'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'egrm10a'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'egrm10a'),
+    definition = function(x){
+        x@par[1L:x@nfact] #slopes
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'egrm10a'),
+    definition = function(x){
+        #x@par[(x@nfact+1):(length(x@par))] #intercepts
+        x@par[(x@nfact):(x@ncat-1)] #intercepts
+        # if we set :(length(x@par)), when collapsed, may produce error?
+        # MAYBE DOESNT MATTER?
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'egrm10a'),
+    definition = function(x){
+        #par <- c(rep(1, x@nfact), rep(0, x@ncat-1))
+        par <- c(rlnorm(1,0,1),1, rnorm(x@ncat-1, 0, 1))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'egrm10a'),
+    definition = function(x){
+        x@par[1L:(x@nfact+x@ncat-1)] <- 0
+        x@est[1L:(x@nfact+x@ncat-1)] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'egrm10a', Theta = 'matrix'),
+    definition = function(x, Theta){
+
+        # Same as P.egrm
+
+        th1 = Theta[,1]; xi1 = Theta[,2];
+
+        # Differ from P.egrm
+        ncat = x@ncat
+        a = x@par[1]
+        a.xi = x@par[2]
+        d = x@par[3:(ncat+1)]
+        #
+        if (all(d == sort(d))) {
+
+            d.mean=mean(d);
+            D.star = matrix(exp(a.xi*Theta[,2]), nrow=nrow(Theta), ncol=ncat-1) *
+                matrix((d - d.mean) + d.mean, nrow=nrow(Theta), ncol=ncat-1, byrow=T)
+            # a.xi included
+            TH1 = matrix(th1, nrow=nrow(Theta), ncol=ncat-1)
+            A = matrix(a, nrow=nrow(Theta), ncol=ncat-1)
+            P = 1/(1+exp(-1*(A*(TH1-D.star))))
+            P.star=cbind(1, P)-cbind(P, 0)
+
+            # Is this correct or justifiable?
+            P.star <- ifelse(P.star < 1e-20, 1e-20, P.star)
+            P.star <- ifelse(P.star > (1 - 1e-20), (1 - 1e-20), P.star)
+        } else {
+
+            P.star <- matrix(0, nrow=nrow(Theta), ncol=ncat)}
+
+        return(P.star)
+
+    }
+)
+
+# complete-data derivative used in parameter estimation (here it is done numerically)
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'egrm10a', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+        if(estHess){
+            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                    Theta=Theta)
+        }
+        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'egrm10a', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'egrm10a', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# defines how the item should be initiallized with the S4 function new()
+#   before the parameter estimates are updated
+#   (set starting values, lower/upper bounds, logicals indicating estimation, etc)
+setMethod("initialize",
+          'egrm10a',
+          function(.Object, nfact, ncat){
+              stopifnot(nfact == 2L)
+              stopifnot(ncat >= 1L)
+              .Object@par <- c(rep(1, nfact),  seq(-1, 1, length.out=ncat-1))
+              #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1))
+              # -3 ~ 3 seems to be too far away
+              names(.Object@par) = c(paste("a",1:(nfact-1), sep=""), "a.xi",
+                                     paste("d", 1:(ncat-1), sep=""))
+              .Object@est <- rep(T, nfact+ncat-1)
               .Object@lbound <- rep(-Inf, nfact+ncat-1)
               .Object@ubound <- rep(Inf, nfact+ncat-1)
               .Object
