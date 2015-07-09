@@ -2546,7 +2546,7 @@ setMethod("initialize",
           'egrm10',
           function(.Object, nfact, ncat){
               stopifnot(nfact == 2L)
-              stopifnot(ncat >= 3L)
+              stopifnot(ncat >= 1L)
               .Object@par <- c(rep(1, nfact),  seq(-1, 1, length.out=ncat-1))
               #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1))
               # -3 ~ 3 seems to be too far away
