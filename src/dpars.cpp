@@ -204,7 +204,7 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, const NumericMatr
         }
     }
     if(estHess){
-        arma::mat hess(npars, npars);
+        arma::mat hess2(npars, npars);
         vector<double> invSig2(invSig.begin(), invSig.end());
         const vector<double> cMeans2(cMeans.begin(), cMeans.end());
         const vector<double> Zdif2(Zdif.begin(), Zdif.end());
@@ -247,8 +247,8 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, const NumericMatr
                     s3 = 0.5 * tr(tmpmat, &nfact);
                     s4 = inner(du1, dinvSig2, cMeans2, &nfact);
                     s5 = N * inner(du1, invSig2, du2, &nfact);
-                    hess(i,j) = s1 + s2 + s3 + s4 - s5;
-                    hess(j,i) = hess(i,j);
+                    hess2(i,j) = s1 + s2 + s3 + s4 - s5;
+                    hess2(j,i) = hess2(i,j);
                 }
             }
         }
@@ -268,7 +268,7 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, const NumericMatr
                 ++whichrow;
             }
         }
-        arma::mat newh = hess.submat(pick, pick);
+        arma::mat newh = hess2.submat(pick, pick);
         for (int i = 0; i < newh.n_cols; ++i)
             for (int j = 0; j < newh.n_cols; ++j)
                 hess(i,j) = newh(i,j);
@@ -304,8 +304,8 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP RestHess, SEXP Rrandeff)
 {
     S4 obj(Robj);
     NumericMatrix Theta(RTheta);
-    bool estHess = as<bool>(RestHess);
-    bool randeff = as<bool>(Rrandeff);
+    const bool estHess = as<bool>(RestHess);
+    const bool randeff = as<bool>(Rrandeff);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     NumericVector par = obj.slot("par");
