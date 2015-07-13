@@ -180,7 +180,6 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, const NumericMatr
     const int N = Theta.nrow();
     const int nfact = Theta.ncol();
     const int npars = nfact + nfact * (nfact + 1);
-    const int npars2 = nfact + nfact * (nfact + 1) / 2;
     const int nsig = npars - nfact;
 
     arma::mat Dif(N, nfact);
