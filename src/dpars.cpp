@@ -268,8 +268,9 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, const NumericMatr
             }
         }
         arma::mat newh = hess2.submat(pick, pick);
-        for (int i = 0; i < newh.n_cols; ++i)
-            for (int j = 0; j < newh.n_cols; ++j)
+        const int n_cols = newh.n_cols;
+        for (int i = 0; i < n_cols; ++i)
+            for (int j = 0; j < n_cols; ++j)
                 hess(i,j) = newh(i,j);
     }
 }
