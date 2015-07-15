@@ -119,11 +119,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
-    fn <- function(Theta, obj, digits, ...){
-        tmpdat <- imputeMissing(obj, Theta)
+    fn <- function(ind, Theta, Theta2, obj, vals, ...){
+        tmpdat <- imputeMissing(obj, Theta[[ind]])
         tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype)
         tmpmod@pars <- obj@pars
-        return(itemfit(tmpmod, Theta=Theta, digits = 200, ...))
+        return(itemfit(tmpmod, Theta=Theta2[[ind]], digits = Inf, ...))
     }
 
     if(missing(x)) missingMsg('x')
@@ -141,15 +141,17 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                  impute argument to compute statistics following multiple data
                  imputations', call.=FALSE)
         stopifnot(impute > 1L)
-        Theta <- fscores(x, plausible.draws = impute)
+        Theta2 <- Theta <- fscores(x, plausible.draws = impute)
+        Theta2[[length(Theta)+1L]] <- Theta[[1L]]
+        Theta2[[1L]] <- NULL
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(Theta, fn, obj=x, vals=vals,
+        collect <- myLapply(1L:impute, fn, Theta=Theta, Theta2=Theta2, obj=x, vals=vals,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,
-                            discrete=discrete, digits = 200, ...)
+                            discrete=discrete, ...)
         ave <- SD <- collect[[1L]]
         pick1 <- 1:nrow(ave)
         pick2 <- sapply(ave, is.numeric)

@@ -1,5 +1,7 @@
 # Changes in mirt 1.11
 
+- further improve item fit statistics when using imputations
+
 - facet plots now try to keep the items in their respective order
 
 - panel theme for lattice plots changed from default to a lighter blue colour, and legend now
