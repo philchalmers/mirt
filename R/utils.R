@@ -1207,6 +1207,10 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
     for(i in 1L:length(random)){
         f <- gsub(" ", "", as.character(random[[i]])[2L])
         splt <- strsplit(f, '\\|')[[1L]]
+        if(any(grepl('\\*', splt[2L]) | grepl('\\+', splt[2L])))
+            stop('The + and * operators are not supported. Please specify
+                 which effects you want to interact with the : operator, and specify
+                 additional random effects in seperate list elements', call.=FALSE)
         gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
         sframe <- model.frame(as.formula(paste0('~',splt[1L])), longdata)
         levels <- interaction(gframe)
