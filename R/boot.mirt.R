@@ -8,7 +8,9 @@
 #' @aliases boot.mirt
 #' @param x an estimated model object
 #' @param R number of draws to use (passed to the \code{boot()} function)
-#' @param ... additional arguments to be passed on to \code{boot(...)}
+#' @param technical technical arguments passed to estimation engine. See \code{\link{mirt}}
+#'   for details
+#' @param ... additional arguments to be passed on to \code{boot(...)} and estimation engine
 #' @keywords bootstrapped standard errors
 #' @export boot.mirt
 #' @seealso
@@ -30,9 +32,9 @@
 #'
 #'
 #' }
-boot.mirt <- function(x, R = 100, ...){
+boot.mirt <- function(x, R = 100, technical = NULL, ...){
     boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group,
-                           class, LR, obj, DTF = NULL, ...) {
+                           class, LR, obj, DTF = NULL, technical, ...) {
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
         rownames(dat) <- NULL
@@ -45,19 +47,19 @@ boot.mirt <- function(x, R = 100, ...){
             mod <- try(mixedmirt(data=dat, model=model, covdata=covdata, itemtype=itemtype,
                                  itemdesign=itemdesign, fixed=fm$fixed, random=fm$random,
                                  lr.fixed=fm$lr.fixed, lr.random=fm$lr.random,
-                                 constrain=constrain, parprior=parprior,
-                                 verbose=FALSE, technical=list(parallel=FALSE),
+                                 constrain=constrain, parprior=parprior, draws=1,
+                                 verbose=FALSE, technical=technical,
                                  SE=FALSE, ...))
         } else if(class == 'DiscreteClass'){
             mod <- try(mdirt(data=dat, model=model, itemtype=itemtype, group=g,
                              constrain=constrain, parprior=parprior,
-                             verbose=FALSE, technical=list(parallel=FALSE),
+                             verbose=FALSE, technical=technical,
                              SE=FALSE, ...))
         } else {
             if(class == 'MultipleGroupClass'){
                 mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
                                      constrain=constrain, parprior=parprior,
-                                     calcNull=FALSE, verbose=FALSE, technical=list(parallel=FALSE),
+                                     calcNull=FALSE, verbose=FALSE, technical=technical,
                                      method=x@method, draws=1, SE=FALSE, ...))
             } else {
                 if(.hasSlot(LR, 'beta')){
@@ -70,7 +72,7 @@ boot.mirt <- function(x, R = 100, ...){
                 }
                 mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
                             parprior=parprior, calcNull=FALSE, verbose=FALSE,
-                            technical=list(parallel=FALSE), formula=formula,
+                            technical=technical, formula=formula,
                             covdata=df, method=x@method, draws=1, SE=FALSE, ...))
             }
         }
@@ -107,10 +109,12 @@ boot.mirt <- function(x, R = 100, ...){
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- sum(structure$est)
+    if(is.null(technical)) technical <- list(parallel=FALSE)
+    else technical$parallel <- FALSE
     if(requireNamespace("boot", quietly = TRUE)){
       boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, class=class,
                     parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
-                    obj=x, ...)
+                    obj=x, technical=technical, ...)
     }
     if(!is.null(DTF)) return(boots)
     names(boots$t0) <- paste(paste(structure$item[structure$est],

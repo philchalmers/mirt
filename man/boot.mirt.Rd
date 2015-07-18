@@ -4,14 +4,17 @@
 \alias{boot.mirt}
 \title{Calculate bootstrapped standard errors for estimated models}
 \usage{
-boot.mirt(x, R = 100, ...)
+boot.mirt(x, R = 100, technical = NULL, ...)
 }
 \arguments{
 \item{x}{an estimated model object}
 
 \item{R}{number of draws to use (passed to the \code{boot()} function)}
 
-\item{...}{additional arguments to be passed on to \code{boot(...)}}
+\item{technical}{technical arguments passed to estimation engine. See \code{\link{mirt}}
+for details}
+
+\item{...}{additional arguments to be passed on to \code{boot(...)} and estimation engine}
 }
 \description{
 Given an internal mirt object estimate the bootstrapped standard errors. It may
