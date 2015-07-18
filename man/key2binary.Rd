@@ -10,12 +10,14 @@ key2binary(fulldata, key)
 \item{fulldata}{an object of class \code{data.frame}, \code{matrix}, or
 \code{table} with the response patterns}
 
-\item{key}{a vector consisting of the 'correct' response to the items. Each
-value corresponds to each column in \code{fulldata}}
+\item{key}{a vector or matrix consisting of the 'correct' response to the items. Each
+value/row corresponds to each column in \code{fulldata}. If the input is a matrix, multiple
+scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
+in the case of a matrix input, no additional scoring keys)}
 }
 \value{
 Returns a numeric matrix with all the response patterns in
-  dichotomous format.
+  dichotomous format
 }
 \description{
 The \code{key2binary} function will convert response pattern data to a
@@ -27,8 +29,14 @@ data(SAT12)
 head(SAT12)
 key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 
-dicho.SAT12 <- key2binary(SAT12,key)
+dicho.SAT12 <- key2binary(SAT12, key)
 head(dicho.SAT12)
+
+# multiple scoring keys
+key2 <- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5),
+              c(2,3,NA,1,rep(NA, 28)))
+dicho.SAT12 <- key2binary(SAT12, key2)
+
     }
 }
 \author{

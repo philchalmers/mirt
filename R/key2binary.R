@@ -3,13 +3,14 @@
 #' The \code{key2binary} function will convert response pattern data to a
 #' dichotomous format, given a response key.
 #'
-#'
 #' @param fulldata an object of class \code{data.frame}, \code{matrix}, or
 #'   \code{table} with the response patterns
-#' @param key a vector consisting of the 'correct' response to the items. Each
-#'   value corresponds to each column in \code{fulldata}
+#' @param key a vector or matrix consisting of the 'correct' response to the items. Each
+#'   value/row corresponds to each column in \code{fulldata}. If the input is a matrix, multiple
+#'   scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
+#'   in the case of a matrix input, no additional scoring keys)
 #' @return Returns a numeric matrix with all the response patterns in
-#'   dichotomous format.
+#'   dichotomous format
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @export key2binary
 #' @examples
@@ -19,17 +20,27 @@
 #' head(SAT12)
 #' key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 #'
-#' dicho.SAT12 <- key2binary(SAT12,key)
+#' dicho.SAT12 <- key2binary(SAT12, key)
 #' head(dicho.SAT12)
+#'
+#' # multiple scoring keys
+#' key2 <- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5),
+#'               c(2,3,NA,1,rep(NA, 28)))
+#' dicho.SAT12 <- key2binary(SAT12, key2)
+#'
 #'     }
 #'
 key2binary <- function (fulldata, key){
     if(missing(fulldata)) missingMsg('fulldata')
     if(missing(key)) missingMsg('key')
-    if (ncol(fulldata) != length(key)) stop("Key is not the correct length.\n", call.=FALSE)
+    if(is.vector(key)) key <- matrix(key)
+    if (ncol(fulldata) != nrow(key)) stop("Key is not the correct length.\n", call.=FALSE)
     colname <- colnames(fulldata)
     X <- as.matrix(fulldata)
     colnames(X) <- colname
-    X <- t(t(X) == key) + 0
+    for(i in 1L:ncol(X)){
+        if(all(is.na(key[i,]))) next
+        X[,i] <- fulldata[,i] %in% key[i,] + 0L
+    }
     return(X)
 }
