@@ -180,20 +180,35 @@ tail(withoutint$X)
 #make the number of groups much larger
 covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
 
-#random groups
+#random groups with fixed intercepts (without suppressed correlation in random intercept term)
+  # group was modeled as a level 2 random intercept effect to allow for group differences
+  # to be captured (capturing 'contexutal effect').
 rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)
 summary(rmod1)
 coef(rmod1)
 
-#random groups and random items
-rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
+#random slopes with fixed intercepts (calculate suppressed correlation by pseudoIQ)
+rmod2 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
 summary(rmod2)
 eff <- randef(rmod2) #estimate random effects
+str(eff)
 
-#random slopes with fixed intercepts (suppressed correlation)
-rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
+#random groups and random items (as known as random- or varying- slopes with random- or varying- intercepts)
+  # group was modeled as a level 2 random intercept effect to allow for group differences
+  # to be captured (capturing 'contexutal effect') and items was modeled as a level 2 random intercept effect
+  # to allow for individual differences to be caputred (capturing 'compositional effect').
+rmod3 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
 summary(rmod3)
-eff <- randef(rmod3)
+eff <- randef(rmod3) #estimate random effects
+str(eff)
+
+# interacting among random groups and random items with main effect
+  # group was modeled as a level 2 random intercept effect to allow for group differences
+  # to be captured (capturing 'contexutal effect') and items was modeled as a level 2 random intercept effect
+  # to allow for individual differences to be caputred (capturing 'compositional effect').
+rmod4 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items, ~1|group:items))
+summary(rmod4)
+eff <- randef(rmod4) #estimate random effects
 str(eff)
 
 ###################################################
