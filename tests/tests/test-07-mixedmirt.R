@@ -133,9 +133,9 @@ test_that('polytomous', {
     mod <- mixedmirt(dat, covdata = covdata, 1, itemtype = '2PL', fixed = ~ 0 + items,
                      lr.fixed = ~ group, verbose=FALSE, SE=TRUE)
     cfs <- coef(mod, digits=10, printSE=TRUE)
-    expect_equal(as.numeric(cfs$lr.betas)[-c(1:2)], c(1.4272120, 0.1075342, 2.9126819, 0.1391350),
+    expect_equal(as.numeric(cfs$lr.betas)[-c(1:2)], c(1.4341209, 0.1320500, 2.9319028, 0.1505968),
                  tolerance=1e-4)
-    expect_equal(mod@logLik, -4359.447, tolerance = 1e-2)
+    expect_equal(mod@logLik, -4359.836, tolerance = 1e-2)
     expect_equal(mod@df, 1001)
 
     mod2 <- mixedmirt(dat, covdata = covdata, 1, itemtype = 'Rasch', fixed = ~ 0 + items,
