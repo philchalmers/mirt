@@ -170,10 +170,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(LRPARS){
             lrPars@par <- lrPars@beta[] <- longpars[lrPars@parnum]
             lrPars@mus <- lrPars@X %*% lrPars@beta
-            if(!list$USEEM){
-                tmp <- gtheta0[[1L]] - lrPars@mus
-                lrPars@sigma <- lrPars@sigma + gamma*((t(tmp) %*% tmp)/ nrow(tmp) - lrPars@sigma)
-            }
             gstructgrouppars[[g]]$gmeans <- lrPars@mus
         }
         if(RAND && cycles > 100L) random <- reloadRandom(random=random, longpars=longpars,
@@ -327,7 +323,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             }
         }
         if(LRPARS){
-            inv_sigma <- solve(lrPars@sigma)
+            inv_sigma <- solve(gstructgrouppars[[1L]]$gcov)
             tmp <- t(inv_sigma %*% t(gtheta0[[1L]] - lrPars@mus) %*% lrPars@X)
             g[lrPars@parnum] <- as.numeric(tmp)
             tmp2 <- -det(inv_sigma) * lrPars@tXX
