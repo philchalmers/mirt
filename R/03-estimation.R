@@ -48,7 +48,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stopifnot(is(invariance, 'character'))
         stopifnot(is(GenRandomPars, 'logical'))
         stopifnot(is(large, 'logical') || is(large, 'list'))
-        opts <- makeopts(...)
+        opts <- makeopts(GenRandomPars=GenRandomPars, ...)
         if(!is.null(survey.weights)){
             stopifnot(opts$method == 'EM')
             stopifnot(length(survey.weights) == nrow(data))

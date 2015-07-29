@@ -1028,7 +1028,7 @@ updateGrad <- function(g, L) L %*% g
 updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
-                     SE = FALSE, verbose = TRUE,
+                     SE = FALSE, verbose = TRUE, GenRandomPars,
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(), use = 'pairwise.complete.obs',
@@ -1095,7 +1095,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
-    if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
+    if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars)
         set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
     opts$gain <- c(0.15,0.65)
