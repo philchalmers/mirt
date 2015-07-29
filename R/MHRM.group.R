@@ -46,6 +46,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     index <- 1L:nfullpars
     N <- nrow(gtheta0[[1L]])
     #Burn in
+    if(LRPARS){
+        lrPars@beta[] <- lrPars@par
+        lrPars@mus <- lrPars@X %*% lrPars@beta
+        gstructgrouppars[[g]]$gmeans <- lrPars@mus
+    }
     cand.t.var <- 1
     tmp <- .1
     OffTerm <- matrix(0, 1, J)

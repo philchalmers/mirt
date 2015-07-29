@@ -29,34 +29,39 @@ prodterms <- function(theta0, prodlist)
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
                         prior.mu, prodlist, OffTerm, CUSTOM.IND)
 {
-    N <- nrow(fulldata)
-    J <- length(pars) - 1L
-    unif <- runif(N)
-    sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
-    total_0 <- attr(theta0, 'log.lik_full')
-    theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
-    if(is.null(total_0)) theta1 <- theta0 #for intial draw
-    log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
-    if(length(prodlist) > 0L)
-        theta1 <- prodterms(theta1,prodlist)
-    itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
-                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
-    total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
-    if(!is.null(prodlist))
-        theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
-                                   length(prodlist)), drop=FALSE]
-    if(is.null(total_0)){ #for intial draw
+    makedraws <- try({
+        N <- nrow(fulldata)
+        J <- length(pars) - 1L
+        unif <- runif(N)
+        sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
+        total_0 <- attr(theta0, 'log.lik_full')
+        theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
+        if(is.null(total_0)) theta1 <- theta0 #for intial draw
+        log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
+        if(length(prodlist) > 0L)
+            theta1 <- prodterms(theta1,prodlist)
+        itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
+                                       offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
+        total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
+        if(!is.null(prodlist))
+            theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
+                                       length(prodlist)), drop=FALSE]
+        if(is.null(total_0)){ #for intial draw
+            attr(theta1, 'log.lik_full') <- total_1
+            return(theta1)
+        }
+        diff <- total_1 - total_0
+        accept <- unif < exp(diff)
+        theta1[!accept, ] <- theta0[!accept, ]
+        total_1[!accept] <- total_0[!accept]
+        log.lik <- sum(total_1)
+        attr(theta1, "Proportion Accepted") <- sum(accept)/N
+        attr(theta1, "log.lik") <- log.lik
         attr(theta1, 'log.lik_full') <- total_1
-        return(theta1)
-    }
-    diff <- total_1 - total_0
-    accept <- unif < exp(diff)
-    theta1[!accept, ] <- theta0[!accept, ]
-    total_1[!accept] <- total_0[!accept]
-    log.lik <- sum(total_1)
-    attr(theta1, "Proportion Accepted") <- sum(accept)/N
-    attr(theta1, "log.lik") <- log.lik
-    attr(theta1, 'log.lik_full') <- total_1
+    }, silent = TRUE)
+    if(is(makedraws, 'try-error'))
+        stop('MH sampler failed. Model is likely unstable or may need better starting values',
+             .call=FALSE)
     return(theta1)
 }
 
