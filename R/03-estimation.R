@@ -517,6 +517,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
     } else if(opts$method == 'MIXED'){
+        if(is.null(opts$technical$RANDSTART)) opts$technical$RANDSTART <- 100L
+        if(is.null(opts$technical$BURNIN) && length(mixed.design$random)) opts$BURNIN <- 200L
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls,
                                     PrepList=PrepList, random=mixed.design$random, Data=Data,
                                     lrPars=lrPars,
@@ -529,7 +531,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars, SE=FALSE,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                           message=opts$message, expl=FALSE),
+                                           message=opts$message, expl=FALSE,
+                                           RANDSTART=opts$technical$RANDSTART),
                                DERIV=DERIV)
         if(opts$SE){
             if(opts$verbose)
@@ -546,7 +549,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                           startlongpars=ESTIMATE$longpars, SE=TRUE,
                                           cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                          message=opts$message, expl=FALSE),
+                                          message=opts$message, expl=FALSE,
+                                          RANDSTART=1L),
                               DERIV=DERIV)
             ESTIMATE$pars <- tmp$pars
             ESTIMATE$random <- tmp$random
