@@ -394,8 +394,9 @@
 #'       4GB or RAM on your PC; default 20000}
 #'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
 #'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
-#'     \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default 150}
-#'     \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default 50}
+#'     \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default is 150}
+#'     \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default is 50}
+#'     \item{MHDRAWS}{number of Metropolis-Hasting draws to use in the MH-RM at each iteration; default is 5}
 #'     \item{set.seed}{seed number used during estimation. Default is 12345}
 #'     \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
 #'       information matrix. Default is 1e-3}
