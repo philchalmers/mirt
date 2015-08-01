@@ -420,7 +420,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(!list$SE && conv >= 3L) break
         if(list$SE && cycles >= (400L + BURNIN + SEMCYCLES) && conv >= 3L) break
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
-        if(gamma == .25){
+        if(cycles == (BURNIN + SEMCYCLES + 1L)){
             gamma <- 0
             phi <- grad
             Phi <- ave.h

@@ -217,22 +217,16 @@ etc)}
 
 \item{technical}{a list containing lower level technical parameters for estimation. May be:
 \describe{
+  \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
   \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
     4GB or RAM on your PC; default 20000}
   \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
-  \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
-  \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default is 150}
-  \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default is 50}
-  \item{MHDRAWS}{number of Metropolis-Hasting draws to use in the MH-RM at each iteration; default is 5}
   \item{set.seed}{seed number used during estimation. Default is 12345}
   \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
     information matrix. Default is 1e-3}
   \item{symmetric_SEM}{logical; force S-EM information matrix to be symmetric? Default is TRUE
     so that computation of standard errors are more stable. Setting this to FALSE can help
     to detect solutions that have not reached the ML estimate}
-  \item{gain}{a vector of two values specifying the numerator and exponent
-       values for the RM gain function \eqn{(val1 / cycle)^val2}.
-       Default is \code{c(0.15,0.65)}}
   \item{warn}{logical; include warning messages during estimation? Default is TRUE}
   \item{message}{logical; include general messages during estimation? Default is TRUE}
   \item{customK}{a numeric vector used to explicitly declare the number of response
@@ -249,13 +243,19 @@ etc)}
     on the first call, therefore the prior will have to deal with this issue accordingly}
   \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
+  \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
+    Default is TRUE}
+  \item{gain}{a vector of two values specifying the numerator and exponent
+       values for the RM gain function \eqn{(val1 / cycle)^val2}.
+       Default is \code{c(0.15,0.65)}}
+  \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default is 150}
+  \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default is 50}
+  \item{MHDRAWS}{number of Metropolis-Hasting draws to use in the MH-RM at each iteration; default is 5}
   \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will
     cause the acceptance ratio to decrease. One value is required for each group in
     unconditional item factor analysis (\code{mixedmirt()} requires additional values
     for random effect). If null, these values are determined internally, attempting to
     tune the acceptance of the draws to be between .1 and .4}
-  \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
-    Default is TRUE}
 }}
 
 \item{...}{additional arguments to be passed}
