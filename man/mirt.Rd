@@ -247,9 +247,9 @@ etc)}
     Default is TRUE}
   \item{gain}{a vector of two values specifying the numerator and exponent
        values for the RM gain function \eqn{(val1 / cycle)^val2}.
-       Default is \code{c(0.15,0.65)}}
+       Default is \code{c(0.10, 0.75)}}
   \item{BURNIN}{number of burn in cycles (stage 1) in MH-RM; default is 150}
-  \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default is 50}
+  \item{SEMCYCLES}{number of SEM cycles (stage 2) in MH-RM; default is 100}
   \item{MHDRAWS}{number of Metropolis-Hasting draws to use in the MH-RM at each iteration; default is 5}
   \item{MHcand}{a vector of values used to tune the MH sampler. Larger values will
     cause the acceptance ratio to decrease. One value is required for each group in

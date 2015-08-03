@@ -499,7 +499,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                    list = list(NCYCLES=opts$NCYCLES, BURNIN=1L,
-                                               SEMCYCLES=2L, gain=opts$gain,
+                                               SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                                KDRAWS=opts$KDRAWS, MHDRAWS=opts$MHDRAWS,
                                                TOL=opts$SEtol, USEEM=TRUE,
                                                nfactNames=PrepList[[1L]]$nfactNames,
@@ -544,7 +544,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               PrepList=PrepList, random=mixed.design$random, Data=Data,
                               lrPars=ESTIMATE$lrPars,
                               list = list(NCYCLES=opts$NCYCLES, BURNIN=1L,
-                                          SEMCYCLES=2L, gain=opts$gain,
+                                          SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                           KDRAWS=opts$KDRAWS, MHDRAWS=opts$MHDRAWS,
                                           TOL=opts$SEtol, USEEM=TRUE,
                                           nfactNames=PrepList[[1L]]$nfactNames,

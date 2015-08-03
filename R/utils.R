@@ -1087,7 +1087,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(opts$method %in% c('EM', 'QMCEM'))
         opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
-    opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
+    opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 100L, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
     opts$MHDRAWS  <- ifelse(is.null(technical$MHDRAWS), 5L, technical$MHDRAWS)
     opts$empiricalhist <- empiricalhist
@@ -1104,7 +1104,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars)
         set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-    opts$gain <- c(0.15,0.65)
+    opts$gain <- c(0.1, 0.75)
     if(!is.null(technical$gain)){
         if(length(technical$gain) == 2L && is.numeric(technical$gain))
             opts$gain <- technical$gain

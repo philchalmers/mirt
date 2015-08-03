@@ -1,5 +1,8 @@
 # Changes in mirt 1.11
 
+- number of SEMCYCLES increased from 50 to 100 in the MH-RM algorithm, and RM gain rate changed from
+  c(.15, .65) to c(.1, .75) 
+
 - further improve item fit statistics when using imputations
 
 - facet plots now try to keep the items in their respective order
