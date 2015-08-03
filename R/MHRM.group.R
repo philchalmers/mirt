@@ -155,7 +155,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             longpars <- longpars/SEMCYCLES
             Tau <- Tau/SEMCYCLES
             k <- KDRAWS
-            gamma <- .25
+            gamma <- 0
         }
         #Reload pars list
         if(list$USEEM) longpars <- list$startlongpars
@@ -421,7 +421,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(list$SE && cycles >= (400L + BURNIN + SEMCYCLES) && conv >= 3L) break
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
         if(cycles == (BURNIN + SEMCYCLES + 1L)){
-            gamma <- 0
             phi <- grad
             Phi <- ave.h
         }
