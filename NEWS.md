@@ -9,6 +9,10 @@
 
 - panel theme for lattice plots changed from default to a lighter blue colour, and legend now
   automatically placed on the right hand side rather than the top
+  
+## BUG FIXES
+
+- fix for Q3 computations (noticed by Katherine Castellano)
 
 # Changes in mirt 1.10
 

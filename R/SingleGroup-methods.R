@@ -603,7 +603,7 @@ setMethod(
                 dat[ ,1L] <- object@Data$data[ ,i] - EI
                 for(j in 1L:J){
                     if(i < j){
-                        ej <- extract.item(object, item=i)
+                        ej <- extract.item(object, item=j)
                         EJ <- expected.item(ej, Theta=Theta)
                         dat[,2L] <- object@Data$data[ ,j] - EJ
                         tmpdat <- na.omit(dat)
