@@ -206,7 +206,7 @@ setMethod(
 #'   95 percent confidence intervals
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
 #'   Only applicable to unidimensional models
-#' @param rotate see \code{\link{mirt}} for details. The default rotation is \code{'none'}
+#' @param rotate see \code{summary} method for details. The default rotation is \code{'none'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
 #' @param digits number of significant digits to be rounded

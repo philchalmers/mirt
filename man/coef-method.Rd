@@ -23,7 +23,7 @@
 
 \item{printSE}{logical; print the standard errors instead of the confidence intervals?}
 
-\item{rotate}{see \code{\link{mirt}} for details. The default rotation is \code{'none'}}
+\item{rotate}{see \code{summary} method for details. The default rotation is \code{'none'}}
 
 \item{Target}{a dummy variable matrix indicting a target rotation pattern}
 
