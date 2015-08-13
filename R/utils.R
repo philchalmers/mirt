@@ -1282,8 +1282,10 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
         X <- model.matrix(formula, df)
     }
     tXX <- t(X) %*% X
-    if(ncol(X) > 1) inv_tXX <- solve(tXX)
+    if(ncol(X) > 1L) inv_tXX <- try(solve(tXX), silent = TRUE)
     else inv_tXX <- matrix(0)
+    if(is(inv_tXX, 'try-error'))
+        stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
@@ -1295,7 +1297,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
             est[colnames(X) %in% estnames[[i]], pick] <- TRUE
         }
     } else est <- matrix(TRUE, nrow(beta), ncol(beta))
-    est[1,] <- FALSE
+    est[1L, ] <- FALSE
     est <- as.logical(est)
     names(est) <- as.character(t(outer(factorNames, colnames(X),
                                      FUN = function(X, Y) paste(X,Y,sep="_"))))
