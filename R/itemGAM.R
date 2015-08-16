@@ -119,6 +119,7 @@
 #' plot(IG4[[1L]], main = 'Category 1')
 #' plot(IG4[[2L]], main = 'Category 2')
 #' plot(IG4[[3L]], main = 'Category 3')
+#'
 #' }
 itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
                     theta_lim = c(-3,3), return.models = FALSE, ...){
@@ -144,7 +145,7 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
             fit_high <- MI$par + z * MI$SEpar
             fit_low <- MI$par - z * MI$SEpar
             fit[[j]] <- data.frame(Theta=Theta2, Prob=plogis(MI$par), Prob_low=plogis(fit_low),
-                              Prob_high=plogis(fit_high), stringsAsFactors=FALSE)
+                                   Prob_high=plogis(fit_high), stringsAsFactors=FALSE)
         }
         cat <- rep(paste0('cat_', 1:ncol(mm)), each=nrow(fit[[1L]]))
         ret <- cbind(do.call(rbind, fit), cat)
@@ -183,18 +184,30 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
 #' @method plot itemGAM
 #' @param x an object of class 'itemGAM'
 #' @param y a \code{NULL} value ignored by the plotting function
+#' @param auto.key plotting argument passed to \code{\link{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
+#' @param par.settings plotting argument passed to \code{\link{lattice}}
 #' @export
-plot.itemGAM <- function(x, y = NULL, ...){
+plot.itemGAM <- function(x, y = NULL,
+                         par.strip.text = list(cex = 0.7),
+                         par.settings = list(strip.background = list(col = '#9ECAE1'),
+                                             strip.border = list(col = "black")),
+                         auto.key = list(space = 'right'), ...){
     class(x) <- 'data.frame'
-    if(length(unique(x$cat)) == 2L) x <- subset(x, cat == 'cat_2')
+    if(length(unique(x$cat)) == 2L){
+        x <- subset(x, cat == 'cat_2')
+        auto.key <- FALSE
+    }
     if(ncol(x) == 3L){
-        return(xyplot(Prob ~ Theta, data=x, groups = cat, auto.key=TRUE,
-                      ylim = c(-0.1,1.1), type = 'l',
+        return(xyplot(Prob ~ Theta, data=x, groups = cat,
+                      ylim = c(-0.1,1.1), type = 'l', par.strip.text=par.strip.text,
+                      par.settings=par.settings, auto.key=auto.key,
                       ylab = expression(P(theta)), xlab = expression(theta),
                       main = 'GAM item probability curves', ...))
     } else {
         return(xyplot(Prob ~ Theta | cat, data=x, ylim = c(-0.1,1.1), alpha = .2, fill = 'darkgrey',
-                      upper=x$Prob_high, lower=x$Prob_low,
+                      upper=x$Prob_high, lower=x$Prob_low, par.strip.text=par.strip.text,
+                      par.settings=par.settings, auto.key=auto.key,
                       panel = function(x, y, lower, upper, fill, alpha, subscripts, ...){
                           panel.polygon(c(x, rev(x)), c(upper[subscripts], rev(lower[subscripts])),
                                         col = fill, border = FALSE, alpha=alpha, ...)

@@ -8,7 +8,9 @@
 itemGAM(item, Theta, formula = resp ~ s(Theta, k = 10), CI = 0.95,
   theta_lim = c(-3, 3), return.models = FALSE, ...)
 
-\method{plot}{itemGAM}(x, y = NULL, ...)
+\method{plot}{itemGAM}(x, y = NULL, par.strip.text = list(cex = 0.7),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
+  list(col = "black")), auto.key = list(space = "right"), ...)
 }
 \arguments{
 \item{item}{a single poorly fitting item to be investigated. Can be a vector or matrix}
@@ -33,6 +35,12 @@ TRUE automatically for multidimensional models)}
 \item{x}{an object of class 'itemGAM'}
 
 \item{y}{a \code{NULL} value ignored by the plotting function}
+
+\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+
+\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+
+\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
 }
 \description{
 This function uses a generalized additive model (GAM) to estimate response curves for items that
@@ -137,6 +145,7 @@ names(IG4)
 plot(IG4[[1L]], main = 'Category 1')
 plot(IG4[[2L]], main = 'Category 2')
 plot(IG4[[3L]], main = 'Category 3')
+
 }
 }
 \seealso{
