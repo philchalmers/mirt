@@ -27,7 +27,11 @@ MDIFF <- function(x){
     for(i in 1L:length(out)){
         item <- extract.item(x, i)
         ds <- ExtractZetas(item)
-        out[[i]] <- -ds / MD[i]
+        if(x@itemtype[i] == "gpcm" | x@itemtype[i] == "nominal"){
+          out[[i]] <- ds/MD[i]
+        } else {
+          out[[i]] <- -ds/MD[i]
+        }    
     }
     ret <- matrix(NA, length(out), max(sapply(out, length)))
     for(i in 1L:length(out))
