@@ -27,7 +27,7 @@ MDIFF <- function(x){
     for(i in 1L:length(out)){
         item <- extract.item(x, i)
         ds <- ExtractZetas(item)
-        if(x@itemtype[i] == "gpcm" | x@itemtype[i] == "nominal")){
+        if(x@itemtype[i] == "gpcm" | x@itemtype[i] == "nominal"){
           out[[i]] <- ds/MD[i]
         } else {
           out[[i]] <- -ds/MD[i]
