@@ -135,7 +135,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         discrete <- TRUE
     }
 
-    if((impute != 0 || any(is.na(x@Data$data))) && !is(x, 'MultipleGroupClass')){
+    stopifnot(Zh || X2 || S_X2)
+    if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
+        stop('Only X2 can be compute without imputed datsets', call.=FALSE)
+
+    if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple data
@@ -191,7 +195,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     J <- ncol(x@Data$data)
     itemloc <- x@itemloc
     pars <- x@pars
-    if(Zh || X2){
+    if(Zh){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
@@ -248,9 +252,24 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             }
         }
     }
-    if((X2 || !is.null(empirical.plot)) && nfact == 1L){
+    if((X2 || !is.null(empirical.plot)) && x@nfact == 1L){
+        if(is.null(Theta))
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
+        nfact <- ncol(Theta)
+        prodlist <- attr(pars, 'prodlist')
+        fulldata <- x@Data$fulldata[[1L]]
+        if(any(Theta %in% c(Inf, -Inf))){
+            for(i in 1L:ncol(Theta)){
+                tmp <- Theta[,i]
+                tmp[tmp %in% c(-Inf, Inf)] <- NA
+                Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
+                Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
+            }
+        }
         ord <- order(Theta[,1L])
         fulldata <- fulldata[ord,]
+        pick <- !is.na(x@Data$data)
+        pick <- pick[ord, ]
         Theta <- Theta[ord, , drop = FALSE]
         den <- dnorm(Theta, 0, .5)
         den <- den / sum(den)
@@ -277,10 +296,10 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         for (i in 1L:J){
             if(!is.null(empirical.plot) && i != empirical.plot) next
             for(j in unique(Groups)){
-                dat <- fulldata[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
+                dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
                 r <- colSums(dat)
                 N <- nrow(dat)
-                mtheta <- matrix(mean(Theta[Groups == j,]), nrow=1)
+                mtheta <- matrix(mean(Theta[Groups == j & pick[,i],]), nrow=1)
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
