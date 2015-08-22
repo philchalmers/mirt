@@ -64,17 +64,27 @@ whether the functional form of the IRT model was misspecified or could be improv
 \examples{
 \dontrun{
 
+P <- function(Theta){exp(Theta^2 * 1.2 - 1) / (1 + exp(Theta^2 * 1.2 - 1))}
+
 #make some data
 set.seed(1234)
 a <- matrix(rlnorm(20, meanlog=0, sdlog = .1),ncol=1)
 d <- matrix(rnorm(20),ncol=1)
+Theta <- matrix(rnorm(2000))
 items <- rep('dich', 20)
-data <- simdata(a,d, 2000, items)
+ps <- P(Theta)
+baditem <- numeric(2000)
+for(i in 1:2000)
+   baditem[i] <- sample(c(0,1), 1, prob = c(1-ps[i], ps[i]))
+data <- cbind(simdata(a,d, 2000, items, Theta=Theta), baditem=baditem)
 
 x <- mirt(data, 1)
 raschfit <- mirt(data, 1, itemtype='Rasch')
 fit <- itemfit(x)
 fit
+
+fit <- itemfit(x, X2=TRUE)
+fit$X2
 
 itemfit(x, empirical.plot = 1) #empirical item plot
 itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99\% CI's
