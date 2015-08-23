@@ -46,6 +46,10 @@
 #' @param returnList logical; return a list containing the data, item objects defined
 #'   by \code{mirt} containing the population parameters and item structure, and the
 #'   latent trait matrix \code{Theta}? Default is FALSE
+#' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
+#'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
+#'   input) redundent
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: Springer.
@@ -163,7 +167,7 @@
 #' d <- matrix(rnorm(6))
 #' itemtype <- rep('dich',6)
 #'
-#' nonlindata <- simdata(a,d,2000,itemtype,Theta=Theta)
+#' nonlindata <- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 #'
 #' #model <- '
 #' #F1 = 1-6
@@ -198,17 +202,42 @@
 #' listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 #' str(listobj)
 #'
+#' # generate dataset from converged model
+#' mod <- mirt(Science, 1, itemtype = c(rep('gpcm', 3), 'nominal'))
+#' sim <- simdata(model=mod, N=1000)
+#' head(sim)
 #'
+#' Theta <- matrix(rnorm(100))
+#' sim <- simdata(model=mod, Theta=Theta)
+#' head(sim)
 #'    }
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE)
+	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
+	model = NULL)
 {
+    fn <- function(p, ns) sample(1L:ns, 1L, prob = p)
+    if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
+    if(!is.null(model)){
+        nitems <- ncol(model@Data$data)
+        nfact <- model@nfact
+        if(is.null(sigma)) sigma <- diag(nfact)
+        if(is.null(mu)) mu <- rep(0,nfact)
+        if(is.null(Theta)){
+            Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
+        } else N <- nrow(Theta)
+        data <- matrix(0, N, nitems)
+        colnames(data) <- paste("Item_", 1L:nitems, sep="")
+        for(i in 1L:nitems){
+            obj <- extract.item(model, i)
+            P <- ProbTrace(obj, Theta)
+            data[,i] <- apply(P, 1L, fn, ns = ncol(P))
+        }
+        return(t(t(data) + model@Data$mins))
+    }
     if(missing(a)) missingMsg('a')
     if(missing(d)) missingMsg('d')
-    if(missing(N)) missingMsg('N')
     if(missing(itemtype)) missingMsg('itemtype')
-    fn <- function(p, ns) sample(1L:ns, 1L, prob = p)
 	nfact <- ncol(a)
 	nitems <- nrow(a)
 	K <- rep(0L,nitems)
@@ -238,9 +267,11 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     upper[itemtype == 'nestlogit'] <- oldupper[itemtype == 'nestlogit']
 	if(is.null(sigma)) sigma <- diag(nfact)
 	if(is.null(mu)) mu <- rep(0,nfact)
-	if(!is.null(Theta))
-		if(ncol(Theta) != nfact || nrow(Theta) != N)
+	if(!is.null(Theta)){
+		if(ncol(Theta) != nfact)
 			stop("The input Theta matrix does not have the correct dimensions", call.=FALSE)
+	    N <- nrow(Theta)
+	}
 	if(is.null(Theta)) Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
     if(is.null(nominal)) nominal <- matrix(NA, nitems, max(K))
 	data <- matrix(0, N, nitems)

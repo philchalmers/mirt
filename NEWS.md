@@ -1,5 +1,8 @@
 # Changes in mirt 1.11
 
+- simdata() gains a model input to impute data from pre-organized models (useful in conjunction with mirtCAT
+  or to generate datasets from already converged models)
+
 - number of SEMCYCLES increased from 50 to 100 in the MH-RM algorithm, and RM gain rate changed from
   c(.15, .65) to c(.1, .75) 
 

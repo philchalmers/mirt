@@ -6,7 +6,7 @@
 \usage{
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE)
+  returnList = FALSE, model = NULL)
 }
 \arguments{
 \item{a}{a matrix of slope parameters. If slopes are to be constrained to
@@ -59,6 +59,10 @@ credit models (see \code{\link{mirt}} for details)}
 \item{returnList}{logical; return a list containing the data, item objects defined
 by \code{mirt} containing the population parameters and item structure, and the
 latent trait matrix \code{Theta}? Default is FALSE}
+
+\item{model}{a single group object, typically returned by functions such as \code{\link{mirt}} or
+  \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
+  input) redundent}
 }
 \description{
 Simulates response patterns for compensatory and noncompensatory MIRT models
@@ -180,7 +184,7 @@ a <- matrix(c(
 d <- matrix(rnorm(6))
 itemtype <- rep('dich',6)
 
-nonlindata <- simdata(a,d,2000,itemtype,Theta=Theta)
+nonlindata <- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 
 #model <- '
 #F1 = 1-6
@@ -215,7 +219,14 @@ dataset <- simdata(a,d,2000,items,nominal=nominal)
 listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 str(listobj)
 
+# generate dataset from converged model
+mod <- mirt(Science, 1, itemtype = c(rep('gpcm', 3), 'nominal'))
+sim <- simdata(model=mod, N=1000)
+head(sim)
 
+Theta <- matrix(rnorm(100))
+sim <- simdata(model=mod, Theta=Theta)
+head(sim)
    }
 }
 \author{
