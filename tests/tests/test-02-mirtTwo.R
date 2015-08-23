@@ -96,7 +96,7 @@ test_that('poly', {
     expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.7249561, -1.4446593, -0.7364399, -0.5627047, -2.5174376, -1.1732461), -1e-2, 1e-2))
 
     resmat <- residuals(modp3, type = 'Q3', Theta = fm3[,'F1'], verbose = FALSE)
-    expect_equal(as.numeric(resmat), c(1,-0.17,-0.134,0.084,-0.17,1,-0.069,-0.232,-0.134,-0.069,1,-0.429,0.084,-0.232,-0.429,1), tolerance=1e-2)
+    expect_equal(as.numeric(resmat), c(1,-0.209,-0.283,0.057,-0.209,1,-0.149,-0.235,-0.283,-0.149,1,-0.33,0.057,-0.235,-0.33,1), tolerance=1e-2)
     resmatLD <- residuals(modp3, type = 'LD', verbose = FALSE)
     expect_equal(as.numeric(resmatLD), c(NA,-23.885,-12.788,22.164,-0.143,NA,10.449,-22.306,-0.104,0.094,NA,-17.526,0.137,-0.138,-0.122,NA), tolerance=1e-2)
     resmatG2 <- residuals(modp3, type = 'LDG2', verbose = FALSE)

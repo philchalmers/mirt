@@ -6,7 +6,7 @@ test_that('exploratory mods', {
     onefact <- mirt(fulldata, 1, verbose = FALSE, SE.type='MHRM', SE=TRUE)
     expect_is(onefact, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(onefact, digits=4)))
-    expect_equal(cfs, c(0.9879,0.691,1.2849,1.8561,1.6175,2.0946,0,NA,NA,1,NA,NA,1.0809,0.7946,1.3671,0.808,0.6391,0.9769,0,NA,NA,1,NA,NA,1.7058,1.2363,2.1753,1.8042,1.4807,2.1277,0,NA,NA,1,NA,NA,0.7652,0.47,1.0604,0.486,0.3399,0.6321,0,NA,NA,1,NA,NA,0.7358,0.4495,1.0221,1.8545,1.6317,2.0773,0,NA,NA,1,NA,NA,0,NA,NA,1,NA,NA),
+    expect_equal(cfs, c(0.9879,0.6579,1.3179,1.8561,1.6074,2.1048,0,NA,NA,1,NA,NA,1.0809,0.7741,1.3877,0.808,0.6389,0.9771,0,NA,NA,1,NA,NA,1.7058,1.1881,2.2235,1.8042,1.4628,2.1457,0,NA,NA,1,NA,NA,0.7652,0.51,1.0203,0.486,0.3402,0.6318,0,NA,NA,1,NA,NA,0.7358,0.4549,1.0167,1.8545,1.6328,2.0762,0,NA,NA,1,NA,NA,0,NA,NA,1,NA,NA),
                  tolerance = 1e-2)
     names <- wald(onefact)
     L <- matrix(0, 1, ncol(names))
@@ -16,8 +16,8 @@ test_that('exploratory mods', {
     L2[1, 7] <- L2[2, 9] <- -1
     W1 <- wald(onefact, L)
     W2 <- wald(onefact, L2)
-    expect_true(mirt:::closeEnough(W1$W - 233.1448, -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(W2$W - 4.270198, -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(W1$W - 187.1901, -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(W2$W - 3.886675, -1e-2, 1e-2))
 
     fitonefact <- M2(onefact)
     expect_is(fitonefact, 'data.frame')
