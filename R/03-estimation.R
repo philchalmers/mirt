@@ -108,6 +108,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             x
         }, message = opts$message)
         Data$data <- data
+        if(any(rowSums(is.na(data)) == ncol(data)))
+            stop('data contains completely empty response patterns. Please remove', call.=FALSE)
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
         # if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
         Data$group <- factor(group)

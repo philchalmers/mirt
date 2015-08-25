@@ -109,6 +109,9 @@ setMethod(
             fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                           return.acov = FALSE, QMC=QMC, custom_den = NULL, ...)
+            if(any(is.na(fs)))
+                stop('Plausible values cannot be drawn for completely empty response patterns.
+                     Please remove these from your analysis.', call.=FALSE)
             fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                           plausible.draws=0, full.scores.SE=FALSE,
@@ -342,6 +345,9 @@ setMethod(
             scores <- tmp[[1L]]
             SEscores <- tmp[[2L]]
         }
+        if(any(is.na(scores)))
+            warning('NAs returned for response patterns with no data. Consider removing',
+                    call.=FALSE)
 		if (full.scores){
             if(USETABDATA){
                 tabdata2 <- object@Data$tabdata[keep, , drop=FALSE]
