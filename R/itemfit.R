@@ -129,11 +129,12 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
-    fn <- function(ind, Theta, Theta2, obj, vals, ...){
-        tmpdat <- imputeMissing(obj, Theta[[ind]])
-        tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype)
+    fn <- function(ind, Theta, obj, vals, ...){
+        tmpdat <- imputeMissing(obj, Theta)
+        tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype,
+                       technical=list(customK=obj@K))
         tmpmod@pars <- obj@pars
-        return(itemfit(tmpmod, Theta=Theta2[[ind]], digits = Inf, ...))
+        return(itemfit(tmpmod, Theta=Theta[[sample(1L:length(Theta), 1)]], digits = Inf, ...))
     }
 
     if(missing(x)) missingMsg('x')
@@ -155,13 +156,11 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                  impute argument to compute statistics following multiple data
                  imputations', call.=FALSE)
         stopifnot(impute > 1L)
-        Theta2 <- Theta <- fscores(x, plausible.draws = impute)
-        Theta2[[length(Theta)+1L]] <- Theta[[1L]]
-        Theta2[[1L]] <- NULL
+        Theta <- fscores(x, plausible.draws = impute)
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(1L:impute, fn, Theta=Theta, Theta2=Theta2, obj=x, vals=vals,
+        collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,
@@ -185,9 +184,13 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     if(is(x, 'MultipleGroupClass')){
         ret <- vector('list', length(x@pars))
         if(is.null(Theta))
-            Theta <- fscores(x, method=method, full.scores=TRUE, ...)
+            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
         for(g in 1L:length(x@pars)){
-            tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            if(impute > 0L){
+                tmpTheta <- vector('list', impute)
+                for(i in 1L:length(tmpTheta))
+                    tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
             ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,

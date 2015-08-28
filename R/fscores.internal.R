@@ -460,7 +460,7 @@ setMethod(
     definition = function(object, rotate, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov,
-                          full.scores.SE, return.acov = FALSE, QMC, ...)
+                          full.scores.SE, return.acov = FALSE, QMC, plausible.draws, ...)
     {
         pars <- object@pars
         ngroups <- length(pars)
@@ -475,10 +475,25 @@ setMethod(
             tmp_obj <- MGC2SC(object, g)
             ret[[g]] <- fscores(tmp_obj, rotate = rotate, full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
-                                mean=gmean[[g]], cov=gcov[[g]], MI=MI,
+                                mean=gmean[[g]], cov=gcov[[g]], MI=MI, plausible.draws=plausible.draws,
                            full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)
         }
         names(ret) <- object@Data$groupNames
+        if(plausible.draws > 0){
+            pv <- plausible.draws
+            out <- matrix(NA, nrow(object@Data$data), ncol(ret[[1L]][[1L]]))
+            out2 <- vector('list', pv)
+            colnames(out) <- colnames(ret[[1L]][[1L]])
+            for(i in 1L:pv){
+                for(g in 1L:object@Data$ngroups){
+                    wch <- which(object@Data$group == object@Data$groupNames[g])
+                    for(j in 1L:ncol(ret[[1L]][[1L]]))
+                        out[wch, j] <- ret[[g]][[i]][,j]
+                }
+                out2[[i]] <- out
+            }
+            return(out2)
+        }
         if(full.scores){
             if(return.acov){
                 group <- object@Data$group

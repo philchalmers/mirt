@@ -37,15 +37,19 @@ fulldata <- imputeMissing(mod, scores)
 (fullmod <- mirt(fulldata, 1))
 
 #with multipleGroup
-group <- rep(c('group1', 'group2'), each=500)
+set.seed(1)
+group <- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
 fs <- fscores(mod2, full.scores=TRUE)
 fulldata2 <- imputeMissing(mod2, fs)
 
 #supply list of plausible value estimates (the best approach when Theta's are imprecise)
 pv <- fscores(mod, plausible.draws = 5)
-fulldata_list <- imputeMissing(mod, pv)
-str(fulldata_list)
+fulldata <- imputeMissing(mod, pv)
+head(fulldata)
+
+fs <- fscores(mod2, plausible.draws = 5)
+fulldata2 <- imputeMissing(mod2, fs)
 
 }
 }

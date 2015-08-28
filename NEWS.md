@@ -1,5 +1,7 @@
 # Changes in mirt 1.11
 
+- adjust plausible values format for multiple group objects
+
 - simdata() gains a model input to impute data from pre-organized models (useful in conjunction with mirtCAT
   or to generate datasets from already converged models)
 
