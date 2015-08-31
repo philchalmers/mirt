@@ -130,11 +130,12 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     impute = 0, digits = 4, ...){
 
     fn <- function(ind, Theta, obj, vals, ...){
-        tmpdat <- imputeMissing(obj, Theta)
+        tmpdat <- imputeMissing(obj, Theta[[ind]])
         tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype,
                        technical=list(customK=obj@K))
         tmpmod@pars <- obj@pars
-        return(itemfit(tmpmod, Theta=Theta[[sample(1L:length(Theta), 1)]], digits = Inf, ...))
+        whc <- 1L:length(Theta)
+        return(itemfit(tmpmod, Theta=Theta[[sample(whc[-ind], 1L)]], digits = Inf, ...))
     }
 
     if(missing(x)) missingMsg('x')

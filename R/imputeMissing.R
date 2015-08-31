@@ -8,8 +8,7 @@
 #' @aliases imputeMissing
 #' @param x an estimated model x from the mirt package
 #' @param Theta a matrix containing the estimates of the latent trait scores
-#'   (e.g., via \code{\link{fscores}}). Can also be a \code{list} input containing different
-#'   estimates for Theta (e.g., plausible value draws)
+#'   (e.g., via \code{\link{fscores}})
 #' @param ... additional arguments to pass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords impute data
@@ -36,14 +35,6 @@
 #' fs <- fscores(mod2, full.scores=TRUE)
 #' fulldata2 <- imputeMissing(mod2, fs)
 #'
-#' #supply list of plausible value estimates (the best approach when Theta's are imprecise)
-#' pv <- fscores(mod, plausible.draws = 5)
-#' fulldata <- imputeMissing(mod, pv)
-#' head(fulldata)
-#'
-#' fs <- fscores(mod2, plausible.draws = 5)
-#' fulldata2 <- imputeMissing(mod2, fs)
-#'
 #' }
 imputeMissing <- function(x, Theta, ...){
     if(missing(x)) missingMsg('x')
@@ -57,13 +48,7 @@ imputeMissing <- function(x, Theta, ...){
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
         for(g in 1L:length(pars)){
             sel <- group == x@Data$groupNames[g]
-            if(is.list(Theta)){
-                Thetatmp <- Theta
-                for(i in 1L:length(Theta))
-                    Thetatmp[[i]] <- Theta[[i]][sel, , drop = FALSE]
-            } else {
-                Thetatmp <- Theta[sel, , drop = FALSE]
-            }
+            Thetatmp <- Theta[sel, , drop = FALSE]
             pars[[g]]@Data$data <- data[sel, ]
             pars[[g]]@Data$mins <- x@Data$mins
             data[sel, ] <- imputeMissing(pars[[g]], Thetatmp, uniq_rows=uniq_rows)
@@ -73,9 +58,8 @@ imputeMissing <- function(x, Theta, ...){
     dots <- list(...)
     pars <- x@pars
     nfact <- pars[[1L]]@nfact
-    if(!is.list(Theta))
-        if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
-            stop('Theta must be a matrix of size N x nfact', call.=FALSE)
+    if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
+        stop('Theta must be a matrix of size N x nfact', call.=FALSE)
     if(!is.list(Theta)){
         if(any(Theta %in% c(Inf, -Inf))){
             for(i in 1L:ncol(Theta)){
@@ -91,15 +75,9 @@ imputeMissing <- function(x, Theta, ...){
     data <- x@Data$data
     N <- nrow(data)
     Nind <- 1L:N
-    if(is.list(Theta)) tmptheta <- Theta[[1L]] else tmptheta <- Theta
     for (i in 1L:J){
         if(!any(is.na(data[,i]))) next
-        if(is.list(Theta)){
-            samp <- sample(1L:length(Theta), N, TRUE)
-            for(j in 1L:length(Theta))
-                tmptheta[samp == j, ] <- Theta[[j]][samp == j, ]
-        }
-        P <- ProbTrace(x=pars[[i]], Theta=tmptheta)
+        P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
         for(j in 1L:length(NAind)){
             data[NAind[j], i] <- sample(1L:K[i]-1L+x@Data$mins[i], 1L,

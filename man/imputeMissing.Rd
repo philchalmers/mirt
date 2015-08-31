@@ -10,8 +10,7 @@ imputeMissing(x, Theta, ...)
 \item{x}{an estimated model x from the mirt package}
 
 \item{Theta}{a matrix containing the estimates of the latent trait scores
-(e.g., via \code{\link{fscores}}). Can also be a \code{list} input containing different
-estimates for Theta (e.g., plausible value draws)}
+(e.g., via \code{\link{fscores}})}
 
 \item{...}{additional arguments to pass}
 }
@@ -41,14 +40,6 @@ set.seed(1)
 group <- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
 fs <- fscores(mod2, full.scores=TRUE)
-fulldata2 <- imputeMissing(mod2, fs)
-
-#supply list of plausible value estimates (the best approach when Theta's are imprecise)
-pv <- fscores(mod, plausible.draws = 5)
-fulldata <- imputeMissing(mod, pv)
-head(fulldata)
-
-fs <- fscores(mod2, plausible.draws = 5)
 fulldata2 <- imputeMissing(mod2, fs)
 
 }
