@@ -601,8 +601,8 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             for(i in 1L:length(redun)){
                 for(j in 1L:length(redun)){
                     if(j < i){
-                        if(all(constrain[[i]] %in% constrain[[j]] ||
-                                all(constrain[[j]] %in% constrain[[i]]))){
+                        if(all(constrain[[i]] %in% constrain[[j]]) ||
+                                all(constrain[[j]] %in% constrain[[i]])){
                             if(length(constrain[[i]]) < length(constrain[[j]])) redun[i] <- TRUE
                             else redun[j] <- TRUE
                         }
