@@ -122,6 +122,10 @@ raschfit <- mirt(data, 1, itemtype='Rasch')
 mirtCluster() # run in parallel
 itemfit(raschfit, impute = 10)
 
+#alternative route: use only valid data, and create a model with the previous parameter estimates
+data2 <- na.omit(data)
+raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
+itemfit(raschfit2)
   }
 }
 \author{

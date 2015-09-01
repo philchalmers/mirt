@@ -123,6 +123,10 @@
 #' mirtCluster() # run in parallel
 #' itemfit(raschfit, impute = 10)
 #'
+#' #alternative route: use only valid data, and create a model with the previous parameter estimates
+#' data2 <- na.omit(data)
+#' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
+#' itemfit(raschfit2)
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
@@ -156,6 +160,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple data
                  imputations', call.=FALSE)
+        if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
+            warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
         stopifnot(impute > 1L)
         Theta <- fscores(x, plausible.draws = impute)
         collect <- vector('list', impute)
