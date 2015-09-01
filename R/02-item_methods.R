@@ -305,6 +305,17 @@ setMethod(
     }
 )
 
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'lrPars'),
+    definition = function(x, cov, theta){
+        inv_sigma <- solve(cov)
+        tmp <- t(inv_sigma %*% t(theta - x@mus) %*% x@X)
+        tmp2 <- -det(inv_sigma) * x@tXX
+        list(grad=tmp, hess=tmp2)
+    }
+)
+
 # ----------------------------------------------------------------
 
 setClass("dich", contains = 'AllItemsClass')

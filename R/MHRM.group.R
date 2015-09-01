@@ -330,13 +330,12 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             }
         }
         if(LRPARS){
-            inv_sigma <- solve(gstructgrouppars[[1L]]$gcov)
-            tmp <- t(inv_sigma %*% t(gtheta0[[1L]] - lrPars@mus) %*% lrPars@X)
-            g[lrPars@parnum] <- as.numeric(tmp)
-            tmp2 <- -det(inv_sigma) * lrPars@tXX
-            for(i in 0L:(ncol(tmp)-1L))
-                h[lrPars@parnum[1:nrow(tmp) + nrow(tmp)*i],
-                  lrPars@parnum[1:nrow(tmp) + nrow(tmp)*i]] <- tmp2
+            deriv <- Deriv(lrPars, cov=gstructgrouppars[[1L]]$gcov, theta=gtheta0[[1L]])
+            g[lrPars@parnum] <- deriv$grad
+            for(i in 0L:(ncol(deriv$grad)-1L))
+                h[lrPars@parnum[1:nrow(deriv$grad) + nrow(deriv$grad)*i],
+                  lrPars@parnum[1:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+
         }
         if(length(constrain)){
             grad <- as.numeric(updateGrad(g, L))
