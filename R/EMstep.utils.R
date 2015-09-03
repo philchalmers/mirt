@@ -362,7 +362,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
 
 BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)
 
-Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
+Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars, retscores=FALSE){
     J <- length(pars) - 1L
     N <- nrow(fulldata)
     nfact <- ncol(Theta)
@@ -372,6 +372,7 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
     X <- lrPars@X
     ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu)
     scores <- ret[[1L]]; vars <- ret[[2L]]
+    if(retscores) return(scores)
     beta <- lrPars@inv_tXX %*% t(X) %*% scores
     siglong <- colMeans(vars)
     beta[!lrPars@est] <- lrPars@par[!lrPars@est]

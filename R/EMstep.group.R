@@ -321,6 +321,16 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             ind2 <- ind1 + length(deriv$grad) - 1L
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
             ind1 <- ind2 + 1L
+            if(length(lrPars)){
+                gp <- ExtractGroupPars(pars[[group]][[J+1L]])
+                tmp <- Mstep.LR(Theta=Theta, CUSTOM.IND=CUSTOM.IND, pars=pars[[group]],
+                                itemloc=itemloc, fulldata=Data$fulldata[[1L]], prior=Prior[[group]],
+                                lrPars=lrPars, retscores=TRUE)
+                deriv <- Deriv(lrPars, cov=gp$gcov, theta=tmp)
+                for(i in 0L:(ncol(deriv$grad)-1L))
+                    h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
+                      lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+            }
         }
         hess <- updateHess(h=h, L=L)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]

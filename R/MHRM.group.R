@@ -333,8 +333,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             deriv <- Deriv(lrPars, cov=gstructgrouppars[[1L]]$gcov, theta=gtheta0[[1L]])
             g[lrPars@parnum] <- deriv$grad
             for(i in 0L:(ncol(deriv$grad)-1L))
-                h[lrPars@parnum[1:nrow(deriv$grad) + nrow(deriv$grad)*i],
-                  lrPars@parnum[1:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+                h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
+                  lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
 
         }
         if(length(constrain)){
