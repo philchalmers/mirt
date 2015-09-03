@@ -227,6 +227,20 @@ head(sim)
 Theta <- matrix(rnorm(100))
 sim <- simdata(model=mod, Theta=Theta)
 head(sim)
+
+# alternatively, define a suitable object with functions from the mirtCAT package
+# help(generate.mirt_object)
+library(mirtCAT)
+
+nitems <- 50
+a1 <- rlnorm(nitems, .2,.2)
+d <- rnorm(nitems)
+g <- rbeta(nitems, 20, 80)
+pars <- data.frame(a1=a1, d=d, g=g)
+head(pars)
+
+obj <- generate.mirt_object(pars, '3PL')
+dat <- simdata(N=200, model=obj)
    }
 }
 \author{
