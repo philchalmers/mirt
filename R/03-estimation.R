@@ -368,10 +368,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(length(lrPars)){
-            if(opts$SE && opts$SE.type != 'complete') ## TODO
-                message('Information matrix computation for latent regression estimates
-                        currently disabled for all but SE.type=\'complete\'')
-            # opts$SE <- FALSE
+            if(opts$SE && !(opts$SE.type %in% c('complete'))) ## TODO
+                stop('Information matrix computation for latent regression estimates
+                    currently disabled for all but SE.type=\'complete\'. Use boot.mirt() instead',
+                     call.=FALSE)
             opts$full <- TRUE
         } else opts$full <- FALSE
         temp <- matrix(0L,nrow=nitems,ncol=nspec)

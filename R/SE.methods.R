@@ -89,7 +89,8 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior, lrPars=lrPars,
-                           J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
+                           J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist,
+                           full=full)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
         for(g in 1L:ngroups){
