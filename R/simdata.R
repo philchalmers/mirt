@@ -230,7 +230,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
 	model = NULL)
 {
-    fn <- function(p, ns) sample(1L:ns, 1L, prob = p)
+    fn <- function(p, ns) sample(1L:ns - 1L, 1L, prob = p)
     if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
     if(!is.null(model)){
         nitems <- ncol(model@Data$data)
