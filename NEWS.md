@@ -2,11 +2,12 @@
 
 - adjust plausible values format for multiple group objects
 
-- simdata() gains a model input to impute data from pre-organized models (useful in conjunction with mirtCAT
-  or to generate datasets from already converged models)
+- `simdata()` gains a `model` input to impute data from pre-organized models (useful in conjunction
+  with mirtCAT or to generate datasets from already converged models). Also gains a `mins` argument
+  to specify what the lowest category should be for each item if `model` is not supplied (default is 0)
 
-- number of SEMCYCLES increased from 50 to 100 in the MH-RM algorithm, and RM gain rate changed from
-  c(.15, .65) to c(.1, .75) 
+- number of `SEMCYCLES` increased from 50 to 100 in the MH-RM algorithm, and RM gain rate changed from
+  `c(.15, .65)` to `c(.1, .75)` 
 
 - further improve item fit statistics when using imputations
 

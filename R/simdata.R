@@ -42,13 +42,17 @@
 #' @param mu a mean vector of the underlying distribution. Default is a vector
 #'   of zeros
 #' @param Theta a user specified matrix of the underlying ability parameters,
-#'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}
+#'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}. When this is supplied the
+#'   \code{N} input is not required
 #' @param returnList logical; return a list containing the data, item objects defined
 #'   by \code{mirt} containing the population parameters and item structure, and the
 #'   latent trait matrix \code{Theta}? Default is FALSE
 #' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
 #'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
 #'   input) redundent
+#' @param mins an integer vector (or single value to be used for each item) indicating what
+#'   the lowest category should be. If \code{model} is supplied then this will be extracted from
+#'   \code{slot(mod, 'Data')$mins}, otherwise the default is 0
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -228,7 +232,7 @@
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
-	model = NULL)
+	model = NULL, mins = 0)
 {
     fn <- function(p, ns) sample(1L:ns - 1L, 1L, prob = p)
     if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
@@ -254,6 +258,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(missing(itemtype)) missingMsg('itemtype')
 	nfact <- ncol(a)
 	nitems <- nrow(a)
+	if(length(mins) == 1L) mins <- rep(mins, nitems)
+	stopifnot(length(mins) == nitems)
 	K <- rep(0L,nitems)
 	if(length(guess) == 1L) guess <- rep(guess,nitems)
 	if(length(guess) != nitems) stop("Guessing parameter is incorrect", call.=FALSE)
@@ -319,10 +325,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
         data[,i] <- apply(P, 1L, fn, ns = ncol(P))
-        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp', 'ideal')))
-            data[ ,i] <- data[ ,i] - 1L
         itemobjects[[i]] <- obj
 	}
+    data <- (t(t(data) + mins))
 	colnames(data) <- paste("Item_", 1L:nitems, sep="")
     if(returnList){
         return(list(itemobjects=itemobjects, data=data, Theta=Theta))
