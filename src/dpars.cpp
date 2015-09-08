@@ -287,14 +287,15 @@ static void _dgroup_pre(vector<double> &grad, NumericMatrix &hess, S4 &obj,
     arma::vec mu(MU.begin(), nfact, false);
     arma::vec meanTheta(MeanTheta.begin(), nfact, false);
     NumericMatrix rs = obj.slot("dat");
-    vector<double> g(grad.size());
-    NumericMatrix h(grad.size(), grad.size());
+    const int grad_size = grad.size();
+    vector<double> g(grad_size);
+    NumericMatrix h(grad_size, grad_size);
     NumericMatrix theta(1, Theta.ncol());
     for(int i = 0; i < Theta.nrow(); ++i){
         for(int j = 0; j < Theta.ncol(); ++j)
             theta(0,j) = Theta(i,j);
         _dgroup(g, h, theta, Sig, invSig, meanTheta, mu, estHess);
-        for(int j = 0; j < grad.size(); ++j)
+        for(int j = 0; j < grad_size; ++j)
             for(int k = 0; k < rs.ncol(); ++k)
                 grad[j] += rs(i, k) * g[j];
     }
