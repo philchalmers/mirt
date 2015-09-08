@@ -33,7 +33,7 @@ setMethod(
         else
             cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ',
                 x@iter, ' ', method, " iterations.\n", sep="")
-        cat('mirt version:', as.character(packageVersion('mirt')), '\n')
+        cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Moptim, '\n')
         if(method == 'EM' || method == 'BL'){
             cat('EM acceleration:', x@accelerate)
@@ -893,7 +893,7 @@ setMethod(
             } else if(type == 'infoangle'){
                 if(is.null(main))
                     main <- 'Information across different angles'
-                symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue',
+                graphics::symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue',
                         xlab = expression(theta[1]), ylab = expression(theta[2]),
                         main = main)
             } else if(type == 'SE'){
@@ -996,8 +996,11 @@ setMethod(
                                par.strip.text=par.strip.text, par.settings=par.settings)
                 obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)),
                                par.strip.text=par.strip.text, par.settings=par.settings)
-                if(!require(latticeExtra)) require(latticeExtra)
-                return(doubleYScale(obj1, obj2, add.ylab2 = add.ylab2, ...))
+                if(requireNamespace("latticeExtra", quietly = TRUE)){
+                    return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = add.ylab2, ...))
+                } else {
+                    stop('latticeExtra package is not available. Please install.', call.=FALSE)
+                }
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- 'Item trace lines'

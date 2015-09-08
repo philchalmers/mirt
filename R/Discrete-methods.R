@@ -17,7 +17,7 @@ setMethod(
         else
             cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ',
                 x@iter, ' ', method, " iterations.\n", sep="")
-        cat('mirt version:', as.character(packageVersion('mirt')), '\n')
+        cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Moptim, '\n')
         cat('EM acceleration:', x@accelerate)
         cat('\nNumber of rectangular quadrature:', x@quadpts)

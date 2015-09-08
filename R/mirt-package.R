@@ -24,7 +24,8 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @import stats lattice GPArotation Rcpp stats4 methods sfsmisc mgcv
-#' @importFrom utils write.table flush.console
+#' @importFrom utils write.table flush.console packageVersion
+#' @importFrom graphics symbols
 #' @exportMethod anova
 #' @exportMethod residuals
 #' @exportMethod summary
