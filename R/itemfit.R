@@ -357,7 +357,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             plt.2 <- reshape(plt.2, varying = 3:ncol(plt.2), direction = 'long', timevar = 'cat')
             plt <- cbind(plt.1, plt.2)
             if(K == 2) plt <- plt[plt$cat != 1, ]
-            return(xyplot(P ~ Theta, plt, group = cat,
+            return(xyplot(P ~ Theta, plt, groups = cat,
                           main = paste('Empirical plot for item', empirical.plot),
                             ylim = c(-0.1,1.1), xlab = expression(theta), ylab=expression(P(theta)),
                           auto.key=ifelse(K==2, FALSE, TRUE), EPCI.lower=EPCI.lower,

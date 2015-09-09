@@ -1023,12 +1023,12 @@ setMethod(
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
                 plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
-                    return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), group = cat,
+                    return(xyplot(P ~ Theta|item, plotobj, ylim = c(-0.1,1.1), groups = cat,
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(P ~ Theta, plotobj, group=item, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta, plotobj, groups=item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -1049,7 +1049,7 @@ setMethod(
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(I ~ Theta, plotobj, group = item,
+                    return(xyplot(I ~ Theta, plotobj, groups = item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))

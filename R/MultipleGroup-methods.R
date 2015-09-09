@@ -152,21 +152,21 @@ setMethod(
             colnames(plt) <- c("info", "score", "Theta", "group")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
-                return(xyplot(info~Theta, plt, type='l', group=group, main = 'Test Information',
+                return(xyplot(info~Theta, plt, type='l', groups=group, main = 'Test Information',
                               xlab = expression(theta), ylab=expression(I(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'RE')
-                return(xyplot(info~Theta, plt, type='l', group=group, main = 'Relative Efficiency',
+                return(xyplot(info~Theta, plt, type='l', groups=group, main = 'Relative Efficiency',
                               xlab = expression(theta), ylab=expression(RE(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'infocontour')
                 cat('No \'contour\' plots for 1-dimensional models\n')
             if(type == 'SE')
-                return(xyplot(SE~Theta, plt, type='l', group=group, main = 'Test Standard Errors',
+                return(xyplot(SE~Theta, plt, type='l', groups=group, main = 'Test Standard Errors',
                               xlab = expression(theta), ylab=expression(SE(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'score')
-                return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
+                return(xyplot(score~Theta, plt, type='l', groups=group, main = 'Expected Total Score',
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'empiricalhist'){
@@ -186,7 +186,7 @@ setMethod(
                     pltfull[[g]] <- plt
                 }
                 plt <- do.call(rbind, pltfull)
-                return(xyplot(Prior ~ Theta, plt, group=group, auto.key = auto.key,
+                return(xyplot(Prior ~ Theta, plt, groups=group, auto.key = auto.key,
                               xlab = expression(theta), ylab = 'Expected Frequency',
                               type = 'b', main = 'Empirical Histogram',
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -217,12 +217,12 @@ setMethod(
                 plt <- do.call(rbind, plt)
                 plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
-                    return(xyplot(P ~ Theta|item, plt, group = cat:group, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta|item, plt, groups = cat:group, ylim = c(-0.1,1.1),
                            xlab = expression(theta), ylab = expression(P(theta)),
                            auto.key = auto.key, type = 'l', main = 'Item trace lines',
                            par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(P ~ Theta|group, plt, group = cat:item, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta|group, plt, groups = cat:item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item trace lines',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -243,12 +243,12 @@ setMethod(
                 plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull)*length(which.items))
                 if(facet_items){
-                    return(xyplot(I ~ Theta | item, plt, group = group,
+                    return(xyplot(I ~ Theta | item, plt, groups = group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(I ~ Theta | group, plt, group = item,
+                    return(xyplot(I ~ Theta | group, plt, groups = item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))

@@ -65,19 +65,19 @@ setMethod(
             if(type == 'info'){
                 if(is.null(main))
                     main <- paste('Information for item', item)
-                return(xyplot(info ~ Theta, dat, group=group, type = 'l',
+                return(xyplot(info ~ Theta, dat, groups=group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- paste("Item", item, "Trace")
-                return(xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l',
+                return(xyplot(P  ~ Theta | cat, dat2, groups=group, type = 'l',
                             auto.key = auto.key, main = main, ylim = c(-0.1,1.1),
                             ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste('Relative efficiency for item', item)
-                return(xyplot(info ~ Theta, dat, group=group, type = 'l',
+                return(xyplot(info ~ Theta, dat, groups=group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
             } else {
@@ -248,7 +248,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                        main = main, ylim = c(-0.1,1.1), auto.key = auto.key,
                        ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else {
-                return(xyplot(P ~ Theta, plt2, group = time, type = 'l', auto.key = auto.key,
+                return(xyplot(P ~ Theta, plt2, groups = time, type = 'l', auto.key = auto.key,
                                 main = main, ylim = c(-0.1,1.1),
                                 ylab = expression(P(theta)), xlab = expression(theta), ... ))
             }
@@ -322,7 +322,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         } else if(type == 'infotrace'){
             if(is.null(main))
                 main <- paste('Trace lines and information for item', item)
-            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), group=time, main = main,
+            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), groups=time, main = main,
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
             obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
                            ylim = c(-0.1,max(plt$info) + .5))
