@@ -155,22 +155,22 @@ static double inner(vector<double> &a, const vector<double> &b, const vector<dou
 static void symMat(vector<double> &dsig, const int *nfact)
 {
     int k = 0;
-    double tmp[*nfact][*nfact];
+    NumericMatrix tmp(*nfact, *nfact);
 
     for(int i = 0; i < *nfact; ++i){
         for(int j = 0; j < *nfact; ++j){
-            tmp[i][j] = dsig[k];
+            tmp(i,j) = dsig[k];
             ++k;
         }
     }
     for(int i = 0; i < *nfact; ++i)
         for(int j = 0; j < *nfact; ++j)
             if(i < j)
-                tmp[j][i] = tmp[i][j];
+                tmp(j,i) = tmp(i,j);
     k = 0;
     for(int i = 0; i < *nfact; ++i){
         for(int j = 0; j < *nfact; ++j){
-            dsig[k] = tmp[i][j];
+            dsig[k] = tmp(i,j);
             ++k;
         }
     }
