@@ -1,3 +1,27 @@
+Changes in mirt 1.11
+
+  - adjust plausible values format for multiple group objects
+
+  - `simdata()` gains a `model` input to impute data from pre-organized models
+  (useful in conjunction with mirtCAT or to generate datasets from already
+  converged models). Also gains a `mins` argument to specify what the lowest
+  category should be for each item if `model` is not supplied (default is 0)
+
+  - number of `SEMCYCLES` increased from 50 to 100 in the MH-RM algorithm,
+  and RM gain rate changed from `c(.15, .65)` to `c(.1, .75)`
+
+  - further improve item fit statistics when using imputations
+
+  - facet plots now try to keep the items in their respective order
+
+  - panel theme for lattice plots changed from default to a lighter blue
+  colour, and legend now automatically placed on the right hand side rather
+  than the top
+
+BUG FIXES
+
+  - fix for Q3 computations (noticed by Katherine Castellano)
+
 Changes in mirt 1.10
 
   - when using prior distributions, starting values now automatically set
