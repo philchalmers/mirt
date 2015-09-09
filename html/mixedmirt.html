@@ -128,7 +128,12 @@ underidentification</p>
 <tr valign="top"><td><code>technical</code></td>
 <td>
 <p>the technical list passed to the MH-RM estimation engine, with the
-SEtol default increased to .0001. See <code><a href="mirt.html">mirt</a></code> for further details</p>
+SEtol default increased to .0001. Additionally, the argument <code>RANDSTART</code> is available
+to incidicate at which iteration (during the burn-in stage) the additional random effect
+variables should begin to be approximated (i.e.,
+elements in <code>lr.random</code> and <code>random</code>). The default for <code>RANDSTART</code> is to start
+at iteration 100, and when random effects are included the default number of burn-in iterations is incrased
+from 150 to 200. See <code><a href="mirt.html">mirt</a></code> for further details</p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
@@ -186,8 +191,8 @@ use the <code><a href="randef.html">randef</a></code> function.
 
 <h3>References</h3>
 
-<p>Chalmers, R. P. (2015, in press). Extended Mixed-Effects Item Response Models
-with the MH-RM Algorithm. <em>Journal of Educational Measurement</em>.
+<p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
+<em>Journal of Educational Measurement, 52</em>, 200-222.
 </p>
 
 
@@ -236,9 +241,9 @@ anova(mod0, mod1)
 ##     group + items)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
-## 2 8118.215 8118.709 8136.996 8178.276 -4046.107 711.952   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 8826.167 8826.525 8842.059 8876.988 -4402.084    NaN NaN NaN
+## 2 8116.957 8117.451 8135.738 8177.018 -4045.478 713.21   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -252,9 +257,9 @@ anova(mod0, mod1)
 ## --------------
 ## FIXED EFFECTS:
 ##         Estimate Std.Error z.value
-## groupG1   -1.829     0.099 -18.411
-## groupG2   -0.659     0.092  -7.149
-## groupG3    0.493     0.092   5.361
+## groupG1   -1.832     0.100 -18.411
+## groupG2   -0.658     0.092  -7.153
+## groupG3    0.492     0.092   5.339
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -262,7 +267,7 @@ anova(mod0, mod1)
 ## 
 ## $Theta
 ##        Theta
-## Theta 0.0767
+## Theta 0.0719
 </code></pre>
 
 <pre><code class="r">coef(mod1)
@@ -270,69 +275,69 @@ anova(mod0, mod1)
 
 <pre><code>## $Item_1
 ##         groupG1 groupG2 groupG3 a1  d  g  u
-## par      -1.829  -0.659   0.493  1  0  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA NA NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA NA NA NA
+## par      -1.832  -0.658   0.492  1  0  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA NA NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA NA NA NA
 ## 
 ## $Item_2
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.829  -0.659   0.493  1 -0.170  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA -0.403 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA  0.064 NA NA
+## par      -1.832  -0.658   0.492  1 -0.170  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA -0.403 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA  0.064 NA NA
 ## 
 ## $Item_3
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.829  -0.659   0.493  1 0.347  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA 0.118 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA 0.576 NA NA
+## par      -1.832  -0.658   0.492  1 0.346  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA 0.117 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA 0.575 NA NA
 ## 
 ## $Item_4
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.829  -0.659   0.493  1 0.684  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA 0.455 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA 0.912 NA NA
+## par      -1.832  -0.658   0.492  1 0.683  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA 0.454 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA 0.912 NA NA
 ## 
 ## $Item_5
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.829  -0.659   0.493  1 1.315  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA 1.081 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA 1.548 NA NA
+## par      -1.832  -0.658   0.492  1 1.313  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA 1.080 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA 1.546 NA NA
 ## 
 ## $Item_6
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.829  -0.659   0.493  1 0.578  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA 0.350 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA 0.807 NA NA
+## par      -1.832  -0.658   0.492  1 0.578  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA 0.349 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA 0.806 NA NA
 ## 
 ## $Item_7
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.829  -0.659   0.493  1  0.097  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA -0.134 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA  0.327 NA NA
+## par      -1.832  -0.658   0.492  1  0.097  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA -0.134 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA  0.327 NA NA
 ## 
 ## $Item_8
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.829  -0.659   0.493  1 -0.407  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA -0.644 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA -0.170 NA NA
+## par      -1.832  -0.658   0.492  1 -0.406  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA -0.643 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA -0.169 NA NA
 ## 
 ## $Item_9
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.829  -0.659   0.493  1 -0.228  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA -0.462 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA  0.006 NA NA
+## par      -1.832  -0.658   0.492  1 -0.228  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA -0.462 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA  0.007 NA NA
 ## 
 ## $Item_10
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.829  -0.659   0.493  1 3.588  0  1
-## CI_2.5   -2.024  -0.839   0.313 NA 3.256 NA NA
-## CI_97.5  -1.635  -0.478   0.674 NA 3.920 NA NA
+## par      -1.832  -0.658   0.492  1 3.584  0  1
+## CI_2.5   -2.027  -0.838   0.311 NA 3.252 NA NA
+## CI_97.5  -1.637  -0.478   0.672 NA 3.915 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.077
-## CI_2.5      NA  0.044
-## CI_97.5     NA  0.109
+## par          0  0.072
+## CI_2.5      NA  0.040
+## CI_97.5     NA  0.104
 </code></pre>
 
 <pre><code class="r">#same model as above in lme4
@@ -342,13 +347,6 @@ library(lme4)
 </code></pre>
 
 <pre><code>## Loading required package: Matrix
-## 
-## Attaching package: &#39;Matrix&#39;
-## 
-## The following objects are masked from &#39;package:base&#39;:
-## 
-##     crossprod, tcrossprod
-## 
 ## 
 ## Attaching package: &#39;lme4&#39;
 ## 
@@ -360,9 +358,9 @@ library(lme4)
 <pre><code class="r">lmod0 &lt;- glmer(value ~ 0 + variable + (1|id), long, family = binomial)
 </code></pre>
 
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
-## control$checkConv, : Model failed to converge with max|grad| = 0.00153862
-## (tol = 0.001, component 6)
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control
+## $checkConv, : Model failed to converge with max|grad| = 0.0213578 (tol =
+## 0.001, component 1)
 </code></pre>
 
 <pre><code class="r">lmod1 &lt;- glmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
@@ -393,8 +391,8 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8118.215 8118.709 8136.996 8178.276 -4046.107     NaN NaN NaN
-## 2 7967.193 7968.585 7998.976 8068.834 -3961.596 169.022   9   0
+## 1 8116.957 8117.451 8135.738 8177.018 -4045.478     NaN NaN NaN
+## 2 7968.238 7969.630 8000.021 8069.879 -3962.119 166.719   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -410,10 +408,10 @@ summary(mod2)
 ## --------------
 ## FIXED EFFECTS:
 ##          Estimate Std.Error z.value
-## groupG1    -1.715     0.104 -16.530
-## groupG2    -0.656     0.092  -7.127
-## groupG3     0.375     0.097   3.856
-## pseudoIQ    0.215     0.056   3.862
+## groupG1    -1.708     0.104 -16.466
+## groupG2    -0.657     0.092  -7.154
+## groupG3     0.374     0.097   3.861
+## pseudoIQ    0.210     0.054   3.867
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -421,7 +419,7 @@ summary(mod2)
 ## 
 ## $Theta
 ##        Theta
-## Theta 0.0693
+## Theta 0.0627
 </code></pre>
 
 <pre><code class="r">anova(mod1b, mod2)
@@ -434,9 +432,9 @@ summary(mod2)
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8105.358 8105.930 8125.584 8170.039 -4038.679     NaN NaN NaN
-## 2 7967.193 7968.585 7998.976 8068.834 -3961.596 154.166   8   0
+<pre><code>##        AIC    AICc    SABIC      BIC    logLik      X2  df   p
+## 1 8104.068 8104.64 8124.294 8168.749 -4038.034     NaN NaN NaN
+## 2 7968.238 7969.63 8000.021 8069.879 -3962.119 151.831   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -528,11 +526,11 @@ summary(rmod1)
 ## 
 ## $Theta
 ##        F1
-## F1 0.0523
+## F1 0.0498
 ## 
 ## $group
 ##           COV_group
-## COV_group      1.05
+## COV_group      1.08
 </code></pre>
 
 <pre><code class="r">coef(rmod1)
@@ -540,75 +538,75 @@ summary(rmod1)
 
 <pre><code>## $Item_1
 ##         a1      d  g  u
-## par      1 -0.667  0  1
-## CI_2.5  NA -0.867 NA NA
-## CI_97.5 NA -0.467 NA NA
+## par      1 -0.656  0  1
+## CI_2.5  NA -0.881 NA NA
+## CI_97.5 NA -0.430 NA NA
 ## 
 ## $Item_2
 ##         a1      d  g  u
-## par      1 -0.839  0  1
-## CI_2.5  NA -1.043 NA NA
-## CI_97.5 NA -0.635 NA NA
+## par      1 -0.828  0  1
+## CI_2.5  NA -1.057 NA NA
+## CI_97.5 NA -0.600 NA NA
 ## 
 ## $Item_3
 ##         a1      d  g  u
-## par      1 -0.316  0  1
-## CI_2.5  NA -0.512 NA NA
-## CI_97.5 NA -0.120 NA NA
+## par      1 -0.304  0  1
+## CI_2.5  NA -0.524 NA NA
+## CI_97.5 NA -0.084 NA NA
 ## 
 ## $Item_4
 ##         a1      d  g  u
-## par      1  0.026  0  1
-## CI_2.5  NA -0.169 NA NA
-## CI_97.5 NA  0.220 NA NA
+## par      1  0.038  0  1
+## CI_2.5  NA -0.180 NA NA
+## CI_97.5 NA  0.255 NA NA
 ## 
 ## $Item_5
 ##         a1     d  g  u
-## par      1 0.666  0  1
-## CI_2.5  NA 0.466 NA NA
-## CI_97.5 NA 0.866 NA NA
+## par      1 0.678  0  1
+## CI_2.5  NA 0.459 NA NA
+## CI_97.5 NA 0.898 NA NA
 ## 
 ## $Item_6
 ##         a1      d  g  u
-## par      1 -0.081  0  1
-## CI_2.5  NA -0.276 NA NA
-## CI_97.5 NA  0.114 NA NA
+## par      1 -0.069  0  1
+## CI_2.5  NA -0.287 NA NA
+## CI_97.5 NA  0.149 NA NA
 ## 
 ## $Item_7
 ##         a1      d  g  u
-## par      1 -0.569  0  1
-## CI_2.5  NA -0.768 NA NA
-## CI_97.5 NA -0.370 NA NA
+## par      1 -0.557  0  1
+## CI_2.5  NA -0.781 NA NA
+## CI_97.5 NA -0.334 NA NA
 ## 
 ## $Item_8
 ##         a1      d  g  u
-## par      1 -1.080  0  1
-## CI_2.5  NA -1.289 NA NA
-## CI_97.5 NA -0.870 NA NA
+## par      1 -1.069  0  1
+## CI_2.5  NA -1.303 NA NA
+## CI_97.5 NA -0.835 NA NA
 ## 
 ## $Item_9
 ##         a1      d  g  u
-## par      1 -0.898  0  1
-## CI_2.5  NA -1.103 NA NA
-## CI_97.5 NA -0.693 NA NA
+## par      1 -0.887  0  1
+## CI_2.5  NA -1.117 NA NA
+## CI_97.5 NA -0.657 NA NA
 ## 
 ## $Item_10
 ##         a1     d  g  u
-## par      1 2.990  0  1
-## CI_2.5  NA 2.673 NA NA
-## CI_97.5 NA 3.307 NA NA
+## par      1 3.010  0  1
+## CI_2.5  NA 2.683 NA NA
+## CI_97.5 NA 3.336 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.052
-## CI_2.5      NA    NaN
-## CI_97.5     NA    NaN
+## par          0  0.050
+## CI_2.5      NA  0.032
+## CI_97.5     NA  0.067
 ## 
 ## $group
 ##         COV_group_group
-## par               1.050
-## CI_2.5            0.623
-## CI_97.5           1.477
+## par               1.076
+## CI_2.5            0.626
+## CI_97.5           1.526
 </code></pre>
 
 <pre><code class="r">#random groups and random items
@@ -623,8 +621,8 @@ summary(rmod2)
 ## 
 ## --------------
 ## FIXED EFFECTS:
-##             Estimate Std.Error z.value
-## (Intercept)   -0.574       NaN     NaN
+##             Estimate Std.Error  z.value
+## (Intercept)   -0.649     0.004 -156.568
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -632,15 +630,15 @@ summary(rmod2)
 ## 
 ## $Theta
 ##        F1
-## F1 0.0564
+## F1 0.0561
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.887
+## COV_group     0.961
 ## 
 ## $items
 ##           COV_items
-## COV_items      1.07
+## COV_items      1.19
 </code></pre>
 
 <pre><code class="r">eff &lt;- randef(rmod2) #estimate random effects
@@ -662,12 +660,12 @@ summary(rmod3)
 ## 
 ## $Theta
 ##        F1
-## F1 0.0638
+## F1 0.0597
 ## 
 ## $group
 ##              COV_group COV_pseudoIQ
 ## COV_group         1.04       0.0000
-## COV_pseudoIQ      0.00       0.0427
+## COV_pseudoIQ      0.00       0.0345
 </code></pre>
 
 <pre><code class="r">eff &lt;- randef(rmod3)
@@ -675,11 +673,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] -0.0571 0.0555 -0.0381 0.0426 -0.1089 ...
+##  $ Theta: num [1:750, 1] 0.00314 0.05789 0.00823 0.05875 -0.07444 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -1.99 -1.28 -1.36 -1.19 -1.48 ...
+##  $ group: num [1:50, 1:2] -2.11 -1.27 -1.43 -1.22 -1.41 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -711,8 +709,8 @@ summary(LLTM)
 ## --------------
 ## FIXED EFFECTS:
 ##                 Estimate Std.Error z.value
-## itemordereasier    0.153     0.033   4.565
-## itemorderharder    0.444     0.034  13.169
+## itemordereasier    0.154     0.031   4.905
+## itemorderharder    0.446     0.032  14.018
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -728,200 +726,200 @@ summary(LLTM)
 
 <pre><code>## $Item.1
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.2
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.3
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.4
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.5
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.6
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.7
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.8
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.9
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.10
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.11
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.12
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.13
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.14
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.15
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.16
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.17
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.18
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.19
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.20
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.21
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.22
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.23
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.24
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.25
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.26
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.27
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.28
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.29
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.30
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.31
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $Item.32
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.153           0.444  1  0  0  1
-## CI_2.5            0.087           0.378 NA NA NA NA
-## CI_97.5           0.218           0.510 NA NA NA NA
+## par               0.154           0.446  1  0  0  1
+## CI_2.5            0.093           0.384 NA NA NA NA
+## CI_97.5           0.216           0.508 NA NA NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
 ## par          0  0.357
-## CI_2.5      NA  0.300
+## CI_2.5      NA  0.299
 ## CI_97.5     NA  0.414
 </code></pre>
 
@@ -930,10 +928,10 @@ summary(LLTM)
 
 <pre><code>##                                                                                                                                     1
 ## infoname itemordereasier.1.7.13.19.25.31.37.43.49.55.61.67.73.79.85.91.97.103.109.115.121.127.133.139.145.151.157.163.169.175.181.187
-## par                                                                                                                             0.153
+## par                                                                                                                             0.154
 ##                                                                                                                                     2
 ## infoname itemorderharder.2.8.14.20.26.32.38.44.50.56.62.68.74.80.86.92.98.104.110.116.122.128.134.140.146.152.158.164.170.176.182.188
-## par                                                                                                                             0.444
+## par                                                                                                                             0.446
 ##                   3
 ## infoname COV_11.194
 ## par           0.357
@@ -944,7 +942,7 @@ wald(LLTM, L) #first half different from second
 </code></pre>
 
 <pre><code>##          W df p
-## 1 92.15335  1 0
+## 1 92.18413  1 0
 </code></pre>
 
 <pre><code class="r">#compare to items with estimated slopes (2PL)
@@ -964,8 +962,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25468.53 25468.57 25472.19 25481.72 -12731.26      NaN NaN NaN
-## 2 20483.06 20487.27 20524.62 20632.56 -10207.53 5047.465  31   0
+## 1 25465.08 25465.12 25468.75 25478.27 -12729.54      NaN NaN NaN
+## 2 20485.80 20490.02 20527.36 20635.30 -10208.90 5041.281  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -979,8 +977,8 @@ anova(twoPL, LLTM) #much better fit
 ## --------------
 ## FIXED EFFECTS:
 ##                 Estimate Std.Error z.value
-## itemordereasier   -1.657     0.063 -26.331
-## itemorderharder   -1.632     0.070 -23.199
+## itemordereasier   -1.668     0.073 -22.882
+## itemorderharder   -1.637     0.081 -20.099
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -996,195 +994,195 @@ anova(twoPL, LLTM) #much better fit
 
 <pre><code>## $Item.1
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 0.929  0  0  1
-## CI_2.5           -1.781          -1.770 0.711 NA NA NA
-## CI_97.5          -1.534          -1.494 1.148 NA NA NA
+## par              -1.668          -1.637 0.936  0  0  1
+## CI_2.5           -1.811          -1.797 0.723 NA NA NA
+## CI_97.5          -1.525          -1.477 1.149 NA NA NA
 ## 
 ## $Item.2
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 2.536  0  0  1
-## CI_2.5           -1.781          -1.770 2.289 NA NA NA
-## CI_97.5          -1.534          -1.494 2.783 NA NA NA
+## par              -1.668          -1.637 2.542  0  0  1
+## CI_2.5           -1.811          -1.797 2.240 NA NA NA
+## CI_97.5          -1.525          -1.477 2.843 NA NA NA
 ## 
 ## $Item.3
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 0.997  0  0  1
-## CI_2.5           -1.781          -1.770 0.781 NA NA NA
-## CI_97.5          -1.534          -1.494 1.213 NA NA NA
+## par              -1.668          -1.637 1.003  0  0  1
+## CI_2.5           -1.811          -1.797 0.790 NA NA NA
+## CI_97.5          -1.525          -1.477 1.217 NA NA NA
 ## 
 ## $Item.4
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.287  0  0  1
-## CI_2.5           -1.781          -1.770 1.055 NA NA NA
-## CI_97.5          -1.534          -1.494 1.519 NA NA NA
+## par              -1.668          -1.637 1.293  0  0  1
+## CI_2.5           -1.811          -1.797 1.064 NA NA NA
+## CI_97.5          -1.525          -1.477 1.523 NA NA NA
 ## 
 ## $Item.5
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 2.714  0  0  1
-## CI_2.5           -1.781          -1.770 2.457 NA NA NA
-## CI_97.5          -1.534          -1.494 2.971 NA NA NA
+## par              -1.668          -1.637 2.720  0  0  1
+## CI_2.5           -1.811          -1.797 2.402 NA NA NA
+## CI_97.5          -1.525          -1.477 3.038 NA NA NA
 ## 
 ## $Item.6
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 0.418  0  0  1
-## CI_2.5           -1.781          -1.770 0.195 NA NA NA
-## CI_97.5          -1.534          -1.494 0.640 NA NA NA
+## par              -1.668          -1.637 0.424  0  0  1
+## CI_2.5           -1.811          -1.797 0.205 NA NA NA
+## CI_97.5          -1.525          -1.477 0.643 NA NA NA
 ## 
 ## $Item.7
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 3.937  0  0  1
-## CI_2.5           -1.781          -1.770 3.698 NA NA NA
-## CI_97.5          -1.534          -1.494 4.176 NA NA NA
+## par              -1.668          -1.637 3.936  0  0  1
+## CI_2.5           -1.811          -1.797 3.509 NA NA NA
+## CI_97.5          -1.525          -1.477 4.363 NA NA NA
 ## 
 ## $Item.8
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 0.510  0  0  1
-## CI_2.5           -1.781          -1.770 0.293 NA NA NA
-## CI_97.5          -1.534          -1.494 0.727 NA NA NA
+## par              -1.668          -1.637 0.518  0  0  1
+## CI_2.5           -1.811          -1.797 0.300 NA NA NA
+## CI_97.5          -1.525          -1.477 0.736 NA NA NA
 ## 
 ## $Item.9
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 5.495  0  0  1
-## CI_2.5           -1.781          -1.770 5.282 NA NA NA
-## CI_97.5          -1.534          -1.494 5.708 NA NA NA
+## par              -1.668          -1.637 5.509  0  0  1
+## CI_2.5           -1.811          -1.797 4.924 NA NA NA
+## CI_97.5          -1.525          -1.477 6.094 NA NA NA
 ## 
 ## $Item.10
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.632  0  0  1
-## CI_2.5           -1.781          -1.770 1.390 NA NA NA
-## CI_97.5          -1.534          -1.494 1.875 NA NA NA
+## par              -1.668          -1.637 1.641  0  0  1
+## CI_2.5           -1.811          -1.797 1.396 NA NA NA
+## CI_97.5          -1.525          -1.477 1.885 NA NA NA
 ## 
 ## $Item.11
 ##         itemordereasier itemorderharder     a1  d  g  u
-## par              -1.657          -1.632 13.706  0  0  1
-## CI_2.5           -1.781          -1.770 12.068 NA NA NA
-## CI_97.5          -1.534          -1.494 15.345 NA NA NA
+## par              -1.668          -1.637 13.602  0  0  1
+## CI_2.5           -1.811          -1.797 10.888 NA NA NA
+## CI_97.5          -1.525          -1.477 16.316 NA NA NA
 ## 
 ## $Item.12
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.240  0  0  1
-## CI_2.5           -1.781          -1.770 1.005 NA NA NA
-## CI_97.5          -1.534          -1.494 1.475 NA NA NA
+## par              -1.668          -1.637 1.254  0  0  1
+## CI_2.5           -1.811          -1.797 1.024 NA NA NA
+## CI_97.5          -1.525          -1.477 1.484 NA NA NA
 ## 
 ## $Item.13
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 3.053  0  0  1
-## CI_2.5           -1.781          -1.770 2.822 NA NA NA
-## CI_97.5          -1.534          -1.494 3.285 NA NA NA
+## par              -1.668          -1.637 3.062  0  0  1
+## CI_2.5           -1.811          -1.797 2.716 NA NA NA
+## CI_97.5          -1.525          -1.477 3.408 NA NA NA
 ## 
 ## $Item.14
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 3.508  0  0  1
-## CI_2.5           -1.781          -1.770 3.246 NA NA NA
-## CI_97.5          -1.534          -1.494 3.769 NA NA NA
+## par              -1.668          -1.637 3.508  0  0  1
+## CI_2.5           -1.811          -1.797 3.110 NA NA NA
+## CI_97.5          -1.525          -1.477 3.907 NA NA NA
 ## 
 ## $Item.15
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 4.789  0  0  1
-## CI_2.5           -1.781          -1.770   NaN NA NA NA
-## CI_97.5          -1.534          -1.494   NaN NA NA NA
+## par              -1.668          -1.637 4.793  0  0  1
+## CI_2.5           -1.811          -1.797 4.276 NA NA NA
+## CI_97.5          -1.525          -1.477 5.310 NA NA NA
 ## 
 ## $Item.16
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.469  0  0  1
-## CI_2.5           -1.781          -1.770 1.231 NA NA NA
-## CI_97.5          -1.534          -1.494 1.707 NA NA NA
+## par              -1.668          -1.637 1.477  0  0  1
+## CI_2.5           -1.811          -1.797 1.239 NA NA NA
+## CI_97.5          -1.525          -1.477 1.716 NA NA NA
 ## 
 ## $Item.17
 ##         itemordereasier itemorderharder     a1  d  g  u
-## par              -1.657          -1.632 10.048  0  0  1
-## CI_2.5           -1.781          -1.770  9.330 NA NA NA
-## CI_97.5          -1.534          -1.494 10.766 NA NA NA
+## par              -1.668          -1.637  9.979  0  0  1
+## CI_2.5           -1.811          -1.797  8.520 NA NA NA
+## CI_97.5          -1.525          -1.477 11.439 NA NA NA
 ## 
 ## $Item.18
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.412  0  0  1
-## CI_2.5           -1.781          -1.770 1.191 NA NA NA
-## CI_97.5          -1.534          -1.494 1.633 NA NA NA
+## par              -1.668          -1.637 1.414  0  0  1
+## CI_2.5           -1.811          -1.797 1.172 NA NA NA
+## CI_97.5          -1.525          -1.477 1.656 NA NA NA
 ## 
 ## $Item.19
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 2.161  0  0  1
-## CI_2.5           -1.781          -1.770 1.906 NA NA NA
-## CI_97.5          -1.534          -1.494 2.415 NA NA NA
+## par              -1.668          -1.637 2.162  0  0  1
+## CI_2.5           -1.811          -1.797 1.872 NA NA NA
+## CI_97.5          -1.525          -1.477 2.452 NA NA NA
 ## 
 ## $Item.20
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 5.832  0  0  1
-## CI_2.5           -1.781          -1.770   NaN NA NA NA
-## CI_97.5          -1.534          -1.494   NaN NA NA NA
+## par              -1.668          -1.637 5.821  0  0  1
+## CI_2.5           -1.811          -1.797 5.163 NA NA NA
+## CI_97.5          -1.525          -1.477 6.478 NA NA NA
 ## 
 ## $Item.21
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 6.415  0  0  1
-## CI_2.5           -1.781          -1.770   NaN NA NA NA
-## CI_97.5          -1.534          -1.494   NaN NA NA NA
+## par              -1.668          -1.637 6.382  0  0  1
+## CI_2.5           -1.811          -1.797 5.657 NA NA NA
+## CI_97.5          -1.525          -1.477 7.107 NA NA NA
 ## 
 ## $Item.22
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 7.925  0  0  1
-## CI_2.5           -1.781          -1.770 7.430 NA NA NA
-## CI_97.5          -1.534          -1.494 8.420 NA NA NA
+## par              -1.668          -1.637 7.877  0  0  1
+## CI_2.5           -1.811          -1.797 6.865 NA NA NA
+## CI_97.5          -1.525          -1.477 8.889 NA NA NA
 ## 
 ## $Item.23
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 0.979  0  0  1
-## CI_2.5           -1.781          -1.770 0.754 NA NA NA
-## CI_97.5          -1.534          -1.494 1.204 NA NA NA
+## par              -1.668          -1.637 0.980  0  0  1
+## CI_2.5           -1.811          -1.797 0.753 NA NA NA
+## CI_97.5          -1.525          -1.477 1.207 NA NA NA
 ## 
 ## $Item.24
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 3.646  0  0  1
-## CI_2.5           -1.781          -1.770 3.416 NA NA NA
-## CI_97.5          -1.534          -1.494 3.877 NA NA NA
+## par              -1.668          -1.637 3.638  0  0  1
+## CI_2.5           -1.811          -1.797 3.220 NA NA NA
+## CI_97.5          -1.525          -1.477 4.056 NA NA NA
 ## 
 ## $Item.25
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.294  0  0  1
-## CI_2.5           -1.781          -1.770 1.063 NA NA NA
-## CI_97.5          -1.534          -1.494 1.525 NA NA NA
+## par              -1.668          -1.637 1.297  0  0  1
+## CI_2.5           -1.811          -1.797 1.056 NA NA NA
+## CI_97.5          -1.525          -1.477 1.539 NA NA NA
 ## 
 ## $Item.26
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.907  0  0  1
-## CI_2.5           -1.781          -1.770 1.683 NA NA NA
-## CI_97.5          -1.534          -1.494 2.131 NA NA NA
+## par              -1.668          -1.637 1.912  0  0  1
+## CI_2.5           -1.811          -1.797 1.643 NA NA NA
+## CI_97.5          -1.525          -1.477 2.181 NA NA NA
 ## 
 ## $Item.27
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 5.728  0  0  1
-## CI_2.5           -1.781          -1.770   NaN NA NA NA
-## CI_97.5          -1.534          -1.494   NaN NA NA NA
+## par              -1.668          -1.637 5.694  0  0  1
+## CI_2.5           -1.811          -1.797 5.056 NA NA NA
+## CI_97.5          -1.525          -1.477 6.332 NA NA NA
 ## 
 ## $Item.28
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 2.125  0  0  1
-## CI_2.5           -1.781          -1.770 1.877 NA NA NA
-## CI_97.5          -1.534          -1.494 2.373 NA NA NA
+## par              -1.668          -1.637 2.127  0  0  1
+## CI_2.5           -1.811          -1.797 1.840 NA NA NA
+## CI_97.5          -1.525          -1.477 2.413 NA NA NA
 ## 
 ## $Item.29
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.163  0  0  1
-## CI_2.5           -1.781          -1.770 0.941 NA NA NA
-## CI_97.5          -1.534          -1.494 1.385 NA NA NA
+## par              -1.668          -1.637 1.168  0  0  1
+## CI_2.5           -1.811          -1.797 0.936 NA NA NA
+## CI_97.5          -1.525          -1.477 1.400 NA NA NA
 ## 
 ## $Item.30
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 1.438  0  0  1
-## CI_2.5           -1.781          -1.770 1.195 NA NA NA
-## CI_97.5          -1.534          -1.494 1.682 NA NA NA
+## par              -1.668          -1.637 1.441  0  0  1
+## CI_2.5           -1.811          -1.797 1.189 NA NA NA
+## CI_97.5          -1.525          -1.477 1.693 NA NA NA
 ## 
 ## $Item.31
 ##         itemordereasier itemorderharder    a1  d  g  u
-## par              -1.657          -1.632 5.282  0  0  1
-## CI_2.5           -1.781          -1.770 5.111 NA NA NA
-## CI_97.5          -1.534          -1.494 5.454 NA NA NA
+## par              -1.668          -1.637 5.268  0  0  1
+## CI_2.5           -1.811          -1.797 4.669 NA NA NA
+## CI_97.5          -1.525          -1.477 5.867 NA NA NA
 ## 
 ## $Item.32
 ##         itemordereasier itemorderharder     a1  d  g  u
-## par              -1.657          -1.632  0.088  0  0  1
-## CI_2.5           -1.781          -1.770 -0.158 NA NA NA
-## CI_97.5          -1.534          -1.494  0.335 NA NA NA
+## par              -1.668          -1.637  0.089  0  0  1
+## CI_2.5           -1.811          -1.797 -0.161 NA NA NA
+## CI_97.5          -1.525          -1.477  0.340 NA NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
@@ -1198,22 +1196,22 @@ anova(twoPL, LLTM) #much better fit
 
 <pre><code>##                                                                                                                                     1
 ## infoname itemordereasier.1.7.13.19.25.31.37.43.49.55.61.67.73.79.85.91.97.103.109.115.121.127.133.139.145.151.157.163.169.175.181.187
-## par                                                                                                                            -1.657
+## par                                                                                                                            -1.668
 ##                                                                                                                                     2
 ## infoname itemorderharder.2.8.14.20.26.32.38.44.50.56.62.68.74.80.86.92.98.104.110.116.122.128.134.140.146.152.158.164.170.176.182.188
-## par                                                                                                                            -1.632
+## par                                                                                                                            -1.637
 ##               3      4      5      6      7      8      9     10     11
 ## infoname   a1.3   a1.9  a1.15  a1.21  a1.27  a1.33  a1.39  a1.45  a1.51
-## par       0.929  2.536  0.997  1.287  2.714  0.418  3.937  0.510  5.495
+## par       0.936  2.542  1.003  1.293  2.720  0.424  3.936  0.518  5.509
 ##              12     13     14     15     16     17     18     19     20
 ## infoname  a1.57  a1.63  a1.69  a1.75  a1.81  a1.87  a1.93  a1.99 a1.105
-## par       1.632 13.706  1.240  3.053  3.508  4.789  1.469 10.048  1.412
+## par       1.641 13.602  1.254  3.062  3.508  4.793  1.477  9.979  1.414
 ##              21     22     23     24     25     26     27     28     29
 ## infoname a1.111 a1.117 a1.123 a1.129 a1.135 a1.141 a1.147 a1.153 a1.159
-## par       2.161  5.832  6.415  7.925  0.979  3.646  1.294  1.907  5.728
+## par       2.162  5.821  6.382  7.877  0.980  3.638  1.297  1.912  5.694
 ##              30     31     32     33     34
 ## infoname a1.165 a1.171 a1.177 a1.183 a1.189
-## par       2.125  1.163  1.438  5.282  0.088
+## par       2.127  1.168  1.441  5.268  0.089
 </code></pre>
 
 <pre><code class="r">L &lt;- matrix(0, 1, 34)
@@ -1222,8 +1220,8 @@ L[1, 2] &lt;- -1
 wald(twoPL, L) #n.s., which is the correct conclusion. Rasch approach gave wrong inference
 </code></pre>
 
-<pre><code>##            W df         p
-## 1 0.07593067  1 0.7828897
+<pre><code>##           W df         p
+## 1 0.1086682  1 0.7416655
 </code></pre>
 
 <pre><code class="r">##LLTM with item error term
@@ -1240,8 +1238,8 @@ summary(LLTMwithError)
 ## --------------
 ## FIXED EFFECTS:
 ##                 Estimate Std.Error z.value
-## itemordereasier    0.206     0.066   3.115
-## itemorderharder    0.361     0.087   4.124
+## itemordereasier    0.221     0.071   3.108
+## itemorderharder    0.354     0.081   4.346
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -1249,11 +1247,11 @@ summary(LLTMwithError)
 ## 
 ## $Theta
 ##       Theta
-## Theta 0.795
+## Theta 0.803
 ## 
 ## $items
 ##           COV_items
-## COV_items      2.47
+## COV_items      2.55
 </code></pre>
 
 <pre><code class="r">#large item level variance after itemorder is regressed; not a great predictor of item difficulty
@@ -1262,207 +1260,207 @@ coef(LLTMwithError)
 
 <pre><code>## $Item.1
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.2
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.3
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.4
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.5
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.6
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.7
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.8
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.9
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.10
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.11
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.12
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.13
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.14
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.15
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.16
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.17
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.18
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.19
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.20
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.21
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.22
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.23
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.24
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.25
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.26
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.27
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.28
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.29
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.30
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.31
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $Item.32
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.206           0.361  1  0  0  1
-## CI_2.5            0.076           0.189 NA NA NA NA
-## CI_97.5           0.335           0.532 NA NA NA NA
+## par               0.221           0.354  1  0  0  1
+## CI_2.5            0.082           0.194 NA NA NA NA
+## CI_97.5           0.360           0.514 NA NA NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.795
-## CI_2.5      NA  0.662
-## CI_97.5     NA  0.928
+## par          0  0.803
+## CI_2.5      NA  0.685
+## CI_97.5     NA  0.921
 ## 
 ## $items
 ##         COV_items_items
-## par               2.468
-## CI_2.5            1.263
-## CI_97.5           3.674
+## par               2.554
+## CI_2.5            1.267
+## CI_97.5           3.840
 </code></pre>
 
 <pre><code class="r">###################################################
@@ -1478,33 +1476,33 @@ coef(mod)
 
 <pre><code>## $Comfort
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.032  1   0   1   2   3  0 3.039 5.620 4.260
-## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 2.012 4.548 3.121
-## CI_97.5  0.218 NA  NA  NA  NA  NA NA 4.066 6.692 5.399
+## par     -0.052  1   0   1   2   3  0 3.033 5.610 4.249
+## CI_2.5  -0.286 NA  NA  NA  NA  NA NA 2.014 4.562 3.142
+## CI_97.5  0.183 NA  NA  NA  NA  NA NA 4.052 6.659 5.357
 ## 
 ## $Work
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.032  1   0   1   2   3  0 1.870 2.783 0.965
-## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 1.393 2.209 0.249
-## CI_97.5  0.218 NA  NA  NA  NA  NA NA 2.348 3.357 1.682
+## par     -0.052  1   0   1   2   3  0 1.866 2.775 0.958
+## CI_2.5  -0.286 NA  NA  NA  NA  NA NA 1.400 2.229 0.281
+## CI_97.5  0.183 NA  NA  NA  NA  NA NA 2.331 3.320 1.635
 ## 
 ## $Future
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.032  1   0   1   2   3  0 2.612 4.027 2.922
-## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 1.958 3.289 2.089
-## CI_97.5  0.218 NA  NA  NA  NA  NA NA 3.266 4.764 3.755
+## par     -0.052  1   0   1   2   3  0 2.607 4.018 2.912
+## CI_2.5  -0.286 NA  NA  NA  NA  NA NA 1.964 3.307 2.117
+## CI_97.5  0.183 NA  NA  NA  NA  NA NA 3.251 4.728 3.706
 ## 
 ## $Benefit
 ##         groupm a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par     -0.032  1   0   1   2   3  0 2.419 3.317 1.995
-## CI_2.5  -0.283 NA  NA  NA  NA  NA NA 1.869 2.672 1.236
-## CI_97.5  0.218 NA  NA  NA  NA  NA NA 2.970 3.963 2.754
+## par     -0.052  1   0   1   2   3  0 2.415 3.309 1.986
+## CI_2.5  -0.286 NA  NA  NA  NA  NA NA 1.875 2.691 1.267
+## CI_97.5  0.183 NA  NA  NA  NA  NA NA 2.954 3.927 2.706
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.934
-## CI_2.5      NA  0.633
-## CI_97.5     NA  1.235
+## par          0  0.927
+## CI_2.5      NA  0.640
+## CI_97.5     NA  1.213
 </code></pre>
 
 <pre><code class="r">#gpcm to estimate slopes
@@ -1521,7 +1519,7 @@ summary(mod2)
 ## --------------
 ## FIXED EFFECTS:
 ##        Estimate Std.Error z.value
-## groupm   -0.164     0.126  -1.305
+## groupm   -0.166     0.118  -1.411
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -1542,9 +1540,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##       AIC     AICc    SABIC      BIC    logLik     X2  df      p
-## 1 3264.55 3265.664 3275.727 3320.148 -1618.275    NaN NaN    NaN
-## 2 3255.89 3257.526 3269.461 3323.401 -1610.945 14.661   3 0.0021
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
+## 1 3266.796 3267.910 3277.972 3322.393 -1619.398    NaN NaN    NaN
+## 2 3257.350 3258.986 3270.921 3324.861 -1611.675 15.446   3 0.0015
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1555,27 +1553,27 @@ coef(mod3)
 
 <pre><code>## $Comfort
 ##         groupm    a1    d1    d2     d3
-## par     -0.207 1.010 4.937 2.722 -1.354
-## CI_2.5  -0.524 0.662 3.976 2.274 -1.693
-## CI_97.5  0.110 1.359 5.898 3.171 -1.014
+## par     -0.201 1.015 4.937 2.717 -1.363
+## CI_2.5  -0.523 0.634 3.968 2.262 -1.713
+## CI_97.5  0.122 1.396 5.906 3.172 -1.014
 ## 
 ## $Work
 ##         groupm    a1    d1    d2     d3
-## par     -0.207 1.207 3.013 0.997 -2.154
-## CI_2.5  -0.524 0.865 2.533 0.684 -2.580
-## CI_97.5  0.110 1.550 3.492 1.311 -1.729
+## par     -0.201 1.161 2.969 0.977 -2.131
+## CI_2.5  -0.523 0.835 2.498 0.666 -2.541
+## CI_97.5  0.122 1.488 3.440 1.288 -1.721
 ## 
 ## $Future
 ##         groupm    a1    d1    d2     d3
-## par     -0.207 2.494 5.615 2.441 -1.976
-## CI_2.5  -0.524 1.357 3.875 1.574 -2.727
-## CI_97.5  0.110 3.630 7.356 3.309 -1.225
+## par     -0.201 2.555 5.695 2.463 -2.024
+## CI_2.5  -0.523 1.291 3.782 1.544 -2.875
+## CI_97.5  0.122 3.819 7.608 3.382 -1.173
 ## 
 ## $Benefit
 ##         groupm    a1    d1    d2     d3
-## par     -0.207 1.068 3.429 1.085 -1.575
-## CI_2.5  -0.524 0.683 2.869 0.776 -1.948
-## CI_97.5  0.110 1.452 3.990 1.395 -1.202
+## par     -0.201 1.088 3.439 1.082 -1.592
+## CI_2.5  -0.523 0.719 2.881 0.772 -1.964
+## CI_97.5  0.122 1.458 3.998 1.392 -1.221
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
@@ -1638,7 +1636,7 @@ anova(rmod0, rmod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.156 9743.453 9761.048 9795.982 -4860.578     NaN NaN NaN
-## 2 9495.025 9495.436 9516.171 9557.457 -4734.513 252.131   2   0
+## 2 9495.007 9495.418 9516.152 9557.438 -4734.503 252.149   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1683,8 +1681,8 @@ anova(rmod0, rmod1b)
 ## --------------
 ## FIXED EFFECTS:
 ##         Estimate Std.Error z.value
-## groupg2    0.810     0.099   8.142
-## groupg3    1.782     0.113  15.753
+## groupg2    0.789     0.092   8.546
+## groupg3    1.755     0.099  17.752
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -1692,7 +1690,7 @@ anova(rmod0, rmod1b)
 ## 
 ## $Theta
 ##       F1
-## F1 0.954
+## F1 0.951
 </code></pre>
 
 <pre><code class="r"># 2PL, requires different input to allow Theta variance to remain fixed
@@ -1710,7 +1708,7 @@ anova(mod0, mod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
-## 2 9497.204 9498.358 9532.988 9602.857 -4726.602 250.569   2   0
+## 2 9499.078 9500.232 9534.862 9604.730 -4727.539 248.696   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1744,13 +1742,13 @@ anova(mod0, mod1b)
 ## 
 ##                F1
 ## (Intercept) 0.000
-## groupg2     0.846
-## groupg3     1.820
+## groupg2     0.850
+## groupg3     1.834
 ## 
-##             Std.Error_F1   z_F1
-## (Intercept)           NA     NA
-## groupg2            0.095  8.955
-## groupg3            0.100 18.267
+##             Std.Error_F1  z_F1
+## (Intercept)           NA    NA
+## groupg2            0.236 3.597
+## groupg3            0.293 6.250
 </code></pre>
 
 <pre><code class="r"># specifying specific regression effects is accomplished by passing a list of formula
@@ -1764,14 +1762,14 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0  1.097      0  0.833
+## par      0      0  1.101      0  0.833
 ## 
 ## $lr.betas
-##                F1    F2
-## (Intercept) 0.000 0.000
-## groupg2     0.857 0.753
-## groupg3     1.716 1.816
-## contvar     0.070 0.000
+##                 F1    F2
+## (Intercept)  0.000 0.000
+## groupg2      0.858 0.753
+## groupg3      1.721 1.816
+## contvar     -0.025 0.000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1790,24 +1788,24 @@ summary(mod2b)
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##      F1    F2
-## F1 1.06 0.000
-## F2 0.00 0.757
+##     F1  F2
+## F1 1.1 0.0
+## F2 0.0 0.8
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
-##                F1    F2
-## (Intercept) 0.000 0.000
-## groupg2     0.833 0.701
-## groupg3     1.665 1.729
-## contvar     0.074 0.000
+##                 F1    F2
+## (Intercept)  0.000 0.000
+## groupg2      0.879 0.672
+## groupg3      1.739 1.724
+## contvar     -0.016 0.000
 ## 
-##             Std.Error_F1 Std.Error_F2   z_F1   z_F2
-## (Intercept)           NA           NA     NA     NA
-## groupg2            0.062        0.067 13.512 10.470
-## groupg3            0.066        0.088 25.281 19.593
-## contvar            0.043           NA  1.721     NA
+##             Std.Error_F1 Std.Error_F2   z_F1  z_F2
+## (Intercept)           NA           NA     NA    NA
+## groupg2            0.110        0.186  7.973 3.608
+## groupg3            0.133        0.195 13.070 8.828
+## contvar            0.053           NA -0.311    NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1848,7 +1846,7 @@ summary(mod1)
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.665
+## COV_group      0.66
 </code></pre>
 
 <pre><code class="r"># include level 2 predictor for &#39;group&#39; variance
@@ -1867,7 +1865,7 @@ summary(mod2)
 ## --------------
 ## FIXED EFFECTS:
 ##            Estimate Std.Error z.value
-## group_pred     0.97     0.035  27.497
+## group_pred     0.96     0.026  36.765
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -1875,11 +1873,11 @@ summary(mod2)
 ## 
 ## $Theta
 ##       F1
-## F1 0.984
+## F1 0.986
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.025
+## COV_group    0.0212
 </code></pre>
 
 <pre><code class="r">anova(mod1, mod2)
@@ -1892,14 +1890,14 @@ summary(mod2)
 ##     items + group_pred, random = ~1 | group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC     BIC    logLik      X2  df   p
-## 1 23683.99 23684.15 23713.08 23751.2 -11830.00     NaN NaN NaN
-## 2 22907.19 22907.37 22938.70 22980.0 -11440.59 778.807   1   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 23682.18 23682.34 23711.27 23749.40 -11829.09     NaN NaN NaN
+## 2 22907.25 22907.44 22938.76 22980.07 -11440.63 776.931   1   0
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
 </body></html>

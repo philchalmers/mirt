@@ -25,7 +25,7 @@ a user input matrix of <i>&theta;</i>'s.
 <pre>
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE)
+  returnList = FALSE, model = NULL, mins = 0)
 </pre>
 
 
@@ -94,7 +94,8 @@ so it is best to set these as the values for the first and last categories as we
 <tr valign="top"><td><code>Theta</code></td>
 <td>
 <p>a user specified matrix of the underlying ability parameters,
-where <code>nrow(Theta) == N</code> and <code>ncol(Theta) == ncol(a)</code></p>
+where <code>nrow(Theta) == N</code> and <code>ncol(Theta) == ncol(a)</code>. When this is supplied the
+<code>N</code> input is not required</p>
 </td></tr>
 <tr valign="top"><td><code>gpcm_mats</code></td>
 <td>
@@ -106,6 +107,18 @@ credit models (see <code><a href="mirt.html">mirt</a></code> for details)</p>
 <p>logical; return a list containing the data, item objects defined
 by <code>mirt</code> containing the population parameters and item structure, and the
 latent trait matrix <code>Theta</code>? Default is FALSE</p>
+</td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>a single group object, typically returned by functions such as <code><a href="mirt.html">mirt</a></code> or
+<code><a href="bfactor.html">bfactor</a></code>. Supplying this will render all other parameter elements (excluding the Theta
+input) redundent</p>
+</td></tr>
+<tr valign="top"><td><code>mins</code></td>
+<td>
+<p>an integer vector (or single value to be used for each item) indicating what
+the lowest category should be. If <code>model</code> is supplied then this will be extracted from
+<code>slot(mod, 'Data')$mins</code>, otherwise the default is 0</p>
 </td></tr>
 </table>
 
@@ -241,7 +254,7 @@ a &lt;- matrix(c(
 d &lt;- matrix(rnorm(6))
 itemtype &lt;- rep(&#39;dich&#39;,6)
 
-nonlindata &lt;- simdata(a,d,2000,itemtype,Theta=Theta)
+nonlindata &lt;- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 
 #model &lt;- &#39;
 #F1 = 1-6
@@ -374,9 +387,66 @@ str(listobj)
 ##  $ Theta      : num [1:2000, 1] -0.72 0.353 1.948 -0.834 -1.1 ...
 </code></pre>
 
-<pre><code class="r">## End(No test)
+<pre><code class="r"># generate dataset from converged model
+mod &lt;- mirt(Science, 1, itemtype = c(rep(&#39;gpcm&#39;, 3), &#39;nominal&#39;))
+sim &lt;- simdata(model=mod, N=1000)
+head(sim)
+</code></pre>
+
+<pre><code>##      Item_1 Item_2 Item_3 Item_4
+## [1,]      3      2      2      2
+## [2,]      4      1      3      3
+## [3,]      2      3      3      3
+## [4,]      2      2      2      3
+## [5,]      3      3      3      4
+## [6,]      4      3      4      3
+</code></pre>
+
+<pre><code class="r">Theta &lt;- matrix(rnorm(100))
+sim &lt;- simdata(model=mod, Theta=Theta)
+head(sim)
+</code></pre>
+
+<pre><code>##      Item_1 Item_2 Item_3 Item_4
+## [1,]      4      1      3      3
+## [2,]      3      4      4      4
+## [3,]      4      3      4      4
+## [4,]      1      3      2      2
+## [5,]      2      1      4      4
+## [6,]      3      2      1      2
+</code></pre>
+
+<pre><code class="r"># alternatively, define a suitable object with functions from the mirtCAT package
+# help(generate.mirt_object)
+library(mirtCAT)
+</code></pre>
+
+<pre><code>## Loading required package: shiny
+</code></pre>
+
+<pre><code class="r">nitems &lt;- 50
+a1 &lt;- rlnorm(nitems, .2,.2)
+d &lt;- rnorm(nitems)
+g &lt;- rbeta(nitems, 20, 80)
+pars &lt;- data.frame(a1=a1, d=d, g=g)
+head(pars)
+</code></pre>
+
+<pre><code>##         a1          d         g
+## 1 1.166747 -0.2380901 0.2081573
+## 2 1.562989 -0.4215493 0.1760318
+## 3 1.038447  0.6323366 0.1223941
+## 4 1.692255  0.8415607 0.1653372
+## 5 1.174677 -0.3151553 0.2875171
+## 6 1.123527  1.3183622 0.2125315
+</code></pre>
+
+<pre><code class="r">obj &lt;- generate.mirt_object(pars, &#39;3PL&#39;)
+dat &lt;- simdata(N=200, model=obj)
+
+## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -24,7 +24,7 @@ package). Parameters are organized from the freely estimated values in <code>mod
 <h3>Usage</h3>
 
 <pre>
-boot.mirt(x, R = 100, ...)
+boot.mirt(x, R = 100, technical = NULL, ...)
 </pre>
 
 
@@ -39,9 +39,14 @@ boot.mirt(x, R = 100, ...)
 <td>
 <p>number of draws to use (passed to the <code>boot()</code> function)</p>
 </td></tr>
+<tr valign="top"><td><code>technical</code></td>
+<td>
+<p>technical arguments passed to estimation engine. See <code><a href="mirt.html">mirt</a></code>
+for details</p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
-<p>additional arguments to be passed on to <code>boot(...)</code></p>
+<p>additional arguments to be passed on to <code>boot(...)</code> and estimation engine</p>
 </td></tr>
 </table>
 
@@ -75,7 +80,7 @@ plot(booted)
 ## boot::boot(data = dat, statistic = boot.draws, R = R, npars = npars, 
 ##     constrain = constrain, class = class, parprior = parprior, 
 ##     model = model, itemtype = itemtype, group = group, LR = LR, 
-##     obj = x)
+##     obj = x, technical = technical)
 ## 
 ## 
 ## Bootstrap Statistics :
@@ -112,7 +117,7 @@ booted
 ## boot::boot(data = dat, statistic = boot.draws, R = R, npars = npars, 
 ##     constrain = constrain, class = class, parprior = parprior, 
 ##     model = model, itemtype = itemtype, group = group, LR = LR, 
-##     obj = x, parallel = &quot;snow&quot;, ncpus = ..2)
+##     obj = x, technical = technical, parallel = &quot;snow&quot;, ncpus = ..2)
 ## 
 ## 
 ## Bootstrap Statistics :
@@ -139,5 +144,5 @@ booted
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
 </body></html>

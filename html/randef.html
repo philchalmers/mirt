@@ -77,11 +77,11 @@ summary(mod)
 ## 
 ## $Theta
 ##      F1
-## F1 1.03
+## F1 1.04
 ## 
 ## $group
 ##           COV_group
-## COV_group    0.0265
+## COV_group     0.019
 </code></pre>
 
 <pre><code class="r">effects &lt;- randef(mod, ndraws = 2000, thin = 20)
@@ -89,29 +89,29 @@ head(effects$Theta)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.62422272
-## [2,]  0.01192967
-## [3,] -0.74335672
-## [4,] -0.64586829
-## [5,]  0.17302564
-## [6,]  0.97072672
+## [1,]  0.42664517
+## [2,]  0.08314456
+## [3,] -0.62669304
+## [4,] -0.69303446
+## [5,]  0.02380483
+## [6,]  0.89138396
 </code></pre>
 
 <pre><code class="r">head(effects$group)
 </code></pre>
 
 <pre><code>##                group
-## group1 -0.0203559582
-## group2  0.0112495671
-## group3  0.0364589469
-## group4  0.0004414886
-## group5 -0.0053402296
-## group6  0.0191336642
+## group1 -0.0021622754
+## group2  0.0004712228
+## group3  0.0077578243
+## group4 -0.0204781985
+## group5 -0.0019536141
+## group6  0.0071281985
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
 </body></html>

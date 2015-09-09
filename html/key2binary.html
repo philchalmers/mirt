@@ -36,8 +36,10 @@ key2binary(fulldata, key)
 </td></tr>
 <tr valign="top"><td><code>key</code></td>
 <td>
-<p>a vector consisting of the 'correct' response to the items. Each
-value corresponds to each column in <code>fulldata</code></p>
+<p>a vector or matrix consisting of the 'correct' response to the items. Each
+value/row corresponds to each column in <code>fulldata</code>. If the input is a matrix, multiple
+scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
+in the case of a matrix input, no additional scoring keys)</p>
 </td></tr>
 </table>
 
@@ -45,7 +47,7 @@ value corresponds to each column in <code>fulldata</code></p>
 <h3>Value</h3>
 
 <p>Returns a numeric matrix with all the response patterns in
-dichotomous format.
+dichotomous format
 </p>
 
 
@@ -94,7 +96,7 @@ head(SAT12)
 
 <pre><code class="r">key &lt;- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 
-dicho.SAT12 &lt;- key2binary(SAT12,key)
+dicho.SAT12 &lt;- key2binary(SAT12, key)
 head(dicho.SAT12)
 </code></pre>
 
@@ -128,9 +130,15 @@ head(dicho.SAT12)
 ## [6,]       0       1       0       0       0       1       0
 </code></pre>
 
-<pre><code class="r">## End(No test)
+<pre><code class="r"># multiple scoring keys
+key2 &lt;- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5),
+              c(2,3,NA,1,rep(NA, 28)))
+dicho.SAT12 &lt;- key2binary(SAT12, key2)
+
+
+## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.10 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
 </body></html>
