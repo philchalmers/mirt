@@ -1028,7 +1028,7 @@ setMethod(
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(P ~ Theta, plotobj, groups=item, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta, plotobj, groups=plotobj$item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -1049,7 +1049,7 @@ setMethod(
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(I ~ Theta, plotobj, groups = item,
+                    return(xyplot(I ~ Theta, plotobj, groups = plotobj$item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))

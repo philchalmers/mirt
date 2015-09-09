@@ -50,33 +50,33 @@ static void add2hess(NumericMatrix &out, const NumericMatrix &in, const double &
 static void matrixMult(vector<double> &c, const vector<double> &a, const vector<double> &b,
                        const int *dim)
 {
-    double A[*dim][*dim], B[*dim][*dim], C[*dim][*dim];
+    NumericMatrix A(*dim, *dim), B(*dim, *dim), C(*dim, *dim);
     int k = 0;
 
     for (int j = 0; j < *dim; ++j){
         for (int i = 0; i < *dim; ++i){
-            A[i][j] = a[k];
+            A(i,j) = a[k];
             ++k;
         }
     }
     k = 0;
     for (int j = 0; j < *dim; ++j){
         for (int i = 0; i < *dim; ++i){
-            B[i][j] = b[k];
+            B(i,j) = b[k];
             ++k;
         }
     }
     for (int i = 0; i < *dim; ++i){
         for (int j = 0; j < *dim; ++j) {
-            C[i][j] = 0;
+            C(i,j) = 0;
             for (k = 0; k < *dim; ++k)
-                C[i][j] += A[i][k] * B[k][j];
+                C(i,j) += A(i,k) * B(k,j);
         }
     }
     k = 0;
     for (int j = 0; j < *dim; ++j) {
         for (int i = 0; i < *dim; ++i){
-            c[k] = C[i][j];
+            c[k] = C(i,j);
             ++k;
         }
     }
@@ -130,18 +130,20 @@ static double inner(vector<double> &a, const vector<double> &b, const vector<dou
                     const int *dim)
 {
     int k = 0;
-    double tmp[*dim], B[*dim][*dim], ret = 0.0;
+    NumericMatrix B(*dim, *dim);
+    double ret = 0.0;
+    vector<double> tmp(*dim);
 
     for(int i = 0; i < *dim; ++i){
         tmp[i] = 0.0;
         for(int j = 0; j < *dim; ++j){
-            B[j][i] = b[k];
+            B(j,i) = b[k];
             ++k;
         }
     }
     for(int i = 0; i < *dim; ++i){
         for(int j = 0; j < *dim; ++j){
-            tmp[i] += a[j] * B[j][i];
+            tmp[i] += a[j] * B(j,i);
             ++k;
         }
     }

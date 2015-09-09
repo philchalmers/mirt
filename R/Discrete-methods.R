@@ -141,7 +141,7 @@ setMethod(
                           auto.key = auto.key, ylab = 'Probability', ylim = c(-.1, 1.1),
                           par.settings=par.settings, par.strip.text=par.strip.text, ...))
         } else {
-            return(xyplot(prob ~ cat|class, data=mlt, groups = item, type = type,
+            return(xyplot(prob ~ cat|class, data=mlt, groups = mlt$item, type = type,
                           auto.key = auto.key, ylab = 'Probability', ylim = c(-.1, 1.1),
                           par.settings=par.settings, par.strip.text=par.strip.text, ...))
         }

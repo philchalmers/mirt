@@ -65,19 +65,19 @@ setMethod(
             if(type == 'info'){
                 if(is.null(main))
                     main <- paste('Information for item', item)
-                return(xyplot(info ~ Theta, dat, groups=group, type = 'l',
+                return(xyplot(info ~ Theta, dat, groups=dat$group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- paste("Item", item, "Trace")
-                return(xyplot(P  ~ Theta | cat, dat2, groups=group, type = 'l',
+                return(xyplot(P  ~ Theta | cat, dat2, groups=dat2$group, type = 'l',
                             auto.key = auto.key, main = main, ylim = c(-0.1,1.1),
                             ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste('Relative efficiency for item', item)
-                return(xyplot(info ~ Theta, dat, groups=group, type = 'l',
+                return(xyplot(info ~ Theta, dat, groups=dat$group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
             } else {
@@ -94,7 +94,7 @@ setMethod(
             if(type == 'info'){
                 if(is.null(main))
                     main <- paste("Item", item, "Information")
-                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=group, main=main,
+                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
                                           zlab=expression(I(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), screen=rot,
                                           scales = list(arrows = FALSE),
@@ -102,7 +102,7 @@ setMethod(
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- paste("Item", item, "Trace")
-                return(wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = group, main = main,
+                return(wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = dat2$group, main = main,
                                           zlab=expression(P(theta)),
                                           xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), zlim = c(-0.1,1.1),
@@ -111,7 +111,7 @@ setMethod(
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste("Relative efficiency for item", item)
-                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=group, main=main,
+                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
                                           zlab=expression(RE(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]),
                                           scales = list(arrows = FALSE), screen=rot,
