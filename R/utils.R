@@ -611,6 +611,20 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }
         constrain[redun] <- NULL
+        redun <- rep(FALSE, length(constrain))
+        if(length(constrain) > 0L){
+            for(i in 1L:length(redun)){
+                for(j in 1L:length(redun)){
+                    if(j < i && !redun[j] && !redun[i]){
+                        if(any(constrain[[i]] %in% constrain[[j]])){
+                            constrain[[i]] <- unique(c(constrain[[i]], constrain[[j]]))
+                            redun[j] <- TRUE
+                        }
+                    }
+                }
+            }
+        }
+        constrain[redun] <- NULL
     }
     return(constrain)
 }

@@ -2,6 +2,10 @@
 
 - added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated
 
+## BUG FIXES
+
+- fix df in multiple-group models with crossed between/within constrains (reported by Leah Feuerstahler)
+
 # Changes in mirt 1.13
 
 - adjust plausible values format for multiple group objects
