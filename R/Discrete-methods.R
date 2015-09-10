@@ -116,7 +116,7 @@ setMethod(
     f = "plot",
     signature = signature(x = 'DiscreteClass', y = 'missing'),
     definition = function(x, which.items = 1:ncol(x@Data$data),
-                          facet_items = TRUE, type = 'b',
+                          facet_items = TRUE, type = 'b', profile = FALSE,
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
@@ -136,6 +136,18 @@ setMethod(
         }, so=so, names=names)
         mlt <- do.call(rbind, mlt)
         mlt$item <- factor(mlt$item, levels = colnames(x@Data$data)[which.items])
+        if(profile){
+            if(all(x@Data$K == 2L)){
+                mlt <- mlt[mlt$cat == 'cat2', ]
+                return(xyplot(prob ~ item, data=mlt, groups = class, type = type,
+                              auto.key = auto.key, ylab = 'Probability', ylim = c(-.1, 1.1),
+                              par.settings=par.settings, par.strip.text=par.strip.text, ...))
+            } else {
+                return(xyplot(prob ~ item|cat, data=mlt, groups = class, type = type,
+                              auto.key = auto.key, ylab = 'Probability', ylim = c(-.1, 1.1),
+                              par.settings=par.settings, par.strip.text=par.strip.text, ...))
+            }
+        }
         if(facet_items){
             return(xyplot(prob ~ cat|item, data=mlt, groups = class, type = type,
                           auto.key = auto.key, ylab = 'Probability', ylim = c(-.1, 1.1),

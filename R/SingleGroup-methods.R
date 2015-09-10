@@ -661,6 +661,8 @@ setMethod(
 #'   to use all available items
 #' @param facet_items logical; apply grid of plots across items? If \code{FALSE}, items will be
 #'   placed in one plot for each group
+#' @param profile logical; provide a profile plot of response probabilities (objects returned from
+#'   \code{\link{mdirt}} only)
 #' @param auto.key plotting argument passed to \code{\link{lattice}}
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
@@ -727,7 +729,7 @@ setMethod(
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
-                          auto.key = list(space = 'right'), ...)
+                          auto.key = list(space = 'right'), profile = FALSE, ...)
     {
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score',

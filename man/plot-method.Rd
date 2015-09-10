@@ -15,7 +15,8 @@
   facet_items = TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
   ehist.cut = 1e-10, add.ylab2 = TRUE, par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), auto.key = list(space = "right"), ...)
+  list(col = "black")), auto.key = list(space = "right"), profile = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{an object of class \code{SingleGroupClass},
@@ -76,6 +77,9 @@ plot, potentially squishing the 'meat' of the plot to take up less area than vis
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
 
 \item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+
+\item{profile}{logical; provide a profile plot of response probabilities (objects returned from
+\code{\link{mdirt}} only)}
 
 \item{...}{additional arguments to be passed to lattice}
 }

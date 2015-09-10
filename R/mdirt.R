@@ -68,11 +68,13 @@
 #' #generate classification plots
 #' plot(mod2)
 #' plot(mod2, facet_items = FALSE)
+#' plot(mod2, profile = TRUE)
 #'
 #' # available for polytomous data
 #' mod <- mdirt(Science, 2)
 #' summary(mod)
 #' plot(mod)
+#' plot(mod, profile=TRUE)
 #'
 #' # classification based on response patterns
 #' fscores(mod2)

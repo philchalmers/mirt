@@ -1,3 +1,7 @@
+# Changes in mirt 1.14
+
+- added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated
+
 # Changes in mirt 1.13
 
 - adjust plausible values format for multiple group objects
