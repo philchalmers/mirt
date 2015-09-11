@@ -595,37 +595,24 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         }
     }
     #remove redundent constraints
-    if(TRUE){
-        redun <- rep(FALSE, length(constrain))
-        if(length(constrain) > 0L){
-            for(i in 1L:length(redun)){
+    redun <- rep(FALSE, length(constrain))
+    if(length(constrain) > 0L){
+        for(i in 1L:length(redun)){
+            while(TRUE){
+                lastredun <- redun
                 for(j in 1L:length(redun)){
-                    if(j < i){
-                        if(all(constrain[[i]] %in% constrain[[j]]) ||
-                                all(constrain[[j]] %in% constrain[[i]])){
-                            if(length(constrain[[i]]) < length(constrain[[j]])) redun[i] <- TRUE
-                            else redun[j] <- TRUE
-                        }
-                    }
-                }
-            }
-        }
-        constrain[redun] <- NULL
-        redun <- rep(FALSE, length(constrain))
-        if(length(constrain) > 0L){
-            for(i in 1L:length(redun)){
-                for(j in 1L:length(redun)){
-                    if(j < i && !redun[j] && !redun[i]){
+                    if(i < j && !redun[j] && !redun[i]){
                         if(any(constrain[[i]] %in% constrain[[j]])){
                             constrain[[i]] <- unique(c(constrain[[i]], constrain[[j]]))
                             redun[j] <- TRUE
                         }
                     }
                 }
+                if(all(lastredun == redun)) break
             }
         }
-        constrain[redun] <- NULL
     }
+    constrain[redun] <- NULL
     return(constrain)
 }
 
