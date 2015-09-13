@@ -163,7 +163,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
             warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
         stopifnot(impute > 1L)
-        Theta <- fscores(x, plausible.draws = impute)
+        Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'))
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
