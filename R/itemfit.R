@@ -136,7 +136,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     fn <- function(ind, Theta, obj, vals, ...){
         tmpdat <- imputeMissing(obj, Theta[[ind]])
         tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype,
-                       technical=list(customK=obj@K))
+                       technical=list(customK=obj@K, message=FALSE, warn=FALSE))
         tmpmod@pars <- obj@pars
         whc <- 1L:length(Theta)
         return(itemfit(tmpmod, Theta=Theta[[sample(whc[-ind], 1L)]], digits = Inf, ...))
@@ -391,7 +391,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         quadpts <- dots$quadpts
         if(is.null(quadpts) && QMC) quadpts <- 15000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
-        if(x@nfact > 3L && !QMC)
+        if(x@nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum'))
             warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                     call.=FALSE)
         theta_lim <- dots$theta_lim
