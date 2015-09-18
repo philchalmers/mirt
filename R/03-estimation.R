@@ -108,8 +108,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             x
         }, message = opts$message)
         Data$data <- data
-        if(any(rowSums(is.na(data)) == ncol(data)))
-            stop('data contains completely empty response patterns. Please remove', call.=FALSE)
+        if(any(rowSums(is.na(data)) == ncol(data))){
+            if(!opts$removeEmptyRows)
+                stop('data contains completely empty response patterns. Please
+                     remove manually or pass removeEmptyRows=TRUE to the technical list', call.=FALSE)
+            else data <- subset(data, rowSums(is.na(data)) != ncol(data))
+        }
+
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
         else Data$grsm.block <- opts$grsm.block
         # if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))

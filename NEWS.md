@@ -2,6 +2,8 @@
 
 - added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated
 
+- add `removeEmptyRows` option to `technical` list
+
 ## BUG FIXES
 
 - fix df in multiple-group models with crossed between/within constrains (reported by Leah Feuerstahler)

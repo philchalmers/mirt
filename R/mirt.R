@@ -418,6 +418,8 @@
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
 #'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
 #'       Default is TRUE}
+#'     \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?
+#'       Default is FALSE}
 #'     \item{gain}{a vector of two values specifying the numerator and exponent
 #'          values for the RM gain function \eqn{(val1 / cycle)^val2}.
 #'          Default is \code{c(0.10, 0.75)}}
