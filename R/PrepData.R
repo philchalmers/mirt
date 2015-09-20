@@ -7,7 +7,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     # if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV', 'CONSTRAIN', 'CONSTRAINB', 'PRIOR', 'MEAN', 'START', 'LBOUND', 'UBOUND',
-                  'FIXED', 'NEXPLORE')
+                  'FIXED', 'FREE', 'NEXPLORE')
     data <- as.matrix(data)
     colnames(data) <- itemnames
     J <- ncol(data)

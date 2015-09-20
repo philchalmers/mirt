@@ -175,6 +175,36 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             ret[picks[[i]]] <- tmp
         }
     }
+    if(any(model[,1L] == 'FREE')){
+        input <- gsub(" ","", model[model[,1L] == 'FREE', 2L])
+        elements <- strsplit(input, '\\),\\(')[[1L]]
+        elements <- gsub('\\(', replacement='', x=elements)
+        elements <- gsub('\\)', replacement='', x=elements)
+        esplit <- strsplit(elements, ',')
+        esplit <- lapply(esplit, function(x){
+            newx <- c()
+            if(length(x) < 2L)
+                stop('FREE = ... has not been supplied enough arguments', call.=FALSE)
+            for(i in 1L:(length(x)-1L)){
+                if(grepl('-', x[i])){
+                    tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                    newx <- c(newx, tmp[1L]:tmp[2L])
+                } else newx <- c(newx, x[i])
+            }
+            x <- c(newx, x[length(x)])
+            x
+        })
+        picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-1L)]))
+        for(i in 1L:length(picks)){
+            tmp <- ret[picks[[i]]]
+            len <- length(esplit[[i]])
+            tmp <- lapply(tmp, function(x, which){
+                x@est[names(x@parnum) == which] <- TRUE
+                x
+            }, which=esplit[[i]][len])
+            ret[picks[[i]]] <- tmp
+        }
+    }
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
                                             parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')))
