@@ -134,9 +134,9 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     if(any(itemtype == 'grsm')){
         unique.grsmgroups <- unique(na.omit(grsm.block))
         for(group in unique.grsmgroups){
-            Kk <- unique(K[grsm.block[grsm.block == unique.grsmgroups[group]]])
-            if(length(Kk) > 1L) stop('Rating scale models require that items to have the
-                                       same number of categories', call.=FALSE)
+            Kk <- unique(K[grsm.block == unique.grsmgroups[group]])
+            if(length(Kk) > 1L) stop(c('Rating scale models require items to have the ',
+                                       'same number of categories'), call.=FALSE)
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){
