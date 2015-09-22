@@ -129,8 +129,7 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
                      discrete=TRUE, verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)
     if(is(mods[[1L]], 'DiscreteClass')){
-        for(i in 1:length(mods))
-        mods[[i]]@Call <- Call
+        for(i in 1:length(mods)) mods[[i]]@Call <- Call
     }
     if(!return_max){
         return(mods)
@@ -141,7 +140,7 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
                 cat('Model log-likelihoods:\n')
                 print(round(LL, 4))
             }
-            mods <- mods[[which(min(LL) == LL)[1L]]]
+            mods <- mods[[which(max(LL) == LL)[1L]]]
         }
     }
     if(!is.null(pars) && pars == 'values') mods <- mods[[1L]]
