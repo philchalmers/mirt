@@ -27,7 +27,7 @@ setMethod(
         if(x@method == 'EM') EMquad <- c('\n     using ', x@quadpts, ' quadrature')
         method <- x@method
         if(method == 'MIXED') method <- 'MHRM'
-        if(x@converge == 1)
+        if(x@converge)
             cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ',
                 method, " iterations.\n", sep = "")
         else

@@ -57,7 +57,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             ind1 <- ind2 + 1L
         }
     }
-    converge <- 1L
+    converge <- TRUE
     estindex <- index[estpars]
     L <- Ls$L
     redun_constr <- Ls$redun_constr
@@ -145,7 +145,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          control=list(fnscale=-1, reltol=TOL)), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par
-        converge <- as.numeric(opt$convergence == 0)
+        converge <- opt$convergence == 0
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
@@ -279,7 +279,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(cycles == NCYCLES){
             if(list$message)
                 message('EM cycles terminated after ', cycles, ' iterations.')
-            converge <- 0L
+            converge <- FALSE
         } else if(cycles == 1L && !(all(!est) && all(!groupest))){
             if(list$warn && !is.nan(TOL))
                 warning('M-step optimimizer converged immediately. Solution is either at the ML or

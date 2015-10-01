@@ -99,7 +99,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     }
     names(longpars) <- names(estpars)
     stagecycle <- 1L
-    converge <- 1L
+    converge <- TRUE
     noninvcount <- 0L
     estindex <- index[estpars]
     L <- Ls$L
@@ -433,7 +433,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM){
         if(list$message)
             message('MHRM terminated after ', NCYCLES, ' iterations.')
-        converge <- 0L
+        converge <- FALSE
     }
     if(list$USEEM) longpars <- list$startlongpars
     for(g in 1L:ngroups){
