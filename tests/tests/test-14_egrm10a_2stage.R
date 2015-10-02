@@ -72,6 +72,8 @@ apply(R, 2, function(x) length(unique(x)))
 
 #Checking built-in itemtype "egrm10" : which 1-dimensional factor model, with slope for factor 1 and xi
 system.time(mod2 <- mirt(R, 2, itemtype=rep("egrm10",n.item)))
+#mirt(R, 2, itemtype=rep("egrm10",n.item), pars='values', parprior=list(c(1,'norm',0,0.1)))
+# GroupPars do not seem to be estimable
 
 #Are the estimates accurate?
 cor(fscores(mod2, full.scores=T)[,1], Theta[,1])
@@ -151,7 +153,7 @@ cor(d3.est, d3.new)
 cor(fscores(mod, full.scores=T)[,1], Theta[,1])
 cor(fscores(mod, full.scores=T)[,2], Theta[,2])
 
+plot(fscores(mod, full.scores=T)[,2], Theta[,2])
 
-
-
-
+#merging a upstream repository into your fork
+#https://help.github.com/articles/merging-an-upstream-repository-into-your-fork/
