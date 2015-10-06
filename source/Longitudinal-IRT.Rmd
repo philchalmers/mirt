@@ -19,11 +19,11 @@ head(dat)
 ```
 
 ```{r}
-model <- mirt.model('Time1 = 1-20
-                     Time2 = 21-40
-                     Time3 = 41-60
-                     COV = Time1*Time2*Time3, Time2*Time2, Time3*Time3
-                     MEAN = Time2, Time3')
+model <- 'Time1 = 1-20
+          Time2 = 21-40
+          Time3 = 41-60
+          COV = Time1*Time2*Time3, Time2*Time2, Time3*Time3
+          MEAN = Time2, Time3'
 itemloadings <- rep(1:20, times = 3) 
 
 #construct constraints dynatically
@@ -52,12 +52,8 @@ for(i in 1:20){
 
 #estimate model
 (mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, TOL=1e-3))
-coef(mod)[[1]]
-coef(mod)[[21]]
-coef(mod)[[41]]
 
-coef(mod)[[2]]
-coef(mod)[[2]]
+coef(mod, simplify=TRUE)
 
 coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22', 
                        'COV_32', 'COV_33')]
@@ -100,13 +96,9 @@ for(i in 1:20){
     }
 }
 
-mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=15, pars=sv)
-coef(mod)[[1]]
-coef(mod)[[21]]
-coef(mod)[[41]]
+mod2 <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=15, pars=sv)
 
-coef(mod)[[2]]
-coef(mod)[[2]]
+coef(mod2, simplify=TRUE)
 
-coef(mod)$GroupPars[,c('MEAN_1', 'MEAN_2', 'COV_11', 'COV_21', 'COV_22')]
+coef(mod2)$GroupPars[,c('MEAN_1', 'MEAN_2', 'COV_11', 'COV_21', 'COV_22')]
 ```
