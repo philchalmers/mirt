@@ -2,6 +2,8 @@
 
 - added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated
 
+- `converge_info` option added to `fscores()` to return convergence information
+
 - add `removeEmptyRows` option to `technical` list
 
 ## BUG FIXES

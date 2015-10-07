@@ -6,7 +6,7 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL, digits=4,
-	                      min_expected, ...)
+	                      min_expected, converge_info, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(!is.null(custom_den)) den_fun <- custom_den
@@ -26,23 +26,23 @@ setMethod(
                                     CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
             }
 	        if(is(estimate, 'try-error'))
-	            return(rep(NA, ncol(scores)*2))
+	            return(rep(NA, ncol(scores)*2 + 1L))
             if(hessian){
                 vcov <- try(solve(estimate$hessian))
                 if(return.acov) return(vcov)
     	        SEest <- try(sqrt(diag(vcov)))
             } else SEest <- rep(NA, ncol(scores))
-	        return(c(estimate$estimate, SEest))
+	        return(c(estimate$estimate, SEest, estimate$code))
 	    }
 	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 	                   hessian, return.acov = FALSE, den_fun, ...){
             if(any(scores[ID, ] %in% c(-Inf, Inf, NA)))
-                return(c(scores[ID, ], rep(NA, ncol(scores))))
+                return(c(scores[ID, ], rep(NA, ncol(scores) + 1L)))
             estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ], den_fun=NULL,
     	                        itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
                                 hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
 	        if(is(estimate, 'try-error'))
-	            return(rep(NA, ncol(scores)*2))
+	            return(rep(NA, ncol(scores)*2 + 1L))
 	        est <- estimate$estimate
             if(hessian){
                 pick <- diag(estimate$hessian) > 0
@@ -58,7 +58,7 @@ setMethod(
                     SEest[SEest > 30] <- NA
                 }
             } else SEest <- rep(NA, ncol(scores))
-	        return(c(est, SEest))
+	        return(c(est, SEest, estimate$code))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 	                    hessian, data, return.acov = FALSE, ...){
@@ -68,13 +68,13 @@ setMethod(
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, data=data[ID, ],
 	                            hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
 	        if(is(estimate, 'try-error'))
-	            return(rep(NA, ncol(scores)*2))
+	            return(rep(NA, ncol(scores)*2 + 1L))
 	        if(hessian){
 	            vcov <- try(solve(estimate$hessian))
 	            if(return.acov) return(vcov)
 	            SEest <- try(sqrt(diag(vcov)))
 	        } else SEest <- rep(NA, ncol(scores))
-	        return(c(estimate$estimate, SEest))
+	        return(c(estimate$estimate, SEest, estimate$code))
 	    }
 	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores, return.acov = FALSE){
 	        if(any(is.na(scores[ID, ])))
@@ -102,20 +102,20 @@ setMethod(
                 if(return.acov) return(vcov)
     	        SE <- sqrt(diag(vcov))
             } else SE <- rep(NA, nfact)
-	        return(c(thetas, SE))
+	        return(c(thetas, SE, 1))
 	    }
 
         if(plausible.draws > 0){
             fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
-                          return.acov = FALSE, QMC=QMC, custom_den = NULL, ...)
+                          return.acov = FALSE, QMC=QMC, custom_den = NULL, converge_info=FALSE, ...)
             if(any(is.na(fs)))
                 stop('Plausible values cannot be drawn for completely empty response patterns.
                      Please remove these from your analysis.', call.=FALSE)
             fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                           plausible.draws=0, full.scores.SE=FALSE,
-                          return.acov = TRUE, QMC=QMC, custom_den = NULL, ...)
+                          return.acov = TRUE, QMC=QMC, custom_den = NULL, converge_info=FALSE, ...)
             ret <- vector('list', plausible.draws)
             for(i in 1L:plausible.draws){
                 suppressWarnings(jit <- lapply(fs_acov, function(x) mirt_rmvnorm(1L, sigma = x)))
@@ -153,7 +153,7 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
-                               custom_theta=custom_theta, ...)
+                               custom_theta=custom_theta, converge_info=converge_info, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret)
             } else {
@@ -172,7 +172,7 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
-                               custom_theta=custom_theta, ...)
+                               custom_theta=custom_theta, converge_info=converge_info, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret)
             }
@@ -295,9 +295,9 @@ setMethod(
             	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP')
-            	    scores <- tmp[ ,1L:nfact, drop = FALSE]
-            	    SEscores <- tmp[ ,-c(1L:nfact), drop = FALSE]
                 }
+                scores <- tmp[ ,1L:nfact, drop = FALSE]
+                SEscores <- tmp[ , 1L:nfact + nfact, drop = FALSE]
             }
     		if(method == "EAP"){
                 #do nothing
@@ -328,11 +328,13 @@ setMethod(
             }
     		if(return.acov){
     		    scores <- tmp
+    		    converge_info_vec <- rep(1, nrow(scores))
                 if(nrow(scores) < ncol(scores)) scores <- t(scores)
     		} else {
     		    scores <- tmp[ ,1:nfact, drop = FALSE]
-    		    SEscores <- tmp[ ,-c(1:nfact), drop = FALSE]
+    		    SEscores <- tmp[ , 1L:nfact + nfact, drop = FALSE]
     		    colnames(scores) <- paste('F', 1L:ncol(scores), sep='')
+    		    converge_info_vec <- tmp[,ncol(tmp)]
     		    if(impute){
     		        list_SEscores[[mi]] <- SEscores
     		        list_scores[[mi]] <- scores
@@ -362,11 +364,13 @@ setMethod(
                     return(ret)
                 }
                 SEscoremat <- SEscores[match(sfulldata, stabdata2), , drop = FALSE]
+                converge_info_mat <- converge_info_vec[match(sfulldata, stabdata2)]
     			colnames(scoremat) <- colnames(scores)
     			colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             } else {
                 scoremat <- scores
                 SEscoremat <- SEscores
+                converge_info_mat <- converge_info_vec
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
                     for(i in 1L:nrow(scoremat))
@@ -377,6 +381,7 @@ setMethod(
             }
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)
+            if(converge_info) scoremat <- cbind(scoremat, converged=converge_info_mat)
             return(scoremat)
 		} else {
             if(return.acov){
@@ -406,6 +411,7 @@ setMethod(
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
             ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
+            if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
             if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
 			return(round(ret, digits))
 		}
