@@ -41,12 +41,12 @@ test_that('exploratory mods', {
     expect_equal(cfs, c(0.969,1.8464,0,1,1.0833,0.806,0,1,1.6824,1.7834,0,1,0.7595,0.4829,0,1,0.7681,1.8658,0,1,0,1),
                  tolerance = 1e-2)
 
-    fs1 <- fscores(onefact, verbose = FALSE, mean=c(1), cov=matrix(2))
+    fs1 <- fscores(onefact, verbose = FALSE, mean=c(1), cov=matrix(2), full.scores=FALSE)
     expect_is(fs1, 'matrix')
     expect_true(mirt:::closeEnough(fs1[1:3,'F1'] - c(-2.1821, -1.6989, -1.6807), -1e-2, 1e-2))
-    fs2 <- fscores(twofact, verbose = FALSE)
+    fs2 <- fscores(twofact, verbose = FALSE, full.scores=FALSE)
     expect_is(fs2, 'matrix')
-    fs3 <- fscores(onefactmissing, verbose = FALSE)
+    fs3 <- fscores(onefactmissing, verbose = FALSE, full.scores=FALSE)
     expect_is(fs3, 'matrix')
 })
 

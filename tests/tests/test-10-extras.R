@@ -7,8 +7,9 @@ test_that('extras', {
     mod1 <- mirt(data, 1, verbose=FALSE, SE=TRUE)
 
     fun <- function(Thetas, MIN, MAX, ...) as.numeric(dunif(Thetas, min=MIN, max=MAX))
-    fs1 <- fscores(mod1, verbose = FALSE, custom_den = fun, MIN = -3, MAX = 3)
-    fs2 <- suppressWarnings(fscores(mod1, custom_den = fun, MIN = -3, MAX = 3, verbose = FALSE, method = 'MAP'))
+    fs1 <- fscores(mod1, verbose = FALSE, custom_den = fun, MIN = -3, MAX = 3, full.scores=FALSE)
+    fs2 <- suppressWarnings(fscores(mod1, custom_den = fun, MIN = -3, MAX = 3, verbose = FALSE, method = 'MAP',
+                                    full.scores=FALSE))
     expect_equal(as.numeric(fs1[1,c('F1', 'SE_F1')]), c(-2.4766, .4988), tolerance = 1e-3)
     expect_equal(as.numeric(fs2[5,c('F1', 'SE_F1')]), c(-1.9121, .9381), tolerance = 1e-3)
 
@@ -36,7 +37,7 @@ test_that('extras', {
     expect_equal(modideal@logLik, -6435.647, tolerance = 1e-3)
     expect_equal(cfs, c(0.73123, 1.26069, -1.41785), tolerance = 1e-3)
 
-    acov <- fscores(mod1, return.acov=TRUE)
+    acov <- fscores(mod1, return.acov=TRUE, full.scores=FALSE)
     expect_equal(acov[[1]][1], 0.4799239, tolerance=1e-3)
     acov <- fscores(mod1, return.acov=TRUE, full.scores=TRUE)
     expect_equal(acov[[500]][1], 0.4987313, tolerance=1e-3)
@@ -79,7 +80,7 @@ test_that('extras', {
     ti <- testinfo(mod1, Theta=Theta)
     expect_equal(ti[1:3, 1], c(0.06607895, 0.06918330, 0.07242870), tolerance = 1e-5)
     set.seed(1234)
-    fs <- fscores(mod1, MI=20, verbose=FALSE)
+    fs <- fscores(mod1, MI=20, verbose=FALSE, full.scores=FALSE)
     expect_is(fs, 'matrix')
     expect_equal(fs[1:3,'F1'], c(-1.853914, -1.509722, -1.514913), tolerance=1e-3)
 

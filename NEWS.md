@@ -1,5 +1,7 @@
 # Changes in mirt 1.14
 
+- changed the default `full.scores = FALSE` argument to `TRUE` in `fscores()`
+
 - added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated
 
 - `converge_info` option added to `fscores()` to return convergence information

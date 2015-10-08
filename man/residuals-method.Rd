@@ -67,7 +67,7 @@ residuals(x, type = 'exp')
 residuals(x, suppress = .15)
 
 # with and without supplied factor scores
-Theta <- fscores(x, full.scores=TRUE)
+Theta <- fscores(x)
 residuals(x, type = 'Q3', Theta=Theta)
 residuals(x, type = 'Q3', method = 'ML')
 

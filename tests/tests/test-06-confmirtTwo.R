@@ -84,11 +84,11 @@ test_that('confirmatory mods', {
     expect_equal(cfs, c(1.6765, 0, 0.4179, -1.0214, 0, 1, 0.542, 0, 0, -1.4527, 0, 1, 0.7514, 0, 0, 1.327, 0, 1, 1.3204, 0, 0, 0.0407, 0, 1, 0, 1.4954, -0.2818, 3.0102, 1.9579, -0.4358, 0, 0.4644, 0, 2.5463, 1.0025, -1.0165, 0, 0.837, 0, 1.8952, 0.089, 0, 0.892, 0, 1.0029, 0, 1, 0, 0, 1, 0, 1),
                  tolerance = 1e-2)
 
-    fs1 <- fscores(mod1, verbose = FALSE)
+    fs1 <- fscores(mod1, verbose = FALSE, full.scores=FALSE)
     expect_is(fs1, 'matrix')
     fs3 <- fscores(mod.quad, full.scores=TRUE, verbose = FALSE)
     expect_is(fs3, 'matrix')
-    fs4 <- fscores(mod.combo, verbose = FALSE)
+    fs4 <- fscores(mod.combo, verbose = FALSE, full.scores=FALSE)
     expect_is(fs4, 'matrix')
 
     TI <- plot(mod1)

@@ -29,7 +29,7 @@ NAitem <- sample(1:ncol(dat), 20, replace = TRUE)
 for(i in 1:20)
     dat[NAperson[i], NAitem[i]] <- NA
 (mod <- mirt(dat, 1))
-scores <- fscores(mod, method = 'MAP', full.scores = TRUE)
+scores <- fscores(mod, method = 'MAP')
 
 #re-estimate imputed dataset (good to do this multiple times and average over)
 fulldata <- imputeMissing(mod, scores)
@@ -39,7 +39,7 @@ fulldata <- imputeMissing(mod, scores)
 set.seed(1)
 group <- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
-fs <- fscores(mod2, full.scores=TRUE)
+fs <- fscores(mod2)
 fulldata2 <- imputeMissing(mod2, fs)
 
 }

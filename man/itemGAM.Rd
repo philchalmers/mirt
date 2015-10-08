@@ -88,7 +88,7 @@ plot(ks, item=c(1,31,32))
 par(ask=FALSE)
 
 # Using point estimates from the model
-Theta <- fscores(mod, full.scores=TRUE)
+Theta <- fscores(mod)
 IG0 <- itemGAM(dat[,1], Theta) #good item
 IG1 <- itemGAM(baditems[,1], Theta)
 IG2 <- itemGAM(baditems[,2], Theta)
@@ -122,7 +122,7 @@ ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 3), 1)
 plot(ks, items = c(1,2,32))
 
 # splines approach
-Theta <- fscores(mod, full.scores=TRUE)
+Theta <- fscores(mod)
 IG <- itemGAM(SAT12[,32], Theta)
 plot(IG)
 
@@ -138,7 +138,7 @@ plot(IG3)
 
 ### multidimensional example by returning the GAM objects
 mod2 <- mirt(dat, 2)
-Theta <- fscores(mod2, full.scores=TRUE)
+Theta <- fscores(mod2)
 IG4 <- itemGAM(SAT12[,32], Theta, formula = resp ~ s(Theta1, k=10) + s(Theta2, k=10),
    return.models=TRUE)
 names(IG4)

@@ -4,7 +4,7 @@
 \alias{fscores}
 \title{Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)}
 \usage{
-fscores(object, rotate = "oblimin", Target = NULL, full.scores = FALSE,
+fscores(object, rotate = "oblimin", Target = NULL, full.scores = TRUE,
   method = "EAP", quadpts = NULL, response.pattern = NULL,
   plausible.draws = 0, returnER = FALSE, return.acov = FALSE,
   mean = NULL, cov = NULL, verbose = TRUE, full.scores.SE = FALSE,
@@ -21,9 +21,9 @@ then this argument is ignored}
 
 \item{Target}{target rotation; see \code{\link{summary-method}} for details}
 
-\item{full.scores}{if \code{FALSE} (default) then a summary table with
-factor scores for each unique pattern is displayed. Otherwise a matrix of factor scores
-for each response pattern in the data is returned}
+\item{full.scores}{if \code{FALSE} then a summary table with
+factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
+for each response pattern in the data is returned (default)}
 
 \item{method}{type of factor score estimation method. Can be expected
 a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
@@ -103,7 +103,7 @@ Multiple imputation variants are possible for each estimator if a parameter
 information matrix was computed, which are useful if the sample size/number of items were small.
 As well, if the model contained latent regression predictors this information will
 be used in computing MAP and EAP estimates (for these models, \code{full.scores=TRUE}
-by default). Finally, plausible value imputation is also available, and will also account
+will always be used). Finally, plausible value imputation is also available, and will also account
 for latent regression predictor effects.
 }
 \details{
@@ -123,15 +123,15 @@ classification based on the raw sum-score.
 \dontrun{
 
 mod <- mirt(Science, 1)
-tabscores <- fscores(mod)
+tabscores <- fscores(mod, full.scores = FALSE)
 head(tabscores)
-fullscores <- fscores(mod, full.scores = TRUE)
-fullscores_with_SE <- fscores(mod, full.scores = TRUE, full.scores.SE=TRUE)
+fullscores <- fscores(mod)
+fullscores_with_SE <- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)
 head(fullscores_with_SE)
 
 #change method argument to use MAP estimates
-fullscores <- fscores(mod, full.scores = TRUE, method='MAP')
+fullscores <- fscores(mod, method='MAP')
 head(fullscores)
 
 #calculate MAP for a given response vector
@@ -140,12 +140,15 @@ fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 
 #use custom latent variable properties (diffuse prior for MAP is very close to ML)
-fscores(mod, method='MAP', cov = matrix(1000))
-fscores(mod, method='ML')
+fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
+fscores(mod, method='ML', full.scores = FALSE)
+
+# EAPsum table of values based on total scores
+fscores(mod, method = 'EAPsum', full.scores = FALSE)
 
 #WLE estimation, run in parallel using available cores
 mirtCluster()
-fscores(mod, method='WLE')
+fscores(mod, method='WLE', full.scores = FALSE)
 
 #multiple imputation using 30 draws for EAP scores. Requires information matrix
 mod <- mirt(Science, 1, SE=TRUE)
@@ -163,7 +166,7 @@ head(fscores(mod, custom_den = fun))
 library(msm)
 # need the :: scope for parallel to see the function (not require if no mirtCluster() defined)
 fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
-head(fscores(mod, custom_den = fun, method = 'MAP'))
+head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 
 }
 }

@@ -67,14 +67,14 @@ test_that('one factor', {
     expect_is(mod_missing, 'MultipleGroupClass')
     expect_equal(mod_missing@df, 32736)
 
-    fs1 <- fscores(mod_metric, verbose = FALSE)
+    fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
     expect_true(mirt:::closeEnough(fs1[[1]][1:6, 'F1'] - c(-2.084760, -1.683841, -1.412181,
                                                            -1.324478, -1.091952, -1.741399), -1e-2, 1e-2))
     fs2 <- fscores(mod_metric, full.scores = TRUE, full.scores.SE=TRUE, method = 'ML')
     expect_equal(as.numeric(head(fs2)), c(0.5531893,  1.1960187,  1.8287234,  1.1133180, -0.5164821, -0.2322618,  0.4968711,  0.6002451,  0.7688432,
                                           0.5831489,  0.4716423,  0.4613523),
                 tolerance = 1e-2)
-    fs3 <- fscores(mod_missing, verbose = FALSE)
+    fs3 <- fscores(mod_missing, verbose = FALSE, full.scores=FALSE)
     fs4 <- fscores(mod_missing, full.scores = TRUE)
     fs5 <- fscores(mod_metric, full.scores = TRUE, scores.only=TRUE)
     expect_is(fs1, 'list')
@@ -162,7 +162,7 @@ test_that('three factor', {
     expect_equal(cfs, c(1.4228, 1.0231, 1.8226, NA, NA, NA, NA, 0.7648, 0.5647, 0.9649, NA, NA, NA, NA, 1.151, 0.8359, 1.4661, NA, NA, NA, NA, -0.5379, -0.7068, -0.369, NA, NA, NA, NA, 0.8433, 0.5984, 1.0881, NA, NA, NA, NA, -0.25, -0.3965, -0.1034, NA, NA, NA, NA, 0.6891, 0.4615, 0.9167, NA, NA, NA, NA, 0.7509, 0.599, 0.9027, NA, NA, NA, NA, 1.3615, 0.9885, 1.7346, NA, NA, NA, NA, 0.2706, 0.0969, 0.4442, NA, NA, NA, NA, NA, NA, 0.454, 0.2234, 0.6846, NA, NA, 0.4949, 0.3577, 0.6322, NA, NA, NA, NA, NA, NA, 1.1874, 0.7276, 1.6472, NA, NA, 0.9519, 0.735, 1.1689, NA, NA, NA, NA, NA, NA, 0.8536, 0.5468, 1.1604, NA, NA, -0.5404, -0.696, -0.3848, NA, NA, NA, NA, NA, NA, 0.9625, 0.6074, 1.3175, NA, NA, -1.1942, -1.3984, -0.9899, NA, NA, NA, NA, NA, NA, 0.8721, 0.5555, 1.1888, NA, NA, -1.0898, -1.2742, -0.9053, NA, NA, NA, NA, NA, NA, NA, NA, 0.7713, 0.5174, 1.0252, 1.3637, 1.1783, 1.549, NA, NA, NA, NA, NA, NA, NA, NA, 1.4962, 1.058, 1.9343, -0.4238, -0.6112, -0.2364, NA, NA, NA, NA, NA, NA, NA, NA, 1.2049, 0.8765, 1.5334, 0.4431, 0.2751, 0.6111, NA, NA, NA, NA, NA, NA, NA, NA, 1.0857, 0.7886, 1.3827, 0.3515, 0.1927, 0.5104, NA, NA, NA, NA, NA, NA, NA, NA, 0.7394, 0.5085, 0.9704, -0.0684, -0.2096, 0.0729, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
                  tolerance = 1e-2)
 
-    fs1 <- fscores(mod_metric, verbose = FALSE)
+    fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
     expect_is(fs1, 'list')
     expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.9750,  0.0475, -0.5315, -0.3341, 0.5062, -0.9750), -1e-3, 1e-3))
 })

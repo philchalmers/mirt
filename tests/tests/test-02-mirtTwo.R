@@ -74,24 +74,24 @@ test_that('poly', {
     expect_equal(cfs, c(0.856,5.072,2.639,-1.35,1.095,2.951,0.968,-2.181,2.601,5.541,2.634,-1.752,0.988,3.443,1.058,-1.595,0,1),
                  tolerance = 1e-2)
 
-    fm0 <- fscores(modp1, method='EAP', response.pattern = c(1,2,3,4))
+    fm0 <- fscores(modp1, method='EAP', response.pattern = c(1,2,3,4), full.scores=FALSE)
     expect_equal(as.numeric(fm0[,c('F1','SE_F1')]), c(-0.3494903, 0.6004922), tolerance=1e-4)
-    fm1 <- fscores(modp1, verbose = FALSE)
+    fm1 <- fscores(modp1, verbose = FALSE, full.scores=FALSE)
     expect_is(fm1, 'matrix')
     expect_true(mirt:::closeEnough(fm1[1:6,'F1'] - c(-2.7488324, -1.4190140, -0.7154329, -0.4453752, -2.5438490, -1.2481072), -1e-2, 1e-2))
     fm1b <- fscores(modp1, verbose = FALSE, full.scores=TRUE)
     expect_equal(cor(fm1b, rowSums(Science))[1], .969, tolerance = .02)
-    fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE)
+    fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE, full.scores=FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
                                        c(2.5966,1.8668,0.6578,1.1597,2.4204,0.7001,2.412,0.8689,0.0258,0.2609,2.3376,1.4844),
                                    -1e-2, 1e-2))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_is(fm3, 'matrix')
-    fm4 <- fscores(modp4, verbose = FALSE)
+    fm4 <- fscores(modp4, verbose = FALSE, full.scores=FALSE)
     expect_is(fm4, 'matrix')
     expect_true(mirt:::closeEnough(fm4[1:6,'F1'] - c(-2.7320802, -1.4459303, -0.7910009, -0.5438761, -2.5310045, -1.1434060), -1e-2, 1e-2))
-    fm5 <- fscores(modp5, verbose = FALSE)
+    fm5 <- fscores(modp5, verbose = FALSE, full.scores=FALSE)
     expect_is(fm5, 'matrix')
     expect_true(mirt:::closeEnough(fm5[1:6,'F1'] - c(-2.7249561, -1.4446593, -0.7364399, -0.5627047, -2.5174376, -1.1732461), -1e-2, 1e-2))
 
@@ -112,7 +112,7 @@ test_that('poly', {
     fit <- suppressMessages(itemfit(modp2, digits = 20))
     expect_equal(fit$Zh, c(-15.19144, -44.35991, -41.90899, -29.75239), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.941804,10.58528,6.913239,10.11068), tolerance=1e-4)
-    fs <- fscores(modp1, method = 'WLE', verbose=FALSE, digits = 10)
+    fs <- fscores(modp1, method = 'WLE', verbose=FALSE, digits = 10, full.scores=FALSE)
     expect_equal(as.numeric(fs[1:3, 5:6]), c(-5.7024116, -2.1162737, -1.1386969,  1.5797286,
                                              0.6321478,  0.6544024), tolerance = 1e-4)
 

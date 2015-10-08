@@ -66,18 +66,18 @@ test_that('dich', {
     #QMCEM
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
     expect_equal(mod@logLik, -2466.653, tolerance=1e-4)
-    fs <- fscores(mod, QMC=TRUE, verbose=FALSE)
+    fs <- fscores(mod, QMC=TRUE, verbose=FALSE, full.scores=FALSE)
     expect_equal(fs[1:3,'F1'], c(-1.9607, -1.5228, -1.5019), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
     expect_equal(m2$M2, 4.615544, tolerance=1e-5)
     ifit <- itemfit(mod, QMC=TRUE, digits = 20)
     expect_equal(ifit$p.S_X2[1], .7769, tolerance = 1e-2)
 
-    fm1 <- fscores(modm1, verbose = FALSE)
+    fm1 <- fscores(modm1, verbose = FALSE, full.scores=FALSE)
     expect_is(fm1, 'matrix')
     expect_true(mirt:::closeEnough(fm1[1:6,'F1'] - c(-1.8665957, -1.5266920, -1.5134024,
                                                      -1.1852276, -1.0946830, -0.7666992), -1e-2, 1e-2))
-    fm2 <- fscores(modm2, method = 'MAP', verbose = FALSE)
+    fm2 <- fscores(modm2, method = 'MAP', verbose = FALSE, full.scores=FALSE)
     expect_is(fm2, 'matrix')
     expect_true(mirt:::closeEnough(fm2[1:6,'F1'] - c(-1.8165552, -1.4946906, -1.4822982,
                                                      -1.1789899, -1.0958928, -0.7951026), -1e-2, 1e-2))
@@ -143,7 +143,7 @@ test_that('dich', {
     modm3 <- mirt(data, model, SE = TRUE, verbose=FALSE)
     expect_is(modm3, 'SingleGroupClass')
 
-    fm1 <- fscores(modm1, verbose = FALSE)
+    fm1 <- fscores(modm1, verbose = FALSE, full.scores=FALSE)
     expect_is(fm1, 'matrix')
     fm2 <- fscores(modm3, method = 'MAP', verbose = FALSE)
     expect_is(fm2, 'matrix')

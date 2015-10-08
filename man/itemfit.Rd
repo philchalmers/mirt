@@ -93,7 +93,7 @@ itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99\
 itemfit(raschfit, method = 'ML') #infit and outfit stats
 
 #same as above, but inputting ML estimates instead
-Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE)
+Theta <- fscores(raschfit, method = 'ML')
 itemfit(raschfit, Theta=Theta)
 
 #similar example to Kang and Chen 2007

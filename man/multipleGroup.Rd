@@ -217,9 +217,9 @@ plot(mod_configural)
 plot(mod_configural, type = 'SE')
 itemplot(mod_configural, 1)
 itemplot(mod_configural, 1, type = 'info')
-fs <- fscores(mod_configural)
+fs <- fscores(mod_configural, full.scores = FALSE)
 head(fs[["D1"]])
-fscores(mod_configural, method = 'EAPsum')
+fscores(mod_configural, method = 'EAPsum', full.scores = FALSE)
 
 # constrain slopes within each group to be equal (but not across groups)
 model2 <- 'F1 = 1-15

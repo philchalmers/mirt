@@ -77,10 +77,10 @@
 #' plot(mod, profile=TRUE)
 #'
 #' # classification based on response patterns
-#' fscores(mod2)
+#' fscores(mod2, full.scores = FALSE)
 #'
 #' # classify individuals either with the largest posterior probability.....
-#' fs <- fscores(mod2, full.scores=TRUE)
+#' fs <- fscores(mod2)
 #' head(fs)
 #' classes <- matrix(1:2, nrow(fs), 2, byrow=TRUE)
 #' class_max <- classes[t(apply(fs, 1, max) == fs)]

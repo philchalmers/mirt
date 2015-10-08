@@ -41,6 +41,9 @@ test_that('old2PL', {
     mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2), verbose=FALSE)
     expect_is(mod, 'SingleGroupClass')
     expect_is(coef(mod), 'list')
+
+    fs <- fscores(mod, converge_info = TRUE)
+    expect_equal(unname(fs[1,]), c(-1.828479, 1), tolerance = 1e-4)
 })
 
 
