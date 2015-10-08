@@ -9,7 +9,7 @@ fscores(object, rotate = "oblimin", Target = NULL, full.scores = TRUE,
   plausible.draws = 0, returnER = FALSE, return.acov = FALSE,
   mean = NULL, cov = NULL, verbose = TRUE, full.scores.SE = FALSE,
   theta_lim = c(-6, 6), MI = 0, QMC = FALSE, custom_den = NULL,
-  custom_theta = NULL, min_expected = 1, ...)
+  custom_theta = NULL, min_expected = 1, converge_info = FALSE, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -89,6 +89,11 @@ each column corresponds to the respective dimension in the model}
 \item{min_expected}{when computing goodness of fit tests when \code{method = 'EAPsum'}, this value is used
 to collapse across the conditioned total scores until the expected values are greater than this value. Note
 that this only affect the goodness of fit tests and not the returned EAP for sum scores table}
+
+\item{converge_info}{logical; include a column in the return objects containing a logical for each
+response pattern indicating whether a maximum value was found (not relavent non-iterative methods,
+such as EAP and EAPsum). Value is a reflection of the \code{code} element from \code{\link{nlm}}
+(e.g., 1 indicates convergence)}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
 }

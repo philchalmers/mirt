@@ -11,7 +11,7 @@
 #' @param ... additional arguments passed to the density function
 #' @keywords reliability
 #' @export marginal_rxx
-#' @seealso \code{\link{extract.group}}, \code{\link{testinfo}}
+#' @seealso \code{\link{empirical_rxx}}, \code{\link{extract.group}}, \code{\link{testinfo}}
 #' @examples
 #'
 #' \dontrun{
@@ -24,6 +24,11 @@
 #'
 #' # empirical estimate (assuming the same prior)
 #' fscores(mod, returnER = TRUE)
+#'
+#' # empirical rxx the alternative way, given theta scores and SEs
+#' fs <- fscores(mod, full.scores.SE=TRUE)
+#' head(fs)
+#' empirical_rxx(fs)
 #'
 #' }
 marginal_rxx <- function(mod, density = dnorm, theta_lim = c(-6,6), ...){

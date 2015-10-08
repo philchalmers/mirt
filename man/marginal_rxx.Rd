@@ -32,10 +32,15 @@ marginal_rxx(mod)
 # empirical estimate (assuming the same prior)
 fscores(mod, returnER = TRUE)
 
+# empirical rxx the alternative way, given theta scores and SEs
+fs <- fscores(mod, full.scores.SE=TRUE)
+head(fs)
+empirical_rxx(fs)
+
 }
 }
 \seealso{
-\code{\link{extract.group}}, \code{\link{testinfo}}
+\code{\link{empirical_rxx}}, \code{\link{extract.group}}, \code{\link{testinfo}}
 }
 \keyword{reliability}
 
