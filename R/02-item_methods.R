@@ -18,7 +18,7 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     prior <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
     prior <- prior/sum(prior)
     freq <- tabdata[,ncol(tabdata)]
-    rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata)], freq=freq,
+    rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata), drop=FALSE], freq=freq,
                         Theta=Theta, prior=prior, itemloc=itemloc,
                         CUSTOM.IND=CUSTOM.IND, full=FALSE)
     tmp <- log(rlist$expected)
@@ -140,6 +140,9 @@ setMethod(
             hess <- matrix(0, length(x@par), length(x@par))
             if(estHess){
                 if(any(x@est)){
+#                     grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
+#                                                   pars=pars, tabdata=tabdata,
+#                                                   itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
                     hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
                                                            pars=pars, tabdata=tabdata,
                                                            itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)

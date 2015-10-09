@@ -161,18 +161,12 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
 #                         out <- Deriv(pars[[g]][[J+1L]], Theta = ret$scores)$grad
 #                         DX[pars[[g]][[J+1L]]@parnum] <- out
 #                     }
-#                    if(any(pars[[g]][[J+1L]]@est)){
-#                         Deriv(pars[[g]][[J+1L]], Theta=Theta, CUSTOM.IND=list(), EM = TRUE,
-#                               pars = pars[[g]], itemloc = itemloc, tabdata = gtabdata,
-#                               estHess=FALSE, prior = Prior[[g]])
-#
-#                         grads <- matrix(0, nrow(Theta), length(pars[[g]][[J+1L]]@par))
-#                         for(i in 1L:nrow(Theta))
-#                             grads[i,] <- Deriv(pars[[g]][[J+1L]], Theta = matrix(Theta[i,]))$grad
-#                         out <- sapply(1L:ncol(grads), function(ind, grads, rr, prior)
-#                             sum(grads[,ind] * rr * prior), grads=grads, rr=rlist[[1L]], prior=Prior[[g]])
-#                         DX[pars[[g]][[J+1L]]@parnum] <- out
-#                     }
+                   if(any(pars[[g]][[J+1L]]@est)){
+                       out <- Deriv(pars[[g]][[J+1L]], Theta=Theta, CUSTOM.IND=list(), EM = TRUE,
+                                    pars = pars[[g]], itemloc = itemloc, tabdata = cbind(gtabdata,1),
+                                    estHess=TRUE, prior = Prior[[g]])
+                       DX[pars[[g]][[J+1L]]@parnum] <- out$grad
+                   }
                 }
                 Igrad <- Igrad + outer(DX, DX) * r
             }
@@ -240,8 +234,8 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     npars <- ncol(L)
     gPrior <- t(do.call(rbind, Prior))
     rs <- do.call(rbind, Data$Freq)
-    # infolist <- fn(1L:ncol(rs), PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, Igrad2, Ihess,
-                    # CUSTOM.IND, SLOW.IND, whichitems=1:length(Data$K), iscross, npars, Data)
+#     infolist <- fn(1L:ncol(rs), PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, Igrad2, Ihess,
+#                     CUSTOM.IND, SLOW.IND, whichitems=1:length(Data$K), iscross, npars, Data)
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior[[1L]], Priorbetween[[1L]],
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
