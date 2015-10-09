@@ -573,6 +573,8 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
                 infos <- infos + ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, MD=TRUE)
         }
         infos <- det(infos)
+        if(closeEnough(infos, -1e-20, 1e-20))
+            stop('Information matrix has a determinate of 0', call.=FALSE)
     }
     return(-(log(sqrt(infos)) + L))
 }

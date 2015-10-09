@@ -10,6 +10,9 @@
 
 ## BUG FIXES
 
+- return a vector of `NA`s when WLE estimation has a Fisher information matrix with a determinant of 0 
+  (reported by Christopher Gess)
+
 - fix df in multiple-group models with crossed between/within constrains (reported by Leah Feuerstahler)
 
 # Changes in mirt 1.13
