@@ -45,6 +45,9 @@ imputeMissing <- function(x, Theta, ...){
         pars <- x@pars
         group <- x@Data$group
         data <- x@Data$data
+        if(sum(is.na(data))/length(data) > .1)
+            warning('Imputing too much data can lead to very conservative results. Use with caution',
+                    call.=FALSE)
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
         for(g in 1L:length(pars)){
             sel <- group == x@Data$groupNames[g]
@@ -73,6 +76,9 @@ imputeMissing <- function(x, Theta, ...){
     K <- x@K
     J <- length(K)
     data <- x@Data$data
+    if(sum(is.na(data))/length(data) > .1)
+        warning('Imputing too much data can lead to very conservative results. Use with caution',
+                call.=FALSE)
     N <- nrow(data)
     Nind <- 1L:N
     for (i in 1L:J){
