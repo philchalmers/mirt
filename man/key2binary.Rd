@@ -24,7 +24,6 @@ The \code{key2binary} function will convert response pattern data to a
 dichotomous format, given a response key.
 }
 \examples{
-\dontrun{
 data(SAT12)
 head(SAT12)
 key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
@@ -37,7 +36,18 @@ key2 <- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
               c(2,3,NA,1,rep(NA, 28)))
 dicho.SAT12 <- key2binary(SAT12, key2)
 
-    }
+# keys from raw character responses
+resp <- as.data.frame(matrix(c(
+  "B","B","D","D","E",
+  "B","A","D","D","E",
+  "B","A","D","C","E",
+  "D","D","D","C","E",
+  "B","C","A","D","A"), ncol=5, byrow=TRUE))
+
+key <- c("B", "D", "D", "C", "E")
+
+d01 <- key2binary(resp, key)
+head(d01)
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
