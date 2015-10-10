@@ -164,7 +164,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                    if(any(pars[[g]][[J+1L]]@est)){
                        out <- Deriv(pars[[g]][[J+1L]], Theta=Theta, CUSTOM.IND=list(), EM = TRUE,
                                     pars = pars[[g]], itemloc = itemloc, tabdata = cbind(gtabdata,1),
-                                    estHess=TRUE, prior = Prior[[g]])
+                                    estHess=FALSE, estGrad = TRUE, prior = Prior[[g]])
                        DX[pars[[g]][[J+1L]]@parnum] <- out$grad
                    }
                 }

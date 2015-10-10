@@ -134,15 +134,20 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
-                          tabdata = NULL, estHess=FALSE, prior = NULL){
+                          tabdata = NULL, estHess=FALSE, estGrad=FALSE, prior = NULL){
         if(EM){
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
+            if(estGrad){
+                if(any(x@est)){
+                    grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
+                                                  pars=pars, tabdata=tabdata,
+                                                  itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                }
+                return(list(grad=grad, hess=hess))
+            }
             if(estHess){
                 if(any(x@est)){
-#                     grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
-#                                                   pars=pars, tabdata=tabdata,
-#                                                   itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
                     hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
                                                            pars=pars, tabdata=tabdata,
                                                            itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
