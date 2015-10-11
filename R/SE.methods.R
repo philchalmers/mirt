@@ -263,7 +263,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     tmp <- matrix(NA, length(is.latent), length(is.latent))
     tmp[!is.latent, !is.latent] <- info
     ESTIMATE <- loadESTIMATEinfo(info=tmp, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
-    if(any(lengthsplit > 2L)){
+    if(!iscross && any(lengthsplit > 2L)){
         for(g in 1L:ngroups){
             tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar
             tmp[!is.na(tmp)] <- NaN
