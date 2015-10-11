@@ -294,7 +294,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             gthetatmp <- lapply(gtheta0, function(x, prodlist) prodterms(x, prodlist),
                               prodlist=prodlist)
         tmp <- .Call('computeDPars', pars, gthetatmp, OffTerm, length(longpars), TRUE,
-                     USE.FIXED)
+                     USE.FIXED, 0L)
         g <- tmp$grad; h <- tmp$hess
         if(length(list$SLOW.IND)){
             for(group in 1L:ngroups){

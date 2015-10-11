@@ -316,7 +316,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             i <- i + 1L
             deriv <- Deriv(x=pars[[group]][[i]], CUSTOM.IND=CUSTOM.IND,
                            Theta=Theta, EM = TRUE,
-                           pars=pars[[group]], tabdata=cbind(Data$tabdatalong, Data$Freq[[group]]),
+                           pars=pars[[group]], tabdata=Data$tabdatalong,
+                           freq=Data$Freq[[group]], prior=Prior[[group]],
                            itemloc=itemloc, estHess=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess

@@ -154,17 +154,10 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
                         tmp <- Deriv(pars[[g]][[i]], Theta=Theta, estHess=FALSE)
                         DX[pars[[g]][[i]]@parnum] <- tmp$grad
                     }
-#                     if(any(pars[[g]][[J+1L]]@est)){
-#                         ret <- .Call('EAPgroup', rlist$itemtrace, gtabdata, Theta,
-#                                      prior=matrix(Prior[[g]], 1L),
-#                                      mu=matrix(pars[[g]][[J+1L]]@par[1L:ncol(Theta)], 1L))
-#                         out <- Deriv(pars[[g]][[J+1L]], Theta = ret$scores)$grad
-#                         DX[pars[[g]][[J+1L]]@parnum] <- out
-#                     }
-                   if(any(pars[[g]][[J+1L]]@est)){
+                    if(any(pars[[g]][[J+1L]]@est)){
                        out <- Deriv(pars[[g]][[J+1L]], Theta=Theta, CUSTOM.IND=list(), EM = TRUE,
-                                    pars = pars[[g]], itemloc = itemloc, tabdata = cbind(gtabdata,1),
-                                    estHess=FALSE, estGrad = TRUE, prior = Prior[[g]])
+                                    pars = pars[[g]], itemloc = itemloc, tabdata = gtabdata, freq = 1L,
+                                    estHess=FALSE, prior = Prior[[g]])
                        DX[pars[[g]][[J+1L]]@parnum] <- out$grad
                    }
                 }
@@ -253,11 +246,11 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
     lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    # if(!iscross){
+    if(!iscross){
         is.latent <- lengthsplit > 2L
         Ihess <- Ihess[!is.latent, !is.latent]; Igrad <- Igrad[!is.latent, !is.latent]
         IgradP <- IgradP[!is.latent, !is.latent]
-    # } else is.latent <- logical(length(lengthsplit))
+    } else is.latent <- logical(length(lengthsplit))
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){

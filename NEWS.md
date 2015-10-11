@@ -1,5 +1,7 @@
 # Changes in mirt 1.14
 
+- `crossprod` SE.type now incorportes latent variable information (replaces NA placeholders)
+
 - changed the default `full.scores = FALSE` argument to `TRUE` in `fscores()`
 
 - added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated

@@ -278,7 +278,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L)$grad
+    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 0L)$grad
     if(length(SLOW.IND)){
         for(group in 1L:ngroups){
             for (i in SLOW.IND){
@@ -319,7 +319,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L)
+        dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L, 0L)
         if(length(SLOW.IND)){
             for(group in 1L:ngroups){
                 for (i in SLOW.IND){

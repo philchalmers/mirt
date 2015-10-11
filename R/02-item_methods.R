@@ -9,7 +9,7 @@ EML <- function(par, obj, Theta){
     return(LL)
 }
 
-EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
+EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND){
     obj <- pars[[length(pars)]]
     obj@par[obj@est] <- x
     gpars <- ExtractGroupPars(obj)
@@ -17,8 +17,7 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     sigma <- gpars$gcov
     prior <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
     prior <- prior/sum(prior)
-    freq <- tabdata[,ncol(tabdata)]
-    rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata), drop=FALSE], freq=freq,
+    rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq,
                         Theta=Theta, prior=prior, itemloc=itemloc,
                         CUSTOM.IND=CUSTOM.IND, full=FALSE)
     tmp <- log(rlist$expected)
@@ -134,61 +133,37 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
-                          tabdata = NULL, estHess=FALSE, estGrad=FALSE, prior = NULL){
+                          tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL){
         if(EM){
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
-            if(estGrad){
-                if(any(x@est)){
-                    grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
-                                                  pars=pars, tabdata=tabdata,
-                                                  itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-                }
-                return(list(grad=grad, hess=hess))
-            }
+#             if(any(x@est)){
+#                 grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
+#                                               pars=pars, tabdata=tabdata, freq=freq,
+#                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+#             }
+#             npars <- length(x@est)
+#             nfact <- ncol(Theta)
+#             dEta <- matrix(0, nrow(Theta), npars)
+#             for(i in 1L:nrow(Theta))
+#                 dEta[i, ] <- Deriv(x, Theta[i, , drop=FALSE])$grad
+#             P <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+#                                   CUSTOM.IND=CUSTOM.IND)
+#             for(i in 1:nrow(tabdata)){
+#                 L <- apply(P[,as.logical(tabdata[i, ]), drop=FALSE], 1, prod)
+#                 PL <- sum(L * prior)
+#                 grad <- grad + 1/PL * colSums(L * dEta * prior)
+#             }
             if(estHess){
                 if(any(x@est)){
                     hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
-                                                           pars=pars, tabdata=tabdata,
+                                                           pars=pars, tabdata=tabdata, freq=freq,
                                                            itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
                 }
-                return(list(grad=grad, hess=hess))
             }
-            J <- length(pars) - 1L
-            nfact <- x@nfact
-            scores <- matrix(0, nrow(tabdata), nfact)
-            r <- tabdata[ ,ncol(tabdata)]
-            N <- sum(r)
-            tabdata <- tabdata[ ,-ncol(tabdata)]
-            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                          CUSTOM.IND=CUSTOM.IND)
-            mu <- x@par[1L:nfact]
-            siglong <- x@par[-(1L:nfact)]
-            sig <- matrix(0,nfact,nfact)
-            selcov <- lower.tri(sig, diag=TRUE)
-            sig[selcov] <- siglong
-            if(nfact != 1L)
-                sig <- sig + t(sig) - diag(diag(sig))
-            prior <- mirt_dmvnorm(Theta, mu, sig)
-            stop('Function not supported', call.=FALSE)
-            ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu)
-            tmp <- cbind(ret$scores, ret$scores2) * r
-            newpars <- apply(tmp, 2, sum) / N
-            if(nfact > 1L){
-                x@par[x@est] <- newpars[x@est]
-                cov <- ExtractGroupPars(x)$gcov
-                ev <- eigen(cov)
-                if(any(ev$values <= 0)){
-                    eval <- ev$values
-                    eval[eval < 0] <- 100*.Machine$double.eps
-                    eval <- eval / sum(eval) * sum(ev$values)
-                    cov <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
-                    newpars[(nfact+1L):length(newpars)] <- cov[lower.tri(cov, TRUE)]
-                }
-            }
-            return(newpars[x@est])
+            return(list(grad=grad, hess=hess))
         }
-        return(.Call("dgroup", x, Theta, estHess, FALSE))
+        return(.Call("dgroup", x, Theta, estHess, FALSE, FALSE))
     }
 )
 
@@ -271,7 +246,7 @@ setMethod(
         Theta <- x@drawvals
         estHess <- TRUE
         pick <- -c(1L:ncol(Theta))
-        out <- .Call("dgroup", x, Theta, estHess, TRUE)
+        out <- .Call("dgroup", x, Theta, estHess, TRUE, FALSE)
         out$grad <- out$grad[pick]
         out$hess <- out$hess[pick, pick, drop=FALSE]
         diag(out$hess) <- -abs(diag(out$hess)) #hack for very small clusters
