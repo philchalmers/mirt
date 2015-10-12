@@ -135,7 +135,7 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
         return(mods)
     } else {
         if(is(mods[[1L]], 'DiscreteClass')){
-            LL <- sapply(mods, function(x) x@logLik)
+            LL <- sapply(mods, function(x) x@Fit$logLik)
             if(verbose && nruns > 1L){
                 cat('Model log-likelihoods:\n')
                 print(round(LL, 4))

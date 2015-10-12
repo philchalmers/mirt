@@ -43,9 +43,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
                                        offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
         total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
-        if(!is.null(prodlist))
-            theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
-                                       length(prodlist)), drop=FALSE]
+        theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
+                                   length(prodlist)), drop=FALSE]
         if(is.null(total_0)){ #for intial draw
             attr(theta1, 'log.lik_full') <- total_1
             return(theta1)
@@ -100,21 +99,21 @@ imputePars2 <- function(MGmod, shortpars, longpars, imputenums, pre.ev){
     while(TRUE){
         shift <- mirt_rmvnorm(1L, mean=shortpars, pre.ev=pre.ev)
         longpars[imputenums] <- shift[1L,]
-        constrain <- MGmod@constrain
+        constrain <- MGmod@Model$constrain
         if(length(constrain) > 0L)
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
-        pars <- list(MGmod@pars[[1L]]@pars, MGmod@pars[[2L]]@pars)
+        pars <- list(MGmod@ParObjects$pars[[1L]]@ParObjects$pars, MGmod@ParObjects$pars[[2L]]@ParObjects$pars)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
-        if(any(MGmod@itemtype %in% c('graded', 'grsm'))){
-            pick <- c(MGmod@itemtype %in% c('graded', 'grsm'), FALSE)
+        if(any(MGmod@Model$itemtype %in% c('graded', 'grsm'))){
+            pick <- c(MGmod@Model$itemtype %in% c('graded', 'grsm'), FALSE)
             if(!all(sapply(pars[[1L]][pick], CheckIntercepts) &
                     sapply(pars[[2L]][pick], CheckIntercepts))) next
         }
         break
     }
-    MGmod@pars[[1L]]@pars <- pars[[1L]]
-    MGmod@pars[[2L]]@pars <- pars[[2L]]
+    MGmod@ParObjects$pars[[1L]]@ParObjects$pars <- pars[[1L]]
+    MGmod@ParObjects$pars[[2L]]@ParObjects$pars <- pars[[2L]]
     MGmod
 }
 
@@ -1046,7 +1045,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      SE = FALSE, verbose = TRUE, GenRandomPars,
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
-                     technical = list(), use = 'pairwise.complete.obs',
+                     technical = list(),
                      SE.type = 'crossprod', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
                      optimizer = NULL, solnp_args = list(), alabama_args = list(), ...)
 {
@@ -1061,7 +1060,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
         stop('method argument not supported', call.=FALSE)
-    D <- 1
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
     opts$draws = draws
@@ -1073,7 +1071,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$verbose = verbose
     opts$SEtol = ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     opts$grsm.block = grsm.block
-    opts$D = D
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
@@ -1092,7 +1089,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn
     opts$message <- if(is.null(technical$message)) TRUE else technical$message
     opts$technical <- technical
-    opts$use <- use
     opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 20000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
@@ -1408,27 +1404,6 @@ RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
     return(c(RMSEA.lower, RMSEA.upper))
 }
 
-assignInformationMG <- function(object){
-    J <- ncol(object@Data$data)
-    names <- colnames(object@information)
-    spl_names <- strsplit(names, split="\\.")
-    spl_names_par <- sapply(spl_names, function(x) x[1L])
-    spl_names <- lapply(spl_names,
-                        function(x) as.numeric(x[-1L]))
-    spl_names <- do.call(rbind, spl_names)
-    for(g in 1L:length(object@pars)){
-        from <- object@pars[[g]]@pars[[1L]]@parnum[1L]
-        to <- object@pars[[g]]@pars[[J+1L]]@parnum[length(
-            object@pars[[g]]@pars[[J+1L]]@parnum)]
-        pick <- spl_names[,g] >= from & spl_names[,g] <= to
-        tmp <- object@information[pick,pick]
-        colnames(tmp) <- rownames(tmp) <-
-            paste(spl_names_par[pick], spl_names[pick,g], sep='.')
-        object@pars[[g]]@information <- tmp
-    }
-    object
-}
-
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
                CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta){
     longpars[est] <- p
@@ -1675,16 +1650,17 @@ collapseCells <- function(O, E, mincell = 1){
 }
 
 MGC2SC <- function(x, which){
-    tmp <- x@pars[[which]]
+    tmp <- x@ParObjects$pars[[which]]
     ind <- 1L
-    for(i in 1L:length(tmp@pars)){
-        tmp@pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@pars[[i]]@parnum) - 1L)
-        ind <- ind + length(tmp@pars[[i]]@parnum)
+    for(i in 1L:x@Data$nitems){
+        tmp@ParObjects$pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@ParObjects$pars[[i]]@parnum) - 1L)
+        ind <- ind + length(tmp@ParObjects$pars[[i]]@parnum)
     }
     tmp@Data <- x@Data
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
+    ## TODO, add acov information in for subset
     tmp
 }
 

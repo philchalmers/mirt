@@ -14,7 +14,7 @@ setMethod(
     signature = signature(object = 'list'),
     definition = function(object, ...)
     {
-        newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@nfact,
+        newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@Model$nfact,
                          Data=list(groupNames=factor(names(object))))
         x <- itemplot.internal(newobject, ...)
         return(invisible(x))
@@ -31,10 +31,10 @@ setMethod(
         Pinfo <- list()
         gnames <- object@Data$groupNames
         nfact <- object@nfact
-        K <- object@pars[[1L]]@pars[[item]]@ncat
+        K <- object@ParObjects$pars[[1L]]@ParObjects$pars[[item]]@ncat
         for(g in 1L:length(gnames)){
-            object@pars[[g]]@information <- object@information
-            Pinfo[[g]] <- itemplot.main(object@pars[[g]], item=item, type='RETURN',
+            object@ParObjects$pars[[g]]@vcov <- object@vcov
+            Pinfo[[g]] <- itemplot.main(object@ParObjects$pars[[g]], item=item, type='RETURN',
                                         degrees=degrees, CE=FALSE, CEalpha=CEalpha,
                                         CEdraws=CEdraws, rot=rot, ...)
             Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
@@ -128,26 +128,26 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                           theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
                           add.ylab2 = TRUE, drape = TRUE, ...){
     if(drop.zeros){
-        if(x@exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
-        x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
+        if(x@Options$exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
+        x@ParObjects$pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     }
-    nfact <- min(x@pars[[item]]@nfact, x@nfact)
+    nfact <- min(x@ParObjects$pars[[item]]@nfact, x@Model$nfact)
     if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
     if(nfact == 2 && is.null(degrees))
         stop('Please specify a vector of angles that sum to 90', call.=FALSE)
     theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
     if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
-    prodlist <- attr(x@pars, 'prodlist')
+    prodlist <- attr(x@ParObjects$pars, 'prodlist')
     if(length(prodlist) > 0){
-        Theta <- thetaComb(theta, x@nfact)
+        Theta <- thetaComb(theta, x@Model$nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
-    if(is(x, 'SingleGroupClass') && x@exploratory){
+    if(is(x, 'SingleGroupClass') && x@Options$exploratory){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
-        x@pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
+        x@ParObjects$pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
     }
-    P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
-    K <- x@pars[[item]]@ncat
+    P <- ProbTrace(x=x@ParObjects$pars[[item]], Theta=ThetaFull)
+    K <- x@ParObjects$pars[[item]]@ncat
     info <- numeric(nrow(ThetaFull))
     if(K == 2L) auto.key <- FALSE
     if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
@@ -155,34 +155,32 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
                 warning('Information plots require the degrees input to be of length 3', call.=FALSE)
             } else {
-                info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
+                info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
             }
         }
         if(nfact == 2){
-            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
         } else {
-            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
         }
     }
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE && nfact != 3){
-        tmpitem <- x@pars[[item]]
+        tmpitem <- x@ParObjects$pars[[item]]
         if(length(tmpitem@SEpar) == 0) stop('Must calculate the information matrix first.', call.=FALSE)
-        splt <- strsplit(colnames(x@information), '\\.')
+        splt <- strsplit(colnames(x@vcov), '\\.')
         parnums <- as.numeric(do.call(rbind, splt)[,2])
-        tmp <- x@pars[[item]]@parnum[x@pars[[item]]@est]
-        if(length(x@constrain) > 0)
-            for(i in 1:length(x@constrain))
-                if(any(tmp %in% x@constrain[[i]]))
-                    tmp[tmp %in% x@constrain[[i]]] <- x@constrain[[i]][1]
+        tmp <- x@ParObjects$pars[[item]]@parnum[x@ParObjects$pars[[item]]@est]
+        constrain <- x@Model$constrain
+        if(length(constrain) > 0)
+            for(i in 1:length(constrain))
+                if(any(tmp %in% constrain[[i]]))
+                    tmp[tmp %in% constrain[[i]]] <- constrain[[i]][1L]
         tmp <- parnums %in% tmp
-        mu <- tmpitem@par[x@pars[[item]]@est]
-        smallinfo <- try(solve(x@information[tmp, tmp]), TRUE)
-        if(is(smallinfo, 'try-error'))
-            stop('Information matrix could not be inverted', call.=FALSE)
-        #make symetric
-        smallinfo <-(smallinfo + t(smallinfo))/2
+        mu <- tmpitem@ParObjects$par[x@ParObjects$pars[[item]]@est]
+        smallinfo <- vcov[tmp, tmp]
+        smallinfo <-(smallinfo + t(smallinfo))/2 #make symetric
         delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
         tmp <- mirt_dmvnorm(delta, mu, smallinfo)
         sorttmp <- sort(tmp)
@@ -209,7 +207,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         }
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
-    score <- expected.item(x@pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
+    score <- expected.item(x@ParObjects$pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
     if(ncol(P) == 2){
         P <- P[ ,-1, drop = FALSE]
         CEprobupper <- CEprobupper[ ,-1, drop = FALSE]

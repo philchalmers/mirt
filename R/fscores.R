@@ -166,7 +166,7 @@ fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = TRU
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 15000
         if(is.null(quadpts))
-            quadpts <- switch(as.character(object@nfact),
+            quadpts <- switch(as.character(object@Model$nfact),
                               '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
     } else quadpts <- 1
     if(method == 'plausible'){

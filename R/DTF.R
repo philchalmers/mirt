@@ -153,7 +153,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
 
     if(missing(mod)) missingMsg('mod')
     stopifnot(is.character(plot))
-    stopifnot(mod@nfact == 1L)
+    stopifnot(mod@Model$nfact == 1L)
     boot <- FALSE
     integration <- 'quad'
     type <- 'score'
@@ -166,15 +166,15 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     }
     if(class(mod) != 'MultipleGroupClass')
         stop('mod input was not estimated by multipleGroup()', call.=FALSE)
-    if(length(mod@pars) != 2L)
+    if(length(mod@ParObjects$pars) != 2L)
         stop('DTF only supports two group models at a time', call.=FALSE)
-    if(!any(sapply(mod@pars, function(x) x@pars[[length(x@pars)]]@est)))
+    if(!any(sapply(mod@ParObjects$pars, function(x) x@ParObjects$pars[[length(x@ParObjects$pars)]]@est)))
         message('No hyper-parameters were estimated in the DIF model. For effective
                 \tDTF testing, freeing the focal group hyper-parameters is recommend.')
     if(!is.null(Theta_nodes)){
         if(!is.matrix(Theta_nodes))
             stop('Theta_nodes must be a matrix', call.=FALSE)
-        if(ncol(Theta_nodes) != mod@nfact)
+        if(ncol(Theta_nodes) != mod@Model$nfact)
             stop('Theta_nodes input does not have the correct number of factors', call.=FALSE)
         colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1L)
             paste0('Theta.', 1L:ncol(Theta_nodes)) else 'Theta'
@@ -186,41 +186,27 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     if(length(type) > 1L && (plot != 'none' || !is.null(Theta_nodes)))
         stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')
 
-    J <- length(mod@K)
-    pre.evs <- list()
     if(is.null(draws)){
         draws <- 1L
         impute <- FALSE
     } else if(!boot){
-        if(length(mod@information) == 1L)
+        if(length(mod@vcov) == 1L)
             stop('Stop an information matrix must be computed', call.=FALSE)
-        info <- mod@information
-        is_na <- is.na(diag(info))
-        info <- info[!is_na, !is_na]
-        if(is(try(chol(info), silent=TRUE), 'try-error')){
-            stop('Proper information matrix must be precomputed in model', call.=FALSE)
-        } else {
-            impute <- TRUE
-            info <- mod@information
-            dd <- diag(info)
-            dd[is.na(dd)] <- 1
-            diag(info) <- dd
-            info[is.na(info)] <- 0
-            shortpars <- mod@shortpars
-            covB <- try(solve(info), TRUE)
-            if(is(covB, 'try-error'))
-                stop('Could not compute inverse of information matrix', call.=FALSE)
-            names <- colnames(covB)
-            imputenums <- sapply(strsplit(names, '\\.'), function(x) as.integer(x[2L]))
-            longpars <- c(do.call(c, lapply(mod@pars[[1L]]@pars, function(x) x@par)),
-                          do.call(c, lapply(mod@pars[[2L]]@pars, function(x) x@par)))
-            pre.ev <- eigen(covB)
-        }
+        if(!mod@OptimInfo$secondordertest)
+            stop('ACOV matrix is not positive definite')
+        impute <- TRUE
+        shortpars <- mod@Internals$shortpars
+        covB <- vcov
+        names <- colnames(covB)
+        imputenums <- sapply(strsplit(names, '\\.'), function(x) as.integer(x[2L]))
+        longpars <- c(do.call(c, lapply(mod@ParObjects$pars[[1L]]@ParObjects$pars, function(x) x@par)),
+                      do.call(c, lapply(mod@ParObjects$pars[[2L]]@ParObjects$pars, function(x) x@par)))
+        pre.ev <- eigen(covB)
     } else impute <- TRUE
     if(is.null(Theta_nodes)){
         if(integration == 'quad'){
             theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=npts))
-            Theta <- thetaComb(theta, mod@nfact)
+            Theta <- thetaComb(theta, mod@Model$nfact)
         }
         if(plot == 'sDTF') Theta_nodes <- Theta
     } else Theta <- Theta_nodes
@@ -235,7 +221,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
                                 Theta_nodes=Theta_nodes, plot=plot, integration=integration,
                                 theta_lim=theta_lim, type=type, pre.ev=pre.ev, longpars=longpars)
         scores <- do.call(rbind, list_scores)
-        pars <- list(mod@pars[[1L]]@pars, mod@pars[[2L]]@pars)
+        pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars, mod@ParObjects$pars[[2L]]@ParObjects$pars)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
         if(!is.null(Theta_nodes)){
             CIs <- apply(scores, 2L, bs_range, CI=CI)

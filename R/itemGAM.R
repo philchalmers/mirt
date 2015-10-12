@@ -130,6 +130,7 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
     keep <- !is.na(item)
     mm <- model.matrix(~ 0 + factor(item))
     if(is.list(Theta)){
+        stopifnot(is.matrix(Theta[[1L]]))
         pvfit <- pvfit_se <- vector('list', length(Theta))
         fit <- vector('list', ncol(mm))
         for(j in 1L:ncol(mm)){
@@ -150,6 +151,7 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
         cat <- rep(paste0('cat_', 1:ncol(mm)), each=nrow(fit[[1L]]))
         ret <- cbind(do.call(rbind, fit), cat)
     } else {
+        stopifnot(is.matrix(Theta))
         nfact <- ncol(Theta)
         if(nfact > 1L && !return.models){
             return.models <- TRUE

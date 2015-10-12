@@ -99,8 +99,8 @@ itemplot <- function(object, item, type = 'trace', degrees = c(45, 45), CE = FAL
     if(!is.numeric(item)) item <- ind[inames == item]
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
     if(is.list(object)){
-        if(object[[1]]@nfact == 1L) degrees <- 0
-    } else if(object@nfact == 1L) degrees <- 0
+        if(object[[1]]@Model$nfact == 1L) degrees <- 0
+    } else if(object@Model$nfact == 1L) degrees <- 0
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,

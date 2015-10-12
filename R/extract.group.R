@@ -35,10 +35,10 @@ extract.group <- function(x, group){
     if(missing(group)) stop('Must specify group number', call.=FALSE)
     vals <- mod2values(x)
     vals <- vals[vals$group == x@Data$groupNames[group], ]
-    sv <- mirt(x@Data$data[x@Data$group == x@Data$groupNames[group], ], x@nfact,
+    sv <- mirt(x@Data$data[x@Data$group == x@Data$groupNames[group], ], x@Model$nfact,
                 pars = 'values', technical = list(customK = x@Data$K))
     sv$value <- vals$value
-    mod <- mirt(x@Data$data[x@Data$group == x@Data$groupNames[group], ], x@nfact,
+    mod <- mirt(x@Data$data[x@Data$group == x@Data$groupNames[group], ], x@Model$nfact,
                 pars = sv, technical = list(customK = x@Data$K, warn=FALSE), TOL = NaN, quadpts=1L)
     return(mod)
 }

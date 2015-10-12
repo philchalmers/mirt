@@ -3,7 +3,7 @@ context('mirtTwo')
 test_that('poly', {
     modp1 <- mirt(Science, 1, verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
-    expect_equal(modp1@df, 239)
+    expect_equal(modp1@Fit$df, 239)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
@@ -12,16 +12,16 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modLouis, digits = 5, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.18838, 4.86544, 0.49088, 2.64044, 0.22267, -1.46621, 0.15868, 1.22569, 0.18189, 2.924, 0.23928, 0.90115, 0.14289, -2.26661, 0.20308, 2.29058, 0.48269, 5.22988, 0.72817, 2.21201, 0.3564, -1.96222, 0.32209, 1.09557, 0.18336, 3.34845, 0.27659, 0.9919, 0.14053, -1.68846, 0.16864, 0, NA, 1, NA),
                  tolerance = 1e-3)
-    expect_equal(modLouis@condnum, 98.26492, tolerance = 1e-2)
+    expect_equal(modLouis@OptimInfo$condnum, 98.26492, tolerance = 1e-2)
     modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modsandwich, digits = 5, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
                  tolerance = 1e-3)
-    expect_equal(modsandwich@condnum, 142.2682, tolerance = 1e-2)
+    expect_equal(modsandwich@OptimInfo$condnum, 142.2682, tolerance = 1e-2)
     modp1 <- mirt(Science, 1, verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
-    expect_equal(modp1@df, 239)
+    expect_equal(modp1@Fit$df, 239)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
@@ -33,13 +33,13 @@ test_that('poly', {
                  tolerance = 1e-2)
     modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
-    expect_equal(modp1@condnum, 102.5529, tolerance = 1e-2)
+    expect_equal(modp1@OptimInfo$condnum, 102.5529, tolerance = 1e-2)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 0.656, 1.425, 4.863, 3.849, 5.876, 2.639, 2.196, 3.083, -1.466, -1.782, -1.149, 1.226, 0.887, 1.565, 2.924, 2.45, 3.398, 0.901, 0.614, 1.188, -2.266, -2.639, -1.894, 2.3, 1.325, 3.275, 5.244, 3.804, 6.685, 2.218, 1.488, 2.949, -1.967, -2.605, -1.329, 1.094, 0.727, 1.461, 3.347, 2.801, 3.893, 0.991, 0.717, 1.266, -1.688, -2.018, -1.357, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     modp2 <- mirt(Science, 2, verbose=FALSE)
     expect_is(modp2, 'SingleGroupClass')
-    expect_equal(modp2@df, 236)
+    expect_equal(modp2@Fit$df, 236)
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
     expect_equal(abs(cfs), abs(c(-1.3278,0.1081,5.1934,2.8583,-1.5996,-0.8762,1.8783,3.7248,1.1598,-2.9225,-1.4614,1.1639,4.6495,1.951,-1.7322,-1.7397,0,4.0053,1.2008,-2.0548,0,0,1,0,1)),
                  tolerance = 1e-2)
@@ -110,7 +110,7 @@ test_that('poly', {
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2, digits = 20))
-    expect_equal(fit$Zh, c(-15.19144, -44.35991, -41.90899, -29.75239), tolerance=1e-4)
+    expect_equal(fit$Zh, c(1.413226, 2.455924, 4.125340, 3.887814), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.941804,10.58528,6.913239,10.11068), tolerance=1e-4)
     fs <- fscores(modp1, method = 'WLE', verbose=FALSE, digits = 10, full.scores=FALSE)
     expect_equal(as.numeric(fs[1:3, 5:6]), c(-5.7024116, -2.1162737, -1.1386969,  1.5797286,
@@ -135,7 +135,7 @@ test_that('poly', {
 #     expect_equal(cfs, c(1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, 0, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -182, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -167.2, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -135.4, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -124.4, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -108.6, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -96.2, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -92.4, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -71.8, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -59.2, 0, 1.6093),
 #                  tolerance = 1e-2)
 #     expect_equal(rsm@df, 9765610)
-    expect_equal(grsm@df, 9765601)
+    expect_equal(grsm@Fit$df, 9765601)
     graded <- mirt(data, 1, verbose = FALSE)
     gM2 <- M2(graded, calcNull=TRUE)
     expect_equal(gM2$M2, 6.51666745, tolerance = 1e-4)
@@ -156,5 +156,5 @@ test_that('poly', {
     ER <- fscores(modp2, returnER = TRUE)
     expect_equal(as.numeric(ER), c(0.4882546, 0.5099054), tolerance=1e-4)
     ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2))
-    expect_equal(as.numeric(ER2), c(0.3996476, 0.4782969), tolerance=1e-4)
+    expect_equal(as.numeric(ER2), c(0.3905138, 0.4797115), tolerance=1e-4)
 })

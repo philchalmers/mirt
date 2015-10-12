@@ -27,14 +27,14 @@ test_that('extras', {
     model1a <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'Louis')
     model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'BL',
                              pars = mod2values(model1a), technical = list(warn=FALSE))
-    expect_equal(as.numeric(model1a@information - model1b@information), numeric(ncol(model1a@information)^2),
-                 tolerance = 1e-3)
+    expect_equal(as.numeric(model1a@vcov - model1b@vcov), numeric(ncol(model1a@vcov)^2),
+                 tolerance = 1e-4)
     model2 <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE,
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))
     modideal <- mirt(dataset1, model = mirt.model('F1 = 1-6
                                                   F2 = 5-10'), 'ideal', verbose = FALSE)
     cfs <- as.numeric(coef(modideal, digits=5, verbose=FALSE)[[5]])
-    expect_equal(modideal@logLik, -6435.647, tolerance = 1e-3)
+    expect_equal(modideal@Fit$logLik, -6435.647, tolerance = 1e-3)
     expect_equal(cfs, c(0.73123, 1.26069, -1.41785), tolerance = 1e-3)
 
     acov <- fscores(mod1, return.acov=TRUE, full.scores=FALSE)
@@ -97,7 +97,7 @@ test_that('extras', {
     pick <- c('a1', 'a2', 'd1', 'd2', 'd3')
     expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-10)
     mod3 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats, TOL = 1e-2, verbose=FALSE)
-    expect_equal(mod3@logLik, -3708.0, tolerance = 1e-4)
+    expect_equal(mod3@Fit$logLik, -3708.0, tolerance = 1e-4)
     cfs <- as.vector(coef(mod3, simplify=TRUE, digits = 5)$items)
     expect_equal(cfs, c(-1.23177,-2.76946,-1.54897,-1.34947,-0.41973,-0.45958,-0.71595,-0.58334,-0.29564,4.58694,0.36752,-0.31281,0.4241,-2.90723,-0.16516,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3.69493,7.87579,3.59178,3.00087,2.60806,2.7068,2.83078,2.07429,6.50601,10.34317,5.36289,4.0315,5.42778,5.57857,4.69492,3.43515,4.9848,4.17678,3.89073,2.40695,5.74,5.87555,5.00542,3.86719,NA,NA,NA,NA,4,4,4,4,NA,NA,NA,NA,5,5,5,5,NA,NA,NA,NA,0,0,0,0,NA,NA,NA,NA,0,0,0,0,NA,NA,NA,NA,5.43095,5.52149,4.54781,3.38757,NA,NA,NA,NA,3.98583,3.27075,2.90466,1.19029), tolerance=1e-4)
 })

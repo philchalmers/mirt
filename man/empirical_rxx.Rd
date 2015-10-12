@@ -7,7 +7,8 @@
 empirical_rxx(Theta_SE)
 }
 \arguments{
-\item{Theta}{a matrix of latent trait estimates returned from \code{\link{fscores}}}
+\item{Theta_SE}{a matrix of latent trait estimates returned from \code{\link{fscores}} with the options
+\code{full.scores = TRUE} and \code{full.scores.SE = TRUE}}
 }
 \description{
 Given secondary latent trait estimates and their associated standard errors

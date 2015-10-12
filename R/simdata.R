@@ -238,7 +238,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
     if(!is.null(model)){
         nitems <- ncol(model@Data$data)
-        nfact <- model@nfact
+        nfact <- model@Model$nfact
         if(is.null(sigma)) sigma <- diag(nfact)
         if(is.null(mu)) mu <- rep(0,nfact)
         if(is.null(Theta)){

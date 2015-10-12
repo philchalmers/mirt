@@ -4,7 +4,7 @@ test_that('dich', {
     data <- expand.table(LSAT7)
     mod1 <- mirt(data, 1, verbose=FALSE)
     expect_is(mod1, 'SingleGroupClass')
-    expect_equal(mod1@df, 21)
+    expect_equal(mod1@Fit$df, 21)
     cfs <- as.numeric(do.call(c, coef(mod1, digits = 4)))
     expect_equal(cfs, c(0.988, 1.8561, 0, 1, 1.081, 0.808, 0, 1, 1.706, 1.8043, 0, 1, 0.7651, 0.486, 0, 1, 0.7358, 1.8545, 0, 1, 0, 1),
                  tolerance = 1e-2)
@@ -16,20 +16,20 @@ test_that('dich', {
     expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm1, digits = 4)))
-    expect_equal(modm1@condnum, 29.75392, tolerance = 1e-4)
+    expect_equal(modm1@OptimInfo$condnum, 29.75392, tolerance = 1e-4)
     expect_equal(cfs, c(0.9876, 0.6367, 1.3384, 1.8559, 1.5978, 2.1139, 0, NA, NA, 1, NA, NA, 1.0808, 0.7604, 1.4013, 0.808, 0.6335, 0.9825, 0, NA, NA, 1, NA, NA, 1.7075, 1.0868, 2.3281, 1.8052, 1.4028, 2.2076, 0, NA, NA, 1, NA, NA, 0.765, 0.5065, 1.0235, 0.486, 0.3114, 0.6606, 0, NA, NA, 1, NA, NA, 0.7357, 0.4246, 1.0467, 1.8545, 1.6332, 2.0757, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm1, 'SingleGroupClass')
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'BL', verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2, digits=4)))
-    expect_equal(modm2@condnum, 30.24068, tolerance = 1e-3)
+    expect_equal(modm2@OptimInfo$condnum, 30.24068, tolerance = 1e-3)
     expect_equal(cfs, c(0.988, 0.6406, 1.3354, 1.8561, 1.5984, 2.1138, 0, NA, NA, 1, NA, NA, 1.081, 0.7501, 1.4119, 0.808, 0.6291, 0.9869, 0, NA, NA, 1, NA, NA, 1.706, 1.0779, 2.334, 1.8043, 1.4036, 2.205, 0, NA, NA, 1, NA, NA, 0.7651, 0.5022, 1.028, 0.486, 0.3392, 0.6328, 0, NA, NA, 1, NA, NA, 0.7358, 0.4395, 1.032, 1.8545, 1.6302, 2.0787, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm2, 'SingleGroupClass')
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE, SE=TRUE)
     expect_is(modm3, 'SingleGroupClass')
-    expect_equal(modm3@df, 25)
-    expect_equal(modm3@condnum, 4.742197, tolerance = 1e-4)
+    expect_equal(modm3@Fit$df, 25)
+    expect_equal(modm3@OptimInfo$condnum, 4.742197, tolerance = 1e-4)
     dat <- expand.table(LSAT6)
     modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modm3, 'SingleGroupClass')
@@ -39,7 +39,7 @@ test_that('dich', {
     model <- mirt.model('F = 1-5
                         CONSTRAIN = (1-5, a1)', quiet=TRUE)
     modm4 <- mirt(data, model, verbose = FALSE, SE=T, SE.type = 'crossprod')
-    expect_equal(modm4@condnum, 5.171716, tolerance = 1e-4)
+    expect_equal(modm4@OptimInfo$condnum, 5.171716, tolerance = 1e-4)
     cfs <- as.numeric(do.call(c, coef(modm4)))
     expect_equal(cfs, c(1.011, 0.885, 1.138, 1.868, 1.67, 2.067, 0, NA, NA, 1, NA, NA, 1.011, 0.885, 1.138, 0.791, 0.631, 0.951, 0, NA, NA, 1, NA, NA, 1.011, 0.885, 1.138, 1.461, 1.277, 1.644, 0, NA, NA, 1, NA, NA, 1.011, 0.885, 1.138, 0.521, 0.367, 0.676, 0, NA, NA, 1, NA, NA, 1.011, 0.885, 1.138, 1.993, 1.793, 2.193, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
@@ -50,13 +50,13 @@ test_that('dich', {
     expect_message(modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, .1),
                                                                  c(4,8,12,16,20,'norm', 1.7, .1))),
                    "EM cycles terminated after 500 iterations.")
-    expect_equal(modm7@df, 11)
+    expect_equal(modm7@Fit$df, 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
     expect_equal(cfs, c(5.143,8.598,0.154,0.859,5.86,3.667,0.16,0.843,10.273,11.019,0.155,0.861,1.281,0.854,0.153,0.845,4.686,9.008,0.154,0.859,0,1), tolerance = 1e-2)
     data[1,1] <- data[2,2] <- NA
     modm6 <- mirt(data, 1, verbose=FALSE)
-    expect_equal(modm6@df, 21)
+    expect_equal(modm6@Fit$df, 21)
     expect_is(modm6, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm6)))
     expect_equal(cfs, c(0.969, 1.851, 0, 1, 1.074, 0.808, 0, 1, 1.717, 1.811, 0, 1, 0.763, 0.486, 0, 1, 0.731, 1.852, 0, 1, 0, 1), tolerance = 1e-2)
@@ -66,7 +66,7 @@ test_that('dich', {
 
     #QMCEM
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
-    expect_equal(mod@logLik, -2466.653, tolerance=1e-4)
+    expect_equal(mod@Fit$logLik, -2466.653, tolerance=1e-4)
     fs <- fscores(mod, QMC=TRUE, verbose=FALSE, full.scores=FALSE)
     expect_equal(fs[1:3,'F1'], c(-1.9607, -1.5228, -1.5019), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
@@ -135,12 +135,12 @@ test_that('dich', {
     model <- 'F1 = 1-3
               F2 = 3-5'
     modm1 <- mirt(data, model, verbose=FALSE)
-    expect_equal(modm1@df, 20)
+    expect_equal(modm1@Fit$df, 20)
     modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), TOL=1e-3, verbose=FALSE)
     cfs <- as.numeric(do.call(c, coef(modm2, digits = 4)))
     expect_equal(cfs, c(0.6514, 0, 1.7031, 0, 1, 1.4872, 0, 0.9174, 0, 1, 2.5151, 3.4949, 3.1337, 5.2577, 0, 1, 0, 0.7058, 0.4789, 0, 1, 0, 0.8524, 1.9092, 0, 1, 0, 0, 1, 0, 1),
                  tolerance = 1e-2)
-    expect_equal(modm2@df, 19)
+    expect_equal(modm2@Fit$df, 19)
     modm3 <- mirt(data, model, SE = TRUE, verbose=FALSE)
     expect_is(modm3, 'SingleGroupClass')
 

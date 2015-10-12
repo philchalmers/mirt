@@ -6,37 +6,37 @@ setMethod(
     {
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
-        cat("Latent class model with ", x@nfact, " classes.\n", sep="")
+        cat("Latent class model with ", x@Model$nfact, " classes.\n", sep="")
         EMquad <- ''
-        if(x@method == 'EM') EMquad <- c('\n     using ', x@quadpts, ' quadrature')
-        method <- x@method
+        if(x@Options$method == 'EM') EMquad <- c('\n     using ', x@Options$quadpts, ' quadrature')
+        method <- x@Options$method
         if(method == 'MIXED') method <- 'MHRM'
-        if(x@converge)
-            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ',
+        if(x@OptimInfo$converge)
+            cat("Converged within ", x@Options$TOL, ' tolerance after ', x@OptimInfo$iter, ' ',
                 method, " iterations.\n", sep = "")
         else
-            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ',
-                x@iter, ' ', method, " iterations.\n", sep="")
+            cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
+                x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
-        cat('M-step optimizer:', x@Moptim, '\n')
-        cat('EM acceleration:', x@accelerate)
-        cat('\nNumber of rectangular quadrature:', x@quadpts)
+        cat('M-step optimizer:', x@Options$Moptim, '\n')
+        cat('EM acceleration:', x@Options$accelerate)
+        cat('\nNumber of rectangular quadrature:', x@Options$quadpts)
         cat('\n')
-        if(!is.nan(x@condnum)){
-            cat("\nInformation matrix estimated with method:", x@infomethod)
-            cat("\nCondition number of information matrix = ", x@condnum,
-                '\nSecond-order test: model ', if(!x@secondordertest)
+        if(!is.na(x@OptimInfo$condnum)){
+            cat("\nInformation matrix estimated with method:", x@Options$infomethod)
+            cat("\nCondition number of information matrix = ", x@OptimInfo$condnum,
+                '\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
                     'is not a maximum, or the information matrix is too inaccurate' else
                         'is a possible local maximum', '\n', sep = "")
         }
-        if(length(x@logLik) > 0){
-            cat("\nLog-likelihood = ", x@logLik, if(method == 'MHRM')
-                paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
-            cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
-            cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
+        if(length(x@Fit$logLik) > 0){
+            cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
+                paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
+            cat("AIC = ", x@Fit$AIC, "; AICc = ", x@Fit$AICc, "\n", sep='')
+            cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             if(!is.nan(x@p)){
-                cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), sep='')
-                cat(", RMSEA = ", round(x@RMSEA,3), sep = '')
+                cat("G2 (", x@Fit$df,") = ", round(x@Fit$G2,2), ", p = ", round(x@Fit$p,4), sep='')
+                cat(", RMSEA = ", round(x@Fit$RMSEA,3), sep = '')
             }
         }
     }
@@ -55,14 +55,14 @@ setMethod(
     signature = 'DiscreteClass',
     definition = function(object, printSE=FALSE, digits = 3, ...)
     {
-        ngroups <- length(object@pars)
-        Theta <- object@Theta
+        ngroups <- object@Data$ngroups
+        Theta <- object@Model$Theta
         ret <- vector('list', ngroups)
         items <- vector('list', object@Data$nitems + 1L)
         names(items) <- c(colnames(object@Data$data), 'Class.Proportions')
         for(g in 1L:ngroups){
             ret[[g]] <- items
-            pars <- object@pars[[g]]
+            pars <- object@ParObjects$pars[[g]]
             for(i in 1L:object@Data$nitems){
                 item <- extract.item(pars, i)
                 P <- round(probtrace(item, Theta), digits)
@@ -70,7 +70,7 @@ setMethod(
                 rownames(P) <- paste0('Class_', 1L:nrow(P))
                 ret[[g]][[i]] <- P
             }
-            ret[[g]][[i+1L]] <- round(object@Prior[[g]], digits)
+            ret[[g]][[i+1L]] <- round(object@Internals$Prior[[g]], digits)
         }
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
@@ -82,7 +82,7 @@ setMethod(
     definition = function(object, printSE=FALSE, drop = TRUE, ...){
         class(object) <- 'MultipleGroupClass'
         ret <- coef(object,  ...)
-        for(g in 1L:length(ret))
+        for(g in 1L:object@Data$ngroups)
             ret[[g]][[length(ret[[g]])]] <- NULL
         if(drop)
             if(length(ret) == 1L) ret <- ret[[1L]]

@@ -23,11 +23,11 @@
 #' }
 mod2values <- function(x){
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
-        PrepList <- x@pars
+        PrepList <- x@ParObjects$pars
         names(PrepList) <- x@Data$groupNames
         MG <- TRUE
     } else {
-        PrepList <- list(pars=x@pars)
+        PrepList <- list(pars=x@ParObjects$pars)
         names(PrepList) <- 'all'
         MG <- FALSE
     }
@@ -35,7 +35,7 @@ mod2values <- function(x){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     for(g in 1L:length(PrepList)){
-        if(MG) tmpgroup <- PrepList[[g]]@pars
+        if(MG) tmpgroup <- PrepList[[g]]@ParObjects$pars
         else tmpgroup <- PrepList[[g]]
         for(i in 1L:length(tmpgroup)){
             if(i <= length(itemnames))
@@ -54,7 +54,7 @@ mod2values <- function(x){
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))
     }
     if(is(x, 'MixedClass')){
-        tmpgroup <- x@random
+        tmpgroup <- x@ParObjects$random
         if(length(tmpgroup)){
             for(i in 1L:length(tmpgroup)){
                 parname <- c(parname, names(tmpgroup[[i]]@est))
@@ -71,8 +71,8 @@ mod2values <- function(x){
             }
         }
     }
-    if(length(x@lrPars) > 0L){
-        lrPars <- x@lrPars
+    if(length(x@Model$lrPars) > 0L){
+        lrPars <- x@Model$lrPars
         parname <- c(parname, names(lrPars@est))
         parnum <- c(parnum, lrPars@parnum)
         par <- c(par, lrPars@par)

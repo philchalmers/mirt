@@ -10,7 +10,7 @@ test_that('wide1dim', {
     for(i in 1:100000)
         dat[sample(one2N, 1), sample(one2n, 1)] <- NA
     mod <- mirt(dat, 1, verbose = FALSE)
-    expect_equal(mod@logLik, -491985.9, tolerance = .01)
+    expect_equal(mod@Fit$logLik, -491985.9, tolerance = .01)
     vals <- mod2values(mod)$value
     vals <- vals[vals != 0 & vals != 1]
     expect_equal(fivenum(vals), c(-3.50602785, 0.03518035, 0.90189515, 1.01846863, 3.46084417),

@@ -4,7 +4,8 @@
 #' returned from \code{\link{fscores}}, compute the empirical reliability.
 #'
 #' @aliases empirical_rxx
-#' @param Theta a matrix of latent trait estimates returned from \code{\link{fscores}}
+#' @param Theta_SE a matrix of latent trait estimates returned from \code{\link{fscores}} with the options
+#'   \code{full.scores = TRUE} and \code{full.scores.SE = TRUE}
 #' @keywords reliability
 #' @export empirical_rxx
 #' @seealso \code{\link{fscores}}, \code{\link{marginal_rxx}}

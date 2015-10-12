@@ -22,46 +22,46 @@ setMethod(
     definition = function(x){
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
-        cat("Full-information item factor analysis with ", x@nfact, " factor(s).\n", sep="")
+        cat("Full-information item factor analysis with ", x@Model$nfact, " factor(s).\n", sep="")
         EMquad <- ''
-        if(x@method == 'EM') EMquad <- c('\n     using ', x@quadpts, ' quadrature')
-        method <- x@method
+        if(x@Options$method == 'EM') EMquad <- c('\n     using ', x@Options$quadpts, ' quadrature')
+        method <- x@Options$method
         if(method == 'MIXED') method <- 'MHRM'
-        if(x@converge)
-            cat("Converged within ", x@TOL, ' tolerance after ', x@iter, ' ',
+        if(x@OptimInfo$converge)
+            cat("Converged within ", x@Options$TOL, ' tolerance after ', x@OptimInfo$iter, ' ',
                 method, " iterations.\n", sep = "")
         else
-            cat("FAILED TO CONVERGE within ", x@TOL, ' tolerance after ',
-                x@iter, ' ', method, " iterations.\n", sep="")
+            cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
+                x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
-        cat('M-step optimizer:', x@Moptim, '\n')
+        cat('M-step optimizer:', x@Options$Moptim, '\n')
         if(method == 'EM' || method == 'BL'){
-            cat('EM acceleration:', x@accelerate)
-            cat('\nNumber of rectangular quadrature:', x@quadpts)
+            cat('EM acceleration:', x@Options$accelerate)
+            cat('\nNumber of rectangular quadrature:', x@Options$quadpts)
             cat('\n')
         }
-        if(!is.nan(x@condnum)){
-            cat("\nInformation matrix estimated with method:", x@infomethod)
-            cat("\nCondition number of information matrix = ", x@condnum,
-                '\nSecond-order test: model ', if(!x@secondordertest)
+        if(!is.na(x@OptimInfo$condnum)){
+            cat("\nInformation matrix estimated with method:", x@Options$infomethod)
+            cat("\nCondition number of information matrix = ", x@OptimInfo$condnum,
+                '\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
                     'is not a maximum, or the information matrix is too inaccurate' else
                         'is a possible local maximum', '\n', sep = "")
         }
-        if(length(x@logLik) > 0){
-            if(x@logPrior != 0){
-                cat("\nLog-posterior = ", x@logLik + x@logPrior, if(method == 'MHRM')
-                    paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
+        if(length(x@Fit$logLik) > 0){
+            if(x@Fit$logPrior != 0){
+                cat("\nLog-posterior = ", x@Fit$logLik + x@Fit$logPrior, if(method == 'MHRM')
+                    paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
                 cat("DIC = ", x@DIC, "\n", sep='')
             } else {
-                cat("\nLog-likelihood = ", x@logLik, if(method == 'MHRM')
-                    paste(', SE =', round(x@SElogLik,3)), "\n",sep='')
-                cat("AIC = ", x@AIC, "; AICc = ", x@AICc, "\n", sep='')
-                cat("BIC = ", x@BIC, "; SABIC = ", x@SABIC, "\n", sep='')
+                cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
+                    paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
+                cat("AIC = ", x@Fit$AIC, "; AICc = ", x@Fit$AICc, "\n", sep='')
+                cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             }
-            if(!is.nan(x@p)){
-                cat("G2 (", x@df,") = ", round(x@G2,2), ", p = ", round(x@p,4), sep='')
-                cat("\nRMSEA = ", round(x@RMSEA,3), ", CFI = ", round(x@CFI,3),
-                    ", TLI = ", round(x@TLI,3), sep='')
+            if(!is.nan(x@Fit$p)){
+                cat("G2 (", x@Fit$df,") = ", round(x@Fit$G2,2), ", p = ", round(x@Fit$p,4), sep='')
+                cat("\nRMSEA = ", round(x@Fit$RMSEA,3), ", CFI = ", round(x@Fit$CFI,3),
+                    ", TLI = ", round(x@Fit$TLI,3), sep='')
             }
         }
     }
@@ -144,20 +144,19 @@ setMethod(
     signature = 'SingleGroupClass',
     definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0, digits = 3,
                           printCI = FALSE, verbose = TRUE, ...){
-        nfact <- ncol(object@F)
-        if (!object@exploratory || rotate == 'none') {
-            F <- object@F
+        if (!object@Options$exploratory || rotate == 'none') {
+            F <- object@Fit$F
             F[abs(F) < suppress] <- NA
-            h2 <- as.matrix(object@h2)
+            h2 <- as.matrix(object@Fit$h2)
             SS <- apply(F^2,2,sum)
-            gp <- ExtractGroupPars(object@pars[[length(object@pars)]])
+            gp <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
             Phi <- cov2cor(gp$gcov)
             colnames(h2) <- "h2"
-            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[1L:object@nfact]
+            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[1L:object@Model$nfact]
             loads <- round(cbind(F,h2),digits)
             rownames(loads) <- colnames(object@Data$data)
             if(verbose){
-                if(object@exploratory)
+                if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
                 print(loads)
                 cat("\nSS loadings: ",round(SS,digits), "\n")
@@ -167,8 +166,8 @@ setMethod(
             }
             invisible(list(rotF=F,h2=h2,fcor=Phi))
         } else {
-            F <- object@F
-            h2 <- as.matrix(object@h2)
+            F <- object@Fit$F
+            h2 <- as.matrix(object@Fit$h2)
             colnames(h2) <- "h2"
             rotF <- Rotate(F, rotate, Target = Target, ...)
             SS <- apply(rotF$loadings^2,2,sum)
@@ -252,43 +251,42 @@ setMethod(
     definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
                           simplify=FALSE, verbose = TRUE, ...){
-        if(printSE && length(object@pars[[1L]]@SEpar)) rawug <- TRUE
+        if(printSE && length(object@ParObjects$pars[[1L]]@SEpar)) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1', call.=FALSE)
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
-        K <- object@K
-        J <- length(K)
-        nfact <- ncol(object@F)
+        J <- object@Data$nitems
+        nfact <- object@Model$nfact + length(object@Model$prodlist)
         a <- matrix(0, J, nfact)
         for(i in 1:J)
-            a[i, ] <- ExtractLambdas(object@pars[[i]])
+            a[i, ] <- ExtractLambdas(object@ParObjects$pars[[i]])
 
-        if (object@exploratory && rotate != 'none'){
+        if (object@Options$exploratory && rotate != 'none'){
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
             a <- rotateLambdas(so) * 1.702
             for(i in 1:J)
-                object@pars[[i]]@par[1:nfact] <- a[i, ]
-            object@pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
+                object@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
+            object@ParObjects$pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         allPars <- list()
         if(IRTpars){
-            if(object@nfact > 1L)
+            if(object@Model$nfact > 1L)
                 stop('traditional parameterization is only available for unidimensional models',
                      call.=FALSE)
             for(i in 1:(J+1))
-                allPars[[i]] <- round(mirt2traditional(object@pars[[i]]), digits)
+                allPars[[i]] <- round(mirt2traditional(object@ParObjects$pars[[i]]), digits)
         } else {
-            if(length(object@pars[[1L]]@SEpar)){
+            if(length(object@ParObjects$pars[[1L]]@SEpar)){
                 if(printSE){
                     for(i in 1L:(J+1L)){
-                        allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
-                                                       object@pars[[i]]@SEpar),
+                        allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                                                       object@ParObjects$pars[[i]]@SEpar),
                                                      2, byrow = TRUE), digits)
                         rownames(allPars[[i]]) <- c('par', 'SE')
-                        nms <- names(object@pars[[i]]@est)
-                        if(i <= J && object@itemtype[i] != 'custom'){
+                        nms <- names(object@ParObjects$pars[[i]]@est)
+                        if(i <= J && object@Model$itemtype[i] != 'custom'){
                             nms[nms == 'g'] <- 'logit(g)'
                             nms[nms == 'u'] <- 'logit(u)'
                         }
@@ -296,18 +294,18 @@ setMethod(
                     }
                 } else {
                     for(i in 1L:(J+1L)){
-                        allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
-                                                       object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
-                                                       object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
+                        allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                                                       object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
+                                                       object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
                                                      3, byrow = TRUE), digits)
                         rownames(allPars[[i]]) <- c('par', SEnames)
-                        colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                        colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                     }
                 }
             } else {
                 for(i in 1L:(J+1L)){
-                    allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
-                    colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    allPars[[i]] <- matrix(round(object@ParObjects$pars[[i]]@par, digits), 1L)
+                    colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                     rownames(allPars[[i]]) <- 'par'
                 }
             }
@@ -331,14 +329,15 @@ setMethod(
             colnames(items) <- unms
             for(i in 1L:nrow(items))
                 items[i, nms[[i]]] <- items.old[[i]]
-            means <- allPars$GroupPars[1L:object@nfact]
-            covs <- matrix(NA, object@nfact, object@nfact)
-            covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(1L:object@nfact)]
-            colnames(covs) <- rownames(covs) <- names(means) <- object@factorNames[1L:object@nfact]
+            nfact <- object@Model$nfact
+            means <- allPars$GroupPars[1L:nfact]
+            covs <- matrix(NA, nfact, nfact)
+            covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(1L:nfact)]
+            colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[1L:nfact]
             allPars <- list(items=items, means=means, cov=covs)
         }
-        if(.hasSlot(object@lrPars, 'beta'))
-            allPars$lr.betas <- round(object@lrPars@beta, digits)
+        if(.hasSlot(object@Model$lrPars, 'beta'))
+            allPars$lr.betas <- round(object@Model$lrPars@beta, digits)
         return(allPars)
     }
 )
@@ -368,13 +367,13 @@ setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, verbose = TRUE){
-        df <- object@df - object2@df
+        df <- object@Fit$df - object2@Fit$df
         if(df < 0){
             temp <- object
             object <- object2
             object2 <- temp
         } else if(df == 0){
-            if((2*object2@logLik - 2*object@logLik) < 0){
+            if((2*object2@Fit$logLik - 2*object@Fit$logLik) < 0){
                 temp <- object
                 object <- object2
                 object2 <- temp
@@ -387,17 +386,17 @@ setMethod(
             print(object2@Call)
             cat('\n')
         }
-        if(any(object2@logPrior != 0 || object@logPrior != 0)){
-            BF <- (object@logLik + object@logPrior) - (object2@logLik + object2@logPrior)
-            ret <- data.frame(DIC = c(object@DIC, object2@DIC),
+        if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
+            BF <- (object@Fit$logLik + object@Fit$logPrior) - (object2@Fit$logLik + object2@Fit$logPrior)
+            ret <- data.frame(DIC = c(object@Fit$DIC, object2@Fit$DIC),
                               Bayes_Factor = c(NA, exp(BF)))
         } else {
-            X2 <- round(2*object2@logLik - 2*object@logLik, 3)
-            ret <- data.frame(AIC = c(object@AIC, object2@AIC),
-                              AICc = c(object@AICc, object2@AICc),
-                              SABIC = c(object@SABIC, object2@SABIC),
-                              BIC = c(object@BIC, object2@BIC),
-                              logLik = c(object@logLik, object2@logLik),
+            X2 <- round(2*object2@Fit$logLik - 2*object@Fit$logLik, 3)
+            ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
+                              AICc = c(object@Fit$AICc, object2@Fit$AICc),
+                              SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
+                              BIC = c(object@Fit$BIC, object2@Fit$BIC),
+                              logLik = c(object@Fit$logLik, object2@Fit$logLik),
                               X2 = c(NaN, X2),
                               df = c(NaN, abs(df)),
                               p = c(NaN, round(1 - pchisq(X2,abs(df)),4)))
@@ -474,37 +473,36 @@ setMethod(
                           suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
     {
         dots <- list(...)
-        if(.hasSlot(object@lrPars, 'beta'))
+        if(.hasSlot(object@Model$lrPars, 'beta'))
             stop('Latent regression models not yet supported')
         discrete <- FALSE
         if(!is.null(dots$discrete)) discrete <- TRUE
-        K <- object@K
+        K <- object@Data$K
         data <- object@Data$data
         N <- nrow(data)
         J <- ncol(data)
-        nfact <- ncol(object@F)
-        itemloc <- object@itemloc
+        nfact <- ncol(object@Fit$F)
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
         if(!discrete){
             if(is.null(quadpts))
-                quadpts <- object@quadpts
+                quadpts <- object@Options$quadpts
             if(is.nan(quadpts))
                 quadpts <- select_quadpts(nfact)
-            bfactorlist <- object@bfactor
+            bfactorlist <- object@Internals$bfactor
             theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
             if(type != 'Q3'){
                 if(is.null(bfactorlist$Priorbetween[[1L]])){
                     Theta <- thetaComb(theta, nfact)
                 } else {
-                    Theta <- object@Theta
+                    Theta <- object@Model$Theta
                 }
             } else if(is.null(Theta)){
                 Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, ...)
             }
         } else {
-            Theta <- object@Theta
+            Theta <- object@Model$Theta
             if(!any(type %in% c('exp', 'LD', 'LDG2')))
                 stop('residual type not supported for discrete latent variables', call.=FALSE)
         }
@@ -513,20 +511,20 @@ setMethod(
         calcG2 <- ifelse(type == 'LDG2', TRUE, FALSE)
         if(type %in% c('LD', 'LDG2')){
             if(!discrete){
-                groupPars <- ExtractGroupPars(object@pars[[length(object@pars)]])
+                groupPars <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
                 prior <- mirt_dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
                 prior <- prior/sum(prior)
             } else {
-                prior <- object@Prior[[1L]]
+                prior <- object@Internals$Prior[[1L]]
             }
-            df <- (object@K - 1) %o% (object@K - 1)
+            df <- (object@Data$K - 1) %o% (object@Data$K - 1)
             diag(df) <- NA
             colnames(df) <- rownames(df) <- colnames(res)
             for(i in 1L:J){
                 for(j in 1L:J){
                     if(i < j){
-                        P1 <- ProbTrace(x=object@pars[[i]], Theta=Theta)
-                        P2 <- ProbTrace(x=object@pars[[j]], Theta=Theta)
+                        P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
+                        P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
                         tab <- table(data[,i],data[,j])
                         Etab <- matrix(0,K[i],K[j])
                         for(k in 1L:K[i])
@@ -565,9 +563,9 @@ setMethod(
             return(res)
         } else if(type == 'exp'){
             r <- object@Data$Freq[[1L]]
-            res <- round((r - object@Pl * nrow(object@Data$data)) /
-                             sqrt(object@Pl * nrow(object@Data$data)),digits)
-            expected <- round(N * object@Pl,digits)
+            res <- round((r - object@Internals$Pl * nrow(object@Data$data)) /
+                             sqrt(object@Internals$Pl * nrow(object@Data$data)),digits)
+            expected <- round(N * object@Internals$Pl,digits)
             tabdata <- object@Data$tabdata
             rownames(tabdata) <- NULL
             ISNA <- is.na(rowSums(tabdata))
@@ -575,7 +573,7 @@ setMethod(
             tabdata <- data.frame(tabdata,object@Data$Freq[[1L]],expected,res)
             colnames(tabdata) <- c(colnames(object@Data$tabdata),"freq","exp","res")
             if(full.scores){
-                tabdata[, 'exp'] <- object@Pl / r * N
+                tabdata[, 'exp'] <- object@Internals$Pl / r * N
                 tabdata2 <- object@Data$tabdata
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
                 sfulldata <- apply(object@Data$data, 1, paste, sep='', collapse = '/')
@@ -738,18 +736,18 @@ setMethod(
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
-        nfact <- x@nfact
+        nfact <- x@Model$nfact
         if(length(degrees) > nfact) type = 'infoangle'
         if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
         if(nfact == 2 && length(degrees) == 1L)
             degrees <- c(degrees, 90 - degrees)
         if(nfact == 3 && length(degrees) == 1L) degrees <- rep(90/3, 3)
         if(nfact == 1) degrees <- 0
-        J <- length(x@pars) - 1
+        J <- x@Data$nitems
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
-        prodlist <- attr(x@pars, 'prodlist')
+        prodlist <- attr(x@ParObjects$pars, 'prodlist')
         if(all(x@Data$K[which.items] == 2L)) auto.key <- FALSE
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
@@ -760,30 +758,30 @@ setMethod(
                 if(nfact == 2) ta <- c(degrees[l], 90 - degrees[l])
                 if(nfact == 3) ta <- degrees
                 for(i in 1:J)
-                    info <- info + iteminfo(x=x@pars[[i]], Theta=ThetaFull, degrees=ta)
+                    info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=ta)
             }
         }
         adj <- x@Data$mins
-        if (x@exploratory){
+        if (x@Options$exploratory){
             if(!is.null(dots$rotate)){
                 so <- summary(x, verbose=FALSE, digits=5, ...)
                 a <- rotateLambdas(so) * 1.702
                 for(i in 1:J)
-                    x@pars[[i]]@par[1:nfact] <- a[i, ]
+                    x@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
             }
         }
-        itemtrace <- computeItemtrace(x@pars, ThetaFull, x@itemloc, CUSTOM.IND=x@CUSTOM.IND)
+        itemtrace <- computeItemtrace(x@ParObjects$pars, ThetaFull, x@Model$itemloc,
+                                      CUSTOM.IND=x@Internals$CUSTOM.IND)
         score <- c()
         for(i in 1:J)
-            score <- c(score, 0:(x@K[i]-1) + adj[i])
+            score <- c(score, 0:(x@Data$K[i]-1) + adj[i])
         score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
         plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))
         if(MI > 0L && nfact == 1L){
             tmpx <- x
-            if(is(try(chol(x@information), silent=TRUE), 'try-error'))
-                stop('Proper information matrix must be precomputed in model', call.=FALSE)
-            tmppars <- x@pars
-            covB <- solve(x@information)
+            if(!x@Options$SE)
+                stop('Must compute an information matrix', call.=FALSE)
+            covB <- x@vcov
             pre.ev <- eigen(covB)
             names <- colnames(covB)
             tmp <- lapply(names, function(x, split){
@@ -793,13 +791,14 @@ setMethod(
             CIscore <- CIinfo <- rxx <- CIrxx <- matrix(0, MI, length(plt$score))
             for(i in 1L:MI){
                 while(TRUE){
-                    tmp <- try(imputePars(pars=x@pars, pre.ev=pre.ev,
-                                          imputenums=imputenums, constrain=x@constrain),
+                    tmp <- try(imputePars(pars=x@ParObjects$pars, pre.ev=pre.ev,
+                                          imputenums=imputenums, constrain=x@Model$constrain),
                                silent=TRUE)
                     if(!is(tmp, 'try-error')) break
                 }
-                tmpx@pars <- tmp
-                itemtrace <- computeItemtrace(tmpx@pars, ThetaFull, x@itemloc, CUSTOM.IND=x@CUSTOM.IND)
+                tmpx@ParObjects$pars <- tmp
+                itemtrace <- computeItemtrace(tmpx@ParObjects$pars, ThetaFull, x@Model$itemloc,
+                                              CUSTOM.IND=x@Internals$CUSTOM.IND)
                 tmpscore <- rowSums(score * itemtrace)
                 CIscore[i, ] <- tmpscore
                 CIinfo[i, ] <- testinfo(tmpx, ThetaFull)[,1L]
@@ -1079,11 +1078,11 @@ setMethod(
             } else if(type == 'empiricalhist'){
                 if(is.null(main))
                     main <- 'Empirical Histogram'
-                Prior <- x@Prior[[1L]]
-                if(!x@empiricalhist)
+                Prior <- x@Internals$Prior[[1L]]
+                if(!x@Options$empiricalhist)
                     stop('Empirical histogram was not estimated for this object', call.=FALSE)
-                Theta <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
-                                    length.out = x@quadpts))
+                Theta <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
+                                    length.out = x@Options$quadpts))
                 Prior <- Prior * nrow(x@Data$data)
                 cuts <- cut(Theta, floor(npts/2))
                 Prior <- do.call(c, lapply(split(Prior, cuts), mean))

@@ -50,7 +50,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior,
                                         large=large, calcNull=FALSE, technical=list(message=FALSE, warn=FALSE,
                                                                                     parallel=FALSE), ...)
-        ret <- list(LL=tmpmod@logLik + tmpmod@logPrior, vals=mod2values(tmpmod))
+        ret <- list(LL=tmpmod@Fit$logLik + tmpmod@Fit$logPrior, vals=mod2values(tmpmod))
         ret
     }
 
@@ -166,16 +166,16 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
           conv_lower=conv_lower, conv_upper=conv_upper)
     }
 
-    if(.hasSlot(mod@lrPars, 'beta'))
+    if(.hasSlot(mod@Model$lrPars, 'beta'))
         stop('Latent regression models not yet supported')
     dat <- mod@Data$data
-    model <- mod@model[[1L]]
-    parprior <- mod@parprior
+    model <- mod@Model$model
+    parprior <- mod@Model$parprior
     if(length(parprior))
         stop('Confidence intervals cannot be computed for models that include priors')
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
-    large <- mirt(mod@Data$data, mod@model[[1L]], large = TRUE)
+    large <- mirt(mod@Data$data, mod@Model$model, large = TRUE)
     as <- matrix(sv$value[sv$name %in% paste0('a', 1L:30L)], ncol(dat))
     asigns <- sign(as)
     if(!is.null(parnum)){
@@ -200,7 +200,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         if(length(parnum) != 2L)
             stop('parnum input must contain exactly two parameter numbers', call.=FALSE)
     }
-    LL <- mod@logLik
+    LL <- mod@Fit$logLik
     get.LL <- LL - qchisq(1-alpha, 1 + plot)/2
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,

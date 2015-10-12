@@ -42,7 +42,7 @@ imputeMissing <- function(x, Theta, ...){
     if(is(x, 'MixedClass'))
         stop('mixedmirt xs not yet supported', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
-        pars <- x@pars
+        pars <- x@ParObjects$pars
         group <- x@Data$group
         data <- x@Data$data
         if(sum(is.na(data))/length(data) > .1)
@@ -59,7 +59,7 @@ imputeMissing <- function(x, Theta, ...){
         return(data)
     }
     dots <- list(...)
-    pars <- x@pars
+    pars <- x@ParObjects$pars
     nfact <- pars[[1L]]@nfact
     if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
         stop('Theta must be a matrix of size N x nfact', call.=FALSE)
@@ -73,7 +73,7 @@ imputeMissing <- function(x, Theta, ...){
             }
         }
     }
-    K <- x@K
+    K <- x@Data$K
     J <- length(K)
     data <- x@Data$data
     if(sum(is.na(data))/length(data) > .1)

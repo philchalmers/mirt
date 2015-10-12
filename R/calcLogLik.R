@@ -4,7 +4,7 @@ setMethod(
 	definition = function(object, draws = 5000, G2 = TRUE, lrPars=NULL)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
-                            CUSTOM.IND, lrPars){
+                            CUSTOM.IND, lrPars, pars, itemloc){
             theta <- mirt_rmvnorm(N,grp$gmeans, grp$gcov)
             if(length(lrPars)) theta <- theta + lrPars@mus
             if(length(prodlist) > 0L)
@@ -23,21 +23,21 @@ setMethod(
                                           CUSTOM.IND=CUSTOM.IND)
             return(rowSums(log(itemtrace)*fulldata))
         }
-        pars <- object@pars
+        pars <- object@ParObjects$pars
         fulldata <- object@Data$fulldata
-        prodlist <- object@prodlist
-        itemloc <- object@itemloc
+        prodlist <- object@Model$prodlist
+        itemloc <- object@Model$itemloc
         N <- nrow(fulldata)
 	    J <- length(pars)-1L
-	    nfact <- length(ExtractLambdas(pars[[1L]])) - length(object@prodlist) - pars[[1L]]@nfixedeffects
+	    nfact <- length(ExtractLambdas(pars[[1L]])) - length(object@Model$prodlist) - pars[[1L]]@nfixedeffects
         LL <- matrix(0, N, draws)
         grp <- ExtractGroupPars(pars[[length(pars)]])
-        if(length(object@random) == 0L){
+        if(length(object@ParObjects$random) == 0L){
             ot <- matrix(0, 1L, J)
-        } else ot <- OffTerm(object@random, J=J, N=N)
-        LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact, lrPars=lrPars,
+        } else ot <- OffTerm(object@ParObjects$random, J=J, N=N)
+        LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact, lrPars=lrPars, pars=pars, itemloc=itemloc,
                         N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
-                        random=object@random, ot=ot, CUSTOM.IND=object@CUSTOM.IND))
+                        random=object@ParObjects$random, ot=ot, CUSTOM.IND=object@Internals$CUSTOM.IND))
         LL <- exp(LL)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)
@@ -53,47 +53,43 @@ setMethod(
         r <- object@Data$Freq[[1L]]
         expected <- .Call('sumExpected', t(data), tabdata, rwmeans, J)
 		tabdata <- cbind(tabdata,expected*N)
-        object@Pl <- expected
+        object@Internals$Pl <- expected
         nestpars <- nconstr <- 0L
         for(i in 1L:length(pars))
             nestpars <- nestpars + sum(pars[[i]]@est)
-        if(length(object@constrain) > 0L)
-            for(i in 1L:length(object@constrain))
-                nconstr <- nconstr + length(object@constrain[[i]]) - 1L
-        nfact <- object@nfact - length(prodlist)
-        nmissingtabdata <- sum(is.na(rowSums(object@Data$tabdata)))
+        if(length(object@Model$constrain) > 0L)
+            for(i in 1L:length(object@Model$constrain))
+                nconstr <- nconstr + length(object@Model$constrain[[i]]) - 1L
+        nfact <- object@Model$nfact - length(prodlist)
+        Fit <- list()
 		if(G2){
 			if(any(is.na(data))){
-			    object@G2 <- NaN
+			    Fit$G2 <- NaN
 			} else {
                 pick <- r != 0L
                 r <- r[pick]
                 expected <- expected[pick]
 				G2 <- 2 * sum(r*log(r/(sum(r)*expected)))
-                df <- object@df
-				object@G2 <- G2
-                if(logLikpre == 0){
-    				null.mod <- object@null.mod
-    				object@TLI <- (null.mod@G2 / null.mod@df - G2/df) / (null.mod@G2 / null.mod@df - 1)
-                }
+				Fit$G2 <- G2
 			}
 		}
-		object@logLik <- logLik
+		Fit$logLik <- logLik
         if(logLikpre < 0)
-            object@logLik <- logLikpre
-		object@SElogLik <- SElogLik
+            Fit$logLik <- logLikpre
+		Fit$SElogLik <- SElogLik
 		LP <- 0
 		if(length(lrPars))
 		    if(lrPars@any.prior)
 		        LP <- LL.Priors(x=lrPars, LL=LP)
-		if(length(object@random))
-		    for(i in 1L:length(object@random))
-		        if(object@random[[i]]@any.prior)
-		            LP <- LL.Priors(x=object@random[[i]], LL=LP)
+		if(length(object@ParObjects$random))
+		    for(i in 1L:length(object@ParObjects$random))
+		        if(object@ParObjects$random[[i]]@any.prior)
+		            LP <- LL.Priors(x=object@ParObjects$random[[i]], LL=LP)
 		for(i in 1L:length(pars))
 		    if(pars[[i]]@any.prior)
 		        LP <- LL.Priors(x=pars[[i]], LL=LP)
-		object@logPrior <- unname(LP)
+		Fit$logPrior <- unname(LP)
+		object@Fit <- Fit
 		return(object)
 	}
 )
@@ -104,7 +100,7 @@ setMethod(
     definition = function(object, draws = 5000)
     {
         class(object) <- 'SingleGroupClass'
-        ret <- calcLogLik(object, draws=draws, G2=FALSE, lrPars=object@lrPars)
+        ret <- calcLogLik(object, draws=draws, G2=FALSE, lrPars=object@Model$lrPars)
         class(ret) <- 'MixedClass'
         return(ret)
 

@@ -289,6 +289,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
+    collectLL <- as.numeric(na.omit(collectLL))
     LP <- 0
     if(any(ANY.PRIOR)){
         if(length(lrPars)){
@@ -341,16 +342,16 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
-                    collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr],
-                    groupest=groupest, lrPars=lrPars, logPrior=LP)
+                    collectLL=collectLL, shortpars=longpars[estpars & !redun_constr],
+                    groupest=groupest, lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
-                    prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=na.omit(collectLL),
+                    prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=collectLL,
                     shortpars=longpars[estpars & !redun_constr], groupest=groupest, lrPars=lrPars,
-                    logPrior=LP)
+                    logPrior=LP, fail_invert_info=FALSE)
     }
     for(g in 1L:ngroups)
         for(i in 1L:J)
