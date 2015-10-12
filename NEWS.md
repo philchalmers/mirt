@@ -3,13 +3,15 @@
 ## MAJOR CHANGES
 
 - the structure of the output objects now contains considerably fewer S4 slots, and instead are 
-  organized into more structured list elements such as DATA, MODEL, FIT, and so on. Additionally,
-  the information matrix has slot has been removed in favour of providing the asymtotic covariance 
+  organized into more structured list elements such as `Data`, `Model`, `Fit`, and so on. Additionally,
+  the information matrix has slot has been removed in favour of providing the asymptotic covariance 
   matrix (a.k.a., the inverse of the information matrix)
 
 ## MINOR CHANGES
 
-- `crossprod` SE.type now incorportes latent variable information (replaces NA placeholders)
+- added `extract.mirt()` function to allow more convenient extracting of internal elements
+
+- `crossprod` SE.type now incorporates latent variable information (replaces NA placeholders)
 
 - changed the default `full.scores = FALSE` argument to `TRUE` in `fscores()`
 

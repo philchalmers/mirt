@@ -978,7 +978,7 @@ IL: Scientific Software International.
   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mod2values}},
   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}},
   \code{\link{probtrace}}, \code{\link{simdata}}, \code{\link{averageMI}},
-  \code{\link{fixef}}
+  \code{\link{fixef}}, \code{\link{extract.mirt}}
 }
 \keyword{models}
 
