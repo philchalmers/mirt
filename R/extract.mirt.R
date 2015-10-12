@@ -29,6 +29,7 @@
 #' }
 #'
 #' @aliases extract.mirt
+#' @export extract.mirt
 #' @param x mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 #'   'DiscreteGroupClass'
 #' @param what a character vector indicating what to extract. Can contain more than one element
