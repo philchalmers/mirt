@@ -1,7 +1,7 @@
 #' Extract various elements from estimated model objects
 #'
 #' A generic function to extract the internal objects from any estimated model. If possible, the
-#' function will returns a data.frame containing the desired elements, otherwise it will return a list.
+#' function will returns a vector/scalar containing the desired elements, otherwise it will return a list.
 #'
 #' Objects which can be extracted from mirt objects include:
 #'
@@ -75,7 +75,8 @@ extract.mirt <- function(x, what){
         )
     }
     names(ret) <- what
+    if(length(ret) == 1L) return(ret[[1L]])
     if(!any(what %in% c('F', 'h2', 'vcov', 'parvec', 'exp_resp')))
-        ret <- as.data.frame(ret)
+        ret <- do.call(c, ret)
     ret
 }

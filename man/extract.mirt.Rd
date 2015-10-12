@@ -14,7 +14,7 @@ extract.mirt(x, what)
 }
 \description{
 A generic function to extract the internal objects from any estimated model. If possible, the
-function will returns a data.frame containing the desired elements, otherwise it will return a list.
+function will returns a vector/scalar containing the desired elements, otherwise it will return a list.
 }
 \details{
 Objects which can be extracted from mirt objects include:
