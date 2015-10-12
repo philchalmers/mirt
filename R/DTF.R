@@ -196,7 +196,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
             stop('ACOV matrix is not positive definite')
         impute <- TRUE
         shortpars <- mod@Internals$shortpars
-        covB <- vcov
+        covB <- mod@vcov
         names <- colnames(covB)
         imputenums <- sapply(strsplit(names, '\\.'), function(x) as.integer(x[2L]))
         longpars <- c(do.call(c, lapply(mod@ParObjects$pars[[1L]]@ParObjects$pars, function(x) x@par)),

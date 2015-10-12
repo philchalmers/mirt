@@ -20,11 +20,9 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full,
+Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full = FALSE,
                        itemtrace=NULL, deriv = FALSE)
 {
-    nquad <- nrow(Theta)
-    J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata)
@@ -37,7 +35,6 @@ Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, f
 Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween, specific,
                           CUSTOM.IND, sitems, itemloc, itemtrace=NULL)
 {
-    J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior)
@@ -227,7 +224,6 @@ Mstep.grad2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, gro
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    LL <- 0
     ind <- 1L
     for(g in 1L:ngroups){
         if(BFACTOR){
@@ -306,12 +302,12 @@ Mstep.grad_alt <- function(x0, optim_args){
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,
-                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, NO.CUSTOM, SLOW.IND,
-                     TOL, control)
+                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, TOL, control)
 {
     plast2 <- plast <- p
     ubound <- UBOUND[est]
     lbound <- LBOUND[est]
+    lastchange <- 0
     if(is.null(control$maxit)) control$maxit <- 50L
     for(iter in 1L:control$maxit){
         longpars[est] <- p
@@ -363,9 +359,6 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
 BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)
 
 Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars, retscores=FALSE){
-    J <- length(pars) - 1L
-    N <- nrow(fulldata)
-    nfact <- ncol(Theta)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
     mu <- lrPars@mus

@@ -40,7 +40,6 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
     L <- Ls$L
-    MSTEPTOL <- list$MSTEPTOL
     Moptim <- list$Moptim
     sitems <- list$sitems
     specific <- list$specific

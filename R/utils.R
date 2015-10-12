@@ -31,7 +31,6 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
 {
     makedraws <- try({
         N <- nrow(fulldata)
-        J <- length(pars) - 1L
         unif <- runif(N)
         sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
         total_0 <- attr(theta0, 'log.lik_full')
@@ -176,22 +175,22 @@ Rotate <- function(F, rotate, Target = NULL, ...)
 gamma.cor <- function(x)
 {
 	concordant <- function(x){
-			mat.lr <- function(r, c){
+			mat.lr <- function(r, c, r.x, c.x){
 				lr <- x[(r.x > r) & (c.x > c)]
 				sum(lr)
 			}
 		r.x <- row(x)
 		c.x <- col(x)
-		sum(x * mapply(mat.lr, r = r.x, c = c.x))
+		sum(x * mapply(mat.lr, r = r.x, c = c.x, MoreArgs=list(r.x=r.x, c.x=c.x)))
 	}
 	discordant <- function(x){
-		mat.ll <- function(r, c){
+		mat.ll <- function(r, c, r.x, c.x){
 			ll <- x[(r.x > r) & (c.x < c)]
 			sum(ll)
 		}
 		r.x <- row(x)
 		c.x <- col(x)
-		sum(x * mapply(mat.ll, r = r.x, c = c.x))
+		sum(x * mapply(mat.ll, r = r.x, c = c.x, MoreArgs=list(r.x=r.x, c.x=c.x)))
 	}
 	c <- concordant(x)
 	d <- discordant(x)
@@ -203,7 +202,6 @@ gamma.cor <- function(x)
 cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.obs')
 {
 	fulldata <- as.matrix(fulldata)
-	nitems <- ncol(fulldata)
 	cormat <- suppressWarnings(cor(fulldata, use=use))
     diag(cormat) <- 1
     cormat[is.na(cormat)] <- 0
@@ -345,7 +343,7 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, N,
+updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
                         BFACTOR, sitems, cycles, rlist, prior, lrPars = list(), full=FALSE){
     Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
@@ -522,7 +520,6 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 constrain[[length(constrain) + 1L]] <- PrepList[[g]]$constrain[[i]]
     if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
         tmpmat <- matrix(NA, nfact, nfact)
-        low_tri <- lower.tri(tmpmat)
         tmp <- c()
         tmpmats <- tmpestmats <- matrix(NA, ngroups, nfact*(nfact+1L)/2)
         for(g in 1L:ngroups){

@@ -16,7 +16,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     theta <- list$theta
     full <- list$full
     J <- length(itemloc) - 1L
-    N <- nrow(Data$data)
     nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
@@ -39,7 +38,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(length(lrPars))
             listpars[[g]][[i+1L]] <- lrPars@par
     }
-    lastpars2 <- lastpars1 <- listpars
     index <- 1L:nfullpars
     longpars <- rep(NA,nfullpars)
     latent_longpars <- logical(nfullpars)
@@ -58,7 +56,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
     }
     converge <- TRUE
-    estindex <- index[estpars]
     L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
@@ -174,7 +171,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                                list=list, ngroups=ngroups, nfact=nfact, prior=prior,
-                               J=J, N=N, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
+                               J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
