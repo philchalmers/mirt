@@ -801,7 +801,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Data$covdata <- attr(mixed.design, 'covdata')
     Data$itemdesign <- attr(mixed.design, 'itemdesign')
     ParObjects <- list(pars=cmods, lrPars=lrPars, random=ESTIMATE$random)
-    OptimInfo <- list(iter=ESTIMATE$cycles, converge=ESTIMATE$converge, cand.t.var=ESTIMATE$cand.t.var,
+    OptimInfo <- list(iter=ESTIMATE$cycles, converged=ESTIMATE$converge, cand.t.var=ESTIMATE$cand.t.var,
                       condnum=NA, secondordertest=NA)
     vcov <- matrix(NA, 1, 1)
     if(Options$SE){

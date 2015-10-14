@@ -35,11 +35,16 @@ Objects which can be extracted from mirt objects include:
   \item{DIC}{DIC}
   \item{F}{unrotated standardized loadings matrix}
   \item{h2}{factor communality estimates}
-  \item{parvec}{vector containing uniquely estimated paramters}
-  \item{vcov}{parameter covariance matrix (associated with parvec)}
-  \item{nest}{number of freely estimated parameters}
   \item{LLhistory}{EM log-likelihood history}
   \item{exp_resp}{expected probability of the unique response patterns}
+  \item{converged}{a logical value indicating whether the model terminated within
+    the convergence criteria}
+  \item{nest}{number of freely estimated parameters}
+  \item{parvec}{vector containing uniquely estimated parameters}
+  \item{vcov}{parameter covariance matrix (associated with parvec)}
+  \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
+  \item{secondordertest}{a logical indicating whether the model passed the second-order test
+    based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
 }
 }
 \examples{
