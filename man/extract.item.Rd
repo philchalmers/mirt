@@ -28,7 +28,7 @@ extr.1 <- extract.item(mod, 1)
 }
 }
 \seealso{
-\code{\link{extract.group}}
+\code{\link{extract.group}}, \code{\link{extract.mirt}}
 }
 \keyword{extract}
 

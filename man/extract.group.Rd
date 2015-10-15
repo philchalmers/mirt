@@ -34,7 +34,7 @@ plot(group.1)
 }
 }
 \seealso{
-\code{\link{extract.item}}
+\code{\link{extract.item}}, \code{\link{extract.mirt}}
 }
 \keyword{extract}
 

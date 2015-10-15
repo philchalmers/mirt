@@ -30,7 +30,7 @@ test_that('exploratory mods', {
     expect_message(modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
                                                                      c(4,8,12,16,20,'norm', 1.7, 1)), method = 'MHRM', draws = 10),
                             "MHRM terminated after 2000 iterations.")
-    expect_equal(modm7@Fit$df, 11)
+    expect_equal(extract.mirt(modm7, 'df'), 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
     expect_equal(cfs, c(5.103,7.255,0.148,0.895,8.396,1.902,0.323,0.891,10.745,6.593,0.356,0.926,5.189,5.404,0.148,0.696,2.352,3.802,0.338,0.897,0,1), tolerance = 1e-2)
