@@ -6,6 +6,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        gpcm_mats=list(), control = list(), ...)
 {
     start.time <- proc.time()[3L]
+    dots <- list(...)
     if(missing(data)) missingMsg('data')
     if(missing(model)) missingMsg('model')
     if(missing(group)) missingMsg('group')
@@ -144,14 +145,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         names(PrepList) <- Data$groupNames
         tmp <- 1L:Data$ngroups
         selectmod <- Data$model[[tmp[names(Data$model) == Data$groupNames[1L]]]]
-        PrepListFull <- PrepList[[1L]] <-
-            PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess,
-                     upper=upper, parprior=parprior, verbose=opts$verbose,
-                     technical=opts$technical, parnumber=1L, BFACTOR=opts$BFACTOR,
-                     grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
-                     mixed.design=mixed.design, customItems=customItems,
-                     fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow,
-                     gpcm_mats=gpcm_mats)
+        if(!is.null(dots$PrepList)) {
+            PrepListFull <- PrepList[[1L]] <- dots$PrepList
+        } else {
+            PrepListFull <- PrepList[[1L]] <-
+                PrepData(data=Data$data, model=selectmod, itemtype=itemtype, guess=guess,
+                         upper=upper, parprior=parprior, verbose=opts$verbose,
+                         technical=opts$technical, parnumber=1L, BFACTOR=opts$BFACTOR,
+                         grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
+                         mixed.design=mixed.design, customItems=customItems,
+                         fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow,
+                         gpcm_mats=gpcm_mats)
+            if(!is.null(dots$Return_PrepList)) return(PrepListFull)
+        }
         if(any(PrepListFull$itemtype == 'nominal') && is.null(nominal.highlow) && !opts$NULL.MODEL
            && opts$verbose)
             if(opts$message)
