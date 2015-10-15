@@ -50,7 +50,7 @@ test_that('dich', {
     expect_message(modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, .1),
                                                                  c(4,8,12,16,20,'norm', 1.7, .1))),
                    "EM cycles terminated after 500 iterations.")
-    expect_equal(extract.mirt(modm, 'df'), 11)
+    expect_equal(extract.mirt(modm7, 'df'), 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
     expect_equal(cfs, c(5.143,8.598,0.154,0.859,5.86,3.667,0.16,0.843,10.273,11.019,0.155,0.861,1.281,0.854,0.153,0.845,4.686,9.008,0.154,0.859,0,1), tolerance = 1e-2)
