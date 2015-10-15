@@ -4,14 +4,14 @@
 \alias{iteminfo}
 \title{Function to calculate item information}
 \usage{
-iteminfo(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE)
+iteminfo(x, Theta, degrees = NULL, total.info = TRUE)
 }
 \arguments{
 \item{x}{an extracted internal mirt object containing item information}
 
 \item{Theta}{a vector (unidimensional) or matrix (multidimensional) of latent trait values}
 
-\item{degrees}{a vector of angles in degrees that are between 0 and 90 that jointly sum to 90.
+\item{degrees}{a vector of angles in degrees that are between 0 and 90.
 Only applicable when the input object is multidimensional}
 
 \item{total.info}{logical; return the total information curve for the item? If \code{FALSE},

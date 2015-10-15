@@ -55,6 +55,9 @@ test_that('confirmatory mods', {
     cfs <- as.numeric(do.call(c, coef(mod1, digits=4)))
     expect_equal(cfs, c(1.5565,0,-0.9627,0,1,0.5455,0,-1.4531,0,1,0.7978,0,1.3458,0,1,1.1692,0.5865,0.0477,0,1,0,1.4023,2.8587,1.8546,-0.4592,0,0.4415,2.5338,0.9943,-1.0163,0,0.8477,1.8935,0.0816,0,0.9704,1.0164,0,1,0,0,1,0.4309,1),
                  tolerance = 1e-2)
+    Theta <- expand.grid(-4:4, -4:4)
+    info <- testinfo(mod1, Theta, degrees = c(30,40))
+    expect_equal(info[1:4], c(0.2563353, 0.3050700, 0.3738668, 0.5134378), tolerance = 1e-4)
 
     mod1b <- mirt(dataset,model.1, verbose = FALSE)
     expect_is(mod1b, 'SingleGroupClass')
@@ -86,6 +89,9 @@ test_that('confirmatory mods', {
 
     fs1 <- fscores(mod1, verbose = FALSE, full.scores=FALSE)
     expect_is(fs1, 'matrix')
+    fs2 <- fscores(mod1, method = 'WLE', response.pattern = dataset[1:2,])
+    expect_equal(as.vector(fs2[,c('F1', 'F2')]), c(-0.4915098, 0.1835822, -1.3767735, 0.5192645),
+                 tolerance=1e-4)
     fs3 <- fscores(mod.quad, full.scores=TRUE, verbose = FALSE)
     expect_is(fs3, 'matrix')
     fs4 <- fscores(mod.combo, verbose = FALSE, full.scores=FALSE)

@@ -5,7 +5,7 @@
 #' @aliases testinfo
 #' @param x an estimated mirt object
 #' @param Theta a matrix of latent trait values
-#' @param degrees a vector of angles in degrees that are between 0 and 90 that jointly sum to 90.
+#' @param degrees a vector of angles in degrees that are between 0 and 90.
 #'   Only applicable when the input object is multidimensional
 #' @param group a number signifying which group the item should be extracted from (applies to
 #'   'MultipleGroupClass' objects only)
@@ -39,6 +39,7 @@
 testinfo <- function(x, Theta, degrees = NULL, group = NULL){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
+    if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
     J <- x@Data$nitems
     info <- 0
     for(i in 1L:J){

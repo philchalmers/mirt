@@ -147,11 +147,11 @@ test_that('poly', {
     Theta <- matrix(seq(-4,4,.01))
     x <- extract.item(modp1, 1)
     iinfo <- iteminfo(x, Theta)
-    expect_is(iinfo, 'matrix')
+    expect_is(iinfo, 'numeric')
     iinfo <- iteminfo(x, Theta, total.info=FALSE)
     expect_is(iinfo, 'matrix')
     tinfo <- testinfo(modp1, Theta)
-    expect_is(tinfo, 'matrix')
+    expect_is(tinfo, 'numeric')
 
     ER <- fscores(modp2, returnER = TRUE)
     expect_equal(as.numeric(ER), c(0.4882546, 0.5099054), tolerance=1e-4)

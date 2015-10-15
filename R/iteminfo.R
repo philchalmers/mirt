@@ -6,7 +6,7 @@
 #' @aliases iteminfo
 #' @param x an extracted internal mirt object containing item information
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
-#' @param degrees a vector of angles in degrees that are between 0 and 90 that jointly sum to 90.
+#' @param degrees a vector of angles in degrees that are between 0 and 90.
 #'   Only applicable when the input object is multidimensional
 #' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #'   information curves for each category are returned as a matrix
@@ -48,12 +48,13 @@
 #' lines(Theta, T1/T1, col = 'red')
 #'
 #' }
-iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE){
+iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
-    if(!is.matrix(Theta)) stop('Theta input must be a matrix', call.=FALSE)
+    if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
     if(ncol(Theta) == 1L) degrees <- 0
+    use_degrees <- ncol(Theta) > 1L
     if(is.null(degrees) && ncol(Theta) != 1L)
-        stop('Multidimensional information requires prespecified angles in degrees that sum to 90',
+        stop('Multidimensional information requires prespecified angles in degrees',
              call.=FALSE)
     if(ncol(Theta) != x@nfact)
         stop('Theta does not have the correct number of dimensions', call.=FALSE)
@@ -61,8 +62,6 @@ iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = 
     info <- if(use_degrees){
         if(ncol(Theta) != length(cosangle))
             stop('length of the degrees vector not equal to the number of factors', call.=FALSE)
-        if(!closeEnough(sum(cosangle^2), 1-1e-10, 1+1e-10))
-            stop('The squared cosines of the degrees vector do not sum to 1', call.=FALSE)
         ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
     } else ItemInfo2(x=x, Theta=Theta, total.info=total.info)
     info
