@@ -490,6 +490,9 @@
 #' A Multidimensional Ideal Point Item Response Theory Model for Binary Data.
 #' \emph{Multivariate Behavioral Research, 41}, 445-471.
 #'
+#' Muraki, E. (1990). Fitting a polytomous item response model to Likert-type data.
+#' \emph{Applied Psychological Measurement, 14}, 59-71.
+#'
 #' Muraki, E. (1992). A generalized partial credit model: Application of an EM algorithm.
 #' \emph{Applied Psychological Measurement, 16}, 159-176.
 #'
