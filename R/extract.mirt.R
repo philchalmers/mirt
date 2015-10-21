@@ -22,6 +22,13 @@
 #'   \item{F}{unrotated standardized loadings matrix}
 #'   \item{h2}{factor communality estimates}
 #'   \item{LLhistory}{EM log-likelihood history}
+#'   \item{tabdata}{a tabular version of the raw response data input. Frequencies are stored
+#'     in \code{freq}}
+#'   \item{freq}{frequencies associated with \code{tabdata}}
+#'   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
+#'     dummy coded variables}
+#'   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
+#'     tabulated frequencies}
 #'   \item{exp_resp}{expected probability of the unique response patterns}
 #'   \item{converged}{a logical value indicating whether the model terminated within
 #'     the convergence criteria}
@@ -29,6 +36,7 @@
 #'   \item{parvec}{vector containing uniquely estimated parameters}
 #'   \item{vcov}{parameter covariance matrix (associated with parvec)}
 #'   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
+#'   \item{Prior}{prior density distribution for the latent traits}
 #'   \item{secondordertest}{a logical indicating whether the model passed the second-order test
 #'     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
 #' }
@@ -78,13 +86,19 @@ extract.mirt <- function(x, what){
                       exp_resp = x@Internals$Pl,
                       converged = x@OptimInfo$converged,
                       condnum = x@OptimInfo$condnum,
+                      Prior = x@Internals$Prior,
                       secondordertest = x@OptimInfo$secondordertest,
+                      tabdata = x@Data$tabdata,
+                      freq = x@Data$Freq,
+                      tabdatalong = x@Data$tabdatalong,
+                      fulldatalong = x@Data$fulldata,
                       NULL
         )
     }
     names(ret) <- what
     if(length(ret) == 1L) return(ret[[1L]])
-    if(!any(what %in% c('F', 'h2', 'vcov', 'parvec', 'exp_resp')))
+    if(!any(what %in% c('F', 'h2', 'vcov', 'parvec', 'exp_resp', 'Prior', 'freq',
+                        'tabdata', 'tabdatalong', 'fulldatalong')))
         ret <- do.call(c, ret)
     ret
 }
