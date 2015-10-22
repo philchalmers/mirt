@@ -25,6 +25,7 @@
 #'   \item{tabdata}{a tabular version of the raw response data input. Frequencies are stored
 #'     in \code{freq}}
 #'   \item{freq}{frequencies associated with \code{tabdata}}
+#'   \item{K}{an integer vector indicating the number of unique elements for each item}
 #'   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
 #'     dummy coded variables}
 #'   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
@@ -32,6 +33,7 @@
 #'   \item{exp_resp}{expected probability of the unique response patterns}
 #'   \item{converged}{a logical value indicating whether the model terminated within
 #'     the convergence criteria}
+#'   \item{iterations}{number of iterations it took to reach the convergence criteria}
 #'   \item{nest}{number of freely estimated parameters}
 #'   \item{parvec}{vector containing uniquely estimated parameters}
 #'   \item{vcov}{parameter covariance matrix (associated with parvec)}
@@ -79,9 +81,11 @@ extract.mirt <- function(x, what){
                       logPrior = x@Fit$logPrior,
                       F = x@Fit$F,
                       h2 = x@Fit$h2,
+                      K = x@Data$K,
                       parvec = x@Internals$shortpars,
                       vcov = x@vcov,
                       nest = x@Model$nest,
+                      iterations = x@OptimInfo$iter,
                       LLhistory = x@Internals$collectLL,
                       exp_resp = x@Internals$Pl,
                       converged = x@OptimInfo$converged,
