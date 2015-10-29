@@ -762,6 +762,7 @@ setMethod(
             }
         }
         adj <- x@Data$mins
+        rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
         if (x@Options$exploratory){
             if(!is.null(dots$rotate)){
                 so <- summary(x, verbose=FALSE, digits=5, ...)
@@ -809,43 +810,55 @@ setMethod(
             colnames(plt) <- c("info", "score", "Theta1", "Theta2", "Theta3")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'infocontour'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- paste("Test Information Contour")
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(contourplot(info ~ Theta1 * Theta2 | Theta3, data = plt,
                                    main = main, xlab = expression(theta[1]),
                                    ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'scorecontour'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- paste("Expected Score Contour")
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
                                    main = main, xlab = expression(theta[1]),
                                    ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'info'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Test Information"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(wireframe(info ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SEcontour'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Test Standard Errors"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
                                           main = main, xlab = expression(theta[1]),
                                           ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'score'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Expected Total Score"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(wireframe(score ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SE'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Test Standard Errors"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(wireframe(SE ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
@@ -857,49 +870,63 @@ setMethod(
             colnames(plt) <- c("info", "score", "Theta1", "Theta2")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'infocontour'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- paste("Test Information Contour")
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(contourplot(info ~ Theta1 * Theta2, data = plt,
                                    main = main, xlab = expression(theta[1]),
                                    ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'scorecontour'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- paste("Expected Score Contour")
-                    return(contourplot(score ~ Theta1 * Theta2, data = plt,
-                                       main = main, xlab = expression(theta[1]),
-                                       ylab = expression(theta[2]),
-                                       par.strip.text=par.strip.text, par.settings=par.settings, ...))
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
+                return(contourplot(score ~ Theta1 * Theta2, data = plt,
+                                   main = main, xlab = expression(theta[1]),
+                                   ylab = expression(theta[2]),
+                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'info'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Test Information"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(wireframe(info ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SEcontour'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Test Standard Errors"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(contourplot(score ~ Theta1 * Theta2, data = plt,
                                           main = main, xlab = expression(theta[1]),
                                           ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'score'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Expected Total Score"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'infoangle'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- 'Information across different angles'
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 graphics::symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue',
                         xlab = expression(theta[1]), ylab = expression(theta[2]),
                         main = main)
             } else if(type == 'SE'){
-                if(is.null(main))
+                if(is.null(main)){
                     main <- "Test Standard Errors"
+                    if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
+                }
                 return(wireframe(SE ~ Theta1 + Theta2, data = plt, main = main,
                                  zlab=expression(SE(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
