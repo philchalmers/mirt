@@ -15,6 +15,7 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
                                      prior=Prior[[g]], itemloc=itemloc, full=full)
         }
         LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
+        rlist[[g]]$r1[is.nan(rlist[[g]]$r1)] <- 0
     }
     return(list(rlist=rlist, LL=LL))
 }
