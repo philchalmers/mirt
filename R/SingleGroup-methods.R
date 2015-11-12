@@ -1169,7 +1169,8 @@ mirt2traditional <- function(x){
         names(ds) <- paste0('c', 1:(ncat-1))
         par <- c(par1, as, ds)
     } else {
-        message('No internal transformation defined for itemtype: ', cls)
+        if(cls != 'GroupPars')
+            message('No internal transformation defined for itemtype: ', cls)
         names(par) <- names(x@est)
     }
     ret <- matrix(par, 1L, dimnames=list('par', names(par)))

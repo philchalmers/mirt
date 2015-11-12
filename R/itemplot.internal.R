@@ -14,8 +14,12 @@ setMethod(
     signature = signature(object = 'list'),
     definition = function(object, ...)
     {
-        newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@Model$nfact,
-                         Data=list(groupNames=factor(names(object))))
+        Data <- object[[1L]]@Data
+        Data$groupNames <- factor(names(object))
+        Model <- object[[1L]]@Model
+        ParObjects <- object[[1L]]@ParObjects
+        ParObjects$pars <- object
+        newobject <- new('MultipleGroupClass', Data=Data, Model=Model, ParObjects=ParObjects)
         x <- itemplot.internal(newobject, ...)
         return(invisible(x))
     }
@@ -30,7 +34,7 @@ setMethod(
     {
         Pinfo <- list()
         gnames <- object@Data$groupNames
-        nfact <- object@nfact
+        nfact <- object@Model$nfact
         K <- object@ParObjects$pars[[1L]]@ParObjects$pars[[item]]@ncat
         for(g in 1L:length(gnames)){
             object@ParObjects$pars[[g]]@vcov <- object@vcov
@@ -171,14 +175,15 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         if(length(tmpitem@SEpar) == 0) stop('Must calculate the information matrix first.', call.=FALSE)
         splt <- strsplit(colnames(x@vcov), '\\.')
         parnums <- as.numeric(do.call(rbind, splt)[,2])
-        tmp <- x@ParObjects$pars[[item]]@parnum[x@ParObjects$pars[[item]]@est]
+        tmp <- tmpitem@parnum[tmpitem@est]
         constrain <- x@Model$constrain
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 if(any(tmp %in% constrain[[i]]))
                     tmp[tmp %in% constrain[[i]]] <- constrain[[i]][1L]
         tmp <- parnums %in% tmp
-        mu <- tmpitem@ParObjects$par[x@ParObjects$pars[[item]]@est]
+        mu <- tmpitem@par[tmpitem@est]
+        vcov <- extract.mirt(x, 'vcov')
         smallinfo <- vcov[tmp, tmp]
         smallinfo <-(smallinfo + t(smallinfo))/2 #make symetric
         delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
