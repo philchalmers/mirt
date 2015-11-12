@@ -97,7 +97,7 @@ setMethod(
             infolist[[g]] <- info
         }
         if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
-        info <- do.call(rbind, infolist)
+        info <- do.call(c, infolist)
         Theta <- ThetaFull
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
         adj <- x@Data$mins
