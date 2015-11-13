@@ -234,22 +234,22 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
         collect <- matrix(NA, length(xrange), 2L)
         for(i in 1L:length(xrange)){
             sv2$value[sv2$parnum == parnums[1L]] <- xrange[i]
-            result <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
+            result <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns, pars=pars,
                                parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                                model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
-                               force = TRUE, ...)
+                               PrepList=PrepList, force = TRUE, ...)
             collect[i, ] <- result[1:2]
         }
         sv2$value[sv2$parnum == parnums[1L]] <- ret[1L, 6L]
-        lp <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
-                           parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
-                           model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
-                           force = TRUE, single=TRUE, ...)
-        sv2$value[sv2$parnum == parnums[1L]] <- ret[1L, 7L]
-        up <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns,
+        lp <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns, pars=pars,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
-                       force = TRUE, single=TRUE, ...)
+                       PrepList=PrepList, force = TRUE, single=TRUE, ...)
+        sv2$value[sv2$parnum == parnums[1L]] <- ret[1L, 7L]
+        up <- mySapply(X=2L, FUN=LLpar, parnums=parnums, asigns=asigns, pars=pars,
+                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
+                       model=model, large=large, sv=sv2, get.LL=get.LL, parprior=parprior,
+                       PrepList=PrepList, force = TRUE, single=TRUE, ...)
         dat <- data.frame(x=xrange, y=as.numeric(collect))
         dat <- rbind(dat, c(ret[1L, 6L], lp), c(ret[1L, 7L], up))
         dat <- rbind(dat, ret[,'value'])

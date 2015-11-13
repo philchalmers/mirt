@@ -645,11 +645,11 @@
 #'   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
 #' mod1 <- mirt(data, 1)
-#' slot(mod1, 'time') #time elapsed for each estimation component
+#' extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #'
 #' #optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 #' mod1 <- mirt(data, 1, optimizer = 'NR')
-#' slot(mod1, 'time')
+#' extract.mirt(mod1, 'time')
 #'
 #' mod2 <- mirt(data, 2, optimizer = 'NR')
 #' #difficulty converging with reduced quadpts, reduce TOL

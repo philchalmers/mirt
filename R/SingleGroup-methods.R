@@ -737,12 +737,7 @@ setMethod(
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@Model$nfact
-        if(length(degrees) > nfact) type = 'infoangle'
         if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
-        if(nfact == 2 && length(degrees) == 1L)
-            degrees <- c(degrees, 90 - degrees)
-        if(nfact == 3 && length(degrees) == 1L) degrees <- rep(90/3, 3)
-        if(nfact == 1) degrees <- 0
         J <- x@Data$nitems
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
@@ -751,15 +746,12 @@ setMethod(
         if(all(x@Data$K[which.items] == 2L)) auto.key <- FALSE
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
+        if(length(degrees) > ncol(ThetaFull)) type <- 'infoangle'
+        if(length(degrees) == 1L) degrees <- rep(degrees, ncol(ThetaFull))
         info <- numeric(nrow(ThetaFull))
         if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
-            for(l in 1:length(degrees)){
-                ta <- degrees[l]
-                if(nfact == 2) ta <- c(degrees[l], 90 - degrees[l])
-                if(nfact == 3) ta <- degrees
-                for(i in 1:J)
-                    info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=ta)
-            }
+            for(i in 1:J)
+                info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=degrees)
         }
         adj <- x@Data$mins
         rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
@@ -802,7 +794,7 @@ setMethod(
                                               CUSTOM.IND=x@Internals$CUSTOM.IND)
                 tmpscore <- rowSums(score * itemtrace)
                 CIscore[i, ] <- tmpscore
-                CIinfo[i, ] <- testinfo(tmpx, ThetaFull)[,1L]
+                CIinfo[i, ] <- testinfo(tmpx, ThetaFull)
                 CIrxx[i, ] <- CIinfo[i, ] / (CIinfo[i, ] + 1)
             }
         }

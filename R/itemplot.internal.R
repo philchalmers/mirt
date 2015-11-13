@@ -137,8 +137,6 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     }
     nfact <- min(x@ParObjects$pars[[item]]@nfact, x@Model$nfact)
     if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
-    if(nfact == 2 && is.null(degrees))
-        stop('Please specify a vector of angles that sum to 90', call.=FALSE)
     theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
     if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
@@ -146,6 +144,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         Theta <- thetaComb(theta, x@Model$nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
+    if(length(degrees) == 1) degrees <- rep(degrees, ncol(ThetaFull))
     if(is(x, 'SingleGroupClass') && x@Options$exploratory){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
         x@ParObjects$pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
@@ -155,17 +154,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     info <- numeric(nrow(ThetaFull))
     if(K == 2L) auto.key <- FALSE
     if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
-        if(nfact == 3){
-            if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
-                warning('Information plots require the degrees input to be of length 3', call.=FALSE)
-            } else {
-                info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
-            }
-        }
-        if(nfact == 2){
-            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
-        } else {
+        if(nfact == 1){
             info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
+        } else {
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
         }
     }
     CEinfoupper <- CEinfolower <- info
