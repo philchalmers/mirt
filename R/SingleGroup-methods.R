@@ -525,12 +525,18 @@ setMethod(
                     if(i < j){
                         P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
                         P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
-                        tab <- table(data[,i],data[,j])
+                        pick <- !is.na(data[,i]) & !is.na(data[,j])
+                        tab <- table(data[pick,i],data[pick,j])
                         Etab <- matrix(0,K[i],K[j])
+                        NN <- sum(tab)
                         for(k in 1L:K[i])
                             for(m in 1:K[j])
-                                Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)
-                        s <- gamma.cor(tab) - gamma.cor(Etab)
+                                Etab[k,m] <- NN * sum(P1[,k] * P2[,m] * prior)
+                        s <- try(gamma.cor(tab) - gamma.cor(Etab), TRUE)
+                        if(is.nan(s) || is(s, 'try-error')){
+                            res[i,j] <- res[j,i] <- NaN
+                            next
+                        }
                         if(s == 0) s <- 1
                         if(calcG2){
                             tmp <- tab
