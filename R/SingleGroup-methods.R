@@ -611,8 +611,6 @@ setMethod(
                         EJ <- expected.item(ej, Theta=Theta)
                         dat[,2L] <- object@Data$data[ ,j] - EJ
                         tmpdat <- na.omit(dat)
-                        n <- nrow(tmpdat)
-                        Sz <- sqrt(1 / (n-3))
                         res[i,j] <- res[j,i] <- cor(tmpdat)[1L,2L]
                     }
                 }
