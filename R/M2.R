@@ -114,7 +114,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             pars[[g]]@Internals$bfactor <- obj@Internals$bfactor
             if(discrete){
                 pars[[g]]@Internals$Prior <- list(obj@Internals$Prior[[g]])
-                pars[[g]]@Theta <- obj@Model$Theta
+                pars[[g]]@Model$Theta <- obj@Model$Theta
             }
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
                                    mins=obj@Data$mins, K=obj@Data$K)
@@ -165,6 +165,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             newret <- data.frame(as.list(M2s), newret, SRMSR)
         } else newret <- data.frame(as.list(M2s), newret)
         rownames(newret) <- 'stats'
+        if(ngroups == 1L) newret <- data.frame(M2=unname(newret[1]), newret[-c(1:2)])
         return(newret)
     }
 

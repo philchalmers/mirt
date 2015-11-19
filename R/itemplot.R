@@ -89,6 +89,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
             stop('shiny package is not available. Please install.', call.=FALSE)
         }
     }
+    dots <- list(...)
     if(missing(object)) missingMsg('object')
     if(missing(item)) missingMsg('item')
     if(is(object, 'DiscreteClass'))
@@ -101,11 +102,12 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     if(is.list(object)){
         if(object[[1]]@Model$nfact == 1L) degrees <- 0
     } else if(object@Model$nfact == 1L) degrees <- 0
+    rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,
-                             par.settings=par.settings, auto.key=auto.key,
-                             ...)
-    if(is.null(ret)) return(invisible(ret))
-    else return(ret)
+                             par.settings=par.settings, auto.key=auto.key, ...)
+    if(object@Options$exploratory)
+        ret$main <- paste0(ret$main, ' (rotate = \'', rotate, '\')')
+    return(ret)
 }

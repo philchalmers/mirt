@@ -117,7 +117,7 @@ imputePars2 <- function(MGmod, shortpars, longpars, imputenums, pre.ev){
 }
 
 # Rotation function
-Rotate <- function(F, rotate, Target = NULL, ...)
+Rotate <- function(F, rotate, Target = NULL, par.strip.text = NULL, par.settings = NULL, ...)
 {
     if(ncol(F) == 1L) rotF <- list()
     if(rotate == 'none') rotF <- list(loadings=F, Phi=diag(ncol(F)), orthogonal=TRUE)

@@ -36,11 +36,12 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     }
     if(drop.zeros){
         zeros <- ret@par > -1e-8 & ret@par < 1e-8
-        zeros[-c(1L:ret@Model$nfact)] <- FALSE
+        nfact <- extract.mirt(x, 'nfact')
+        zeros[-c(1L:nfact)] <- FALSE
         ret@par <- ret@par[!zeros]
         ret@est <- ret@est[!zeros]
         ret@parnum <- ret@parnum[!zeros]
-        ret@Model$nfact <- sum(!zeros[c(1L:ret@Model$nfact)])
+        ret@nfact <- sum(!zeros[c(1L:nfact)])
     }
     ret
 }
