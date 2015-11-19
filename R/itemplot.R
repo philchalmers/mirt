@@ -107,7 +107,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,
                              par.settings=par.settings, auto.key=auto.key, ...)
-    if(object@Options$exploratory)
+    if(!is.list(object) && object@Options$exploratory)
         ret$main <- paste0(ret$main, ' (rotate = \'', rotate, '\')')
     return(ret)
 }
