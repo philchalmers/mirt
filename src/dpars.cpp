@@ -214,7 +214,7 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, S4 &obj,
             }
         }
     }
-    const int npars2 = nfact + nfact * (nfact + 1) / 2;
+    //const int npars2 = nfact + nfact * (nfact + 1) / 2;
     arma::mat invSig = inv(Sig);
     arma::vec meanTheta(nfact);
     for (int j = 0; j < nfact; ++j){
@@ -329,9 +329,9 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
 
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
-    const int npars = nfact + nfact * (nfact + 1);
+    //const int npars = nfact + nfact * (nfact + 1);
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
-    const int nsig = npars - nfact;
+    //const int nsig = npars - nfact;
     NumericMatrix tabdata = obj.slot("dat");
     const int N = tabdata.nrow();
     const int nitems = tabdata.ncol();
