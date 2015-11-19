@@ -494,39 +494,25 @@ technical = list( customTheta=Theta , customPriorFun = mixed_prior ) )
 
 <pre><code class="r"># Like in Model 7e, the number of estimated parameters must be included.
 mod8c@nest &lt;- as.integer(sum(mod.pars$est) + 1)
+</code></pre>
 
-# two class proportions and therefore one probability is freely estimated.
+<pre><code>## Error in checkAtAssignment(structure(&quot;SingleGroupClass&quot;, package = &quot;mirt&quot;), : &#39;nest&#39; is not a slot in class &quot;SingleGroupClass&quot;
+</code></pre>
+
+<pre><code class="r"># two class proportions and therefore one probability is freely estimated.
 #* extract item parameters
 sirt::mirt.wrapper.coef(mod8c)
 </code></pre>
 
-<pre><code>## $coef
-##    item       a1         a2       a3          a4 d g u
-## 1    A1 6.939759 10.4427176 0.939256  1.99778732 0 0 1
-## 2    A2 6.939759  8.5385787 0.939256  1.24592570 0 0 1
-## 3    A3 6.939759  8.5640207 0.939256  0.26767959 0 0 1
-## 4    A4 6.939759  7.5083930 0.939256 -0.24366677 0 0 1
-## 5    B1 6.939759  9.1376106 0.939256  1.05550594 0 0 1
-## 6    B2 6.939759  6.9727610 0.939256  0.01265795 0 0 1
-## 7    B3 6.939759  9.1183162 0.939256  2.79738276 0 0 1
-## 8    B4 6.939759  8.2034975 0.939256  0.92500675 0 0 1
-## 9    C1 6.939759  0.2864100 0.939256  4.40892965 0 0 1
-## 10   C2 6.939759 -0.3311075 0.939256  1.28424912 0 0 1
-## 11   C3 6.939759  0.1971777 0.939256  2.74050644 0 0 1
-## 12   C4 6.939759 -2.5808550 0.939256  1.48278835 0 0 1
-## 
-## $GroupPars
-## MEAN_1 MEAN_2 MEAN_3 MEAN_4 COV_11 COV_21 COV_31 COV_41 COV_22 COV_32 
-##      0      0      0      0      1      0      0      0      1      0 
-## COV_42 COV_33 COV_43 COV_44 
-##      0      1      0      1
+<pre><code>## Error: $ operator not defined for this S4 class
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.1.2 (2014-10-31)
+<pre><code>## R version 3.2.2 (2015-08-14)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 14.04.3 LTS
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C              
@@ -541,39 +527,26 @@ sirt::mirt.wrapper.coef(mod8c)
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] sirt_1.3        TAM_1.4-1       CDM_4.1         ltm_1.0-0      
-##  [5] polycor_0.7-8   sfsmisc_1.0-27  mvtnorm_1.0-2   msm_1.5        
-##  [9] MASS_7.3-37     mirt_1.8        lattice_0.20-29 knitr_1.9      
+##  [1] sirt_1.9-0      TAM_1.14-0      CDM_4.6-0       ltm_1.0-0      
+##  [5] polycor_0.7-8   sfsmisc_1.0-28  mvtnorm_1.0-3   msm_1.6        
+##  [9] MASS_7.3-45     mirt_1.14       lattice_0.20-33 knitr_1.11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
-##  [4] car_2.0-22            cluster_1.15.3        coda_0.16-1          
-##  [7] colorspace_1.2-4      combinat_0.0-8        corpcor_1.6.7        
-## [10] d3Network_0.5.1       digest_0.6.8          ellipse_0.3-8        
-## [13] evaluate_0.5.5        expm_0.99-1.1         fdrtool_1.2.13       
-## [16] flexmix_2.3-13        foreign_0.8-62        formatR_1.0          
-## [19] Formula_1.2-0         ggm_2.3               ggplot2_1.0.0        
-## [22] glasso_1.8            GPArotation_2014.11-1 grid_3.1.2           
-## [25] gtable_0.1.2          gtools_3.4.1          Hmisc_3.14-6         
-## [28] huge_1.2.6            ic.infer_1.1-5        igraph_0.7.1         
-## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-20       
-## [34] latticeExtra_0.6-26   lavaan_0.5-17         lisrelToR_0.1.4      
-## [37] lme4_1.1-7            lpSolve_5.6.10        markdown_0.7.4       
-## [40] Matrix_1.1-4          matrixcalc_1.0-3      mime_0.2             
-## [43] minqa_1.2.4           mnormt_1.5-1          modeltools_0.2-21    
-## [46] mRm_1.1.5             munsell_0.4.2         nlme_3.1-119         
-## [49] nloptr_1.0.4          nnet_7.3-8            numDeriv_2012.9-1    
-## [52] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
-## [55] plyr_1.8.1            png_0.1-7             proto_0.3-10         
-## [58] psych_1.5.1           psychomix_1.1-1       psychotools_0.4-0    
-## [61] qgraph_1.3            quadprog_1.5-5        RColorBrewer_1.1-2   
-## [64] Rcpp_0.11.3           RCurl_1.95-4.5        reshape2_1.4.1       
-## [67] rjson_0.2.15          rockchalk_1.8.86      rpart_4.1-8          
-## [70] rtiff_1.4.4           scales_0.2.4          sem_3.1-5            
-## [73] semPlot_1.0.1         sendplot_4.0.0        sm_2.2-5.4           
-## [76] sna_2.3-2             splines_3.1.2         stringr_0.6.2        
-## [79] survival_2.37-7       tensor_1.5            tools_3.1.2          
-## [82] whisker_0.3-2         WrightMap_1.1         XML_3.98-1.1
+##  [1] lavaan_0.5-20         gtools_3.5.0          modeltools_0.2-21    
+##  [4] kappalab_0.4-7        lpSolve_5.6.13        kernlab_0.9-22       
+##  [7] splines_3.2.2         expm_0.999-0          mgcv_1.8-9           
+## [10] survival_2.38-3       sm_2.2-5.4            lavaan.survey_1.1.3  
+## [13] plyr_1.8.3            GPArotation_2014.11-1 stringr_1.0.0        
+## [16] ic.infer_1.1-5        combinat_0.0-8        coda_0.18-1          
+## [19] psych_1.5.8           evaluate_0.8          mRm_1.1.5            
+## [22] flexmix_2.3-13        parallel_3.2.2        psychotools_0.4-0    
+## [25] markdown_0.7.4        WrightMap_1.1         Rcpp_0.12.2          
+## [28] tensor_1.5            mime_0.4              mnormt_1.5-3         
+## [31] stringi_1.0-1         survey_3.30-3         numDeriv_2014.2-1    
+## [34] grid_3.2.2            psychomix_1.1-3       quadprog_1.5-5       
+## [37] tools_3.2.2           magrittr_1.5          Formula_1.2-1        
+## [40] pbivnorm_0.6.0        Matrix_1.2-2          boot_1.3-17          
+## [43] nnet_7.3-11           igraph_1.0.1          nlme_3.1-122
 </code></pre>
 
 </body>

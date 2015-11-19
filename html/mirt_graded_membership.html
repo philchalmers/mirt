@@ -234,11 +234,11 @@ summary(mod1)
 </code></pre>
 
 <pre><code>## ----------------------------------------------------------------------------------
-## sirt 1.3 (2015-01-06) 
+## sirt 1.9-0 (2015-11-04) 
 ## 
-## Date of Analysis: 2015-01-22 22:37:47 
-## Time difference of 0.0284853 secs
-## Computation Time: 0.0284853 
+## Date of Analysis: 2015-11-19 13:34:02 
+## Time difference of 0.02087402 secs
+## Computation Time: 0.02087402 
 ## 
 ##   Function &#39;gom.em&#39; 
 ##    Discrete Grade of Membership Model
@@ -285,11 +285,11 @@ summary(mod2)
 </code></pre>
 
 <pre><code>## ----------------------------------------------------------------------------------
-## sirt 1.3 (2015-01-06) 
+## sirt 1.9-0 (2015-11-04) 
 ## 
-## Date of Analysis: 2015-01-22 22:37:47 
-## Time difference of 0.0255332 secs
-## Computation Time: 0.0255332 
+## Date of Analysis: 2015-11-19 13:34:02 
+## Time difference of 0.02111435 secs
+## Computation Time: 0.02111435 
 ## 
 ##   Function &#39;gom.em&#39; 
 ##    Discrete Grade of Membership Model
@@ -390,63 +390,50 @@ mod2m &lt;- mirt::mirt(dat, 1, rep( &quot;icc_gom&quot;,I) , customItems=list(&q
 
 # correct number of estimated parameters
 mod2m@nest &lt;- as.integer(sum(mod2values(mod2m)$est) + nrow(Theta)-1 )
+</code></pre>
 
-# extract log-likelihood and compute AIC and BIC
+<pre><code>## Error in checkAtAssignment(structure(&quot;SingleGroupClass&quot;, package = &quot;mirt&quot;), : &#39;nest&#39; is not a slot in class &quot;SingleGroupClass&quot;
+</code></pre>
+
+<pre><code class="r"># extract log-likelihood and compute AIC and BIC
 mod2m@logLik
 </code></pre>
 
-<pre><code>## [1] -5538.888
+<pre><code>## Error in eval(expr, envir, enclos): no slot of name &quot;logLik&quot; for this object of class &quot;SingleGroupClass&quot;
 </code></pre>
 
 <pre><code class="r">( AIC &lt;- -2*mod2m@logLik+2*mod2m@nest )
 </code></pre>
 
-<pre><code>## [1] 11121.78
+<pre><code>## Error in eval(expr, envir, enclos): no slot of name &quot;logLik&quot; for this object of class &quot;SingleGroupClass&quot;
 </code></pre>
 
 <pre><code class="r">( BIC &lt;- -2*mod2m@logLik+log(mod2m@Data$N)*mod2m@nest )
 </code></pre>
 
-<pre><code>## [1] 11229.75
+<pre><code>## Error in eval(expr, envir, enclos): no slot of name &quot;logLik&quot; for this object of class &quot;SingleGroupClass&quot;
 </code></pre>
 
 <pre><code class="r"># extract coefficients
 ( cmod2m &lt;- mirt.wrapper.coef(mod2m) )
 </code></pre>
 
-<pre><code>## $coef
-##    item         a1        a2
-## 1    I1 -2.0157582 2.1259488
-## 2    I2 -2.4385394 1.6295050
-## 3    I3 -2.4995496 1.4922735
-## 4    I4 -3.1465547 1.4458247
-## 5    I5 -1.9124057 0.9662409
-## 6    I6 -1.1906872 1.1371916
-## 7    I7 -1.4496769 1.1827344
-## 8    I8 -1.3874215 1.3746965
-## 9    I9 -3.2677096 1.0726382
-## 10  I10 -0.9421034 2.7217024
-## 
-## $GroupPars
-## MEAN_1 COV_11 
-##      0      1
+<pre><code>## Error: $ operator not defined for this S4 class
 </code></pre>
 
 <pre><code class="r"># compare estimated distributions
 round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]] ) , 5 )
 </code></pre>
 
-<pre><code>##         sirt    mirt
-## [1,] 0.33357 0.33603
-## [2,] 0.18101 0.17820
-## [3,] 0.48542 0.48577
+<pre><code>## Error in cbind(sirt = mod2$pi.k, mirt = mod2m@Prior[[1]]): no slot of name &quot;Prior&quot; for this object of class &quot;SingleGroupClass&quot;
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.1.2 (2014-10-31)
+<pre><code>## R version 3.2.2 (2015-08-14)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 14.04.3 LTS
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C              
@@ -461,38 +448,24 @@ round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = mod2m@Prior[[1]]
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] sirt_1.3        TAM_1.4-1       CDM_4.1         ltm_1.0-0      
-##  [5] polycor_0.7-8   sfsmisc_1.0-27  mvtnorm_1.0-2   msm_1.5        
-##  [9] MASS_7.3-37     mirt_1.8        lattice_0.20-29 knitr_1.9      
+##  [1] sirt_1.9-0      TAM_1.14-0      CDM_4.6-0       ltm_1.0-0      
+##  [5] polycor_0.7-8   sfsmisc_1.0-28  mvtnorm_1.0-3   msm_1.6        
+##  [9] MASS_7.3-45     mirt_1.14       lattice_0.20-33 knitr_1.11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
-##  [4] car_2.0-22            cluster_1.15.3        coda_0.16-1          
-##  [7] colorspace_1.2-4      combinat_0.0-8        corpcor_1.6.7        
-## [10] d3Network_0.5.1       digest_0.6.8          ellipse_0.3-8        
-## [13] evaluate_0.5.5        expm_0.99-1.1         fdrtool_1.2.13       
-## [16] foreign_0.8-62        formatR_1.0           Formula_1.2-0        
-## [19] ggm_2.3               ggplot2_1.0.0         glasso_1.8           
-## [22] GPArotation_2014.11-1 grid_3.1.2            gtable_0.1.2         
-## [25] gtools_3.4.1          Hmisc_3.14-6          huge_1.2.6           
-## [28] ic.infer_1.1-5        igraph_0.7.1          jpeg_0.1-8           
-## [31] kappalab_0.4-6        kernlab_0.9-20        latticeExtra_0.6-26  
-## [34] lavaan_0.5-17         lisrelToR_0.1.4       lme4_1.1-7           
-## [37] lpSolve_5.6.10        markdown_0.7.4        Matrix_1.1-4         
-## [40] matrixcalc_1.0-3      mime_0.2              minqa_1.2.4          
-## [43] mnormt_1.5-1          munsell_0.4.2         nlme_3.1-119         
-## [46] nloptr_1.0.4          nnet_7.3-8            numDeriv_2012.9-1    
-## [49] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
-## [52] plyr_1.8.1            png_0.1-7             proto_0.3-10         
-## [55] psych_1.5.1           qgraph_1.3            quadprog_1.5-5       
-## [58] RColorBrewer_1.1-2    Rcpp_0.11.3           RCurl_1.95-4.5       
-## [61] reshape2_1.4.1        rjson_0.2.15          rockchalk_1.8.86     
-## [64] rpart_4.1-8           rtiff_1.4.4           scales_0.2.4         
-## [67] sem_3.1-5             semPlot_1.0.1         sendplot_4.0.0       
-## [70] sm_2.2-5.4            sna_2.3-2             splines_3.1.2        
-## [73] stringr_0.6.2         survival_2.37-7       tensor_1.5           
-## [76] tools_3.1.2           whisker_0.3-2         WrightMap_1.1        
-## [79] XML_3.98-1.1
+##  [1] Rcpp_0.12.2           plyr_1.8.3            tools_3.2.2          
+##  [4] boot_1.3-17           evaluate_0.8          nlme_3.1-122         
+##  [7] mgcv_1.8-9            igraph_1.0.1          Matrix_1.2-2         
+## [10] psych_1.5.8           parallel_3.2.2        expm_0.999-0         
+## [13] pbivnorm_0.6.0        WrightMap_1.1         coda_0.18-1          
+## [16] kappalab_0.4-7        ic.infer_1.1-5        stringr_1.0.0        
+## [19] gtools_3.5.0          combinat_0.0-8        grid_3.2.2           
+## [22] lavaan.survey_1.1.3   survival_2.38-3       sm_2.2-5.4           
+## [25] GPArotation_2014.11-1 lavaan_0.5-20         kernlab_0.9-22       
+## [28] magrittr_1.5          tensor_1.5            splines_3.2.2        
+## [31] mnormt_1.5-3          lpSolve_5.6.13        mime_0.4             
+## [34] numDeriv_2014.2-1     quadprog_1.5-5        survey_3.30-3        
+## [37] stringi_1.0-1         markdown_0.7.4
 </code></pre>
 
 </body>

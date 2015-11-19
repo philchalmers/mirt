@@ -236,11 +236,15 @@ summary(mod1)
 </code></pre>
 
 <pre><code>## ------------------------------------------------------------
-## sirt 1.3 (2015-01-06) 
+## sirt 1.9-0 (2015-11-04) 
 ## 
-## Date of Analysis: 2015-01-22 22:38:34 
-## Time difference of 0.1491692 secs
-## Computation time: 0.1491692 
+## Date of Analysis: 2015-11-19 13:34:29 
+## Time difference of 0.1313508 secs
+## Computation time: 0.1313508 
+## 
+## Call:
+## rasch.mml2(dat = dat, mmliter = mmliter, progress = FALSE, fixed.K = fixed.K, 
+##     irtmodel = &quot;ramsay.qm&quot;)
 ## 
 ## Semiparametric Marginal Maximum Likelihood Estimation 
 ## Function &#39;rasch.mml2&#39; 
@@ -325,7 +329,7 @@ print(mod1m)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.8 
+## mirt version: 1.14 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 10
@@ -361,32 +365,36 @@ print(mod1m)
 </code></pre>
 
 <pre><code class="r">cmod1m &lt;- mirt.wrapper.coef( mod1m )$coef
-
-# compare simulated and estimated values
-dfr &lt;- cbind( b , cmod1m$b , exp(mod1$item$b ) )
-colnames(dfr) &lt;- c(&quot;simulated&quot; , &quot;mirt&quot; , &quot;sirt_rasch.mml2&quot;)
-round( dfr , 2 )
 </code></pre>
 
-<pre><code>##       simulated mirt sirt_rasch.mml2
-##  [1,]      0.14 0.11            0.11
-##  [2,]      0.20 0.17            0.18
-##  [3,]      0.30 0.27            0.29
-##  [4,]      0.45 0.42            0.43
-##  [5,]      0.67 0.66            0.67
-##  [6,]      1.00 1.00            1.02
-##  [7,]      1.49 1.54            1.55
-##  [8,]      2.23 2.22            2.21
-##  [9,]      3.32 3.02            2.98
-## [10,]      4.95 5.24            5.09
-## [11,]      7.39 5.65            5.51
+<pre><code>## Error: $ operator not defined for this S4 class
+</code></pre>
+
+<pre><code class="r"># compare simulated and estimated values
+dfr &lt;- cbind( b , cmod1m$b , exp(mod1$item$b ) )
+</code></pre>
+
+<pre><code>## Error in cbind(b, cmod1m$b, exp(mod1$item$b)): object &#39;cmod1m&#39; not found
+</code></pre>
+
+<pre><code class="r">colnames(dfr) &lt;- c(&quot;simulated&quot; , &quot;mirt&quot; , &quot;sirt_rasch.mml2&quot;)
+</code></pre>
+
+<pre><code>## Error in colnames(dfr) &lt;- c(&quot;simulated&quot;, &quot;mirt&quot;, &quot;sirt_rasch.mml2&quot;): object &#39;dfr&#39; not found
+</code></pre>
+
+<pre><code class="r">round( dfr , 2 )
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;dfr&#39; not found
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.1.2 (2014-10-31)
+<pre><code>## R version 3.2.2 (2015-08-14)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 14.04.3 LTS
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C              
@@ -401,40 +409,27 @@ round( dfr , 2 )
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] MultiLCIRT_2.7   limSolve_1.5.5.1 sirt_1.3         TAM_1.4-1       
-##  [5] CDM_4.1          ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-27  
-##  [9] mvtnorm_1.0-2    msm_1.5          MASS_7.3-37      mirt_1.8        
-## [13] lattice_0.20-29  knitr_1.9       
+##  [1] MultiLCIRT_2.9   limSolve_1.5.5.1 sirt_1.9-0       TAM_1.14-0      
+##  [5] CDM_4.6-0        ltm_1.0-0        polycor_0.7-8    sfsmisc_1.0-28  
+##  [9] mvtnorm_1.0-3    msm_1.6          MASS_7.3-45      mirt_1.14       
+## [13] lattice_0.20-33  knitr_1.11      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] acepack_1.3-3.3       bitops_1.0-6          boot_1.3-13          
-##  [4] car_2.0-22            cluster_1.15.3        coda_0.16-1          
-##  [7] colorspace_1.2-4      combinat_0.0-8        corpcor_1.6.7        
-## [10] d3Network_0.5.1       digest_0.6.8          ellipse_0.3-8        
-## [13] evaluate_0.5.5        expm_0.99-1.1         fdrtool_1.2.13       
-## [16] flexmix_2.3-13        foreign_0.8-62        formatR_1.0          
-## [19] Formula_1.2-0         ggm_2.3               ggplot2_1.0.0        
-## [22] glasso_1.8            GPArotation_2014.11-1 grid_3.1.2           
-## [25] gtable_0.1.2          gtools_3.4.1          Hmisc_3.14-6         
-## [28] huge_1.2.6            ic.infer_1.1-5        igraph_0.7.1         
-## [31] jpeg_0.1-8            kappalab_0.4-6        kernlab_0.9-20       
-## [34] latticeExtra_0.6-26   lavaan_0.5-17         lisrelToR_0.1.4      
-## [37] lme4_1.1-7            lpSolve_5.6.10        markdown_0.7.4       
-## [40] Matrix_1.1-4          matrixcalc_1.0-3      mime_0.2             
-## [43] minqa_1.2.4           mnormt_1.5-1          modeltools_0.2-21    
-## [46] mRm_1.1.5             munsell_0.4.2         nlme_3.1-119         
-## [49] nloptr_1.0.4          nnet_7.3-8            numDeriv_2012.9-1    
-## [52] parallel_3.1.2        pbivnorm_0.5-1        pixmap_0.4-11        
-## [55] plyr_1.8.1            png_0.1-7             proto_0.3-10         
-## [58] psych_1.5.1           psychomix_1.1-1       psychotools_0.4-0    
-## [61] qgraph_1.3            quadprog_1.5-5        RColorBrewer_1.1-2   
-## [64] Rcpp_0.11.3           RCurl_1.95-4.5        reshape2_1.4.1       
-## [67] rjson_0.2.15          rockchalk_1.8.86      rpart_4.1-8          
-## [70] rtiff_1.4.4           scales_0.2.4          sem_3.1-5            
-## [73] semPlot_1.0.1         sendplot_4.0.0        sm_2.2-5.4           
-## [76] sna_2.3-2             splines_3.1.2         stringr_0.6.2        
-## [79] survival_2.37-7       tensor_1.5            tools_3.1.2          
-## [82] whisker_0.3-2         WrightMap_1.1         XML_3.98-1.1
+##  [1] lavaan_0.5-20         gtools_3.5.0          modeltools_0.2-21    
+##  [4] kappalab_0.4-7        lpSolve_5.6.13        kernlab_0.9-22       
+##  [7] splines_3.2.2         expm_0.999-0          mgcv_1.8-9           
+## [10] survival_2.38-3       sm_2.2-5.4            lavaan.survey_1.1.3  
+## [13] plyr_1.8.3            GPArotation_2014.11-1 stringr_1.0.0        
+## [16] ic.infer_1.1-5        combinat_0.0-8        coda_0.18-1          
+## [19] psych_1.5.8           evaluate_0.8          mRm_1.1.5            
+## [22] flexmix_2.3-13        parallel_3.2.2        psychotools_0.4-0    
+## [25] markdown_0.7.4        WrightMap_1.1         Rcpp_0.12.2          
+## [28] tensor_1.5            mime_0.4              mnormt_1.5-3         
+## [31] stringi_1.0-1         survey_3.30-3         numDeriv_2014.2-1    
+## [34] grid_3.2.2            psychomix_1.1-3       quadprog_1.5-5       
+## [37] tools_3.2.2           magrittr_1.5          Formula_1.2-1        
+## [40] pbivnorm_0.6.0        Matrix_1.2-2          boot_1.3-17          
+## [43] nnet_7.3-11           igraph_1.0.1          nlme_3.1-122
 </code></pre>
 
 </body>
